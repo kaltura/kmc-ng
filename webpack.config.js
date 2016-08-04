@@ -9,6 +9,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
+
 /**
  * Env
  * Get npm lifecycle event to identify the environment
@@ -211,6 +212,16 @@ module.exports = function makeWebpackConfig() {
       }])
     );
   }
+
+  /**
+   * Temoprary solution - copy configuration into the build folder so it will be exposed to the webpack-dev-server
+   * TODO [kmc] should merge the relevant env config with the shared into one configuration file
+   */
+  config.plugins.push(new CopyWebpackPlugin([{
+    from : 'src/config/*',
+    to: 'config',
+    flatten: true
+  }]));
 
   /**
    * PostCSS

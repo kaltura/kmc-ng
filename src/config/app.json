@@ -2,7 +2,7 @@
   "env" : "development",
   "core" : {
     "kaltura" : {
-      "apiUrl" : "" // environment specific
+      "apiUrl" : ""
     },
     "diagnostic" : {
       "debugging": false

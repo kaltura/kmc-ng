@@ -6,9 +6,18 @@ import '@angular/common';
 import '@angular/http';
 import '@angular/router';
 
-// RxJS
-import 'rxjs';
+// RxJS Statics
+import 'rxjs/Observable';
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/observable/fromPromise';
 
+// RxJS Operators
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/toPromise';
 
 
 // Bootstrap

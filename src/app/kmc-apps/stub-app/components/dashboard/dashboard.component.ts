@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { KMCConfig } from '@kmc/core'
 
 @Component({
   moduleId: module.id,
@@ -11,9 +10,8 @@ import { KMCConfig } from '@kmc/core'
 export class DashboardComponent implements OnInit {
 
   path : string;
-  constructor(r : ActivatedRoute, kmcConfig : KMCConfig) {
+  constructor(r : ActivatedRoute) {
     this.path = r.snapshot.url.map((item) => item.path).join('/');
-    this.path = kmcConfig.get('env');
   }
 
   ngOnInit() {
