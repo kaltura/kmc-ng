@@ -70,8 +70,7 @@ module.exports = function makeWebpackConfig() {
     // only discover files that have those extensions
     extensions: ['', '.ts', '.js', '.json', '.css', '.scss', '.html'],
     alias: {
-      'app': 'src/app',
-      'common': 'src/common'
+      '@kmc': 'src/app/shared/@kmc'
     }
   };
 

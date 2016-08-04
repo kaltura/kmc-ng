@@ -35,7 +35,7 @@ export class UniversalStudioComponent implements OnInit {
       version : '3',
       preview_embed: null, // redundant feature (null on purpose)
       vars: {
-        ks : 'jJ8MTgwMjM4MXzG91x-G8o9ni9jVJnwIexP4msJg6W_oOvDgajmIgERMFQm0UiywSZmcEJh27oyQnFlJed4s5W0vlQCQqAVelIDu8eGZ2zE3hJ0OH6Sdpegf8u7QaV6RpNCs9xuyk2weWSHoOPxTsoz7WxJPYCmtGEuLdtG3zF43ZxsNV4f3WAhbA==',  // TODO should get from the kmc host dynamically
+        ks : 'djJ8MTgwMjM4MXyDjLGu04Jwa7_RN3i3KyNogOLSTRFfBdjQV99RYH0jdz4r45gOy6uIeTdZKqzxdA2OrKI6gzieGd6GbVPJWcScpEzc3UgIcKTG4MKHWHWq2QVrZqqYRWCuu04Sio1m-zb7_29hvvu8tNmhQssmaffWicc_rQKeiJhMsOUH7nrbEA==',  // TODO should get from the kmc host dynamically
         api_url : 'http://www.kaltura.com', // TODO should get from the kmc host dynamically
         studio: {
           version : "v2.0.5",

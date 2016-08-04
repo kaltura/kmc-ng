@@ -1,0 +1,11 @@
+{
+  "env" : "development",
+  "core" : {
+    "kaltura" : {
+      "apiUrl" : "" // environment specific
+    },
+    "diagnostic" : {
+      "debugging": false
+    }
+  }
+}

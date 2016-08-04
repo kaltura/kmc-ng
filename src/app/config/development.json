@@ -1,0 +1,7 @@
+{
+  "core" : {
+    "diagnostic" : {
+      "debugging": true
+    }
+  }
+}

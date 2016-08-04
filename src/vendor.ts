@@ -9,6 +9,8 @@ import '@angular/router';
 // RxJS
 import 'rxjs';
 
+
+
 // Bootstrap
 import 'ng2-bootstrap/ng2-bootstrap';
 
@@ -17,7 +19,7 @@ import 'ng2-bootstrap/ng2-bootstrap';
 // general libraries
 import 'jquery';
 import 'moment';
-
+import 'ramda';
 
 // Import application theme (not pure vendor but we want is to bundle in vendor)
 import './style/app.scss';
