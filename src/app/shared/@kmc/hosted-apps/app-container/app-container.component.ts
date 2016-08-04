@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, Input, ElementRef} from '@angular/core';
 import { Subscription } from 'rxjs/rx';
-import {KMCHostDisplayService} from "../../../../shared/@kmc/core/kmc-host-display.service";
+import {KMCHostDisplayService} from "@kmc/core/kmc-host-display.service";
 import * as $ from 'jquery';
 
 @Component({

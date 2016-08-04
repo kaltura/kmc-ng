@@ -1,7 +1,4 @@
 <ul class="nav navbar-nav">
-  <li>
-    <a [routerLink]="['/login']">Login</a>
-  </li>
   <li *ngFor="let item of menuConfig">
     <a (click)="selectItem(item)"  [class.disabled]="!item.routePath">{{item.titleToken}}</a>
   </li>

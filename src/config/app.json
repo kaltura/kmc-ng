@@ -2,7 +2,8 @@
   "env" : "development",
   "core" : {
     "kaltura" : {
-      "apiUrl" : ""
+      "apiUrl" : "https://admin.kaltura.com/api_v3",
+      "format" : "1"
     },
     "diagnostic" : {
       "debugging": false

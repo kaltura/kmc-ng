@@ -12,6 +12,7 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/fromPromise';
 
 // RxJS Operators
+import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';

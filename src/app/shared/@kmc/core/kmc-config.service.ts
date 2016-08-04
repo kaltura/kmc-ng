@@ -57,15 +57,14 @@ export class KMCConfig {
         });
     }
 
-    get(key: string | string[]) : any {
-        let keyToken : string[];
-        if (typeof key === 'string')
+    get(...keys : string[]) : any | any[] {
+
+        const values = keys.map((key) =>
         {
-            keyToken = key.split('.');
-        }else
-        {
-            keyToken = key;
-        }
-        return R.path(keyToken,this.config);
+            const keyToken = key.split('.');
+            return R.path(keyToken,this.config);
+        });
+
+        return values.length === 1 ? values[0] : values;
     }
 };

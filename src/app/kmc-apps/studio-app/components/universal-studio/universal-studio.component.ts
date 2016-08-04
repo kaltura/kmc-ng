@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
-import {AppContainerComponent} from "../../../../shared/@kmc/hostedApps/app-container/app-container.component";
+import {AppContainerComponent} from "@kmc/hosted-apps/app-container/app-container.component";
 declare var window:any;
 
 @Component({
