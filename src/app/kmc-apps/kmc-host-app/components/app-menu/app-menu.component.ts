@@ -21,7 +21,7 @@ export class AppMenuComponent implements OnInit {
 
   selectItem(item) : void{
     // The navigation is done by url since the menu config is not aware to the internal hierarchy
-    this.router.navigateByUrl('app/' + item.routePath);
+    this.router.navigateByUrl(item.routePath);
   }
   notifyMenuLoadError(reason : any) : void {
     console.error(reason);
