@@ -224,6 +224,15 @@ module.exports = function makeWebpackConfig() {
   }]));
 
   /**
+   * Copy assets to public
+   */
+  config.plugins.push(new CopyWebpackPlugin([{
+    context : 'src/assets',
+    from : '**/*',
+    to: 'assets'
+  }]));
+
+  /**
    * PostCSS
    * Reference: https://github.com/postcss/autoprefixer-core
    * Add vendor prefixes to your css
