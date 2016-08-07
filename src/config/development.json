@@ -1,5 +1,8 @@
 {
   "core" : {
+    "kaltura" : {
+      "apiUrl" : "https://www.kaltura.com/api_v3/index.php"
+    },
     "diagnostic" : {
       "debugging": true
     }

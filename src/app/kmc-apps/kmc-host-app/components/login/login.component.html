@@ -13,8 +13,10 @@
   </form>
 
   <div class="row">
+
     <div class="col-xs-12">
-      {{ loginResult | async }}
+      <h2>Login Response</h2>
+      <pre>{{ loginResult | async | json }}</pre>
     </div>
   </div>
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/observable';
+import { Observable } from 'rxjs/Observable';
 import { Http, URLSearchParams } from '@angular/http';
 import { KMCConfig } from '@kmc/core';
 
@@ -28,7 +28,8 @@ export class UserService {
             searchParams.set('privileges', privileges);
         }
 
-        return this.http.post(apiUrl, { search : searchParams})
+
+        return this.http.request(apiUrl, { method : 'post', search : searchParams })
             .map(result => result.json());
     }
 }

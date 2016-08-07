@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/observable';
+import { Observable } from 'rxjs/Observable';
 import { KalturaProxy } from '@kmc/kaltura-api';
 import { UserContext } from './user-context'
 import { IReadonlyUserContext } from './i-readonly-user-context';
