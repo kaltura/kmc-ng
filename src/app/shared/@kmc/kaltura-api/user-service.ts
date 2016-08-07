@@ -1,35 +1,45 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Http, URLSearchParams } from '@angular/http';
-import { KMCConfig } from '@kmc/core';
+import { KalturaMultiRequest } from "./kaltura-multi-request";
+import { KalturaAPIClient } from "./kaltura-api-client";
+import {KalturaRequest} from "./kaltura-request";
 
 
-@Injectable()
 export class UserService {
-    constructor(private http : Http, private kmcConfig : KMCConfig){
 
+    constructor(){
+        throw new Error('This class should not be initialized (you should use its static functions to create new requests)');
     }
 
-    loginByLoginId(loginId :string, password : string , expiry? : number, privileges? : string) : Observable<string>
+    static getByLoginId(loginId : string, options? : { ks? : string }) :  KalturaRequest<string>
     {
-        const [ apiUrl, format = 1] = this.kmcConfig.get('core.kaltura.apiUrl', 'core.kaltura.format');
+        const parameters : any = {
+            loginId : loginId
+        };
 
-        const searchParams: URLSearchParams = new URLSearchParams();
-        searchParams.set('format', '' + format);
-        searchParams.set('service', 'user');
-        searchParams.set('action', 'loginByLoginId');
-        searchParams.set('loginId', loginId);
-        searchParams.set('password', password);
-        if (expiry) {
-            searchParams.set('expiry', ''+expiry);
+        if (options && options.ks) {
+            parameters.ks = options.ks;
         }
 
-        if (privileges) {
-            searchParams.set('privileges', privileges);
+        return new KalturaRequest<string>('user','getByLoginId',parameters);
+    }
+
+    static loginByLoginId(loginId :string, password : string, options? : { expiry? : number | string, privileges? : string} ) : KalturaRequest<string>
+    {
+        const parameters : any = {
+            loginId : loginId,
+            password : password
+        };
+
+        if (options && options.expiry) {
+            parameters.expiry = options.expiry;
         }
 
+        if (options && options.privileges) {
+            parameters.privileges = options.privileges;
+        }
 
-        return this.http.request(apiUrl, { method : 'post', search : searchParams })
-            .map(result => result.json());
+        return new KalturaRequest<string>('user','loginByLoginId', parameters, { ksValueGenerator : true });
     }
 }

@@ -3,7 +3,9 @@
   "core" : {
     "kaltura" : {
       "apiUrl" : "",
-      "format" : "1"
+      "format" : "1",
+      "expiry" : "86400",
+      "privileges" : "disableentitlement"
     },
     "diagnostic" : {
       "debugging": false
