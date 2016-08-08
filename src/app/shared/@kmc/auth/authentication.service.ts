@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import * as R from 'ramda';
+
 import { UserContext } from './user-context'
 import { IReadonlyUserContext } from './i-readonly-user-context';
 import { KalturaAPIClient } from "../kaltura-api/kaltura-api-client";
@@ -13,14 +15,14 @@ import {KMCConfig} from "../core/kmc-config.service";
 @Injectable()
 export class AuthenticationService {
 
-    private _userContext : UserContext;
+    private userContext : UserContext;
 
     constructor(private kalturaAPIClient : KalturaAPIClient, private kmcConfig : KMCConfig){
-        this._userContext = new UserContext();
+        this.userContext = new UserContext();
     }
 
     get UserContext() : IReadonlyUserContext{
-        return this._userContext;
+        return this.userContext;
     }
 
     login(username : string, password : string, rememberMe = false) : Observable<IReadonlyUserContext> {
@@ -42,21 +44,22 @@ export class AuthenticationService {
         ));
 
         return multiRequest.execute(this.kalturaAPIClient)
-            //.do(
-            //(results) => {
-            //   // this._userContext.ks = results[0].ks;
-            //}).map((results) => {
-            //    return this._userContext
-            //})
+            .do(
+            (results) => {
+                const ks  = results[0];
+                const generalProperties = R.pick(['id', 'partnerId', 'fullName', 'firstName', 'lastName', 'roleIds', 'roleNames', 'isAccountOwner'])(results[1]);
+
+                const permissions = R.map(R.pick(['id','type','name','status']))(results[2].objects);
+
+                this.userContext.ks = ks;
+                this.userContext.permissions = permissions;
+                Object.assign(this.userContext,generalProperties);
+            }).map((results) => {
+                return this.userContext;
+            })
             .catch((err) => {
                 console.log(err);
                 return Observable.throw(err);
             });
-
-
-
-        // option B
-        //UserService.loginByLoginId(username, password).execute(this.kalturaAPIClient);
-
     }
 }

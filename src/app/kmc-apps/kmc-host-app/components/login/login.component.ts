@@ -18,8 +18,11 @@ export class LoginComponent implements OnInit {
   login(event, username, password) {
     event.preventDefault();
 
+
+
     // Temoprary
     this.loginResult = this.authenticationService.login(username, password);
+
     // this is the relevant approach
     // TODO show loader
     //this.authenticationService.login(username, password).subscribe(

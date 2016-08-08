@@ -4,6 +4,8 @@ import { URLSearchParams } from '@angular/http';
 import { KalturaRequest } from "./kaltura-request";
 import {KalturaAPIClient} from "./kaltura-api-client";
 
+import * as R from 'ramda';
+
 export  class KalturaMultiRequest {
 
     private kalturaRequests : KalturaRequest<any>[];
@@ -20,26 +22,33 @@ export  class KalturaMultiRequest {
 
         if (this.kalturaRequests.length) {
 
-            const ksValue = { assignAutomatically : true, customKSValue : '' };
+            const ksValue = { assignAutomatically : true};
 
-            const parameters = {};
+            const parameters = {
+                'service' : 'multirequest'
+            };
+
+            var ksValueGeneratorIndex = R.findIndex(R.propEq('ksValueGenerator',true))(this.kalturaRequests);
+
+            if (ksValueGeneratorIndex > -1)
+            {
+                ksValue.assignAutomatically = false;
+            }
 
             this.kalturaRequests.forEach((request,index) => {
 
-                const requestIdentifier = index+1;
+                const requestIdentifier = index + 1;
 
                 const requestParameters = Object.assign({
                     service : request.service,
                     action : request.action
                 },request.parameters);
 
-                parameters[requestIdentifier] = requestParameters;
-
-                if (request.ksValueGenerator)
-                {
-                    ksValue.assignAutomatically = false;
-                    ksValue.customKSValue = `{${requestIdentifier}:result}`;
+                if (ksValueGeneratorIndex > -1 && ksValueGeneratorIndex !== index){
+                    requestParameters['ks'] = `{${ksValueGeneratorIndex+1}:result}`;
                 }
+
+                parameters[requestIdentifier] = requestParameters;
             });
 
             return client.transmit({ parameters,ksValue });

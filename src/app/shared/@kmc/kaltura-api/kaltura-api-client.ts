@@ -19,32 +19,29 @@ export class KalturaAPIClient {
         }
     }
 
-    transmit(args : {parameters : {}, ksValue : {assignAutomatically : boolean, customKSValue? : string}}):Observable<any> {
+    transmit(args : {parameters : {}, ksValue : {assignAutomatically : boolean}}):Observable<any> {
 
         // We use the actual args parameters to optimize performance, it should affect the api since the arguments are created inside the library elements.
 
         if (args.parameters) {
+
+            args.parameters['clientTag'] = this.config.clientTag;
+            args.parameters['format'] = this.config.format;
+            args.parameters['apiVersion'] = this.config.apiVersion;
+
             if (args.ksValue && args.ksValue.assignAutomatically) {
                 if (this.config.ks) {
                     args.parameters['ks'] = this.config.ks;
                 } else {
                     return Observable.throw({errorCode: 'cannot_invoke_request_without_ks'});
                 }
-            }else if (args.ksValue && args.ksValue.customKSValue)
-            {
-                args.parameters['ks'] = args.ksValue.customKSValue
             }
 
-            // TODO [es] get from args - search: 'service=multirequest&action=null&format=1',
-            return this.http.request(this.config.apiUrl ,
+            return this.http.request(this.config.apiUrl,
                 {
                     method: 'post',
-                    search: 'service=multirequest&action=null&format=1',
                     body: JSON.stringify(args.parameters),
-                    headers: new Headers({
-                        contentType: 'application/json',
-                        dataType: 'json'
-                    })
+                    headers : new Headers(this.config.headers)
                 }
             )
             .map(result => result.json());

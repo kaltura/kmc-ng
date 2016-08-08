@@ -29,7 +29,8 @@ export class UserService {
     {
         const parameters : any = {
             loginId : loginId,
-            password : password
+            password : password,
+            partnerId : null
         };
 
         if (options && options.expiry) {
