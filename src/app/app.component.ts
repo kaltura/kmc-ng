@@ -7,10 +7,10 @@ import { KalturaAPIClient, KalturaAPIConfig } from "./shared/@kmc/kaltura-api";
 import {KMCConfig} from "./shared/@kmc/core/kmc-config.service";
 
 function buildKalturaAPIConfig(kmcConfig : KMCConfig) {
-  const { apiUrl, format = 1}  = kmcConfig.get('core.kaltura');
+  const { apiUrl, apiVersion }  = kmcConfig.get('core.kaltura');
   const config = new KalturaAPIConfig();
   config.apiUrl = apiUrl;
-  config.format = format;
+  config.apiVersion = apiVersion;
 
   return config;
 }

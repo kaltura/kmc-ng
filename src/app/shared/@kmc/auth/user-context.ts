@@ -1,7 +1,5 @@
 
-import { IReadonlyUserContext } from './i-readonly-user-context';
-
-export class UserContext implements IReadonlyUserContext{
+export class UserContext {
 
     ks : string;
     firstname : string;
@@ -20,7 +18,7 @@ export class UserContext implements IReadonlyUserContext{
     }
 
 
-    public getKS() : string {
+    get KS() : string {
         return this.ks;
     }
 }

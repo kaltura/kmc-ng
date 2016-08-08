@@ -3,7 +3,6 @@ import { Observable } from 'rxjs/Observable';
 import * as R from 'ramda';
 
 import { UserContext } from './user-context'
-import { IReadonlyUserContext } from './i-readonly-user-context';
 import { KalturaAPIClient } from "../kaltura-api/kaltura-api-client";
 import {UserService} from "../kaltura-api/user-service";
 import {PermissionService, KalturaPermissionFilterTypes, IKalturaPermissionFilter} from "../kaltura-api/permission-service";
@@ -21,11 +20,11 @@ export class AuthenticationService {
         this.userContext = new UserContext();
     }
 
-    get UserContext() : IReadonlyUserContext{
+    get UserContext() : UserContext{
         return this.userContext;
     }
 
-    login(username : string, password : string, rememberMe = false) : Observable<IReadonlyUserContext> {
+    login(username : string, password : string, rememberMe = false) : Observable<UserContext> {
 
         const { expiry, privileges }  = this.kmcConfig.get('core.kaltura');
 
