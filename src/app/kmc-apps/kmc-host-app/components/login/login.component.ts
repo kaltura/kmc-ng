@@ -9,7 +9,7 @@ import {AuthenticationService} from "../../../../shared/@kmc/auth/authentication
 })
 export class LoginComponent implements OnInit {
 
-  loginResult : any;
+  userContext : any;
   constructor(private authenticationService : AuthenticationService) {}
 
   ngOnInit() {
@@ -18,10 +18,8 @@ export class LoginComponent implements OnInit {
   login(event, username, password) {
     event.preventDefault();
 
-
-
     // Temoprary
-    this.loginResult = this.authenticationService.login(username, password);
+    this.userContext = this.authenticationService.login(username, password);
 
     // this is the relevant approach
     // TODO show loader
