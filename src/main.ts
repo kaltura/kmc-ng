@@ -6,7 +6,7 @@ import { AppComponent } from './app/app.component';
 import { APP_ROUTER_PROVIDERS } from './app/app.routes';
 
 import { KMCConfig } from '@kmc/core'
-import { ConfigCanActivate } from './app/kmc-apps/kmc-host-app/shared';
+import { ConfigCanActivate } from './app/kmc-apps/kmc-shell-app/shared';
 
 // depending on the env mode, enable prod mode or add debugging modules
 if (process.env.ENV === 'build') {

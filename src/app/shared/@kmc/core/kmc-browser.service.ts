@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ReplaySubject, Observable } from 'rxjs/rx';
 
 @Injectable()
-export class KMCHostDisplayService {
+export class KMCBrowserService {
 
   private _areaHeight$ : ReplaySubject<number>;
   constructor() {
