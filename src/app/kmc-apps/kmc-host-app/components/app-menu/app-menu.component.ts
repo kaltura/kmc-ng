@@ -21,19 +21,25 @@ export class AppMenuComponent implements OnInit {
 
   menuConfig : AppMenuConfig;
   selectedMenuItem: AppMenuItem;
+  showSubMenu: boolean = true;
 
   selectItem(item, isSubMenu) : void{
     // The navigation is done by url since the menu config is not aware to the internal hierarchy
     if ( !isSubMenu ) {
       this.selectedMenuItem = item;
+      this.showSubMenu = item.showSubMenu !== undefined ? item.showSubMenu : true;
     }
-    this.router.navigateByUrl(item.routePath);
+    //this.router.navigateByUrl(item.routePath);
   }
 
   ngOnInit() {
     this.menuConfig = this.appMenuService.getMenuConfig();
     let path = this.router.url.substr(1).split("/")[0];
-    this.selectedMenuItem = R.find(R.propEq('routePath', path))(this.menuConfig);
+    let item = R.find(R.propEq('routePath', path))(this.menuConfig);
+    if (item) {
+      this.selectedMenuItem = item;
+      this.showSubMenu = item.showSubMenu !== undefined ? item.showSubMenu : true;
+    }
   }
 
 }

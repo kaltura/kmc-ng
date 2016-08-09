@@ -9,8 +9,8 @@ import * as $ from 'jquery';
   selector: 'kmc-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  providers : [AppMenuService,KMCHostDisplayService],
-  directives: [ROUTER_DIRECTIVES,AppMenuComponent]
+  providers : [AppMenuService, KMCHostDisplayService],
+  directives: [ROUTER_DIRECTIVES, AppMenuComponent]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   @ViewChild('appMenu',true) private _appMenuRef : any;
