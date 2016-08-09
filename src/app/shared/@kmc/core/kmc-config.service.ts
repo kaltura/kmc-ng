@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { ReplaySubject, Observable } from 'rxjs/rx';
 import * as R from 'ramda';
 
 
@@ -17,7 +17,14 @@ function handleLoadError (error: any) {
 @Injectable()
 export class KMCConfig {
     private config = {};
+    private _initialized$ : ReplaySubject<boolean>;
+
     constructor(private http: Http) {
+        this._initialized$ = <ReplaySubject<boolean>>new ReplaySubject(1); // we are using here a replay subject with buffer of 1 so any new subsribers will get the last one.
+    }
+
+    public onRefresh() : Observable<boolean>{
+        return this._initialized$.asObservable(); // we proxy the subject by a function that returns its observable to prevent others from broadcasting on that subject.
     }
 
     private loadConfigFromServer() : Promise<any> {
@@ -50,6 +57,7 @@ export class KMCConfig {
         return new Promise((resolve, reject) => {
             this.loadConfigFromServer().then(config => {
                 this.config = config;
+                this._initialized$.next(true);
                 resolve(true);
             }).catch(function (error) {
                 reject(error);

@@ -36,8 +36,8 @@ export class UniversalStudioComponent implements OnInit {
       version : '3',
       preview_embed: null, // redundant feature (null on purpose)
       vars: {
-        ks : this.authenticationService.UserContext.ks,
-        api_url : this.kmcConfig.get('core.kaltura.apiUrl'),
+        ks : this.authenticationService.userContext.ks,
+        api_url : this.kmcConfig.get('modules.studio_universal.apiUrl'),
         studio: {
           version : "v2.0.5",
           showHTMLStudio : false,
