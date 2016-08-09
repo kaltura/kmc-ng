@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES,Router } from '@angular/router';
+import { ROUTER_DIRECTIVES, Router } from '@angular/router';
 
 import { AppMenuConfig } from '../../shared/app-menu-config';
 import { AppMenuService } from '../../shared/app-menu.service';
+import { AppMenuItem } from "../../shared/app-menu-config";
+
+import * as R from 'ramda';
 
 @Component({
-  moduleId: module.id,
   selector: 'kmc-app-menu',
   templateUrl: './app-menu.component.html',
   styleUrls: ['./app-menu.component.scss'],
@@ -13,24 +15,32 @@ import { AppMenuService } from '../../shared/app-menu.service';
 })
 export class AppMenuComponent implements OnInit {
 
-  constructor(private appMenuService : AppMenuService,private router : Router) {
+  constructor(private appMenuService : AppMenuService, private router : Router) {
 
   }
 
   menuConfig : AppMenuConfig;
+  selectedMenuItem: AppMenuItem;
+  showSubMenu: boolean = true;
 
-  selectItem(item) : void{
+  selectItem(item, isSubMenu) : void{
     // The navigation is done by url since the menu config is not aware to the internal hierarchy
-    this.router.navigateByUrl(item.routePath);
+    if ( !isSubMenu ) {
+      this.selectedMenuItem = item;
+      this.showSubMenu = item.showSubMenu !== undefined ? item.showSubMenu : true;
+    }
+    //this.router.navigateByUrl(item.routePath);
   }
-  notifyMenuLoadError(reason : any) : void {
-    console.error(reason);
-  }
-  useMenuConfig(menuConfig : AppMenuConfig) :void {
-    this.menuConfig = menuConfig;
-  }
+
   ngOnInit() {
-    this.appMenuService.getMenuConfig().then(this.useMenuConfig.bind(this)).catch(this.notifyMenuLoadError.bind(this));
+    // TODO [kmc] [amir] subscribe to router changes, unsubscribe on destroy and move logic to change event. remove selectItem.
+    this.menuConfig = this.appMenuService.getMenuConfig();
+    let path = this.router.url.substr(1).split("/")[0];
+    let item = R.find(R.propEq('routePath', path))(this.menuConfig);
+    if (item) {
+      this.selectedMenuItem = item;
+      this.showSubMenu = item.showSubMenu !== undefined ? item.showSubMenu : true;
+    }
   }
 
 }

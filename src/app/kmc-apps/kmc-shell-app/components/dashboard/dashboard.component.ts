@@ -6,7 +6,6 @@ import {KMCBrowserService} from "../../../../shared/@kmc/core/kmc-browser.servic
 import * as $ from 'jquery';
 
 @Component({
-  moduleId: module.id,
   selector: 'kmc-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],

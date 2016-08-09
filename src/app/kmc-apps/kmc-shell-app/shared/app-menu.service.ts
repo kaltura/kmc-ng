@@ -1,28 +1,15 @@
 import { Injectable } from '@angular/core';
 
 import { AppMenuConfig } from './app-menu-config'
-
-const StaticMenuConfig : AppMenuConfig = [
-  {routePath : 'dashboard', titleToken : 'Dashboard'},
-  {routePath : 'content', titleToken : 'Content', children : [
-    {routePath : 'entries', titleToken : 'Entries'}
-  ]},
-  {routePath : 'studio', titleToken : 'Studio'},
-  {routePath : '', titleToken : 'Analytics'},
-  {routePath : '', titleToken : 'Settings'},
-  {routePath : '', titleToken : 'Administration'},
-];
+import { KMCConfig } from "../../../shared/@kmc/core/kmc-config.service";
 
 @Injectable()
 export class AppMenuService {
 
-  constructor() {}
+  constructor(private kmcConfig : KMCConfig) {}
 
-  getMenuConfig() : Promise<AppMenuConfig> {
-    return new Promise(function (resolve,reject){
-      resolve(StaticMenuConfig);
-    });
-
+  getMenuConfig() : AppMenuConfig {
+    return this.kmcConfig.get("core.menuConfig");
   }
 
 

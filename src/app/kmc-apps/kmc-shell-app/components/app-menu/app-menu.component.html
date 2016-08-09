@@ -1,8 +1,25 @@
-<ul class="nav navbar-nav">
-  <li *ngFor="let item of menuConfig">
-    <a (click)="selectItem(item)"  [class.disabled]="!item.routePath">{{item.titleToken}}</a>
-  </li>
-  <li>
-    <a [class.disabled]="true">Upload</a>
-  </li>
-</ul>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <ul class="nav navbar-nav">
+        <li *ngFor="let item of menuConfig">
+          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]" (click)="selectItem(item, false)"  [class.disabled]="!item.routePath">{{item.titleToken}}</a>
+        </li>
+        <li>
+          <a [class.disabled]="true">Upload</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <ul class="nav navbar-nav" *ngIf="selectedMenuItem && showSubMenu">
+        <li *ngFor="let subitem of selectedMenuItem.children">
+          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+subitem.routePath]" (click)="selectItem(subitem, true)"  [class.disabled]="!subitem.routePath">{{subitem.titleToken}}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
