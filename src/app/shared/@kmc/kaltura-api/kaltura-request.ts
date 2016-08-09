@@ -16,14 +16,14 @@ export  class KalturaRequest<T> {
         }
     }
 
-    execute(client : KalturaAPIClient) : Observable<T>{
+    execute(client : KalturaAPIClient) : Observable<any>{
         const ksValue = { assignAutomatically : !this.ksValueGenerator };
         const requestParameters = Object.assign({
             service : this.service,
             action : this.action
         },this.parameters);
 
-        return client.transmit({ parameters : requestParameters, ksValue}).map(response =>
+        return client.transmit({ parameters : requestParameters, ksValue}).flatMap(response =>
         {
             if (KalturaAPIException.isMatch(response))
             {

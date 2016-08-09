@@ -5,7 +5,6 @@ import {AuthenticationService} from "../../../../shared/@kmc/auth/authentication
 import {KMCBrowserService} from "../../../../shared/@kmc/core/kmc-browser.service";
 
 @Component({
-  moduleId: module.id,
   selector: 'kmc-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
