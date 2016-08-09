@@ -17,7 +17,7 @@ const routes: RouterConfig = [
 
       {path: 'login', component: LoginComponent},
       {
-        path: '', component: DashboardComponent, children: [
+        path: '', component: DashboardComponent, canActivate:[AuthCanActivate], children: [
         {path: 'content', component: ContentComponent, children:[
           { path: '', redirectTo: 'entries', pathMatch: 'full' },
           {path: 'entries', component: EntriesComponent},

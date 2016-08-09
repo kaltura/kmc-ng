@@ -33,6 +33,7 @@ export class AppMenuComponent implements OnInit {
   }
 
   ngOnInit() {
+    // TODO [kmc] [amir] subscribe to router changes, unsubscribe on destroy and move logic to change event. remove selectItem.
     this.menuConfig = this.appMenuService.getMenuConfig();
     let path = this.router.url.substr(1).split("/")[0];
     let item = R.find(R.propEq('routePath', path))(this.menuConfig);

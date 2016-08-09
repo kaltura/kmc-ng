@@ -23,7 +23,7 @@ export  class KalturaRequest<T> {
             action : this.action
         },this.parameters);
 
-        return client.transmit({ parameters : requestParameters, ksValue}).map(response =>
+        return client.transmit({ parameters : requestParameters, ksValue}).flatMap(response =>
         {
             if (KalturaAPIException.isMatch(response))
             {
