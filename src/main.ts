@@ -23,12 +23,14 @@ function buildKalturaAPIConfig(kmcConfig : KMCConfig) {
 
     const config = new KalturaAPIConfig();
 
-    kmcConfig.onRefresh().subscribe(
+    const onRefreshSubscribe = kmcConfig.onRefresh().subscribe(
         () => {
+            if (onRefreshSubscribe) {
+                onRefreshSubscribe.unsubscribe();
+            }
             const { apiUrl, apiVersion }  = kmcConfig.get('core.kaltura');
             config.apiUrl = apiUrl;
             config.apiVersion = apiVersion;
-
         }
     );
 

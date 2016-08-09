@@ -44,8 +44,10 @@ export class KMCBrowserService {
   }
 
   public getFromSessionStorage(key : string) : any{
-    var driver = this.locker.useDriver(Locker.DRIVERS.SESSION);
-    return driver.get(key);
+    // TODO [kmc] disabled temporary to bypass exception in auth-can-activate.ts
+    //var driver = this.locker.useDriver(Locker.DRIVERS.SESSION);
+    //return driver.get(key);
+    return this.locker.get(key);
   }
 
   public removeFromSessionStorage(key : string) : any{
