@@ -16,7 +16,7 @@ export  class KalturaRequest<T> {
         }
     }
 
-    execute(client : KalturaAPIClient) : Observable<T>{
+    execute(client : KalturaAPIClient) : Observable<any>{
         const ksValue = { assignAutomatically : !this.ksValueGenerator };
         const requestParameters = Object.assign({
             service : this.service,
