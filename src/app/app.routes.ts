@@ -5,6 +5,8 @@ import { EntriesComponent as ContentEntries } from "./kmc-apps/content-app/compo
 import { DashboardComponent } from "./kmc-apps/kmc-host-app/components/dashboard/dashboard.component";
 import { UniversalStudioComponent } from "./kmc-apps/studio-app/components/universal-studio/universal-studio.component";
 import { ConfigCanActivate } from './kmc-apps/kmc-host-app/shared';
+import {ContentComponent} from "./kmc-apps/content-app/components/content/content.component";
+import {EntriesComponent} from "./kmc-apps/content-app/components/entries/entries.component";
 
 
 const routes: RouterConfig = [
@@ -15,7 +17,12 @@ const routes: RouterConfig = [
       {path: 'login', component: LoginComponent},
       {
         path: '', component: DashboardComponent, children: [
-        {path: 'content', component: StubDashboardComponent},
+        {path: 'content', component: ContentComponent, children:[
+          { path: '', redirectTo: 'entries', pathMatch: 'full' },
+          {path: 'entries', component: EntriesComponent},
+          {path: 'moderation', component: StubDashboardComponent},
+          {path: 'playlists', component: StubDashboardComponent}
+        ]},
         {path: 'dashboard', component: StubDashboardComponent},
         {path: 'studio', component: UniversalStudioComponent}
       ]

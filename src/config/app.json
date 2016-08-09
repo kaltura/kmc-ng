@@ -6,6 +6,18 @@
       "expiry" : "86400",
       "privileges" : "disableentitlement"
     },
+    "menuConfig": [
+        { "routePath" : "dashboard", "titleToken" : "Dashboard" },
+        { "routePath" : "content", "titleToken" : "Content", "showSubMenu": true, "children" : [
+          { "routePath" : "content/entries", "titleToken" : "Entries" },
+          { "routePath" : "content/moderation", "titleToken" : "Moderation" },
+          { "routePath" : "content/playlists", "titleToken" : "Playlists" }
+        ]},
+        {"routePath" : "studio", "titleToken" : "Studio"},
+        {"routePath" : "", "titleToken" : "Analytics"},
+        {"routePath" : "", "titleToken" : "Settings"},
+        {"routePath" : "", "titleToken" : "Administration"}
+      ],
     "diagnostic" : {
       "debugging": false
     }

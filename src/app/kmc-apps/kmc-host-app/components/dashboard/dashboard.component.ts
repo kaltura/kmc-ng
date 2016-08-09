@@ -6,7 +6,6 @@ import {KMCHostDisplayService} from "../../../../shared/@kmc/core/kmc-host-displ
 import * as $ from 'jquery';
 
 @Component({
-  moduleId: module.id,
   selector: 'kmc-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
