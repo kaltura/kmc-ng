@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ReplaySubject, Observable } from 'rxjs/rx';
-import { Locker } from 'angular2-locker';
+import {LocalStorageService, SessionStorageService} from 'ng2-webstorage';
 import {KMCConfig} from "./kmc-config.service";
 
 @Injectable()
 export class KMCBrowserService {
 
-  constructor(private kmcConfig : KMCConfig, private locker : Locker)
+  constructor(private kmcConfig : KMCConfig, private localStorage :LocalStorageService, private sessionStorage : SessionStorageService )
   {
     this._areaHeight$ = <ReplaySubject<number>>new ReplaySubject(1); // we are using here a replay subject with buffer of 1 so any new subsribers will get the last one.
 
-    locker.setNamespace(<string>kmcConfig.get('shell.browser.storageNamespace'));
   }
 
   private _areaHeight$ : ReplaySubject<number>;
@@ -24,35 +23,27 @@ export class KMCBrowserService {
   };
 
   public setInLocalStorage(key : string, value : any) : void{
-    var driver = this.locker.useDriver(Locker.DRIVERS.LOCAL);
-    driver.set(key,value);
+   this.localStorage.store(key,value);
   }
 
   public getFromLocalStorage(key : string) : any{
-    var driver = this.locker.useDriver(Locker.DRIVERS.LOCAL);
-    return driver.get(key);
+    return this.localStorage.retrieve(key);
   }
 
   public removeFromLocalStorage(key : string) : any{
-    var driver = this.locker.useDriver(Locker.DRIVERS.LOCAL);
-    return driver.remove(key);
+    this.localStorage.clear(key);
   }
 
   public setInSessionStorage(key : string, value : any) : void{
-    var driver = this.locker.useDriver(Locker.DRIVERS.SESSION);
-    driver.set(key,value);
+    this.sessionStorage.store(key,value);
   }
 
   public getFromSessionStorage(key : string) : any{
-    // TODO [kmc] disabled temporary to bypass exception in auth-can-activate.ts
-    //var driver = this.locker.useDriver(Locker.DRIVERS.SESSION);
-    //return driver.get(key);
-    return this.locker.get(key);
+    return this.sessionStorage.retrieve(key);
   }
 
   public removeFromSessionStorage(key : string) : any{
-    var driver = this.locker.useDriver(Locker.DRIVERS.SESSION);
-    return driver.remove(key);
+    this.sessionStorage.clear(key);
   }
 
 }

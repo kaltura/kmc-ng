@@ -1,7 +1,7 @@
 import { enableProdMode } from '@angular/core';
 import { bootstrap } from '@angular/platform-browser-dynamic';
 import { HTTP_PROVIDERS } from '@angular/http';
-import {Locker, LockerConfig} from 'angular2-locker'
+import {NG2_WEBSTORAGE} from 'ng2-webstorage';
 
 import { AppComponent } from './app/app.component';
 import { APP_ROUTER_PROVIDERS } from './app/app.routes';
@@ -47,7 +47,6 @@ bootstrap(AppComponent, [
     AuthCanActivate,
     KalturaAPIClient,
     KMCBrowserService,
-    Locker,
-    { provide : LockerConfig, useValue : new LockerConfig()},
+    NG2_WEBSTORAGE,
     {provide : KalturaAPIConfig, useFactory : buildKalturaAPIConfig, deps : [KMCConfig]}
   ]);
