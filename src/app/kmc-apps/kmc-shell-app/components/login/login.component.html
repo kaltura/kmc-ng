@@ -23,10 +23,10 @@
 
     <div class="col-xs-12">
       <h2>Extracted User Context</h2>
-      <div class="alert alert-info">
-        <div *ngIf="automaticLogin">User logged-in automatically by browser session </div>
+      <div class="alert alert-info"  *ngIf="automaticLogin">
+        <div>User logged-in automatically by browser session </div>
       </div>
-      <pre>{{ userContext | json  }}</pre>
+      <pre *ngIf="userContext">{{ userContext | json  }}</pre>
     </div>
   </div>
 

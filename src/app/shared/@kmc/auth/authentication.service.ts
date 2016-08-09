@@ -36,7 +36,7 @@ export class AuthenticationService {
         const multiRequest = new KalturaMultiRequest();
 
         // TODO [kmc] remove
-        this.browserService.removeFromSessionStorage('login.avoid');  // since we currently store actual login/password, we only allow session storage
+        this.browserService.removeFromSessionStorage('auth.login.avoid');  // since we currently store actual login/password, we only allow session storage
 
         multiRequest.addRequest(UserService.loginByLoginId(username, password, { expiry, privileges}));
         multiRequest.addRequest(UserService.getByLoginId(username));
@@ -96,6 +96,11 @@ export class AuthenticationService {
 
     public loginAutomatically() : Observable<any>
     {
+        if (this.userContext.ks)
+        {
+            return Observable.of(true);
+        }
+
         // TODO [kmc] should remove this logic - for demonstration purposes only
         const loginToken = this.browserService.getFromSessionStorage('auth.login.avoid');  // since we currently store actual login/password, we only allow session storage
         if (loginToken) {
