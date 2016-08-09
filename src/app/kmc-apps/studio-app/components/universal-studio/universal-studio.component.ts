@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import {AppContainerComponent} from "@kmc/hosted-apps/app-container/app-container.component";
+import {AuthenticationService} from "../../../../shared/@kmc/auth/authentication.service";
+import {KMCConfig} from "../../../../shared/@kmc/core/kmc-config.service";
 declare var window:any;
 
 @Component({
@@ -11,7 +13,7 @@ declare var window:any;
 })
 export class UniversalStudioComponent implements OnInit {
 
-  constructor() {}
+  constructor(private authenticationService : AuthenticationService, private kmcConfig : KMCConfig) {}
 
   // private variables
 
@@ -30,13 +32,12 @@ export class UniversalStudioComponent implements OnInit {
 
   initializeBridgeVariables() : void{
 
-
     window.kmc = {
       version : '3',
       preview_embed: null, // redundant feature (null on purpose)
       vars: {
-        ks : 'djJ8MTgwMjM4MXyDjLGu04Jwa7_RN3i3KyNogOLSTRFfBdjQV99RYH0jdz4r45gOy6uIeTdZKqzxdA2OrKI6gzieGd6GbVPJWcScpEzc3UgIcKTG4MKHWHWq2QVrZqqYRWCuu04Sio1m-zb7_29hvvu8tNmhQssmaffWicc_rQKeiJhMsOUH7nrbEA==',  // TODO should get from the kmc host dynamically
-        api_url : 'http://www.kaltura.com', // TODO should get from the kmc host dynamically
+        ks : this.authenticationService.userContext.ks,
+        api_url : this.kmcConfig.get('modules.studio_universal.apiUrl'),
         studio: {
           version : "v2.0.5",
           showHTMLStudio : false,

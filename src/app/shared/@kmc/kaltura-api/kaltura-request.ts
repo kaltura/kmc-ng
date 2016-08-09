@@ -1,6 +1,7 @@
 import { URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs'
 import {KalturaAPIClient} from "./kaltura-api-client";
+import {KalturaAPIException} from "./kaltura-api-exception";
 
 
 
@@ -22,6 +23,16 @@ export  class KalturaRequest<T> {
             action : this.action
         },this.parameters);
 
-        return client.transmit({ parameters : requestParameters, ksValue});
+        return client.transmit({ parameters : requestParameters, ksValue}).map(response =>
+        {
+            if (KalturaAPIException.isMatch(response))
+            {
+                const errorResponse = KalturaAPIException.create(response);
+                return Observable.throw(errorResponse);
+
+            }
+
+            return response;
+        });
     }
 }

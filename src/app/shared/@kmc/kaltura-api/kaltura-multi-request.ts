@@ -5,6 +5,7 @@ import { KalturaRequest } from "./kaltura-request";
 import {KalturaAPIClient} from "./kaltura-api-client";
 
 import * as R from 'ramda';
+import {KalturaAPIException} from "./kaltura-api-exception";
 
 export  class KalturaMultiRequest {
 
@@ -18,7 +19,7 @@ export  class KalturaMultiRequest {
         this.kalturaRequests.push(request);
     }
 
-    public execute(client : KalturaAPIClient) : Observable<any>{
+    public execute(client : KalturaAPIClient, ignoreAPIExceptions = false) : Observable<any>{
 
         if (this.kalturaRequests.length) {
 
@@ -51,7 +52,30 @@ export  class KalturaMultiRequest {
                 parameters[requestIdentifier] = requestParameters;
             });
 
-            return client.transmit({ parameters,ksValue });
+            return client.transmit({ parameters,ksValue }).flatMap(responses =>
+            {
+                const errorResponses = [];
+                const parsedResponses = responses.map(response =>
+                {
+                    if (KalturaAPIException.isMatch(response))
+                    {
+                        const errorResponse = KalturaAPIException.create(response);
+                        errorResponses.push(errorResponse);
+                        return errorResponse;
+                    }
+
+                    return response;
+                });
+
+                if (errorResponses.length > 0 && !ignoreAPIExceptions)
+                {
+                    return Observable.throw(errorResponses[0]);
+                }else
+                {
+                    return Observable.of(parsedResponses);
+                }
+            });
+
 
         }else {
             return Observable.throw({errorCode : 'no_requests_provided'});

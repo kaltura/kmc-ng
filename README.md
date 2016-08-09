@@ -13,9 +13,18 @@ KMC-ng application uses the following technologies:
 * Documentation with [TypeDoc](http://typedoc.io/).
 
 
+
 ## Quick start
 
-> Clone/Download the repo then edit `app.ts` inside [`/src/app/app.component.ts`](/src/app/app.component.ts)
+### Prerequisites
+
+Make sure you have the following libraries installed globally.
+```bash
+$ sudo npm i -g webpack typings webpack-cli
+```
+
+
+Clone the repository and load project dependencies
 
 ```bash
 # clone our repo
