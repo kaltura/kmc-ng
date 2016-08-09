@@ -3,7 +3,7 @@ export class KalturaAPIConfig {
     apiUrl : string;
     apiVersion : string;
 
-    clientTag ; '@kaltura-ng2/kapi_v1_0_0';
+    clientTag = '@kaltura-ng2/kapi_v1_0_0';
     headers = {
         'Accept' : 'application/json',
         'Content-Type' : 'application/json'

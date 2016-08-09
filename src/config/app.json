@@ -1,6 +1,12 @@
 {
   "env" : "development",
+  "shell" : {
+    "browser": {
+      "storageNamespace" : "kmc-ng"
+    }
+  },
   "core" : {
+
     "kaltura" : {
       "apiUrl" : "",
       "expiry" : "86400",
@@ -9,5 +15,11 @@
     "diagnostic" : {
       "debugging": false
     }
+  },
+  "modules": {
+    "studio_universal" : {
+      "apiUrl" : "http://www.kaltura.com"
+    }
   }
+
 }

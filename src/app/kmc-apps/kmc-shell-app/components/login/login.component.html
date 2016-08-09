@@ -1,0 +1,33 @@
+<div class="login jumbotron center-block">
+  <h1>Login</h1>
+  <div class="alert alert-warning" *ngIf="errorMessage">{{ errorMessage }}</div>
+  <form role="form" (submit)="login(username.value, password.value,false,$event)">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" #username class="form-control" id="username" placeholder="Username">
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" #password class="form-control" id="password" placeholder="Password">
+    </div>
+    <div class="form-group" *ngIf="false">
+      <label for="password">Remember me</label>
+      <input type="checkbox" #rememberme class="form-control" id="rememberme">
+    </div>
+    <button type="submit" class="btn btn-default" [disabled]="inProgress">{{ inProgress ? 'Please wait' : 'Submit'}}</button>
+    <button routerLink="/content" class="btn" *ngIf="userContext">Open Application</button>
+  </form>
+
+
+  <div class="row">
+
+    <div class="col-xs-12">
+      <h2>Extracted User Context</h2>
+      <div class="alert alert-info">
+        <div *ngIf="automaticLogin">User logged-in automatically by browser session </div>
+      </div>
+      <pre>{{ userContext | json  }}</pre>
+    </div>
+  </div>
+
+</div>

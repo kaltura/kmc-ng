@@ -30,6 +30,7 @@ import 'ng2-bootstrap/ng2-bootstrap';
 import 'jquery';
 import 'moment';
 import 'ramda';
+import 'angular2-locker';
 
 // Import application theme (not pure vendor but we want is to bundle in vendor)
 import './style/app.scss';
