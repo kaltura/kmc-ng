@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { ROUTER_DIRECTIVES, Router } from '@angular/router';
 
 @Component({
-  moduleId: module.id,
   selector: 'kmc-entries',
   templateUrl: './entries.component.html',
-  styleUrls: ['./entries.component.scss']
+  styleUrls: ['./entries.component.scss'],
+  directives: [ROUTER_DIRECTIVES]
 })
 export class EntriesComponent implements OnInit {
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit() {
   }

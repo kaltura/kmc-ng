@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES, Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { ROUTER_DIRECTIVES, Router, NavigationEnd } from '@angular/router';
 
 import { AppMenuConfig } from '../../shared/app-menu-config';
 import { AppMenuService } from '../../shared/app-menu.service';
 import { AppMenuItem } from "../../shared/app-menu-config";
+import { UploadComponent } from "../upload/upload.component";
 
 import * as R from 'ramda';
 
@@ -11,36 +12,44 @@ import * as R from 'ramda';
   selector: 'kmc-app-menu',
   templateUrl: './app-menu.component.html',
   styleUrls: ['./app-menu.component.scss'],
-  directives: [ROUTER_DIRECTIVES]
+  directives: [ROUTER_DIRECTIVES, UploadComponent]
 })
-export class AppMenuComponent implements OnInit {
+export class AppMenuComponent {
+
+  private sub: any;
 
   constructor(private appMenuService : AppMenuService, private router : Router) {
-
+    this.sub = router.events.subscribe((event) => {
+      if(event instanceof NavigationEnd) {
+        this.setSelectedRoute(event.url);
+      }
+    });
   }
 
   menuConfig : AppMenuConfig;
   selectedMenuItem: AppMenuItem;
   showSubMenu: boolean = true;
 
-  selectItem(item, isSubMenu) : void{
-    // The navigation is done by url since the menu config is not aware to the internal hierarchy
-    if ( !isSubMenu ) {
+  setSelectedRoute( path ){
+    // close upload if currently open
+    this.uploadOpen = false;
+
+    this.menuConfig = this.appMenuService.getMenuConfig();
+    let item = R.find(R.propEq('routePath', path.split("/")[1]))(this.menuConfig);
+    if ( item ) {
       this.selectedMenuItem = item;
       this.showSubMenu = item.showSubMenu !== undefined ? item.showSubMenu : true;
     }
-    //this.router.navigateByUrl(item.routePath);
   }
 
-  ngOnInit() {
-    // TODO [kmc] [amir] subscribe to router changes, unsubscribe on destroy and move logic to change event. remove selectItem.
-    this.menuConfig = this.appMenuService.getMenuConfig();
-    let path = this.router.url.substr(1).split("/")[0];
-    let item = R.find(R.propEq('routePath', path))(this.menuConfig);
-    if (item) {
-      this.selectedMenuItem = item;
-      this.showSubMenu = item.showSubMenu !== undefined ? item.showSubMenu : true;
-    }
+  // handle upload window visibility
+  uploadOpen: boolean = false;
+  toggleUpload(){
+    this.uploadOpen = !this.uploadOpen;
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
 }

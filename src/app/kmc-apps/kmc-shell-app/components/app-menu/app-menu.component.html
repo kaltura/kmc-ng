@@ -3,10 +3,19 @@
     <div class="col-12">
       <ul class="nav navbar-nav">
         <li *ngFor="let item of menuConfig">
-          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]" (click)="selectItem(item, false)"  [class.disabled]="!item.routePath">{{item.titleToken}}</a>
+          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]" [class.disabled]="!item.routePath">{{item.titleToken}}</a>
         </li>
         <li>
-          <a [class.disabled]="true">Upload</a>
+          <a (click)="toggleUpload()">Upload</a>
+          <kmc-upload [uploadOpen]="uploadOpen"></kmc-upload>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <div style="background-color: pink; width: 100px; height: 24px; margin-top: 14px">settings</div>
+        </li>
+        <li>
+          <div style="background-color: green; width: 100px; height: 24px; margin-top: 14px">language</div>
         </li>
       </ul>
     </div>
@@ -17,9 +26,10 @@
     <div class="col-12">
       <ul class="nav navbar-nav" *ngIf="selectedMenuItem && showSubMenu">
         <li *ngFor="let subitem of selectedMenuItem.children">
-          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+subitem.routePath]" (click)="selectItem(subitem, true)"  [class.disabled]="!subitem.routePath">{{subitem.titleToken}}</a>
+          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+subitem.routePath]" [class.disabled]="!subitem.routePath">{{subitem.titleToken}}</a>
         </li>
       </ul>
     </div>
   </div>
 </div>
+
