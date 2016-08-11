@@ -1,12 +1,67 @@
-a{
+.appMenu{
+  background-color: #252525;
+}
+.appSubMenu{
+  background-color: white;
+  padding-bottom: 6px;
+  padding-left: 20px;
+  border-bottom: 1px solid grey;
+}
+.appMenu a{
+  color: #C5C5C5;
   cursor: pointer;
-
+  line-height: 28px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 10px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
   &.disabled {
     color: gray;
     cursor: not-allowed;
   }
-
 }
-.activeLink{
-  color: deeppink;
+.appMenu a:hover{
+  background-color: #252525;
+  color: #A1E5F5;
+}
+.appMenu a.activeLink{
+  background-color: white;
+  color: #222222;
+}
+
+.appSubMenu a{
+  color: #222222;
+  cursor: pointer;
+  line-height: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 6px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  border-radius: 10px;
+  &.disabled {
+    color: gray;
+    cursor: not-allowed;
+  }
+}
+.appSubMenu a:hover{
+  background-color: white;
+  color: #252525;
+}
+.appSubMenu a.activeLink{
+  background-color: #252525;
+  color: white;
+}
+.appMenu a.uploadOpen{
+  color: #222222;
+  background-color: #F1F6FD;
+}
+
+.appMenu img{
+  float: left;
+  margin-top: 4px;
+  margin-right: 50px;
 }

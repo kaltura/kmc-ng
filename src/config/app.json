@@ -20,9 +20,9 @@
           { "routePath" : "content/playlists", "titleToken" : "Playlists" }
         ]},
         {"routePath" : "studio", "titleToken" : "Studio"},
-        {"routePath" : "", "titleToken" : "Analytics"},
-        {"routePath" : "", "titleToken" : "Settings"},
-        {"routePath" : "", "titleToken" : "Administration"}
+        {"routePath" : "analytics", "titleToken" : "Analytics"},
+        {"routePath" : "settings", "titleToken" : "Settings"},
+        {"routePath" : "admin", "titleToken" : "Administration"}
       ],
     "diagnostic" : {
       "debugging": false

@@ -1,0 +1,50 @@
+.uploadWindow {
+  background-color: #F1F6FD;
+  width: 226px;
+  margin-left: -120px;
+  position: absolute;
+  border: 1px solid #cacaca;
+  border-top: 1px solid #F1F6FD;
+  border-radius: 5px;
+  box-shadow: 3px 3px 1px #888888;
+  padding: 10px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.uploadButtonsGroup{
+  width: 100%;
+  background-color: white;
+  border: 1px solid #BDE1F2;
+  border-radius: 5px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+
+.uploadButtonsGroup button{
+  width: 100%;
+  height: 28px;
+  color: white;
+  border-radius: 5px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  outline: none;
+}
+.uploadButtonsGroup.mediaButtons button{
+  background-color: #177193;
+}
+
+.uploadButtonsGroup.prepareButtons button{
+  background-color: #505050;
+}
+.uploadButtonsGroup .link{
+  text-align: center;
+  width: 100%;
+}
+
+.uploadButtonsGroup.bulk .link{
+  text-align: left;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+

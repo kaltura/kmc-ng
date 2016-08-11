@@ -1,12 +1,13 @@
-<div class="container-fluid">
+<div class="container-fluid appMenu">
   <div class="row">
+    <img src="assets/kmc-ng-shell/header_logo.png">
     <div class="col-12">
       <ul class="nav navbar-nav">
         <li *ngFor="let item of menuConfig">
-          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]" [class.disabled]="!item.routePath">{{item.titleToken}}</a>
+          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]">{{item.titleToken}}</a>
         </li>
         <li>
-          <a (click)="toggleUpload()">Upload</a>
+          <a (click)="toggleUpload()" [class.uploadOpen]="uploadOpen">Upload &nbsp;&nbsp;{{uploadOpen ? '&#x25B2;' : '&#x25BC;'}}</a>
           <kmc-upload [uploadOpen]="uploadOpen"></kmc-upload>
         </li>
       </ul>
@@ -21,15 +22,16 @@
     </div>
   </div>
 </div>
-<div class="container-fluid">
+<div class="container-fluid appSubMenu" *ngIf="selectedMenuItem && showSubMenu && selectedMenuItem.children">
   <div class="row">
     <div class="col-12">
-      <ul class="nav navbar-nav" *ngIf="selectedMenuItem && showSubMenu">
+      <ul class="nav navbar-nav">
         <li *ngFor="let subitem of selectedMenuItem.children">
-          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+subitem.routePath]" [class.disabled]="!subitem.routePath">{{subitem.titleToken}}</a>
+          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+subitem.routePath]">{{subitem.titleToken}}</a>
         </li>
       </ul>
     </div>
   </div>
 </div>
+
 

@@ -1,1 +1,22 @@
-<div *ngIf="uploadOpen" style="background-color: cyan; width: 100px; height: 240px; position: absolute">Upload Media</div>
+<div *ngIf="uploadOpen" class="uploadWindow">
+  <p class="uploadLabel">Upload Media</p>
+  <div class="uploadButtonsGroup mediaButtons">
+    <button>Upload from Desktop</button>
+    <button>Record from Webcam</button>
+    <button>Import from Web</button>
+    <div class="link"><a href="">Need High-Speed Upload?</a></div>
+  </div>
+
+  <p class="uploadLabel">Prepare Entry</p>
+  <div class="uploadButtonsGroup prepareButtons">
+    <button>Video Entry</button>
+    <button>Audio Entry</button>
+    <button>Live Stream Entry</button>
+  </div>
+
+  <p class="uploadLabel">Submit Bulk</p>
+  <div class="uploadButtonsGroup bulk">
+    <div class="link"><a href="">Select CSV/XML</a></div>
+    <div class="link"><a href="">Download CSV/XML Samples</a></div>
+  </div>
+</div>
