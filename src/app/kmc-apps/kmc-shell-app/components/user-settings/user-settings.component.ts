@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { AuthenticationService } from "../../../../shared/@kmc/auth/authentication.service";
 import { UserContext } from "../../../../shared/@kmc/auth/user-context";
+import { KMCExternalLinks } from "../../../../shared/@kmc/core/kmc-external-links.service";
+import {KMCConfig} from "../../../../shared/@kmc/core/kmc-config.service";
 
 @Component({
   selector: 'kmc-user-settings',
@@ -12,7 +14,7 @@ export class UserSettingsComponent {
   timeoutID:number = null;
   private _userContext : UserContext;
 
-  constructor(private authenticationService : AuthenticationService) {
+  constructor(private authenticationService : AuthenticationService, private externalLinksService: KMCExternalLinks, private kmcConfig: KMCConfig) {
     this._userContext = authenticationService.userContext;
   }
 
@@ -34,6 +36,23 @@ export class UserSettingsComponent {
 
   logout(){
     this.authenticationService.logout();
+  }
+
+  openUserManual(){
+    this.externalLinksService.openLink(this.kmcConfig.get("core.externalLinks.USER_MANUAL"),{},"_blank");
+  }
+  openSupport(){
+
+    // TODO [kmc] use MD5 to encode true / false for paying partner.
+    // TODO [kmc] Use hash table of partner packages for package type.
+    // TODO [kmc] Open support in a modal window over KMC and not in _blank
+
+    let params = {
+      "type": this._userContext.partnerInfo.partnerPackage == 2 ? "b326b5062b2f0e69046810717534cb09" : "68934a3e9455fa72420237eb05902327",
+      "pid": this._userContext.partnerId
+    };
+
+    this.externalLinksService.openLink(this.kmcConfig.get("core.externalLinks.SUPPORT"), params, "_blank");
   }
 
 }

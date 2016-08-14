@@ -60,11 +60,11 @@ export class AuthenticationService {
                 const ks  = results[0];
                 const generalProperties = R.pick(['id', 'partnerId', 'fullName', 'firstName', 'lastName', 'roleIds', 'roleNames', 'isAccountOwner'])(results[1]);
                 const permissions = R.map(R.pick(['id','type','name','status']))(results[2].objects);
-                const partnerProperties = results[3];
+                const partnerProperties = R.pick(['name', 'partnerPackage'])(results[3]);
 
                 this.userContext.ks = ks;
                 this.userContext.permissions = permissions;
-                this.userContext.accountName = partnerProperties.name;
+                this.userContext.partnerInfo = partnerProperties;
                 Object.assign(this.userContext, generalProperties);
 
                 this.updateBrowserCache(rememberMe);

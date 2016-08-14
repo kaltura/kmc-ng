@@ -4,11 +4,11 @@
     <span>{{_userContext.fullName}}</span>
     <span><a (click)="logout()">(Logout)</a></span>
     <span class="separator">|</span>
-    <span>Account: {{_userContext.accountName}}</span>
+    <span>Account: {{_userContext.partnerInfo.name}}</span>
     <span><a>(Change Acoount)</a></span>
     <span class="separator">|</span>
-    <span><a>User Manual</a></span>
+    <span><a (click)="openUserManual()">User Manual</a></span>
     <span class="separator">|</span>
-    <span><a>Support</a></span>
+    <span><a (click)="openSupport()">Support</a></span>
   </div>
 </div>

@@ -5,7 +5,7 @@ import {NG2_WEBSTORAGE} from 'ng2-webstorage';
 
 import { AppComponent } from './app/app.component';
 import { APP_ROUTER_PROVIDERS } from './app/app.routes';
-import { KMCConfig } from '@kmc/core'
+import { KMCConfig, KMCExternalLinks } from '@kmc/core'
 import { ConfigCanActivate } from './app/kmc-apps/kmc-shell-app/shared';
 import {AuthenticationService} from "./app/shared/@kmc/auth/authentication.service";
 import {AuthCanActivate} from "./app/shared/@kmc/auth/auth-can-activate.service";
@@ -41,6 +41,7 @@ function buildKalturaAPIConfig(kmcConfig : KMCConfig) {
 bootstrap(AppComponent, [
     ConfigCanActivate,
     KMCConfig,
+    KMCExternalLinks,
     HTTP_PROVIDERS,
     APP_ROUTER_PROVIDERS,
     AuthenticationService,

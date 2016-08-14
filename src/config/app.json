@@ -26,6 +26,10 @@
       ],
     "diagnostic" : {
       "debugging": false
+    },
+    "externalLinks":{
+      "USER_MANUAL": "https://kmc.kaltura.com/content/docs/pdf/KMC_User_Manual.pdf",
+      "SUPPORT": "http://kmc.kaltura.com/index.php/kmc/support"
     }
   },
   "modules": {
