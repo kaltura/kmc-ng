@@ -48,6 +48,7 @@ export class AuthenticationService {
                 }
             }}
         ));
+        multiRequest.addRequest(UserService.getPartnerById('{2:result:partnerId}'));
 
         this.clearBrowserCache();
 
@@ -56,12 +57,13 @@ export class AuthenticationService {
             (results) => {
                 const ks  = results[0];
                 const generalProperties = R.pick(['id', 'partnerId', 'fullName', 'firstName', 'lastName', 'roleIds', 'roleNames', 'isAccountOwner'])(results[1]);
-
                 const permissions = R.map(R.pick(['id','type','name','status']))(results[2].objects);
+                const partnerProperties = results[3];
 
                 this.userContext.ks = ks;
                 this.userContext.permissions = permissions;
-                Object.assign(this.userContext,generalProperties);
+                this.userContext.accountName = partnerProperties.name;
+                Object.assign(this.userContext, generalProperties);
 
                 this.updateBrowserCache(rememberMe);
 

@@ -12,6 +12,7 @@ export class UserContext {
     roleNames: string;
     isAccountOwner : string;
     permissions : any;
+    accountName: string;
 
     constructor()
     {

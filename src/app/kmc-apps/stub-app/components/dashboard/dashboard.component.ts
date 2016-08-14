@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import {AuthenticationService} from "../../../../shared/@kmc/auth/authentication.service";
+import {UserContext} from "../../../../shared/@kmc/auth/user-context";
 
 @Component({
   selector: 'kmc-dashboard',
@@ -9,8 +11,11 @@ import { ActivatedRoute } from '@angular/router';
 export class DashboardComponent implements OnInit {
 
   path : string;
-  constructor(r : ActivatedRoute) {
+  private _userContext : UserContext;
+
+  constructor(r : ActivatedRoute, private authenticationService : AuthenticationService) {
     this.path = r.snapshot.url.map((item) => item.path).join('/');
+    this._userContext = authenticationService.userContext;
   }
 
   ngOnInit() {

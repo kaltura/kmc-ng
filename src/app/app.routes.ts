@@ -8,6 +8,8 @@ import { ConfigCanActivate } from './kmc-apps/kmc-shell-app/shared';
 import {AuthCanActivate} from "./shared/@kmc/auth/auth-can-activate.service";
 import {ContentComponent} from "./kmc-apps/content-app/components/content/content.component";
 import {EntriesComponent} from "./kmc-apps/content-app/components/entries/entries.component";
+import {ModerationComponent} from "./kmc-apps/content-app/components/moderation/moderation.component";
+import {PlaylistsComponent} from "./kmc-apps/content-app/components/playlists/playlists.component";
 
 
 const routes: RouterConfig = [
@@ -21,8 +23,8 @@ const routes: RouterConfig = [
         {path: 'content', component: ContentComponent, children:[
           { path: '', redirectTo: 'entries', pathMatch: 'full' },
           {path: 'entries', component: EntriesComponent},
-          {path: 'moderation', component: StubDashboardComponent},
-          {path: 'playlists', component: StubDashboardComponent}
+          {path: 'moderation', component: ModerationComponent},
+          {path: 'playlists', component: PlaylistsComponent}
         ]},
         {path: 'dashboard', component: StubDashboardComponent},
         {path: 'studio', component: UniversalStudioComponent}
