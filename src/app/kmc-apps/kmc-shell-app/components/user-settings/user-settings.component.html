@@ -1,0 +1,14 @@
+<div class="userSettings" (mouseenter)="setOpen(true)" (mouseleave)="setOpen(false)" #userSettings>
+  <span class="widgetLink" *ngIf="!isOpen">< &nbsp;{{_userContext.fullName}}</span>
+  <div [hidden]="!isOpen" [class.open]="isOpen">
+    <span>{{_userContext.fullName}}</span>
+    <span><a (click)="logout()">(Logout)</a></span>
+    <span class="separator">|</span>
+    <span>Account: {{_userContext.accountName}}</span>
+    <span><a>(Change Acoount)</a></span>
+    <span class="separator">|</span>
+    <span><a>User Manual</a></span>
+    <span class="separator">|</span>
+    <span><a>Support</a></span>
+  </div>
+</div>

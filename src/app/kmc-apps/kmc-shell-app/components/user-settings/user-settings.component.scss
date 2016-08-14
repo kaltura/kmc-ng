@@ -1,0 +1,30 @@
+.userSettings{
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 9px;
+  border: 1px solid grey;
+  border-radius: 4px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 1px;
+  color: #C5C5C5;
+  height: 22px;
+  background-color: #1f1f1f;
+}
+.userSettings .separator{
+  margin-left: 4px;
+  margin-right: 4px;
+}
+.widgetLink{
+  color: #59A3B5;
+}
+.userSettings .open{
+  font-weight: normal;
+  padding-top: 1px;
+  cursor: default;
+}
+.userSettings .open a{
+  margin-left: 6px;
+  margin-right: 6px;
+  cursor: pointer;
+}

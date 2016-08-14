@@ -9,6 +9,7 @@
 }
 .appMenu a{
   color: #C5C5C5;
+  outline: 0;
   cursor: pointer;
   line-height: 28px;
   font-size: 12px;
@@ -63,5 +64,11 @@
 .appMenu img{
   float: left;
   margin-top: 4px;
-  margin-right: 50px;
+}
+.appMenu .leftNavBar{
+  position: absolute;
+  margin-left: 160px;
+}
+.appMenu .widgetLink{
+  color: #59A3B5;
 }

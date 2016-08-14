@@ -2,18 +2,18 @@
   <div class="row">
     <img src="assets/kmc-ng-shell/header_logo.png">
     <div class="col-12">
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav leftNavBar">
         <li *ngFor="let item of menuConfig">
           <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]">{{item.titleToken}}</a>
         </li>
         <li>
-          <a (click)="toggleUpload()" [class.uploadOpen]="uploadOpen">Upload &nbsp;&nbsp;{{uploadOpen ? '&#x25B2;' : '&#x25BC;'}}</a>
+          <a (click)="toggleUpload()" [class.uploadOpen]="uploadOpen" class="widgetLink">Upload &nbsp;&nbsp;{{uploadOpen ? '&#x25B2;' : '&#x25BC;'}}</a>
           <kmc-upload [uploadOpen]="uploadOpen"></kmc-upload>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-          <div style="background-color: pink; width: 100px; height: 24px; margin-top: 14px">settings</div>
+          <kmc-user-settings></kmc-user-settings>
         </li>
         <li>
           <div style="background-color: green; width: 100px; height: 24px; margin-top: 14px">language</div>

@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
 import * as R from 'ramda';
 
 import { UserContext } from './user-context'
 import { KalturaAPIClient } from "../kaltura-api/kaltura-api-client";
-import {UserService} from "../kaltura-api/user-service";
-import {PermissionService, KalturaPermissionFilterTypes, IKalturaPermissionFilter} from "../kaltura-api/permission-service";
-import {KalturaRequest} from "../kaltura-api/kaltura-request";
-import {KalturaMultiRequest} from "../kaltura-api/kaltura-multi-request";
-import {KMCConfig} from "../core/kmc-config.service";
-import {KMCBrowserService} from "../core/kmc-browser.service";
-import {KalturaAPIConfig} from "../kaltura-api/kaltura-api-config";
+import { UserService } from "../kaltura-api/user-service";
+import { PermissionService, KalturaPermissionFilterTypes, IKalturaPermissionFilter } from "../kaltura-api/permission-service";
+import { KalturaRequest } from "../kaltura-api/kaltura-request";
+import { KalturaMultiRequest } from "../kaltura-api/kaltura-multi-request";
+import { KMCConfig } from "../core/kmc-config.service";
+import { KMCBrowserService } from "../core/kmc-browser.service";
+import { KalturaAPIConfig } from "../kaltura-api/kaltura-api-config";
 
 
 @Injectable()
@@ -18,7 +19,8 @@ export class AuthenticationService {
 
     private _userContext : UserContext;
 
-    constructor(private kalturaAPIClient : KalturaAPIClient,
+    constructor(private router: Router,
+                private kalturaAPIClient : KalturaAPIClient,
                 private kmcConfig : KMCConfig,
                 private browserService : KMCBrowserService,
                 private kalturaAPIConfig : KalturaAPIConfig){
@@ -78,6 +80,14 @@ export class AuthenticationService {
             }).map((results) => {
                 return true;
             });
+    }
+
+    logout(){
+      this.userContext.ks = null;
+      this.kalturaAPIConfig.ks = null;
+      this.clearBrowserCache();
+      this.browserService.removeFromSessionStorage('auth.login.avoid');
+      this.router.navigateByUrl("/");
     }
 
     private clearBrowserCache(){

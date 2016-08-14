@@ -6,7 +6,12 @@ $appBkgColor: #EFEEEE;
 body{
   overflow-x: hidden;
 }
-
+a{
+  color: #59A3B5;
+}
+a:hover{
+  color: #A1E5F5;
+}
 .miniApp{
   width: 100%;
   height: 100%;
