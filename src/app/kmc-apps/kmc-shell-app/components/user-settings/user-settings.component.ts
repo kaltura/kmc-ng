@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { AuthenticationService } from "../../../../shared/@kmc/auth/authentication.service";
 import { UserContext } from "../../../../shared/@kmc/auth/user-context";
 import { KMCExternalLinks } from "../../../../shared/@kmc/core/kmc-external-links.service";
-import {KMCConfig} from "../../../../shared/@kmc/core/kmc-config.service";
+import { KMCConfig } from "../../../../shared/@kmc/core/kmc-config.service";
+import { KMCConsts } from "../../../../shared/@kmc/core/kmc-consts";
+import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({
   selector: 'kmc-user-settings',
@@ -42,16 +44,17 @@ export class UserSettingsComponent {
     this.externalLinksService.openLink(this.kmcConfig.get("core.externalLinks.USER_MANUAL"),{},"_blank");
   }
   openSupport(){
+console.log(Md5.hashStr('blah blah blah') );
 
-    // TODO [kmc] use MD5 to encode true / false for paying partner.
-    // TODO [kmc] Use hash table of partner packages for package type.
-    // TODO [kmc] Open support in a modal window over KMC and not in _blank
+    // check if this is a paying partner. If so - open support form. If not - redirect to general support. Use MD5 to pass as a parameter.
+    let payingCustomer: boolean = this._userContext.partnerInfo.partnerPackage === KMCConsts.PartnerPackages.PARTNER_PACKAGE_PAID;
 
     let params = {
-      "type": this._userContext.partnerInfo.partnerPackage == 2 ? "b326b5062b2f0e69046810717534cb09" : "68934a3e9455fa72420237eb05902327",
+      "type": Md5.hashStr(payingCustomer.toString()),
       "pid": this._userContext.partnerId
     };
 
+    // TODO [kmc] Open support in a modal window over KMC and not in _blank
     this.externalLinksService.openLink(this.kmcConfig.get("core.externalLinks.SUPPORT"), params, "_blank");
   }
 
