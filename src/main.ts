@@ -1,11 +1,11 @@
 import { enableProdMode } from '@angular/core';
 import { bootstrap } from '@angular/platform-browser-dynamic';
 import { HTTP_PROVIDERS } from '@angular/http';
-import {NG2_WEBSTORAGE} from 'ng2-webstorage';
+import { NG2_WEBSTORAGE } from 'ng2-webstorage';
 
 import { AppComponent } from './app/app.component';
 import { APP_ROUTER_PROVIDERS } from './app/app.routes';
-import { KMCConfig, KMCExternalLinks } from '@kmc/core'
+import { KMCConfig, KMCExternalLinks, KMCLanguage } from '@kmc/core'
 import { ConfigCanActivate } from './app/kmc-apps/kmc-shell-app/shared';
 import {AuthenticationService} from "./app/shared/@kmc/auth/authentication.service";
 import {AuthCanActivate} from "./app/shared/@kmc/auth/auth-can-activate.service";
@@ -41,6 +41,7 @@ function buildKalturaAPIConfig(kmcConfig : KMCConfig) {
 bootstrap(AppComponent, [
     ConfigCanActivate,
     KMCConfig,
+    KMCLanguage,
     KMCExternalLinks,
     HTTP_PROVIDERS,
     APP_ROUTER_PROVIDERS,

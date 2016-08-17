@@ -16,7 +16,8 @@
           <kmc-user-settings></kmc-user-settings>
         </li>
         <li>
-          <div style="background-color: green; width: 100px; height: 24px; margin-top: 14px">language</div>
+          <img class="lang" src="{{selectedLanguage.icon}}" title="Select Language" (click)="toggleLanguage()">
+          <kmc-language-menu [langMenuOpen]="langMenuOpen" (onLanguageSelected)="onLanguageSelected($event)"></kmc-language-menu>
         </li>
       </ul>
     </div>

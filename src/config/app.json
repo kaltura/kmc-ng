@@ -30,7 +30,15 @@
     "externalLinks":{
       "USER_MANUAL": "https://kmc.kaltura.com/content/docs/pdf/KMC_User_Manual.pdf",
       "SUPPORT": "http://kmc.kaltura.com/index.php/kmc/support"
-    }
+    },
+    "locales":[
+      {"id" : "en_US", "label" : "English", "icon" : "assets/locales/en_US.png", "source" : "i18n/locale-en.json"},
+      {"id" : "he_IL", "label" : "Hebrew", "icon" : "assets/locales/he_IL.png", "source" : "i18n/locale-he.json"},
+      {"id" : "de_DE", "label" : "Deutsch", "icon" : "assets/locales/de_DE.png", "source" : "i18n/locale-de.json"},
+      {"id" : "es_ES", "label" : "Español", "icon" : "assets/locales/es_ES.png", "source" : "i18n/locale-es.json"},
+      {"id" : "fr_FR", "label" : "Français", "icon" : "assets/locales/fr_FR.png", "source" : "i18n/locale-fr.json"},
+      {"id" : "ja_JP", "label" : "日本語", "icon" : "assets/locales/ja_JP.png", "source" : "i18n/locale-ja.json"}
+    ]
   },
   "modules": {
     "studio_universal" : {
