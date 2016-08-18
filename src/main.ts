@@ -8,6 +8,7 @@ import { APP_ROUTER_PROVIDERS } from './app/app.routes';
 import { KMCConfig, KMCExternalLinks, KMCLanguage } from '@kmc/core'
 import { ConfigCanActivate } from './app/kmc-apps/kmc-shell-app/shared';
 import {AuthenticationService} from "./app/shared/@kmc/auth/authentication.service";
+import {BaseEntryService} from "./app/shared/@kmc/kaltura-api/baseentry.service.ts";
 import {AuthCanActivate} from "./app/shared/@kmc/auth/auth-can-activate.service";
 import {KalturaAPIClient} from "./app/shared/@kmc/kaltura-api/kaltura-api-client";
 import {KMCBrowserService} from "./app/shared/@kmc/core/kmc-browser.service";
@@ -46,6 +47,7 @@ bootstrap(AppComponent, [
     HTTP_PROVIDERS,
     APP_ROUTER_PROVIDERS,
     AuthenticationService,
+    BaseEntryService,
     AuthCanActivate,
     KalturaAPIClient,
     KMCBrowserService,
