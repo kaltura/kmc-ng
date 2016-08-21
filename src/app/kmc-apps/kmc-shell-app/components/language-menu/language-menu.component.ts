@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { KMCConfig } from "../../../../shared/@kmc/core/kmc-config.service";
-import { KMCLanguage } from "../../../../shared/@kmc/core/kmc-language.service";
 
 @Component({
   selector: 'kmc-language-menu',
@@ -14,7 +13,7 @@ export class LanguageMenuComponent {
 
   languages: Array<Object> = [];
 
-  constructor(private kmcConfig: KMCConfig, private lang: KMCLanguage) {
+  constructor(private kmcConfig: KMCConfig) {
     this.languages = kmcConfig.get("core.locales");
   }
 

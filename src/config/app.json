@@ -33,7 +33,6 @@
     },
     "locales":[
       {"id" : "en_US", "label" : "English", "icon" : "assets/locales/en_US.png", "source" : "i18n/locale-en.json"},
-      {"id" : "he_IL", "label" : "Hebrew", "icon" : "assets/locales/he_IL.png", "source" : "i18n/locale-he.json"},
       {"id" : "de_DE", "label" : "Deutsch", "icon" : "assets/locales/de_DE.png", "source" : "i18n/locale-de.json"},
       {"id" : "es_ES", "label" : "Español", "icon" : "assets/locales/es_ES.png", "source" : "i18n/locale-es.json"},
       {"id" : "fr_FR", "label" : "Français", "icon" : "assets/locales/fr_FR.png", "source" : "i18n/locale-fr.json"},

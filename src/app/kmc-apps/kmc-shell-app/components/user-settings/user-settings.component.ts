@@ -4,6 +4,7 @@ import { UserContext } from "../../../../shared/@kmc/auth/user-context";
 import { KMCExternalLinks } from "../../../../shared/@kmc/core/kmc-external-links.service";
 import { KMCConfig } from "../../../../shared/@kmc/core/kmc-config.service";
 import { KMCConsts } from "../../../../shared/@kmc/core/kmc-consts";
+import { KMCLanguage } from "../../../../shared/@kmc/core/kmc-language.service";
 import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({
@@ -16,7 +17,7 @@ export class UserSettingsComponent {
   timeoutID:number = null;
   private _userContext : UserContext;
 
-  constructor(private authenticationService : AuthenticationService, private externalLinksService: KMCExternalLinks, private kmcConfig: KMCConfig) {
+  constructor(private authenticationService : AuthenticationService, private externalLinksService: KMCExternalLinks, private kmcConfig: KMCConfig, private lang: KMCLanguage) {
     this._userContext = authenticationService.userContext;
   }
 

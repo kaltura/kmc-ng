@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 
+import { KMCLanguage } from "../../../../shared/@kmc/core/kmc-language.service";
+
 @Component({
   selector: 'kmc-upload',
   templateUrl: './upload.component.html',
@@ -7,6 +9,6 @@ import { Component, Input } from '@angular/core';
 })
 export class UploadComponent {
   @Input() uploadOpen: boolean;
-  constructor() {
+  constructor(private lang: KMCLanguage) {
   }
 }

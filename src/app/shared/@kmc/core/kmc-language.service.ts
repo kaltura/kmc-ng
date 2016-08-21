@@ -19,7 +19,7 @@ function handleLoadError (error: any) {
 export class KMCLanguage {
 
     //private _initialized$ : ReplaySubject<boolean>;
-    public dic: any = {};
+    private dic: any;
     private currentLanguage: any = {};
 
     constructor(private http: Http, private kmcConfig: KMCConfig, private kmcBrowserService: KMCBrowserService) {
@@ -60,9 +60,9 @@ export class KMCLanguage {
     setLanguage(languageId){
       this.kmcBrowserService.setInLocalStorage("kmc_lang", languageId);
       this.currentLanguage = this.getLanguageById(languageId);
-      this.loadDictionary(this.currentLanguage.source).subscribe(function(dictionary){
-        this.dic = dictionary;
-      }, err => console.log(err));
+      this.loadDictionary(this.currentLanguage.source).subscribe((dictionary) =>
+        this.dic = dictionary
+      , err => console.log(err));
       return this.currentLanguage;
     }
 
@@ -76,46 +76,9 @@ export class KMCLanguage {
           return data.json();
         });
     }
-    //
-    //public onRefresh() : Observable<boolean>{
-    //    return this._initialized$.asObservable(); // we proxy the subject by a function that returns its observable to prevent others from broadcasting on that subject.
-    //}
-    //
-    //private loadConfigFromServer() : Promise<any> {
-    //    return new Promise((resolve,reject) =>
-    //    {
-    //        this.http.get('config/app.json')
-    //            .map(res => res.json())
-    //            .catch(handleLoadError)
-    //            .subscribe(
-    //                (appData) => {
-    //                    this.http.get(`config/${appData.env}.json`)
-    //                        .map(res => res.json())
-    //                        .catch(handleLoadError)
-    //                        .subscribe(
-    //                            (data) => {
-    //                                resolve(deepMerge(appData,data))
-    //                            },
-    //                            (error) => {
-    //                                reject(error);
-    //                            }
-    //                        );
-    //                },
-    //                (error) => {
-    //                    reject(error);
-    //                }
-    //            );
-    //    });
-    //}
-    //public load() : Promise<any> {
-    //    return new Promise((resolve, reject) => {
-    //        this.loadConfigFromServer().then(config => {
-    //            this.config = config;
-    //            this._initialized$.next(true);
-    //            resolve(true);
-    //        }).catch(function (error) {
-    //            reject(error);
-    //        });
-    //    });
-    //}
+
+    get(key){
+      return this.dic && this.dic[key] ? this.dic[key] : key;
+    }
+
 };

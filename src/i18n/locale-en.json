@@ -1,3 +1,31 @@
 {
-  "name":"amir"
+  "upload":"Upload",
+  "Dashboard": "Dashboard",
+  "Content": "Content",
+  "Entries": "Entries",
+  "Moderation": "Moderation",
+  "Playlists": "Playlists",
+  "Studio": "Studio",
+  "Analytics": "Analytics",
+  "Settings": "Settings",
+  "Administration": "Administration",
+  "selectLang": "Select Language",
+  "userManual": "User Manual",
+  "support": "Support",
+  "changeAccount": "(Change Acoount)",
+  "account": "Account",
+  "logout": "(Logout)",
+  "uploadMedia": "Upload Media",
+  "uploadFromDesktop": "Upload from Desktop",
+  "uploadRecord": "Record from Webcam",
+  "uploadImport": "Import from Web",
+  "highSpeed": "Need High-Speed Upload?",
+  "prepare": "Prepare Entry",
+  "videoEntry": "Video Entry",
+  "audioEntry": "Audio Entry",
+  "liveStream": "Live Stream Entry",
+  "submitBulk": "Submit Bulk",
+  "selectCSV": "Select CSV/XML",
+  "downloadCSV": "Download CSV/XML Samples"
 }
+
