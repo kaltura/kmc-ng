@@ -12,6 +12,9 @@ form {
 .tableHolder{
   border: 1px solid #cacaca;
   border-radius: 10px;
+  -webkit-transition: opacity 1s;
+  -moz-transition: opacity 1s;
+  transition: opacity 1s;
 }
 .entries th{
   height: 40px;
