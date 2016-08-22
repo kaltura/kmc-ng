@@ -1,8 +1,33 @@
 form {
   text-align: center;
 }
+.miniApp{
+  padding: 10px;
+}
+.entries{
+  background-color: #F4F4F4;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.tableHolder{
+  border: 1px solid #cacaca;
+  border-radius: 10px;
+}
+.entries th{
+  height: 40px;
+}
+table tr:last-child td:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+table tr:last-child td:last-child {
+  border-bottom-right-radius: 10px;
+}
 .entries, tr {
-  border: 1px solid grey;
+  border: 1px solid #cacaca;
+}
+.entries, th:first-child {
+  padding-left: 5px;
 }
 .entries .thumbnailHolder{
   margin: 5px;
