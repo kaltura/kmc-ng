@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({name: 'entryType'})
 export class EntryTypePipe implements PipeTransform {
-  transform(value: string): string {
+  transform(value: string = "1"): string {
     let icon:string = "";
     switch (value.toString()){
       case "1":

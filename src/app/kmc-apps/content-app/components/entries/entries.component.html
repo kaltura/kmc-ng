@@ -21,7 +21,7 @@
       <tr *ngFor="let entry of entries$ | async">
         <td><div class="thumbnailHolder"><span class="helper"></span><img src="{{entry.thumbnailUrl}}"></div></td>
         <td>{{entry.id}}</td>
-        <td>{{entry.name}}</td>
+        <td><a>{{entry.name}}</a></td>
         <td><img src="{{entry.mediaType | entryType}}"></td>
         <td>{{entry.plays}}</td>
         <td>{{entry.createdAt * 1000 | date:'MM/dd/y HH:MM'}}</td>

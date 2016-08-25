@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES, Router } from '@angular/router';
 import { FORM_PROVIDERS, FormBuilder, Validators} from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 
@@ -12,7 +11,6 @@ import { TimePipe } from "../../../../shared/@kmc/pipes/time.pipe";
   selector: 'kmc-entries',
   templateUrl: './entries.component.html',
   styleUrls: ['./entries.component.scss'],
-  directives: [ROUTER_DIRECTIVES],
   pipes: [EntryTypePipe, TimePipe, EntryStatusPipe]
 })
 export class EntriesComponent implements OnInit {
@@ -20,12 +18,22 @@ export class EntriesComponent implements OnInit {
 
   private entries$: Observable<any>;
   private searchForm: any;
+  private filter: any;
+  private responseProfile: any;
 
   constructor(private baseEntryService: BaseEntryService, private formBuilder: FormBuilder) {
     this.searchForm = this.formBuilder.group({
       'search': ['', Validators.required]
     });
-
+    this.filter = {
+      "objectType": "KalturaMediaEntryFilter",
+      "mediaTypeIn": "1,2,5,6,201"
+    }
+    this.responseProfile = {
+      "objectType": "KalturaDetachedResponseProfile",
+      "type": "1",
+      "fields": "id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status"
+    }
   }
 
   ngOnInit() {
@@ -33,7 +41,7 @@ export class EntriesComponent implements OnInit {
     //this.entries$ = this.baseEntryService.list(); // initial load of all entries
     this.entries$ = this.searchForm.controls.search.valueChanges
       .debounceTime(500)
-      .switchMap(value => this.baseEntryService.list(value));
+      .switchMap(value => this.baseEntryService.list(value, this.filter, this.responseProfile));
   }
 
   ngAfterViewInit(){

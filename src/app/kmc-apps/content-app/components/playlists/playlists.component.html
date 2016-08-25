@@ -1,3 +1,35 @@
 <div class="miniApp">
-<p>playlists content</p>
+  <p>Playlists</p>
+  <form [ngFormModel]="searchForm">
+    <label for="search">Search:</label>
+    <input type="text" id="search" ngControl="search">
+  </form><br>
+  <span [hidden]="(playlists$ | async)?.length !== null">Loading Playlists...</span>
+  <div class="tableHolder" [hidden]="(playlists$ | async)?.length === null" [style.opacity]="(playlists$ | async)?.length === null ? 0 : 1">
+    <table style="width:100%" class="entries">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Created On</th>
+        <th>Action</th>
+      </tr>
+      <tr *ngFor="let playlist of playlists$ | async">
+        <td>{{playlist.id}}</td>
+        <td><a>{{playlist.name}}</a></td>
+        <td>{{playlist.playlistType | playlistType}}</td>
+        <td>{{playlist.createdAt * 1000 | date:'MM/dd/y HH:MM'}}</td>
+        <td>
+          <div class="form-group">
+            <label for="sel1">Select Action:</label>
+            <select class="form-control" id="sel1">
+              <option>Preview & Embed</option>
+              <option>Delete</option>
+              <option>View Details</option>
+            </select>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
 </div>

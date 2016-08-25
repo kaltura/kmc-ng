@@ -1,3 +1,9 @@
+a{
+  color: #59A3B5;
+  &:hover{
+    color: #A1E5F5;
+  }
+}
 .userSettings{
   font-size: 12px;
   font-weight: bold;
