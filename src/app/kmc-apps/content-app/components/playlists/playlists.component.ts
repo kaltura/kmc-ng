@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FORM_PROVIDERS, FormBuilder, Validators} from '@angular/common';
 import { Observable } from 'rxjs/Observable';
+import { DROPDOWN_DIRECTIVES } from 'ng2-bootstrap';
 
 import { BaseEntryService } from "../../../../shared/@kmc/kaltura-api/baseentry.service.ts";
 import { PlaylistTypePipe } from "../../../../shared/@kmc/pipes/playlist.type.pipe";
@@ -10,6 +11,7 @@ import { TimePipe } from "../../../../shared/@kmc/pipes/time.pipe";
   selector: 'kmc-playlists',
   templateUrl: './playlists.component.html',
   styleUrls: ['./playlists.component.scss'],
+  directives: [DROPDOWN_DIRECTIVES],
   pipes: [PlaylistTypePipe, TimePipe]
 })
 export class PlaylistsComponent implements OnInit {
@@ -39,5 +41,9 @@ export class PlaylistsComponent implements OnInit {
       .startWith('')
       .debounceTime(500)
       .switchMap(value => this.baseEntryService.list(value, this.filter, this.responseProfile));
+  }
+
+  onActionSelected(action, entryID){
+    alert("Selected Action: "+action+"\nPlaylist ID: "+entryID);
   }
 }

@@ -28,13 +28,15 @@
         <td>{{entry.duration | time}}</td>
         <td>{{entry.status | entryStatus}}</td>
         <td>
-          <div class="form-group">
-            <label for="sel1">Select Action:</label>
-            <select class="form-control" id="sel1">
-              <option>Preview & Embed</option>
-              <option>Delete</option>
-              <option>View Details</option>
-            </select>
+          <div class="btn-group" dropdown>
+            <button id="single-button" type="button" class="btn btn-info" dropdownToggle>
+              Select Action <span class="caret"></span>
+            </button>
+            <ul dropdownMenu role="menu" aria-labelledby="single-button">
+              <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('embed',entry.id)">Preview & Embed</a></li>
+              <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('delete',entry.id)">Delete</a></li>
+              <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('view',entry.id)">View Details</a></li>
+            </ul>
           </div>
         </td>
       </tr>
