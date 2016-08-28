@@ -36,14 +36,8 @@ export class PlaylistsComponent implements OnInit {
 
   ngOnInit() {
     this.playlists$ = this.searchForm.controls.search.valueChanges
+      .startWith('')
       .debounceTime(500)
       .switchMap(value => this.baseEntryService.list(value, this.filter, this.responseProfile));
-  }
-
-  ngAfterViewInit() {
-    // initial load of all entries by invoking the search logic with an empty search value. Requires a timeout due to the debounce definition.
-    setTimeout(function (self) {
-      self.searchForm.controls.search.updateValue('');
-    }, 0, this);
   }
 }

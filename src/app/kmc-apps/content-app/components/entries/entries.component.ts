@@ -37,18 +37,9 @@ export class EntriesComponent implements OnInit {
   }
 
   ngOnInit() {
-    // TODO [kmc] - since we are going to add additional filters, consider using an array variable for binding and update it on each Observable change (search, filter, categories etc.)
-    //this.entries$ = this.baseEntryService.list(); // initial load of all entries
     this.entries$ = this.searchForm.controls.search.valueChanges
+      .startWith('')
       .debounceTime(500)
       .switchMap(value => this.baseEntryService.list(value, this.filter, this.responseProfile));
   }
-
-  ngAfterViewInit(){
-    // initial load of all entries by invoking the search logic with an empty search value. Requires a timeout due to the debounce definition.
-    setTimeout(function(self){
-      self.searchForm.controls.search.updateValue('');
-    },0, this);
-  }
-
 }
