@@ -5,7 +5,6 @@ import {KMCConfig} from "../../../../shared/@kmc/core/kmc-config.service";
 declare var window:any;
 
 @Component({
-  moduleId: module.id,
   selector: 'kmc-universal-studio',
   templateUrl: './universal-studio.component.html',
   styleUrls: ['./universal-studio.component.scss'],

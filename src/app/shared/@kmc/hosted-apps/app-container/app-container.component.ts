@@ -4,7 +4,6 @@ import {KMCBrowserService} from "@kmc/core/kmc-browser.service";
 import * as $ from 'jquery';
 
 @Component({
-  moduleId: module.id,
   selector: 'kmc-app-container',
   templateUrl: './app-container.component.html',
   styleUrls: ['./app-container.component.scss']

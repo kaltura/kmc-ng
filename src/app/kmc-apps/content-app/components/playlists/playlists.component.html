@@ -1,9 +1,9 @@
 <div class="miniApp">
   <p>Playlists</p>
-  <form [ngFormModel]="searchForm">
+  <!--form [formGroup]="searchForm">
     <label for="search">Search:</label>
-    <input type="text" id="search" ngControl="search">
-  </form><br>
+    <input type="text" id="search" formControlName="search" name="search">
+  </form><br-->
   <span [hidden]="(playlists$ | async)?.length !== null">Loading Playlists...</span>
   <div class="tableHolder" [hidden]="(playlists$ | async)?.length === null" [style.opacity]="(playlists$ | async)?.length === null ? 0 : 1">
     <table style="width:100%" class="entries">
@@ -19,8 +19,8 @@
         <td><a>{{playlist.name}}</a></td>
         <td>{{playlist.playlistType | playlistType}}</td>
         <td>{{playlist.createdAt * 1000 | date:'MM/dd/y HH:MM'}}</td>
-        <td>
-          <div class="btn-group" dropdown>
+        <td>Actions
+          <!--div class="btn-group" dropdown>
             <button id="single-button" type="button" class="btn btn-info" dropdownToggle>
               Select Action <span class="caret"></span>
             </button>
@@ -29,7 +29,7 @@
               <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('delete',playlist.id)">Delete</a></li>
               <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('view',playlist.id)">View Details</a></li>
             </ul>
-          </div>
+          </div-->
         </td>
       </tr>
     </table>

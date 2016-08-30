@@ -1,4 +1,4 @@
-import { provideRouter, RouterConfig } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from "./kmc-apps/kmc-shell-app/components/login/login.component";
 import { DashboardComponent as StubDashboardComponent  } from "./kmc-apps/stub-app/components/dashboard/dashboard.component";
 import { EntriesComponent as ContentEntries } from "./kmc-apps/content-app/components/entries/entries.component";
@@ -12,7 +12,7 @@ import {ModerationComponent} from "./kmc-apps/content-app/components/moderation/
 import {PlaylistsComponent} from "./kmc-apps/content-app/components/playlists/playlists.component";
 
 
-const routes: RouterConfig = [
+const routes: Routes = [
   {
     path: '', canActivate: [ConfigCanActivate],
     children: [
@@ -37,6 +37,6 @@ const routes: RouterConfig = [
   }
 ];
 
-export const APP_ROUTER_PROVIDERS = [
-  provideRouter(routes)
-];
+
+
+export const routing = RouterModule.forRoot(routes);

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FORM_PROVIDERS, FormBuilder, Validators} from '@angular/common';
 import { Observable } from 'rxjs/Observable';
-import { DROPDOWN_DIRECTIVES } from 'ng2-bootstrap';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+//import { DROPDOWN_DIRECTIVES } from 'ng2-bootstrap';
 
 import { BaseEntryService } from "../../../../shared/@kmc/kaltura-api/baseentry.service.ts";
 import { EntryTypePipe } from "../../../../shared/@kmc/pipes/entry.type.pipe";
@@ -12,13 +12,13 @@ import { TimePipe } from "../../../../shared/@kmc/pipes/time.pipe";
   selector: 'kmc-entries',
   templateUrl: './entries.component.html',
   styleUrls: ['./entries.component.scss'],
-  directives: [DROPDOWN_DIRECTIVES],
+  //directives: [DROPDOWN_DIRECTIVES],
   pipes: [EntryTypePipe, TimePipe, EntryStatusPipe]
 })
 export class EntriesComponent implements OnInit {
 
   private entries$: Observable<any>;
-  private searchForm: any;
+  private searchForm: FormGroup;
   private filter: any;
   private responseProfile: any;
 
@@ -38,7 +38,7 @@ export class EntriesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.entries$ = this.searchForm.controls.search.valueChanges
+    this.entries$ = Observable.fromEvent(this.searchForm.controls.search.valueChanges)
       .startWith('')
       .debounceTime(500)
       .switchMap(value => this.baseEntryService.list(value, this.filter, this.responseProfile));
