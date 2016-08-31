@@ -1,21 +1,21 @@
-import {NgModule, NgModuleFactoryLoader, enableProdMode} from '@angular/core';
+import { NgModule, NgModuleFactoryLoader, enableProdMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { bootstrap } from '@angular/platform-browser-dynamic';
 import { HttpModule } from '@angular/http';
 import { NG2_WEBSTORAGE } from 'ng2-webstorage';
 
-import {AsyncNgModuleLoader} from './shared/async-ng-module-loader';
+import { AsyncNgModuleLoader } from './shared/async-ng-module-loader';
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
 import { KMCConfig, KMCExternalLinks, KMCLanguage } from './shared/@kmc/core'
 import { ConfigCanActivate } from './kmc-apps/kmc-shell-app/shared';
-import {AuthenticationService} from "./shared/@kmc/auth/authentication.service";
-import {BaseEntryService} from "./shared/@kmc/kaltura-api/baseentry.service.ts";
-import {AuthCanActivate} from "./shared/@kmc/auth/auth-can-activate.service";
-import {KalturaAPIClient} from "./shared/@kmc/kaltura-api/kaltura-api-client";
-import {KMCBrowserService} from "./shared/@kmc/core/kmc-browser.service";
-import {KalturaAPIConfig} from "./shared/@kmc/kaltura-api/kaltura-api-config";
-//import {KMCAppModule as ContentEntriesAppModule} from "./kmc-apps/content-entries-app/kmc-app.module";
+import { AuthenticationService } from "./shared/@kmc/auth/authentication.service";
+import { BaseEntryService } from "./shared/@kmc/kaltura-api/baseentry.service.ts";
+import { AuthCanActivate } from "./shared/@kmc/auth/auth-can-activate.service";
+import { KalturaAPIClient } from "./shared/@kmc/kaltura-api/kaltura-api-client";
+import { KMCBrowserService } from "./shared/@kmc/core/kmc-browser.service";
+import { KalturaAPIConfig } from "./shared/@kmc/kaltura-api/kaltura-api-config";
+import { TimePipe } from "./shared/@kmc/pipes/time.pipe";
 
 // depending on the env mode, enable prod mode or add debugging modules
 if (process.env.ENV === 'build') {
@@ -49,6 +49,7 @@ function buildKalturaAPIConfig(kmcConfig : KMCConfig) {
     ConfigCanActivate,
     KMCConfig,
     KMCLanguage,
+    TimePipe,
     KMCExternalLinks,
     AuthenticationService,
     BaseEntryService,

@@ -8,10 +8,6 @@ import { UniversalStudioComponent } from "./kmc-apps/studio-app/components/unive
 import { ConfigCanActivate } from './kmc-apps/kmc-shell-app/shared';
 import { AuthCanActivate } from "./shared/@kmc/auth/auth-can-activate.service";
 
-import { ModerationComponent } from "./kmc-apps/content-app/components/moderation/moderation.component";
-import { PlaylistsComponent } from "./kmc-apps/content-app/components/playlists/playlists.component";
-
-
 const routes: Routes = [
   {
     path: '', canActivate: [ConfigCanActivate],
@@ -24,11 +20,19 @@ const routes: Routes = [
           { path: '', redirectTo: 'entries', pathMatch: 'full' },
           { path: 'entries', loadChildren: load(() => new Promise(resolve => {
             (require as any).ensure([], require => {
-              resolve(require('./kmc-apps/content-entries-app/kmc-app.module').KMCAppModule);
+              resolve(require('./kmc-apps/content-entries-app/content-entries-app.module').ContentEntriesAppModule);
             });
           }))},
-          { path: 'moderation', component: ModerationComponent },
-          { path: 'playlists', component: PlaylistsComponent }
+          { path: 'moderation', loadChildren: load(() => new Promise(resolve => {
+            (require as any).ensure([], require => {
+              resolve(require('./kmc-apps/content-moderation-app/content-moderation-app.module').ContentModerationAppModule);
+            });
+          }))},
+          { path: 'playlists', loadChildren: load(() => new Promise(resolve => {
+            (require as any).ensure([], require => {
+              resolve(require('./kmc-apps/content-playlists-app/content-playlists-app.module').ContentPlaylistsAppModule);
+            });
+          }))}
         ]},
         { path: 'dashboard', component: StubDashboardComponent },
         { path: 'studio', component: UniversalStudioComponent }
@@ -42,3 +46,5 @@ const routes: Routes = [
 ];
 
 export const routing = RouterModule.forRoot(routes);
+
+

@@ -3,16 +3,13 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { Observable } from 'rxjs/Observable';
 //import { DROPDOWN_DIRECTIVES } from 'ng2-bootstrap';
 
-import { BaseEntryService } from "../../../../shared/@kmc/kaltura-api/baseentry.service.ts";
-import { PlaylistTypePipe } from "../../../../shared/@kmc/pipes/playlist.type.pipe";
-//import { TimePipe } from "../../../../shared/@kmc/pipes/time.pipe";
+import { BaseEntryService } from "../../../shared/@kmc/kaltura-api/baseentry.service.ts";
 
 @Component({
   selector: 'kmc-playlists',
   templateUrl: './playlists.component.html',
-  styleUrls: ['./playlists.component.scss'],
+  styleUrls: ['./playlists.component.scss']
   //directives: [DROPDOWN_DIRECTIVES],
-  pipes: [PlaylistTypePipe]
 })
 export class PlaylistsComponent implements OnInit {
 
