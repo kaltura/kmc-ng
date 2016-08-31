@@ -5,14 +5,14 @@ import { Observable } from 'rxjs/Observable';
 
 import { BaseEntryService } from "../../../../shared/@kmc/kaltura-api/baseentry.service.ts";
 import { PlaylistTypePipe } from "../../../../shared/@kmc/pipes/playlist.type.pipe";
-import { TimePipe } from "../../../../shared/@kmc/pipes/time.pipe";
+//import { TimePipe } from "../../../../shared/@kmc/pipes/time.pipe";
 
 @Component({
   selector: 'kmc-playlists',
   templateUrl: './playlists.component.html',
   styleUrls: ['./playlists.component.scss'],
   //directives: [DROPDOWN_DIRECTIVES],
-  pipes: [PlaylistTypePipe, TimePipe]
+  pipes: [PlaylistTypePipe]
 })
 export class PlaylistsComponent implements OnInit {
 

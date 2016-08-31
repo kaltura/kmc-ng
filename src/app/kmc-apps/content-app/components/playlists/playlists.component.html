@@ -1,9 +1,9 @@
 <div class="miniApp">
   <p>Playlists</p>
-  <form [formGroup]="searchForm">
+  <!--form [formGroup]="searchForm">
     <label for="search">Search:</label>
     <input type="text" id="search" formControlName="search" #search>
-  </form><br>
+  </form><br-->
   <span [hidden]="playlists.rows.length !== 1 || search.value.length != 0">Loading Playlists...</span>
   <div class="tableHolder">
     <table style="width:100%" class="entries" #playlists>
