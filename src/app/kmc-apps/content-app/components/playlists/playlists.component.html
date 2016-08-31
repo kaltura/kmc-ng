@@ -1,12 +1,12 @@
 <div class="miniApp">
   <p>Playlists</p>
-  <!--form [formGroup]="searchForm">
+  <form [formGroup]="searchForm">
     <label for="search">Search:</label>
-    <input type="text" id="search" formControlName="search" name="search">
-  </form><br-->
-  <span [hidden]="(playlists$ | async)?.length !== null">Loading Playlists...</span>
-  <div class="tableHolder" [hidden]="(playlists$ | async)?.length === null" [style.opacity]="(playlists$ | async)?.length === null ? 0 : 1">
-    <table style="width:100%" class="entries">
+    <input type="text" id="search" formControlName="search" #search>
+  </form><br>
+  <span [hidden]="playlists.rows.length !== 1 || search.value.length != 0">Loading Playlists...</span>
+  <div class="tableHolder">
+    <table style="width:100%" class="entries" #playlists>
       <tr>
         <th>ID</th>
         <th>Name</th>

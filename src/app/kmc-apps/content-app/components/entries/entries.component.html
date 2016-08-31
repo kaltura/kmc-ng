@@ -2,11 +2,11 @@
   <p>Entries</p>
   <form [formGroup]="searchForm">
     <label for="search">Search:</label>
-    <input type="text" id="search" formControlName="search">
+    <input type="text" id="search" formControlName="search" #search>
   </form><br>
-  <span [hidden]="(entries$ | async)?.length !== null">Loading Entries...</span>
-  <div class="tableHolder" [hidden]="(entries$ | async)?.length === null" [style.opacity]="(entries$ | async)?.length === null ? 0 : 1">
-    <table style="width:100%" class="entries">
+  <span [hidden]="entries.rows.length !== 1 || search.value.length != 0">Loading Entries...</span>
+  <div class="tableHolder">
+    <table style="width:100%" class="entries" #entries>
       <tr>
         <th>Thumbnail</th>
         <th>ID</th>

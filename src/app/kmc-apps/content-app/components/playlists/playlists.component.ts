@@ -18,13 +18,12 @@ export class PlaylistsComponent implements OnInit {
 
   private playlists$: Observable<any>;
   private searchForm: FormGroup;
-  private searchField = new FormControl(['', Validators.required]);
   private filter: any;
   private responseProfile: any;
 
   constructor(private baseEntryService: BaseEntryService, private formBuilder: FormBuilder) {
-    this.searchForm = this.formBuilder.group({
-      'search': this.searchField
+    this.searchForm = formBuilder.group({
+      'search': ['', Validators.required]
     });
     this.filter = {
       "objectType": "KalturaBaseEntryFilter",
@@ -38,11 +37,10 @@ export class PlaylistsComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.playlists$ = this.searchField.valueChanges
-    //  .startWith('')
-    //  .debounceTime(500)
-    //  .switchMap(value => this.baseEntryService.list(value, this.filter, this.responseProfile));
-    this.playlists$ = this.baseEntryService.list('', this.filter, this.responseProfile);
+    this.playlists$ = this.searchForm.controls['search'].valueChanges
+      .startWith('')
+      .debounceTime(500)
+      .switchMap(value => this.baseEntryService.list(value, this.filter, this.responseProfile));
   }
 
   onActionSelected(action, entryID){

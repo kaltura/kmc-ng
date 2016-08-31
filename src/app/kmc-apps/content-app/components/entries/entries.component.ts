@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 //import { DROPDOWN_DIRECTIVES } from 'ng2-bootstrap';
 
@@ -38,7 +39,7 @@ export class EntriesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.entries$ = Observable.fromEvent(this.searchForm.controls.search.valueChanges)
+    this.entries$ = this.searchForm.controls['search'].valueChanges
       .startWith('')
       .debounceTime(500)
       .switchMap(value => this.baseEntryService.list(value, this.filter, this.responseProfile));
