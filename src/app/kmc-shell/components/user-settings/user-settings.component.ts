@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { AuthenticationService } from "../../../../shared/@kmc/auth/authentication.service";
-import { UserContext } from "../../../../shared/@kmc/auth/user-context";
-import { KMCBrowserService } from "../../../../shared/@kmc/core/kmc-browser.service";
-import { KMCConfig } from "../../../../shared/@kmc/core/kmc-config.service";
-import { KMCConsts } from "../../../../shared/@kmc/core/kmc-consts";
-import { KMCLanguage } from "../../../../shared/@kmc/core/kmc-language.service";
+import { AuthenticationService } from "../../../shared/@kmc/auth/authentication.service";
+import { UserContext } from "../../../shared/@kmc/auth/user-context";
+import { KMCBrowserService } from "../../../shared/@kmc/core/kmc-browser.service";
+import { KMCConfig } from "../../../shared/@kmc/core/kmc-config.service";
+import { KMCConsts } from "../../../shared/@kmc/core/kmc-consts";
+import { KMCLanguage } from "../../../shared/@kmc/core/kmc-language.service";
 import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({

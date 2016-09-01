@@ -1,4 +1,5 @@
 import { NgModule, NgModuleFactoryLoader, enableProdMode } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { bootstrap } from '@angular/platform-browser-dynamic';
 import { HttpModule } from '@angular/http';
@@ -8,7 +9,7 @@ import { AsyncNgModuleLoader } from './shared/async-ng-module-loader';
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
 import { KMCConfig, KMCLanguage } from './shared/@kmc/core'
-import { ConfigCanActivate } from './kmc-apps/kmc-shell-app/shared';
+import { ConfigCanActivate } from './kmc-shell/shared';
 import { AuthenticationService } from "./shared/@kmc/auth/authentication.service";
 import { BaseEntryService } from "./shared/@kmc/kaltura-api/baseentry.service.ts";
 import { AuthCanActivate } from "./shared/@kmc/auth/auth-can-activate.service";
@@ -16,8 +17,8 @@ import { KalturaAPIClient } from "./shared/@kmc/kaltura-api/kaltura-api-client";
 import { KalturaAPIConfig } from "./shared/@kmc/kaltura-api/kaltura-api-config";
 import { TimePipe } from "./shared/@kmc/pipes/time.pipe";
 import { KMCBrowserService } from "./shared/@kmc/core/kmc-browser.service";
-import {UniversalStudioAppModule} from "./kmc-apps/universal-studio-app/universal-studio-app.module";
-import {KMCShellService} from "./shared/kmc-shell.service";
+import { KMCShellService } from "./shared/kmc-shell.service";
+import {KMCShellAppModule} from "./kmc-shell/kmc-shell.module";
 
 // depending on the env mode, enable prod mode or add debugging modules
 if (process.env.ENV === 'build') {
@@ -44,7 +45,7 @@ function buildKalturaAPIConfig(kmcConfig : KMCConfig) {
 }
 
 @NgModule({
-  imports: [ BrowserModule, HttpModule, routing],       // module dependencies
+  imports: [ BrowserModule, HttpModule, routing, KMCShellAppModule, RouterModule.forRoot([])],       // module dependencies
   declarations: [ AppComponent ],   // components and directives
   bootstrap: [ AppComponent ],     // root component
   providers: [

@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { KMCConfig } from "../../../../shared/@kmc/core/kmc-config.service";
+import { KMCConfig } from "../../../shared/@kmc/core/kmc-config.service";
 
 @Component({
   selector: 'kmc-language-menu',

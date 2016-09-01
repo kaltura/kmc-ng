@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import {AuthenticationService} from "../../../../shared/@kmc/auth/authentication.service";
-import {KMCBrowserService} from "../../../../shared/@kmc/core/kmc-browser.service";
+import {AuthenticationService} from "../../../shared/@kmc/auth/authentication.service";
+import {KMCBrowserService} from "../../../shared/@kmc/core/kmc-browser.service";
 
 @Component({
   selector: 'kmc-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
-  directives : [ROUTER_DIRECTIVES]
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
 

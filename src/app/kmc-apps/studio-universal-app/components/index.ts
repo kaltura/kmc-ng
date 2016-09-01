@@ -1,1 +1,1 @@
-export * from './universal-studio.component';
+export * from './studio-universal.component';

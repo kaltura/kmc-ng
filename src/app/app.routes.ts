@@ -1,9 +1,9 @@
 import { Routes, RouterModule } from '@angular/router';
 
-import {load} from './shared/async-ng-module-loader';
-import { LoginComponent } from "./kmc-apps/kmc-shell-app/components/login/login.component";
-import { DashboardComponent } from "./kmc-apps/kmc-shell-app/components/dashboard/dashboard.component";
-import { ConfigCanActivate } from './kmc-apps/kmc-shell-app/shared';
+import {load } from './shared/async-ng-module-loader';
+import { LoginComponent } from "./kmc-shell/components/login/login.component";
+import { DashboardComponent } from "./kmc-shell/components/dashboard/dashboard.component";
+import { ConfigCanActivate } from './kmc-shell/shared';
 import { AuthCanActivate } from "./shared/@kmc/auth/auth-can-activate.service";
 
 const routes: Routes = [

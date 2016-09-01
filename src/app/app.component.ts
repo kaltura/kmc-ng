@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Http } from '@angular/http';
-import { ROUTER_DIRECTIVES } from '@angular/router';
 
 /*
  * App Component
@@ -8,7 +7,6 @@ import { ROUTER_DIRECTIVES } from '@angular/router';
  */
 @Component({
   selector: 'kmc-root',
-  directives: [ROUTER_DIRECTIVES],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })

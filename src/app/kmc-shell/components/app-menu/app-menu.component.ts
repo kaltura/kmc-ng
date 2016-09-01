@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ROUTER_DIRECTIVES, Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 
 import { AppMenuConfig } from '../../shared/app-menu-config';
 import { AppMenuService } from '../../shared/app-menu.service';
@@ -7,7 +7,7 @@ import { AppMenuItem } from "../../shared/app-menu-config";
 import { UploadComponent } from "../upload/upload.component";
 import { UserSettingsComponent } from "../user-settings/user-settings.component";
 import { LanguageMenuComponent } from "../language-menu/language-menu.component";
-import { KMCLanguage } from "../../../../shared/@kmc/core/kmc-language.service";
+import { KMCLanguage } from "../../../shared/@kmc/core/kmc-language.service";
 
 import * as R from 'ramda';
 
@@ -16,7 +16,7 @@ import * as R from 'ramda';
   selector: 'kmc-app-menu',
   templateUrl: './app-menu.component.html',
   styleUrls: ['./app-menu.component.scss'],
-  directives: [ROUTER_DIRECTIVES, UploadComponent, UserSettingsComponent, LanguageMenuComponent]
+  directives: [UploadComponent, UserSettingsComponent, LanguageMenuComponent]
 })
 export class AppMenuComponent {
 
