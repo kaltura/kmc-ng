@@ -17,7 +17,7 @@ export class UserSettingsComponent {
   timeoutID:number = null;
   private _userContext : UserContext;
 
-  constructor(private authenticationService : AuthenticationService, private externalLinksService: KMCBrowserService, private kmcConfig: KMCConfig, private lang: KMCLanguage) {
+  constructor(private authenticationService : AuthenticationService, private browserService: KMCBrowserService, private kmcConfig: KMCConfig, private lang: KMCLanguage) {
     this._userContext = authenticationService.userContext;
   }
 
@@ -42,7 +42,7 @@ export class UserSettingsComponent {
   }
 
   openUserManual(){
-    this.externalLinksService.openLink(this.kmcConfig.get("core.externalLinks.USER_MANUAL"),{},"_blank");
+    this.browserService.openLink(this.kmcConfig.get("core.externalLinks.USER_MANUAL"),{},"_blank");
   }
   openSupport(){
 console.log(Md5.hashStr('blah blah blah') );
@@ -56,7 +56,7 @@ console.log(Md5.hashStr('blah blah blah') );
     };
 
     // TODO [kmc] Open support in a modal window over KMC and not in _blank
-    this.externalLinksService.openLink(this.kmcConfig.get("core.externalLinks.SUPPORT"), params, "_blank");
+    this.browserService.openLink(this.kmcConfig.get("core.externalLinks.SUPPORT"), params, "_blank");
   }
 
 }
