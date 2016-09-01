@@ -2,9 +2,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import {load} from './shared/async-ng-module-loader';
 import { LoginComponent } from "./kmc-apps/kmc-shell-app/components/login/login.component";
-import { DashboardComponent as StubDashboardComponent  } from "./kmc-apps/stub-app/components/dashboard/dashboard.component";
 import { DashboardComponent } from "./kmc-apps/kmc-shell-app/components/dashboard/dashboard.component";
-import { UniversalStudioComponent } from "./kmc-apps/studio-app/components/universal-studio/universal-studio.component";
 import { ConfigCanActivate } from './kmc-apps/kmc-shell-app/shared';
 import { AuthCanActivate } from "./shared/@kmc/auth/auth-can-activate.service";
 
@@ -39,7 +37,11 @@ const routes: Routes = [
             resolve(require('./kmc-apps/dashboard-app/dashboard-app.module').DashboardAppModule);
           });
         }))},
-        { path: 'studio', component: UniversalStudioComponent }
+        { path: 'studio', loadChildren: load(() => new Promise(resolve => {
+          (require as any).ensure([], require => {
+            resolve(require('./kmc-apps/studio-universal-app/studio-universal-app.module').StudioUniversalAppModule);
+          });
+        }))}
       ]
       },
       {

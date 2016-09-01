@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, Input, ElementRef} from '@angular/core';
 import { Subscription } from 'rxjs/rx';
-import {KMCBrowserService} from "@kmc/core/kmc-browser.service";
 import * as $ from 'jquery';
+
+import {KMCShellService} from "../../../kmc-shell.service";
 
 @Component({
   selector: 'kmc-app-container',
@@ -15,7 +16,7 @@ export class AppContainerComponent implements OnInit, OnDestroy, AfterViewInit {
   private _$iframe : any;
   private _contentAreaHeightSubscriber : Subscription;
 
-  constructor(private kmcBrowserService : KMCBrowserService) {}
+  constructor(private kmcShellService : KMCShellService) {}
 
   public get HostedAppPath() : string{
     return this._hostedAppPath;
@@ -47,9 +48,11 @@ export class AppContainerComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   registerToHeightChange() : void{
-    const contentArea$ = this.kmcBrowserService.getContentAreaHeight();
+    console.info("registerToHeightChange");
+    const contentArea$ = this.kmcShellService.getContentAreaHeight();
     this._contentAreaHeightSubscriber = contentArea$.subscribe(
         value => {
+          console.info("registerToHeightChange");
           this._$iframe.height(value);
         });
 

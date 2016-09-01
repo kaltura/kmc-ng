@@ -2,30 +2,29 @@ import { Component, OnInit,AfterViewInit,ViewChild, OnDestroy } from '@angular/c
 import { ROUTER_DIRECTIVES } from '@angular/router';
 import {AppMenuComponent} from "../app-menu/app-menu.component";
 import { AppMenuService } from '../../shared/app-menu.service';
-import {KMCBrowserService} from "../../../../shared/@kmc/core/kmc-browser.service";
+import { KMCShellService } from "../../../../shared/kmc-shell.service";
 import * as $ from 'jquery';
 
 @Component({
   selector: 'kmc-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  providers : [AppMenuService,KMCBrowserService],
+  providers : [AppMenuService],
   directives: [ROUTER_DIRECTIVES,AppMenuComponent]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   @ViewChild('appMenu',true) private _appMenuRef : any;
   private onResize : () => void;
 
-  constructor(private kmcBrowserService : KMCBrowserService) {
+  constructor(private kmcShellService : KMCShellService) {
     this.onResize = this._resizeContent.bind(this);
   }
 
   private _resizeContent() : void
   {
     const $window = $(window);
-
     const $appMenu = $(this._appMenuRef.nativeElement);
-    this.kmcBrowserService.setContentAreaHeight($window.outerHeight()-$appMenu.outerHeight());
+    this.kmcShellService.setContentAreaHeight($window.outerHeight()-$appMenu.outerHeight());
   }
 
   ngAfterViewInit()

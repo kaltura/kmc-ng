@@ -1,16 +1,17 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
-import {AppContainerComponent} from "@kmc/hosted-apps/app-container/app-container.component";
-import {AuthenticationService} from "../../../../shared/@kmc/auth/authentication.service";
-import {KMCConfig} from "../../../../shared/@kmc/core/kmc-config.service";
+import { AuthenticationService } from "../../../shared/@kmc/auth/authentication.service";
+import { KMCConfig } from "../../../shared/@kmc/core/kmc-config.service";
+import { AppContainerComponent } from "../../../shared/@kmc/hosted-apps/app-container/app-container.component";
+
 declare var window:any;
 
 @Component({
   selector: 'kmc-universal-studio',
-  templateUrl: './universal-studio.component.html',
-  styleUrls: ['./universal-studio.component.scss'],
-  directives : [AppContainerComponent]
+  templateUrl: './studio-universal.component.html',
+  styleUrls: ['./studio-universal.component.scss'],
+  directives: [ AppContainerComponent ]
 })
-export class UniversalStudioComponent implements OnInit {
+export class StudioUniversalComponent implements OnInit {
 
   constructor(private authenticationService : AuthenticationService, private kmcConfig : KMCConfig) {}
 
@@ -26,7 +27,7 @@ export class UniversalStudioComponent implements OnInit {
   ngOnInit() {
     this.initializeBridgeVariables();
     // TODO currently hardcoded - will be taken from configuration.
-    this.studioAppPath = 'player-studio/';
+    this.studioAppPath = 'http://localhost/html5.kaltura/player-studio/app/index.html';
   }
 
   initializeBridgeVariables() : void{

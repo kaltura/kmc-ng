@@ -13,9 +13,11 @@ import { AuthenticationService } from "./shared/@kmc/auth/authentication.service
 import { BaseEntryService } from "./shared/@kmc/kaltura-api/baseentry.service.ts";
 import { AuthCanActivate } from "./shared/@kmc/auth/auth-can-activate.service";
 import { KalturaAPIClient } from "./shared/@kmc/kaltura-api/kaltura-api-client";
-import { KMCBrowserService } from "./shared/@kmc/core/kmc-browser.service";
 import { KalturaAPIConfig } from "./shared/@kmc/kaltura-api/kaltura-api-config";
 import { TimePipe } from "./shared/@kmc/pipes/time.pipe";
+import { KMCBrowserService } from "./shared/@kmc/core/kmc-browser.service";
+import {UniversalStudioAppModule} from "./kmc-apps/universal-studio-app/universal-studio-app.module";
+import {KMCShellService} from "./shared/kmc-shell.service";
 
 // depending on the env mode, enable prod mode or add debugging modules
 if (process.env.ENV === 'build') {
@@ -43,18 +45,20 @@ function buildKalturaAPIConfig(kmcConfig : KMCConfig) {
 
 @NgModule({
   imports: [ BrowserModule, HttpModule, routing],       // module dependencies
-  declarations: [ AppComponent],   // components and directives
+  declarations: [ AppComponent ],   // components and directives
   bootstrap: [ AppComponent ],     // root component
   providers: [
     ConfigCanActivate,
     KMCConfig,
+    KMCBrowserService,
+    KMCShellService,
+    KMCShellService,
     KMCLanguage,
     TimePipe,
     AuthenticationService,
     BaseEntryService,
     AuthCanActivate,
     KalturaAPIClient,
-    KMCBrowserService,
     NG2_WEBSTORAGE,
     {provide : KalturaAPIConfig, useFactory : buildKalturaAPIConfig, deps : [KMCConfig]},
     {provide: NgModuleFactoryLoader, useClass: AsyncNgModuleLoader}
