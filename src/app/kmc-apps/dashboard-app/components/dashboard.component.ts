@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {AuthenticationService} from "../../../../shared/@kmc/auth/authentication.service";
-import {UserContext} from "../../../../shared/@kmc/auth/user-context";
+import {AuthenticationService} from "../../../shared/@kmc/auth/authentication.service";
+import {UserContext} from "../../../shared/@kmc/auth/user-context";
 
 @Component({
   selector: 'kmc-dashboard',

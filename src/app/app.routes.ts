@@ -34,7 +34,11 @@ const routes: Routes = [
             });
           }))}
         ]},
-        { path: 'dashboard', component: StubDashboardComponent },
+        { path: 'dashboard', loadChildren: load(() => new Promise(resolve => {
+          (require as any).ensure([], require => {
+            resolve(require('./kmc-apps/dashboard-app/dashboard-app.module').DashboardAppModule);
+          });
+        }))},
         { path: 'studio', component: UniversalStudioComponent }
       ]
       },
