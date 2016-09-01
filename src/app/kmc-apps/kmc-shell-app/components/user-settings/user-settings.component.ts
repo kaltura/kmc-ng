@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthenticationService } from "../../../../shared/@kmc/auth/authentication.service";
 import { UserContext } from "../../../../shared/@kmc/auth/user-context";
-import { KMCExternalLinks } from "../../../../shared/@kmc/core/kmc-external-links.service";
+import { KMCBrowserService } from "../../../../shared/@kmc/core/kmc-browser.service";
 import { KMCConfig } from "../../../../shared/@kmc/core/kmc-config.service";
 import { KMCConsts } from "../../../../shared/@kmc/core/kmc-consts";
 import { KMCLanguage } from "../../../../shared/@kmc/core/kmc-language.service";
@@ -17,7 +17,7 @@ export class UserSettingsComponent {
   timeoutID:number = null;
   private _userContext : UserContext;
 
-  constructor(private authenticationService : AuthenticationService, private externalLinksService: KMCExternalLinks, private kmcConfig: KMCConfig, private lang: KMCLanguage) {
+  constructor(private authenticationService : AuthenticationService, private externalLinksService: KMCBrowserService, private kmcConfig: KMCConfig, private lang: KMCLanguage) {
     this._userContext = authenticationService.userContext;
   }
 

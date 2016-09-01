@@ -7,7 +7,7 @@ import { NG2_WEBSTORAGE } from 'ng2-webstorage';
 import { AsyncNgModuleLoader } from './shared/async-ng-module-loader';
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
-import { KMCConfig, KMCExternalLinks, KMCLanguage } from './shared/@kmc/core'
+import { KMCConfig, KMCLanguage } from './shared/@kmc/core'
 import { ConfigCanActivate } from './kmc-apps/kmc-shell-app/shared';
 import { AuthenticationService } from "./shared/@kmc/auth/authentication.service";
 import { BaseEntryService } from "./shared/@kmc/kaltura-api/baseentry.service.ts";
@@ -50,7 +50,6 @@ function buildKalturaAPIConfig(kmcConfig : KMCConfig) {
     KMCConfig,
     KMCLanguage,
     TimePipe,
-    KMCExternalLinks,
     AuthenticationService,
     BaseEntryService,
     AuthCanActivate,
