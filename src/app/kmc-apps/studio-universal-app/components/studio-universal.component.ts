@@ -8,8 +8,7 @@ declare var window:any;
 @Component({
   selector: 'kmc-universal-studio',
   templateUrl: './studio-universal.component.html',
-  styleUrls: ['./studio-universal.component.scss'],
-  directives: [ AppContainerComponent ]
+  styleUrls: ['./studio-universal.component.scss']
 })
 export class StudioUniversalComponent implements OnInit {
 
