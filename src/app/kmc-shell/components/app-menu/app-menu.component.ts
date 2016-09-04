@@ -15,8 +15,7 @@ import * as R from 'ramda';
 @Component({
   selector: 'kmc-app-menu',
   templateUrl: './app-menu.component.html',
-  styleUrls: ['./app-menu.component.scss'],
-  directives: [UploadComponent, UserSettingsComponent, LanguageMenuComponent]
+  styleUrls: ['./app-menu.component.scss']
 })
 export class AppMenuComponent {
 

@@ -4,7 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { NG2_WEBSTORAGE } from 'ng2-webstorage';
 
-import { AsyncNgModuleLoader } from './shared/async-ng-module-loader';
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
 import { KMCConfig, KMCLanguage } from './shared/@kmc/core';
@@ -60,8 +59,7 @@ function buildKalturaAPIConfig(kmcConfig: KMCConfig) {
     AuthCanActivate,
     KalturaAPIClient,
     NG2_WEBSTORAGE,
-    {provide : KalturaAPIConfig, useFactory : buildKalturaAPIConfig, deps : [KMCConfig]},
-    {provide: NgModuleFactoryLoader, useClass: AsyncNgModuleLoader}
+    {provide : KalturaAPIConfig, useFactory : buildKalturaAPIConfig, deps : [KMCConfig]}
   ]                    // services
 })
 export class AppModule { }

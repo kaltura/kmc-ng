@@ -1,4 +1,4 @@
-import 'es6-shim';
+require('core-js/shim');
 import 'reflect-metadata';
 require('zone.js/dist/zone');
 

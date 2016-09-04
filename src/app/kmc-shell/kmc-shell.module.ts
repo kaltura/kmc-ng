@@ -11,7 +11,13 @@ import {UserSettingsComponent} from "./components/user-settings/user-settings.co
 
 @NgModule({
   imports:      [ CommonModule, RouterModule.forChild([]) ],
-  declarations: [ DashboardComponent, AppMenuComponent, LanguageMenuComponent, LoginComponent, UploadComponent, UserSettingsComponent ],
+  declarations: [
+    DashboardComponent,
+    AppMenuComponent,
+    LanguageMenuComponent,
+    LoginComponent,
+    UploadComponent,
+    UserSettingsComponent ],
   exports: [DashboardComponent,LoginComponent ],
   providers:    []
 })
