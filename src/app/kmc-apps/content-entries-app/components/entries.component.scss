@@ -1,0 +1,56 @@
+@import "../../../../style/mixins";
+form {
+  text-align: center;
+}
+img{
+  max-height:100%;
+  max-width:100%;
+  vertical-align: middle;
+}
+.miniApp{
+  padding: 10px;
+}
+.entries{
+  @include rounded-corners(10px);
+  background-color: #F4F4F4;
+  overflow: hidden;
+  th{
+    height: 40px;
+    &:first-child {
+      padding-left: 5px;
+    }
+  }
+  .thumbnailHolder{
+    margin: 5px;
+    width: 90px;
+    height: 60px;
+    background-color: black;
+    white-space: nowrap;
+    text-align: center;
+    margin: 5px;
+  }
+  .helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+  }
+  .form-group {
+    padding-top: 5px;
+    padding-right: 10px;
+    label{
+      font-weight: normal;
+    }
+  }
+}
+.tableHolder{
+  @include rounded-corners(10px);
+  border: 1px solid #cacaca;
+  overflow: auto;
+  height: calc(100% - 200px);
+  -webkit-transition: opacity 1s;
+  -moz-transition: opacity 1s;
+  transition: opacity 1s;
+}
+.entries, tr {
+  border: 1px solid #cacaca;
+}

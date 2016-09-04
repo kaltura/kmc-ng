@@ -1,0 +1,14 @@
+<div class="userSettings" (mouseenter)="setOpen(true)" (mouseleave)="setOpen(false)" #userSettings>
+  <span class="widgetLink" *ngIf="!isOpen">< &nbsp;{{_userContext.fullName}}</span>
+  <div [hidden]="!isOpen" [class.open]="isOpen">
+    <span>{{_userContext.fullName}}</span>
+    <span><a (click)="logout()">{{lang.dic?.logout}}</a></span>
+    <span class="separator">|</span>
+    <span>{{lang.dic?.account + ' : ' + _userContext.partnerInfo.name}}</span>
+    <span><a>{{lang.dic?.changeAccount}}</a></span>
+    <span class="separator">|</span>
+    <span><a (click)="openUserManual()">{{lang.dic?.userManual}}</a></span>
+    <span class="separator">|</span>
+    <span><a (click)="openSupport()">{{lang.dic?.support}}</a></span>
+  </div>
+</div>

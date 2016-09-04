@@ -1,0 +1,6 @@
+<div [hidden]="!langMenuOpen" class="languageWindow">
+  <div *ngFor="let language of languages" class="langMenuItem" (click)="selectLanguage(language.id)">
+    <img src="{{language.icon}}">
+    <span>{{language.label}}</span>
+  </div>
+</div>

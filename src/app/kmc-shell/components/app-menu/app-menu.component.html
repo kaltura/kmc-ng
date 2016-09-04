@@ -1,0 +1,38 @@
+<div class="container-fluid appMenu">
+  <div class="row">
+    <img src="assets/kmc-ng-shell/header_logo.png">
+    <div class="col-12">
+      <ul class="nav navbar-nav leftNavBar">
+        <li *ngFor="let item of menuConfig">
+          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]">{{lang.get(item.titleToken)}}</a>
+        </li>
+        <li>
+          <a (click)="toggleUpload()" [class.uploadOpen]="uploadOpen" class="widgetLink">{{lang.dic?.upload}} &nbsp;&nbsp;{{uploadOpen ? '&#x25B2;' : '&#x25BC;'}}</a>
+          <kmc-upload [uploadOpen]="uploadOpen"></kmc-upload>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <kmc-user-settings></kmc-user-settings>
+        </li>
+        <li>
+          <img class="lang" src="{{selectedLanguage.icon}}" title="{{lang.dic?.selectLang}}" (click)="toggleLanguage()">
+          <kmc-language-menu [langMenuOpen]="langMenuOpen" (onLanguageSelected)="onLanguageSelected($event)"></kmc-language-menu>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="container-fluid appSubMenu" *ngIf="selectedMenuItem && showSubMenu && selectedMenuItem.children">
+  <div class="row">
+    <div class="col-12">
+      <ul class="nav navbar-nav">
+        <li *ngFor="let subitem of selectedMenuItem.children">
+          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+subitem.routePath]">{{lang.get(subitem.titleToken)}}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+

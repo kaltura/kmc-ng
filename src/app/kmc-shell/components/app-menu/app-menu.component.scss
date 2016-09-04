@@ -1,0 +1,86 @@
+/* colors scheme */
+$menuBkgColor: #252525;
+$mainLinkColor: #C5C5C5;
+$mainLinkHoverBkg: #252525;
+$mainLinkHoverColor: #A1E5F5;
+$mainLinkActiveColor: #222222;
+$subLinkActiveColor: #252525;
+$uploadLinkActiveColor: #F1F6FD;
+$widgetLinkColor: #59A3B5;
+
+.appMenu{
+  background-color: $menuBkgColor;
+  height: 38px;
+
+  a {
+    color: $mainLinkColor;
+    outline: 0;
+    cursor: pointer;
+    line-height: 28px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    &:hover {
+      background-color: $mainLinkHoverBkg;
+      color: $mainLinkHoverColor;
+    }
+    &.activeLink {
+      background-color: white;
+      color: $mainLinkActiveColor;
+    }
+    &.uploadOpen{
+      color: $mainLinkActiveColor;
+      background-color: $uploadLinkActiveColor;
+    }
+  }
+
+  img{
+    float: left;
+    margin-top: 4px;
+  }
+
+  .leftNavBar{
+    position: absolute;
+    margin-left: 160px;
+  }
+  .widgetLink{
+    color: $widgetLinkColor;
+  }
+
+  .lang{
+    margin-right: 29px;
+    margin-left: 14px;
+    margin-top: 14px;
+    cursor: pointer;
+  }
+
+}
+.appSubMenu{
+  background-color: white;
+  padding-bottom: 6px;
+  padding-left: 20px;
+  border-bottom: 1px solid grey;
+  a{
+    color: $mainLinkActiveColor;
+    cursor: pointer;
+    line-height: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 6px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-radius: 10px;
+    &.disabled {
+      color: gray;
+      cursor: not-allowed;
+    }
+    &.activeLink{
+      background-color: $subLinkActiveColor;
+      color: white;
+    }
+  }
+}

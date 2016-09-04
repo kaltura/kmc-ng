@@ -43,4 +43,17 @@ export class UserService {
 
         return new KalturaRequest<string>('user','loginByLoginId', parameters, { ksValueGenerator : true });
     }
+
+    static getPartnerById(id : string, options? : { ks? : string }) :  KalturaRequest<string>
+    {
+      const parameters : any = {
+        id : id
+      };
+
+      if (options && options.ks) {
+        parameters.ks = options.ks;
+      }
+
+      return new KalturaRequest<string>('partner','get',parameters);
+    }
 }

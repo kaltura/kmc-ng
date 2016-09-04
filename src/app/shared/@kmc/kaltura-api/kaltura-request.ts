@@ -32,7 +32,7 @@ export  class KalturaRequest<T> {
 
             }
 
-            return response;
+            return Observable.of(response);
         });
     }
 }

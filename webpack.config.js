@@ -233,6 +233,15 @@ module.exports = function makeWebpackConfig() {
   }]));
 
   /**
+   * Copy localization files to public
+   */
+  config.plugins.push(new CopyWebpackPlugin([{
+    context : 'src/i18n',
+    from : '**/*',
+    to: 'i18n'
+  }]));
+
+  /**
    * PostCSS
    * Reference: https://github.com/postcss/autoprefixer-core
    * Add vendor prefixes to your css

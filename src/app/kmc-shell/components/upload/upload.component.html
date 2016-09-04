@@ -1,0 +1,22 @@
+<div *ngIf="uploadOpen" class="uploadWindow">
+  <p class="uploadLabel">{{lang.dic?.uploadMedia}}</p>
+  <div class="uploadButtonsGroup mediaButtons">
+    <button>{{lang.dic?.uploadFromDesktop}}</button>
+    <button>{{lang.dic?.uploadRecord}}</button>
+    <button>{{lang.dic?.uploadImport}}</button>
+    <div class="link"><a>{{lang.dic?.highSpeed}}</a></div>
+  </div>
+
+  <p class="uploadLabel">{{lang.dic?.prepare}}</p>
+  <div class="uploadButtonsGroup prepareButtons">
+    <button>{{lang.dic?.videoEntry}}</button>
+    <button>{{lang.dic?.audioEntry}}</button>
+    <button>{{lang.dic?.liveStream}}</button>
+  </div>
+
+  <p class="uploadLabel">{{lang.dic?.submitBulk}}</p>
+  <div class="uploadButtonsGroup bulk">
+    <div class="link"><a>{{lang.dic?.selectCSV}}</a></div>
+    <div class="link"><a>{{lang.dic?.downloadCSV}}</a></div>
+  </div>
+</div>
