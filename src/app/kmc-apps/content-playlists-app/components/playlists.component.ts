@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-// import { DROPDOWN_DIRECTIVES } from 'ng2-bootstrap';
 
 import { BaseEntryService } from '../../../shared/@kmc/kaltura-api/baseentry.service.ts';
 
@@ -9,7 +8,6 @@ import { BaseEntryService } from '../../../shared/@kmc/kaltura-api/baseentry.ser
   selector: 'kmc-playlists',
   templateUrl: './playlists.component.html',
   styleUrls: ['./playlists.component.scss']
-  // directives: [DROPDOWN_DIRECTIVES],
 })
 export class PlaylistsComponent implements OnInit {
 
