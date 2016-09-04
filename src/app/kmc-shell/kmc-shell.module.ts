@@ -10,7 +10,7 @@ import {UploadComponent} from "./components/upload/upload.component";
 import {UserSettingsComponent} from "./components/user-settings/user-settings.component";
 
 @NgModule({
-  imports:      [ CommonModule, RouterModule.forRoot([]) ],
+  imports:      [ CommonModule, RouterModule.forChild([]) ],
   declarations: [ DashboardComponent, AppMenuComponent, LanguageMenuComponent, LoginComponent, UploadComponent, UserSettingsComponent ],
   exports: [DashboardComponent,LoginComponent ],
   providers:    []
