@@ -6,7 +6,7 @@
 import { Injectable, NgModuleFactory, NgModuleFactoryLoader, Compiler } from '@angular/core';
 
 class LoaderCallback {
-  constructor(public callback: Function, public exportName = "default") {}
+  constructor(public callback: Function, public exportName = 'default') {}
 }
 
 export function load(callback: Function, exportName?: string): any {
@@ -24,7 +24,7 @@ export class AsyncNgModuleLoader implements NgModuleFactoryLoader {
 
   load(modulePath: string | LoaderCallback): Promise<NgModuleFactory<any>> {
     if (modulePath instanceof LoaderCallback) {
-      const loaderCallback = (modulePath as LoaderCallback)
+      const loaderCallback = (modulePath as LoaderCallback);
 
       return loaderCallback.callback(loaderCallback.exportName)
         .then((type: any) => checkNotEmpty(type, loaderCallback.exportName))

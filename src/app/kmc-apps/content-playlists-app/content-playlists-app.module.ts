@@ -3,9 +3,9 @@ import { CommonModule }       from '@angular/common';
 import { FormsModule, ReactiveFormsModule }        from '@angular/forms';
 
 import { routing} from './content-playlists-app.routes';
-import { PlaylistsComponent } from "./components/playlists.component";
-import { PlaylistTypePipe } from "./pipes/playlist.type.pipe";
-import { TimePipe } from "./pipes/time.pipe";
+import { PlaylistsComponent } from './components/playlists.component';
+import { PlaylistTypePipe } from './pipes/playlist.type.pipe';
+import { TimePipe } from './pipes/time.pipe';
 
 @NgModule({
   imports:      [ CommonModule, FormsModule, routing, ReactiveFormsModule ],

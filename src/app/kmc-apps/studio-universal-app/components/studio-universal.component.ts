@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from "../../../shared/@kmc/auth/authentication.service";
 import { KMCConfig } from "../../../shared/@kmc/core/kmc-config.service";
 import { AppContainerComponent } from "../../../shared/@kmc/hosted-apps/app-container/app-container.component";

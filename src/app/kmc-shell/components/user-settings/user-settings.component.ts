@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { AuthenticationService } from "../../../shared/@kmc/auth/authentication.service";
-import { UserContext } from "../../../shared/@kmc/auth/user-context";
-import { KMCBrowserService } from "../../../shared/@kmc/core/kmc-browser.service";
-import { KMCConfig } from "../../../shared/@kmc/core/kmc-config.service";
-import { KMCConsts } from "../../../shared/@kmc/core/kmc-consts";
-import { KMCLanguage } from "../../../shared/@kmc/core/kmc-language.service";
+import { AuthenticationService } from '../../../shared/@kmc/auth/authentication.service';
+import { UserContext } from '../../../shared/@kmc/auth/user-context';
+import { KMCBrowserService } from '../../../shared/@kmc/core/kmc-browser.service';
+import { KMCConfig } from '../../../shared/@kmc/core/kmc-config.service';
+import { KMCConsts } from '../../../shared/@kmc/core/kmc-consts';
+import { KMCLanguage } from '../../../shared/@kmc/core/kmc-language.service';
 import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({
@@ -13,50 +13,50 @@ import { Md5 } from 'ts-md5/dist/md5';
   styleUrls: ['./user-settings.component.scss']
 })
 export class UserSettingsComponent {
-  isOpen:boolean = false;
-  timeoutID:number = null;
-  private _userContext : UserContext;
+  isOpen: boolean = false;
+  timeoutID: number = null;
+  private _userContext: UserContext;
 
-  constructor(private authenticationService : AuthenticationService, private browserService: KMCBrowserService, private kmcConfig: KMCConfig, private lang: KMCLanguage) {
+  constructor(private authenticationService: AuthenticationService, private browserService: KMCBrowserService, private kmcConfig: KMCConfig, private lang: KMCLanguage) {
     this._userContext = authenticationService.userContext;
   }
 
-  setOpen(open){
+  setOpen(open) {
     let _this = this;
     if (open) {
       // give a little threshold to allow the user roll out and back in when trying to click a link
-      if (this.timeoutID){
+      if (this.timeoutID) {
         clearTimeout(this.timeoutID);
         this.timeoutID = null;
       }
       this.isOpen = open;
-    }else{
+    } else {
       this.timeoutID = setTimeout(function(){
         _this.isOpen = open;
-      },500);
+      }, 500);
     }
   }
 
-  logout(){
+  logout() {
     this.authenticationService.logout();
   }
 
-  openUserManual(){
-    this.browserService.openLink(this.kmcConfig.get("core.externalLinks.USER_MANUAL"),{},"_blank");
+  openUserManual() {
+    this.browserService.openLink(this.kmcConfig.get('core.externalLinks.USER_MANUAL'), {}, '_blank');
   }
-  openSupport(){
+  openSupport() {
 console.log(Md5.hashStr('blah blah blah') );
 
     // check if this is a paying partner. If so - open support form. If not - redirect to general support. Use MD5 to pass as a parameter.
     let payingCustomer: boolean = this._userContext.partnerInfo.partnerPackage === KMCConsts.PartnerPackages.PARTNER_PACKAGE_PAID;
 
     let params = {
-      "type": Md5.hashStr(payingCustomer.toString()),
-      "pid": this._userContext.partnerId
+      'type': Md5.hashStr(payingCustomer.toString()),
+      'pid': this._userContext.partnerId
     };
 
     // TODO [kmc] Open support in a modal window over KMC and not in _blank
-    this.browserService.openLink(this.kmcConfig.get("core.externalLinks.SUPPORT"), params, "_blank");
+    this.browserService.openLink(this.kmcConfig.get('core.externalLinks.SUPPORT'), params, '_blank');
   }
 
 }

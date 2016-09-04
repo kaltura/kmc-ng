@@ -3,15 +3,14 @@ import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import * as R from 'ramda';
 
-import { UserContext } from './user-context'
-import { KalturaAPIClient } from "../kaltura-api/kaltura-api-client";
-import { UserService } from "../kaltura-api/user-service";
-import { PermissionService, KalturaPermissionFilterTypes, IKalturaPermissionFilter } from "../kaltura-api/permission-service";
-import { KalturaRequest } from "../kaltura-api/kaltura-request";
-import { KalturaMultiRequest } from "../kaltura-api/kaltura-multi-request";
-import { KMCConfig } from "../core/kmc-config.service";
-import { KMCBrowserService } from "../core/kmc-browser.service";
-import { KalturaAPIConfig } from "../kaltura-api/kaltura-api-config";
+import { UserContext } from './user-context';
+import { KalturaAPIClient } from '../kaltura-api/kaltura-api-client';
+import { UserService } from '../kaltura-api/user-service';
+import { PermissionService, KalturaPermissionFilterTypes, IKalturaPermissionFilter } from '../kaltura-api/permission-service';
+import { KalturaMultiRequest } from '../kaltura-api/kaltura-multi-request';
+import { KMCConfig } from '../core/kmc-config.service';
+import { KMCBrowserService } from '../core/kmc-browser.service';
+import { KalturaAPIConfig } from '../kaltura-api/kaltura-api-config';
 
 
 @Injectable()
@@ -23,8 +22,8 @@ export class AuthenticationService {
                 private kalturaAPIClient : KalturaAPIClient,
                 private kmcConfig : KMCConfig,
                 private browserService : KMCBrowserService,
-                private kalturaAPIConfig : KalturaAPIConfig){
-        this._userContext = new UserContext();
+                private kalturaAPIConfig : KalturaAPIConfig) {
+      this._userContext = new UserContext();
     }
 
     get userContext() : UserContext{
@@ -74,7 +73,7 @@ export class AuthenticationService {
 
                 // TODO [kmc] should remove this logic - for demonstration purposes only
                 const value = `${username};${password}`;
-                console.warn("The login form currently store the loginId and password in session memory (!!!) this is temporary behavior that will be removed during Sep 2016");
+                console.warn('The login form currently store the loginId and password in session memory (!!!) this is temporary behavior that will be removed during Sep 2016');
                 this.browserService.setInSessionStorage('auth.login.avoid',value);  // since we currently store actual login/password, we only allow session storage
 
             }).map((results) => {
@@ -82,41 +81,38 @@ export class AuthenticationService {
             });
     }
 
-    logout(){
+    logout() {
       this.userContext.ks = null;
       this.kalturaAPIConfig.ks = null;
       this.clearBrowserCache();
       this.browserService.removeFromSessionStorage('auth.login.avoid');
-      this.router.navigateByUrl("/");
+      this.router.navigateByUrl('/');
     }
 
-    private clearBrowserCache(){
-        this.browserService.removeFromSessionStorage('auth.ks');
-        this.browserService.removeFromLocalStorage('auth.ks');
+    private clearBrowserCache() {
+      this.browserService.removeFromSessionStorage('auth.ks');
+      this.browserService.removeFromLocalStorage('auth.ks');
     }
 
     private updateBrowserCache(rememberMe:Boolean):void {
         this.clearBrowserCache();
-        if (rememberMe)
-        {
+        if (rememberMe) {
             this.browserService.setInLocalStorage('auth.ks',this.userContext.ks);
-        }else
-        {
+        } else {
             this.browserService.setInSessionStorage('auth.ks',this.userContext.ks);
         }
     }
 
     public loginAutomatically() : Observable<any>
     {
-        if (this.userContext.ks)
-        {
+        if (this.userContext.ks) {
             return Observable.of(true);
         }
 
         // TODO [kmc] should remove this logic - for demonstration purposes only
         const loginToken = this.browserService.getFromSessionStorage('auth.login.avoid');  // since we currently store actual login/password, we only allow session storage
         if (loginToken) {
-            console.warn("The login form currently extract the loginId and password in session memory (!!!) this is temporary behavior that will be removed during Sep 2016");
+            console.warn('The login form currently extract the loginId and password in session memory (!!!) this is temporary behavior that will be removed during Sep 2016');
             const loginTokens = loginToken.split(';');
             return this.login(loginTokens[0],loginTokens[1],false);
         }

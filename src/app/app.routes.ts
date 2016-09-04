@@ -1,10 +1,10 @@
 import { Routes, RouterModule } from '@angular/router';
 
 import {load } from './shared/async-ng-module-loader';
-import { LoginComponent } from "./kmc-shell/components/login/login.component";
-import { DashboardComponent } from "./kmc-shell/components/dashboard/dashboard.component";
+import { LoginComponent } from './kmc-shell/components/login/login.component';
+import { DashboardComponent } from './kmc-shell/components/dashboard/dashboard.component';
 import { ConfigCanActivate } from './kmc-shell/shared';
-import { AuthCanActivate } from "./shared/@kmc/auth/auth-can-activate.service";
+import { AuthCanActivate } from './shared/@kmc/auth/auth-can-activate.service';
 
 const routes: Routes = [
   {
@@ -13,8 +13,8 @@ const routes: Routes = [
 
       { path: 'login', component: LoginComponent },
       {
-        path: '', component: DashboardComponent, canActivate:[AuthCanActivate], children: [
-        { path: 'content', children:[
+        path: '', component: DashboardComponent, canActivate: [AuthCanActivate], children: [
+        { path: 'content', children: [
           { path: '', redirectTo: 'entries', pathMatch: 'full' },
           { path: 'entries', loadChildren: load(() => new Promise(resolve => {
             (require as any).ensure([], require => {

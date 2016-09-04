@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-//import { DROPDOWN_DIRECTIVES } from 'ng2-bootstrap';
+// import { DROPDOWN_DIRECTIVES } from 'ng2-bootstrap';
 
-import { BaseEntryService } from "../../../shared/@kmc/kaltura-api/baseentry.service.ts";
+import { BaseEntryService } from '../../../shared/@kmc/kaltura-api/baseentry.service.ts';
 
 @Component({
   selector: 'kmc-playlists',
   templateUrl: './playlists.component.html',
   styleUrls: ['./playlists.component.scss']
-  //directives: [DROPDOWN_DIRECTIVES],
+  // directives: [DROPDOWN_DIRECTIVES],
 })
 export class PlaylistsComponent implements OnInit {
 
@@ -23,13 +23,13 @@ export class PlaylistsComponent implements OnInit {
       'search': ['', Validators.required]
     });
     this.filter = {
-      "objectType": "KalturaBaseEntryFilter",
-      "typeEqual": "5"
+      'objectType': 'KalturaBaseEntryFilter',
+      'typeEqual': '5'
     }
     this.responseProfile = {
-      "objectType": "KalturaDetachedResponseProfile",
-      "type": "1",
-      "fields": "id,name,playlistType,createdAt"
+      'objectType': 'KalturaDetachedResponseProfile',
+      'type': '1',
+      'fields': 'id,name,playlistType,createdAt'
     }
   }
 
@@ -41,6 +41,6 @@ export class PlaylistsComponent implements OnInit {
   }
 
   onActionSelected(action, entryID){
-    alert("Selected Action: "+action+"\nPlaylist ID: "+entryID);
+    alert('Selected Action: '+action+'\nPlaylist ID: '+entryID);
   }
 }

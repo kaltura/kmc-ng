@@ -22,7 +22,7 @@ import 'rxjs/add/operator/toPromise';
 
 
 // Bootstrap
-//import 'ng2-bootstrap/ng2-bootstrap';
+// import 'ng2-bootstrap/ng2-bootstrap';
 
 
 
