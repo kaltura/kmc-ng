@@ -48,11 +48,9 @@ export class AppContainerComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   registerToHeightChange() : void{
-    console.info("registerToHeightChange");
     const contentArea$ = this.kmcShellService.getContentAreaHeight();
     this._contentAreaHeightSubscriber = contentArea$.subscribe(
         value => {
-          console.info("registerToHeightChange");
           this._$iframe.height(value);
         });
 
