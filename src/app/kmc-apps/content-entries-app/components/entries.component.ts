@@ -3,15 +3,12 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
-//import { DROPDOWN_DIRECTIVES } from 'ng2-bootstrap';
-
 import { BaseEntryService } from "../../../shared/@kmc/kaltura-api/baseentry.service.ts";
 
 @Component({
   selector: 'kmc-entries',
   templateUrl: './entries.component.html',
   styleUrls: ['./entries.component.scss']
-  //directives: [DROPDOWN_DIRECTIVES]
 })
 export class EntriesComponent implements OnInit {
 
