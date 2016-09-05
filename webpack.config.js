@@ -26,6 +26,7 @@ module.exports = function makeWebpackConfig() {
    */
   var config = {};
 
+
   /**
    * Devtool
    * Reference: http://webpack.github.io/docs/configuration.html#devtool
@@ -61,18 +62,16 @@ module.exports = function makeWebpackConfig() {
     chunkFilename: isProd ? '[id].[hash].chunk.js' : '[id].chunk.js'
   };
 
+
   /**
    * Resolve
    * Reference: http://webpack.github.io/docs/configuration.html#resolve
    */
   config.resolve = {
     cache: !isTest,
-    root: root(),
+    root: [path.join(__dirname, 'node_modules')],
     // only discover files that have those extensions
-    extensions: ['', '.ts', '.js', '.json', '.css', '.scss', '.html'],
-    alias: {
-      '@kmc': 'src/app/shared/@kmc'
-    }
+    extensions: ['', '.ts', '.js', '.json', '.css', '.scss', '.html']
   };
 
   /**
@@ -88,7 +87,7 @@ module.exports = function makeWebpackConfig() {
       {
         test: /\.ts$/,
         loaders: ['ts', 'angular2-template-loader'],
-        exclude: [isTest ? /\.(e2e)\.ts$/ : /\.(spec|e2e)\.ts$/, /node_modules\/(?!(ng2-.+))/]
+        exclude: [isTest ? /\.(e2e)\.ts$/ : /\.(spec|e2e)\.ts$/, /node_modules\/.+/]
       },
 
       // copy those assets to output

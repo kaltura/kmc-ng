@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 import { CanActivate, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import {AuthenticationService} from "./authentication.service";
-import { KMCConfig } from '@kmc/core'
+import { KMCConfig } from '../core'
 
 
 

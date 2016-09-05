@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, Input, ElementRef} from '@angular/core';
 import { Subscription } from 'rxjs/rx';
 import * as $ from 'jquery';
-
-import {KMCShellService} from "../../../kmc-shell.service";
+import { KMCShellService } from '@kaltura/kmcng-core';
 
 @Component({
   selector: 'kmc-app-container',

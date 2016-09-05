@@ -31,6 +31,7 @@ import 'jquery';
 import 'moment';
 import 'ramda';
 import 'ng2-webstorage';
+import '@kaltura/kmcng-core';
 
 // Import application theme (not pure vendor but we want is to bundle in vendor)
 import './style/app.scss';

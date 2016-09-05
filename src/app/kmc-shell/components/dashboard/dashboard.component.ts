@@ -1,7 +1,9 @@
 import { Component, OnInit,AfterViewInit,ViewChild, OnDestroy } from '@angular/core';
+import { KMCShellService } from "@kaltura/kmcng-core";
+
 import {AppMenuComponent} from "../app-menu/app-menu.component";
 import { AppMenuService } from '../../shared/app-menu.service';
-import { KMCShellService } from "../../../shared/kmc-shell.service";
+
 import * as $ from 'jquery';
 
 @Component({
