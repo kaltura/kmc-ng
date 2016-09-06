@@ -7,7 +7,7 @@ import { AppMenuItem } from "../../shared/app-menu-config";
 import { UploadComponent } from "../upload/upload.component";
 import { UserSettingsComponent } from "../user-settings/user-settings.component";
 import { LanguageMenuComponent } from "../language-menu/language-menu.component";
-import { KMCLanguage } from "../../../shared/@kmc/core/kmc-language.service";
+import { KMCLanguage } from "@kaltura/kmcng-core";
 
 import * as R from 'ramda';
 

@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
-import { AuthenticationService } from '../../../shared/@kmc/auth/authentication.service';
-import { UserContext } from '../../../shared/@kmc/auth/user-context';
 import { KMCBrowserService } from '../../../shared/@kmc/core/kmc-browser.service';
-import { KMCConfig } from '../../../shared/@kmc/core/kmc-config.service';
 import { KMCConsts } from '../../../shared/@kmc/core/kmc-consts';
-import { KMCLanguage } from '../../../shared/@kmc/core/kmc-language.service';
+import { KMCLanguage, AppConfig, UserAuthentication, AppUser } from '@kaltura/kmcng-core';
 import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({
@@ -15,10 +12,10 @@ import { Md5 } from 'ts-md5/dist/md5';
 export class UserSettingsComponent {
   isOpen: boolean = false;
   timeoutID: number = null;
-  private _userContext: UserContext;
+  private _userContext: AppUser;
 
-  constructor(private authenticationService: AuthenticationService, private browserService: KMCBrowserService, private kmcConfig: KMCConfig, private lang: KMCLanguage) {
-    this._userContext = authenticationService.userContext;
+  constructor(private userAuthentication: UserAuthentication, private browserService: KMCBrowserService, private appConfig: AppConfig, private lang: KMCLanguage) {
+    this._userContext = userAuthentication.appUser;
   }
 
   setOpen(open) {
@@ -38,11 +35,11 @@ export class UserSettingsComponent {
   }
 
   logout() {
-    this.authenticationService.logout();
+    this.userAuthentication.logout();
   }
 
   openUserManual() {
-    this.browserService.openLink(this.kmcConfig.get('core.externalLinks.USER_MANUAL'), {}, '_blank');
+    this.browserService.openLink(this.appConfig.get('core.externalLinks.USER_MANUAL'), {}, '_blank');
   }
   openSupport() {
 console.log(Md5.hashStr('blah blah blah') );
@@ -56,7 +53,7 @@ console.log(Md5.hashStr('blah blah blah') );
     };
 
     // TODO [kmc] Open support in a modal window over KMC and not in _blank
-    this.browserService.openLink(this.kmcConfig.get('core.externalLinks.SUPPORT'), params, '_blank');
+    this.browserService.openLink(this.appConfig.get('core.externalLinks.SUPPORT'), params, '_blank');
   }
 
 }

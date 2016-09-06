@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import {AuthenticationService} from "../../../shared/@kmc/auth/authentication.service";
+import { UserAuthentication } from '@kaltura/kmcng-core';
 import {KMCBrowserService} from "../../../shared/@kmc/core/kmc-browser.service";
 
 @Component({
@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   automaticLogin = false;
   inProgress = false;
   userContext : any;
-  constructor(private authenticationService : AuthenticationService, private browserService : KMCBrowserService) {
+  constructor(private userAuthentication : UserAuthentication, private browserService : KMCBrowserService) {
 
   }
 
@@ -25,10 +25,10 @@ export class LoginComponent implements OnInit {
 
     // TODO [kmc] for demonstration purposes - should not reach the login page if already logged-in
     this.inProgress = true;
-    this.authenticationService.loginAutomatically().subscribe(
+    this.userAuthentication.loginAutomatically().subscribe(
         (result) =>
         {
-          this.userContext = this.authenticationService.userContext;
+          this.userContext = this.userAuthentication.appUser;
           this.automaticLogin = true;
           this.inProgress = false;
         },
@@ -49,10 +49,10 @@ export class LoginComponent implements OnInit {
     this.automaticLogin = false;
 
 
-    this.authenticationService.login(username, password,rememberMe).subscribe(
+    this.userAuthentication.login(username, password,rememberMe).subscribe(
         (result) =>
         {
-          this.userContext = this.authenticationService.userContext;
+          this.userContext = this.userAuthentication.appUser;
 
           this.inProgress = false;
         },

@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, Input, ElementRef} from '@angular/core';
 import { Subscription } from 'rxjs/rx';
+import { Observable } from 'rxjs/Observable';
 import * as $ from 'jquery';
-import { KMCShellService } from '@kaltura/kmcng-core';
+import { ShellService } from '@kaltura/kmcng-core'
 
 @Component({
   selector: 'kmc-app-container',
@@ -15,7 +16,7 @@ export class AppContainerComponent implements OnInit, OnDestroy, AfterViewInit {
   private _$iframe : any;
   private _contentAreaHeightSubscriber : Subscription;
 
-  constructor(private kmcShellService : KMCShellService) {}
+  constructor(private kmcShellService : ShellService) {}
 
   public get HostedAppPath() : string{
     return this._hostedAppPath;

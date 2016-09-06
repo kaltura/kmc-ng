@@ -1,25 +1,22 @@
 import { Injectable } from '@angular/core'
 import { CanActivate, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import {AuthenticationService} from "./authentication.service";
-import { KMCConfig } from '../core'
-
-
+import { AppConfig, UserAuthentication } from "@kaltura/kmcng-core";
 
 @Injectable()
 export class AuthCanActivate implements CanActivate {
-    constructor(private router : Router, private kmcConfig : KMCConfig,  private authenticationService : AuthenticationService) {}
+    constructor(private router : Router, private appConfig : AppConfig,  private userAuthentication : UserAuthentication) {}
     canActivate(route: ActivatedRouteSnapshot,  state: RouterStateSnapshot):Observable<boolean> {
 
         // TODO [kmc] This logic is a bit complex - will be simplified once we will decide on the routing library
         return Observable.create(observer =>
         {
-            const onRefreshSubscribe = this.kmcConfig.onRefresh().subscribe(
+            const onRefreshSubscribe = this.appConfig.onRefresh().subscribe(
                 () => {
                     if (onRefreshSubscribe) {
                         onRefreshSubscribe.unsubscribe();
                     }
-                    this.authenticationService.loginAutomatically().subscribe(
+                    this.userAuthentication.loginAutomatically().subscribe(
                         () => {
                             observer.next(true);
                             observer.complete();

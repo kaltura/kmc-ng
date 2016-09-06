@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import {LocalStorageService, SessionStorageService} from 'ng2-webstorage';
-import {KMCConfig} from "./kmc-config.service";
+
 
 @Injectable()
 export class KMCBrowserService {
 
-  constructor(private kmcConfig : KMCConfig, private localStorage :LocalStorageService, private sessionStorage : SessionStorageService )
+  constructor(private localStorage :LocalStorageService, private sessionStorage : SessionStorageService )
   {}
 
   public setInLocalStorage(key : string, value : any) : void{
