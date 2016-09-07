@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppConfig, UserAuthentication } from '@kaltura/kmcng-core';
-import { AppContainerComponent } from "../../../shared/@kmc/hosted-apps/app-container/app-container.component";
+import { AppContainerComponent } from "@kaltura/kmcng-shell";
 
 declare var window:any;
 

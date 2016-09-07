@@ -1,5 +1,5 @@
 import { Component, OnInit,AfterViewInit,ViewChild, OnDestroy } from '@angular/core';
-import { ShellService } from "@kaltura/kmcng-core";
+import { ShellService } from "@kaltura/kmcng-shell";
 
 import {AppMenuComponent} from "../app-menu/app-menu.component";
 import { AppMenuService } from '../../shared/app-menu.service';
