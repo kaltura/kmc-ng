@@ -5,11 +5,11 @@ import { FormsModule, ReactiveFormsModule }        from '@angular/forms';
 import { routing} from './content-playlists-app.routes';
 import { PlaylistsComponent } from './components/playlists.component';
 import { PlaylistTypePipe } from './pipes/playlist.type.pipe';
-import { TimePipe } from './pipes/time.pipe';
+import { KMCngShellCommonModule } from '@kaltura/kmcng-shell';
 
 @NgModule({
-  imports:      [ CommonModule, FormsModule, routing, ReactiveFormsModule ],
-  declarations: [ PlaylistsComponent, PlaylistTypePipe, TimePipe ],
+  imports:      [ CommonModule, FormsModule, routing, ReactiveFormsModule, KMCngShellCommonModule ],
+  declarations: [ PlaylistsComponent, PlaylistTypePipe ],
   providers:    []
 })
 export class ContentPlaylistsAppModule { }

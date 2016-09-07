@@ -10,7 +10,7 @@ import { KalturaApiModule } from '@kaltura/kaltura-api';
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
 import { AuthCanActivate } from './shared/@kmc/auth/auth-can-activate.service';
-import { TimePipe } from './shared/@kmc/pipes/time.pipe';
+import { TimePipe } from '@kaltura/kmcng-shell';
 import { KMCBrowserService } from './shared/@kmc/core/kmc-browser.service';
 import { KMCShellAppModule } from './kmc-shell/kmc-shell.module';
 import { ConfigCanActivate } from "./kmc-shell/shared/config-can-activate.service";
@@ -20,9 +20,6 @@ import { ConfigCanActivate } from "./kmc-shell/shared/config-can-activate.servic
 if (process.env.ENV === 'build') {
   enableProdMode();
 }
-
-console.log(KMCngCoreModule);
-console.log(KMCShellAppModule);
 
 @NgModule({
   imports: <any>[ BrowserModule, HttpModule, routing, KMCngCoreModule, KalturaApiModule, KMCShellAppModule, RouterModule.forRoot([])],       // module dependencies

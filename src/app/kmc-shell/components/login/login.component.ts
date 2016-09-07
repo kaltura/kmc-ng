@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { UserAuthentication } from '@kaltura/kmcng-core';
+import { AppAuthentication } from '@kaltura/kmcng-core';
 import {KMCBrowserService} from "../../../shared/@kmc/core/kmc-browser.service";
 
 @Component({
@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   automaticLogin = false;
   inProgress = false;
   userContext : any;
-  constructor(private userAuthentication : UserAuthentication, private browserService : KMCBrowserService) {
+  constructor(private userAuthentication : AppAuthentication, private browserService : KMCBrowserService) {
 
   }
 

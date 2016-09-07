@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AppConfig, UserAuthentication } from '@kaltura/kmcng-core';
-import { AppContainerComponent } from "../../../shared/@kmc/hosted-apps/app-container/app-container.component";
+import { AppConfig, AppAuthentication } from '@kaltura/kmcng-core';
+import { AppContainerComponent } from "@kaltura/kmcng-shell";
 
 declare var window:any;
 
@@ -11,7 +11,7 @@ declare var window:any;
 })
 export class StudioUniversalComponent implements OnInit {
 
-  constructor(private userAuthentication : UserAuthentication, private appConfig : AppConfig) {}
+  constructor(private userAuthentication : AppAuthentication, private appConfig : AppConfig) {}
 
   // private variables
 
