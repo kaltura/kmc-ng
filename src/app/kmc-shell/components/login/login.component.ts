@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { AppAuthentication } from '@kaltura/kmcng-core';
-import {KMCBrowserService} from "../../../shared/@kmc/core/kmc-browser.service";
+import { KMCBrowserService } from '@kaltura/kmcng-shell';
 
 @Component({
   selector: 'kmc-login',
