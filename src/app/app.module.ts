@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { NG2_WEBSTORAGE } from 'ng2-webstorage';
 
-import { KMCngCoreModule } from '@kaltura/kmcng-core';
+import { KMCngCoreModule, AppStorage } from '@kaltura/kmcng-core';
 import { KalturaApiModule } from '@kaltura/kaltura-api';
 
 import { AppComponent } from './app.component';
@@ -29,6 +29,7 @@ console.log(KMCShellAppModule);
   declarations: <any>[ AppComponent ],   // components and directives
   bootstrap: <any>[ AppComponent ],     // root component
   providers: <any>[
+    { provide : AppStorage,  useExisting : KMCBrowserService },
     ConfigCanActivate,
     KMCBrowserService,
     TimePipe,

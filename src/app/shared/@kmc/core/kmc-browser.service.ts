@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
+import { IAppStorage } from '@kaltura/kmcng-core';
+
 import {LocalStorageService, SessionStorageService} from 'ng2-webstorage';
 
 
 @Injectable()
-export class KMCBrowserService {
+export class KMCBrowserService implements IAppStorage{
 
   constructor(private localStorage :LocalStorageService, private sessionStorage : SessionStorageService )
   {}
