@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { KMCBrowserService } from '../../../shared/@kmc/core/kmc-browser.service';
 import { KMCConsts } from '../../../shared/@kmc/core/kmc-consts';
-import { KMCLanguage, AppConfig, UserAuthentication, AppUser } from '@kaltura/kmcng-core';
+import { KMCLanguage, AppConfig, AppAuthentication, AppUser } from '@kaltura/kmcng-core';
 import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({
@@ -14,7 +14,7 @@ export class UserSettingsComponent {
   timeoutID: number = null;
   private _userContext: AppUser;
 
-  constructor(private userAuthentication: UserAuthentication, private browserService: KMCBrowserService, private appConfig: AppConfig, private lang: KMCLanguage) {
+  constructor(private userAuthentication: AppAuthentication, private browserService: KMCBrowserService, private appConfig: AppConfig, private lang: KMCLanguage) {
     this._userContext = userAuthentication.appUser;
   }
 
