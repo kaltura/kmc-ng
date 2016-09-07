@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { KalturaAPIClient } from '@kaltura/kapi';
-import { BaseEntryService } from '@kaltura/kapi/dist/base-entry'
+import { KalturaAPIClient } from '@kaltura/kaltura-api';
+import { BaseEntryService } from '@kaltura/kaltura-api/dist/base-entry'
 
 //import { DROPDOWN_DIRECTIVES } from 'ng2-bootstrap';
 

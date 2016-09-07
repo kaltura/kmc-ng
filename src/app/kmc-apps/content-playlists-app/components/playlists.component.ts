@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { KalturaAPIClient } from '@kaltura/kapi';
+import { KalturaAPIClient } from '@kaltura/kaltura-api';
 // import { DROPDOWN_DIRECTIVES } from 'ng2-bootstrap';
 
 
-import { BaseEntryService } from '@kaltura/kapi/dist/base-entry';
+import { BaseEntryService } from '@kaltura/kaltura-api/dist/base-entry';
 
 @Component({
   selector: 'kmc-playlists',

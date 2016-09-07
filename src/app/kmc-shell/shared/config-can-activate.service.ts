@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { AppConfig } from '@kaltura/kmcng-core';
-import { KalturaAPIConfig } from '@kaltura/kapi';
+import { KalturaAPIConfig } from '@kaltura/kaltura-api';
 
 @Injectable()
 export class ConfigCanActivate implements CanActivate {

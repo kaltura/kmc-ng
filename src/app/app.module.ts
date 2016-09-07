@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 import { NG2_WEBSTORAGE } from 'ng2-webstorage';
 
 import { KMCngCoreModule } from '@kaltura/kmcng-core';
-import { KalturaApiModule } from '@kaltura/kapi';
+import { KalturaApiModule } from '@kaltura/kaltura-api';
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
