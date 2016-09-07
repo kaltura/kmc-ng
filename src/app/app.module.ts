@@ -11,7 +11,7 @@ import { AppComponent } from './app.component';
 import { routing } from './app.routes';
 import { AuthCanActivate } from './shared/@kmc/auth/auth-can-activate.service';
 import { TimePipe } from '@kaltura/kmcng-shell';
-import { KMCBrowserService } from './shared/@kmc/core/kmc-browser.service';
+import { KMCBrowserService } from '@kaltura/kmcng-shell';
 import { KMCShellAppModule } from './kmc-shell/kmc-shell.module';
 import { ConfigCanActivate } from "./kmc-shell/shared/config-can-activate.service";
 

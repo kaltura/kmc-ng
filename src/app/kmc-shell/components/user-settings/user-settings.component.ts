@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { KMCBrowserService } from '../../../shared/@kmc/core/kmc-browser.service';
+import { KMCBrowserService } from '@kaltura/kmcng-shell';
 import { KMCConsts } from '../../../shared/@kmc/core/kmc-consts';
 import { KMCLanguage, AppConfig, AppAuthentication, AppUser } from '@kaltura/kmcng-core';
 import { Md5 } from 'ts-md5/dist/md5';
@@ -42,8 +42,6 @@ export class UserSettingsComponent {
     this.browserService.openLink(this.appConfig.get('core.externalLinks.USER_MANUAL'), {}, '_blank');
   }
   openSupport() {
-console.log(Md5.hashStr('blah blah blah') );
-
     // check if this is a paying partner. If so - open support form. If not - redirect to general support. Use MD5 to pass as a parameter.
     let payingCustomer: boolean = this._userContext.partnerInfo.partnerPackage === KMCConsts.PartnerPackages.PARTNER_PACKAGE_PAID;
 
