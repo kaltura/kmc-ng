@@ -1,9 +1,14 @@
 import { NgModule, Injectable } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpModule } from '@angular/http';
 import { CommonModule }       from '@angular/common';
+import { KMCngCoreModule, AppStorage } from '@kaltura/kmcng-core';
+import { KalturaApiModule } from '@kaltura/kaltura-api';
 import { KMCngShellCoreModule } from '@kaltura/kmcng-shell';
 import { GetConfigPostLoadProvider, PostLoadAdapter } from '@kaltura/kmcng-core';
 import { KalturaAPIConfig } from '@kaltura/kaltura-api';
+import { NG2_WEBSTORAGE } from 'ng2-webstorage';
 
 import { DashboardComponent } from "./components/dashboard/dashboard.component";
 import {AppMenuComponent} from "./components/app-menu/app-menu.component";
@@ -11,6 +16,7 @@ import {LanguageMenuComponent} from "./components/language-menu/language-menu.co
 import {LoginComponent} from "./components/login/login.component";
 import {UploadComponent} from "./components/upload/upload.component";
 import {UserSettingsComponent} from "./components/user-settings/user-settings.component";
+import { BrowserService } from '@kaltura/kmcng-shell';
 
 @Injectable()
 class KalturaAPIConfigConfigAdapter implements PostLoadAdapter
@@ -28,7 +34,15 @@ class KalturaAPIConfigConfigAdapter implements PostLoadAdapter
 }
 
 @NgModule({
-  imports:      [ CommonModule, KMCngShellCoreModule, RouterModule.forChild([]) ],
+  imports:      [
+    CommonModule,
+    KMCngShellCoreModule,
+    RouterModule.forChild([]),
+    BrowserModule,
+    HttpModule,
+    KMCngCoreModule,
+    KalturaApiModule,
+    ],
   declarations: [
     DashboardComponent,
     AppMenuComponent,
@@ -38,7 +52,8 @@ class KalturaAPIConfigConfigAdapter implements PostLoadAdapter
     UserSettingsComponent ],
   exports: [DashboardComponent,LoginComponent ],
   providers:    [
-    GetConfigPostLoadProvider(KalturaAPIConfigConfigAdapter)
+    GetConfigPostLoadProvider(KalturaAPIConfigConfigAdapter),
+    NG2_WEBSTORAGE
   ]
 })
 export class KMCShellAppModule { }

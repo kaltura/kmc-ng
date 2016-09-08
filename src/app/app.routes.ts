@@ -1,10 +1,8 @@
 import { Routes, RouterModule } from '@angular/router';
+import { AuthCanActivate, ConfigCanActivate } from '@kaltura/kmcng-core';
 
 import { LoginComponent } from './kmc-shell/components/login/login.component';
 import { DashboardComponent } from './kmc-shell/components/dashboard/dashboard.component';
-
-import { AuthCanActivate } from './shared/@kmc/auth/auth-can-activate.service';
-import {ConfigCanActivate} from "./kmc-shell/shared/config-can-activate.service";
 
 const routes: Routes = <Routes>[
   {
