@@ -38,7 +38,7 @@
     "jquery": "^3.1.0",
     "lodash": "^4.14.1",
     "moment": "^2.14.1",
-    "ng2-bootstrap": "^1.0.24",
+    "ng2-bootstrap": "^1.1.1",
     "ng2-webstorage": "^1.1.0",
     "ramda": "^0.22.1",
     "ts-md5": "^1.2.0"
