@@ -4,6 +4,7 @@ import { AuthCanActivate, ConfigCanActivate } from '@kaltura/kmcng-core';
 import { LoginComponent } from './kmc-shell/components/login/login.component';
 import { DashboardComponent } from './kmc-shell/components/dashboard/dashboard.component';
 
+
 const routes: Routes = <Routes>[
   {
     path: '', canActivate: [ConfigCanActivate],
