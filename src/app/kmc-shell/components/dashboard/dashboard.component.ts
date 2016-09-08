@@ -1,5 +1,5 @@
 import { Component, OnInit,AfterViewInit,ViewChild, OnDestroy } from '@angular/core';
-import { ShellService } from "@kaltura/kmcng-shell";
+import { AppShellService } from "@kaltura/kmcng-shell";
 
 import {AppMenuComponent} from "../app-menu/app-menu.component";
 import { AppMenuService } from '../../shared/app-menu.service';
@@ -16,7 +16,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   @ViewChild('appMenu',true) private _appMenuRef : any;
   private onResize : () => void;
 
-  constructor(private shellService : ShellService) {
+  constructor(private appShellService : AppShellService) {
     this.onResize = this._resizeContent.bind(this);
   }
 
@@ -24,7 +24,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   {
     const $window = $(window);
     const $appMenu = $(this._appMenuRef.nativeElement);
-    this.shellService.setContentAreaHeight($window.outerHeight()-$appMenu.outerHeight());
+    this.appShellService.setContentAreaHeight($window.outerHeight()-$appMenu.outerHeight());
   }
 
   ngAfterViewInit()
