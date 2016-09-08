@@ -6,15 +6,10 @@ import { KalturaAPIConfig } from '@kaltura/kaltura-api';
 
 @Injectable()
 export class ConfigCanActivate implements CanActivate {
-    constructor(private appConfig : AppConfig, private kalturaAPIConfig : KalturaAPIConfig) {}
+    constructor(private appConfig : AppConfig) {}
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Observable<boolean> {
         return <Observable<boolean>>Observable.fromPromise(this.appConfig.load()
             .then(() => {
-                const { apiUrl, apiVersion }  = this.appConfig.get('core.kaltura');
-
-                this.kalturaAPIConfig.apiUrl = apiUrl;
-                this.kalturaAPIConfig.apiVersion = apiVersion;
-
                 return true;
             })
             .catch((error) => Observable.throw(error)));

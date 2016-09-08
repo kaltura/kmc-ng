@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { AppAuthentication } from '@kaltura/kmcng-core';
+import { AppAuthentication, AppAuthEventTypes } from '@kaltura/kmcng-core';
 import { BrowserService } from '@kaltura/kmcng-shell';
 
 @Component({
@@ -16,23 +16,34 @@ export class LoginComponent implements OnInit {
   automaticLogin = false;
   inProgress = false;
   userContext : any;
-  constructor(private userAuthentication : AppAuthentication, private browserService : BrowserService) {
+  constructor(private appAuthentication : AppAuthentication, private browserService : BrowserService) {
 
   }
 
   ngOnInit() {
     this.updateSessionKS();
 
-    // TODO [kmc] for demonstration purposes - should not reach the login page if already logged-in
+
     this.inProgress = true;
-    this.userAuthentication.loginAutomatically().subscribe(
+    const appEventSubscriber = this.appAuthentication.appEvents$.subscribe(
         (result) =>
         {
-          this.userContext = this.userAuthentication.appUser;
-          this.automaticLogin = true;
-          this.inProgress = false;
+          if (result !== AppAuthEventTypes.Bootstrapping) {
+            if (appEventSubscriber) {
+              appEventSubscriber.unsubscribe();
+            }
+
+            this.userContext = this.appAuthentication.appUser;
+            this.inProgress = false;
+          }
         },
         (err) =>{
+          if (appEventSubscriber)
+          {
+            appEventSubscriber.unsubscribe();
+          }
+
+          this.errorMessage = err.message;
           this.inProgress = false;
         }
     );
@@ -50,10 +61,10 @@ export class LoginComponent implements OnInit {
     this.automaticLogin = false;
 
 
-    this.userAuthentication.login(username, password,rememberMe).subscribe(
+    this.appAuthentication.login(username, password,rememberMe).subscribe(
         (result) =>
         {
-          this.userContext = this.userAuthentication.appUser;
+          this.userContext = this.appAuthentication.appUser;
 
           this.inProgress = false;
         },

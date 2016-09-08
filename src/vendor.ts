@@ -10,6 +10,7 @@ import '@angular/router';
 import 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/observable/of';
 
 // RxJS Operators
 import 'rxjs/add/operator/do';
