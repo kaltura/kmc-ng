@@ -17,13 +17,17 @@ export class AuthCanActivate implements CanActivate {
         {
             const appEventsSubscription = this.appAuthentication.appEvents$.subscribe(
                 (eventType : AppAuthEventTypes) => {
-                    if (appEventsSubscription) {
-                        appEventsSubscription.unsubscribe();
-                    }
 
-                    const isLogged = eventType === AppAuthEventTypes.UserLoggedIn ? true : false;
-                    observer.next(isLogged);
-                    observer.complete();
+                    const isLogged =  ((eventType === AppAuthEventTypes.UserLoggedIn) ? true : false);
+
+                    if (eventType !== AppAuthEventTypes.Bootstrapping) {
+                        if (appEventsSubscription) {
+                            appEventsSubscription.unsubscribe();
+                        }
+
+                        observer.next(isLogged);
+                        observer.complete();
+                    }
                 },
                 () => {
                     // error with configuration
