@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { BrowserService } from '@kaltura/kmcng-shell';
 import { KMCLanguage, AppConfig, AppAuthentication, AppUser, PartnerPackageTypes } from '@kaltura/kmcng-core';
 import { Md5 } from 'ts-md5/dist/md5';
@@ -13,7 +14,7 @@ export class UserSettingsComponent {
   timeoutID: number = null;
   private _userContext: AppUser;
 
-  constructor(private userAuthentication: AppAuthentication, private browserService: BrowserService, private appConfig: AppConfig, private lang: KMCLanguage) {
+  constructor(private userAuthentication: AppAuthentication, private router : Router, private browserService: BrowserService, private appConfig: AppConfig, private lang: KMCLanguage) {
     this._userContext = userAuthentication.appUser;
   }
 
@@ -35,6 +36,8 @@ export class UserSettingsComponent {
 
   logout() {
     this.userAuthentication.logout();
+    // TODO [kmcng] emit event instead and move logic to kmc shell
+    this.router.navigateByUrl('/');
   }
 
   openUserManual() {
