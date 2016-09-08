@@ -6,8 +6,7 @@ import { CommonModule }       from '@angular/common';
 import { KMCngCoreModule, AppStorage } from '@kaltura/kmcng-core';
 import { KalturaApiModule } from '@kaltura/kaltura-api';
 import { KMCngShellCoreModule } from '@kaltura/kmcng-shell';
-import { GetConfigPostLoadProvider, PostLoadAdapter } from '@kaltura/kmcng-core';
-import { KalturaAPIConfig } from '@kaltura/kaltura-api';
+import { GetConfigPostLoadProvider } from '@kaltura/kmcng-core';
 import { NG2_WEBSTORAGE } from 'ng2-webstorage';
 
 import { DashboardComponent } from "./components/dashboard/dashboard.component";
@@ -18,20 +17,7 @@ import {UploadComponent} from "./components/upload/upload.component";
 import {UserSettingsComponent} from "./components/user-settings/user-settings.component";
 import { BrowserService } from '@kaltura/kmcng-shell';
 
-@Injectable()
-class KalturaAPIConfigConfigAdapter implements PostLoadAdapter
-{
-  constructor(private kalturaAPIConfig : KalturaAPIConfig){
-
-  }
-  execute(config : any) : void{
-    // TODO [kmc] handle error scenarios (missing core.kaltura)
-    const { apiUrl, apiVersion }  = config.core.kaltura;
-    const kalturaAPIConfig  = this.kalturaAPIConfig;
-    kalturaAPIConfig.apiUrl = apiUrl;
-    kalturaAPIConfig.apiVersion = apiVersion;
-  }
-}
+import { KalturaAPIConfigAdapter } from './shared/kaltura-api-config-adapter.service';
 
 @NgModule({
   imports:      [
@@ -52,7 +38,7 @@ class KalturaAPIConfigConfigAdapter implements PostLoadAdapter
     UserSettingsComponent ],
   exports: [DashboardComponent,LoginComponent ],
   providers:    [
-    GetConfigPostLoadProvider(KalturaAPIConfigConfigAdapter),
+    GetConfigPostLoadProvider(KalturaAPIConfigAdapter),
     NG2_WEBSTORAGE
   ]
 })
