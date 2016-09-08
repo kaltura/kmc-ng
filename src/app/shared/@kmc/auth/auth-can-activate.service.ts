@@ -1,37 +1,33 @@
 import { Injectable } from '@angular/core'
 import { CanActivate, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import {AuthenticationService} from "./authentication.service";
-import { KMCConfig } from '@kmc/core'
-
-
+import { AppConfig, AppAuthentication, AppAuthEventTypes } from "@kaltura/kmcng-core";
 
 @Injectable()
 export class AuthCanActivate implements CanActivate {
-    constructor(private router : Router, private kmcConfig : KMCConfig,  private authenticationService : AuthenticationService) {}
+    constructor(private router : Router, private appConfig : AppConfig,  private appAuthentication : AppAuthentication) {}
     canActivate(route: ActivatedRouteSnapshot,  state: RouterStateSnapshot):Observable<boolean> {
 
-        // TODO [kmc] This logic is a bit complex - will be simplified once we will decide on the routing library
+        if (this.appAuthentication.isLogged())
+        {
+            return Observable.of(true);
+        }
+
         return Observable.create(observer =>
         {
-            const onRefreshSubscribe = this.kmcConfig.onRefresh().subscribe(
-                () => {
-                    if (onRefreshSubscribe) {
-                        onRefreshSubscribe.unsubscribe();
-                    }
-                    this.authenticationService.loginAutomatically().subscribe(
-                        () => {
-                            observer.next(true);
-                            observer.complete();
-                        },
-                        () => {
-                            // user not logged
-                            this.router.navigate(['login']);
+            const appEventsSubscription = this.appAuthentication.appEvents$.subscribe(
+                (eventType : AppAuthEventTypes) => {
 
-                            observer.next(false);
-                            observer.complete();
+                    const isLogged =  ((eventType === AppAuthEventTypes.UserLoggedIn) ? true : false);
+
+                    if (eventType !== AppAuthEventTypes.Bootstrapping) {
+                        if (appEventsSubscription) {
+                            appEventsSubscription.unsubscribe();
                         }
-                    );
+
+                        observer.next(isLogged);
+                        observer.complete();
+                    }
                 },
                 () => {
                     // error with configuration
@@ -39,7 +35,6 @@ export class AuthCanActivate implements CanActivate {
                     observer.complete();
                 }
             );
-
         });
     }
 }

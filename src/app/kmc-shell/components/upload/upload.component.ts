@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { KMCLanguage } from "../../../shared/@kmc/core/kmc-language.service";
+import { KMCLanguage } from "@kaltura/kmcng-core";
 
 @Component({
   selector: 'kmc-upload',

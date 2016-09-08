@@ -2,10 +2,11 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { LoginComponent } from './kmc-shell/components/login/login.component';
 import { DashboardComponent } from './kmc-shell/components/dashboard/dashboard.component';
-import { ConfigCanActivate } from './kmc-shell/shared';
-import { AuthCanActivate } from './shared/@kmc/auth/auth-can-activate.service';
 
-const routes: Routes = [
+import { AuthCanActivate } from './shared/@kmc/auth/auth-can-activate.service';
+import {ConfigCanActivate} from "./kmc-shell/shared/config-can-activate.service";
+
+const routes: Routes = <Routes>[
   {
     path: '', canActivate: [ConfigCanActivate],
     children: [

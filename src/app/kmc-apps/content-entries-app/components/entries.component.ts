@@ -2,13 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { KalturaAPIClient } from '@kaltura/kaltura-api';
+import { BaseEntryService } from '@kaltura/kaltura-api/dist/base-entry'
 
-import { BaseEntryService } from "../../../shared/@kmc/kaltura-api/baseentry.service.ts";
+//import { DROPDOWN_DIRECTIVES } from 'ng2-bootstrap';
+
+
 
 @Component({
   selector: 'kmc-entries',
   templateUrl: './entries.component.html',
   styleUrls: ['./entries.component.scss']
+  //directives: [DROPDOWN_DIRECTIVES]
 })
 export class EntriesComponent implements OnInit {
 
@@ -17,7 +22,7 @@ export class EntriesComponent implements OnInit {
   private filter: any;
   private responseProfile: any;
 
-  constructor(private baseEntryService: BaseEntryService, private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private kalturaAPIClient : KalturaAPIClient) {
     this.searchForm = this.formBuilder.group({
       'search': ['', Validators.required]
     });
@@ -36,7 +41,10 @@ export class EntriesComponent implements OnInit {
     this.entries$ = this.searchForm.controls['search'].valueChanges
       .startWith('')
       .debounceTime(500)
-      .switchMap(value => this.baseEntryService.list(value, this.filter, this.responseProfile));
+      .switchMap(value =>
+          BaseEntryService.list(value, this.filter, this.responseProfile)
+              .execute(this.kalturaAPIClient)
+              .map(response => response.objects));
   }
 
   onActionSelected(action, entryID){

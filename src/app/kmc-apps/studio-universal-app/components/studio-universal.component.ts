@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from "../../../shared/@kmc/auth/authentication.service";
-import { KMCConfig } from "../../../shared/@kmc/core/kmc-config.service";
-import { AppContainerComponent } from "../../../shared/@kmc/hosted-apps/app-container/app-container.component";
+import { AppConfig, AppAuthentication } from '@kaltura/kmcng-core';
+import { AppContainerComponent } from "@kaltura/kmcng-shell";
 
 declare var window:any;
 
@@ -12,7 +11,7 @@ declare var window:any;
 })
 export class StudioUniversalComponent implements OnInit {
 
-  constructor(private authenticationService : AuthenticationService, private kmcConfig : KMCConfig) {}
+  constructor(private userAuthentication : AppAuthentication, private appConfig : AppConfig) {}
 
   // private variables
 
@@ -35,8 +34,8 @@ export class StudioUniversalComponent implements OnInit {
       version : '3',
       preview_embed: null, // redundant feature (null on purpose)
       vars: {
-        ks : this.authenticationService.userContext.ks,
-        api_url : this.kmcConfig.get('modules.studio_universal.apiUrl'),
+        ks : this.userAuthentication.appUser.ks,
+        api_url : this.appConfig.get('modules.studio_universal.apiUrl'),
         studio: {
           version : "v2.0.5",
           showHTMLStudio : false,

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {AuthenticationService} from "../../../shared/@kmc/auth/authentication.service";
-import {UserContext} from "../../../shared/@kmc/auth/user-context";
+
+import { AppUser, AppAuthentication } from '@kaltura/kmcng-core';
 
 @Component({
   selector: 'kmc-dashboard',
@@ -11,11 +11,11 @@ import {UserContext} from "../../../shared/@kmc/auth/user-context";
 export class DashboardComponent implements OnInit {
 
   path : string;
-  private _userContext : UserContext;
+  private _userContext : AppUser;
 
-  constructor(r : ActivatedRoute, private authenticationService : AuthenticationService) {
+  constructor(r : ActivatedRoute, private authenticationService : AppAuthentication) {
     this.path = r.snapshot.url.map((item) => item.path).join('/');
-    this._userContext = authenticationService.userContext;
+    this._userContext = authenticationService.appUser;
   }
 
   ngOnInit() {

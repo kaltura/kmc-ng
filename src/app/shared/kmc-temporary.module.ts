@@ -2,7 +2,7 @@ import { NgModule }           from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule }       from '@angular/common';
 
-import {AppContainerComponent} from "./@kmc/hosted-apps/app-container/app-container.component";
+import {AppContainerComponent} from "@kaltura/kmcng-shell";
 
 @NgModule({
     imports: [

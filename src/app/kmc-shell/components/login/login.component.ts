@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import {AuthenticationService} from "../../../shared/@kmc/auth/authentication.service";
-import {KMCBrowserService} from "../../../shared/@kmc/core/kmc-browser.service";
+import { AppAuthentication, AppAuthEventTypes } from '@kaltura/kmcng-core';
+import { BrowserService } from '@kaltura/kmcng-shell';
 
 @Component({
   selector: 'kmc-login',
@@ -16,27 +16,39 @@ export class LoginComponent implements OnInit {
   automaticLogin = false;
   inProgress = false;
   userContext : any;
-  constructor(private authenticationService : AuthenticationService, private browserService : KMCBrowserService) {
+  constructor(private appAuthentication : AppAuthentication, private browserService : BrowserService) {
 
   }
 
   ngOnInit() {
     this.updateSessionKS();
 
-    // TODO [kmc] for demonstration purposes - should not reach the login page if already logged-in
+
     this.inProgress = true;
-    this.authenticationService.loginAutomatically().subscribe(
+    const appEventSubscriber = this.appAuthentication.appEvents$.subscribe(
         (result) =>
         {
-          this.userContext = this.authenticationService.userContext;
-          this.automaticLogin = true;
-          this.inProgress = false;
+          if (result !== AppAuthEventTypes.Bootstrapping) {
+            if (appEventSubscriber) {
+              appEventSubscriber.unsubscribe();
+            }
+
+            this.userContext = this.appAuthentication.appUser;
+            this.inProgress = false;
+          }
         },
         (err) =>{
+          if (appEventSubscriber)
+          {
+            appEventSubscriber.unsubscribe();
+          }
+
+          this.errorMessage = err.message;
           this.inProgress = false;
         }
     );
   }
+
 
   login(username, password, rememberMe,event) {
 
@@ -49,10 +61,10 @@ export class LoginComponent implements OnInit {
     this.automaticLogin = false;
 
 
-    this.authenticationService.login(username, password,rememberMe).subscribe(
+    this.appAuthentication.login(username, password,rememberMe).subscribe(
         (result) =>
         {
-          this.userContext = this.authenticationService.userContext;
+          this.userContext = this.appAuthentication.appUser;
 
           this.inProgress = false;
         },

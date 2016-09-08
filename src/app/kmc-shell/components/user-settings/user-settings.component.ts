@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
-import { AuthenticationService } from '../../../shared/@kmc/auth/authentication.service';
-import { UserContext } from '../../../shared/@kmc/auth/user-context';
-import { KMCBrowserService } from '../../../shared/@kmc/core/kmc-browser.service';
-import { KMCConfig } from '../../../shared/@kmc/core/kmc-config.service';
-import { KMCConsts } from '../../../shared/@kmc/core/kmc-consts';
-import { KMCLanguage } from '../../../shared/@kmc/core/kmc-language.service';
+import { Router } from '@angular/router';
+import { BrowserService } from '@kaltura/kmcng-shell';
+import { KMCLanguage, AppConfig, AppAuthentication, AppUser, PartnerPackageTypes } from '@kaltura/kmcng-core';
 import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({
@@ -15,10 +12,10 @@ import { Md5 } from 'ts-md5/dist/md5';
 export class UserSettingsComponent {
   isOpen: boolean = false;
   timeoutID: number = null;
-  private _userContext: UserContext;
+  private _userContext: AppUser;
 
-  constructor(private authenticationService: AuthenticationService, private browserService: KMCBrowserService, private kmcConfig: KMCConfig, private lang: KMCLanguage) {
-    this._userContext = authenticationService.userContext;
+  constructor(private userAuthentication: AppAuthentication, private router : Router, private browserService: BrowserService, private appConfig: AppConfig, private lang: KMCLanguage) {
+    this._userContext = userAuthentication.appUser;
   }
 
   setOpen(open) {
@@ -38,25 +35,24 @@ export class UserSettingsComponent {
   }
 
   logout() {
-    this.authenticationService.logout();
+    this.userAuthentication.logout();
+    // TODO [kmcng] emit event instead and move logic to kmc shell
+    this.router.navigateByUrl('/');
   }
 
   openUserManual() {
-    this.browserService.openLink(this.kmcConfig.get('core.externalLinks.USER_MANUAL'), {}, '_blank');
+    this.browserService.openLink(this.appConfig.get('core.externalLinks.USER_MANUAL'), {}, '_blank');
   }
   openSupport() {
-console.log(Md5.hashStr('blah blah blah') );
-
     // check if this is a paying partner. If so - open support form. If not - redirect to general support. Use MD5 to pass as a parameter.
-    let payingCustomer: boolean = this._userContext.partnerInfo.partnerPackage === KMCConsts.PartnerPackages.PARTNER_PACKAGE_PAID;
-
+    let payingCustomer: boolean = this._userContext.partnerInfo.partnerPackage === PartnerPackageTypes.PartnerPackagePaid;
     let params = {
       'type': Md5.hashStr(payingCustomer.toString()),
       'pid': this._userContext.partnerId
     };
 
     // TODO [kmc] Open support in a modal window over KMC and not in _blank
-    this.browserService.openLink(this.kmcConfig.get('core.externalLinks.SUPPORT'), params, '_blank');
+    this.browserService.openLink(this.appConfig.get('core.externalLinks.SUPPORT'), params, '_blank');
   }
 
 }

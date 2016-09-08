@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core'
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { KMCConfig } from '@kmc/core';
-
+import { AppConfig } from '@kaltura/kmcng-core';
+import { KalturaAPIConfig } from '@kaltura/kaltura-api';
 
 @Injectable()
 export class ConfigCanActivate implements CanActivate {
-    constructor(private kmcConfig : KMCConfig) {}
+    constructor(private appConfig : AppConfig) {}
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Observable<boolean> {
-        return Observable.fromPromise(this.kmcConfig.load()
-            .then(() => true)
+        return <Observable<boolean>>Observable.fromPromise(this.appConfig.load()
+            .then(() => {
+                return true;
+            })
             .catch((error) => Observable.throw(error)));
 
 

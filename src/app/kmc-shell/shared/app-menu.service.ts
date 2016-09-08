@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 
 import { AppMenuConfig } from './app-menu-config'
-import { KMCConfig } from "../../shared/@kmc/core/kmc-config.service";
+import { AppConfig } from "@kaltura/kmcng-core";
 
 @Injectable()
 export class AppMenuService {
 
-  constructor(private kmcConfig : KMCConfig) {}
+  constructor(private appConfig : AppConfig) {}
 
   getMenuConfig() : AppMenuConfig {
-    return this.kmcConfig.get("core.menuConfig");
+    return this.appConfig.get("core.menuConfig");
   }
 
 

@@ -4,62 +4,32 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { NG2_WEBSTORAGE } from 'ng2-webstorage';
 
+import { KMCngCoreModule, AppStorage } from '@kaltura/kmcng-core';
+import { KalturaApiModule } from '@kaltura/kaltura-api';
+
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
-import { KMCConfig, KMCLanguage } from './shared/@kmc/core';
-import { ConfigCanActivate } from './kmc-shell/shared';
-import { AuthenticationService } from './shared/@kmc/auth/authentication.service';
-import { BaseEntryService } from './shared/@kmc/kaltura-api/baseentry.service.ts';
 import { AuthCanActivate } from './shared/@kmc/auth/auth-can-activate.service';
-import { KalturaAPIClient } from './shared/@kmc/kaltura-api/kaltura-api-client';
-import { KalturaAPIConfig } from './shared/@kmc/kaltura-api/kaltura-api-config';
-import { TimePipe } from './shared/@kmc/pipes/time.pipe';
-import { KMCBrowserService } from './shared/@kmc/core/kmc-browser.service';
-import { KMCShellService } from './shared/kmc-shell.service';
+import { BrowserService } from '@kaltura/kmcng-shell';
 import { KMCShellAppModule } from './kmc-shell/kmc-shell.module';
+import { ConfigCanActivate } from "./kmc-shell/shared/config-can-activate.service";
+
 
 // depending on the env mode, enable prod mode or add debugging modules
 if (process.env.ENV === 'build') {
   enableProdMode();
 }
 
-
-function buildKalturaAPIConfig(kmcConfig: KMCConfig) {
-
-  const config = new KalturaAPIConfig();
-
-  const onRefreshSubscribe = kmcConfig.onRefresh().subscribe(
-    () => {
-      if (onRefreshSubscribe) {
-        onRefreshSubscribe.unsubscribe();
-      }
-      const { apiUrl, apiVersion }  = kmcConfig.get('core.kaltura');
-      config.apiUrl = apiUrl;
-      config.apiVersion = apiVersion;
-    }
-  );
-
-  return config;
-}
-
 @NgModule({
-  imports: [ BrowserModule, HttpModule, routing, KMCShellAppModule, RouterModule.forRoot([])],       // module dependencies
-  declarations: [ AppComponent ],   // components and directives
-  bootstrap: [ AppComponent ],     // root component
-  providers: [
+  imports: <any>[ BrowserModule, HttpModule, routing, KMCngCoreModule, KalturaApiModule, KMCShellAppModule, RouterModule.forRoot([])],       // module dependencies
+  declarations: <any>[ AppComponent ],   // components and directives
+  bootstrap: <any>[ AppComponent ],     // root component
+  providers: <any>[
+    { provide : AppStorage,  useExisting : BrowserService },
     ConfigCanActivate,
-    KMCConfig,
-    KMCBrowserService,
-    KMCShellService,
-    KMCShellService,
-    KMCLanguage,
-    TimePipe,
-    AuthenticationService,
-    BaseEntryService,
+    BrowserService,
     AuthCanActivate,
-    KalturaAPIClient,
-    NG2_WEBSTORAGE,
-    {provide : KalturaAPIConfig, useFactory : buildKalturaAPIConfig, deps : [KMCConfig]}
-  ]                    // services
+    NG2_WEBSTORAGE
+  ]
 })
 export class AppModule { }
