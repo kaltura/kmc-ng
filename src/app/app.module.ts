@@ -10,7 +10,7 @@ import { KalturaApiModule } from '@kaltura/kaltura-api';
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
 import { AuthCanActivate } from './shared/@kmc/auth/auth-can-activate.service';
-import { KMCBrowserService } from '@kaltura/kmcng-shell';
+import { BrowserService } from '@kaltura/kmcng-shell';
 import { KMCShellAppModule } from './kmc-shell/kmc-shell.module';
 import { ConfigCanActivate } from "./kmc-shell/shared/config-can-activate.service";
 
@@ -25,9 +25,9 @@ if (process.env.ENV === 'build') {
   declarations: <any>[ AppComponent ],   // components and directives
   bootstrap: <any>[ AppComponent ],     // root component
   providers: <any>[
-    { provide : AppStorage,  useExisting : KMCBrowserService },
+    { provide : AppStorage,  useExisting : BrowserService },
     ConfigCanActivate,
-    KMCBrowserService,
+    BrowserService,
     AuthCanActivate,
     NG2_WEBSTORAGE
   ]
