@@ -24,6 +24,6 @@ export class EntryTypePipe implements PipeTransform {
         icon = 'unknown.png';
         break;
     }
-    return 'assets/entryTypes/' + icon;
+    return 'assets/content/entryTypes/' + icon;
   }
 }
