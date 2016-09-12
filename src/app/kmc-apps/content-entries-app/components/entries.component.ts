@@ -5,6 +5,17 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { KalturaAPIClient } from '@kaltura/kaltura-api';
 import { BaseEntryService } from '@kaltura/kaltura-api/dist/base-entry';
 
+export interface Entry {
+  id: string;
+  name: string;
+  thumbnailUrl: string;
+  mediaType: string;
+  plays: string;
+  createdAt: string;
+  duration: string;
+  status: string;
+}
+
 @Component({
   selector: 'kmc-entries',
   templateUrl: './entries.component.html',
@@ -66,13 +77,3 @@ export class EntriesComponent implements OnInit {
   }
 }
 
-export interface Entry {
-  id: string;
-  name: string;
-  thumbnailUrl: string;
-  mediaType: string;
-  plays: string;
-  createdAt: string;
-  duration: string;
-  status: string;
-}

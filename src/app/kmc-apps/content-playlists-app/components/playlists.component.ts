@@ -2,16 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { KalturaAPIClient } from '@kaltura/kaltura-api';
-// import { DROPDOWN_DIRECTIVES } from 'ng2-bootstrap';
-
 
 import { BaseEntryService } from '@kaltura/kaltura-api/dist/base-entry';
+
+export interface Playlist{
+  id: string;
+  name: string;
+  playlistType: string;
+  createdAt: string;
+}
 
 @Component({
   selector: 'kmc-playlists',
   templateUrl: './playlists.component.html',
   styleUrls: ['./playlists.component.scss']
-  // directives: [DROPDOWN_DIRECTIVES],
 })
 export class PlaylistsComponent implements OnInit {
 
@@ -67,11 +71,4 @@ export class PlaylistsComponent implements OnInit {
       this.playlists = playlists;
     });
   }
-}
-
-export interface Playlist{
-  id: string;
-  name: string;
-  playlistType: string;
-  createdAt: string;
 }
