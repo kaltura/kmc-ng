@@ -5,7 +5,7 @@ import { KalturaAPIClient } from '@kaltura/kaltura-api';
 // import { DROPDOWN_DIRECTIVES } from 'ng2-bootstrap';
 
 
-import { BaseEntryService } from '@kaltura/kaltura-api/dist/base-entry';
+import { BaseEntryService } from '@kaltura/kaltura-api/base-entry';
 
 @Component({
   selector: 'kmc-playlists',
