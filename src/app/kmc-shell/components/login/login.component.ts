@@ -16,6 +16,9 @@ export class LoginComponent implements OnInit {
   automaticLogin = false;
   inProgress = false;
   userContext : any;
+
+  showDetails: boolean = false; // TODO for demo only, remove after demo.
+
   constructor(private appAuthentication : AppAuthentication, private browserService : BrowserService) {
 
   }
@@ -82,5 +85,7 @@ export class LoginComponent implements OnInit {
     this.sessionKS = this.browserService.getFromSessionStorage('auth.ks');
   }
 
-
+  toggleDetailsPanel(){
+    this.showDetails = !this.showDetails;
+  }
 }

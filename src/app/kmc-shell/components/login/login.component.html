@@ -1,33 +1,47 @@
-<div class="login jumbotron center-block">
-  <h1>Login</h1>
-  <div class="alert alert-warning" *ngIf="errorMessage">{{ errorMessage }}</div>
-  <form role="form" (submit)="login(username.value, password.value,false,$event)">
-    <div class="form-group">
-      <label for="username">Username</label>
-      <input type="text" #username class="form-control" id="username" placeholder="Username">
-    </div>
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input type="password" #password class="form-control" id="password" placeholder="Password">
-    </div>
-    <div class="form-group" *ngIf="false">
-      <label for="password">Remember me</label>
-      <input type="checkbox" #rememberme class="form-control" id="rememberme">
-    </div>
-    <button type="submit" class="btn btn-default" [disabled]="inProgress">{{ inProgress ? 'Please wait' : 'Submit'}}</button>
-    <button routerLink="/content" class="btn" *ngIf="userContext">Open Application</button>
-  </form>
+<div class="loginContainer">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4"></div>
+         <div class="col-md-4">
+            <div class="panel panel-default">
+              <div class="panel-heading"><img src="assets/kmc-shell/Kaltura-LogoAnimation-500-400.gif"></div>
+                <div class="panel-body">
+                  <div class="alert alert-warning" *ngIf="errorMessage">{{ errorMessage }}</div>
+                  <form role="form" (submit)="login(username.value, password.value,false,$event)">
+                    <div class="form-group" [hidden]="userContext && userContext.ks">
+                      <label for="username">Username</label>
+                      <input type="text" #username class="form-control" id="username" placeholder="Username">
+                    </div>
+                    <div class="form-group" [hidden]="userContext && userContext.ks">
+                      <label for="password">Password</label>
+                      <input type="password" #password class="form-control" id="password" placeholder="Password">
+                    </div>
 
+                    <button type="submit" class="btn btn-info col-md-12" [disabled]="inProgress" *ngIf="!userContext || (userContext && !userContext.ks)">{{ inProgress ? 'Please wait' : 'Submit'}}</button>
 
-  <div class="row">
+                    <div class="alert alert-success" *ngIf="userContext && userContext.ks">Login Successful!</div>
 
-    <div class="col-xs-12">
-      <h2>Extracted User Context</h2>
-      <div class="alert alert-info"  *ngIf="automaticLogin">
-        <div>User logged-in automatically by browser session </div>
-      </div>
-      <pre *ngIf="userContext">{{ userContext | json  }}</pre>
+                    <button type="button" class="btn btn-info col-md-5 topBuffer" *ngIf="userContext && userContext.ks" (click)="toggleDetailsPanel()">Show / Hide Profile</button>
+                    <button routerLink="/dashboard" class="btn btn-info col-md-5 col-md-offset-2 topBuffer" *ngIf="userContext && userContext.ks">Open Application</button>
+                  </form>
+
+                  <div class="row" [hidden]="!showDetails">
+                    <div class="col-xs-12">
+                      <h3>Extracted User Context</h3>
+                      <div class="alert alert-info"  *ngIf="automaticLogin">
+                        <div>User logged-in automatically by browser session </div>
+                      </div>
+                      <pre *ngIf="userContext">{{ userContext | json  }}</pre>
+                    </div>
+                  </div>
+
+                </div>
+            </div>
+        </div>
     </div>
   </div>
 
 </div>
+
+
+
