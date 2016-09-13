@@ -8,20 +8,19 @@
                 <div class="panel-body">
                   <div class="alert alert-warning" *ngIf="errorMessage">{{ errorMessage }}</div>
                   <form role="form" (submit)="login(username.value, password.value,false,$event)">
-                    <div class="form-group">
+                    <div class="form-group" [hidden]="userContext && userContext.ks">
                       <label for="username">Username</label>
                       <input type="text" #username class="form-control" id="username" placeholder="Username">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" [hidden]="userContext && userContext.ks">
                       <label for="password">Password</label>
                       <input type="password" #password class="form-control" id="password" placeholder="Password">
                     </div>
-                    <div class="form-group" *ngIf="false">
-                      <label for="password">Remember me</label>
-                      <input type="checkbox" #rememberme class="form-control" id="rememberme">
-                    </div>
 
-                    <button type="submit" class="btn btn-info col-md-12" [disabled]="inProgress">{{ inProgress ? 'Please wait' : 'Submit'}}</button>
+                    <button type="submit" class="btn btn-info col-md-12" [disabled]="inProgress" *ngIf="!userContext || (userContext && !userContext.ks)">{{ inProgress ? 'Please wait' : 'Submit'}}</button>
+
+                    <div class="alert alert-success" *ngIf="userContext && userContext.ks">Login Successful!</div>
+
                     <button type="button" class="btn btn-info col-md-5 topBuffer" *ngIf="userContext && userContext.ks" (click)="toggleDetailsPanel()">Show / Hide Profile</button>
                     <button routerLink="/dashboard" class="btn btn-info col-md-5 col-md-offset-2 topBuffer" *ngIf="userContext && userContext.ks">Open Application</button>
                   </form>
