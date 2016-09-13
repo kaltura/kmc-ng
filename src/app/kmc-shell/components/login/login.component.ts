@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { AppAuthentication, AppAuthEventTypes } from '@kaltura/kmcng-core';
+import { AppAuthentication, AppAuthStatusTypes } from '@kaltura/kmcng-core';
 import { BrowserService } from '@kaltura/kmcng-shell';
 
 @Component({
@@ -9,11 +9,7 @@ import { BrowserService } from '@kaltura/kmcng-shell';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-
-  sessionKS : string;
-  localKS : string;
   errorMessage : string;
-  automaticLogin = false;
   inProgress = false;
   userContext : any;
 
@@ -24,32 +20,9 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.updateSessionKS();
-
-
-    this.inProgress = true;
-    const appEventSubscriber = this.appAuthentication.appEvents$.subscribe(
-        (result) =>
-        {
-          if (result !== AppAuthEventTypes.Bootstrapping) {
-            if (appEventSubscriber) {
-              appEventSubscriber.unsubscribe();
-            }
-
-            this.userContext = this.appAuthentication.appUser;
-            this.inProgress = false;
-          }
-        },
-        (err) =>{
-          if (appEventSubscriber)
-          {
-            appEventSubscriber.unsubscribe();
-          }
-
-          this.errorMessage = err.message;
-          this.inProgress = false;
-        }
-    );
+    if (this.appAuthentication.isLogged()){
+      this.userContext = this.appAuthentication.appUser;
+    }
   }
 
 
@@ -61,14 +34,12 @@ export class LoginComponent implements OnInit {
 
     this.errorMessage = '';
     this.inProgress = true;
-    this.automaticLogin = false;
 
 
     this.appAuthentication.login(username, password,rememberMe).subscribe(
         (result) =>
         {
           this.userContext = this.appAuthentication.appUser;
-
           this.inProgress = false;
         },
         (err) =>{
@@ -79,11 +50,6 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  private updateSessionKS():void {
-    // TODO [kmc] should remove this function - temporary for demonstration
-    this.localKS = this.browserService.getFromLocalStorage('auth.ks');
-    this.sessionKS = this.browserService.getFromSessionStorage('auth.ks');
-  }
 
   toggleDetailsPanel(){
     this.showDetails = !this.showDetails;

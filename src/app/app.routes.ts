@@ -1,13 +1,14 @@
 import { Routes, RouterModule } from '@angular/router';
-import { AuthCanActivate, ConfigCanActivate } from '@kaltura/kmcng-core';
+import { AuthCanActivate, AppBootstrap } from '@kaltura/kmcng-core';
 
 import { LoginComponent } from './kmc-shell/components/login/login.component';
 import { DashboardComponent } from './kmc-shell/components/dashboard/dashboard.component';
+import {ErrorComponent} from "./kmc-shell/components/error/error.component";
 
 
 const routes: Routes = <Routes>[
   {
-    path: '', canActivate: [ConfigCanActivate],
+    path: '', canActivate: [AppBootstrap],
     children: [
 
       { path: 'login', component: LoginComponent },
@@ -44,7 +45,10 @@ const routes: Routes = <Routes>[
       ]
       },
       {
-        path: '', redirectTo: '/login', pathMatch: 'full'
+        path: '', redirectTo: '/dashboard', pathMatch: 'full'
+      },
+      {
+        path: 'error', component: ErrorComponent
       }
     ]
   }
