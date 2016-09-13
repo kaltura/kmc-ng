@@ -25,8 +25,8 @@ endbox
 
 == Angular Dependency Injection configuration ==
 
-AppShell --> AppShell  : register KalturaAPIConfigAdapter\n[post-config phase]
-AngularRouter <- AppShell : set AppBootstrap\nas 'canActivate' on root route
+AppShell --> Angular  : register KalturaAPIConfigAdapter\n[post-config phase]
+AppShell -> AngularRouter  : assign AppBootstrap\nas 'canActivate' on root route
 
  == Angular run phase ==
 
@@ -40,7 +40,7 @@ activate AppBootstrap
 alt configuration not valid
 AppBootstrap -> AppBootstrap : update status to 'error'
 AppBootstrap --> AppBootstrapRouter : << status >>
-AppBootstrapRouter -> AppShell: navigate to error view
+AppBootstrapRouter -> AngularRouter: navigate to error view
 end
 
 hnote over AppBootstrap: << handle 'pre-config' adapters >>
@@ -59,7 +59,7 @@ destroy AppConfigService
 alt failure
 AppBootstrap -> AppBootstrap : update status to 'error'
 AppBootstrap --> AppBootstrapRouter : << status >>
-AppBootstrapRouter -> AppShell: navigate to error view
+AppBootstrapRouter -> AngularRouter: navigate to error view
 end
 
 hnote over AppBootstrap: << handle 'post-config' adapters >>
@@ -94,7 +94,7 @@ destroy AppAuthService
 alt failure
 AppBootstrap -> AppBootstrap : update status to 'error'
 AppBootstrap --> AppBootstrapRouter : << status >>
-AppBootstrapRouter -> AppShell: navigate to error view
+AppBootstrapRouter -> AngularRouter: navigate to error view
 end
 
 hnote over AppBootstrap: << handle 'post-auth' adapters >>
@@ -103,7 +103,7 @@ AppBootstrap -> AppBootstrap : update status to 'bootstrapped'
 AppBootstrap --> AppBootstrapRouter : << status >>
 
 alt user authenticated
-AppBootstrapRouter -> AppShell : navigate to default view\nallow requested kmcng-app
+AppBootstrapRouter -> AngularRouter : navigate to default view\nallow requested kmcng-app
 else user is annonymous
 AppBootstrapRouter -> AppShell: navigate to login view
 end
