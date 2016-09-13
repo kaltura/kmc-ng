@@ -25,6 +25,8 @@ import 'rxjs/add/operator/startWith';
 // Bootstrap
 import 'ng2-bootstrap/ng2-bootstrap';
 
+// PrimeNG
+import 'primeng/primeng';
 
 
 // general libraries

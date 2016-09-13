@@ -7,9 +7,10 @@ import { PlaylistsComponent } from './components/playlists.component';
 import { PlaylistTypePipe } from './pipes/playlist.type.pipe';
 import { KMCngShellCommonModule } from '@kaltura/kmcng-shell';
 import { DropdownModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { DataTableModule, SharedModule, InputTextModule, ButtonModule} from 'primeng/primeng';
 
 @NgModule({
-  imports:      [ CommonModule, FormsModule, routing, ReactiveFormsModule, KMCngShellCommonModule, DropdownModule ],
+  imports:      [ CommonModule, FormsModule, routing, ReactiveFormsModule, KMCngShellCommonModule, DropdownModule, DataTableModule, SharedModule, InputTextModule, ButtonModule ],
   declarations: [ PlaylistsComponent, PlaylistTypePipe ],
   providers:    []
 })

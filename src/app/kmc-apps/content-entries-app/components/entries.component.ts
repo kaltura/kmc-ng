@@ -3,17 +3,23 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { KalturaAPIClient } from '@kaltura/kaltura-api';
-import { BaseEntryService } from '@kaltura/kaltura-api/dist/base-entry'
+import { BaseEntryService } from '@kaltura/kaltura-api/dist/base-entry';
 
-//import { DROPDOWN_DIRECTIVES } from 'ng2-bootstrap';
-
-
+export interface Entry {
+  id: string;
+  name: string;
+  thumbnailUrl: string;
+  mediaType: string;
+  plays: string;
+  createdAt: string;
+  duration: string;
+  status: string;
+}
 
 @Component({
   selector: 'kmc-entries',
   templateUrl: './entries.component.html',
   styleUrls: ['./entries.component.scss']
-  //directives: [DROPDOWN_DIRECTIVES]
 })
 export class EntriesComponent implements OnInit {
 
@@ -21,6 +27,9 @@ export class EntriesComponent implements OnInit {
   private searchForm: FormGroup;
   private filter: any;
   private responseProfile: any;
+  private sub: any;
+
+  entriesList: Entry[];
 
   constructor(private formBuilder: FormBuilder, private kalturaAPIClient : KalturaAPIClient) {
     this.searchForm = this.formBuilder.group({
@@ -45,9 +54,26 @@ export class EntriesComponent implements OnInit {
           BaseEntryService.list(value, this.filter, this.responseProfile)
               .execute(this.kalturaAPIClient)
               .map(response => response.objects));
+
+    this.sub = this.entries$.subscribe((entries) => {
+      this.entriesList = entries;
+    });
+  }
+
+  ngOnDestroy(){
+    this.sub.unsubscribe();
   }
 
   onActionSelected(action, entryID){
     alert("Selected Action: "+action+"\nEntry ID: "+entryID);
   }
+
+  refresh(){
+    this.entriesList = [];
+    this.sub.unsubscribe();
+    this.sub = this.entries$.subscribe((entries) => {
+      this.entriesList = entries;
+    });
+  }
 }
+

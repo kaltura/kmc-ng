@@ -1,44 +1,33 @@
 @import "../../../../style/mixins";
-form {
-  text-align: center;
-}
-
 .miniApp{
   padding: 10px;
-}
-.entries{
-  @include rounded-corners(10px);
-  background-color: #F4F4F4;
-  overflow: hidden;
-  th{
-    height: 40px;
-    &:first-child {
-      padding-left: 5px;
-    }
+  p{
+    text-align: left;
   }
-  td{
-    height: 60px;
-    &:first-child {
-      padding-left: 5px;
-    }
+  .refreshBtn{
+    position: absolute;
+    top: 67px;
+    right: 10px;
   }
-  .form-group {
-    padding-top: 5px;
-    padding-right: 10px;
-    label{
-      font-weight: normal;
-    }
+  .actionsBtn{
+    color: #fff;
+    background-color: #2399e5;
+    border-color: #1f89ce;
   }
 }
+.helper {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+.form-group {
+  padding-top: 5px;
+  padding-right: 10px;
+  label{
+    font-weight: normal;
+  }
+}
+
 .tableHolder{
-  @include rounded-corners(10px);
-  border: 1px solid #cacaca;
-  overflow: auto;
   height: calc(100% - 200px);
-  -webkit-transition: opacity 1s;
-  -moz-transition: opacity 1s;
-  transition: opacity 1s;
-}
-.entries, tr {
-  border: 1px solid #cacaca;
 }

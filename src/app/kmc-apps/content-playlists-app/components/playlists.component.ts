@@ -2,16 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { KalturaAPIClient } from '@kaltura/kaltura-api';
-// import { DROPDOWN_DIRECTIVES } from 'ng2-bootstrap';
-
 
 import { BaseEntryService } from '@kaltura/kaltura-api/dist/base-entry';
+
+export interface Playlist{
+  id: string;
+  name: string;
+  playlistType: string;
+  createdAt: string;
+}
 
 @Component({
   selector: 'kmc-playlists',
   templateUrl: './playlists.component.html',
   styleUrls: ['./playlists.component.scss']
-  // directives: [DROPDOWN_DIRECTIVES],
 })
 export class PlaylistsComponent implements OnInit {
 
@@ -19,6 +23,9 @@ export class PlaylistsComponent implements OnInit {
   private searchForm: FormGroup;
   private filter: any;
   private responseProfile: any;
+  private sub: any;
+
+  playlists: Playlist[];
 
   constructor(private formBuilder: FormBuilder, private kalturaAPIClient : KalturaAPIClient) {
     this.searchForm = formBuilder.group({
@@ -43,9 +50,25 @@ export class PlaylistsComponent implements OnInit {
           BaseEntryService.list(value, this.filter, this.responseProfile)
           .execute(this.kalturaAPIClient)
           .map(response => response.objects));
+
+    this.sub = this.playlists$.subscribe((entries) => {
+      this.playlists = entries;
+    });
+  }
+
+  ngOnDestroy(){
+    this.sub.unsubscribe();
   }
 
   onActionSelected(action, entryID){
     alert('Selected Action: '+action+'\nPlaylist ID: '+entryID);
+  }
+
+  refresh(){
+    this.playlists = [];
+    this.sub.unsubscribe();
+    this.sub = this.playlists$.subscribe((playlists) => {
+      this.playlists = playlists;
+    });
   }
 }
