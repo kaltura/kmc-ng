@@ -83,6 +83,13 @@ module.exports = function makeWebpackConfig() {
   config.module = {
     preLoaders: isTest ? [] : [{test: /\.ts$/, loader: 'tslint'}],
     loaders: [
+        // Add loader that will monitor changes in @kaltura (needed during deployment
+      {
+        test: /node_modules\/@kaltura\/\.js/,
+        loaders: [],
+        exclude: []
+      },
+
       // Support for .ts files.
       {
         test: /\.ts$/,
