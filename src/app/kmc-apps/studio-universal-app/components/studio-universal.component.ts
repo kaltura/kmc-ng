@@ -25,7 +25,7 @@ export class StudioUniversalComponent implements OnInit {
   ngOnInit() {
     this.initializeBridgeVariables();
     // TODO currently hardcoded - will be taken from configuration.
-    this.studioAppPath = 'http://localhost/html5.kaltura/player-studio/app/index.html';
+    this.studioAppPath = '/player-studio/';
   }
 
   initializeBridgeVariables() : void{
