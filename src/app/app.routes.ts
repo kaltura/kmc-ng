@@ -8,6 +8,9 @@ import {ErrorComponent} from "./kmc-shell/components/error/error.component";
 
 const routes: Routes = <Routes>[
   {
+    path: 'error', component: ErrorComponent
+  },
+  {
     path: '', canActivate: [AppBootstrap],
     children: [
 
@@ -46,9 +49,6 @@ const routes: Routes = <Routes>[
       },
       {
         path: '', redirectTo: '/dashboard', pathMatch: 'full'
-      },
-      {
-        path: 'error', component: ErrorComponent
       }
     ]
   }

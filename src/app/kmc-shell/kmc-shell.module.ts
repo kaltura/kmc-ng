@@ -6,7 +6,7 @@ import { CommonModule }       from '@angular/common';
 import { KMCngCoreModule, AppStorage } from '@kaltura/kmcng-core';
 import { KalturaApiModule } from '@kaltura/kaltura-api';
 import { KMCngShellCoreModule } from '@kaltura/kmcng-shell';
-import { GetConfigPostLoadProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType } from '@kaltura/kmcng-core';
+import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType } from '@kaltura/kmcng-core';
 import { NG2_WEBSTORAGE } from 'ng2-webstorage';
 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -19,7 +19,8 @@ import { UserSettingsComponent } from './components/user-settings/user-settings.
 import { BrowserService } from '@kaltura/kmcng-shell';
 
 import { KalturaAPIConfigAdapter } from './shared/kaltura-api-config-adapter.service';
-import {AppBootstrapConfig} from "./shared/app-bootstrap-config.service";
+import { KalturaAuthConfigAdapter } from './shared/kaltura-auth-config-adapter.service';
+import {AppDefaultConfig} from "./shared/app-default-config.service";
 
 
 @NgModule({
@@ -42,13 +43,14 @@ import {AppBootstrapConfig} from "./shared/app-bootstrap-config.service";
     UserSettingsComponent ],
   exports: [DashboardComponent,LoginComponent ],
   providers:    [
-    GetConfigPostLoadProvider(KalturaAPIConfigAdapter),
-    AppBootstrapConfig,
+    GetBootstrapProvider(KalturaAPIConfigAdapter),
+    GetBootstrapProvider(KalturaAuthConfigAdapter),
+    AppDefaultConfig,
     NG2_WEBSTORAGE
   ]
 })
 export class KMCShellAppModule {
-  constructor(appBootstrap: AppBootstrap, config: AppBootstrapConfig){
+  constructor(appBootstrap: AppBootstrap, config: AppDefaultConfig){
     appBootstrap.initApp(<AppBootstrapConfigType>config);
   }
 }

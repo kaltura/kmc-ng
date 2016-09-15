@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
 @Injectable()
-export class AppBootstrapConfig {
+export class AppDefaultConfig {
   configUri = "config/app.json";
-  loginRoute = "login";
+  loginRoute = "/login";
   errorRoute = "/error";
-  authenticatedRoute = "dashboard";
+  defaultRoute = "/dashboard";
 }

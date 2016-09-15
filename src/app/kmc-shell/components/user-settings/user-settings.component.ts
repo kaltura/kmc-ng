@@ -37,7 +37,7 @@ export class UserSettingsComponent {
   logout() {
     this.userAuthentication.logout();
     // TODO [kmcng] emit event instead and move logic to kmc shell
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('/login');
   }
 
   openUserManual() {
