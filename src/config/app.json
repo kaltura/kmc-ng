@@ -1,6 +1,7 @@
 {
-  "env" : "development",
+  "env" : "config/development.json",
   "shell" : {
+    "defaultRoute": "content",
     "browser": {
       "storageNamespace" : "kmc-ng"
     }
