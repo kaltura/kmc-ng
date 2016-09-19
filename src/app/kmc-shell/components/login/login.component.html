@@ -22,7 +22,7 @@
                     <div class="alert alert-success" *ngIf="userContext && userContext.ks">Login Successful!</div>
 
                     <button type="button" class="btn btn-info col-md-5 topBuffer" *ngIf="userContext && userContext.ks" (click)="toggleDetailsPanel()">Show / Hide Profile</button>
-                    <button routerLink="/dashboard" class="btn btn-info col-md-5 col-md-offset-2 topBuffer" *ngIf="userContext && userContext.ks">Open Application</button>
+                    <button class="btn btn-info col-md-5 col-md-offset-2 topBuffer" *ngIf="userContext && userContext.ks" (click)="openApp($event)">Open Application</button>
                   </form>
 
                   <div class="row" [hidden]="!showDetails">
