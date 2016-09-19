@@ -26,6 +26,7 @@
   "liveStream": "Live Stream Entry",
   "submitBulk": "Submit Bulk",
   "selectCSV": "Select CSV/XML",
-  "downloadCSV": "Download CSV/XML Samples"
+  "downloadCSV": "Download CSV/XML Samples",
+  "dashboardWelcome": "{{fullName}}, Welcome to the Kaltura management console. You are logged in as a {{roleNames}} user in the {{partnerName}} account."
 }
 

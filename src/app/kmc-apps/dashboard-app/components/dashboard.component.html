@@ -1,6 +1,4 @@
 <div class="miniApp">
-  <div class="dashboardHeader">
-    {{_userContext.fullName}}, Welcome to the Kaltura management console. You are logged in as a {{_userContext.roleNames}} user in the {{_userContext.partnerInfo.name}} account.
-  </div>
+  <div class="dashboardHeader">{{ 'dashboardWelcome' | translate: {fullName: _userContext.fullName, roleNames: _userContext.roleNames, partnerName: _userContext.partnerInfo.name} }}</div>
 <p>{{path}} content</p>
 </div>

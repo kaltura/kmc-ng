@@ -26,5 +26,6 @@
   "liveStream": "Vivre flux d'entrée",
   "submitBulk": "Soumettre Bulk",
   "selectCSV": "Sélectionnez CSV / XML",
-  "downloadCSV": "Télécharger CSV Samples / XML"
+  "downloadCSV": "Télécharger CSV Samples / XML",
+  "dashboardWelcome": "{{fullName}}, Bienvenue à la console de gestion Kaltura. Vous êtes connecté en tant que {{roleNames}} utilisateur dans le {{partnerName}} compte."
 }

@@ -26,5 +26,6 @@
   "liveStream": "ストリームエントリーライブ",
   "submitBulk": "バルクを提出",
   "selectCSV": "CSV/ XMLを選択",
-  "downloadCSV": "CSV/ XMLのサンプルをダウンロード"
+  "downloadCSV": "CSV/ XMLのサンプルをダウンロード",
+  "dashboardWelcome": "{{fullName}}、カルトゥーラ管理コンソールへようこそ。あなたは{{partnerName}}のアカウントで{{roleNames}}ユーザーとしてログインしています。"
 }

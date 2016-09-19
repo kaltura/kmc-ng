@@ -26,6 +26,7 @@
   "liveStream": "Vive entrada en la corriente",
   "submitBulk": "presentar a granel",
   "selectCSV": "Seleccione CSV / XML",
-  "downloadCSV": "Las muestras descarga CSV / XML"
+  "downloadCSV": "Las muestras descarga CSV / XML",
+  "dashboardWelcome": "{{fullName}}, Bienvenido a la consola de administración Kaltura. Usted está en el sistema como {{roleNames}} usuario en el {{partnerName}} cuenta."
 }
 

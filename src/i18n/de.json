@@ -26,6 +26,7 @@
   "liveStream": "Livestream Eintrag",
   "submitBulk": "Senden Groß",
   "selectCSV": "Wählen Sie CSV / XML",
-  "downloadCSV": "Laden Sie CSV / XML-Beispiele"
+  "downloadCSV": "Laden Sie CSV / XML-Beispiele",
+  "dashboardWelcome": "{{fullName}}, Willkommen in der Kaltura Management-Konsole. Sie sind als {{roleNames}} Benutzer in der {{partnerName}} Konto angemeldet."
 }
 
