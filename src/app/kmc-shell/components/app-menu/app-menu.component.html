@@ -4,10 +4,10 @@
     <div class="col-12">
       <ul class="nav navbar-nav leftNavBar">
         <li *ngFor="let item of menuConfig">
-          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]">{{item.titleToken | translate}}</a>
+          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]">{{'MENU.'+item.titleToken | translate}}</a>
         </li>
         <li>
-          <a (click)="toggleUpload()" [class.uploadOpen]="uploadOpen" class="widgetLink">{{ 'upload' | translate }} &nbsp;&nbsp;{{uploadOpen ? '&#x25B2;' : '&#x25BC;'}}</a>
+          <a (click)="toggleUpload()" [class.uploadOpen]="uploadOpen" class="widgetLink">{{ 'MENU.upload' | translate }} &nbsp;&nbsp;{{uploadOpen ? '&#x25B2;' : '&#x25BC;'}}</a>
           <kmc-upload [uploadOpen]="uploadOpen"></kmc-upload>
         </li>
       </ul>
@@ -16,7 +16,7 @@
           <kmc-user-settings></kmc-user-settings>
         </li>
         <li>
-          <img class="lang" src="{{selectedLanguage?.icon}}" title="{{ 'selectLang' | translate}}" (click)="toggleLanguage()">
+          <img class="lang" src="{{selectedLanguage?.icon}}" title="{{ 'MENU.selectLang' | translate}}" (click)="toggleLanguage()">
           <kmc-language-menu [langMenuOpen]="langMenuOpen" (onLanguageSelected)="onLanguageSelected($event)"></kmc-language-menu>
         </li>
       </ul>
@@ -28,7 +28,7 @@
     <div class="col-12">
       <ul class="nav navbar-nav">
         <li *ngFor="let subitem of selectedMenuItem.children">
-          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+subitem.routePath]">{{subitem.titleToken | translate}}</a>
+          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+subitem.routePath]">{{'MENU.'+subitem.titleToken | translate}}</a>
         </li>
       </ul>
     </div>

@@ -31,7 +31,7 @@ import * as R from 'ramda';
     CommonModule,
     KMCngShellCoreModule,
     RouterModule.forChild([]),
-    TranslateModule.forRoot(),
+    TranslateModule,
     BrowserModule,
     HttpModule,
     KMCngCoreModule,
@@ -45,7 +45,7 @@ import * as R from 'ramda';
     ErrorComponent,
     UploadComponent,
     UserSettingsComponent ],
-  exports: [DashboardComponent,LoginComponent, TranslateModule ],
+  exports: [DashboardComponent,LoginComponent ],
   providers:    [
     GetBootstrapProvider(KalturaAPIConfigAdapter),
     GetBootstrapProvider(KalturaAuthConfigAdapter),
@@ -61,7 +61,7 @@ export class KMCShellAppModule {
         translate.use(this.getCurrentLanguage(translate.getBrowserLang()));
       },
       () => {
-        throw "Bootstrap proccess failed!";
+        throw "Bootstrap process failed!";
       });
   }
 

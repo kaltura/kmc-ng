@@ -2,13 +2,13 @@
   <span class="widgetLink" *ngIf="!isOpen">< &nbsp;{{_userContext.fullName}}</span>
   <div [hidden]="!isOpen" [class.open]="isOpen">
     <span>{{_userContext.fullName}}</span>
-    <span><a (click)="logout()">{{'logout' | translate}}</a></span>
+    <span><a (click)="logout()">{{'USER_SETTINGS.logout' | translate}}</a></span>
     <span class="separator">|</span>
-    <span>{{'account' | translate}} : {{_userContext.partnerInfo.name}}</span>
-    <span><a>{{'changeAccount' | translate}}</a></span>
+    <span>{{'USER_SETTINGS.account' | translate}} : {{_userContext.partnerInfo.name}}</span>
+    <span><a>{{'USER_SETTINGS.changeAccount' | translate}}</a></span>
     <span class="separator">|</span>
-    <span><a (click)="openUserManual()">{{'userManual' | translate}}</a></span>
+    <span><a (click)="openUserManual()">{{'USER_SETTINGS.userManual' | translate}}</a></span>
     <span class="separator">|</span>
-    <span><a (click)="openSupport()">{{'support' | translate}}</a></span>
+    <span><a (click)="openSupport()">{{'USER_SETTINGS.support' | translate}}</a></span>
   </div>
 </div>

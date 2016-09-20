@@ -1,31 +1,41 @@
 {
-  "upload":"Télécharger",
-  "Dashboard": "Tableau de bord",
-  "Content": "Contenu",
-  "Entries": "entrées",
-  "Moderation": "Modération",
-  "Playlists": "playlists",
-  "Studio": "Studio",
-  "Analytics": "Analytique",
-  "Settings": "Paramètres",
-  "Administration": "Administration",
-  "selectLang": "Choisir la langue",
-  "userManual": "Manuel utilisateur",
-  "support": "Soutien",
-  "changeAccount": "(Change Acoount)",
-  "account": "Compte",
-  "logout": "(Se déconnecter)",
-  "uploadMedia": "Ajouter des médias",
-  "uploadFromDesktop": "Télécharger depuis bureau",
-  "uploadRecord": "Enregistrement à partir de Webcam",
-  "uploadImport": "Importer à partir du Web",
-  "highSpeed": "Besoin haut débit Upload?",
-  "prepare": "Préparer l'entrée",
-  "videoEntry": "Entrée vidéo",
-  "audioEntry": "Entrée Audio",
-  "liveStream": "Vivre flux d'entrée",
-  "submitBulk": "Soumettre Bulk",
-  "selectCSV": "Sélectionnez CSV / XML",
-  "downloadCSV": "Télécharger CSV Samples / XML",
-  "dashboardWelcome": "{{fullName}}, Bienvenue à la console de gestion Kaltura. Vous êtes connecté en tant que {{roleNames}} utilisateur dans le {{partnerName}} compte."
+  "MENU": {
+    "upload":"Télécharger",
+    "Dashboard": "Tableau de bord",
+    "Content": "Contenu",
+    "Entries": "entrées",
+    "Moderation": "Modération",
+    "Playlists": "playlists",
+    "Studio": "Studio",
+    "Analytics": "Analytique",
+    "Settings": "Paramètres",
+    "Administration": "Administration",
+    "selectLang": "Choisir la langue"
+  },
+  "USER_SETTINGS": {
+    "userManual": "Manuel utilisateur",
+    "support": "Soutien",
+    "changeAccount": "(Change Acoount)",
+    "account": "Compte",
+    "logout": "(Se déconnecter)"
+  },
+  "UPLOAD": {
+    "uploadMedia": "Ajouter des médias",
+    "uploadFromDesktop": "Télécharger depuis bureau",
+    "uploadRecord": "Enregistrement à partir de Webcam",
+    "uploadImport": "Importer à partir du Web",
+    "highSpeed": "Besoin haut débit Upload?",
+    "prepare": "Préparer l'entrée",
+    "videoEntry": "Entrée vidéo",
+    "audioEntry": "Entrée Audio",
+    "liveStream": "Vivre flux d'entrée",
+    "submitBulk": "Soumettre Bulk",
+    "selectCSV": "Sélectionnez CSV / XML",
+    "downloadCSV": "Télécharger CSV Samples / XML"
+  },
+  "DASHBOARD": {
+    "dashboardWelcome": "{{fullName}}, Bienvenue à la console de gestion Kaltura. Vous êtes connecté en tant que {{roleNames}} utilisateur dans le {{partnerName}} compte."
+  }
 }
+
+
