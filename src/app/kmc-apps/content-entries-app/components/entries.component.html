@@ -6,7 +6,7 @@
   <button pButton type="text" (click)="refresh(); search.value=''; dt.reset()" icon="fa-refresh" label="Refresh" title="Refresh" class="refreshBtn"></button>
   <span [hidden]="(entriesList && entriesList.length !== 0) || search.value.length != 0">Loading Entries...</span>
   <div class="tableHolder">
-    <p-dataTable [value]="entriesList" scrollable="true" [hidden]="!entriesList || entriesList.length===0" scrollHeight="100%" #dt>
+    <p-dataTable [value]="entriesList" (onSort)="sort($event)" scrollable="true" [hidden]="!entriesList || entriesList.length===0" scrollHeight="100%" #dt>
       <p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">
         <template let-col let-entry="rowData" pTemplate type="body">
           <div class="thumbnailHolder"><span class="helper"></span><img src="{{entry[col.field]}}"></div>

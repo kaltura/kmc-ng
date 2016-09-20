@@ -37,7 +37,8 @@ export class EntriesComponent implements OnInit {
     });
     this.filter = {
       "objectType": "KalturaMediaEntryFilter",
-      "mediaTypeIn": "1,2,5,6,201"
+      "mediaTypeIn": "1,2,5,6,201",
+      "orderBy": ""
     }
     this.responseProfile = {
       "objectType": "KalturaDetachedResponseProfile",
@@ -74,6 +75,12 @@ export class EntriesComponent implements OnInit {
     this.sub = this.entries$.subscribe((entries) => {
       this.entriesList = entries;
     });
+  }
+
+  sort(event) {
+    let sortOrder = event.order === 1 ? "+" : "-";
+    this.filter.orderBy = sortOrder + event.field;
+    this.refresh();
   }
 }
 

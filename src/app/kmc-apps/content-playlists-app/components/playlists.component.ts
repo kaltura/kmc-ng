@@ -71,4 +71,10 @@ export class PlaylistsComponent implements OnInit {
       this.playlists = playlists;
     });
   }
+
+  sort(event) {
+    let sortOrder = event.order === 1 ? "+" : "-";
+    this.filter.orderBy = sortOrder + event.field;
+    this.refresh();
+  }
 }
