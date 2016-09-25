@@ -1,4 +1,4 @@
-<div class="loginContainer">
+<div class="loginContainer" *ngIf="showLogin">
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-4"></div>
@@ -7,7 +7,7 @@
               <div class="panel-heading"><img src="assets/kmc-shell/Kaltura-LogoAnimation-500-400.gif"></div>
                 <div class="panel-body">
                   <div class="alert alert-warning" *ngIf="errorMessage">{{ errorMessage }}</div>
-                  <form role="form" (submit)="login(username.value, password.value,false,$event)">
+                  <form role="form" (submit)="login(username.value, password.value, $event)">
                     <div class="form-group" [hidden]="userContext && userContext.ks">
                       <label for="username">Username</label>
                       <input type="text" #username class="form-control" id="username" placeholder="Username">
@@ -16,25 +16,8 @@
                       <label for="password">Password</label>
                       <input type="password" #password class="form-control" id="password" placeholder="Password">
                     </div>
-
-                    <button type="submit" class="btn btn-info col-md-12" [disabled]="inProgress" *ngIf="!userContext || (userContext && !userContext.ks)">{{ inProgress ? 'Please wait' : 'Submit'}}</button>
-
-                    <div class="alert alert-success" *ngIf="userContext && userContext.ks">Login Successful!</div>
-
-                    <button type="button" class="btn btn-info col-md-5 topBuffer" *ngIf="userContext && userContext.ks" (click)="toggleDetailsPanel()">Show / Hide Profile</button>
-                    <button class="btn btn-info col-md-5 col-md-offset-2 topBuffer" *ngIf="userContext && userContext.ks" (click)="openApp($event)">Open Application</button>
+                    <button type="submit" class="btn btn-info col-md-12" [disabled]="inProgress">{{ inProgress ? 'Please wait' : 'Submit'}}</button>
                   </form>
-
-                  <div class="row" [hidden]="!showDetails">
-                    <div class="col-xs-12">
-                      <h3>Extracted User Context</h3>
-                      <div class="alert alert-info"  *ngIf="automaticLogin">
-                        <div>User logged-in automatically by browser session </div>
-                      </div>
-                      <pre *ngIf="userContext">{{ userContext | json  }}</pre>
-                    </div>
-                  </div>
-
                 </div>
             </div>
         </div>

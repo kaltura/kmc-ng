@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
-import { AppAuthentication, AppAuthStatusTypes, AppNavigator } from '@kaltura/kmcng-core';
-import { BrowserService } from '@kaltura/kmcng-shell';
+import { AppAuthentication, AppNavigator } from '@kaltura/kmcng-core';
 
 @Component({
   selector: 'kmc-login',
@@ -12,51 +10,39 @@ import { BrowserService } from '@kaltura/kmcng-shell';
 export class LoginComponent implements OnInit {
   errorMessage : string;
   inProgress = false;
-  userContext : any;
+  showLogin = false;
 
-  showDetails: boolean = false; // TODO for demo only, remove after demo.
-
-  constructor(private appAuthentication : AppAuthentication, private browserService : BrowserService, private appNavigator: AppNavigator) {
+  constructor(private appAuthentication : AppAuthentication, private appNavigator: AppNavigator) {
 
   }
 
   ngOnInit() {
     if (this.appAuthentication.isLogged()){
-      this.userContext = this.appAuthentication.appUser;
+      this.appNavigator.navigateToDefault();
+    }else{
+      this.showLogin = true;
     }
   }
 
 
-  login(username, password, rememberMe,event) {
-
+  login(username, password ,event) {
 
     event.preventDefault();
-
 
     this.errorMessage = '';
     this.inProgress = true;
 
 
-    this.appAuthentication.login(username, password,rememberMe).subscribe(
+    this.appAuthentication.login(username, password).subscribe(
         (result) =>
         {
-          this.userContext = this.appAuthentication.appUser;
+          this.appNavigator.navigateToDefault();
           this.inProgress = false;
         },
         (err) =>{
             this.errorMessage = err.message;
-            this.userContext = '';
           this.inProgress = false;
         }
     );
-  }
-
-  toggleDetailsPanel(){
-    this.showDetails = !this.showDetails;
-  }
-
-  openApp(event){
-    event.preventDefault();
-    this.appNavigator.navigateToDefault();
   }
 }
