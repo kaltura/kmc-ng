@@ -1,4 +1,4 @@
-<div class="loginContainer">
+<div class="loginContainer" *ngIf="showLogin">
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-4"></div>
@@ -18,23 +18,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-info col-md-12" [disabled]="inProgress" *ngIf="!userContext || (userContext && !userContext.ks)">{{ inProgress ? 'Please wait' : 'Submit'}}</button>
-
-                    <div class="alert alert-success" *ngIf="userContext && userContext.ks">Login Successful!</div>
-
-                    <button type="button" class="btn btn-info col-md-5 topBuffer" *ngIf="userContext && userContext.ks" (click)="toggleDetailsPanel()">Show / Hide Profile</button>
-                    <button class="btn btn-info col-md-5 col-md-offset-2 topBuffer" *ngIf="userContext && userContext.ks" (click)="openApp($event)">Open Application</button>
                   </form>
-
-                  <div class="row" [hidden]="!showDetails">
-                    <div class="col-xs-12">
-                      <h3>Extracted User Context</h3>
-                      <div class="alert alert-info"  *ngIf="automaticLogin">
-                        <div>User logged-in automatically by browser session </div>
-                      </div>
-                      <pre *ngIf="userContext">{{ userContext | json  }}</pre>
-                    </div>
-                  </div>
-
                 </div>
             </div>
         </div>

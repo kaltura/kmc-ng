@@ -12,26 +12,24 @@ import { BrowserService } from '@kaltura/kmcng-shell';
 export class LoginComponent implements OnInit {
   errorMessage : string;
   inProgress = false;
-  userContext : any;
+  showLogin = false;
 
-  showDetails: boolean = false; // TODO for demo only, remove after demo.
-
-  constructor(private appAuthentication : AppAuthentication, private browserService : BrowserService, private appNavigator: AppNavigator) {
+  constructor(private appAuthentication : AppAuthentication, private appNavigator: AppNavigator) {
 
   }
 
   ngOnInit() {
     if (this.appAuthentication.isLogged()){
-      this.userContext = this.appAuthentication.appUser;
+      this.appNavigator.navigateToDefault();
+    }else{
+      this.showLogin = true;
     }
   }
 
 
   login(username, password, rememberMe,event) {
 
-
     event.preventDefault();
-
 
     this.errorMessage = '';
     this.inProgress = true;
@@ -40,23 +38,13 @@ export class LoginComponent implements OnInit {
     this.appAuthentication.login(username, password,rememberMe).subscribe(
         (result) =>
         {
-          this.userContext = this.appAuthentication.appUser;
+          this.appNavigator.navigateToDefault();
           this.inProgress = false;
         },
         (err) =>{
             this.errorMessage = err.message;
-            this.userContext = '';
           this.inProgress = false;
         }
     );
-  }
-
-  toggleDetailsPanel(){
-    this.showDetails = !this.showDetails;
-  }
-
-  openApp(event){
-    event.preventDefault();
-    this.appNavigator.navigateToDefault();
   }
 }
