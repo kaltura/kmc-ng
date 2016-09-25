@@ -7,7 +7,7 @@
               <div class="panel-heading"><img src="assets/kmc-shell/Kaltura-LogoAnimation-500-400.gif"></div>
                 <div class="panel-body">
                   <div class="alert alert-warning" *ngIf="errorMessage">{{ errorMessage }}</div>
-                  <form role="form" (submit)="login(username.value, password.value,false,$event)">
+                  <form role="form" (submit)="login(username.value, password.value, $event)">
                     <div class="form-group" [hidden]="userContext && userContext.ks">
                       <label for="username">Username</label>
                       <input type="text" #username class="form-control" id="username" placeholder="Username">
@@ -16,8 +16,7 @@
                       <label for="password">Password</label>
                       <input type="password" #password class="form-control" id="password" placeholder="Password">
                     </div>
-
-                    <button type="submit" class="btn btn-info col-md-12" [disabled]="inProgress" *ngIf="!userContext || (userContext && !userContext.ks)">{{ inProgress ? 'Please wait' : 'Submit'}}</button>
+                    <button type="submit" class="btn btn-info col-md-12" [disabled]="inProgress">{{ inProgress ? 'Please wait' : 'Submit'}}</button>
                   </form>
                 </div>
             </div>

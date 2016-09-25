@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
   }
 
 
-  login(username, password, rememberMe,event) {
+  login(username, password ,event) {
 
     event.preventDefault();
 
@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
     this.inProgress = true;
 
 
-    this.appAuthentication.login(username, password,rememberMe).subscribe(
+    this.appAuthentication.login(username, password).subscribe(
         (result) =>
         {
           this.appNavigator.navigateToDefault();
