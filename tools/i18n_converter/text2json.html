@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Text to JSON Converter</title>
+
+    <script>
+        var saveAs=saveAs||function(e){"use strict";if(typeof e==="undefined"||typeof navigator!=="undefined"&&/MSIE [1-9]\./.test(navigator.userAgent)){return}var t=e.document,n=function(){return e.URL||e.webkitURL||e},r=t.createElementNS("http://www.w3.org/1999/xhtml","a"),o="download"in r,i=function(e){var t=new MouseEvent("click");e.dispatchEvent(t)},a=/constructor/i.test(e.HTMLElement),f=/CriOS\/[\d]+/.test(navigator.userAgent),u=function(t){(e.setImmediate||e.setTimeout)(function(){throw t},0)},d="application/octet-stream",s=1e3*40,c=function(e){var t=function(){if(typeof e==="string"){n().revokeObjectURL(e)}else{e.remove()}};setTimeout(t,s)},l=function(e,t,n){t=[].concat(t);var r=t.length;while(r--){var o=e["on"+t[r]];if(typeof o==="function"){try{o.call(e,n||e)}catch(i){u(i)}}}},p=function(e){if(/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(e.type)){return new Blob([String.fromCharCode(65279),e],{type:e.type})}return e},v=function(t,u,s){if(!s){t=p(t)}var v=this,w=t.type,m=w===d,y,h=function(){l(v,"writestart progress write writeend".split(" "))},S=function(){if((f||m&&a)&&e.FileReader){var r=new FileReader;r.onloadend=function(){var t=f?r.result:r.result.replace(/^data:[^;]*;/,"data:attachment/file;");var n=e.open(t,"_blank");if(!n)e.location.href=t;t=undefined;v.readyState=v.DONE;h()};r.readAsDataURL(t);v.readyState=v.INIT;return}if(!y){y=n().createObjectURL(t)}if(m){e.location.href=y}else{var o=e.open(y,"_blank");if(!o){e.location.href=y}}v.readyState=v.DONE;h();c(y)};v.readyState=v.INIT;if(o){y=n().createObjectURL(t);setTimeout(function(){r.href=y;r.download=u;i(r);h();c(y);v.readyState=v.DONE});return}S()},w=v.prototype,m=function(e,t,n){return new v(e,t||e.name||"download",n)};if(typeof navigator!=="undefined"&&navigator.msSaveOrOpenBlob){return function(e,t,n){t=t||e.name||"download";if(!n){e=p(e)}return navigator.msSaveOrOpenBlob(e,t)}}w.abort=function(){};w.readyState=w.INIT=0;w.WRITING=1;w.DONE=2;w.error=w.onwritestart=w.onprogress=w.onwrite=w.onabort=w.onerror=w.onwriteend=null;return m}(typeof self!=="undefined"&&self||typeof window!=="undefined"&&window||this.content);if(typeof module!=="undefined"&&module.exports){module.exports.saveAs=saveAs}else if(typeof define!=="undefined"&&define!==null&&define.amd!==null){define([],function(){return saveAs})};
+
+        function convert(){
+            var txt = document.getElementById("txt").value;
+            var arr = txt.split("\n"); // break by lines
+            // remove comments and empty lines
+            for (var i  =arr.length-1; i >= 0; i--){
+                if (arr[i] == "" || arr[i][0] == undefined){
+                    arr.splice(i,1);
+                }
+                if (document.getElementById('ignor').checked && document.getElementById('ignorChars').value.length){
+                    if (typeof arr[i] !== "undefined" && arr[i][0].indexOf(document.getElementById('ignorChars').value) === 0){
+                        arr.splice(i,1);
+                    }
+                }
+            }
+            if (document.getElementById('arr').checked) {
+                var json = [];
+                for (var j = 0; j < arr.length; j++) {
+                    var item = arr[j].split((/=(.+)?/));
+                    if (item && item.length > 1) {
+                        var key = item[0].trim();
+                        var val = item[1].trim();
+
+                        if (key && val) {
+                            var obj = {};
+                            obj[key] = unicodeToChar(val.split("{").join("{{").split("}").join("}}"));
+                            json.push(obj);
+                        }
+                    }
+                }
+            }else{
+                var duplicates = false;
+                var json = {};
+                var filename="";
+                for (var j = 0; j < arr.length; j++) {
+                    if (arr[j].indexOf("--->") === 0){
+                        filename = arr[j].substr(15);
+                        json[filename]={};
+                    }else {
+                        var item = arr[j].split((/=(.+)?/));
+                        if (item && item.length > 1) {
+                            var key = item[0].trim();
+                            var val = item[1].trim();
+
+                            if (key && val) {
+                                if (json[filename][key]) {
+                                    if (json[filename][key] === val) {
+                                        console.warn("Duplicate found in file: " + filename + ", key: " + key);
+                                        console.warn("Original value: " + json[filename][key] + ", New value: " + val);
+                                        console.warn("Overwritting value...");
+                                    } else {
+                                        console.warn("%cDuplicate key found with different values!\nFile: " + filename + ", Key: " + key, 'background: yellow; color: red');
+                                        console.warn("%cOriginal value: " + json[filename][key] + ", New value: " + val, 'background: yellow; color: red');
+                                        console.warn("%cOverwritting old value with new one...", 'background: yellow; color: red');
+                                    }
+                                    duplicates = true;
+                                }
+                                json[filename][key] = unicodeToChar(val.split("{").join("{{").split("}").join("}}"));
+                            }
+                        }
+                    }
+                }
+                if (duplicates){
+                    alert("Duplicated found! Check your console for details.")
+                }
+
+            }
+            document.getElementById("json").value = JSON.stringify(json);
+        }
+
+        function handleDragOver(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+            evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+        }
+
+        var filename = "";
+        function handleFileSelect(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+            evt.target.value = "";
+
+            var files = evt.dataTransfer.files;
+            var counter = 0;
+            // Loop through the FileList and render image files as thumbnails.
+            for (var i = 0, f; f = files[i]; i++) {
+                filename = files[i].name;
+                var reader = new FileReader();
+                // Closure to capture the file information.
+                reader.onload = (function(theFile) {
+                    return function(e) {
+                        dropZone.value += "\n---> New File: "+theFile.name.split(".")[0]+"\n"+e.target.result;
+                        counter++;
+                        if (counter === files.length){
+                            convert();
+                        }
+                    };
+                })(f);
+
+                // Read in the image file as a data URL.
+                reader.readAsText(f);
+            }
+        }
+
+        function onPaste(e){
+            setTimeout(function(){
+                convert();
+            },0);
+        }
+
+        function save(){
+            var blob = new Blob([document.getElementById("json").value], {type: "text/plain;charset=utf-8"});
+            saveAs(blob, filename === "" ? "output.json" : filename + ".json");
+        }
+
+        function unicodeToChar(text) {
+            return text.replace(/\\u[\dA-F]{4}/gi,
+                    function (match) {
+                        return String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16));
+                    });
+        }
+
+    </script>
+</head>
+<body style="padding: 10px; background-color: #cacaca">
+    <h3 style="text-align: center">Text to JSON Converter</h3>
+    <div style="width: 100%; text-align: center">
+        <label><input type="checkbox" name="ignor" id="ignor" checked>Ignor lines starting with: </label><input type="text" id="ignorChars" value="#">
+
+        <label style="margin-left: 30px"><input id="arr" type="radio" name="mode" value="array"> Create an array of object</label>
+        <label><input type="radio" name="mode" value="object" checked> Create one object</label>
+
+    </div>
+
+    <div style="margin-bottom: 5px">
+        <span>Source (Paste text or drop file / files here)</span>
+    </div>
+    <textarea style="width: 100%; height: 40vh" id="txt" onpaste="onPaste()"></textarea>
+    <div style="margin-top: 5px; margin-bottom: 5px">
+        <span>JSON Output</span>
+        <button onclick="save()" style="float: right">Save As</button>
+        <button onclick="convert()" style="float: right; margin-right: 10px">Convert Again</button>
+    </div>
+    <textarea style="width: 100%; height: 40vh" id="json"></textarea>
+
+    <script>
+        var dropZone = document.getElementById('txt');
+        dropZone.addEventListener('dragover', handleDragOver, false);
+        dropZone.addEventListener('drop', handleFileSelect, false);
+    </script>
+
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-84357618-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
