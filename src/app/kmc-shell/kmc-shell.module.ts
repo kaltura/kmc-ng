@@ -2,12 +2,16 @@ import { NgModule, Injectable } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
-import { CommonModule }       from '@angular/common';
-import { KMCngCoreModule, AppStorage } from '@kaltura/kmcng-core';
+import { CommonModule } from '@angular/common';
+
+import { KMCngCoreModule } from '@kaltura/kmcng-core';
 import { KalturaApiModule } from '@kaltura/kaltura-api';
 import { KMCngShellCoreModule } from '@kaltura/kmcng-shell';
 import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType } from '@kaltura/kmcng-core';
+
 import { NG2_WEBSTORAGE } from 'ng2-webstorage';
+import { TranslateModule } from 'ng2-translate/ng2-translate';
+
 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AppMenuComponent } from './components/app-menu/app-menu.component';
@@ -20,7 +24,10 @@ import { BrowserService } from '@kaltura/kmcng-shell';
 
 import { KalturaAPIConfigAdapter } from './shared/kaltura-api-config-adapter.service';
 import { KalturaAuthConfigAdapter } from './shared/kaltura-auth-config-adapter.service';
-import {AppDefaultConfig} from "./shared/app-default-config.service";
+import { KalturaLocalizationAdapter } from './shared/kaltura-localization-adapter.service';
+import { AppDefaultConfig } from "./shared/app-default-config.service";
+
+import * as R from 'ramda';
 
 
 @NgModule({
@@ -32,6 +39,7 @@ import {AppDefaultConfig} from "./shared/app-default-config.service";
     HttpModule,
     KMCngCoreModule,
     KalturaApiModule,
+    TranslateModule
     ],
   declarations: [
     DashboardComponent,
@@ -44,6 +52,7 @@ import {AppDefaultConfig} from "./shared/app-default-config.service";
   exports: [DashboardComponent,LoginComponent ],
   providers:    [
     GetBootstrapProvider(KalturaAPIConfigAdapter),
+    GetBootstrapProvider(KalturaLocalizationAdapter),
     GetBootstrapProvider(KalturaAuthConfigAdapter),
     AppDefaultConfig,
     NG2_WEBSTORAGE

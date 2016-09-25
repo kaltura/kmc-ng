@@ -1,22 +1,22 @@
 <div *ngIf="uploadOpen" class="uploadWindow">
-  <p class="uploadLabel">{{lang.dic?.uploadMedia}}</p>
+  <p class="uploadLabel">{{'UPLOAD.luploadMedia' | translate}}</p>
   <div class="uploadButtonsGroup mediaButtons">
-    <button>{{lang.dic?.uploadFromDesktop}}</button>
-    <button>{{lang.dic?.uploadRecord}}</button>
-    <button>{{lang.dic?.uploadImport}}</button>
-    <div class="link"><a>{{lang.dic?.highSpeed}}</a></div>
+    <button>{{'UPLOAD.uploadFromDesktop' | translate}}</button>
+    <button>{{'UPLOAD.uploadRecord' | translate}}</button>
+    <button>{{'UPLOAD.uploadImport' | translate}}</button>
+    <div class="link"><a>{{'UPLOAD.highSpeed' | translate}}</a></div>
   </div>
 
-  <p class="uploadLabel">{{lang.dic?.prepare}}</p>
+  <p class="uploadLabel">{{'prepare' | translate}}</p>
   <div class="uploadButtonsGroup prepareButtons">
-    <button>{{lang.dic?.videoEntry}}</button>
-    <button>{{lang.dic?.audioEntry}}</button>
-    <button>{{lang.dic?.liveStream}}</button>
+    <button>{{'UPLOAD.videoEntry' | translate}}</button>
+    <button>{{'UPLOAD.audioEntry' | translate}}</button>
+    <button>{{'UPLOAD.liveStream' | translate}}</button>
   </div>
 
-  <p class="uploadLabel">{{lang.dic?.submitBulk}}</p>
+  <p class="uploadLabel">{{'UPLOAD.submitBulk' | translate}}</p>
   <div class="uploadButtonsGroup bulk">
-    <div class="link"><a>{{lang.dic?.selectCSV}}</a></div>
-    <div class="link"><a>{{lang.dic?.downloadCSV}}</a></div>
+    <div class="link"><a>{{'UPLOAD.selectCSV' | translate}}</a></div>
+    <div class="link"><a>{{'UPLOAD.downloadCSV' | translate}}</a></div>
   </div>
 </div>
