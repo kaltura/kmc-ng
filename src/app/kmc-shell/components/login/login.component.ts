@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
-import { AppAuthentication, AppAuthStatusTypes, AppNavigator } from '@kaltura/kmcng-core';
-import { BrowserService } from '@kaltura/kmcng-shell';
+import { AppAuthentication, AppNavigator } from '@kaltura/kmcng-core';
 
 @Component({
   selector: 'kmc-login',
