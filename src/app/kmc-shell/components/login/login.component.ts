@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { AppAuthentication, AppAuthStatusTypes } from '@kaltura/kmcng-core';
+
+import { AppAuthentication, AppAuthStatusTypes, AppNavigator } from '@kaltura/kmcng-core';
 import { BrowserService } from '@kaltura/kmcng-shell';
 
 @Component({
@@ -15,7 +16,7 @@ export class LoginComponent implements OnInit {
 
   showDetails: boolean = false; // TODO for demo only, remove after demo.
 
-  constructor(private appAuthentication : AppAuthentication, private browserService : BrowserService) {
+  constructor(private appAuthentication : AppAuthentication, private browserService : BrowserService, private appNavigator: AppNavigator) {
 
   }
 
@@ -50,8 +51,12 @@ export class LoginComponent implements OnInit {
     );
   }
 
-
   toggleDetailsPanel(){
     this.showDetails = !this.showDetails;
+  }
+
+  openApp(event){
+    event.preventDefault();
+    this.appNavigator.navigateToDefault();
   }
 }
