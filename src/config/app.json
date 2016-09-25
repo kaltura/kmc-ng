@@ -33,11 +33,11 @@
       "SUPPORT": "http://kmc.kaltura.com/index.php/kmc/support"
     },
     "locales":[
-      {"id" : "en_US", "label" : "English", "icon" : "assets/kmc-shell/locales/en_US.png", "source" : "i18n/locale-en.json"},
-      {"id" : "de_DE", "label" : "Deutsch", "icon" : "assets/kmc-shell/locales/de_DE.png", "source" : "i18n/locale-de.json"},
-      {"id" : "es_ES", "label" : "Español", "icon" : "assets/kmc-shell/locales/es_ES.png", "source" : "i18n/locale-es.json"},
-      {"id" : "fr_FR", "label" : "Français", "icon" : "assets/kmc-shell/locales/fr_FR.png", "source" : "i18n/locale-fr.json"},
-      {"id" : "ja_JP", "label" : "日本語", "icon" : "assets/kmc-shell/locales/ja_JP.png", "source" : "i18n/locale-ja.json"}
+      {"id" : "en", "label" : "English", "icon" : "assets/kmc-shell/locales/en_US.png", "source" : "i18n/en.json"},
+      {"id" : "de", "label" : "Deutsch", "icon" : "assets/kmc-shell/locales/de_DE.png", "source" : "i18n/de.json"},
+      {"id" : "es", "label" : "Español", "icon" : "assets/kmc-shell/locales/es_ES.png", "source" : "i18n/es.json"},
+      {"id" : "fr", "label" : "Français", "icon" : "assets/kmc-shell/locales/fr_FR.png", "source" : "i18n/fr.json"},
+      {"id" : "ja", "label" : "日本語", "icon" : "assets/kmc-shell/locales/ja_JP.png", "source" : "i18n/ja.json"}
     ]
   },
   "modules": {

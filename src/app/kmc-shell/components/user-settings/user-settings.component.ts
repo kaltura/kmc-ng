@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { BrowserService } from '@kaltura/kmcng-shell';
-import { KMCLanguage, AppConfig, AppAuthentication, AppUser, PartnerPackageTypes, AppNavigator } from '@kaltura/kmcng-core';
+import { AppConfig, AppAuthentication, AppUser, PartnerPackageTypes } from '@kaltura/kmcng-core';
 import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({

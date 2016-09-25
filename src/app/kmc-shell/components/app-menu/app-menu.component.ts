@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
+import { TranslateService, LangChangeEvent } from 'ng2-translate/ng2-translate';
+
+import { AppConfig, AppStorage } from '@kaltura/kmcng-core';
 import { AppMenuConfig } from '../../shared/app-menu-config';
 import { AppMenuService } from '../../shared/app-menu.service';
 import { AppMenuItem } from "../../shared/app-menu-config";
 import { UploadComponent } from "../upload/upload.component";
 import { UserSettingsComponent } from "../user-settings/user-settings.component";
 import { LanguageMenuComponent } from "../language-menu/language-menu.component";
-import { KMCLanguage } from "@kaltura/kmcng-core";
 
 import * as R from 'ramda';
 
@@ -22,13 +24,19 @@ export class AppMenuComponent {
   private sub: any;
   selectedLanguage: any;
 
-  constructor(private appMenuService : AppMenuService, private router : Router, private lang: KMCLanguage) {
+  constructor(private appMenuService : AppMenuService, private router : Router, private translate: TranslateService, private appConfig: AppConfig, private appStorage: AppStorage) {
     this.sub = router.events.subscribe((event) => {
       if(event instanceof NavigationEnd) {
         this.setSelectedRoute(event.url);
       }
     });
-    this.selectedLanguage = this.lang.getDefaultLanguage();
+
+    if (typeof this.translate.currentLang !== "undefined"){
+      this.selectedLanguage = this.getLanguageById(this.translate.currentLang);
+    }
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      this.selectedLanguage = this.getLanguageById(event.lang);
+    });
   }
 
   menuConfig : AppMenuConfig;
@@ -62,8 +70,13 @@ export class AppMenuComponent {
     this.langMenuOpen = !this.langMenuOpen;
   }
   onLanguageSelected(langId: string) {
-    this.selectedLanguage = this.lang.setLanguage(langId);
+    this.translate.use(langId);
+    this.appStorage.setInLocalStorage('kmc_lang', langId);
     this.langMenuOpen = false; // close the language menu after selection
+  }
+
+  private getLanguageById(langId : any) : any {
+    return R.find(R.propEq('id', langId))(this.appConfig.get('core.locales'));
   }
 
   ngOnDestroy() {

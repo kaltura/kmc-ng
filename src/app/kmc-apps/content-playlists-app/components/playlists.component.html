@@ -10,7 +10,7 @@
 
   <div class="tableHolder">
 
-    <p-dataTable [value]="playlists" scrollable="true" [hidden]="!playlists || playlists.length===0" scrollHeight="100%" #dt>
+    <p-dataTable [value]="playlists" (onSort)="sort($event)" [hidden]="!playlists || playlists.length===0" scrollHeight="100%" #dt>
       <p-column field="id" header="ID" [sortable]="true" [style]="{'width':'100px'}"></p-column>
       <p-column field="name" header="Name" [sortable]="true">
         <template let-col let-playlist="rowData" pTemplate type="body">
