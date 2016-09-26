@@ -16,8 +16,7 @@
           <kmc-user-settings></kmc-user-settings>
         </li>
         <li>
-          <img class="lang" src="{{selectedLanguage?.icon}}" title="{{ 'MENU.selectLang' | translate}}" (click)="toggleLanguage()">
-          <kmc-language-menu [langMenuOpen]="langMenuOpen" (onLanguageSelected)="onLanguageSelected($event)"></kmc-language-menu>
+          <kmc-language-menu></kmc-language-menu>
         </li>
       </ul>
     </div>
