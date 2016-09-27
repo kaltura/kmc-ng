@@ -1,8 +1,8 @@
+$menuBkgColor: #252525;
 .loginContainer{
   position: absolute;
   width: 100%;
   height: 100%;
-  padding-top: 100px;
 
   background: rgba(226,226,226,1);
   background: -moz-linear-gradient(top, rgba(226,226,226,1) 0%, rgba(219,219,219,1) 50%, rgba(209,209,209,1) 51%, rgba(254,254,254,1) 100%);
@@ -12,6 +12,41 @@
   background: -ms-linear-gradient(top, rgba(226,226,226,1) 0%, rgba(219,219,219,1) 50%, rgba(209,209,209,1) 51%, rgba(254,254,254,1) 100%);
   background: linear-gradient(to bottom, rgba(226,226,226,1) 0%, rgba(219,219,219,1) 50%, rgba(209,209,209,1) 51%, rgba(254,254,254,1) 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#fefefe', GradientType=0 );
+
+  .header{
+    background-color: $menuBkgColor;
+    margin-bottom: 100px;
+    height: 38px;
+
+    ul{
+      padding-top: 9px;
+    }
+
+    li{
+      margin-left: 10px;
+    }
+
+    a{
+      color: #59A3B5;
+      &:hover{
+        color: #A1E5F5;
+      }
+    }
+
+    img{
+      float: left;
+      margin-top: 4px;
+    }
+
+    .langMenu{
+      margin-right: 26px;
+      float: right;
+    }
+
+    .separator{
+      color: #C5C5C5;
+    }
+  }
 }
 
 .panel-heading{

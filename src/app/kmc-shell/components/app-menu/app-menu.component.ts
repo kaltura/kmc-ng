@@ -4,9 +4,6 @@ import { Router, NavigationEnd } from '@angular/router';
 import { AppMenuConfig } from '../../shared/app-menu-config';
 import { AppMenuService } from '../../shared/app-menu.service';
 import { AppMenuItem } from "../../shared/app-menu-config";
-import { UploadComponent } from "../upload/upload.component";
-import { UserSettingsComponent } from "../user-settings/user-settings.component";
-import { LanguageMenuComponent } from "../language-menu/language-menu.component";
 
 import * as R from 'ramda';
 
