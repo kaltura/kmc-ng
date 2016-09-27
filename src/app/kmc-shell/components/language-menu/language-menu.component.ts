@@ -12,6 +12,7 @@ import * as R from 'ramda';
 export class LanguageMenuComponent {
 
   selectedLanguage: any;
+  menuOpened: boolean = false;
   languages: Array<Object> = [];
 
   constructor(private kmcConfig: AppConfig, private translate: TranslateService, private appStorage: AppStorage, private appConfig: AppConfig) {
@@ -25,7 +26,12 @@ export class LanguageMenuComponent {
     });
   }
 
+  toggleMenu() {
+    this.menuOpened = !this.menuOpened;
+  }
+
   selectLanguage(langId: string) {
+    this.menuOpened = false;
     this.translate.use(langId);
     this.appStorage.setInLocalStorage('kmc_lang', langId);
   }

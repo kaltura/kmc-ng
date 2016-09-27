@@ -1,7 +1,7 @@
 <div class="langMenu">
-  <img class="lang" src="{{selectedLanguage?.icon}}" title="{{ 'MENU.selectLang' | translate}}" (click)="langMenu.hidden ? langMenu.hidden=false : langMenu.hidden=true">
-  <div [hidden]="true" class="languageWindow" #langMenu>
-    <div *ngFor="let language of languages" class="langMenuItem" (click)="selectLanguage(language.id);langMenu.hidden=true">
+  <img class="lang" src="{{selectedLanguage.icon}}" title="{{ 'MENU.selectLang' | translate}}" (click)="toggleMenu()">
+  <div [hidden]="!menuOpened" class="languageWindow" #langMenu>
+    <div *ngFor="let language of languages" class="langMenuItem" (click)="selectLanguage(language.id)">
       <img src="{{language.icon}}">
       <span>{{language.label}}</span>
     </div>
