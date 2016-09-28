@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-import { AppAuthentication, AppNavigator } from '@kaltura/kmcng-core';
+import { AppAuthentication, AppNavigator, AppConfig } from '@kaltura/kmcng-core';
+import { BrowserService } from '@kaltura/kmcng-shell';
 
 @Component({
   selector: 'kmc-login',
@@ -12,7 +13,7 @@ export class LoginComponent implements OnInit {
   inProgress = false;
   showLogin = false;
 
-  constructor(private appAuthentication : AppAuthentication, private appNavigator: AppNavigator) {
+  constructor(private appAuthentication : AppAuthentication, private appNavigator: AppNavigator, private browserService: BrowserService, private appConfig: AppConfig) {
 
   }
 
@@ -23,7 +24,6 @@ export class LoginComponent implements OnInit {
       this.showLogin = true;
     }
   }
-
 
   login(username, password ,event) {
 
@@ -44,5 +44,9 @@ export class LoginComponent implements OnInit {
           this.inProgress = false;
         }
     );
+  }
+
+  openUserManual() {
+    this.browserService.openLink(this.appConfig.get('core.externalLinks.USER_MANUAL'), {}, '_blank');
   }
 }
