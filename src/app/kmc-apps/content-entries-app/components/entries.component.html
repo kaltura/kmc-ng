@@ -18,7 +18,7 @@
   <div class="row grid">
       <div class="col-md-2" style="height: 100%">
         <div class="row" style="height: 100%">
-          <div style="width: 100%; height: 100%">
+          <div class="accordionHolder">
             <p-accordion>
               <p-accordionTab header="Filter by Categories" [selected]="true">
                 <kmc-categories-filter></kmc-categories-filter>
@@ -86,7 +86,7 @@
         </div>
         <div class="row footer">
           <div>
-            <button style="width: 100px">Bulk Actions</button>
+            <button style="width: 120px">Bulk Actions</button>
           </div>
           <div style="width: 100%">
             <p-paginator rows="10" totalRecords="120" [rowsPerPageOptions]="[10,20,30]"></p-paginator>
