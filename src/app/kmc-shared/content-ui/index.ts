@@ -1,1 +1,1 @@
-export * from './categories-filter';
+export * from './categories-filter/categories-filter.component';

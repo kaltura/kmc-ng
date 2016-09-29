@@ -56,4 +56,13 @@ $gridPadding: 10px;
     height: 100%;
     vertical-align: middle;
   }
+  .footer{
+    height: $primeDataTableFooterHeight;
+    margin-top: $primeDataTableFooterHeight;
+    display: table;
+    div{
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
 }

@@ -3,7 +3,8 @@ $appSubMenuHeight: 33px;
 $contentArea: calc(100vh - 71px);
 
 $primeDataTableHeaderHeight: 30px;
-$primeDataTableHeight: calc(100% - 30px);
+$primeDataTableFooterHeight: 30px;
+$primeDataTableHeight: calc(100% - 60px); /* reducing $primeDataTableHeaderHeight and $primeDataTableFooterHeight */
 
 $contentHeaderHeight: 50px;
 $contentGridHeight: calc(100% - 50px);
