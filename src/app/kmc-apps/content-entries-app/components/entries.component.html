@@ -18,7 +18,19 @@
   <div class="row grid">
       <div class="col-md-2" style="height: 100%">
         <div class="row" style="height: 100%">
-          <div style="border: 1px solid #cacaca; width: 100%; height: 100%">Filters Accordion</div>
+          <div style="width: 100%; height: 100%">
+            <p-accordion>
+              <p-accordionTab header="Filter by Categories" [selected]="true">
+                <kmc-categories-filter></kmc-categories-filter>
+              </p-accordionTab>
+              <p-accordionTab header="Additional Filters">
+                Additional Filters Content
+              </p-accordionTab>
+              <p-accordionTab header="Department Info">
+                Department Info Content
+              </p-accordionTab>
+            </p-accordion>
+          </div>
         </div>
       </div>
       <div class="col-md-10" style="height: 100%">
