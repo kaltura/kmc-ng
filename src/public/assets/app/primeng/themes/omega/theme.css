@@ -336,8 +336,8 @@
 }
 
 .ui-tabview .ui-tabview-nav > li.ui-state-default.ui-state-active {
-    background: #ffffff; 
-    font-weight: normal; 
+    background: #ffffff;
+    font-weight: normal;
     color: #555555;
 }
 
@@ -362,7 +362,7 @@
  */
 .ui-dialog { padding: .2em; width: 300px; overflow: visible; border: 0 none; -webkit-box-shadow: 0 1px 4px rgba(0,0,0,0.75); -moz-box-shadow: 0 1px 4px rgba(0,0,0,0.75); box-shadow: 0 1px 4px rgba(0,0,0,0.75); }
 .ui-dialog .ui-dialog-titlebar { position: relative; background: transparent !important; padding: 0 0 8px 0; margin: 20px 20px 5px 20px; border: solid #e5e5e5; border-width: 0 0 1px 0; -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0; }
-.ui-dialog .ui-dialog-title { float: left; margin: .1em 16px .1em 0; color: #353536; font-size: 20px !important; } 
+.ui-dialog .ui-dialog-title { float: left; margin: .1em 16px .1em 0; color: #353536; font-size: 20px !important; }
 .ui-dialog .ui-dialog-content { position: relative; border: 0; padding: 15px 20px 20px 20px; background: none; overflow: auto; zoom: 1; }
 .ui-dialog .ui-dialog-buttonpane { text-align: left; border: solid #e5e5e5; border-width: 1px 0 0 0; background: transparent; margin: 20px 20px 10px 20px; padding: 10px 0 0 0; }
 .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset { float: right; }
@@ -515,7 +515,7 @@ td.ui-datepicker-unselectable {
 }
 
 .ui-progressbar .ui-progressbar-value {
-	 border: 1px solid #156090; 
+	 border: 1px solid #156090;
      background: #186ba0;
 }
 
@@ -554,8 +554,8 @@ button.ui-button.ui-state-active, .ui-button.ui-state-active {
 .ui-chkbox-box.ui-state-focus.ui-state-active,
 .ui-radiobutton-box.ui-state-active,
 .ui-radiobutton-box.ui-state-focus.ui-state-active{
-    border: 1px solid #156090; 
-    background: #186ba0; 
+    border: 1px solid #156090;
+    background: #186ba0;
     color: #FFFFFF;
 }
 
@@ -576,7 +576,10 @@ button.ui-button.ui-state-active, .ui-button.ui-state-active {
 	background: #186ba0 !important;
 	color: #ffffff !important;
 }
-
+.ui-paginator{
+  background: transparent;
+  border: none;
+}
 .ui-paginator .ui-paginator-page.ui-state-active {
 	background: #186ba0;
 	color: #ffffff;
@@ -617,13 +620,13 @@ button.ui-button.ui-state-active, .ui-button.ui-state-active {
 }
 
 .ui-panel.ui-widget .ui-panel-titlebar.ui-corner-all {
-    -moz-border-radius-bottom-left: 0px; 
-    -webkit-border-bottom-left-radius: 0px; 
-    -khtml-border-bottom-left-radius: 0px; 
+    -moz-border-radius-bottom-left: 0px;
+    -webkit-border-bottom-left-radius: 0px;
+    -khtml-border-bottom-left-radius: 0px;
     border-bottom-left-radius: 0px;
-    -moz-border-radius-bottom-right: 0px; 
-    -webkit-border-bottom-right-radius: 0px; 
-    -khtml-border-bottom-right-radius: 0px; 
+    -moz-border-radius-bottom-right: 0px;
+    -webkit-border-bottom-right-radius: 0px;
+    -khtml-border-bottom-right-radius: 0px;
     border-bottom-right-radius: 0px;
 }
 
@@ -735,8 +738,8 @@ button.ui-button.ui-state-active, .ui-button.ui-state-active {
 }
 
 .ui-tabmenu .ui-tabmenu-nav > li.ui-state-default.ui-state-active {
-    background: #ffffff; 
-    font-weight: normal; 
+    background: #ffffff;
+    font-weight: normal;
     color: #555555;
 }
 
@@ -762,8 +765,8 @@ button.ui-button.ui-state-active, .ui-button.ui-state-active {
 /* PanelMenu */
 .ui-panelmenu .ui-panelmenu-header.ui-state-active,
 .ui-panelmenu .ui-panelmenu-header.ui-state-active a {
-    border: 1px solid #156090; 
-    background: #186ba0; 
+    border: 1px solid #156090;
+    background: #186ba0;
     color: #FFFFFF;
 }
 
