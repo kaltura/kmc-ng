@@ -6,8 +6,7 @@ import { KalturaUIModule } from '@kaltura/kmcng-ui';
 
 import { TreeModule, SharedModule } from 'primeng/primeng';
 
-import { CategoriesFilterComponent } from './content-ui/categories-filter/categories-filter.component';
-import { EntryTypePipe, EntryStatusPipe, PlaylistTypePipe } from './pipes/index';
+import { CategoriesFilterComponent, EntryTypePipe, EntryStatusPipe, PlaylistTypePipe } from './content-ui';
 
 @NgModule({
   imports:      [ CommonModule, TreeModule, FormsModule, SharedModule, KalturaUIModule ],
