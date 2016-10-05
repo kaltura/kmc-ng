@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { BrowserService } from 'kmcng-shell';
 import { AppConfig, AppAuthentication, AppUser, PartnerPackageTypes, AppNavigator } from '@kaltura-ng2/kaltura-core';
 import { Md5 } from 'ts-md5/dist/md5';

@@ -70,7 +70,6 @@ export class EntriesComponent implements OnInit {
   }
 
   refresh(){
-    this.entriesList = [];
     this.sub.unsubscribe();
     this.sub = this.entries$.subscribe((entries) => {
       this.entriesList = entries;
