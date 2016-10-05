@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AppConfig, AppStorage } from '@kaltura/kmcng-core';
+import { AppConfig, AppStorage } from '@kaltura-ng2/kaltura-core';
 
 import { TranslateService, LangChangeEvent } from 'ng2-translate/ng2-translate';
 import * as R from 'ramda';

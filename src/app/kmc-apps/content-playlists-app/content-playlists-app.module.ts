@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule }        from '@angular/forms';
 import { routing} from './content-playlists-app.routes';
 import { PlaylistsComponent } from './components/playlists.component';
 import { PlaylistTypePipe } from './pipes/playlist.type.pipe';
-import { KMCngShellCommonModule } from '@kaltura/kmcng-shell';
+import { KMCngShellCommonModule } from 'kmcng-shell';
 import { DropdownModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { DataTableModule, SharedModule, InputTextModule, ButtonModule} from 'primeng/primeng';
 

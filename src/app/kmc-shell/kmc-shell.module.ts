@@ -4,10 +4,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { CommonModule } from '@angular/common';
 
-import { KMCngCoreModule } from '@kaltura/kmcng-core';
-import { KalturaApiModule } from '@kaltura/kaltura-api';
-import { KMCngShellCoreModule } from '@kaltura/kmcng-shell';
-import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType } from '@kaltura/kmcng-core';
+import { KalturaCoreModule } from '@kaltura-ng2/kaltura-core';
+import { KalturaApiModule } from '@kaltura-ng2/kaltura-api';
+import { KMCngShellCoreModule } from 'kmcng-shell';
+import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType } from '@kaltura-ng2/kaltura-core';
 
 import { NG2_WEBSTORAGE } from 'ng2-webstorage';
 import { TranslateModule } from 'ng2-translate/ng2-translate';
@@ -20,7 +20,7 @@ import { LoginComponent } from './components/login/login.component';
 import { ErrorComponent } from './components/error/error.component';
 import { UploadComponent } from './components/upload/upload.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
-import { BrowserService } from '@kaltura/kmcng-shell';
+import { BrowserService } from 'kmcng-shell';
 
 import { KalturaAPIConfigAdapter } from './shared/kaltura-api-config-adapter.service';
 import { KalturaAuthConfigAdapter } from './shared/kaltura-auth-config-adapter.service';
@@ -37,7 +37,7 @@ import * as R from 'ramda';
     RouterModule.forChild([]),
     BrowserModule,
     HttpModule,
-    KMCngCoreModule,
+    KalturaCoreModule,
     KalturaApiModule,
     TranslateModule
     ],
