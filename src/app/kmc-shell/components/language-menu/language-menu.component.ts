@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { AppConfig } from '@kaltura/kmcng-core';
+import { AppConfig } from '@kaltura-ng2/kaltura-core';
 
 @Component({
   selector: 'kmc-language-menu',

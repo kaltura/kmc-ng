@@ -35,9 +35,8 @@ import 'moment';
 import 'ramda';
 import 'ng2-webstorage';
 
-import '@kaltura/kaltura-api';
-import '@kaltura/kmcng-core';
-import '@kaltura/kmcng-shell';
+import '@kaltura-ng2/kaltura-api';
+import '@kaltura-ng2/kaltura-core';
 
 // Import application theme (not pure vendor but we want is to bundle in vendor)
 import './style/app.scss';

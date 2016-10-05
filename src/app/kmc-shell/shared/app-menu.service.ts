@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { AppMenuConfig } from './app-menu-config'
-import { AppConfig } from "@kaltura/kmcng-core";
+import { AppConfig } from "@kaltura-ng2/kaltura-core";
 
 @Injectable()
 export class AppMenuService {

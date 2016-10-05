@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { KalturaAPIClient } from '@kaltura/kaltura-api';
+import { KalturaAPIClient } from '@kaltura-ng2/kaltura-api';
 
-import { BaseEntryService } from '@kaltura/kaltura-api/base-entry';
+import { BaseEntryService } from '@kaltura-ng2/kaltura-api/base-entry';
 
 export interface Playlist{
   id: string;
