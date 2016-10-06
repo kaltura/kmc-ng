@@ -37,7 +37,7 @@ import * as R from 'ramda';
     RouterModule.forChild([]),
     BrowserModule,
     HttpModule,
-    KalturaCoreModule,
+    KalturaCoreModule.forRoot(),
     KalturaApiModule,
     TranslateModule
     ],
