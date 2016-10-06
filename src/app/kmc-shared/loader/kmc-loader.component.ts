@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'kmc-loader',
-  templateUrl: './loader.component.html',
-  styleUrls: ['./loader.component.scss']
+  templateUrl: './kmc-loader.component.html',
+  styleUrls: ['./kmc-loader.component.scss']
 })
 export class LoaderComponent  {
   @Input() loading: boolean;

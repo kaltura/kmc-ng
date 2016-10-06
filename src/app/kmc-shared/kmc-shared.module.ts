@@ -7,7 +7,7 @@ import { KalturaUIModule } from '@kaltura/kmcng-ui';
 import { TreeModule, SharedModule } from 'primeng/primeng';
 
 import { CategoriesFilterComponent, EntryTypePipe, EntryStatusPipe, PlaylistTypePipe } from './content-ui';
-import { LoaderComponent } from './loader/loadercomponent';
+import { LoaderComponent } from './loader/kmc-loader.component';
 
 @NgModule({
   imports:      [ CommonModule, TreeModule, FormsModule, SharedModule, KalturaUIModule ],
