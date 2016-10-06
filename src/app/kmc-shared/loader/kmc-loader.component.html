@@ -1,5 +1,8 @@
-<ng-content></ng-content>
-<div *ngIf="loading" class="loader-background">
-  <div class="loader">Loading...</div>
+<div style="position: relative; display: block">
+  <ng-content></ng-content>
+  <div *ngIf="loading" class="loader-background">
+    <div class="loader">Loading...</div>
+  </div>
 </div>
+
 
