@@ -58,9 +58,13 @@ export class EntriesComponent implements OnInit {
               .execute(this.kalturaAPIClient)
               .map(response => response.objects));
 
-    this.sub = this.entries$.subscribe((entries) => {
-      this.entriesList = entries;
-      this.loading = false;
+    this.sub = this.entries$.subscribe(
+      (entries) => {
+        this.entriesList = entries;
+        this.loading = false;
+      },
+      (error) => {
+        this.loading = false;
     });
   }
 
@@ -77,6 +81,9 @@ export class EntriesComponent implements OnInit {
     this.sub.unsubscribe();
     this.sub = this.entries$.subscribe((entries) => {
       this.entriesList = entries;
+      this.loading = false;
+    },
+    (error) => {
       this.loading = false;
     });
   }
