@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
-import { KalturaAPIClient } from '@kaltura/kaltura-api';
-import { BaseEntryService } from '@kaltura/kaltura-api/base-entry';
+import { KalturaAPIClient } from '@kaltura-ng2/kaltura-api';
+import { BaseEntryService } from '@kaltura-ng2/kaltura-api/base-entry';
 
 export interface Entry {
   id: string;

@@ -2,7 +2,7 @@ import { NgModule }           from '@angular/core';
 import { CommonModule }       from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { KalturaUIModule } from '@kaltura/kmcng-ui';
+import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
 
 import { TreeModule, SharedModule } from 'primeng/primeng';
 

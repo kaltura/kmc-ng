@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { AppAuthentication, AppNavigator } from '@kaltura-ng2/kaltura-core';
+import { AppAuthentication, AppNavigator, AppConfig } from '@kaltura-ng2/kaltura-core';
 import { BrowserService } from 'kmcng-shell';
 
 @Component({
