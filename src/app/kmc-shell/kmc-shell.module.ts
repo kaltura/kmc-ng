@@ -12,7 +12,6 @@ import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrap
 import { NG2_WEBSTORAGE } from 'ng2-webstorage';
 import { TranslateModule } from 'ng2-translate/ng2-translate';
 
-
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AppMenuComponent } from './components/app-menu/app-menu.component';
 import { LanguageMenuComponent } from './components/language-menu/language-menu.component';
@@ -38,8 +37,8 @@ import * as R from 'ramda';
     BrowserModule,
     HttpModule,
     KalturaCoreModule.forRoot(),
-    KalturaApiModule,
-    TranslateModule
+    TranslateModule.forRoot(),
+    KalturaApiModule
     ],
   declarations: [
     DashboardComponent,
@@ -48,7 +47,8 @@ import * as R from 'ramda';
     LoginComponent,
     ErrorComponent,
     UploadComponent,
-    UserSettingsComponent ],
+    UserSettingsComponent
+    ],
   exports: [DashboardComponent,LoginComponent ],
   providers:    [
     GetBootstrapProvider(KalturaAPIConfigAdapter),
