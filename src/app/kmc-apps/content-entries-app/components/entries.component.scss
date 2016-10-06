@@ -6,6 +6,8 @@ $gridPadding: 10px;
 .entries{
   background-color: $appBkgColor;
   height: $contentArea;
+  padding-left: 15px;
+  padding-right: 15px;
   width: 100%;
   .topBar{
     height: $contentHeaderHeight;

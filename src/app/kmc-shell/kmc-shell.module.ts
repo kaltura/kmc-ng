@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { CommonModule } from '@angular/common';
 
-import { KalturaCoreModule } from '@kaltura-ng2/kaltura-core';
+import { KalturaCoreModule, AppStorage } from '@kaltura-ng2/kaltura-core';
 import { KalturaApiModule } from '@kaltura-ng2/kaltura-api';
 import { KMCngShellCoreModule } from 'kmcng-shell';
 import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType } from '@kaltura-ng2/kaltura-core';
@@ -55,6 +55,7 @@ import * as R from 'ramda';
     GetBootstrapProvider(KalturaLocalizationAdapter),
     GetBootstrapProvider(KalturaAuthConfigAdapter),
     AppDefaultConfig,
+    { provide : AppStorage,  useExisting : BrowserService },
     NG2_WEBSTORAGE
   ]
 })
