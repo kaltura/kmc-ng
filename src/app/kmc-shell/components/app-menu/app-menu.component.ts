@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
+import { AppConfig, AppStorage } from '@kaltura-ng2/kaltura-core';
 import { AppMenuConfig } from '../../shared/app-menu-config';
 import { AppMenuService } from '../../shared/app-menu.service';
 import { AppMenuItem } from "../../shared/app-menu-config";

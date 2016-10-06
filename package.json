@@ -31,6 +31,8 @@
     "@angular/platform-browser": "2.0.0",
     "@angular/platform-browser-dynamic": "2.0.0",
     "@angular/router": "3.0.0-rc.2",
+    "@kaltura-ng2/kaltura-api": "0.0.1",
+    "@kaltura-ng2/kaltura-core": "0.0.1",
     "core-js": "2.4.1",
     "jquery": "^3.1.0",
     "lodash": "^4.14.1",
