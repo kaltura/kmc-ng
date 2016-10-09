@@ -1,16 +1,10 @@
 /* colors scheme */
-$menuBkgColor: #252525;
-$mainLinkColor: #C5C5C5;
-$mainLinkHoverBkg: #252525;
-$mainLinkHoverColor: #A1E5F5;
-$mainLinkActiveColor: #222222;
-$subLinkActiveColor: #252525;
-$uploadLinkActiveColor: #F1F6FD;
-$widgetLinkColor: #59A3B5;
+@import '../../../../style/colors';
+@import '../../../../style/variables';
 
 .appMenu{
   background-color: $menuBkgColor;
-  height: 38px;
+  height: $appMenuHeight;
 
   a {
     color: $mainLinkColor;
@@ -58,6 +52,7 @@ $widgetLinkColor: #59A3B5;
   }
 }
 .appSubMenu{
+  height: $appSubMenuHeight;
   background-color: white;
   padding-bottom: 6px;
   padding-left: 20px;

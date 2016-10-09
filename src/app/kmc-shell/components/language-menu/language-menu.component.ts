@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { AppConfig, AppStorage } from '@kaltura-ng2/kaltura-core';
+import { AppConfig, AppStorage, AppLocalization } from '@kaltura-ng2/kaltura-core';
 
-import { TranslateService, LangChangeEvent } from 'ng2-translate/ng2-translate';
 import * as R from 'ramda';
 
 @Component({
@@ -15,15 +14,15 @@ export class LanguageMenuComponent {
   menuOpened: boolean = false;
   languages: Array<Object> = [];
 
-  constructor(private kmcConfig: AppConfig, private translate: TranslateService, private appStorage: AppStorage, private appConfig: AppConfig) {
+  constructor(private kmcConfig: AppConfig, private appStorage: AppStorage, private appConfig: AppConfig, private appLocalization: AppLocalization) {
     this.languages = kmcConfig.get("core.locales");
 
-    if (typeof this.translate.currentLang !== "undefined"){
-      this.selectedLanguage = this.getLanguageById(this.translate.currentLang);
+    if (typeof this.appLocalization.selectedLanguage !== "undefined"){
+      this.selectedLanguage = this.getLanguageById(this.appLocalization.selectedLanguage);
     }
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.selectedLanguage = this.getLanguageById(event.lang);
-    });
+    // this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+    //   this.selectedLanguage = this.getLanguageById(event.lang);
+    // });
   }
 
   toggleMenu() {
@@ -32,8 +31,8 @@ export class LanguageMenuComponent {
 
   selectLanguage(langId: string) {
     this.menuOpened = false;
-    this.translate.use(langId);
     this.appStorage.setInLocalStorage('kmc_lang', langId);
+    location.reload();
   }
 
   private getLanguageById(langId : any) : any {

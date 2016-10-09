@@ -1,7 +1,6 @@
 import { NgModule, NgModuleFactoryLoader, enableProdMode } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import {TranslateModule} from 'ng2-translate/ng2-translate';
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
 import { KMCShellAppModule } from './kmc-shell/kmc-shell.module';
@@ -12,7 +11,7 @@ if (process.env.ENV === 'build') {
 }
 
 @NgModule({
-  imports: <any>[ routing,  RouterModule.forRoot([]), KMCShellAppModule, TranslateModule.forRoot() ],       // module dependencies
+  imports: <any>[ routing,  RouterModule.forRoot([]), KMCShellAppModule ],       // module dependencies
   declarations: <any>[ AppComponent ],   // components and directives
   bootstrap: <any>[ AppComponent ],     // root component
   providers: <any>[

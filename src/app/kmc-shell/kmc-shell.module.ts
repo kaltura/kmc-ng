@@ -4,14 +4,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { CommonModule } from '@angular/common';
 
-import { KalturaCoreModule } from '@kaltura-ng2/kaltura-core';
+import { KalturaCoreModule, AppStorage } from '@kaltura-ng2/kaltura-core';
 import { KalturaApiModule } from '@kaltura-ng2/kaltura-api';
 import { KMCngShellCoreModule } from 'kmcng-shell';
 import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType } from '@kaltura-ng2/kaltura-core';
 
 import { NG2_WEBSTORAGE } from 'ng2-webstorage';
 import { TranslateModule } from 'ng2-translate/ng2-translate';
-
 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AppMenuComponent } from './components/app-menu/app-menu.component';
@@ -37,9 +36,9 @@ import * as R from 'ramda';
     RouterModule.forChild([]),
     BrowserModule,
     HttpModule,
-    KalturaCoreModule,
-    KalturaApiModule,
-    TranslateModule
+    KalturaCoreModule.forRoot(),
+    TranslateModule.forRoot(),
+    KalturaApiModule
     ],
   declarations: [
     DashboardComponent,
@@ -48,13 +47,15 @@ import * as R from 'ramda';
     LoginComponent,
     ErrorComponent,
     UploadComponent,
-    UserSettingsComponent ],
+    UserSettingsComponent
+    ],
   exports: [DashboardComponent,LoginComponent ],
   providers:    [
     GetBootstrapProvider(KalturaAPIConfigAdapter),
     GetBootstrapProvider(KalturaLocalizationAdapter),
     GetBootstrapProvider(KalturaAuthConfigAdapter),
     AppDefaultConfig,
+    { provide : AppStorage,  useExisting : BrowserService },
     NG2_WEBSTORAGE
   ]
 })

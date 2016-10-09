@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+
 import { KalturaAPIClient } from '@kaltura-ng2/kaltura-api';
 import { BaseEntryService } from '@kaltura-ng2/kaltura-api/base-entry';
 
@@ -30,6 +30,7 @@ export class EntriesComponent implements OnInit {
   private sub: any;
 
   entriesList: Entry[];
+  loading = false;
 
   constructor(private formBuilder: FormBuilder, private kalturaAPIClient : KalturaAPIClient) {
     this.searchForm = this.formBuilder.group({
@@ -48,6 +49,7 @@ export class EntriesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loading = true;
     this.entries$ = this.searchForm.controls['search'].valueChanges
       .startWith('')
       .debounceTime(500)
@@ -56,8 +58,13 @@ export class EntriesComponent implements OnInit {
               .execute(this.kalturaAPIClient)
               .map(response => response.objects));
 
-    this.sub = this.entries$.subscribe((entries) => {
-      this.entriesList = entries;
+    this.sub = this.entries$.subscribe(
+      (entries) => {
+        this.entriesList = entries;
+        this.loading = false;
+      },
+      (error) => {
+        this.loading = false;
     });
   }
 
@@ -70,9 +77,14 @@ export class EntriesComponent implements OnInit {
   }
 
   refresh(){
+    this.loading = true;
     this.sub.unsubscribe();
     this.sub = this.entries$.subscribe((entries) => {
       this.entriesList = entries;
+      this.loading = false;
+    },
+    (error) => {
+      this.loading = false;
     });
   }
 
