@@ -8,7 +8,7 @@ import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrap
 import { KalturaApiModule } from '@kaltura-ng2/kaltura-api';
 import { BrowserService, KMCShellModule } from 'kmc-shell';
 
-import { NG2_WEBSTORAGE } from 'ng2-webstorage';
+import { Ng2Webstorage } from 'ng2-webstorage';
 import { TranslateModule } from 'ng2-translate/ng2-translate';
 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -36,7 +36,8 @@ import * as R from 'ramda';
     HttpModule,
     KalturaCommonModule.forRoot(),
     TranslateModule.forRoot(),
-    KalturaApiModule
+    KalturaApiModule,
+    Ng2Webstorage
     ],
   declarations: [
     DashboardComponent,
@@ -53,8 +54,7 @@ import * as R from 'ramda';
     GetBootstrapProvider(KalturaLocalizationAdapter),
     GetBootstrapProvider(KalturaAuthConfigAdapter),
     AppDefaultConfig,
-    { provide : AppStorage,  useExisting : BrowserService },
-    NG2_WEBSTORAGE
+    { provide : AppStorage,  useExisting : BrowserService }
   ]
 })
 export class KMCShellAppModule {
