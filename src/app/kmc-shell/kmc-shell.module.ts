@@ -4,10 +4,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { CommonModule } from '@angular/common';
 
-import { KalturaCoreModule, AppStorage } from '@kaltura-ng2/kaltura-core';
+import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType, KalturaCommonModule, AppStorage } from '@kaltura-ng2/kaltura-common';
 import { KalturaApiModule } from '@kaltura-ng2/kaltura-api';
 import { KMCngShellCoreModule } from 'kmcng-shell';
-import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType } from '@kaltura-ng2/kaltura-core';
 
 import { NG2_WEBSTORAGE } from 'ng2-webstorage';
 import { TranslateModule } from 'ng2-translate/ng2-translate';
@@ -36,7 +35,7 @@ import * as R from 'ramda';
     RouterModule.forChild([]),
     BrowserModule,
     HttpModule,
-    KalturaCoreModule.forRoot(),
+    KalturaCommonModule.forRoot(),
     TranslateModule.forRoot(),
     KalturaApiModule
     ],

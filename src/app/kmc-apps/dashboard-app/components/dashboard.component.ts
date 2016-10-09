@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { AppUser, AppAuthentication } from '@kaltura-ng2/kaltura-core';
+import { AppUser, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 
 @Component({
   selector: 'kmc-dashboard',

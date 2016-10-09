@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AppConfig, AppStorage, AppLocalization } from '@kaltura-ng2/kaltura-core';
+import { AppConfig, AppStorage, AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import * as R from 'ramda';
 

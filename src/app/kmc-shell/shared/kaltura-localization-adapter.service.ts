@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BootstrapAdapter, BootstrapAdapterType, AppConfig, AppLocalization } from '@kaltura-ng2/kaltura-core';
+import { BootstrapAdapter, BootstrapAdapterType, AppConfig, AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 @Injectable()
 export class KalturaLocalizationAdapter implements BootstrapAdapter

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-core';
+import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { AppContainerComponent } from "kmcng-shell";
 
 declare var window:any;
