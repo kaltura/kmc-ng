@@ -1,6 +1,6 @@
 import { NgModule }           from '@angular/core';
 import { CommonModule }       from '@angular/common';
-import { KMCngShellCommonModule } from 'kmcng-shell';
+import { KMCShellModule } from 'kmc-shell';
 
 import { routing} from './studio-universal-app.routes';
 import { StudioUniversalComponent } from './components/studio-universal.component';
@@ -8,7 +8,7 @@ import { StudioUniversalComponent } from './components/studio-universal.componen
 @NgModule({
   imports: [
     CommonModule,
-    KMCngShellCommonModule,
+    KMCShellModule,
     routing
   ],
   declarations: [

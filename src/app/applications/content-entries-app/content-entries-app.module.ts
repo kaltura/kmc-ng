@@ -8,11 +8,11 @@ import { DataTableModule, SharedModule, InputTextModule, ButtonModule, Accordion
 
 import { routing} from './content-entries-app.routes';
 import { EntriesComponent } from './components/entries.component';
-import { KMCngShellCommonModule } from 'kmcng-shell';
+import { KMCShellModule } from 'kmc-shell';
 import { KMCContentUIModule } from 'kmc-content-ui';
 
 @NgModule({
-  imports:      [ CommonModule, FormsModule, routing, ReactiveFormsModule, KMCngShellCommonModule, DropdownModule, DataTableModule,
+  imports:      [ CommonModule, FormsModule, routing, ReactiveFormsModule, KMCShellModule, DropdownModule, DataTableModule,
     SharedModule, InputTextModule, ButtonModule, AccordionModule, KMCContentUIModule, PaginatorModule, KalturaUIModule],
   declarations: [ EntriesComponent ],
   providers:    []

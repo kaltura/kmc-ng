@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 
 import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType, KalturaCommonModule, AppStorage } from '@kaltura-ng2/kaltura-common';
 import { KalturaApiModule } from '@kaltura-ng2/kaltura-api';
-import { KMCngShellCoreModule } from 'kmcng-shell';
+import { BrowserService, KMCShellModule } from 'kmc-shell';
 
 import { NG2_WEBSTORAGE } from 'ng2-webstorage';
 import { TranslateModule } from 'ng2-translate/ng2-translate';
@@ -18,7 +18,6 @@ import { LoginComponent } from './components/login/login.component';
 import { ErrorComponent } from './components/error/error.component';
 import { UploadComponent } from './components/upload/upload.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
-import { BrowserService } from 'kmcng-shell';
 
 import { KalturaAPIConfigAdapter } from './shared/kaltura-api-config-adapter.service';
 import { KalturaAuthConfigAdapter } from './shared/kaltura-auth-config-adapter.service';
@@ -31,7 +30,7 @@ import * as R from 'ramda';
 @NgModule({
   imports:      [
     CommonModule,
-    KMCngShellCoreModule,
+    KMCShellModule.forRoot(),
     RouterModule.forChild([]),
     BrowserModule,
     HttpModule,

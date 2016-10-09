@@ -1,8 +1,6 @@
 import { NgModule,SkipSelf, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AppShellService } from "./providers/app-shell.service";
-import { BrowserService } from "./providers/browser.service";
 
 @NgModule({
     imports: <any[]>[
@@ -12,8 +10,7 @@ import { BrowserService } from "./providers/browser.service";
     exports: <any[]>[
     ],
     providers: <any[]>[
-        BrowserService,
-        AppShellService
+
     ]
 })
 export class KMCngShellCoreModule {

@@ -1,5 +1,5 @@
 import { Component, OnInit,AfterViewInit,ViewChild, OnDestroy } from '@angular/core';
-import { AppShellService } from "kmcng-shell";
+import { AppShellService } from "kmc-shell";
 
 import {AppMenuComponent} from "../app-menu/app-menu.component";
 import { AppMenuService } from '../../shared/app-menu.service';
