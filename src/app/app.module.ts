@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
-import { KMCShellAppModule } from './kmc-shell/kmc-shell.module';
+import { KMCShellAppModule } from './shell/kmc-shell.module';
 
 // depending on the env mode, enable prod mode or add debugging modules
 if (process.env.ENV === 'build') {

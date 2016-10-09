@@ -36,7 +36,7 @@ import 'ramda';
 import 'ng2-webstorage';
 
 import '@kaltura-ng2/kaltura-api';
-import '@kaltura-ng2/kaltura-core';
+import '@kaltura-ng2/kaltura-common';
 
 // Import application theme (not pure vendor but we want is to bundle in vendor)
 import './style/app.scss';
