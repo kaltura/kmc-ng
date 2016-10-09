@@ -4,8 +4,6 @@ import { KalturaApiModule } from '@kaltura-ng2/kaltura-api';
 import { KalturaAPIConfig } from '@kaltura-ng2/kaltura-api';
 import { AppDefaultConfig } from "./app-default-config.service";
 
-
-
 @Injectable()
 export class KalturaAPIConfigAdapter implements BootstrapAdapter
 {
