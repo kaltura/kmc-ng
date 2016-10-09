@@ -14,9 +14,6 @@ import { ErrorComponent } from './components/error/error.component';
 import { UploadComponent } from './components/upload/upload.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 
-import * as R from 'ramda';
-
-
 @NgModule({
   imports:      [
     CommonModule,
