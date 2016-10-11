@@ -8,7 +8,7 @@
     "clean-start": "npm run clean-install && npm start",
     "watch": "webpack --watch --progress --profile",
     "build": "rimraf dist && webpack --progress --profile --bail",
-    "server": "webpack-dev-server --inline --progress --port 8080",
+    "dev": "webpack-dev-server --inline --progress --port 8080",
     "webdriver-update": "webdriver-manager update",
     "webdriver-start": "webdriver-manager start",
     "lint": "tslint --force \"src/**/*.ts\"",
@@ -19,7 +19,7 @@
     "test-watch": "karma start --no-single-run --auto-watch",
     "ci": "npm run e2e && npm run test",
     "docs": "typedoc --options typedoc.json src/app/app.component.ts",
-    "start": "npm run server",
+    "start": "npm run dev",
     "postinstall": "npm run webdriver-update && typings install"
   },
   "dependencies": {
@@ -34,7 +34,9 @@
     "@kaltura-ng2/kaltura-api": "~0.0.2",
     "@kaltura-ng2/kaltura-common": "~0.0.2",
     "@kaltura-ng2/kaltura-ui": "~0.0.2",
+    "bootstrap-sass": "^3.3.7",
     "core-js": "^2.4.1",
+    "font-awesome": "^4.6.3",
     "jquery": "^3.1.0",
     "lodash": "^4.14.1",
     "moment": "^2.14.1",

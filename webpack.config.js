@@ -17,6 +17,7 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 var ENV = process.env.npm_lifecycle_event;
 var isTest = ENV === 'test' || ENV === 'test-watch';
 var isProd = ENV === 'build';
+var isDev = ENV === 'dev';
 
 module.exports = function makeWebpackConfig() {
   /**
@@ -47,6 +48,7 @@ module.exports = function makeWebpackConfig() {
    */
   config.entry = isTest ? {} : {
     'polyfills': './src/polyfills.ts',
+    'theme': './src/theme.ts',
     'vendor': './src/vendor.ts',
     'app': './src/main.ts' // our angular app
   };
@@ -59,7 +61,7 @@ module.exports = function makeWebpackConfig() {
     path: root('dist'),
     publicPath: isProd ? '/' : 'http://localhost:8080/',
     filename: isProd ? 'js/[name].[hash].js' : 'js/[name].js',
-    chunkFilename: isProd ? '[id].[hash].chunk.js' : '[id].chunk.js'
+    chunkFilename: isProd ? 'js/[id].[hash].chunk.js' : '[id].chunk.js'
   };
 
 
@@ -84,22 +86,12 @@ module.exports = function makeWebpackConfig() {
   config.module = {
     preLoaders: isTest ? [] : [{test: /\.ts$/, loader: 'tslint'}],
     loaders: [
-        // Add loader that will monitor changes in @kaltura-ng2 (needed during development)
-      {
-        test: /node_modules\/@kaltura-ng2\/\.ts/,
-        loaders: [],
-        exclude: []
-      },
-
       // Support for .ts files.
       {
         test: /\.ts$/,
         loaders: ['ts', 'angular2-template-loader'],
         exclude: [isTest ? /\.(e2e)\.ts$/ : /\.(spec|e2e)\.ts$/, /node_modules\/.+/]
       },
-
-      // copy those assets to output
-      {test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/, loader: 'file?name=fonts/[name].[hash].[ext]?'},
 
       // Support for *.json files.
       {test: /\.json$/, loader: 'json'},
@@ -112,8 +104,6 @@ module.exports = function makeWebpackConfig() {
         exclude: root('src', 'app'),
         loader: isTest ? 'null' : ExtractTextPlugin.extract('style', 'css?sourceMap!postcss')
       },
-      // all css required in src/app files will be merged in js files
-      {test: /\.css$/, include: root('src', 'app'), loader: 'raw!postcss'},
 
       // support for .scss files
       // use 'null' loader in test mode (https://github.com/webpack/null-loader)
@@ -124,21 +114,36 @@ module.exports = function makeWebpackConfig() {
         loader: isTest ? 'null' : ExtractTextPlugin.extract('style', 'css?sourceMap!postcss!sass')
       },
       // all css required in src/app files will be merged in js files
-      {test: /\.scss$/, exclude: root('src', 'style'), loader: 'raw!postcss!sass'},
+      {test: /\.scss$/, include: root('src', 'app'), loader: 'raw!postcss!sass'},
 
       // support for .html as raw text
       // todo: change the loader to something that adds a hash to images
       {test: /\.html$/, loader: 'raw'},
+
+      // copy those assets to output
+      {test: /\.(png|jpe?g|gif|svg|ico)$/, loader: 'file?name=assets/[name].[hash].[ext]?'},
+
       // load fonts (required by bootstrap)
-      {test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff'},
-      {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream'},
-      {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file'},
-      {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml'}
+      {test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?name=fonts/[name].[hash].[ext]?limit=10000&mimetype=application/font-woff'},
+      {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?name=fonts/[name].[hash].[ext]?limit=10000&mimetype=application/octet-stream'},
+      {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file?name=fonts/[name].[hash].[ext]?'},
+      {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?name=assets/[name].[hash].[ext]?limit=10000&mimetype=image/svg+xml'}
     ],
     postLoaders: [],
     noParse: [/.+zone\.js\/dist\/.+/, /.+angular2\/bundles\/.+/, /angular2-polyfills\.js/]
   };
 
+  if (isDev)
+  {
+    // Add loader that will monitor changes in @kaltura-ng2 (needed during development)
+    config.module.preLoaders.push(
+        {
+          test: /node_modules\/@kaltura-ng2\/\.ts/,
+          loaders: [],
+          exclude: []
+        }
+    );
+  }
   if (isTest) {
     // instrument only testing sources with Istanbul, covers ts files
     config.module.postLoaders.push({
@@ -180,7 +185,7 @@ module.exports = function makeWebpackConfig() {
       // Reference: https://webpack.github.io/docs/code-splitting.html
       // Reference: https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin
       new CommonsChunkPlugin({
-        name: ['vendor', 'polyfills']
+        name: ['theme','vendor', 'polyfills']
       }),
 
       // Inject script and link tags into html files
