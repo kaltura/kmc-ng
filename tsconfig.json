@@ -1,12 +1,28 @@
 {
   "compilerOptions": {
+    "baseUrl" : ".",
     "target": "ES5",
     "module": "commonjs",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "noEmitHelpers": true
+    "moduleResolution": "node",
+    "paths": {
+      "*": ["src/app/applications/shared/*"]
+    },
+    "noEmitHelpers": true,
+    "typeRoots" : [
+      "./types"
+    ]
   },
+  "awesomeTypescriptLoaderOptions": {
+    "forkChecker": true,
+    "useWebpackText": true
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
   "compileOnSave": false,
   "buildOnSave": false
 

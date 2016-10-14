@@ -1,4 +1,10 @@
-$menuBkgColor: #252525;
+
+.k-logo {
+  background-image: url('../../styles/assets/header_logo.png');
+  width:109px;
+  height:30px;
+}
+
 .loginContainer{
   position: absolute;
   width: 100%;
@@ -14,7 +20,7 @@ $menuBkgColor: #252525;
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#fefefe', GradientType=0 );
 
   .header{
-    background-color: $menuBkgColor;
+    background-color: #252525;
     margin-bottom: 100px;
     height: 38px;
 
