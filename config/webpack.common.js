@@ -122,6 +122,17 @@ module.exports = {
         exclude: [/\.(spec|e2e)\.ts$/,/node_modules/,/typings/]
       },
 
+
+      /* Raw loader support for *.html
+       * Returns file content as string
+       *
+       * See: https://github.com/webpack/raw-loader
+       */
+      {
+        test: /\.html$/,
+        loader: 'raw-loader'
+      },
+
       // Support for *.json files.
       {test: /\.json$/, loader: 'json'},
 
@@ -142,6 +153,7 @@ module.exports = {
         exclude: helpers.root('src/app'),
         loader: ExtractTextPlugin.extract({ fallbackLoader:'style', loader: 'css!postcss!resolve-url!sass?sourceMap'})
       },
+
       // all css required in src/app files will be merged in js files
       {test: /\.scss$/, include: helpers.root('src/app'), loader: 'raw!postcss!sass'},
 
@@ -154,23 +166,7 @@ module.exports = {
       {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file?name=fonts/[name].[hash].[ext]?'},
       {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?name=assets/[name].[hash].[ext]?limit=10000&mimetype=image/svg+xml'},
 
-      /* Raw loader support for *.html
-       * Returns file content as string
-       *
-       * See: https://github.com/webpack/raw-loader
-       */
-      {
-        test: /\.html$/,
-        loader: 'raw-loader',
-        exclude: [helpers.root('src/index.html')]
-      },
 
-      /* File loader for supporting images, for example, in CSS files.
-      */
-      {
-        test: /\.(jpg|png|gif)$/,
-        loader: 'file'
-      }
     ]
 
   },
@@ -209,10 +205,16 @@ module.exports = {
      *
      * See: https://www.npmjs.com/package/copy-webpack-plugin
      */
-    new CopyWebpackPlugin([{
-      from: 'src/assets',
-      to: 'assets'
-    }]),
+    new CopyWebpackPlugin([
+      {
+        from: 'src/config',
+        to: 'config'
+      },
+      {
+        from: 'src/i18n',
+        to: 'i18n'
+      }
+    ]),
 
     /*
      * Plugin: HtmlWebpackPlugin
