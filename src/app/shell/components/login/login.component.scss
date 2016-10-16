@@ -1,8 +1,13 @@
+@import '../../styles/scss/_comon.scss';
 
-.k-logo {
-  background-image: url('../../styles/assets/header_logo.png');
-  width:109px;
-  height:30px;
+.k-logo-animated-500-400 {
+  background-image: url('../../styles/assets/Kaltura-LogoAnimation-500-400.gif');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center center;
+  width:200px;
+  margin:auto;
+  height:250px;
 }
 
 .loginContainer{
@@ -22,7 +27,7 @@
   .header{
     background-color: #252525;
     margin-bottom: 100px;
-    height: 38px;
+    height: $header-height;
 
     ul{
       padding-top: 9px;

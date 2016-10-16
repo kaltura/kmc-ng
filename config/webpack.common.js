@@ -151,12 +151,11 @@ module.exports = {
       {
         test: /\.scss$/,
         exclude: helpers.root('src/app'),
-        loader: ExtractTextPlugin.extract({ fallbackLoader:'style', loader: 'css!postcss!resolve-url!sass?sourceMap'})
+        loader: ExtractTextPlugin.extract({ fallbackLoader:'style', loader: 'css!resolve-url!sass?sourceMap'})
       },
 
       // all css required in src/app files will be merged in js files
-      {test: /\.scss$/, include: helpers.root('src/app'), loader: 'raw!postcss!sass'},
-
+      {test: /\.scss$/, include: helpers.root('src/app'), loader: 'exports-loader?module.exports.toString()!css!resolve-url!sass?sourceMap'},
       // copy those assets to output
       {test: /\.(png|jpe?g|gif|svg|ico)$/, loader: 'file?name=assets/[name].[hash].[ext]?'},
 

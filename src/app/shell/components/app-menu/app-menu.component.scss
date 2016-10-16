@@ -1,6 +1,5 @@
-/* colors scheme */
-@import '../../../../style/colors';
-@import '../../../../style/variables';
+@import '../../styles/scss/_comon.scss';
+@import '~kmc-shell/scss/_variables.scss';
 
 .appMenu{
   background-color: $menuBkgColor;

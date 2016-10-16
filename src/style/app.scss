@@ -1,12 +1,12 @@
-@import "variables";
+@import "_variables";
 @import '~bootstrap-sass/assets/stylesheets/_bootstrap-mincer.scss';
 @import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
 
-@import "colors";
 
 body{
   overflow-x: hidden;
 }
+
 a{
   color: $link;
   cursor: pointer;
