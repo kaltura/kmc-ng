@@ -2,11 +2,11 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title><%= webpackConfig.metadata.title %></title>
-    <meta name="description" content="<%= webpackConfig.metadata.title %>">
 
     <% if (webpackConfig.htmlElements.headTags) { %>
     <!-- Configured Head Tags  -->
@@ -15,11 +15,6 @@
 
     <!-- base url -->
     <base href="<%= webpackConfig.metadata.baseUrl %>">
-
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="robots" content="index, follow"/>
-    <meta name="keywords"
-          content="production, shows, talent, discover, contribute, share, enhance, first open source video platform, video editing, media collaboration, online video, movie, wikimentaries, wiki"/>
 </head>
 <body>
 <kmc-root>Loading...</kmc-root>

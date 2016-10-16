@@ -21,7 +21,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
  * Webpack Constants
  */
 const METADATA = {
-  title: 'Angular2 Webpack Starter by @gdi2290 from @AngularClass',
+  title: 'Kaltura - Open Source Video Platform',
   baseUrl: '/',
   isDevServer: helpers.isWebpackDevServer()
 };
@@ -212,6 +212,10 @@ module.exports = {
       {
         from: 'src/i18n',
         to: 'i18n'
+      },
+      {
+        from: 'src/favicon.ico',
+        to: ''
       }
     ]),
 
