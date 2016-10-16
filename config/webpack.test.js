@@ -1,6 +1,3 @@
-/**
- * @author: @AngularClass
- */
 
 const helpers = require('./helpers');
 

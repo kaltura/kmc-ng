@@ -1,6 +1,4 @@
-/**
- * @author: @AngularClass
- */
+
 var path = require('path');
 
 // Helper functions
