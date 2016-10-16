@@ -72,7 +72,7 @@ module.exports = function makeWebpackConfig() {
   config.resolve = {
     cache: !isTest,
     root: [path.join(__dirname, 'node_modules'),
-           path.join(__dirname, 'src/app/applications/shared')],
+           path.join(__dirname, 'src/app/shared')],
     // only discover files that have those extensions
     extensions: ['', '.ts', '.js', '.json', '.css', '.scss', '.html']
   };

@@ -76,7 +76,7 @@ module.exports = {
      */
     extensions: ['', '.ts', '.js', '.json'],
 
-    modules : ['src/app/applications/shared','node_modules']
+    modules : ['src/app/shared','node_modules']
   },
 
   /*
