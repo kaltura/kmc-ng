@@ -1,4 +1,15 @@
-$menuBkgColor: #252525;
+@import '../../styles/scss/_comon.scss';
+
+.k-logo-animated-500-400 {
+  background-image: url('../../styles/assets/Kaltura-LogoAnimation-500-400.gif');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center center;
+  width:200px;
+  margin:auto;
+  height:250px;
+}
+
 .loginContainer{
   position: absolute;
   width: 100%;
@@ -14,9 +25,9 @@ $menuBkgColor: #252525;
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#fefefe', GradientType=0 );
 
   .header{
-    background-color: $menuBkgColor;
+    background-color: #252525;
     margin-bottom: 100px;
-    height: 38px;
+    height: $header-height;
 
     ul{
       padding-top: 9px;

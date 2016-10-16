@@ -19,18 +19,19 @@ export class UserSettingsComponent {
 
   setOpen(open) {
     let _this = this;
-    if (open) {
-      // give a little threshold to allow the user roll out and back in when trying to click a link
-      if (this.timeoutID) {
-        clearTimeout(this.timeoutID);
-        this.timeoutID = null;
-      }
-      this.isOpen = open;
-    } else {
-      this.timeoutID = setTimeout(function(){
-        _this.isOpen = open;
-      }, 500);
-    }
+    _this.isOpen = open;
+    //if (open) {
+    //  // give a little threshold to allow the user roll out and back in when trying to click a link
+    //  if (this.timeoutID) {
+    //    clearTimeout(this.timeoutID);
+    //    this.timeoutID = null;
+    //  }
+    //  this.isOpen = open;
+    //} else {
+    //  this.timeoutID = (setTimeout(function(){
+    //    _this.isOpen = open;
+    //  }, 500) as number);
+    //}
   }
 
   logout() {
