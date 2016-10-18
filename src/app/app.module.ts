@@ -1,4 +1,4 @@
-import { NgModule, NgModuleFactoryLoader, enableProdMode, Injectable } from '@angular/core';
+import { NgModule, enableProdMode } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
@@ -14,15 +14,12 @@ import { BrowserService, KMCShellModule } from 'kmc-shell';
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
 
-
 import { KalturaAPIConfigAdapter } from './services/kaltura-api-config-adapter.service';
 import { KalturaAuthConfigAdapter } from './services/kaltura-auth-config-adapter.service';
 import { KalturaLocalizationAdapter } from './services/kaltura-localization-adapter.service';
 import { AppDefaultConfig } from "./services/app-default-config.service";
 
 
-
-// shell imports
 import { AppMenuService } from './services/app-menu.service';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AppMenuComponent } from './components/app-menu/app-menu.component';
