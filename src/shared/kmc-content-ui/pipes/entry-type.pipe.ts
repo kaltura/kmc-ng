@@ -3,27 +3,27 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({name: 'entryType'})
 export class EntryTypePipe implements PipeTransform {
   transform(value = '1'): string {
-    let icon = '';
+    let className = 'k-entry-';
     switch (value.toString()) {
       case '1':
-         icon = 'media.png';
+        className += 'media';
          break;
       case '2':
-        icon = 'image.png';
+        className += 'image';
         break;
       case '5':
-        icon = 'audio.png';
+        className += 'audio';
         break;
       case '201':
       case '202':
       case '203':
       case '204':
-        icon = 'live.png';
+        className += 'live';
         break;
       default:
-        icon = 'unknown.png';
+        className += 'unknown';
         break;
     }
-    return 'assets/content/entryTypes/' + icon;
+    return className;
   }
 }
