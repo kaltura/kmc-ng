@@ -51,6 +51,17 @@ module.exports = webpackMerge(commonConfig, {
    */
   devtool: 'cheap-module-source-map',
 
+  module : {
+    loaders: [
+      // Add loader that will monitor changes in @kaltura-ng2 (needed during deployment)
+      {
+        test: /node_modules\/@kaltura-ng2\/\.ts/,
+            loaders : [],
+          exclude : []
+      }
+    ]
+  },
+
   /**
    * Options affecting the output of the compilation.
    *
