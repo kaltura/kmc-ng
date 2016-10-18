@@ -1,4 +1,4 @@
-import { NgModule, NgModuleFactoryLoader, enableProdMode } from '@angular/core';
+import { NgModule, enableProdMode } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
@@ -13,13 +13,22 @@ import { BrowserService, KMCShellModule } from 'kmc-shell';
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
-import { KMCShellAppModule } from './shell.module';
-
 
 import { KalturaAPIConfigAdapter } from './services/kaltura-api-config-adapter.service';
 import { KalturaAuthConfigAdapter } from './services/kaltura-auth-config-adapter.service';
 import { KalturaLocalizationAdapter } from './services/kaltura-localization-adapter.service';
 import { AppDefaultConfig } from "./services/app-default-config.service";
+
+
+import { AppMenuService } from './services/app-menu.service';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { AppMenuComponent } from './components/app-menu/app-menu.component';
+import { LanguageMenuComponent } from './components/language-menu/language-menu.component';
+import { LoginComponent } from './components/login/login.component';
+import { ErrorComponent } from './components/error/error.component';
+import { UploadComponent } from './components/upload/upload.component';
+import { UserSettingsComponent } from './components/user-settings/user-settings.component';
+
 
 
 // depending on the env mode, enable prod mode or add debugging modules
@@ -29,6 +38,7 @@ if (process.env.ENV === 'build') {
 
 @NgModule({
   imports: <any>[ routing,
+    CommonModule,
     RouterModule.forRoot([]),
     KMCShellModule.forRoot(),
     BrowserModule,
@@ -36,11 +46,19 @@ if (process.env.ENV === 'build') {
     KalturaCommonModule.forRoot(),
     TranslateModule.forRoot(),
     KalturaApiModule,
-    Ng2Webstorage,
-    KMCShellAppModule ],       // module dependencies
-  declarations: <any>[ AppComponent ],   // components and directives
+    Ng2Webstorage,],       // module dependencies
+  declarations: <any>[ AppComponent,
+    DashboardComponent,
+    AppMenuComponent,
+    LanguageMenuComponent,
+    LoginComponent,
+    ErrorComponent,
+    UploadComponent,
+    UserSettingsComponent ],   // components and directives
   bootstrap: <any>[ AppComponent ],     // root component
+  exports: [DashboardComponent,LoginComponent ],
   providers: <any>[
+    AppMenuService,
     GetBootstrapProvider(KalturaAPIConfigAdapter),
     GetBootstrapProvider(KalturaLocalizationAdapter),
     GetBootstrapProvider(KalturaAuthConfigAdapter),
