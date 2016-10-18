@@ -13,7 +13,7 @@ import { BrowserService, KMCShellModule } from 'kmc-shell';
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
-import { KMCShellAppModule } from './shell/kmc-shell.module';
+import { KMCShellAppModule } from './shell.module';
 
 
 import { KalturaAPIConfigAdapter } from './services/kaltura-api-config-adapter.service';

@@ -1,9 +1,9 @@
 import { Routes, RouterModule } from '@angular/router';
 import { AuthCanActivate, AppBootstrap } from '@kaltura-ng2/kaltura-common';
 
-import { LoginComponent } from './shell/components/login/login.component';
-import { DashboardComponent } from './shell/components/dashboard/dashboard.component';
-import {ErrorComponent} from "./shell/components/error/error.component";
+import { LoginComponent } from './components/login/login.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import {ErrorComponent} from "./components/error/error.component";
 
 
 const routes: Routes = <Routes>[
