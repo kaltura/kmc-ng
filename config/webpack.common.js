@@ -73,7 +73,7 @@ module.exports = {
      */
     extensions: ['', '.ts', '.js', '.json'],
 
-    modules : ['src/app/shared','node_modules']
+    modules : ['src/shared','node_modules']
   },
 
   /*
@@ -138,7 +138,7 @@ module.exports = {
       // all css in src/style will be bundled in an external css file
       {
         test: /\.css$/,
-        exclude: helpers.root('src/app'),
+        include: [helpers.root('src/styles'), helpers.root('node_modules')],
         loader: ExtractTextPlugin.extract( {fallbackLoader: 'style', loader: 'css?sourceMap!postcss'})
       },
 
@@ -147,12 +147,13 @@ module.exports = {
       // all css in src/style will be bundled in an external css file
       {
         test: /\.scss$/,
-        exclude: helpers.root('src/app'),
+        include: [helpers.root('src/styles'), helpers.root('node_modules')],
         loader: ExtractTextPlugin.extract({ fallbackLoader:'style', loader: 'css!resolve-url!sass?sourceMap'})
       },
 
       // all css required in src/app files will be merged in js files
-      {test: /\.scss$/, include: helpers.root('src/app'), loader: 'exports-loader?module.exports.toString()!css!resolve-url!sass?sourceMap'},
+      {test: /\.scss$/, include: [helpers.root('src/app'),helpers.root('src/applications'),helpers.root('src/shared')], loader: 'exports-loader?module.exports.toString()!css!resolve-url!sass?sourceMap'},
+
       // copy those assets to output
       {test: /\.(png|jpe?g|gif|svg|ico)$/, loader: 'file?name=assets/[name].[hash].[ext]?'},
 
