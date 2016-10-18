@@ -21,28 +21,28 @@ const routes: Routes = <Routes>[
           { path: '', redirectTo: 'entries', pathMatch: 'full' },
           { path: 'entries', loadChildren: () => new Promise(resolve => {
             (require as any).ensure([], require => {
-              resolve(require('./applications/content-entries-app/content-entries-app.module').ContentEntriesAppModule);
+              resolve(require('../applications/content-entries-app/content-entries-app.module').ContentEntriesAppModule);
             });
           })},
           { path: 'moderation', loadChildren: () => new Promise(resolve => {
             (require as any).ensure([], require => {
-              resolve(require('./applications/content-moderation-app/content-moderation-app.module').ContentModerationAppModule);
+              resolve(require('../applications/content-moderation-app/content-moderation-app.module').ContentModerationAppModule);
             });
           })},
           { path: 'playlists', loadChildren: () => new Promise(resolve => {
             (require as any).ensure([], require => {
-              resolve(require('./applications/content-playlists-app/content-playlists-app.module').ContentPlaylistsAppModule);
+              resolve(require('../applications/content-playlists-app/content-playlists-app.module').ContentPlaylistsAppModule);
             });
           })}
         ]},
         { path: 'dashboard', loadChildren: () => new Promise(resolve => {
           (require as any).ensure([], require => {
-            resolve(require('./applications/dashboard-app/dashboard-app.module').DashboardAppModule);
+            resolve(require('../applications/dashboard-app/dashboard-app.module').DashboardAppModule);
           });
         })},
         { path: 'studio', loadChildren: () => new Promise(resolve => {
           (require as any).ensure([], require => {
-            resolve(require('./applications/studio-universal-app/studio-universal-app.module').StudioUniversalAppModule);
+            resolve(require('../applications/studio-universal-app/studio-universal-app.module').StudioUniversalAppModule);
           });
         })}
       ]

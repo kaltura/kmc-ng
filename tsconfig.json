@@ -8,7 +8,7 @@
     "sourceMap": true,
     "moduleResolution": "node",
     "paths": {
-      "*": ["src/app/shared/*"]
+      "*": ["src/shared/*"]
     },
     "noEmitHelpers": true,
     "typeRoots" : [
