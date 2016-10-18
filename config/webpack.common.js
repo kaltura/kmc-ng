@@ -13,6 +13,7 @@ const HtmlElementsPlugin = require('./html-elements-plugin');
 const TsConfigPathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin;
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+const appScriptsFolders = [helpers.root('src/app'),helpers.root('src/applications'),helpers.root('src/shared')];
 
 /*
  * Webpack Constants
@@ -73,7 +74,7 @@ module.exports = {
      */
     extensions: ['', '.ts', '.js', '.json'],
 
-    modules : ['src/shared','node_modules']
+    modules : [helpers.root('src/shared'),helpers.root('node_modules')]
   },
 
   /*
@@ -89,7 +90,11 @@ module.exports = {
      * See: http://webpack.github.io/docs/configuration.html#module-preloaders-module-postloaders
      */
     preLoaders: [
-
+      {
+        test: /\.ts$/,
+        include : appScriptsFolders,
+        loader: "tslint"
+      }
     ],
 
     /*
@@ -152,7 +157,7 @@ module.exports = {
       },
 
       // all css required in src/app files will be merged in js files
-      {test: /\.scss$/, include: [helpers.root('src/app'),helpers.root('src/applications'),helpers.root('src/shared')], loader: 'exports-loader?module.exports.toString()!css!resolve-url!sass?sourceMap'},
+      {test: /\.scss$/, include: appScriptsFolders, loader: 'exports-loader?module.exports.toString()!css!resolve-url!sass?sourceMap'},
 
       // copy those assets to output
       {test: /\.(png|jpe?g|gif|svg|ico)$/, loader: 'file?name=assets/[name].[hash].[ext]?'},
