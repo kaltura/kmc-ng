@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 import { AppConfig, AppStorage } from '@kaltura-ng2/kaltura-common';
-import { AppMenuConfig } from '../../shared/app-menu-config';
-import { AppMenuService } from '../../shared/app-menu.service';
-import { AppMenuItem } from "../../shared/app-menu-config";
+import { AppMenuConfig } from '../../services/app-menu-config';
+import { AppMenuService } from '../../services/app-menu.service';
+import { AppMenuItem } from "../../services/app-menu-config";
 
 import * as R from 'ramda';
 

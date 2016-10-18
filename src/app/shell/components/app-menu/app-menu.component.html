@@ -1,7 +1,7 @@
 <div class="container-fluid appMenu">
   <div class="row">
-    <img src="assets/kmc-shell/header_logo.png">
     <div class="col-12">
+      <div class="k-logo"></div>
       <ul class="nav navbar-nav leftNavBar">
         <li *ngFor="let item of menuConfig">
           <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]">{{'MENU.'+item.titleToken | translate}}</a>
