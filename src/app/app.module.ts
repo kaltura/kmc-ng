@@ -4,12 +4,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { CommonModule } from '@angular/common';
 import { Ng2Webstorage } from 'ng2-webstorage';
-import { TranslateModule } from 'ng2-translate/ng2-translate';
 
 import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType, KalturaCommonModule, AppStorage } from '@kaltura-ng2/kaltura-common';
 import { KalturaApiModule } from '@kaltura-ng2/kaltura-api';
 import { BrowserService, KMCShellModule } from 'kmc-shell';
-
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
@@ -18,7 +16,6 @@ import { KalturaAPIConfigAdapter } from './services/kaltura-api-config-adapter.s
 import { KalturaAuthConfigAdapter } from './services/kaltura-auth-config-adapter.service';
 import { KalturaLocalizationAdapter } from './services/kaltura-localization-adapter.service';
 import { AppDefaultConfig } from "./services/app-default-config.service";
-
 
 import { AppMenuService } from './services/app-menu.service';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -44,7 +41,6 @@ if (process.env.ENV === 'build') {
     BrowserModule,
     HttpModule,
     KalturaCommonModule.forRoot(),
-    TranslateModule.forRoot(),
     KalturaApiModule,
     Ng2Webstorage,],       // module dependencies
   declarations: <any>[ AppComponent,
