@@ -41,7 +41,8 @@
         </div>
         <div class="col-md-10" style="height: 100%">
           <div class="row tableHolder">
-              <p-dataTable [value]="entriesList" scrollable="true" scrollHeight="100%" #dt>
+              <p-dataTable [value]="entriesList" scrollable="true" scrollHeight="100%" [(selection)]="selectedEntries" selectionMode="multiple" #dt>
+                <!--p-column [style]="{'width':'46px'}" selectionMode="multiple"></p-column-->
                 <p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">
                   <template let-col let-entry="rowData" pTemplate type="body">
                     <div class="thumbnailHolder"><span class="helper"></span><img src="{{entry[col.field]}}"></div>
@@ -88,18 +89,14 @@
                     </div>
                   </template>
                 </p-column>
+                <footer>
+                  <button [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>
+                  <p-paginator rows="10" totalRecords="120" [rowsPerPageOptions]="[10,20,30]"></p-paginator>
+                </footer>
               </p-dataTable>
-          </div>
-          <div class="row footer">
-            <div>
-              <button style="width: 120px">Bulk Actions</button>
-            </div>
-            <div style="width: 100%">
-              <p-paginator rows="10" totalRecords="120" [rowsPerPageOptions]="[10,20,30]"></p-paginator>
-            </div>
           </div>
         </div>
     </div>
   </div>
-
 </kmc-loader>
+<p-tieredMenu #menu [model]="bulkActionsMenu" [popup]="true" [styleClass]="menu"></p-tieredMenu>
