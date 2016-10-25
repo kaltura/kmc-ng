@@ -62,13 +62,17 @@ $gridPadding: 10px;
     height: 100%;
     vertical-align: middle;
   }
-  .footer{
-    height: $primeDataTableFooterHeight;
-    margin-top: $primeDataTableFooterHeight;
-    display: table;
-    div{
-      display: table-cell;
-      vertical-align: middle;
+  footer{
+    display: flex;
+    button{
+      height: 28px;
+      margin-top: 4px;
+      &[disabled]{
+        color: #cacaca;
+      }
     }
+  }
+  p-paginator{
+    flex: 1;
   }
 }

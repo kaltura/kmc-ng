@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
+import { MenuItem } from 'primeng/primeng';
+
 import { KalturaAPIClient } from '@kaltura-ng2/kaltura-api';
 import { BaseEntryService } from '@kaltura-ng2/kaltura-api/base-entry';
 
@@ -30,6 +32,8 @@ export class EntriesComponent implements OnInit {
   private sub: any;
 
   entriesList: Entry[];
+  selectedEntries: Entry[];
+  bulkActionsMenu: MenuItem[];
   loading = false;
 
   constructor(private formBuilder: FormBuilder, private kalturaAPIClient : KalturaAPIClient) {
@@ -50,6 +54,57 @@ export class EntriesComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
+    this.selectedEntries = [];
+    this.bulkActionsMenu = [
+      {
+        label: 'Set Scheduling',
+      },
+      {
+        label: 'Set Access Control',
+      },
+      {
+        label: 'Add / Remove Tags',
+        items: [
+          {
+            label: 'Add Tags'
+          },
+          {
+            label: 'Remove Tags'
+          }
+        ]
+      },
+      {
+        label: 'Add / Remove Categories',
+        items: [
+          {
+            label: 'Add To Categories'
+          },
+          {
+            label: 'Remove From Categories'
+          }
+        ]
+      },
+      {
+        label: 'Add To New Category / Playlist',
+        items: [
+          {
+            label: 'Add To New Category'
+          },
+          {
+            label: 'Add To New Playlist'
+          }
+        ]
+      },
+      {
+        label: 'Change Owner'
+      },
+      {
+        label: 'Download'
+      },
+      {
+        label: 'Delete'
+      }
+    ];
     this.entries$ = this.searchForm.controls['search'].valueChanges
       .startWith('')
       .debounceTime(500)
