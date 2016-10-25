@@ -2,6 +2,8 @@
 @import '~bootstrap-sass/assets/stylesheets/_bootstrap-mincer.scss';
 @import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
 
+/* primeng overwrites: to be added automatically by build process */
+@import '../../applications/content-entries-app/styles/scss/index.scss';
 
 body{
   overflow-x: hidden;
@@ -25,17 +27,4 @@ a{
     font-size: 24px;
     margin-top: 10px;
   }
-}
-
-// primeng theme overwrites
-.ui-datatable .ui-paginator{
-  border: 0 none;
-  background: transparent;
-}
-.ui-datatable .ui-datatable-footer {
-  background: #ebedf0;
-  border-top: 1px solid #cacaca;
-}
-.ui-menu{
-  width: 18.5em;
 }
