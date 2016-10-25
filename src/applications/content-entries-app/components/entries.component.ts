@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { Subject } from 'rxjs/Rx';
 
-import { KalturaAPIClient } from '@kaltura-ng2/kaltura-api';
-import { BaseEntryService } from '@kaltura-ng2/kaltura-api/base-entry';
+import { ContentEntriesStore } from 'kmc-content-ui';
 
 export interface Entry {
   id: string;
@@ -19,57 +19,61 @@ export interface Entry {
 @Component({
   selector: 'kmc-entries',
   templateUrl: './entries.component.html',
-  styleUrls: ['./entries.component.scss']
+  styleUrls: ['./entries.component.scss'],
+  providers : [ContentEntriesStore]
 })
 export class EntriesComponent implements OnInit {
 
-  private entries$: Observable<any>;
-  private searchForm: FormGroup;
-  private filter: any;
-  private responseProfile: any;
-  private sub: any;
+  searchForm: FormGroup;
 
-  entriesList: Entry[];
+  filter = {
+    pageIndex : 0,
+    pageSize : 50,
+    searchText : '',
+    videoOnly : false,
+    orderBy : ''
+  };
+
   loading = false;
 
-  constructor(private formBuilder: FormBuilder, private kalturaAPIClient : KalturaAPIClient) {
+  refreshList = new Subject();
+
+  constructor(private formBuilder: FormBuilder,
+              public contentEntriesStore : ContentEntriesStore) {
     this.searchForm = this.formBuilder.group({
-      'search': ['', Validators.required]
+      'searchText': ['', Validators.required],
+      'videoOnly' : [true]
     });
-    this.filter = {
-      "objectType": "KalturaMediaEntryFilter",
-      "mediaTypeIn": "1,2,5,6,201",
-      "orderBy": ""
-    }
-    this.responseProfile = {
-      "objectType": "KalturaDetachedResponseProfile",
-      "type": "1",
-      "fields": "id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status"
-    }
+
   }
 
   ngOnInit() {
-    this.loading = true;
-    this.entries$ = this.searchForm.controls['search'].valueChanges
-      .startWith('')
-      .debounceTime(500)
-      .switchMap(value =>
-          BaseEntryService.list(value, this.filter, this.responseProfile)
-              .execute(this.kalturaAPIClient)
-              .map(response => response.objects));
+    this.loading = false;
 
-    this.sub = this.entries$.subscribe(
-      (entries) => {
-        this.entriesList = entries;
-        this.loading = false;
-      },
-      (error) => {
-        this.loading = false;
-    });
+    const searchText = this.searchForm.controls['searchText'].valueChanges
+        .debounceTime(500);
+    const videoOnly = this.searchForm.controls['videoOnly'].valueChanges;
+
+    const refreshList = this.refreshList.asObservable();
+
+    Observable.merge(searchText,refreshList,videoOnly)
+        .switchMap(() => {
+          console.log(JSON.stringify(this.filter));
+          return this.contentEntriesStore.filter(this.filter);
+        })
+        .subscribe(
+            (entries) => {
+              this.loading = false;
+            },
+            (error) => {
+              this.loading = false;
+            });
   }
 
+
+
   ngOnDestroy(){
-    this.sub.unsubscribe();
+
   }
 
   onActionSelected(action, entryID){
@@ -78,14 +82,7 @@ export class EntriesComponent implements OnInit {
 
   refresh(){
     this.loading = true;
-    this.sub.unsubscribe();
-    this.sub = this.entries$.subscribe((entries) => {
-      this.entriesList = entries;
-      this.loading = false;
-    },
-    (error) => {
-      this.loading = false;
-    });
+
   }
 
   sort(event) {

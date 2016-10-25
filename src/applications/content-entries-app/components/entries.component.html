@@ -7,11 +7,12 @@
       </div>
       <div class="col-md-10 topBar">
         <form [formGroup]="searchForm" class="vcenter">
-          <input type="text" pInputText id="search" formControlName="search" placeholder="Search Entries" #search>
+          <input type="text" pInputText formControlName="searchText" [ngModel]="filter.searchText" placeholder="Search Entries">
+          <p-checkbox formControlName="videoOnly" [ngModel]="filter.videoOnly" binary="true"></p-checkbox>
           <button pButton type="text" icon="fa-search"></button>
         </form>
         <div class="vcenter refreshBtn">
-          <button pButton type="text" (click)="refresh(); search.value=''; dt.reset()" icon="fa-refresh" label="Refresh" title="Refresh"></button>
+          <button pButton type="text" (click)="refreshList.next()" icon="fa-refresh" label="Refresh" title="Refresh"></button>
         </div>
 
       </div>
@@ -41,7 +42,7 @@
         </div>
         <div class="col-md-10" style="height: 100%">
           <div class="row tableHolder">
-              <p-dataTable [value]="entriesList" scrollable="true" scrollHeight="100%" #dt>
+              <p-dataTable [value]="contentEntriesStore.entries$ | async" scrollable="true" scrollHeight="100%" >
                 <p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">
                   <template let-col let-entry="rowData" pTemplate type="body">
                     <div class="thumbnailHolder"><span class="helper"></span><img src="{{entry[col.field]}}"></div>
@@ -95,7 +96,7 @@
               <button style="width: 120px">Bulk Actions</button>
             </div>
             <div style="width: 100%">
-              <p-paginator rows="10" totalRecords="120" [rowsPerPageOptions]="[10,20,30]"></p-paginator>
+              <p-paginator [rows]="filter.pageSize" [first]="filter.pageIndex" [totalRecords]="" [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
             </div>
           </div>
         </div>
