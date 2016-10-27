@@ -1,106 +1,102 @@
+<div class="entries">
 <kmc-loader [loading]="loading">
-
-  <div class="entries">
-    <div class="row">
-      <div class="col-md-2 topBar">
-        <span class="title">Entries</span>
-      </div>
-      <div class="col-md-10 topBar">
-        <form [formGroup]="searchForm" class="vcenter">
+  <div class="row">
+    <div class="col-md-2 topBar">
+      <span class="title">Entries</span>
+    </div>
+    <div class="col-md-10 topBar">
+      <form [formGroup]="searchForm" class="vcenter">
           <input type="text" pInputText formControlName="searchText" [ngModel]="filter.searchText" placeholder="Search Entries">
           <p-checkbox formControlName="videoOnly" [ngModel]="filter.videoOnly" binary="true"></p-checkbox>
-          <button pButton type="text" icon="fa-search"></button>
-        </form>
-        <div class="vcenter refreshBtn">
+        <button pButton type="text" icon="fa-search"></button>
+      </form>
+      <div class="vcenter refreshBtn">
           <button pButton type="text" (click)="refreshList.next()" icon="fa-refresh" label="Refresh" title="Refresh"></button>
-        </div>
-
       </div>
-    </div>
 
-    <div class="row grid">
-        <div class="col-md-2" style="height: 100%">
-
-          <div class="row" style="height: 100%">
-
-            <div class="accordionHolder">
-
-              <p-accordion>
-                <p-accordionTab header="Filter by Categories" [selected]="true">
-                  <kmc-categories-filter></kmc-categories-filter>
-                </p-accordionTab>
-                <p-accordionTab header="Additional Filters">
-                  Additional Filters Content
-                </p-accordionTab>
-                <p-accordionTab header="Department Info">
-                  Department Info Content
-                </p-accordionTab>
-              </p-accordion>
-
-            </div>
-          </div>
-        </div>
-        <div class="col-md-10" style="height: 100%">
-          <div class="row tableHolder">
-              <p-dataTable [value]="contentEntriesStore.entries$ | async" scrollable="true" scrollHeight="100%" >
-                <p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">
-                  <template let-col let-entry="rowData" pTemplate type="body">
-                    <div class="thumbnailHolder"><span class="helper"></span><img src="{{entry[col.field]}}"></div>
-                  </template>
-                </p-column>
-                <p-column field="id" header="ID" [sortable]="'custom'" (sortFunction)="sort($event)" [style]="{'width':'100px'}"></p-column>
-                <p-column field="name" header="Name" [sortable]="'custom'" (sortFunction)="sort($event)">
-                  <template let-col let-entry="rowData" pTemplate type="body">
-                    <a (click)="onActionSelected('view',entry.id)">{{entry[col.field]}}</a>
-                  </template>
-                </p-column>
-                <p-column field="mediaType" header="Type" [sortable]="'custom'" (sortFunction)="sort($event)" [style]="{'width':'80px', 'text-align': 'center'}">
-                  <template let-col let-entry="rowData" pTemplate type="body">
-                    <div [class]="entry[col.field] | entryType"></div>
-                  </template>
-                </p-column>
-                <p-column field="plays" header="Plays" [sortable]="'custom'" (sortFunction)="sort($event)" [style]="{'width':'80px', 'text-align': 'center'}"></p-column>
-                <p-column field="createdAt" header="Created On" [sortable]="true" [style]="{'width':'140px'}">
-                  <template let-col let-entry="rowData" pTemplate type="body">
-                    <span>{{entry[col.field] * 1000 | date:'MM/dd/y HH:MM'}}</span>
-                  </template>
-                </p-column>
-                <p-column field="duration" header="Duration" [sortable]="'custom'" (sortFunction)="sort($event)" [style]="{'width':'100px'}">
-                  <template let-col let-entry="rowData" pTemplate type="body">
-                    <span>{{entry[col.field] | time}}</span>
-                  </template>
-                </p-column>
-                <p-column field="status" header="Status" [sortable]="'custom'" (sortFunction)="sort($event)" [style]="{'width':'140px'}">
-                  <template let-col let-entry="rowData" pTemplate type="body">
-                    <span>{{entry[col.field] | entryStatus}}</span>
-                  </template>
-                </p-column>
-                <p-column header="Action" [style]="{'overflow':'visible', 'width':'180px'}">
-                  <template let-col let-entry="rowData" pTemplate type="body">
-                    <div class="btn-group" dropdown>
-                      <button id="single-button" type="button" class="btn btn-xs actionsBtn" dropdownToggle>
-                        Select Action <span class="caret"></span>
-                      </button>
-                      <ul dropdownMenu role="menu" aria-labelledby="single-button" style="z-index: 1000">
-                        <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('embed',entry.id)">Preview & Embed</a></li>
-                        <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('delete',entry.id)">Delete</a></li>
-                        <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('view',entry.id)">View Details</a></li>
-                      </ul>
-                    </div>
-                  </template>
-                </p-column>
-              </p-dataTable>
-          </div>
-          <div class="row footer">
-            <div>
-              <button style="width: 120px">Bulk Actions</button>
-            </div>
-            <div style="width: 100%">
-              <p-paginator [rows]="filter.pageSize" [first]="filter.pageIndex" [totalRecords]="" [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
-            </div>
-          </div>
-        </div>
     </div>
   </div>
 
+  <div class="row grid">
+      <div class="col-md-2" style="height: 100%">
+
+        <div class="row" style="height: 100%">
+
+          <div class="accordionHolder">
+
+            <p-accordion>
+              <p-accordionTab header="Filter by Categories" [selected]="true">
+                <kmc-categories-filter></kmc-categories-filter>
+              </p-accordionTab>
+              <p-accordionTab header="Additional Filters">
+                Additional Filters Content
+              </p-accordionTab>
+              <p-accordionTab header="Department Info">
+                Department Info Content
+              </p-accordionTab>
+            </p-accordion>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-md-10" style="height: 100%">
+        <div class="row tableHolder">
+              <p-dataTable [value]="contentEntriesStore.entries$ | async" scrollable="true" scrollHeight="100%">
+              <!--p-column [style]="{'width':'46px'}" selectionMode="multiple"></p-column-->
+              <p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">
+                <template let-col let-entry="rowData" pTemplate type="body">
+                  <div class="thumbnailHolder"><span class="helper"></span><img src="{{entry[col.field]}}"></div>
+                </template>
+              </p-column>
+              <p-column field="id" header="ID" [sortable]="'custom'" (sortFunction)="sort($event)" [style]="{'width':'100px'}"></p-column>
+              <p-column field="name" header="Name" [sortable]="'custom'" (sortFunction)="sort($event)">
+                <template let-col let-entry="rowData" pTemplate type="body">
+                  <a (click)="onActionSelected('view',entry.id)">{{entry[col.field]}}</a>
+                </template>
+              </p-column>
+              <p-column field="mediaType" header="Type" [sortable]="'custom'" (sortFunction)="sort($event)" [style]="{'width':'80px', 'text-align': 'center'}">
+                <template let-col let-entry="rowData" pTemplate type="body">
+                  <div [class]="entry[col.field] | entryType"></div>
+                </template>
+              </p-column>
+              <p-column field="plays" header="Plays" [sortable]="'custom'" (sortFunction)="sort($event)" [style]="{'width':'80px', 'text-align': 'center'}"></p-column>
+              <p-column field="createdAt" header="Created On" [sortable]="true" [style]="{'width':'140px'}">
+                <template let-col let-entry="rowData" pTemplate type="body">
+                  <span>{{entry[col.field] * 1000 | date:'MM/dd/y HH:MM'}}</span>
+                </template>
+              </p-column>
+              <p-column field="duration" header="Duration" [sortable]="'custom'" (sortFunction)="sort($event)" [style]="{'width':'100px'}">
+                <template let-col let-entry="rowData" pTemplate type="body">
+                  <span>{{entry[col.field] | time}}</span>
+                </template>
+              </p-column>
+              <p-column field="status" header="Status" [sortable]="'custom'" (sortFunction)="sort($event)" [style]="{'width':'140px'}">
+                <template let-col let-entry="rowData" pTemplate type="body">
+                  <span>{{entry[col.field] | entryStatus}}</span>
+                </template>
+              </p-column>
+              <p-column header="Action" [style]="{'overflow':'visible', 'width':'180px'}">
+                <template let-col let-entry="rowData" pTemplate type="body">
+                  <div class="btn-group" dropdown>
+                    <button id="single-button" type="button" class="btn btn-xs actionsBtn" dropdownToggle>
+                      Select Action <span class="caret"></span>
+                    </button>
+                    <ul dropdownMenu role="menu" aria-labelledby="single-button" style="z-index: 1000">
+                      <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('embed',entry.id)">Preview & Embed</a></li>
+                      <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('delete',entry.id)">Delete</a></li>
+                      <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('view',entry.id)">View Details</a></li>
+                    </ul>
+                  </div>
+                </template>
+              </p-column>
+              <footer>
+                <button [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>
+              <p-paginator [rows]="filter.pageSize" [first]="filter.pageIndex" [totalRecords]="" [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
+              </footer>
+            </p-dataTable>
+        </div>
+      </div>
+  </div>
 </kmc-loader>
+<p-tieredMenu #menu [model]="bulkActionsMenu" [popup]="true" [styleClass]="menu"></p-tieredMenu>
+</div>

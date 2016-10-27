@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Subject } from 'rxjs/Rx';
+import { MenuItem } from 'primeng/primeng';
+
 
 import { ContentEntriesStore } from 'kmc-content-ui';
 
@@ -34,6 +36,8 @@ export class EntriesComponent implements OnInit {
     orderBy : ''
   };
 
+  selectedEntries: Entry[];
+  bulkActionsMenu: MenuItem[];
   loading = false;
 
   refreshList = new Subject();
@@ -49,7 +53,57 @@ export class EntriesComponent implements OnInit {
 
   ngOnInit() {
     this.loading = false;
-
+    this.selectedEntries = [];
+    this.bulkActionsMenu = [
+      {
+        label: 'Set Scheduling',
+      },
+      {
+        label: 'Set Access Control',
+      },
+      {
+        label: 'Add / Remove Tags',
+        items: [
+          {
+            label: 'Add Tags'
+          },
+          {
+            label: 'Remove Tags'
+          }
+        ]
+      },
+      {
+        label: 'Add / Remove Categories',
+        items: [
+          {
+            label: 'Add To Categories'
+          },
+          {
+            label: 'Remove From Categories'
+          }
+        ]
+      },
+      {
+        label: 'Add To New Category / Playlist',
+        items: [
+          {
+            label: 'Add To New Category'
+          },
+          {
+            label: 'Add To New Playlist'
+          }
+        ]
+      },
+      {
+        label: 'Change Owner'
+      },
+      {
+        label: 'Download'
+      },
+      {
+        label: 'Delete'
+      }
+    ];
     const searchText = this.searchForm.controls['searchText'].valueChanges
         .debounceTime(500);
     const videoOnly = this.searchForm.controls['videoOnly'].valueChanges;
