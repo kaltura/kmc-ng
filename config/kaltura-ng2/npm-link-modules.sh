@@ -4,12 +4,14 @@ set -e
 
 cd `dirname $0`
 
-while read RAW_PACKAGE
+LIST="$(cat ../../package.json | bash $(npm bin)/JSON.sh -b | grep dependencies | grep kaltura | cut -f 1 | cut -d ',' -f2 | cut -d '"' -f 2 | cut -d "/" -f 2)"
+
+echo $LIST
+for PACKAGE in ${LIST} ;
 do
-  PACKAGE=${RAW_PACKAGE}
   echo "======================== Running npm link for package '${PACKAGE}' ======================== "
   npm link @kaltura-ng2/${PACKAGE}
 
-done < kaltura-ng2-modules.txt
+done
 
 echo "=== All libraries were linked successfully ==="
