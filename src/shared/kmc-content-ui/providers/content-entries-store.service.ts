@@ -12,11 +12,17 @@ export type FilterArgs = {
     videoOnly? : boolean;
 };
 
+export interface Entries{
+    items : any[],
+    totalCount : number
+}
+
 @Injectable()
 export class ContentEntriesStore
 {
-    private _entries: BehaviorSubject<any> = new BehaviorSubject([]);
-    public entries$: Observable<any> = this._entries.asObservable();
+    private _entries: BehaviorSubject<Entries> = new BehaviorSubject({items : [], totalCount : 0});
+
+    public entries$: Observable<Entries> = this._entries.asObservable();
 
     constructor(private kalturaAPIClient : KalturaAPIClient) {
 
@@ -43,10 +49,9 @@ export class ContentEntriesStore
         {
             BaseEntryService.list(filter, pager, responseProfile)
                 .execute(this.kalturaAPIClient)
-                .map(response => response.objects)
                 .subscribe(
-                    (entries) => {
-                        this._entries.next(entries);
+                    (response) => {
+                        this._entries.next({ items : <any[]>response.objects, totalCount : <number>response.totalCount});
                         observe.next(true);
                     },
                     () =>

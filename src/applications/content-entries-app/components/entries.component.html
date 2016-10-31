@@ -6,12 +6,11 @@
     </div>
     <div class="col-md-10 topBar">
       <form [formGroup]="searchForm" class="vcenter">
-          <input type="text" pInputText formControlName="searchText" [ngModel]="filter.searchText" placeholder="Search Entries">
-          <p-checkbox formControlName="videoOnly" [ngModel]="filter.videoOnly" binary="true"></p-checkbox>
+          <input type="text" pInputText formControlName="searchText" placeholder="Search Entries">
         <button pButton type="text" icon="fa-search"></button>
       </form>
       <div class="vcenter refreshBtn">
-          <button pButton type="text" (click)="refreshList.next()" icon="fa-refresh" label="Refresh" title="Refresh"></button>
+          <button pButton type="text" (click)="reload()" icon="fa-refresh" label="Refresh" title="Refresh"></button>
       </div>
 
     </div>
@@ -41,7 +40,7 @@
       </div>
       <div class="col-md-10" style="height: 100%">
         <div class="row tableHolder">
-              <p-dataTable [value]="contentEntriesStore.entries$ | async" scrollable="true" scrollHeight="100%">
+              <p-dataTable [value]="(contentEntriesStore.entries$ | async)?.items" scrollable="true" scrollHeight="100%">
               <!--p-column [style]="{'width':'46px'}" selectionMode="multiple"></p-column-->
               <p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">
                 <template let-col let-entry="rowData" pTemplate type="body">
@@ -91,7 +90,8 @@
               </p-column>
               <footer>
                 <button [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>
-              <p-paginator [rows]="filter.pageSize" [first]="filter.pageIndex" [totalRecords]="" [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
+              <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChange($event)" [first]="filter.pageIndex" [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount" [rowsPerPageOptions]="[5,10,20]"></p-paginator>
+                  {{ filter.pageIndex }} | {{ (contentEntriesStore.entries$ | async)?.totalCount }}
               </footer>
             </p-dataTable>
         </div>

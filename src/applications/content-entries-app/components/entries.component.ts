@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { Subject } from 'rxjs/Rx';
+import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
 
-
+import { bulkActionsMenuItems } from './bulkActionsMenuItems';
 import { ContentEntriesStore } from 'kmc-content-ui';
 
 export interface Entry {
@@ -18,105 +18,80 @@ export interface Entry {
   status: string;
 }
 
+
+
 @Component({
   selector: 'kmc-entries',
   templateUrl: './entries.component.html',
   styleUrls: ['./entries.component.scss'],
   providers : [ContentEntriesStore]
 })
-export class EntriesComponent implements OnInit {
+export class EntriesComponent implements OnInit, OnDestroy {
 
+  private _filterChanges : Subscription;
   searchForm: FormGroup;
 
   filter = {
     pageIndex : 0,
-    pageSize : 50,
+    pageSize : 5,
     searchText : '',
-    videoOnly : false,
     orderBy : ''
   };
 
-  selectedEntries: Entry[];
-  bulkActionsMenu: MenuItem[];
+  selectedEntries: Entry[] = [];
+  bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
   loading = false;
 
-  refreshList = new Subject();
+  private refreshList = <Subject<boolean>>new Subject();
+
 
   constructor(private formBuilder: FormBuilder,
               public contentEntriesStore : ContentEntriesStore) {
     this.searchForm = this.formBuilder.group({
-      'searchText': ['', Validators.required],
-      'videoOnly' : [true]
+      'searchText': []
     });
 
   }
 
-  ngOnInit() {
-    this.loading = false;
-    this.selectedEntries = [];
-    this.bulkActionsMenu = [
+  onPaginationChange(state : any) : void{
+    this.filter.pageIndex = state.page;
+    this.filter.pageSize = state.rows;
+
+    this.reload(false);
+  }
+
+  reload(resetPagination : boolean = false) : void{
+    this.refreshList.next(resetPagination);
+  }
+
+  unsubscribeToFilterChanges() : void{
+    if (this._filterChanges) {
+      this._filterChanges.unsubscribe();
+      this._filterChanges = null;
+    }
+  }
+
+
+  subscribeToFilterChanges() : void{
+    const searchText$ = this.searchForm.controls['searchText'].valueChanges
+        .debounceTime(500).do((value) =>{
+          this.filter.searchText = value;
+        });
+
+    const refreshList$ = this.refreshList.do((resetPagination) =>{
+      if (resetPagination)
       {
-        label: 'Set Scheduling',
-      },
-      {
-        label: 'Set Access Control',
-      },
-      {
-        label: 'Add / Remove Tags',
-        items: [
-          {
-            label: 'Add Tags'
-          },
-          {
-            label: 'Remove Tags'
-          }
-        ]
-      },
-      {
-        label: 'Add / Remove Categories',
-        items: [
-          {
-            label: 'Add To Categories'
-          },
-          {
-            label: 'Remove From Categories'
-          }
-        ]
-      },
-      {
-        label: 'Add To New Category / Playlist',
-        items: [
-          {
-            label: 'Add To New Category'
-          },
-          {
-            label: 'Add To New Playlist'
-          }
-        ]
-      },
-      {
-        label: 'Change Owner'
-      },
-      {
-        label: 'Download'
-      },
-      {
-        label: 'Delete'
+        this.filter.pageIndex = 0;
       }
-    ];
-    const searchText = this.searchForm.controls['searchText'].valueChanges
-        .debounceTime(500);
-    const videoOnly = this.searchForm.controls['videoOnly'].valueChanges;
+    });
 
-    const refreshList = this.refreshList.asObservable();
-
-    Observable.merge(searchText,refreshList,videoOnly)
-        .switchMap(() => {
+    this._filterChanges = Observable.merge(searchText$,refreshList$)
+        .switchMap((values) => {
           console.log(JSON.stringify(this.filter));
           return this.contentEntriesStore.filter(this.filter);
         })
         .subscribe(
-            (entries) => {
+            () => {
               this.loading = false;
             },
             (error) => {
@@ -124,10 +99,12 @@ export class EntriesComponent implements OnInit {
             });
   }
 
-
+  ngOnInit() {
+    this.subscribeToFilterChanges();
+  }
 
   ngOnDestroy(){
-
+    this.unsubscribeToFilterChanges();
   }
 
   onActionSelected(action, entryID){
