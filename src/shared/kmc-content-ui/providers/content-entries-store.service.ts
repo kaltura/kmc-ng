@@ -5,6 +5,8 @@ import { Observable } from 'rxjs/Observable';
 import { KalturaAPIClient } from '@kaltura-ng2/kaltura-api';
 import { BaseEntryService, KalturaMediaEntryFilter, KalturaDetachedResponseProfile, KalturaFilterPager } from '@kaltura-ng2/kaltura-api/base-entry';
 
+import * as R from 'ramda';
+
 export enum SortDirection {
     Desc,
     Asc
@@ -15,6 +17,7 @@ export type FilterArgs = {
     pageIndex : number;
     pageSize : number;
     searchText? : string;
+    mediaTypeIn? : number[];
 };
 
 export interface Entries{
@@ -33,14 +36,22 @@ export class ContentEntriesStore
 
     }
 
+
     public filter(filterArgs : FilterArgs, filterColumns? : string) : Observable<boolean>
     {
         let filter, pager, responseProfile;
 
         filter = new KalturaMediaEntryFilter();
         const orderBy = filterArgs.sortBy ? (filterArgs.sortDirection === SortDirection.Desc ? '-' : '+')  + filterArgs.sortBy : '';
-            Object.assign(filter, {mediaTypeIn : "1,2,5,6,201", freeText: filterArgs.searchText,
-        orderBy : orderBy});
+            Object.assign(filter, {freeText: filterArgs.searchText, orderBy : orderBy});
+
+        if (filterArgs.mediaTypeIn && filterArgs.mediaTypeIn.length)
+        {
+            filter.mediaTypeIn = R.join(',', filterArgs.mediaTypeIn);
+        }else
+        {
+            filter.mediaTypeIn = '1,2,5,6,201';
+        }
 
         pager = new KalturaFilterPager();
         Object.assign(pager, { pageSize : filterArgs.pageSize, pageIndex : filterArgs.pageIndex});
