@@ -18,15 +18,7 @@ export interface Entry {
   status: string;
 }
 
-@Pipe({name: 'sortDirectionToDataTable'})
-class SortDirectionToDataTable implements PipeTransform {
-  transform(value:number):number {
-    return -1;
-  }
-}
-
 @Component({
-  pipes : [SortDirectionToDataTable],
   selector: 'kmc-entries',
   templateUrl: './entries.component.html',
   styleUrls: ['./entries.component.scss'],
