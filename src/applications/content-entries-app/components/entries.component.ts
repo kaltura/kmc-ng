@@ -124,7 +124,22 @@ export class EntriesComponent implements OnInit, OnDestroy {
   }
 
   onActionSelected(action, entryID){
-    alert("Selected Action: "+action+"\nEntry ID: "+entryID);
+    //alert("Selected Action: "+action+"\nEntry ID: "+entryID);
+  }
+
+
+  categoriesChanged(values : any)
+  {
+    Object.assign(this.filter,values);
+    console.log(values);
+    this.reload(true);
+  }
+
+  additionalInfoChanged(values : any)
+  {
+    Object.assign(this.filter,values);
+    console.log(values);
+    this.reload(true);
   }
 
 

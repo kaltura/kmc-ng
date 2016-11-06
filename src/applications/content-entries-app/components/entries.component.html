@@ -16,9 +16,9 @@
   </div>
 
   <div class="row grid">
-      <div class="col-md-2" style="height: 100%">
+      <div class="col-md-2" >
 
-        <div class="row" style="height: 100%">
+        <div class="row"  >
 
           <div class="accordionHolder">
 
@@ -36,10 +36,13 @@
 
           </div>
         </div>
+          <!--<div class="row">-->
+              <!--<kmc-filters  (categoriesChanged)="categoriesChanged($event)" (additionalInfoChanged)="additionalInfoChanged($event)"></kmc-filters>-->
+          <!--</div>-->
       </div>
       <div class="col-md-10" style="height: 100%">
         <div class="row tableHolder">
-              <p-dataTable [value]="(contentEntriesStore.entries$ | async)?.items" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | sortDirection" scrollable="true" scrollHeight="100%" selectionMode="multiple" (onSort)="onSortChanged($event)" [(selection)]="selectedEntries">
+              <p-dataTable [value]="(contentEntriesStore.entries$ | async)?.items" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | sortDirection" scrollable="true" scrollHeight="600px" selectionMode="multiple" (onSort)="onSortChanged($event)" [(selection)]="selectedEntries">
               <!--p-column [style]="{'width':'46px'}" selectionMode="multiple"></p-column-->
               <p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">
                 <template let-col let-entry="rowData" pTemplate type="body">

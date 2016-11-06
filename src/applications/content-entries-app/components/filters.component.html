@@ -1,0 +1,42 @@
+<div>
+    <form [formGroup]="categoriesForm">
+        <div class="panel panel-default">
+            <div class="panel-heading">Filter by categories</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label>categoriesIdsMatchOr</label>
+                    <input type="input" formControlName="categoriesIdsMatchOr" class="form-control">
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <div class="form-group">
+                    <label>createdAtGreaterThanOrEqual</label>
+                    <p-calendar formControlName="createdAtGreaterThanOrEqual" [monthNavigator]="true" [yearNavigator]="true" [readonlyInput]="true" yearRange="1980:2030"></p-calendar>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <div class="form-group">
+                    <label>createdAtLessThanOrEqual</label>
+                    <p-calendar formControlName="createdAtLessThanOrEqual" [monthNavigator]="true" [yearNavigator]="true" [readonlyInput]="true" yearRange="1980:2030"></p-calendar>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form [formGroup]="additionalForm">
+        <div class="panel panel-default">
+            <div class="panel-heading">Additional Info</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label>mediaTypeIn</label>
+                    <p-multiSelect [options]="mediaTypes"  formControlName="mediaTypeIn"></p-multiSelect>
+                </div>
+            </div>
+
+
+        </div>
+    </form>
+
+</div>
