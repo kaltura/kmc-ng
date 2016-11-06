@@ -5,11 +5,16 @@ import { Observable } from 'rxjs/Observable';
 import { KalturaAPIClient } from '@kaltura-ng2/kaltura-api';
 import { BaseEntryService, KalturaMediaEntryFilter, KalturaDetachedResponseProfile, KalturaFilterPager } from '@kaltura-ng2/kaltura-api/base-entry';
 
+export enum SortDirection {
+    Desc,
+    Asc
+}
 export type FilterArgs = {
+    sortBy : string;
+    sortDirection : SortDirection;
     pageIndex : number;
     pageSize : number;
     searchText? : string;
-    videoOnly? : boolean;
 };
 
 export interface Entries{
@@ -33,7 +38,9 @@ export class ContentEntriesStore
         let filter, pager, responseProfile;
 
         filter = new KalturaMediaEntryFilter();
-        Object.assign(filter, {mediaTypeIn : "1,2,5,6,201", freeText: filterArgs.searchText});
+        const orderBy = filterArgs.sortBy ? (filterArgs.sortDirection === SortDirection.Desc ? '-' : '+')  + filterArgs.sortBy : '';
+            Object.assign(filter, {mediaTypeIn : "1,2,5,6,201", freeText: filterArgs.searchText,
+        orderBy : orderBy});
 
         pager = new KalturaFilterPager();
         Object.assign(pager, { pageSize : filterArgs.pageSize, pageIndex : filterArgs.pageIndex});

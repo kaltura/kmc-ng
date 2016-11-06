@@ -6,8 +6,7 @@
     </div>
     <div class="col-md-10 topBar">
       <form [formGroup]="searchForm" class="vcenter">
-          <input type="text" pInputText formControlName="searchText" placeholder="Search Entries">
-        <button pButton type="text" icon="fa-search"></button>
+          <input type="text" pInputText formControlName="searchText" (onenter)="freetextValue = $event.target.value" (keyup.enter)="onFreetextChanged()" placeholder="Search Entries">
       </form>
       <div class="vcenter refreshBtn">
           <button pButton type="text" (click)="reload()" icon="fa-refresh" label="Refresh" title="Refresh"></button>
@@ -40,36 +39,36 @@
       </div>
       <div class="col-md-10" style="height: 100%">
         <div class="row tableHolder">
-              <p-dataTable [value]="(contentEntriesStore.entries$ | async)?.items" scrollable="true" scrollHeight="100%" selectionMode="multiple" [(selection)]="selectedEntries">
+              <p-dataTable [value]="(contentEntriesStore.entries$ | async)?.items" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | sortDirectionToDataTable" scrollable="true" scrollHeight="100%" selectionMode="multiple" (onSort)="onSortChanged($event)" [(selection)]="selectedEntries">
               <!--p-column [style]="{'width':'46px'}" selectionMode="multiple"></p-column-->
               <p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">
                 <template let-col let-entry="rowData" pTemplate type="body">
                   <div class="thumbnailHolder"><span class="helper"></span><img src="{{entry[col.field]}}"></div>
                 </template>
               </p-column>
-              <p-column field="id" header="ID" [sortable]="'custom'" (sortFunction)="sort($event)" [style]="{'width':'100px'}"></p-column>
-              <p-column field="name" header="Name" [sortable]="'custom'" (sortFunction)="sort($event)">
+              <p-column field="id" header="ID" [sortable]="'custom'" [style]="{'width':'100px'}"></p-column>
+              <p-column field="name" header="Name" [sortable]="'custom'" >
                 <template let-col let-entry="rowData" pTemplate type="body">
                   <a (click)="onActionSelected('view',entry.id)">{{entry[col.field]}}</a>
                 </template>
               </p-column>
-              <p-column field="mediaType" header="Type" [sortable]="'custom'" (sortFunction)="sort($event)" [style]="{'width':'80px', 'text-align': 'center'}">
+              <p-column field="mediaType" header="Type" [sortable]="'custom'"  [style]="{'width':'80px', 'text-align': 'center'}">
                 <template let-col let-entry="rowData" pTemplate type="body">
                   <div [class]="entry[col.field] | entryType"></div>
                 </template>
               </p-column>
-              <p-column field="plays" header="Plays" [sortable]="'custom'" (sortFunction)="sort($event)" [style]="{'width':'80px', 'text-align': 'center'}"></p-column>
+              <p-column field="plays" header="Plays" [sortable]="'custom'"  [style]="{'width':'80px', 'text-align': 'center'}"></p-column>
               <p-column field="createdAt" header="Created On" [sortable]="true" [style]="{'width':'140px'}">
                 <template let-col let-entry="rowData" pTemplate type="body">
                   <span>{{entry[col.field] * 1000 | date:'MM/dd/y HH:MM'}}</span>
                 </template>
               </p-column>
-              <p-column field="duration" header="Duration" [sortable]="'custom'" (sortFunction)="sort($event)" [style]="{'width':'100px'}">
+              <p-column field="duration" header="Duration" [sortable]="'custom'"  [style]="{'width':'100px'}">
                 <template let-col let-entry="rowData" pTemplate type="body">
                   <span>{{entry[col.field] | time}}</span>
                 </template>
               </p-column>
-              <p-column field="status" header="Status" [sortable]="'custom'" (sortFunction)="sort($event)" [style]="{'width':'140px'}">
+              <p-column field="status" header="Status" [sortable]="'custom'"  [style]="{'width':'140px'}">
                 <template let-col let-entry="rowData" pTemplate type="body">
                   <span>{{entry[col.field] | entryStatus}}</span>
                 </template>
@@ -90,8 +89,7 @@
               </p-column>
               <footer>
                 <button [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>
-              <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChange($event)" [first]="filter.pageIndex" [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount" [rowsPerPageOptions]="[5,10,20]"></p-paginator>
-                  {{ filter.pageIndex }} | {{ (contentEntriesStore.entries$ | async)?.totalCount }}
+              <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChanged($event)" [first]="filter.pageIndex * filter.pageSize" [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount" [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
               </footer>
             </p-dataTable>
         </div>

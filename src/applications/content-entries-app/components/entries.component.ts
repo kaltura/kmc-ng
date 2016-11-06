@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy,  Pipe, PipeTransform } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
 
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
-import { ContentEntriesStore } from 'kmc-content-ui';
+import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui';
 
 export interface Entry {
   id: string;
@@ -18,9 +18,15 @@ export interface Entry {
   status: string;
 }
 
-
+@Pipe({name: 'sortDirectionToDataTable'})
+class SortDirectionToDataTable implements PipeTransform {
+  transform(value:number):number {
+    return -1;
+  }
+}
 
 @Component({
+  pipes : [SortDirectionToDataTable],
   selector: 'kmc-entries',
   templateUrl: './entries.component.html',
   styleUrls: ['./entries.component.scss'],
@@ -31,11 +37,12 @@ export class EntriesComponent implements OnInit, OnDestroy {
   private _filterChanges : Subscription;
   searchForm: FormGroup;
 
-  filter = {
+  filter : FilterArgs = {
     pageIndex : 0,
-    pageSize : 5,
+    pageSize : 50,
     searchText : '',
-    orderBy : ''
+    sortBy : 'createdAt',
+    sortDirection : SortDirection.Desc
   };
 
   selectedEntries: Entry[] = [];
@@ -53,11 +60,23 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   }
 
-  onPaginationChange(state : any) : void{
+  onFreetextChanged() : void{
+    this.filter.pageIndex = 0;
+    this.filter.searchText = this.searchForm.value.searchText;
+    this.reload();
+  }
+
+  onSortChanged(event) {
+    this.filter.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
+    this.filter.sortBy = event.field;
+    this.reload();
+  }
+
+  onPaginationChanged(state : any) : void{
     this.filter.pageIndex = state.page;
     this.filter.pageSize = state.rows;
 
-    this.reload(false);
+    this.reload();
   }
 
   reload(resetPagination : boolean = false) : void{
@@ -73,10 +92,12 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
 
   subscribeToFilterChanges() : void{
-    const searchText$ = this.searchForm.controls['searchText'].valueChanges
-        .debounceTime(500).do((value) =>{
-          this.filter.searchText = value;
-        });
+    // remove after PRD will be provided - currently we disabled automatic filtering while user type
+    //const searchText$ = this.searchForm.controls['searchText'].valueChanges
+    //    .debounceTime(500).do((value) =>{
+    //      this.filter.searchText = value;
+    //      this.filter.pageIndex = 0;
+    //    });
 
     const refreshList$ = this.refreshList.do((resetPagination) =>{
       if (resetPagination)
@@ -85,9 +106,9 @@ export class EntriesComponent implements OnInit, OnDestroy {
       }
     });
 
-    this._filterChanges = Observable.merge(searchText$,refreshList$)
+    this._filterChanges = Observable.merge(refreshList$)
         .switchMap((values) => {
-          console.log(JSON.stringify(this.filter));
+          this.loading = true;
           return this.contentEntriesStore.filter(this.filter);
         })
         .subscribe(
@@ -101,6 +122,9 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscribeToFilterChanges();
+
+    this.reload();
+
   }
 
   ngOnDestroy(){
@@ -111,15 +135,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
     alert("Selected Action: "+action+"\nEntry ID: "+entryID);
   }
 
-  refresh(){
-    this.loading = true;
 
-  }
 
-  sort(event) {
-    let sortOrder = event.order === 1 ? "+" : "-";
-    this.filter.orderBy = sortOrder + event.field;
-    this.refresh();
-  }
 }
 
