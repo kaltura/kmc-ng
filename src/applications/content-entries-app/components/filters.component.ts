@@ -34,7 +34,7 @@ export class FiltersComponent implements OnInit, OnDestroy {
     @Output()
     additionalInfoChanged = new EventEmitter<any>();
 
-    mediaTypes = [];
+    lists : any = {};
 
     constructor(private formBuilder: FormBuilder,
                 public contentEntriesStore : ContentEntriesStore) {
@@ -45,13 +45,16 @@ export class FiltersComponent implements OnInit, OnDestroy {
         })
 
         this.additionalForm = this.formBuilder.group({
-            mediaTypeIn : []
+            mediaTypeIn : [],
+            statusIn : [],
+            distributionProfiles : []
         });
 
+        // load lists from external json
         for(const propertyName in FiltersContent)
         {
             const propertyItems = FiltersContent[propertyName];
-            const propertyTarget = this[propertyName] = [];
+            const propertyTarget = this.lists[propertyName] = [];
             for(const key in propertyItems )
             {
                 propertyTarget.push({ label : key, value : propertyItems[key]});

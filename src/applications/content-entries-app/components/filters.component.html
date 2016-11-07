@@ -31,7 +31,17 @@
             <div class="panel-body">
                 <div class="form-group">
                     <label>mediaTypeIn</label>
-                    <p-multiSelect [options]="mediaTypes"  formControlName="mediaTypeIn"></p-multiSelect>
+                    <p-multiSelect [options]="lists.mediaTypes"  formControlName="mediaTypeIn"></p-multiSelect>
+                </div>
+
+                <div class="form-group">
+                    <label>statusIn</label>
+                    <p-multiSelect [options]="lists.statusTypes"  formControlName="statusIn"></p-multiSelect>
+                </div>
+
+                <div class="form-group">
+                    <label>distributionProfiles</label>
+                    <p-multiSelect [options]="lists.distributionTypes"  formControlName="distributionProfiles"></p-multiSelect>
                 </div>
             </div>
 
