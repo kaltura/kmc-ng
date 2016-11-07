@@ -5,7 +5,7 @@ import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
 
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
-import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui';
+import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
 
 export interface Entry {
   id: string;
@@ -39,6 +39,8 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   selectedEntries: Entry[] = [];
   bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
+
+  tableHeight = '';
   loading = false;
 
   private refreshList = <Subject<boolean>>new Subject();
@@ -49,7 +51,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
     this.searchForm = this.formBuilder.group({
       'searchText': []
     });
-
+    this.tableHeight = window.innerHeight - 200 +"px";
   }
 
   onFreetextChanged() : void{
