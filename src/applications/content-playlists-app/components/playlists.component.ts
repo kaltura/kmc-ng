@@ -43,21 +43,11 @@ export class PlaylistsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.playlists$ = this.searchForm.controls['search'].valueChanges
-      .startWith('')
-      .debounceTime(500)
-      .switchMap(value =>
-          BaseEntryService.list(value, this.filter, this.responseProfile)
-          .execute(this.kalturaAPIClient)
-          .map(response => response.objects));
 
-    this.sub = this.playlists$.subscribe((entries) => {
-      this.playlists = entries;
-    });
   }
 
   ngOnDestroy(){
-    this.sub.unsubscribe();
+
   }
 
   onActionSelected(action, entryID){
@@ -65,16 +55,10 @@ export class PlaylistsComponent implements OnInit {
   }
 
   refresh(){
-    this.playlists = [];
-    this.sub.unsubscribe();
-    this.sub = this.playlists$.subscribe((playlists) => {
-      this.playlists = playlists;
-    });
+
   }
 
   sort(event) {
-    let sortOrder = event.order === 1 ? "+" : "-";
-    this.filter.orderBy = sortOrder + event.field;
-    this.refresh();
+
   }
 }

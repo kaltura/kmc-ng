@@ -34,7 +34,8 @@ export class EntriesComponent implements OnInit, OnDestroy {
     pageSize : 50,
     searchText : '',
     sortBy : 'createdAt',
-    sortDirection : SortDirection.Desc
+    sortDirection : SortDirection.Desc,
+    distributionProfiles : [1233,222]
   };
 
   selectedEntries: Entry[] = [];
