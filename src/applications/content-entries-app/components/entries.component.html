@@ -24,7 +24,7 @@
 
             <p-accordion>
               <p-accordionTab header="Filter by Categories" [selected]="true">
-                <kmc-categories-filter></kmc-categories-filter>
+                <kmc-categories-filter (categoriesChanged)="categoriesChanged($event)"></kmc-categories-filter>
               </p-accordionTab>
               <p-accordionTab header="Additional Filters">
                 Additional Filters Content

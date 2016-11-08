@@ -1,3 +1,8 @@
 <div>
-  <pre style="height: 400px">{{categories | json}}</pre>
+  <!--pre style="height: 400px">{{categories | json}}</pre-->
+  <p-tree [value]="categories">
+    <template let-node  pTemplate type="default">
+      <input type="checkbox" [(ngModel)]="node.selected" [indeterminate]="node.partialSelection" (ngModelChange)="categorySelected(node)"><span style="margin-left: 6px">{{node.label}}</span>
+    </template>
+  </p-tree>
 </div>
