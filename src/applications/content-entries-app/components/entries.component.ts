@@ -5,7 +5,7 @@ import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
 
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
-import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui';
+import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
 
 export interface Entry {
   id: string;

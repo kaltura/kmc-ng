@@ -1,4 +1,8 @@
 <div>
-  <kmc-categories-tree></kmc-categories-tree>
-  <kmc-categories-search></kmc-categories-search>
+  <!--p-tree [value]="categories">
+    <template let-node  pTemplate type="default">
+      <input type="checkbox" [(ngModel)]="node.selected" [indeterminate]="node.partialSelection" (ngModelChange)="categorySelected(node)"><span style="margin-left: 6px">{{node.label}}</span>
+    </template>
+  </p-tree-->
+  filters
 </div>

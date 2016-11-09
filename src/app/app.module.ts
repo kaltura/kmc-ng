@@ -25,7 +25,7 @@ import { LoginComponent } from './components/login/login.component';
 import { ErrorComponent } from './components/error/error.component';
 import { UploadComponent } from './components/upload/upload.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
-
+import { KMCContentUIModule } from 'kmc-content-ui/kmc-content-ui.module';
 
 
 // depending on the env mode, enable prod mode or add debugging modules
@@ -41,6 +41,7 @@ if (process.env.ENV === 'build') {
     BrowserModule,
     HttpModule,
     KalturaCommonModule.forRoot(),
+    KMCContentUIModule.forRoot(),
     KalturaApiModule,
     Ng2Webstorage,],       // module dependencies
   declarations: <any>[ AppComponent,
