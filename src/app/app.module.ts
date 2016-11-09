@@ -7,6 +7,7 @@ import { Ng2Webstorage } from 'ng2-webstorage';
 
 import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType, KalturaCommonModule, AppStorage } from '@kaltura-ng2/kaltura-common';
 import { KalturaApiModule } from '@kaltura-ng2/kaltura-api';
+import  {KalturaRequestBuilder} from '@kaltura-ng2/kaltura-api/utils/adapters/kaltura-request-builder.service';
 import  {KalturaHttpPostService} from '@kaltura-ng2/kaltura-api/utils/adapters/kaltura-http-post.service';
 import  {KalturaHttpConfiguration} from '@kaltura-ng2/kaltura-api/utils/adapters/kaltura-http-configuration';
 import  {KalturaRequestConfiguration} from '@kaltura-ng2/kaltura-api/utils/kaltura-request-configuration';
@@ -65,7 +66,7 @@ if (process.env.ENV === 'build') {
     GetBootstrapProvider(KalturaAuthConfigAdapter),
     GetBootstrapProvider(KalturaHttpConfigurationAdapter  ),
     AppDefaultConfig,
-    KalturaHttpPostService,
+    { provide :KalturaRequestBuilder, useClass : KalturaHttpPostService},
       KalturaHttpConfiguration,
     KalturaRequestConfiguration,
     { provide : AppStorage,  useExisting : BrowserService }

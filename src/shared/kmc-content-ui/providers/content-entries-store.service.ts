@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-import  {KalturaHttpPostService} from '@kaltura-ng2/kaltura-api/utils/adapters/kaltura-http-post.service';
+import  {KalturaRequestBuilder} from '@kaltura-ng2/kaltura-api/utils/adapters/kaltura-request-builder.service';
 import { KalturaAPIClient } from '@kaltura-ng2/kaltura-api';
 import {
     KalturaContentDistributionSearchItem,
@@ -49,7 +49,7 @@ export class ContentEntriesStore {
 
     public entries$:Observable<Entries> = this._entries.asObservable();
 
-    constructor(private kalturaAPIClient:KalturaAPIClient, private httpPostService:KalturaHttpPostService) {
+    constructor(private kalturaAPIClient:KalturaAPIClient,  private requestBuilder : KalturaRequestBuilder) {
 
     }
 
@@ -124,7 +124,7 @@ export class ContentEntriesStore {
             );
 
 
-            this.httpPostService.transmit(request).subscribe(
+            this.requestBuilder.transmit(request).subscribe(
                 (response) => {
                     observe.next(true);
                     observe.complete();
