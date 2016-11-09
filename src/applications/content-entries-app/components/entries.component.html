@@ -101,6 +101,7 @@
               <footer>
                 <button [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>
               <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChanged($event)" [first]="filter.pageIndex * filter.pageSize" [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount" [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
+                  Total Records {{ (contentEntriesStore.entries$ | async)?.totalCount }}
               </footer>
             </p-dataTable>
         </div>

@@ -33,6 +33,9 @@ export type FilterArgs = {
     mediaTypeIn? : number[];
     statusIn? : number[];
     distributionProfiles? : number[];
+    categoriesIdsMatchOr? : string;
+    createdAtLessThanOrEqual? : Date;
+    createdAtGreaterThanOrEqual? : Date;
 };
 
 export interface Entries{
@@ -60,7 +63,13 @@ export class ContentEntriesStore {
 
             filter = new KalturaMediaEntryFilter();
             const orderBy = filterArgs.sortBy ? (filterArgs.sortDirection === SortDirection.Desc ? '-' : '+') + filterArgs.sortBy : '';
-            Object.assign(filter, {freeText: filterArgs.searchText, orderBy: orderBy});
+            Object.assign(filter, {
+                freeText: filterArgs.searchText,
+                orderBy: orderBy,
+                categoriesIdsMatchOr : filterArgs.categoriesIdsMatchOr,
+                createdAtGreaterThanOrEqual : filterArgs.createdAtGreaterThanOrEqual ? filterArgs.createdAtGreaterThanOrEqual.getTime() / 1000 : null,
+                createdAtLessThanOrEqual : filterArgs.createdAtLessThanOrEqual ? filterArgs.createdAtLessThanOrEqual.getTime() / 1000 : null
+            });
 
             if (filterArgs.mediaTypeIn && filterArgs.mediaTypeIn.length) {
                 filter.mediaTypeIn = R.join(',', filterArgs.mediaTypeIn);
@@ -104,12 +113,13 @@ export class ContentEntriesStore {
             // TODO [KMC] we need to cancel all previous requests otherwise we might override entries$ with older responses
             const request = BaseEntryService.list(filter, pager, responseProfile).setCompletion(
                 (response:KalturaResponse<KalturaBaseEntryListResponse>) => {
-                    debugger;
-                    // TODO [kmc] result should be typed!! (consider removing the T | Exception)
-                    const result = <KalturaBaseEntryListResponse>response.result;
-                    this._entries.next({items: <any[]>result.objects, totalCount: <number>result.totalCount});
-
-
+                    if (response.result) {
+                        const result = <KalturaBaseEntryListResponse>response.result;
+                        this._entries.next({items: <any[]>result.objects, totalCount: <number>result.totalCount});
+                    }else
+                    {
+                        // handle response.error
+                    }
                 }
             );
 

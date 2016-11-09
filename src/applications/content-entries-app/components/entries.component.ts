@@ -18,6 +18,9 @@ export interface Entry {
   status: string;
 }
 
+const requestFields = "id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status";
+const entriesSortAsc = 1;
+
 @Component({
   selector: 'kmc-entries',
   templateUrl: './entries.component.html',
@@ -35,7 +38,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
     searchText : '',
     sortBy : 'createdAt',
     sortDirection : SortDirection.Desc,
-    distributionProfiles : [1233,222]
+    distributionProfiles : []
   };
 
   selectedEntries: Entry[] = [];
@@ -60,7 +63,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
   }
 
   onSortChanged(event) {
-    this.filter.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
+    this.filter.sortDirection = event.order === entriesSortAsc ? SortDirection.Asc : SortDirection.Desc;
     this.filter.sortBy = event.field;
     this.reload();
   }
@@ -102,7 +105,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
     this._filterChanges = Observable.merge(refreshList$)
         .switchMap((values) => {
           this.loading = true;
-          return this.contentEntriesStore.filter(this.filter);
+          return this.contentEntriesStore.filter(this.filter, requestFields);
         })
         .subscribe(
             () => {
@@ -132,14 +135,14 @@ export class EntriesComponent implements OnInit, OnDestroy {
   categoriesChanged(values : any)
   {
     Object.assign(this.filter,values);
-    console.log(values);
+
     this.reload(true);
   }
 
   additionalInfoChanged(values : any)
   {
     Object.assign(this.filter,values);
-    console.log(values);
+
     this.reload(true);
   }
 
