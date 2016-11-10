@@ -75,7 +75,7 @@ export class ContentMetadataProfilesStore
             .subscribe(
               (metadataProfiles) => {
                 let metadataProfileFilters = [];
-                this.addMetadataProfiles(metadataProfiles, metadataProfileFilters);
+                this.createMetadataProfileFilters(metadataProfiles, metadataProfileFilters);
                 this._metadata_profiles.next({items: <MetadataProfile[]>metadataProfiles, filters: metadataProfileFilters, loaded: true, status: ''});
                 observe.next(true);
                 observe.complete();
@@ -92,7 +92,7 @@ export class ContentMetadataProfilesStore
       }
     }
 
-  addMetadataProfiles(metadataProfiles, metadataProfileFilters){
+  createMetadataProfileFilters(metadataProfiles, metadataProfileFilters){
     // for each metadata profile, parse its XSD and see if it has a searchable list in it
     metadataProfiles.forEach((metadataProfile) => {
       const xsd = metadataProfile.xsd ? metadataProfile.xsd : null; // try to get the xsd schema from the metadata profile
