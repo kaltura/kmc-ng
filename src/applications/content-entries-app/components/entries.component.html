@@ -29,8 +29,13 @@
               <p-accordionTab header="Additional Filters">
                 Additional Filters Content
               </p-accordionTab>
-              <p-accordionTab header="Department Info">
-                Department Info Content
+              <p-accordionTab *ngFor="let filter of metadataProfileFilters" header="{{filter.label}}">
+                  <div class="row" style="margin-bottom: 10px" *ngFor="let f of filter.filters">
+                    <p>{{f.filterName}}</p>
+                    <ul style="margin: 0; list-style: none; float: left; padding-left: 10px">
+                      <li *ngFor="let field of f.values"><input type="checkbox" (change)="metadataFilterChange($event, f.fieldName, field)" value="{{field}}"> {{field}}</li>
+                    </ul>
+                  </div>
               </p-accordionTab>
             </p-accordion>
 
