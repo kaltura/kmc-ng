@@ -111,7 +111,7 @@ export class ContentEntriesStore {
             }
 
             // TODO [KMC] we need to cancel all previous requests otherwise we might override entries$ with older responses
-            const request = BaseEntryService.list(filter, pager, responseProfile).setCompletion(
+            const request = BaseEntryService.list(filter, pager).setResponseProfile(responseProfile).setCompletion(
                 (response:KalturaResponse<KalturaBaseEntryListResponse>) => {
                     if (response.result) {
                         const result = <KalturaBaseEntryListResponse>response.result;
