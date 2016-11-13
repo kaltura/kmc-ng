@@ -7,7 +7,7 @@ import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
 import { TreeModule, SharedModule } from 'primeng/primeng';
 
 import { CategoriesFilterComponent } from './categories-filter/categories-filter.component';
-import { ContentMetadataProfilesStore } from './providers/content-metadata-profiles-store.service';
+import { ContentCategoriesStore } from './providers/content-categories-store.service';
 import { EntryTypePipe, EntryStatusPipe, PlaylistTypePipe } from './pipes/index';
 
 @NgModule({
@@ -21,7 +21,7 @@ export class KMCContentUIModule {
     return {
       ngModule: KMCContentUIModule,
       providers: [
-        ContentMetadataProfilesStore
+        ContentCategoriesStore
       ]
     };
   }

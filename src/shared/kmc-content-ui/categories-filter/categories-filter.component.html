@@ -1,8 +1,8 @@
 <div>
-  <!--p-tree [value]="categories">
+  <!--pre style="height: 400px">{{categories | json}}</pre-->
+  <p-tree [value]="categories">
     <template let-node  pTemplate type="default">
-      <input type="checkbox" [(ngModel)]="node.selected" [indeterminate]="node.partialSelection" (ngModelChange)="categorySelected(node)"><span style="margin-left: 6px">{{node.label}}</span>
+      <input #cb type="checkbox" [(ngModel)]="categoriesSelectionMap[node.id]" (ngModelChange)="categorySelected(node.id, cb.checked)"><span style="margin-left: 6px">{{node.label}}</span><!--[indeterminate]="node.partialSelection"-->
     </template>
-  </p-tree-->
-  filters
+  </p-tree>
 </div>

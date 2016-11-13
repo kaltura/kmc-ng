@@ -9,6 +9,7 @@ import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui/p
 import { ContentMetadataProfilesStore, MetadataProfile, MetadataProfileFilterGroup } from 'kmc-content-ui/providers/content-metadata-profiles-store.service';
 
 import * as R from 'ramda';
+import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
 
 export interface Entry {
   id: string;
@@ -42,6 +43,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   selectedEntries: Entry[] = [];
   bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
+
   loading = false;
 
   metadataProfiles: MetadataProfile[];
@@ -55,7 +57,6 @@ export class EntriesComponent implements OnInit, OnDestroy {
     this.searchForm = this.formBuilder.group({
       'searchText': []
     });
-
   }
 
   onFreetextChanged() : void{
