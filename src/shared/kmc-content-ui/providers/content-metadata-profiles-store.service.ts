@@ -65,7 +65,7 @@ export class ContentMetadataProfilesStore
         return Observable.create(observe => {
           MetadataProfileService.list(filter, responseProfile)
             .execute(this.kalturaAPIClient)
-            .map((response) => {
+            .map((response: any) => {
               if (response && response.objects){
                 return response.objects;
               }else{
@@ -73,7 +73,7 @@ export class ContentMetadataProfilesStore
               }
             })
             .subscribe(
-              (metadataProfiles) => {
+              (metadataProfiles: any[]) => {
                 let metadataProfileFilters = [];
                 this.createMetadataProfileFilters(metadataProfiles, metadataProfileFilters);
                 this._metadata_profiles.next({items: <MetadataProfile[]>metadataProfiles, filters: metadataProfileFilters, loaded: true, status: ''});
@@ -93,40 +93,45 @@ export class ContentMetadataProfilesStore
     }
 
   createMetadataProfileFilters(metadataProfiles, metadataProfileFilters){
-    // for each metadata profile, parse its XSD and see if it has a searchable list in it
-    metadataProfiles.forEach((metadataProfile) => {
-      const xsd = metadataProfile.xsd ? metadataProfile.xsd : null; // try to get the xsd schema from the metadata profile
-      if (xsd){
-        const parser = new DOMParser();
-        const schema = parser.parseFromString(xsd,"text/xml");      // create an xml documents from the schema
-        const elements = schema.getElementsByTagName("element");    // get all element nodes
+    try {
+      // for each metadata profile, parse its XSD and see if it has a searchable list in it
+      metadataProfiles.forEach((metadataProfile) => {
+        const xsd = metadataProfile.xsd ? metadataProfile.xsd : null; // try to get the xsd schema from the metadata profile
+        if (xsd) {
+          const parser = new DOMParser();
+          const schema = parser.parseFromString(xsd, "text/xml");      // create an xml documents from the schema
+          const elements = schema.getElementsByTagName("element");    // get all element nodes
 
-        // for each xsd element with an ID attribute - search for a simpleType node of type listType - this means we have to add it to the filters if it is searchable
-        for (let i = 0; i < elements.length; i++){
-          const currentNode = elements[i];
-          if (currentNode.getAttribute("id") !== null) {            // only elements with ID attribue can be used for filters
-            const simpleTypes = currentNode.getElementsByTagName("simpleType");
-            if (simpleTypes.length > 0) {
-              // check if this element is searchable
-              if (currentNode.getElementsByTagName("searchable").length && currentNode.getElementsByTagName("searchable")[0].innerHTML === "true") {
-                // check if the simpleType type is "listType"
-                if (simpleTypes[0].getElementsByTagName("restriction").length && simpleTypes[0].getElementsByTagName("restriction")[0].getAttribute("base") === "listType") {
-                  // get filter properties and add it to the metadata profile filters list
-                  const filterLabel = currentNode.getElementsByTagName("appinfo").length ? currentNode.getElementsByTagName("appinfo")[0].getElementsByTagName("label")[0].innerHTML : "";
-                  const valueNodes = simpleTypes[0].getElementsByTagName("enumeration");
-                  const values = [];
-                  for (let j = 0; j < valueNodes.length; j++){
-                    values.push(valueNodes[j].getAttribute("value"));
+          // for each xsd element with an ID attribute - search for a simpleType node of type listType - this means we have to add it to the filters if it is searchable
+          for (let i = 0; i < elements.length; i++) {
+            const currentNode = elements[i];
+            if (currentNode.getAttribute("id") !== null) {            // only elements with ID attribue can be used for filters
+              const simpleTypes = currentNode.getElementsByTagName("simpleType");
+              if (simpleTypes.length > 0) {
+                // check if this element is searchable
+                if (currentNode.getElementsByTagName("searchable").length && currentNode.getElementsByTagName("searchable")[0].innerHTML === "true") {
+                  // check if the simpleType type is "listType"
+                  if (simpleTypes[0].getElementsByTagName("restriction").length && simpleTypes[0].getElementsByTagName("restriction")[0].getAttribute("base") === "listType") {
+                    // get filter properties and add it to the metadata profile filters list
+                    const filterLabel = currentNode.getElementsByTagName("appinfo").length ? currentNode.getElementsByTagName("appinfo")[0].getElementsByTagName("label")[0].innerHTML : "";
+                    const valueNodes = simpleTypes[0].getElementsByTagName("enumeration");
+                    const values = [];
+                    for (let j = 0; j < valueNodes.length; j++) {
+                      values.push(valueNodes[j].getAttribute("value"));
+                    }
+                    const fieldName = currentNode.getAttribute("name");
+                    this.addMetadataProfileFilter(metadataProfileFilters, metadataProfile.name, filterLabel, fieldName, values);
                   }
-                  const fieldName = currentNode.getAttribute("name");
-                  this.addMetadataProfileFilter(metadataProfileFilters, metadataProfile.name, filterLabel, fieldName, values);
                 }
               }
             }
           }
         }
-      }
-    });
+      });
+    }catch(e){
+      // TODO [kmc] handle error
+      console.log("An error occured during the metadata profile filters creation process.");
+    }
   }
 
   addMetadataProfileFilter(metadataProfileFilters, metadataProfileName, filterName, fieldName, values){

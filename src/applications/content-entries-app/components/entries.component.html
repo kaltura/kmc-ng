@@ -18,28 +18,8 @@
   <div class="row grid">
       <div class="col-md-2" >
 
-        <div class="row"  >
-
-          <div class="accordionHolder">
-
-            <p-accordion>
-              <p-accordionTab header="Filter by Categories" [selected]="true">
-                <kmc-categories-filter (categoriesChanged)="categoriesChanged($event)"></kmc-categories-filter>
-              </p-accordionTab>
-              <p-accordionTab header="Additional Filters">
-                Additional Filters Content
-              </p-accordionTab>
-              <p-accordionTab *ngFor="let filter of metadataProfileFilters" header="{{filter.label}}">
-                  <div class="row" style="margin-bottom: 10px" *ngFor="let f of filter.filters">
-                    <p>{{f.filterName}}</p>
-                    <ul style="margin: 0; list-style: none; float: left; padding-left: 10px">
-                      <li *ngFor="let field of f.values"><input type="checkbox" (change)="metadataFilterChange($event, f.fieldName, field)" value="{{field}}"> {{field}}</li>
-                    </ul>
-                  </div>
-              </p-accordionTab>
-            </p-accordion>
-
-          </div>
+        <div class="row">
+          <kmc-filters-accordion (categoriesChanged)="categoriesChanged($event)" (metadataProfileFilterChanged)="metadataProfileFilterChanged($event)"></kmc-filters-accordion>
         </div>
           <!--<div class="row">-->
               <!--<kmc-filters  (categoriesChanged)="categoriesChanged($event)" (additionalInfoChanged)="additionalInfoChanged($event)"></kmc-filters>-->

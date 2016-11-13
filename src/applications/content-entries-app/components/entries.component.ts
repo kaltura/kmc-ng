@@ -6,10 +6,8 @@ import { MenuItem } from 'primeng/primeng';
 
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
 import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
-import { ContentMetadataProfilesStore, MetadataProfile, MetadataProfileFilterGroup } from 'kmc-content-ui/providers/content-metadata-profiles-store.service';
 
 import * as R from 'ramda';
-import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
 
 export interface Entry {
   id: string;
@@ -46,14 +44,10 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   loading = false;
 
-  metadataProfiles: MetadataProfile[];
-  metadataProfilesSubscribe : Subscription;
-  metadataProfileFilters: MetadataProfileFilterGroup[] = [];
-
   private refreshList = <Subject<boolean>>new Subject();
 
 
-  constructor(private formBuilder: FormBuilder, public contentEntriesStore : ContentEntriesStore, public contentMetadataProfilesStore: ContentMetadataProfilesStore) {
+  constructor(private formBuilder: FormBuilder, public contentEntriesStore : ContentEntriesStore) {
     this.searchForm = this.formBuilder.group({
       'searchText': []
     });
@@ -121,33 +115,11 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscribeToFilterChanges();
-
-    this.metadataProfilesSubscribe = this.contentMetadataProfilesStore.metadata_profiles$.subscribe(
-      (metadataProfiles: any) => {
-        this.metadataProfiles = metadataProfiles.items ? metadataProfiles.items : [];
-        this.metadataProfileFilters = metadataProfiles.filters ? metadataProfiles.filters : [];
-      },
-      (error) => {
-        // TODO [KMC] - handle error
-      });
-
-    this.loading = true;
-    this.contentMetadataProfilesStore.reloadMetadataProfiles().subscribe(
-      () => {
-        this.loading = false;
-      },
-      (error) => {
-        // TODO [KMC] - handle error
-        this.loading = false;
-      });
-
     this.reload();
-
   }
 
   ngOnDestroy(){
     this.unsubscribeToFilterChanges();
-    this.metadataProfilesSubscribe.unsubscribe();
   }
 
   onActionSelected(action, entryID){
@@ -169,10 +141,9 @@ export class EntriesComponent implements OnInit, OnDestroy {
     this.reload(true);
   }
 
-  metadataFilterChange(event, fieldName, value){
-    const filterSelected = event.target.checked;
-    const filterField = "/*[local-name()='metadata']/*[local-name()='" + fieldName + "']";
-    const filterValue = value;
+  metadataProfileFilterChanged(metadataProfileFilter : any)
+  {
+    // TODO [kmc] - create advanced filter using the metadataProfileFilter object data
   }
 
 }

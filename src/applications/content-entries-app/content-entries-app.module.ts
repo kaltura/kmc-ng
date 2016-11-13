@@ -8,6 +8,7 @@ import { TieredMenuModule, CheckboxModule, DataTableModule, SharedModule, InputT
 
 import { routing} from './content-entries-app.routes';
 import { EntriesComponent } from './components/entries.component';
+import { FiltersAccordionComponent } from './components/filters.accordion.component';
 import { KMCShellModule } from 'kmc-shell';
 import { KMCContentUIModule } from 'kmc-content-ui';
 import {SortDirectionPipe} from "./pipes/sort-direction.pipe";
@@ -35,8 +36,9 @@ import {FiltersComponent} from "./components/filters.component";
     KalturaUIModule],
   declarations: [
     EntriesComponent,
-      FiltersComponent,
-    SortDirectionPipe],
+    FiltersComponent,
+    SortDirectionPipe,
+    FiltersAccordionComponent],
   providers:    []
 })
 export class ContentEntriesAppModule { }
