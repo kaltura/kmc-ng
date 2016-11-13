@@ -38,10 +38,12 @@ export class CategoriesFilterComponent implements OnInit, OnDestroy{
     this.loading = true;
     this.contentCategoriesStore.reloadCategories().subscribe(
       () => {
+        this.categoriesSelectionMap = {};
         this.loading = false;
       },
       (error) => {
         // TODO [KMC] - handle error
+        this.categoriesSelectionMap = {};
         this.loading = false;
       });
   }
