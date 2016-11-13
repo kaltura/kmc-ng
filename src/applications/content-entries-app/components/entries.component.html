@@ -24,7 +24,7 @@
 
             <p-accordion>
               <p-accordionTab header="Filter by Categories" [selected]="true">
-                <kmc-categories-filter></kmc-categories-filter>
+                <kmc-categories-filter (categoriesChanged)="categoriesChanged($event)"></kmc-categories-filter>
               </p-accordionTab>
               <p-accordionTab header="Additional Filters">
                 Additional Filters Content
@@ -42,8 +42,8 @@
       </div>
       <div class="col-md-10" style="height: 100%">
         <div class="row tableHolder">
-              <p-dataTable [value]="(contentEntriesStore.entries$ | async)?.items" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | sortDirection" scrollable="true" scrollHeight="600px" selectionMode="multiple" (onSort)="onSortChanged($event)" [(selection)]="selectedEntries">
-              <!--p-column [style]="{'width':'46px'}" selectionMode="multiple"></p-column-->
+              <p-dataTable [value]="(contentEntriesStore.entries$ | async)?.items" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | sortDirection" scrollable="true" scrollHeight="600px" (onSort)="onSortChanged($event)" [(selection)]="selectedEntries">
+              <p-column [style]="{'width':'46px'}" selectionMode="multiple"></p-column>
               <p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">
                 <template let-col let-entry="rowData" pTemplate type="body">
                   <div class="thumbnailHolder"><span class="helper"></span><img src="{{entry[col.field]}}"></div>
