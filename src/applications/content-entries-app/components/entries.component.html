@@ -18,23 +18,8 @@
   <div class="row grid">
       <div class="col-md-2" >
 
-        <div class="row"  >
-
-          <div class="accordionHolder">
-
-            <p-accordion>
-              <p-accordionTab header="Filter by Categories" [selected]="true">
-                <kmc-categories-filter (categoriesChanged)="categoriesChanged($event)"></kmc-categories-filter>
-              </p-accordionTab>
-              <p-accordionTab header="Additional Filters">
-                Additional Filters Content
-              </p-accordionTab>
-              <p-accordionTab header="Department Info">
-                Department Info Content
-              </p-accordionTab>
-            </p-accordion>
-
-          </div>
+        <div class="row">
+          <kmc-filters-accordion (categoriesChanged)="categoriesChanged($event)" (metadataProfileFilterChanged)="metadataProfileFilterChanged($event)"></kmc-filters-accordion>
         </div>
           <!--<div class="row">-->
               <!--<kmc-filters  (categoriesChanged)="categoriesChanged($event)" (additionalInfoChanged)="additionalInfoChanged($event)"></kmc-filters>-->

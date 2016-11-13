@@ -7,6 +7,8 @@ import { MenuItem } from 'primeng/primeng';
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
 import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
 
+import * as R from 'ramda';
+
 export interface Entry {
   id: string;
   name: string;
@@ -45,8 +47,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
   private refreshList = <Subject<boolean>>new Subject();
 
 
-  constructor(private formBuilder: FormBuilder,
-              public contentEntriesStore : ContentEntriesStore) {
+  constructor(private formBuilder: FormBuilder, public contentEntriesStore : ContentEntriesStore) {
     this.searchForm = this.formBuilder.group({
       'searchText': []
     });
@@ -114,9 +115,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscribeToFilterChanges();
-
     this.reload();
-
   }
 
   ngOnDestroy(){
@@ -142,7 +141,10 @@ export class EntriesComponent implements OnInit, OnDestroy {
     this.reload(true);
   }
 
-
+  metadataProfileFilterChanged(metadataProfileFilter : any)
+  {
+    // TODO [kmc] - create advanced filter using the metadataProfileFilter object data
+  }
 
 }
 
