@@ -40,7 +40,6 @@ export class EntriesComponent implements OnInit, OnDestroy {
   selectedEntries: Entry[] = [];
   bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
 
-  tableHeight = '';
   loading = false;
 
   private refreshList = <Subject<boolean>>new Subject();
@@ -51,7 +50,6 @@ export class EntriesComponent implements OnInit, OnDestroy {
     this.searchForm = this.formBuilder.group({
       'searchText': []
     });
-    this.tableHeight = window.innerHeight - 200 +"px";
   }
 
   onFreetextChanged() : void{

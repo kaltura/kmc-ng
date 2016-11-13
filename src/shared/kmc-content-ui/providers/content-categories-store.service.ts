@@ -15,13 +15,13 @@ export interface Categories{
 }
 
 export class Category {
-  selected = false;
-  partialSelection = false;
+  id = "";
   label = "";
   parentId = "";
   children = [];
 
-  constructor(label: string, parentId: string){
+  constructor(id: string, label: string, parentId: string){
+    this.id = id;
     this.label = label;
     this.parentId = parentId;
   }
@@ -65,15 +65,17 @@ export class ContentCategoriesStore
         return Observable.create(observe => {
           CategoryService.list(filter, responseProfile)
             .execute(this.kalturaAPIClient)
-            .map((response) => {
+            .map((response: any) => {
               if (response && response.objects){
-                return this.buildCategoriesHyrarchy(response.objects, categoriesMap);
+                const categoriesData = this.buildCategoriesHyrarchy(response.objects);
+                categoriesMap = categoriesData.categoriesMap;
+                return categoriesData.rootLevel;
               }else{
                 return [];
               }
             })
             .subscribe(
-              (categories) => {
+              (categories: Category[]) => {
                 this._categories.next({items: <Category[]>categories, map: categoriesMap, loaded: true, status: ''});
                 observe.next(true);
                 observe.complete();
@@ -91,15 +93,16 @@ export class ContentCategoriesStore
     }
 
 
-  buildCategoriesHyrarchy(categories: any[], categoriesMap) : any[] {
+  buildCategoriesHyrarchy(categories: any[]) : { rootLevel : Category[], categoriesMap: {[categoryID: string]: Category}} {
     // convert flat array to hyrarchial data array
     let allCategories = [];
     let rootLevel = [];
+    let categoriesMap = {};
 
     categories.sort(function(a,b) {return (a.name.toLocaleLowerCase() > b.name.toLocaleLowerCase()) ? 1 : ((b.name.toLocaleLowerCase() > a.name.toLocaleLowerCase()) ? -1 : 0);} );
 
     categories.forEach(function(category: any) {
-      let cat = new Category(category.name, category.parentId);
+      let cat = new Category(category.id, category.name, category.parentId);
       categoriesMap[category.id] = cat;
       allCategories.push(cat);
     }, this);
@@ -112,7 +115,7 @@ export class ContentCategoriesStore
       }
     }, this);
 
-    return rootLevel;
+    return {rootLevel: rootLevel, categoriesMap: categoriesMap};
   }
 
 }
