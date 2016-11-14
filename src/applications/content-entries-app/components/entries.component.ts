@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy,  Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit, OnDestroy,  Pipe, PipeTransform, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
-import { MenuItem } from 'primeng/primeng';
+import { MenuItem, DataTable } from 'primeng/primeng';
 
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
 import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
@@ -30,6 +30,10 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   private _filterChanges : Subscription;
   searchForm: FormGroup;
+
+  showTags = false;
+  tableMargin = 240;
+  @ViewChild('dataTable') public dataTable: DataTable;
 
   filter : FilterArgs = {
     pageIndex : 0,
@@ -116,6 +120,12 @@ export class EntriesComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscribeToFilterChanges();
     this.reload();
+  }
+
+  toggleTags(){
+    this.showTags = !this.showTags;
+    let newHeight = this.showTags ? this.tableMargin + 40 : this.tableMargin;
+    this.dataTable.scrollBody.style.maxHeight = "calc(100vh - " + newHeight + "px)";
   }
 
   ngOnDestroy(){

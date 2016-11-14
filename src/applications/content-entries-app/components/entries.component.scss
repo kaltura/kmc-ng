@@ -1,6 +1,17 @@
 @import '~kmc-shell/styles/scss/_variables.scss';
 @import '~kmc-content-ui/styles/scss/_common.scss';
 
+#container {
+  width:100%;
+  background:grey;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 20px;
+}
+
+/*
+
+
 $gridPadding: 10px;
 
 .entries{
@@ -71,3 +82,4 @@ $gridPadding: 10px;
     flex: 1;
   }
 }
+*/

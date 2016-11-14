@@ -5,7 +5,15 @@
 /* primeng overwrites: to be added automatically by build process */
 @import '../../applications/content-entries-app/styles/scss/index.scss';
 
-body{
+html {
+  height: 100%;
+}
+
+body {
+  padding:0 0;
+  margin:0 0;
+  height: 100%;
+  background:grey;
   overflow-x: hidden;
 }
 
