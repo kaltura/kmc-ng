@@ -1,63 +1,70 @@
 <div id="container" class="entries">
-  <div style="width: 100%; height: 40px; background-color: red">filters
+  <div style="width: 100%; height: 40px; background-color: red; flex: 0 0 auto">filters
     <button (click)="toggleTags()">show / hide tags</button>
   </div>
-  <div *ngIf="showTags" style="width: 100%; height: 40px; background-color: blue">tags</div>
-  <div style="width: 100%;flex: 1 1 auto;background-color: purple; border: 2px solid black">table</div>
-  <!--p-dataTable #dataTable [value]="(contentEntriesStore.entries$ | async)?.items" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | sortDirection" scrollable="true" [scrollHeight]="'calc(100vh - '+tableMargin+'px)'" (onSort)="onSortChanged($event)" [(selection)]="selectedEntries">
-    <p-column [style]="{'width':'46px'}" selectionMode="multiple"></p-column>
-    <p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">
-      <template let-col let-entry="rowData" pTemplate type="body">
-        <div class="thumbnailHolder"><span class="helper"></span><img src="{{entry[col.field]}}"></div>
-      </template>
-    </p-column>
-    <p-column field="id" header="ID" [sortable]="'custom'" [style]="{'width':'100px'}"></p-column>
-    <p-column field="name" header="Name" [sortable]="'custom'" >
-      <template let-col let-entry="rowData" pTemplate type="body">
-        <a (click)="onActionSelected('view',entry.id)">{{entry[col.field]}}</a>
-      </template>
-    </p-column>
-    <p-column field="mediaType" header="Type" [sortable]="'custom'"  [style]="{'width':'80px', 'text-align': 'center'}">
-      <template let-col let-entry="rowData" pTemplate type="body">
-        <div [class]="entry[col.field] | entryType"></div>
-      </template>
-    </p-column>
-    <p-column field="plays" header="Plays" [sortable]="'custom'"  [style]="{'width':'80px', 'text-align': 'center'}"></p-column>
-    <p-column field="createdAt" header="Created On" [sortable]="true" [style]="{'width':'140px'}">
-      <template let-col let-entry="rowData" pTemplate type="body">
-        <span>{{entry[col.field] * 1000 | date:'MM/dd/y HH:MM'}}</span>
-      </template>
-    </p-column>
-    <p-column field="duration" header="Duration" [sortable]="'custom'"  [style]="{'width':'100px'}">
-      <template let-col let-entry="rowData" pTemplate type="body">
-        <span>{{entry[col.field] | time}}</span>
-      </template>
-    </p-column>
-    <p-column field="status" header="Status" [sortable]="'custom'"  [style]="{'width':'140px'}">
-      <template let-col let-entry="rowData" pTemplate type="body">
-        <span>{{entry[col.field] | entryStatus}}</span>
-      </template>
-    </p-column>
-    <p-column header="Action" [style]="{'overflow':'visible', 'width':'180px'}">
-      <template let-col let-entry="rowData" pTemplate type="body">
-        <div class="btn-group" dropdown>
-          <button id="single-button" type="button" class="btn btn-xs actionsBtn" dropdownToggle>
-            Select Action <span class="caret"></span>
-          </button>
-          <ul dropdownMenu role="menu" aria-labelledby="single-button" style="z-index: 1000">
-            <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('embed',entry.id)">Preview & Embed</a></li>
-            <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('delete',entry.id)">Delete</a></li>
-            <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('view',entry.id)">View Details</a></li>
-          </ul>
-        </div>
-      </template>
-    </p-column-->
-    <!--footer>
-      <button [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>
-      <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChanged($event)" [first]="filter.pageIndex * filter.pageSize" [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount" [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
-    </footer-->
-  <!--/p-dataTable-->
-  <div style="width: 100%; height: 40px; background-color: yellow">footer</div>
+  <div *ngIf="showTags" style="width: 100%; height: 40px; background-color: blue; flex: 0 0 auto">tags</div>
+  <div fillHeight [watchers]="[footer,footer2]" style="width: 100%;flex: 1 1 auto;background-color: white; overflow-y: hidden">
+    <p-dataTable #dataTable [value]="(contentEntriesStore.entries$ | async)?.items" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | sortDirection" scrollable="true" scrollHeight="100%" (onSort)="onSortChanged($event)" [(selection)]="selectedEntries">
+      <p-column [style]="{'width':'46px'}" selectionMode="multiple"></p-column>
+      <p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">
+        <template let-col let-entry="rowData" pTemplate type="body">
+          <div class="thumbnailHolder"><span class="helper"></span><img src="{{entry[col.field]}}"></div>
+        </template>
+      </p-column>
+      <p-column field="id" header="ID" [sortable]="'custom'" [style]="{'width':'100px'}"></p-column>
+      <p-column field="name" header="Name" [sortable]="'custom'" >
+        <template let-col let-entry="rowData" pTemplate type="body">
+          <a (click)="onActionSelected('view',entry.id)">{{entry[col.field]}}</a>
+        </template>
+      </p-column>
+      <p-column field="mediaType" header="Type" [sortable]="'custom'"  [style]="{'width':'80px', 'text-align': 'center'}">
+        <template let-col let-entry="rowData" pTemplate type="body">
+          <div [class]="entry[col.field] | entryType"></div>
+        </template>
+      </p-column>
+      <p-column field="plays" header="Plays" [sortable]="'custom'"  [style]="{'width':'80px', 'text-align': 'center'}"></p-column>
+      <p-column field="createdAt" header="Created On" [sortable]="true" [style]="{'width':'140px'}">
+        <template let-col let-entry="rowData" pTemplate type="body">
+          <span>{{entry[col.field] * 1000 | date:'MM/dd/y HH:MM'}}</span>
+        </template>
+      </p-column>
+      <p-column field="duration" header="Duration" [sortable]="'custom'"  [style]="{'width':'100px'}">
+        <template let-col let-entry="rowData" pTemplate type="body">
+          <span>{{entry[col.field] | time}}</span>
+        </template>
+      </p-column>
+      <p-column field="status" header="Status" [sortable]="'custom'"  [style]="{'width':'140px'}">
+        <template let-col let-entry="rowData" pTemplate type="body">
+          <span>{{entry[col.field] | entryStatus}}</span>
+        </template>
+      </p-column>
+      <p-column header="Action" [style]="{'overflow':'visible', 'width':'180px'}">
+        <template let-col let-entry="rowData" pTemplate type="body">
+          <div class="btn-group" dropdown>
+            <button id="single-button" type="button" class="btn btn-xs actionsBtn" dropdownToggle>
+              Select Action <span class="caret"></span>
+            </button>
+            <ul dropdownMenu role="menu" aria-labelledby="single-button" style="z-index: 1000">
+              <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('embed',entry.id)">Preview & Embed</a></li>
+              <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('delete',entry.id)">Delete</a></li>
+              <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('view',entry.id)">View Details</a></li>
+            </ul>
+          </div>
+        </template>
+      </p-column>
+      <!--footer>
+        <button [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>
+        <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChanged($event)" [first]="filter.pageIndex * filter.pageSize" [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount" [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
+      </footer-->
+    </p-dataTable>
+  </div>
+  <div class="footer" #footer style="width: 100%; height: 40px; background-color: yellow; flex: 0 0 auto">footer
+    <button onclick="document.getElementsByClassName('footer')[0].style.height = 100+'px'">set height to 100</button>
+    <button onclick="document.getElementsByClassName('footer')[0].style.height = 40+'px'">set height to 40</button>
+  </div>
+  <div class="footer2" #footer2 style="width: 100%; height: 40px; background-color: cyan; flex: 0 0 auto">footer
+    <button onclick="document.getElementsByClassName('footer2')[0].style.height = 100+'px'">change height</button>
+  </div>
 </div>
 
 <!--<div class="entries">-->
