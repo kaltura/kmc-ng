@@ -3,7 +3,8 @@
     <button (click)="toggleTags()">show / hide tags</button>
   </div>
   <div *ngIf="showTags" style="width: 100%; height: 40px; background-color: blue">tags</div>
-  <p-dataTable #dataTable [value]="(contentEntriesStore.entries$ | async)?.items" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | sortDirection" scrollable="true" [scrollHeight]="'calc(100vh - '+tableMargin+'px)'" (onSort)="onSortChanged($event)" [(selection)]="selectedEntries">
+  <div style="width: 100%;flex: 1 1 auto;background-color: purple; border: 2px solid black">table</div>
+  <!--p-dataTable #dataTable [value]="(contentEntriesStore.entries$ | async)?.items" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | sortDirection" scrollable="true" [scrollHeight]="'calc(100vh - '+tableMargin+'px)'" (onSort)="onSortChanged($event)" [(selection)]="selectedEntries">
     <p-column [style]="{'width':'46px'}" selectionMode="multiple"></p-column>
     <p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">
       <template let-col let-entry="rowData" pTemplate type="body">
@@ -50,12 +51,12 @@
           </ul>
         </div>
       </template>
-    </p-column>
+    </p-column-->
     <!--footer>
       <button [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>
       <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChanged($event)" [first]="filter.pageIndex * filter.pageSize" [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount" [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
     </footer-->
-  </p-dataTable>
+  <!--/p-dataTable-->
   <div style="width: 100%; height: 40px; background-color: yellow">footer</div>
 </div>
 
