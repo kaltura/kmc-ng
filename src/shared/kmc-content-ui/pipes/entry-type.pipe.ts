@@ -5,7 +5,8 @@ export class EntryTypePipe implements PipeTransform {
   transform(value): string {
     let className = 'k-entry-';
 
-    if (value) {
+    // TODO [kmc] use the actual enum instead of strings
+    if (typeof(value) !== 'undefined' && value !== null)  {
       switch (value.toString()) {
         case '1':
           className += 'media';

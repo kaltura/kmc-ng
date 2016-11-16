@@ -4,6 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class EntryStatusPipe implements PipeTransform {
   transform(value: string): string {
     let ret: string = '';
+      // TODO [kmc] use the actual enum instead of strings
     if (typeof(value) !== 'undefined' && value !== null)  {
         switch (value.toString()) {
             case '-2':
