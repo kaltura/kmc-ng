@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy,  Pipe, PipeTransform, ViewChild } from '@
 import { Observable } from 'rxjs/Observable';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
-import { MenuItem, DataTable } from 'primeng/primeng';
+import { MenuItem } from 'primeng/primeng';
 
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
 import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
@@ -30,9 +30,6 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   private _filterChanges : Subscription;
   searchForm: FormGroup;
-
-  showTags = false;
-  @ViewChild('dataTable') public dataTable: DataTable;
 
   filter : FilterArgs = {
     pageIndex : 0,

@@ -35,7 +35,7 @@ export class FillHeightDirective implements AfterViewInit{
       if (this.offsetTop === 0){
         this.offsetTop = this.el.nativeElement.offsetTop;
       }
-console.info(this.offsetTop+" , "+this.el.nativeElement.offsetTop);
+
       // handle offsetTop changes
       if (this.offsetTop !== this.el.nativeElement.offsetTop){
         const delta = this.el.nativeElement.offsetTop - this.offsetTop;
