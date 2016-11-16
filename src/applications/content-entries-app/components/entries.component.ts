@@ -32,7 +32,6 @@ export class EntriesComponent implements OnInit, OnDestroy {
   searchForm: FormGroup;
 
   showTags = false;
-  tableMargin = 200;
   @ViewChild('dataTable') public dataTable: DataTable;
 
   filter : FilterArgs = {
