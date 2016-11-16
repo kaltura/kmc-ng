@@ -1,157 +1,83 @@
-<div id="container" class="entries">
-  <div style="width: 100%; height: 40px; background-color: red; flex: 0 0 auto">filters
-    <button (click)="toggleTags()">show / hide tags</button>
+<div class="entries">
+
+  <div [k-loader]="loading" style="width: 300px; background-color: white; position: absolute; margin-top: 20px; margin-left: 20px; border: 1px solid grey; border-radius: 5px">
+      <kmc-filters-accordion style="width: 300px" (categoriesChanged)="categoriesChanged($event)" (metadataProfileFilterChanged)="metadataProfileFilterChanged($event)"></kmc-filters-accordion>
   </div>
-  <div *ngIf="showTags" style="width: 100%; height: 40px; background-color: blue; flex: 0 0 auto">tags</div>
-  <div fillHeight [watchers]="[footer,footer2]" style="width: 100%;flex: 1 1 auto;background-color: white; overflow-y: hidden">
-    <p-dataTable #dataTable [value]="(contentEntriesStore.entries$ | async)?.items" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | sortDirection" scrollable="true" scrollHeight="100%" (onSort)="onSortChanged($event)" [(selection)]="selectedEntries">
-      <p-column [style]="{'width':'46px'}" selectionMode="multiple"></p-column>
-      <p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">
-        <template let-col let-entry="rowData" pTemplate type="body">
-          <div class="thumbnailHolder"><span class="helper"></span><img src="{{entry[col.field]}}"></div>
-        </template>
-      </p-column>
-      <p-column field="id" header="ID" [sortable]="'custom'" [style]="{'width':'100px'}"></p-column>
-      <p-column field="name" header="Name" [sortable]="'custom'" >
-        <template let-col let-entry="rowData" pTemplate type="body">
-          <a (click)="onActionSelected('view',entry.id)">{{entry[col.field]}}</a>
-        </template>
-      </p-column>
-      <p-column field="mediaType" header="Type" [sortable]="'custom'"  [style]="{'width':'80px', 'text-align': 'center'}">
-        <template let-col let-entry="rowData" pTemplate type="body">
-          <div [class]="entry[col.field] | entryType"></div>
-        </template>
-      </p-column>
-      <p-column field="plays" header="Plays" [sortable]="'custom'"  [style]="{'width':'80px', 'text-align': 'center'}"></p-column>
-      <p-column field="createdAt" header="Created On" [sortable]="true" [style]="{'width':'140px'}">
-        <template let-col let-entry="rowData" pTemplate type="body">
-          <span>{{entry[col.field] * 1000 | date:'MM/dd/y HH:MM'}}</span>
-        </template>
-      </p-column>
-      <p-column field="duration" header="Duration" [sortable]="'custom'"  [style]="{'width':'100px'}">
-        <template let-col let-entry="rowData" pTemplate type="body">
-          <span>{{entry[col.field] | time}}</span>
-        </template>
-      </p-column>
-      <p-column field="status" header="Status" [sortable]="'custom'"  [style]="{'width':'140px'}">
-        <template let-col let-entry="rowData" pTemplate type="body">
-          <span>{{entry[col.field] | entryStatus}}</span>
-        </template>
-      </p-column>
-      <p-column header="Action" [style]="{'overflow':'visible', 'width':'180px'}">
-        <template let-col let-entry="rowData" pTemplate type="body">
-          <div class="btn-group" dropdown>
-            <button id="single-button" type="button" class="btn btn-xs actionsBtn" dropdownToggle>
-              Select Action <span class="caret"></span>
-            </button>
-            <ul dropdownMenu role="menu" aria-labelledby="single-button" style="z-index: 1000">
-              <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('embed',entry.id)">Preview & Embed</a></li>
-              <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('delete',entry.id)">Delete</a></li>
-              <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('view',entry.id)">View Details</a></li>
-            </ul>
-          </div>
-        </template>
-      </p-column>
-      <!--footer>
-        <button [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>
+
+  <div class="k-datatable-holder">
+      <div style="width: 100%; height: 50px; background-color: white; flex: 0 0 auto; display: table; border: 1px solid grey; border-bottom: none; border-top-left-radius: 5px; border-top-right-radius: 5px">
+        <form [formGroup]="searchForm" style="display: table-cell; vertical-align: middle; padding-left: 8px">
+          <input type="text" pInputText formControlName="searchText" (onenter)="freetextValue = $event.target.value" (keyup.enter)="onFreetextChanged()" placeholder="Search Entries">
+        </form>
+        <button style="float: right; margin-top: 12px; margin-right: 8px" pButton type="text" (click)="reload()" icon="fa-refresh" label="Refresh" title="Refresh"></button>
+        <button style="float: right; margin-top: 12px; margin-right: 70px" (click)="showTags=!showTags">show / hide tags</button>
+      </div>
+      <div *ngIf="showTags" style="width: 100%; height: 50px; background-color: #f3f3f3; border: 1px solid grey; flex: 0 0 auto">
+        <div style="height: 30px; background-color: #cacaca; border: 1px solid grey; border-radius: 15px; width: 100px; margin-top: 10px; margin-left: 10px; text-align: center; padding: 5px">Filter 1</div>
+      </div>
+
+       <div fillHeight [k-loader]="loading" [watchers]="[footer,footer2]" style="width: 100%;flex: 1 1 auto;background-color: white; overflow-y: hidden; border: 1px solid grey; border-top: none; position: relative">
+        <p-dataTable #dataTable [value]="(contentEntriesStore.entries$ | async)?.items" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | sortDirection" scrollable="true" scrollHeight="100%" (onSort)="onSortChanged($event)" [(selection)]="selectedEntries">
+          <p-column [style]="{'width':'46px'}" selectionMode="multiple"></p-column>
+          <p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">
+            <template let-col let-entry="rowData" pTemplate type="body">
+              <div class="thumbnailHolder"><span class="helper"></span><img src="{{entry[col.field]}}"></div>
+            </template>
+          </p-column>
+          <p-column field="id" header="ID" [sortable]="'custom'" [style]="{'width':'100px'}"></p-column>
+          <p-column field="name" header="Name" [sortable]="'custom'" >
+            <template let-col let-entry="rowData" pTemplate type="body">
+              <a (click)="onActionSelected('view',entry.id)">{{entry[col.field]}}</a>
+            </template>
+          </p-column>
+          <p-column field="mediaType" header="Type" [sortable]="'custom'"  [style]="{'width':'80px', 'text-align': 'center'}">
+            <template let-col let-entry="rowData" pTemplate type="body">
+              <div [class]="entry[col.field] | entryType"></div>
+            </template>
+          </p-column>
+          <p-column field="plays" header="Plays" [sortable]="'custom'"  [style]="{'width':'80px', 'text-align': 'center'}"></p-column>
+          <p-column field="createdAt" header="Created On" [sortable]="true" [style]="{'width':'140px'}">
+            <template let-col let-entry="rowData" pTemplate type="body">
+              <span>{{entry[col.field] * 1000 | date:'MM/dd/y HH:MM'}}</span>
+            </template>
+          </p-column>
+          <p-column field="duration" header="Duration" [sortable]="'custom'"  [style]="{'width':'100px'}">
+            <template let-col let-entry="rowData" pTemplate type="body">
+              <span>{{entry[col.field] | time}}</span>
+            </template>
+          </p-column>
+          <p-column field="status" header="Status" [sortable]="'custom'"  [style]="{'width':'140px'}">
+            <template let-col let-entry="rowData" pTemplate type="body">
+              <span>{{entry[col.field] | entryStatus}}</span>
+            </template>
+          </p-column>
+          <p-column header="Action" [style]="{'overflow':'visible', 'width':'180px'}">
+            <template let-col let-entry="rowData" pTemplate type="body">
+              <div class="btn-group" dropdown>
+                <button id="single-button" type="button" class="btn btn-xs actionsBtn" dropdownToggle>
+                  Select Action <span class="caret"></span>
+                </button>
+                <ul dropdownMenu role="menu" aria-labelledby="single-button" style="z-index: 1000">
+                  <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('embed',entry.id)">Preview & Embed</a></li>
+                  <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('delete',entry.id)">Delete</a></li>
+                  <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('view',entry.id)">View Details</a></li>
+                </ul>
+              </div>
+            </template>
+          </p-column>
+          <!--footer>
+            <button [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>
+            <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChanged($event)" [first]="filter.pageIndex * filter.pageSize" [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount" [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
+          </footer-->
+        </p-dataTable>
+      </div>
+
+      <div class="footer" #footer style="width: 100%; height: 40px; background-color: white; padding: 5px;border: 1px solid grey; border-bottom: none; border-top: none; flex: 0 0 auto">
+        <button style="float: left; margin-top: 2px" [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>
         <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChanged($event)" [first]="filter.pageIndex * filter.pageSize" [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount" [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
-      </footer-->
-    </p-dataTable>
-  </div>
-  <div class="footer" #footer style="width: 100%; height: 40px; background-color: yellow; flex: 0 0 auto">footer
-    <button onclick="document.getElementsByClassName('footer')[0].style.height = 100+'px'">set height to 100</button>
-    <button onclick="document.getElementsByClassName('footer')[0].style.height = 40+'px'">set height to 40</button>
-  </div>
-  <div class="footer2" #footer2 style="width: 100%; height: 40px; background-color: cyan; flex: 0 0 auto">footer
-    <button onclick="document.getElementsByClassName('footer2')[0].style.height = 100+'px'">change height</button>
+        <button onclick="document.getElementsByClassName('footer')[0].style.height = 100+'px'" style="float: right">set height to 100</button>
+        <button onclick="document.getElementsByClassName('footer')[0].style.height = 40+'px'" style="float: right">set height to 40</button>
+      </div>
+    <p-tieredMenu #menu [model]="bulkActionsMenu" [popup]="true" [styleClass]="menu"></p-tieredMenu>
   </div>
 </div>
-
-<!--<div class="entries">-->
-<!--<kmc-loader [loading]="loading">-->
-  <!--<div class="row">-->
-    <!--<div class="col-md-2 topBar">-->
-      <!--<span class="title">Entries</span>-->
-    <!--</div>-->
-    <!--<div class="col-md-10 topBar">-->
-      <!--<form [formGroup]="searchForm" class="vcenter">-->
-          <!--<input type="text" pInputText formControlName="searchText" (onenter)="freetextValue = $event.target.value" (keyup.enter)="onFreetextChanged()" placeholder="Search Entries">-->
-      <!--</form>-->
-      <!--<div class="vcenter refreshBtn">-->
-          <!--<button pButton type="text" (click)="reload()" icon="fa-refresh" label="Refresh" title="Refresh"></button>-->
-      <!--</div>-->
-
-    <!--</div>-->
-  <!--</div>-->
-
-  <!--<div class="row grid">-->
-      <!--<div class="col-md-2" >-->
-
-        <!--<div class="row">-->
-          <!--<kmc-filters-accordion (categoriesChanged)="categoriesChanged($event)" (metadataProfileFilterChanged)="metadataProfileFilterChanged($event)"></kmc-filters-accordion>-->
-        <!--</div>-->
-          <!--<div class="row">-->
-              <!--<kmc-filters  (categoriesChanged)="categoriesChanged($event)" (additionalInfoChanged)="additionalInfoChanged($event)"></kmc-filters>-->
-          <!--</div>-->
-      <!--</div>-->
-      <!--<div class="col-md-10" style="height: 100%">-->
-        <!--<div class="row tableHolder">-->
-              <!--<p-dataTable [value]="(contentEntriesStore.entries$ | async)?.items" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | sortDirection" scrollable="true" scrollHeight="600px" (onSort)="onSortChanged($event)" [(selection)]="selectedEntries">-->
-              <!--<p-column [style]="{'width':'46px'}" selectionMode="multiple"></p-column>-->
-              <!--<p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">-->
-                <!--<template let-col let-entry="rowData" pTemplate type="body">-->
-                  <!--<div class="thumbnailHolder"><span class="helper"></span><img src="{{entry[col.field]}}"></div>-->
-                <!--</template>-->
-              <!--</p-column>-->
-              <!--<p-column field="id" header="ID" [sortable]="'custom'" [style]="{'width':'100px'}"></p-column>-->
-              <!--<p-column field="name" header="Name" [sortable]="'custom'" >-->
-                <!--<template let-col let-entry="rowData" pTemplate type="body">-->
-                  <!--<a (click)="onActionSelected('view',entry.id)">{{entry[col.field]}}</a>-->
-                <!--</template>-->
-              <!--</p-column>-->
-              <!--<p-column field="mediaType" header="Type" [sortable]="'custom'"  [style]="{'width':'80px', 'text-align': 'center'}">-->
-                <!--<template let-col let-entry="rowData" pTemplate type="body">-->
-                  <!--<div [class]="entry[col.field] | entryType"></div>-->
-                <!--</template>-->
-              <!--</p-column>-->
-              <!--<p-column field="plays" header="Plays" [sortable]="'custom'"  [style]="{'width':'80px', 'text-align': 'center'}"></p-column>-->
-              <!--<p-column field="createdAt" header="Created On" [sortable]="true" [style]="{'width':'140px'}">-->
-                <!--<template let-col let-entry="rowData" pTemplate type="body">-->
-                  <!--<span>{{entry[col.field] * 1000 | date:'MM/dd/y HH:MM'}}</span>-->
-                <!--</template>-->
-              <!--</p-column>-->
-              <!--<p-column field="duration" header="Duration" [sortable]="'custom'"  [style]="{'width':'100px'}">-->
-                <!--<template let-col let-entry="rowData" pTemplate type="body">-->
-                  <!--<span>{{entry[col.field] | time}}</span>-->
-                <!--</template>-->
-              <!--</p-column>-->
-              <!--<p-column field="status" header="Status" [sortable]="'custom'"  [style]="{'width':'140px'}">-->
-                <!--<template let-col let-entry="rowData" pTemplate type="body">-->
-                  <!--<span>{{entry[col.field] | entryStatus}}</span>-->
-                <!--</template>-->
-              <!--</p-column>-->
-              <!--<p-column header="Action" [style]="{'overflow':'visible', 'width':'180px'}">-->
-                <!--<template let-col let-entry="rowData" pTemplate type="body">-->
-                  <!--<div class="btn-group" dropdown>-->
-                    <!--<button id="single-button" type="button" class="btn btn-xs actionsBtn" dropdownToggle>-->
-                      <!--Select Action <span class="caret"></span>-->
-                    <!--</button>-->
-                    <!--<ul dropdownMenu role="menu" aria-labelledby="single-button" style="z-index: 1000">-->
-                      <!--<li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('embed',entry.id)">Preview & Embed</a></li>-->
-                      <!--<li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('delete',entry.id)">Delete</a></li>-->
-                      <!--<li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('view',entry.id)">View Details</a></li>-->
-                    <!--</ul>-->
-                  <!--</div>-->
-                <!--</template>-->
-              <!--</p-column>-->
-              <!--<footer>-->
-                <!--<button [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>-->
-              <!--<p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChanged($event)" [first]="filter.pageIndex * filter.pageSize" [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount" [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>-->
-              <!--</footer>-->
-            <!--</p-dataTable>-->
-        <!--</div>-->
-      <!--</div>-->
-  <!--</div>-->
-<!--</kmc-loader>-->
-<!--<p-tieredMenu #menu [model]="bulkActionsMenu" [popup]="true" [styleClass]="menu"></p-tieredMenu>-->
-<!--</div>-->

@@ -122,12 +122,6 @@ export class EntriesComponent implements OnInit, OnDestroy {
     this.reload();
   }
 
-  toggleTags(){
-    this.showTags = !this.showTags;
-    // let newHeight = this.showTags ? this.tableMargin + 40 : this.tableMargin;
-    // this.dataTable.scrollBody.style.maxHeight = "calc(100vh - " + newHeight + "px)";
-  }
-
   ngOnDestroy(){
     this.unsubscribeToFilterChanges();
   }

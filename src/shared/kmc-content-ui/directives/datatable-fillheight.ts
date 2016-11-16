@@ -9,9 +9,11 @@ export class FillHeightDirective implements AfterViewInit{
   @ContentChild('dataTable') public dataTable: DataTable;
 
   @Input() set watchers(elements: any[]){
-    this.watchedElements = elements;
     for (let i = 0; i < elements.length; i++){
-      this.watchersHeight += parseInt(elements[i].style.height);
+      if (elements[i] && elements[i].style) {
+        this.watchersHeight += parseInt(elements[i].style.height);
+        this.watchedElements.push(elements[i]);
+      }
     }
   }
 
@@ -33,7 +35,7 @@ export class FillHeightDirective implements AfterViewInit{
       if (this.offsetTop === 0){
         this.offsetTop = this.el.nativeElement.offsetTop;
       }
-
+console.info(this.offsetTop+" , "+this.el.nativeElement.offsetTop);
       // handle offsetTop changes
       if (this.offsetTop !== this.el.nativeElement.offsetTop){
         const delta = this.el.nativeElement.offsetTop - this.offsetTop;
@@ -61,7 +63,7 @@ export class FillHeightDirective implements AfterViewInit{
       }
 
       // fix for primeNG data table bug not reducing header height from the scroll calculation
-      if (this.el.nativeElement.clientHeight === parseInt(scrollBody.style.maxHeight)){
+      if (this.el.nativeElement.offsetHeight === parseInt(scrollBody.style.maxHeight)){
         scrollBody.style.maxHeight = parseInt(scrollBody.style.maxHeight) - scrollHeader.clientHeight + "px";
       }
 
