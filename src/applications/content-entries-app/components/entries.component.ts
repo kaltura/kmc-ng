@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy,  Pipe, PipeTransform, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy,  Pipe, PipeTransform } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
