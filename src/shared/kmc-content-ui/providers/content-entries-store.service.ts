@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-import  {KalturaRequestBuilder} from '@kaltura-ng2/kaltura-api/utils/adapters/kaltura-request-builder.service';
-import { KalturaAPIClient } from '@kaltura-ng2/kaltura-api';
 import {
     KalturaContentDistributionSearchItem,
     KalturaSearchOperatorType,
@@ -12,11 +10,11 @@ import {
     KalturaDetachedResponseProfile,
     KalturaFilterPager,
     KalturaBaseEntryListResponse
-     } from '@kaltura-ng2/kaltura-api/types'
+     } from '@kaltura-ng2/kaltura-api'
 
-import {KalturaResponse} from '@kaltura-ng2/kaltura-api/utils/kaltura-response';
 
-import {BaseEntryService } from '@kaltura-ng2/kaltura-api/base-entry';
+import {KalturaServerClient} from '@kaltura-ng2/kaltura-api';
+import {BaseEntryService} from '@kaltura-ng2/kaltura-api/services';
 
 import * as R from 'ramda';
 
@@ -49,7 +47,7 @@ export class ContentEntriesStore {
 
     public entries$:Observable<Entries> = this._entries.asObservable();
 
-    constructor(private kalturaAPIClient:KalturaAPIClient,  private requestBuilder : KalturaRequestBuilder) {
+    constructor(private kalturaServerClient :KalturaServerClient) {
 
     }
 
@@ -112,7 +110,7 @@ export class ContentEntriesStore {
 
             // TODO [KMC] we need to cancel all previous requests otherwise we might override entries$ with older responses
             const request = BaseEntryService.list(filter, pager).setResponseProfile(responseProfile).setCompletion(
-                (response:KalturaResponse<KalturaBaseEntryListResponse>) => {
+                (response => {
                     if (response.result) {
                         const result = <KalturaBaseEntryListResponse>response.result;
                         this._entries.next({items: <any[]>result.objects, totalCount: <number>result.totalCount});
@@ -121,10 +119,10 @@ export class ContentEntriesStore {
                         // handle response.error
                     }
                 }
-            );
+            ));
 
 
-            this.requestBuilder.transmit(request).subscribe(
+            this.kalturaServerClient.transmit(request).subscribe(
                 (response) => {
                     observe.next(true);
                     observe.complete();

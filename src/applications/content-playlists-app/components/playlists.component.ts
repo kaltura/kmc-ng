@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { KalturaAPIClient } from '@kaltura-ng2/kaltura-api';
-
-import { BaseEntryService } from '@kaltura-ng2/kaltura-api/base-entry';
 
 export interface Playlist{
   id: string;
@@ -27,7 +24,7 @@ export class PlaylistsComponent implements OnInit {
 
   playlists: Playlist[];
 
-  constructor(private formBuilder: FormBuilder, private kalturaAPIClient : KalturaAPIClient) {
+  constructor(private formBuilder: FormBuilder) {
     this.searchForm = formBuilder.group({
       'search': ['', Validators.required]
     });

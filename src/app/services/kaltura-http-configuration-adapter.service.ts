@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BootstrapAdapter, BootstrapAdapterType, AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
-import  {KalturaRequestConfiguration} from '@kaltura-ng2/kaltura-api/utils/kaltura-request-configuration';
-
-
-import { AppDefaultConfig } from "./app-default-config.service";
+import  {KalturaHttpConfiguration} from '@kaltura-ng2/kaltura-api';
 
 
 
@@ -11,12 +8,12 @@ import { AppDefaultConfig } from "./app-default-config.service";
 export class KalturaHttpConfigurationAdapter implements BootstrapAdapter
 {
     type = BootstrapAdapterType.postAuth;
-    constructor( private requestConfiguration : KalturaRequestConfiguration,  private appAuthentication: AppAuthentication){
+    constructor( private kalturaHttpConfiguration : KalturaHttpConfiguration,  private appAuthentication: AppAuthentication){
 
     }
     execute() : void {
         // TODO [kmc] should remove on logout
-        this.requestConfiguration.ks = this.appAuthentication.appUser.ks;
+        this.kalturaHttpConfiguration.ks = this.appAuthentication.appUser.ks;
         // TODO [kmc] should set partner id?
 
     }

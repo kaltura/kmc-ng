@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy,  Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit, OnDestroy,  Pipe, PipeTransform  } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { NgModel  } from '@angular/forms';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
-import { MenuItem } from 'primeng/primeng';
+import { DataTable, MenuItem } from 'primeng/primeng';
 
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
 import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui';
