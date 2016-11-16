@@ -71,7 +71,7 @@
               <p-column field="plays" header="Plays" [sortable]="'custom'"  [style]="{'width':'80px', 'text-align': 'center'}"></p-column>
               <p-column field="createdAt" header="Created On" [sortable]="true" [style]="{'width':'140px'}">
                 <template let-col let-entry="rowData" pTemplate type="body">
-                  <span>{{entry[col.field] * 1000 | date:'MM/dd/y HH:MM'}}</span>
+                  <span>{{entry[col.field]  | date:'MM/dd/y HH:MM'}}</span>
                 </template>
               </p-column>
               <p-column field="duration" header="Duration" [sortable]="'custom'"  [style]="{'width':'100px'}">
