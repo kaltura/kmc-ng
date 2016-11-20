@@ -122,7 +122,7 @@ export class ContentEntriesStore {
             ));
 
 
-            this.kalturaServerClient.transmit(request).subscribe(
+            this.kalturaServerClient.request(request).subscribe(
                 (response) => {
                     observe.next(true);
                     observe.complete();
