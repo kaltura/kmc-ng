@@ -1,7 +1,12 @@
 .entries {
-  .ui-datatable .ui-paginator {
+  .ui-paginator {
     border: 0 none;
     background: transparent;
+
+    /* 3 lines below to be removed - only for demo */
+    float: left;
+    position: absolute;
+    margin-left: 30%;
   }
   .ui-datatable .ui-datatable-footer {
     background: #ebedf0;
@@ -10,7 +15,10 @@
   .ui-menu {
     width: 18.5em;
   }
-  .ui-accordion .ui-accordion-content{
-    padding: 4px;
+  .ui-accordion .ui-accordion-header{
+    border-top: none;
+  }
+  .ui-tree{
+    width: 255px;
   }
 }

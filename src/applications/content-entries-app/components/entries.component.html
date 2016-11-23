@@ -1,88 +1,29 @@
 <div class="entries">
-<kmc-loader [loading]="loading">
-  <div class="row">
-    <div class="col-md-2 topBar">
-      <span class="title">Entries</span>
-    </div>
-    <div class="col-md-10 topBar">
-      <form [formGroup]="searchForm" class="vcenter">
+
+  <div class="accordionHolder" [kLoader]="loading">
+      <kFiltersAccordion style="width: 300px" (categoriesChanged)="categoriesChanged($event)" (metadataProfileFilterChanged)="metadataProfileFilterChanged($event)"></kFiltersAccordion>
+  </div>
+
+  <div class="entriesHolder">
+      <div class="headerFilters">
+        <form [formGroup]="searchForm">
           <input type="text" pInputText formControlName="searchText" (onenter)="freetextValue = $event.target.value" (keyup.enter)="onFreetextChanged()" placeholder="Search Entries">
-      </form>
-      <div class="vcenter refreshBtn">
-          <button pButton type="text" (click)="reload()" icon="fa-refresh" label="Refresh" title="Refresh"></button>
+        </form>
+        <button style="float: right; margin-top: 12px; margin-right: 8px" pButton type="text" (click)="reload()" icon="fa-refresh" label="Refresh" title="Refresh"></button>
+        <button style="float: right; margin-top: 12px; margin-right: 70px" (click)="showTags=!showTags">show / hide tags</button>
+      </div>
+      <div *ngIf="showTags" class="tags">
+        <div style="height: 30px; background-color: #cacaca; border: 1px solid grey; border-radius: 15px; width: 100px; margin-top: 10px; margin-left: 10px; text-align: center; padding: 5px">Filter 1</div>
       </div>
 
-    </div>
+      <kEntriesTable class="kEntriesTable" [entries]="(contentEntriesStore.entries$ | async)?.items" [filter]="filter" [selectedEntries]="selectedEntries" [loading]="loading" (sortChanged)="onSortChanged($event)" (actionSelected)="onActionSelected($event)"></kEntriesTable>
+
+      <div class="footer" #footer>
+        <button class="bulkActions" [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>
+        <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChanged($event)" [first]="filter.pageIndex * filter.pageSize" [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount" [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
+        <button onclick="document.getElementsByClassName('footer')[0].style.height = 100+'px'" style="float: right">set height to 100</button>
+        <button onclick="document.getElementsByClassName('footer')[0].style.height = 40+'px'" style="float: right">set height to 40</button>
+      </div>
+    <p-tieredMenu #menu [model]="bulkActionsMenu" [popup]="true" [styleClass]="menu"></p-tieredMenu>
   </div>
-
-  <div class="row grid">
-      <div class="col-md-2" >
-
-        <div class="row">
-          <kmc-filters-accordion (categoriesChanged)="categoriesChanged($event)" (metadataProfileFilterChanged)="metadataProfileFilterChanged($event)"></kmc-filters-accordion>
-        </div>
-          <!--<div class="row">-->
-              <!--<kmc-filters  (categoriesChanged)="categoriesChanged($event)" (additionalInfoChanged)="additionalInfoChanged($event)"></kmc-filters>-->
-          <!--</div>-->
-      </div>
-      <div class="col-md-10" style="height: 100%">
-        <div class="row tableHolder">
-              <p-dataTable [value]="(contentEntriesStore.entries$ | async)?.items" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | sortDirection" scrollable="true" scrollHeight="600px" (onSort)="onSortChanged($event)" [(selection)]="selectedEntries">
-              <p-column [style]="{'width':'46px'}" selectionMode="multiple"></p-column>
-              <p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">
-                <template let-col let-entry="rowData" pTemplate type="body">
-                  <div class="thumbnailHolder"><span class="helper"></span><img src="{{entry[col.field]}}"></div>
-                </template>
-              </p-column>
-              <p-column field="id" header="ID" [sortable]="'custom'" [style]="{'width':'100px'}"></p-column>
-              <p-column field="name" header="Name" [sortable]="'custom'" >
-                <template let-col let-entry="rowData" pTemplate type="body">
-                  <a (click)="onActionSelected('view',entry.id)">{{entry[col.field]}}</a>
-                </template>
-              </p-column>
-              <p-column field="mediaType" header="Type" [sortable]="'custom'"  [style]="{'width':'80px', 'text-align': 'center'}">
-                <template let-col let-entry="rowData" pTemplate type="body">
-                  <div [class]="entry[col.field] | entryType"></div>
-                </template>
-              </p-column>
-              <p-column field="plays" header="Plays" [sortable]="'custom'"  [style]="{'width':'80px', 'text-align': 'center'}"></p-column>
-              <p-column field="createdAt" header="Created On" [sortable]="true" [style]="{'width':'140px'}">
-                <template let-col let-entry="rowData" pTemplate type="body">
-                  <span>{{entry[col.field] * 1000 | date:'MM/dd/y HH:MM'}}</span>
-                </template>
-              </p-column>
-              <p-column field="duration" header="Duration" [sortable]="'custom'"  [style]="{'width':'100px'}">
-                <template let-col let-entry="rowData" pTemplate type="body">
-                  <span>{{entry[col.field] | time}}</span>
-                </template>
-              </p-column>
-              <p-column field="status" header="Status" [sortable]="'custom'"  [style]="{'width':'140px'}">
-                <template let-col let-entry="rowData" pTemplate type="body">
-                  <span>{{entry[col.field] | entryStatus}}</span>
-                </template>
-              </p-column>
-              <p-column header="Action" [style]="{'overflow':'visible', 'width':'180px'}">
-                <template let-col let-entry="rowData" pTemplate type="body">
-                  <div class="btn-group" dropdown>
-                    <button id="single-button" type="button" class="btn btn-xs actionsBtn" dropdownToggle>
-                      Select Action <span class="caret"></span>
-                    </button>
-                    <ul dropdownMenu role="menu" aria-labelledby="single-button" style="z-index: 1000">
-                      <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('embed',entry.id)">Preview & Embed</a></li>
-                      <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('delete',entry.id)">Delete</a></li>
-                      <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('view',entry.id)">View Details</a></li>
-                    </ul>
-                  </div>
-                </template>
-              </p-column>
-              <footer>
-                <button [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>
-              <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChanged($event)" [first]="filter.pageIndex * filter.pageSize" [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount" [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
-              </footer>
-            </p-dataTable>
-        </div>
-      </div>
-  </div>
-</kmc-loader>
-<p-tieredMenu #menu [model]="bulkActionsMenu" [popup]="true" [styleClass]="menu"></p-tieredMenu>
 </div>

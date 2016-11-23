@@ -5,7 +5,7 @@ import { ContentMetadataProfilesStore, MetadataProfile, MetadataProfileFilterGro
 
 
 @Component({
-    selector: 'kmc-filters-accordion',
+    selector: 'kFiltersAccordion',
     templateUrl: './filters.accordion.component.html',
     styleUrls: ['./filters.accordion.component.scss'],
 })

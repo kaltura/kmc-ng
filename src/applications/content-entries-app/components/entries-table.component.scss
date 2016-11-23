@@ -1,0 +1,23 @@
+.kEntriesTable{
+  position: absolute;
+  background-color: white;
+  border: 1px solid grey;
+  overflow-y: hidden;
+  img {
+    max-height: 100%;
+    max-width: 100%;
+    vertical-align: middle;
+  }
+  .thumbnailHolder {
+    width: 75px;
+    height: 50px;
+    background-color: black;
+    white-space: nowrap;
+    text-align: center;
+  }
+  .helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+  }
+}

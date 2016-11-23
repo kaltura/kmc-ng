@@ -122,8 +122,8 @@ export class EntriesComponent implements OnInit, OnDestroy {
     this.unsubscribeToFilterChanges();
   }
 
-  onActionSelected(action, entryID){
-    //alert("Selected Action: "+action+"\nEntry ID: "+entryID);
+  onActionSelected(event){
+    alert("Selected Action: "+event.action+"\nEntry ID: "+event.entryID);
   }
 
 
