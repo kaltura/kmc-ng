@@ -1,6 +1,6 @@
 <div class="entries">
 
-  <div class="accordionHolder">
+  <div class="accordionHolder" [kLoader]="loading">
       <kFiltersAccordion style="width: 300px" (categoriesChanged)="categoriesChanged($event)" (metadataProfileFilterChanged)="metadataProfileFilterChanged($event)"></kFiltersAccordion>
   </div>
 
