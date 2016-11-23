@@ -1,6 +1,11 @@
 import { Directive, ElementRef, Input, Renderer, AfterViewInit, OnDestroy, ContentChild } from '@angular/core';
 import { DataTable } from 'primeng/primeng';
 
+function isDataTable(x : DataTable) : x is DataTable
+{
+  return x ? !!x.onEdit : false;
+}
+
 @Directive({
   selector: '[fillHeight]',
 })
@@ -8,65 +13,27 @@ export class FillHeightDirective implements AfterViewInit{
 
   @ContentChild('dataTable') public dataTable: DataTable;
 
-  @Input() set watchers(elements: any[]){
-    for (let i = 0; i < elements.length; i++){
-      if (elements[i] && elements[i].style) {
-        this.watchersHeight += parseInt(elements[i].style.height);
-        this.watchedElements.push(elements[i]);
-      }
-    }
-  }
-
-  watchedElements: any[] = [];
-  watchersHeight: number = 0;
   intervalID: any = null;
-  offsetTop = 0;
+  currentHeight;
 
   constructor(private el: ElementRef, renderer: Renderer) {
   }
 
   ngAfterViewInit(){
+    if (!isDataTable(this.dataTable)){
+      return;
+    }
     const scrollBody = this.dataTable.scrollBody;
     const scrollHeader = this.dataTable.scrollHeader;
+    this.currentHeight = this.el.nativeElement.clientHeight;
 
     this.intervalID = setInterval( () => {
-
-      // init offsetTop only on timeout to allow screen rendering to finish
-      if (this.offsetTop === 0){
-        this.offsetTop = this.el.nativeElement.offsetTop;
-      }
-
-      // handle offsetTop changes
-      if (this.offsetTop !== this.el.nativeElement.offsetTop){
-        const delta = this.el.nativeElement.offsetTop - this.offsetTop;
-        this.offsetTop = this.el.nativeElement.offsetTop;
+      if (this.el.nativeElement.clientHeight !== this.currentHeight){
+        this.currentHeight = this.el.nativeElement.clientHeight;
         if (scrollBody){
-          const maxHeight = parseInt(scrollBody.style.maxHeight);
-          scrollBody.style.maxHeight = (maxHeight - delta) + "px";
+          scrollBody.style.maxHeight = (this.el.nativeElement.clientHeight - scrollHeader.clientHeight) + "px";
         }
       }
-
-      // handle additional watched DOM elements hight changes
-      if (this.watchedElements.length) {
-        let updatedWatchersHeight = 0;
-        for (let i = 0; i < this.watchedElements.length; i++) {
-          updatedWatchersHeight += parseInt(this.watchedElements[i].style.height);
-        }
-        if (updatedWatchersHeight !== this.watchersHeight) {
-          const delta = updatedWatchersHeight - this.watchersHeight;
-          this.watchersHeight = updatedWatchersHeight;
-          if (scrollBody) {
-            const maxHeight = parseInt(scrollBody.style.maxHeight);
-            scrollBody.style.maxHeight = (maxHeight - delta) + "px";
-          }
-        }
-      }
-
-      // fix for primeNG data table bug not reducing header height from the scroll calculation
-      if (this.el.nativeElement.offsetHeight === parseInt(scrollBody.style.maxHeight)){
-        scrollBody.style.maxHeight = parseInt(scrollBody.style.maxHeight) - scrollHeader.clientHeight + "px";
-      }
-
     },200);
   }
 

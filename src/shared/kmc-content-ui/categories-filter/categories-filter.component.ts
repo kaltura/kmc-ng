@@ -6,7 +6,7 @@ import * as R from 'ramda';
 import { ContentCategoriesStore, Category } from 'kmc-content-ui/providers/content-categories-store.service';
 
 @Component({
-  selector: 'kmc-categories-filter',
+  selector: 'kCategoriesFilter',
   templateUrl: './categories-filter.component.html',
   styleUrls: ['./categories-filter.component.scss']
 })

@@ -13,6 +13,7 @@ import { KMCShellModule } from 'kmc-shell';
 import { KMCContentUIModule } from 'kmc-content-ui';
 import {SortDirectionPipe} from "./pipes/sort-direction.pipe";
 import {FiltersComponent} from "./components/filters.component";
+import {kEntriesTable} from './components/entries-table.component';
 
 @NgModule({
   imports:      [
@@ -38,7 +39,8 @@ import {FiltersComponent} from "./components/filters.component";
     EntriesComponent,
     FiltersComponent,
     SortDirectionPipe,
-    FiltersAccordionComponent],
+    FiltersAccordionComponent,
+    kEntriesTable],
   providers:    []
 })
 export class ContentEntriesAppModule { }
