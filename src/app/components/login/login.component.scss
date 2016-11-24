@@ -79,10 +79,11 @@
     width: 100%;
   }
   button{
-    margin-top: 15px;
+    margin-top: 10px;
   }
-  label{
-    margin-top: 5px;
+  label, input{
+    margin-bottom: 5px;
+    display: block;
   }
 }
 .loginAlert{

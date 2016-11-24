@@ -1,6 +1,4 @@
 @import "_variables";
-@import '~bootstrap-sass/assets/stylesheets/_bootstrap-mincer.scss';
-@import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
 
 /* primeng overwrites: to be added automatically by build process */
 @import '../../applications/content-entries-app/styles/scss/index.scss';
@@ -8,6 +6,13 @@
 body {
   background:#cacaca;
   overflow: hidden;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0;
+}
+
+label{
+  font-size: 14px;
+  font-weight: bold;
 }
 
 a{
