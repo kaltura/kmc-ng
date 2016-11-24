@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { Ng2Webstorage } from 'ng2-webstorage';
 
 import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType, KalturaCommonModule, AppStorage } from '@kaltura-ng2/kaltura-common';
+import { ButtonModule, InputTextModule} from 'primeng/primeng';
+
 import { KalturaApiModule } from '@kaltura-ng2/kaltura-api';
 import { BrowserService, KMCShellModule } from 'kmc-shell';
 
@@ -35,6 +37,8 @@ if (process.env.ENV === 'build') {
 
 @NgModule({
   imports: <any>[ routing,
+    ButtonModule,
+    InputTextModule,
     CommonModule,
     RouterModule.forRoot([]),
     KMCShellModule.forRoot(),
