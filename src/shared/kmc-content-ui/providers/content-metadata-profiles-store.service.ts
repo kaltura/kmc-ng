@@ -113,7 +113,7 @@ export class ContentMetadataProfilesStore
                   // check if the simpleType type is "listType"
                   if (simpleTypes[0].getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "restriction").length && simpleTypes[0].getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "restriction")[0].getAttribute("base") === "listType") {
                     // get filter properties and add it to the metadata profile filters list
-                    const filterLabel = currentNode.getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "appinfo").length ? currentNode.getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema" ,"appinfo")[0].getElementsByTagName("label")[0].innerHTML : "";
+                    const filterLabel = currentNode.getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "appinfo").length ? currentNode.getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema","appinfo")[0].getElementsByTagName("label")[0].textContent : "";
                     const valueNodes = simpleTypes[0].getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "enumeration");
                     const values = [];
                     for (let j = 0; j < valueNodes.length; j++) {
