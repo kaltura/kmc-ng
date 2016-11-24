@@ -21,4 +21,7 @@
   .ui-tree{
     width: 255px;
   }
+  tr.ui-state-hover .ui-button{
+    visibility: visible !important;
+  }
 }
