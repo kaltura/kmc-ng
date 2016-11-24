@@ -15,6 +15,8 @@
   position: absolute;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 
   background: rgba(226,226,226,1);
   background: -moz-linear-gradient(top, rgba(226,226,226,1) 0%, rgba(219,219,219,1) 50%, rgba(209,209,209,1) 51%, rgba(254,254,254,1) 100%);
@@ -28,14 +30,7 @@
   .header{
     background-color: $menuBkgColor;
     margin-bottom: 100px;
-
-    ul{
-      padding-top: 15px;
-    }
-
-    li{
-      margin-left: 10px;
-    }
+    display: flex;
 
     a{
       color: #59A3B5;
@@ -44,18 +39,21 @@
       }
     }
 
-    img{
-      float: left;
-      margin-top: 4px;
-    }
-
     .langMenu{
       margin-right: 26px;
       float: right;
     }
 
+    .pullRight{
+      display: flex;
+      flex: 1 1 auto;
+      justify-content: flex-end;
+      padding-top: 15px
+    }
     .separator{
       color: #C5C5C5;
+      margin-left: 15px;
+      margin-right: 15px;
     }
   }
 }
@@ -67,6 +65,32 @@
     width: 200px;
   }
 }
-.topBuffer{
-  margin-top: 10px;
+.loginWindow{
+  background-color: white;
+  width: 40%;
+  margin-left: 30%;
+  border: 1px solid white;
+  border-radius: 10px;
+}
+.loginForm{
+  padding: 20px;
+  input{
+    float: left;
+    width: 100%;
+  }
+  button{
+    margin-top: 15px;
+  }
+  label{
+    margin-top: 5px;
+  }
+}
+.loginAlert{
+  height: 30px;
+  line-height: 30px;
+  padding-left: 5px;
+  border: 1px solid lightcoral;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  background-color: lightcoral;
 }

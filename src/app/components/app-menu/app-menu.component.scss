@@ -4,6 +4,7 @@
 .appMenu{
   background-color: $menuBkgColor;
   height: $appMenuHeight;
+  display: flex;
 
   a {
     color: $mainLinkColor;
