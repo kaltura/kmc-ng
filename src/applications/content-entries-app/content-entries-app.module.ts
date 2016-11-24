@@ -2,7 +2,6 @@ import { NgModule }           from '@angular/core';
 import { CommonModule }       from '@angular/common';
 import { FormsModule, ReactiveFormsModule }        from '@angular/forms';
 import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
-import { DropdownModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { TieredMenuModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, ButtonModule, AccordionModule, CalendarModule,  MultiSelectModule, PaginatorModule} from 'primeng/primeng';
 
 
@@ -25,7 +24,6 @@ import {kEntriesTable} from './components/entries-table.component';
     routing,
     ReactiveFormsModule,
     KMCShellModule,
-    DropdownModule,
     DataTableModule,
     SharedModule,
     InputTextModule,
