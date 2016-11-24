@@ -8,6 +8,18 @@
     position: absolute;
     margin-left: 30%;
   }
+
+  /* TODO [kmc] Can move to library once fixing the scss issue */
+  .table-row-image-temp-location
+  {
+    background-image: url('../assets/menu.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+    margin:auto;
+    height:20px;
+  }
+
   .ui-datatable .ui-datatable-footer {
     background: #ebedf0;
     border-top: 1px solid #cacaca;

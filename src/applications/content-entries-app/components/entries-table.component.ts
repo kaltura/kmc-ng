@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {MenuItem} from 'primeng/primeng';
 
 @Component({
   selector: 'kEntriesTable',
@@ -17,7 +18,25 @@ export class kEntriesTable {
   @Output()
   actionSelected = new EventEmitter<any>();
 
+  private items: MenuItem[];
+
+  dp(items : any, menu : any)  : void
+  {
+
+    debugger;
+  }
   constructor() {
+    this.buildMenu();
+
+  }
+
+  buildMenu() : void
+  {
+    this.items = [
+      {label: 'New', icon: 'fa-plus'},
+      {label: 'Open', icon: 'fa-download'},
+      {label: 'Undo', icon: 'fa-refresh'}
+    ];
   }
 
   onSortChanged(event){
