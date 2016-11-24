@@ -39,12 +39,16 @@
           <button id="single-button" type="button" class="btn btn-xs actionsBtn" dropdownToggle>
             Select Action <span class="caret"></span>
           </button>
-          <ul dropdownMenu role="menu" aria-labelledby="single-button" style="z-index: 1000">
+          <ul dropdownMenu role="menu" aria-labelledby="single-button" style="left: 0px">
             <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('embed',entry.id)">Preview & Embed</a></li>
             <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('delete',entry.id)">Delete</a></li>
             <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('view',entry.id)">View Details</a></li>
           </ul>
         </div>
+        <!--div class="actions">
+          <button pButton type="text" icon="fa-ellipsis-h" (click)="menu.toggle($event)" style="position: absolute"></button>
+          <p-menu #menu popup="popup" [model]="actions"></p-menu>
+        </div-->
       </template>
     </p-column>
   </p-dataTable>

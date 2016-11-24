@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { MenuItem } from 'primeng/primeng';
 
 @Component({
   selector: 'kEntriesTable',

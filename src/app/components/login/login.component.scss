@@ -1,4 +1,5 @@
 @import '../../styles/scss/_comon.scss';
+@import '~kmc-shell/styles/scss/_variables.scss';
 
 .k-logo-animated-500-400 {
   background-image: url('../../styles/assets/Kaltura-LogoAnimation-500-400.gif');
@@ -25,11 +26,11 @@
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#fefefe', GradientType=0 );
 
   .header{
-    background-color: #252525;
+    background-color: $menuBkgColor;
     margin-bottom: 100px;
 
     ul{
-      padding-top: 9px;
+      padding-top: 15px;
     }
 
     li{
