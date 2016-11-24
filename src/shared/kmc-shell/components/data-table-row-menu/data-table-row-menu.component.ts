@@ -25,31 +25,27 @@ export class DataTableRowMenu implements OnInit, OnDestroy {
     constructor(private elementRef : ElementRef) {}
 
     ngOnInit() {
-        const element = this.elementRef.nativeElement;
+        const elementRow = $(this.elementRef.nativeElement).closest('tr');
 
-        // TODO [kmc] for demonstration only, smart find the parent
+        if (elementRow) {
+            this.menuButton = $(this.menuButtonRef.nativeElement);
 
-        const elementRow = element.parentElement.parentElement.parentElement;
+            // TODO workaround for the scss not importing images correctly
+            const newUrl = this.menuButton.css('background-image').replace(/\/css/g, "/");
+            this.menuButton.css('background-image', newUrl);
 
-        this.menuButton =$(this.menuButtonRef.nativeElement);
+            this.menuButton.hide();
 
-        // TODO workaround for the scss not importing images correctly
-        const newUrl = this.menuButton.css('background-image').replace(/\/css/g,"/");
-        this.menuButton.css('background-image',newUrl);
+            elementRow.on('mouseenter', () => {
+                this.isMouseEnter = true;
+                this.updateButtonVisibility(true);
+            });
 
-        this.menuButton.hide();
-
-        elementRow.addEventListener('mouseenter',() =>
-        {
-            this.isMouseEnter = true;
-            this.updateButtonVisibility(true);
-        });
-
-        elementRow.addEventListener('mouseleave',() =>
-        {
-            this.isMouseEnter = false;
-            this.updateButtonVisibility(false);
-        });
+            elementRow.on('mouseleave', () => {
+                this.isMouseEnter = false;
+                this.updateButtonVisibility(false);
+            });
+        }
     }
 
     updateButtonVisibility(shouldShow : boolean) : void
@@ -67,7 +63,7 @@ export class DataTableRowMenu implements OnInit, OnDestroy {
                         this.menuButton.fadeIn();
                         this.isMenuButtonVisible = true;
                     }
-                },500);
+                },200);
             }
         }else
         {
