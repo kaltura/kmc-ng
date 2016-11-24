@@ -13,7 +13,7 @@
         <button style="float: right; margin-top: 12px; margin-right: 70px" (click)="showTags=!showTags">show / hide tags</button>
       </div>
       <div *ngIf="showTags" class="tags">
-        <div style="height: 30px; background-color: #cacaca; border: 1px solid grey; border-radius: 15px; width: 100px; margin-top: 10px; margin-left: 10px; text-align: center; padding: 5px">Filter 1</div>
+        <div style="height: 20px; background-color: #cacaca; border: 1px solid grey; border-radius: 15px; width: 100px; margin-top: 10px; margin-left: 10px; text-align: center; padding: 5px">Filter 1</div>
       </div>
 
       <kEntriesTable class="kEntriesTable" [entries]="(contentEntriesStore.entries$ | async)?.items" [filter]="filter" [selectedEntries]="selectedEntries" [loading]="loading" (sortChanged)="onSortChanged($event)" (actionSelected)="onActionSelected($event)"></kEntriesTable>
