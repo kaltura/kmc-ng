@@ -20,4 +20,16 @@
     height: 100%;
     vertical-align: middle;
   }
+  .actionsBtn {
+    color: #fff;
+    background-color: #2399e5;
+    border-color: #1f89ce;
+  }
+  .actions{
+    width: 100%;
+    text-align: center;
+    button {
+      visibility: hidden;
+    }
+  }
 }
