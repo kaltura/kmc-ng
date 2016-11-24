@@ -22,7 +22,7 @@
         <button class="bulkActions" [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>
         <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChanged($event)" [first]="filter.pageIndex * filter.pageSize" [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount" [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
         <button onclick="document.getElementsByClassName('footer')[0].style.height = 100+'px'" style="float: right">set height to 100</button>
-        <button onclick="document.getElementsByClassName('footer')[0].style.height = 40+'px'" style="float: right">set height to 40</button>
+        <button onclick="document.getElementsByClassName('footer')[0].style.height = 50+'px'" style="float: right">set height to 50</button>
       </div>
     <p-tieredMenu #menu [model]="bulkActionsMenu" [popup]="true" [styleClass]="menu"></p-tieredMenu>
   </div>
