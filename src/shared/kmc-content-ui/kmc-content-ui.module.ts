@@ -9,15 +9,14 @@ import { TreeModule, SharedModule } from 'primeng/primeng';
 import { CategoriesFilterComponent } from './categories-filter/categories-filter.component';
 import { ContentCategoriesStore } from './providers/content-categories-store.service';
 import { ContentMetadataProfilesStore } from './providers/content-metadata-profiles-store.service';
-import { FillHeightDirective } from './directives/datatable-fillheight';
 
 import { EntryTypePipe, EntryStatusPipe, PlaylistTypePipe } from './pipes/index';
 
 @NgModule({
   imports:      [ CommonModule, TreeModule, FormsModule, SharedModule, KalturaUIModule ],
-  declarations: [ CategoriesFilterComponent, EntryTypePipe, EntryStatusPipe, PlaylistTypePipe, FillHeightDirective ],
+  declarations: [ CategoriesFilterComponent, EntryTypePipe, EntryStatusPipe, PlaylistTypePipe ],
   providers:    [],
-  exports: [ CategoriesFilterComponent, EntryTypePipe, EntryStatusPipe, PlaylistTypePipe, FillHeightDirective ]
+  exports: [ CategoriesFilterComponent, EntryTypePipe, EntryStatusPipe, PlaylistTypePipe ]
 })
 export class KMCContentUIModule {
   static forRoot(): ModuleWithProviders {
