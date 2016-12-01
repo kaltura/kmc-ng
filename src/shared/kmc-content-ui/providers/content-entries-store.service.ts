@@ -14,7 +14,7 @@ import {
 
 
 import {KalturaServerClient} from '@kaltura-ng2/kaltura-api';
-import {BaseEntryService} from '@kaltura-ng2/kaltura-api/services';
+import {BaseEntryService} from '@kaltura-ng2/kaltura-api/services/base-entry';
 
 import * as R from 'ramda';
 
@@ -109,7 +109,12 @@ export class ContentEntriesStore {
             }
 
             // TODO [KMC] we need to cancel all previous requests otherwise we might override entries$ with older responses
-            const request = BaseEntryService.list(filter, pager).setResponseProfile(responseProfile).setCompletion(
+            const request = BaseEntryService.list({filter, pager})
+              .setData(request =>
+              {
+                request.responseProfile = responseProfile;
+              })
+              .setCompletion(
                 (response => {
                     if (response.result) {
                         const result = <KalturaBaseEntryListResponse>response.result;

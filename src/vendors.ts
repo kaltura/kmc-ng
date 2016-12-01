@@ -35,6 +35,6 @@ import 'moment';
 import 'ramda';
 import 'ng2-webstorage';
 
-import '@kaltura-ng2/kaltura-api';
+// TODO [kmc] move to kaltura-vendor.ts
 import '@kaltura-ng2/kaltura-common';
 

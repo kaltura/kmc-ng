@@ -14,6 +14,9 @@ const DedupePlugin = require('webpack/lib/optimize/DedupePlugin');
 const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
+
 /**
  * Webpack Constants
  */
@@ -91,6 +94,7 @@ module.exports = webpackMerge(commonConfig, {
    */
   plugins: [
 
+    new BundleAnalyzerPlugin(),
     /**
      * Plugin: WebpackMd5Hash
      * Description: Plugin to replace a standard webpack chunkhash with md5.
@@ -107,7 +111,7 @@ module.exports = webpackMerge(commonConfig, {
      * See: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
      * See: https://github.com/webpack/docs/wiki/optimization#deduplication
      */
-    new DedupePlugin(),
+    //new DedupePlugin(),
 
     /**
      * Plugin: DefinePlugin
@@ -202,8 +206,8 @@ module.exports = webpackMerge(commonConfig, {
    * See: https://github.com/wbuchwalter/tslint-loader
    */
   tslint: {
-    emitErrors: true,
-    failOnHint: true,
+    emitErrors: false,
+    failOnHint: false,
     resourcePath: 'src'
   },
 
