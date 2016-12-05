@@ -1,4 +1,4 @@
-<div class="appMenu">
+<div class="appMenu grid">
 
       <div class="k-logo"></div>
 
@@ -21,7 +21,7 @@
 
 </div>
 
-<div class="appSubMenu" style="display: flex" *ngIf="selectedMenuItem && showSubMenu && selectedMenuItem.children">
+<div class="appSubMenu grid" *ngIf="selectedMenuItem && showSubMenu && selectedMenuItem.children">
 
 
         <div *ngFor="let subitem of selectedMenuItem.children" class="subMenuContainer" [routerLinkActive]="['active']">

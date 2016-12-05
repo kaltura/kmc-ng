@@ -1,33 +1,37 @@
-<div class="loginContainer" *ngIf="showLogin">
+<div class="loginContainer grid-column-noGutter" *ngIf="showLogin">
 
-        <div class="header">
-            <div class="k-logo"></div>
+        <div class="header col-12 grid-noGutter-equalHeight">
+            <div class="col-6">
+              <div class="k-logo"></div>
+            </div>
 
-            <div class="pullRight">
-              <span><a (click)="openUserManual()">{{'USER_SETTINGS.userManual' | translate}}</a></span>
-              <span class="separator">|</span>
-              <kmc-language-menu class="langMenu"></kmc-language-menu>
+            <div class="col-6">
+              <div class="pullRight">
+                <span><a (click)="openUserManual()">{{'USER_SETTINGS.userManual' | translate}}</a></span>
+                <span class="separator">|</span>
+                <kmc-language-menu class="langMenu"></kmc-language-menu>
+              </div>
             </div>
         </div>
 
-        <div>
-            <div class="loginWindow">
-              <div class="k-logo-animated-500-400"></div>
-                <div class="loginForm">
-                    <div class="loginAlert" *ngIf="errorMessage">{{ errorMessage }}</div>
-                    <form role="form" (submit)="login(username.value, password.value, $event)">
-                        <div [hidden]="userContext && userContext.ks">
-                            <label for="username">Username</label>
-                            <input type="text" pInputText #username id="username" placeholder="Username">
-                        </div>
-                        <div [hidden]="userContext && userContext.ks">
-                            <label for="password">Password</label>
-                            <input type="password" pInputText #password id="password" placeholder="Password">
-                        </div>
-                        <button pButton type="text" type="submit" label="{{ inProgress ? 'Please wait' : 'Submit'}}" [disabled]="inProgress"></button>
-                    </form>
-                </div>
-            </div>
+        <div class="grid-center">
+            <div class="loginWindow col-4">
+                <div class="k-logo-animated-500-400"></div>
+                  <div class="loginForm">
+                      <div class="loginAlert" *ngIf="errorMessage">{{ errorMessage }}</div>
+                      <form role="form" (submit)="login(username.value, password.value, $event)">
+                          <div [hidden]="userContext && userContext.ks">
+                              <label for="username">Username</label>
+                              <input type="text" pInputText #username id="username" placeholder="Username">
+                          </div>
+                          <div [hidden]="userContext && userContext.ks">
+                              <label for="password">Password</label>
+                              <input type="password" pInputText #password id="password" placeholder="Password">
+                          </div>
+                          <button pButton type="text" type="submit" label="{{ inProgress ? 'Wait...' : 'Submit'}}" [disabled]="inProgress"></button>
+                      </form>
+                  </div>
+              </div>
         </div>
 </div>
 
