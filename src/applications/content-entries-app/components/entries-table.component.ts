@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import {MenuItem} from 'primeng/primeng';
+import {Entry} from "./entries.component";
 
 @Component({
   selector: 'kEntriesTable',
@@ -17,6 +18,8 @@ export class kEntriesTable {
   sortChanged = new EventEmitter<any>();
   @Output()
   actionSelected = new EventEmitter<any>();
+  @Output()
+  selectedEntriesChange = new EventEmitter<any>();
 
   private items: MenuItem[];
 
@@ -45,6 +48,14 @@ export class kEntriesTable {
 
   onActionSelected(action, entryID){
     this.actionSelected.emit({"action": action, "entryID": entryID});
+  }
+
+  onSelectionChange(event){
+    this.selectedEntries = [];
+    event.forEach((entry: Entry) => {
+      this.selectedEntries.push(entry.id)
+    });
+    this.selectedEntriesChange.emit(this.selectedEntries);
   }
 
 }

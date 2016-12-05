@@ -39,7 +39,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
     sortDirection : SortDirection.Desc
   };
 
-  selectedEntries: Entry[] = [];
+  selectedEntries: any[] = [];
   bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
 
   loading = false;
