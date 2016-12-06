@@ -197,7 +197,7 @@ module.exports = {
      * See: https://github.com/webpack/docs/wiki/optimization#multi-page-app
      */
     new webpack.optimize.CommonsChunkPlugin({
-      name: ['polyfills', 'kaltura-vendor', 'vendors','theme'].reverse()
+      name: ['polyfills', 'vendors', 'kaltura-vendor', 'theme'].reverse()
     }),
 
     /*

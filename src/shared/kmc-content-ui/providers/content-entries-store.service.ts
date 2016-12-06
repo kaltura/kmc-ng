@@ -4,17 +4,17 @@ import { Observable } from 'rxjs/Observable';
 
 import {
     KalturaContentDistributionSearchItem,
-    KalturaSearchOperatorType,
     KalturaSearchOperator,
     KalturaMediaEntryFilter,
     KalturaDetachedResponseProfile,
     KalturaFilterPager,
     KalturaBaseEntryListResponse
-     } from '@kaltura-ng2/kaltura-api'
+     } from '@kaltura-ng2/kaltura-api/kaltura-types'
 
+import { KalturaSearchOperatorType} from '@kaltura-ng2/kaltura-api/kaltura-enums'
 
 import {KalturaServerClient} from '@kaltura-ng2/kaltura-api';
-import {BaseEntryService} from '@kaltura-ng2/kaltura-api/services/base-entry';
+import {BaseEntryListAction} from '@kaltura-ng2/kaltura-api/services/base-entry';
 
 import * as R from 'ramda';
 
@@ -109,11 +109,8 @@ export class ContentEntriesStore {
             }
 
             // TODO [KMC] we need to cancel all previous requests otherwise we might override entries$ with older responses
-            const request = BaseEntryService.list({filter, pager})
-              .setData(request =>
-              {
-                request.responseProfile = responseProfile;
-              })
+
+            const request = new BaseEntryListAction({filter, pager, responseProfile})
               .setCompletion(
                 (response => {
                     if (response.result) {
