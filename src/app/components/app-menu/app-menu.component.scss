@@ -3,8 +3,6 @@
 
 .appMenu{
   background-color: $menuBkgColor;
-  height: $appMenuHeight;
-  display: flex;
 
   a {
     color: $mainLinkColor;
@@ -43,7 +41,6 @@
   }
 }
 .appSubMenu{
-  height: $appSubMenuHeight;
   background-color: white;
   padding-left: 20px;
   border-bottom: 1px solid grey;
@@ -70,7 +67,6 @@
   .subMenuContainer{
     margin-left: 15px;
     margin-right: 15px;
-    height: $appSubMenuHeight;
     position: relative;
     &.active{
       >.linkMarker {

@@ -3,7 +3,7 @@ import { CommonModule }       from '@angular/common';
 import { FormsModule, ReactiveFormsModule }        from '@angular/forms';
 import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
-import { TieredMenuModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, ButtonModule, AccordionModule, CalendarModule,  MultiSelectModule, PaginatorModule} from 'primeng/primeng';
+import { TieredMenuModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, ButtonModule, AccordionModule, CalendarModule,  MultiSelectModule, PaginatorModule, MenuModule} from 'primeng/primeng';
 
 
 import { routing} from './content-entries-app.routes';
@@ -18,6 +18,7 @@ import {kEntriesTable} from './components/entries-table.component';
 @NgModule({
   imports:      [
     TieredMenuModule,
+    MenuModule,
     CheckboxModule,
     CommonModule,
     FormsModule,

@@ -15,8 +15,6 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
 
   background: rgba(226,226,226,1);
   background: -moz-linear-gradient(top, rgba(226,226,226,1) 0%, rgba(219,219,219,1) 50%, rgba(209,209,209,1) 51%, rgba(254,254,254,1) 100%);
@@ -29,8 +27,6 @@
 
   .header{
     background-color: $menuBkgColor;
-    margin-bottom: 100px;
-    display: flex;
 
     a{
       color: #59A3B5;
@@ -67,10 +63,9 @@
 }
 .loginWindow{
   background-color: white;
-  width: 40%;
-  margin-left: 30%;
   border: 1px solid white;
   border-radius: 10px;
+  margin-top: 100px;
 }
 .loginForm{
   padding: 20px;
