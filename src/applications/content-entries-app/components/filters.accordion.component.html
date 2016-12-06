@@ -1,0 +1,20 @@
+<div class="accordionHolder" [kLoader]="loading">
+
+  <p-accordion>
+    <p-accordionTab header="Filter by Categories" [selected]="true">
+      <kCategoriesFilter (categoriesChanged)="onCategoriesChanged($event)"></kCategoriesFilter>
+    </p-accordionTab>
+    <p-accordionTab header="Additional Filters">
+      Additional Filters Content
+    </p-accordionTab>
+    <p-accordionTab *ngFor="let filter of metadataProfileFilters" header="{{filter.label}}">
+      <div class="row" style="margin-bottom: 10px; padding-left: 30px" *ngFor="let f of filter.filters">
+        <p>{{f.filterName}}</p>
+        <ul style="margin: 0; list-style: none; float: left; padding-left: 10px">
+          <li *ngFor="let field of f.values"><input type="checkbox" (change)="metadataFilterChange($event, f.fieldName, field)" value="{{field}}"> {{field}}</li>
+        </ul>
+      </div>
+    </p-accordionTab>
+  </p-accordion>
+
+</div>

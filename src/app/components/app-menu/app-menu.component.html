@@ -1,36 +1,34 @@
-<div class="container-fluid appMenu">
-  <div class="row">
-    <div class="col-12">
+<div class="appMenu grid">
+
       <div class="k-logo"></div>
-      <ul class="nav navbar-nav leftNavBar">
-        <li *ngFor="let item of menuConfig">
-          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]">{{'MENU.'+item.titleToken | translate}}</a>
-        </li>
-        <li>
-          <a (click)="toggleUpload()" [class.uploadOpen]="uploadOpen" class="widgetLink">{{ 'MENU.upload' | translate }} &nbsp;&nbsp;{{uploadOpen ? '&#x25B2;' : '&#x25BC;'}}</a>
-          <kmc-upload [uploadOpen]="uploadOpen"></kmc-upload>
-        </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li>
+
+      <div *ngFor="let item of menuConfig">
+        <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]">{{'MENU.'+item.titleToken | translate}}</a>
+      </div>
+      <div>
+        <a (click)="toggleUpload()" [class.uploadOpen]="uploadOpen" class="widgetLink">{{ 'MENU.upload' | translate }} &nbsp;&nbsp;{{uploadOpen ? '&#x25B2;' : '&#x25BC;'}}</a>
+        <kmc-upload [uploadOpen]="uploadOpen"></kmc-upload>
+      </div>
+
+      <div style="display: flex; flex: 1 1 auto; justify-content: flex-end">
+        <div>
           <kmc-user-settings></kmc-user-settings>
-        </li>
-        <li>
+        </div>
+        <div>
           <kmc-language-menu class="langMenu"></kmc-language-menu>
-        </li>
-      </ul>
-    </div>
-  </div>
+        </div>
+      </div>
+
 </div>
-<div class="container-fluid appSubMenu" *ngIf="selectedMenuItem && showSubMenu && selectedMenuItem.children">
-  <div class="row">
-    <div class="col-12">
-      <ul class="nav navbar-nav">
-        <li *ngFor="let subitem of selectedMenuItem.children">
+
+<div class="appSubMenu grid" *ngIf="selectedMenuItem && showSubMenu && selectedMenuItem.children">
+
+
+        <div *ngFor="let subitem of selectedMenuItem.children" class="subMenuContainer" [routerLinkActive]="['active']">
           <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+subitem.routePath]">{{'MENU.'+subitem.titleToken | translate}}</a>
-        </li>
-      </ul>
-    </div>
-  </div>
+          <div class="linkMarker"></div>
+        </div>
+
+
 </div>
 

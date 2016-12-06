@@ -1,0 +1,45 @@
+<div [kLoader]="loading" fillHeight class="kEntriesTable col">
+  <p-dataTable #dataTable  [value]="entries" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | sortDirection" scrollable="true" scrollHeight="100%" (selectionChange)="onSelectionChange($event)" (onSort)="onSortChanged($event)" [(selection)]="tableSelectedEntries">
+    <p-column [style]="{'width':'46px'}" selectionMode="multiple"></p-column>
+    <p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">
+      <template let-col let-entry="rowData" pTemplate type="body">
+        <div class="thumbnailHolder"><span class="helper"></span><img src="{{entry[col.field]}}"></div>
+      </template>
+    </p-column>
+    <p-column field="id" header="ID" [sortable]="'custom'" [style]="{'width':'100px'}"></p-column>
+    <p-column field="name" header="Name" [sortable]="'custom'" >
+      <template let-col let-entry="rowData" pTemplate type="body">
+        <a (click)="onActionSelected('view',entry.id)">{{entry[col.field]}}</a>
+      </template>
+    </p-column>
+    <p-column field="mediaType" header="Type" [sortable]="'custom'"  [style]="{'width':'80px', 'text-align': 'center'}">
+      <template let-col let-entry="rowData" pTemplate type="body">
+        <div [class]="entry[col.field] | entryType"></div>
+      </template>
+    </p-column>
+    <p-column field="plays" header="Plays" [sortable]="'custom'"  [style]="{'width':'80px', 'text-align': 'center'}"></p-column>
+    <p-column field="createdAt" header="Created On" [sortable]="true" [style]="{'width':'140px'}">
+      <template let-col let-entry="rowData" pTemplate type="body">
+        <span>{{entry[col.field] * 1000 | date:'MM/dd/y HH:MM'}}</span>
+      </template>
+    </p-column>
+    <p-column field="duration" header="Duration" [sortable]="'custom'"  [style]="{'width':'100px'}">
+      <template let-col let-entry="rowData" pTemplate type="body">
+        <span>{{entry[col.field] | time}}</span>
+      </template>
+    </p-column>
+    <p-column field="status" header="Status" [sortable]="'custom'"  [style]="{'width':'140px'}">
+      <template let-col let-entry="rowData" pTemplate type="body">
+        <span>{{entry[col.field] | entryStatus}}</span>
+      </template>
+    </p-column>
+    <p-column header="Action" [style]="{'overflow':'visible', 'width':'100px'}">
+      <template let-col let-entry="rowData" pTemplate type="body">
+        <div class="actions">
+          <button type="button" pButton icon="fa fa-ellipsis-h" (click)="openActionsMenu($event, entry.id)"></button>
+        </div>
+      </template>
+    </p-column>
+  </p-dataTable>
+  <p-menu #actionsmenu popup="popup" [model]="items" [appendTo]="'body'"></p-menu>
+</div>

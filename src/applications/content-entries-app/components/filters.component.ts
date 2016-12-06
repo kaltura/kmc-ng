@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
 
-import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui';
+import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
 import {FiltersContent} from './filters-content'
 
 

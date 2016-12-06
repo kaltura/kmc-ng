@@ -6,7 +6,9 @@ import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
 import { DataTable, MenuItem } from 'primeng/primeng';
 
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
-import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui';
+import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
+
+import * as R from 'ramda';
 
 export interface Entry {
   id: string;
@@ -42,19 +44,18 @@ export class EntriesComponent implements OnInit, OnDestroy {
     distributionProfiles : []
   };
 
-  selectedEntries: Entry[] = [];
+  selectedEntries: any[] = [];
   bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
+
   loading = false;
 
   private refreshList = <Subject<boolean>>new Subject();
 
 
-  constructor(private formBuilder: FormBuilder,
-              public contentEntriesStore : ContentEntriesStore) {
+  constructor(private formBuilder: FormBuilder, public contentEntriesStore : ContentEntriesStore) {
     this.searchForm = this.formBuilder.group({
       'searchText': []
     });
-
   }
 
   onFreetextChanged() : void{
@@ -119,17 +120,15 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscribeToFilterChanges();
-
     this.reload();
-
   }
 
   ngOnDestroy(){
     this.unsubscribeToFilterChanges();
   }
 
-  onActionSelected(action, entryID){
-    //alert("Selected Action: "+action+"\nEntry ID: "+entryID);
+  onActionSelected(event){
+    alert("Selected Action: "+event.action+"\nEntry ID: "+event.entryID);
   }
 
 
@@ -147,7 +146,10 @@ export class EntriesComponent implements OnInit, OnDestroy {
     this.reload(true);
   }
 
-
+  metadataProfileFilterChanged(metadataProfileFilter : any)
+  {
+    // TODO [kmc] - create advanced filter using the metadataProfileFilter object data
+  }
 
 }
 

@@ -1,51 +1,38 @@
-<div class="loginContainer" *ngIf="showLogin">
-    <div class="container-fluid">
-        <div class="row header">
-            <div class="col-12">
-                <div class="k-logo"></div>
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <span><a (click)="openUserManual()">{{'USER_SETTINGS.userManual' | translate}}</a></span>
-                    </li>
-                    <li>
-                        <span class="separator">|</span>
-                    </li>
-                    <li>
-                        <kmc-language-menu class="langMenu"></kmc-language-menu>
-                    </li>
-                </ul>
+<div class="loginContainer grid-column-noGutter" *ngIf="showLogin">
+
+        <div class="header col-12 grid-noGutter-equalHeight">
+            <div class="col-6">
+              <div class="k-logo"></div>
+            </div>
+
+            <div class="col-6">
+              <div class="pullRight">
+                <span><a (click)="openUserManual()">{{'USER_SETTINGS.userManual' | translate}}</a></span>
+                <span class="separator">|</span>
+                <kmc-language-menu class="langMenu"></kmc-language-menu>
+              </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="k-logo-animated-500-400"></div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="alert alert-warning" *ngIf="errorMessage">{{ errorMessage }}</div>
-                        <form role="form" (submit)="login(username.value, password.value, $event)">
-                            <div class="form-group" [hidden]="userContext && userContext.ks">
-                                <label for="username">Username</label>
-                                <input type="text" #username class="form-control" id="username" placeholder="Username">
-                            </div>
-                            <div class="form-group" [hidden]="userContext && userContext.ks">
-                                <label for="password">Password</label>
-                                <input type="password" #password class="form-control" id="password"
-                                       placeholder="Password">
-                            </div>
-                            <button type="submit" class="btn btn-info col-md-12" [disabled]="inProgress">{{ inProgress ?
-                                'Please wait' : 'Submit'}}
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+        <div class="grid-center">
+            <div class="loginWindow col-4">
+                <div class="k-logo-animated-500-400"></div>
+                  <div class="loginForm">
+                      <div class="loginAlert" *ngIf="errorMessage">{{ errorMessage }}</div>
+                      <form role="form" (submit)="login(username.value, password.value, $event)">
+                          <div [hidden]="userContext && userContext.ks">
+                              <label for="username">Username</label>
+                              <input type="text" pInputText #username id="username" placeholder="Username">
+                          </div>
+                          <div [hidden]="userContext && userContext.ks">
+                              <label for="password">Password</label>
+                              <input type="password" pInputText #password id="password" placeholder="Password">
+                          </div>
+                          <button pButton type="text" type="submit" label="{{ inProgress ? 'Wait...' : 'Submit'}}" [disabled]="inProgress"></button>
+                      </form>
+                  </div>
+              </div>
         </div>
-    </div>
-
 </div>
 
 

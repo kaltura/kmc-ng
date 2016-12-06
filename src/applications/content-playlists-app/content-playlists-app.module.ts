@@ -6,11 +6,10 @@ import { routing} from './content-playlists-app.routes';
 import { PlaylistsComponent } from './components/playlists.component';
 import { KMCContentUIModule } from 'kmc-content-ui';
 import { KMCShellModule } from 'kmc-shell';
-import { DropdownModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { DataTableModule, SharedModule, InputTextModule, ButtonModule} from 'primeng/primeng';
 
 @NgModule({
-  imports:      [ CommonModule, FormsModule, routing, ReactiveFormsModule, KMCShellModule, DropdownModule, DataTableModule, SharedModule, InputTextModule, ButtonModule, KMCContentUIModule ],
+  imports:      [ CommonModule, FormsModule, routing, ReactiveFormsModule, KMCShellModule, DataTableModule, SharedModule, InputTextModule, ButtonModule, KMCContentUIModule ],
   declarations: [ PlaylistsComponent ],
   providers:    []
 })

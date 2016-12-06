@@ -7,12 +7,12 @@ a{
 .userSettings{
   font-size: 12px;
   font-weight: bold;
-  margin-top: 9px;
+  margin-top: 12px;
   border: 1px solid grey;
   border-radius: 4px;
   padding-left: 10px;
   padding-right: 10px;
-  padding-top: 1px;
+  padding-top: 3px;
   color: #C5C5C5;
   height: 22px;
   background-color: #1f1f1f;
@@ -26,7 +26,7 @@ a{
 }
 .userSettings .open{
   font-weight: normal;
-  padding-top: 1px;
+  padding-top: 3px;
   cursor: default;
 }
 .userSettings .open a{
