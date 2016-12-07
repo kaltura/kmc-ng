@@ -8,9 +8,6 @@ import { Ng2Webstorage } from 'ng2-webstorage';
 import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType, KalturaCommonModule, AppStorage } from '@kaltura-ng2/kaltura-common';
 import {  KalturaApiModule, KalturaHttpConfiguration, KalturaHttpPostClient,  KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 
-import { ButtonModule, InputTextModule} from 'primeng/primeng';
-
-import { KalturaApiModule } from '@kaltura-ng2/kaltura-api';
 import { BrowserService, KMCShellModule } from 'kmc-shell';
 
 import { AppComponent } from './app.component';
@@ -31,6 +28,8 @@ import { UploadComponent } from './components/upload/upload.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 import {KalturaHttpConfigurationAdapter} from "./services/kaltura-http-configuration-adapter.service";
 
+import { ButtonModule, InputTextModule} from 'primeng/primeng';
+
 import { KMCContentUIModule } from 'kmc-content-ui/kmc-content-ui.module';
 
 
@@ -40,15 +39,20 @@ if (process.env.ENV === 'build') {
 }
 
 @NgModule({
-  imports: <any>[ routing,
+  imports: <any>[
+    routing,
     CommonModule,
     RouterModule.forRoot([]),
     KMCShellModule.forRoot(),
     BrowserModule,
     HttpModule,
+    KMCContentUIModule.forRoot(),
     KalturaCommonModule.forRoot(),
     KalturaApiModule,
-    Ng2Webstorage,],       // module dependencies
+    Ng2Webstorage,
+    ButtonModule,
+    InputTextModule
+  ],       // module dependencies
   declarations: <any>[ AppComponent,
     DashboardComponent,
     AppMenuComponent,

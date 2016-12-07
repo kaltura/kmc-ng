@@ -7,7 +7,6 @@ const commonConfig = require('./webpack.common.js'); // the settings that are co
  * Webpack Plugins
  */
 const DefinePlugin = require('webpack/lib/DefinePlugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 /**
  * Webpack Constants
@@ -106,7 +105,7 @@ module.exports = webpackMerge(commonConfig, {
 
   plugins: [
 
-      new BundleAnalyzerPlugin(),
+
 
     /**
      * Plugin: DefinePlugin

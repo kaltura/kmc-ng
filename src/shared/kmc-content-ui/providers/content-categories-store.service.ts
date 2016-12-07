@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-import { KalturaAPIClient } from '@kaltura-ng2/kaltura-api';
-import { CategoryService, KalturaCategoryFilter, KalturaDetachedResponseProfile } from '@kaltura-ng2/kaltura-api/category';
+import {KalturaServerClient} from '@kaltura-ng2/kaltura-api';
+import { CategoryListAction } from '@kaltura-ng2/kaltura-api/services/category';
+import { KalturaCategoryFilter, KalturaDetachedResponseProfile, KalturaResponseProfileType} from '@kaltura-ng2/kaltura-api/types'
 
 import * as R from 'ramda';
 
@@ -35,36 +36,36 @@ export class ContentCategoriesStore
     private _categories: BehaviorSubject<Categories> = new BehaviorSubject({items: [], map: {}, loaded: false, status: ''});
     public categories$: Observable<Categories> = this._categories.asObservable();
 
-    private responseProfile: any;
-
-    constructor(private kalturaAPIClient : KalturaAPIClient) {
+    constructor(private kalturaServerClient :KalturaServerClient) {
 
     }
 
 
     public reloadCategories(ignoreCache: boolean = false) : Observable<boolean>
     {
-        let filter, responseProfile;
-        let categoriesMap = {};
 
-        filter = new KalturaCategoryFilter();
-        Object.assign(filter, {orderBy : '+name'});
-
-        responseProfile = new KalturaDetachedResponseProfile();
-        Object.assign(responseProfile, {
-          "objectType": "KalturaDetachedResponseProfile",
-          "type": "1",
-          "fields": "id,parentId,name"
-        });
 
         const categories = this._categories.getValue();
 
       if (ignoreCache || !categories.loaded || categories.status) {
+        let categoriesMap = {};
+
         this._categories.next({items: [], map: {}, loaded: false, status: ''});
 
+        const filter = new KalturaCategoryFilter();
+        filter.orderBy = '+name';
+
+        const responseProfile = new KalturaDetachedResponseProfile()
+          .setData( data => {
+            data.fields = "id,name,xsd,views";
+            data.type = KalturaResponseProfileType.IncludeFields;
+          });
+
         return Observable.create(observe => {
-          CategoryService.list(filter, responseProfile)
-            .execute(this.kalturaAPIClient)
+
+          this.kalturaServerClient.request(
+            new CategoryListAction({filter, responseProfile})
+          )
             .map((response: any) => {
               if (response && response.objects){
                 const categoriesData = this.buildCategoriesHyrarchy(response.objects);

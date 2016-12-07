@@ -57,7 +57,7 @@ module.exports = {
     'polyfills': './src/polyfills.ts',
     'theme' : './src/theme.ts',
     'vendors': './src/vendors.ts',
-    'kaltura-vendor': './src/kaltura-vendor.ts',
+    'kaltura': './src/kaltura-vendor.ts',
     'app': './src/main.ts' // our angular app
   },
 
@@ -197,7 +197,7 @@ module.exports = {
      * See: https://github.com/webpack/docs/wiki/optimization#multi-page-app
      */
     new webpack.optimize.CommonsChunkPlugin({
-      name: ['polyfills', 'vendors', 'kaltura-vendor', 'theme'].reverse()
+      name: ['polyfills', 'vendors', 'kaltura', 'theme'].reverse()
     }),
 
     /*
