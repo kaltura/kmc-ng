@@ -1,36 +1,4 @@
 @import "_variables";
 
-/* primeng overwrites: to be added automatically by build process */
-@import '../../applications/content-entries-app/styles/scss/index.scss';
 
-body {
-  background:#cacaca;
-  overflow: hidden;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  margin: 0;
-}
 
-label{
-  font-size: 14px;
-  font-weight: bold;
-}
-
-a{
-  color: $link;
-  cursor: pointer;
-  &:hover{
-    color: $linkHover;
-  }
-}
-
-.miniApp{
-  width: 100%;
-  height: 100%;
-  background-color: $appBkgColor;
-  position: fixed;
-  p{
-    text-align: center;
-    font-size: 24px;
-    margin-top: 10px;
-  }
-}

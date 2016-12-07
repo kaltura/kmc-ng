@@ -7,9 +7,21 @@ import '@angular/http';
 import '@angular/router';
 
 // RxJS Statics
+import 'rxjs/Observable';
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/observable/of';
 
-// Bootstrap
-import 'ng2-bootstrap/ng2-bootstrap';
+// RxJS Operators
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/startWith';
+
 
 // PrimeNG
 import 'primeng/primeng';
@@ -20,5 +32,3 @@ import 'jquery';
 import 'moment';
 import 'ramda';
 import 'ng2-webstorage';
-
-
