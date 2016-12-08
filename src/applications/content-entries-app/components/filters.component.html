@@ -1,54 +1,40 @@
-<div>
+<div class="container">
     <form [formGroup]="categoriesForm">
-        <div class="panel panel-default">
-            <div class="panel-heading">Categories Filter</div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <label>categories (separate with comma)</label>
-                    <input type="input" formControlName="categories" class="form-control">
-                </div>
-            </div>
-        </div>
+        <ul class="flex-outer">
+            <li>
+                <label>Categories</label>
+                <input pInputText formControlName="categories"
+                         placeholder="Enter categories (press enter after each one)"/>
+            </li>
+        </ul>
     </form>
 
     <form [formGroup]="refineForm">
-        <div class="panel panel-default">
-            <div class="panel-heading">Refine Filters</div>
-            <div class="panel-body">
-
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label>Created at From</label>
-                        <p-calendar formControlName="createdAtFrom" [monthNavigator]="true" [yearNavigator]="true" [readonlyInput]="true" yearRange="1980:2030"></p-calendar>
-                    </div>
-                </div>
-
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label>Created at to</label>
-                        <p-calendar formControlName="createdAtTo" [monthNavigator]="true" [yearNavigator]="true" [readonlyInput]="true" yearRange="1980:2030"></p-calendar>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>mediaTypeIn</label>
-                    <p-multiSelect [options]="lists.mediaTypes"  formControlName="mediaTypes"></p-multiSelect>
-                </div>
-
-                <div class="form-group">
-                    <label>statusIn</label>
-                    <p-multiSelect [options]="lists.statusTypes"  formControlName="statuses"></p-multiSelect>
-                </div>
-
-                <div class="form-group">
-                    <label>distributionProfiles</label>
-                    <p-multiSelect [options]="lists.distributionTypes"  formControlName="distributionProfiles"></p-multiSelect>
-                </div>
-
-            </div>
-
-
-        </div>
+        <ul class="flex-outer">
+            <li>
+                <label>Created since</label>
+                <p-calendar formControlName="createdAtFrom" [monthNavigator]="true" [yearNavigator]="true"
+                            [readonlyInput]="true" yearRange="1980:2030"></p-calendar>
+            </li>
+            <li>
+                <label>Created Until</label>
+                <p-calendar formControlName="createdAtTo" [monthNavigator]="true" [yearNavigator]="true"
+                            [readonlyInput]="true" yearRange="1980:2030"></p-calendar>
+            </li>
+            <li>
+                <label>Media Types</label>
+                <p-multiSelect [options]="lists.mediaTypes" formControlName="mediaTypes"></p-multiSelect>
+            </li>
+            <li>
+                <label>Statuses</label>
+                <p-multiSelect [options]="lists.statusTypes" formControlName="statuses"></p-multiSelect>
+            </li>
+            <li>
+                <label>Distributions</label>
+                <p-multiSelect [options]="lists.distributionTypes"
+                               formControlName="distributionProfiles"></p-multiSelect>
+            </li>
+        </ul>
     </form>
 
 </div>
