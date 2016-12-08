@@ -1,14 +1,13 @@
 import { Component, OnInit, OnDestroy,  Pipe, PipeTransform  } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { NgModel  } from '@angular/forms';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
-import { DataTable, MenuItem } from 'primeng/primeng';
+import { MenuItem } from 'primeng/primeng';
 
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
 import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
+import {RefineFiltersChangedArgs} from "./filters.component";
 
-import * as R from 'ramda';
 
 export interface Entry {
   id: string;
@@ -21,7 +20,7 @@ export interface Entry {
   status: string;
 }
 
-const requestFields = "id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status";
+const filterColumns = "id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status";
 const entriesSortAsc = 1;
 
 @Component({
@@ -41,7 +40,8 @@ export class EntriesComponent implements OnInit, OnDestroy {
     searchText : '',
     sortBy : 'createdAt',
     sortDirection : SortDirection.Desc,
-    distributionProfiles : []
+    distributionProfiles : [],
+    filterColumns : filterColumns
   };
 
   selectedEntries: any[] = [];
@@ -107,7 +107,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
     this._filterChanges = Observable.merge(refreshList$)
         .switchMap((values) => {
           this.loading = true;
-          return this.contentEntriesStore.filter(this.filter, requestFields);
+          return this.contentEntriesStore.filter(this.filter);
         })
         .subscribe(
             () => {
@@ -132,21 +132,25 @@ export class EntriesComponent implements OnInit, OnDestroy {
   }
 
 
-  categoriesChanged(values : any)
+  private categoriesChanged(data : number[])
   {
-    Object.assign(this.filter,values);
+    this.filter.categories = data;
 
     this.reload(true);
   }
 
-  additionalInfoChanged(values : any)
+  private refineFiltersChanged(data : RefineFiltersChangedArgs)
   {
-    Object.assign(this.filter,values);
+    this.filter.createdAtFrom = data.createdAtFrom;
+    this.filter.createdAtTo = data.createdAtTo;
+    this.filter.mediaTypes = data.mediaTypes;
+    this.filter.statuses = data.statuses;
+    this.filter.distributionProfiles = data.distributionProfiles;
 
     this.reload(true);
   }
 
-  metadataProfileFilterChanged(metadataProfileFilter : any)
+  private metadataProfileFilterChanged(metadataProfileFilter : any)
   {
     // TODO [kmc] - create advanced filter using the metadataProfileFilter object data
   }

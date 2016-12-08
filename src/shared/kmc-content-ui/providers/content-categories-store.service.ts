@@ -40,7 +40,6 @@ export class ContentCategoriesStore
 
     }
 
-
     public reloadCategories(ignoreCache: boolean = false) : Observable<boolean>
     {
 

@@ -1,7 +1,8 @@
 <div class="entries grid-noGutter">
 
   <div class="accordionHolder">
-      <kFiltersAccordion style="width: 300px" (categoriesChanged)="categoriesChanged($event)" (metadataProfileFilterChanged)="metadataProfileFilterChanged($event)"></kFiltersAccordion>
+      <!--<kFiltersAccordion style="width: 300px" (categoriesChanged)="categoriesChanged($event)" (metadataProfileFilterChanged)="metadataProfileFilterChanged($event)"></kFiltersAccordion>-->
+    <kFilters (refineFiltersChanged)="refineFiltersChanged($event)" (categoriesChanged)="categoriesChanged($event)"></kFilters>
   </div>
 
   <div class="entriesHolder grid-column-noGutter col-12">

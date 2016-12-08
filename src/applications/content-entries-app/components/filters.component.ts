@@ -1,52 +1,47 @@
-import { EventEmitter, Output, Input, Component, OnInit, OnDestroy, PipeTransform } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { EventEmitter, Output, Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
 
-import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
 import {FiltersContent} from './filters-content'
 
 
-export interface Entry {
-    id: string;
-    name: string;
-    thumbnailUrl: string;
-    mediaType: string;
-    plays: string;
-    createdAt: string;
-    duration: string;
-    status: string;
+export interface RefineFiltersChangedArgs
+{
+    createdAtFrom? : Date;
+    createdAtTo? : Date;
+    mediaTypes? : number[];
+    statuses? : number[];
+    distributionProfiles? : number[];
 }
 
 @Component({
-    selector: 'kmc-filters',
+    selector: 'kFilters',
     templateUrl: './filters.component.html',
     styleUrls: ['./filters.component.scss'],
 })
 export class FiltersComponent implements OnInit, OnDestroy {
 
-    additionalForm : FormGroup;
+    refineForm : FormGroup;
     categoriesForm : FormGroup;
 
     @Output()
-    categoriesChanged = new EventEmitter<any>();
+    categoriesChanged = new EventEmitter<number[]>();
 
     @Output()
-    additionalInfoChanged = new EventEmitter<any>();
+    refineFiltersChanged = new EventEmitter<RefineFiltersChangedArgs>();
 
     lists : any = {};
 
     constructor(private formBuilder: FormBuilder,
-                public contentEntriesStore : ContentEntriesStore) {
+                ) {
         this.categoriesForm = this.formBuilder.group({
-            categoriesIdsMatchOr : [],
-            createdAtLessThanOrEqual : [],
-            createdAtGreaterThanOrEqual : []
+            categories : []
         })
 
-        this.additionalForm = this.formBuilder.group({
-            mediaTypeIn : [],
-            statusIn : [],
+        this.refineForm = this.formBuilder.group({
+            createdAtFrom : [],
+            createdAtTo : [],
+            mediaTypes : [],
+            statuses : [],
             distributionProfiles : []
         });
 
@@ -66,12 +61,12 @@ export class FiltersComponent implements OnInit, OnDestroy {
     {
         this.categoriesForm.valueChanges.debounceTime(500).subscribe(
             value =>{
-               this.categoriesChanged.emit(this.categoriesForm.value);
+                this.categoriesChanged.emit(this.categoriesForm.value.categories.split(','));
             });
 
-        this.additionalForm.valueChanges.debounceTime(500).subscribe(
+        this.refineForm.valueChanges.debounceTime(500).subscribe(
             value =>{
-               this.additionalInfoChanged.emit(this.additionalForm.value);
+               this.refineFiltersChanged.emit(this.refineForm.value);
             });
     }
 
