@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.1.0-alpha",
+  "version": "0.0.0",
   "license": "AGPL-3.0",
   "scripts": {
     "build:dev": "webpack --config config/webpack.dev.js --progress --profile",
@@ -59,7 +59,7 @@
     "@angular/platform-browser": "~2.0.2",
     "@angular/platform-browser-dynamic": "~2.0.2",
     "@angular/router": "~3.0.2",
-    "@kaltura-ng2/kaltura-api": "~0.0.2",
+    "@kaltura-ng2/kaltura-api": "0.1.0-alpha",
     "@kaltura-ng2/kaltura-common": "~0.0.2",
     "@kaltura-ng2/kaltura-ui": "~0.0.2",
     "core-js": "^2.4.1",
