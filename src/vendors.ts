@@ -32,7 +32,3 @@ import 'jquery';
 import 'moment';
 import 'ramda';
 import 'ng2-webstorage';
-
-import '@kaltura-ng2/kaltura-api';
-import '@kaltura-ng2/kaltura-common';
-

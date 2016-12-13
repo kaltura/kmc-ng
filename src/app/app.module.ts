@@ -6,9 +6,8 @@ import { CommonModule } from '@angular/common';
 import { Ng2Webstorage } from 'ng2-webstorage';
 
 import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType, KalturaCommonModule, AppStorage } from '@kaltura-ng2/kaltura-common';
-import { ButtonModule, InputTextModule} from 'primeng/primeng';
+import {  KalturaApiModule, KalturaHttpConfiguration, KalturaHttpPostClient,  KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 
-import { KalturaApiModule } from '@kaltura-ng2/kaltura-api';
 import { BrowserService, KMCShellModule } from 'kmc-shell';
 
 import { AppComponent } from './app.component';
@@ -27,6 +26,10 @@ import { LoginComponent } from './components/login/login.component';
 import { ErrorComponent } from './components/error/error.component';
 import { UploadComponent } from './components/upload/upload.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
+import {KalturaHttpConfigurationAdapter} from "./services/kaltura-http-configuration-adapter.service";
+
+import { ButtonModule, InputTextModule} from 'primeng/primeng';
+
 import { KMCContentUIModule } from 'kmc-content-ui/kmc-content-ui.module';
 
 
@@ -36,18 +39,20 @@ if (process.env.ENV === 'build') {
 }
 
 @NgModule({
-  imports: <any>[ routing,
-    ButtonModule,
-    InputTextModule,
+  imports: <any>[
+    routing,
     CommonModule,
     RouterModule.forRoot([]),
     KMCShellModule.forRoot(),
     BrowserModule,
     HttpModule,
-    KalturaCommonModule.forRoot(),
     KMCContentUIModule.forRoot(),
+    KalturaCommonModule.forRoot(),
     KalturaApiModule,
-    Ng2Webstorage,],       // module dependencies
+    Ng2Webstorage,
+    ButtonModule,
+    InputTextModule
+  ],       // module dependencies
   declarations: <any>[ AppComponent,
     DashboardComponent,
     AppMenuComponent,
@@ -63,7 +68,10 @@ if (process.env.ENV === 'build') {
     GetBootstrapProvider(KalturaAPIConfigAdapter),
     GetBootstrapProvider(KalturaLocalizationAdapter),
     GetBootstrapProvider(KalturaAuthConfigAdapter),
+    GetBootstrapProvider(KalturaHttpConfigurationAdapter  ),
     AppDefaultConfig,
+    { provide :KalturaServerClient, useClass : KalturaHttpPostClient},
+      KalturaHttpConfiguration,
     { provide : AppStorage,  useExisting : BrowserService }
   ]
 })

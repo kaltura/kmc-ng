@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { KalturaAPIClient } from '@kaltura-ng2/kaltura-api';
-
-import { BaseEntryService } from '@kaltura-ng2/kaltura-api/base-entry';
 
 export interface Playlist{
   id: string;
@@ -27,7 +24,7 @@ export class PlaylistsComponent implements OnInit {
 
   playlists: Playlist[];
 
-  constructor(private formBuilder: FormBuilder, private kalturaAPIClient : KalturaAPIClient) {
+  constructor(private formBuilder: FormBuilder) {
     this.searchForm = formBuilder.group({
       'search': ['', Validators.required]
     });
@@ -43,21 +40,11 @@ export class PlaylistsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.playlists$ = this.searchForm.controls['search'].valueChanges
-      .startWith('')
-      .debounceTime(500)
-      .switchMap(value =>
-          BaseEntryService.list(value, this.filter, this.responseProfile)
-          .execute(this.kalturaAPIClient)
-          .map(response => response.objects));
 
-    this.sub = this.playlists$.subscribe((entries) => {
-      this.playlists = entries;
-    });
   }
 
   ngOnDestroy(){
-    this.sub.unsubscribe();
+
   }
 
   onActionSelected(action, entryID){
@@ -65,16 +52,10 @@ export class PlaylistsComponent implements OnInit {
   }
 
   refresh(){
-    this.playlists = [];
-    this.sub.unsubscribe();
-    this.sub = this.playlists$.subscribe((playlists) => {
-      this.playlists = playlists;
-    });
+
   }
 
   sort(event) {
-    let sortOrder = event.order === 1 ? "+" : "-";
-    this.filter.orderBy = sortOrder + event.field;
-    this.refresh();
+
   }
 }

@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-import { KalturaAPIClient } from '@kaltura-ng2/kaltura-api';
-import { MetadataProfileService, KalturaMetadataProfileFilter, KalturaDetachedResponseProfile } from '@kaltura-ng2/kaltura-api/metadata-profile';
+import {KalturaServerClient} from '@kaltura-ng2/kaltura-api';
+import { MetadataProfileListAction } from '@kaltura-ng2/kaltura-api/services/metadata-profile';
+import { KalturaMetadataProfileFilter, KalturaDetachedResponseProfile, KalturaResponseProfileType} from '@kaltura-ng2/kaltura-api/types'
 
 import * as R from 'ramda';
 
@@ -38,24 +39,21 @@ export class ContentMetadataProfilesStore
     private _metadata_profiles: BehaviorSubject<MetadataProfiles> = new BehaviorSubject({items: [], filters: [], loaded: false, status: ''});
     public metadata_profiles$: Observable<MetadataProfiles> = this._metadata_profiles.asObservable();
 
-    constructor(private kalturaAPIClient : KalturaAPIClient) {
+    constructor(private kalturaServerClient :KalturaServerClient) {
 
     }
 
 
     public reloadMetadataProfiles(ignoreCache: boolean = false) : Observable<boolean>
     {
-        let filter, responseProfile;
-
-        filter = new KalturaMetadataProfileFilter();
+        const filter = new KalturaMetadataProfileFilter();
         Object.assign(filter, {orderBy : '+name', createModeNotEqual: 3, metadataObjectTypeEqual: '1'});
 
-        responseProfile = new KalturaDetachedResponseProfile();
-        Object.assign(responseProfile, {
-          "objectType": "KalturaDetachedResponseProfile",
-          "type": "1",
-          "fields": "id,name,xsd,views"
-        });
+        const responseProfile = new KalturaDetachedResponseProfile()
+          .setData( data => {
+            data.fields = "id,name,xsd,views";
+            data.type = KalturaResponseProfileType.IncludeFields;
+          });
 
         const metadata_profiles = this._metadata_profiles.getValue();
 
@@ -63,8 +61,9 @@ export class ContentMetadataProfilesStore
         this._metadata_profiles.next({items: [], filters: [], loaded: false, status: ''});
 
         return Observable.create(observe => {
-          MetadataProfileService.list(filter, responseProfile)
-            .execute(this.kalturaAPIClient)
+          this.kalturaServerClient.request(
+            new MetadataProfileListAction({filter, responseProfile})
+          )
             .map((response: any) => {
               if (response && response.objects){
                 return response.objects;

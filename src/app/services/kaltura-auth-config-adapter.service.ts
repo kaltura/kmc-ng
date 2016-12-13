@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BootstrapAdapter, BootstrapAdapterType, AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
-import { KalturaApiModule } from '@kaltura-ng2/kaltura-api';
-import { KalturaAPIConfig } from '@kaltura-ng2/kaltura-api';
 import { AppDefaultConfig } from "./app-default-config.service";
 
 

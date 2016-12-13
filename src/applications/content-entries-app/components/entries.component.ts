@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy,  Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit, OnDestroy,  Pipe, PipeTransform  } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
@@ -6,8 +6,8 @@ import { MenuItem } from 'primeng/primeng';
 
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
 import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
+import {RefineFiltersChangedArgs} from "./filters.component";
 
-import * as R from 'ramda';
 
 export interface Entry {
   id: string;
@@ -19,6 +19,9 @@ export interface Entry {
   duration: string;
   status: string;
 }
+
+const filterColumns = "id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status";
+const entriesSortAsc = 1;
 
 @Component({
   selector: 'kmc-entries',
@@ -36,7 +39,9 @@ export class EntriesComponent implements OnInit, OnDestroy {
     pageSize : 50,
     searchText : '',
     sortBy : 'createdAt',
-    sortDirection : SortDirection.Desc
+    sortDirection : SortDirection.Desc,
+    distributionProfiles : [],
+    filterColumns : filterColumns
   };
 
   selectedEntries: any[] = [];
@@ -60,7 +65,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
   }
 
   onSortChanged(event) {
-    this.filter.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
+    this.filter.sortDirection = event.order === entriesSortAsc ? SortDirection.Asc : SortDirection.Desc;
     this.filter.sortBy = event.field;
     this.reload();
   }
@@ -127,21 +132,25 @@ export class EntriesComponent implements OnInit, OnDestroy {
   }
 
 
-  categoriesChanged(values : any)
+  private categoriesChanged(data : number[])
   {
-    Object.assign(this.filter,values);
-    console.log(values);
+    this.filter.categories = data;
+
     this.reload(true);
   }
 
-  additionalInfoChanged(values : any)
+  private refineFiltersChanged(data : RefineFiltersChangedArgs)
   {
-    Object.assign(this.filter,values);
-    console.log(values);
+    this.filter.createdAtFrom = data.createdAtFrom;
+    this.filter.createdAtTo = data.createdAtTo;
+    this.filter.mediaTypes = data.mediaTypes;
+    this.filter.statuses = data.statuses;
+    this.filter.distributionProfiles = data.distributionProfiles;
+
     this.reload(true);
   }
 
-  metadataProfileFilterChanged(metadataProfileFilter : any)
+  private metadataProfileFilterChanged(metadataProfileFilter : any)
   {
     // TODO [kmc] - create advanced filter using the metadataProfileFilter object data
   }

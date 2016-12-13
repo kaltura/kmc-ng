@@ -152,13 +152,13 @@ It's simple, just install the lib via npm and import it in your code when you ne
 
 ### How to include external css files such as bootstrap.css ?
 
-Just install the lib and import the css files in `src/theme.ts`. For example this is how to do it with bootstrap:
+Just install the lib and import the css files in `src/vendor.ts`. For example this is how to do it with bootstrap:
 
 ```sh
 npm install bootstrap@4.0.0 --save
 ```
 
-And in `src/theme.ts` add the following:
+And in `src/vendor.ts` add the following:
 
 ```ts
 import 'bootstrap/dist/css/bootstrap.css';
