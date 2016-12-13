@@ -16,8 +16,7 @@
 module.exports = {
   link: [
     /** <link> tags for favicons **/
-    { rel: "icon", type: "image/vnd.microsoft.icon",  href: "favicon.ico" },
-    { rel: "stylesheet", type: "text/css",  href: "https://cdn.jsdelivr.net/gridlex/2.2.4/gridlex.min.css" }
+    { rel: "icon", type: "image/vnd.microsoft.icon",  href: "favicon.ico" }
   ],
   meta: [
     { name: "robots", content: "index, follow" },

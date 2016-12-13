@@ -1,3 +1,22 @@
 $link: #1393FF;
 $linkHover: lighten($link, 10%);
 $appBkgColor: #EFEEEE;
+
+/* Application colors scheme */
+$borderColor: #cacaca;
+$appBkgColor: #EFEEEE;
+
+/* App menu colors */
+$menuBkgColor: #373535;
+$mainLinkColor: #A6A5A5;
+$mainLinkHoverBkg: #252525;
+$mainLinkHoverColor: #FFFFFF;
+$mainLinkActiveColor: #FFFFFF;
+$subLinkColor: #808080;
+$subLinkActiveColor: #000000;
+$uploadLinkActiveColor: #F1F6FD;
+$widgetLinkColor: #59A3B5;
+
+$appMenuHeight: 50px;
+$contentArea: calc(100vh - 100px);
+
