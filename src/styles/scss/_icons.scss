@@ -1,9 +1,10 @@
 @import '../fonts/kmcng-icon-pack/style.scss';
 
-.fa
-{
-    font-family: 'KMCng-icon-pack' !important;
-}
-.fa-unsorted:before, .fa-sort:before {
-    @extend .kIconrefresh_small:before;
+.kUseKMCngIcons {
+    .fa {
+        font-family: 'KMCng-icon-pack' !important;
+    }
+    .fa-unsorted:before, .fa-sort:before {
+        @extend .kIconrefresh_small:before;
+    }
 }
