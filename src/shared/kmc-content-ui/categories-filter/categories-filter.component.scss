@@ -1,1 +1,21 @@
-
+.nodeLabel{
+    width:100%;
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 5px;
+}
+.numChildren{
+    color: #9c9c9c;
+    margin-left: 10px;
+}
+.clearAll{
+    margin-top: 10px;
+}
+.allCategories{
+    color: #9c9c9c;
+}
+a.disabled{
+    pointer-events: none;
+    cursor: not-allowed;
+    color: #cacaca;
+}
