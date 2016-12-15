@@ -14,7 +14,7 @@
         <form [formGroup]="searchForm">
           <input type="text" pInputText formControlName="searchText" (onenter)="freetextValue = $event.target.value" (keyup.enter)="onFreetextChanged()" placeholder="Search Entries">
         </form>
-        <button style="float: right; margin-top: 12px; margin-right: 8px" pButton type="text" (click)="reload()" icon="fa-refresh" label="Refresh" title="Refresh"></button>
+        <button style="float: right; margin-top: 12px; margin-right: 8px" pButton class="kButtonDefault small" type="text" (click)="reload()" icon="fa-refresh" label="Refresh" title="Refresh"></button>
       </div>
       <div *ngIf="showTags" class="tags">
         <div style="height: 20px; background-color: #cacaca; border: 1px solid grey; border-radius: 15px; width: 100px; margin-top: 10px; margin-left: 10px; text-align: center; padding: 5px">Filter 1</div>
@@ -23,7 +23,7 @@
       <kEntriesTable class="entriesTable grid-column-noGutter col" [entries]="(contentEntriesStore.entries$ | async)?.items" [filter]="filter" [(selectedEntries)]="selectedEntries" [loading]="loading" (sortChanged)="onSortChanged($event)" (actionSelected)="onActionSelected($event)"></kEntriesTable>
 
       <div class="footer col-12" #footer>
-        <button class="bulkActions" [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>
+        <!--<button class="bulkActions kButtonDefault small" [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>-->
         <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChanged($event)" [first]="filter.pageIndex * filter.pageSize" [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount" [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
       </div>
     <p-tieredMenu #menu [model]="bulkActionsMenu" [popup]="true" [styleClass]="menu"></p-tieredMenu>

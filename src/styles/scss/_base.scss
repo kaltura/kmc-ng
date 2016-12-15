@@ -1,0 +1,32 @@
+body {
+  background:#cacaca;
+  overflow: hidden;
+  font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  margin: 0;
+}
+
+label{
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.link{
+    font-size: 15px;
+    color: $kGrayscale1;
+    text-decoration: underline;
+    cursor: pointer;
+    &:hover{
+      color: darken($kGrayscale1, 20%);
+    }
+    &:active{
+        color: $kTertiary;
+    }
+    &:disabled{
+        cursor: none;
+        color: $kGrayscale4;
+    }
+    text-overflow: ellipsis;
+}
+a{
+    @extend .link;
+}

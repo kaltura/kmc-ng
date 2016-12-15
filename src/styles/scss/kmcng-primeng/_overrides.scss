@@ -1,0 +1,166 @@
+/* buttons */
+.ui-button{
+    font-weight: 700;
+    border-radius: 4px;
+}
+.ui-button-text-icon-left .ui-button-text {
+    padding: 0em 1em .3em 2.1em;
+}
+.disabled{
+    color: $kGrayscale4;
+    background: transparent;
+    border: 1px solid $kGrayscale4;
+    cursor: none;
+}
+.large{
+    font-size: 16px;
+    padding: 16px;
+    min-width: 200px;
+    height: 48px;
+}
+.small{
+    font-size: 15px;
+    padding: 8px;
+    min-width: 100px;
+    height: 34px;
+}
+.ui-button.kButtonBranded {
+    &.ui-state-default{
+        color: #ffffff;
+        background: $kPrimary;
+    }
+    &.ui-state-hover{
+        background: darken($kPrimary, 20%);
+    }
+    &.ui-state-active{
+        box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
+    }
+    &.ui-state-default:disabled{
+        color: $kGrayscale4;
+        background: transparent;
+        border: 1px solid $kGrayscale4;
+        cursor: none;
+    }
+    &.large{
+        @extend .large;
+    }
+    &.small{
+        @extend .small;
+    }
+}
+
+.ui-button.kButtonDefault {
+    &.ui-state-default{
+        color: $kGrayscale1;
+        background: #ffffff;
+        border: 1px solid $kGrayscale1;
+    }
+    &.ui-state-hover{
+        color: $kPrimary;
+    }
+    &.ui-state-active{
+        box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
+    }
+    &.ui-state-default:disabled{
+        @extend .disabled;
+    }
+    &.large{
+        @extend .large;
+    }
+    &.small{
+        @extend .small;
+    }
+}
+
+.ui-button.kButtonDanger {
+    &.ui-state-default{
+        color: #ffffff;
+        background: $kDandger;
+    }
+    &.ui-state-hover{
+        background: darken($kDandger, 20%);
+    }
+    &.ui-state-active{
+        box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
+    }
+    &.ui-state-default:disabled{
+        @extend .disabled;
+    }
+    &.large{
+        @extend .large;
+    }
+    &.small{
+        @extend .small;
+    }
+}
+
+/* links */
+.ui-widget-content a {
+    @extend .link;
+}
+
+/* dropdown */
+.ui-multiselect-label-container{
+    color: $kGrayscale1;
+    .ui-state-hover{
+        color: $kPrimary;
+    }
+}
+
+/* data table */
+.ui-datatable thead th, .ui-datatable tfoot td, .ui-datatable tbody td {
+    border-left: none;
+    border-right: none;
+}
+.ui-datatable th.ui-state-default{
+    text-align: left;
+}
+.ui-datatable tbody > tr.ui-widget-content {
+    height: 70px;
+}
+.ui-datatable th.ui-state-default{
+    border: none;
+    background: transparent;
+}
+.ui-widget-header.ui-datatable-scrollable-header{
+    background: transparent;
+    height: 26px;
+    padding-top: 4px;
+}
+.ui-datatable th.ui-state-default{
+    font-size: 13px;
+    font-weight: 400;
+    color: $kGrayscale3;
+    text-overflow: ellipsis;
+}
+.ui-datatable th.ui-state-active {
+    color: $kGrayscale1;
+}
+.ui-datatable .ui-cell-data{
+    font-size: 15px;
+    font-weight: 700;
+    color: $kGrayscale3;
+    text-overflow: ellipsis;
+}
+
+/* paginator */
+.ui-paginator.ui-widget-header.ui-unselectable-text{
+    background: transparent;
+    border: none;
+}
+.ui-paginator-page.ui-paginator-element.ui-state-default.ui-corner-all{
+    border-radius: 0px;
+}
+.ui-paginator .ui-paginator-pages, .ui-paginator .ui-paginator-page, .ui-paginator .ui-paginator-next, .ui-paginator .ui-paginator-prev, .ui-paginator .ui-paginator-first, .ui-paginator .ui-paginator-last{
+    margin-left: 0px;
+    margin-right: 0px;
+}
+.ui-paginator .ui-paginator-pages {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.ui-paginator .ui-paginator-rpp-options {
+    float: right;
+    margin-top: 4px;
+}

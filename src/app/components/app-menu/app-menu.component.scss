@@ -1,7 +1,9 @@
 @import '../../../styles/scss/_variables.scss';
+@import '../../styles/scss/kmc-logo';
 
 .appMenu{
   background-color: $menuBkgColor;
+  display: flex;
 
   a {
     color: $mainLinkColor;

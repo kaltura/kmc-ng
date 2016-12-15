@@ -1,0 +1,13 @@
+@import '../../../styles/scss/_variables';
+
+.kApplicationContainer
+{
+    width: 100%;
+    padding-left: $appContainerPadding;
+    padding-right: $appContainerPadding;
+
+    .kApplicationContent
+    {
+        width:calc(100vw - #{2*$appContainerPadding});
+    }
+}

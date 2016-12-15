@@ -1,39 +1,41 @@
 @import '~kmc-content-ui/styles/scss/_entry-types.scss';
 
-.kEntriesTable{
-  background-color: white;
-  overflow-y: hidden;
-  position: absolute;
-  img {
-    max-height: 100%;
-    max-width: 100%;
-    vertical-align: middle;
-  }
-  .thumbnailHolder {
-    width: 75px;
-    height: 50px;
-    background-color: black;
-    white-space: nowrap;
-    text-align: center;
-  }
-  .helper {
-    display: inline-block;
-    height: 100%;
-    vertical-align: middle;
-  }
-  .actionsBtn {
-    color: #fff;
-    background-color: #2399e5;
-    border-color: #1f89ce;
-  }
-  .actions{
-    width: 100%;
-    text-align: center;
-    button{
-      color: grey !important;
-      background-color: rgba(0,0,0,0) !important;
-      border: none !important;
-      font-size: 16px !important;
+.kEntriesTable {
+    background-color: white;
+    overflow-y: hidden;
+    position: absolute;
+    img {
+        max-height: 100%;
+        max-width: 100%;
+        vertical-align: middle;
+        border-radius: 3px;
     }
-  }
+    .thumbnailHolder {
+        width: 80px;
+        height: 46px;
+        background-color: black;
+        white-space: nowrap;
+        text-align: center;
+        border-radius: 3px;
+    }
+    .helper {
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+    }
+    .actionsBtn {
+        color: #fff;
+        background-color: #2399e5;
+        border-color: #1f89ce;
+    }
+    .actions {
+        width: 100%;
+        text-align: center;
+        button {
+            color: grey !important;
+            background-color: rgba(0, 0, 0, 0) !important;
+            border: none !important;
+            font-size: 16px !important;
+        }
+    }
 }

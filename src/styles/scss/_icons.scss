@@ -1,10 +1,10 @@
 @import '../fonts/kmcng-icon-pack/style.scss';
 
-.kUseKMCngIcons {
+.kUseKMCngIcons1 {
     .fa {
         font-family: 'KMCng-icon-pack' !important;
     }
-    .fa-unsorted:before, .fa-sort:before {
+    .fa-refresh:before {
         @extend .kIconrefresh_small:before;
     }
 }
