@@ -10,150 +10,150 @@ import {RefineFiltersChangedArgs} from "./filters.component";
 
 
 export interface Entry {
-  id: string;
-  name: string;
-  thumbnailUrl: string;
-  mediaType: string;
-  plays: string;
-  createdAt: string;
-  duration: string;
-  status: string;
+    id: string;
+    name: string;
+    thumbnailUrl: string;
+    mediaType: string;
+    plays: string;
+    createdAt: string;
+    duration: string;
+    status: string;
 }
 
 const filterColumns = "id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status";
 const entriesSortAsc = 1;
 
 @Component({
-  selector: 'kmc-entries',
-  templateUrl: './entries.component.html',
-  styleUrls: ['./entries.component.scss'],
-  providers : [ContentEntriesStore]
+    selector: 'kmc-entries',
+    templateUrl: './entries.component.html',
+    styleUrls: ['./entries.component.scss'],
+    providers : [ContentEntriesStore]
 })
 export class EntriesComponent implements OnInit, OnDestroy {
 
-  private _filterChanges : Subscription;
-  searchForm: FormGroup;
+    private _filterChanges : Subscription;
+    searchForm: FormGroup;
 
-  filter : FilterArgs = {
-    pageIndex : 0,
-    pageSize : 50,
-    searchText : '',
-    sortBy : 'createdAt',
-    sortDirection : SortDirection.Desc,
-    distributionProfiles : [],
-    filterColumns : filterColumns
-  };
+    filter : FilterArgs = {
+        pageIndex : 0,
+        pageSize : 50,
+        searchText : '',
+        sortBy : 'createdAt',
+        sortDirection : SortDirection.Desc,
+        distributionProfiles : [],
+        filterColumns : filterColumns
+    };
 
-  selectedEntries: any[] = [];
-  bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
+    selectedEntries: any[] = [];
+    bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
 
-  loading = false;
+    loading = false;
 
-  private refreshList = <Subject<boolean>>new Subject();
+    private refreshList = <Subject<boolean>>new Subject();
 
 
-  constructor(private formBuilder: FormBuilder, public contentEntriesStore : ContentEntriesStore) {
-    this.searchForm = this.formBuilder.group({
-      'searchText': []
-    });
-  }
-
-  onFreetextChanged() : void{
-    this.filter.pageIndex = 0;
-    this.filter.searchText = this.searchForm.value.searchText;
-    this.reload();
-  }
-
-  onSortChanged(event) {
-    this.filter.sortDirection = event.order === entriesSortAsc ? SortDirection.Asc : SortDirection.Desc;
-    this.filter.sortBy = event.field;
-    this.reload();
-  }
-
-  onPaginationChanged(state : any) : void{
-    this.filter.pageIndex = state.page;
-    this.filter.pageSize = state.rows;
-
-    this.reload();
-  }
-
-  reload(resetPagination : boolean = false) : void{
-    this.refreshList.next(resetPagination);
-  }
-
-  unsubscribeToFilterChanges() : void{
-    if (this._filterChanges) {
-      this._filterChanges.unsubscribe();
-      this._filterChanges = null;
+    constructor(private formBuilder: FormBuilder, public contentEntriesStore : ContentEntriesStore) {
+        this.searchForm = this.formBuilder.group({
+            'searchText': []
+        });
     }
-  }
 
-
-  subscribeToFilterChanges() : void{
-    // remove after PRD will be provided - currently we disabled automatic filtering while user type
-    //const searchText$ = this.searchForm.controls['searchText'].valueChanges
-    //    .debounceTime(500).do((value) =>{
-    //      this.filter.searchText = value;
-    //      this.filter.pageIndex = 0;
-    //    });
-
-    const refreshList$ = this.refreshList.do((resetPagination) =>{
-      if (resetPagination)
-      {
+    onFreetextChanged() : void{
         this.filter.pageIndex = 0;
-      }
-    });
+        this.filter.searchText = this.searchForm.value.searchText;
+        this.reload();
+    }
 
-    this._filterChanges = Observable.merge(refreshList$)
-        .switchMap((values) => {
-          this.loading = true;
-          return this.contentEntriesStore.filter(this.filter);
-        })
-        .subscribe(
-            () => {
-              this.loading = false;
-            },
-            (error) => {
-              this.loading = false;
-            });
-  }
+    onSortChanged(event) {
+        this.filter.sortDirection = event.order === entriesSortAsc ? SortDirection.Asc : SortDirection.Desc;
+        this.filter.sortBy = event.field;
+        this.reload();
+    }
 
-  ngOnInit() {
-    this.subscribeToFilterChanges();
-    this.reload();
-  }
+    onPaginationChanged(state : any) : void{
+        this.filter.pageIndex = state.page;
+        this.filter.pageSize = state.rows;
 
-  ngOnDestroy(){
-    this.unsubscribeToFilterChanges();
-  }
+        this.reload();
+    }
 
-  onActionSelected(event){
-    alert("Selected Action: "+event.action+"\nEntry ID: "+event.entryID);
-  }
+    reload(resetPagination : boolean = false) : void{
+        this.refreshList.next(resetPagination);
+    }
+
+    unsubscribeToFilterChanges() : void{
+        if (this._filterChanges) {
+            this._filterChanges.unsubscribe();
+            this._filterChanges = null;
+        }
+    }
 
 
-  private categoriesChanged(data : number[])
-  {
-    this.filter.categories = data;
+    subscribeToFilterChanges() : void{
+        // remove after PRD will be provided - currently we disabled automatic filtering while user type
+        //const searchText$ = this.searchForm.controls['searchText'].valueChanges
+        //    .debounceTime(500).do((value) =>{
+        //      this.filter.searchText = value;
+        //      this.filter.pageIndex = 0;
+        //    });
 
-    this.reload(true);
-  }
+        const refreshList$ = this.refreshList.do((resetPagination) =>{
+            if (resetPagination)
+            {
+                this.filter.pageIndex = 0;
+            }
+        });
 
-  private refineFiltersChanged(data : RefineFiltersChangedArgs)
-  {
-    this.filter.createdAtFrom = data.createdAtFrom;
-    this.filter.createdAtTo = data.createdAtTo;
-    this.filter.mediaTypes = data.mediaTypes;
-    this.filter.statuses = data.statuses;
-    this.filter.distributionProfiles = data.distributionProfiles;
+        this._filterChanges = Observable.merge(refreshList$)
+            .switchMap((values) => {
+                this.loading = true;
+                return this.contentEntriesStore.filter(this.filter);
+            })
+            .subscribe(
+                () => {
+                    this.loading = false;
+                },
+                (error) => {
+                    this.loading = false;
+                });
+    }
 
-    this.reload(true);
-  }
+    ngOnInit() {
+        this.subscribeToFilterChanges();
+        this.reload();
+    }
 
-  private metadataProfileFilterChanged(metadataProfileFilter : any)
-  {
-    // TODO [kmc] - create advanced filter using the metadataProfileFilter object data
-  }
+    ngOnDestroy(){
+        this.unsubscribeToFilterChanges();
+    }
+
+    onActionSelected(event){
+        alert("Selected Action: "+event.action+"\nEntry ID: "+event.entryID);
+    }
+
+
+    private categoriesChanged(data : number[])
+    {
+        this.filter.categories = data;
+
+        this.reload(true);
+    }
+
+    private refineFiltersChanged(data : RefineFiltersChangedArgs)
+    {
+        this.filter.createdAtFrom = data.createdAtFrom;
+        this.filter.createdAtTo = data.createdAtTo;
+        this.filter.mediaTypes = data.mediaTypes;
+        this.filter.statuses = data.statuses;
+        this.filter.distributionProfiles = data.distributionProfiles;
+
+        this.reload(true);
+    }
+
+    private metadataProfileFilterChanged(metadataProfileFilter : any)
+    {
+        // TODO [kmc] - create advanced filter using the metadataProfileFilter object data
+    }
 
 }
 
