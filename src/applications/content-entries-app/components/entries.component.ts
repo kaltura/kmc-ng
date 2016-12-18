@@ -1,13 +1,18 @@
 import { Component, OnInit, OnDestroy,  Pipe, PipeTransform  } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
 
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
 import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
 import {RefineFiltersChangedArgs} from "./filters.component";
 
+
+import {KalturaServerClient} from '@kaltura-ng2/kaltura-api';
+import {BaseEntryListAction} from '@kaltura-ng2/kaltura-api/services/base-entry';
+import {KalturaDetachedResponseProfile,
+        KalturaMediaEntryFilter,
+        KalturaResponseProfileType,
+        KalturaFilterPager} from '@kaltura-ng2/kaltura-api/types';
 
 export interface Entry {
   id: string;
@@ -29,131 +34,135 @@ const entriesSortAsc = 1;
   styleUrls: ['./entries.component.scss'],
   providers : [ContentEntriesStore]
 })
+
 export class EntriesComponent implements OnInit, OnDestroy {
 
-  private _filterChanges : Subscription;
-  searchForm: FormGroup;
 
-  filter : FilterArgs = {
-    pageIndex : 0,
-    pageSize : 50,
-    searchText : '',
-    sortBy : 'createdAt',
-    sortDirection : SortDirection.Desc,
-    distributionProfiles : [],
-    filterColumns : filterColumns
-  };
+    searchForm: FormGroup;
 
-  selectedEntries: any[] = [];
-  bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
+    filter: FilterArgs = {
+        pageIndex: 0,
+        pageSize: 50,
+        searchText: '',
+        sortBy: 'createdAt',
+        sortDirection: SortDirection.Desc,
+        distributionProfiles: [],
+        filterColumns: filterColumns
+    };
 
-  loading = false;
+    selectedEntries: any[] = [];
+    bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
 
-  private refreshList = <Subject<boolean>>new Subject();
+    loading = false;
 
+    constructor(private kalturaClient: KalturaServerClient, private formBuilder: FormBuilder, public contentEntriesStore: ContentEntriesStore) {
+        this.searchForm = this.formBuilder.group({
+            'searchText': []
+        });
 
-  constructor(private formBuilder: FormBuilder, public contentEntriesStore : ContentEntriesStore) {
-    this.searchForm = this.formBuilder.group({
-      'searchText': []
-    });
-  }
-
-  onFreetextChanged() : void{
-    this.filter.pageIndex = 0;
-    this.filter.searchText = this.searchForm.value.searchText;
-    this.reload();
-  }
-
-  onSortChanged(event) {
-    this.filter.sortDirection = event.order === entriesSortAsc ? SortDirection.Asc : SortDirection.Desc;
-    this.filter.sortBy = event.field;
-    this.reload();
-  }
-
-  onPaginationChanged(state : any) : void{
-    this.filter.pageIndex = state.page;
-    this.filter.pageSize = state.rows;
-
-    this.reload();
-  }
-
-  reload(resetPagination : boolean = false) : void{
-    this.refreshList.next(resetPagination);
-  }
-
-  unsubscribeToFilterChanges() : void{
-    if (this._filterChanges) {
-      this._filterChanges.unsubscribe();
-      this._filterChanges = null;
+        this.getEntries({
+            pageSize : 5,
+            pageIndex : 0,
+            searchText : 'weird search text',
+            filterColumns: 'id,name,thumbnailUrl,mediaType,plays,createdAt'
+        });
     }
-  }
 
+    private getEntries(filterArgs: any = {}): void {
 
-  subscribeToFilterChanges() : void{
-    // remove after PRD will be provided - currently we disabled automatic filtering while user type
-    //const searchText$ = this.searchForm.controls['searchText'].valueChanges
-    //    .debounceTime(500).do((value) =>{
-    //      this.filter.searchText = value;
-    //      this.filter.pageIndex = 0;
-    //    });
+        let filter: KalturaMediaEntryFilter, pager, responseProfile;
 
-    const refreshList$ = this.refreshList.do((resetPagination) =>{
-      if (resetPagination)
-      {
+        // build baseEntry > List > Filter object
+        filter = new KalturaMediaEntryFilter();
+        filter.orderBy = '+createdAt';
+        filter.createdAtGreaterThanOrEqual = filterArgs.createdAtFrom;
+        filter.freeText = filterArgs.searchText;
+
+        // build baseEntry > List > pager object
+        pager = new KalturaFilterPager();
+        pager.pageSize = filterArgs.pageSize;
+        pager.pageIndex = filterArgs.pageIndex;
+
+        // build baseEntry > List > response profile object
+        if (filterArgs.filterColumns) {
+            responseProfile = new KalturaDetachedResponseProfile();
+            responseProfile.type = KalturaResponseProfileType.IncludeFields;
+            responseProfile.fields = filterArgs.filterColumns;
+        }
+
+        this.kalturaClient.request(
+            new BaseEntryListAction({filter, pager, responseProfile})
+        ).subscribe(
+            response => {
+                if (response.error) {
+                    // handle error
+                    console.log(response.error.message);
+                } else {
+                    console.log(`Got ${response.result.objects.length}  out of  ${response.result.totalCount} items`);
+                }
+            }
+        );
+    }
+
+    onFreetextChanged(): void {
         this.filter.pageIndex = 0;
-      }
-    });
+        this.filter.searchText = this.searchForm.value.searchText;
+        this.reload();
+    }
 
-    this._filterChanges = Observable.merge(refreshList$)
-        .switchMap((values) => {
-          this.loading = true;
-          return this.contentEntriesStore.filter(this.filter);
-        })
-        .subscribe(
-            () => {
-              this.loading = false;
-            },
-            (error) => {
-              this.loading = false;
-            });
-  }
+    onSortChanged(event) {
+        this.filter.sortDirection = event.order === entriesSortAsc ? SortDirection.Asc : SortDirection.Desc;
+        this.filter.sortBy = event.field;
+        this.reload();
+    }
 
-  ngOnInit() {
-    this.subscribeToFilterChanges();
-    this.reload();
-  }
+    onPaginationChanged(state: any): void {
+        this.filter.pageIndex = state.page;
+        this.filter.pageSize = state.rows;
 
-  ngOnDestroy(){
-    this.unsubscribeToFilterChanges();
-  }
+        this.reload();
+    }
 
-  onActionSelected(event){
-    alert("Selected Action: "+event.action+"\nEntry ID: "+event.entryID);
-  }
+    reload(resetPagination: boolean = false): void {
+        if (resetPagination) {
+            this.filter.pageIndex = 0;
+        }
+
+        return this.contentEntriesStore.reload(this.filter);
+    }
 
 
-  private categoriesChanged(data : number[])
-  {
-    this.filter.categories = data;
+    ngOnInit() {
+        this.reload();
+    }
 
-    this.reload(true);
-  }
+    ngOnDestroy() {
+    }
 
-  private refineFiltersChanged(data : RefineFiltersChangedArgs)
-  {
-    this.filter.createdAtFrom = data.createdAtFrom;
-    this.filter.createdAtTo = data.createdAtTo;
-    this.filter.mediaTypes = data.mediaTypes;
-    this.filter.statuses = data.statuses;
-    this.filter.distributionProfiles = data.distributionProfiles;
+    onActionSelected(event) {
+        alert("Selected Action: " + event.action + "\nEntry ID: " + event.entryID);
+    }
 
-    this.reload(true);
-  }
 
-  private metadataProfileFilterChanged(metadataProfileFilter : any)
-  {
-    // TODO [kmc] - create advanced filter using the metadataProfileFilter object data
-  }
+    private categoriesChanged(data: number[]) {
+        this.filter.categories = data;
+
+        this.reload(true);
+    }
+
+    private refineFiltersChanged(data: RefineFiltersChangedArgs) {
+        this.filter.createdAtFrom = data.createdAtFrom;
+        this.filter.createdAtTo = data.createdAtTo;
+        this.filter.mediaTypes = data.mediaTypes;
+        this.filter.statuses = data.statuses;
+        this.filter.distributionProfiles = data.distributionProfiles;
+
+        this.reload(true);
+    }
+
+    private metadataProfileFilterChanged(metadataProfileFilter: any) {
+        // TODO [kmc] - create advanced filter using the metadataProfileFilter object data
+    }
 
 }
 

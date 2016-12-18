@@ -12,7 +12,7 @@
           <span *ngIf="selectedEntries.length" style="font-weight: bold"> * {{selectedEntries.length}} Selected</span>
         </div>
         <form [formGroup]="searchForm">
-          <input type="text" pInputText formControlName="searchText" (onenter)="freetextValue = $event.target.value" (keyup.enter)="onFreetextChanged()" placeholder="Search Entries">
+          <input type="text" pInputText formControlName="searchText"  (keyup.enter)="onFreetextChanged()" placeholder="Search Entries">
         </form>
         <button style="float: right; margin-top: 12px; margin-right: 8px" pButton type="text" (click)="reload()" icon="fa-refresh" label="Refresh" title="Refresh"></button>
       </div>

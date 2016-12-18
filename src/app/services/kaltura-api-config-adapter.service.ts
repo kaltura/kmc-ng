@@ -16,7 +16,6 @@ export class KalturaAPIConfigAdapter implements BootstrapAdapter
       const { apiUrl, apiVersion }  = this.appConfig.get("core.kaltura");
 
         this.httpConfiguration.endpointUrl = apiUrl;
-        this.httpConfiguration.apiVersion = apiVersion;
         this.httpConfiguration.clientTag = '';
     }
 }
