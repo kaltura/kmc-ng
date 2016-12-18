@@ -4,6 +4,7 @@
         <!--<kFiltersAccordion style="width: 300px" (categoriesChanged)="categoriesChanged($event)" (metadataProfileFilterChanged)="metadataProfileFilterChanged($event)"></kFiltersAccordion>-->
         <kFilters (refineFiltersChanged)="refineFiltersChanged($event)"
                   (categoriesChanged)="categoriesChanged($event)"></kFilters>
+        <kCategoriesFilter (categoriesChanged)="categoriesChanged($event)"></kCategoriesFilter>
     </div>
 
     <div class="kEntriesHolder grid-column-noGutter col-12">
