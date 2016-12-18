@@ -6,7 +6,7 @@
         <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
         <p-column field="thumbnailUrl" header="Thumbnail" [style]="{'width':'100px', 'text-align': 'center'}">
             <template let-col let-entry="rowData" pTemplate type="body">
-                <div class="thumbnailHolder"><span class="helper"></span><img src="{{entry[col.field]}}"></div>
+                <div class="kThumbnailHolder"><span class="kHelper"></span><img src="{{entry[col.field]}}"></div>
             </template>
         </p-column>
         <p-column field="name" header="Name" [sortable]="'custom'">
@@ -39,8 +39,8 @@
         </p-column>
         <p-column header="" [style]="{'overflow':'visible', 'width':'100px'}">
             <template let-col let-entry="rowData" pTemplate type="body">
-                <div class="actions">
-                    <button type="button" pButton icon="fa fa-ellipsis-h"
+                <div class="kEntriesTableActions">
+                    <button type="button" pButton icon="kIconmore"
                             (click)="openActionsMenu($event, entry.id)"></button>
                 </div>
             </template>

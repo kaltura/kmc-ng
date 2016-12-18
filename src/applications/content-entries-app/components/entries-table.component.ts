@@ -40,13 +40,13 @@ export class kEntriesTable implements AfterViewInit{
   buildMenu() : void
   {
     this.items = [
-      {label: 'Preview & Embed', icon: 'fa-code', command: (event) => {
+      {label: 'Preview & Embed', command: (event) => {
         this.onActionSelected("preview", this.actionsMenuEntryId);
       }},
-      {label: 'Delete', icon: 'fa-trash-o', command: (event) => {
+      {label: 'Delete', command: (event) => {
         this.onActionSelected("delete", this.actionsMenuEntryId);
       }},
-      {label: 'View Details', icon: 'fa-pencil-square-o', command: (event) => {
+      {label: 'View Details', command: (event) => {
         this.onActionSelected("view", this.actionsMenuEntryId);
       }}
     ];

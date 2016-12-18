@@ -1,74 +1,77 @@
 @import '../../../styles/scss/_variables.scss';
 
-.entries {
-  font-size: 13px;
-  background-color: $appBkgColor;
-  height: $contentArea;
-  width: 100%;
-  .entriesHolder {
+.kEntries {
+    font-size: 15px;
+    background-color: $appBkgColor;
+    height: $contentArea;
     width: 100%;
-    height: 100%;
-    background: #cacaca;
-    padding-left: 340px;
-    padding-right: 20px;
-    padding-top: 20px;
-  }
-  .refreshBtn {
-    text-align: right;
-  }
-  .headerFilters{
-    width: 100%;
-    height: 66px;
-    background-color: white;
-    flex: 0 0 auto;
-    display: table;
-    border: 1px solid $kGrayscale6;
-    border-bottom: none;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    form{
-      display: table-cell;
-      vertical-align: middle;
-      padding-left: 8px;
+    .kEntriesHolder {
+        width: 100%;
+        height: 100%;
+        background: #cacaca;
+        padding-left: 340px;
+        padding-right: 20px;
+        padding-top: 20px;
     }
-    div{
-      display: table-cell;
-      vertical-align: middle;
-      padding-left: 16px;
+    .kRefreshBtn {
+        margin-left: auto;
+        margin-right: 16px;
     }
-  }
-  .tags{
-    width: 100%;
-    height: 50px;
-    background-color: #f3f3f3;
-    border: 1px solid grey;
-    flex: 0 0 50px;
-  }
-  .accordionHolder{
-    width: 300px;
-    background-color: white;
-    position: absolute;
-    margin-top: 20px;
-    margin-left: 20px;
-    border: 1px solid grey;
-    border-radius: 5px;
-  }
-  .footer {
-    width: 100%;
-    height: 34px;
-    background-color: white;
-    border: 1px solid $kGrayscale6;
-    border-bottom: none;
-    border-top: none;
-  }
-  .bulkActions{
-    float: left;
-    margin-top: 2px;
-    margin-left: 5px;
-  }
-  .entriesTable{
-    border: 1px solid $kGrayscale6;
-    position: relative;
-  }
+    .kEntriesTableFilters {
+        width: 100%;
+        height: 66px;
+        background-color: white;
+        flex: 0 0 auto;
+        align-items: center;
+        padding-left: 16px;
+        border: 1px solid $kGrayscale6;
+        border-bottom: none;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        form {
+            display: table-cell;
+            vertical-align: middle;
+            padding-left: 8px;
+        }
+        div {
+            display: table-cell;
+            vertical-align: middle;
+            padding-left: 16px;
+        }
+    }
+    .kEntriesTableTags {
+        width: 100%;
+        height: 50px;
+        background-color: #f3f3f3;
+        border: 1px solid grey;
+        flex: 0 0 50px;
+    }
+    .accordionHolder {
+        width: 300px;
+        background-color: white;
+        position: absolute;
+        margin-top: 20px;
+        margin-left: 20px;
+        border: 1px solid grey;
+        border-radius: 5px;
+    }
+    .kEntriesTableFooter {
+        width: 100%;
+        height: 34px;
+        background-color: white;
+        border: 1px solid $kGrayscale6;
+        border-bottom: none;
+    }
+    .kEntriesTable {
+        border: none;
+        position: relative;
+    }
+    .kSelectedEntriesLabel{
+        font-weight: bold;
+        margin-right: 40px;
+    }
+    .kBulkOperations{
+        width: 300px;
+    }
 }
 

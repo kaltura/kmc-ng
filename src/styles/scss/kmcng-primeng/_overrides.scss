@@ -3,9 +3,6 @@
     font-weight: 700;
     border-radius: 4px;
 }
-.ui-button-text-icon-left .ui-button-text {
-    padding: 0em 1em .3em 2.1em;
-}
 .disabled{
     color: $kGrayscale4;
     background: transparent;
@@ -14,13 +11,11 @@
 }
 .large{
     font-size: 16px;
-    padding: 16px;
     min-width: 200px;
     height: 48px;
 }
 .small{
     font-size: 15px;
-    padding: 8px;
     min-width: 100px;
     height: 34px;
 }
@@ -48,12 +43,14 @@
         @extend .small;
     }
 }
-
+.ui-datatable-odd{
+    background-color: #ffffff;
+}
 .ui-button.kButtonDefault {
     &.ui-state-default{
         color: $kGrayscale1;
         background: #ffffff;
-        border: 1px solid $kGrayscale1;
+        border: 1px solid $kGrayscale4;
     }
     &.ui-state-hover{
         color: $kPrimary;
@@ -76,6 +73,7 @@
     &.ui-state-default{
         color: #ffffff;
         background: $kDandger;
+        border: 1px solid $kDandger;
     }
     &.ui-state-hover{
         background: darken($kDandger, 20%);
@@ -93,7 +91,12 @@
         @extend .small;
     }
 }
-
+.ui-button-icon-only .fa{
+    margin-left: -10px;
+}
+.ui-button span, button.ui-button.ui-state-default span, .ui-button.ui-state-default span.ui-button-icon-only .fa{
+    font-weight: 400;
+}
 /* links */
 .ui-widget-content a {
     @extend .link;
@@ -126,6 +129,8 @@
     background: transparent;
     height: 26px;
     padding-top: 4px;
+    border-left: none;
+    border-right: none;
 }
 .ui-datatable th.ui-state-default{
     font-size: 13px;
@@ -141,6 +146,13 @@
     font-weight: 700;
     color: $kGrayscale3;
     text-overflow: ellipsis;
+}
+.ui-state-highlight, .ui-widget-content .ui-state-highlight{
+    background-color: #ffffff;
+    border: 1px solid #d9d9d9;
+}
+.ui-datatable th.ui-state-default{
+    outline: none;
 }
 
 /* paginator */
@@ -163,4 +175,48 @@
 .ui-paginator .ui-paginator-rpp-options {
     float: right;
     margin-top: 4px;
+}
+
+/* menus */
+.ui-menu{
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.ui-tieredmenu.ui-menu{
+    width: 250px;
+}
+.ui-menu.ui-menu-dynamic, .ui-menu .ui-menu-child{
+    background: #ffffff;
+}
+.ui-menu a.ui-menuitem-link{
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 21px;
+    padding-left: 9px;
+    color: $kGrayscale1;
+    &:disabled{
+        color: $kGrayscale4;
+    }
+}
+.ui-menu a.ui-state-hover, .ui-menu .ui-menu-child a.ui-state-hover{
+    color: $kGrayscale1;
+    background-color: $kGrayscale7;
+    border: 1px solid $kGrayscale7;
+}
+.ui-menu .ui-menu-parent .ui-submenu-icon{
+    margin-top: 3px;
+}
+
+/* checkboxes */
+.ui-datatable .ui-selection-column .ui-chkbox-box{
+    width: 18px;
+    height: 18px;
+    border: 1px solid $kGrayscale4;
+    border-radius: 3px;
+}
+.ui-datatable .ui-selection-column .ui-chkbox-box.ui-state-active{
+    background-color: $kPrimary;
+    border: 1px solid $kPrimary;
 }
