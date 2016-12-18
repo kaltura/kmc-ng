@@ -16,16 +16,16 @@ export interface Categories{
 }
 
 export class Category {
-  id = "";
-  label = "";
-  parentId = "";
-  children = [];
+    id: number;
+    label = "";
+    parentId: number;
+    children: Category[] = [];
 
-  constructor(id: string, label: string, parentId: string){
-    this.id = id;
-    this.label = label;
-    this.parentId = parentId;
-  }
+    constructor(id: number, label: string, parentId: number){
+        this.id = id;
+        this.label = label;
+        this.parentId = parentId;
+    }
 }
 
 @Injectable()
@@ -40,7 +40,7 @@ export class ContentCategoriesStore
 
     }
 
-    public reloadCategories(ignoreCache: boolean = false) : Observable<boolean>
+    public reloadCategories(ignoreCache: boolean = false, parentNodeId: number = -1) : Observable<boolean>
     {
 
 
@@ -53,10 +53,13 @@ export class ContentCategoriesStore
 
         const filter = new KalturaCategoryFilter();
         filter.orderBy = '+name';
+          if (parentNodeId > -1){
+              Object.assign(filter, {parentIdEqual : parentNodeId});
+          }
 
         const responseProfile = new KalturaDetachedResponseProfile()
           .setData( data => {
-            data.fields = "id,name,xsd,views";
+            data.fields = "id,name,parentId,xsd,views";
             data.type = KalturaResponseProfileType.IncludeFields;
           });
 
@@ -66,8 +69,8 @@ export class ContentCategoriesStore
             new CategoryListAction({filter, responseProfile})
           )
             .map((response: any) => {
-              if (response && response.objects){
-                const categoriesData = this.buildCategoriesHyrarchy(response.objects);
+              if (response.result && response.result.objects){
+                const categoriesData = this.buildCategoriesHyrarchy(response.result.objects);
                 categoriesMap = categoriesData.categoriesMap;
                 return categoriesData.rootLevel;
               }else{
@@ -108,7 +111,7 @@ export class ContentCategoriesStore
     }, this);
 
     allCategories.forEach(function(category: Category) {
-      if (category.parentId == "0"){
+      if (category.parentId === 0){
         rootLevel.push(category);
       }else{
         categoriesMap[category.parentId].children.push(category);

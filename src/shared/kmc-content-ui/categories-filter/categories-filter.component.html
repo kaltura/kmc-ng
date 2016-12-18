@@ -1,8 +1,17 @@
-<div>
-  <!--pre style="height: 400px">{{categories | json}}</pre-->
-  <p-tree [value]="categories">
-    <template let-node  pTemplate type="default">
-      <input #cb type="checkbox" [(ngModel)]="categoriesSelectionMap[node.id]" (ngModelChange)="categorySelected(node.id, cb.checked)"><span style="margin-left: 6px">{{node.label}}</span><!--[indeterminate]="node.partialSelection"-->
-    </template>
-  </p-tree>
+<div style="padding: 20px; padding-bottom: 0px">
+
+    <p-autoComplete [(ngModel)]="currentSearch" [suggestions]="filteredSearchCategories" (completeMethod)="categorySearch($event)" field="label" placeholder="Search Categories" [minLength]="3" (onSelect)="categorySelected($event)"></p-autoComplete>
+
+    <p class="allCategories">ALL CATEGORIES {{searchCategories.length && !lazyLoading ? searchCategories.length : ''}}</p>
+    <p><span style="margin-right: 86px">Auto select children: </span><p-toggleButton [(ngModel)]="autoSelectChildren"></p-toggleButton></p>
+    <p-tree [autoSelectChildren]="autoSelectChildren" [value]="categories" selectionMode="checkbox" [(selection)]="selectedCategories" (onNodeSelect)="onCategorySelectionChange($event)" (onNodeUnselect)="onCategorySelectionChange($event)">
+        <template let-node  pTemplate type="default">
+            <span class="nodeLabel">{{node.label}}</span>
+            <span class="numChildren" *ngIf="node.children && node.children.length">{{node.children.length}}</span>
+        </template>
+    </p-tree>
+
+    <p>
+        <a class="clearAll" [class.disabled]="selectedCategories.length === 0" (click)="clearAll()">Clear all</a>
+    </p>
 </div>
