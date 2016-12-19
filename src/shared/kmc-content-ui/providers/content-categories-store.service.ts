@@ -114,7 +114,9 @@ export class ContentCategoriesStore
       if (category.parentId === 0){
         rootLevel.push(category);
       }else{
-        categoriesMap[category.parentId].children.push(category);
+        if (categoriesMap[category.parentId]) {
+            categoriesMap[category.parentId].children.push(category);
+        }
       }
     }, this);
 

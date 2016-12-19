@@ -25,7 +25,7 @@
         background: $kPrimary;
     }
     &.ui-state-hover{
-        background: darken($kPrimary, 20%);
+        background: darken($kPrimary, 10%);
     }
     &.ui-state-active{
         box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
@@ -76,7 +76,8 @@
         border: 1px solid $kDandger;
     }
     &.ui-state-hover{
-        background: darken($kDandger, 20%);
+        background: darken($kDandger, 10%);
+        border: 1px solid darken($kDandger, 10%);
     }
     &.ui-state-active{
         box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
@@ -111,7 +112,7 @@
 }
 
 /* data table */
-.ui-datatable thead th, .ui-datatable tfoot td, .ui-datatable tbody td {
+.ui-datatable thead th, .ui-datatable tfoot td, .ui-datatable tbody td, .ui-datatable-data.ui-widget-content {
     border-left: none;
     border-right: none;
 }
@@ -120,6 +121,11 @@
 }
 .ui-datatable tbody > tr.ui-widget-content {
     height: 70px;
+    border-left: none;
+    border-right: none;
+    &:first-child{
+        border-top: 1px solid #ffffff;
+    }
 }
 .ui-datatable th.ui-state-default{
     border: none;
@@ -154,7 +160,14 @@
 .ui-datatable th.ui-state-default{
     outline: none;
 }
-
+.ui-sortable-column-icon.fa.fa-fw.fa-sort{
+    visibility: hidden;
+    &.fa-sort-asc, &.fa-sort-desc{
+        font-size: 10px;
+        margin-left: 8px;
+        visibility: visible;
+    }
+}
 /* paginator */
 .ui-paginator.ui-widget-header.ui-unselectable-text{
     background: transparent;
@@ -176,7 +189,9 @@
     float: right;
     margin-top: 4px;
 }
-
+.ui-paginator-rpp-options.ui-widget.ui-state-default{
+    border: none;
+}
 /* menus */
 .ui-menu{
     padding-top: 6px;
@@ -206,7 +221,8 @@
     border: 1px solid $kGrayscale7;
 }
 .ui-menu .ui-menu-parent .ui-submenu-icon{
-    margin-top: 3px;
+    margin-top: 4px;
+    font-size: 11px;
 }
 
 /* checkboxes */
@@ -227,16 +243,12 @@
 }
 
 /* tree */
-.ui-treenode-content{
-    border-top: 1px solid $kGrayscale6;
-}
 .ui-tree .ui-tree-container{
     padding-left: 0px;
     padding-top: 0px;
 }
 .ui-tree.ui-widget.ui-widget-content.ui-corner-all.ui-tree-selectable{
     border: none;
-    border-bottom: 1px solid $kGrayscale6;
 }
 .ui-treenode-label.ui-corner-all.ui-state-hover{
     background-color: #ffffff;

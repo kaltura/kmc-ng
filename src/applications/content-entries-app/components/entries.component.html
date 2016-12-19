@@ -1,6 +1,6 @@
 <div class="kEntries grid-noGutter kUseKMCngIcons">
 
-    <div class="accordionHolder">
+    <div class="accordionHolder" style="display: none">
         <kCategoriesFilter (categoriesChanged)="categoriesChanged($event)"></kCategoriesFilter>
         <!--<kFiltersAccordion style="width: 300px" (categoriesChanged)="categoriesChanged($event)" (metadataProfileFilterChanged)="metadataProfileFilterChanged($event)"></kFiltersAccordion>-->
         <kFilters (refineFiltersChanged)="refineFiltersChanged($event)"
@@ -8,21 +8,23 @@
 
     </div>
 
-    <div class="kEntriesHolder grid-column-noGutter col-12">
+    <div class="kEntriesHolder kContent grid-column-noGutter">
         <div class="kEntriesTableFilters grid col-12">
                 <span *ngIf="(contentEntriesStore.entries$ | async)?.totalCount">{{(contentEntriesStore.entries$ | async)?.totalCount}} Entries</span>
                 <div [style.visibility]="selectedEntries.length ? 'visible' : 'hidden'" class="kBulkOperations">
-                    <span class="kSelectedEntriesLabel"> * {{selectedEntries.length}} Selected</span>
-                    <button pButton icon="fa fa-trash" class="kButtonDanger"></button>
+                    <span class="kSelectedEntriesLabel">• {{selectedEntries.length}} Selected</span>
+                    <button pButton icon="fa fa-trash" class="kButtonDanger kBulkDeleteBtn"></button>
                     <button class="kButtonDefault small" [disabled]="!selectedEntries.length" pButton label="Bulk Actions" (click)="menu.toggle($event)"></button>
+                    <a class="kBulkCancel">Cancel</a>
                 </div>
-                <form [formGroup]="searchForm">
-                    <input type="text" pInputText formControlName="searchText"
-                           (onenter)="freetextValue = $event.target.value" (keyup.enter)="onFreetextChanged()"
-                           placeholder="Search Entries">
-                </form>
-
-                <button pButton class="kButtonDefault kRefreshBtn small" type="text" (click)="reload()" icon="kIconrefresh_small" label="Refresh" title="Refresh"></button>
+                <div [style.visibility]="selectedEntries.length ? 'hidden' : 'visible'">
+                    <form [formGroup]="searchForm">
+                        <input type="text" pInputText formControlName="searchText"
+                               (onenter)="freetextValue = $event.target.value" (keyup.enter)="onFreetextChanged()"
+                               placeholder="Search Entries">
+                    </form>
+                </div>
+                <button pButton class="kButtonDefault kRefreshBtn small" type="text" (click)="reload()" icon="kIconrefresh" title="Refresh"></button>
 
 
         </div>
@@ -44,6 +46,7 @@
                          [first]="filter.pageIndex * filter.pageSize"
                          [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount"
                          [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
+            <span class="kPaginatorShowRowsLabel">Show rows:</span>
         </div>
         <p-tieredMenu #menu [model]="bulkActionsMenu" [popup]="true" [styleClass]="menu"></p-tieredMenu>
     </div>

@@ -4,12 +4,24 @@
     /*.fa {
         font-family: 'KMCng-icon-pack' !important;
     }*/
-    .fa-caret-right:before{
+    .ui-submenu-icon.fa-fw.fa-caret-right:before{
+        font-family: 'KMCng-icon-pack' !important;
+        @extend .kIcondropdown_arrow_right:before;
+    }
+    .ui-tree-toggler.fa-caret-right:before{
         font-family: 'KMCng-icon-pack' !important;
         @extend .kIcontree-arrow-right:before;
     }
-    .fa-caret-down:before{
+    .ui-tree-toggler.fa-caret-down:before{
         font-family: 'KMCng-icon-pack' !important;
         @extend .kIcontree-arrow-down:before;
+    }
+    .ui-sortable-column-icon.fa-sort-asc:before{
+        font-family: 'KMCng-icon-pack' !important;
+        @extend .kIcondropdown_arrow_top:before;
+    }
+    .ui-sortable-column-icon.fa-sort-desc:before{
+        font-family: 'KMCng-icon-pack' !important;
+        @extend .kIcondropdown_arrow_bottom:before;
     }
 }
