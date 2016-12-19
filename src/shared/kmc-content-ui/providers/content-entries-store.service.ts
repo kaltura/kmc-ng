@@ -68,29 +68,44 @@ export class ContentEntriesStore {
         this.subscribeToUpdateChanges();
     }
 
-    subscribeToUpdateChanges() : void
-    {
+    subscribeToUpdateChanges() : void {
+        // switchMap is used to ignore old requests
         this._entriesFilter
+            .do(()=>
+            {
+                this._status.next({loading : true, errorMessage : null});
+            })
             .switchMap(this._updateEntries.bind(this))
             .subscribe(
-                response =>
-                {
-                    if (response.result) {
-                        const result = <KalturaBaseEntryListResponse>response.result;
+                result => {
+
+                    if (result instanceof KalturaBaseEntryListResponse) {
+                        console.log(`subscribeToUpdateChanges() : handling result`);
                         this._entries.next({items: <any[]>result.objects, totalCount: <number>result.totalCount});
+                        this._status.next({loading : false, errorMessage : null});
                     } else {
-                        // handle response.error
+                        this._status.next({loading : false, errorMessage : (<Error>result).message});
                     }
                 },
-                error =>
-                {
-
+                error => {
+                    // TODO [kmc] should not reach here
+                    console.log(`subscribeToUpdateChanges() : reached error`);
+                },
+                () => {
+                    // TODO [kmc] should not reach here
+                    console.log(`subscribeToUpdateChanges() : reached completed`);
                 }
-            )
-
+            );
     }
 
-    private _updateEntries(updateArgs : UpdateArgs) : Observable<KalturaBaseEntryListResponse> {
+    _updateEntriesCount = 1;
+    private _updateEntries(updateArgs : UpdateArgs) : Observable<KalturaBaseEntryListResponse | Error> {
+
+
+        console.log(`_updateEntries() : invoking request ${this._updateEntriesCount}`);
+
+        this._updateEntriesCount++;
+
         let filter: KalturaMediaEntryFilter, pager, responseProfile;
 
         const advancedSearch = new KalturaSearchOperator();
@@ -124,22 +139,26 @@ export class ContentEntriesStore {
             responseProfile.fields = updateArgs.filterColumns;
         }
 
-        // TODO [KMC] we need to cancel all previous requests otherwise we might override entries$ with older responses
 
         return this.kalturaServerClient.request(
             new BaseEntryListAction({filter, pager, responseProfile})
-        ).flatMap(
-            response =>
-            {
-                if (response.error)
+            )
+            .map(
+                response =>
                 {
-                    return Observable.throw(response.error.message);
-                }else
-                {
-                    return response.result;
+                    if (response.error)
+                    {
+                        console.log(`_updateEntries() : handling error result`);
+
+                        return new Error(response.error.message);
+                    }else
+                    {
+                        console.log(`_updateEntries() : returning valid result`);
+                        return response.result;
+                    }
                 }
-            }
-        );
+            )
+            .catch(err => Observable.of(err));
     }
 
     private updateMediaTypeIn(filterArgs: UpdateArgs, filter: KalturaMediaEntryFilter): void {
@@ -189,4 +208,3 @@ export class ContentEntriesStore {
         }
     }
 }
-

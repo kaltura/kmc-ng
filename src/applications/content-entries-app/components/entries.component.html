@@ -21,7 +21,8 @@
         <div style="height: 20px; background-color: #cacaca; border: 1px solid grey; border-radius: 15px; width: 100px; margin-top: 10px; margin-left: 10px; text-align: center; padding: 5px">Filter 1</div>
       </div>
 
-      <kEntriesTable class="entriesTable grid-column-noGutter col" [entries]="(contentEntriesStore.entries$ | async)?.items" [filter]="filter" [(selectedEntries)]="selectedEntries" [loading]="loading" (sortChanged)="onSortChanged($event)" (actionSelected)="onActionSelected($event)"></kEntriesTable>
+
+     <kEntriesTable class="entriesTable grid-column-noGutter col" [entries]="(contentEntriesStore.entries$ | async)?.items" [loading]="(contentEntriesStore.status$ | async)?.loading" [filter]="filter" [(selectedEntries)]="selectedEntries" (sortChanged)="onSortChanged($event)" (actionSelected)="onActionSelected($event)"></kEntriesTable>
 
       <div class="footer col-12" #footer>
         <button class="bulkActions" [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>

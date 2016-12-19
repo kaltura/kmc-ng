@@ -27,11 +27,7 @@ export class kEntriesTable implements AfterViewInit{
 
   private items: MenuItem[];
 
-  dp(items : any, menu : any)  : void
-  {
 
-    debugger;
-  }
   constructor() {
     this.buildMenu();
 
