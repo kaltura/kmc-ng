@@ -6,8 +6,8 @@
     <p><span style="margin-right: 66px">Auto select children: </span><p-toggleButton [(ngModel)]="autoSelectChildren"></p-toggleButton></p>
     <p-tree [autoSelectChildren]="autoSelectChildren" [value]="categories" selectionMode="checkbox" [(selection)]="selectedCategories" (onNodeSelect)="onCategorySelectionChange($event)" (onNodeUnselect)="onCategorySelectionChange($event)">
         <template let-node  pTemplate type="default">
-            <span class="nodeLabel">{{node.label}}</span>
-            <span class="numChildren" *ngIf="node.children && node.children.length">{{node.children.length}}</span>
+            <span class="kTreeNodeLabel">{{node.label}}</span>
+            <span class="kTreeNodeNumChildren" *ngIf="node.children && node.children.length">{{node.children.length}}</span>
         </template>
     </p-tree>
 

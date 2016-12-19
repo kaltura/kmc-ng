@@ -210,13 +210,51 @@
 }
 
 /* checkboxes */
-.ui-datatable .ui-selection-column .ui-chkbox-box{
+.ui-datatable .ui-selection-column .ui-chkbox-box, .ui-tree .ui-chkbox-box{
     width: 18px;
     height: 18px;
     border: 1px solid $kGrayscale4;
     border-radius: 3px;
+    font-size: 12px;
+}
+.ui-datatable .ui-selection-column .ui-chkbox .ui-chkbox-icon{
+    margin-left: 0px;
+    margin-top: 3px;
 }
 .ui-datatable .ui-selection-column .ui-chkbox-box.ui-state-active{
     background-color: $kPrimary;
     border: 1px solid $kPrimary;
+}
+
+/* tree */
+.ui-treenode-content{
+    border-top: 1px solid $kGrayscale6;
+}
+.ui-tree .ui-tree-container{
+    padding-left: 0px;
+    padding-top: 0px;
+}
+.ui-tree.ui-widget.ui-widget-content.ui-corner-all.ui-tree-selectable{
+    border: none;
+    border-bottom: 1px solid $kGrayscale6;
+}
+.ui-treenode-label.ui-corner-all.ui-state-hover{
+    background-color: #ffffff;
+}
+.ui-tree .ui-tree-toggler{
+    color: $kGrayscale3;
+    margin-right: 8px;
+    margin-left: 20px;
+}
+.ui-tree .ui-treenode-leaf-icon{
+    width: 47px;
+}
+.ui-tree .ui-chkbox .ui-chkbox-icon{
+    background-color: $kPrimary;
+    border: 0px solid $kPrimary;
+    margin-top: 0px;
+    line-height: 18px;
+    width: 20px;
+    border-radius: 3px;
+    color: #ffffff;
 }

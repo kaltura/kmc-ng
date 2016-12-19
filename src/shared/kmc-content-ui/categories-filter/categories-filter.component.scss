@@ -1,11 +1,18 @@
-.nodeLabel{
+@import "../../../styles/scss/_variables.scss";
+
+.kTreeNodeLabel{
     width:100%;
     font-size: 14px;
-    font-weight: bold;
+    font-weight: 700;
+    line-height: 43px;
+    color: $kGrayscale1;
+    text-overflow: ellipsis;
     margin-left: 5px;
 }
-.numChildren{
-    color: #9c9c9c;
+.kTreeNodeNumChildren{
+    font-size: 14px;
+    font-weight: 700;
+    color: $kGrayscale3;
     margin-left: 10px;
 }
 .clearAll{
@@ -18,4 +25,5 @@ a.disabled{
     pointer-events: none;
     cursor: not-allowed;
     color: #cacaca;
+    border: none;
 }

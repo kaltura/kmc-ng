@@ -1,10 +1,15 @@
 @import '../fonts/kmcng-icon-pack/style.scss';
 
-.kUseKMCngIcons1 {
-    .fa {
+.kUseKMCngIcons {
+    /*.fa {
         font-family: 'KMCng-icon-pack' !important;
+    }*/
+    .fa-caret-right:before{
+        font-family: 'KMCng-icon-pack' !important;
+        @extend .kIcontree-arrow-right:before;
     }
-    .fa-refresh:before {
-        @extend .kIconrefresh_small:before;
+    .fa-caret-down:before{
+        font-family: 'KMCng-icon-pack' !important;
+        @extend .kIcontree-arrow-down:before;
     }
 }
