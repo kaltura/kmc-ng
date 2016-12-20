@@ -24,6 +24,7 @@ export class CategoriesFilterComponent implements OnInit, OnDestroy{
     currentSearch: any;
 
     autoSelectChildren:boolean = true;
+    lazyLoading: boolean = false;
 
     @Output()
     categoriesChanged = new EventEmitter<any>();
@@ -64,7 +65,7 @@ export class CategoriesFilterComponent implements OnInit, OnDestroy{
         for (let id in this.categoriesMap){
             let category: Category = this.categoriesMap[id];
             let label = category.label;
-            while (category.parentId !== 0){
+            while (category.parentId !== 0 && this.categoriesMap[category.parentId]){
                 category = this.categoriesMap[category.parentId];
                 label = category.label + " > "+ label;
             }

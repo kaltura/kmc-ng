@@ -1,0 +1,129 @@
+@font-face {
+  font-family: 'kmcng-icon-pack';
+  src:
+    url('fonts/kmcng-icon-pack.woff2?r6sxm9') format('woff2'),
+    url('fonts/kmcng-icon-pack.ttf?r6sxm9') format('truetype'),
+    url('fonts/kmcng-icon-pack.woff?r6sxm9') format('woff'),
+    url('fonts/kmcng-icon-pack.svg?r6sxm9#kmcng-icon-pack') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="kIcon"], [class*=" kIcon"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'kmcng-icon-pack' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.kIconpagination_end:before {
+  content: "\e91f";
+}
+.kIconpagination_start:before {
+  content: "\e920";
+}
+.kIconcheck_small:before {
+  content: "\e91a";
+}
+.kIconclose_small:before {
+  content: "\e91b";
+}
+.kIcondropdown_arrow_bottom:before {
+  content: "\e91c";
+}
+.kIcondropdown_arrow_right:before {
+  content: "\e921";
+}
+.kIcondropdown_arrow_left:before {
+  content: "\e91d";
+}
+.kIcondropdown_arrow_top:before {
+  content: "\e91e";
+}
+.kIconrefresh_small:before {
+  content: "\e90b";
+}
+.kIconarrow_backward:before {
+  content: "\e90c";
+}
+.kIconarrow_forward:before {
+  content: "\e90d";
+}
+.kIconcheck_large:before {
+  content: "\e90e";
+}
+.kIconfilter:before {
+  content: "\e90f";
+}
+.kIconfolder:before {
+  content: "\e910";
+}
+.kIconmagnifier:before {
+  content: "\e911";
+}
+.kIconpen:before {
+  content: "\e912";
+}
+.kIconshare:before {
+  content: "\e913";
+}
+.kIcontree-arrow-right:before {
+  content: "\e919";
+}
+.kIcontree-arrow-down:before {
+  content: "\e900";
+}
+.kIconupload:before {
+  content: "\e914";
+}
+.kIconconfirmation:before {
+  content: "\e915";
+}
+.kIconmore:before {
+  content: "\e916";
+}
+.kIcontrash:before {
+  content: "\e917";
+}
+.kIconwarning:before {
+  content: "\e918";
+}
+.kIconfolder_large:before {
+  content: "\e901";
+}
+.kIcongear:before {
+  content: "\e902";
+}
+.kIconhelp:before {
+  content: "\e903";
+}
+.kIconimage:before {
+  content: "\e904";
+}
+.kIconpicture:before {
+  content: "\e905";
+}
+.kIconplay:before {
+  content: "\e906";
+}
+.kIconrefresh:before {
+  content: "\e907";
+}
+.kIconsound:before {
+  content: "\e908";
+}
+.kIconuser:before {
+  content: "\e909";
+}
+.kIconvideo:before {
+  content: "\e90a";
+}
+

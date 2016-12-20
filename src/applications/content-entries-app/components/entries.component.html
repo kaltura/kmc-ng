@@ -1,33 +1,53 @@
-<div class="entries grid-noGutter">
+<div class="kEntries grid-noGutter kUseKMCngIcons">
 
-  <div class="accordionHolder">
-      <kCategoriesFilter (categoriesChanged)="categoriesChanged($event)"></kCategoriesFilter>
-      <!--<kFiltersAccordion style="width: 300px" (categoriesChanged)="categoriesChanged($event)" (metadataProfileFilterChanged)="metadataProfileFilterChanged($event)"></kFiltersAccordion>-->
-    <kFilters (refineFiltersChanged)="refineFiltersChanged($event)" (categoriesChanged)="categoriesChanged($event)"></kFilters>
-  </div>
+    <div class="accordionHolder" style="display: none">
+        <kCategoriesFilter (categoriesChanged)="categoriesChanged($event)"></kCategoriesFilter>
+        <!--<kFiltersAccordion style="width: 300px" (categoriesChanged)="categoriesChanged($event)" (metadataProfileFilterChanged)="metadataProfileFilterChanged($event)"></kFiltersAccordion>-->
+        <kFilters (refineFiltersChanged)="refineFiltersChanged($event)"
+                  (categoriesChanged)="categoriesChanged($event)"></kFilters>
 
-  <div class="entriesHolder grid-column-noGutter col-12">
-      <div class="headerFilters col-12">
-        <div>
-          <span *ngIf="(contentEntriesStore.entries$ | async)?.totalCount">{{(contentEntriesStore.entries$ | async)?.totalCount}} Entries</span>
-          <span *ngIf="selectedEntries.length" style="font-weight: bold"> * {{selectedEntries.length}} Selected</span>
+    </div>
+
+    <div class="kEntriesHolder kContent grid-column-noGutter">
+        <div class="kEntriesTableFilters grid col-12">
+                <span *ngIf="(contentEntriesStore.entries$ | async)?.totalCount">{{(contentEntriesStore.entries$ | async)?.totalCount}} Entries</span>
+                <div [style.visibility]="selectedEntries.length ? 'visible' : 'hidden'" class="kBulkOperations">
+                    <span class="kSelectedEntriesLabel">• {{selectedEntries.length}} Selected</span>
+                    <button pButton icon="fa fa-trash" class="kButtonDanger kBulkDeleteBtn"></button>
+                    <button class="kButtonDefault small" [disabled]="!selectedEntries.length" pButton label="Bulk Actions" (click)="menu.toggle($event)"></button>
+                    <a class="kBulkCancel">Cancel</a>
+                </div>
+                <div [style.visibility]="selectedEntries.length ? 'hidden' : 'visible'">
+                    <form [formGroup]="searchForm">
+                        <input type="text" pInputText formControlName="searchText"
+                               (onenter)="freetextValue = $event.target.value" (keyup.enter)="onFreetextChanged()"
+                               placeholder="Search Entries">
+                    </form>
+                </div>
+                <button pButton class="kButtonDefault kRefreshBtn small" type="text" (click)="reload()" icon="kIconrefresh" title="Refresh"></button>
+
+
         </div>
-        <form [formGroup]="searchForm">
-          <input type="text" pInputText formControlName="searchText"  (keyup.enter)="onFreetextChanged()" placeholder="Search Entries">
-        </form>
-        <button style="float: right; margin-top: 12px; margin-right: 8px" pButton type="text" (click)="reload()" icon="fa-refresh" label="Refresh" title="Refresh"></button>
-      </div>
-      <div *ngIf="showTags" class="tags">
-        <div style="height: 20px; background-color: #cacaca; border: 1px solid grey; border-radius: 15px; width: 100px; margin-top: 10px; margin-left: 10px; text-align: center; padding: 5px">Filter 1</div>
-      </div>
+        <div *ngIf="showTags" class="kEntriesTableTags">
+            <div
+                style="height: 20px; background-color: #cacaca; border: 1px solid grey; border-radius: 15px; width: 100px; margin-top: 10px; margin-left: 10px; text-align: center; padding: 5px">
+                Filter 1
+            </div>
+        </div>
 
+        <kEntriesTable class="kEntriesTable grid-column-noGutter col"
+                       [entries]="(contentEntriesStore.entries$ | async)?.items" [filter]="filter"
+                       [(selectedEntries)]="selectedEntries" [loading]="loading" (sortChanged)="onSortChanged($event)"
+                       (actionSelected)="onActionSelected($event)"></kEntriesTable>
 
-     <kEntriesTable class="entriesTable grid-column-noGutter col" [entries]="(contentEntriesStore.entries$ | async)?.items" [loading]="(contentEntriesStore.status$ | async)?.loading" [filter]="filter" [(selectedEntries)]="selectedEntries" (sortChanged)="onSortChanged($event)" (actionSelected)="onActionSelected($event)"></kEntriesTable>
+        <div class="kEntriesTableFooter col-12" #footer>
 
-      <div class="footer col-12" #footer>
-        <button class="bulkActions" [disabled]="!selectedEntries.length" type="button" pButton icon="fa fa-list" label="Bulk Actions" (click)="menu.toggle($event)"></button>
-        <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChanged($event)" [first]="filter.pageIndex * filter.pageSize" [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount" [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
-      </div>
-    <p-tieredMenu #menu [model]="bulkActionsMenu" [popup]="true" [styleClass]="menu"></p-tieredMenu>
-  </div>
+            <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChanged($event)"
+                         [first]="filter.pageIndex * filter.pageSize"
+                         [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount"
+                         [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
+            <span class="kPaginatorShowRowsLabel">Show rows:</span>
+        </div>
+        <p-tieredMenu #menu [model]="bulkActionsMenu" [popup]="true" [styleClass]="menu"></p-tieredMenu>
+    </div>
 </div>
