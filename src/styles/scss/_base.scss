@@ -29,6 +29,10 @@ label{
 }
 a{
     @extend .link;
+    outline: none;
+}
+select{
+    outline: none;
 }
 
 /* main content width according to screen resolution */

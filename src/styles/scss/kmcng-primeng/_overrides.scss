@@ -173,8 +173,10 @@
     background: transparent;
     border: none;
 }
-.ui-paginator-page.ui-paginator-element.ui-state-default.ui-corner-all{
+.ui-paginator-page.ui-paginator-element{
+    outline: none;
     border-radius: 0px;
+    color: $kGrayscale1;
 }
 .ui-paginator .ui-paginator-pages, .ui-paginator .ui-paginator-page, .ui-paginator .ui-paginator-next, .ui-paginator .ui-paginator-prev, .ui-paginator .ui-paginator-first, .ui-paginator .ui-paginator-last{
     margin-left: 0px;
@@ -191,6 +193,16 @@
 }
 .ui-paginator-rpp-options.ui-widget.ui-state-default{
     border: none;
+}
+.ui-paginator .ui-paginator-page, .ui-paginator .ui-paginator-next, .ui-paginator .ui-paginator-prev, .ui-paginator .ui-paginator-first, .ui-paginator .ui-paginator-last{
+    margin-left: -2px;
+    margin-right: -2px;
+    border-radius: 0px;
+}
+.ui-paginator .ui-paginator-page.ui-state-active{
+    background: $kGrayscale6;
+    color: $kGrayscale1;
+    border: 1px solid $kGrayscale4;
 }
 /* menus */
 .ui-menu{

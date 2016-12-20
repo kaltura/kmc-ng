@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'kmcng-icon-pack';
   src:
-    url('fonts/kmcng-icon-pack.woff2?t27u22') format('woff2'),
-    url('fonts/kmcng-icon-pack.ttf?t27u22') format('truetype'),
-    url('fonts/kmcng-icon-pack.woff?t27u22') format('woff'),
-    url('fonts/kmcng-icon-pack.svg?t27u22#kmcng-icon-pack') format('svg');
+    url('fonts/kmcng-icon-pack.woff2?r6sxm9') format('woff2'),
+    url('fonts/kmcng-icon-pack.ttf?r6sxm9') format('truetype'),
+    url('fonts/kmcng-icon-pack.woff?r6sxm9') format('woff'),
+    url('fonts/kmcng-icon-pack.svg?r6sxm9#kmcng-icon-pack') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.kIconpagination_end:before {
+  content: "\e91f";
+}
+.kIconpagination_start:before {
+  content: "\e920";
+}
 .kIconcheck_small:before {
   content: "\e91a";
 }
@@ -34,6 +40,9 @@
   content: "\e91c";
 }
 .kIcondropdown_arrow_right:before {
+  content: "\e921";
+}
+.kIcondropdown_arrow_left:before {
   content: "\e91d";
 }
 .kIcondropdown_arrow_top:before {

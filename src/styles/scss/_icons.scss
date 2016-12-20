@@ -24,4 +24,24 @@
         font-family: 'KMCng-icon-pack' !important;
         @extend .kIcondropdown_arrow_bottom:before;
     }
+    .ui-paginator-next.ui-paginator-element .fa.fa-forward:before{
+        font-family: 'KMCng-icon-pack' !important;
+        @extend .kIcondropdown_arrow_right:before;
+        font-size: 12px;
+    }
+    .ui-paginator-prev.ui-paginator-element .fa.fa-backward:before{
+        font-family: 'KMCng-icon-pack' !important;
+        @extend .kIcondropdown_arrow_left:before;
+        font-size: 12px;
+    }
+    .ui-paginator-last.ui-paginator-element .fa.fa-step-forward:before{
+        font-family: 'KMCng-icon-pack' !important;
+        @extend .kIconpagination_end:before;
+        font-size: 12px;
+    }
+    .ui-paginator-first.ui-paginator-element .fa.fa-step-backward:before{
+        font-family: 'KMCng-icon-pack' !important;
+        @extend .kIconpagination_start:before;
+        font-size: 12px;
+    }
 }
