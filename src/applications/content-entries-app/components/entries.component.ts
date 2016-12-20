@@ -82,48 +82,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
     }
 
 
-    temp = 1;
     ngOnInit() {
-        this.contentEntriesStore.entries$.subscribe(
-            (result) =>
-            {
-                if (this.temp % 3 === 0)
-                {
-                    console.log(`ngOnInit(): raising error`);
-                }else
-                {
-                    console.log(`ngOnInit() : result ${result.totalCount}`);
-
-                }
-                this.temp++;
-
-            },
-            (err) =>
-            {
-                console.log(`ngOnInit(): error ${err}`);
-            },
-            () =>
-            {
-              console.log(`ngOnInit(): complete`);
-            }
-        );
-
-        this.contentEntriesStore.entries$.subscribe(
-            (result) =>
-            {
-                console.log(`ngOnInit() 2 : result ${result.totalCount}`);
-
-            },
-            (err) =>
-            {
-                console.log(`ngOnInit() 2 : error ${err}`);
-            },
-            () =>
-            {
-                console.log(`ngOnInit() 2 : complete`);
-            }
-        )
-
         this.reload();
     }
 

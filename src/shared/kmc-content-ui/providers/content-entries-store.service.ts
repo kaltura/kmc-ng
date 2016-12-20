@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/do';
 
 import {
     KalturaContentDistributionSearchItem,
@@ -80,7 +82,6 @@ export class ContentEntriesStore {
                 result => {
 
                     if (result instanceof KalturaBaseEntryListResponse) {
-                        console.log(`subscribeToUpdateChanges() : handling result`);
                         this._entries.next({items: <any[]>result.objects, totalCount: <number>result.totalCount});
                         this._status.next({loading : false, errorMessage : null});
                     } else {
@@ -89,22 +90,14 @@ export class ContentEntriesStore {
                 },
                 error => {
                     // TODO [kmc] should not reach here
-                    console.log(`subscribeToUpdateChanges() : reached error`);
                 },
                 () => {
                     // TODO [kmc] should not reach here
-                    console.log(`subscribeToUpdateChanges() : reached completed`);
                 }
             );
     }
 
-    _updateEntriesCount = 1;
     private _updateEntries(updateArgs : UpdateArgs) : Observable<KalturaBaseEntryListResponse | Error> {
-
-
-        console.log(`_updateEntries() : invoking request ${this._updateEntriesCount}`);
-
-        this._updateEntriesCount++;
 
         let filter: KalturaMediaEntryFilter, pager, responseProfile;
 
@@ -140,7 +133,7 @@ export class ContentEntriesStore {
         }
 
 
-        return this.kalturaServerClient.request(
+        return <any>this.kalturaServerClient.request(
             new BaseEntryListAction({filter, pager, responseProfile})
             )
             .map(
@@ -148,12 +141,9 @@ export class ContentEntriesStore {
                 {
                     if (response.error)
                     {
-                        console.log(`_updateEntries() : handling error result`);
-
                         return new Error(response.error.message);
                     }else
                     {
-                        console.log(`_updateEntries() : returning valid result`);
                         return response.result;
                     }
                 }
