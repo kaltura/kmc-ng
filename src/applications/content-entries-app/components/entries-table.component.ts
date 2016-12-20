@@ -26,6 +26,7 @@ export class kEntriesTable implements AfterViewInit{
   private actionsMenuEntryId: string = "";
 
   private items: MenuItem[];
+  tableSelectedEntries: Entry[] = [];
 
 
   constructor() {

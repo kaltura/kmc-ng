@@ -16,6 +16,9 @@
         border: none;
         width: auto;
         margin-top: -7px;
+        &:active{
+            box-shadow: none;
+        }
     }
     .kEntriesTableFilters {
         width: 100%;

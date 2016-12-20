@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy,  Pipe, PipeTransform  } from '@angular/core';
+import { Component, OnInit, OnDestroy,  ViewChild  } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
@@ -7,6 +7,7 @@ import { MenuItem } from 'primeng/primeng';
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
 import { ContentEntriesStore, UpdateArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
 import {RefineFiltersChangedArgs} from "./filters.component";
+import {kEntriesTable} from "./entries-table.component";
 
 
 export interface Entry {
@@ -30,6 +31,8 @@ const entriesSortAsc = 1;
     providers : [ContentEntriesStore]
 })
 export class EntriesComponent implements OnInit, OnDestroy {
+
+    @ViewChild(kEntriesTable) private dataTable: kEntriesTable;
 
     private _filterChanges : Subscription;
     searchForm: FormGroup;
@@ -93,7 +96,10 @@ export class EntriesComponent implements OnInit, OnDestroy {
         alert("Selected Action: "+event.action+"\nEntry ID: "+event.entryID);
     }
 
-
+    clearSelection(){
+        this.selectedEntries = [];
+        this.dataTable.tableSelectedEntries = [];
+    }
     private categoriesChanged(data : number[])
     {
         this.filter.categories = data;
