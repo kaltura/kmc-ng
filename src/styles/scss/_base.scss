@@ -36,35 +36,35 @@ select{
 }
 
 /* main content width according to screen resolution */
-@media screen and (max-device-width: 767px) and (-webkit-min-device-pixel-ratio: 1) {
+@media screen and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 1) {
     .kContent { width: auto; margin: auto !important;}
 }
-@media screen and (min-device-width: 768px) and (-webkit-min-device-pixel-ratio: 1) {
+@media screen and (min-width: 768px) and (-webkit-min-device-pixel-ratio: 1) {
     .kContent { width: 750px; margin: auto !important;}
 }
-@media screen and (min-device-width: 992px) and (-webkit-min-device-pixel-ratio: 1) {
+@media screen and (min-width: 992px) and (-webkit-min-device-pixel-ratio: 1) {
     .kContent { width: 970px; margin: auto !important;}
 }
-@media screen and (min-device-width: 1200px) and (-webkit-min-device-pixel-ratio: 1) {
+@media screen and (min-width: 1200px) and (-webkit-min-device-pixel-ratio: 1) {
     .kContent { width: 1170px; margin: auto !important;}
 }
-@media screen and (min-device-width: 1440px) and (-webkit-min-device-pixel-ratio: 1) {
+@media screen and (min-width: 1440px) and (-webkit-min-device-pixel-ratio: 1) {
     .kContent { width: 1400px; margin: auto !important;}
 }
 /* support retina devices */
-@media screen and (max-device-width: 767px) and (-webkit-min-device-pixel-ratio: 2) {
+@media screen and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 2) {
     .kContent { width: auto; margin: auto !important;}
 }
-@media screen and (min-device-width: 768px) and (-webkit-min-device-pixel-ratio: 2) {
+@media screen and (min-width: 768px) and (-webkit-min-device-pixel-ratio: 2) {
     .kContent { width: 750px; margin: auto !important;}
 }
-@media screen and (min-device-width: 992px) and (-webkit-min-device-pixel-ratio: 2) {
+@media screen and (min-width: 992px) and (-webkit-min-device-pixel-ratio: 2) {
     .kContent { width: 970px; margin: auto !important;}
 }
-@media screen and (min-device-width: 1200px) and (-webkit-min-device-pixel-ratio: 2) {
+@media screen and (min-width: 1200px) and (-webkit-min-device-pixel-ratio: 2) {
     .kContent { width: 1170px; margin: auto !important;}
 }
 
-@media screen and (min-device-width: 1440px) and (-webkit-min-device-pixel-ratio: 2) {
+@media screen and (min-width: 1440px) and (-webkit-min-device-pixel-ratio: 2) {
     .kContent { width: 1400px; margin: auto !important;}
 }
