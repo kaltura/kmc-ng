@@ -21,14 +21,12 @@
 
 </div>
 
-<div class="appSubMenu grid" *ngIf="selectedMenuItem && showSubMenu && selectedMenuItem.children">
-
-
+<div class="appSubMenu" *ngIf="selectedMenuItem && showSubMenu && selectedMenuItem.children">
+    <div class="kContent">
         <div *ngFor="let subitem of selectedMenuItem.children" class="subMenuContainer" [routerLinkActive]="['active']">
           <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+subitem.routePath]">{{'MENU.'+subitem.titleToken | translate}}</a>
           <div class="linkMarker"></div>
         </div>
-
-
+    </div>
 </div>
 

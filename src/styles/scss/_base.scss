@@ -37,34 +37,34 @@ select{
 
 /* main content width according to screen resolution */
 @media screen and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 1) {
-    .kContent { width: auto; margin: auto !important;}
+    .kContent { width: auto; margin: auto !important; display: flex;}
 }
 @media screen and (min-width: 768px) and (-webkit-min-device-pixel-ratio: 1) {
-    .kContent { width: 750px; margin: auto !important;}
+    .kContent { width: 750px; margin: auto !important; display: flex;}
 }
 @media screen and (min-width: 992px) and (-webkit-min-device-pixel-ratio: 1) {
-    .kContent { width: 970px; margin: auto !important;}
+    .kContent { width: 970px; margin: auto !important; display: flex;}
 }
 @media screen and (min-width: 1200px) and (-webkit-min-device-pixel-ratio: 1) {
-    .kContent { width: 1170px; margin: auto !important;}
+    .kContent { width: 1170px; margin: auto !important; display: flex;}
 }
 @media screen and (min-width: 1440px) and (-webkit-min-device-pixel-ratio: 1) {
-    .kContent { width: 1400px; margin: auto !important;}
+    .kContent { width: 1400px; margin: auto !important; display: flex;}
 }
 /* support retina devices */
 @media screen and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 2) {
-    .kContent { width: auto; margin: auto !important;}
+    .kContent { width: auto; margin: auto !important; display: flex;}
 }
 @media screen and (min-width: 768px) and (-webkit-min-device-pixel-ratio: 2) {
-    .kContent { width: 750px; margin: auto !important;}
+    .kContent { width: 750px; margin: auto !important; display: flex;}
 }
 @media screen and (min-width: 992px) and (-webkit-min-device-pixel-ratio: 2) {
-    .kContent { width: 970px; margin: auto !important;}
+    .kContent { width: 970px; margin: auto !important; display: flex;}
 }
 @media screen and (min-width: 1200px) and (-webkit-min-device-pixel-ratio: 2) {
-    .kContent { width: 1170px; margin: auto !important;}
+    .kContent { width: 1170px; margin: auto !important; display: flex;}
 }
 
 @media screen and (min-width: 1440px) and (-webkit-min-device-pixel-ratio: 2) {
-    .kContent { width: 1400px; margin: auto !important;}
+    .kContent { width: 1400px; margin: auto !important; display: flex;}
 }
