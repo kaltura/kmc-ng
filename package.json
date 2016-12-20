@@ -64,6 +64,8 @@
     "@kaltura-ng2/kaltura-common": "~0.0.2",
     "@kaltura-ng2/kaltura-primeng-ui": "~1.0.0-alpha",
     "@kaltura-ng2/kaltura-ui": "~0.0.2",
+    "gridlex": "^2.2.4",
+    "normalize.css": "^5.0.0",
     "core-js": "^2.4.1",
     "font-awesome": "^4.6.3",
     "jquery": "^3.1.0",
