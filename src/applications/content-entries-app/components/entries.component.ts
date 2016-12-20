@@ -5,7 +5,7 @@ import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
 
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
-import { ContentEntriesStore, FilterArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
+import { ContentEntriesStore, UpdateArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
 import {RefineFiltersChangedArgs} from "./filters.component";
 
 
@@ -34,7 +34,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
     private _filterChanges : Subscription;
     searchForm: FormGroup;
 
-    filter : FilterArgs = {
+    filter : UpdateArgs = {
         pageIndex : 0,
         pageSize : 50,
         searchText : '',
@@ -47,12 +47,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
     selectedEntries: any[] = [];
     bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
 
-    loading = false;
-
-    private refreshList = <Subject<boolean>>new Subject();
-
-
-    constructor(private formBuilder: FormBuilder, public contentEntriesStore : ContentEntriesStore) {
+    constructor(private formBuilder: FormBuilder, private contentEntriesStore : ContentEntriesStore) {
         this.searchForm = this.formBuilder.group({
             'searchText': []
         });
@@ -78,53 +73,20 @@ export class EntriesComponent implements OnInit, OnDestroy {
     }
 
     reload(resetPagination : boolean = false) : void{
-        this.refreshList.next(resetPagination);
-    }
-
-    unsubscribeToFilterChanges() : void{
-        if (this._filterChanges) {
-            this._filterChanges.unsubscribe();
-            this._filterChanges = null;
+        if (resetPagination)
+        {
+            this.filter.pageIndex = 0;
         }
+
+        this.contentEntriesStore.update(this.filter);
     }
 
-
-    subscribeToFilterChanges() : void{
-        // remove after PRD will be provided - currently we disabled automatic filtering while user type
-        //const searchText$ = this.searchForm.controls['searchText'].valueChanges
-        //    .debounceTime(500).do((value) =>{
-        //      this.filter.searchText = value;
-        //      this.filter.pageIndex = 0;
-        //    });
-
-        const refreshList$ = this.refreshList.do((resetPagination) =>{
-            if (resetPagination)
-            {
-                this.filter.pageIndex = 0;
-            }
-        });
-
-        this._filterChanges = Observable.merge(refreshList$)
-            .switchMap((values) => {
-                this.loading = true;
-                return this.contentEntriesStore.filter(this.filter);
-            })
-            .subscribe(
-                () => {
-                    this.loading = false;
-                },
-                (error) => {
-                    this.loading = false;
-                });
-    }
 
     ngOnInit() {
-        this.subscribeToFilterChanges();
         this.reload();
     }
 
     ngOnDestroy(){
-        this.unsubscribeToFilterChanges();
     }
 
     onActionSelected(event){

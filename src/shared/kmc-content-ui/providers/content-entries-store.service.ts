@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/do';
 
 import {
     KalturaContentDistributionSearchItem,
@@ -23,7 +26,13 @@ export enum SortDirection {
     Desc,
     Asc
 }
-export type FilterArgs = {
+
+export type UpdateStatus = {
+    loading : boolean;
+    errorMessage : string;
+};
+
+export type UpdateArgs = {
     categories? : number[];
     createdAtFrom? : Date;
     createdAtTo? : Date;
@@ -51,14 +60,98 @@ function toServerDate(value? : Date) : number
 @Injectable()
 export class ContentEntriesStore {
     private _entries: BehaviorSubject<Entries> = new BehaviorSubject({items: [], totalCount: 0});
+    private _status : BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null});
+    private _entriesFilter : Subject<UpdateArgs> = new Subject<UpdateArgs>();
 
     public entries$: Observable<Entries> = this._entries.asObservable();
+    public status$: Observable<UpdateStatus> = this._status.asObservable();
 
     constructor(private kalturaServerClient: KalturaServerClient) {
-
+        this.subscribeToUpdateChanges();
     }
 
-    private updateMediaTypeIn(filterArgs: FilterArgs, filter: KalturaMediaEntryFilter): void {
+    subscribeToUpdateChanges() : void {
+        // switchMap is used to ignore old requests
+        this._entriesFilter
+            .do(()=>
+            {
+                this._status.next({loading : true, errorMessage : null});
+            })
+            .switchMap(this._updateEntries.bind(this))
+            .subscribe(
+                result => {
+
+                    if (result instanceof KalturaBaseEntryListResponse) {
+                        this._entries.next({items: <any[]>result.objects, totalCount: <number>result.totalCount});
+                        this._status.next({loading : false, errorMessage : null});
+                    } else {
+                        this._status.next({loading : false, errorMessage : (<Error>result).message});
+                    }
+                },
+                error => {
+                    // TODO [kmc] should not reach here
+                },
+                () => {
+                    // TODO [kmc] should not reach here
+                }
+            );
+    }
+
+    private _updateEntries(updateArgs : UpdateArgs) : Observable<KalturaBaseEntryListResponse | Error> {
+
+        let filter: KalturaMediaEntryFilter, pager, responseProfile;
+
+        const advancedSearch = new KalturaSearchOperator();
+        advancedSearch.type = KalturaSearchOperatorType.SearchAnd;
+
+        // build baseEntry > List > Filter object
+        filter = new KalturaMediaEntryFilter();
+        filter.orderBy = updateArgs.sortBy ? (updateArgs.sortDirection === SortDirection.Desc ? '-' : '+') + updateArgs.sortBy : '';
+        filter.createdAtGreaterThanOrEqual = toServerDate(updateArgs.createdAtFrom);
+        filter.createdAtLessThanOrEqual = toServerDate(updateArgs.createdAtTo);
+        filter.freeText = updateArgs.searchText;
+        this.updateCategoriesIdsMatchOr(updateArgs, filter);
+        this.updateMediaTypeIn(updateArgs, filter);
+        this.updateStatusIn(updateArgs, filter);
+        this.updateDistributionProfiles(updateArgs, advancedSearch);
+
+        // add advanced search if it was filled with items
+        if (advancedSearch.items.length > 0) {
+            filter.advancedSearch = advancedSearch;
+        }
+
+        // build baseEntry > List > pager object
+        pager = new KalturaFilterPager();
+        pager.pageSize = updateArgs.pageSize;
+        pager.pageIndex = updateArgs.pageIndex;
+
+        // build baseEntry > List > response profile object
+        if (updateArgs.filterColumns) {
+            responseProfile = new KalturaDetachedResponseProfile();
+            responseProfile.type = KalturaResponseProfileType.IncludeFields;
+            responseProfile.fields = updateArgs.filterColumns;
+        }
+
+
+        return <any>this.kalturaServerClient.request(
+            new BaseEntryListAction({filter, pager, responseProfile})
+            )
+            .map(
+                response =>
+                {
+                    if (response.error)
+                    {
+                        return new Error(response.error.message);
+                    }else
+                    {
+                        return response.result;
+                    }
+                }
+            )
+            .catch(err => Observable.of(err));
+    }
+
+    private updateMediaTypeIn(filterArgs: UpdateArgs, filter: KalturaMediaEntryFilter): void {
         if (filterArgs.mediaTypes && filterArgs.mediaTypes.length) {
             filter.mediaTypeIn = R.join(',', filterArgs.mediaTypes);
         } else {
@@ -66,13 +159,13 @@ export class ContentEntriesStore {
         }
     }
 
-    private updateCategoriesIdsMatchOr(filterArgs: FilterArgs, filter: KalturaMediaEntryFilter): void {
+    private updateCategoriesIdsMatchOr(filterArgs: UpdateArgs, filter: KalturaMediaEntryFilter): void {
         if (filterArgs.categories && filterArgs.categories.length) {
             filter.categoriesIdsMatchOr = R.join(',', filterArgs.categories);
         }
     }
 
-    private updateStatusIn(filterArgs: FilterArgs, filter: KalturaMediaEntryFilter): void {
+    private updateStatusIn(filterArgs: UpdateArgs, filter: KalturaMediaEntryFilter): void {
         if (filterArgs.statuses && filterArgs.statuses.length) {
             filter.statusIn = R.join(',', filterArgs.statuses);
         } else {
@@ -80,7 +173,7 @@ export class ContentEntriesStore {
         }
     }
 
-    private updateDistributionProfiles(filterArgs:FilterArgs,  advancedSearch : KalturaSearchOperator) : void
+    private updateDistributionProfiles(filterArgs:UpdateArgs, advancedSearch : KalturaSearchOperator) : void
     {
         if (filterArgs.distributionProfiles && filterArgs.distributionProfiles.length) {
             const distributionProfiles = new KalturaSearchOperator();
@@ -97,67 +190,11 @@ export class ContentEntriesStore {
         }
     }
 
-    public filter(filterArgs: FilterArgs): Observable<boolean> {
-        return Observable.create(observe => {
-            let filter: KalturaMediaEntryFilter, pager, responseProfile;
+    public update(updateArgs: UpdateArgs): void {
 
-            const advancedSearch = new KalturaSearchOperator();
-            advancedSearch.type = KalturaSearchOperatorType.SearchAnd;
-
-            // build baseEntry > List > Filter object
-            filter = new KalturaMediaEntryFilter();
-            filter.orderBy = filterArgs.sortBy ? (filterArgs.sortDirection === SortDirection.Desc ? '-' : '+') + filterArgs.sortBy : '';
-            filter.createdAtGreaterThanOrEqual = toServerDate(filterArgs.createdAtFrom);
-            filter.createdAtLessThanOrEqual = toServerDate(filterArgs.createdAtTo);
-            filter.freeText = filterArgs.searchText;
-            this.updateCategoriesIdsMatchOr(filterArgs,filter);
-            this.updateMediaTypeIn(filterArgs, filter);
-            this.updateStatusIn(filterArgs, filter);
-            this.updateDistributionProfiles(filterArgs, advancedSearch);
-
-            // add advanced search if it was filled with items
-            if (advancedSearch.items.length > 0) {
-                filter.advancedSearch = advancedSearch;
-            }
-
-            // build baseEntry > List > pager object
-            pager = new KalturaFilterPager();
-            pager.pageSize = filterArgs.pageSize;
-            pager.pageIndex = filterArgs.pageIndex;
-
-            // build baseEntry > List > response profile object
-            if (filterArgs.filterColumns) {
-                responseProfile = new KalturaDetachedResponseProfile();
-                responseProfile.type = KalturaResponseProfileType.IncludeFields;
-                responseProfile.fields = filterArgs.filterColumns;
-            }
-
-            // TODO [KMC] we need to cancel all previous requests otherwise we might override entries$ with older responses
-
-            const request = new BaseEntryListAction({filter, pager, responseProfile})
-                .setCompletion(
-                    (response => {
-                            if (response.result) {
-                                const result = <KalturaBaseEntryListResponse>response.result;
-                                this._entries.next({items: <any[]>result.objects, totalCount: <number>result.totalCount});
-                            } else {
-                                // handle response.error
-                            }
-                        }
-                    ));
-
-
-            this.kalturaServerClient.request(request).subscribe(
-                (response) => {
-                    observe.next(true);
-                    observe.complete();
-                },
-                () => {
-                    observe.next(false);
-                    observe.complete();
-                }
-            );
-        });
+        if (updateArgs)
+        {
+            this._entriesFilter.next(updateArgs);
+        }
     }
 }
-
