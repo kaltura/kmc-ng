@@ -15,7 +15,7 @@
                     <span class="kSelectedEntriesLabel">• {{selectedEntries.length}} Selected</span>
                     <button pButton icon="fa fa-trash" class="kButtonDanger kBulkDeleteBtn"></button>
                     <button class="kButtonDefault small" [disabled]="!selectedEntries.length" pButton label="Bulk Actions" (click)="menu.toggle($event)"></button>
-                    <a class="kBulkCancel">Cancel</a>
+                    <a class="kBulkCancel" (click)="clearSelection()">Cancel</a>
                 </div>
                 <div [style.visibility]="selectedEntries.length ? 'hidden' : 'visible'">
                     <form [formGroup]="searchForm">
