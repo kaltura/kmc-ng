@@ -14,7 +14,7 @@
         font-size: 24px;
         margin-left: auto;
         border: none;
-        width: auto;
+        min-width: inherit;
         margin-top: -7px;
         &:active{
             box-shadow: none;
@@ -31,14 +31,10 @@
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
         form {
-            display: table-cell;
-            vertical-align: middle;
-            padding-left: 8px;
+            padding-right: 8px;
         }
         div {
-            display: table-cell;
-            vertical-align: middle;
-            padding-left: 6px;
+            padding-right: 6px;
         }
     }
     .kEntriesTableTags {
@@ -85,6 +81,9 @@
     }
     .kBulkDeleteBtn{
         margin-right: 10px;
+    }
+    .kFilters{
+        display: flex;
     }
 }
 

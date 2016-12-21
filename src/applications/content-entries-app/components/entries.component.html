@@ -7,7 +7,6 @@
                   (categoriesChanged)="categoriesChanged($event)"></kFilters>
 
     </div>
-
     <div class="kEntriesHolder kContent grid-column-noGutter">
         <div class="kEntriesTableFilters grid col-12">
                 <span *ngIf="(contentEntriesStore.entries$ | async)?.totalCount">{{(contentEntriesStore.entries$ | async)?.totalCount}} Entries</span>
@@ -17,12 +16,13 @@
                     <button class="kButtonDefault small" [disabled]="!selectedEntries.length" pButton label="Bulk Actions" (click)="menu.toggle($event)"></button>
                     <a class="kBulkCancel" (click)="clearSelection()">Cancel</a>
                 </div>
-                <div [style.visibility]="selectedEntries.length ? 'hidden' : 'visible'">
+                <div [style.visibility]="selectedEntries.length ? 'hidden' : 'visible'" class="kFilters">
                     <form [formGroup]="searchForm">
                         <input type="text" pInputText formControlName="searchText"
                                (onenter)="freetextValue = $event.target.value" (keyup.enter)="onFreetextChanged()"
                                placeholder="Search Entries">
                     </form>
+                    <button #categoriesFilterBtn>Filter Categories</button>
                 </div>
                 <button pButton class="kButtonDefault kRefreshBtn small" type="text" (click)="reload()" icon="kIconrefresh" title="Refresh"></button>
 
@@ -37,7 +37,7 @@
 
         <kEntriesTable class="kEntriesTable grid-column-noGutter col"
                        [entries]="(contentEntriesStore.entries$ | async)?.items" [filter]="filter"
-                       [(selectedEntries)]="selectedEntries" [loading]="loading" (sortChanged)="onSortChanged($event)"
+                       [(selectedEntries)]="selectedEntries" [loading]="(contentEntriesStore.status$ | async)?.loading" (sortChanged)="onSortChanged($event)"
                        (actionSelected)="onActionSelected($event)"></kEntriesTable>
 
         <div class="kEntriesTableFooter col-12" #footer>
@@ -50,4 +50,16 @@
         </div>
         <p-tieredMenu #menu [model]="bulkActionsMenu" [popup]="true" [styleClass]="menu"></p-tieredMenu>
     </div>
+
 </div>
+
+<!-- popup widgets section -->
+<kPopupWidget [modal]="true" [popupWidth]="200" [popupHeight]="150" [closeBtn]="true" [targetRef]="categoriesFilterBtn" [targetOffset]="{'x':-20, 'y': -20}" [childrenPopups]="[categoriesPref]">
+    <span>hello</span><br><br>
+    <input type="text"/>
+    <button #nested>open nested</button>
+</kPopupWidget>
+
+<kPopupWidget #categoriesPref [popupWidth]="100" [popupHeight]="100" [closeBtn]="true" [targetRef]="nested" [targetOffset]="{'x':20, 'y': 20}">
+    <span>config</span>
+</kPopupWidget>

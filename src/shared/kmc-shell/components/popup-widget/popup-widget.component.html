@@ -1,0 +1,6 @@
+<div class="kPopupWidget" [style.display]="show ? 'block' : 'none'" [style.width]="popupWidth+'px'" [style.height]="popupHeight+'px'">
+    <button *ngIf="closeBtn" class="kButtonDefault small kCloseBtn" pButton icon="kIconclose_small" (click)="close()"></button>
+    <div class="kPopupWidgetContent">
+        <ng-content></ng-content>
+    </div>
+</div>
