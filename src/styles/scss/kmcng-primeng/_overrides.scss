@@ -153,7 +153,7 @@
     color: $kGrayscale3;
     text-overflow: ellipsis;
 }
-.ui-state-highlight, .ui-widget-content .ui-state-highlight{
+.ui-datatable .ui-state-highlight, .ui-datatable .ui-widget-content .ui-state-highlight{
     background-color: #ffffff;
     border: 1px solid #d9d9d9;
 }
@@ -268,10 +268,9 @@
 .ui-tree .ui-tree-toggler{
     color: $kGrayscale3;
     margin-right: 8px;
-    margin-left: 20px;
 }
 .ui-tree .ui-treenode-leaf-icon{
-    width: 47px;
+    width: 27px;
 }
 .ui-tree .ui-chkbox .ui-chkbox-icon{
     background-color: $kPrimary;
@@ -282,3 +281,14 @@
     border-radius: 3px;
     color: #ffffff;
 }
+/* input */
+.ui-inputtext{
+    background-color: $kGrayscale6;
+    border: 1px solid $kGrayscale6;
+}
+ /* auto complete */
+.ui-autocomplete-input.ui-inputtext.ui-corner-all.ui-state-default.ui-widget{
+    width: 320px;
+    @extend .ui-inputtext;
+}
+

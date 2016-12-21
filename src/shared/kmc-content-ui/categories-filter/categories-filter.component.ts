@@ -1,17 +1,18 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Output, ViewChild} from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, Output, ViewChild, Input, AfterViewInit, ElementRef} from '@angular/core';
 import { Tree, TreeNode } from 'primeng/primeng';
 
 import { Subscription} from 'rxjs';
 import * as R from 'ramda';
 
 import { ContentCategoriesStore, Category } from 'kmc-content-ui/providers/content-categories-store.service';
+import {PopupWidgetComponent} from "../../kmc-shell/components/popup-widget/popup-widget.component";
 
 @Component({
     selector: 'kCategoriesFilter',
     templateUrl: './categories-filter.component.html',
     styleUrls: ['./categories-filter.component.scss']
 })
-export class CategoriesFilterComponent implements OnInit, OnDestroy{
+export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestroy{
 
     loading = false;
     categories: any;
@@ -31,7 +32,9 @@ export class CategoriesFilterComponent implements OnInit, OnDestroy{
 
     @ViewChild(Tree) categoriesTree: Tree;
 
-    constructor(public contentCategoriesStore: ContentCategoriesStore) {
+    @Input() parentPopupWidget: PopupWidgetComponent;
+
+    constructor(public filtersRef: ElementRef, public contentCategoriesStore: ContentCategoriesStore) {
     }
 
     ngOnInit() {
@@ -45,6 +48,21 @@ export class CategoriesFilterComponent implements OnInit, OnDestroy{
                 // TODO [KMC] - handle error
             });
         this.reloadCategories(-1);
+    }
+
+    ngAfterViewInit(){
+        if (this.parentPopupWidget){
+            this.parentPopupWidget.stateNotifier.subscribe(event => {
+                if (event === "open"){
+                    const inputFields: any[] = this.filtersRef.nativeElement.getElementsByTagName("input");
+                    if (inputFields.length && inputFields[0].focus){
+                        setTimeout(() => {
+                            inputFields[0].focus();
+                        },0);
+                    }
+                }
+            });
+        }
     }
 
     reloadCategories(parentNodeId: number){
@@ -97,7 +115,6 @@ export class CategoriesFilterComponent implements OnInit, OnDestroy{
             }
             this.onCategorySelectionChange(null);
         }
-
         this.currentSearch = null;
     }
 
@@ -120,7 +137,13 @@ export class CategoriesFilterComponent implements OnInit, OnDestroy{
         this.onCategorySelectionChange(null);
     }
 
+    close(){
+        if (this.parentPopupWidget){
+            this.parentPopupWidget.close();
+        }
+    }
     ngOnDestroy(){
+        this.parentPopupWidget.stateNotifier.unsubscribe();
         this.categoriesSubscribe.unsubscribe();
     }
 

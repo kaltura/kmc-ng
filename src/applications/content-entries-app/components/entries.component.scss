@@ -85,5 +85,32 @@
     .kFilters{
         display: flex;
     }
+    .kCategoriesFilter{
+        border: 1px solid $kGrayscale4;
+        border-radius: 4px;
+        display: flex;
+        background-color: #ffffff;
+        height: 26px;
+        align-items: center;
+        cursor: pointer;
+        color: $kGrayscale3;
+        width: 180px;
+        position: relative;
+        i{
+            margin-right: 8px;
+            margin-left: 8px;
+            &.dropdown{
+                font-size: 10px;
+            }
+        }
+        &:hover{
+            color: $kPrimary;
+        }
+        .dropdown{
+            position: absolute;
+            right: 4px;
+            top: 8px;
+        }
+    }
 }
 

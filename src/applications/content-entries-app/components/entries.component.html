@@ -1,7 +1,7 @@
 <div class="kEntries grid-noGutter kUseKMCngIcons">
 
     <div class="accordionHolder" style="display: none">
-        <kCategoriesFilter (categoriesChanged)="categoriesChanged($event)"></kCategoriesFilter>
+
         <!--<kFiltersAccordion style="width: 300px" (categoriesChanged)="categoriesChanged($event)" (metadataProfileFilterChanged)="metadataProfileFilterChanged($event)"></kFiltersAccordion>-->
         <kFilters (refineFiltersChanged)="refineFiltersChanged($event)"
                   (categoriesChanged)="categoriesChanged($event)"></kFilters>
@@ -22,8 +22,8 @@
                                (onenter)="freetextValue = $event.target.value" (keyup.enter)="onFreetextChanged()"
                                placeholder="Search Entries">
                     </form>
-                    <button #categoriesFilterBtn>Filter Categories</button>
                 </div>
+                <div #categoriesFilterBtn class="kCategoriesFilter"><i class="kIconfolder"></i><span>Filter Categories</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
                 <button pButton class="kButtonDefault kRefreshBtn small" type="text" (click)="reload()" icon="kIconrefresh" title="Refresh"></button>
 
 
@@ -54,12 +54,7 @@
 </div>
 
 <!-- popup widgets section -->
-<kPopupWidget [modal]="true" [popupWidth]="200" [popupHeight]="150" [closeBtn]="true" [targetRef]="categoriesFilterBtn" [targetOffset]="{'x':-20, 'y': -20}" [childrenPopups]="[categoriesPref]">
-    <span>hello</span><br><br>
-    <input type="text"/>
-    <button #nested>open nested</button>
+<kPopupWidget #categoriesFilterPopup [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="categoriesFilterBtn" [targetOffset]="{'x':-20, 'y': -20}">
+    <kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup" (categoriesChanged)="categoriesChanged($event)"></kCategoriesFilter>
 </kPopupWidget>
 
-<kPopupWidget #categoriesPref [popupWidth]="100" [popupHeight]="100" [closeBtn]="true" [targetRef]="nested" [targetOffset]="{'x':20, 'y': 20}">
-    <span>config</span>
-</kPopupWidget>

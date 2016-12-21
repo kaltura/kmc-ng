@@ -10,11 +10,12 @@ import { TreeModule, SharedModule, AutoCompleteModule, ToggleButtonModule } from
 import { CategoriesFilterComponent } from './categories-filter/categories-filter.component';
 import { ContentCategoriesStore } from './providers/content-categories-store.service';
 import { ContentMetadataProfilesStore } from './providers/content-metadata-profiles-store.service';
+import { KMCShellModule } from 'kmc-shell';
 
 import { EntryTypePipe, EntryStatusPipe, PlaylistTypePipe } from './pipes/index';
 
 @NgModule({
-    imports:      [ CommonModule, TreeModule, FormsModule, SharedModule, KalturaUIModule, KalturaPrimeNgUIModule, AutoCompleteModule, ToggleButtonModule ],
+    imports:      [ CommonModule, TreeModule, FormsModule, SharedModule, KalturaUIModule, KalturaPrimeNgUIModule, AutoCompleteModule, ToggleButtonModule, KMCShellModule ],
     declarations: [ CategoriesFilterComponent, EntryTypePipe, EntryStatusPipe, PlaylistTypePipe ],
     providers:    [],
     exports: [ CategoriesFilterComponent, EntryTypePipe, EntryStatusPipe, PlaylistTypePipe ]

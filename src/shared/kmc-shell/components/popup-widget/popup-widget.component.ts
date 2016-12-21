@@ -1,12 +1,15 @@
-import { Component, AfterViewInit, EventEmitter, Output, Input, ElementRef} from '@angular/core';
+import { Component, AfterViewInit, EventEmitter, OnDestroy, Input, ElementRef} from '@angular/core';
 import {BrowserService} from "../../providers/browser.service";
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'kPopupWidget',
     templateUrl: './popup-widget.component.html',
     styleUrls: ['./popup-widget.component.scss']
 })
-export class PopupWidgetComponent implements AfterViewInit{
+export class PopupWidgetComponent implements AfterViewInit, OnDestroy{
+
+    stateNotifier: Subject<any> = new Subject();
 
     // required parameters
     @Input() popupWidth: number;
@@ -19,6 +22,7 @@ export class PopupWidgetComponent implements AfterViewInit{
     @Input() closeOnClickOutside: boolean = true;
     @Input() targetOffset: any = {'x':0, 'y': 0};
     @Input() childrenPopups: PopupWidgetComponent[] = [];
+    @Input() parentPopup: PopupWidgetComponent;
 
     // events
     onOpen = new EventEmitter<any>();
@@ -51,6 +55,7 @@ export class PopupWidgetComponent implements AfterViewInit{
 
             this.show = true;
             this.onOpen.emit(); // dispatch onOpen event (API)
+            this.stateNotifier.next('open');
         }
     }
 
@@ -58,6 +63,7 @@ export class PopupWidgetComponent implements AfterViewInit{
         if (this.enabled) {
             this.show = false;
             this.onClose.emit(); // dispatch onClose event (API)
+            this.stateNotifier.next('close');
 
             // close children popups if exist
             if (this.childrenPopups.length){
@@ -84,6 +90,8 @@ export class PopupWidgetComponent implements AfterViewInit{
         if (this.validate()) {
             this.enabled = true;
             this.onViewInit.emit(); // dispatch onViewInit event (API)
+            this.stateNotifier.next('viewInit');
+
             document.body.appendChild(this.popup.nativeElement); // attach component to body to get absolute position
 
             // register to targetRef click event to toggle the popup widget
@@ -109,6 +117,21 @@ export class PopupWidgetComponent implements AfterViewInit{
                     }
                 })
             }
+
+            if (this.parentPopup){
+                this.parentPopup.stateNotifier.subscribe(event => {
+                    if (event === "close"){
+                        this.close();
+                    }
+                });
+            }
+        }
+    }
+
+    ngOnDestroy(){
+        this.stateNotifier.complete();
+        if (this.parentPopup){
+            this.parentPopup.stateNotifier.unsubscribe();
         }
     }
 
