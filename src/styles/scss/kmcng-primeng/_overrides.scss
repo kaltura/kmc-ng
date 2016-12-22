@@ -300,3 +300,7 @@
     @extend .ui-inputtext;
 }
 
+/* radio buttons */
+.ui-chkbox-box.ui-state-active, .ui-radiobutton-box.ui-state-active{
+    background-color: $kPrimary;
+}

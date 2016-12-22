@@ -1,8 +1,8 @@
 <div class="kUseKMCngIcons">
     <div class="kHeader">
         <p-autoComplete width="300px" [(ngModel)]="currentSearch" [suggestions]="filteredSearchCategories" (completeMethod)="categorySearch($event)" field="label" placeholder="Find Category" [minLength]="3" (onSelect)="categorySelected($event)"></p-autoComplete>
-        <i #config class="kIcongear kTreeConfig"></i>
-        <p class="kAllCategories">ALL CATEGORIES {{searchCategories.length && !lazyLoading ? searchCategories.length : ''}}</p>
+        <i #config class="kIcongear kTreeConfig" pTooltip="Preferences"></i>
+        <div class="kAllCategories">ALL CATEGORIES {{searchCategories.length && !lazyLoading ? searchCategories.length : ''}}</div>
     </div>
     <div class="kTreeContainer">
         <p-tree [autoSelectChildren]="autoSelectChildren" [value]="categories" selectionMode="checkbox" [(selection)]="selectedCategories" (onNodeSelect)="onCategorySelectionChange($event)" (onNodeUnselect)="onCategorySelectionChange($event)">
@@ -13,13 +13,11 @@
         </p-tree>
     </div>
 
-    <p>
+    <p >
         <a [class.disabled]="selectedCategories.length === 0" (click)="clearAll()">Clear all</a>
         <a class="kClose" (click)="close()">Close</a>
     </p>
 </div>
-<kPopupWidget #categoriesPref [popupWidth]="360" [popupHeight]="200" [closeBtn]="true" [targetRef]="config" [targetOffset]="{'x':-322, 'y': -24}" [parentPopup]="parentPopupWidget">
-    <div class="kPrefs">
-        <p class="kFilterPrefs">FILTER PREFERENCES</p>
-    </div>
+<kPopupWidget #categoriesPref [popupWidth]="360" [popupHeight]="220" [closeBtn]="true" [targetRef]="config" [targetOffset]="{'x':-322, 'y': -24}" [parentPopup]="parentPopupWidget">
+    <kCategoriesFilterPrefs [(showChildren)]="autoSelectChildren"></kCategoriesFilterPrefs>
 </kPopupWidget>

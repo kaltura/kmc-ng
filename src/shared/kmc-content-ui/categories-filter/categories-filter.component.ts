@@ -6,6 +6,7 @@ import * as R from 'ramda';
 
 import { ContentCategoriesStore, Category } from 'kmc-content-ui/providers/content-categories-store.service';
 import {PopupWidgetComponent} from "../../kmc-shell/components/popup-widget/popup-widget.component";
+import {BrowserService} from "../../kmc-shell/providers/browser.service";
 
 @Component({
     selector: 'kCategoriesFilter',
@@ -24,7 +25,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     filteredSearchCategories = [];
     currentSearch: any;
 
-    autoSelectChildren:boolean = true;
+    autoSelectChildren:string = 'false';
     lazyLoading: boolean = false;
 
     @Output()
@@ -34,7 +35,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     @Input() parentPopupWidget: PopupWidgetComponent;
 
-    constructor(public filtersRef: ElementRef, public contentCategoriesStore: ContentCategoriesStore) {
+    constructor(public filtersRef: ElementRef, public contentCategoriesStore: ContentCategoriesStore, public browserService: BrowserService) {
     }
 
     ngOnInit() {
@@ -48,6 +49,9 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                 // TODO [KMC] - handle error
             });
         this.reloadCategories(-1);
+
+        const savedAutoSelectChildren: any = this.browserService.getFromLocalStorage("categoriesTree.autoSelectChildren");
+        this.autoSelectChildren = savedAutoSelectChildren === null ? 'false' : savedAutoSelectChildren;
     }
 
     ngAfterViewInit(){
@@ -105,7 +109,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         this.categoriesTree.expandToNode(this.categoriesMap[event.id]);
 
         if (R.findIndex(R.propEq('id', parseInt(event.id)))(this.selectedCategories) === -1){
-            if (this.autoSelectChildren){
+            if (this.autoSelectChildren === 'true'){
                 this.categoriesTree.propagateSelectionDown(this.categoriesMap[event.id], true);
                 if(this.categoriesMap[event.id].parent) {
                     this.categoriesTree.propagateSelectionUp(this.categoriesMap[event.id].parent, true);

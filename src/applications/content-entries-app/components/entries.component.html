@@ -12,7 +12,7 @@
                 <span *ngIf="(contentEntriesStore.entries$ | async)?.totalCount">{{(contentEntriesStore.entries$ | async)?.totalCount}} Entries</span>
                 <div [style.visibility]="selectedEntries.length ? 'visible' : 'hidden'" class="kBulkOperations">
                     <span class="kSelectedEntriesLabel">• {{selectedEntries.length}} Selected</span>
-                    <button pButton icon="fa fa-trash" class="kButtonDanger kBulkDeleteBtn"></button>
+                    <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"></button>
                     <button class="kButtonDefault small" [disabled]="!selectedEntries.length" pButton label="Bulk Actions" (click)="menu.toggle($event)"></button>
                     <a class="kBulkCancel" (click)="clearSelection()">Cancel</a>
                 </div>
@@ -26,8 +26,6 @@
                     <div #refineBtn class="kRefine"><i class="kIconfilter"></i><span>Refine</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
                 </div>
                 <button pButton class="kButtonDefault kRefreshBtn small" type="text" (click)="reload()" icon="kIconrefresh" title="Refresh"></button>
-
-
         </div>
         <div *ngIf="showTags" class="kEntriesTableTags">
             <div

@@ -28,6 +28,7 @@
     margin-left: -20px;
     padding-left: 20px;
     margin-right: -20px;
+    margin-top: 18px;
 }
 .kPrefs{
     padding-left: 20px;
@@ -42,6 +43,11 @@
 .kTreeContainer{
     overflow-y: auto;
     height: 340px;
+    border-bottom: 1px solid $kGrayscale6;
+    margin-left: -20px;
+    padding-left: 20px;
+    margin-right: -20px;
+    width: 387px;
 }
 a.disabled{
     pointer-events: none;
