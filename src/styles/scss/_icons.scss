@@ -43,4 +43,8 @@
         @extend .kIconcheck_small:before;
         font-size: 12px;
     }
+    .ui-chkbox-icon.ui-c.fa.fa-fw.fa-minus:before{
+        @extend .kIconpartial_small:before;
+        font-size: 9px;
+    }
 }
