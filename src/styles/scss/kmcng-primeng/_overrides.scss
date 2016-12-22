@@ -232,6 +232,11 @@
     background-color: $kGrayscale7;
     border: 1px solid $kGrayscale7;
 }
+.ui-state-highlight, .ui-widget-content .ui-state-highlight{
+    color: $kGrayscale1;
+    background-color: $kGrayscale7;
+    border: none;
+}
 .ui-menu .ui-menu-parent .ui-submenu-icon{
     margin-top: 4px;
     font-size: 11px;
@@ -280,6 +285,9 @@
     width: 20px;
     border-radius: 3px;
     color: #ffffff;
+}
+.ui-tree .ui-treenode-label.ui-state-hover, .ui-tree .ui-treenode-label.ui-state-highlight{
+    background-color: #ffffff;
 }
 /* input */
 .ui-inputtext{

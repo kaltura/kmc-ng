@@ -7,12 +7,10 @@ import { BrowserService } from "./providers/browser.service";
 import {TimePipe} from "./pipes/time.pipe";
 import {AppContainerComponent} from "./components/app-container/app-container.component";
 import { PopupWidgetComponent } from './components/popup-widget/popup-widget.component';
-import { ButtonModule } from 'primeng/primeng';
 
 @NgModule({
     imports: <any[]>[
-        CommonModule,
-        ButtonModule
+        CommonModule
     ],
     declarations: <any[]>[
         TimePipe,

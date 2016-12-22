@@ -22,8 +22,9 @@
                                (onenter)="freetextValue = $event.target.value" (keyup.enter)="onFreetextChanged()"
                                placeholder="Search Entries">
                     </form>
+                    <div #categoriesFilterBtn class="kCategoriesFilter"><i class="kIconfolder"></i><span>Filter Categories</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
+                    <div #refineBtn class="kRefine"><i class="kIconfilter"></i><span>Refine</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
                 </div>
-                <div #categoriesFilterBtn class="kCategoriesFilter"><i class="kIconfolder"></i><span>Filter Categories</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
                 <button pButton class="kButtonDefault kRefreshBtn small" type="text" (click)="reload()" icon="kIconrefresh" title="Refresh"></button>
 
 
@@ -58,3 +59,6 @@
     <kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup" (categoriesChanged)="categoriesChanged($event)"></kCategoriesFilter>
 </kPopupWidget>
 
+<kPopupWidget #refinePopup [popupWidth]="400" [popupHeight]="500" [closeBtn]="true" [targetRef]="refineBtn" [targetOffset]="{'x':-20, 'y': -20}">
+    Refine content
+</kPopupWidget>

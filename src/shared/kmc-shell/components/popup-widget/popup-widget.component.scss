@@ -8,12 +8,14 @@
     background-color: #ffffff;
     border-radius: 4px;
     .kCloseBtn{
-        font-size: 12px;
-        border: none;
+        font-size: 14px;
         float: right;
-        min-width: inherit;
-        &:active{
-            box-shadow: none;
+        color: $kGrayscale3;
+        margin-top: 14px;
+        margin-right: 14px;
+        cursor: pointer;
+        &:hover{
+            color: $kPrimary;
         }
     }
     .kPopupWidgetContent{

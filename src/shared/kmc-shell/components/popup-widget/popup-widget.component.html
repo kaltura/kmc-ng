@@ -1,5 +1,5 @@
 <div class="kPopupWidget kAverageElevation" [style.display]="show ? 'block' : 'none'" [style.width]="popupWidth+'px'" [style.height]="popupHeight+'px'">
-    <button *ngIf="closeBtn" class="kButtonDefault small kCloseBtn" pButton icon="kIconclose_small" (click)="close()"></button>
+    <i *ngIf="closeBtn" class="kCloseBtn kIconclose_small" (click)="close()"></i>
     <div class="kPopupWidgetContent">
         <ng-content></ng-content>
     </div>
