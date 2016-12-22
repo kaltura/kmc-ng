@@ -12,7 +12,6 @@
     }
     .kRefreshBtn {
         font-size: 24px;
-        margin-left: auto;
         border: none;
         min-width: inherit;
         margin-top: -7px;
@@ -44,15 +43,6 @@
         border: 1px solid grey;
         flex: 0 0 50px;
     }
-    .accordionHolder {
-        width: 300px;
-        background-color: white;
-        position: absolute;
-        margin-top: 20px;
-        margin-left: 20px;
-        border: 1px solid grey;
-        border-radius: 5px;
-    }
     .kEntriesTableFooter {
         width: 100%;
         height: 34px;
@@ -68,6 +58,11 @@
         font-weight: bold;
         margin-right: 36px;
         margin-left: 5px;
+    }
+    .kSearchInput {
+        background: url(../styles/assets/magnifier.png) no-repeat 7px 4px;
+        padding-left:30px;
+        background-color: $kGrayscale6;
     }
     .kBulkOperations{
         width: 360px;
@@ -85,6 +80,7 @@
     }
     .kFilters{
         display: flex;
+        margin-left: auto;
     }
     .kCategoriesFilter{
         border: 1px solid $kGrayscale4;

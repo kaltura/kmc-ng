@@ -18,7 +18,7 @@
                 </div>
                 <div [style.visibility]="selectedEntries.length ? 'hidden' : 'visible'" class="kFilters">
                     <form [formGroup]="searchForm">
-                        <input type="text" pInputText formControlName="searchText"
+                        <input type="text" pInputText formControlName="searchText" class="kSearchInput"
                                (onenter)="freetextValue = $event.target.value" (keyup.enter)="onFreetextChanged()"
                                placeholder="Search Entries">
                     </form>
@@ -57,6 +57,6 @@
     <kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup" (categoriesChanged)="categoriesChanged($event)"></kCategoriesFilter>
 </kPopupWidget>
 
-<kPopupWidget #refinePopup [popupWidth]="400" [popupHeight]="500" [closeBtn]="true" [targetRef]="refineBtn" [targetOffset]="{'x':-20, 'y': -20}">
+<kPopupWidget #refinePopup [popupWidth]="400" [popupHeight]="500" [closeBtn]="true" [targetRef]="refineBtn" [targetOffset]="{'x':-220, 'y': -20}">
     Refine content
 </kPopupWidget>
