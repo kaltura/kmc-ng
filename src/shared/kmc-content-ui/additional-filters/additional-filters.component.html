@@ -1,0 +1,12 @@
+<!--div style="padding-top: 20px">
+    <p-tree [autoSelectChildren]="true" [value]="filters" selectionMode="checkbox" [(selection)]="selectedFilters" (onNodeSelect)="onFiltersSelectionChange($event)" (onNodeUnselect)="onFiltersSelectionChange($event)">
+    <template let-node  pTemplate type="default">
+        <span class="kTreeNodeLabel">{{node.label}}</span>
+    </template>
+    </p-tree>
+
+    <p style="padding-left: 20px">
+        <a class="clearAll" [class.disabled]="selectedFilters.length === 0" (click)="clearAll()">Clear all</a>
+    </p>
+</div-->
+Additional Filters
