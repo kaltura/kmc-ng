@@ -48,6 +48,11 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
                 // TODO [KMC] - handle error
             });
         this.reloadAdditionalFilters();
+
+        this.filter = {
+            createdAtFrom: null,
+            createdAtTo: null
+        }
     }
 
     reloadAdditionalFilters(){
@@ -77,7 +82,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
         // clear all partial selections
         this.additionalFilters.forEach((filter: AdditionalFilter) => {
             if (filter['partialSelected']){
-                (filter['partialSelected'] = false;
+                filter['partialSelected'] = false;
             }
         });
         this.onFiltersSelectionChange(null);

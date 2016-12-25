@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'kmcng-icon-pack';
   src:
-    url('fonts/kmcng-icon-pack.woff2?r6sxm9') format('woff2'),
-    url('fonts/kmcng-icon-pack.ttf?r6sxm9') format('truetype'),
-    url('fonts/kmcng-icon-pack.woff?r6sxm9') format('woff'),
-    url('fonts/kmcng-icon-pack.svg?r6sxm9#kmcng-icon-pack') format('svg');
+    url('fonts/kmcng-icon-pack.woff2?rtmbt4') format('woff2'),
+    url('fonts/kmcng-icon-pack.ttf?rtmbt4') format('truetype'),
+    url('fonts/kmcng-icon-pack.woff?rtmbt4') format('woff'),
+    url('fonts/kmcng-icon-pack.svg?rtmbt4#kmcng-icon-pack') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.kIconpartial_small:before {
+  content: "\e922";
+}
 .kIconpagination_end:before {
   content: "\e91f";
 }
@@ -80,6 +83,15 @@
 }
 .kIcontree-arrow-down:before {
   content: "\e900";
+}
+.kIconcalendar:before {
+  content: "\e923";
+}
+.kIconhouse:before {
+  content: "\e924";
+}
+.kIconuser_small:before {
+  content: "\e925";
 }
 .kIconupload:before {
   content: "\e914";

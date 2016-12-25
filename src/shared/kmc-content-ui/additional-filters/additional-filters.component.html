@@ -1,9 +1,9 @@
 <div style="padding-top: 20px">
     <div style="padding-left: 20px">
         <p>Created Between</p>
-        <p-calendar [(ngModel)]="createdFrom" [showIcon]="true" icon="kIconfolder_large" onSelect="updateFilter()"></p-calendar>
+        <p-calendar [(ngModel)]="createdFrom" [showIcon]="true" icon="kIconcalendar" (onSelect)="updateFilter()"></p-calendar>
         <span style="margin-left: 40px; margin-right: 5px">-</span>
-        <p-calendar [(ngModel)]="createdTo" [showIcon]="true" icon="kIconfolder_large" onSelect="updateFilter()"></p-calendar>
+        <p-calendar [(ngModel)]="createdTo" [showIcon]="true" icon="kIconcalendar" (onSelect)="updateFilter()"></p-calendar>
     </div>
     <p style="padding-left: 20px">
         <a class="clearAll" (click)="clearDates()">Clear Dates</a>
