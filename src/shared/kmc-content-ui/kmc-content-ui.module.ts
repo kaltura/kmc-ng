@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
 
-import { TreeModule, SharedModule, AutoCompleteModule, ToggleButtonModule } from 'primeng/primeng';
+import { TreeModule, SharedModule, AutoCompleteModule, ToggleButtonModule, CalendarModule } from 'primeng/primeng';
 
 import { CategoriesFilterComponent } from './categories-filter/categories-filter.component';
 import { AdditionalFiltersComponent } from './additional-filters/additional-filters.component';
@@ -16,7 +16,7 @@ import { ContentAdditionalFiltersStore } from './providers/content-additional-fi
 import { EntryTypePipe, EntryStatusPipe, PlaylistTypePipe } from './pipes/index';
 
 @NgModule({
-    imports:      [ CommonModule, TreeModule, FormsModule, SharedModule, KalturaUIModule, KalturaPrimeNgUIModule, AutoCompleteModule, ToggleButtonModule ],
+    imports:      [ CommonModule, TreeModule, FormsModule, SharedModule, KalturaUIModule, KalturaPrimeNgUIModule, AutoCompleteModule, ToggleButtonModule, CalendarModule ],
     declarations: [ CategoriesFilterComponent, AdditionalFiltersComponent, EntryTypePipe, EntryStatusPipe, PlaylistTypePipe ],
     providers:    [],
     exports: [ CategoriesFilterComponent, AdditionalFiltersComponent, EntryTypePipe, EntryStatusPipe, PlaylistTypePipe ]
