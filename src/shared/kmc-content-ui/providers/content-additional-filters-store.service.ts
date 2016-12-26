@@ -28,9 +28,11 @@ export interface AdditionalFilters {
 export class AdditionalFilter {
     id: string;
     label = "";
+    filterName: string;
     children: AdditionalFilter[] = [];
 
-    constructor(id: string, label: string) {
+    constructor(filterName: string, id: string, label: string) {
+        this.filterName = filterName;
         this.id = id;
         this.label = label;
     }
@@ -124,52 +126,52 @@ export class ContentAdditionalFiltersStore {
         this.rootLevel = [];
         let newFilter: AdditionalFilter;
 
-        newFilter = new AdditionalFilter('','Media Types');
-        newFilter.children.push(new AdditionalFilter('1','Video'));
-        newFilter.children.push(new AdditionalFilter('2','Image'));
-        newFilter.children.push(new AdditionalFilter('5','Audio'));
-        newFilter.children.push(new AdditionalFilter('6','Video Mix'));
-        newFilter.children.push(new AdditionalFilter('201','Live Stream'));
+        newFilter = new AdditionalFilter('mediaType', '','Media Types');
+        newFilter.children.push(new AdditionalFilter('mediaType', '1','Video'));
+        newFilter.children.push(new AdditionalFilter('mediaType', '2','Image'));
+        newFilter.children.push(new AdditionalFilter('mediaType', '5','Audio'));
+        newFilter.children.push(new AdditionalFilter('mediaType', '6','Video Mix'));
+        newFilter.children.push(new AdditionalFilter('mediaType', '201','Live Stream'));
         this.rootLevel.push(newFilter);
 
-        newFilter = new AdditionalFilter('','Ingestion Statuses');
-        newFilter.children.push(new AdditionalFilter('2','Ready'));
-        newFilter.children.push(new AdditionalFilter('7','No Media'));
-        newFilter.children.push(new AdditionalFilter('4','Pending'));
-        newFilter.children.push(new AdditionalFilter('0','Uploading'));
-        newFilter.children.push(new AdditionalFilter('1','Transcoding'));
-        newFilter.children.push(new AdditionalFilter('-1,-2','Error'));
+        newFilter = new AdditionalFilter('ingestionStatus', '','Ingestion Statuses');
+        newFilter.children.push(new AdditionalFilter('ingestionStatus', '2','Ready'));
+        newFilter.children.push(new AdditionalFilter('ingestionStatus', '7','No Media'));
+        newFilter.children.push(new AdditionalFilter('ingestionStatus', '4','Pending'));
+        newFilter.children.push(new AdditionalFilter('ingestionStatus', '0','Uploading'));
+        newFilter.children.push(new AdditionalFilter('ingestionStatus', '1','Transcoding'));
+        newFilter.children.push(new AdditionalFilter('ingestionStatus', '-1,-2','Error'));
         this.rootLevel.push(newFilter);
 
-        newFilter = new AdditionalFilter('','Durations');
-        newFilter.children.push(new AdditionalFilter('short','Short (0-4 min.)'));
-        newFilter.children.push(new AdditionalFilter('medium','Medium (4-20 min.)'));
-        newFilter.children.push(new AdditionalFilter('long','Long (20+ min.)'));
+        newFilter = new AdditionalFilter('durations', '','Durations');
+        newFilter.children.push(new AdditionalFilter('durations', 'short','Short (0-4 min.)'));
+        newFilter.children.push(new AdditionalFilter('durations', 'medium','Medium (4-20 min.)'));
+        newFilter.children.push(new AdditionalFilter('durations', 'long','Long (20+ min.)'));
         this.rootLevel.push(newFilter);
 
-        newFilter = new AdditionalFilter('','Original & Clipped Entries');
-        newFilter.children.push(new AdditionalFilter('1','Original Entries'));
-        newFilter.children.push(new AdditionalFilter('0','Clipped Entries'));
+        newFilter = new AdditionalFilter('originalAndClipped', '','Original & Clipped Entries');
+        newFilter.children.push(new AdditionalFilter('originalAndClipped', '1','Original Entries'));
+        newFilter.children.push(new AdditionalFilter('originalAndClipped', '0','Clipped Entries'));
         this.rootLevel.push(newFilter);
 
-        newFilter = new AdditionalFilter('','Time Scheduling');
-        newFilter.children.push(new AdditionalFilter('past','Past Scheduling'));
-        newFilter.children.push(new AdditionalFilter('live','Live'));
-        newFilter.children.push(new AdditionalFilter('future','Future Scheduling'));
-        newFilter.children.push(new AdditionalFilter('scheduled','Scheduled'));
+        newFilter = new AdditionalFilter('timeScheduling', '','Time Scheduling');
+        newFilter.children.push(new AdditionalFilter('timeScheduling', 'past','Past Scheduling'));
+        newFilter.children.push(new AdditionalFilter('timeScheduling', 'live','Live'));
+        newFilter.children.push(new AdditionalFilter('timeScheduling', 'future','Future Scheduling'));
+        newFilter.children.push(new AdditionalFilter('timeScheduling', 'scheduled','Scheduled'));
         this.rootLevel.push(newFilter);
 
-        newFilter = new AdditionalFilter('','Moderation Statuses');
-        newFilter.children.push(new AdditionalFilter('2','Approved'));
-        newFilter.children.push(new AdditionalFilter('5','Flagged for review'));
-        newFilter.children.push(new AdditionalFilter('6','Rejected'));
-        newFilter.children.push(new AdditionalFilter('7','Auto approved'));
-        newFilter.children.push(new AdditionalFilter('1','Pending moderation'));
+        newFilter = new AdditionalFilter('moderationStatuses', '','Moderation Statuses');
+        newFilter.children.push(new AdditionalFilter('moderationStatuses', '2','Approved'));
+        newFilter.children.push(new AdditionalFilter('moderationStatuses', '5','Flagged for review'));
+        newFilter.children.push(new AdditionalFilter('moderationStatuses', '6','Rejected'));
+        newFilter.children.push(new AdditionalFilter('moderationStatuses', '7','Auto approved'));
+        newFilter.children.push(new AdditionalFilter('moderationStatuses', '1','Pending moderation'));
         this.rootLevel.push(newFilter);
 
-        newFilter = new AdditionalFilter('','Replacement Statuses');
-        newFilter.children.push(new AdditionalFilter('3,1','Processing new files'));
-        newFilter.children.push(new AdditionalFilter('2','Ready for review'));
+        newFilter = new AdditionalFilter('replacementStatuses', '','Replacement Statuses');
+        newFilter.children.push(new AdditionalFilter('replacementStatuses', '3,1','Processing new files'));
+        newFilter.children.push(new AdditionalFilter('replacementStatuses', '2','Ready for review'));
         this.rootLevel.push(newFilter);
     }
 
@@ -183,16 +185,16 @@ export class ContentAdditionalFiltersStore {
                 if (response.resultType && response.result && response.result.objects && response.result.objects.length) {
                     switch (response.resultType) {
                         case "KalturaFlavorParamsListResponse":
-                            newFilter = new AdditionalFilter('', 'Flavors');
+                            newFilter = new AdditionalFilter('flavors', '', 'Flavors');
                             response.result.objects.forEach((flavor: KalturaFlavorParams) => {
-                                newFilter.children.push(new AdditionalFilter(flavor.id.toString(), flavor.name));
+                                newFilter.children.push(new AdditionalFilter('flavors', flavor.id.toString(), flavor.name));
                             });
                             this.rootLevel.push(newFilter);
                             break;
                         case "KalturaAccessControlListResponse":
-                            newFilter = new AdditionalFilter('', 'Access Control Profiles');
+                            newFilter = new AdditionalFilter('accessControlProfiles', '', 'Access Control Profiles');
                             response.result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
-                                newFilter.children.push(new AdditionalFilter(accessControlProfile.id.toString(), accessControlProfile.name));
+                                newFilter.children.push(new AdditionalFilter('accessControlProfiles', accessControlProfile.id.toString(), accessControlProfile.name));
                             });
                             this.rootLevel.push(newFilter);
                             break;

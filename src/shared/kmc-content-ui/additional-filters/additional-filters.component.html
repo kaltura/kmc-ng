@@ -8,9 +8,14 @@
     <p style="padding-left: 20px">
         <a class="clearAll" (click)="clearDates()">Clear Dates</a>
     </p>
-    <p-tree [value]="additionalFilters" selectionMode="checkbox" [(selection)]="selectedFilters" (onNodeSelect)="onFiltersSelectionChange($event)" (onNodeUnselect)="onFiltersSelectionChange($event)">
+    <p-tree [value]="additionalFilters" selectionMode="checkbox" [(selection)]="selectedFilters" (onNodeSelect)="updateFilter()" (onNodeUnselect)="updateFilter()">
     <template let-node  pTemplate type="default">
-        <span class="kTreeNodeLabel">{{node.label}}</span>
+        <span *ngIf="node.id!=='scheduled'" class="kTreeNodeLabel">{{node.label}}</span>
+        <div *ngIf="node.id==='scheduled'">
+            <span class="kTreeNodeLabel">{{node.label}}</span>
+            <p-calendar [(ngModel)]="scheduledFrom" (onSelect)="updateFilter()"></p-calendar>
+            <p-calendar [(ngModel)]="scheduledTo" (onSelect)="updateFilter()"></p-calendar>
+        </div>
     </template>
     </p-tree>
 
