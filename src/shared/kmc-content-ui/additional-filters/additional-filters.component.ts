@@ -4,6 +4,7 @@ import { Subscription} from 'rxjs';
 import * as R from 'ramda';
 
 import { ContentAdditionalFiltersStore, AdditionalFilter } from 'kmc-content-ui/providers/content-additional-filters-store.service';
+import { FilterType } from './additional-filters-types';
 
 export interface RefineFiltersChangedArgs
 {
@@ -109,16 +110,16 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
             this.filter.createdAtLessThanOrEqual = this.createdTo;
         }
 
-        this.setFlatFilter('ingestionStatus', 'statusIn');                  // set ingestion status filter
-        this.setFlatFilter('mediaType', 'mediaTypeIn');                     // set media type filter
-        this.setFlatFilter('durations', 'durationTypeMatchOr');             // set duration filter
-        this.setFlatFilter('moderationStatuses', 'moderationStatusIn');     // set moderation status filter
-        this.setFlatFilter('replacementStatuses', 'replacementStatusIn');   // set replacement status filter
-        this.setFlatFilter('flavors', 'flavorParamsIdsMatchOr');            // set flavors filter
-        this.setFlatFilter('accessControlProfiles', 'accessControlIdIn');   // set access control profiles filter
+        this.setFlatFilter(FilterType.Types.IngestionStatus, 'statusIn');                  // set ingestion status filter
+        this.setFlatFilter(FilterType.Types.MediaType, 'mediaTypeIn');                     // set media type filter
+        this.setFlatFilter(FilterType.Types.Durations, 'durationTypeMatchOr');             // set duration filter
+        this.setFlatFilter(FilterType.Types.ModerationStatuses, 'moderationStatusIn');     // set moderation status filter
+        this.setFlatFilter(FilterType.Types.ReplacementStatuses, 'replacementStatusIn');   // set replacement status filter
+        this.setFlatFilter(FilterType.Types.Flavors, 'flavorParamsIdsMatchOr');            // set flavors filter
+        this.setFlatFilter(FilterType.Types.AccessControlProfiles, 'accessControlIdIn');   // set access control profiles filter
 
         // set original and clipped entries filter
-        filters = R.filter((filter: AdditionalFilter) => filter.filterName === 'originalAndClipped', this.selectedFilters);
+        filters = R.filter((filter: AdditionalFilter) => filter.filterName === FilterType.Types.OriginalAndClipped, this.selectedFilters);
         if (filters.length > 1) {
             this.filter.isRoot = -1;
         }
@@ -127,7 +128,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
         }
 
         // set time scheduling filter
-        filters = R.filter((filter: AdditionalFilter) => filter.filterName === 'timeScheduling', this.selectedFilters);
+        filters = R.filter((filter: AdditionalFilter) => filter.filterName === FilterType.Types.TimeScheduling, this.selectedFilters);
         if (filters.length){
             if (R.findIndex(R.propEq('id', 'past'))(filters) > -1){
                 this.filter.endDateLessThanOrEqual = new Date();
@@ -145,6 +146,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
             }
         }
 
+        console.info(this.filter);
         this.refineFiltersChanged.emit(this.filter);
     }
 
@@ -157,7 +159,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
                     this.filter[filterPoperty] += filter.id + ',';
                 }
             });
-            this.filter[filterPoperty] = this.filter[filterPoperty].substr(0, this.filter[filterPoperty].length-1);
+            this.filter[filterPoperty] = this.filter[filterPoperty].substr(0, this.filter[filterPoperty].length-1); // remove last comma from string
         }
     }
 
