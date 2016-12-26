@@ -53,8 +53,6 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
         this.additionalFiltersSubscribe = this.contentAdditionalFiltersStore.additionalFilters$.subscribe(
             (additionalFiltersRoot: any) => {
                 this.additionalFilters = additionalFiltersRoot.items ? additionalFiltersRoot.items : [];
-                // this.categoriesMap = categoriesRoot.map ? categoriesRoot.map : {};
-                // this.createSearchCategories();
             },
             (error) => {
                 // TODO [KMC] - handle error
