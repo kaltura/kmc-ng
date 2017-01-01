@@ -3,9 +3,21 @@
       <div class="k-logo"></div>
 
       <div *ngFor="let item of menuConfig">
-        <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]">{{'MENU.'+item.titleToken | translate}}</a>
+        <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]">{{'MENU.'+item.titleToken | translate | uppercase}}</a>
       </div>
-      <div>
+
+    <div class="kMenu-right">
+        <button pButton label="UPLOAD" class="kButtonDefault kUploadBtn"></button>
+        <i class="kIconfolder_large"></i>
+        <i class="kIconuser"></i>
+        <i class="kIcongear"></i>
+        <i class="kIconhelp"></i>
+        <div class="kUserName" (click)="user_settings_menu.toggle($event)">
+            <span>{{_userContext.fullName}}</span>
+            <i class="kIcondropdown_arrow_bottom"></i>
+        </div>
+    </div>
+      <!--div>
         <a (click)="toggleUpload()" [class.uploadOpen]="uploadOpen" class="widgetLink">{{ 'MENU.upload' | translate }} &nbsp;&nbsp;{{uploadOpen ? '&#x25B2;' : '&#x25BC;'}}</a>
         <kmc-upload [uploadOpen]="uploadOpen"></kmc-upload>
       </div>
@@ -17,16 +29,18 @@
         <div>
           <kmc-language-menu class="langMenu"></kmc-language-menu>
         </div>
-      </div>
+      </div-->
 
 </div>
 
 <div class="appSubMenu" *ngIf="selectedMenuItem && showSubMenu && selectedMenuItem.children">
     <div class="kContent">
         <div *ngFor="let subitem of selectedMenuItem.children" class="subMenuContainer" [routerLinkActive]="['active']">
-          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+subitem.routePath]">{{'MENU.'+subitem.titleToken | translate}}</a>
+          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+subitem.routePath]">{{'MENU.'+subitem.titleToken | translate | uppercase}}</a>
           <div class="linkMarker"></div>
         </div>
     </div>
 </div>
 
+
+<p-tieredMenu #user_settings_menu popup="popup" [model]="userSettingsMenu"></p-tieredMenu>
