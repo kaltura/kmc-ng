@@ -28,7 +28,7 @@ import { UploadComponent } from './components/upload/upload.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 import {KalturaHttpConfigurationAdapter} from "./services/kaltura-http-configuration-adapter.service";
 
-import { ButtonModule, InputTextModule} from 'primeng/primeng';
+import { ButtonModule, InputTextModule, TieredMenuModule} from 'primeng/primeng';
 
 import { KMCContentUIModule } from 'kmc-content-ui/kmc-content-ui.module';
 
@@ -45,6 +45,7 @@ if (process.env.ENV === 'build') {
     RouterModule.forRoot([]),
     KMCShellModule.forRoot(),
     BrowserModule,
+    TieredMenuModule,
     HttpModule,
     KMCContentUIModule.forRoot(),
     KalturaCommonModule.forRoot(),
