@@ -1,17 +1,19 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Output, ViewChild} from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, Output, ViewChild, Input, AfterViewInit, ElementRef} from '@angular/core';
 import { Tree, TreeNode } from 'primeng/primeng';
 
 import { Subscription} from 'rxjs';
 import * as R from 'ramda';
 
 import { ContentCategoriesStore, Category } from 'kmc-content-ui/providers/content-categories-store.service';
+import {PopupWidgetComponent} from "../../kmc-shell/components/popup-widget/popup-widget.component";
+import {BrowserService} from "../../kmc-shell/providers/browser.service";
 
 @Component({
     selector: 'kCategoriesFilter',
     templateUrl: './categories-filter.component.html',
     styleUrls: ['./categories-filter.component.scss']
 })
-export class CategoriesFilterComponent implements OnInit, OnDestroy{
+export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestroy{
 
     loading = false;
     categories: any;
@@ -23,7 +25,7 @@ export class CategoriesFilterComponent implements OnInit, OnDestroy{
     filteredSearchCategories = [];
     currentSearch: any;
 
-    autoSelectChildren:boolean = true;
+    autoSelectChildren:string = 'false';
     lazyLoading: boolean = false;
 
     @Output()
@@ -31,7 +33,9 @@ export class CategoriesFilterComponent implements OnInit, OnDestroy{
 
     @ViewChild(Tree) categoriesTree: Tree;
 
-    constructor(public contentCategoriesStore: ContentCategoriesStore) {
+    @Input() parentPopupWidget: PopupWidgetComponent;
+
+    constructor(public filtersRef: ElementRef, public contentCategoriesStore: ContentCategoriesStore, public browserService: BrowserService) {
     }
 
     ngOnInit() {
@@ -45,6 +49,24 @@ export class CategoriesFilterComponent implements OnInit, OnDestroy{
                 // TODO [KMC] - handle error
             });
         this.reloadCategories(-1);
+
+        const savedAutoSelectChildren: any = this.browserService.getFromLocalStorage("categoriesTree.autoSelectChildren");
+        this.autoSelectChildren = savedAutoSelectChildren === null ? 'false' : savedAutoSelectChildren;
+    }
+
+    ngAfterViewInit(){
+        if (this.parentPopupWidget){
+            this.parentPopupWidget.stateNotifier.subscribe(event => {
+                if (event === "open"){
+                    const inputFields: any[] = this.filtersRef.nativeElement.getElementsByTagName("input");
+                    if (inputFields.length && inputFields[0].focus){
+                        setTimeout(() => {
+                            inputFields[0].focus();
+                        },0);
+                    }
+                }
+            });
+        }
     }
 
     reloadCategories(parentNodeId: number){
@@ -87,7 +109,7 @@ export class CategoriesFilterComponent implements OnInit, OnDestroy{
         this.categoriesTree.expandToNode(this.categoriesMap[event.id]);
 
         if (R.findIndex(R.propEq('id', parseInt(event.id)))(this.selectedCategories) === -1){
-            if (this.autoSelectChildren){
+            if (this.autoSelectChildren === 'true'){
                 this.categoriesTree.propagateSelectionDown(this.categoriesMap[event.id], true);
                 if(this.categoriesMap[event.id].parent) {
                     this.categoriesTree.propagateSelectionUp(this.categoriesMap[event.id].parent, true);
@@ -97,7 +119,6 @@ export class CategoriesFilterComponent implements OnInit, OnDestroy{
             }
             this.onCategorySelectionChange(null);
         }
-
         this.currentSearch = null;
     }
 
@@ -120,7 +141,13 @@ export class CategoriesFilterComponent implements OnInit, OnDestroy{
         this.onCategorySelectionChange(null);
     }
 
+    close(){
+        if (this.parentPopupWidget){
+            this.parentPopupWidget.close();
+        }
+    }
     ngOnDestroy(){
+        this.parentPopupWidget.stateNotifier.unsubscribe();
         this.categoriesSubscribe.unsubscribe();
     }
 

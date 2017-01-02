@@ -1,0 +1,26 @@
+@import '../../../../styles/scss/_variables.scss';
+:host{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+.kPopupWidget{
+    background-color: #ffffff;
+    border-radius: 4px;
+    overflow: hidden;
+    .kCloseBtn{
+        font-size: 14px;
+        float: right;
+        color: $kGrayscale3;
+        margin-top: 14px;
+        margin-right: 14px;
+        cursor: pointer;
+        &:hover{
+            color: $kPrimary;
+        }
+    }
+    .kPopupWidgetContent{
+        margin: 12px;
+    }
+}
+

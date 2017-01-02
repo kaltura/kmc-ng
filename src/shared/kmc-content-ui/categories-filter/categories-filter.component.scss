@@ -15,15 +15,57 @@
     color: $kGrayscale3;
     margin-left: 10px;
 }
-.clearAll{
-    margin-top: 10px;
+.kClose{
+    float: right;
 }
-.allCategories{
-    color: #9c9c9c;
+.kAllCategories{
+    color: $kGrayscale3;
+    line-height: 40px;
+    letter-spacing: 0.1em;
+    font-size: 13px;
+    border-top: 1px solid $kGrayscale6;
+    border-bottom: 1px solid $kGrayscale6;
+    margin-left: -20px;
+    padding-left: 20px;
+    margin-right: -20px;
+    margin-top: 18px;
+}
+.kPrefs{
+    padding-left: 20px;
+    padding-top: 10px;
+}
+.kFilterPrefs{
+    color: $kGrayscale3;
+    line-height: 40px;
+    letter-spacing: 0.1em;
+    font-size: 13px;
+}
+.kTreeContainer{
+    overflow-y: auto;
+    height: 340px;
+    border-bottom: 1px solid $kGrayscale6;
+    margin-left: -20px;
+    padding-left: 20px;
+    margin-right: -20px;
+    width: 387px;
 }
 a.disabled{
     pointer-events: none;
     cursor: not-allowed;
     color: #cacaca;
     border: none;
+}
+.kTreeConfig{
+    font-size: 24px;
+    position: absolute;
+    right: 16px;
+    top: 24px;
+    color: $kGrayscale3;
+    cursor: pointer;
+    &:hover{
+        color: $kPrimary;
+    }
+}
+.kHeader{
+    padding-top: 8px;
 }

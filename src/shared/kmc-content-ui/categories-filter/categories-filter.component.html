@@ -1,17 +1,23 @@
-<div style="padding-top: 20px">
-    <div style="padding-left: 20px">
-        <p-autoComplete [(ngModel)]="currentSearch" [suggestions]="filteredSearchCategories" (completeMethod)="categorySearch($event)" field="label" placeholder="Search Categories" [minLength]="3" (onSelect)="categorySelected($event)"></p-autoComplete>
-        <p><span style="margin-right: 66px">Auto select children: </span><p-toggleButton [(ngModel)]="autoSelectChildren"></p-toggleButton></p>
-        <p class="allCategories">ALL CATEGORIES {{searchCategories.length && !lazyLoading ? searchCategories.length : ''}}</p>
+<div class="kUseKMCngIcons">
+    <div class="kHeader">
+        <p-autoComplete width="300px" [(ngModel)]="currentSearch" [suggestions]="filteredSearchCategories" (completeMethod)="categorySearch($event)" field="label" placeholder="Find Category" [minLength]="3" (onSelect)="categorySelected($event)"></p-autoComplete>
+        <i #config class="kIcongear kTreeConfig" pTooltip="Preferences"></i>
+        <div class="kAllCategories">ALL CATEGORIES {{searchCategories.length && !lazyLoading ? searchCategories.length : ''}}</div>
     </div>
-    <p-tree [autoSelectChildren]="autoSelectChildren" [value]="categories" selectionMode="checkbox" [(selection)]="selectedCategories" (onNodeSelect)="onCategorySelectionChange($event)" (onNodeUnselect)="onCategorySelectionChange($event)">
-    <template let-node  pTemplate type="default">
-        <span class="kTreeNodeLabel">{{node.label}}</span>
-        <span class="kTreeNodeNumChildren" *ngIf="node.children && node.children.length">{{node.children.length}}</span>
-    </template>
-    </p-tree>
+    <div class="kTreeContainer">
+        <p-tree [autoSelectChildren]="autoSelectChildren" [value]="categories" selectionMode="checkbox" [(selection)]="selectedCategories" (onNodeSelect)="onCategorySelectionChange($event)" (onNodeUnselect)="onCategorySelectionChange($event)">
+        <template let-node  pTemplate type="default">
+            <span class="kTreeNodeLabel">{{node.label}}</span>
+            <span class="kTreeNodeNumChildren" *ngIf="node.children && node.children.length">{{node.children.length}}</span>
+        </template>
+        </p-tree>
+    </div>
 
-    <p style="padding-left: 20px">
-        <a class="clearAll" [class.disabled]="selectedCategories.length === 0" (click)="clearAll()">Clear all</a>
+    <p >
+        <a [class.disabled]="selectedCategories.length === 0" (click)="clearAll()">Clear all</a>
+        <a class="kClose" (click)="close()">Close</a>
     </p>
 </div>
+<kPopupWidget #categoriesPref [popupWidth]="360" [popupHeight]="220" [closeBtn]="true" [targetRef]="config" [targetOffset]="{'x':-322, 'y': -24}" [parentPopup]="parentPopupWidget">
+    <kCategoriesFilterPrefs [(showChildren)]="autoSelectChildren"></kCategoriesFilterPrefs>
+</kPopupWidget>

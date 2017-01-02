@@ -1,6 +1,7 @@
 /* Elevation */
 .kLowElevation{
     box-shadow: 0 0px 2px 0 rgba(0,0,0,0.24);
+    border: 1px solid $kGrayscale4;
 }
 .kAverageElevation{
     box-shadow: 0 2px 8px 0 rgba(0,0,0,0.24);
