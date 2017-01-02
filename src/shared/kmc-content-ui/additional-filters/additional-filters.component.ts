@@ -8,20 +8,26 @@ import { FilterType } from './additional-filters-types';
 
 export interface RefineFiltersChangedArgs
 {
-    createdAtGreaterThanOrEqual? : Date;
-    createdAtLessThanOrEqual? : Date;
+    createdAtGreaterThanOrEqual? : Number;
+    createdAtLessThanOrEqual? : Number;
     mediaTypeIn? : string;
     statusIn? : string;
     durationTypeMatchOr? :string;
     isRoot? : number;
-    endDateLessThanOrEqual? : Date;
-    startDateLessThanOrEqualOrNull? : Date;
-    endDateGreaterThanOrEqualOrNull? : Date;
-    startDateGreaterThanOrEqual? : Date;
+    endDateLessThanOrEqual? : Number;
+    startDateLessThanOrEqualOrNull? : Number;
+    endDateGreaterThanOrEqualOrNull? : Number;
+    startDateGreaterThanOrEqual? : Number;
     moderationStatusIn? : string;
     replacementStatusIn? : string;
     flavorParamsIdsMatchOr? : string;
     accessControlIdIn? : string;
+    distributionProfiles? : string[]; // since this should fill the advanced search objecct with the metadata profiles - it will be parsed in the content-entries-store
+}
+
+function toServerDate(value? : Date) : number
+{
+    return value ? value.getTime() / 1000 : null;
 }
 
 @Component({
@@ -100,12 +106,13 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     }
     // update the filter
     updateFilter(){
+        this.initFilter();
         let filters: AdditionalFilter[];
 
         // set creation dates filter
         if (this.createdFrom || this.createdTo) {
-            this.filter.createdAtGreaterThanOrEqual = this.createdFrom;
-            this.filter.createdAtLessThanOrEqual = this.createdTo;
+            this.filter.createdAtGreaterThanOrEqual = toServerDate(this.createdFrom);
+            this.filter.createdAtLessThanOrEqual = toServerDate(this.createdTo);
         }
 
         this.setFlatFilter(FilterType.Types.IngestionStatus, 'statusIn');                  // set ingestion status filter
@@ -129,19 +136,30 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
         filters = R.filter((filter: AdditionalFilter) => filter.filterName === FilterType.Types.TimeScheduling, this.selectedFilters);
         if (filters.length){
             if (R.findIndex(R.propEq('id', 'past'))(filters) > -1){
-                this.filter.endDateLessThanOrEqual = new Date();
+                this.filter.endDateLessThanOrEqual = toServerDate(new Date());
             }
             if (R.findIndex(R.propEq('id', 'live'))(filters) > -1){
-                this.filter.startDateLessThanOrEqualOrNull = new Date();
-                this.filter.endDateGreaterThanOrEqualOrNull = new Date();
+                this.filter.startDateLessThanOrEqualOrNull = toServerDate(new Date());
+                this.filter.endDateGreaterThanOrEqualOrNull = toServerDate(new Date());
             }
             if (R.findIndex(R.propEq('id', 'future'))(filters) > -1){
-                this.filter.startDateGreaterThanOrEqual = new Date();
+                this.filter.startDateGreaterThanOrEqual = toServerDate(new Date());
             }
             if (R.findIndex(R.propEq('id', 'scheduled'))(filters) > -1){
-                this.filter.startDateGreaterThanOrEqual = this.scheduledFrom;
-                this.filter.endDateLessThanOrEqual = this.scheduledTo
+                this.filter.startDateGreaterThanOrEqual = toServerDate(this.scheduledFrom);
+                this.filter.endDateLessThanOrEqual = toServerDate(this.scheduledTo);
             }
+        }
+
+        // set distribution profiles filter
+        filters = R.filter((filter: AdditionalFilter) => filter.filterName === FilterType.Types.DistributionProfiles, this.selectedFilters);
+        if (filters.length){
+            this.filter.distributionProfiles = [];
+            filters.forEach( (distributionProfile) => {
+                if (distributionProfile.id.length){
+                    this.filter.distributionProfiles.push(distributionProfile.id);
+                }
+            });
         }
 
         console.info(this.filter);
@@ -159,6 +177,15 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
             });
             this.filter[filterPoperty] = this.filter[filterPoperty].substr(0, this.filter[filterPoperty].length-1); // remove last comma from string
         }
+    }
+
+    isScheduledEnabled(){
+        const filters: AdditionalFilter[] = R.filter((filter: AdditionalFilter) => filter.filterName === FilterType.Types.TimeScheduling, this.selectedFilters);
+        return R.findIndex(R.propEq('id', 'scheduled'))(filters) > -1;
+    }
+
+    blockScheduleToggle(event){
+        event.stopPropagation();
     }
 
     ngOnDestroy(){

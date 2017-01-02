@@ -8,7 +8,8 @@ export const FilterType = {
         "ModerationStatuses" : "moderationStatuses",
         "ReplacementStatuses" : "replacementStatuses",
         "Flavors" : "flavors",
-        "AccessControlProfiles": "accessControlProfiles"
+        "AccessControlProfiles": "accessControlProfiles",
+        "DistributionProfiles": "distributionProfiles",
     },
     MediaType: {
         'Video': '1',

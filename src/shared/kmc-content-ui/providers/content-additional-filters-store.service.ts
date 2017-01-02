@@ -15,7 +15,8 @@ import {
     KalturaDetachedResponseProfile,
     KalturaResponseProfileType,
     KalturaFlavorParams,
-    KalturaAccessControlProfile
+    KalturaAccessControlProfile,
+    KalturaDistributionProfile
 } from '@kaltura-ng2/kaltura-api/types'
 
 import {FilterType} from '../additional-filters/additional-filters-types';
@@ -68,7 +69,7 @@ export class ContentAdditionalFiltersStore {
             const metadataProfilesFilter = new KalturaMetadataProfileFilter();
             metadataProfilesFilter.createModeNotEqual = 3;
             metadataProfilesFilter.orderBy = '-createdAt';
-            metadataProfilesFilter.metadataObjectTypeEqual = KalturaMetadataObjectType.User;
+            metadataProfilesFilter.metadataObjectTypeEqual = KalturaMetadataObjectType.Entry;
 
             const accessControlFilter = new KalturaAccessControlFilter();
             accessControlFilter.orderBy = '-createdAt';
@@ -158,6 +159,13 @@ export class ContentAdditionalFiltersStore {
                             newFilter = new AdditionalFilter('accessControlProfiles', '', 'Access Control Profiles');
                             response.result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
                                 newFilter.children.push(new AdditionalFilter('accessControlProfiles', accessControlProfile.id.toString(), accessControlProfile.name));
+                            });
+                            this.rootLevel.push(newFilter);
+                            break;
+                        case "KalturaDistributionProfileListResponse":
+                            newFilter = new AdditionalFilter('distributionProfiles', '', 'Destinations');
+                            response.result.objects.forEach((distributionProfile: KalturaDistributionProfile) => {
+                                newFilter.children.push(new AdditionalFilter('distributionProfiles', distributionProfile.id.toString(), distributionProfile.name));
                             });
                             this.rootLevel.push(newFilter);
                             break;

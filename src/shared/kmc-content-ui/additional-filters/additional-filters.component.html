@@ -11,10 +11,10 @@
     <p-tree [value]="additionalFilters" selectionMode="checkbox" [(selection)]="selectedFilters" (onNodeSelect)="updateFilter()" (onNodeUnselect)="updateFilter()">
     <template let-node  pTemplate type="default">
         <span *ngIf="node.id!=='scheduled'" class="kTreeNodeLabel">{{node.label}}</span>
-        <div *ngIf="node.id==='scheduled'">
+        <div *ngIf="node.id==='scheduled'" (click)="blockScheduleToggle($event)">
             <span class="kTreeNodeLabel">{{node.label}}</span>
-            <p-calendar [(ngModel)]="scheduledFrom" (onSelect)="updateFilter()"></p-calendar>
-            <p-calendar [(ngModel)]="scheduledTo" (onSelect)="updateFilter()"></p-calendar>
+            <p-calendar #scheduledfrom [(ngModel)]="scheduledFrom" [disabled]="!isScheduledEnabled()" (onSelect)="scheduledfrom.overlayVisible = false; updateFilter()"></p-calendar>
+            <p-calendar #scheduledto [(ngModel)]="scheduledTo" [disabled]="!isScheduledEnabled()" (onSelect)="scheduledto.overlayVisible = false; updateFilter()"></p-calendar>
         </div>
     </template>
     </p-tree>
