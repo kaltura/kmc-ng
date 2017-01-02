@@ -1,4 +1,5 @@
 <div style="padding-top: 20px">
+    <p style="padding-left: 20px">ADDITIONAL FILTERS</p>
     <div style="padding-left: 20px">
         <p>Created Between</p>
         <p-calendar [(ngModel)]="createdFrom" [showIcon]="true" icon="kIconcalendar" (onSelect)="updateFilter()"></p-calendar>
@@ -19,6 +20,14 @@
     </template>
     </p-tree>
 
+    <div *ngFor="let metadataProfile of metadataProfilesFilters">
+        <p style="padding-left: 20px">{{metadataProfile.label | uppercase}}</p>
+        <p-tree [value]="metadataProfile.filters" selectionMode="checkbox" [(selection)]="selectedFilters" (onNodeSelect)="updateFilter()" (onNodeUnselect)="updateFilter()">
+            <template let-node  pTemplate type="default">
+                <span class="kTreeNodeLabel">{{node.label}}</span>
+            </template>
+        </p-tree>
+    </div>
     <p style="padding-left: 20px">
         <a class="clearAll" [class.disabled]="selectedFilters.length === 0" (click)="clearAll()">Clear all</a>
     </p>

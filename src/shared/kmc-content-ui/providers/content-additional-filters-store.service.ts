@@ -16,7 +16,8 @@ import {
     KalturaResponseProfileType,
     KalturaFlavorParams,
     KalturaAccessControlProfile,
-    KalturaDistributionProfile
+    KalturaDistributionProfile,
+    KalturaMetadataProfile
 } from '@kaltura-ng2/kaltura-api/types'
 
 import {FilterType} from '../additional-filters/additional-filters-types';
@@ -26,8 +27,18 @@ import * as R from 'ramda';
 
 export interface AdditionalFilters {
     items: AdditionalFilter[],
+    metadataFilters: MetadataProfileFilterGroup[],
     loaded: boolean,
     status: string
+}
+export class MetadataProfileFilter {
+    label?: string;
+    data?: string;
+    children?: any[];
+}
+export class MetadataProfileFilterGroup {
+    label?: string;
+    filters?: MetadataProfileFilter[];
 }
 export class AdditionalFilter {
     id: string;
@@ -47,12 +58,14 @@ export class ContentAdditionalFiltersStore {
 
     private _additionalFilters: BehaviorSubject<AdditionalFilters> = new BehaviorSubject({
         items: [],
+        metadataFilters: [],
         loaded: false,
         status: ''
     });
     public additionalFilters$: Observable<AdditionalFilters> = this._additionalFilters.asObservable();
 
     private rootLevel: AdditionalFilter[] = [];
+    private metadataFilters: any[] = [];
 
     constructor(private kalturaServerClient: KalturaServerClient) {
         this.initRootLevel();
@@ -64,7 +77,7 @@ export class ContentAdditionalFiltersStore {
 
         if (ignoreCache || !additionalFilters.loaded || additionalFilters.status) {
 
-            this._additionalFilters.next({items: [], loaded: false, status: ''});
+            this._additionalFilters.next({items: [], metadataFilters: [], loaded: false, status: ''});
 
             const metadataProfilesFilter = new KalturaMetadataProfileFilter();
             metadataProfilesFilter.createModeNotEqual = 3;
@@ -108,6 +121,7 @@ export class ContentAdditionalFiltersStore {
                         (filters: AdditionalFilter[]) => {
                             this._additionalFilters.next({
                                 items: <AdditionalFilter[]>filters,
+                                metadataFilters: <MetadataProfileFilterGroup[]>this.metadataFilters,
                                 loaded: true,
                                 status: ''
                             });
@@ -169,12 +183,75 @@ export class ContentAdditionalFiltersStore {
                             });
                             this.rootLevel.push(newFilter);
                             break;
+                        case "KalturaMetadataProfileListResponse":
+                            if (response.result.objects && response.result.objects.length)
+                            this.createMetadataProfileFilters(response.result.objects);
+                            break;
                     }
                 }
             }
         })
-
         return this.rootLevel;
+    }
+
+    createMetadataProfileFilters(metadataProfiles: KalturaMetadataProfile[]){
+        try {
+            // for each metadata profile, parse its XSD and see if it has a searchable list in it
+            metadataProfiles.forEach((metadataProfile) => {
+                const xsd = metadataProfile.xsd ? metadataProfile.xsd : null; // try to get the xsd schema from the metadata profile
+                if (xsd) {
+                    const parser = new DOMParser();
+                    const schema = parser.parseFromString(xsd, "text/xml");      // create an xml documents from the schema
+                    const elements = schema.getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "element");    // get all element nodes
+
+                    // for each xsd element with an ID attribute - search for a simpleType node of type listType - this means we have to add it to the filters if it is searchable
+                    for (let i = 0; i < elements.length; i++) {
+                        const currentNode = elements[i];
+                        if (currentNode.getAttribute("id") !== null) {            // only elements with ID attribue can be used for filters
+                            const simpleTypes = currentNode.getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "simpleType");
+                            if (simpleTypes.length > 0) {
+                                // check if this element is searchable
+                                if (currentNode.getElementsByTagName("searchable").length && currentNode.getElementsByTagName("searchable")[0].textContent === "true") {
+                                    // check if the simpleType type is "listType"
+                                    if (simpleTypes[0].getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "restriction").length && simpleTypes[0].getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "restriction")[0].getAttribute("base") === "listType") {
+                                        // get filter properties and add it to the metadata profile filters list
+                                        const filterLabel = currentNode.getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "appinfo").length ? currentNode.getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema","appinfo")[0].getElementsByTagName("label")[0].textContent : "";
+                                        const valueNodes = simpleTypes[0].getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "enumeration");
+                                        const values = [];
+                                        for (let j = 0; j < valueNodes.length; j++) {
+                                            values.push(valueNodes[j].getAttribute("value"));
+                                        }
+                                        const fieldName = currentNode.getAttribute("name");
+                                        this.addMetadataProfileFilter(metadataProfile.name, filterLabel, fieldName, values);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            this.rootLevel
+        }catch(e){
+            // TODO [kmc] handle error
+            console.log("An error occured during the metadata profile filters creation process.");
+        }
+    }
+
+    addMetadataProfileFilter(metadataProfileName, filterName, fieldName, values){
+        // check if current filter group (accordion header) already exists. If not - create a new one
+        let filterGroup: MetadataProfileFilterGroup = R.find(R.propEq('label', metadataProfileName))(this.metadataFilters);
+        if (typeof filterGroup === "undefined"){
+            filterGroup = {label: metadataProfileName, filters: []};
+            this.metadataFilters.push(filterGroup);
+        }
+        // if the filter does not exist in the filters group yet - add it to the group
+        if (typeof R.find(R.propEq('label', filterName))(filterGroup.filters) === "undefined") {
+            let newFilter: AdditionalFilter = new AdditionalFilter(filterName, "", filterName);
+            for (let i = 0; i < values.length; i++){
+                newFilter.children.push(new AdditionalFilter(filterName, fieldName, values[i]));
+            }
+            filterGroup.filters.push(newFilter);
+        }
     }
 
 }

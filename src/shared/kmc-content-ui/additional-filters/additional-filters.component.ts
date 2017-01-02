@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy, EventEmitter, Output} from '@angular/core
 import { Subscription} from 'rxjs';
 import * as R from 'ramda';
 
-import { ContentAdditionalFiltersStore, AdditionalFilter } from 'kmc-content-ui/providers/content-additional-filters-store.service';
+import { ContentAdditionalFiltersStore, AdditionalFilter, MetadataProfileFilterGroup, MetadataProfileFilter } from 'kmc-content-ui/providers/content-additional-filters-store.service';
 import { FilterType } from './additional-filters-types';
 
 export interface RefineFiltersChangedArgs
@@ -39,7 +39,9 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
 
     additionalFiltersSubscribe : Subscription;
     additionalFilters: AdditionalFilter[];
-    selectedFilters: AdditionalFilter[] = [];
+    metadataProfilesFilters: MetadataProfileFilterGroup[];
+    selectedFilters: any[] = [];
+
     filter: RefineFiltersChangedArgs;
     loading = false;
 
@@ -59,6 +61,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
         this.additionalFiltersSubscribe = this.contentAdditionalFiltersStore.additionalFilters$.subscribe(
             (additionalFiltersRoot: any) => {
                 this.additionalFilters = additionalFiltersRoot.items ? additionalFiltersRoot.items : [];
+                this.metadataProfilesFilters = additionalFiltersRoot.metadataFilters ? additionalFiltersRoot.metadataFilters : [];
             },
             (error) => {
                 // TODO [KMC] - handle error
