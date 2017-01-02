@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy, EventEmitter, Output} from '@angular/core
 import { Subscription} from 'rxjs';
 import * as R from 'ramda';
 
-import { ContentAdditionalFiltersStore, AdditionalFilter, MetadataProfileFilterGroup, MetadataProfileFilter } from 'kmc-content-ui/providers/content-additional-filters-store.service';
+import { ContentAdditionalFiltersStore, AdditionalFilter, MetadataProfileFilterGroup, MetadataFilter } from 'kmc-content-ui/providers/content-additional-filters-store.service';
 import { FilterType } from './additional-filters-types';
 
 export interface RefineFiltersChangedArgs
@@ -22,7 +22,8 @@ export interface RefineFiltersChangedArgs
     replacementStatusIn? : string;
     flavorParamsIdsMatchOr? : string;
     accessControlIdIn? : string;
-    distributionProfiles? : string[]; // since this should fill the advanced search objecct with the metadata profiles - it will be parsed in the content-entries-store
+    distributionProfiles? : string[]; // since this should fill the advanced search object with the metadata profiles - it will be parsed in the content-entries-store
+    metadataProfiles? : any[];
 }
 
 function toServerDate(value? : Date) : number
@@ -104,7 +105,8 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     initFilter(){
         this.filter = {
             statusIn: "-1,-2,0,1,2,7,4",
-            mediaTypeIn: "1,2,5,6,201"
+            mediaTypeIn: "1,2,5,6,201",
+            metadataProfiles: []
         };
     }
     // update the filter
@@ -164,6 +166,13 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
                 }
             });
         }
+
+        // update metadata filters
+        this.selectedFilters.forEach( filter => {
+            if (filter instanceof MetadataFilter && filter.id !== ""){
+                this.filter.metadataProfiles.push({'metadataProfileId': filter.id, 'field': filter.filterName, 'value': filter.label});
+            }
+        });
 
         console.info(this.filter);
         this.refineFiltersChanged.emit(this.filter);

@@ -52,6 +52,11 @@ export class AdditionalFilter {
         this.label = label;
     }
 }
+export class MetadataFilter extends AdditionalFilter{
+    constructor(filterName: string, id: string, label: string) {
+        super(filterName, id, label);
+    }
+}
 @Injectable()
 export class ContentAdditionalFiltersStore {
     // TODO [KMC] - clear cached data on logout
@@ -222,7 +227,7 @@ export class ContentAdditionalFiltersStore {
                                             values.push(valueNodes[j].getAttribute("value"));
                                         }
                                         const fieldName = currentNode.getAttribute("name");
-                                        this.addMetadataProfileFilter(metadataProfile.name, filterLabel, fieldName, values);
+                                        this.addMetadataProfileFilter(metadataProfile.id, metadataProfile.name, filterLabel, fieldName, values);
                                     }
                                 }
                             }
@@ -237,7 +242,7 @@ export class ContentAdditionalFiltersStore {
         }
     }
 
-    addMetadataProfileFilter(metadataProfileName, filterName, fieldName, values){
+    addMetadataProfileFilter(metadataProfileID, metadataProfileName, filterName, fieldName, values){
         // check if current filter group (accordion header) already exists. If not - create a new one
         let filterGroup: MetadataProfileFilterGroup = R.find(R.propEq('label', metadataProfileName))(this.metadataFilters);
         if (typeof filterGroup === "undefined"){
@@ -246,9 +251,9 @@ export class ContentAdditionalFiltersStore {
         }
         // if the filter does not exist in the filters group yet - add it to the group
         if (typeof R.find(R.propEq('label', filterName))(filterGroup.filters) === "undefined") {
-            let newFilter: AdditionalFilter = new AdditionalFilter(filterName, "", filterName);
+            let newFilter: AdditionalFilter = new MetadataFilter(filterName, "", filterName);
             for (let i = 0; i < values.length; i++){
-                newFilter.children.push(new AdditionalFilter(filterName, fieldName, values[i]));
+                newFilter.children.push(new MetadataFilter(fieldName, metadataProfileID, values[i]));
             }
             filterGroup.filters.push(newFilter);
         }
