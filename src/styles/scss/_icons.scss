@@ -4,7 +4,7 @@
     .fa {
         font-family: 'KMCng-icon-pack' !important;
     }
-    .ui-submenu-icon.fa-fw.fa-caret-right:before{
+    .ui-submenu-icon.fa-caret-right:before{
         @extend .kIcondropdown_arrow_right:before;
     }
     .ui-tree-toggler.fa-caret-right:before{
@@ -35,15 +35,15 @@
         @extend .kIconpagination_start:before;
         font-size: 12px;
     }
-    .ui-radiobutton-icon.fa.fa-fw.fa-circle:before{
+    .ui-radiobutton-icon.fa.fa-circle:before{
         @extend .kIconcheck_small:before;
         font-size: 10px;
     }
-    .ui-chkbox-icon.ui-c.fa.fa-fw.fa-check:before{
+    .ui-chkbox-icon.ui-c.fa.fa-check:before{
         @extend .kIconcheck_small:before;
         font-size: 12px;
     }
-    .ui-chkbox-icon.ui-c.fa.fa-fw.fa-minus:before{
+    .ui-chkbox-icon.ui-c.fa.fa-minus:before{
         @extend .kIconpartial_small:before;
         font-size: 9px;
     }
