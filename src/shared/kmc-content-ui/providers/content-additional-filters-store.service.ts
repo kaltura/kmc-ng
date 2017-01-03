@@ -206,22 +206,23 @@ export class ContentAdditionalFiltersStore {
                 const xsd = metadataProfile.xsd ? metadataProfile.xsd : null; // try to get the xsd schema from the metadata profile
                 if (xsd) {
                     const parser = new DOMParser();
+                    const ns = "http://www.w3.org/2001/XMLSchema";
                     const schema = parser.parseFromString(xsd, "text/xml");      // create an xml documents from the schema
-                    const elements = schema.getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "element");    // get all element nodes
+                    const elements = schema.getElementsByTagNameNS(ns, "element");    // get all element nodes
 
                     // for each xsd element with an ID attribute - search for a simpleType node of type listType - this means we have to add it to the filters if it is searchable
                     for (let i = 0; i < elements.length; i++) {
                         const currentNode = elements[i];
                         if (currentNode.getAttribute("id") !== null) {            // only elements with ID attribue can be used for filters
-                            const simpleTypes = currentNode.getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "simpleType");
+                            const simpleTypes = currentNode.getElementsByTagNameNS(ns, "simpleType");
                             if (simpleTypes.length > 0) {
                                 // check if this element is searchable
                                 if (currentNode.getElementsByTagName("searchable").length && currentNode.getElementsByTagName("searchable")[0].textContent === "true") {
                                     // check if the simpleType type is "listType"
-                                    if (simpleTypes[0].getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "restriction").length && simpleTypes[0].getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "restriction")[0].getAttribute("base") === "listType") {
+                                    if (simpleTypes[0].getElementsByTagNameNS(ns, "restriction").length && simpleTypes[0].getElementsByTagNameNS(ns, "restriction")[0].getAttribute("base") === "listType") {
                                         // get filter properties and add it to the metadata profile filters list
-                                        const filterLabel = currentNode.getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "appinfo").length ? currentNode.getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema","appinfo")[0].getElementsByTagName("label")[0].textContent : "";
-                                        const valueNodes = simpleTypes[0].getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "enumeration");
+                                        const filterLabel = currentNode.getElementsByTagNameNS(ns, "appinfo").length ? currentNode.getElementsByTagNameNS(ns,"appinfo")[0].getElementsByTagName("label")[0].textContent : "";
+                                        const valueNodes = simpleTypes[0].getElementsByTagNameNS(ns, "enumeration");
                                         const values = [];
                                         for (let j = 0; j < valueNodes.length; j++) {
                                             values.push(valueNodes[j].getAttribute("value"));
