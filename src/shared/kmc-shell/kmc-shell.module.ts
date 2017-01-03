@@ -6,7 +6,6 @@ import { AppShellService } from "./providers/app-shell.service";
 import { BrowserService } from "./providers/browser.service";
 import {TimePipe} from "./pipes/time.pipe";
 import {AppContainerComponent} from "./components/app-container/app-container.component";
-import { PopupWidgetComponent } from './components/popup-widget/popup-widget.component';
 
 @NgModule({
     imports: <any[]>[
@@ -14,13 +13,11 @@ import { PopupWidgetComponent } from './components/popup-widget/popup-widget.com
     ],
     declarations: <any[]>[
         TimePipe,
-        AppContainerComponent,
-        PopupWidgetComponent
+        AppContainerComponent
     ],
     exports: <any[]>[
         TimePipe,
-        AppContainerComponent,
-        PopupWidgetComponent
+        AppContainerComponent
     ],
     providers: <any[]>[
     ]

@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Output, ViewChild, Input, AfterViewInit, ElementRef} from '@angular/core';
 import { Tree, TreeNode } from 'primeng/primeng';
+import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
 import { Subscription} from 'rxjs';
 import * as R from 'ramda';
 
 import { ContentCategoriesStore, Category } from 'kmc-content-ui/providers/content-categories-store.service';
-import {PopupWidgetComponent} from "../../kmc-shell/components/popup-widget/popup-widget.component";
 import {BrowserService} from "../../kmc-shell/providers/browser.service";
 
 @Component({

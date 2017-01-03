@@ -9,8 +9,6 @@ export class BrowserService implements IAppStorage {
   constructor(private localStorage :LocalStorageService, private sessionStorage : SessionStorageService )
   {}
 
-  popupWidgetInitialZindex = 200;
-
   public setInLocalStorage(key : string, value : any) : void{
    this.localStorage.store(key,value);
   }
@@ -47,9 +45,5 @@ export class BrowserService implements IAppStorage {
       baseUrl = baseUrl.slice(0, - 1); // remove last &
     }
     window.open(baseUrl, target);
-  }
-
-  public getPopupZindex(){
-      return this.popupWidgetInitialZindex++;
   }
 }
