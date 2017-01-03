@@ -282,3 +282,12 @@
     border-radius: 3px;
     color: #ffffff;
 }
+ /* Calendar */
+.ui-calendar{
+    .ui-inputtext {
+        width: 75px;
+    }
+    button{
+        @extend .ui-button.kButtonDefault;
+    }
+}

@@ -1,14 +1,15 @@
 <div class="kEntries grid-noGutter kUseKMCngIcons">
 
-    <div class="accordionHolder" style="display: none">
-        <kCategoriesFilter (categoriesChanged)="categoriesChanged($event)"></kCategoriesFilter>
+    <div class="accordionHolder" style="display: block; height: 700px; overflow-y: auto">
+        <!--kCategoriesFilter (categoriesChanged)="categoriesChanged($event)"></kCategoriesFilter-->
         <!--<kFiltersAccordion style="width: 300px" (categoriesChanged)="categoriesChanged($event)" (metadataProfileFilterChanged)="metadataProfileFilterChanged($event)"></kFiltersAccordion>-->
-        <kFilters (refineFiltersChanged)="refineFiltersChanged($event)"
-                  (categoriesChanged)="categoriesChanged($event)"></kFilters>
+        <!--<kFilters (refineFiltersChanged)="refineFiltersChanged($event)"-->
+                  <!--(categoriesChanged)="categoriesChanged($event)"></kFilters>-->
+        <kAdditionalFilter></kAdditionalFilter>
 
     </div>
 
-    <div class="kEntriesHolder kContent grid-column-noGutter">
+    <div class="kEntriesHolder kContent grid-column-noGutter" style="margin-left: 360px !important;">
         <div class="kEntriesTableFilters grid col-12">
                 <span *ngIf="(contentEntriesStore.entries$ | async)?.totalCount">{{(contentEntriesStore.entries$ | async)?.totalCount}} Entries</span>
                 <div [style.visibility]="selectedEntries.length ? 'visible' : 'hidden'" class="kBulkOperations">
