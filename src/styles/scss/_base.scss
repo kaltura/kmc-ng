@@ -35,15 +35,6 @@ select{
     outline: none;
 }
 
-.modalOverlay{
-    width: 100%;
-    height: 100%;
-    background-color: $kGrayscale3;
-    opacity: 0.5;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-}
 /* main content width according to screen resolution */
 @media screen and (max-width: 767px) {
     .kContent { width: auto; margin: auto !important; display: flex;}
