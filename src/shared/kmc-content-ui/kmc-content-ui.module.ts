@@ -3,7 +3,7 @@ import { CommonModule }       from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
-import { KalturaPopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
+import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
 
 import { TreeModule, SharedModule, AutoCompleteModule, RadioButtonModule, TooltipModule } from 'primeng/primeng';
@@ -17,7 +17,7 @@ import { KMCShellModule } from 'kmc-shell';
 import { EntryTypePipe, EntryStatusPipe, PlaylistTypePipe } from './pipes/index';
 
 @NgModule({
-    imports:      [ KalturaPopupWidgetModule, CommonModule, TreeModule, FormsModule, SharedModule, KalturaUIModule, KalturaPrimeNgUIModule, AutoCompleteModule, RadioButtonModule, TooltipModule, KMCShellModule ],
+    imports:      [ PopupWidgetModule, CommonModule, TreeModule, FormsModule, SharedModule, KalturaUIModule, KalturaPrimeNgUIModule, AutoCompleteModule, RadioButtonModule, TooltipModule, KMCShellModule ],
     declarations: [ CategoriesFilterComponent, CategoriesFilterPrefsComponent, EntryTypePipe, EntryStatusPipe, PlaylistTypePipe ],
     providers:    [],
     exports: [ CategoriesFilterComponent, CategoriesFilterPrefsComponent, EntryTypePipe, EntryStatusPipe, PlaylistTypePipe ]

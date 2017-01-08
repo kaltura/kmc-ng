@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, EventEmitter, Output, ViewChild, Input, A
 import { Tree, TreeNode } from 'primeng/primeng';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
-import { Subscription} from 'rxjs';
+import { Subscription} from 'rxjs/Subscription';
 import * as R from 'ramda';
 
 import { ContentCategoriesStore, Category } from 'kmc-content-ui/providers/content-categories-store.service';
@@ -57,7 +57,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     ngAfterViewInit(){
         if (this.parentPopupWidget){
-            this.parentPopupStateChangeSubscribe = this.parentPopupWidget.stateNotifier$.subscribe(event => {
+            this.parentPopupStateChangeSubscribe = this.parentPopupWidget.state$.subscribe(event => {
                 if (event === PopupWidgetStates.Open){
                     const inputFields: any[] = this.filtersRef.nativeElement.getElementsByTagName("input");
                     if (inputFields.length && inputFields[0].focus){
@@ -148,8 +148,12 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
     ngOnDestroy(){
-        this.parentPopupStateChangeSubscribe.unsubscribe();
-        this.categoriesSubscribe.unsubscribe();
+        if (this.parentPopupStateChangeSubscribe) {
+            this.parentPopupStateChangeSubscribe.unsubscribe();
+        }
+        if (this.categoriesSubscribe) {
+            this.categoriesSubscribe.unsubscribe();
+        }
     }
 
 }
