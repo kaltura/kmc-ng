@@ -153,14 +153,14 @@
     color: $kGrayscale3;
     text-overflow: ellipsis;
 }
-.ui-state-highlight, .ui-widget-content .ui-state-highlight{
+.ui-datatable .ui-state-highlight, .ui-datatable .ui-widget-content .ui-state-highlight{
     background-color: #ffffff;
     border: 1px solid #d9d9d9;
 }
 .ui-datatable th.ui-state-default{
     outline: none;
 }
-.ui-sortable-column-icon.fa.fa-fw.fa-sort{
+.ui-sortable-column-icon.fa.fa-sort{
     visibility: hidden;
     &.fa-sort-asc, &.fa-sort-desc{
         font-size: 10px;
@@ -232,6 +232,11 @@
     background-color: $kGrayscale7;
     border: 1px solid $kGrayscale7;
 }
+.ui-state-highlight, .ui-widget-content .ui-state-highlight{
+    color: $kGrayscale1;
+    background-color: $kGrayscale7;
+    border: none;
+}
 .ui-menu .ui-menu-parent .ui-submenu-icon{
     margin-top: 4px;
     font-size: 11px;
@@ -268,10 +273,9 @@
 .ui-tree .ui-tree-toggler{
     color: $kGrayscale3;
     margin-right: 8px;
-    margin-left: 20px;
 }
 .ui-tree .ui-treenode-leaf-icon{
-    width: 47px;
+    width: 27px;
 }
 .ui-tree .ui-chkbox .ui-chkbox-icon{
     background-color: $kPrimary;
@@ -281,4 +285,22 @@
     width: 20px;
     border-radius: 3px;
     color: #ffffff;
+}
+.ui-tree .ui-treenode-label.ui-state-hover, .ui-tree .ui-treenode-label.ui-state-highlight{
+    background-color: #ffffff;
+}
+/* input */
+.ui-inputtext{
+    background-color: $kGrayscale6;
+    border: 1px solid $kGrayscale6;
+}
+ /* auto complete */
+.ui-autocomplete-input.ui-inputtext.ui-corner-all.ui-state-default.ui-widget{
+    width: 320px;
+    @extend .ui-inputtext;
+}
+
+/* radio buttons */
+.ui-chkbox-box.ui-state-active, .ui-radiobutton-box.ui-state-active{
+    background-color: $kPrimary;
 }
