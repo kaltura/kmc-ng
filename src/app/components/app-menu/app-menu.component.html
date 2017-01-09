@@ -11,7 +11,7 @@
         <i class="kIconfolder_large"></i>
         <i class="kIconuser"></i>
         <i class="kIcongear"></i>
-        <i class="kIconhelp"></i>
+        <i #help class="kIconhelp"  [class.open]="helpOpen"></i>
         <div #username class="kUserName" [class.open]="userSettingsOpen">
             <span>{{_userContext.fullName}}</span>
             <i class="kIcondropdown_arrow_bottom"></i>
@@ -44,4 +44,21 @@
 
 <kPopupWidget #usersettings [appendTo]="appmenu" [popupWidth]="200" [closeBtn]="false" [targetRef]="username" [targetOffset]="{'x':-50, 'y': 30}" (onOpen)="userSettingsOpen=true" (onClose)="userSettingsOpen=false">
     <kmc-user-settings></kmc-user-settings>
+</kPopupWidget>
+
+<kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="helpOpen=true" (onClose)="helpOpen=false">
+    <p class="kHelpTitle">GETTING STARTED</p>
+    <p class="kHelpLink">KMC Overview</p>
+    <p class="kHelpLink">Media Management & Workflow</p>
+    <p class="kHelpLink">Watch the product tour</p>
+    <hr>
+    <p class="kHelpTitle">HELP & SUPPORT</p>
+    <p class="kHelpLink">Download user manual</p>
+    <p class="kHelpLink">Contact support</p>
+    <div class="kContexualHelp">
+        <hr>
+        <p class="kHelpTitle">CURRENT PAGE</p>
+        <p class="kHelpLink">Contextual link 1</p>
+        <p class="kHelpLink">Contextual link 2</p>
+    </div>
 </kPopupWidget>
