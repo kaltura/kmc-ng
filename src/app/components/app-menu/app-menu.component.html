@@ -1,4 +1,4 @@
-<div class="appMenu">
+<div #appmenu class="appMenu">
 
       <div class="k-logo"></div>
 
@@ -12,7 +12,7 @@
         <i class="kIconuser"></i>
         <i class="kIcongear"></i>
         <i class="kIconhelp"></i>
-        <div class="kUserName" (click)="user_settings_menu.toggle($event)">
+        <div #username class="kUserName" [class.open]="userSettingsOpen">
             <span>{{_userContext.fullName}}</span>
             <i class="kIcondropdown_arrow_bottom"></i>
         </div>
@@ -42,5 +42,6 @@
     </div>
 </div>
 
-
-<p-tieredMenu #user_settings_menu popup="popup" [model]="userSettingsMenu"></p-tieredMenu>
+<kPopupWidget #usersettings [appendTo]="appmenu" [popupWidth]="200" [closeBtn]="false" [targetRef]="username" [targetOffset]="{'x':-50, 'y': 30}" (onOpen)="userSettingsOpen=true" (onClose)="userSettingsOpen=false">
+    <kmc-user-settings></kmc-user-settings>
+</kPopupWidget>

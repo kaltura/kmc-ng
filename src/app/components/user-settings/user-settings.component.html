@@ -1,4 +1,4 @@
-<div class="userSettings" (mouseenter)="setOpen(true)" (mouseleave)="setOpen(false)" #userSettings>
+<!--div class="userSettings" (mouseenter)="setOpen(true)" (mouseleave)="setOpen(false)" #userSettings>
   <span class="widgetLink" *ngIf="!isOpen">< &nbsp;{{_userContext.fullName}}</span>
   <div [hidden]="!isOpen" [class.open]="isOpen">
     <span>{{_userContext.fullName}}</span>
@@ -11,4 +11,30 @@
     <span class="separator">|</span>
     <span><a (click)="openSupport()">{{'USER_SETTINGS.support' | translate}}</a></span>
   </div>
+</div-->
+<ul>
+    <li class="kMenuItemLabel"><i class="kIconuser_small"></i>
+        <div class="kMenuItem">
+            <span>{{_userContext.fullName}}</span>
+            <a (click)="logout()">Log out</a>
+        </div>
+    </li>
+    <li class="kMenuItemLabel"><i class="kIconhouse"></i>
+        <div class="kMenuItem">
+            <span>{{_userContext.partnerInfo.name}}</span>
+            <a>Change Account</a>
+        </div>
+    </li>
+</ul>
+<hr>
+<div class="kLanguagesTitle">
+    <span>Languages</span>
 </div>
+
+<ul class="kLanguages">
+    <li><i class="kIconcheck_large"></i><a>English</a></li>
+    <li><i [style.opacity]="0" class="kIconcheck_large"></i><a>Deutsch</a></li>
+    <li><i [style.opacity]="0" class="kIconcheck_large"></i><a>Español</a></li>
+    <li><i [style.opacity]="0" class="kIconcheck_large"></i><a>Español</a></li>
+    <li><i [style.opacity]="0" class="kIconcheck_large"></i><a>日本語</a></li>
+</ul>

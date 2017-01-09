@@ -76,7 +76,7 @@
         font-weight: 400;
         margin-left: 12px;
         font-size: 14px;
-        &:hover {
+        &:hover, &.open {
             opacity: 1;
             color: $mainLinkHoverColor;
             i {

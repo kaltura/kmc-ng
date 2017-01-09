@@ -7,6 +7,7 @@ import { Ng2Webstorage } from 'ng2-webstorage';
 
 import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType, KalturaCommonModule, AppStorage } from '@kaltura-ng2/kaltura-common';
 import {  KalturaApiModule, KalturaHttpConfiguration, KalturaHttpPostClient,  KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 
 import { BrowserService, KMCShellModule } from 'kmc-shell';
 
@@ -52,6 +53,7 @@ if (process.env.ENV === 'build') {
     KalturaApiModule,
     Ng2Webstorage,
     ButtonModule,
+    PopupWidgetModule,
     InputTextModule
   ],       // module dependencies
   declarations: <any>[ AppComponent,

@@ -21,6 +21,7 @@ export class AppMenuComponent implements OnInit{
     private sub: any;
     private _userContext: AppUser;
     private userSettingsMenu: MenuItem[];
+    private userSettingsOpen = false;
 
     constructor(private userAuthentication: AppAuthentication, private appMenuService: AppMenuService, private appNavigator : AppNavigator, private router: Router) {
         this.sub = router.events.subscribe((event) => {
