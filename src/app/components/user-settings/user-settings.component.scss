@@ -1,36 +1,46 @@
-a{
-  color: #59A3B5;
-  &:hover{
-    color: #A1E5F5;
-  }
+@import '../../../styles/scss/_variables';
+ul {
+    list-style-type: none;
+    padding: 0;
 }
-.userSettings{
-  font-size: 12px;
-  font-weight: bold;
-  margin-top: 12px;
-  border: 1px solid grey;
-  border-radius: 4px;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 3px;
-  color: #C5C5C5;
-  height: 22px;
-  background-color: #1f1f1f;
+i{
+    margin-right: 8px;
 }
-.userSettings .separator{
-  margin-left: 4px;
-  margin-right: 4px;
+li{
+    margin-top: 14px;
 }
-.widgetLink{
-  color: #59A3B5;
+hr{
+    height: 1px;
+    margin-left: -20px;
+    margin-right: -20px;
 }
-.userSettings .open{
-  font-weight: normal;
-  padding-top: 3px;
-  cursor: default;
+.kMenuItemLabel{
+    font-size: 15px;
+    color: $kGrayscale3;
 }
-.userSettings .open a{
-  margin-left: 6px;
-  margin-right: 6px;
-  cursor: pointer;
+.kMenuItem{
+    display: flex;
+    flex-direction: column;
+    margin-left: 30px;
+    margin-top: -18px;
+    a{
+        margin-top: 4px;
+        color: $kTertiary;
+        &:hover{
+            color: darken($kTertiary, 10%);
+        }
+        &:active{
+            color: $kTertiary;
+        }
+    }
+}
+.kLanguagesTitle{
+    background-color: $kGrayscale6;
+    width: 100%;
+    height: 28px;
+    text-align: center;
+    padding-top: 6px;
+}
+.kLanguages{
+
 }
