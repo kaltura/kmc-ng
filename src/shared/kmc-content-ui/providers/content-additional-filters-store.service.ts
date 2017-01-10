@@ -20,6 +20,7 @@ import {
     KalturaMetadataProfile
 } from '@kaltura-ng2/kaltura-api/types'
 
+import {ConstantsFilters} from './constant-filters';
 
 import * as R from 'ramda';
 
@@ -51,9 +52,19 @@ export class MetadataProfileFilterGroup {
     filters?: MetadataProfileFilter[];
 }
 
+export interface FilterItem
+{
+    value : string;
+    name : string;
+}
+
+export interface FilterType
+{ type : string, caption : string }
+
 export interface Filters
 {
-    distributions : {id : string, name : string}[]
+    filtersGroups : { groupName : string, filtersTypes : FilterType[]}[];
+    filtersByType : { [key : string] : FilterItem[]}
 }
 
 
@@ -125,30 +136,61 @@ export class ContentAdditionalFiltersStore {
 
                         } else {
 
-                            const distributions = [];
+                            const filters : Filters = {filtersGroups : [], filtersByType : {}};
 
+                            const defaultFilterGroup = {groupName : '', filtersTypes : []};
+                            filters.filtersGroups.push(defaultFilterGroup);
+
+                            // build constant filters
+                            ConstantsFilters.forEach((filter) =>
+                            {
+                                defaultFilterGroup.filtersTypes.push({ type : filter.type, caption : filter.name});
+                                const items = filters.filtersByType[filter.type] = [];
+                                filter.items.forEach((item: any) => {
+                                    items.push({value : item.value, name : item.name});
+                                });
+                            });
+
+                            // build distributions filter
                             if (responses[1].result.objects.length > 0) {
-
+                                defaultFilterGroup.filtersTypes.push({ type : 'distributions', caption : 'Destinations'});
+                                const items = filters.filtersByType['distributions'] = [];
                                 responses[1].result.objects.forEach((distributionProfile: KalturaDistributionProfile) => {
-                                    distributions.push({id : distributionProfile.id, name : distributionProfile.name});
+                                    items.push({value : distributionProfile.id, name : distributionProfile.name});
                                 });
                             }
 
-                            // responses[2].result.objects.forEach((flavor: KalturaFlavorParams) => {
-                            //     newFilter.children.push(new AdditionalFilter('flavors', flavor.id.toString(), flavor.name));
-                            // });
-                            //
-                            // responses[3].result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
-                            //     newFilter.children.push(new AdditionalFilter('accessControlProfiles', accessControlProfile.id.toString(), accessControlProfile.name));
-                            // });
-                            //
+                            // build flavors filter
+                            if (responses[2].result.objects.length > 0) {
+                                defaultFilterGroup.filtersTypes.push({
+                                    type: 'flavors',
+                                    caption: 'Flavors'
+                                });
+                                const items = filters.filtersByType['flavors'] = [];
+                                responses[2].result.objects.forEach((flavor: KalturaFlavorParams) => {
+                                    items.push({value: flavor.id, name: flavor.name});
+                                });
+                            }
+
+                            // build acces control profile filter
+                            if (responses[3].result.objects.length > 0) {
+                                defaultFilterGroup.filtersTypes.push({
+                                    type: 'accessControlProfiles',
+                                    caption: 'Access Control Profiles'
+                                });
+                                const items = filters.filtersByType['accessControlProfiles'] = [];
+                                responses[3].result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
+                                    items.push({
+                                        value: accessControlProfile.id,
+                                        name: accessControlProfile.name
+                                    });
+                                });
+                            }
+
+                            // build metadata profile filters
                             this.createMetadataProfileFilters(responses[0].result.objects);
 
-                            const bb = this.metadataFilters;
-                            debugger;
-                            this._additionalFilters.next({
-                                distributions: distributions
-                            });
+                            this._additionalFilters.next(filters);
 
                             this._status.next({ dataLoad : AdditionalFilterLoadingStatus.Loaded});
                         }

@@ -8,8 +8,6 @@ export class PrimeTreeNode {
     private _children : PrimeTreeNode[] = null;
     private _childrenCount : number = null;
 
-    payload : any = null;
-
     public get leaf() : boolean
     {
         return this._children !== null ? (this._children.length === 0) : (this._childrenCount == null || this._childrenCount === 0);
@@ -37,7 +35,7 @@ export class PrimeTreeNode {
         return this._children;
     }
 
-    constructor(public data: string | number, public label : string,  children : PrimeTreeNode[] | number = null, public group : string = "") {
+    constructor(public data: string | number, public label : string,  children : PrimeTreeNode[] | number = null, public payload : any = null) {
         if (children !== null) {
             if (!isNaN(<any>children) && isFinite(<any>children)) {
                 this.childrenCount = <number>children;
@@ -97,8 +95,9 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     @Output()
     refineFiltersChanged = new EventEmitter<RefineFiltersChangedArgs>();
 
-    private treeNodes : PrimeTreeNode[] = [];
-    private treeData : any;
+    private defaultFiltersNodes : PrimeTreeNode[] = [];
+    private customFiltersNode : PrimeTreeNode[] = [];
+    private filters : any;
 
     constructor(public contentAdditionalFiltersStore: ContentAdditionalFiltersStore) {
     }
@@ -109,14 +108,31 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
         this.additionalFiltersSubscribe = this.contentAdditionalFiltersStore.additionalFilters$.subscribe(
             (filters: Filters) => {
 
-                this.treeNodes = [];
-                this.treeData = filters;
+                this.defaultFiltersNodes = [];
+                this.filters = filters;
 
-                if (filters.distributions.length)
+                // create root nodes
+                filters.filtersGroups.forEach(group =>
                 {
-                    this.treeNodes.push(new PrimeTreeNode("distribution-all","All Destinations",filters.distributions.length,'distributions'));
+                    if (group.groupName)
+                    {
 
-                }
+                    }else
+                    {
+                        // filter is part of the default group (additional information)
+                        group.filtersTypes.forEach(filter =>
+                        {
+                            const filterItems = filters.filtersByType[filter.type];
+                            const itemsCount = filterItems ? filterItems.length : 0;
+
+                            if (itemsCount != 0) {
+                                this.defaultFiltersNodes.push(new PrimeTreeNode(null, filter.caption,itemsCount, filter.type));
+                            }
+                        });
+                    }
+
+                });
+
             },
             (error) => {
                 // TODO [KMC] - handle error
@@ -131,14 +147,14 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
         if(event.node instanceof PrimeTreeNode) {
             const primeNode : PrimeTreeNode = <PrimeTreeNode>event.node;
 
-            if (primeNode.children === null)
+            if (primeNode.children === null && typeof primeNode.payload === 'string')
             {
-                const children = this.treeData[primeNode.group];
+                const children = this.filters.filtersByType[primeNode.payload];
 
                 if (children) {
                     primeNode.children = [];
                     children.forEach(item => {
-                        primeNode.children.push(new PrimeTreeNode(item.id, item.name,null,primeNode.group));
+                        primeNode.children.push(new PrimeTreeNode(item.id, item.name,null,primeNode.payload));
                     });
                 }
             }
@@ -184,7 +200,9 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
         };
     }
     updateFilter()
-    {}
+    {
+        console.log(this.selectedFilters);
+    }
 
     // update the filter
     // updateFilter(){
