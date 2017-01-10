@@ -9,13 +9,15 @@
     <p style="padding-left: 20px">
         <a class="clearAll" (click)="clearDates()">Clear Dates</a>
     </p>
-    <p-tree [value]="additionalFilters" selectionMode="checkbox" [(selection)]="selectedFilters" (onNodeSelect)="updateFilter()" (onNodeUnselect)="updateFilter()">
+    <p-tree [value]="treeNodes" selectionMode="checkbox" [selection]="selectedFilters"  (onNodeSelect)="updateFilter()" (onNodeUnselect)="updateFilter()" (onNodeExpand)="loadNode($event)">
     <template let-node  pTemplate type="default">
-        <span *ngIf="node.id!=='scheduled'" class="kTreeNodeLabel">{{node.label}}</span>
+        <span  class="kTreeNodeLabel">{{node.label}} ({{ node.childrenCount}})</span>
         <div *ngIf="node.id==='scheduled'" (click)="blockScheduleToggle($event)">
-            <span class="kTreeNodeLabel">{{node.label}}</span>
-            <p-calendar #scheduledfrom [(ngModel)]="scheduledFrom" [disabled]="!isScheduledEnabled()" (onSelect)="scheduledfrom.overlayVisible = false; updateFilter()"></p-calendar>
-            <p-calendar #scheduledto [(ngModel)]="scheduledTo" [disabled]="!isScheduledEnabled()" (onSelect)="scheduledto.overlayVisible = false; updateFilter()"></p-calendar>
+
+            <div>
+                <p-calendar #scheduledfrom [(ngModel)]="scheduledFrom" [disabled]="!isScheduledEnabled()" [appendTo]="'body'" (onSelect)="scheduledfrom.overlayVisible = false; updateFilter()"></p-calendar>
+                <p-calendar #scheduledto [(ngModel)]="scheduledTo" [disabled]="!isScheduledEnabled()" (onSelect)="scheduledto.overlayVisible = false; updateFilter()"></p-calendar>
+            </div>
         </div>
     </template>
     </p-tree>

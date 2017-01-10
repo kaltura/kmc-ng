@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
+import {ReplaySubject} from 'rxjs/ReplaySubject';
 
 import {KalturaServerClient, KalturaMetadataObjectType, KalturaMultiRequest, KalturaResponse} from '@kaltura-ng2/kaltura-api';
 import {FlavorParamsListAction} from '@kaltura-ng2/kaltura-api/services/flavor-params';
@@ -20,26 +20,9 @@ import {
     KalturaMetadataProfile
 } from '@kaltura-ng2/kaltura-api/types'
 
-import {FilterType} from '../additional-filters/additional-filters-types';
-import {AdditionalFiltersBase} from '../additional-filters/additional-filters-base';
 
 import * as R from 'ramda';
 
-export interface AdditionalFilters {
-    items: AdditionalFilter[],
-    metadataFilters: MetadataProfileFilterGroup[],
-    loaded: boolean,
-    status: string
-}
-export class MetadataProfileFilter {
-    label?: string;
-    data?: string;
-    children?: any[];
-}
-export class MetadataProfileFilterGroup {
-    label?: string;
-    filters?: MetadataProfileFilter[];
-}
 export class AdditionalFilter {
     id: string;
     label = "";
@@ -57,32 +40,48 @@ export class MetadataFilter extends AdditionalFilter{
         super(filterName, id, label);
     }
 }
+
+export class MetadataProfileFilter {
+    label?: string;
+    data?: string;
+    children?: any[];
+}
+export class MetadataProfileFilterGroup {
+    label?: string;
+    filters?: MetadataProfileFilter[];
+}
+
+export interface Filters
+{
+    distributions : {id : string, name : string}[]
+}
+
+
+export enum AdditionalFilterLoadingStatus
+{
+    Loading,
+    Loaded,
+    FailedToLoad
+}
 @Injectable()
 export class ContentAdditionalFiltersStore {
+
     // TODO [KMC] - clear cached data on logout
+    private _additionalFilters: ReplaySubject<Filters> = new ReplaySubject<Filters>(1);
+    public additionalFilters$ = this._additionalFilters.asObservable();
+    private _status : BehaviorSubject<{ dataLoad? : AdditionalFilterLoadingStatus, error? : string}> = new BehaviorSubject<{ dataLoad? : AdditionalFilterLoadingStatus, error? : string}>(null);
+    public status$ = this._status.asObservable();
 
-    private _additionalFilters: BehaviorSubject<AdditionalFilters> = new BehaviorSubject({
-        items: [],
-        metadataFilters: [],
-        loaded: false,
-        status: ''
-    });
-    public additionalFilters$: Observable<AdditionalFilters> = this._additionalFilters.asObservable();
-
-    private rootLevel: AdditionalFilter[] = [];
-    private metadataFilters: any[] = [];
 
     constructor(private kalturaServerClient: KalturaServerClient) {
-        this.initRootLevel();
+        this.load();
     }
 
-    public reloadAdditionalFilters(ignoreCache: boolean = false): Observable<boolean> {
+    private metadataFilters: any[] = [];
 
-        const additionalFilters = this._additionalFilters.getValue();
-
-        if (ignoreCache || !additionalFilters.loaded || additionalFilters.status) {
-
-            this._additionalFilters.next({items: [], metadataFilters: [], loaded: false, status: ''});
+    private load() : void {
+        if (!this._status.getValue()) {
+            this._status.next({dataLoad: AdditionalFilterLoadingStatus.Loading});
 
             const metadataProfilesFilter = new KalturaMetadataProfileFilter();
             metadataProfilesFilter.createModeNotEqual = 3;
@@ -99,104 +98,69 @@ export class ContentAdditionalFiltersStore {
             distributionProfilePager.pageSize = 1000;
 
             const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile();
-            responseProfile.setData( data => {
+            responseProfile.setData(data => {
                 data.fields = "id,name";
                 data.type = KalturaResponseProfileType.IncludeFields;
             });
 
-            return Observable.create(observe => {
+            const request = new KalturaMultiRequest(
+                new MetadataProfileListAction({filter: metadataProfilesFilter}),
+                new DistributionProfileListAction({pager: distributionProfilePager}),
+                new FlavorParamsListAction({pager: distributionProfilePager, responseProfile}),
+                new AccessControlListAction({
+                    pager: accessControlPager,
+                    filter: accessControlFilter,
+                    responseProfile
+                }),
+            );
 
+            this.kalturaServerClient.multiRequest(request)
+                .subscribe(
+                    (responses) => {
+                        if (responses.hasErrors()) {
+                            this._status.next({
+                                dataLoad: AdditionalFilterLoadingStatus.FailedToLoad,
+                                error: 'failed to load refine filters'
+                            });
 
-                const request = new KalturaMultiRequest(
-                    new MetadataProfileListAction({filter: metadataProfilesFilter}),
-                    new DistributionProfileListAction({pager: distributionProfilePager}),
-                    new FlavorParamsListAction({pager: distributionProfilePager, responseProfile}),
-                    new AccessControlListAction({pager: accessControlPager, filter: accessControlFilter, responseProfile}),
-                )
-                    return this.kalturaServerClient.multiRequest(request)
-                    .map((response: any) => {
-                        if (response.length){
-                          const additionalFiltersData: AdditionalFilter[] = this.buildAdditionalFiltersHyrarchy(response);
-                          return additionalFiltersData;
-                        }else{
-                          return [];
-                        }
-                    })
-                    .subscribe(
-                        (filters: AdditionalFilter[]) => {
+                        } else {
+
+                            const distributions = [];
+
+                            if (responses[1].result.objects.length > 0) {
+
+                                responses[1].result.objects.forEach((distributionProfile: KalturaDistributionProfile) => {
+                                    distributions.push({id : distributionProfile.id, name : distributionProfile.name});
+                                });
+                            }
+
+                            // responses[2].result.objects.forEach((flavor: KalturaFlavorParams) => {
+                            //     newFilter.children.push(new AdditionalFilter('flavors', flavor.id.toString(), flavor.name));
+                            // });
+                            //
+                            // responses[3].result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
+                            //     newFilter.children.push(new AdditionalFilter('accessControlProfiles', accessControlProfile.id.toString(), accessControlProfile.name));
+                            // });
+                            //
+                            this.createMetadataProfileFilters(responses[0].result.objects);
+
+                            const bb = this.metadataFilters;
+                            debugger;
                             this._additionalFilters.next({
-                                items: <AdditionalFilter[]>filters,
-                                metadataFilters: <MetadataProfileFilterGroup[]>this.metadataFilters,
-                                loaded: true,
-                                status: ''
+                                distributions: distributions
                             });
-                            observe.next(true);
-                            observe.complete();
-                        },
-                        () => {
-                            // TODO [KMC]: handle error
-                            observe.next(false);
-                            observe.complete();
+
+                            this._status.next({ dataLoad : AdditionalFilterLoadingStatus.Loaded});
                         }
-                    )
-            });
-        } else {
-            return Observable.of(true);
-        }
-    }
-
-    initRootLevel(){
-        this.rootLevel = [];
-        let newFilter: AdditionalFilter;
-
-        AdditionalFiltersBase.forEach( filter => {
-            newFilter = new AdditionalFilter( filter.filterName, '', filter.label);
-            filter.children.forEach(filterNode => {
-                newFilter.children.push(new AdditionalFilter(filter.filterName, filterNode.value, filterNode.label));
-            });
-            this.rootLevel.push(newFilter);
-        });
-    }
-
-
-    buildAdditionalFiltersHyrarchy(filters: KalturaResponse<any>[]): AdditionalFilter[] {
-        let newFilter: AdditionalFilter;
-        filters.forEach((response: KalturaResponse<any>) => {
-            if (response.error){
-                console.error("Error loading additional filters: "+response.error.message);
-            }else{
-                if (response.resultType && response.result && response.result.objects && response.result.objects.length) {
-                    switch (response.resultType) {
-                        case "KalturaFlavorParamsListResponse":
-                            newFilter = new AdditionalFilter('flavors', '', 'Flavors');
-                            response.result.objects.forEach((flavor: KalturaFlavorParams) => {
-                                newFilter.children.push(new AdditionalFilter('flavors', flavor.id.toString(), flavor.name));
-                            });
-                            this.rootLevel.push(newFilter);
-                            break;
-                        case "KalturaAccessControlListResponse":
-                            newFilter = new AdditionalFilter('accessControlProfiles', '', 'Access Control Profiles');
-                            response.result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
-                                newFilter.children.push(new AdditionalFilter('accessControlProfiles', accessControlProfile.id.toString(), accessControlProfile.name));
-                            });
-                            this.rootLevel.push(newFilter);
-                            break;
-                        case "KalturaDistributionProfileListResponse":
-                            newFilter = new AdditionalFilter('distributionProfiles', '', 'Destinations');
-                            response.result.objects.forEach((distributionProfile: KalturaDistributionProfile) => {
-                                newFilter.children.push(new AdditionalFilter('distributionProfiles', distributionProfile.id.toString(), distributionProfile.name));
-                            });
-                            this.rootLevel.push(newFilter);
-                            break;
-                        case "KalturaMetadataProfileListResponse":
-                            if (response.result.objects && response.result.objects.length)
-                            this.createMetadataProfileFilters(response.result.objects);
-                            break;
+                    },
+                    () => {
+                        this._status.next({
+                            dataLoad: AdditionalFilterLoadingStatus.FailedToLoad,
+                            error: 'failed to load redine filters'
+                        });
                     }
-                }
-            }
-        })
-        return this.rootLevel;
+                )
+        }
     }
 
     createMetadataProfileFilters(metadataProfiles: KalturaMetadataProfile[]){
@@ -236,7 +200,7 @@ export class ContentAdditionalFiltersStore {
                     }
                 }
             });
-            this.rootLevel
+
         }catch(e){
             // TODO [kmc] handle error
             console.log("An error occured during the metadata profile filters creation process.");

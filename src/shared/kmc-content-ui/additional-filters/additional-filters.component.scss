@@ -15,3 +15,8 @@ a.disabled{
     color: $kGrayscale5;
     border: none;
 }
+
+:host /deep/ .ui-tree .ui-chkbox{
+    vertical-align: top;
+    margin-top: 11px;
+}
