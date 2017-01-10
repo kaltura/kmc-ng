@@ -1,53 +1,7 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Output} from '@angular/core';
-
 import { Subscription} from 'rxjs';
-import * as R from 'ramda';
-
-export class PrimeTreeNode {
-
-    private _children : PrimeTreeNode[] = null;
-    private _childrenCount : number = null;
-
-    public get leaf() : boolean
-    {
-        return this._children !== null ? (this._children.length === 0) : (this._childrenCount == null || this._childrenCount === 0);
-    }
-
-    public get childrenCount() : number
-    {
-        return this._childrenCount !== null ? this._childrenCount : this._children ? this._children.length : 0;
-    }
-
-    public set childrenCount(value : number)
-    {
-        this._childrenCount = value;
-        this._children = null;
-    }
-
-    public set children(value :  PrimeTreeNode[])
-    {
-        this._childrenCount = null;
-        this._children = value;
-    }
-
-    public get children() : PrimeTreeNode[]
-    {
-        return this._children;
-    }
-
-    constructor(public data: string | number, public label : string,  children : PrimeTreeNode[] | number = null, public payload : any = null) {
-        if (children !== null) {
-            if (!isNaN(<any>children) && isFinite(<any>children)) {
-                this.childrenCount = <number>children;
-            } else {
-                this.children = <PrimeTreeNode[]>children;
-            }
-        }
-    }
-}
-
-import { ContentAdditionalFiltersStore, Filters } from 'kmc-content-ui/providers/content-additional-filters-store.service';
-import { FilterType } from '../providers/additional-filters-types';
+import {PrimeTreeNode, TreeDataHandler} from '@kaltura-ng2/kaltura-primeng-ui';
+import { ContentAdditionalFiltersStore, Filters } from '../../../shared/kmc-content-ui/providers/content-additional-filters-store.service';
 
 export interface RefineFiltersChangedArgs
 {
@@ -99,7 +53,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     private customFiltersNode : PrimeTreeNode[] = [];
     private filters : any;
 
-    constructor(public contentAdditionalFiltersStore: ContentAdditionalFiltersStore) {
+    constructor(public contentAdditionalFiltersStore: ContentAdditionalFiltersStore, private treeDataHandler : TreeDataHandler) {
     }
 
 
@@ -123,10 +77,19 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
                         group.filtersTypes.forEach(filter =>
                         {
                             const filterItems = filters.filtersByType[filter.type];
-                            const itemsCount = filterItems ? filterItems.length : 0;
 
-                            if (itemsCount != 0) {
-                                this.defaultFiltersNodes.push(new PrimeTreeNode(null, filter.caption,itemsCount, filter.type));
+                            if (filterItems && filterItems.length > 0) {
+                                this.defaultFiltersNodes.push(
+                                new PrimeTreeNode(null, filter.caption,
+                                    this.treeDataHandler.create(
+                                        {
+                                            data : filterItems,
+                                            idProperty : 'id',
+                                            nameProperty : 'name'
+                                        }
+                                    )
+                                    , filter.type)
+                                );
                             }
                         });
                     }
@@ -142,24 +105,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
         // this.reloadAdditionalFilters();
     }
 
-    private loadNode(event)
-    {
-        if(event.node instanceof PrimeTreeNode) {
-            const primeNode : PrimeTreeNode = <PrimeTreeNode>event.node;
 
-            if (primeNode.children === null && typeof primeNode.payload === 'string')
-            {
-                const children = this.filters.filtersByType[primeNode.payload];
-
-                if (children) {
-                    primeNode.children = [];
-                    children.forEach(item => {
-                        primeNode.children.push(new PrimeTreeNode(item.id, item.name,null,primeNode.payload));
-                    });
-                }
-            }
-        }
-    }
 
     //
     // reloadAdditionalFilters(){

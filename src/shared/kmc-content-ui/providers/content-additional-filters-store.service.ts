@@ -24,34 +24,6 @@ import {ConstantsFilters} from './constant-filters';
 
 import * as R from 'ramda';
 
-export class AdditionalFilter {
-    id: string;
-    label = "";
-    filterName: string;
-    children: AdditionalFilter[] = [];
-
-    constructor(filterName: string, id: string, label: string) {
-        this.filterName = filterName;
-        this.id = id;
-        this.label = label;
-    }
-}
-export class MetadataFilter extends AdditionalFilter{
-    constructor(filterName: string, id: string, label: string) {
-        super(filterName, id, label);
-    }
-}
-
-export class MetadataProfileFilter {
-    label?: string;
-    data?: string;
-    children?: any[];
-}
-export class MetadataProfileFilterGroup {
-    label?: string;
-    filters?: MetadataProfileFilter[];
-}
-
 export interface FilterItem
 {
     value : string;
@@ -61,9 +33,15 @@ export interface FilterItem
 export interface FilterType
 { type : string, caption : string }
 
+export interface FilterGroup
+{
+    groupName : string,
+    filtersTypes : FilterType[]
+}
+
 export interface Filters
 {
-    filtersGroups : { groupName : string, filtersTypes : FilterType[]}[];
+    filtersGroups : FilterGroup[];
     filtersByType : { [key : string] : FilterItem[]}
 }
 
@@ -74,6 +52,7 @@ export enum AdditionalFilterLoadingStatus
     Loaded,
     FailedToLoad
 }
+
 @Injectable()
 export class ContentAdditionalFiltersStore {
 
@@ -87,8 +66,6 @@ export class ContentAdditionalFiltersStore {
     constructor(private kalturaServerClient: KalturaServerClient) {
         this.load();
     }
-
-    private metadataFilters: any[] = [];
 
     private load() : void {
         if (!this._status.getValue()) {
@@ -187,9 +164,29 @@ export class ContentAdditionalFiltersStore {
                                 });
                             }
 
-                            // build metadata profile filters
-                            this.createMetadataProfileFilters(responses[0].result.objects);
-
+                            // // build metadata profile filters
+                            // const metadataGroups = this.createMetadataProfileFilters(responses[0].result.objects);
+                            //
+                            // metadataGroups.forEach(metadataGroup =>
+                            // {
+                            //     if (metadataGroup.filters && metadataGroup.filters.length > 0) {
+                            //         const filterGroup = {groupName: metadataGroup.label, filtersTypes: []};
+                            //         filters.filtersGroups.push(filterGroup);
+                            //
+                            //         metadataGroup.filters.forEach(filter => {
+                            //             filterGroup.filtersTypes.push({ type : filter.label, caption : filter.label});
+                            //             const items = filters.filtersByType[filter.label] = [];
+                            //
+                            //             filter.children.forEach((filterItem : MetadataFilter) =>
+                            //             {
+                            //                items.push({
+                            //                    value : filterItem.id,
+                            //                    name : filterItem.label
+                            //                })
+                            //             });
+                            //         });
+                            //     }
+                            // });
                             this._additionalFilters.next(filters);
 
                             this._status.next({ dataLoad : AdditionalFilterLoadingStatus.Loaded});
@@ -205,66 +202,69 @@ export class ContentAdditionalFiltersStore {
         }
     }
 
-    createMetadataProfileFilters(metadataProfiles: KalturaMetadataProfile[]){
-        try {
-            // for each metadata profile, parse its XSD and see if it has a searchable list in it
-            metadataProfiles.forEach((metadataProfile) => {
-                const xsd = metadataProfile.xsd ? metadataProfile.xsd : null; // try to get the xsd schema from the metadata profile
-                if (xsd) {
-                    const parser = new DOMParser();
-                    const ns = "http://www.w3.org/2001/XMLSchema";
-                    const schema = parser.parseFromString(xsd, "text/xml");      // create an xml documents from the schema
-                    const elements = schema.getElementsByTagNameNS(ns, "element");    // get all element nodes
-
-                    // for each xsd element with an ID attribute - search for a simpleType node of type listType - this means we have to add it to the filters if it is searchable
-                    for (let i = 0; i < elements.length; i++) {
-                        const currentNode = elements[i];
-                        if (currentNode.getAttribute("id") !== null) {            // only elements with ID attribue can be used for filters
-                            const simpleTypes = currentNode.getElementsByTagNameNS(ns, "simpleType");
-                            if (simpleTypes.length > 0) {
-                                // check if this element is searchable
-                                if (currentNode.getElementsByTagName("searchable").length && currentNode.getElementsByTagName("searchable")[0].textContent === "true") {
-                                    // check if the simpleType type is "listType"
-                                    if (simpleTypes[0].getElementsByTagNameNS(ns, "restriction").length && simpleTypes[0].getElementsByTagNameNS(ns, "restriction")[0].getAttribute("base") === "listType") {
-                                        // get filter properties and add it to the metadata profile filters list
-                                        const filterLabel = currentNode.getElementsByTagNameNS(ns, "appinfo").length ? currentNode.getElementsByTagNameNS(ns,"appinfo")[0].getElementsByTagName("label")[0].textContent : "";
-                                        const valueNodes = simpleTypes[0].getElementsByTagNameNS(ns, "enumeration");
-                                        const values = [];
-                                        for (let j = 0; j < valueNodes.length; j++) {
-                                            values.push(valueNodes[j].getAttribute("value"));
-                                        }
-                                        const fieldName = currentNode.getAttribute("name");
-                                        this.addMetadataProfileFilter(metadataProfile.id, metadataProfile.name, filterLabel, fieldName, values);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-        }catch(e){
-            // TODO [kmc] handle error
-            console.log("An error occured during the metadata profile filters creation process.");
-        }
-    }
-
-    addMetadataProfileFilter(metadataProfileID, metadataProfileName, filterName, fieldName, values){
-        // check if current filter group (accordion header) already exists. If not - create a new one
-        let filterGroup: MetadataProfileFilterGroup = R.find(R.propEq('label', metadataProfileName))(this.metadataFilters);
-        if (typeof filterGroup === "undefined"){
-            filterGroup = {label: metadataProfileName, filters: []};
-            this.metadataFilters.push(filterGroup);
-        }
-        // if the filter does not exist in the filters group yet - add it to the group
-        if (typeof R.find(R.propEq('label', filterName))(filterGroup.filters) === "undefined") {
-            let newFilter: AdditionalFilter = new MetadataFilter(filterName, "", filterName);
-            for (let i = 0; i < values.length; i++){
-                newFilter.children.push(new MetadataFilter(fieldName, metadataProfileID, values[i]));
-            }
-            filterGroup.filters.push(newFilter);
-        }
-    }
+    // createMetadataProfileFilters(metadataProfiles: KalturaMetadataProfile[]) : FilterGroup[]{
+    //     const result : FilterGroup[] = [];
+    //     try {
+    //         // for each metadata profile, parse its XSD and see if it has a searchable list in it
+    //         metadataProfiles.forEach((metadataProfile) => {
+    //             const xsd = metadataProfile.xsd ? metadataProfile.xsd : null; // try to get the xsd schema from the metadata profile
+    //             if (xsd) {
+    //                 const parser = new DOMParser();
+    //                 const ns = "http://www.w3.org/2001/XMLSchema";
+    //                 const schema = parser.parseFromString(xsd, "text/xml");      // create an xml documents from the schema
+    //                 const elements = schema.getElementsByTagNameNS(ns, "element");    // get all element nodes
+    //
+    //                 // for each xsd element with an ID attribute - search for a simpleType node of type listType - this means we have to add it to the filters if it is searchable
+    //                 for (let i = 0; i < elements.length; i++) {
+    //                     const currentNode = elements[i];
+    //                     if (currentNode.getAttribute("id") !== null) {            // only elements with ID attribue can be used for filters
+    //                         const simpleTypes = currentNode.getElementsByTagNameNS(ns, "simpleType");
+    //                         if (simpleTypes.length > 0) {
+    //                             // check if this element is searchable
+    //                             if (currentNode.getElementsByTagName("searchable").length && currentNode.getElementsByTagName("searchable")[0].textContent === "true") {
+    //                                 // check if the simpleType type is "listType"
+    //                                 if (simpleTypes[0].getElementsByTagNameNS(ns, "restriction").length && simpleTypes[0].getElementsByTagNameNS(ns, "restriction")[0].getAttribute("base") === "listType") {
+    //                                     // get filter properties and add it to the metadata profile filters list
+    //                                     const filterLabel = currentNode.getElementsByTagNameNS(ns, "appinfo").length ? currentNode.getElementsByTagNameNS(ns,"appinfo")[0].getElementsByTagName("label")[0].textContent : "";
+    //                                     const valueNodes = simpleTypes[0].getElementsByTagNameNS(ns, "enumeration");
+    //                                     const values = [];
+    //                                     for (let j = 0; j < valueNodes.length; j++) {
+    //                                         values.push(valueNodes[j].getAttribute("value"));
+    //                                     }
+    //                                     const fieldName = currentNode.getAttribute("name");
+    //                                     this.addMetadataProfileFilter(result, metadataProfile.id, metadataProfile.name, filterLabel, fieldName, values);
+    //                                 }
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         });
+    //
+    //     }catch(e){
+    //         // TODO [kmc] handle error
+    //         console.log("An error occured during the metadata profile filters creation process.");
+    //     }
+    //
+    //     return result;
+    // }
+    //
+    // addMetadataProfileFilter(result, metadataProfileID, metadataProfileName, filterName, fieldName, values){
+    //     // check if current filter group (accordion header) already exists. If not - create a new one
+    //     let filterGroup: MetadataProfileFilterGroup = R.find(R.propEq('label', metadataProfileName))(this.metadataFilters);
+    //     if (typeof filterGroup === "undefined"){
+    //         filterGroup = {label: metadataProfileName, filters: []};
+    //         result.push(filterGroup);
+    //     }
+    //     // if the filter does not exist in the filters group yet - add it to the group
+    //     if (typeof R.find(R.propEq('label', filterName))(filterGroup.filters) === "undefined") {
+    //         let newFilter: AdditionalFilter = new MetadataFilter(filterName, "", filterName);
+    //         for (let i = 0; i < values.length; i++){
+    //             newFilter.children.push(new MetadataFilter(fieldName, metadataProfileID, values[i]));
+    //         }
+    //         filterGroup.filters.push(newFilter);
+    //     }
+    // }
 
 }
 
