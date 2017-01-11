@@ -977,11 +977,11 @@
         {}
       ],
       "properties": {
-        "order": 35,
-        "id": 4,
-        "name": "play",
+        "order": 41,
+        "id": 10,
         "prevSize": 24,
-        "code": 59654
+        "code": 59686,
+        "name": "play"
       },
       "setIdx": 4,
       "setId": 0,

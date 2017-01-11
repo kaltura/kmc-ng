@@ -9,12 +9,12 @@
     .kEntriesHolder {
         height: 100%;
         border: 1px solid $kGrayscale6;
+        position: relative;
     }
     .kRefreshBtn {
         font-size: 24px;
-        margin-left: auto;
         border: none;
-        width: auto;
+        min-width: inherit;
         margin-top: -7px;
         &:active{
             box-shadow: none;
@@ -31,14 +31,10 @@
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
         form {
-            display: table-cell;
-            vertical-align: middle;
-            padding-left: 8px;
+            padding-right: 8px;
         }
         div {
-            display: table-cell;
-            vertical-align: middle;
-            padding-left: 6px;
+            padding-right: 6px;
         }
     }
     .kEntriesTableTags {
@@ -47,15 +43,6 @@
         background-color: #f3f3f3;
         border: 1px solid grey;
         flex: 0 0 50px;
-    }
-    .accordionHolder {
-        width: 300px;
-        background-color: white;
-        position: absolute;
-        margin-top: 20px;
-        margin-left: 20px;
-        border: 1px solid grey;
-        border-radius: 5px;
     }
     .kEntriesTableFooter {
         width: 100%;
@@ -71,6 +58,12 @@
     .kSelectedEntriesLabel{
         font-weight: bold;
         margin-right: 36px;
+        margin-left: 5px;
+    }
+    .kSearchInput {
+        background: url(../styles/assets/magnifier.png) no-repeat 7px 4px;
+        padding-left:30px;
+        background-color: $kGrayscale6;
     }
     .kBulkOperations{
         width: 360px;
@@ -85,6 +78,42 @@
     }
     .kBulkDeleteBtn{
         margin-right: 10px;
+    }
+    .kFilters{
+        display: flex;
+        margin-left: auto;
+    }
+    .kCategoriesFilter{
+        border: 1px solid $kGrayscale4;
+        border-radius: 4px;
+        display: flex;
+        background-color: #ffffff;
+        height: 26px;
+        align-items: center;
+        cursor: pointer;
+        color: $kGrayscale3;
+        width: 180px;
+        position: relative;
+        margin-right: 8px;
+        i{
+            margin-right: 8px;
+            margin-left: 8px;
+            &.dropdown{
+                font-size: 10px;
+            }
+        }
+        &:hover{
+            color: $kPrimary;
+        }
+        .dropdown{
+            position: absolute;
+            right: 4px;
+            top: 8px;
+        }
+    }
+    .kRefine{
+        @extend .kCategoriesFilter;
+        width: 140px;
     }
 }
 

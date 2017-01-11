@@ -9,29 +9,11 @@ import { Md5 } from 'ts-md5/dist/md5';
   styleUrls: ['./user-settings.component.scss']
 })
 export class UserSettingsComponent {
-  isOpen: boolean = false;
   timeoutID: number = null;
   private _userContext: AppUser;
 
   constructor(private userAuthentication: AppAuthentication, private appNavigator : AppNavigator, private browserService: BrowserService, private appConfig: AppConfig) {
     this._userContext = userAuthentication.appUser;
-  }
-
-  setOpen(open) {
-    let _this = this;
-    _this.isOpen = open;
-    //if (open) {
-    //  // give a little threshold to allow the user roll out and back in when trying to click a link
-    //  if (this.timeoutID) {
-    //    clearTimeout(this.timeoutID);
-    //    this.timeoutID = null;
-    //  }
-    //  this.isOpen = open;
-    //} else {
-    //  this.timeoutID = (setTimeout(function(){
-    //    _this.isOpen = open;
-    //  }, 500) as number);
-    //}
   }
 
   logout() {
