@@ -4,6 +4,7 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
+import {Scheduler} from 'rxjs/rx';
 
 import {
     KalturaContentDistributionSearchItem,
@@ -35,10 +36,7 @@ export interface Entries{
     totalCount : number
 }
 
-function toServerDate(value? : Date) : number
-{
-    return value ? value.getTime() / 1000 : null;
-}
+
 
 export interface filterUpdateData {
     filter: FilterItem[];
@@ -54,7 +52,7 @@ export class ContentEntriesStore {
     private _activeFilters : FilterItem[] = [];
     private _activeFiltersMap : {[key : string] : FilterItem[]} = {};
 
-    private _filterUpdate : ReplaySubject<filterUpdateData> = new ReplaySubject<filterUpdateData>(1);
+    private _filterUpdate : ReplaySubject<filterUpdateData> = new ReplaySubject<filterUpdateData>(1,null,Scheduler.async);
 
     public entries$: Observable<Entries> = this._entries.asObservable();
     public status$: Observable<UpdateStatus> = this._status.asObservable();
@@ -202,6 +200,11 @@ export class ContentEntriesStore {
             if (!filter.mediaTypeIn)
             {
                 filter.mediaTypeIn = '1,2,5,6,201';
+            }
+
+            if (!filter.statusIn)
+            {
+                filter.statusIn = '-1,-2,0,1,2,7,4';
             }
         }
 

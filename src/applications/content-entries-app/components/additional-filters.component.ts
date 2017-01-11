@@ -8,26 +8,9 @@ import {MediaTypesFilter} from "../../../shared/kmc-content-ui/content-entries-f
 
 import * as R from 'ramda';
 import {FlavorsFilter} from "../../../shared/kmc-content-ui/content-entries-filter/filters/flavors-filter";
+import {CreatedAfterFilter} from "../../../shared/kmc-content-ui/content-entries-filter/filters/created-after-filter";
+import {CreatedBeforeFilter} from "../../../shared/kmc-content-ui/content-entries-filter/filters/created-before-filter";
 
-export interface RefineFiltersChangedArgs
-{
-    createdAtGreaterThanOrEqual? : Number;
-    createdAtLessThanOrEqual? : Number;
-    mediaTypeIn? : string;
-    statusIn? : string;
-    durationTypeMatchOr? :string;
-    isRoot? : number;
-    endDateLessThanOrEqual? : Number;
-    startDateLessThanOrEqualOrNull? : Number;
-    endDateGreaterThanOrEqualOrNull? : Number;
-    startDateGreaterThanOrEqual? : Number;
-    moderationStatusIn? : string;
-    replacementStatusIn? : string;
-    flavorParamsIdsMatchOr? : string;
-    accessControlIdIn? : string;
-    distributionProfiles? : string[]; // since this should fill the advanced search object with the metadata profiles - it will be parsed in the content-entries-store
-    metadataProfiles? : any[];
-}
 
 function toServerDate(value? : Date) : number
 {
@@ -41,23 +24,20 @@ function toServerDate(value? : Date) : number
 })
 export class AdditionalFiltersComponent implements OnInit, OnDestroy{
 
-    additionalFiltersSubscribe : Subscription;
-    selectedFilters: any[] = [];
-
-    filter: RefineFiltersChangedArgs;
-    loading = false;
 
     createdFrom: Date;
     createdTo: Date;
     scheduledFrom: Date;
     scheduledTo: Date;
 
-    @Output()
-    refineFiltersChanged = new EventEmitter<RefineFiltersChangedArgs>();
 
+
+    private additionalFiltersSubscrition : Subscription;
+    private filterUpdateSubscription : Subscription;
+    private selectedNodes: any[] = [];
+    private loading = false;
     private defaultFiltersNodes : PrimeTreeNode[] = [];
-    private customFiltersNode : PrimeTreeNode[] = [];
-    private filters : any;
+    private groupedFiltersNodes : PrimeTreeNode[] = [];
 
     private treeSelectionsDiffer : IterableDiffer = null;
 
@@ -69,52 +49,54 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     ngOnInit() {
         this.treeSelectionsDiffer = this.differs.find([]).create(null);
 
-        this.additionalFiltersSubscribe = this.contentAdditionalFiltersStore.additionalFilters$.subscribe(
+        this.filterUpdateSubscription = this.contentEntriesStore.filterUpdate$.subscribe(
+            filter => {
+                if (filter.removed && filter.removed.length > 0) {
+                    // only removed items should be handled (because relevant added filters are originated from this component)
+                    this.updateTreeComponent(filter.removed);
+                    this.updateCreatedComponents();
+                }
+            }
+        );
+
+        this.additionalFiltersSubscrition = this.contentAdditionalFiltersStore.additionalFilters$.subscribe(
             (filters: Filters) => {
 
                 this.defaultFiltersNodes = [];
-                this.filters = filters;
+                this.groupedFiltersNodes = [];
 
                 // create root nodes
-                filters.filtersGroups.forEach(group =>
-                {
-                    if (group.groupName)
-                    {
+                filters.filtersGroups.forEach(group => {
+                    if (group.groupName) {
 
-                    }else
-                    {
+                    } else {
                         // filter is part of the default group (additional information)
-                        group.filtersTypes.forEach(filter =>
-                        {
+                        group.filtersTypes.forEach(filter => {
                             const filterItems = filters.filtersByType[filter.type];
 
                             if (filterItems && filterItems.length > 0) {
                                 this.defaultFiltersNodes.push(
-                                new PrimeTreeNode(null, filter.caption,
-                                    this.treeDataHandler.create(
-                                        {
-                                            data : filterItems,
-                                            idProperty : 'id',
-                                            nameProperty : 'name',
-                                            payload : filter.type
+                                    new PrimeTreeNode(null, filter.caption,
+                                        this.treeDataHandler.create(
+                                            {
+                                                data: filterItems,
+                                                idProperty: 'id',
+                                                nameProperty: 'name',
+                                                payload: filter.type
 
-                                        }
-                                    )
-                                    , filter.type)
+                                            }
+                                        )
+                                        , filter.type)
                                 );
                             }
                         });
                     }
 
                 });
-
             },
             (error) => {
                 // TODO [KMC] - handle error
             });
-
-        // this.initFilter();
-        // this.reloadAdditionalFilters();
     }
 
 
@@ -132,14 +114,16 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     //         });
     // }
     //
-    // clearDates(){
-    //     this.createdFrom = null;
-    //     this.createdTo = null;
-    //     this.updateFilter();
-    // }
+    clearCreatedFilters(){
+        this.createdFrom = null;
+        this.createdTo = null;
+
+        this.updateCreatedFromFilter();
+        this.updateCreatedToFilter();
+    }
     //
     // clearAll(){
-    //     this.selectedFilters = [];
+    //     this.selectedNodes = [];
     //     // clear all partial selections
     //     this.additionalFilters.forEach((filter: AdditionalFilter) => {
     //         if (filter['partialSelected']){
@@ -149,23 +133,102 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     //     this.updateFilter();
     // }
 
-    // init filter
-    initFilter(){
-        this.filter = {
-            statusIn: "-1,-2,0,1,2,7,4",
-            mediaTypeIn: "1,2,5,6,201",
-            metadataProfiles: []
-        };
+    updateCreatedComponents() : void {
+
+        const createdBeforeFilters = <CreatedBeforeFilter[]>this.contentEntriesStore.getActiveFilters(CreatedBeforeFilter);
+
+        if (createdBeforeFilters && createdBeforeFilters.length > 0)
+        {
+            this.createdTo = createdBeforeFilters[0].date;
+        }else
+        {
+            this.createdTo = null;
+        }
+
+        const createdAfterFilters = this.contentEntriesStore.getActiveFilters(CreatedAfterFilter);
+
+        if (createdAfterFilters && createdAfterFilters.length > 0)
+        {
+            this.createdFrom = (<CreatedAfterFilter>createdAfterFilters[0]).date;
+        }else
+        {
+            this.createdFrom = null;
+        }
     }
 
+    updateTreeComponent(removedFilters : FilterItem[]) : void
+    {
+        if (removedFilters)
+        {
+            const nodesToRemove : PrimeTreeNode[] = [];
 
-    updateFilter(event)
+            removedFilters.forEach(filter =>
+            {
+               if (filter instanceof MediaTypesFilter)
+               {
+
+                   const nodeToRemove = R.find(R.propEq('data',filter.mediaType),this.selectedNodes);
+                   if (nodeToRemove)
+                   {
+                       nodesToRemove.push(nodeToRemove);
+                   }
+
+               }
+            });
+
+            if (nodesToRemove.length > 0)
+            {
+                this.selectedNodes = R.without(nodesToRemove,this.selectedNodes);
+            }
+        }
+    }
+
+    updateScheduledFilter(event)
+    {
+
+    }
+
+    updateCreatedToFilter()
+    {
+        let newFilters : FilterItem[] = [];
+
+        const existingFilters = this.contentEntriesStore.getActiveFilters(CreatedBeforeFilter);
+
+        if (existingFilters.length > 0)
+        {
+            this.contentEntriesStore.removeFilters(...existingFilters);
+        }
+
+        if (this.createdTo)
+        {
+            this.contentEntriesStore.addFilters(new CreatedBeforeFilter(this.createdTo));
+        }
+    }
+
+    updateCreatedFromFilter()
+    {
+        let newFilters : FilterItem[] = [];
+
+        const existingFilters = this.contentEntriesStore.getActiveFilters(CreatedAfterFilter);
+
+        if (existingFilters.length > 0)
+        {
+            this.contentEntriesStore.removeFilters(...existingFilters);
+        }
+
+        if (this.createdFrom)
+        {
+            this.contentEntriesStore.addFilters(new CreatedAfterFilter(this.createdFrom));
+        }
+    }
+
+    updateTreeFilter(event)
     {
 
         let newFilters : FilterItem[] = [];
         let removedFilters : FilterItem[] = [];
 
-        const selectionChanges = this.treeSelectionsDiffer.diff(this.selectedFilters);
+        const selectionChanges = this.treeSelectionsDiffer.diff(this.selectedNodes);
 
         if (selectionChanges)
         {
@@ -186,10 +249,8 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
 
                 if (filter)
                 {
-                    newFilters.push(filter);
+                    removedFilters.push(filter);
                 }
-
-                removedFilters.push(filter);
             });
         }
 
@@ -266,10 +327,6 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     //     let filters: AdditionalFilter[];
     //
     //     // set creation dates filter
-    //     if (this.createdFrom || this.createdTo) {
-    //         this.filter.createdAtGreaterThanOrEqual = toServerDate(this.createdFrom);
-    //         this.filter.createdAtLessThanOrEqual = toServerDate(this.createdTo);
-    //     }
     //
     //     this.setFlatFilter(FilterType.Types.IngestionStatus, 'statusIn');                  // set ingestion status filter
     //     this.setFlatFilter(FilterType.Types.MediaType, 'mediaTypeIn');                     // set media type filter
@@ -280,7 +337,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     //     this.setFlatFilter(FilterType.Types.AccessControlProfiles, 'accessControlIdIn');   // set access control profiles filter
     //
     //     // set original and clipped entries filter
-    //     filters = R.filter((filter: AdditionalFilter) => filter.filterName === FilterType.Types.OriginalAndClipped, this.selectedFilters);
+    //     filters = R.filter((filter: AdditionalFilter) => filter.filterName === FilterType.Types.OriginalAndClipped, this.selectedNodes);
     //     if (filters.length > 1) {
     //         this.filter.isRoot = -1;
     //     }
@@ -289,7 +346,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     //     }
     //
     //     // set time scheduling filter
-    //     filters = R.filter((filter: AdditionalFilter) => filter.filterName === FilterType.Types.TimeScheduling, this.selectedFilters);
+    //     filters = R.filter((filter: AdditionalFilter) => filter.filterName === FilterType.Types.TimeScheduling, this.selectedNodes);
     //     if (filters.length){
     //         if (R.findIndex(R.propEq('id', 'past'))(filters) > -1){
     //             this.filter.endDateLessThanOrEqual = toServerDate(new Date());
@@ -308,7 +365,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     //     }
     //
     //     // set distribution profiles filter
-    //     filters = R.filter((filter: AdditionalFilter) => filter.filterName === FilterType.Types.DistributionProfiles, this.selectedFilters);
+    //     filters = R.filter((filter: AdditionalFilter) => filter.filterName === FilterType.Types.DistributionProfiles, this.selectedNodes);
     //     if (filters.length){
     //         this.filter.distributionProfiles = [];
     //         filters.forEach( (distributionProfile) => {
@@ -319,7 +376,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     //     }
     //
     //     // update metadata filters
-    //     this.selectedFilters.forEach( filter => {
+    //     this.selectedNodes.forEach( filter => {
     //         if (filter instanceof MetadataFilter && filter.id !== ""){
     //             this.filter.metadataProfiles.push({'metadataProfileId': filter.id, 'field': filter.filterName, 'value': filter.label});
     //         }
@@ -330,7 +387,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     // }
     //
     // setFlatFilter(filterName: string, filterPoperty: string){
-    //     const filters: AdditionalFilter[] = R.filter((filter: AdditionalFilter) => filter.filterName === filterName, this.selectedFilters);
+    //     const filters: AdditionalFilter[] = R.filter((filter: AdditionalFilter) => filter.filterName === filterName, this.selectedNodes);
     //     if (filters.length){
     //         this.filter[filterPoperty] = "";
     //         filters.forEach((filter: AdditionalFilter) => {
@@ -344,7 +401,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
 
     isScheduledEnabled(){
         return false;
-        // const filters: AdditionalFilter[] = R.filter((filter: AdditionalFilter) => filter.filterName === FilterType.Types.TimeScheduling, this.selectedFilters);
+        // const filters: AdditionalFilter[] = R.filter((filter: AdditionalFilter) => filter.filterName === FilterType.Types.TimeScheduling, this.selectedNodes);
         // return R.findIndex(R.propEq('id', 'scheduled'))(filters) > -1;
     }
 
@@ -353,6 +410,6 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     }
 
     ngOnDestroy(){
-        this.additionalFiltersSubscribe.unsubscribe();
+        this.additionalFiltersSubscrition.unsubscribe();
     }
 }

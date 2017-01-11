@@ -2,23 +2,23 @@
     <p style="padding-left: 20px">ADDITIONAL FILTERS</p>
     <div style="padding-left: 20px">
         <p>Created Between</p>
-        <p-calendar [(ngModel)]="createdFrom" [showIcon]="true" icon="kIconcalendar" (onSelect)="updateFilter()"></p-calendar>
+        <p-calendar [(ngModel)]="createdFrom" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" icon="kIconcalendar" (onSelect)="updateCreatedFromFilter($event)"></p-calendar>
         <span style="margin-left: 40px; margin-right: 5px">-</span>
-        <p-calendar [(ngModel)]="createdTo" [showIcon]="true" icon="kIconcalendar" (onSelect)="updateFilter()"></p-calendar>
+        <p-calendar [(ngModel)]="createdTo" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" icon="kIconcalendar" (onSelect)="updateCreatedToFilter($event)"></p-calendar>
     </div>
     <p style="padding-left: 20px">
-        <a class="clearAll" (click)="clearDates()">Clear Dates</a>
+        <a class="clearAll" (click)="clearCreatedFilters()">Clear Dates</a>
     </p>
 
 
-    <p-tree [value]="defaultFiltersNodes" selectionMode="checkbox" [selection]="selectedFilters"  (onNodeSelect)="updateFilter($event)" (onNodeUnselect)="updateFilter($event)" >
+    <p-tree [value]="defaultFiltersNodes" selectionMode="checkbox" [selection]="selectedNodes"  (onNodeSelect)="updateTreeFilter($event)" (onNodeUnselect)="updateTreeFilter($event)" >
         <template let-node  pTemplate type="default">
             <span  class="kTreeNodeLabel">{{node.label}} <span *ngIf="node.childrenCount">({{ node.childrenCount}})</span></span>
-            <div *ngIf="node.id==='scheduled'" (click)="blockScheduleToggle($event)">
+            <div *ngIf="node.data==='scheduled'" (click)="blockScheduleToggle($event)">
 
                 <div>
-                    <p-calendar #scheduledfrom [(ngModel)]="scheduledFrom" [disabled]="!isScheduledEnabled()" [appendTo]="'body'" (onSelect)="scheduledfrom.overlayVisible = false; updateFilter()"></p-calendar>
-                    <p-calendar #scheduledto [(ngModel)]="scheduledTo" [disabled]="!isScheduledEnabled()" (onSelect)="scheduledto.overlayVisible = false; updateFilter()"></p-calendar>
+                    <p-calendar #scheduledfrom [(ngModel)]="scheduledFrom" [disabled]="!isScheduledEnabled()" [appendTo]="'body'" [monthNavigator]="true" [yearNavigator]="true" [readonlyInput]="true" (onSelect)="scheduledfrom.overlayVisible = false; updateScheduledFilter()"></p-calendar>
+                    <p-calendar #scheduledto [(ngModel)]="scheduledTo" [disabled]="!isScheduledEnabled()" [monthNavigator]="true" [yearNavigator]="true" [readonlyInput]="true" (onSelect)="scheduledto.overlayVisible = false; updateScheduledFilter()"></p-calendar>
                 </div>
             </div>
         </template>
@@ -27,14 +27,14 @@
 
     <div *ngFor="let metadataProfile of metadataProfilesFilters">
         <p style="padding-left: 20px">{{metadataProfile.label | uppercase}}</p>
-        <p-tree [value]="metadataProfile.filters" selectionMode="checkbox" [(selection)]="selectedFilters" (onNodeSelect)="updateFilter()" (onNodeUnselect)="updateFilter()">
+        <p-tree [value]="metadataProfile.filters" selectionMode="checkbox" [(selection)]="selectedFilters" (onNodeSelect)="updateTreeFilter()" (onNodeUnselect)="updateTreeFilter()">
             <template let-node  pTemplate type="default">
                 <span class="kTreeNodeLabel">{{node.label}}</span>
             </template>
         </p-tree>
     </div>
     <p style="padding-left: 20px">
-        <a class="clearAll" [class.disabled]="selectedFilters.length === 0" (click)="clearAll()">Clear all</a>
+        <a class="clearAll" [class.disabled]="selectedNodes.length === 0" (click)="clearAll()">Clear all</a>
     </p>
 </div>
 
