@@ -19,9 +19,7 @@ import { EntryTypePipe, EntryStatusPipe, PlaylistTypePipe } from './pipes/index'
 
 @NgModule({
     imports:      [ PopupWidgetModule, CommonModule, TreeModule, FormsModule, SharedModule, KalturaUIModule, KalturaPrimeNgUIModule, AutoCompleteModule, RadioButtonModule, TooltipModule, KMCShellModule ],
-    declarations: [ CategoriesFilterComponent, CategoriesFilterPrefsComponent, EntryTypePipe, EntryStatusPipe, PlaylistTypePipe ],
-    imports:      [ CommonModule, TreeModule, FormsModule, SharedModule, KalturaUIModule, KalturaPrimeNgUIModule, AutoCompleteModule, ToggleButtonModule, CalendarModule ],
-    declarations: [ CategoriesFilterComponent, EntryTypePipe, EntryStatusPipe, PlaylistTypePipe ],
+    declarations: [ CategoriesFilterComponent, EntryTypePipe, EntryStatusPipe, PlaylistTypePipe,CategoriesFilterPrefsComponent ],
     providers:    [],
     exports: [ CategoriesFilterComponent, CategoriesFilterPrefsComponent, EntryTypePipe, EntryStatusPipe, PlaylistTypePipe ]
 })

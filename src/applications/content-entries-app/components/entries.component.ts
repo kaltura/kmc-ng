@@ -48,6 +48,9 @@ export class EntriesComponent implements OnInit, OnDestroy {
         filterColumns : filterColumns
     };
 
+
+    private filterUpdateSubscription : Subscription;
+
     selectedEntries: any[] = [];
     bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
 
@@ -60,20 +63,12 @@ export class EntriesComponent implements OnInit, OnDestroy {
         });
     }
 
+
     removeTag(tag: any){
-        const idx = R.findIndex(R.propEq('id', tag.id))(this.tags);
-        if (idx !== -1) {
-            this.tags.splice(idx, 1);
-        }
+        this.contentEntriesStore.removeFilters(tag);
     }
+
     removeAllTags(){
-        this.tags=[];
-    }
-    addTag(){
-        this.tagId++;
-        let myArray = ["tag 1","tag 2", "tag 3","Another tag", "short tag", "a longer tag name"," one more tag"];
-        var randomValue = myArray[Math.floor(Math.random() * myArray.length)];
-        this.tags.push({label: randomValue, tooltip: randomValue+" tooltip", id: this.tagId });
     }
 
     onFreetextChanged() : void{
@@ -106,10 +101,19 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
 
     ngOnInit() {
+
+        this.filterUpdateSubscription = this.contentEntriesStore.filterUpdate$.subscribe(
+            filter =>
+            {
+                this.tags = filter.filter;
+            }
+        );
         this.reload();
     }
 
     ngOnDestroy(){
+        this.filterUpdateSubscription.unsubscribe();
+        this.filterUpdateSubscription = null;
     }
 
     onActionSelected(event){

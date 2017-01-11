@@ -13,7 +13,7 @@
 
     <p-tree [value]="defaultFiltersNodes" selectionMode="checkbox" [selection]="selectedFilters"  (onNodeSelect)="updateFilter($event)" (onNodeUnselect)="updateFilter($event)" >
         <template let-node  pTemplate type="default">
-            <span  class="kTreeNodeLabel">{{node.label}} ({{ node.childrenCount}})</span>
+            <span  class="kTreeNodeLabel">{{node.label}} <span *ngIf="node.childrenCount">({{ node.childrenCount}})</span></span>
             <div *ngIf="node.id==='scheduled'" (click)="blockScheduleToggle($event)">
 
                 <div>

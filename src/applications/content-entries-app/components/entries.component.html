@@ -9,7 +9,7 @@
 
     </div>
 
-    <div class="kEntriesHolder kContent grid-column-noGutter" style="margin-left: 360px !important;">
+    <div class="kEntriesHolder kContent grid-column-noGutter" >
         <div class="kEntriesTableFilters grid col-12">
                 <span *ngIf="(contentEntriesStore.entries$ | async)?.totalCount">{{(contentEntriesStore.entries$ | async)?.totalCount}} Entries</span>
                 <div [style.visibility]="selectedEntries.length ? 'visible' : 'hidden'" class="kBulkOperations">
@@ -26,15 +26,9 @@
                     </form>
                 </div>
                 <button pButton class="kButtonDefault kRefreshBtn small" type="text" (click)="reload()" icon="kIconrefresh" title="Refresh"></button>
-
-
         </div>
-        <div *ngIf="showTags" class="kEntriesTableTags">
-            <div
-                style="height: 20px; background-color: #cacaca; border: 1px solid grey; border-radius: 15px; width: 100px; margin-top: 10px; margin-left: 10px; text-align: center; padding: 5px">
-                Filter 1
-            </div>
-        </div>
+
+        <kTags [title]="'Active Filters:'" [data]="tags" [labelField]="'label'"  [tooltipField]="'tooltip'" (onTagRemove)="removeTag($event)" (onRemoveAll)="removeAllTags()"></kTags>
 
         <kEntriesTable class="kEntriesTable grid-column-noGutter col"
                        [entries]="(contentEntriesStore.entries$ | async)?.items" [filter]="filter"
