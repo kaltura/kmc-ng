@@ -5,7 +5,7 @@ import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
 
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
-import { ContentEntriesStore, UpdateArgs, SortDirection } from 'kmc-content-ui/providers/content-entries-store.service';
+import { ContentEntriesStore } from 'kmc-content-ui/providers/content-entries-store.service';
 import {RefineFiltersChangedArgs} from "./filters.component";
 import {kEntriesTable} from "./entries-table.component";
 
@@ -37,12 +37,12 @@ export class EntriesComponent implements OnInit, OnDestroy {
     private _filterChanges : Subscription;
     searchForm: FormGroup;
 
-    filter : UpdateArgs = {
+    filter : any = {
         pageIndex : 0,
         pageSize : 50,
         searchText : '',
         sortBy : 'createdAt',
-        sortDirection : SortDirection.Desc,
+        sortDirection : null,
         distributionProfiles : [],
         filterColumns : filterColumns
     };
@@ -63,7 +63,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
     }
 
     onSortChanged(event) {
-        this.filter.sortDirection = event.order === entriesSortAsc ? SortDirection.Asc : SortDirection.Desc;
+        //this.filter.sortDirection = event.order === entriesSortAsc ? SortDirection.Asc : SortDirection.Desc;
         this.filter.sortBy = event.field;
         this.reload();
     }
@@ -81,7 +81,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
             this.filter.pageIndex = 0;
         }
 
-        this.contentEntriesStore.update(this.filter);
+        //this.contentEntriesStore.update(this.filter);
     }
 
 

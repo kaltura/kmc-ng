@@ -56,7 +56,7 @@ function createTag(tagName, attrMap, publicPath) {
         const usePublicPath = attrMap.hasOwnProperty('=' + name) ? !!attrMap['=' + name] : name === 'href';
 
         if (usePublicPath) {
-          // remove a starting trailing slash if the value has one so we wont have //
+          // remove a starting trailing slash if the id has one so we wont have //
           value = publicPath + (value[0] === '/' ? value.substr(1) : value);
         }
       }

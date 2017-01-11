@@ -1,27 +1,27 @@
 export const ConstantsFilters = [
-    {type : 'mediaType', name : 'Media Types',
+    {type : 'mediaTypes', name : 'Media Types',
         items :
     [
-        {value : '1',name : 'Video'},
-        {value : '2',name : 'Image'},
-        {value : '5',name : 'Audio'},
-        {value : '6',name : 'VideoMix'},
-        {value : '201',name : 'Live'}
+        {id :'1',name : 'Video'},
+        {id :'2',name : 'Image'},
+        {id :'5',name : 'Audio'},
+        {id :'6',name : 'VideoMix'},
+        {id :'201',name : 'Live'}
 
     ]},
-    {type : 'ingestionStatus', name : 'Ingestion Statuses',
+    {type : 'ingestionStatuses', name : 'Ingestion Statuses',
         items :
             [
-                {value : '7',name : 'NoMedia'},
-                {value : '4',name : 'Pending'},
-                {value : '0',name : 'Uploading'},
-                {value : '1',name : 'Transcoding'},
-                {value : '-1,-2',name : 'Error'}
+                {id :'7',name : 'NoMedia'},
+                {id :'4',name : 'Pending'},
+                {id :'0',name : 'Uploading'},
+                {id :'1',name : 'Transcoding'},
+                {id :'-1,-2',name : 'Error'}
             ]}
 ];
 
 //
-// {value : ,name : ''},
+// {id : ,name : ''},
 //     Types: {
 //         "MediaType" : "mediaType",
 //         "IngestionStatus" : "ingestionStatus",

@@ -116,7 +116,7 @@ export class ContentMetadataProfilesStore
                     const valueNodes = simpleTypes[0].getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "enumeration");
                     const values = [];
                     for (let j = 0; j < valueNodes.length; j++) {
-                      values.push(valueNodes[j].getAttribute("value"));
+                      values.push(valueNodes[j].getAttribute("id"));
                     }
                     const fieldName = currentNode.getAttribute("name");
                     this.addMetadataProfileFilter(metadataProfileFilters, metadataProfile.name, filterLabel, fieldName, values);

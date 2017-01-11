@@ -1,7 +1,13 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Output} from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, Output, IterableDiffer, IterableDiffers} from '@angular/core';
 import { Subscription} from 'rxjs';
 import {PrimeTreeNode, TreeDataHandler} from '@kaltura-ng2/kaltura-primeng-ui';
 import { ContentAdditionalFiltersStore, Filters } from '../../../shared/kmc-content-ui/providers/content-additional-filters-store.service';
+import {ContentEntriesStore} from "../../../shared/kmc-content-ui/providers/content-entries-store.service";
+import {FilterItem} from "../../../shared/kmc-content-ui/content-entries-filter/filter-item";
+import {MediaTypesFilter} from "../../../shared/kmc-content-ui/content-entries-filter/filters/media-types-filter";
+
+import * as R from 'ramda';
+import {FlavorsFilter} from "../../../shared/kmc-content-ui/content-entries-filter/filters/flavors-filter";
 
 export interface RefineFiltersChangedArgs
 {
@@ -53,11 +59,15 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     private customFiltersNode : PrimeTreeNode[] = [];
     private filters : any;
 
-    constructor(public contentAdditionalFiltersStore: ContentAdditionalFiltersStore, private treeDataHandler : TreeDataHandler) {
+    private treeSelectionsDiffer : IterableDiffer = null;
+
+    constructor(public contentAdditionalFiltersStore: ContentAdditionalFiltersStore, private treeDataHandler : TreeDataHandler,
+                private contentEntriesStore : ContentEntriesStore, private differs: IterableDiffers) {
     }
 
 
     ngOnInit() {
+        this.treeSelectionsDiffer = this.differs.find([]).create(null);
 
         this.additionalFiltersSubscribe = this.contentAdditionalFiltersStore.additionalFilters$.subscribe(
             (filters: Filters) => {
@@ -85,7 +95,9 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
                                         {
                                             data : filterItems,
                                             idProperty : 'id',
-                                            nameProperty : 'name'
+                                            nameProperty : 'name',
+                                            payload : filter.type
+
                                         }
                                     )
                                     , filter.type)
@@ -145,9 +157,107 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
             metadataProfiles: []
         };
     }
-    updateFilter()
+
+
+    updateFilter(event)
     {
-        console.log(this.selectedFilters);
+
+        let newFilters : FilterItem[] = [];
+        let removedFilters : FilterItem[] = [];
+
+        const selectionChanges = this.treeSelectionsDiffer.diff(this.selectedFilters);
+
+        if (selectionChanges)
+        {
+            selectionChanges.forEachAddedItem((record) => {
+                const node : PrimeTreeNode = record.item;
+                const filter = this.createFilter(node);
+
+                if (filter)
+                {
+                    newFilters.push(filter);
+                }
+            });
+
+            selectionChanges.forEachRemovedItem((record) => {
+                const node : PrimeTreeNode = record.item;
+
+                const filter = this.removeFilter(node);
+
+                if (filter)
+                {
+                    newFilters.push(filter);
+                }
+
+                removedFilters.push(filter);
+            });
+        }
+
+        if (newFilters.length > 0) {
+            this.contentEntriesStore.addFilters(...newFilters);
+        }
+
+        if (removedFilters.length > 0) {
+            this.contentEntriesStore.removeFilters(...removedFilters);
+        }
+    }
+
+    createFilter(node : PrimeTreeNode) : FilterItem
+    {
+        let result : FilterItem = null;
+
+        // ignore undefined/null filter data (the virtual roots has undefined/null data)
+        if (node instanceof PrimeTreeNode && typeof node.data !== 'undefined' && node.data !== null)
+        {
+            switch (node.payload)
+            {
+                case "mediaTypes":
+                    result = new MediaTypesFilter(<string>node.data, node.label);
+                    break;
+                case "flavors":
+                    result = new FlavorsFilter(<string>node.data, node.label);
+
+                default:
+
+                    break;
+            }
+        }
+
+        return result;
+    }
+
+    removeFilter(node : PrimeTreeNode)
+    {
+        let result : FilterItem = null;
+
+        // ignore undefined/null filter data (the virtual roots has undefined/null data)
+        if (node instanceof PrimeTreeNode && typeof node.data !== 'undefined' && node.data !== null)
+        {
+            switch (node.payload)
+            {
+                case "mediaTypes":
+                    result = R.find((filter : MediaTypesFilter) =>
+                    {
+                        // we are doing a weak comparison on purpose to overcome number/string comparison issues
+                        return filter.mediaType  == node.data;
+                    }, this.contentEntriesStore.getActiveFilters(MediaTypesFilter));
+                    break;
+                case "flavors":
+                    result = R.find((filter : FlavorsFilter) =>
+                    {
+                        // we are doing a weak comparison on purpose to overcome number/string comparison issues
+                        return filter.flavor  == node.data;
+                    }, this.contentEntriesStore.getActiveFilters(FlavorsFilter));
+                    break;
+                default:
+
+
+                    break;
+            }
+        }
+
+        return result;
+
     }
 
     // update the filter

@@ -244,7 +244,7 @@ module.exports = {
      * href attributes, you can disable that by adding a "=href": false property.
      * You can also enable it to other attribute by settings "=attName": true.
      *
-     * The configuration supplied is map between a location (key) and an element definition object (value)
+     * The configuration supplied is map between a location (key) and an element definition object (id)
      * The location (key) is then exported to the template under then htmlElements property in webpack configuration.
      *
      * Example:
@@ -271,7 +271,7 @@ module.exports = {
      * href attributes, you can disable that by adding a "=href": false property.
      * You can also enable it to other attribute by settings "=attName": true.
      *
-     * The configuration supplied is map between a location (key) and an element definition object (value)
+     * The configuration supplied is map between a location (key) and an element definition object (id)
      * The location (key) is then exported to the template under then htmlElements property in webpack configuration.
      *
      * Example:

@@ -26,7 +26,7 @@ import * as R from 'ramda';
 
 export interface FilterItem
 {
-    value : string;
+    id : string;
     name : string;
 }
 
@@ -124,7 +124,7 @@ export class ContentAdditionalFiltersStore {
                                 defaultFilterGroup.filtersTypes.push({ type : filter.type, caption : filter.name});
                                 const items = filters.filtersByType[filter.type] = [];
                                 filter.items.forEach((item: any) => {
-                                    items.push({value : item.value, name : item.name});
+                                    items.push({id : item.id, name : item.name});
                                 });
                             });
 
@@ -133,7 +133,7 @@ export class ContentAdditionalFiltersStore {
                                 defaultFilterGroup.filtersTypes.push({ type : 'distributions', caption : 'Destinations'});
                                 const items = filters.filtersByType['distributions'] = [];
                                 responses[1].result.objects.forEach((distributionProfile: KalturaDistributionProfile) => {
-                                    items.push({value : distributionProfile.id, name : distributionProfile.name});
+                                    items.push({id : distributionProfile.id, name : distributionProfile.name});
                                 });
                             }
 
@@ -145,7 +145,7 @@ export class ContentAdditionalFiltersStore {
                                 });
                                 const items = filters.filtersByType['flavors'] = [];
                                 responses[2].result.objects.forEach((flavor: KalturaFlavorParams) => {
-                                    items.push({value: flavor.id, name: flavor.name});
+                                    items.push({id: flavor.id, name: flavor.name});
                                 });
                             }
 
@@ -158,7 +158,7 @@ export class ContentAdditionalFiltersStore {
                                 const items = filters.filtersByType['accessControlProfiles'] = [];
                                 responses[3].result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
                                     items.push({
-                                        value: accessControlProfile.id,
+                                        id: accessControlProfile.id,
                                         name: accessControlProfile.name
                                     });
                                 });
@@ -180,7 +180,7 @@ export class ContentAdditionalFiltersStore {
                             //             filter.children.forEach((filterItem : MetadataFilter) =>
                             //             {
                             //                items.push({
-                            //                    value : filterItem.id,
+                            //                    id : filterItem.id,
                             //                    name : filterItem.label
                             //                })
                             //             });
@@ -229,7 +229,7 @@ export class ContentAdditionalFiltersStore {
     //                                     const valueNodes = simpleTypes[0].getElementsByTagNameNS(ns, "enumeration");
     //                                     const values = [];
     //                                     for (let j = 0; j < valueNodes.length; j++) {
-    //                                         values.push(valueNodes[j].getAttribute("value"));
+    //                                         values.push(valueNodes[j].getAttribute("id"));
     //                                     }
     //                                     const fieldName = currentNode.getAttribute("name");
     //                                     this.addMetadataProfileFilter(result, metadataProfile.id, metadataProfile.name, filterLabel, fieldName, values);

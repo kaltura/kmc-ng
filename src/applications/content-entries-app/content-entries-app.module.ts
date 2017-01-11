@@ -13,7 +13,6 @@ import { EntriesComponent } from './components/entries.component';
 import { FiltersAccordionComponent } from './components/filters.accordion.component';
 import { KMCShellModule } from 'kmc-shell';
 import { KMCContentUIModule } from 'kmc-content-ui';
-import {SortDirectionPipe} from "./pipes/sort-direction.pipe";
 import {FiltersComponent} from "./components/filters.component";
 import {kEntriesTable} from './components/entries-table.component';
 
@@ -45,8 +44,7 @@ import {kEntriesTable} from './components/entries-table.component';
     EntriesComponent,
     FiltersAccordionComponent,
     FiltersComponent,
-    kEntriesTable,
-    SortDirectionPipe
+    kEntriesTable
   ],
   providers:    []
 })
