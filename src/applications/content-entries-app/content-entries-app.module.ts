@@ -12,10 +12,8 @@ import { AdditionalFiltersComponent } from './components/additional-filters.comp
 
 import { routing} from './content-entries-app.routes';
 import { EntriesComponent } from './components/entries.component';
-import { FiltersAccordionComponent } from './components/filters.accordion.component';
 import { KMCShellModule } from 'kmc-shell';
 import { KMCContentUIModule } from 'kmc-content-ui';
-import {FiltersComponent} from "./components/filters.component";
 import {kEntriesTable} from './components/entries-table.component';
 
 @NgModule({
@@ -46,8 +44,6 @@ import {kEntriesTable} from './components/entries-table.component';
   declarations: [
       AdditionalFiltersComponent,
     EntriesComponent,
-    FiltersAccordionComponent,
-    FiltersComponent,
     kEntriesTable
   ],
   providers:    []

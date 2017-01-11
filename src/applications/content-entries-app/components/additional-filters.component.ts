@@ -121,17 +121,12 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
         this.updateCreatedFromFilter();
         this.updateCreatedToFilter();
     }
-    //
-    // clearAll(){
-    //     this.selectedNodes = [];
-    //     // clear all partial selections
-    //     this.additionalFilters.forEach((filter: AdditionalFilter) => {
-    //         if (filter['partialSelected']){
-    //             filter['partialSelected'] = false;
-    //         }
-    //     });
-    //     this.updateFilter();
-    // }
+
+    clearAllTreeFilters(){
+        this.selectedNodes = [];
+        this.updateTreeFilter();
+
+    }
 
     updateCreatedComponents() : void {
 
@@ -222,7 +217,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
         }
     }
 
-    updateTreeFilter(event)
+    updateTreeFilter()
     {
 
         let newFilters : FilterItem[] = [];
