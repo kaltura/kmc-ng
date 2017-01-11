@@ -9,6 +9,7 @@ import { ContentEntriesStore, UpdateArgs, SortDirection } from 'kmc-content-ui/p
 import {RefineFiltersChangedArgs} from "./filters.component";
 import {kEntriesTable} from "./entries-table.component";
 
+import * as R from 'ramda';
 
 export interface Entry {
     id: string;
@@ -50,10 +51,29 @@ export class EntriesComponent implements OnInit, OnDestroy {
     selectedEntries: any[] = [];
     bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
 
+    tags=[];
+    tagId = 0;
+
     constructor(private formBuilder: FormBuilder, private contentEntriesStore : ContentEntriesStore) {
         this.searchForm = this.formBuilder.group({
             'searchText': []
         });
+    }
+
+    removeTag(tag: any){
+        const idx = R.findIndex(R.propEq('id', tag.id))(this.tags);
+        if (idx !== -1) {
+            this.tags.splice(idx, 1);
+        }
+    }
+    removeAllTags(){
+        this.tags=[];
+    }
+    addTag(){
+        this.tagId++;
+        let myArray = ["tag 1","tag 2", "tag 3","Another tag", "short tag", "a longer tag name"," one more tag"];
+        var randomValue = myArray[Math.floor(Math.random() * myArray.length)];
+        this.tags.push({label: randomValue, tooltip: randomValue+" tooltip", id: this.tagId });
     }
 
     onFreetextChanged() : void{
