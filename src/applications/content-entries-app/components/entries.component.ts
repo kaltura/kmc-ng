@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
 
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
-import { ContentEntriesStore } from 'kmc-content-ui/providers/content-entries-store.service';
+import {ContentEntriesStore, SortDirection} from 'kmc-content-ui/providers/content-entries-store.service';
 import {kEntriesTable} from "./entries-table.component";
 
 import {FreetextFilter} from "../../../shared/kmc-content-ui/content-entries-filter/filters/freetext-filter";
@@ -19,9 +19,6 @@ export interface Entry {
     status: string;
 }
 
-const filterColumns = "id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status";
-const entriesSortAsc = 1;
-
 @Component({
     selector: 'kmc-entries',
     templateUrl: './entries.component.html',
@@ -32,87 +29,100 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
     @ViewChild(kEntriesTable) private dataTable: kEntriesTable;
 
-    private filterUpdateSubscription : Subscription;
-    private searchFreetext : string ;
+    private runQuerySubscription : Subscription;
     private selectedEntries: any[] = [];
     private bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
 
     private filter = {
         pageIndex : 0,
+        freetextSearch : '',
         pageSize : 50,
+        sortBy : 'createdAt',
+        sortDirection : SortDirection.Asc
     };
 
     constructor(private contentEntriesStore : ContentEntriesStore) {
-
     }
-
-
 
     removeTag(tag: any){
         this.contentEntriesStore.removeFilters(tag);
     }
 
     removeAllTags(){
+        this.contentEntriesStore.clearAllFilters();
     }
 
     onFreetextChanged() : void{
 
         this.contentEntriesStore.removeFiltersByType(FreetextFilter);
 
-        if (this.searchFreetext)
+        if (this.filter.freetextSearch)
         {
-            this.contentEntriesStore.addFilters(new FreetextFilter(this.searchFreetext));
+            this.contentEntriesStore.addFilters(new FreetextFilter(this.filter.freetextSearch));
         }
     }
 
     onSortChanged(event) {
-        //this.filter.sortDirection = event.order === entriesSortAsc ? SortDirection.Asc : SortDirection.Desc;
-        //this.filter.sortBy = event.field;
-        //this.reload();
+
+        this.filter.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
+        this.filter.sortBy = event.field;
+
+        this.contentEntriesStore.updateQuery({
+            sortBy : this.filter.sortBy,
+            sortDirection : this.filter.sortDirection
+        });
     }
 
-    onPaginationChanged(state : any) : void{
-        // this.filter.pageIndex = state.page;
-        // this.filter.pageSize = state.rows;
-        //
-        // this.reload();
-    }
+    onPaginationChanged(state : any) : void {
+        this.filter.pageIndex = state.page;
+        this.filter.pageSize = state.rows;
 
-    reload(resetPagination : boolean = false) : void{
-        // if (resetPagination)
-        // {
-        //     this.filter.pageIndex = 0;
-        //}
-
-        //this.contentEntriesStore.update(this.filter);
-    }
-
-
-    ngOnInit() {
-        this.filterUpdateSubscription = this.contentEntriesStore.filterUpdate$.subscribe(
-            filter => {
-               this.updateFreetextComponent();
-            }
-        );
-
-        this.reload();
+        this.contentEntriesStore.updateQuery({
+            pageIndex : this.filter.pageIndex+1,
+            pageSize : this.filter.pageSize
+        });
     }
 
     ngOnDestroy(){
-        this.filterUpdateSubscription.unsubscribe();
-        this.filterUpdateSubscription = null;
+        this.runQuerySubscription.unsubscribe();
+        this.runQuerySubscription = null;
+
+        this.contentEntriesStore.dispose();
     }
 
-    updateFreetextComponent()
+    ngOnInit() {
+        this.runQuerySubscription = this.contentEntriesStore.runQuery$.subscribe(
+            query => {
+               this.updateFreetextComponent();
+
+               this.filter.pageIndex = query.data.pageIndex-1;
+            }
+        );
+
+        this.contentEntriesStore.updateQuery({
+            pageIndex : this.filter.pageIndex+1,
+            pageSize : this.filter.pageSize,
+            sortBy : this.filter.sortBy,
+            sortDirection : this.filter.sortDirection,
+            fields :'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status'
+        });
+    }
+
+    private reload()
+    {
+        this.contentEntriesStore.reload();
+    }
+
+    private updateFreetextComponent()
     {
         const freetextFilter = this.contentEntriesStore.getFirstFilterByType(FreetextFilter);
 
         if (freetextFilter)
         {
-            this.searchFreetext = freetextFilter.text;
+            this.filter.freetextSearch = freetextFilter.text;
         }else
         {
-            this.searchFreetext = null;
+            this.filter.freetextSearch = null;
         }
     }
 
@@ -124,11 +134,6 @@ export class EntriesComponent implements OnInit, OnDestroy {
         this.selectedEntries = [];
         this.dataTable.tableSelectedEntries = [];
     }
-    private categoriesChanged(data : number[])
-    {
-        //this.filter.categories = data;
 
-        //this.reload(true);
-    }
 }
 

@@ -16,7 +16,7 @@
             </div>
             <div [style.visibility]="selectedEntries.length ? 'hidden' : 'visible'" class="kFilters">
                     <input type="text" pInputText class="kSearchInput"
-                           [(ngModel)]="searchFreetext"
+                           [(ngModel)]="filter.freetextSearch"
                            (keyup.enter)="onFreetextChanged()"
                            placeholder="Search Entries">
                 <div #categoriesFilterBtn class="kCategoriesFilter"><i class="kIconfolder"></i><span>Filter Categories</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
@@ -25,7 +25,7 @@
             <button pButton class="kButtonDefault kRefreshBtn small" type="text" (click)="reload()" icon="kIconrefresh" title="Refresh"></button>
         </div>
 
-        <kTags [title]="'Active Filters:'" [data]="(this.contentEntriesStore.filterUpdate$ | async)?.filter" [labelField]="'label'"  [tooltipField]="'tooltip'" (onTagRemove)="removeTag($event)" (onRemoveAll)="removeAllTags()"></kTags>
+        <kTags [title]="'Active Filters:'" [data]="(this.contentEntriesStore.runQuery$ | async)?.filters" [labelField]="'label'"  [tooltipField]="'tooltip'" (onTagRemove)="removeTag($event)" (onRemoveAll)="removeAllTags()"></kTags>
 
         <kEntriesTable class="kEntriesTable grid-column-noGutter col"
                        [entries]="(contentEntriesStore.entries$ | async)?.items" [filter]="filter"
@@ -37,7 +37,7 @@
             <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChanged($event)"
                          [first]="filter.pageIndex * filter.pageSize"
                          [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount"
-                         [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
+                         [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
             <span class="kPaginatorShowRowsLabel">Show rows:</span>
         </div>
     </div>

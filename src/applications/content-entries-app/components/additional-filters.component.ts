@@ -49,11 +49,11 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     ngOnInit() {
         this.treeSelectionsDiffer = this.differs.find([]).create(null);
 
-        this.filterUpdateSubscription = this.contentEntriesStore.filterUpdate$.subscribe(
+        this.filterUpdateSubscription = this.contentEntriesStore.runQuery$.subscribe(
             filter => {
-                if (filter.removed && filter.removed.length > 0) {
-                    // only removed items should be handled (because relevant added filters are originated from this component)
-                    this.updateTreeComponent(filter.removed);
+                if (filter.removedFilters && filter.removedFilters.length > 0) {
+                    // only removedFilters items should be handled (because relevant addedFilters filters are originated from this component)
+                    this.updateTreeComponent(filter.removedFilters);
                     this.updateCreatedComponents();
                 }
             }
@@ -70,7 +70,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
                     if (group.groupName) {
 
                     } else {
-                        // filter is part of the default group (additional information)
+                        // filters is part of the default group (additional information)
                         group.filtersTypes.forEach(filter => {
                             const filterItems = filters.filtersByType[filter.type];
 
@@ -248,7 +248,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     {
         let result : FilterItem = null;
 
-        // ignore undefined/null filter data (the virtual roots has undefined/null data)
+        // ignore undefined/null filters data (the virtual roots has undefined/null data)
         if (node instanceof PrimeTreeNode && typeof node.data !== 'undefined' && node.data !== null)
         {
             switch (node.payload)
@@ -272,7 +272,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     {
         let result : FilterItem = null;
 
-        // ignore undefined/null filter data (the virtual roots has undefined/null data)
+        // ignore undefined/null filters data (the virtual roots has undefined/null data)
         if (node instanceof PrimeTreeNode && typeof node.data !== 'undefined' && node.data !== null)
         {
             switch (node.payload)
@@ -302,87 +302,87 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
 
     }
 
-    // update the filter
+    // update the filters
     // updateFilter(){
     //     this.initFilter();
     //     let filters: AdditionalFilter[];
     //
-    //     // set creation dates filter
+    //     // set creation dates filters
     //
-    //     this.setFlatFilter(FilterType.Types.IngestionStatus, 'statusIn');                  // set ingestion status filter
-    //     this.setFlatFilter(FilterType.Types.MediaType, 'mediaTypeIn');                     // set media type filter
-    //     this.setFlatFilter(FilterType.Types.Durations, 'durationTypeMatchOr');             // set duration filter
-    //     this.setFlatFilter(FilterType.Types.ModerationStatuses, 'moderationStatusIn');     // set moderation status filter
-    //     this.setFlatFilter(FilterType.Types.ReplacementStatuses, 'replacementStatusIn');   // set replacement status filter
-    //     this.setFlatFilter(FilterType.Types.Flavors, 'flavorParamsIdsMatchOr');            // set flavors filter
-    //     this.setFlatFilter(FilterType.Types.AccessControlProfiles, 'accessControlIdIn');   // set access control profiles filter
+    //     this.setFlatFilter(FilterType.Types.IngestionStatus, 'statusIn');                  // set ingestion status filters
+    //     this.setFlatFilter(FilterType.Types.MediaType, 'mediaTypeIn');                     // set media type filters
+    //     this.setFlatFilter(FilterType.Types.Durations, 'durationTypeMatchOr');             // set duration filters
+    //     this.setFlatFilter(FilterType.Types.ModerationStatuses, 'moderationStatusIn');     // set moderation status filters
+    //     this.setFlatFilter(FilterType.Types.ReplacementStatuses, 'replacementStatusIn');   // set replacement status filters
+    //     this.setFlatFilter(FilterType.Types.Flavors, 'flavorParamsIdsMatchOr');            // set flavors filters
+    //     this.setFlatFilter(FilterType.Types.AccessControlProfiles, 'accessControlIdIn');   // set access control profiles filters
     //
-    //     // set original and clipped entries filter
-    //     filters = R.filter((filter: AdditionalFilter) => filter.filterName === FilterType.Types.OriginalAndClipped, this.selectedNodes);
+    //     // set original and clipped entries filters
+    //     filters = R.filters((filters: AdditionalFilter) => filters.filterName === FilterType.Types.OriginalAndClipped, this.selectedNodes);
     //     if (filters.length > 1) {
-    //         this.filter.isRoot = -1;
+    //         this.filters.isRoot = -1;
     //     }
     //     if (filters.length === 1) {
-    //         this.filter.isRoot = parseInt(filters[0].id);
+    //         this.filters.isRoot = parseInt(filters[0].id);
     //     }
     //
-    //     // set time scheduling filter
-    //     filters = R.filter((filter: AdditionalFilter) => filter.filterName === FilterType.Types.TimeScheduling, this.selectedNodes);
+    //     // set time scheduling filters
+    //     filters = R.filters((filters: AdditionalFilter) => filters.filterName === FilterType.Types.TimeScheduling, this.selectedNodes);
     //     if (filters.length){
     //         if (R.findIndex(R.propEq('id', 'past'))(filters) > -1){
-    //             this.filter.endDateLessThanOrEqual = toServerDate(new Date());
+    //             this.filters.endDateLessThanOrEqual = toServerDate(new Date());
     //         }
     //         if (R.findIndex(R.propEq('id', 'live'))(filters) > -1){
-    //             this.filter.startDateLessThanOrEqualOrNull = toServerDate(new Date());
-    //             this.filter.endDateGreaterThanOrEqualOrNull = toServerDate(new Date());
+    //             this.filters.startDateLessThanOrEqualOrNull = toServerDate(new Date());
+    //             this.filters.endDateGreaterThanOrEqualOrNull = toServerDate(new Date());
     //         }
     //         if (R.findIndex(R.propEq('id', 'future'))(filters) > -1){
-    //             this.filter.startDateGreaterThanOrEqual = toServerDate(new Date());
+    //             this.filters.startDateGreaterThanOrEqual = toServerDate(new Date());
     //         }
     //         if (R.findIndex(R.propEq('id', 'scheduled'))(filters) > -1){
-    //             this.filter.startDateGreaterThanOrEqual = toServerDate(this.scheduledFrom);
-    //             this.filter.endDateLessThanOrEqual = toServerDate(this.scheduledTo);
+    //             this.filters.startDateGreaterThanOrEqual = toServerDate(this.scheduledFrom);
+    //             this.filters.endDateLessThanOrEqual = toServerDate(this.scheduledTo);
     //         }
     //     }
     //
-    //     // set distribution profiles filter
-    //     filters = R.filter((filter: AdditionalFilter) => filter.filterName === FilterType.Types.DistributionProfiles, this.selectedNodes);
+    //     // set distribution profiles filters
+    //     filters = R.filters((filters: AdditionalFilter) => filters.filterName === FilterType.Types.DistributionProfiles, this.selectedNodes);
     //     if (filters.length){
-    //         this.filter.distributionProfiles = [];
+    //         this.filters.distributionProfiles = [];
     //         filters.forEach( (distributionProfile) => {
     //             if (distributionProfile.id.length){
-    //                 this.filter.distributionProfiles.push(distributionProfile.id);
+    //                 this.filters.distributionProfiles.push(distributionProfile.id);
     //             }
     //         });
     //     }
     //
     //     // update metadata filters
-    //     this.selectedNodes.forEach( filter => {
-    //         if (filter instanceof MetadataFilter && filter.id !== ""){
-    //             this.filter.metadataProfiles.push({'metadataProfileId': filter.id, 'field': filter.filterName, 'value': filter.label});
+    //     this.selectedNodes.forEach( filters => {
+    //         if (filters instanceof MetadataFilter && filters.id !== ""){
+    //             this.filters.metadataProfiles.push({'metadataProfileId': filters.id, 'field': filters.filterName, 'value': filters.label});
     //         }
     //     });
     //
-    //     console.info(this.filter);
-    //     this.refineFiltersChanged.emit(this.filter);
+    //     console.info(this.filters);
+    //     this.refineFiltersChanged.emit(this.filters);
     // }
     //
     // setFlatFilter(filterName: string, filterPoperty: string){
-    //     const filters: AdditionalFilter[] = R.filter((filter: AdditionalFilter) => filter.filterName === filterName, this.selectedNodes);
+    //     const filters: AdditionalFilter[] = R.filters((filters: AdditionalFilter) => filters.filterName === filterName, this.selectedNodes);
     //     if (filters.length){
-    //         this.filter[filterPoperty] = "";
-    //         filters.forEach((filter: AdditionalFilter) => {
-    //             if (filter.id !== '') {
-    //                 this.filter[filterPoperty] += filter.id + ',';
+    //         this.filters[filterPoperty] = "";
+    //         filters.forEach((filters: AdditionalFilter) => {
+    //             if (filters.id !== '') {
+    //                 this.filters[filterPoperty] += filters.id + ',';
     //             }
     //         });
-    //         this.filter[filterPoperty] = this.filter[filterPoperty].substr(0, this.filter[filterPoperty].length-1); // remove last comma from string
+    //         this.filters[filterPoperty] = this.filters[filterPoperty].substr(0, this.filters[filterPoperty].length-1); // remove last comma from string
     //     }
     // }
 
     isScheduledEnabled(){
         return false;
-        // const filters: AdditionalFilter[] = R.filter((filter: AdditionalFilter) => filter.filterName === FilterType.Types.TimeScheduling, this.selectedNodes);
+        // const filters: AdditionalFilter[] = R.filters((filters: AdditionalFilter) => filters.filterName === FilterType.Types.TimeScheduling, this.selectedNodes);
         // return R.findIndex(R.propEq('id', 'scheduled'))(filters) > -1;
     }
 

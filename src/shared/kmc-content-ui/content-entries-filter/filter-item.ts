@@ -1,11 +1,5 @@
 import {
-    KalturaContentDistributionSearchItem,
-    KalturaSearchOperator,
     KalturaMediaEntryFilter,
-    KalturaDetachedResponseProfile,
-    KalturaFilterPager,
-    KalturaBaseEntryListResponse,
-    KalturaResponseProfileType
 } from '@kaltura-ng2/kaltura-api/types'
 
 
@@ -14,19 +8,13 @@ export type UpdateArgs = {
     createdAtFrom? : Date;
     createdAtTo? : Date;
     distributionProfiles? : number[];
-    filterColumns?: string;
-    pageIndex : number;
-    pageSize : number;
+
+
     searchText? : string;
-    sortBy : string;
-    sortDirection : SortDirection;
+
     statuses? : number[];
 };
 
-export enum SortDirection {
-    Desc,
-    Asc
-}
 
 export interface FilterRequestContext
 {
@@ -36,7 +24,7 @@ export interface FilterRequestContext
 export abstract class FilterItem
 {
 
-    constructor(public label : string)
+    constructor(public label : string, public tooltip : string = label)
     {
 
 

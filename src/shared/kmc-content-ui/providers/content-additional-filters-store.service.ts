@@ -128,7 +128,7 @@ export class ContentAdditionalFiltersStore {
                                 });
                             });
 
-                            // build distributions filter
+                            // build distributions filters
                             if (responses[1].result.objects.length > 0) {
                                 defaultFilterGroup.filtersTypes.push({ type : 'distributions', caption : 'Destinations'});
                                 const items = filters.filtersByType['distributions'] = [];
@@ -137,7 +137,7 @@ export class ContentAdditionalFiltersStore {
                                 });
                             }
 
-                            // build flavors filter
+                            // build flavors filters
                             if (responses[2].result.objects.length > 0) {
                                 defaultFilterGroup.filtersTypes.push({
                                     type: 'flavors',
@@ -149,7 +149,7 @@ export class ContentAdditionalFiltersStore {
                                 });
                             }
 
-                            // build acces control profile filter
+                            // build acces control profile filters
                             if (responses[3].result.objects.length > 0) {
                                 defaultFilterGroup.filtersTypes.push({
                                     type: 'accessControlProfiles',
@@ -173,11 +173,11 @@ export class ContentAdditionalFiltersStore {
                             //         const filterGroup = {groupName: metadataGroup.label, filtersTypes: []};
                             //         filters.filtersGroups.push(filterGroup);
                             //
-                            //         metadataGroup.filters.forEach(filter => {
-                            //             filterGroup.filtersTypes.push({ type : filter.label, caption : filter.label});
-                            //             const items = filters.filtersByType[filter.label] = [];
+                            //         metadataGroup.filters.forEach(filters => {
+                            //             filterGroup.filtersTypes.push({ type : filters.label, caption : filters.label});
+                            //             const items = filters.filtersByType[filters.label] = [];
                             //
-                            //             filter.children.forEach((filterItem : MetadataFilter) =>
+                            //             filters.children.forEach((filterItem : MetadataFilter) =>
                             //             {
                             //                items.push({
                             //                    id : filterItem.id,
@@ -224,7 +224,7 @@ export class ContentAdditionalFiltersStore {
     //                             if (currentNode.getElementsByTagName("searchable").length && currentNode.getElementsByTagName("searchable")[0].textContent === "true") {
     //                                 // check if the simpleType type is "listType"
     //                                 if (simpleTypes[0].getElementsByTagNameNS(ns, "restriction").length && simpleTypes[0].getElementsByTagNameNS(ns, "restriction")[0].getAttribute("base") === "listType") {
-    //                                     // get filter properties and add it to the metadata profile filters list
+    //                                     // get filters properties and add it to the metadata profile filters list
     //                                     const filterLabel = currentNode.getElementsByTagNameNS(ns, "appinfo").length ? currentNode.getElementsByTagNameNS(ns,"appinfo")[0].getElementsByTagName("label")[0].textContent : "";
     //                                     const valueNodes = simpleTypes[0].getElementsByTagNameNS(ns, "enumeration");
     //                                     const values = [];
@@ -250,13 +250,13 @@ export class ContentAdditionalFiltersStore {
     // }
     //
     // addMetadataProfileFilter(result, metadataProfileID, metadataProfileName, filterName, fieldName, values){
-    //     // check if current filter group (accordion header) already exists. If not - create a new one
+    //     // check if current filters group (accordion header) already exists. If not - create a new one
     //     let filterGroup: MetadataProfileFilterGroup = R.find(R.propEq('label', metadataProfileName))(this.metadataFilters);
     //     if (typeof filterGroup === "undefined"){
     //         filterGroup = {label: metadataProfileName, filters: []};
     //         result.push(filterGroup);
     //     }
-    //     // if the filter does not exist in the filters group yet - add it to the group
+    //     // if the filters does not exist in the filters group yet - add it to the group
     //     if (typeof R.find(R.propEq('label', filterName))(filterGroup.filters) === "undefined") {
     //         let newFilter: AdditionalFilter = new MetadataFilter(filterName, "", filterName);
     //         for (let i = 0; i < values.length; i++){
