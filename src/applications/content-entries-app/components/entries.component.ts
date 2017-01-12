@@ -1,12 +1,10 @@
 import { Component, OnInit, OnDestroy,  ViewChild  } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { Subject, BehaviorSubject, Subscription } from 'rxjs/Rx';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
 
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
 import { ContentEntriesStore } from 'kmc-content-ui/providers/content-entries-store.service';
-import {RefineFiltersChangedArgs} from "./filters.component";
 import {kEntriesTable} from "./entries-table.component";
 
 import * as R from 'ramda';
