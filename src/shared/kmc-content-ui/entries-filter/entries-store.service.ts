@@ -8,7 +8,6 @@ import {Scheduler} from 'rxjs/rx';
 import {Subscription} from 'rxjs/Subscription';
 
 import {
-    KalturaContentDistributionSearchItem,
     KalturaSearchOperator,
     KalturaMediaEntryFilter,
     KalturaDetachedResponseProfile,
@@ -23,7 +22,7 @@ import {KalturaServerClient} from '@kaltura-ng2/kaltura-api';
 import {BaseEntryListAction} from '@kaltura-ng2/kaltura-api/services/base-entry';
 
 import * as R from 'ramda';
-import {FilterItem, FilterRequestContext} from "../content-entries-filter/filter-item";
+import {FilterItem, FilterRequestContext} from "./filter-item";
 
 export type UpdateStatus = {
     loading : boolean;
@@ -58,7 +57,7 @@ export interface filterUpdateData {
 }
 
 @Injectable()
-export class ContentEntriesStore {
+export class EntriesStore {
 
     private _entries: BehaviorSubject<Entries> = new BehaviorSubject({items: [], totalCount: 0});
     private _status : BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null});

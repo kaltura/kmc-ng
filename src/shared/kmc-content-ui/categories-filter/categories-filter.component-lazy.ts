@@ -4,7 +4,7 @@
 // import { Subscription} from 'rxjs';
 // import * as R from 'ramda';
 //
-// import { ContentCategoriesStore, Category } from 'kmc-content-ui/providers/content-categories-store.service';
+// import { CategoriesStore, Category } from 'kmc-content-ui/providers/content-categories-store.service';
 //
 // @Component({
 //   selector: 'kCategoriesFilter',
@@ -33,11 +33,11 @@
 //
 //   @ViewChild(Tree) categoriesTree: Tree;
 //
-//   constructor(public contentCategoriesStore: ContentCategoriesStore) {
+//   constructor(public categoriesStore: CategoriesStore) {
 //   }
 //
 //   ngOnInit() {
-//     this.categoriesSubscribe = this.contentCategoriesStore.categories$.subscribe(
+//     this.categoriesSubscribe = this.categoriesStore.categories$.subscribe(
 //       (categoriesRoot: any) => {
 //         this.categories = categoriesRoot.items ? categoriesRoot.items : [];
 //         this.categoriesMap = categoriesRoot.map ? categoriesRoot.map : {};
@@ -60,7 +60,7 @@
 //
 //   reloadCategories(parentNodeId: number){
 //     this.loading = true;
-//     this.contentCategoriesStore.reloadCategories(this.lazyLoading, parentNodeId).subscribe(
+//     this.categoriesStore.reloadCategories(this.lazyLoading, parentNodeId).subscribe(
 //       () => {
 //         this.loading = false;
 //       },

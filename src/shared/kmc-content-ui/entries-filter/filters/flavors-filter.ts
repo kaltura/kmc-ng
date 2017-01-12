@@ -4,10 +4,16 @@ import {FilterItem, FilterRequestContext} from "../filter-item";
 export class FlavorsFilter  extends FilterItem{
 
 
-    constructor(public flavor : string, label : string)
+    private _flavor : string;
+
+    public get flavor() : string{
+        return this._flavor;
+    }
+
+    constructor(flavor : string, label : string)
     {
         super(label);
-
+        this._flavor = flavor;
     }
 
     _buildRequest(request : FilterRequestContext) : void {

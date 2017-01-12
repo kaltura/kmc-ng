@@ -6,7 +6,7 @@
 
     <div #entriesTableHolder class="kEntriesHolder kContent grid-column-noGutter">
         <div class="kEntriesTableFilters grid col-12">
-            <span *ngIf="(contentEntriesStore.entries$ | async)?.totalCount">{{(contentEntriesStore.entries$ | async)?.totalCount}} Entries</span>
+            <span *ngIf="(entriesStore.entries$ | async)?.totalCount">{{(entriesStore.entries$ | async)?.totalCount}} Entries</span>
 
             <div [style.visibility]="selectedEntries.length ? 'visible' : 'hidden'" class="kBulkOperations">
                 <span class="kSelectedEntriesLabel">• {{selectedEntries.length}} Selected</span>
@@ -25,18 +25,18 @@
             <button pButton class="kButtonDefault kRefreshBtn small" type="text" (click)="reload()" icon="kIconrefresh" title="Refresh"></button>
         </div>
 
-        <kTags [title]="'Active Filters:'" [data]="(this.contentEntriesStore.runQuery$ | async)?.filters" [labelField]="'label'"  [tooltipField]="'tooltip'" (onTagRemove)="removeTag($event)" (onRemoveAll)="removeAllTags()"></kTags>
+        <kTags [title]="'Active Filters:'" [data]="(this.entriesStore.runQuery$ | async)?.filters" [labelField]="'label'"  [tooltipField]="'tooltip'" (onTagRemove)="removeTag($event)" (onRemoveAll)="removeAllTags()"></kTags>
 
         <kEntriesTable class="kEntriesTable grid-column-noGutter col"
-                       [entries]="(contentEntriesStore.entries$ | async)?.items" [filter]="filter"
-                       [(selectedEntries)]="selectedEntries" [loading]="(contentEntriesStore.status$ | async)?.loading" (sortChanged)="onSortChanged($event)"
+                       [entries]="(entriesStore.entries$ | async)?.items" [filter]="filter"
+                       [(selectedEntries)]="selectedEntries" [loading]="(entriesStore.status$ | async)?.loading" (sortChanged)="onSortChanged($event)"
                        (actionSelected)="onActionSelected($event)"></kEntriesTable>
 
         <div class="kEntriesTableFooter col-12" #footer>
 
             <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChanged($event)"
                          [first]="filter.pageIndex * filter.pageSize"
-                         [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount"
+                         [totalRecords]="(entriesStore.entries$ | async)?.totalCount"
                          [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
             <span class="kPaginatorShowRowsLabel">Show rows:</span>
         </div>

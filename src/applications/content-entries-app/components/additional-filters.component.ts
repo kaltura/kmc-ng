@@ -1,15 +1,15 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Output, IterableDiffer, IterableDiffers} from '@angular/core';
 import { Subscription} from 'rxjs';
 import {PrimeTreeNode, TreeDataHandler} from '@kaltura-ng2/kaltura-primeng-ui';
-import { ContentAdditionalFiltersStore, Filters } from '../../../shared/kmc-content-ui/providers/content-additional-filters-store.service';
-import {ContentEntriesStore} from "../../../shared/kmc-content-ui/providers/content-entries-store.service";
-import {FilterItem} from "../../../shared/kmc-content-ui/content-entries-filter/filter-item";
-import {MediaTypesFilter} from "../../../shared/kmc-content-ui/content-entries-filter/filters/media-types-filter";
+import { AdditionalFiltersStore, Filters } from '../../../shared/kmc-content-ui/providers/additional-filters-store.service';
+import {EntriesStore} from "../../../shared/kmc-content-ui/entries-filter/entries-store.service";
+import {FilterItem} from "../../../shared/kmc-content-ui/entries-filter/filter-item";
+import {MediaTypesFilter} from "../../../shared/kmc-content-ui/entries-filter/filters/media-types-filter";
 
 import * as R from 'ramda';
-import {FlavorsFilter} from "../../../shared/kmc-content-ui/content-entries-filter/filters/flavors-filter";
-import {CreatedAfterFilter} from "../../../shared/kmc-content-ui/content-entries-filter/filters/created-after-filter";
-import {CreatedBeforeFilter} from "../../../shared/kmc-content-ui/content-entries-filter/filters/created-before-filter";
+import {FlavorsFilter} from "../../../shared/kmc-content-ui/entries-filter/filters/flavors-filter";
+import {CreatedAfterFilter} from "../../../shared/kmc-content-ui/entries-filter/filters/created-after-filter";
+import {CreatedBeforeFilter} from "../../../shared/kmc-content-ui/entries-filter/filters/created-before-filter";
 
 
 function toServerDate(value? : Date) : number
@@ -23,14 +23,10 @@ function toServerDate(value? : Date) : number
     styleUrls: ['./additional-filters.component.scss']
 })
 export class AdditionalFiltersComponent implements OnInit, OnDestroy{
-
-
     createdFrom: Date;
     createdTo: Date;
     scheduledFrom: Date;
     scheduledTo: Date;
-
-
 
     private additionalFiltersSubscrition : Subscription;
     private filterUpdateSubscription : Subscription;
@@ -41,15 +37,15 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
 
     private treeSelectionsDiffer : IterableDiffer = null;
 
-    constructor(public contentAdditionalFiltersStore: ContentAdditionalFiltersStore, private treeDataHandler : TreeDataHandler,
-                private contentEntriesStore : ContentEntriesStore, private differs: IterableDiffers) {
+    constructor(public additionalFiltersStore: AdditionalFiltersStore, private treeDataHandler : TreeDataHandler,
+                private entriesStore : EntriesStore, private differs: IterableDiffers) {
     }
 
 
     ngOnInit() {
         this.treeSelectionsDiffer = this.differs.find([]).create(null);
 
-        this.filterUpdateSubscription = this.contentEntriesStore.runQuery$.subscribe(
+        this.filterUpdateSubscription = this.entriesStore.runQuery$.subscribe(
             filter => {
                 if (filter.removedFilters && filter.removedFilters.length > 0) {
                     // only removedFilters items should be handled (because relevant addedFilters filters are originated from this component)
@@ -59,7 +55,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
             }
         );
 
-        this.additionalFiltersSubscrition = this.contentAdditionalFiltersStore.additionalFilters$.subscribe(
+        this.additionalFiltersSubscrition = this.additionalFiltersStore.additionalFilters$.subscribe(
             (filters: Filters) => {
 
                 this.defaultFiltersNodes = [];
@@ -104,7 +100,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     //
     // reloadAdditionalFilters(){
     //     this.loading = true;
-    //     this.contentAdditionalFiltersStore.reloadAdditionalFilters(false).subscribe(
+    //     this.additionalFiltersStore.reloadAdditionalFilters(false).subscribe(
     //         () => {
     //             this.loading = false;
     //         },
@@ -130,7 +126,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
 
     updateCreatedComponents() : void {
 
-        const createdBeforeFilter = this.contentEntriesStore.getFirstFilterByType(CreatedBeforeFilter);
+        const createdBeforeFilter = this.entriesStore.getFirstFilterByType(CreatedBeforeFilter);
 
         if (createdBeforeFilter)
         {
@@ -140,7 +136,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
             this.createdTo = null;
         }
 
-        const createdAfterFilter = this.contentEntriesStore.getFirstFilterByType(CreatedAfterFilter);
+        const createdAfterFilter = this.entriesStore.getFirstFilterByType(CreatedAfterFilter);
 
         if (createdAfterFilter)
         {
@@ -185,21 +181,21 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
 
     updateCreatedToFilter()
     {
-        this.contentEntriesStore.removeFiltersByType(CreatedBeforeFilter);
+        this.entriesStore.removeFiltersByType(CreatedBeforeFilter);
 
         if (this.createdTo)
         {
-            this.contentEntriesStore.addFilters(new CreatedBeforeFilter(this.createdTo));
+            this.entriesStore.addFilters(new CreatedBeforeFilter(this.createdTo));
         }
     }
 
     updateCreatedFromFilter()
     {
-        this.contentEntriesStore.removeFiltersByType(CreatedAfterFilter);
+        this.entriesStore.removeFiltersByType(CreatedAfterFilter);
 
         if (this.createdFrom)
         {
-            this.contentEntriesStore.addFilters(new CreatedAfterFilter(this.createdFrom));
+            this.entriesStore.addFilters(new CreatedAfterFilter(this.createdFrom));
         }
     }
 
@@ -236,11 +232,11 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
         }
 
         if (newFilters.length > 0) {
-            this.contentEntriesStore.addFilters(...newFilters);
+            this.entriesStore.addFilters(...newFilters);
         }
 
         if (removedFilters.length > 0) {
-            this.contentEntriesStore.removeFilters(...removedFilters);
+            this.entriesStore.removeFilters(...removedFilters);
         }
     }
 
@@ -282,14 +278,14 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
                     {
                         // we are doing a weak comparison on purpose to overcome number/string comparison issues
                         return filter.mediaType  == node.data;
-                    }, this.contentEntriesStore.getFiltersByType(MediaTypesFilter));
+                    }, this.entriesStore.getFiltersByType(MediaTypesFilter));
                     break;
                 case "flavors":
                     result = R.find((filter : FlavorsFilter) =>
                     {
                         // we are doing a weak comparison on purpose to overcome number/string comparison issues
                         return filter.flavor  == node.data;
-                    }, this.contentEntriesStore.getFiltersByType(FlavorsFilter));
+                    }, this.entriesStore.getFiltersByType(FlavorsFilter));
                     break;
                 default:
 

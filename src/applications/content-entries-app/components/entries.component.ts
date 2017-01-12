@@ -3,10 +3,10 @@ import { Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
 
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
-import {ContentEntriesStore, SortDirection} from 'kmc-content-ui/providers/content-entries-store.service';
+import {EntriesStore, SortDirection} from 'kmc-content-ui/entries-filter/entries-store.service';
 import {kEntriesTable} from "./entries-table.component";
 
-import {FreetextFilter} from "../../../shared/kmc-content-ui/content-entries-filter/filters/freetext-filter";
+import {FreetextFilter} from "../../../shared/kmc-content-ui/entries-filter/filters/freetext-filter";
 
 export interface Entry {
     id: string;
@@ -23,7 +23,7 @@ export interface Entry {
     selector: 'kmc-entries',
     templateUrl: './entries.component.html',
     styleUrls: ['./entries.component.scss'],
-    providers : [ContentEntriesStore]
+    providers : [EntriesStore]
 })
 export class EntriesComponent implements OnInit, OnDestroy {
 
@@ -41,24 +41,24 @@ export class EntriesComponent implements OnInit, OnDestroy {
         sortDirection : SortDirection.Asc
     };
 
-    constructor(private contentEntriesStore : ContentEntriesStore) {
+    constructor(private entriesStore : EntriesStore) {
     }
 
     removeTag(tag: any){
-        this.contentEntriesStore.removeFilters(tag);
+        this.entriesStore.removeFilters(tag);
     }
 
     removeAllTags(){
-        this.contentEntriesStore.clearAllFilters();
+        this.entriesStore.clearAllFilters();
     }
 
     onFreetextChanged() : void{
 
-        this.contentEntriesStore.removeFiltersByType(FreetextFilter);
+        this.entriesStore.removeFiltersByType(FreetextFilter);
 
         if (this.filter.freetextSearch)
         {
-            this.contentEntriesStore.addFilters(new FreetextFilter(this.filter.freetextSearch));
+            this.entriesStore.addFilters(new FreetextFilter(this.filter.freetextSearch));
         }
     }
 
@@ -67,7 +67,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
         this.filter.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
         this.filter.sortBy = event.field;
 
-        this.contentEntriesStore.updateQuery({
+        this.entriesStore.updateQuery({
             sortBy : this.filter.sortBy,
             sortDirection : this.filter.sortDirection
         });
@@ -77,7 +77,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
         this.filter.pageIndex = state.page;
         this.filter.pageSize = state.rows;
 
-        this.contentEntriesStore.updateQuery({
+        this.entriesStore.updateQuery({
             pageIndex : this.filter.pageIndex+1,
             pageSize : this.filter.pageSize
         });
@@ -87,11 +87,11 @@ export class EntriesComponent implements OnInit, OnDestroy {
         this.runQuerySubscription.unsubscribe();
         this.runQuerySubscription = null;
 
-        this.contentEntriesStore.dispose();
+        this.entriesStore.dispose();
     }
 
     ngOnInit() {
-        this.runQuerySubscription = this.contentEntriesStore.runQuery$.subscribe(
+        this.runQuerySubscription = this.entriesStore.runQuery$.subscribe(
             query => {
                this.updateFreetextComponent();
 
@@ -99,7 +99,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
             }
         );
 
-        this.contentEntriesStore.updateQuery({
+        this.entriesStore.updateQuery({
             pageIndex : this.filter.pageIndex+1,
             pageSize : this.filter.pageSize,
             sortBy : this.filter.sortBy,
@@ -110,12 +110,12 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
     private reload()
     {
-        this.contentEntriesStore.reload();
+        this.entriesStore.reload();
     }
 
     private updateFreetextComponent()
     {
-        const freetextFilter = this.contentEntriesStore.getFirstFilterByType(FreetextFilter);
+        const freetextFilter = this.entriesStore.getFirstFilterByType(FreetextFilter);
 
         if (freetextFilter)
         {

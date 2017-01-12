@@ -20,7 +20,7 @@ import {
     KalturaMetadataProfile
 } from '@kaltura-ng2/kaltura-api/types'
 
-import {ConstantsFilters} from './constant-filters';
+import {ConstantsFilters} from '../entries-filter/constant-filters';
 
 import * as R from 'ramda';
 
@@ -54,7 +54,7 @@ export enum AdditionalFilterLoadingStatus
 }
 
 @Injectable()
-export class ContentAdditionalFiltersStore {
+export class AdditionalFiltersStore {
 
     // TODO [KMC] - clear cached data on logout
     private _additionalFilters: ReplaySubject<Filters> = new ReplaySubject<Filters>(1);
