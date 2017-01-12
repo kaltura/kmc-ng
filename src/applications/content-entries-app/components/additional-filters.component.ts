@@ -1,15 +1,15 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Output, IterableDiffer, IterableDiffers} from '@angular/core';
 import { Subscription} from 'rxjs';
 import {PrimeTreeNode, TreeDataHandler} from '@kaltura-ng2/kaltura-primeng-ui';
-import { AdditionalFiltersStore, Filters } from '../../../shared/kmc-content-ui/providers/additional-filters-store.service';
-import {EntriesStore} from "../../../shared/kmc-content-ui/entries-filter/entries-store.service";
-import {FilterItem} from "../../../shared/kmc-content-ui/entries-filter/filter-item";
-import {MediaTypesFilter} from "../../../shared/kmc-content-ui/entries-filter/filters/media-types-filter";
+import { AdditionalFiltersStore, Filters } from '../providers/additional-filters-store.service';
+import {EntriesStore} from "../../../shared/kmc-content-ui/entries-store/entries-store.service";
+import {FilterItem} from "../../../shared/kmc-content-ui/entries-store/filter-item";
+import {MediaTypesFilter} from "../../../shared/kmc-content-ui/entries-store/filters/media-types-filter";
 
 import * as R from 'ramda';
-import {FlavorsFilter} from "../../../shared/kmc-content-ui/entries-filter/filters/flavors-filter";
-import {CreatedAfterFilter} from "../../../shared/kmc-content-ui/entries-filter/filters/created-after-filter";
-import {CreatedBeforeFilter} from "../../../shared/kmc-content-ui/entries-filter/filters/created-before-filter";
+import {FlavorsFilter} from "../../../shared/kmc-content-ui/entries-store/filters/flavors-filter";
+import {CreatedAfterFilter} from "../../../shared/kmc-content-ui/entries-store/filters/created-after-filter";
+import {CreatedBeforeFilter} from "../../../shared/kmc-content-ui/entries-store/filters/created-before-filter";
 
 
 function toServerDate(value? : Date) : number

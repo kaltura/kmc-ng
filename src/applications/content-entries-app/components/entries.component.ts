@@ -3,10 +3,10 @@ import { Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
 
 import { bulkActionsMenuItems } from './bulkActionsMenuItems';
-import {EntriesStore, SortDirection} from 'kmc-content-ui/entries-filter/entries-store.service';
+import {EntriesStore, SortDirection} from 'kmc-content-ui/entries-store/entries-store.service';
 import {kEntriesTable} from "./entries-table.component";
 
-import {FreetextFilter} from "../../../shared/kmc-content-ui/entries-filter/filters/freetext-filter";
+import {FreetextFilter} from "../../../shared/kmc-content-ui/entries-store/filters/freetext-filter";
 
 export interface Entry {
     id: string;

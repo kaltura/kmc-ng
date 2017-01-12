@@ -5,7 +5,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui
 import { Subscription} from 'rxjs/Subscription';
 import * as R from 'ramda';
 
-import { CategoriesStore, Category } from 'kmc-content-ui/providers/categories-store.service';
+import { CategoriesStore, Category } from '../categories-store.service';
 import {BrowserService} from "../../kmc-shell/providers/browser.service";
 
 @Component({

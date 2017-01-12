@@ -15,6 +15,7 @@ import { EntriesComponent } from './components/entries.component';
 import { KMCShellModule } from 'kmc-shell';
 import { KMCContentUIModule } from 'kmc-content-ui';
 import {kEntriesTable} from './components/entries-table.component';
+import {AdditionalFiltersStore} from "./providers/additional-filters-store.service";
 
 @NgModule({
   imports:      [
@@ -46,6 +47,8 @@ import {kEntriesTable} from './components/entries-table.component';
     EntriesComponent,
     kEntriesTable
   ],
-  providers:    []
+  providers:    [
+      AdditionalFiltersStore
+  ]
 })
 export class ContentEntriesAppModule { }

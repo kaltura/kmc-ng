@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {ReplaySubject} from 'rxjs/ReplaySubject';
 
-import {KalturaServerClient, KalturaMetadataObjectType, KalturaMultiRequest, KalturaResponse} from '@kaltura-ng2/kaltura-api';
+import {KalturaServerClient, KalturaMetadataObjectType, KalturaMultiRequest} from '@kaltura-ng2/kaltura-api';
 import {FlavorParamsListAction} from '@kaltura-ng2/kaltura-api/services/flavor-params';
 import {MetadataProfileListAction} from '@kaltura-ng2/kaltura-api/services/metadata-profile';
 import {AccessControlListAction} from '@kaltura-ng2/kaltura-api/services/access-control';
@@ -16,11 +16,10 @@ import {
     KalturaResponseProfileType,
     KalturaFlavorParams,
     KalturaAccessControlProfile,
-    KalturaDistributionProfile,
-    KalturaMetadataProfile
+    KalturaDistributionProfile
 } from '@kaltura-ng2/kaltura-api/types'
 
-import {ConstantsFilters} from '../entries-filter/constant-filters';
+import {ConstantsFilters} from './constant-filters';
 
 import * as R from 'ramda';
 

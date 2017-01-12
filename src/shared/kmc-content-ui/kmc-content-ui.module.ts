@@ -10,9 +10,8 @@ import { TreeModule, SharedModule, AutoCompleteModule, RadioButtonModule, Toolti
 
 import { CategoriesFilterComponent } from './categories-filter/categories-filter.component';
 import { CategoriesFilterPrefsComponent } from './categories-filter-preferences/categories-filter-preferences.component';
-import { CategoriesStore } from './providers/categories-store.service';
+import { CategoriesStore } from './categories-store.service';
 import { KMCShellModule } from 'kmc-shell';
-import { AdditionalFiltersStore } from './providers/additional-filters-store.service';
 
 import { EntryTypePipe, EntryStatusPipe, PlaylistTypePipe } from './pipes/index';
 
@@ -27,8 +26,7 @@ export class KMCContentUIModule {
         return {
             ngModule: KMCContentUIModule,
             providers: [
-                CategoriesStore,
-                AdditionalFiltersStore
+                CategoriesStore
             ]
         };
     }
