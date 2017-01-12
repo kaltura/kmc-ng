@@ -62,22 +62,11 @@ export class ContentEntriesStore {
         this.subscribeToUpdateChanges();
     }
 
-    public getActiveFilters(filterType? : {new(...args : any[]) : FilterItem;}) : FilterItem[]
-    {
-        if (filterType)
-        {
-            const filtersOfType = this._activeFiltersMap[filterType.name];
-            return filtersOfType ? [...filtersOfType] : [];
-        }else {
-            return [...this._activeFilters];
-        }
-    }
     subscribeToUpdateChanges() : void {
         // switchMap is used to ignore old requests
         this._filterUpdate
-            .do(()=>
-            {
-                this._status.next({loading : true, errorMessage : null});
+            .do(() => {
+                this._status.next({loading: true, errorMessage: null});
             })
             .switchMap(this._updateEntries.bind(this))
             .subscribe(
@@ -85,9 +74,9 @@ export class ContentEntriesStore {
 
                     if (result instanceof KalturaBaseEntryListResponse) {
                         this._entries.next({items: <any[]>result.objects, totalCount: <number>result.totalCount});
-                        this._status.next({loading : false, errorMessage : null});
+                        this._status.next({loading: false, errorMessage: null});
                     } else {
-                        this._status.next({loading : false, errorMessage : (<Error>result).message});
+                        this._status.next({loading: false, errorMessage: (<Error>result).message});
                     }
                 },
                 error => {
@@ -98,6 +87,33 @@ export class ContentEntriesStore {
                 }
             );
     }
+
+
+    public removeFiltersByType(filterType : {new(...args : any[]) : FilterItem;}) : void {
+        if (filterType && filterType.name) {
+            const filtersOfType = this._activeFiltersMap[filterType.name];
+
+            if (filtersOfType) {
+                this.removeFilters(...filtersOfType);
+            }
+        }
+    }
+
+    public getFirstFilterByType<T extends FilterItem>(filterType : {new(...args : any[]) : T;}) : T
+    {
+        const filters = <T[]>this.getFiltersByType(filterType);
+        return filters && filters.length > 0 ? filters[0] : null;
+    }
+
+    public getFiltersByType<T extends FilterItem>(filterType : {new(...args : any[]) : T;}) : T[] {
+        if (filterType.name) {
+            const filtersOfType = <T[]>this._activeFiltersMap[filterType.name];
+            return filtersOfType ? [...filtersOfType] : [];
+        } else {
+            return [];
+        }
+    }
+
 
     public addFilters(...filters : FilterItem[]) : void{
         if (filters)

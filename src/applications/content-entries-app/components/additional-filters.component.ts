@@ -130,21 +130,21 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
 
     updateCreatedComponents() : void {
 
-        const createdBeforeFilters = <CreatedBeforeFilter[]>this.contentEntriesStore.getActiveFilters(CreatedBeforeFilter);
+        const createdBeforeFilter = this.contentEntriesStore.getFirstFilterByType(CreatedBeforeFilter);
 
-        if (createdBeforeFilters && createdBeforeFilters.length > 0)
+        if (createdBeforeFilter)
         {
-            this.createdTo = createdBeforeFilters[0].date;
+            this.createdTo = createdBeforeFilter.date;
         }else
         {
             this.createdTo = null;
         }
 
-        const createdAfterFilters = this.contentEntriesStore.getActiveFilters(CreatedAfterFilter);
+        const createdAfterFilter = this.contentEntriesStore.getFirstFilterByType(CreatedAfterFilter);
 
-        if (createdAfterFilters && createdAfterFilters.length > 0)
+        if (createdAfterFilter)
         {
-            this.createdFrom = (<CreatedAfterFilter>createdAfterFilters[0]).date;
+            this.createdFrom = createdAfterFilter.date;
         }else
         {
             this.createdFrom = null;
@@ -185,14 +185,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
 
     updateCreatedToFilter()
     {
-        let newFilters : FilterItem[] = [];
-
-        const existingFilters = this.contentEntriesStore.getActiveFilters(CreatedBeforeFilter);
-
-        if (existingFilters.length > 0)
-        {
-            this.contentEntriesStore.removeFilters(...existingFilters);
-        }
+        this.contentEntriesStore.removeFiltersByType(CreatedBeforeFilter);
 
         if (this.createdTo)
         {
@@ -202,14 +195,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
 
     updateCreatedFromFilter()
     {
-        let newFilters : FilterItem[] = [];
-
-        const existingFilters = this.contentEntriesStore.getActiveFilters(CreatedAfterFilter);
-
-        if (existingFilters.length > 0)
-        {
-            this.contentEntriesStore.removeFilters(...existingFilters);
-        }
+        this.contentEntriesStore.removeFiltersByType(CreatedAfterFilter);
 
         if (this.createdFrom)
         {
@@ -296,14 +282,14 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
                     {
                         // we are doing a weak comparison on purpose to overcome number/string comparison issues
                         return filter.mediaType  == node.data;
-                    }, this.contentEntriesStore.getActiveFilters(MediaTypesFilter));
+                    }, this.contentEntriesStore.getFiltersByType(MediaTypesFilter));
                     break;
                 case "flavors":
                     result = R.find((filter : FlavorsFilter) =>
                     {
                         // we are doing a weak comparison on purpose to overcome number/string comparison issues
                         return filter.flavor  == node.data;
-                    }, this.contentEntriesStore.getActiveFilters(FlavorsFilter));
+                    }, this.contentEntriesStore.getFiltersByType(FlavorsFilter));
                     break;
                 default:
 

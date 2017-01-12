@@ -15,18 +15,17 @@
                 <a class="kBulkCancel" (click)="clearSelection()">Cancel</a>
             </div>
             <div [style.visibility]="selectedEntries.length ? 'hidden' : 'visible'" class="kFilters">
-                <form [formGroup]="searchForm">
-                    <input type="text" pInputText formControlName="searchText" class="kSearchInput"
-                           (onenter)="freetextValue = $event.target.value" (keyup.enter)="onFreetextChanged()"
+                    <input type="text" pInputText class="kSearchInput"
+                           [(ngModel)]="searchFreetext"
+                           (keyup.enter)="onFreetextChanged()"
                            placeholder="Search Entries">
-                </form>
                 <div #categoriesFilterBtn class="kCategoriesFilter"><i class="kIconfolder"></i><span>Filter Categories</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
                 <div #refineBtn class="kRefine"><i class="kIconfilter"></i><span>Refine</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
             </div>
             <button pButton class="kButtonDefault kRefreshBtn small" type="text" (click)="reload()" icon="kIconrefresh" title="Refresh"></button>
         </div>
 
-        <kTags [title]="'Active Filters:'" [data]="tags" [labelField]="'label'"  [tooltipField]="'tooltip'" (onTagRemove)="removeTag($event)" (onRemoveAll)="removeAllTags()"></kTags>
+        <kTags [title]="'Active Filters:'" [data]="(this.contentEntriesStore.filterUpdate$ | async)?.filter" [labelField]="'label'"  [tooltipField]="'tooltip'" (onTagRemove)="removeTag($event)" (onRemoveAll)="removeAllTags()"></kTags>
 
         <kEntriesTable class="kEntriesTable grid-column-noGutter col"
                        [entries]="(contentEntriesStore.entries$ | async)?.items" [filter]="filter"

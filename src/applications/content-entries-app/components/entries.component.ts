@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy,  ViewChild  } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
 
@@ -7,7 +6,7 @@ import { bulkActionsMenuItems } from './bulkActionsMenuItems';
 import { ContentEntriesStore } from 'kmc-content-ui/providers/content-entries-store.service';
 import {kEntriesTable} from "./entries-table.component";
 
-import * as R from 'ramda';
+import {FreetextFilter} from "../../../shared/kmc-content-ui/content-entries-filter/filters/freetext-filter";
 
 export interface Entry {
     id: string;
@@ -33,33 +32,20 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
     @ViewChild(kEntriesTable) private dataTable: kEntriesTable;
 
-    private _filterChanges : Subscription;
-    searchForm: FormGroup;
+    private filterUpdateSubscription : Subscription;
+    private searchFreetext : string ;
+    private selectedEntries: any[] = [];
+    private bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
 
-    filter : any = {
+    private filter = {
         pageIndex : 0,
         pageSize : 50,
-        searchText : '',
-        sortBy : 'createdAt',
-        sortDirection : null,
-        distributionProfiles : [],
-        filterColumns : filterColumns
     };
 
+    constructor(private contentEntriesStore : ContentEntriesStore) {
 
-    private filterUpdateSubscription : Subscription;
-
-    selectedEntries: any[] = [];
-    bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
-
-    tags=[];
-    tagId = 0;
-
-    constructor(private formBuilder: FormBuilder, private contentEntriesStore : ContentEntriesStore) {
-        this.searchForm = this.formBuilder.group({
-            'searchText': []
-        });
     }
+
 
 
     removeTag(tag: any){
@@ -70,48 +56,64 @@ export class EntriesComponent implements OnInit, OnDestroy {
     }
 
     onFreetextChanged() : void{
-        this.filter.pageIndex = 0;
-        this.filter.searchText = this.searchForm.value.searchText;
-        this.reload();
+
+        this.contentEntriesStore.removeFiltersByType(FreetextFilter);
+
+        if (this.searchFreetext)
+        {
+            this.contentEntriesStore.addFilters(new FreetextFilter(this.searchFreetext));
+        }
     }
 
     onSortChanged(event) {
         //this.filter.sortDirection = event.order === entriesSortAsc ? SortDirection.Asc : SortDirection.Desc;
-        this.filter.sortBy = event.field;
-        this.reload();
+        //this.filter.sortBy = event.field;
+        //this.reload();
     }
 
     onPaginationChanged(state : any) : void{
-        this.filter.pageIndex = state.page;
-        this.filter.pageSize = state.rows;
-
-        this.reload();
+        // this.filter.pageIndex = state.page;
+        // this.filter.pageSize = state.rows;
+        //
+        // this.reload();
     }
 
     reload(resetPagination : boolean = false) : void{
-        if (resetPagination)
-        {
-            this.filter.pageIndex = 0;
-        }
+        // if (resetPagination)
+        // {
+        //     this.filter.pageIndex = 0;
+        //}
 
         //this.contentEntriesStore.update(this.filter);
     }
 
 
     ngOnInit() {
-
         this.filterUpdateSubscription = this.contentEntriesStore.filterUpdate$.subscribe(
-            filter =>
-            {
-                this.tags = filter.filter;
+            filter => {
+               this.updateFreetextComponent();
             }
         );
+
         this.reload();
     }
 
     ngOnDestroy(){
         this.filterUpdateSubscription.unsubscribe();
         this.filterUpdateSubscription = null;
+    }
+
+    updateFreetextComponent()
+    {
+        const freetextFilter = this.contentEntriesStore.getFirstFilterByType(FreetextFilter);
+
+        if (freetextFilter)
+        {
+            this.searchFreetext = freetextFilter.text;
+        }else
+        {
+            this.searchFreetext = null;
+        }
     }
 
     onActionSelected(event){
@@ -124,26 +126,9 @@ export class EntriesComponent implements OnInit, OnDestroy {
     }
     private categoriesChanged(data : number[])
     {
-        this.filter.categories = data;
+        //this.filter.categories = data;
 
-        this.reload(true);
+        //this.reload(true);
     }
-
-    private refineFiltersChanged(data : RefineFiltersChangedArgs)
-    {
-        this.filter.createdAtFrom = data.createdAtFrom;
-        this.filter.createdAtTo = data.createdAtTo;
-        this.filter.mediaTypes = data.mediaTypes;
-        this.filter.statuses = data.statuses;
-        this.filter.distributionProfiles = data.distributionProfiles;
-
-        this.reload(true);
-    }
-
-    private metadataProfileFilterChanged(metadataProfileFilter : any)
-    {
-        // TODO [kmc] - create advanced filter using the metadataProfileFilter object data
-    }
-
 }
 
