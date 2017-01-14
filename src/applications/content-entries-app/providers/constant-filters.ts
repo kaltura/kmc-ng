@@ -1,3 +1,4 @@
+
 export const ConstantsFilters = [
     {type : 'mediaTypes', name : 'Media Types',
         items :
@@ -28,8 +29,8 @@ export const ConstantsFilters = [
     },
     {type : 'originalClippedEntries', name : 'Original & Clipped Entries',
         items : [
-            {id :'1',name : 'Original Entries'},
-            {id :'0',name : 'Clipped Entries'}
+            {id :'1', name : 'Original Entries'},
+            {id :'0', name : 'Clipped Entries'}
         ]
     },
     {type : 'timeScheduling', name : 'Time Scheduling',

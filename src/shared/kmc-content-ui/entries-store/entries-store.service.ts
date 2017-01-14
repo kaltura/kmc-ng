@@ -216,17 +216,12 @@ export class EntriesStore {
     private _updateEntries({filters : activeFilers, data : queryData } : { filters : FilterItem[], data : QueryData}) : Observable<KalturaBaseEntryListResponse | Error> {
 
 
-        let filter: KalturaMediaEntryFilter;
+        let filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter();
 
-        const advancedSearch = new KalturaSearchOperator();
+
+        const advancedSearch = filter.advancedSearch = new KalturaSearchOperator();
         advancedSearch.type = KalturaSearchOperatorType.SearchAnd;
 
-        // build baseEntry > List > Filter object
-        filter = new KalturaMediaEntryFilter();
-
-        // filter.createdAtGreaterThanOrEqual = toServerDate(updateArgs.createdAtFrom);
-        // filter.createdAtLessThanOrEqual = toServerDate(updateArgs.createdAtTo);
-        // filter.freeText = updateArgs.searchText;
         // this.updateCategoriesIdsMatchOr(updateArgs, filter);
         // this.updateMediaTypeIn(updateArgs, filter);
         // this.updateStatusIn(updateArgs, filter);
@@ -238,8 +233,10 @@ export class EntriesStore {
         // }
 
         const requestContext: FilterRequestContext = {
-            filter: filter
+            filter: filter,
+            advancedSearch : advancedSearch
         };
+
         let responseProfile: KalturaDetachedResponseProfile = null;
         let pagination: KalturaFilterPager = null;
 
@@ -309,20 +306,5 @@ export class EntriesStore {
     //     }
     // }
     //
-    // private updateDistributionProfiles(filterArgs:UpdateArgs, advancedSearch : KalturaSearchOperator) : void
-    // {
-    //     if (filterArgs.distributionProfiles && filterArgs.distributionProfiles.length) {
-    //         const distributionProfiles = new KalturaSearchOperator();
-    //         distributionProfiles.type = KalturaSearchOperatorType.SearchOr;
-    //         advancedSearch.items.push(distributionProfiles);
-    //
-    //         R.forEach(item => {
-    //             const newItem = new KalturaContentDistributionSearchItem();
-    //             newItem.distributionProfileId = item;
-    //             newItem.hasEntryDistributionValidationErrors = false;
-    //             newItem.noDistributionProfiles = false;
-    //             distributionProfiles.items.push(newItem)
-    //         }, filterArgs.distributionProfiles);
-    //     }
-    // }
+
 }

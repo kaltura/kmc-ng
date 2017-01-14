@@ -10,6 +10,14 @@ import * as R from 'ramda';
 import {FlavorsFilter} from "../../../shared/kmc-content-ui/entries-store/filters/flavors-filter";
 import {CreatedAfterFilter} from "../../../shared/kmc-content-ui/entries-store/filters/created-after-filter";
 import {CreatedBeforeFilter} from "../../../shared/kmc-content-ui/entries-store/filters/created-before-filter";
+import {IngestionStatusesFilter} from "../../../shared/kmc-content-ui/entries-store/filters/ingestion-statuses-filter";
+import {DurationsFilters} from "../../../shared/kmc-content-ui/entries-store/filters/durations-filter";
+import {OriginalClippedFilter} from "../../../shared/kmc-content-ui/entries-store/filters/original-clipped-filter";
+import {TimeSchedulingFilter} from "../../../shared/kmc-content-ui/entries-store/filters/time-scheduling-filter";
+import {ModerationStatusesFilter} from "../../../shared/kmc-content-ui/entries-store/filters/moderation-statuses-filter";
+import {ReplacementStatusesFilter} from "../../../shared/kmc-content-ui/entries-store/filters/replacement-statuses-filter";
+import {AccessControlProfilesFilter} from "../../../shared/kmc-content-ui/entries-store/filters/access-control-profiles-filter";
+import {DistributionsFilter} from "../../../shared/kmc-content-ui/entries-store/filters/distributions-filter";
 
 
 function toServerDate(value? : Date) : number
@@ -27,8 +35,9 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     createdTo: Date;
     scheduledFrom: Date;
     scheduledTo: Date;
+    scheduledSelected : boolean = false;
 
-    private additionalFiltersSubscrition : Subscription;
+    private additionalFiltersSubscription : Subscription;
     private filterUpdateSubscription : Subscription;
     private selectedNodes: any[] = [];
     private loading = false;
@@ -55,7 +64,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
             }
         );
 
-        this.additionalFiltersSubscrition = this.additionalFiltersStore.additionalFilters$.subscribe(
+        this.additionalFiltersSubscription = this.additionalFiltersStore.additionalFilters$.subscribe(
             (filters: Filters) => {
 
                 this.defaultFiltersNodes = [];
@@ -216,6 +225,11 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
                 if (filter)
                 {
                     newFilters.push(filter);
+
+                    if (filter instanceof TimeSchedulingFilter && filter.value)
+                    {
+                        this.scheduledSelected = true;
+                    }
                 }
             });
 
@@ -227,6 +241,11 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
                 if (filter)
                 {
                     removedFilters.push(filter);
+
+                    if (filter instanceof TimeSchedulingFilter && filter.value)
+                    {
+                        this.scheduledSelected = false;
+                    }
                 }
             });
         }
@@ -252,11 +271,37 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
                 case "mediaTypes":
                     result = new MediaTypesFilter(<string>node.data, node.label);
                     break;
+                case "ingestionStatuses":
+                    result = new IngestionStatusesFilter(<string>node.data, node.label);
+                    break;
                 case "flavors":
                     result = new FlavorsFilter(<string>node.data, node.label);
-
+                    break;
+                case "durations":
+                    result = new DurationsFilters(<string>node.data, node.label);
+                    break;
+                case "originalClippedEntries":
+                    const value : '0' | '1'  = node.data === '0' ? '0' : node.data === '1' ? '1' : null;
+                    if (value !== null) {
+                        result = new OriginalClippedFilter(value, node.label);
+                    }
+                    break;
+                case "timeScheduling":
+                    result = new TimeSchedulingFilter(<string>node.data, node.label, this.scheduledTo, this.scheduledFrom);
+                    break;
+                case "moderationStatuses":
+                    result = new ModerationStatusesFilter(<string>node.data, node.label);
+                    break;
+                case "replacementStatuses":
+                    result = new ReplacementStatusesFilter(<string>node.data, node.label);
+                    break;
+                case "accessControlProfiles":
+                    result = new AccessControlProfilesFilter(<string>node.data, node.label);
+                    break;
+                case "distributions":
+                    result = new DistributionsFilter(<number>node.data, node.label);
+                    break;
                 default:
-
                     break;
             }
         }
@@ -387,6 +432,6 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     }
 
     ngOnDestroy(){
-        this.additionalFiltersSubscrition.unsubscribe();
+        this.additionalFiltersSubscription.unsubscribe();
     }
 }

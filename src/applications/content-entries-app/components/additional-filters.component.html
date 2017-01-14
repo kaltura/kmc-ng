@@ -17,8 +17,8 @@
             <div *ngIf="node.data==='scheduled'" (click)="blockScheduleToggle($event)">
 
                 <div>
-                    <p-calendar #scheduledfrom [(ngModel)]="scheduledFrom" [disabled]="!isScheduledEnabled()" [appendTo]="'body'" [monthNavigator]="true" [yearNavigator]="true" [readonlyInput]="true" (onSelect)="scheduledfrom.overlayVisible = false; updateScheduledFilter()"></p-calendar>
-                    <p-calendar #scheduledto [(ngModel)]="scheduledTo" [disabled]="!isScheduledEnabled()" [monthNavigator]="true" [yearNavigator]="true" [readonlyInput]="true" (onSelect)="scheduledto.overlayVisible = false; updateScheduledFilter()"></p-calendar>
+                    <p-calendar #scheduledfrom [(ngModel)]="scheduledFrom" [disabled]="!scheduledSelected" [appendTo]="'body'" [monthNavigator]="true" [yearNavigator]="true" [readonlyInput]="true" (onSelect)="updateScheduledFilter()"></p-calendar>
+                    <p-calendar #scheduledto [(ngModel)]="scheduledTo" [disabled]="!scheduledSelected" [monthNavigator]="true" [yearNavigator]="true" [readonlyInput]="true" (onSelect)="updateScheduledFilter()"></p-calendar>
                 </div>
             </div>
         </template>

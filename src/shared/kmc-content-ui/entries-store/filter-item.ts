@@ -1,5 +1,6 @@
 import {
     KalturaMediaEntryFilter,
+    KalturaSearchOperator
 } from '@kaltura-ng2/kaltura-api/types'
 
 
@@ -18,7 +19,8 @@ export type UpdateArgs = {
 
 export interface FilterRequestContext
 {
-    filter : KalturaMediaEntryFilter
+    filter : KalturaMediaEntryFilter,
+    advancedSearch : KalturaSearchOperator
 }
 
 export abstract class FilterItem
