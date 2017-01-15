@@ -59,10 +59,14 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         // update components when the active filter list is updated
         this.filterUpdateSubscription = this.entriesStore.runQuery$.subscribe(
             filter => {
+
+                // sync components
+                this.updateScheduledComponentsFromFilters();
+                this.updateCreatedComponentsFromFilters();
+
                 if (filter.removedFilters && filter.removedFilters.length > 0) {
                     // only removedFilters items should be handled (because relevant addedFilters filters are originated from this component)
-                    this.updateTreeComponent(filter.removedFilters);
-                    this.updateCreatedComponents();
+                    this.updateTreeComponentFromFilters(filter.removedFilters);
                 }
             }
         );
@@ -110,21 +114,35 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
             });
     }
 
-    clearCreatedFilters(){
+    private clearCreatedFilters(){
         this.createdFrom = null;
         this.createdTo = null;
 
-        this.updateCreatedFromFilter();
-        this.updateCreatedToFilter();
+        this.updateCreatedFromFilterFromComponent();
+        this.updateCreatedToFilterFromComponent();
     }
 
-    clearAllTreeFilters(){
+    private clearAllTreeFilters(){
         this.selectedNodes = [];
-        this.updateTreeFilter();
+        this.updateFiltersFromTreeSelection();
 
     }
 
-    updateCreatedComponents() : void {
+    private getScheduledFilter() : TimeSchedulingFilter
+    {
+        let result : TimeSchedulingFilter = null;
+        const timeFilters = this.entriesStore.getFiltersByType(TimeSchedulingFilter);
+
+        let scheduledEnabled = false;
+        if (timeFilters && timeFilters.length > 0)
+        {
+            result = R.find(R.propEq('value','scheduled'),timeFilters);
+        }
+
+        return result;
+    }
+
+    private updateCreatedComponentsFromFilters() : void {
 
         const createdBeforeFilter = this.entriesStore.getFirstFilterByType(CreatedBeforeFilter);
 
@@ -147,8 +165,21 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         }
     }
 
-    updateTreeComponent(removedFilters : FilterItem[]) : void
+    private updateScheduledComponentsFromFilters() : void{
+        if (this.getScheduledFilter() !== null)
+        {
+            this.scheduledSelected = true;
+        }
+        else {
+            this.scheduledTo = null;
+            this.scheduledFrom = null;
+            this.scheduledSelected = false;
+        }
+    }
+
+    private updateTreeComponentFromFilters(removedFilters : FilterItem[]) : void
     {
+        // traverse on removed filters and update tree selection accordingly
         if (removedFilters)
         {
             const nodesToRemove : PrimeTreeNode[] = [];
@@ -157,7 +188,15 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
             {
                 if (filter instanceof ValueFilter && this.isFilterOriginatedByTreeComponent(filter))
                 {
-                    const nodeToRemove = R.find(R.propEq('data',filter.value),this.selectedNodes);
+                    let nodeToRemove = R.find(R.propEq('data',filter.value),this.selectedNodes);
+
+                    if (nodeToRemove && nodeToRemove.data === 'scheduled' && this.getScheduledFilter() !== null)
+                    {
+                        // 'scheduled' filter item has a special behavior. when a user modify the scheduled To/From dates
+                        // a filter is being re-created. in such a scenario we don't want to remove the selection
+                        nodeToRemove = null;
+                    }
+
                     if (nodeToRemove)
                     {
                         nodesToRemove.push(nodeToRemove);
@@ -172,7 +211,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         }
     }
 
-    updateScheduledFilter(event)
+    private updateScheduledFilterFromComponents(event)
     {
         const previousFilter = this.entriesStore.getFirstFilterByType(TimeSchedulingFilter);
 
@@ -189,7 +228,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
 
     }
 
-    updateCreatedToFilter()
+    private updateCreatedToFilterFromComponent()
     {
         this.entriesStore.removeFiltersByType(CreatedBeforeFilter);
 
@@ -199,7 +238,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         }
     }
 
-    updateCreatedFromFilter()
+    private updateCreatedFromFilterFromComponent()
     {
         this.entriesStore.removeFiltersByType(CreatedAfterFilter);
 
@@ -209,7 +248,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         }
     }
 
-    updateTreeFilter()
+    private updateFiltersFromTreeSelection()
     {
 
         let newFilters : FilterItem[] = [];
@@ -226,27 +265,17 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
                 if (filter)
                 {
                     newFilters.push(filter);
-
-                    if (filter instanceof TimeSchedulingFilter && filter.value)
-                    {
-                        this.scheduledSelected = true;
-                    }
                 }
             });
 
             selectionChanges.forEachRemovedItem((record) => {
                 const node : PrimeTreeNode = record.item;
 
-                const filter = this.removeTreeFilter(node);
+                const filter = this.findFilterOfSelectedNode(node);
 
                 if (filter)
                 {
                     removedFilters.push(filter);
-
-                    if (filter instanceof TimeSchedulingFilter && filter.value)
-                    {
-                        this.scheduledSelected = false;
-                    }
                 }
             });
         }
@@ -260,7 +289,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         }
     }
 
-    isFilterOriginatedByTreeComponent(filter : ValueFilter<any>) : boolean
+    private isFilterOriginatedByTreeComponent(filter : ValueFilter<any>) : boolean
     {
         return (filter instanceof MediaTypesFilter
                 || filter instanceof IngestionStatusesFilter
@@ -274,7 +303,8 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
                 || filter instanceof DistributionsFilter
         );
     }
-    createTreeFilter(node : PrimeTreeNode) : FilterItem
+
+    private createTreeFilter(node : PrimeTreeNode) : FilterItem
     {
         let result : FilterItem = null;
 
@@ -324,7 +354,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         return result;
     }
 
-    getFilterTypeByTreeNode(node : PrimeTreeNode) : {new(...args : any[]) : ValueFilter<any>;}
+    private getFilterTypeByTreeNode(node : PrimeTreeNode) : {new(...args : any[]) : ValueFilter<any>;}
     {
         let result = null;
         // ignore undefined/null filters data (the virtual roots has undefined/null data)
@@ -370,7 +400,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         return result;
     }
 
-    removeTreeFilter(node : PrimeTreeNode)
+    private findFilterOfSelectedNode(node : PrimeTreeNode)
     {
         let result : FilterItem = null;
 
@@ -396,7 +426,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
     //
 
 
-    blockScheduleToggle(event){
+    private blockScheduleToggle(event){
         event.stopPropagation();
     }
 
