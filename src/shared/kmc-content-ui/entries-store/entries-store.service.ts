@@ -4,6 +4,7 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/catch';
 import {Scheduler} from 'rxjs/rx';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -99,16 +100,21 @@ export class EntriesStore {
             .do(() => {
                 this._status.next({loading: true, errorMessage: null});
             })
-            .switchMap(this._updateEntries.bind(this))
+            .switchMap((query) => this._updateEntries(query).catch(error => Observable.of(error)))
+            .catch(error => Observable.of(error))
             .subscribe(
                 result => {
 
                     if (result instanceof KalturaBaseEntryListResponse) {
                         this._entries.next({items: <any[]>result.objects, totalCount: <number>result.totalCount});
                         this._status.next({loading: false, errorMessage: null});
-                    } else {
+                    } else if (result instanceof  Error){
                         this._status.next({loading: false, errorMessage: (<Error>result).message});
+                    }else {
+                        this._status.next({loading: false, errorMessage: 'problem occurred'});
+
                     }
+
                 },
                 error => {
                     // TODO [kmc] should not reach here
@@ -116,6 +122,7 @@ export class EntriesStore {
                 },
                 () => {
                     // TODO [kmc] should not reach here
+                    console.error("BBBUUUUUUUUUU");
                 }
             );
     }

@@ -32,10 +32,10 @@ function toServerDate(value? : Date) : number
     styleUrls: ['./entries-additional-filters.component.scss']
 })
 export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
-    createdFrom: Date;
-    createdTo: Date;
-    scheduledFrom: Date;
-    scheduledTo: Date;
+    createdAfter: Date;
+    createdBefore: Date;
+    scheduledAfter: Date;
+    scheduledBefore: Date;
     scheduledSelected : boolean = false;
 
     private additionalFiltersSubscription : Subscription;
@@ -115,11 +115,11 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
     }
 
     private clearCreatedFilters(){
-        this.createdFrom = null;
-        this.createdTo = null;
+        this.createdAfter = null;
+        this.createdBefore = null;
 
-        this.updateCreatedFromFilterFromComponent();
-        this.updateCreatedToFilterFromComponent();
+        this.updateCreatedAfterFilterFromComponent();
+        this.updateCreatedBeforeFilterFromComponent();
     }
 
     private clearAllTreeFilters(){
@@ -148,31 +148,35 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
 
         if (createdBeforeFilter)
         {
-            this.createdTo = createdBeforeFilter.value;
+            this.createdBefore = createdBeforeFilter.value;
         }else
         {
-            this.createdTo = null;
+            this.createdBefore = null;
         }
 
         const createdAfterFilter = this.entriesStore.getFirstFilterByType(CreatedAfterFilter);
 
         if (createdAfterFilter)
         {
-            this.createdFrom = createdAfterFilter.value;
+            this.createdAfter = createdAfterFilter.value;
         }else
         {
-            this.createdFrom = null;
+            this.createdAfter = null;
         }
     }
 
     private updateScheduledComponentsFromFilters() : void{
-        if (this.getScheduledFilter() !== null)
+        const scheduledFilterItem =this.getScheduledFilter();
+
+        if (scheduledFilterItem !== null)
         {
             this.scheduledSelected = true;
+            this.scheduledAfter = scheduledFilterItem.scheduledAfter;
+            this.scheduledBefore = scheduledFilterItem.scheduledBefore;
         }
         else {
-            this.scheduledTo = null;
-            this.scheduledFrom = null;
+            this.scheduledBefore = null;
+            this.scheduledAfter = null;
             this.scheduledSelected = false;
         }
     }
@@ -211,8 +215,22 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         }
     }
 
-    private updateScheduledFilterFromComponents(event)
+
+    private updateScheduledFilterFromComponents()
     {
+        if (this.scheduledBefore && this.scheduledAfter) {
+            const isValid = this.scheduledAfter <= this.scheduledBefore;
+
+            if (!isValid)
+            {
+                // TODO [kmcng] replace with dialog
+                setTimeout(this.updateScheduledComponentsFromFilters.bind(this),0);
+
+                window.alert("'From Date' must be before 'To Date'");
+                return;
+            }
+        }
+
         const previousFilter = this.entriesStore.getFirstFilterByType(TimeSchedulingFilter);
 
         if (previousFilter)
@@ -222,29 +240,56 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
             // make sure the filter is already set for 'schedule', otherwise ignore update
             this.entriesStore.removeFiltersByType(TimeSchedulingFilter);
             this.entriesStore.addFilters(
-                new TimeSchedulingFilter(previousValue, previousLabel, this.scheduledTo, this.scheduledFrom)
+                new TimeSchedulingFilter(previousValue, previousLabel, this.scheduledBefore, this.scheduledAfter)
             );
         }
 
     }
 
-    private updateCreatedToFilterFromComponent()
+
+    private updateCreatedBeforeFilterFromComponent()
     {
+        if (this.createdBefore && this.createdAfter) {
+            const isValid = this.createdAfter <= this.createdBefore;
+
+            if (!isValid)
+            {
+                // TODO [kmcng] replace with dialog
+                setTimeout(this.updateCreatedComponentsFromFilters.bind(this),0);
+
+                window.alert("'From Date' must be before 'To Date'");
+                return;
+            }
+        }
+
         this.entriesStore.removeFiltersByType(CreatedBeforeFilter);
 
-        if (this.createdTo)
+        if (this.createdBefore)
         {
-            this.entriesStore.addFilters(new CreatedBeforeFilter(this.createdTo));
+            this.entriesStore.addFilters(new CreatedBeforeFilter(this.createdBefore));
         }
     }
 
-    private updateCreatedFromFilterFromComponent()
+    private updateCreatedAfterFilterFromComponent()
     {
+        if (this.createdBefore && this.createdAfter) {
+            const isValid = this.createdAfter <= this.createdBefore;
+
+            if (!isValid)
+            {
+                // TODO [kmcng] replace with dialog
+                setTimeout(this.updateCreatedComponentsFromFilters.bind(this),0);
+
+                window.alert("'From Date' must be before 'To Date'");
+                return;
+            }
+        }
+
         this.entriesStore.removeFiltersByType(CreatedAfterFilter);
 
-        if (this.createdFrom)
+        if (this.createdAfter)
         {
-            this.entriesStore.addFilters(new CreatedAfterFilter(this.createdFrom));
+            this.entriesStore.addFilters(new CreatedAfterFilter(this.createdAfter));
         }
     }
 
@@ -332,7 +377,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
                     }
                     break;
                 case "timeScheduling":
-                    result = new TimeSchedulingFilter(<string>node.data, node.label, this.scheduledTo, this.scheduledFrom);
+                    result = new TimeSchedulingFilter(<string>node.data, node.label, this.scheduledBefore, this.scheduledAfter);
                     break;
                 case "moderationStatuses":
                     result = new ModerationStatusesFilter(<string>node.data, node.label);

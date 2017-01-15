@@ -5,22 +5,22 @@ import {ValueFilter} from '../value-filter';
 export class TimeSchedulingFilter  extends ValueFilter<string>{
 
 
-    private _scheduledTo : Date;
-    private _scheduledFrom : Date;
+    private _scheduledBefore : Date;
+    private _scheduledAfter : Date;
 
-    public get scheduledFrom() : Date{
-        return this._scheduledFrom;
+    public get scheduledAfter() : Date{
+        return this._scheduledAfter;
     }
 
-    public get scheduledTo() : Date{
-        return this._scheduledTo;
+    public get scheduledBefore() : Date{
+        return this._scheduledBefore;
     }
 
     constructor(value : string, label : string, scheduledTo? : Date, scheduledFrom? : Date)
     {
         super(value, label);
-        this._scheduledFrom = scheduledFrom;
-        this._scheduledTo = scheduledTo;
+        this._scheduledAfter = scheduledFrom;
+        this._scheduledBefore = scheduledTo;
     }
 
     private toServerDate(value?: Date): number {
@@ -41,8 +41,8 @@ export class TimeSchedulingFilter  extends ValueFilter<string>{
               request.filter.startDateGreaterThanOrEqual = this.toServerDate(new Date());
               break;
           case 'scheduled':
-              request.filter.startDateGreaterThanOrEqual = this.toServerDate(this.scheduledFrom);
-              request.filter.endDateLessThanOrEqual = this.toServerDate(this.scheduledTo);
+              request.filter.startDateGreaterThanOrEqual = this.toServerDate(this.scheduledAfter);
+              request.filter.endDateLessThanOrEqual = this.toServerDate(this.scheduledBefore);
               break;
           default:
               break
