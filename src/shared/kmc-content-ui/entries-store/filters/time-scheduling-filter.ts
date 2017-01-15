@@ -1,16 +1,12 @@
 
 
-import {FilterItem, FilterRequestContext} from "../filter-item";
-export class TimeSchedulingFilter  extends FilterItem{
+import {FilterRequestContext} from "../filter-item";
+import {ValueFilter} from '../value-filter';
+export class TimeSchedulingFilter  extends ValueFilter<string>{
 
 
-    private _value : string;
     private _scheduledTo : Date;
     private _scheduledFrom : Date;
-
-    public get value() : string{
-        return this._value;
-    }
 
     public get scheduledFrom() : Date{
         return this._scheduledFrom;
@@ -22,8 +18,7 @@ export class TimeSchedulingFilter  extends FilterItem{
 
     constructor(value : string, label : string, scheduledTo? : Date, scheduledFrom? : Date)
     {
-        super(label);
-        this._value = value;
+        super(value, label);
         this._scheduledFrom = scheduledFrom;
         this._scheduledTo = scheduledTo;
     }
@@ -33,7 +28,7 @@ export class TimeSchedulingFilter  extends FilterItem{
     }
 
     _buildRequest(request : FilterRequestContext) : void {
-      switch (this._value)
+      switch (this.value)
       {
           case 'past':
               request.filter.endDateLessThanOrEqual = this.toServerDate(new Date());

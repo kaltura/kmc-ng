@@ -6,22 +6,14 @@ import {
 
 import { KalturaSearchOperatorType} from '@kaltura-ng2/kaltura-api/kaltura-enums'
 
+import {FilterRequestContext} from "../filter-item";
+import {ValueFilter} from '../value-filter';
 
-import {FilterItem, FilterRequestContext} from "../filter-item";
-export class DistributionsFilter  extends FilterItem{
-
-
-    private _value : number;
-
-    public get value() : number{
-        return this._value;
-    }
+export class DistributionsFilter  extends ValueFilter<number>{
 
     constructor(value : number, label : string)
     {
-        super(label);
-        this._value = value;
-
+        super(value, label);
     }
 
     _buildRequest(request : FilterRequestContext) : void {
@@ -46,7 +38,7 @@ export class DistributionsFilter  extends FilterItem{
 
 
         const newItem = new KalturaContentDistributionSearchItem();
-        newItem.distributionProfileId = this._value;
+        newItem.distributionProfileId = this.value;
         newItem.hasEntryDistributionValidationErrors = false;
         newItem.noDistributionProfiles = false;
         distributionItem.items.push(newItem)

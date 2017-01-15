@@ -1,28 +1,20 @@
+import {FilterRequestContext} from "../filter-item";
+import {ValueFilter} from '../value-filter';
 
+export class IngestionStatusesFilter  extends ValueFilter<string>{
 
-import {FilterItem, FilterRequestContext} from "../filter-item";
-export class IngestionStatusesFilter  extends FilterItem{
-
-
-    private _statuses : string;
-
-    public get statuses() : string{
-        return this._statuses;
-    }
-
-    constructor(statuses : string, label : string)
+    constructor(value : string, label : string)
     {
-        super(label);
-        this._statuses = statuses;
+        super(value, label);
     }
 
     _buildRequest(request : FilterRequestContext) : void {
         if (typeof request.filter.statusIn !== 'undefined')
         {
-            request.filter.statusIn += `,${this.statuses}`;
+            request.filter.statusIn += `,${this.value}`;
         }else
         {
-            request.filter.statusIn = this.statuses;
+            request.filter.statusIn = this.value;
         }
     }
 }

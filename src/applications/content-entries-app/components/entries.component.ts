@@ -119,7 +119,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
         if (freetextFilter)
         {
-            this.filter.freetextSearch = freetextFilter.text;
+            this.filter.freetextSearch = freetextFilter.value;
         }else
         {
             this.filter.freetextSearch = null;

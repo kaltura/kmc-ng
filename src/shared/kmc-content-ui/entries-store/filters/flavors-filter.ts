@@ -1,28 +1,21 @@
 
+import {FilterRequestContext} from "../filter-item";
+import {ValueFilter} from '../value-filter';
 
-import {FilterItem, FilterRequestContext} from "../filter-item";
-export class FlavorsFilter  extends FilterItem{
+export class FlavorsFilter  extends ValueFilter<string>{
 
-
-    private _flavor : string;
-
-    public get flavor() : string{
-        return this._flavor;
-    }
-
-    constructor(flavor : string, label : string)
+    constructor(value : string, label : string)
     {
-        super(label);
-        this._flavor = flavor;
+        super(value, label);
     }
 
     _buildRequest(request : FilterRequestContext) : void {
         if (typeof request.filter.flavorParamsIdsMatchOr !== 'undefined')
         {
-            request.filter.flavorParamsIdsMatchOr += `,${this.flavor}`;
+            request.filter.flavorParamsIdsMatchOr += `,${this.value}`;
         }else
         {
-            request.filter.flavorParamsIdsMatchOr = this.flavor;
+            request.filter.flavorParamsIdsMatchOr = this.value;
         }
     }
 }

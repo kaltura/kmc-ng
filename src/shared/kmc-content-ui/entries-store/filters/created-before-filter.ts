@@ -1,27 +1,20 @@
-
-
-import {FilterItem, FilterRequestContext} from "../filter-item";
 import * as moment from 'moment';
+import {FilterRequestContext} from "../filter-item";
+import {ValueFilter} from '../value-filter';
 
-export class CreatedBeforeFilter  extends FilterItem{
+export class CreatedBeforeFilter  extends ValueFilter<Date>{
 
-    private _date : Date;
-
-    public get date() : Date{
-        return this._date;
+    constructor(value : Date)
+    {
+        super(value, `Before ${moment(value).format('LL')}`);
     }
 
-    constructor(date: Date) {
-        super(`Before ${moment(date).format('LL')}`);
-        this._date = date;
-
-    }
 
     private toServerDate(value?: Date): number {
         return value ? value.getTime() / 1000 : null;
     }
 
     _buildRequest(request : FilterRequestContext) : void {
-        request.filter.createdAtLessThanOrEqual = this.toServerDate(this.date);
+        request.filter.createdAtLessThanOrEqual = this.toServerDate(this.value);
     }
 }

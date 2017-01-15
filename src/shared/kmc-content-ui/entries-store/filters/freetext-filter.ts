@@ -1,20 +1,14 @@
-import {FilterItem, FilterRequestContext} from "../filter-item";
+import {FilterRequestContext} from "../filter-item";
+import {ValueFilter} from '../value-filter';
 
-export class FreetextFilter  extends FilterItem{
+export class FreetextFilter  extends ValueFilter<string>{
 
-    private _text : string;
-
-    public get text() : string{
-        return this._text;
-    }
-
-    constructor(text : string)
+    constructor(value : string, label : string = value)
     {
-        super(text);
-        this._text = text;
+        super(value, label);
     }
 
     _buildRequest(request : FilterRequestContext) : void {
-        request.filter.freeText = this.text;
+        request.filter.freeText = this.value;
     }
 }

@@ -1,20 +1,15 @@
 
 
-import {FilterItem, FilterRequestContext} from "../filter-item";
+
 import * as moment from 'moment';
+import {FilterRequestContext} from "../filter-item";
+import {ValueFilter} from '../value-filter';
 
-export class CreatedAfterFilter  extends FilterItem {
+export class CreatedAfterFilter  extends ValueFilter<Date>{
 
-    private _date : Date;
-
-    public get date() : Date{
-        return this._date;
-    }
-
-    constructor(date: Date) {
-        super(`After ${moment(date).format('LL')}`);
-        this._date = date;
-
+    constructor(value : Date)
+    {
+        super(value, `After ${moment(value).format('LL')}`);
     }
 
     private toServerDate(value?: Date): number {
@@ -23,6 +18,6 @@ export class CreatedAfterFilter  extends FilterItem {
 
 
     _buildRequest(request: FilterRequestContext): void {
-        request.filter.createdAtGreaterThanOrEqual = this.toServerDate(this.date);
+        request.filter.createdAtGreaterThanOrEqual = this.toServerDate(this.value);
     }
 }

@@ -1,23 +1,16 @@
-import {FilterItem, FilterRequestContext} from "../filter-item";
 
-import * as R from 'ramda';
 import {KalturaNullableBoolean} from '@kaltura-ng2/kaltura-api/types';
 
 type AcceptedValues = '0' | '1';
 
-export class OriginalClippedFilter  extends FilterItem{
+import {FilterRequestContext} from "../filter-item";
+import {ValueFilter} from '../value-filter';
 
-    private _value : AcceptedValues;
-
-    public get value() : AcceptedValues{
-        return this._value;
-    }
+export class OriginalClippedFilter  extends ValueFilter<AcceptedValues>{
 
     constructor(value : AcceptedValues, label : string)
     {
-        super(label);
-        this._value = value;
-
+        super(value, label);
     }
 
     _buildRequest(request : FilterRequestContext) : void {

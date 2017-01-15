@@ -18,6 +18,7 @@ import {ModerationStatusesFilter} from "../../../shared/kmc-content-ui/entries-s
 import {ReplacementStatusesFilter} from "../../../shared/kmc-content-ui/entries-store/filters/replacement-statuses-filter";
 import {AccessControlProfilesFilter} from "../../../shared/kmc-content-ui/entries-store/filters/access-control-profiles-filter";
 import {DistributionsFilter} from "../../../shared/kmc-content-ui/entries-store/filters/distributions-filter";
+import {ValueFilter} from "../../../shared/kmc-content-ui/entries-store/value-filter";
 
 
 function toServerDate(value? : Date) : number
@@ -52,8 +53,10 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
 
 
     ngOnInit() {
+        // manage differences of selections
         this.treeSelectionsDiffer = this.differs.find([]).create(null);
 
+        // update components when the active filter list is updated
         this.filterUpdateSubscription = this.entriesStore.runQuery$.subscribe(
             filter => {
                 if (filter.removedFilters && filter.removedFilters.length > 0) {
@@ -64,9 +67,10 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
             }
         );
 
+        // load addition filters from additino filter service.
+        this.loading = true;
         this.additionalFiltersSubscription = this.additionalFiltersStore.additionalFilters$.subscribe(
             (filters: Filters) => {
-
                 this.defaultFiltersNodes = [];
                 this.groupedFiltersNodes = [];
 
@@ -96,29 +100,16 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
                             }
                         });
                     }
-
                 });
+
+                this.loading = false;
             },
             (error) => {
                 // TODO [KMC] - handle error
+                this.loading = false;
             });
     }
 
-
-
-    //
-    // reloadAdditionalFilters(){
-    //     this.loading = true;
-    //     this.additionalFiltersStore.reloadAdditionalFilters(false).subscribe(
-    //         () => {
-    //             this.loading = false;
-    //         },
-    //         (error) => {
-    //             // TODO [KMC] - handle error
-    //             this.loading = false;
-    //         });
-    // }
-    //
     clearCreatedFilters(){
         this.createdFrom = null;
         this.createdTo = null;
@@ -139,7 +130,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
 
         if (createdBeforeFilter)
         {
-            this.createdTo = createdBeforeFilter.date;
+            this.createdTo = createdBeforeFilter.value;
         }else
         {
             this.createdTo = null;
@@ -149,7 +140,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
 
         if (createdAfterFilter)
         {
-            this.createdFrom = createdAfterFilter.date;
+            this.createdFrom = createdAfterFilter.value;
         }else
         {
             this.createdFrom = null;
@@ -164,16 +155,14 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
 
             removedFilters.forEach(filter =>
             {
-               if (filter instanceof MediaTypesFilter)
-               {
-
-                   const nodeToRemove = R.find(R.propEq('data',filter.mediaType),this.selectedNodes);
-                   if (nodeToRemove)
-                   {
-                       nodesToRemove.push(nodeToRemove);
-                   }
-
-               }
+                if (filter instanceof ValueFilter && this.isFilterOriginatedByTreeComponent(filter))
+                {
+                    const nodeToRemove = R.find(R.propEq('data',filter.value),this.selectedNodes);
+                    if (nodeToRemove)
+                    {
+                        nodesToRemove.push(nodeToRemove);
+                    }
+                }
             });
 
             if (nodesToRemove.length > 0)
@@ -185,6 +174,18 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
 
     updateScheduledFilter(event)
     {
+        const previousFilter = this.entriesStore.getFirstFilterByType(TimeSchedulingFilter);
+
+        if (previousFilter)
+        {
+            const previousValue = previousFilter.value;
+            const previousLabel = previousFilter.label;
+            // make sure the filter is already set for 'schedule', otherwise ignore update
+            this.entriesStore.removeFiltersByType(TimeSchedulingFilter);
+            this.entriesStore.addFilters(
+                new TimeSchedulingFilter(previousValue, previousLabel, this.scheduledTo, this.scheduledFrom)
+            );
+        }
 
     }
 
@@ -220,7 +221,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
         {
             selectionChanges.forEachAddedItem((record) => {
                 const node : PrimeTreeNode = record.item;
-                const filter = this.createFilter(node);
+                const filter = this.createTreeFilter(node);
 
                 if (filter)
                 {
@@ -236,7 +237,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
             selectionChanges.forEachRemovedItem((record) => {
                 const node : PrimeTreeNode = record.item;
 
-                const filter = this.removeFilter(node);
+                const filter = this.removeTreeFilter(node);
 
                 if (filter)
                 {
@@ -259,9 +260,25 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
         }
     }
 
-    createFilter(node : PrimeTreeNode) : FilterItem
+    isFilterOriginatedByTreeComponent(filter : ValueFilter<any>) : boolean
+    {
+        return (filter instanceof MediaTypesFilter
+                || filter instanceof IngestionStatusesFilter
+                || filter instanceof FlavorsFilter
+                || filter instanceof DurationsFilters
+                || filter instanceof TimeSchedulingFilter
+                || filter instanceof OriginalClippedFilter
+                || filter instanceof ModerationStatusesFilter
+                || filter instanceof ReplacementStatusesFilter
+                || filter instanceof AccessControlProfilesFilter
+                || filter instanceof DistributionsFilter
+        );
+    }
+    createTreeFilter(node : PrimeTreeNode) : FilterItem
     {
         let result : FilterItem = null;
+
+        let filterType = this.getFilterTypeByTreeNode(node);
 
         // ignore undefined/null filters data (the virtual roots has undefined/null data)
         if (node instanceof PrimeTreeNode && typeof node.data !== 'undefined' && node.data !== null)
@@ -309,94 +326,65 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
         return result;
     }
 
-    removeFilter(node : PrimeTreeNode)
+    getFilterTypeByTreeNode(node : PrimeTreeNode) : {new(...args : any[]) : ValueFilter<any>;}
     {
-        let result : FilterItem = null;
-
+        let result = null;
         // ignore undefined/null filters data (the virtual roots has undefined/null data)
         if (node instanceof PrimeTreeNode && typeof node.data !== 'undefined' && node.data !== null)
         {
             switch (node.payload)
             {
                 case "mediaTypes":
-                    result = R.find((filter : MediaTypesFilter) =>
-                    {
-                        // we are doing a weak comparison on purpose to overcome number/string comparison issues
-                        return filter.mediaType  == node.data;
-                    }, this.entriesStore.getFiltersByType(MediaTypesFilter));
+                    result = MediaTypesFilter;
+                    break;
+                case "ingestionStatuses":
+                    result = IngestionStatusesFilter;
                     break;
                 case "flavors":
-                    result = R.find((filter : FlavorsFilter) =>
-                    {
-                        // we are doing a weak comparison on purpose to overcome number/string comparison issues
-                        return filter.flavor  == node.data;
-                    }, this.entriesStore.getFiltersByType(FlavorsFilter));
+                    result = FlavorsFilter;
+                    break;
+                case "durations":
+                    result = DurationsFilters;
+                    break;
+                case "originalClippedEntries":
+                    result = OriginalClippedFilter;
+                    break;
+                case "timeScheduling":
+                    result = TimeSchedulingFilter;
+                    break;
+                case "moderationStatuses":
+                    result = ModerationStatusesFilter;
+                    break;
+                case "replacementStatuses":
+                    result = ReplacementStatusesFilter;
+                    break;
+                case "accessControlProfiles":
+                    result = AccessControlProfilesFilter;
+                    break;
+                case "distributions":
+                    result = DistributionsFilter;
                     break;
                 default:
-
-
                     break;
             }
         }
 
         return result;
-
     }
 
-    // update the filters
-    // updateFilter(){
-    //     this.initFilter();
-    //     let filters: AdditionalFilter[];
-    //
-    //     // set creation dates filters
-    //
-    //     this.setFlatFilter(FilterType.Types.IngestionStatus, 'statusIn');                  // set ingestion status filters
-    //     this.setFlatFilter(FilterType.Types.MediaType, 'mediaTypeIn');                     // set media type filters
-    //     this.setFlatFilter(FilterType.Types.Durations, 'durationTypeMatchOr');             // set duration filters
-    //     this.setFlatFilter(FilterType.Types.ModerationStatuses, 'moderationStatusIn');     // set moderation status filters
-    //     this.setFlatFilter(FilterType.Types.ReplacementStatuses, 'replacementStatusIn');   // set replacement status filters
-    //     this.setFlatFilter(FilterType.Types.Flavors, 'flavorParamsIdsMatchOr');            // set flavors filters
-    //     this.setFlatFilter(FilterType.Types.AccessControlProfiles, 'accessControlIdIn');   // set access control profiles filters
-    //
-    //     // set original and clipped entries filters
-    //     filters = R.filters((filters: AdditionalFilter) => filters.filterName === FilterType.Types.OriginalAndClipped, this.selectedNodes);
-    //     if (filters.length > 1) {
-    //         this.filters.isRoot = -1;
-    //     }
-    //     if (filters.length === 1) {
-    //         this.filters.isRoot = parseInt(filters[0].id);
-    //     }
-    //
-    //     // set time scheduling filters
-    //     filters = R.filters((filters: AdditionalFilter) => filters.filterName === FilterType.Types.TimeScheduling, this.selectedNodes);
-    //     if (filters.length){
-    //         if (R.findIndex(R.propEq('id', 'past'))(filters) > -1){
-    //             this.filters.endDateLessThanOrEqual = toServerDate(new Date());
-    //         }
-    //         if (R.findIndex(R.propEq('id', 'live'))(filters) > -1){
-    //             this.filters.startDateLessThanOrEqualOrNull = toServerDate(new Date());
-    //             this.filters.endDateGreaterThanOrEqualOrNull = toServerDate(new Date());
-    //         }
-    //         if (R.findIndex(R.propEq('id', 'future'))(filters) > -1){
-    //             this.filters.startDateGreaterThanOrEqual = toServerDate(new Date());
-    //         }
-    //         if (R.findIndex(R.propEq('id', 'scheduled'))(filters) > -1){
-    //             this.filters.startDateGreaterThanOrEqual = toServerDate(this.scheduledFrom);
-    //             this.filters.endDateLessThanOrEqual = toServerDate(this.scheduledTo);
-    //         }
-    //     }
-    //
-    //     // set distribution profiles filters
-    //     filters = R.filters((filters: AdditionalFilter) => filters.filterName === FilterType.Types.DistributionProfiles, this.selectedNodes);
-    //     if (filters.length){
-    //         this.filters.distributionProfiles = [];
-    //         filters.forEach( (distributionProfile) => {
-    //             if (distributionProfile.id.length){
-    //                 this.filters.distributionProfiles.push(distributionProfile.id);
-    //             }
-    //         });
-    //     }
-    //
+    removeTreeFilter(node : PrimeTreeNode)
+    {
+        let result : FilterItem = null;
+
+        let filterType = this.getFilterTypeByTreeNode(node);
+
+        if (filterType) {
+            result = R.find(R.propEq('value', node.data), this.entriesStore.getFiltersByType(filterType));
+        }
+
+        return result;
+    }
+
     //     // update metadata filters
     //     this.selectedNodes.forEach( filters => {
     //         if (filters instanceof MetadataFilter && filters.id !== ""){
@@ -408,24 +396,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     //     this.refineFiltersChanged.emit(this.filters);
     // }
     //
-    // setFlatFilter(filterName: string, filterPoperty: string){
-    //     const filters: AdditionalFilter[] = R.filters((filters: AdditionalFilter) => filters.filterName === filterName, this.selectedNodes);
-    //     if (filters.length){
-    //         this.filters[filterPoperty] = "";
-    //         filters.forEach((filters: AdditionalFilter) => {
-    //             if (filters.id !== '') {
-    //                 this.filters[filterPoperty] += filters.id + ',';
-    //             }
-    //         });
-    //         this.filters[filterPoperty] = this.filters[filterPoperty].substr(0, this.filters[filterPoperty].length-1); // remove last comma from string
-    //     }
-    // }
 
-    isScheduledEnabled(){
-        return false;
-        // const filters: AdditionalFilter[] = R.filters((filters: AdditionalFilter) => filters.filterName === FilterType.Types.TimeScheduling, this.selectedNodes);
-        // return R.findIndex(R.propEq('id', 'scheduled'))(filters) > -1;
-    }
 
     blockScheduleToggle(event){
         event.stopPropagation();

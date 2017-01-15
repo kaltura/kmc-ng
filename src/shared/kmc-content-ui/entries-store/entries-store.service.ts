@@ -218,19 +218,8 @@ export class EntriesStore {
 
         let filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter();
 
-
         const advancedSearch = filter.advancedSearch = new KalturaSearchOperator();
         advancedSearch.type = KalturaSearchOperatorType.SearchAnd;
-
-        // this.updateCategoriesIdsMatchOr(updateArgs, filter);
-        // this.updateMediaTypeIn(updateArgs, filter);
-        // this.updateStatusIn(updateArgs, filter);
-        // this.updateDistributionProfiles(updateArgs, advancedSearch);
-
-        // add advanced search if it was filled with items
-        // if (advancedSearch.items.length > 0) {
-        //     filter.advancedSearch = advancedSearch;
-        // }
 
         const requestContext: FilterRequestContext = {
             filter: filter,
@@ -244,6 +233,11 @@ export class EntriesStore {
             activeFilers.forEach(filter => {
                 filter._buildRequest(requestContext);
             });
+        }
+
+        if (advancedSearch.items && advancedSearch.items.length === 0)
+        {
+            delete filter.advancedSearch;
         }
 
         if (!filter.mediaTypeIn) {
@@ -289,22 +283,4 @@ export class EntriesStore {
             )
             .catch(err => Observable.of(err));
     }
-
-    //
-    //
-    // private updateCategoriesIdsMatchOr(filterArgs: UpdateArgs, filter: KalturaMediaEntryFilter): void {
-    //     if (filterArgs.categories && filterArgs.categories.length) {
-    //         filter.categoriesIdsMatchOr = R.join(',', filterArgs.categories);
-    //     }
-    // }
-    //
-    // private updateStatusIn(filterArgs: UpdateArgs, filter: KalturaMediaEntryFilter): void {
-    //     if (filterArgs.statuses && filterArgs.statuses.length) {
-    //         filter.statusIn = R.join(',', filterArgs.statuses);
-    //     } else {
-    //         filter.statusIn = '-1,-2,0,1,2,7,4';
-    //     }
-    // }
-    //
-
 }
