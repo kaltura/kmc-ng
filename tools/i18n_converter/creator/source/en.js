@@ -1,4 +1,4 @@
-{
+var source = {
     "app":{
         "menu": {
             "upload":"Upload",
