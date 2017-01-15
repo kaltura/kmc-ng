@@ -1,24 +1,24 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Output, IterableDiffer, IterableDiffers} from '@angular/core';
 import { Subscription} from 'rxjs';
 import {PrimeTreeNode, TreeDataHandler} from '@kaltura-ng2/kaltura-primeng-ui';
-import { AdditionalFiltersStore, Filters } from '../providers/additional-filters-store.service';
-import {EntriesStore} from "../../../shared/kmc-content-ui/entries-store/entries-store.service";
-import {FilterItem} from "../../../shared/kmc-content-ui/entries-store/filter-item";
-import {MediaTypesFilter} from "../../../shared/kmc-content-ui/entries-store/filters/media-types-filter";
+import {EntriesStore} from "../entries-store/entries-store.service";
+import {FilterItem} from "../entries-store/filter-item";
+import {MediaTypesFilter} from "../entries-store/filters/media-types-filter";
 
 import * as R from 'ramda';
-import {FlavorsFilter} from "../../../shared/kmc-content-ui/entries-store/filters/flavors-filter";
-import {CreatedAfterFilter} from "../../../shared/kmc-content-ui/entries-store/filters/created-after-filter";
-import {CreatedBeforeFilter} from "../../../shared/kmc-content-ui/entries-store/filters/created-before-filter";
-import {IngestionStatusesFilter} from "../../../shared/kmc-content-ui/entries-store/filters/ingestion-statuses-filter";
-import {DurationsFilters} from "../../../shared/kmc-content-ui/entries-store/filters/durations-filter";
-import {OriginalClippedFilter} from "../../../shared/kmc-content-ui/entries-store/filters/original-clipped-filter";
-import {TimeSchedulingFilter} from "../../../shared/kmc-content-ui/entries-store/filters/time-scheduling-filter";
-import {ModerationStatusesFilter} from "../../../shared/kmc-content-ui/entries-store/filters/moderation-statuses-filter";
-import {ReplacementStatusesFilter} from "../../../shared/kmc-content-ui/entries-store/filters/replacement-statuses-filter";
-import {AccessControlProfilesFilter} from "../../../shared/kmc-content-ui/entries-store/filters/access-control-profiles-filter";
-import {DistributionsFilter} from "../../../shared/kmc-content-ui/entries-store/filters/distributions-filter";
-import {ValueFilter} from "../../../shared/kmc-content-ui/entries-store/value-filter";
+import {FlavorsFilter} from "../entries-store/filters/flavors-filter";
+import {CreatedAfterFilter} from "../entries-store/filters/created-after-filter";
+import {CreatedBeforeFilter} from "../entries-store/filters/created-before-filter";
+import {IngestionStatusesFilter} from "../entries-store/filters/ingestion-statuses-filter";
+import {DurationsFilters} from "../entries-store/filters/durations-filter";
+import {OriginalClippedFilter} from "../entries-store/filters/original-clipped-filter";
+import {TimeSchedulingFilter} from "../entries-store/filters/time-scheduling-filter";
+import {ModerationStatusesFilter} from "../entries-store/filters/moderation-statuses-filter";
+import {ReplacementStatusesFilter} from "../entries-store/filters/replacement-statuses-filter";
+import {AccessControlProfilesFilter} from "../entries-store/filters/access-control-profiles-filter";
+import {DistributionsFilter} from "../entries-store/filters/distributions-filter";
+import {ValueFilter} from "../entries-store/value-filter";
+import {EntriesAdditionalFiltersStore, AdditionalFilters} from "./entries-additional-filters-store.service";
 
 
 function toServerDate(value? : Date) : number
@@ -27,11 +27,11 @@ function toServerDate(value? : Date) : number
 }
 
 @Component({
-    selector: 'kAdditionalFilter',
-    templateUrl: './additional-filters.component.html',
-    styleUrls: ['./additional-filters.component.scss']
+    selector: 'kEntriesAdditionalFilter',
+    templateUrl: './entries-additional-filters.component.html',
+    styleUrls: ['./entries-additional-filters.component.scss']
 })
-export class AdditionalFiltersComponent implements OnInit, OnDestroy{
+export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
     createdFrom: Date;
     createdTo: Date;
     scheduledFrom: Date;
@@ -47,7 +47,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
 
     private treeSelectionsDiffer : IterableDiffer = null;
 
-    constructor(public additionalFiltersStore: AdditionalFiltersStore, private treeDataHandler : TreeDataHandler,
+    constructor(public additionalFiltersStore: EntriesAdditionalFiltersStore, private treeDataHandler : TreeDataHandler,
                 private entriesStore : EntriesStore, private differs: IterableDiffers) {
     }
 
@@ -70,7 +70,7 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
         // load addition filters from additino filter service.
         this.loading = true;
         this.additionalFiltersSubscription = this.additionalFiltersStore.additionalFilters$.subscribe(
-            (filters: Filters) => {
+            (filters: AdditionalFilters) => {
                 this.defaultFiltersNodes = [];
                 this.groupedFiltersNodes = [];
 
@@ -277,8 +277,6 @@ export class AdditionalFiltersComponent implements OnInit, OnDestroy{
     createTreeFilter(node : PrimeTreeNode) : FilterItem
     {
         let result : FilterItem = null;
-
-        let filterType = this.getFilterTypeByTreeNode(node);
 
         // ignore undefined/null filters data (the virtual roots has undefined/null data)
         if (node instanceof PrimeTreeNode && typeof node.data !== 'undefined' && node.data !== null)

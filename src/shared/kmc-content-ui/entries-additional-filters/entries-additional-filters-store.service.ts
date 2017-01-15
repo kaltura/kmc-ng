@@ -38,7 +38,7 @@ export interface FilterGroup
     filtersTypes : FilterType[]
 }
 
-export interface Filters
+export interface AdditionalFilters
 {
     filtersGroups : FilterGroup[];
     filtersByType : { [key : string] : FilterItem[]}
@@ -53,10 +53,10 @@ export enum AdditionalFilterLoadingStatus
 }
 
 @Injectable()
-export class AdditionalFiltersStore {
+export class EntriesAdditionalFiltersStore {
 
     // TODO [KMC] - clear cached data on logout
-    private _additionalFilters: ReplaySubject<Filters> = new ReplaySubject<Filters>(1);
+    private _additionalFilters: ReplaySubject<AdditionalFilters> = new ReplaySubject<AdditionalFilters>(1);
     public additionalFilters$ = this._additionalFilters.asObservable();
     private _status : BehaviorSubject<{ dataLoad? : AdditionalFilterLoadingStatus, error? : string}> = new BehaviorSubject<{ dataLoad? : AdditionalFilterLoadingStatus, error? : string}>(null);
     public status$ = this._status.asObservable();
@@ -112,7 +112,7 @@ export class AdditionalFiltersStore {
 
                         } else {
 
-                            const filters : Filters = {filtersGroups : [], filtersByType : {}};
+                            const filters : AdditionalFilters = {filtersGroups : [], filtersByType : {}};
 
                             const defaultFilterGroup = {groupName : '', filtersTypes : []};
                             filters.filtersGroups.push(defaultFilterGroup);
@@ -148,7 +148,7 @@ export class AdditionalFiltersStore {
                                 });
                             }
 
-                            // build acces control profile filters
+                            // build access control profile filters
                             if (responses[3].result.objects.length > 0) {
                                 defaultFilterGroup.filtersTypes.push({
                                     type: 'accessControlProfiles',

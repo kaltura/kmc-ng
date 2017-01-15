@@ -84,6 +84,10 @@ export class EntriesStore {
         this._activeFilters = null;
         this._activeFiltersMap = null;
         this._queryData = null;
+        this._status.complete();
+        this._status.unsubscribe();
+        this._runQuery.complete();
+        this._runQuery.unsubscribe();
         this._entries.complete();
         this._entries.unsubscribe();
     }
@@ -229,7 +233,7 @@ export class EntriesStore {
         let responseProfile: KalturaDetachedResponseProfile = null;
         let pagination: KalturaFilterPager = null;
 
-        if (activeFilers) {
+        if (activeFilers && activeFilers.length > 0) {
             activeFilers.forEach(filter => {
                 filter._buildRequest(requestContext);
             });
