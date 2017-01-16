@@ -47,4 +47,12 @@
         @extend .kIconpartial_small:before;
         font-size: 9px;
     }
+    .ui-datepicker-prev .fa.fa-angle-left:before{
+        @extend .kIcondropdown_arrow_left:before;
+        font-size: 9px;
+    }
+    .ui-datepicker-next .fa.fa-angle-right:before{
+        @extend .kIcondropdown_arrow_right:before;
+        font-size: 9px;
+    }
 }

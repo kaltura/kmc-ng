@@ -2,9 +2,9 @@
     <p style="padding-left: 20px">ADDITIONAL FILTERS</p>
     <div style="padding-left: 20px">
         <p>Created Between</p>
-        <p-calendar [(ngModel)]="createdAfter" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" icon="kIconcalendar" (onSelect)="updateCreatedAfterFilterFromComponent($event)"></p-calendar>
+        <p-calendar [(ngModel)]="createdAfter" [readonlyInput]="true" [appendTo]="'body'" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="updateCreatedAfterFilterFromComponent($event)"></p-calendar>
         <span style="margin-left: 40px; margin-right: 5px">-</span>
-        <p-calendar [(ngModel)]="createdBefore" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" icon="kIconcalendar" (onSelect)="updateCreatedBeforeFilterFromComponent($event)"></p-calendar>
+        <p-calendar [(ngModel)]="createdBefore" [readonlyInput]="true" [appendTo]="'body'" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="updateCreatedBeforeFilterFromComponent($event)"></p-calendar>
     </div>
     <p style="padding-left: 20px">
         <a class="clearAll" (click)="clearCreatedFilters()">Clear Dates</a>
@@ -18,8 +18,8 @@
                 <span  class="kTreeNodeLabel">{{node.label}} <span *ngIf="node.childrenCount">({{ node.childrenCount}})</span></span>
                 <div *ngIf="node.data==='scheduled'" (click)="blockScheduleToggle($event)">
                     <div>
-                        <p-calendar #scheduledfrom [(ngModel)]="scheduledAfter" [disabled]="!scheduledSelected" [appendTo]="'body'" [monthNavigator]="true" [yearNavigator]="true" [readonlyInput]="true" (onSelect)="updateScheduledFilterFromComponents($event)"></p-calendar>
-                        <p-calendar #scheduledto [(ngModel)]="scheduledBefore" [disabled]="!scheduledSelected" [monthNavigator]="true" [yearNavigator]="true" [readonlyInput]="true" (onSelect)="updateScheduledFilterFromComponents($event)"></p-calendar>
+                        <p-calendar #scheduledfrom [(ngModel)]="scheduledAfter" [disabled]="!scheduledSelected" [appendTo]="'body'" [monthNavigator]="true" [yearNavigator]="true"  yearRange="2005:2030"[readonlyInput]="true" (onSelect)="updateScheduledFilterFromComponents($event)"></p-calendar>
+                        <p-calendar #scheduledto [(ngModel)]="scheduledBefore" [disabled]="!scheduledSelected" [appendTo]="'body'" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" [readonlyInput]="true" (onSelect)="updateScheduledFilterFromComponents($event)"></p-calendar>
                     </div>
                 </div>
             </template>
