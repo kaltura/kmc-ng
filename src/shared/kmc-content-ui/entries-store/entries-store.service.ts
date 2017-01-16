@@ -57,8 +57,17 @@ export interface filterUpdateData {
     data : QueryData;
 }
 
+export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) : T;};
+
 @Injectable()
-export class EntriesStore {
+    export class EntriesStore {
+
+    private static filterTypeMapping = {};
+
+    public static registerFilterType<T extends FilterItem>(filterType : FilterTypeConstructor<T>, handler: (items : T[], request : FilterRequestContext) => void) : void
+    {
+        EntriesStore.filterTypeMapping[filterType.name] = handler;
+    }
 
     private _entries: BehaviorSubject<Entries> = new BehaviorSubject({items: [], totalCount: 0});
     private _status : BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null});
@@ -133,7 +142,7 @@ export class EntriesStore {
         this._runQuery.next({ filters : this._activeFilters, removedFilters : [], addedFilters : [], data : this._queryData });
     }
 
-    public removeFiltersByType(filterType : {new(...args : any[]) : FilterItem;}) : void {
+    public removeFiltersByType(filterType : FilterTypeConstructor<FilterItem>) : void {
         if (filterType && filterType.name) {
             const filtersOfType = this._activeFiltersMap[filterType.name];
 
@@ -143,13 +152,13 @@ export class EntriesStore {
         }
     }
 
-    public getFirstFilterByType<T extends FilterItem>(filterType : {new(...args : any[]) : T;}) : T
+    public getFirstFilterByType<T extends FilterItem>(filterType : FilterTypeConstructor<T>) : T
     {
         const filters = <T[]>this.getFiltersByType(filterType);
         return filters && filters.length > 0 ? filters[0] : null;
     }
 
-    public getFiltersByType<T extends FilterItem>(filterType : {new(...args : any[]) : T;}) : T[] {
+    public getFiltersByType<T extends FilterItem>(filterType : FilterTypeConstructor<T>) : T[] {
         if (filterType.name) {
             const filtersOfType = <T[]>this._activeFiltersMap[filterType.name];
             return filtersOfType ? [...filtersOfType] : [];
@@ -241,6 +250,19 @@ export class EntriesStore {
         let pagination: KalturaFilterPager = null;
 
         if (activeFilers && activeFilers.length > 0) {
+
+            Object.keys(this._activeFiltersMap).forEach(key =>
+            {
+                const handler = EntriesStore.filterTypeMapping[key];
+                const items = this._activeFiltersMap[key];
+
+                if (handler)
+                {
+                    handler(items, requestContext);
+                }
+            });
+
+
             activeFilers.forEach(filter => {
                 filter._buildRequest(requestContext);
             });
