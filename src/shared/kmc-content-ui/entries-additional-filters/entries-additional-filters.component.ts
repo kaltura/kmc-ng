@@ -7,8 +7,7 @@ import {MediaTypesFilter} from "../entries-store/filters/media-types-filter";
 
 import * as R from 'ramda';
 import {FlavorsFilter} from "../entries-store/filters/flavors-filter";
-import {CreatedAfterFilter} from "../entries-store/filters/created-after-filter";
-import {CreatedBeforeFilter} from "../entries-store/filters/created-before-filter";
+
 import {IngestionStatusesFilter} from "../entries-store/filters/ingestion-statuses-filter";
 import {DurationsFilters} from "../entries-store/filters/durations-filter";
 import {OriginalClippedFilter} from "../entries-store/filters/original-clipped-filter";
@@ -23,6 +22,7 @@ import {
     FilterGroupType, filterGroupMetadataProfileType
 } from "./entries-additional-filters-store.service";
 import {MetadataProfileFilter} from "../entries-store/filters/metadata-profile-filter";
+import {CreatedAtFilter} from "../entries-store/filters/created-at-filter";
 
 
 function toServerDate(value? : Date) : number
@@ -120,8 +120,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         this.createdAfter = null;
         this.createdBefore = null;
 
-        this.updateCreatedAfterFilterFromComponent();
-        this.updateCreatedBeforeFilterFromComponent();
+        this.updateCreatedAtFilterFromComponent();
     }
 
     private clearAllTreeFilters(){
@@ -146,24 +145,16 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
 
     private updateCreatedComponentsFromFilters() : void {
 
-        const createdBeforeFilter = this.entriesStore.getFirstFilterByType(CreatedBeforeFilter);
+        const createdAtFilter = this.entriesStore.getFirstFilterByType(CreatedAtFilter);
 
-        if (createdBeforeFilter)
+        if (createdAtFilter)
         {
-            this.createdBefore = createdBeforeFilter.value;
-        }else
-        {
-            this.createdBefore = null;
-        }
-
-        const createdAfterFilter = this.entriesStore.getFirstFilterByType(CreatedAfterFilter);
-
-        if (createdAfterFilter)
-        {
-            this.createdAfter = createdAfterFilter.value;
+            this.createdAfter = createdAtFilter.createdAfter;
+            this.createdBefore = createdAtFilter.createdBefore;
         }else
         {
             this.createdAfter = null;
+            this.createdBefore = null;
         }
     }
 
@@ -245,11 +236,9 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
                 new TimeSchedulingFilter(previousValue, previousLabel, this.scheduledBefore, this.scheduledAfter)
             );
         }
-
     }
 
-
-    private updateCreatedBeforeFilterFromComponent()
+    private updateCreatedAtFilterFromComponent()
     {
         if (this.createdBefore && this.createdAfter) {
             const isValid = this.createdAfter <= this.createdBefore;
@@ -264,34 +253,11 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
             }
         }
 
-        this.entriesStore.removeFiltersByType(CreatedBeforeFilter);
+        this.entriesStore.removeFiltersByType(CreatedAtFilter);
 
-        if (this.createdBefore)
+        if (this.createdAfter || this.createdBefore)
         {
-            this.entriesStore.addFilters(new CreatedBeforeFilter(this.createdBefore));
-        }
-    }
-
-    private updateCreatedAfterFilterFromComponent()
-    {
-        if (this.createdBefore && this.createdAfter) {
-            const isValid = this.createdAfter <= this.createdBefore;
-
-            if (!isValid)
-            {
-                // TODO [kmcng] replace with dialog
-                setTimeout(this.updateCreatedComponentsFromFilters.bind(this),0);
-
-                window.alert("'From Date' must be before 'To Date'");
-                return;
-            }
-        }
-
-        this.entriesStore.removeFiltersByType(CreatedAfterFilter);
-
-        if (this.createdAfter)
-        {
-            this.entriesStore.addFilters(new CreatedAfterFilter(this.createdAfter));
+            this.entriesStore.addFilters(new CreatedAtFilter(this.createdAfter, this.createdBefore));
         }
     }
 

@@ -2,9 +2,9 @@
     <p style="padding-left: 20px">ADDITIONAL FILTERS</p>
     <div style="padding-left: 20px">
         <p>Created Between</p>
-        <p-calendar [(ngModel)]="createdAfter" [readonlyInput]="true" [appendTo]="'body'" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="updateCreatedAfterFilterFromComponent($event)"></p-calendar>
+        <p-calendar [(ngModel)]="createdAfter" [readonlyInput]="true" [appendTo]="'body'" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="updateCreatedAtFilterFromComponent()"></p-calendar>
         <span style="margin-left: 40px; margin-right: 5px">-</span>
-        <p-calendar [(ngModel)]="createdBefore" [readonlyInput]="true" [appendTo]="'body'" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="updateCreatedBeforeFilterFromComponent($event)"></p-calendar>
+        <p-calendar [(ngModel)]="createdBefore" [readonlyInput]="true" [appendTo]="'body'" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="updateCreatedAtFilterFromComponent()"></p-calendar>
     </div>
     <p style="padding-left: 20px">
         <a class="clearAll" (click)="clearCreatedFilters()">Clear Dates</a>
