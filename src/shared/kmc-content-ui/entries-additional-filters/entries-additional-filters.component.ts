@@ -42,8 +42,8 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
     private filterUpdateSubscription : Subscription;
     private selectedNodes: any[] = [];
     private loading = false;
-    private defaultFiltersNodes : PrimeTreeNode[] = [];
-    private groupedFiltersNodes : PrimeTreeNode[] = [];
+    private primeGroups : { groupName : string, items : PrimeTreeNode[] }[] = [];
+
 
     private treeSelectionsDiffer : IterableDiffer = null;
 
@@ -75,35 +75,34 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         this.loading = true;
         this.additionalFiltersSubscription = this.additionalFiltersStore.additionalFilters$.subscribe(
             (filters: AdditionalFilters) => {
-                this.defaultFiltersNodes = [];
-                this.groupedFiltersNodes = [];
+                this.primeGroups = [];
 
                 // create root nodes
-                filters.filtersGroups.forEach(group => {
-                    if (group.groupName) {
+                filters.groups.forEach(group => {
+                    const primeGroup = { groupName : group.groupName, items : [] };
+                    this.primeGroups.push(primeGroup);
 
-                    } else {
-                        // filters is part of the default group (additional information)
-                        group.filtersTypes.forEach(filter => {
-                            const filterItems = filters.filtersByType[filter.type];
+                    // filters is part of the default group (additional information)
+                    group.filtersTypes.forEach(filter => {
+                        const filterItems = group.filtersByType[filter.type];
 
-                            if (filterItems && filterItems.length > 0) {
-                                this.defaultFiltersNodes.push(
-                                    new PrimeTreeNode(null, filter.caption,
-                                        this.treeDataHandler.create(
-                                            {
-                                                data: filterItems,
-                                                idProperty: 'id',
-                                                nameProperty: 'name',
-                                                payload: filter.type
+                        if (filterItems && filterItems.length > 0) {
+                            primeGroup.items.push(
+                                new PrimeTreeNode(null, filter.caption,
+                                    this.treeDataHandler.create(
+                                        {
+                                            data: filterItems,
+                                            idProperty: 'id',
+                                            nameProperty: 'name',
+                                            payload: filter.type
 
-                                            }
-                                        )
-                                        , filter.type)
-                                );
-                            }
-                        });
-                    }
+                                        }
+                                    )
+                                    , filter.type)
+                            );
+                        }
+                    });
+
                 });
 
                 this.loading = false;

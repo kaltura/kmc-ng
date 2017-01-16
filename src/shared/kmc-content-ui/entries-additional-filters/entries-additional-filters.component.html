@@ -11,27 +11,25 @@
     </p>
 
 
-    <p-tree [value]="defaultFiltersNodes" selectionMode="checkbox" [selection]="selectedNodes"  (onNodeSelect)="updateFiltersFromTreeSelection()" (onNodeUnselect)="updateFiltersFromTreeSelection()" >
-        <template let-node  pTemplate type="default">
-            <span  class="kTreeNodeLabel">{{node.label}} <span *ngIf="node.childrenCount">({{ node.childrenCount}})</span></span>
-            <div *ngIf="node.data==='scheduled'" (click)="blockScheduleToggle($event)">
-                <div>
-                    <p-calendar #scheduledfrom [(ngModel)]="scheduledAfter" [disabled]="!scheduledSelected" [appendTo]="'body'" [monthNavigator]="true" [yearNavigator]="true" [readonlyInput]="true" (onSelect)="updateScheduledFilterFromComponents($event)"></p-calendar>
-                    <p-calendar #scheduledto [(ngModel)]="scheduledBefore" [disabled]="!scheduledSelected" [monthNavigator]="true" [yearNavigator]="true" [readonlyInput]="true" (onSelect)="updateScheduledFilterFromComponents($event)"></p-calendar>
-                </div>
-            </div>
-        </template>
-    </p-tree>
-
-
-    <div *ngFor="let metadataProfile of metadataProfilesFilters">
-        <p style="padding-left: 20px">{{metadataProfile.label | uppercase}}</p>
-        <p-tree [value]="metadataProfile.filters" selectionMode="checkbox" [(selection)]="selectedFilters" (onNodeSelect)="updateTreeFilter()" (onNodeUnselect)="updateTreeFilter()">
+    <div *ngFor="let primeGroup of primeGroups">
+        <p *ngIf="primeGroup.groupName" style="padding-left: 20px">{{primeGroup.groupName | uppercase}}</p>
+        <p-tree [value]="primeGroup.items" selectionMode="checkbox" [selection]="selectedNodes"  (onNodeSelect)="updateFiltersFromTreeSelection()" (onNodeUnselect)="updateFiltersFromTreeSelection()" >
             <template let-node  pTemplate type="default">
-                <span class="kTreeNodeLabel">{{node.label}}</span>
+                <span  class="kTreeNodeLabel">{{node.label}} <span *ngIf="node.childrenCount">({{ node.childrenCount}})</span></span>
+                <div *ngIf="node.data==='scheduled'" (click)="blockScheduleToggle($event)">
+                    <div>
+                        <p-calendar #scheduledfrom [(ngModel)]="scheduledAfter" [disabled]="!scheduledSelected" [appendTo]="'body'" [monthNavigator]="true" [yearNavigator]="true" [readonlyInput]="true" (onSelect)="updateScheduledFilterFromComponents($event)"></p-calendar>
+                        <p-calendar #scheduledto [(ngModel)]="scheduledBefore" [disabled]="!scheduledSelected" [monthNavigator]="true" [yearNavigator]="true" [readonlyInput]="true" (onSelect)="updateScheduledFilterFromComponents($event)"></p-calendar>
+                    </div>
+                </div>
             </template>
         </p-tree>
     </div>
+
+
+
+
+
     <p style="padding-left: 20px">
         <a class="clearAll" [class.disabled]="selectedNodes.length === 0" (click)="clearAllTreeFilters()">Clear all</a>
     </p>
