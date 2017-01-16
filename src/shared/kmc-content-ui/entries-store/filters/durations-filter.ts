@@ -1,5 +1,6 @@
+import * as R from 'ramda';
 
-import {FilterRequestContext} from "../filter-item";
+import {EntriesStore} from "../entries-store.service";
 import {ValueFilter} from '../value-filter';
 
 export class DurationsFilters  extends ValueFilter<string>{
@@ -8,14 +9,14 @@ export class DurationsFilters  extends ValueFilter<string>{
     {
         super(value, label);
     }
-
-    _buildRequest(request : FilterRequestContext) : void {
-        if (typeof request.filter.durationTypeMatchOr !== 'undefined')
-        {
-            request.filter.durationTypeMatchOr += `,${this.value}`;
-        }else
-        {
-            request.filter.durationTypeMatchOr = this.value;
-        }
-    }
 }
+
+
+EntriesStore.registerFilterType(DurationsFilters, (items, request) =>
+{
+    request.filter.durationTypeMatchOr = R.reduce((acc : string, item : ValueFilter<string>) =>
+    {
+        return `${acc}${acc ? ',' : ''}${item.value}`;
+    },'',items);
+});
+

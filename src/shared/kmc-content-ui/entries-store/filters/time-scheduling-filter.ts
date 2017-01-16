@@ -1,6 +1,6 @@
+import * as R from 'ramda';
 
-
-import {FilterRequestContext} from "../filter-item";
+import {EntriesStore} from "../entries-store.service";
 import {ValueFilter} from '../value-filter';
 export class TimeSchedulingFilter  extends ValueFilter<string>{
 
@@ -26,26 +26,31 @@ export class TimeSchedulingFilter  extends ValueFilter<string>{
     private toServerDate(value?: Date): number {
         return value ? value.getTime() / 1000 : null;
     }
-
-    _buildRequest(request : FilterRequestContext) : void {
-      switch (this.value)
-      {
-          case 'past':
-              request.filter.endDateLessThanOrEqual = this.toServerDate(new Date());
-              break;
-          case 'live':
-              request.filter.startDateLessThanOrEqualOrNull = this.toServerDate(new Date());
-              request.filter.endDateGreaterThanOrEqualOrNull = this.toServerDate(new Date());
-              break;
-          case 'future':
-              request.filter.startDateGreaterThanOrEqual = this.toServerDate(new Date());
-              break;
-          case 'scheduled':
-              request.filter.startDateGreaterThanOrEqual = this.toServerDate(this.scheduledAfter);
-              request.filter.endDateLessThanOrEqual = this.toServerDate(this.scheduledBefore);
-              break;
-          default:
-              break
-      }
-    }
 }
+
+EntriesStore.registerFilterType(TimeSchedulingFilter, (items, request) =>
+{
+
+    items.forEach((item : ValueFilter<string>) =>
+    {
+        switch (item.value)
+        {
+            case 'past':
+                request.filter.endDateLessThanOrEqual = this.toServerDate(new Date());
+                break;
+            case 'live':
+                request.filter.startDateLessThanOrEqualOrNull = this.toServerDate(new Date());
+                request.filter.endDateGreaterThanOrEqualOrNull = this.toServerDate(new Date());
+                break;
+            case 'future':
+                request.filter.startDateGreaterThanOrEqual = this.toServerDate(new Date());
+                break;
+            case 'scheduled':
+                request.filter.startDateGreaterThanOrEqual = this.toServerDate(this.scheduledAfter);
+                request.filter.endDateLessThanOrEqual = this.toServerDate(this.scheduledBefore);
+                break;
+            default:
+                break
+        }
+    });
+});

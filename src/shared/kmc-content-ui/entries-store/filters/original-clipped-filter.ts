@@ -1,10 +1,10 @@
 
 import {KalturaNullableBoolean} from '@kaltura-ng2/kaltura-api/types';
 
-type AcceptedValues = '0' | '1';
-
-import {FilterRequestContext} from "../filter-item";
+import {EntriesStore} from "../entries-store.service";
 import {ValueFilter} from '../value-filter';
+
+type AcceptedValues = '0' | '1';
 
 export class OriginalClippedFilter  extends ValueFilter<AcceptedValues>{
 
@@ -12,31 +12,36 @@ export class OriginalClippedFilter  extends ValueFilter<AcceptedValues>{
     {
         super(value, label);
     }
-
-    _buildRequest(request : FilterRequestContext) : void {
-
-        if (typeof request.filter.isRoot !== 'undefined')
-        {
-            switch (this.value)
-            {
-                case '0':
-                    // if it is not False then is should be null
-                    if (request.filter.isRoot !== KalturaNullableBoolean.FalseValue)
-                    {
-                        request.filter.isRoot = KalturaNullableBoolean.NullValue;
-                    }
-                    break;
-                case '1':
-                    // if it is not True then is should be null
-                    if (request.filter.isRoot !== KalturaNullableBoolean.TrueValue)
-                    {
-                        request.filter.isRoot = KalturaNullableBoolean.NullValue;
-                    }
-                    break;
-            }
-        }else
-        {
-            request.filter.isRoot = this.value === '0' ?  KalturaNullableBoolean.FalseValue : KalturaNullableBoolean.TrueValue;
-        }
-    }
 }
+
+EntriesStore.registerFilterType(OriginalClippedFilter, (items, request) =>
+{
+    let value : KalturaNullableBoolean = null;
+
+    items.forEach((item :ValueFilter<AcceptedValues>) =>
+    {
+        switch (item.value)
+        {
+            case '0':
+                if (value == null)
+                {
+                    value  = KalturaNullableBoolean.FalseValue;
+                }else if (value === KalturaNullableBoolean.TrueValue)
+                {
+                    value  = KalturaNullableBoolean.NullValue;
+                }
+                break;
+            case '1':
+                if (value == null)
+                {
+                    value  = KalturaNullableBoolean.TrueValue;
+                }else if (value === KalturaNullableBoolean.FalseValue)
+                {
+                    value  = KalturaNullableBoolean.NullValue;
+                }
+                break;
+        }
+    });
+
+    request.filter.isRoot = value;
+});

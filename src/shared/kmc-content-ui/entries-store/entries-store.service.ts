@@ -23,7 +23,7 @@ import {KalturaServerClient} from '@kaltura-ng2/kaltura-api';
 import {BaseEntryListAction} from '@kaltura-ng2/kaltura-api/services/base-entry';
 
 import * as R from 'ramda';
-import {FilterItem, FilterRequestContext} from "./filter-item";
+import {FilterItem} from "./filter-item";
 
 export type UpdateStatus = {
     loading : boolean;
@@ -42,7 +42,12 @@ export interface QueryData
     sortBy? : string,
     sortDirection? : SortDirection,
     fields? : string;
+}
 
+export interface FilterRequestContext
+{
+    filter : KalturaMediaEntryFilter,
+    advancedSearch : KalturaSearchOperator
 }
 
 export enum SortDirection {
@@ -260,11 +265,6 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
                 {
                     handler(items, requestContext);
                 }
-            });
-
-
-            activeFilers.forEach(filter => {
-                filter._buildRequest(requestContext);
             });
         }
 

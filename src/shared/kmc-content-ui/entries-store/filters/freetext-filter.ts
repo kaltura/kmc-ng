@@ -1,4 +1,4 @@
-import {FilterRequestContext} from "../filter-item";
+import {EntriesStore} from "../entries-store.service";
 import {ValueFilter} from '../value-filter';
 
 export class FreetextFilter  extends ValueFilter<string>{
@@ -7,8 +7,10 @@ export class FreetextFilter  extends ValueFilter<string>{
     {
         super(value, label);
     }
-
-    _buildRequest(request : FilterRequestContext) : void {
-        request.filter.freeText = this.value;
-    }
 }
+
+EntriesStore.registerFilterType(FreetextFilter, (items, request) =>
+{
+    const firstItem = items[0];
+    request.filter.freeText = firstItem.value;
+});

@@ -1,14 +1,11 @@
+import * as R from 'ramda';
 
 import { KalturaMetadataSearchItem, KalturaSearchCondition} from '@kaltura-ng2/kaltura-api/kaltura-types'
 import { KalturaSearchOperatorType} from '@kaltura-ng2/kaltura-api/kaltura-enums'
 
-import {FilterRequestContext} from "../filter-item";
-
 import {ValueFilter} from "../value-filter";
-
 import {EntriesStore} from '../entries-store.service';
 
-import * as R from 'ramda';
 
 export class MetadataProfileFilter  extends ValueFilter<string>{
 
@@ -29,16 +26,10 @@ export class MetadataProfileFilter  extends ValueFilter<string>{
         this._metadataProfileId = metadataProfileId;
         this._fieldPath = fieldPath;
     }
-
-    _buildRequest(request : FilterRequestContext) : void {
-        // do nothing
-
-    }
 }
 
 EntriesStore.registerFilterType(MetadataProfileFilter, (items, request) =>
 {
-
     // group all filters by metadata profile id
     R.values(R.groupBy((item : MetadataProfileFilter) =>
     {

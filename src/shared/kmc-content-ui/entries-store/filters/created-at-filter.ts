@@ -1,5 +1,7 @@
 import * as moment from 'moment';
-import {FilterRequestContext, FilterItem} from "../filter-item";
+
+import {EntriesStore} from "../entries-store.service";
+import {FilterItem} from "../filter-item";
 
 export class CreatedAtFilter  extends FilterItem{
 
@@ -38,16 +40,17 @@ export class CreatedAtFilter  extends FilterItem{
     private toServerDate(value?: Date): number {
         return value ? value.getTime() / 1000 : null;
     }
-
-
-    _buildRequest(request: FilterRequestContext): void {
-
-        if (this.createdBefore) {
-            request.filter.createdAtLessThanOrEqual = this.toServerDate(this.createdBefore);
-        }
-
-        if (this.createdAfter) {
-            request.filter.createdAtGreaterThanOrEqual = this.toServerDate(this.createdAfter);
-        }
-    }
 }
+
+EntriesStore.registerFilterType(CreatedAtFilter, (items, request) =>
+{
+    const firstItem = items[0];
+
+    if (firstItem.createdBefore) {
+        request.filter.createdAtLessThanOrEqual = this.toServerDate(firstItem.createdBefore);
+    }
+
+    if (firstItem.createdAfter) {
+        request.filter.createdAtGreaterThanOrEqual = this.toServerDate(firstItem.createdAfter);
+    }
+});

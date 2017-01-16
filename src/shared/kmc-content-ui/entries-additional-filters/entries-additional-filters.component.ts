@@ -422,17 +422,17 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
             return result;
         }
     }
-    
+
     private onCreatedChanged() : void
     {
         this.syncCreatedFilters();
     }
-    
+
     private onSchedulingChanged() : void
     {
         this.syncSchedulingFilters();
-    } 
-    
+    }
+
     private onTreeSelectionChanged() : void
     {
         this.syncTreeFilters();

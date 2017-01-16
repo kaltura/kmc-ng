@@ -1,4 +1,6 @@
-import {FilterRequestContext} from "../filter-item";
+import * as R from 'ramda';
+
+import {EntriesStore} from "../entries-store.service";
 import {ValueFilter} from '../value-filter';
 
 export class MediaTypesFilter  extends ValueFilter<string>{
@@ -7,15 +9,13 @@ export class MediaTypesFilter  extends ValueFilter<string>{
     {
         super(value, label);
     }
-
-    _buildRequest(request : FilterRequestContext) : void {
-
-        if (typeof request.filter.mediaTypeIn !== 'undefined')
-        {
-            request.filter.mediaTypeIn += `,${this.value}`;
-        }else
-        {
-            request.filter.mediaTypeIn = this.value;
-        }
-    }
 }
+
+EntriesStore.registerFilterType(MediaTypesFilter, (items, request) =>
+{
+    request.filter.mediaTypeIn = R.reduce((acc : string, item : ValueFilter<string>) =>
+    {
+        return `${acc}${acc ? ',' : ''}${item.value}`;
+    },'',items);
+});
+
