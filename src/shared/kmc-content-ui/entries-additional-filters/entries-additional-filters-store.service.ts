@@ -25,10 +25,26 @@ import {ConstantsFilters} from './constant-filters';
 
 import * as R from 'ramda';
 
+export class FilterGroupType
+{
+    constructor(public type : string, public caption : string)
+    {
+
+    }
+}
+
+export class filterGroupMetadataProfileType extends FilterGroupType
+{
+    constructor(type : string,caption : string, public metadataProfileId : number, public fieldPath : string[])
+    {
+        super(type,caption);
+    }
+}
+
 export interface FilterGroup
 {
     groupName : string,
-    filtersTypes : { type : string, caption : string }[]
+    filtersTypes : FilterGroupType[]
     filtersByType : { [key : string] : {id : string, name : string}[]}
 }
 
@@ -113,7 +129,7 @@ export class EntriesAdditionalFiltersStore {
                             // build constant filters
                             ConstantsFilters.forEach((filter) =>
                             {
-                                defaultFilterGroup.filtersTypes.push({ type : filter.type, caption : filter.name});
+                                defaultFilterGroup.filtersTypes.push(new FilterGroupType(filter.type,filter.name));
                                 const items = defaultFilterGroup.filtersByType[filter.type] = [];
                                 filter.items.forEach((item: any) => {
                                     items.push({id : item.id, name : item.name});
@@ -122,7 +138,7 @@ export class EntriesAdditionalFiltersStore {
 
                             // build distributions filters
                             if (responses[1].result.objects.length > 0) {
-                                defaultFilterGroup.filtersTypes.push({ type : 'distributions', caption : 'Destinations'});
+                                defaultFilterGroup.filtersTypes.push(new FilterGroupType('distributions',"Destinations"));
                                 const items = defaultFilterGroup.filtersByType['distributions'] = [];
                                 responses[1].result.objects.forEach((distributionProfile: KalturaDistributionProfile) => {
                                     items.push({id : distributionProfile.id, name : distributionProfile.name});
@@ -131,10 +147,7 @@ export class EntriesAdditionalFiltersStore {
 
                             // build flavors filters
                             if (responses[2].result.objects.length > 0) {
-                                defaultFilterGroup.filtersTypes.push({
-                                    type: 'flavors',
-                                    caption: 'Flavors'
-                                });
+                                defaultFilterGroup.filtersTypes.push(new FilterGroupType('flavors',"Flavors"));
                                 const items = defaultFilterGroup.filtersByType['flavors'] = [];
                                 responses[2].result.objects.forEach((flavor: KalturaFlavorParams) => {
                                     items.push({id: flavor.id, name: flavor.name});
@@ -143,10 +156,7 @@ export class EntriesAdditionalFiltersStore {
 
                             // build access control profile filters
                             if (responses[3].result.objects.length > 0) {
-                                defaultFilterGroup.filtersTypes.push({
-                                    type: 'accessControlProfiles',
-                                    caption: 'Access Control Profiles'
-                                });
+                                defaultFilterGroup.filtersTypes.push(new FilterGroupType('accessControlProfiles','Access Control Profiles'));
                                 const items = defaultFilterGroup.filtersByType['accessControlProfiles'] = [];
                                 responses[3].result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
                                     items.push({
@@ -179,7 +189,7 @@ export class EntriesAdditionalFiltersStore {
                                             filters.groups.push(filterGroup);
 
                                             profileLists.forEach(list => {
-                                                filterGroup.filtersTypes.push({type: list.id, caption: list.label});
+                                                filterGroup.filtersTypes.push(new filterGroupMetadataProfileType(list.id, list.label, metadataProfile.id,list.path));
                                                 const items = filterGroup.filtersByType[list.id] = [];
 
                                                 list.optionalValues.forEach(value => {

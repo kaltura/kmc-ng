@@ -18,7 +18,11 @@ import {ReplacementStatusesFilter} from "../entries-store/filters/replacement-st
 import {AccessControlProfilesFilter} from "../entries-store/filters/access-control-profiles-filter";
 import {DistributionsFilter} from "../entries-store/filters/distributions-filter";
 import {ValueFilter} from "../entries-store/value-filter";
-import {EntriesAdditionalFiltersStore, AdditionalFilters} from "./entries-additional-filters-store.service";
+import {
+    EntriesAdditionalFiltersStore, AdditionalFilters,
+    FilterGroupType, filterGroupMetadataProfileType
+} from "./entries-additional-filters-store.service";
+import {MetadataProfileFilter} from "../entries-store/filters/metadata-profile-filter";
 
 
 function toServerDate(value? : Date) : number
@@ -83,22 +87,21 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
                     this.primeGroups.push(primeGroup);
 
                     // filters is part of the default group (additional information)
-                    group.filtersTypes.forEach(filter => {
-                        const filterItems = group.filtersByType[filter.type];
+                    group.filtersTypes.forEach(filterType => {
+                        const filterItems = group.filtersByType[filterType.type];
 
                         if (filterItems && filterItems.length > 0) {
                             primeGroup.items.push(
-                                new PrimeTreeNode(null, filter.caption,
+                                new PrimeTreeNode(null, filterType.caption,
                                     this.treeDataHandler.create(
                                         {
                                             data: filterItems,
                                             idProperty: 'id',
                                             nameProperty: 'name',
-                                            payload: filter.type
+                                            payload: filterType
 
                                         }
-                                    )
-                                    , filter.type)
+                                    ))
                             );
                         }
                     });
@@ -353,95 +356,101 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         let result : FilterItem = null;
 
         // ignore undefined/null filters data (the virtual roots has undefined/null data)
-        if (node instanceof PrimeTreeNode && typeof node.data !== 'undefined' && node.data !== null)
-        {
-            switch (node.payload)
-            {
-                case "mediaTypes":
-                    result = new MediaTypesFilter(<string>node.data, node.label);
-                    break;
-                case "ingestionStatuses":
-                    result = new IngestionStatusesFilter(<string>node.data, node.label);
-                    break;
-                case "flavors":
-                    result = new FlavorsFilter(<string>node.data, node.label);
-                    break;
-                case "durations":
-                    result = new DurationsFilters(<string>node.data, node.label);
-                    break;
-                case "originalClippedEntries":
-                    const value : '0' | '1'  = node.data === '0' ? '0' : node.data === '1' ? '1' : null;
-                    if (value !== null) {
-                        result = new OriginalClippedFilter(value, node.label);
-                    }
-                    break;
-                case "timeScheduling":
-                    result = new TimeSchedulingFilter(<string>node.data, node.label, this.scheduledBefore, this.scheduledAfter);
-                    break;
-                case "moderationStatuses":
-                    result = new ModerationStatusesFilter(<string>node.data, node.label);
-                    break;
-                case "replacementStatuses":
-                    result = new ReplacementStatusesFilter(<string>node.data, node.label);
-                    break;
-                case "accessControlProfiles":
-                    result = new AccessControlProfilesFilter(<string>node.data, node.label);
-                    break;
-                case "distributions":
-                    result = new DistributionsFilter(<number>node.data, node.label);
-                    break;
-                default:
-                    break;
+        if (node instanceof PrimeTreeNode && typeof node.data !== 'undefined' && node.data !== null) {
+
+            if (node.payload instanceof filterGroupMetadataProfileType) {
+                const filterType : filterGroupMetadataProfileType = <filterGroupMetadataProfileType>node.payload;
+                result = new MetadataProfileFilter(filterType.metadataProfileId,filterType.fieldPath,<any>node.data);
+            } else if (node.payload instanceof FilterGroupType) {
+                switch ((<FilterGroupType>node.payload).type) {
+                    case "mediaTypes":
+                        result = new MediaTypesFilter(<string>node.data, node.label);
+                        break;
+                    case "ingestionStatuses":
+                        result = new IngestionStatusesFilter(<string>node.data, node.label);
+                        break;
+                    case "flavors":
+                        result = new FlavorsFilter(<string>node.data, node.label);
+                        break;
+                    case "durations":
+                        result = new DurationsFilters(<string>node.data, node.label);
+                        break;
+                    case "originalClippedEntries":
+                        const value: '0' | '1' = node.data === '0' ? '0' : node.data === '1' ? '1' : null;
+                        if (value !== null) {
+                            result = new OriginalClippedFilter(value, node.label);
+                        }
+                        break;
+                    case "timeScheduling":
+                        result = new TimeSchedulingFilter(<string>node.data, node.label, this.scheduledBefore, this.scheduledAfter);
+                        break;
+                    case "moderationStatuses":
+                        result = new ModerationStatusesFilter(<string>node.data, node.label);
+                        break;
+                    case "replacementStatuses":
+                        result = new ReplacementStatusesFilter(<string>node.data, node.label);
+                        break;
+                    case "accessControlProfiles":
+                        result = new AccessControlProfilesFilter(<string>node.data, node.label);
+                        break;
+                    case "distributions":
+                        result = new DistributionsFilter(<number>node.data, node.label);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
         return result;
     }
 
-    private getFilterTypeByTreeNode(node : PrimeTreeNode) : {new(...args : any[]) : ValueFilter<any>;}
-    {
+    private getFilterTypeByTreeNode(node : PrimeTreeNode) : {new(...args : any[]) : ValueFilter<any>;} {
         let result = null;
         // ignore undefined/null filters data (the virtual roots has undefined/null data)
-        if (node instanceof PrimeTreeNode && typeof node.data !== 'undefined' && node.data !== null)
-        {
-            switch (node.payload)
-            {
-                case "mediaTypes":
-                    result = MediaTypesFilter;
-                    break;
-                case "ingestionStatuses":
-                    result = IngestionStatusesFilter;
-                    break;
-                case "flavors":
-                    result = FlavorsFilter;
-                    break;
-                case "durations":
-                    result = DurationsFilters;
-                    break;
-                case "originalClippedEntries":
-                    result = OriginalClippedFilter;
-                    break;
-                case "timeScheduling":
-                    result = TimeSchedulingFilter;
-                    break;
-                case "moderationStatuses":
-                    result = ModerationStatusesFilter;
-                    break;
-                case "replacementStatuses":
-                    result = ReplacementStatusesFilter;
-                    break;
-                case "accessControlProfiles":
-                    result = AccessControlProfilesFilter;
-                    break;
-                case "distributions":
-                    result = DistributionsFilter;
-                    break;
-                default:
-                    break;
-            }
-        }
+        if (node instanceof PrimeTreeNode && typeof node.data !== 'undefined' && node.data !== null) {
 
-        return result;
+            if (node.payload instanceof filterGroupMetadataProfileType) {
+                result = MetadataProfileFilter;
+            } else if (node.payload instanceof FilterGroupType) {
+                switch ((<FilterGroupType>node.payload).type) {
+                    case "mediaTypes":
+                        result = MediaTypesFilter;
+                        break;
+                    case "ingestionStatuses":
+                        result = IngestionStatusesFilter;
+                        break;
+                    case "flavors":
+                        result = FlavorsFilter;
+                        break;
+                    case "durations":
+                        result = DurationsFilters;
+                        break;
+                    case "originalClippedEntries":
+                        result = OriginalClippedFilter;
+                        break;
+                    case "timeScheduling":
+                        result = TimeSchedulingFilter;
+                        break;
+                    case "moderationStatuses":
+                        result = ModerationStatusesFilter;
+                        break;
+                    case "replacementStatuses":
+                        result = ReplacementStatusesFilter;
+                        break;
+                    case "accessControlProfiles":
+                        result = AccessControlProfilesFilter;
+                        break;
+                    case "distributions":
+                        result = DistributionsFilter;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return result;
+        }
     }
 
     private findFilterOfSelectedNode(node : PrimeTreeNode)
