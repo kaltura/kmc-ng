@@ -2,21 +2,23 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {ReplaySubject} from 'rxjs/ReplaySubject';
 
-import {KalturaServerClient, KalturaMetadataObjectType, KalturaMultiRequest} from '@kaltura-ng2/kaltura-api';
+import {KalturaServerClient, KalturaMetadataObjectType, KalturaMultiRequest, KalturaMetadataProfile} from '@kaltura-ng2/kaltura-api';
 import {FlavorParamsListAction} from '@kaltura-ng2/kaltura-api/services/flavor-params';
 import {MetadataProfileListAction} from '@kaltura-ng2/kaltura-api/services/metadata-profile';
 import {AccessControlListAction} from '@kaltura-ng2/kaltura-api/services/access-control';
 import {DistributionProfileListAction} from '@kaltura-ng2/kaltura-api/services/distribution-profile';
 
 import {
-    KalturaMetadataProfileFilter,
     KalturaAccessControlFilter,
-    KalturaFilterPager,
-    KalturaDetachedResponseProfile,
-    KalturaResponseProfileType,
-    KalturaFlavorParams,
     KalturaAccessControlProfile,
-    KalturaDistributionProfile
+    KalturaDetachedResponseProfile,
+    KalturaDistributionProfile,
+    KalturaFilterPager,
+    KalturaFlavorParams,
+    KalturaMetadataProfileCreateMode,
+    KalturaMetadataProfileFilter,
+    KalturaResponseProfileType,
+    KalturaMetadataProfileStatus
 } from '@kaltura-ng2/kaltura-api/types'
 
 import {ConstantsFilters} from './constant-filters';
@@ -71,7 +73,7 @@ export class EntriesAdditionalFiltersStore {
             this._status.next({dataLoad: AdditionalFilterLoadingStatus.Loading});
 
             const metadataProfilesFilter = new KalturaMetadataProfileFilter();
-            metadataProfilesFilter.createModeNotEqual = 3;
+            metadataProfilesFilter.createModeNotEqual = KalturaMetadataProfileCreateMode.App;
             metadataProfilesFilter.orderBy = '-createdAt';
             metadataProfilesFilter.metadataObjectTypeEqual = KalturaMetadataObjectType.Entry;
 
@@ -163,31 +165,48 @@ export class EntriesAdditionalFiltersStore {
                                 });
                             }
 
-                            // // build metadata profile filters
-                            // const metadataGroups = this.createMetadataProfileFilters(responses[0].result.objects);
-                            //
-                            // metadataGroups.forEach(metadataGroup =>
-                            // {
-                            //     if (metadataGroup.filters && metadataGroup.filters.length > 0) {
-                            //         const filterGroup = {groupName: metadataGroup.label, filtersTypes: []};
-                            //         filters.filtersGroups.push(filterGroup);
-                            //
-                            //         metadataGroup.filters.forEach(filters => {
-                            //             filterGroup.filtersTypes.push({ type : filters.label, caption : filters.label});
-                            //             const items = filters.filtersByType[filters.label] = [];
-                            //
-                            //             filters.children.forEach((filterItem : MetadataFilter) =>
-                            //             {
-                            //                items.push({
-                            //                    id : filterItem.id,
-                            //                    name : filterItem.label
-                            //                })
-                            //             });
-                            //         });
-                            //     }
-                            // });
-                            this._additionalFilters.next(filters);
+                            // build metadata profile filters
+                            const parser = new MetadataProfileParser();
 
+                            if (responses[0].result.objects && responses[0].result.objects.length > 0)
+                            {
+                                responses[0].result.objects.forEach(kalturaProfile =>
+                                {
+                                    const metadataProfile = parser.parse(kalturaProfile);
+
+                                    if (metadataProfile)
+                                    {
+                                        // get only fields that are list, searchable and has values
+                                        const profileLists = R.filter(field =>
+                                        {
+                                            return (field.type === MetadataFieldTypes.List && field.isSearchable && field.optionalValues.length > 0);
+                                        }, metadataProfile.fields);
+
+                                        // if found relevant lists, create a group for that profile
+                                        if (profileLists && profileLists.length > 0) {
+                                            const filterGroup = {groupName: metadataProfile.name, filtersTypes: []};
+
+                                            profileLists.forEach(list => {
+                                                filterGroup.filtersTypes.push({type: list.id, caption: list.label});
+                                                const items = filters.filtersByType[list.id] = [];
+
+                                                list.optionalValues.forEach(value => {
+                                                    items.push({
+                                                        id: value,
+                                                        name: value
+                                                    })
+
+                                                });
+                                            });
+
+                                            filters.filtersGroups.push(filterGroup);
+                                        }
+
+                                    }
+                                });
+                            }
+
+                            this._additionalFilters.next(filters);
                             this._status.next({ dataLoad : AdditionalFilterLoadingStatus.Loaded});
                         }
                     },
@@ -200,70 +219,207 @@ export class EntriesAdditionalFiltersStore {
                 )
         }
     }
+}
 
-    // createMetadataProfileFilters(metadataProfiles: KalturaMetadataProfile[]) : FilterGroup[]{
-    //     const result : FilterGroup[] = [];
-    //     try {
-    //         // for each metadata profile, parse its XSD and see if it has a searchable list in it
-    //         metadataProfiles.forEach((metadataProfile) => {
-    //             const xsd = metadataProfile.xsd ? metadataProfile.xsd : null; // try to get the xsd schema from the metadata profile
-    //             if (xsd) {
-    //                 const parser = new DOMParser();
-    //                 const ns = "http://www.w3.org/2001/XMLSchema";
-    //                 const schema = parser.parseFromString(xsd, "text/xml");      // create an xml documents from the schema
-    //                 const elements = schema.getElementsByTagNameNS(ns, "element");    // get all element nodes
-    //
-    //                 // for each xsd element with an ID attribute - search for a simpleType node of type listType - this means we have to add it to the filters if it is searchable
-    //                 for (let i = 0; i < elements.length; i++) {
-    //                     const currentNode = elements[i];
-    //                     if (currentNode.getAttribute("id") !== null) {            // only elements with ID attribue can be used for filters
-    //                         const simpleTypes = currentNode.getElementsByTagNameNS(ns, "simpleType");
-    //                         if (simpleTypes.length > 0) {
-    //                             // check if this element is searchable
-    //                             if (currentNode.getElementsByTagName("searchable").length && currentNode.getElementsByTagName("searchable")[0].textContent === "true") {
-    //                                 // check if the simpleType type is "listType"
-    //                                 if (simpleTypes[0].getElementsByTagNameNS(ns, "restriction").length && simpleTypes[0].getElementsByTagNameNS(ns, "restriction")[0].getAttribute("base") === "listType") {
-    //                                     // get filters properties and add it to the metadata profile filters list
-    //                                     const filterLabel = currentNode.getElementsByTagNameNS(ns, "appinfo").length ? currentNode.getElementsByTagNameNS(ns,"appinfo")[0].getElementsByTagName("label")[0].textContent : "";
-    //                                     const valueNodes = simpleTypes[0].getElementsByTagNameNS(ns, "enumeration");
-    //                                     const values = [];
-    //                                     for (let j = 0; j < valueNodes.length; j++) {
-    //                                         values.push(valueNodes[j].getAttribute("id"));
-    //                                     }
-    //                                     const fieldName = currentNode.getAttribute("name");
-    //                                     this.addMetadataProfileFilter(result, metadataProfile.id, metadataProfile.name, filterLabel, fieldName, values);
-    //                                 }
-    //                             }
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         });
-    //
-    //     }catch(e){
-    //         // TODO [kmc] handle error
-    //         console.log("An error occured during the metadata profile filters creation process.");
-    //     }
-    //
-    //     return result;
-    // }
-    //
-    // addMetadataProfileFilter(result, metadataProfileID, metadataProfileName, filterName, fieldName, values){
-    //     // check if current filters group (accordion header) already exists. If not - create a new one
-    //     let filterGroup: MetadataProfileFilterGroup = R.find(R.propEq('label', metadataProfileName))(this.metadataFilters);
-    //     if (typeof filterGroup === "undefined"){
-    //         filterGroup = {label: metadataProfileName, filters: []};
-    //         result.push(filterGroup);
-    //     }
-    //     // if the filters does not exist in the filters group yet - add it to the group
-    //     if (typeof R.find(R.propEq('label', filterName))(filterGroup.filters) === "undefined") {
-    //         let newFilter: AdditionalFilter = new MetadataFilter(filterName, "", filterName);
-    //         for (let i = 0; i < values.length; i++){
-    //             newFilter.children.push(new MetadataFilter(fieldName, metadataProfileID, values[i]));
-    //         }
-    //         filterGroup.filters.push(newFilter);
-    //     }
-    // }
+enum MetadataFieldTypes
+{
+    Text,
+    Date,
+    Object,
+    List,
+    Container
+}
+
+interface MetadataFieldInfo
+{
+    documentations? : string;
+    label? : string;
+    isSearchable? : boolean;
+    defaultLabel? : string;
+    isTimeControl? : boolean;
+    description? : string;
+}
+
+interface MetadataProfile
+{
+    id : number;
+    name : string;
+    isActive : boolean;
+    fields : MetadataProfileField[]
 
 }
 
+interface MetadataProfileField extends MetadataFieldInfo
+{
+    type : MetadataFieldTypes;
+    path : string[];
+    optionalValues : string[];
+    id : string;
+}
+
+class MetadataProfileParser
+{
+    private getFieldType(element : Element) : MetadataFieldTypes
+    {
+        let result : MetadataFieldTypes;
+        const type : string = element.getAttribute('type');
+
+        switch (type)
+        {
+            case "textType":
+                result = MetadataFieldTypes.Text;
+                break;
+            case "dateType":
+                result = MetadataFieldTypes.Date;
+                break;
+            case "listType":
+                result = MetadataFieldTypes.List;
+                break;
+            case "objectType":
+                result = MetadataFieldTypes.Object;
+                break;
+            default:
+
+                if (element.children && element.children.length > 0)
+                {
+                    const firstChild = element.children[0];
+
+                    if (firstChild.localName === 'complexType')
+                    {
+                        result = MetadataFieldTypes.Container;
+                    }else
+                    {
+                        // for backward compatibility
+                        result = MetadataFieldTypes.List;
+                    }
+                }
+
+                break;
+        }
+
+        return result;
+
+    }
+
+    public  parse(kalturaMetadataProfile : KalturaMetadataProfile) : MetadataProfile{
+        const result : MetadataProfile = {
+            id : kalturaMetadataProfile.id,
+            name : kalturaMetadataProfile.name,
+            isActive : kalturaMetadataProfile.status === KalturaMetadataProfileStatus.Active,
+            fields : []
+        };
+
+        if (kalturaMetadataProfile.xsd)
+        {
+            const parser = new DOMParser();
+            const ns = "http://www.w3.org/2001/XMLSchema";
+            const xsd = parser.parseFromString(kalturaMetadataProfile.xsd, "text/xml");      // create an xml documents from the schema
+
+            const rootElement = xsd.firstElementChild.firstElementChild; // schema / element
+            const rootElementPath = rootElement.getAttribute('name');
+            const children = rootElement.firstElementChild.firstElementChild.children; // ComplexType / sequence / elements[]
+
+            if (children && children.length)
+            {
+                for(let i = 0, length = children.length;i<length;i++)
+                {
+                    const field = this.extractField(children[i], [rootElementPath]);
+                    if (field) {
+                        result.fields.push(field);
+                    }
+
+                }
+            }
+        }
+        return result;
+    }
+
+    private updateFieldInfo(field : MetadataFieldInfo, element : Element) : void
+    {
+        const infoElements = element.children[0].children;
+
+        if (element && element.children && element.children.length > 0)
+        {
+            this.forEach(element.children[0].children, infoElement =>
+            {
+                const childsName = infoElement.localName;
+
+                if (childsName =="documentation") {
+                    field.documentations = infoElement.textContent;
+                }
+                else {
+                    this.forEach(infoElement.children, infoProperty =>
+                    {
+                        switch (infoProperty.localName) {
+                            case "label":
+                                field.label = infoProperty.textContent;
+                            case "key":
+                                field.defaultLabel = infoProperty.textContent;
+                                break;
+                            case "searchable":
+                                field.isSearchable = infoProperty.textContent === 'true';
+                                break;
+                            case "timeControl":
+                                field.isTimeControl = infoProperty.textContent === 'true';
+                                break;
+                            case "description":
+                                field.description = infoProperty.textContent;
+                                break;
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    private extractField(element : Element, parentPath : string[]) : MetadataProfileField {
+        let result: MetadataProfileField = null;
+        const fieldName = element ? element.getAttribute('name') : null;
+
+        if (fieldName) {
+            result = {
+                type: this.getFieldType(element),
+                path: [...parentPath, fieldName],
+                optionalValues : [],
+                id : element.getAttribute('id')
+            };
+
+            this.updateFieldInfo(result, element);
+
+            if (element.children && element.children.length > 1) {
+                const dataElement = element.children[1];
+
+                if (dataElement.localName == 'complexType') {
+                    // TODO [kmcng] not needed for version 1
+                    //if (dataElement.children[0].localName == "sequenceType" && dataElement.children[0].children) {
+                    // this.forEach(dataElement.children[0].children, dataProperty =>
+                    // {
+                    // var nestedField: MetadataFieldVO = fromXSDToField(nestedElement, field.xpath);
+                    // // if any of the nested fields are searchable, make the parent field searcheable too
+                    // if (nestedField.appearInSearch) {
+                    //     field.appearInSearch = true;
+                    // }
+                    // field.nestedFieldsArray.addItem(nestedField);
+                    // });
+                    //}
+                    //}
+                } else if (result.type === MetadataFieldTypes.List && dataElement.children && dataElement.children.length > 0) {
+                    this.forEach(dataElement.children[0].children, item => {
+                        result.optionalValues.push(item.getAttribute('value'));
+                    });
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private forEach(collection : HTMLCollection, callback : (element : Element) => void) : void {
+        if (callback && collection && collection.length > 0) {
+            for(let i = 0, length = collection.length;i<length;i++)
+            {
+                callback(collection[i]);
+            }
+        }
+    }
+}
