@@ -55,7 +55,6 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
                 private entriesStore : EntriesStore, private differs: IterableDiffers) {
     }
 
-
     ngOnInit() {
         // manage differences of selections
         this.treeSelectionsDiffer = this.differs.find([]).create(null);
@@ -65,12 +64,12 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
             filter => {
 
                 // sync components
-                this.updateScheduledComponentsFromFilters();
-                this.updateCreatedComponentsFromFilters();
+                this.syncScheduledComponents();
+                this.syncCreatedComponents();
 
                 if (filter.removedFilters && filter.removedFilters.length > 0) {
                     // only removedFilters items should be handled (because relevant addedFilters filters are originated from this component)
-                    this.updateTreeComponentFromFilters(filter.removedFilters);
+                    this.syncTreeComponents(filter.removedFilters);
                 }
             }
         );
@@ -116,34 +115,11 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
             });
     }
 
-    private clearCreatedFilters(){
-        this.createdAfter = null;
-        this.createdBefore = null;
-
-        this.updateCreatedAtFilterFromComponent();
+    ngOnDestroy(){
+        this.additionalFiltersSubscription.unsubscribe();
     }
 
-    private clearAllTreeFilters(){
-        this.selectedNodes = [];
-        this.updateFiltersFromTreeSelection();
-
-    }
-
-    private getScheduledFilter() : TimeSchedulingFilter
-    {
-        let result : TimeSchedulingFilter = null;
-        const timeFilters = this.entriesStore.getFiltersByType(TimeSchedulingFilter);
-
-        let scheduledEnabled = false;
-        if (timeFilters && timeFilters.length > 0)
-        {
-            result = R.find(R.propEq('value','scheduled'),timeFilters);
-        }
-
-        return result;
-    }
-
-    private updateCreatedComponentsFromFilters() : void {
+    private syncCreatedComponents() : void {
 
         const createdAtFilter = this.entriesStore.getFirstFilterByType(CreatedAtFilter);
 
@@ -158,7 +134,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         }
     }
 
-    private updateScheduledComponentsFromFilters() : void{
+    private syncScheduledComponents() : void{
         const scheduledFilterItem =this.getScheduledFilter();
 
         if (scheduledFilterItem !== null)
@@ -174,7 +150,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         }
     }
 
-    private updateTreeComponentFromFilters(removedFilters : FilterItem[]) : void
+    private syncTreeComponents(removedFilters : FilterItem[]) : void
     {
         // traverse on removed filters and update tree selection accordingly
         if (removedFilters)
@@ -208,8 +184,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         }
     }
 
-
-    private updateScheduledFilterFromComponents()
+    private syncSchedulingFilters()
     {
         if (this.scheduledBefore && this.scheduledAfter) {
             const isValid = this.scheduledAfter <= this.scheduledBefore;
@@ -217,7 +192,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
             if (!isValid)
             {
                 // TODO [kmcng] replace with dialog
-                setTimeout(this.updateScheduledComponentsFromFilters.bind(this),0);
+                setTimeout(this.syncScheduledComponents.bind(this),0);
 
                 window.alert("'From Date' must be before 'To Date'");
                 return;
@@ -238,7 +213,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         }
     }
 
-    private updateCreatedAtFilterFromComponent()
+    private syncCreatedFilters()
     {
         if (this.createdBefore && this.createdAfter) {
             const isValid = this.createdAfter <= this.createdBefore;
@@ -246,7 +221,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
             if (!isValid)
             {
                 // TODO [kmcng] replace with dialog
-                setTimeout(this.updateCreatedComponentsFromFilters.bind(this),0);
+                setTimeout(this.syncCreatedComponents.bind(this),0);
 
                 window.alert("'From Date' must be before 'To Date'");
                 return;
@@ -261,7 +236,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         }
     }
 
-    private updateFiltersFromTreeSelection()
+    private syncTreeFilters()
     {
 
         let newFilters : FilterItem[] = [];
@@ -273,7 +248,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         {
             selectionChanges.forEachAddedItem((record) => {
                 const node : PrimeTreeNode = record.item;
-                const filter = this.createTreeFilter(node);
+                const filter = this.createTreeFilters(node);
 
                 if (filter)
                 {
@@ -302,9 +277,36 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         }
     }
 
+    private clearCreatedComponents(){
+        this.createdAfter = null;
+        this.createdBefore = null;
+
+        this.syncCreatedFilters();
+    }
+
+    private clearAllComponents(){
+        this.selectedNodes = [];
+        this.syncTreeFilters();
+
+    }
+
+    private getScheduledFilter() : TimeSchedulingFilter
+    {
+        let result : TimeSchedulingFilter = null;
+        const timeFilters = this.entriesStore.getFiltersByType(TimeSchedulingFilter);
+
+        if (timeFilters && timeFilters.length > 0)
+        {
+            result = R.find(R.propEq('value','scheduled'),timeFilters);
+        }
+
+        return result;
+    }
+
     private isFilterOriginatedByTreeComponent(filter : ValueFilter<any>) : boolean
     {
         return (filter instanceof MediaTypesFilter
+                || filter instanceof MetadataProfileFilter
                 || filter instanceof IngestionStatusesFilter
                 || filter instanceof FlavorsFilter
                 || filter instanceof DurationsFilters
@@ -317,7 +319,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         );
     }
 
-    private createTreeFilter(node : PrimeTreeNode) : FilterItem
+    private createTreeFilters(node : PrimeTreeNode) : FilterItem
     {
         let result : FilterItem = null;
 
@@ -325,9 +327,11 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         if (node instanceof PrimeTreeNode && typeof node.data !== 'undefined' && node.data !== null) {
 
             if (node.payload instanceof filterGroupMetadataProfileType) {
+                // create metadata profile filter
                 const filterType : filterGroupMetadataProfileType = <filterGroupMetadataProfileType>node.payload;
                 result = new MetadataProfileFilter(filterType.metadataProfileId,filterType.fieldPath,<any>node.data);
             } else if (node.payload instanceof FilterGroupType) {
+                // create filter by
                 switch ((<FilterGroupType>node.payload).type) {
                     case "mediaTypes":
                         result = new MediaTypesFilter(<string>node.data, node.label);
@@ -418,6 +422,21 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
             return result;
         }
     }
+    
+    private onCreatedChanged() : void
+    {
+        this.syncCreatedFilters();
+    }
+    
+    private onSchedulingChanged() : void
+    {
+        this.syncSchedulingFilters();
+    } 
+    
+    private onTreeSelectionChanged() : void
+    {
+        this.syncTreeFilters();
+    }
 
     private findFilterOfSelectedNode(node : PrimeTreeNode)
     {
@@ -432,24 +451,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         return result;
     }
 
-    //     // update metadata filters
-    //     this.selectedNodes.forEach( filters => {
-    //         if (filters instanceof MetadataFilter && filters.id !== ""){
-    //             this.filters.metadataProfiles.push({'metadataProfileId': filters.id, 'field': filters.filterName, 'value': filters.label});
-    //         }
-    //     });
-    //
-    //     console.info(this.filters);
-    //     this.refineFiltersChanged.emit(this.filters);
-    // }
-    //
-
-
     private blockScheduleToggle(event){
         event.stopPropagation();
-    }
-
-    ngOnDestroy(){
-        this.additionalFiltersSubscription.unsubscribe();
     }
 }

@@ -2,24 +2,24 @@
     <p style="padding-left: 20px">ADDITIONAL FILTERS</p>
     <div style="padding-left: 20px">
         <p>Created Between</p>
-        <p-calendar [(ngModel)]="createdAfter" [readonlyInput]="true" [appendTo]="'body'" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="updateCreatedAtFilterFromComponent()"></p-calendar>
-        <span style="margin-left: 40px; margin-right: 5px">-</span>
-        <p-calendar [(ngModel)]="createdBefore" [readonlyInput]="true" [appendTo]="'body'" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="updateCreatedAtFilterFromComponent()"></p-calendar>
+        <p-calendar [(ngModel)]="createdAfter" [readonlyInput]="true" [appendTo]="'body'" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="onCreatedChanged()"></p-calendar>
+            <span style="margin-left: 40px; margin-right: 5px">-</span>
+        <p-calendar [(ngModel)]="createdBefore" [readonlyInput]="true" [appendTo]="'body'" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="onCreatedChanged()"></p-calendar>
     </div>
     <p style="padding-left: 20px">
-        <a class="clearAll" (click)="clearCreatedFilters()">Clear Dates</a>
+        <a class="clearAll" (click)="clearCreatedComponents()">Clear Dates</a>
     </p>
 
 
     <div *ngFor="let primeGroup of primeGroups">
         <p *ngIf="primeGroup.groupName" style="padding-left: 20px">{{primeGroup.groupName | uppercase}}</p>
-        <p-tree [value]="primeGroup.items" selectionMode="checkbox" [selection]="selectedNodes"  (onNodeSelect)="updateFiltersFromTreeSelection()" (onNodeUnselect)="updateFiltersFromTreeSelection()" >
+        <p-tree [value]="primeGroup.items" selectionMode="checkbox" [selection]="selectedNodes"  (onNodeSelect)="onTreeSelectionChanged()" (onNodeUnselect)="onTreeSelectionChanged()" >
             <template let-node  pTemplate type="default">
                 <span  class="kTreeNodeLabel">{{node.label}} <span *ngIf="node.childrenCount">({{ node.childrenCount}})</span></span>
                 <div *ngIf="node.data==='scheduled'" (click)="blockScheduleToggle($event)">
                     <div>
-                        <p-calendar #scheduledfrom [(ngModel)]="scheduledAfter" [disabled]="!scheduledSelected" [appendTo]="'body'" [monthNavigator]="true" [yearNavigator]="true"  yearRange="2005:2030"[readonlyInput]="true" (onSelect)="updateScheduledFilterFromComponents($event)"></p-calendar>
-                        <p-calendar #scheduledto [(ngModel)]="scheduledBefore" [disabled]="!scheduledSelected" [appendTo]="'body'" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" [readonlyInput]="true" (onSelect)="updateScheduledFilterFromComponents($event)"></p-calendar>
+                        <p-calendar #scheduledfrom [(ngModel)]="scheduledAfter" [disabled]="!scheduledSelected" [appendTo]="'body'" [monthNavigator]="true" [yearNavigator]="true"  yearRange="2005:2030"[readonlyInput]="true" (onSelect)="onSchedulingChanged($event)"></p-calendar>
+                        <p-calendar #scheduledto [(ngModel)]="scheduledBefore" [disabled]="!scheduledSelected" [appendTo]="'body'" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" [readonlyInput]="true" (onSelect)="onSchedulingChanged($event)"></p-calendar>
                     </div>
                 </div>
             </template>
@@ -31,7 +31,7 @@
 
 
     <p style="padding-left: 20px">
-        <a class="clearAll" [class.disabled]="selectedNodes.length === 0" (click)="clearAllTreeFilters()">Clear all</a>
+        <a class="clearAll" [class.disabled]="selectedNodes.length === 0" (click)="clearAllComponents()">Clear all</a>
     </p>
 </div>
 

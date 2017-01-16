@@ -83,17 +83,10 @@ export class EntriesComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy(){
-        this.runQuerySubscription.unsubscribe();
-        this.runQuerySubscription = null;
-
-        this.entriesStore.dispose();
-    }
-
     ngOnInit() {
         this.runQuerySubscription = this.entriesStore.runQuery$.subscribe(
             query => {
-               this.updateFreetextComponent();
+               this.syncFreetextComponents();
 
                this.filter.pageIndex = query.data.pageIndex-1;
             }
@@ -108,12 +101,19 @@ export class EntriesComponent implements OnInit, OnDestroy {
         });
     }
 
+    ngOnDestroy(){
+        this.runQuerySubscription.unsubscribe();
+        this.runQuerySubscription = null;
+
+        this.entriesStore.dispose();
+    }
+
     private reload()
     {
         this.entriesStore.reload();
     }
 
-    private updateFreetextComponent()
+    private syncFreetextComponents()
     {
         const freetextFilter = this.entriesStore.getFirstFilterByType(FreetextFilter);
 
