@@ -1,47 +1,39 @@
 <div class="kEntries grid-noGutter kUseKMCngIcons">
 
-    <div class="accordionHolder" style="display: none">
-
-        <!--<kFiltersAccordion style="width: 300px" (categoriesChanged)="categoriesChanged($event)" (metadataProfileFilterChanged)="metadataProfileFilterChanged($event)"></kFiltersAccordion>-->
-        <kFilters (refineFiltersChanged)="refineFiltersChanged($event)"
-                  (categoriesChanged)="categoriesChanged($event)"></kFilters>
-
-    </div>
     <div #entriesTableHolder class="kEntriesHolder kContent grid-column-noGutter">
         <div class="kEntriesTableFilters grid col-12">
-                <span *ngIf="(contentEntriesStore.entries$ | async)?.totalCount">{{(contentEntriesStore.entries$ | async)?.totalCount}} Entries</span>
-            <button (click)="addTag()">Add Tag</button>
-                <div [style.visibility]="selectedEntries.length ? 'visible' : 'hidden'" class="kBulkOperations">
-                    <span class="kSelectedEntriesLabel">• {{selectedEntries.length}} Selected</span>
-                    <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"></button>
-                    <button class="kButtonDefault small" [disabled]="!selectedEntries.length" pButton label="Bulk Actions" (click)="menu.toggle($event)"></button>
-                    <a class="kBulkCancel" (click)="clearSelection()">Cancel</a>
-                </div>
-                <div [style.visibility]="selectedEntries.length ? 'hidden' : 'visible'" class="kFilters">
-                    <form [formGroup]="searchForm">
-                        <input type="text" pInputText formControlName="searchText" class="kSearchInput"
-                               (onenter)="freetextValue = $event.target.value" (keyup.enter)="onFreetextChanged()"
-                               placeholder="Search Entries">
-                    </form>
-                    <div #categoriesFilterBtn class="kCategoriesFilter"><i class="kIconfolder"></i><span>Filter Categories</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
-                    <div #refineBtn class="kRefine"><i class="kIconfilter"></i><span>Refine</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
-                </div>
-                <button pButton class="kButtonDefault kRefreshBtn small" type="text" (click)="reload()" icon="kIconrefresh" title="Refresh"></button>
+            <span *ngIf="(entriesStore.entries$ | async)?.totalCount">{{(entriesStore.entries$ | async)?.totalCount}} Entries</span>
+
+            <div [style.visibility]="selectedEntries.length ? 'visible' : 'hidden'" class="kBulkOperations">
+                <span class="kSelectedEntriesLabel">• {{selectedEntries.length}} Selected</span>
+                <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"></button>
+                <button class="kButtonDefault small" [disabled]="!selectedEntries.length" pButton label="Bulk Actions" (click)="menu.toggle($event)"></button>
+                <a class="kBulkCancel" (click)="clearSelection()">Cancel</a>
+            </div>
+            <div [style.visibility]="selectedEntries.length ? 'hidden' : 'visible'" class="kFilters">
+                    <input type="text" pInputText class="kSearchInput"
+                           [(ngModel)]="filter.freetextSearch"
+                           (keyup.enter)="onFreetextChanged()"
+                           placeholder="Search Entries">
+                <div #categoriesFilterBtn class="kCategoriesFilter"><i class="kIconfolder"></i><span>Filter Categories</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
+                <div #refineBtn class="kRefine"><i class="kIconfilter"></i><span>Refine</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
+            </div>
+            <button pButton class="kButtonDefault kRefreshBtn small" type="text" (click)="reload()" icon="kIconrefresh" title="Refresh"></button>
         </div>
 
-        <kTags [title]="'Active Filters:'" [data]="tags" [labelField]="'label'"  [tooltipField]="'tooltip'" (onTagRemove)="removeTag($event)" (onRemoveAll)="removeAllTags()"></kTags>
+        <kTags [title]="'Active Filters:'" [data]="(this.entriesStore.runQuery$ | async)?.filters" [labelField]="'label'"  [tooltipField]="'tooltip'" (onTagRemove)="removeTag($event)" (onRemoveAll)="removeAllTags()"></kTags>
 
         <kEntriesTable class="kEntriesTable grid-column-noGutter col"
-                       [entries]="(contentEntriesStore.entries$ | async)?.items" [filter]="filter"
-                       [(selectedEntries)]="selectedEntries" [loading]="(contentEntriesStore.status$ | async)?.loading" (sortChanged)="onSortChanged($event)"
+                       [entries]="(entriesStore.entries$ | async)?.items" [filter]="filter"
+                       [(selectedEntries)]="selectedEntries" [loading]="(entriesStore.status$ | async)?.loading" (sortChanged)="onSortChanged($event)"
                        (actionSelected)="onActionSelected($event)"></kEntriesTable>
 
         <div class="kEntriesTableFooter col-12" #footer>
 
             <p-paginator [rows]="filter.pageSize" (onPageChange)="onPaginationChanged($event)"
                          [first]="filter.pageIndex * filter.pageSize"
-                         [totalRecords]="(contentEntriesStore.entries$ | async)?.totalCount"
-                         [rowsPerPageOptions]="[25,50,100,250,500]"></p-paginator>
+                         [totalRecords]="(entriesStore.entries$ | async)?.totalCount"
+                         [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
             <span class="kPaginatorShowRowsLabel">Show rows:</span>
         </div>
     </div>
@@ -49,10 +41,10 @@
 </div>
 
 <!-- popup widgets section -->
-<kPopupWidget #categoriesFilterPopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="categoriesFilterBtn" [targetOffset]="{'x':-20, 'y': -20}">
+<kPopupWidget #categoriesFilterPopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="categoriesFilterBtn" [targetOffset]="{'x':-20, 'y': -21}">
     <kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup" (categoriesChanged)="categoriesChanged($event)"></kCategoriesFilter>
 </kPopupWidget>
 
-<kPopupWidget #refinePopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="true" [targetRef]="refineBtn" [targetOffset]="{'x':-220, 'y': -20}">
-    Refine content
+<kPopupWidget #refinePopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="refineBtn" [targetOffset]="{'x':-220, 'y': -22}">
+    <kEntriesAdditionalFilter></kEntriesAdditionalFilter>
 </kPopupWidget>

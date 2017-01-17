@@ -42,6 +42,7 @@
 }
 .kTreeContainer{
     overflow-y: auto;
+    overflow-x: hidden;
     height: 340px;
     border-bottom: 1px solid $kGrayscale6;
     margin-left: -20px;
@@ -52,7 +53,7 @@
 a.disabled{
     pointer-events: none;
     cursor: not-allowed;
-    color: #cacaca;
+    color: $kGrayscale5;
     border: none;
 }
 .kTreeConfig{

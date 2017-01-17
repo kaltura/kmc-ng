@@ -29,7 +29,7 @@ export class Category {
 }
 
 @Injectable()
-export class ContentCategoriesStore
+export class CategoriesStore
 {
     // TODO [KMC] - clear cached data on logout
 

@@ -304,3 +304,22 @@
 .ui-chkbox-box.ui-state-active, .ui-radiobutton-box.ui-state-active{
     background-color: $kPrimary;
 }
+ /* Calendar */
+.ui-calendar{
+    .ui-datepicker-header{
+        background: #01ACCD;
+    }
+    .ui-inputtext {
+        width: 75px;
+    }
+    button{
+        @extend .ui-button.kButtonDefault;
+    }
+    .ui-datepicker-prev, .ui-datepicker-next{
+        color: #ffffff;
+    }
+    .ui-datepicker-prev-hover, .ui-datepicker-next-hover{
+        background: #01ACCD;
+        border: 0px solid #01ACCD;
+    }
+}

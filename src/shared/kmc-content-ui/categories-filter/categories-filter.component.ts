@@ -5,7 +5,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui
 import { Subscription} from 'rxjs/Subscription';
 import * as R from 'ramda';
 
-import { ContentCategoriesStore, Category } from 'kmc-content-ui/providers/content-categories-store.service';
+import { CategoriesStore, Category } from '../categories-store.service';
 import {BrowserService} from "../../kmc-shell/providers/browser.service";
 
 @Component({
@@ -36,11 +36,11 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     @Input() parentPopupWidget: PopupWidgetComponent;
 
-    constructor(public filtersRef: ElementRef, public contentCategoriesStore: ContentCategoriesStore, public browserService: BrowserService) {
+    constructor(public filtersRef: ElementRef, public categoriesStore: CategoriesStore, public browserService: BrowserService) {
     }
 
     ngOnInit() {
-        this.categoriesSubscribe = this.contentCategoriesStore.categories$.subscribe(
+        this.categoriesSubscribe = this.categoriesStore.categories$.subscribe(
             (categoriesRoot: any) => {
                 this.categories = categoriesRoot.items ? categoriesRoot.items : [];
                 this.categoriesMap = categoriesRoot.map ? categoriesRoot.map : {};
@@ -72,7 +72,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     reloadCategories(parentNodeId: number){
         this.loading = true;
-        this.contentCategoriesStore.reloadCategories(false, parentNodeId).subscribe(
+        this.categoriesStore.reloadCategories(false, parentNodeId).subscribe(
             () => {
                 this.loading = false;
             },

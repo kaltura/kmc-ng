@@ -43,8 +43,8 @@ function stripTrailing(str, char) {
  * Given a string remove trailing slashes and adds 1 slash at the end of the string.
  *
  * Example:
- * safeUrl('/value/')
- * // 'value/'
+ * safeUrl('/id/')
+ * // 'id/'
  *
  * @param url
  * @returns {string}

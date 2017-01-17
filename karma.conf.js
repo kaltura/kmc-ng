@@ -51,8 +51,8 @@ module.exports = function (config) {
         html: 'coverage/html',
         'text': null
       },
-      timeoutNotCreated: 1000, // default value
-      timeoutNoMoreFiles: 1000 // default value
+      timeoutNotCreated: 1000, // default id
+      timeoutNoMoreFiles: 1000 // default id
     },
 
     webpackServer: {
