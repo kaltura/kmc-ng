@@ -5,47 +5,47 @@ import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
 import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 import { TagsModule } from '@kaltura-ng2/kaltura-ui/tags';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
-import { TieredMenuModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, ButtonModule, AccordionModule, CalendarModule,  MultiSelectModule, PaginatorModule, MenuModule} from 'primeng/primeng';
+import { TreeModule, TieredMenuModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, ButtonModule, AccordionModule, CalendarModule,  MultiSelectModule, PaginatorModule, MenuModule} from 'primeng/primeng';
+
+
 
 
 import { routing} from './content-entries-app.routes';
 import { EntriesComponent } from './components/entries.component';
-import { FiltersAccordionComponent } from './components/filters.accordion.component';
 import { KMCShellModule } from 'kmc-shell';
-import { KMCContentUIModule } from 'kmc-content-ui';
-import {SortDirectionPipe} from "./pipes/sort-direction.pipe";
-import {FiltersComponent} from "./components/filters.component";
 import {kEntriesTable} from './components/entries-table.component';
+import {KMCContentUIModule} from "../../shared/kmc-content-ui/kmc-content-ui.module";
 
 @NgModule({
   imports:      [
-    TieredMenuModule,
-    MenuModule,
-    CheckboxModule,
-    CommonModule,
-    FormsModule,
-    CalendarModule,
-    routing,
-    ReactiveFormsModule,
-    KMCShellModule,
-    DataTableModule,
-    SharedModule,
-    InputTextModule,
-    ButtonModule,
-    AccordionModule,
-    KMCContentUIModule,
-    PaginatorModule,
-    MultiSelectModule,
-    KalturaUIModule,
-    PopupWidgetModule,
-    TagsModule,
-    KalturaPrimeNgUIModule],
+      AccordionModule,
+      ButtonModule,
+      CalendarModule,
+      CheckboxModule,
+      CommonModule,
+      DataTableModule,
+      FormsModule,
+      InputTextModule,
+      KalturaPrimeNgUIModule,
+      KalturaUIModule,
+      KMCContentUIModule,
+      KMCShellModule,
+      MenuModule,
+      MultiSelectModule,
+      PaginatorModule,
+      PopupWidgetModule,
+      ReactiveFormsModule,
+      routing,
+      SharedModule,
+      TieredMenuModule,
+      TreeModule,
+      TagsModule
+    ],
   declarations: [
     EntriesComponent,
-    FiltersComponent,
-    SortDirectionPipe,
-    FiltersAccordionComponent,
-    kEntriesTable],
-  providers:    []
+    kEntriesTable
+  ],
+  providers:    [
+  ]
 })
 export class ContentEntriesAppModule { }
