@@ -1,9 +1,5 @@
 <div class="kEntries grid-noGutter kUseKMCngIcons">
 
-    <div class="accordionHolder" style="display: block; height: 700px; overflow-y: auto">
-        <kEntriesAdditionalFilter></kEntriesAdditionalFilter>
-    </div>
-
     <div #entriesTableHolder class="kEntriesHolder kContent grid-column-noGutter">
         <div class="kEntriesTableFilters grid col-12">
             <span *ngIf="(entriesStore.entries$ | async)?.totalCount">{{(entriesStore.entries$ | async)?.totalCount}} Entries</span>
@@ -45,10 +41,10 @@
 </div>
 
 <!-- popup widgets section -->
-<kPopupWidget #categoriesFilterPopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="categoriesFilterBtn" [targetOffset]="{'x':-20, 'y': -20}">
+<kPopupWidget #categoriesFilterPopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="categoriesFilterBtn" [targetOffset]="{'x':-20, 'y': -21}">
     <kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup" (categoriesChanged)="categoriesChanged($event)"></kCategoriesFilter>
 </kPopupWidget>
 
-<kPopupWidget #refinePopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="true" [targetRef]="refineBtn" [targetOffset]="{'x':-220, 'y': -20}">
-    Refine content
+<kPopupWidget #refinePopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="refineBtn" [targetOffset]="{'x':-220, 'y': -22}">
+    <kEntriesAdditionalFilter></kEntriesAdditionalFilter>
 </kPopupWidget>

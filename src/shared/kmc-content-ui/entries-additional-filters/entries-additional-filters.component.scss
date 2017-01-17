@@ -1,5 +1,49 @@
 @import "../../../styles/scss/variables";
 
+.kHeader{
+    padding-top: 8px;
+    .kTitle{
+        line-height: 28px;
+        background-color: $kGrayscale6;
+        border: 0px solid $kGrayscale6;
+        border-radius: 3px;
+        text-align: center;
+        color: $kGrayscale3;
+    }
+}
+.kFiltersGroupTitle{
+    color: $kGrayscale3;
+    line-height: 40px;
+    letter-spacing: 0.1em;
+    font-size: 13px;
+    border-top: 1px solid $kGrayscale6;
+    border-bottom: 1px solid $kGrayscale6;
+    margin-left: -20px;
+    padding-left: 20px;
+    margin-right: -20px;
+    margin-top: 18px;
+    margin-bottom: 8px;
+}
+.kTreeContainer{
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 400px;
+    border-bottom: 1px solid $kGrayscale6;
+    margin-left: -20px;
+    padding-left: 20px;
+    margin-right: -20px;
+    width: 387px;
+}
+.kClearAll{
+    margin-left: 44px;
+}
+.kClose{
+    float: right;
+}
+.kCalendarSeparator{
+    margin-left: 40px;
+    margin-right: 5px;
+}
 .kTreeNodeLabel{
     width:100%;
     font-size: 14px;

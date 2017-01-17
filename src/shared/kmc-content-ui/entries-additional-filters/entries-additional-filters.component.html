@@ -1,37 +1,39 @@
-<div style="padding-top: 20px">
-    <p style="padding-left: 20px">ADDITIONAL FILTERS</p>
-    <div style="padding-left: 20px">
+<div class="kUseKMCngIcons kRefineFilters">
+    <div class="kHeader">
+        <div class="kTitle">Refine Search</div>
+    </div>
+    <div #refine class="kTreeContainer" style="position:relative">
+        <div class="kFiltersGroupTitle">
+            <span>ADDITIONAL FILTERS</span>
+        </div>
         <p>Created Between</p>
-        <p-calendar [(ngModel)]="createdAfter" [readonlyInput]="true" [appendTo]="'body'" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="updateCreatedAfterFilterFromComponent($event)"></p-calendar>
-        <span style="margin-left: 40px; margin-right: 5px">-</span>
-        <p-calendar [(ngModel)]="createdBefore" [readonlyInput]="true" [appendTo]="'body'" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="updateCreatedBeforeFilterFromComponent($event)"></p-calendar>
-    </div>
-    <p style="padding-left: 20px">
-        <a class="clearAll" (click)="clearCreatedFilters()">Clear Dates</a>
-    </p>
+        <p-calendar [(ngModel)]="createdAfter" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="updateCreatedAfterFilterFromComponent($event)"></p-calendar>
+        <span class="kCalendarSeparator">-</span>
+        <p-calendar [(ngModel)]="createdBefore" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="updateCreatedBeforeFilterFromComponent($event)"></p-calendar>
+        <a class="kClearAll" (click)="clearCreatedFilters()">Clear Dates</a>
 
-
-    <div *ngFor="let primeGroup of primeGroups">
-        <p *ngIf="primeGroup.groupName" style="padding-left: 20px">{{primeGroup.groupName | uppercase}}</p>
-        <p-tree [value]="primeGroup.items" selectionMode="checkbox" [selection]="selectedNodes"  (onNodeSelect)="updateFiltersFromTreeSelection()" (onNodeUnselect)="updateFiltersFromTreeSelection()" >
-            <template let-node  pTemplate type="default">
-                <span  class="kTreeNodeLabel">{{node.label}} <span *ngIf="node.childrenCount">({{ node.childrenCount}})</span></span>
-                <div *ngIf="node.data==='scheduled'" (click)="blockScheduleToggle($event)">
-                    <div>
-                        <p-calendar #scheduledfrom [(ngModel)]="scheduledAfter" [disabled]="!scheduledSelected" [appendTo]="'body'" [monthNavigator]="true" [yearNavigator]="true"  yearRange="2005:2030"[readonlyInput]="true" (onSelect)="updateScheduledFilterFromComponents($event)"></p-calendar>
-                        <p-calendar #scheduledto [(ngModel)]="scheduledBefore" [disabled]="!scheduledSelected" [appendTo]="'body'" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" [readonlyInput]="true" (onSelect)="updateScheduledFilterFromComponents($event)"></p-calendar>
+        <div *ngFor="let primeGroup of primeGroups">
+            <div *ngIf="primeGroup.groupName" class="kFiltersGroupTitle">
+                <span>{{primeGroup.groupName | uppercase}}</span>
+            </div>
+            <p-tree [value]="primeGroup.items" selectionMode="checkbox" [selection]="selectedNodes"  (onNodeSelect)="updateFiltersFromTreeSelection()" (onNodeUnselect)="updateFiltersFromTreeSelection()" >
+                <template let-node  pTemplate type="default">
+                    <span  class="kTreeNodeLabel">{{node.label}} <span *ngIf="node.childrenCount">({{ node.childrenCount}})</span></span>
+                    <div *ngIf="node.data==='scheduled'" (click)="blockScheduleToggle($event)">
+                        <div>
+                            <p-calendar #scheduledfrom [(ngModel)]="scheduledAfter" [showIcon]="true" icon="kIconcalendar" [disabled]="!scheduledSelected" [monthNavigator]="true" [yearNavigator]="true"  yearRange="2005:2030"[readonlyInput]="true" (onSelect)="updateScheduledFilterFromComponents(scheduledfrom)"></p-calendar>
+                            <span class="kCalendarSeparator">-</span>
+                            <p-calendar #scheduledto [(ngModel)]="scheduledBefore" [showIcon]="true" icon="kIconcalendar" [disabled]="!scheduledSelected" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" [readonlyInput]="true" (onSelect)="updateScheduledFilterFromComponents(scheduledto)"></p-calendar>
+                        </div>
                     </div>
-                </div>
-            </template>
-        </p-tree>
+                </template>
+            </p-tree>
+        </div>
     </div>
 
-
-
-
-
-    <p style="padding-left: 20px">
+    <p>
         <a class="clearAll" [class.disabled]="selectedNodes.length === 0" (click)="clearAllTreeFilters()">Clear all</a>
+        <a class="kClose" (click)="close()">Close</a>
     </p>
 </div>
 
