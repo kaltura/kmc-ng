@@ -1,9 +1,11 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Output, IterableDiffer, IterableDiffers} from '@angular/core';
-import { Subscription} from 'rxjs';
+import { Component, OnInit, OnDestroy, AfterViewInit, Input, IterableDiffer, IterableDiffers, ElementRef} from '@angular/core';
+import { Subscription} from 'rxjs/Subscription';
 import {PrimeTreeNode, TreeDataHandler} from '@kaltura-ng2/kaltura-primeng-ui';
 import {EntriesStore} from "../entries-store/entries-store.service";
 import {FilterItem} from "../entries-store/filter-item";
 import {MediaTypesFilter} from "../entries-store/filters/media-types-filter";
+
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
 import * as R from 'ramda';
 import {FlavorsFilter} from "../entries-store/filters/flavors-filter";
@@ -35,7 +37,7 @@ function toServerDate(value? : Date) : number
     templateUrl: './entries-additional-filters.component.html',
     styleUrls: ['./entries-additional-filters.component.scss']
 })
-export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
+export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit, OnDestroy{
     createdAfter: Date;
     createdBefore: Date;
     scheduledAfter: Date;
@@ -51,8 +53,11 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
 
     private treeSelectionsDiffer : IterableDiffer = null;
 
+    @Input() parentPopupWidget: PopupWidgetComponent;
+    parentPopupStateChangeSubscribe : Subscription;
+
     constructor(public additionalFiltersStore: EntriesAdditionalFiltersStore, private treeDataHandler : TreeDataHandler,
-                private entriesStore : EntriesStore, private differs: IterableDiffers) {
+                private entriesStore : EntriesStore, private differs: IterableDiffers, private elementRef: ElementRef) {
     }
 
     ngOnInit() {
@@ -113,6 +118,21 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
                 // TODO [KMC] - handle error
                 this.loading = false;
             });
+    }
+
+    ngAfterViewInit(){
+        if (this.parentPopupWidget){
+            this.parentPopupStateChangeSubscribe = this.parentPopupWidget.state$.subscribe(event => {
+                if (event === PopupWidgetStates.Open){
+                    const nativeElement: HTMLElement = this.elementRef.nativeElement;
+                    if (nativeElement && nativeElement.getElementsByClassName("kTreeContainer").length > 0){
+                        setTimeout(()=>{
+                            nativeElement.getElementsByClassName("kTreeContainer")[0].scrollTop = 0;
+                        },0);
+                    }
+                }
+            });
+        }
     }
 
     ngOnDestroy(){
@@ -460,5 +480,11 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
 
     private blockScheduleToggle(event){
         event.stopPropagation();
+    }
+
+    private close(){
+        if (this.parentPopupWidget){
+            this.parentPopupWidget.close();
+        }
     }
 }

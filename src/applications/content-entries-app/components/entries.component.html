@@ -46,5 +46,5 @@
 </kPopupWidget>
 
 <kPopupWidget #refinePopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="refineBtn" [targetOffset]="{'x':-220, 'y': -22}">
-    <kEntriesAdditionalFilter></kEntriesAdditionalFilter>
+    <kEntriesAdditionalFilter [parentPopupWidget]="refinePopup" ></kEntriesAdditionalFilter>
 </kPopupWidget>
