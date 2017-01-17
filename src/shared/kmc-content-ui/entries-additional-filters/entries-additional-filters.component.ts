@@ -123,12 +123,10 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     ngAfterViewInit(){
         if (this.parentPopupWidget){
             this.parentPopupStateChangeSubscribe = this.parentPopupWidget.state$.subscribe(event => {
-                if (event === PopupWidgetStates.Open){
+                if (event === PopupWidgetStates.Close){
                     const nativeElement: HTMLElement = this.elementRef.nativeElement;
                     if (nativeElement && nativeElement.getElementsByClassName("kTreeContainer").length > 0){
-                        setTimeout(()=>{
-                            nativeElement.getElementsByClassName("kTreeContainer")[0].scrollTop = 0;
-                        },0);
+                        nativeElement.getElementsByClassName("kTreeContainer")[0].scrollTop = 0;
                     }
                 }
             });
