@@ -1,28 +1,3 @@
-import {
-    KalturaMediaEntryFilter,
-    KalturaSearchOperator
-} from '@kaltura-ng2/kaltura-api/types'
-
-
-export type UpdateArgs = {
-    categories? : number[];
-    createdAtFrom? : Date;
-    createdAtTo? : Date;
-    distributionProfiles? : number[];
-
-
-    searchText? : string;
-
-    statuses? : number[];
-};
-
-
-export interface FilterRequestContext
-{
-    filter : KalturaMediaEntryFilter,
-    advancedSearch : KalturaSearchOperator
-}
-
 export abstract class FilterItem
 {
 
@@ -38,12 +13,9 @@ export abstract class FilterItem
         return this._tooltip;
     }
 
-    constructor(label : string, tooltip : string = label)
-    {
+    constructor(label : string, tooltip : string = label) {
         this._label = label;
         this._tooltip = tooltip;
 
     }
-
-     abstract _buildRequest(request : FilterRequestContext) : void;
 }

@@ -1,5 +1,6 @@
+import * as R from 'ramda';
 
-import {FilterRequestContext} from "../filter-item";
+import {EntriesStore} from "../entries-store.service";
 import {ValueFilter} from '../value-filter';
 
 export class FlavorsFilter  extends ValueFilter<string>{
@@ -8,14 +9,13 @@ export class FlavorsFilter  extends ValueFilter<string>{
     {
         super(value, label);
     }
-
-    _buildRequest(request : FilterRequestContext) : void {
-        if (typeof request.filter.flavorParamsIdsMatchOr !== 'undefined')
-        {
-            request.filter.flavorParamsIdsMatchOr += `,${this.value}`;
-        }else
-        {
-            request.filter.flavorParamsIdsMatchOr = this.value;
-        }
-    }
 }
+
+EntriesStore.registerFilterType(FlavorsFilter, (items, request) =>
+{
+    request.filter.flavorParamsIdsMatchOr = R.reduce((acc : string, item : ValueFilter<string>) =>
+    {
+        return `${acc}${acc ? ',' : ''}${item.value}`;
+    },'',items);
+});
+

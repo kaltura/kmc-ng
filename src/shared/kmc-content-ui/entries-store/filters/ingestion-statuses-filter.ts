@@ -1,4 +1,6 @@
-import {FilterRequestContext} from "../filter-item";
+import * as R from 'ramda';
+
+import {EntriesStore} from "../entries-store.service";
 import {ValueFilter} from '../value-filter';
 
 export class IngestionStatusesFilter  extends ValueFilter<string>{
@@ -7,14 +9,12 @@ export class IngestionStatusesFilter  extends ValueFilter<string>{
     {
         super(value, label);
     }
-
-    _buildRequest(request : FilterRequestContext) : void {
-        if (typeof request.filter.statusIn !== 'undefined')
-        {
-            request.filter.statusIn += `,${this.value}`;
-        }else
-        {
-            request.filter.statusIn = this.value;
-        }
-    }
 }
+
+EntriesStore.registerFilterType(IngestionStatusesFilter, (items, request) =>
+{
+    request.filter.statusIn = R.reduce((acc : string, item : ValueFilter<string>) =>
+    {
+        return `${acc}${acc ? ',' : ''}${item.value}`;
+    },'',items);
+});

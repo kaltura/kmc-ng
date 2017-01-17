@@ -1,4 +1,6 @@
-import {FilterRequestContext} from "../filter-item";
+import * as R from 'ramda';
+
+import {EntriesStore} from "../entries-store.service";
 import {ValueFilter} from '../value-filter';
 
 export class ReplacementStatusesFilter  extends ValueFilter<string>{
@@ -7,15 +9,12 @@ export class ReplacementStatusesFilter  extends ValueFilter<string>{
     {
         super(value, label);
     }
-
-    _buildRequest(request : FilterRequestContext) : void {
-
-        if (typeof request.filter.replacementStatusIn !== 'undefined')
-        {
-            request.filter.replacementStatusIn += `,${this.value}`;
-        }else
-        {
-            request.filter.replacementStatusIn = this.value;
-        }
-    }
 }
+
+EntriesStore.registerFilterType(ReplacementStatusesFilter, (items, request) =>
+{
+    request.filter.replacementStatusIn = R.reduce((acc : string, item : ValueFilter<string>) =>
+    {
+        return `${acc}${acc ? ',' : ''}${item.value}`;
+    },'',items);
+});

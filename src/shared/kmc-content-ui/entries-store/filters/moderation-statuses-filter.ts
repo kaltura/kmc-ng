@@ -1,4 +1,6 @@
-import {FilterRequestContext} from "../filter-item";
+import * as R from 'ramda';
+
+import {EntriesStore} from "../entries-store.service";
 import {ValueFilter} from '../value-filter';
 
 export class ModerationStatusesFilter  extends ValueFilter<string>{
@@ -7,15 +9,12 @@ export class ModerationStatusesFilter  extends ValueFilter<string>{
     {
         super(value, label);
     }
-
-    _buildRequest(request : FilterRequestContext) : void {
-
-        if (typeof request.filter.moderationStatusIn !== 'undefined')
-        {
-            request.filter.moderationStatusIn += `,${this.value}`;
-        }else
-        {
-            request.filter.moderationStatusIn = this.value;
-        }
-    }
 }
+
+EntriesStore.registerFilterType(ModerationStatusesFilter, (items, request) =>
+{
+    request.filter.moderationStatusIn = R.reduce((acc : string, item : ValueFilter<string>) =>
+    {
+        return `${acc}${acc ? ',' : ''}${item.value}`;
+    },'',items);
+});
