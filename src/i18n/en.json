@@ -36,7 +36,46 @@
         },
         "content":{
             "entries":{
-
+                "entries": "Entries",
+                "selected": "Selected",
+                "bulkActions": "Bulk Actions",
+                "cancel": "Cancel",
+                "searchEntries": "Search Entries",
+                "filterCategories": "Filter Categories",
+                "refine": "Refine",
+                "refresh": "Refresh"
+            },
+            "filters":{
+                "activeFilters": "Active Filters:",
+                "clearAll": "Clear All",
+                "close": "Close",
+                "findCategory": "Find Category",
+                "allCategories": "All Categories",
+                "additionalFilters": "Additional Filters",
+                "refineSearch": "Refine Search",
+                "clearDates": "Clear Dates",
+                "createdBetween": "Created Between",
+                "preferences": {
+                    "preferences": "Preferences",
+                    "filterPreferences": "Filter Preferences",
+                    "selectedOnly": "Display entries associated with the selected category only.",
+                    "subSelected": "Display entries associated with the selected category and its sub-categories."
+                }
+            },
+            "table":{
+                "thumbnail": "Thumbnail",
+                "name": "Name",
+                "type": "Type",
+                "plays": "Plays",
+                "createdOn": "Created On",
+                "duration": "Duration",
+                "status": "Status",
+                "previewAndEmbed": "Preview & Embed",
+                "delete": "Delete",
+                "view": "View Details"
+            },
+            "paginator":{
+                "showRows": "Show rows:"
             }
         }
     }

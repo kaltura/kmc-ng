@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
 import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
+import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 
 import { TreeModule, SharedModule, AutoCompleteModule, RadioButtonModule, TooltipModule, CalendarModule } from 'primeng/primeng';
 
@@ -28,6 +29,7 @@ import {EntriesAdditionalFiltersStore} from "./entries-additional-filters/entrie
         FormsModule,
         CalendarModule,
         KalturaPrimeNgUIModule,
+        KalturaCommonModule,
         KMCShellModule,
         PopupWidgetModule,
         RadioButtonModule,

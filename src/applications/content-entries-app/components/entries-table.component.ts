@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit } from '@angular/core';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
+import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { Entry } from './entries.component';
 
 @Component({
@@ -29,7 +30,7 @@ export class kEntriesTable implements AfterViewInit{
   tableSelectedEntries: Entry[] = [];
 
 
-  constructor() {
+  constructor(private appLocalization: AppLocalization) {
     this.buildMenu();
 
   }
@@ -37,13 +38,13 @@ export class kEntriesTable implements AfterViewInit{
   buildMenu() : void
   {
     this.items = [
-      {label: 'Preview & Embed', command: (event) => {
+      {label: this.appLocalization.get("applications.content.table.previewAndEmbed"), command: (event) => {
         this.onActionSelected("preview", this.actionsMenuEntryId);
       }},
-      {label: 'Delete', command: (event) => {
+      {label: this.appLocalization.get("applications.content.table.delete"), command: (event) => {
         this.onActionSelected("delete", this.actionsMenuEntryId);
       }},
-      {label: 'View Details', command: (event) => {
+      {label: this.appLocalization.get("applications.content.table.view"), command: (event) => {
         this.onActionSelected("view", this.actionsMenuEntryId);
       }}
     ];
