@@ -184,7 +184,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         }
     }
 
-    private syncSchedulingFilters()
+    private syncSchedulingFilters() : boolean
     {
         if (this.scheduledBefore && this.scheduledAfter) {
             const isValid = this.scheduledAfter <= this.scheduledBefore;
@@ -195,7 +195,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
                 setTimeout(this.syncScheduledComponents.bind(this),0);
 
                 window.alert("'From Date' must be before 'To Date'");
-                return;
+                return false;
             }
         }
 
@@ -211,6 +211,8 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
                 new TimeSchedulingFilter(previousValue, previousLabel, this.scheduledBefore, this.scheduledAfter)
             );
         }
+
+        return true;
     }
 
     private syncCreatedFilters()
@@ -428,9 +430,14 @@ export class EntriesAdditionalFiltersComponent implements OnInit, OnDestroy{
         this.syncCreatedFilters();
     }
 
-    private onSchedulingChanged() : void
+    private onSchedulingChanged(calendarRef : any) : void
     {
-        this.syncSchedulingFilters();
+        if (this.syncSchedulingFilters())
+        {
+            if (calendarRef && calendarRef.overlayVisible){
+                calendarRef.overlayVisible = false;
+            }
+        }
     }
 
     private onTreeSelectionChanged() : void
