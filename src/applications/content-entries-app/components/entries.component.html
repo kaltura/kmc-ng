@@ -25,7 +25,7 @@
 
         <kEntriesTable class="kEntriesTable grid-column-noGutter col"
                        [entries]="(entriesStore.entries$ | async)?.items" [filter]="filter"
-                       [(selectedEntries)]="selectedEntries" [loading]="(entriesStore.status$ | async)?.loading" (sortChanged)="onSortChanged($event)"
+                       [(selectedEntries)]="selectedEntries" (sortChanged)="onSortChanged($event)"
                        (actionSelected)="onActionSelected($event)"></kEntriesTable>
 
         <div class="kEntriesTableFooter col-12" #footer>
@@ -42,9 +42,9 @@
 
 <!-- popup widgets section -->
 <kPopupWidget #categoriesFilterPopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="categoriesFilterBtn" [targetOffset]="{'x':-20, 'y': -21}">
-    <kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup" (categoriesChanged)="categoriesChanged($event)"></kCategoriesFilter>
+    <kCategoriesFilter #categoriesFilter [parentPopupWidget]="categoriesFilterPopup" (categoriesChanged)="categoriesChanged($event)"></kCategoriesFilter>
 </kPopupWidget>
 
 <kPopupWidget #refinePopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="refineBtn" [targetOffset]="{'x':-220, 'y': -22}">
-    <kEntriesAdditionalFilter [parentPopupWidget]="refinePopup" ></kEntriesAdditionalFilter>
+    <kEntriesAdditionalFilter #refine [parentPopupWidget]="refinePopup" ></kEntriesAdditionalFilter>
 </kPopupWidget>

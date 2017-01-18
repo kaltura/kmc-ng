@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit } from '@angular/core';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { Entry } from './entries.component';
+import {EntriesStore} from "kmc-content-ui/entries-store/entries-store.service";
 
 @Component({
   selector: 'kEntriesTable',
@@ -12,7 +13,6 @@ export class kEntriesTable implements AfterViewInit{
   @Input() entries: any[] = [];
   @Input() filter: any = {};
   @Input() selectedEntries: any[] = [];
-  @Input() loading: boolean =false;
 
   @Output()
   sortChanged = new EventEmitter<any>();
@@ -29,7 +29,7 @@ export class kEntriesTable implements AfterViewInit{
   tableSelectedEntries: Entry[] = [];
 
 
-  constructor() {
+  constructor(private entriesStore : EntriesStore) {
     this.buildMenu();
 
   }
