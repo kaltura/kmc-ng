@@ -21,6 +21,6 @@
         <a class="kClose" (click)="close()">Close</a>
     </p>
 </div>
-<kPopupWidget #categoriesPref [appendTo]="categoriesTree" [popupWidth]="360" [popupHeight]="220" [closeBtn]="true" [targetRef]="config" [targetOffset]="{'x':-310, 'y': -10}" [parentPopup]="parentPopupWidget">
+<kPopupWidget #categoriesPref [modal]="true" [popupWidth]="360" [popupHeight]="220" [closeBtn]="true" [targetRef]="config" [targetOffset]="{'x':-324, 'y': -24}" [parentPopup]="parentPopupWidget">
     <kCategoriesFilterPrefs [(showChildren)]="autoSelectChildren"></kCategoriesFilterPrefs>
 </kPopupWidget>
