@@ -105,10 +105,8 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             selectionChanges.forEachAddedItem((record) => {
                 const node : PrimeTreeNode = record.item;
                 const mode = this.autoSelectChildren ? CategoriesFilterModes.Hierarchy : CategoriesFilterModes.Exact;
-                var bb = this;
 
-
-                newFilters.push(new CategoriesFilter(<number>node.data,mode, node.label, node.payload));
+                newFilters.push(new CategoriesFilter(<number>node.data,mode, node.label,node.origin.fullName));
             });
 
             let categoriesFilters = this.entriesStore.getFiltersByType(CategoriesFilter);

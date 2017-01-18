@@ -11,7 +11,7 @@ import { KalturaCategoryFilter, KalturaCategory, KalturaDetachedResponseProfile,
 const allCategoriesFetchToken = 'all_categories';
 
 export interface Categories{
-    items : {parentId? : number, id : number, name : string, sortValue : number}[],
+    items : {parentId? : number, id : number, name : string, sortValue : number, fullName : string}[],
 }
 
 export type UpdateStatus = {
@@ -50,7 +50,7 @@ export class CategoriesStore {
 
             const responseProfile = new KalturaDetachedResponseProfile()
                 .setData(data => {
-                    data.fields = "id,name,parentId,partnerSortValue";
+                    data.fields = "id,name,parentId,partnerSortValue,fullName";
                     data.type = KalturaResponseProfileType.IncludeFields;
                 });
 
@@ -71,10 +71,12 @@ export class CategoriesStore {
 
                             result.result.objects.forEach((category : KalturaCategory) =>
                             {
-                               items.push({ id : category.id,
+                               items.push({
+                                   id : category.id,
                                    name : category.name,
                                    parentId : category.parentId !== 0 ? category.parentId : null,
-                                   sortValue : category.partnerSortValue
+                                   sortValue : category.partnerSortValue,
+                                   fullName : category.fullName
                                });
                             });
 

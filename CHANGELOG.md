@@ -7,7 +7,7 @@ When the user click on a calendar component, a visual calendar is shown which is
 
 The component is part of [PrimeNG suite](primefaces.org/primeng/). We use version 1.0.1 which doesn't handle a nested popup correctly. At the moment, the calendar is exceed the boundary of the 'Refine popup' and is shown partially. 
 
-We reported this bug in the [following issue]() and waiting for their response to better understand how to solve this issue. 
+We reported this bug in the [following issue](https://github.com/primefaces/primeng/issues/1833) and waiting for their response to better understand how to solve this issue. 
 
 
 ### Features

@@ -102,10 +102,9 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                                             data: filterItems,
                                             idProperty: 'id',
                                             nameProperty: 'name',
-                                            payload: filterType
-
+                                            payload: filterType,
                                         }
-                                    ))
+                                    ),null,null)
                             );
                         }
                     });
