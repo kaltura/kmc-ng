@@ -42,9 +42,9 @@
 
 <!-- popup widgets section -->
 <kPopupWidget #categoriesFilterPopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="categoriesFilterBtn" [targetOffset]="{'x':-20, 'y': -21}">
-    <kCategoriesFilter #categoriesFilter [parentPopupWidget]="categoriesFilterPopup" (categoriesChanged)="categoriesChanged($event)"></kCategoriesFilter>
+    <kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup" (categoriesChanged)="categoriesChanged($event)"></kCategoriesFilter>
 </kPopupWidget>
 
 <kPopupWidget #refinePopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="refineBtn" [targetOffset]="{'x':-220, 'y': -22}">
-    <kEntriesAdditionalFilter #refine [parentPopupWidget]="refinePopup" ></kEntriesAdditionalFilter>
+    <kEntriesAdditionalFilter [parentPopupWidget]="refinePopup" ></kEntriesAdditionalFilter>
 </kPopupWidget>
