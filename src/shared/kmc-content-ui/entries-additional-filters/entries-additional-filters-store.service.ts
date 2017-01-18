@@ -51,6 +51,7 @@ export interface FilterGroup
 export interface AdditionalFilters
 {
     groups : FilterGroup[];
+    metadataProfiles : number[];
 }
 
 
@@ -121,7 +122,7 @@ export class EntriesAdditionalFiltersStore {
 
                         } else {
 
-                            const filters : AdditionalFilters = {groups : []};
+                            const filters : AdditionalFilters = {groups : [], metadataProfiles : []};
 
                             const defaultFilterGroup = {groupName : '', filtersTypes : [], filtersByType : {}};
                             filters.groups.push(defaultFilterGroup);
@@ -177,6 +178,8 @@ export class EntriesAdditionalFiltersStore {
 
                                     if (metadataProfile)
                                     {
+                                        filters.metadataProfiles.push(metadataProfile.id);
+
                                         // get only fields that are list, searchable and has values
                                         const profileLists = R.filter(field =>
                                         {

@@ -7,6 +7,7 @@ import {EntriesStore, SortDirection} from 'kmc-content-ui/entries-store/entries-
 import {kEntriesTable} from "./entries-table.component";
 
 import {FreetextFilter} from "../../../shared/kmc-content-ui/entries-store/filters/freetext-filter";
+import {EntriesAdditionalFiltersStore} from "../../../shared/kmc-content-ui/entries-additional-filters/entries-additional-filters-store.service";
 
 export interface Entry {
     id: string;
@@ -30,6 +31,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
     @ViewChild(kEntriesTable) private dataTable: kEntriesTable;
 
     private runQuerySubscription : Subscription;
+    private additionalFiltersSubscription : Subscription;
     private selectedEntries: any[] = [];
     private bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
 
@@ -41,7 +43,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
         sortDirection : SortDirection.Asc
     };
 
-    constructor(private entriesStore : EntriesStore) {
+    constructor(private entriesStore : EntriesStore, private additionalFilters : EntriesAdditionalFiltersStore) {
     }
 
     removeTag(tag: any){
@@ -92,6 +94,15 @@ export class EntriesComponent implements OnInit, OnDestroy {
             }
         );
 
+        this.additionalFiltersSubscription = this.additionalFilters.additionalFilters$.subscribe(
+            data => {
+                if (data.metadataProfiles)
+                {
+                    this.entriesStore.updateQuery({ metadataProfiles : data.metadataProfiles});
+                }
+            }
+        );
+
         this.entriesStore.updateQuery({
             pageIndex : this.filter.pageIndex+1,
             pageSize : this.filter.pageSize,
@@ -104,6 +115,9 @@ export class EntriesComponent implements OnInit, OnDestroy {
     ngOnDestroy(){
         this.runQuerySubscription.unsubscribe();
         this.runQuerySubscription = null;
+
+        this.additionalFiltersSubscription.unsubscribe();
+        this.additionalFiltersSubscription = null;
 
         this.entriesStore.dispose();
     }

@@ -1,12 +1,17 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Output, ViewChild, Input, AfterViewInit, ElementRef} from '@angular/core';
-import { Tree, TreeNode } from 'primeng/primeng';
+import { Component, OnInit, OnDestroy, EventEmitter, Output, ViewChild, Input, IterableDiffer, IterableDiffers, AfterViewInit, ElementRef} from '@angular/core';
+import { Tree } from 'primeng/primeng';
+import {PrimeTreeNode, TreeDataHandler} from '@kaltura-ng2/kaltura-primeng-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
 import { Subscription} from 'rxjs/Subscription';
 import * as R from 'ramda';
 
-import { CategoriesStore, Category } from '../categories-store.service';
+import { CategoriesStore } from '../categories-store.service';
 import {BrowserService} from "../../kmc-shell/providers/browser.service";
+import {FilterItem} from "../entries-store/filter-item";
+import {ValueFilter} from "../entries-store/value-filter";
+import {EntriesStore} from "../entries-store/entries-store.service";
+import {CategoriesFilter, CategoriesFilterModes} from "../entries-store/filters/categories-filter";
 
 @Component({
     selector: 'kCategoriesFilter',
@@ -15,49 +20,62 @@ import {BrowserService} from "../../kmc-shell/providers/browser.service";
 })
 export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestroy{
 
-    loading = false;
-    categories: any;
-    categoriesSubscribe : Subscription;
-    parentPopupStateChangeSubscribe : Subscription;
-    selectedCategories: Category[] = [];
-    categoriesMap: any = {};
-
-    searchCategories = [];
-    filteredSearchCategories = [];
-    currentSearch: any;
-
-    autoSelectChildren:string = 'false';
-    lazyLoading: boolean = false;
-
-    @Output()
-    categoriesChanged = new EventEmitter<any>();
-
-    @ViewChild(Tree) categoriesTree: Tree;
+    private categories: PrimeTreeNode[] = [];
+    private categoriesSubscription : Subscription;
+    private filterUpdateSubscription : Subscription;
+    private parentPopupStateChangeSubscription : Subscription;
+    private selectedNodes: PrimeTreeNode[] = [];
+    private autoSelectChildren:boolean = false;
+    private treeSelectionsDiffer : IterableDiffer = null;
+    @ViewChild(Tree)
+    private categoriesTree: Tree;
 
     @Input() parentPopupWidget: PopupWidgetComponent;
 
-    constructor(public filtersRef: ElementRef, public categoriesStore: CategoriesStore, public browserService: BrowserService) {
+    constructor(public filtersRef: ElementRef, public categoriesStore: CategoriesStore, public browserService: BrowserService,
+                private entriesStore : EntriesStore, private treeDataHandler : TreeDataHandler, private differs: IterableDiffers) {
     }
 
     ngOnInit() {
-        this.categoriesSubscribe = this.categoriesStore.categories$.subscribe(
-            (categoriesRoot: any) => {
-                this.categories = categoriesRoot.items ? categoriesRoot.items : [];
-                this.categoriesMap = categoriesRoot.map ? categoriesRoot.map : {};
-                this.createSearchCategories();
+        // manage differences of selections
+        this.treeSelectionsDiffer = this.differs.find([]).create(null);
+
+        // update components when the active filter list is updated
+        this.filterUpdateSubscription = this.entriesStore.runQuery$.subscribe(
+            filter => {
+                if (filter.removedFilters && filter.removedFilters.length > 0) {
+                    // only removedFilters items should be handled (because relevant addedFilters filters are originated from this component)
+                    this.syncTreeComponents(filter.removedFilters);
+                }
+            }
+        );
+
+        this.categoriesSubscription = this.categoriesStore.categories$.subscribe(
+            (result) => {
+                this.categories = this.treeDataHandler.create(
+                    {
+                        data: result.items,
+                        idProperty: 'id',
+                        nameProperty: 'name',
+                        parentIdProperty : 'parentId',
+                        sortByType : 'number',
+                        sortByProperty : 'sortValue'
+                    }
+                );
             },
             (error) => {
                 // TODO [KMC] - handle error
             });
-        this.reloadCategories(-1);
 
-        const savedAutoSelectChildren: any = this.browserService.getFromLocalStorage("categoriesTree.autoSelectChildren");
-        this.autoSelectChildren = savedAutoSelectChildren === null ? 'false' : savedAutoSelectChildren;
+        this.categoriesStore.getCategories();
+
+        const savedAutoSelectChildren: boolean = this.browserService.getFromLocalStorage("categoriesTree.autoSelectChildren");
+        this.autoSelectChildren = savedAutoSelectChildren === null ? false : savedAutoSelectChildren;
     }
 
     ngAfterViewInit(){
         if (this.parentPopupWidget){
-            this.parentPopupStateChangeSubscribe = this.parentPopupWidget.state$.subscribe(event => {
+            this.parentPopupStateChangeSubscription = this.parentPopupWidget.state$.subscribe(event => {
                 if (event === PopupWidgetStates.Open){
                     const inputFields: any[] = this.filtersRef.nativeElement.getElementsByTagName("input");
                     if (inputFields.length && inputFields[0].focus){
@@ -70,76 +88,93 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    reloadCategories(parentNodeId: number){
-        this.loading = true;
-        this.categoriesStore.reloadCategories(false, parentNodeId).subscribe(
-            () => {
-                this.loading = false;
-            },
-            (error) => {
-                // TODO [KMC] - handle error
-                this.loading = false;
+    private onTreeSelectionChanged() : void
+    {
+        this.syncTreeFilters();
+    }
+
+    private syncTreeFilters()
+    {
+        let newFilters : FilterItem[] = [];
+        let removedFilters : FilterItem[] = [];
+
+        const selectionChanges = this.treeSelectionsDiffer.diff(this.selectedNodes);
+
+        if (selectionChanges)
+        {
+            selectionChanges.forEachAddedItem((record) => {
+                const node : PrimeTreeNode = record.item;
+                const mode = this.autoSelectChildren ? CategoriesFilterModes.Hierarchy : CategoriesFilterModes.Exact;
+
+                newFilters.push(new CategoriesFilter(<number>node.data,mode, node.label,node.origin.fullName));
             });
-    }
 
-    // create a flat array for all categories to be used by auto-complete search field
-    createSearchCategories(){
-        this.searchCategories = [];
-        for (let id in this.categoriesMap){
-            let category: Category = this.categoriesMap[id];
-            let label = category.label;
-            while (category.parentId !== 0 && this.categoriesMap[category.parentId]){
-                category = this.categoriesMap[category.parentId];
-                label = category.label + " > "+ label;
+            let categoriesFilters = this.entriesStore.getFiltersByType(CategoriesFilter);
+
+            if (categoriesFilters) {
+                selectionChanges.forEachRemovedItem((record) => {
+                    const node : PrimeTreeNode = record.item;
+
+                    const filter = R.find(R.propEq('value', node.data), categoriesFilters);
+
+                    if (filter)
+                    {
+                        removedFilters.push(filter);
+                    }
+                });
             }
-            this.searchCategories.push({'label': label, 'id': id});
+
+        }
+
+        if (newFilters.length > 0) {
+            this.entriesStore.addFilters(...newFilters);
+        }
+
+        if (removedFilters.length > 0) {
+            this.entriesStore.removeFilters(...removedFilters);
         }
     }
 
-    categorySearch(event) {
-        let query = event.query;
-        this.filteredSearchCategories = [];
-        this.searchCategories.forEach((category: Category) => {
-            if(category.label.toLowerCase().indexOf(query.toLowerCase()) !== -1) {
-                this.filteredSearchCategories.push(category);
-            }
-        });
-    }
+    private syncTreeComponents(removedFilters : FilterItem[]) : void
+    {
+        // traverse on removed filters and update tree selection accordingly
+        if (removedFilters)
+        {
+            const nodesToRemove : PrimeTreeNode[] = [];
 
-    categorySelected(event){
-        this.categoriesTree.expandToNode(this.categoriesMap[event.id]);
+            removedFilters.forEach(filter =>
+            {
+                if (filter instanceof ValueFilter)
+                {
+                    let nodeToRemove = R.find(R.propEq('data',filter.value),this.selectedNodes);
 
-        if (R.findIndex(R.propEq('id', parseInt(event.id)))(this.selectedCategories) === -1){
-            if (this.autoSelectChildren === 'true'){
-                this.categoriesTree.propagateSelectionDown(this.categoriesMap[event.id], true);
-                if(this.categoriesMap[event.id].parent) {
-                    this.categoriesTree.propagateSelectionUp(this.categoriesMap[event.id].parent, true);
+                    if (nodeToRemove)
+                    {
+                        nodesToRemove.push(nodeToRemove);
+                    }
                 }
-            }else{
-                this.selectedCategories.push(this.categoriesMap[event.id]);
-            }
-            this.onCategorySelectionChange(null);
-        }
-        this.currentSearch = null;
-    }
+            });
 
-    onCategorySelectionChange(event){
-        let selectedCategories: any[] = [];
-        this.selectedCategories.forEach((category: Category) => {
-            selectedCategories.push(category.id);
-        });
-        this.categoriesChanged.emit(selectedCategories);
-    }
-
-    clearAll(){
-        this.selectedCategories = [];
-        // clear all partial selections
-        for (let key in this.categoriesMap){
-            if (this.categoriesMap[key] && this.categoriesMap[key]['partialSelected']) {
-                this.categoriesMap[key]['partialSelected'] = false;
+            if (nodesToRemove.length > 0)
+            {
+                this.selectedNodes = R.without(nodesToRemove,this.selectedNodes);
             }
         }
-        this.onCategorySelectionChange(null);
+    }
+
+    private onSelectionModeChanged(value)
+    {
+        this.autoSelectChildren = value;
+
+        this.browserService.setInLocalStorage("categoriesTree.autoSelectChildren", this.autoSelectChildren);
+
+        // clear current selection
+        this.selectedNodes = [];
+        this.syncTreeFilters();
+    }
+
+    private clearAll(){
+       // TODO
     }
 
     close(){
@@ -147,12 +182,15 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             this.parentPopupWidget.close();
         }
     }
+
     ngOnDestroy(){
-        if (this.parentPopupStateChangeSubscribe) {
-            this.parentPopupStateChangeSubscribe.unsubscribe();
+        if (this.parentPopupStateChangeSubscription) {
+            this.parentPopupStateChangeSubscription.unsubscribe();
+            this.parentPopupStateChangeSubscription = null;
         }
-        if (this.categoriesSubscribe) {
-            this.categoriesSubscribe.unsubscribe();
+        if (this.categoriesSubscription) {
+            this.categoriesSubscription.unsubscribe();
+            this.categoriesSubscription = null;
         }
     }
 

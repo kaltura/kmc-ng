@@ -9,12 +9,13 @@ import {Scheduler} from 'rxjs/rx';
 import {Subscription} from 'rxjs/Subscription';
 
 import {
-    KalturaSearchOperator,
-    KalturaMediaEntryFilter,
+    KalturaBaseEntryListResponse,
     KalturaDetachedResponseProfile,
     KalturaFilterPager,
-    KalturaBaseEntryListResponse,
-    KalturaResponseProfileType
+    KalturaMediaEntryFilter,
+    KalturaMetadataSearchItem,
+    KalturaResponseProfileType,
+    KalturaSearchOperator
 } from '@kaltura-ng2/kaltura-api/types'
 
 import { KalturaSearchOperatorType} from '@kaltura-ng2/kaltura-api/kaltura-enums'
@@ -41,7 +42,8 @@ export interface QueryData
     pageSize? : number,
     sortBy? : string,
     sortDirection? : SortDirection,
-    fields? : string;
+    fields? : string,
+    metadataProfiles? : number[]
 }
 
 export interface FilterRequestContext
@@ -261,10 +263,39 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
                 const handler = EntriesStore.filterTypeMapping[key];
                 const items = this._activeFiltersMap[key];
 
-                if (handler)
+                if (handler && items && items.length > 0)
                 {
                     handler(items, requestContext);
                 }
+            });
+        }
+
+        if (queryData.metadataProfiles && queryData.metadataProfiles.length > 0)
+        {
+            const missingMetadataProfiles = [ ...queryData.metadataProfiles]; // create a new array (don't alter the original one)
+
+            // find metadataprofiles that are not part of the request query
+            (advancedSearch.items || []).forEach(metadataProfileItem =>
+            {
+                if (metadataProfileItem instanceof KalturaMetadataSearchItem)
+                {
+                    const indexOfMetadata = missingMetadataProfiles.indexOf((<KalturaMetadataSearchItem>metadataProfileItem).metadataProfileId);
+                    if (indexOfMetadata >= 0)
+                    {
+                        missingMetadataProfiles.splice(indexOfMetadata,1);
+                    }
+                }
+
+            });
+
+            // add default values to the missing metadata profiles
+            missingMetadataProfiles.forEach((metadataProfileId : number) =>
+            {
+                const metadataItem : KalturaMetadataSearchItem = new KalturaMetadataSearchItem();
+                metadataItem.metadataProfileId = metadataProfileId;
+                metadataItem.type = KalturaSearchOperatorType.SearchAnd;
+                metadataItem.items = [];
+                advancedSearch.items.push(metadataItem);
             });
         }
 

@@ -1,14 +1,13 @@
 <div #categoriesTree class="kUseKMCngIcons">
     <div class="kHeader">
-        <p-autoComplete width="300px" [(ngModel)]="currentSearch" [suggestions]="filteredSearchCategories" (completeMethod)="categorySearch($event)" field="label" placeholder="Find Category" [minLength]="3" (onSelect)="categorySelected($event)"></p-autoComplete>
+        <p-autoComplete width="300px" [(ngModel)]="currentSearch"  field="label" placeholder="Find Category" [minLength]="3" ></p-autoComplete>
         <i #config class="kIcongear kTreeConfig" pTooltip="Preferences"></i>
         <div class="kAllCategories">
             <span>ALL CATEGORIES </span>
-            <span [hidden]="lazyLoading">{{searchCategories.length}}</span>
         </div>
     </div>
     <div class="kTreeContainer">
-        <p-tree [autoSelectChildren]="autoSelectChildren" [value]="categories" selectionMode="checkbox" [(selection)]="selectedCategories" (onNodeSelect)="onCategorySelectionChange($event)" (onNodeUnselect)="onCategorySelectionChange($event)">
+        <p-tree [kTreeHierarchySelection]="autoSelectChildren" [value]="categories" selectionMode="checkbox" [(selection)]="selectedNodes" (onNodeSelect)="onTreeSelectionChanged()" (onNodeUnselect)="onTreeSelectionChanged()">
         <template let-node  pTemplate type="default">
             <span class="kTreeNodeLabel">{{node.label}}</span>
             <span class="kTreeNodeNumChildren" *ngIf="node.children && node.children.length">{{node.children.length}}</span>
@@ -16,8 +15,8 @@
         </p-tree>
     </div>
 
-    <p >
-        <a [class.disabled]="selectedCategories.length === 0" (click)="clearAll()">Clear all</a>
+    <p>
+        <a [class.disabled]="selectedNodes?.length === 0" (click)="clearAll()">Clear all</a>
         <a class="kClose" (click)="close()">Close</a>
     </p>
 </div>
