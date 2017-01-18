@@ -41,7 +41,8 @@ export interface QueryData
     pageSize? : number,
     sortBy? : string,
     sortDirection? : SortDirection,
-    fields? : string;
+    fields? : string,
+    metadataProfiles? : number[]
 }
 
 export interface FilterRequestContext
@@ -261,7 +262,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
                 const handler = EntriesStore.filterTypeMapping[key];
                 const items = this._activeFiltersMap[key];
 
-                if (handler)
+                if (handler && items && items.length > 0)
                 {
                     handler(items, requestContext);
                 }

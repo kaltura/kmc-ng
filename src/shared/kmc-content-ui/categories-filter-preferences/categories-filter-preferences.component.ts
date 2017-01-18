@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter} from '@angular/core';
-import {BrowserService} from "../../kmc-shell/providers/browser.service";
 
 @Component({
     selector: 'kCategoriesFilterPrefs',
@@ -8,20 +7,22 @@ import {BrowserService} from "../../kmc-shell/providers/browser.service";
 })
 export class CategoriesFilterPrefsComponent{
 
-    @Input() showChildren: string;
-    @Output() showChildrenChange:EventEmitter<string> = new EventEmitter<string>();
+    @Input() showChildren: boolean;
+    @Output() showChildrenChange:EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    constructor(public browserService: BrowserService) {
+    constructor() {
     }
 
     prefChange(){
         // use timeout to allow data binding to update showChildren before emitting the change event and saving to local storage
         setTimeout(()=>{
-            this.showChildrenChange.emit(this.showChildren);
-            this.browserService.setInLocalStorage("categoriesTree.autoSelectChildren", this.showChildren);
-        },0)
-
+            if (this.showChildren)
+            {
+                window.alert("This feature is currently not supported");
+                this.showChildren = false;
+            }
+            //this.showChildrenChange.emit(this.showChildren);
+        },0);
     }
-
 }
 

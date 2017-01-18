@@ -2,6 +2,11 @@ import * as R from 'ramda';
 
 import {EntriesStore} from "../entries-store.service";
 import {ValueFilter} from '../value-filter';
+
+function toServerDate(value?: Date): number {
+    return value ? value.getTime() / 1000 : null;
+}
+
 export class TimeSchedulingFilter  extends ValueFilter<string>{
 
 
@@ -22,10 +27,6 @@ export class TimeSchedulingFilter  extends ValueFilter<string>{
         this._scheduledAfter = scheduledFrom;
         this._scheduledBefore = scheduledTo;
     }
-
-    private toServerDate(value?: Date): number {
-        return value ? value.getTime() / 1000 : null;
-    }
 }
 
 EntriesStore.registerFilterType(TimeSchedulingFilter, (items, request) =>
@@ -36,18 +37,18 @@ EntriesStore.registerFilterType(TimeSchedulingFilter, (items, request) =>
         switch (item.value)
         {
             case 'past':
-                request.filter.endDateLessThanOrEqual = this.toServerDate(new Date());
+                request.filter.endDateLessThanOrEqual = toServerDate(new Date());
                 break;
             case 'live':
-                request.filter.startDateLessThanOrEqualOrNull = this.toServerDate(new Date());
-                request.filter.endDateGreaterThanOrEqualOrNull = this.toServerDate(new Date());
+                request.filter.startDateLessThanOrEqualOrNull = toServerDate(new Date());
+                request.filter.endDateGreaterThanOrEqualOrNull = toServerDate(new Date());
                 break;
             case 'future':
-                request.filter.startDateGreaterThanOrEqual = this.toServerDate(new Date());
+                request.filter.startDateGreaterThanOrEqual = toServerDate(new Date());
                 break;
             case 'scheduled':
-                request.filter.startDateGreaterThanOrEqual = this.toServerDate(this.scheduledAfter);
-                request.filter.endDateLessThanOrEqual = this.toServerDate(this.scheduledBefore);
+                request.filter.startDateGreaterThanOrEqual = toServerDate(this.scheduledAfter);
+                request.filter.endDateLessThanOrEqual = toServerDate(this.scheduledBefore);
                 break;
             default:
                 break

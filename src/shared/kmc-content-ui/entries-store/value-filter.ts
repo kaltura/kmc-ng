@@ -9,9 +9,9 @@ export abstract class ValueFilter<T> extends FilterItem{
         return this._value;
     }
 
-    constructor(value : T, label : string)
+    constructor(value : T, label : string, tooltip : string = label)
     {
-        super(label);
+        super(label, tooltip);
         this._value = value;
     }
 }
