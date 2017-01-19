@@ -32,7 +32,7 @@ export class TimeSchedulingFilter  extends ValueFilter<string>{
 EntriesStore.registerFilterType(TimeSchedulingFilter, (items, request) =>
 {
 
-    items.forEach((item : ValueFilter<string>) =>
+    items.forEach((item : TimeSchedulingFilter) =>
     {
         switch (item.value)
         {
@@ -47,8 +47,14 @@ EntriesStore.registerFilterType(TimeSchedulingFilter, (items, request) =>
                 request.filter.startDateGreaterThanOrEqual = toServerDate(new Date());
                 break;
             case 'scheduled':
-                request.filter.startDateGreaterThanOrEqual = toServerDate(this.scheduledAfter);
-                request.filter.endDateLessThanOrEqual = toServerDate(this.scheduledBefore);
+                if (item.scheduledAfter) {
+                    request.filter.startDateGreaterThanOrEqual = toServerDate(item.scheduledAfter);
+                }
+
+                if (item.scheduledBefore) {
+                    request.filter.endDateLessThanOrEqual = toServerDate(item.scheduledBefore);
+                }
+
                 break;
             default:
                 break

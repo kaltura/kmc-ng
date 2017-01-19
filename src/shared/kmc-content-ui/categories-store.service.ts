@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/share';
 
 import {KalturaServerClient} from '@kaltura-ng2/kaltura-api';
@@ -21,7 +21,7 @@ export type UpdateStatus = {
 
 @Injectable()
 export class CategoriesStore {
-    private _fetchingQueue: {[key: string]: Subscription } = {};
+    private _fetchingQueue: {[key: string]: ISubscription } = {};
     private _status: BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({
         loading: false,
         errorMessage: null
