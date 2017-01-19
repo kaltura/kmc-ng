@@ -77,7 +77,37 @@
             "paginator":{
                 "showRows": "Show rows:"
             }
+            ,
+            "entryStatus":{
+                "errorImporting": "Error Importing",
+                "errorConverting": "Error Converting",
+                "scanFailure": "Scan Failure",
+                "import": "Import",
+                "infected": "Infected",
+                "preconvert": "Preconvert",
+                "ready": "Ready",
+                "deleted": "Deleted",
+                "pending": "Pending",
+                "moderate": "Moderate",
+                "blocked": "Blocked",
+                "noContent": "No Content"
+            },
+            "bulkActions":{
+                "setScheduling": "Set Scheduling",
+                "setAccessControl": "Set Access Control",
+                "addRemoveTags": "Add / Remove Tags",
+                "addTags": "Add Tags",
+                "removeTags": "Remove Tags",
+                "addRemoveCategories": "Add / Remove Categories",
+                "addToCategories": "Add To Categories",
+                "removeFromCategories": "Remove From Categories",
+                "addToNewCategoryPlaylist": "Add To New Category / Playlist",
+                "addToNewCategory": "Add To New Category",
+                "addToNewPlaylist": "Add To New Playlist",
+                "changeOwner": "Change Owner",
+                "download": "Download",
+                "delete": "Delete"
+            }
         }
     }
 }
-

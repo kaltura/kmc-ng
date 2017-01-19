@@ -32,8 +32,8 @@
     </div>
 
     <p>
-        <a class="clearAll" [class.disabled]="selectedNodes.length === 0" (click)="clearAllComponents()">Clear all</a>
-        <a class="kClose" (click)="close()">Close</a>
+        <a class="clearAll" [class.disabled]="selectedNodes.length === 0" (click)="clearAllComponents()">{{'applications.content.filters.clearAll' | translate}}</a>
+        <a class="kClose" (click)="close()">{{'applications.content.filters.close' | translate}}</a>
     </p>
 </div>
 
