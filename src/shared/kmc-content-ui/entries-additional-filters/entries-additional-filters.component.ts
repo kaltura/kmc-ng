@@ -444,10 +444,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
     private onCreatedChanged() : void
     {
-        //setTimeout(() =>
-        //{
-            this.syncCreatedFilters();
-        //},200);
+        this.syncCreatedFilters();
     }
 
     private onSchedulingChanged(calendarRef : any) : void
