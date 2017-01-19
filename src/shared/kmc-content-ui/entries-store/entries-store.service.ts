@@ -78,7 +78,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
     private _entries: BehaviorSubject<Entries> = new BehaviorSubject({items: [], totalCount: 0});
     private _status : BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null});
-    private _runQuery : ReplaySubject<filterUpdateData> = new ReplaySubject<filterUpdateData>(1,null, Scheduler.async);
+    private _runQuery : ReplaySubject<filterUpdateData> = new ReplaySubject<filterUpdateData>(1,null);
     private _runQuerySubscription : Subscription;
 
     private _activeFilters : FilterItem[] = [];
@@ -88,7 +88,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
     public entries$: Observable<Entries> = this._entries.asObservable();
     public status$: Observable<UpdateStatus> = this._status.asObservable();
     public runQuery$ : Observable<filterUpdateData> = this._runQuery.asObservable()
-        .observeOn(Scheduler.asap);
+        .observeOn(Scheduler.async);
 
 
     constructor(private kalturaServerClient: KalturaServerClient) {
