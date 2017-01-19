@@ -10,7 +10,7 @@
         <p-calendar [(ngModel)]="createdAfter" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="onCreatedChanged()"></p-calendar>
         <span class="kCalendarSeparator">-</span>
         <p-calendar [(ngModel)]="createdBefore" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="onCreatedChanged()"></p-calendar>
-        <a class="kClearAll" (click)="clearCreatedFilters()">{{'applications.content.filters.clearDates' | translate}}</a>
+        <a class="kClearAll" (click)="clearCreatedComponents()">{{'applications.content.filters.clearDates' | translate}}</a>
 
         <div *ngFor="let primeGroup of primeGroups">
             <div *ngIf="primeGroup.groupName" class="kFiltersGroupTitle">
@@ -32,7 +32,7 @@
     </div>
 
     <p>
-        <a class="clearAll" [class.disabled]="selectedNodes.length === 0" (click)="clearAllTreeFilters()">Clear all</a>
+        <a class="clearAll" [class.disabled]="selectedNodes.length === 0" (click)="clearAllComponents()">Clear all</a>
         <a class="kClose" (click)="close()">Close</a>
     </p>
 </div>

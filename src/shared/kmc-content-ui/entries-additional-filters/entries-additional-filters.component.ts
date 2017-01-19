@@ -46,7 +46,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
     private additionalFiltersSubscription : Subscription;
     private filterUpdateSubscription : Subscription;
-    private selectedNodes: any[] = [];
+    private selectedNodes: PrimeTreeNode[] = [];
     private loading = false;
     private primeGroups : { groupName : string, items : PrimeTreeNode[] }[] = [];
 
@@ -102,10 +102,9 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                                             data: filterItems,
                                             idProperty: 'id',
                                             nameProperty: 'name',
-                                            payload: filterType
-
+                                            payload: filterType,
                                         }
-                                    ))
+                                    ),null,null)
                             );
                         }
                     });

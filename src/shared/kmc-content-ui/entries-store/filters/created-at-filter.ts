@@ -3,6 +3,11 @@ import * as moment from 'moment';
 import {EntriesStore} from "../entries-store.service";
 import {FilterItem} from "../filter-item";
 
+
+function toServerDate(value?: Date): number {
+    return value ? value.getTime() / 1000 : null;
+}
+
 export class CreatedAtFilter  extends FilterItem{
 
     private _createdBefore : Date;
@@ -34,12 +39,6 @@ export class CreatedAtFilter  extends FilterItem{
         this._createdAfter = createdAfter;
         this._createdBefore = createdBefore;
     }
-
-
-
-    private toServerDate(value?: Date): number {
-        return value ? value.getTime() / 1000 : null;
-    }
 }
 
 EntriesStore.registerFilterType(CreatedAtFilter, (items, request) =>
@@ -47,10 +46,10 @@ EntriesStore.registerFilterType(CreatedAtFilter, (items, request) =>
     const firstItem = items[0];
 
     if (firstItem.createdBefore) {
-        request.filter.createdAtLessThanOrEqual = this.toServerDate(firstItem.createdBefore);
+        request.filter.createdAtLessThanOrEqual = toServerDate(firstItem.createdBefore);
     }
 
     if (firstItem.createdAfter) {
-        request.filter.createdAtGreaterThanOrEqual = this.toServerDate(firstItem.createdAfter);
+        request.filter.createdAtGreaterThanOrEqual = toServerDate(firstItem.createdAfter);
     }
 });
