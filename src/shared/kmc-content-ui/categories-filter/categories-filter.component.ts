@@ -84,6 +84,12 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                         },0);
                     }
                 }
+                if (event === PopupWidgetStates.Close){
+                    const nativeElement: HTMLElement = this.filtersRef.nativeElement;
+                    if (nativeElement && nativeElement.getElementsByClassName("kTreeContainer").length > 0){
+                        nativeElement.getElementsByClassName("kTreeContainer")[0].scrollTop = 0;
+                    }
+                }
             });
         }
     }
