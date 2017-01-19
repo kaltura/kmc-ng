@@ -20,7 +20,6 @@ export class AppMenuComponent implements OnInit{
 
     private sub: any;
     private _userContext: AppUser;
-    private userSettingsMenu: MenuItem[];
     private userSettingsOpen = false;
     private helpOpen = false;
 
@@ -35,19 +34,6 @@ export class AppMenuComponent implements OnInit{
     }
 
     ngOnInit() {
-        this.userSettingsMenu = [
-            {label: 'Logout', command: (event) => {
-                this.logout();
-            }},
-            {label: 'Change Account'},
-            {label: 'English', items: [
-                {label: 'English'},
-                {label: 'Deutsch'},
-                {label: 'Español'},
-                {label: 'Français'},
-                {label: '日本語'}
-            ]}
-        ];
     }
 
     menuConfig: AppMenuConfig;

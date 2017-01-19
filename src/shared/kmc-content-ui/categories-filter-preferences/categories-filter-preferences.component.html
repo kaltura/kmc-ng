@@ -1,8 +1,8 @@
 <div class="kPrefs kUseKMCngIcons">
-    <p class="kFilterPrefs">FILTER PREFERENCES</p>
+    <p class="kFilterPrefs">{{'applications.content.filters.preferences.filterPreferences' | translate | uppercase}}</p>
     <div class="kButtons">
-        <p-radioButton name="prefs" [value]="false" label="Display entries associated with the selected category only." [(ngModel)]="showChildren" (click)="prefChange()"></p-radioButton>
-        <p-radioButton name="prefs" [value]="true" label="Display entries associated with the selected category and its sub-categories." [(ngModel)]="showChildren" (click)="prefChange()"></p-radioButton>
+        <p-radioButton name="prefs" value="false" label="{{'applications.content.filters.preferences.selectedOnly' | translate}}" [(ngModel)]="showChildren" (click)="prefChange()"></p-radioButton>
+        <p-radioButton name="prefs" value="true" label="{{'applications.content.filters.preferences.subSelected' | translate}}" [(ngModel)]="showChildren" (click)="prefChange()"></p-radioButton>
     </div>
 </div>
 

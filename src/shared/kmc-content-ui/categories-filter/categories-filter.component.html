@@ -1,9 +1,9 @@
 <div #categoriesTree class="kUseKMCngIcons">
     <div class="kHeader">
-        <p-autoComplete width="300px" [(ngModel)]="currentSearch"  field="label" placeholder="Find Category" [minLength]="3" ></p-autoComplete>
-        <i #config class="kIcongear kTreeConfig" pTooltip="Preferences"></i>
+        <p-autoComplete width="300px" [(ngModel)]="currentSearch"  field="label" placeholder="{{'applications.content.filters.findCategory' | translate}}" [minLength]="3" ></p-autoComplete>
+        <i #config class="kIcongear kTreeConfig" pTooltip="{{'applications.content.filters.preferences.preferences' | translate}}"></i>
         <div class="kAllCategories">
-            <span>ALL CATEGORIES </span>
+            <span>{{'applications.content.filters.allCategories' | translate | uppercase}} </span>
         </div>
     </div>
     <div class="kTreeContainer">
@@ -16,8 +16,8 @@
     </div>
 
     <p>
-        <a [class.disabled]="selectedNodes?.length === 0" (click)="clearAll()">Clear all</a>
-        <a class="kClose" (click)="close()">Close</a>
+        <a [class.disabled]="selectedNodes?.length === 0" (click)="clearAll()">{{'applications.content.filters.clearAll' | translate}}</a>
+        <a class="kClose" (click)="close()">{{'applications.content.filters.close' | translate}}</a>
     </p>
 </div>
 <kPopupWidget #categoriesPref [modal]="true" [popupWidth]="360" [popupHeight]="220" [closeBtn]="true" [targetRef]="config" [targetOffset]="{'x':-324, 'y': -24}" [parentPopup]="parentPopupWidget">

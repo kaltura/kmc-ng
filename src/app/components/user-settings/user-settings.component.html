@@ -16,19 +16,19 @@
     <li class="kMenuItemLabel"><i class="kIconuser_small"></i>
         <div class="kMenuItem">
             <span>{{_userContext.fullName}}</span>
-            <a (click)="logout()">Log out</a>
+            <a (click)="logout()">{{'app.userSettings.logout' | translate}}</a>
         </div>
     </li>
     <li class="kMenuItemLabel"><i class="kIconhouse"></i>
         <div class="kMenuItem">
             <span>{{_userContext.partnerInfo.name}}</span>
-            <a>Change Account</a>
+            <a>{{'app.userSettings.changeAccount' | translate}}</a>
         </div>
     </li>
 </ul>
 <hr>
 <div class="kLanguagesTitle">
-    <span>Languages</span>
+    <span>{{'app.languageMenu.selectLang' | translate}}</span>
 </div>
 
 <ul class="kLanguages">

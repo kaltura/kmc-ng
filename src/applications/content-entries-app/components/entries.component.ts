@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy,  ViewChild  } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
+import {AppLocalization} from '@kaltura-ng2/kaltura-common';
 
-import { bulkActionsMenuItems } from './bulkActionsMenuItems';
 import {EntriesStore, SortDirection} from 'kmc-content-ui/entries-store/entries-store.service';
 import {kEntriesTable} from "./entries-table.component";
 
@@ -33,7 +33,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
     private runQuerySubscription : Subscription;
     private additionalFiltersSubscription : Subscription;
     private selectedEntries: any[] = [];
-    private bulkActionsMenu: MenuItem[] = bulkActionsMenuItems;
+    private bulkActionsMenu: MenuItem[] = [];
 
     private filter = {
         pageIndex : 0,
@@ -43,7 +43,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
         sortDirection : SortDirection.Asc
     };
 
-    constructor(private entriesStore : EntriesStore, private additionalFilters : EntriesAdditionalFiltersStore) {
+    constructor(private entriesStore : EntriesStore, private additionalFilters : EntriesAdditionalFiltersStore, private appLocalization: AppLocalization) {
     }
 
     removeTag(tag: any){
@@ -86,6 +86,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.bulkActionsMenu = this.getBulkActionItems();
         this.runQuerySubscription = this.entriesStore.runQuery$.subscribe(
             query => {
                this.syncFreetextComponents();
@@ -147,6 +148,31 @@ export class EntriesComponent implements OnInit, OnDestroy {
     clearSelection(){
         this.selectedEntries = [];
         this.dataTable.tableSelectedEntries = [];
+    }
+
+    executeBulkAction(action: string){
+        alert("Execute bulk action for " + action);
+    }
+    getBulkActionItems(){
+        return  [
+            { label: this.appLocalization.get('applications.content.bulkActions.setScheduling'), command: (event) => { this.executeBulkAction("setScheduling") } },
+            { label: this.appLocalization.get('applications.content.bulkActions.setAccessControl'), command: (event) => { this.executeBulkAction("setAccessControl") } },
+            { label: this.appLocalization.get('applications.content.bulkActions.addRemoveTags'), items: [
+                { label: this.appLocalization.get('applications.content.bulkActions.addTags'), command: (event) => { this.executeBulkAction("addTags") } },
+                { label: this.appLocalization.get('applications.content.bulkActions.removeTags'), command: (event) => { this.executeBulkAction("removeTags") } }]
+            },
+            { label: this.appLocalization.get('applications.content.bulkActions.addRemoveCategories'), items: [
+                { label: this.appLocalization.get('applications.content.bulkActions.addToCategories'), command: (event) => { this.executeBulkAction("addToCategories") } },
+                { label: this.appLocalization.get('applications.content.bulkActions.removeFromCategories'), command: (event) => { this.executeBulkAction("removeFromCategories") } }]
+            },
+            { label: this.appLocalization.get('applications.content.bulkActions.addToNewCategoryPlaylist'), items: [
+                { label: this.appLocalization.get('applications.content.bulkActions.addToNewCategory'), command: (event) => { this.executeBulkAction("addToNewCategory") } },
+                { label: this.appLocalization.get('applications.content.bulkActions.addToNewPlaylist'), command: (event) => { this.executeBulkAction("addToNewPlaylist") } }]
+            },
+            { label: this.appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => { this.executeBulkAction("changeOwner") } },
+            { label: this.appLocalization.get('applications.content.bulkActions.download'), command: (event) => { this.executeBulkAction("download") } },
+            { label: this.appLocalization.get('applications.content.bulkActions.delete'), command: (event) => { this.executeBulkAction("delete") } }
+        ];
     }
 
 }
