@@ -1,26 +1,25 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { EntryType } from '../entries-store/entries-store.service';
 
 @Pipe({name: 'entryType'})
 export class EntryTypePipe implements PipeTransform {
   transform(value): string {
     let className = 'k-entry-';
-
-    // TODO [kmc] use the actual enum instead of strings
     if (typeof(value) !== 'undefined' && value !== null)  {
-      switch (value.toString()) {
-        case '1':
+      switch (value) {
+        case EntryType.Media:
           className += 'media';
           break;
-        case '2':
+        case EntryType.Image:
           className += 'image';
           break;
-        case '5':
+        case EntryType.Audio:
           className += 'audio';
           break;
-        case '201':
-        case '202':
-        case '203':
-        case '204':
+        case EntryType.Live:
+        case EntryType.Live2:
+        case EntryType.Live3:
+        case EntryType.Live4:
           className += 'live';
           break;
         default:

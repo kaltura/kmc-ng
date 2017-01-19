@@ -1,6 +1,8 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {AppLocalization} from '@kaltura-ng2/kaltura-common';
 
+import { EntryStatus } from '../entries-store/entries-store.service';
+
 @Pipe({name: 'entryStatus'})
 export class EntryStatusPipe implements PipeTransform {
 
@@ -9,43 +11,42 @@ export class EntryStatusPipe implements PipeTransform {
 
     transform(value: string): string {
         let ret: string = '';
-        // TODO [kmc] use the actual enum instead of strings
         if (typeof(value) !== 'undefined' && value !== null) {
             switch (value.toString()) {
-                case '-2':
+                case EntryStatus.ErrorImporting:
                     ret = this.appLocalization.get("applications.content.entryStatus.errorImporting");
                     break;
-                case '-1':
+                case EntryStatus.ErrorConverting:
                     ret = this.appLocalization.get("applications.content.entryStatus.errorConverting");
                     break;
-                case 'virusScan.ScanFailure':
+                case EntryStatus.ScanFailure:
                     ret = this.appLocalization.get("applications.content.entryStatus.scanFailure");
                     break;
-                case '0':
+                case EntryStatus.Import:
                     ret = this.appLocalization.get("applications.content.entryStatus.import");
                     break;
-                case 'virusScan.Infected':
+                case EntryStatus.Infected:
                     ret = this.appLocalization.get("applications.content.entryStatus.infected");
                     break;
-                case '1':
+                case EntryStatus.PreConvert:
                     ret = this.appLocalization.get("applications.content.entryStatus.preconvert");
                     break;
-                case '2':
+                case EntryStatus.Ready:
                     ret = this.appLocalization.get("applications.content.entryStatus.ready");
                     break;
-                case '3':
+                case EntryStatus.Deleted:
                     ret = this.appLocalization.get("applications.content.entryStatus.deleted");
                     break;
-                case '4':
+                case EntryStatus.Pending:
                     ret = this.appLocalization.get("applications.content.entryStatus.pending");
                     break;
-                case '5':
+                case EntryStatus.Moderate:
                     ret = this.appLocalization.get("applications.content.entryStatus.moderate");
                     break;
-                case '6':
+                case EntryStatus.Blocked:
                     ret = this.appLocalization.get("applications.content.entryStatus.blocked");
                     break;
-                case '7':
+                case EntryStatus.NoContent:
                     ret = this.appLocalization.get("applications.content.entryStatus.noContent");
                     break;
             }

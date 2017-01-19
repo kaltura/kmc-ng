@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit } from
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { Entry } from './entries.component';
-import {EntriesStore} from "kmc-content-ui/entries-store/entries-store.service";
+import {EntriesStore, EntryType, EntryStatus} from "kmc-content-ui/entries-store/entries-store.service";
 
 @Component({
   selector: 'kEntriesTable',
@@ -31,11 +31,9 @@ export class kEntriesTable implements AfterViewInit{
 
 
   constructor(private appLocalization: AppLocalization, private entriesStore : EntriesStore) {
-    this.buildMenu();
-
   }
 
-  buildMenu() : void
+  buildMenu(mediaType: string = null, status: string = null) : void
   {
     this.items = [
       {label: this.appLocalization.get("applications.content.table.previewAndEmbed"), command: (event) => {
@@ -48,9 +46,16 @@ export class kEntriesTable implements AfterViewInit{
         this.onActionSelected("view", this.actionsMenuEntryId);
       }}
     ];
+    if (status && status != EntryStatus.Ready){
+        this.items.shift();
+        if (mediaType && mediaType == EntryType.Live.toString()){
+            this.items.pop();
+        }
+    }
   }
 
   ngAfterViewInit(){
+    this.buildMenu();
     if (this.dataTable.scrollBody) {
       this.dataTable.scrollBody.onscroll = () => {
         if (this.actionsMenu){
@@ -60,18 +65,29 @@ export class kEntriesTable implements AfterViewInit{
     }
   }
 
-  openActionsMenu(event, entryId){
+  openActionsMenu(event: any, entryId: string, mediaType: string, status: string){
     if (this.actionsMenu){
       this.actionsMenu.toggle(event);
       if (this.actionsMenuEntryId !== entryId){
-        this.actionsMenu.show(event);
+        this.buildMenu(mediaType, status);
         this.actionsMenuEntryId = entryId;
+        this.actionsMenu.show(event);
       }
     }
   }
 
-  onActionSelected(action, entryID){
-    this.actionSelected.emit({"action": action, "entryID": entryID});
+  allowDrilldown(mediaType: string, status: string){
+      let allowed = true;
+      if ( mediaType && mediaType == EntryType.Live.toString() && status && status != EntryStatus.Ready){
+          allowed = false;
+      }
+      return allowed;
+  }
+
+  onActionSelected(action: string, entryID: string, mediaType: string = null, status: string = null){
+    if (this.allowDrilldown(mediaType, status)) {
+        this.actionSelected.emit({"action": action, "entryID": entryID});
+    }
   }
 
   onSortChanged(event){
