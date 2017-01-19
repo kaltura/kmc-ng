@@ -3,7 +3,7 @@ import { Tree } from 'primeng/primeng';
 import {PrimeTreeNode, TreeDataHandler} from '@kaltura-ng2/kaltura-primeng-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
-import { Subscription} from 'rxjs/Subscription';
+import {ISubscription} from 'rxjs/Subscription';
 import * as R from 'ramda';
 
 import { CategoriesStore } from '../categories-store.service';
@@ -21,9 +21,9 @@ import {CategoriesFilter, CategoriesFilterModes} from "../entries-store/filters/
 export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestroy{
 
     private categories: PrimeTreeNode[] = [];
-    private categoriesSubscription : Subscription;
-    private filterUpdateSubscription : Subscription;
-    private parentPopupStateChangeSubscription : Subscription;
+    private categoriesSubscription : ISubscription;
+    private filterUpdateSubscription : ISubscription;
+    private parentPopupStateChangeSubscription : ISubscription;
     private selectedNodes: PrimeTreeNode[] = [];
     private autoSelectChildren:boolean = false;
     private treeSelectionsDiffer : IterableDiffer = null;
@@ -174,7 +174,8 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     private clearAll(){
-       // TODO
+        this.selectedNodes = [];
+        this.syncTreeFilters();
     }
 
     close(){

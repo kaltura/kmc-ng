@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, Input, IterableDiffer, IterableDiffers, ElementRef} from '@angular/core';
-import { Subscription} from 'rxjs/Subscription';
+import { ISubscription} from 'rxjs/Subscription';
 import {PrimeTreeNode, TreeDataHandler} from '@kaltura-ng2/kaltura-primeng-ui';
 import {EntriesStore} from "../entries-store/entries-store.service";
 import {FilterItem} from "../entries-store/filter-item";
@@ -44,8 +44,8 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     scheduledBefore: Date;
     scheduledSelected : boolean = false;
 
-    private additionalFiltersSubscription : Subscription;
-    private filterUpdateSubscription : Subscription;
+    private additionalFiltersSubscription : ISubscription;
+    private filterUpdateSubscription : ISubscription;
     private selectedNodes: PrimeTreeNode[] = [];
     private loading = false;
     private primeGroups : { groupName : string, items : PrimeTreeNode[] }[] = [];
@@ -54,7 +54,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     private treeSelectionsDiffer : IterableDiffer = null;
 
     @Input() parentPopupWidget: PopupWidgetComponent;
-    parentPopupStateChangeSubscribe : Subscription;
+    parentPopupStateChangeSubscribe : ISubscription;
 
     constructor(public additionalFiltersStore: EntriesAdditionalFiltersStore, private treeDataHandler : TreeDataHandler,
                 private entriesStore : EntriesStore, private differs: IterableDiffers, private elementRef: ElementRef) {
@@ -444,7 +444,10 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
     private onCreatedChanged() : void
     {
-        this.syncCreatedFilters();
+        //setTimeout(() =>
+        //{
+            this.syncCreatedFilters();
+        //},200);
     }
 
     private onSchedulingChanged(calendarRef : any) : void

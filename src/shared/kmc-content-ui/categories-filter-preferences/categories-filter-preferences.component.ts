@@ -21,7 +21,7 @@ export class CategoriesFilterPrefsComponent{
                 window.alert("This feature is currently not supported");
                 this.showChildren = false;
             }
-            //this.showChildrenChange.emit(this.showChildren);
+            this.showChildrenChange.emit(this.showChildren);
         },0);
     }
 }

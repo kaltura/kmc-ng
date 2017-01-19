@@ -25,7 +25,7 @@ EntriesStore.registerFilterType(DistributionsFilter, (items, request) =>
     items.forEach(item =>
     {
         const newItem = new KalturaContentDistributionSearchItem();
-        newItem.distributionProfileId = this.value;
+        newItem.distributionProfileId = item.value;
         newItem.hasEntryDistributionValidationErrors = false;
         newItem.noDistributionProfiles = false;
         distributionItem.items.push(newItem)
