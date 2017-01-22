@@ -30,7 +30,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
     @ViewChild(kEntriesTable) private dataTable: kEntriesTable;
 
-    private runQuerySubscription : Subscription;
+    private querySubscription : Subscription;
     private additionalFiltersSubscription : Subscription;
     private selectedEntries: any[] = [];
     private bulkActionsMenu: MenuItem[] = [];
@@ -87,7 +87,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.bulkActionsMenu = this.getBulkActionItems();
-        this.runQuerySubscription = this.entriesStore.runQuery$.subscribe(
+        this.querySubscription = this.entriesStore.query$.subscribe(
             query => {
                this.syncFreetextComponents();
 
@@ -95,27 +95,37 @@ export class EntriesComponent implements OnInit, OnDestroy {
             }
         );
 
+        let isFirstRequest = true;
+
         this.additionalFiltersSubscription = this.additionalFilters.additionalFilters$.subscribe(
             data => {
                 if (data.metadataProfiles)
                 {
-                    this.entriesStore.updateQuery({ metadataProfiles : data.metadataProfiles});
+                    if (isFirstRequest)
+                    {
+                        isFirstRequest = false;
+                        this.entriesStore.updateQuery({
+                            pageIndex : this.filter.pageIndex+1,
+                            pageSize : this.filter.pageSize,
+                            sortBy : this.filter.sortBy,
+                            sortDirection : this.filter.sortDirection,
+                            metadataProfiles : data.metadataProfiles,
+                            fields :'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status'
+                        });
+
+                    }else
+                    {
+                        this.entriesStore.updateQuery({ metadataProfiles : data.metadataProfiles});
+
+                    }
                 }
             }
         );
-
-        this.entriesStore.updateQuery({
-            pageIndex : this.filter.pageIndex+1,
-            pageSize : this.filter.pageSize,
-            sortBy : this.filter.sortBy,
-            sortDirection : this.filter.sortDirection,
-            fields :'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status'
-        });
     }
 
     ngOnDestroy(){
-        this.runQuerySubscription.unsubscribe();
-        this.runQuerySubscription = null;
+        this.querySubscription.unsubscribe();
+        this.querySubscription = null;
 
         this.additionalFiltersSubscription.unsubscribe();
         this.additionalFiltersSubscription = null;

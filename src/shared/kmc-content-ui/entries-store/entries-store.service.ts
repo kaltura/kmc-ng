@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
+
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observable } from 'rxjs/Observable';
+import {ISubscription} from 'rxjs/Subscription';
+import {Scheduler} from 'rxjs';
+import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/catch';
-import {Scheduler} from 'rxjs/rx';
-import {Subscription} from 'rxjs/Subscription';
+import 'rxjs/add/observable/throw';
 
 import {
     KalturaBaseEntryListResponse,
@@ -46,7 +47,7 @@ export interface QueryData
     metadataProfiles? : number[]
 }
 
-export interface FilterRequestContext
+export interface FilterArgs
 {
     filter : KalturaMediaEntryFilter,
     advancedSearch : KalturaSearchOperator
@@ -57,7 +58,7 @@ export enum SortDirection {
     Asc
 }
 
-export interface filterUpdateData {
+export interface QueryRequestArgs {
     filters: FilterItem[];
     addedFilters: FilterItem[];
     removedFilters: FilterItem[];
@@ -71,15 +72,14 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
     private static filterTypeMapping = {};
 
-    public static registerFilterType<T extends FilterItem>(filterType : FilterTypeConstructor<T>, handler: (items : T[], request : FilterRequestContext) => void) : void
+    public static registerFilterType<T extends FilterItem>(filterType : FilterTypeConstructor<T>, handler: (items : T[], request : FilterArgs) => void) : void
     {
         EntriesStore.filterTypeMapping[filterType.name] = handler;
     }
 
     private _entries: BehaviorSubject<Entries> = new BehaviorSubject({items: [], totalCount: 0});
     private _status : BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null});
-    private _runQuery : ReplaySubject<filterUpdateData> = new ReplaySubject<filterUpdateData>(1,null);
-    private _runQuerySubscription : Subscription;
+    private _query : ReplaySubject<QueryRequestArgs> = new ReplaySubject<QueryRequestArgs>(1,null);
 
     private _activeFilters : FilterItem[] = [];
     private _activeFiltersMap : {[key : string] : FilterItem[]} = {};
@@ -87,8 +87,8 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
     public entries$: Observable<Entries> = this._entries.asObservable();
     public status$: Observable<UpdateStatus> = this._status.asObservable();
-    public runQuery$ : Observable<filterUpdateData> = this._runQuery.asObservable()
-        .observeOn(Scheduler.async);
+    public query$ : Observable<QueryRequestArgs> = this._query.asObservable();
+    public executeQuerySubscription : ISubscription = null;
 
 
     constructor(private kalturaServerClient: KalturaServerClient) {
@@ -97,57 +97,30 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
     dispose()
     {
-        this._runQuerySubscription.unsubscribe();
-        this._runQuerySubscription = null;
+        if (this.executeQuerySubscription) {
+            this.executeQuerySubscription.unsubscribe();
+            this.executeQuerySubscription = null;
+        }
         this._activeFilters = null;
         this._activeFiltersMap = null;
         this._queryData = null;
         this._status.complete();
         this._status.unsubscribe();
-        this._runQuery.complete();
-        this._runQuery.unsubscribe();
+        this._query.complete();
+        this._query.unsubscribe();
         this._entries.complete();
         this._entries.unsubscribe();
     }
 
     private subscribeToChanges() : void {
         // switchMap is used to ignore old requests
-
-        this._runQuerySubscription = this._runQuery
-            .do(() => {
-                this._status.next({loading: true, errorMessage: null});
-            })
-            .switchMap((query) => this._updateEntries(query).catch(error => Observable.of(error)))
-            .catch(error => Observable.of(error))
-            .subscribe(
-                result => {
-
-                    if (result instanceof KalturaBaseEntryListResponse) {
-                        this._entries.next({items: <any[]>result.objects, totalCount: <number>result.totalCount});
-                        this._status.next({loading: false, errorMessage: null});
-                    } else if (result instanceof  Error){
-                        this._status.next({loading: false, errorMessage: (<Error>result).message});
-                    }else {
-                        this._status.next({loading: false, errorMessage: 'problem occurred'});
-
-                    }
-
-                },
-                error => {
-                    // TODO [kmc] should not reach here
-                    this._status.next({loading: false, errorMessage: 'fatal failure while querying'});
-                },
-                () => {
-                    // TODO [kmc] should not reach here
-                    console.error("BBBUUUUUUUUUU");
-                }
-            );
     }
+
 
     public updateQuery(query : QueryData)
     {
         Object.assign(this._queryData,query);
-        this._runQuery.next({ filters : this._activeFilters, removedFilters : [], addedFilters : [], data : this._queryData });
+        this.executeQuery({ filters : this._activeFilters, removedFilters : [], addedFilters : [], data : this._queryData });
     }
 
     public removeFiltersByType(filterType : FilterTypeConstructor<FilterItem>) : void {
@@ -180,12 +153,12 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         const previousFilters = this._activeFilters;
         this._activeFilters = [];
         this._activeFiltersMap = {};
-        this._runQuery.next({ filters : this._activeFilters, removedFilters : previousFilters, addedFilters : [], data : this._queryData });
+        this.executeQuery({ filters : this._activeFilters, removedFilters : previousFilters, addedFilters : [], data : this._queryData });
     }
 
     public reload() : void
     {
-        this._runQuery.next({ filters : this._activeFilters, removedFilters : [], addedFilters : [], data : this._queryData });
+        this.executeQuery({ filters : this._activeFilters, removedFilters : [], addedFilters : [], data : this._queryData });
     }
 
     public addFilters(...filters : FilterItem[]) : void{
@@ -209,7 +182,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             {
                 this._activeFilters = [...this._activeFilters, ...addedFilters];
                 this._queryData.pageIndex = 1;
-                this._runQuery.next({ filters : this._activeFilters, removedFilters : [], addedFilters : addedFilters, data : this._queryData  });
+                this.executeQuery({ filters : this._activeFilters, removedFilters : [], addedFilters : addedFilters, data : this._queryData  });
             }
         }
     }
@@ -236,116 +209,156 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             if (removedFilters.length > 0)
             {
                 this._queryData.pageIndex = 1;
-                this._runQuery.next({ filters : this._activeFilters, removedFilters : removedFilters, addedFilters : [], data : this._queryData  });
+                this.executeQuery({ filters : this._activeFilters, removedFilters : removedFilters, addedFilters : [], data : this._queryData  });
             }
         }
     }
 
-    private _updateEntries({filters : activeFilers, data : queryData } : { filters : FilterItem[], data : QueryData}) : Observable<KalturaBaseEntryListResponse | Error> {
-
-
-        let filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter();
-
-        const advancedSearch = filter.advancedSearch = new KalturaSearchOperator();
-        advancedSearch.type = KalturaSearchOperatorType.SearchAnd;
-
-        const requestContext: FilterRequestContext = {
-            filter: filter,
-            advancedSearch : advancedSearch
-        };
-
-        let responseProfile: KalturaDetachedResponseProfile = null;
-        let pagination: KalturaFilterPager = null;
-
-        if (activeFilers && activeFilers.length > 0) {
-
-            Object.keys(this._activeFiltersMap).forEach(key =>
-            {
-                const handler = EntriesStore.filterTypeMapping[key];
-                const items = this._activeFiltersMap[key];
-
-                if (handler && items && items.length > 0)
-                {
-                    handler(items, requestContext);
-                }
-            });
-        }
-
-        if (queryData.metadataProfiles && queryData.metadataProfiles.length > 0)
+    private executeQuery(args : QueryRequestArgs)
+    {
+        // cancel previous requests
+        if (this.executeQuerySubscription)
         {
-            const missingMetadataProfiles = [ ...queryData.metadataProfiles]; // create a new array (don't alter the original one)
+            this.executeQuerySubscription.unsubscribe();
+            this.executeQuerySubscription = null;
+        }
 
-            // find metadataprofiles that are not part of the request query
-            (advancedSearch.items || []).forEach(metadataProfileItem =>
-            {
-                if (metadataProfileItem instanceof KalturaMetadataSearchItem)
+        // execute the request
+        this.executeQuerySubscription = Observable.create(observer => {
+            this._status.next({loading: true, errorMessage: null});
+            this._query.next(args);
+
+            let requestSubscription = this.buildQueryRequest(args).subscribe(observer);
+
+            return () => {
+                if (requestSubscription) {
+                    requestSubscription.unsubscribe();
+                    requestSubscription = null;
+                }
+            }
+        }).subscribeOn(Scheduler.async).subscribe(
+            response => {
+                this.executeQuerySubscription = null;
+
+                if (response.error)
                 {
-                    const indexOfMetadata = missingMetadataProfiles.indexOf((<KalturaMetadataSearchItem>metadataProfileItem).metadataProfileId);
-                    if (indexOfMetadata >= 0)
-                    {
-                        missingMetadataProfiles.splice(indexOfMetadata,1);
-                    }
+                    this._status.next({loading: false, errorMessage: response.error.message});
+                }else {
+
+                    this._entries.next({
+                        items: <any[]>response.result.objects,
+                        totalCount: <number>response.result.totalCount
+                    });
                 }
+                this._status.next({loading: false, errorMessage: null});
+            },
+            error => {
+                this.executeQuerySubscription = null;
+                this._status.next({loading: false, errorMessage: (<Error>error).message});
+            }
+        );
 
-            });
+    }
 
-            // add default values to the missing metadata profiles
-            missingMetadataProfiles.forEach((metadataProfileId : number) =>
-            {
-                const metadataItem : KalturaMetadataSearchItem = new KalturaMetadataSearchItem();
-                metadataItem.metadataProfileId = metadataProfileId;
-                metadataItem.type = KalturaSearchOperatorType.SearchAnd;
-                metadataItem.items = [];
-                advancedSearch.items.push(metadataItem);
-            });
-        }
+    private buildQueryRequest({filters : activeFilers, data : queryData } : { filters : FilterItem[], data : QueryData}) : Observable<KalturaBaseEntryListResponse> {
 
-        if (advancedSearch.items && advancedSearch.items.length === 0)
-        {
-            delete filter.advancedSearch;
-        }
+        try {
+            let filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter();
+            let responseProfile: KalturaDetachedResponseProfile = null;
+            let pagination: KalturaFilterPager = null;
 
-        if (!filter.mediaTypeIn) {
-            filter.mediaTypeIn = '1,2,5,6,201';
-        }
+            const advancedSearch = filter.advancedSearch = new KalturaSearchOperator();
+            advancedSearch.type = KalturaSearchOperatorType.SearchAnd;
 
-        if (!filter.statusIn) {
-            filter.statusIn = '-1,-2,0,1,2,7,4';
-        }
+            const requestContext: FilterArgs = {
+                filter: filter,
+                advancedSearch: advancedSearch
+            };
 
-        if (queryData.sortBy) {
-            filter.orderBy = `${queryData.sortDirection === SortDirection.Desc ? '-' : '+'}${queryData.sortBy}`;
-        }
+            // build request args by converting filters using registered handlers
+            if (activeFilers && activeFilers.length > 0) {
 
-        if (queryData.fields) {
-            responseProfile = new KalturaDetachedResponseProfile();
-            responseProfile.type = KalturaResponseProfileType.IncludeFields;
-            responseProfile.fields = queryData.fields;
-        }
+                Object.keys(this._activeFiltersMap).forEach(key => {
+                    const handler = EntriesStore.filterTypeMapping[key];
+                    const items = this._activeFiltersMap[key];
 
-        if (queryData.pageIndex || queryData.pageSize) {
-            pagination = new KalturaFilterPager();
-            pagination.pageSize = queryData.pageSize;
-            pagination.pageIndex = queryData.pageIndex;
-        }
-
-
-        return <any>this.kalturaServerClient.request(
-            new BaseEntryListAction({
-                filter: requestContext.filter,
-                pager: pagination,
-                responseProfile: responseProfile
-            })
-        )
-            .map(
-                response => {
-                    if (response.error) {
-                        return new Error(response.error.message);
-                    } else {
-                        return response.result;
+                    if (handler && items && items.length > 0) {
+                        handler(items, requestContext);
                     }
-                }
+                });
+            }
+
+            // handle default args of metadata profiles (we must send all metadata profiles that should take part of the freetext searching
+            if (queryData.metadataProfiles && queryData.metadataProfiles.length > 0) {
+                const missingMetadataProfiles = [...queryData.metadataProfiles]; // create a new array (don't alter the original one)
+
+                // find metadataprofiles that are not part of the request query
+                (advancedSearch.items || []).forEach(metadataProfileItem => {
+                    if (metadataProfileItem instanceof KalturaMetadataSearchItem) {
+                        const indexOfMetadata = missingMetadataProfiles.indexOf((<KalturaMetadataSearchItem>metadataProfileItem).metadataProfileId);
+                        if (indexOfMetadata >= 0) {
+                            missingMetadataProfiles.splice(indexOfMetadata, 1);
+                        }
+                    }
+
+                });
+
+                // add default values to the missing metadata profiles
+                missingMetadataProfiles.forEach((metadataProfileId: number) => {
+                    const metadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem();
+                    metadataItem.metadataProfileId = metadataProfileId;
+                    metadataItem.type = KalturaSearchOperatorType.SearchAnd;
+                    metadataItem.items = [];
+                    advancedSearch.items.push(metadataItem);
+                });
+            }
+
+            // remove advanced search arg if it is empty
+            if (advancedSearch.items && advancedSearch.items.length === 0) {
+                delete filter.advancedSearch;
+            }
+
+            // handle default value for media types
+            if (!filter.mediaTypeIn) {
+                filter.mediaTypeIn = '1,2,5,6,201';
+            }
+
+            // handle default value for statuses
+            if (!filter.statusIn) {
+                filter.statusIn = '-1,-2,0,1,2,7,4';
+            }
+
+            // update the sort by args
+            if (queryData.sortBy) {
+                filter.orderBy = `${queryData.sortDirection === SortDirection.Desc ? '-' : '+'}${queryData.sortBy}`;
+            }
+
+            // update desired fields of entries
+            if (queryData.fields) {
+                responseProfile = new KalturaDetachedResponseProfile();
+                responseProfile.type = KalturaResponseProfileType.IncludeFields;
+                responseProfile.fields = queryData.fields;
+            }
+
+            // update pagination args
+            if (queryData.pageIndex || queryData.pageSize) {
+                pagination = new KalturaFilterPager();
+                pagination.pageSize = queryData.pageSize;
+                pagination.pageIndex = queryData.pageIndex;
+            }
+
+            // build the request
+            return <any>this.kalturaServerClient.request(
+                new BaseEntryListAction({
+                    filter: requestContext.filter,
+                    pager: pagination,
+                    responseProfile: responseProfile
+                })
             )
-            .catch(err => Observable.of(err));
+        }catch(err)
+        {
+            return Observable.throw(err);
+        }
+
     }
 }

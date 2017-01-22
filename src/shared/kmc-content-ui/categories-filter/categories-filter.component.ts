@@ -41,7 +41,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         this.treeSelectionsDiffer = this.differs.find([]).create(null);
 
         // update components when the active filter list is updated
-        this.filterUpdateSubscription = this.entriesStore.runQuery$.subscribe(
+        this.filterUpdateSubscription = this.entriesStore.query$.subscribe(
             filter => {
                 if (filter.removedFilters && filter.removedFilters.length > 0) {
                     // only removedFilters items should be handled (because relevant addedFilters filters are originated from this component)
