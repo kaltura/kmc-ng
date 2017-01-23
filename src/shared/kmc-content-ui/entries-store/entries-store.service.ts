@@ -64,30 +64,6 @@ export interface filterUpdateData {
     data : QueryData;
 }
 
-export const EntryType = {
-    "Media": 1,
-    "Image": 2,
-    "Audio": 5,
-    "Live": 201,
-    "Live2": 202,
-    "Live3": 203,
-    "Live4": 204
-}
-export const EntryStatus = {
-    "ErrorImporting": "-2",
-    "ErrorConverting": "-1",
-    "ScanFailure": "virusScan.ScanFailure",
-    "Import": "0",
-    "Infected": "virusScan.Infected",
-    "PreConvert": "1",
-    "Ready": "2",
-    "Deleted": "3",
-    "Pending": "4",
-    "Moderate": "5",
-    "Blocked": "6",
-    "NoContent": "7"
-}
-
 export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) : T;};
 
 @Injectable()

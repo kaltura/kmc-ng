@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { EntryType } from '../entries-store/entries-store.service';
+import { KalturaMediaType } from '@kaltura-ng2/kaltura-api';
 
 @Pipe({name: 'entryType'})
 export class EntryTypePipe implements PipeTransform {
@@ -7,19 +7,19 @@ export class EntryTypePipe implements PipeTransform {
     let className = 'k-entry-';
     if (typeof(value) !== 'undefined' && value !== null)  {
       switch (value) {
-        case EntryType.Media:
+        case KalturaMediaType.Video:
           className += 'media';
           break;
-        case EntryType.Image:
+        case KalturaMediaType.Image:
           className += 'image';
           break;
-        case EntryType.Audio:
+        case KalturaMediaType.Audio:
           className += 'audio';
           break;
-        case EntryType.Live:
-        case EntryType.Live2:
-        case EntryType.Live3:
-        case EntryType.Live4:
+        case KalturaMediaType.LiveStreamFlash:
+        case KalturaMediaType.LiveStreamQuicktime:
+        case KalturaMediaType.LiveStreamRealMedia:
+        case KalturaMediaType.LiveStreamWindowsMedia:
           className += 'live';
           break;
         default:

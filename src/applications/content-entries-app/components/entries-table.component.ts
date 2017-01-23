@@ -1,8 +1,9 @@
 import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit } from '@angular/core';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { KalturaMediaType, KalturaEntryStatus } from '@kaltura-ng2/kaltura-api';
 import { Entry } from './entries.component';
-import {EntriesStore, EntryType, EntryStatus} from "kmc-content-ui/entries-store/entries-store.service";
+import { EntriesStore } from "kmc-content-ui/entries-store/entries-store.service";
 
 @Component({
   selector: 'kEntriesTable',
@@ -46,16 +47,15 @@ export class kEntriesTable implements AfterViewInit{
         this.onActionSelected("view", this.actionsMenuEntryId);
       }}
     ];
-    if (status && status != EntryStatus.Ready){
+    if (status && status != KalturaEntryStatus.Ready.toString()){
         this.items.shift();
-        if (mediaType && mediaType == EntryType.Live.toString()){
+        if (mediaType && mediaType == KalturaMediaType.LiveStreamFlash.toString()){
             this.items.pop();
         }
     }
   }
 
   ngAfterViewInit(){
-    this.buildMenu();
     if (this.dataTable.scrollBody) {
       this.dataTable.scrollBody.onscroll = () => {
         if (this.actionsMenu){
@@ -65,12 +65,12 @@ export class kEntriesTable implements AfterViewInit{
     }
   }
 
-  openActionsMenu(event: any, entryId: string, mediaType: string, status: string){
+  openActionsMenu(event: any, entry: Entry){
     if (this.actionsMenu){
       this.actionsMenu.toggle(event);
-      if (this.actionsMenuEntryId !== entryId){
-        this.buildMenu(mediaType, status);
-        this.actionsMenuEntryId = entryId;
+      if (this.actionsMenuEntryId !== entry.id){
+        this.buildMenu(entry.mediaType, entry.status);
+        this.actionsMenuEntryId = entry.id;
         this.actionsMenu.show(event);
       }
     }
@@ -78,7 +78,7 @@ export class kEntriesTable implements AfterViewInit{
 
   allowDrilldown(mediaType: string, status: string){
       let allowed = true;
-      if ( mediaType && mediaType == EntryType.Live.toString() && status && status != EntryStatus.Ready){
+      if ( mediaType && mediaType == KalturaMediaType.LiveStreamFlash.toString() && status && status != KalturaEntryStatus.Ready.toString()){
           allowed = false;
       }
       return allowed;

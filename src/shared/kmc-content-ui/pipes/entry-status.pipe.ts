@@ -1,7 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {AppLocalization} from '@kaltura-ng2/kaltura-common';
-
-import { EntryStatus } from '../entries-store/entries-store.service';
+import { KalturaEntryStatus } from '@kaltura-ng2/kaltura-api';
 
 @Pipe({name: 'entryStatus'})
 export class EntryStatusPipe implements PipeTransform {
@@ -13,40 +12,40 @@ export class EntryStatusPipe implements PipeTransform {
         let ret: string = '';
         if (typeof(value) !== 'undefined' && value !== null) {
             switch (value.toString()) {
-                case EntryStatus.ErrorImporting:
+                case KalturaEntryStatus.ErrorImporting.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.errorImporting");
                     break;
-                case EntryStatus.ErrorConverting:
+                case KalturaEntryStatus.ErrorConverting.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.errorConverting");
                     break;
-                case EntryStatus.ScanFailure:
+                case KalturaEntryStatus.ScanFailure.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.scanFailure");
                     break;
-                case EntryStatus.Import:
+                case KalturaEntryStatus.Import.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.import");
                     break;
-                case EntryStatus.Infected:
+                case KalturaEntryStatus.Infected.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.infected");
                     break;
-                case EntryStatus.PreConvert:
+                case KalturaEntryStatus.Preconvert.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.preconvert");
                     break;
-                case EntryStatus.Ready:
+                case KalturaEntryStatus.Ready.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.ready");
                     break;
-                case EntryStatus.Deleted:
+                case KalturaEntryStatus.Deleted.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.deleted");
                     break;
-                case EntryStatus.Pending:
+                case KalturaEntryStatus.Pending.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.pending");
                     break;
-                case EntryStatus.Moderate:
+                case KalturaEntryStatus.Moderate.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.moderate");
                     break;
-                case EntryStatus.Blocked:
+                case KalturaEntryStatus.Blocked.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.blocked");
                     break;
-                case EntryStatus.NoContent:
+                case KalturaEntryStatus.NoContent.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.noContent");
                     break;
             }
