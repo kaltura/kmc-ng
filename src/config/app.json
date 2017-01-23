@@ -14,16 +14,9 @@
       "privileges" : "disableentitlement"
     },
     "menuConfig": [
-        { "routePath" : "dashboard", "titleToken" : "Dashboard" },
         { "routePath" : "content", "titleToken" : "Content", "showSubMenu": true, "children" : [
-          { "routePath" : "content/entries", "titleToken" : "Entries" },
-          { "routePath" : "content/moderation", "titleToken" : "Moderation" },
-          { "routePath" : "content/playlists", "titleToken" : "Playlists" }
-        ]},
-        {"routePath" : "studio", "titleToken" : "Studio"},
-        {"routePath" : "analytics", "titleToken" : "Analytics"},
-        {"routePath" : "settings", "titleToken" : "Settings"},
-        {"routePath" : "admin", "titleToken" : "Administration"}
+          { "routePath" : "content/entries", "titleToken" : "Entries" }
+        ]}
       ],
     "diagnostic" : {
       "debugging": false
