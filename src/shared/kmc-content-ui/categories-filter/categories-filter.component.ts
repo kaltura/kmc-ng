@@ -20,8 +20,9 @@ import {CategoriesFilter, CategoriesFilterModes} from "../entries-store/filters/
 })
 export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestroy{
 
+    private loading : boolean = false;
+    private errorMessage : string = null;
     private categories: PrimeTreeNode[] = [];
-    private categoriesSubscription : ISubscription;
     private filterUpdateSubscription : ISubscription;
     private parentPopupStateChangeSubscription : ISubscription;
     private selectedNodes: PrimeTreeNode[] = [];
@@ -50,27 +51,35 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             }
         );
 
-        this.categoriesSubscription = this.categoriesStore.categories$.subscribe(
-            (result) => {
-                this.categories = this.treeDataHandler.create(
-                    {
-                        data: result.items,
-                        idProperty: 'id',
-                        nameProperty: 'name',
-                        parentIdProperty : 'parentId',
-                        sortByType : 'number',
-                        sortByProperty : 'sortValue'
-                    }
-                );
-            },
-            (error) => {
-                // TODO [KMC] - handle error
-            });
-
-        this.categoriesStore.getCategories();
-
         const savedAutoSelectChildren: boolean = this.browserService.getFromLocalStorage("categoriesTree.autoSelectChildren");
         this.autoSelectChildren = savedAutoSelectChildren === null ? false : savedAutoSelectChildren;
+
+        this.reloadCategories();
+    }
+
+    private reloadCategories() : void
+    {
+        this.loading = true;
+        this.errorMessage = null;
+        this.categoriesStore.getAllCategories().subscribe(result =>
+        {
+            this.loading = false;
+            this.categories = this.treeDataHandler.create(
+                {
+                    data: result.items,
+                    idProperty: 'id',
+                    nameProperty: 'name',
+                    parentIdProperty : 'parentId',
+                    sortByType : 'number',
+                    sortByProperty : 'sortValue'
+                }
+            );
+        },
+        error =>
+        {
+            this.loading = false;
+            this.errorMessage = error.message || 'failed to extract categories';
+        });
     }
 
     ngAfterViewInit(){
@@ -194,10 +203,6 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         if (this.parentPopupStateChangeSubscription) {
             this.parentPopupStateChangeSubscription.unsubscribe();
             this.parentPopupStateChangeSubscription = null;
-        }
-        if (this.categoriesSubscription) {
-            this.categoriesSubscription.unsubscribe();
-            this.categoriesSubscription = null;
         }
     }
 

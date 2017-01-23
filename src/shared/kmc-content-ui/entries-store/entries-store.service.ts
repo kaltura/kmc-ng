@@ -21,7 +21,7 @@ import {
 
 import { KalturaSearchOperatorType} from '@kaltura-ng2/kaltura-api/kaltura-enums'
 
-import {KalturaServerClient} from '@kaltura-ng2/kaltura-api';
+import {KalturaServerClient, KalturaResponse} from '@kaltura-ng2/kaltura-api';
 import {BaseEntryListAction} from '@kaltura-ng2/kaltura-api/services/base-entry';
 
 import * as R from 'ramda';
@@ -254,7 +254,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
     }
 
-    private buildQueryRequest({filters : activeFilers, data : queryData } : { filters : FilterItem[], data : QueryData}) : Observable<KalturaBaseEntryListResponse> {
+    private buildQueryRequest({filters : activeFilers, data : queryData } : { filters : FilterItem[], data : QueryData}) : Observable<KalturaResponse<KalturaBaseEntryListResponse>> {
 
         try {
             let filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter();
