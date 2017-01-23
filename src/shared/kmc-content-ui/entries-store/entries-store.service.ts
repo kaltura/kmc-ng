@@ -92,7 +92,6 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
 
     constructor(private kalturaServerClient: KalturaServerClient) {
-        this.subscribeToChanges();
     }
 
     dispose()
@@ -111,11 +110,6 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         this._entries.complete();
         this._entries.unsubscribe();
     }
-
-    private subscribeToChanges() : void {
-        // switchMap is used to ignore old requests
-    }
-
 
     public updateQuery(query : QueryData)
     {
