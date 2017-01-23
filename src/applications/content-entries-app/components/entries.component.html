@@ -21,7 +21,7 @@
             <button pButton class="kButtonDefault kRefreshBtn small" type="text" (click)="reload()" icon="kIconrefresh" title="{{'applications.content.entries.refresh' | translate}}"></button>
         </div>
 
-        <kTags [title]="'applications.content.filters.activeFilters' | translate" [data]="(this.entriesStore.runQuery$ | async)?.filters" [labelField]="'label'" [tooltipField]="'tooltip'" (onTagRemove)="removeTag($event)" (onRemoveAll)="removeAllTags()"></kTags>
+        <kTags [title]="'applications.content.filters.activeFilters' | translate" [data]="(this.entriesStore.query$ | async)?.filters" [labelField]="'label'" [tooltipField]="'tooltip'" (onTagRemove)="removeTag($event)" (onRemoveAll)="removeAllTags()"></kTags>
 
         <kEntriesTable class="kEntriesTable grid-column-noGutter col"
                        [entries]="(entriesStore.entries$ | async)?.items" [filter]="filter"

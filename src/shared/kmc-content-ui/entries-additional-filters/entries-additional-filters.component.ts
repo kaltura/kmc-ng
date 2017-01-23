@@ -65,7 +65,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         this.treeSelectionsDiffer = this.differs.find([]).create(null);
 
         // update components when the active filter list is updated
-        this.filterUpdateSubscription = this.entriesStore.runQuery$.subscribe(
+        this.filterUpdateSubscription = this.entriesStore.query$.subscribe(
             filter => {
 
                 // sync components
