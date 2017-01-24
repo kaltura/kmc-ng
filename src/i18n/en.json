@@ -99,5 +99,10 @@
                 "delete": "Delete"
             }
         }
+    },
+    "entriesShared": {
+        "categoriesFilters" : {
+            "maxChildrenExceeded" : "Number of categories exceeds {{childrenCount}} and cannot be displayed. Please use the search category control"
+        }
     }
 }

@@ -3,6 +3,8 @@ import { Tree } from 'primeng/primeng';
 import {PrimeTreeNode, TreeDataHandler, NodeChildrenStatuses} from '@kaltura-ng2/kaltura-primeng-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import {AppUser,AppAuthentication} from '@kaltura-ng2/kaltura-common';
+import {  AppConfig } from '@kaltura-ng2/kaltura-common';
+import {AppLocalization} from '@kaltura-ng2/kaltura-common';
 
 
 import {ISubscription} from 'rxjs/Subscription';
@@ -39,8 +41,17 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     @Input() parentPopupWidget: PopupWidgetComponent;
 
-    constructor(public filtersRef: ElementRef, public categoriesStore: CategoriesStore, public browserService: BrowserService,
-                private entriesStore : EntriesStore, private treeDataHandler : TreeDataHandler, private differs: IterableDiffers, appAuthentication : AppAuthentication) {
+    constructor(
+        appAuthentication : AppAuthentication,
+        private appConfig: AppConfig,
+        private appLocalization: AppLocalization,
+        private differs: IterableDiffers,
+        private entriesStore : EntriesStore,
+        private treeDataHandler : TreeDataHandler,
+        public browserService: BrowserService,
+        public categoriesStore: CategoriesStore,
+        public filtersRef: ElementRef
+    ) {
         this.appUser = appAuthentication.appUser;
     }
 
@@ -61,6 +72,8 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         const savedAutoSelectChildren: boolean = this.browserService.getFromLocalStorage("categoriesTree.autoSelectChildren");
         this.autoSelectChildren = savedAutoSelectChildren === null ? false : savedAutoSelectChildren;
 
+
+        // TODO [kmcng] consider using constants for permissions flags
         this.inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
         this.reloadCategories();
     }
@@ -188,15 +201,24 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
             // make sure the node children weren't loaded already.
             if (node.childrenStatus !== NodeChildrenStatuses.loaded && node.childrenStatus !== NodeChildrenStatuses.loading) {
-                node.childrenStatus = NodeChildrenStatuses.loading;
-                this.categoriesStore.getChildrenCategories(<number>node.data).subscribe(result => {
-                        node.setChildren(this.treeDataHandler.create(
-                            this.createTreeHandlerArguments(result.items, node.data)
-                        ));
-                    },
-                    error => {
-                        node.childrenStatus = NodeChildrenStatuses.error;
-                    });
+
+                const maxNumberOfChildren = this.appConfig.get('entriesShared.categoriesFilters.maxChildrenToShow',100);
+                if (node.childrenCount > maxNumberOfChildren)
+                {
+                    node.setChildrenLoadStatus(NodeChildrenStatuses.error,
+                                                this.appLocalization.get('entriesShared.categoriesFilters.maxChildrenExceeded', { childrenCount : maxNumberOfChildren}));
+                }else {
+                    node.setChildrenLoadStatus(NodeChildrenStatuses.loading);
+                    this.categoriesStore.getChildrenCategories(<number>node.data).subscribe(result => {
+                            node.setChildren(this.treeDataHandler.create(
+                                this.createTreeHandlerArguments(result.items, node.data)
+                            ));
+                        },
+                        error => {
+                            node.setChildrenLoadStatus(NodeChildrenStatuses.error,
+                                error.message );
+                        });
+                }
             }
         }
     }

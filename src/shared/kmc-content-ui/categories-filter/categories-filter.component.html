@@ -13,8 +13,10 @@
                 <span class="kTreeNodeLabel">{{node.label}}</span>
                 <span class="kTreeNodeNumChildren" *ngIf="node.childrenCount">{{node.childrenCount}}</span>
             </div>
-            <div *ngIf="node.childrenStatus === NodeChildrenStatuses.loading">- loading -</div>
-            <div *ngIf="node.childrenStatus === NodeChildrenStatuses.error">- error -</div>
+            <div *ngIf="node.expanded && node.childrenStatus === NodeChildrenStatuses.loading">- loading -</div>
+            <div *ngIf="node.expanded && node.childrenStatus === NodeChildrenStatuses.error">
+                {{ node.childrenLoadError || "Failed to load children" }}
+            </div>
         </template>
         </p-tree>
     </div>
