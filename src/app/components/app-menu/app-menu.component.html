@@ -17,20 +17,6 @@
             <i class="kIcondropdown_arrow_bottom"></i>
         </div>
     </div>
-      <!--div>
-        <a (click)="toggleUpload()" [class.uploadOpen]="uploadOpen" class="widgetLink">{{ 'MENU.upload' | translate }} &nbsp;&nbsp;{{uploadOpen ? '&#x25B2;' : '&#x25BC;'}}</a>
-        <kmc-upload [uploadOpen]="uploadOpen"></kmc-upload>
-      </div>
-
-      <div style="display: flex; flex: 1 1 auto; justify-content: flex-end">
-        <div>
-          <kmc-user-settings></kmc-user-settings>
-        </div>
-        <div>
-          <kmc-language-menu class="langMenu"></kmc-language-menu>
-        </div>
-      </div-->
-
 </div>
 
 <div class="appSubMenu" *ngIf="selectedMenuItem && showSubMenu && selectedMenuItem.children">
@@ -43,7 +29,7 @@
 </div>
 
 <kPopupWidget #usersettings [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="username" [targetOffset]="{'x':-50, 'y': 30}" (onOpen)="userSettingsOpen=true" (onClose)="userSettingsOpen=false">
-    <kmc-user-settings></kmc-user-settings>
+    <kKMCUserSettings></kKMCUserSettings>
 </kPopupWidget>
 
 <kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="helpOpen=true" (onClose)="helpOpen=false">

@@ -1,7 +1,5 @@
-import * as R from 'ramda';
-
-import {EntriesStore} from "../entries-store.service";
-import {ValueFilter} from '../value-filter';
+import { EntriesStore } from "../entries-store.service";
+import { ValueFilter } from '../value-filter';
 
 function toServerDate(value?: Date): number {
     return value ? value.getTime() / 1000 : null;

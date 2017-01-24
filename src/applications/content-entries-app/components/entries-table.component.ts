@@ -10,7 +10,7 @@ import { EntriesStore } from "kmc-content-ui/entries-store/entries-store.service
   templateUrl: './entries-table.component.html',
   styleUrls: ['./entries-table.component.scss']
 })
-export class kEntriesTable implements AfterViewInit{
+export class kEntriesTableComponent implements AfterViewInit{
 
   @Input() entries: any[] = [];
   @Input() filter: any = {};

@@ -4,9 +4,9 @@ import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/share';
 
-import {KalturaServerClient} from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { CategoryListAction } from '@kaltura-ng2/kaltura-api/services/category';
-import { KalturaCategoryFilter, KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType} from '@kaltura-ng2/kaltura-api/types'
+import { KalturaCategoryFilter, KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType } from '@kaltura-ng2/kaltura-api/types'
 
 const allCategoriesFetchToken = 'all_categories';
 

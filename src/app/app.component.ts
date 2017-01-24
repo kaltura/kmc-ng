@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
  * Top Level Component
  */
 @Component({
-  selector: 'kmc-root',
+  selector: 'kKMCRoot',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })

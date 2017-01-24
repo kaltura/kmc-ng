@@ -1,17 +1,17 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Output, ViewChild, Input, IterableDiffer, IterableDiffers, AfterViewInit, ElementRef} from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, Input, IterableDiffer, IterableDiffers, AfterViewInit, ElementRef } from '@angular/core';
 import { Tree } from 'primeng/primeng';
-import {PrimeTreeNode, TreeDataHandler} from '@kaltura-ng2/kaltura-primeng-ui';
+import { PrimeTreeNode, TreeDataHandler } from '@kaltura-ng2/kaltura-primeng-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
-import {ISubscription} from 'rxjs/Subscription';
+import { ISubscription } from 'rxjs/Subscription';
 import * as R from 'ramda';
 
 import { CategoriesStore } from '../categories-store.service';
-import {BrowserService} from "../../kmc-shell/providers/browser.service";
-import {FilterItem} from "../entries-store/filter-item";
-import {ValueFilter} from "../entries-store/value-filter";
-import {EntriesStore} from "../entries-store/entries-store.service";
-import {CategoriesFilter, CategoriesFilterModes} from "../entries-store/filters/categories-filter";
+import { BrowserService } from "../../kmc-shell/providers/browser.service";
+import { FilterItem } from "../entries-store/filter-item";
+import { ValueFilter } from "../entries-store/value-filter";
+import { EntriesStore } from "../entries-store/entries-store.service";
+import { CategoriesFilter, CategoriesFilterModes } from "../entries-store/filters/categories-filter";
 
 @Component({
     selector: 'kCategoriesFilter',
@@ -29,6 +29,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     private treeSelectionsDiffer : IterableDiffer = null;
     @ViewChild(Tree)
     private categoriesTree: Tree;
+    private currentSearch: string
 
     @Input() parentPopupWidget: PopupWidgetComponent;
 

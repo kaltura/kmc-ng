@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'kmc-error',
+  selector: 'kKMCError',
   templateUrl: './error.component.html',
   styleUrls: ['./error.component.scss']
 })

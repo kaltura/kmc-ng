@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 
-import {EntriesStore} from "../entries-store.service";
-import {FilterItem} from "../filter-item";
+import { EntriesStore } from "../entries-store.service";
+import { FilterItem } from "../filter-item";
 
 
 function toServerDate(value?: Date): number {

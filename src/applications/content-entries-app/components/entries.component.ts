@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy,  ViewChild  } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
-import {AppLocalization} from '@kaltura-ng2/kaltura-common';
+import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
-import {EntriesStore, SortDirection} from 'kmc-content-ui/entries-store/entries-store.service';
-import {kEntriesTable} from "./entries-table.component";
+import { EntriesStore, SortDirection } from 'kmc-content-ui/entries-store/entries-store.service';
+import { kEntriesTableComponent } from "./entries-table.component";
 
-import {FreetextFilter} from "../../../shared/kmc-content-ui/entries-store/filters/freetext-filter";
-import {EntriesAdditionalFiltersStore} from "../../../shared/kmc-content-ui/entries-additional-filters/entries-additional-filters-store.service";
+import { FreetextFilter } from "../../../shared/kmc-content-ui/entries-store/filters/freetext-filter";
+import { EntriesAdditionalFiltersStore } from "../../../shared/kmc-content-ui/entries-additional-filters/entries-additional-filters-store.service";
 
 export interface Entry {
     id: string;
@@ -21,14 +21,14 @@ export interface Entry {
 }
 
 @Component({
-    selector: 'kmc-entries',
+    selector: 'kKMCEntries',
     templateUrl: './entries.component.html',
     styleUrls: ['./entries.component.scss'],
     providers : [EntriesStore]
 })
 export class EntriesComponent implements OnInit, OnDestroy {
 
-    @ViewChild(kEntriesTable) private dataTable: kEntriesTable;
+    @ViewChild(kEntriesTableComponent) private dataTable: kEntriesTableComponent;
 
     private querySubscription : Subscription;
     private additionalFiltersSubscription : Subscription;

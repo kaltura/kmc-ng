@@ -3,7 +3,7 @@ import { AuthCanActivate, AppBootstrap } from '@kaltura-ng2/kaltura-common';
 
 import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import {ErrorComponent} from "./components/error/error.component";
+import { ErrorComponent } from "./components/error/error.component";
 
 
 const routes: Routes = <Routes>[

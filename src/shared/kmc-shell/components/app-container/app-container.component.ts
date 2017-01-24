@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, Input, ElementRef, HostBinding} from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, Input, ElementRef, HostBinding } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
 import { AppShellService } from "../../providers/app-shell.service";
 import * as $ from 'jquery';
 
 @Component({
-  selector: 'kmc-app-container',
+  selector: 'kKMCAppContainer',
   templateUrl: './app-container.component.html',
   styleUrls: ['./app-container.component.scss']
 })

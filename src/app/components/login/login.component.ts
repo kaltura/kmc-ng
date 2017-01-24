@@ -4,7 +4,7 @@ import { AppAuthentication, AppNavigator, AppConfig } from '@kaltura-ng2/kaltura
 import { BrowserService } from 'kmc-shell';
 
 @Component({
-  selector: 'kmc-login',
+  selector: 'kKMCLogin',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })

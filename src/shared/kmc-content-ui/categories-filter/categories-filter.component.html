@@ -8,7 +8,7 @@
     </div>
     <div class="kTreeContainer">
         <p-tree [kTreeHierarchySelection]="autoSelectChildren" [value]="categories" selectionMode="checkbox" [(selection)]="selectedNodes" (onNodeSelect)="onTreeSelectionChanged()" (onNodeUnselect)="onTreeSelectionChanged()">
-        <template let-node  pTemplate type="default">
+        <template let-node  pTemplate="default">
             <span class="kTreeNodeLabel">{{node.label}}</span>
             <span class="kTreeNodeNumChildren" *ngIf="node.children && node.children.length">{{node.children.length}}</span>
         </template>

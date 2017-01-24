@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {LocalStorageService, SessionStorageService} from 'ng2-webstorage';
+import { LocalStorageService, SessionStorageService } from 'ng2-webstorage';
 import { IAppStorage } from '@kaltura-ng2/kaltura-common';
 
 

@@ -5,16 +5,16 @@ import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
 import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 import { TagsModule } from '@kaltura-ng2/kaltura-ui/tags';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
-import { TreeModule, TieredMenuModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, ButtonModule, AccordionModule, CalendarModule,  MultiSelectModule, PaginatorModule, MenuModule} from 'primeng/primeng';
+import { TreeModule, TieredMenuModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, ButtonModule, AccordionModule, CalendarModule,  MultiSelectModule, PaginatorModule, MenuModule } from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 
 
 
-import { routing} from './content-entries-app.routes';
+import { routing } from './content-entries-app.routes';
 import { EntriesComponent } from './components/entries.component';
 import { KMCShellModule } from 'kmc-shell';
-import {kEntriesTable} from './components/entries-table.component';
-import {KMCContentUIModule} from "../../shared/kmc-content-ui/kmc-content-ui.module";
+import { kEntriesTableComponent } from './components/entries-table.component';
+import { KMCContentUIModule } from "../../shared/kmc-content-ui/kmc-content-ui.module";
 
 @NgModule({
   imports:      [
@@ -44,7 +44,7 @@ import {KMCContentUIModule} from "../../shared/kmc-content-ui/kmc-content-ui.mod
     ],
   declarations: [
     EntriesComponent,
-    kEntriesTable
+      kEntriesTableComponent
   ],
   providers:    [
   ]

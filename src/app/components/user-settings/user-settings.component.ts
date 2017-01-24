@@ -4,7 +4,7 @@ import { AppConfig, AppAuthentication, AppUser, PartnerPackageTypes, AppNavigato
 import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({
-  selector: 'kmc-user-settings',
+  selector: 'kKMCUserSettings',
   templateUrl: './user-settings.component.html',
   styleUrls: ['./user-settings.component.scss']
 })
