@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import {ISubscription} from 'rxjs/Subscription';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { Entry } from './entries.component';
@@ -9,7 +10,7 @@ import {EntriesStore} from "kmc-content-ui/entries-store/entries-store.service";
   templateUrl: './entries-table.component.html',
   styleUrls: ['./entries-table.component.scss']
 })
-export class kEntriesTable implements AfterViewInit, OnInit{
+export class kEntriesTable implements AfterViewInit, OnInit, OnDestroy{
 
   private loadingError = null;
   @Input() entries: any[] = [];
@@ -26,6 +27,7 @@ export class kEntriesTable implements AfterViewInit, OnInit{
   @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
   private actionsMenuEntryId: string = "";
+  private entriesStoreStatusSubscription : ISubscription;
 
   private items: MenuItem[];
   tableSelectedEntries: Entry[] = [];
@@ -39,7 +41,7 @@ export class kEntriesTable implements AfterViewInit, OnInit{
 
   ngOnInit() {
 
-      this.entriesStore.status$.subscribe(
+      this.entriesStoreStatusSubscription = this.entriesStore.status$.subscribe(
           result => {
                 if (result.errorMessage)
                 {
@@ -56,6 +58,12 @@ export class kEntriesTable implements AfterViewInit, OnInit{
               throw error;
           });
 
+  }
+
+  ngOnDestroy()
+  {
+      this.entriesStoreStatusSubscription.unsubscribe();
+      this.entriesStoreStatusSubscription = null;
   }
 
   buildMenu() : void
