@@ -61,6 +61,7 @@ a.disabled{
     border: none;
 }
 
+/* Make sure the checkbox remain aligned even if the node height changes */
 :host /deep/ .ui-tree .ui-chkbox{
     vertical-align: top;
     margin-top: 11px;

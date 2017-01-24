@@ -7,10 +7,14 @@
         </div>
     </div>
     <div class="kTreeContainer">
-        <p-tree [kTreeHierarchySelection]="autoSelectChildren" [value]="categories" selectionMode="checkbox" [(selection)]="selectedNodes" (onNodeSelect)="onTreeSelectionChanged()" (onNodeUnselect)="onTreeSelectionChanged()">
+        <p-tree [kTreeHierarchySelection]="autoSelectChildren" [value]="categories" selectionMode="checkbox" [(selection)]="selectedNodes" (onNodeSelect)="onTreeSelectionChanged()" (onNodeUnselect)="onTreeSelectionChanged()" (onNodeExpand)="onNodeExpand($event)">
         <template let-node  pTemplate type="default">
-            <span class="kTreeNodeLabel">{{node.label}}</span>
-            <span class="kTreeNodeNumChildren" *ngIf="node.children && node.children.length">{{node.children.length}}</span>
+            <div>
+                <span class="kTreeNodeLabel">{{node.label}}</span>
+                <span class="kTreeNodeNumChildren" *ngIf="node.childrenCount">{{node.childrenCount}}</span>
+            </div>
+            <div *ngIf="node.childrenStatus === NodeChildrenStatuses.loading">- loading -</div>
+            <div *ngIf="node.childrenStatus === NodeChildrenStatuses.error">- error -</div>
         </template>
         </p-tree>
     </div>

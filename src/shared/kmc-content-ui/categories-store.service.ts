@@ -15,7 +15,8 @@ export interface CategoryData
     id : number,
     name : string,
     sortValue : number,
-    fullName : string
+    fullName : string,
+    childrenCount : number
 }
 
 
@@ -120,7 +121,8 @@ export class CategoriesStore {
                     name: category.name,
                     parentId: category.parentId !== 0 ? category.parentId : null,
                     sortValue: category.partnerSortValue,
-                    fullName: category.fullName
+                    fullName: category.fullName,
+                    childrenCount : category.directSubCategoriesCount
                 });
             });
         }
@@ -132,13 +134,13 @@ export class CategoriesStore {
     {
         const filter = new KalturaCategoryFilter();
         filter.orderBy = '+name';
-        if (parentId) {
+        if (parentId !== null && typeof parentId !== 'undefined') {
             Object.assign(filter, {parentIdEqual: parentId});
         }
 
         const responseProfile = new KalturaDetachedResponseProfile()
             .setData(data => {
-                data.fields = "id,name,parentId,partnerSortValue,fullName";
+                data.fields = "id,name,parentId,partnerSortValue,fullName,directSubCategoriesCount";
                 data.type = KalturaResponseProfileType.IncludeFields;
             });
 
