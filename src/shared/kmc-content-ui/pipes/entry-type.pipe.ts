@@ -1,26 +1,25 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { KalturaMediaType } from '@kaltura-ng2/kaltura-api';
 
 @Pipe({name: 'entryType'})
 export class EntryTypePipe implements PipeTransform {
   transform(value): string {
     let className = 'k-entry-';
-
-    // TODO [kmc] use the actual enum instead of strings
     if (typeof(value) !== 'undefined' && value !== null)  {
-      switch (value.toString()) {
-        case '1':
+      switch (value) {
+        case KalturaMediaType.Video:
           className += 'media';
           break;
-        case '2':
+        case KalturaMediaType.Image:
           className += 'image';
           break;
-        case '5':
+        case KalturaMediaType.Audio:
           className += 'audio';
           break;
-        case '201':
-        case '202':
-        case '203':
-        case '204':
+        case KalturaMediaType.LiveStreamFlash:
+        case KalturaMediaType.LiveStreamQuicktime:
+        case KalturaMediaType.LiveStreamRealMedia:
+        case KalturaMediaType.LiveStreamWindowsMedia:
           className += 'live';
           break;
         default:

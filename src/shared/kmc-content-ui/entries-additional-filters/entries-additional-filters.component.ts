@@ -319,7 +319,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
             result = R.find(R.propEq('value','scheduled'),timeFilters);
         }
 
-        return result;
+        return result || null;
     }
 
     private isFilterOriginatedByTreeComponent(filter : ValueFilter<any>) : boolean

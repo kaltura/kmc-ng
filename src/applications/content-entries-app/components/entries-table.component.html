@@ -6,12 +6,12 @@
         <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
         <p-column field="thumbnailUrl" header="{{'applications.content.table.thumbnail' | translate}}" [style]="{'width':'100px', 'text-align': 'center'}">
             <template let-col let-entry="rowData" pTemplate type="body">
-                <div class="kThumbnailHolder"><span class="kHelper"></span><img src="{{entry[col.field]}}" (click)="onActionSelected('view',entry.id)"></div>
+                <div class="kThumbnailHolder"><span class="kHelper"></span><img src="{{entry[col.field]}}" [class.disable]="!allowDrilldown(entry.mediaType,entry.status)" (click)="onActionSelected('view',entry.id,entry.mediaType,entry.status)"></div>
             </template>
         </p-column>
         <p-column field="name" header="{{'applications.content.table.name' | translate}}" [sortable]="'custom'">
             <template let-col let-entry="rowData" pTemplate type="body">
-                <span class="kTitle" (click)="onActionSelected('view',entry.id)">{{entry[col.field]}}</span>
+                <span class="kTitle" [class.disable]="!allowDrilldown(entry.mediaType,entry.status)" (click)="onActionSelected('view',entry.id,entry.mediaType,entry.status)">{{entry[col.field]}}</span>
             </template>
         </p-column>
         <p-column field="id" header="ID" [sortable]="'custom'" [style]="{'width':'100px'}"></p-column>
@@ -41,7 +41,7 @@
             <template let-col let-entry="rowData" pTemplate type="body">
                 <div class="kEntriesTableActions">
                     <button type="button" pButton icon="kIconmore"
-                            (click)="openActionsMenu($event, entry.id)"></button>
+                            (click)="openActionsMenu($event, entry)"></button>
                 </div>
             </template>
         </p-column>

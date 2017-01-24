@@ -2,8 +2,9 @@ import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit
 import {ISubscription} from 'rxjs/Subscription';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { KalturaMediaType, KalturaEntryStatus } from '@kaltura-ng2/kaltura-api';
 import { Entry } from './entries.component';
-import {EntriesStore} from "kmc-content-ui/entries-store/entries-store.service";
+import { EntriesStore } from "kmc-content-ui/entries-store/entries-store.service";
 
 @Component({
   selector: 'kEntriesTable',
@@ -35,9 +36,8 @@ export class kEntriesTable implements AfterViewInit, OnInit, OnDestroy{
 
 
   constructor(private appLocalization: AppLocalization, private entriesStore : EntriesStore) {
-    this.buildMenu();
-
   }
+
 
   ngOnInit() {
 
@@ -66,7 +66,7 @@ export class kEntriesTable implements AfterViewInit, OnInit, OnDestroy{
       this.entriesStoreStatusSubscription = null;
   }
 
-  buildMenu() : void
+    buildMenu(mediaType: string = null, status: string = null) : void
   {
     this.items = [
       {label: this.appLocalization.get("applications.content.table.previewAndEmbed"), command: (event) => {
@@ -79,6 +79,12 @@ export class kEntriesTable implements AfterViewInit, OnInit, OnDestroy{
         this.onActionSelected("view", this.actionsMenuEntryId);
       }}
     ];
+    if (status && status != KalturaEntryStatus.Ready.toString()){
+        this.items.shift();
+        if (mediaType && mediaType == KalturaMediaType.LiveStreamFlash.toString()){
+            this.items.pop();
+        }
+    }
   }
 
   ngAfterViewInit(){
@@ -98,18 +104,30 @@ export class kEntriesTable implements AfterViewInit, OnInit, OnDestroy{
             this.entriesStore.reload();
         }
     }
-  openActionsMenu(event, entryId){
+
+  openActionsMenu(event: any, entry: Entry){
     if (this.actionsMenu){
       this.actionsMenu.toggle(event);
-      if (this.actionsMenuEntryId !== entryId){
+      if (this.actionsMenuEntryId !== entry.id){
+        this.buildMenu(entry.mediaType, entry.status);
+        this.actionsMenuEntryId = entry.id;
         this.actionsMenu.show(event);
-        this.actionsMenuEntryId = entryId;
       }
     }
   }
 
-  onActionSelected(action, entryID){
-    this.actionSelected.emit({"action": action, "entryID": entryID});
+  allowDrilldown(mediaType: string, status: string){
+      let allowed = true;
+      if ( mediaType && mediaType == KalturaMediaType.LiveStreamFlash.toString() && status && status != KalturaEntryStatus.Ready.toString()){
+          allowed = false;
+      }
+      return allowed;
+  }
+
+  onActionSelected(action: string, entryID: string, mediaType: string = null, status: string = null){
+    if (this.allowDrilldown(mediaType, status)) {
+        this.actionSelected.emit({"action": action, "entryID": entryID});
+    }
   }
 
   onSortChanged(event){
