@@ -222,6 +222,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             this._status.next({loading: true, errorMessage: null});
             this._query.next(args);
 
+
             let requestSubscription = this.buildQueryRequest(args).subscribe(observer);
 
             return () => {
@@ -239,18 +240,18 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
                     this._status.next({loading: false, errorMessage: response.error.message});
                 }else {
 
+                    this._status.next({loading: false, errorMessage: null});
+
                     this._entries.next({
                         items: <any[]>response.result.objects,
                         totalCount: <number>response.result.totalCount
                     });
                 }
-                this._status.next({loading: false, errorMessage: null});
             },
             error => {
                 this.executeQuerySubscription = null;
-                this._status.next({loading: false, errorMessage: (<Error>error).message});
-            }
-        );
+                this._status.next({loading: false, errorMessage: (<Error>error).message || <string>error});
+            });
 
     }
 

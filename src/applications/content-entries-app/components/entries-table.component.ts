@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit } from '@angular/core';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { Entry } from './entries.component';
@@ -9,8 +9,9 @@ import {EntriesStore} from "kmc-content-ui/entries-store/entries-store.service";
   templateUrl: './entries-table.component.html',
   styleUrls: ['./entries-table.component.scss']
 })
-export class kEntriesTable implements AfterViewInit{
+export class kEntriesTable implements AfterViewInit, OnInit{
 
+  private loadingError = null;
   @Input() entries: any[] = [];
   @Input() filter: any = {};
   @Input() selectedEntries: any[] = [];
@@ -30,8 +31,30 @@ export class kEntriesTable implements AfterViewInit{
   tableSelectedEntries: Entry[] = [];
 
 
+
   constructor(private appLocalization: AppLocalization, private entriesStore : EntriesStore) {
     this.buildMenu();
+
+  }
+
+  ngOnInit() {
+
+      this.entriesStore.status$.subscribe(
+          result => {
+                if (result.errorMessage)
+                {
+                    // TODO [kmcng] show retry only if network connectivity
+                    this.loadingError = { message : result.errorMessage, buttons : { retry : 'Retry'}};
+                }else
+                {
+                    this.loadingError = null;
+                }
+          },
+          error =>
+          {
+              // TODO [kmc] navigate to error page
+              throw error;
+          });
 
   }
 
@@ -60,6 +83,13 @@ export class kEntriesTable implements AfterViewInit{
     }
   }
 
+    onLoadingAction(actionKey : string)
+    {
+        if (actionKey === 'retry')
+        {
+            this.entriesStore.reload();
+        }
+    }
   openActionsMenu(event, entryId){
     if (this.actionsMenu){
       this.actionsMenu.toggle(event);

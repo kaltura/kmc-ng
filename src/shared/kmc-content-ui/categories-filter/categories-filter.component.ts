@@ -187,7 +187,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             const node : PrimeTreeNode = <PrimeTreeNode>event.node;
 
             // make sure the node children weren't loaded already.
-            if (node.childrenStatus !== NodeChildrenStatuses.loaded) {
+            if (node.childrenStatus !== NodeChildrenStatuses.loaded && node.childrenStatus !== NodeChildrenStatuses.loading) {
                 node.childrenStatus = NodeChildrenStatuses.loading;
                 this.categoriesStore.getChildrenCategories(<number>node.data).subscribe(result => {
                         node.setChildren(this.treeDataHandler.create(
