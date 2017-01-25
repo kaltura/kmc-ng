@@ -18,7 +18,7 @@ import { EntryTypePipe, EntryStatusPipe, PlaylistTypePipe } from './pipes/index'
 import {
     EntriesAdditionalFiltersComponent
 } from "./entries-additional-filters/entries-additional-filters.component";
-import {EntriesAdditionalFiltersStore} from "./entries-additional-filters/entries-additional-filters-store.service";
+import { EntriesAdditionalFiltersStore } from "./entries-additional-filters/entries-additional-filters-store.service";
 
 
 

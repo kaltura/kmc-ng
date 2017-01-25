@@ -5,9 +5,9 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/multicast';
 
-import {KalturaServerClient, KalturaResponse} from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient, KalturaResponse } from '@kaltura-ng2/kaltura-api';
 import { CategoryListAction } from '@kaltura-ng2/kaltura-api/services/category';
-import { KalturaCategoryFilter, KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaCategoryListResponse} from '@kaltura-ng2/kaltura-api/types'
+import { KalturaCategoryFilter, KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaCategoryListResponse } from '@kaltura-ng2/kaltura-api/types'
 
 export interface CategoryData
 {

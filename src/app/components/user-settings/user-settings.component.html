@@ -1,17 +1,3 @@
-<!--div class="userSettings" (mouseenter)="setOpen(true)" (mouseleave)="setOpen(false)" #userSettings>
-  <span class="widgetLink" *ngIf="!isOpen">< &nbsp;{{_userContext.fullName}}</span>
-  <div [hidden]="!isOpen" [class.open]="isOpen">
-    <span>{{_userContext.fullName}}</span>
-    <span><a (click)="logout()">{{'USER_SETTINGS.logout' | translate}}</a></span>
-    <span class="separator">|</span>
-    <span>{{'USER_SETTINGS.account' | translate}} : {{_userContext.partnerInfo.name}}</span>
-    <span><a>{{'USER_SETTINGS.changeAccount' | translate}}</a></span>
-    <span class="separator">|</span>
-    <span><a (click)="openUserManual()">{{'USER_SETTINGS.userManual' | translate}}</a></span>
-    <span class="separator">|</span>
-    <span><a (click)="openSupport()">{{'USER_SETTINGS.support' | translate}}</a></span>
-  </div>
-</div-->
 <ul>
     <li class="kMenuItemLabel"><i class="kIconuser_small"></i>
         <div class="kMenuItem">

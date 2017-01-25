@@ -1,21 +1,21 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Output, ViewChild, Input, IterableDiffer, IterableDiffers, AfterViewInit, ElementRef} from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, Output, ViewChild, Input, IterableDiffer, IterableDiffers, AfterViewInit, ElementRef } from '@angular/core';
 import { Tree } from 'primeng/primeng';
-import {PrimeTreeNode, TreeDataHandler, NodeChildrenStatuses} from '@kaltura-ng2/kaltura-primeng-ui';
+import { PrimeTreeNode, TreeDataHandler, NodeChildrenStatuses } from '@kaltura-ng2/kaltura-primeng-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
-import {AppUser,AppAuthentication} from '@kaltura-ng2/kaltura-common';
-import {  AppConfig } from '@kaltura-ng2/kaltura-common';
-import {AppLocalization} from '@kaltura-ng2/kaltura-common';
+import { AppUser,AppAuthentication } from '@kaltura-ng2/kaltura-common';
+import { AppConfig } from '@kaltura-ng2/kaltura-common';
+import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 
-import {ISubscription} from 'rxjs/Subscription';
+import { ISubscription } from 'rxjs/Subscription';
 import * as R from 'ramda';
 
 import { CategoriesStore } from '../categories-store.service';
-import {BrowserService} from "../../kmc-shell/providers/browser.service";
-import {FilterItem} from "../entries-store/filter-item";
-import {ValueFilter} from "../entries-store/value-filter";
-import {EntriesStore} from "../entries-store/entries-store.service";
-import {CategoriesFilter, CategoriesFilterModes} from "../entries-store/filters/categories-filter";
+import { BrowserService } from "../../kmc-shell/providers/browser.service";
+import { FilterItem } from "../entries-store/filter-item";
+import { ValueFilter } from "../entries-store/value-filter";
+import { EntriesStore } from "../entries-store/entries-store.service";
+import { CategoriesFilter, CategoriesFilterModes } from "../entries-store/filters/categories-filter";
 
 @Component({
     selector: 'kCategoriesFilter',
@@ -26,14 +26,15 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     private loading : boolean = false;
     private errorMessage : string = null;
-    private categories: PrimeTreeNode[] = [];
+    public _categories: PrimeTreeNode[] = [];
     private appUser : AppUser;
     private inLazyMode : boolean = false;
     private filterUpdateSubscription : ISubscription;
     private parentPopupStateChangeSubscription : ISubscription;
-    private selectedNodes: PrimeTreeNode[] = [];
-    private autoSelectChildren:boolean = false;
+    public _selectedNodes: PrimeTreeNode[] = [];
+    public _autoSelectChildren:boolean = false;
     private treeSelectionsDiffer : IterableDiffer = null;
+    public _currentSearch: string = "";
 
     public NodeChildrenStatuses : any = NodeChildrenStatuses; // we expose the enum so we will be able to use it as part of template expression
     @ViewChild(Tree)
@@ -70,7 +71,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         );
 
         const savedAutoSelectChildren: boolean = this.browserService.getFromLocalStorage("categoriesTree.autoSelectChildren");
-        this.autoSelectChildren = savedAutoSelectChildren === null ? false : savedAutoSelectChildren;
+        this._autoSelectChildren = savedAutoSelectChildren === null ? false : savedAutoSelectChildren;
 
 
         // TODO [kmcng] consider using constants for permissions flags
@@ -87,7 +88,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
         categories$.subscribe(result => {
                 this.loading = false;
-                this.categories = this.treeDataHandler.create(
+                this._categories = this.treeDataHandler.create(
                     this.createTreeHandlerArguments(result.items)
                 );
             },
@@ -118,7 +119,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    private onTreeSelectionChanged() : void
+    public _onTreeSelectionChanged() : void
     {
         this.syncTreeFilters();
     }
@@ -128,13 +129,13 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         let newFilters : FilterItem[] = [];
         let removedFilters : FilterItem[] = [];
 
-        const selectionChanges = this.treeSelectionsDiffer.diff(this.selectedNodes);
+        const selectionChanges = this.treeSelectionsDiffer.diff(this._selectedNodes);
 
         if (selectionChanges)
         {
             selectionChanges.forEachAddedItem((record) => {
                 const node : PrimeTreeNode = record.item;
-                const mode = this.autoSelectChildren ? CategoriesFilterModes.Hierarchy : CategoriesFilterModes.Exact;
+                const mode = this._autoSelectChildren ? CategoriesFilterModes.Hierarchy : CategoriesFilterModes.Exact;
 
                 newFilters.push(new CategoriesFilter(<number>node.data,mode, node.label,node.origin.fullName));
             });
@@ -176,7 +177,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             {
                 if (filter instanceof ValueFilter)
                 {
-                    let nodeToRemove = R.find(R.propEq('data',filter.value),this.selectedNodes);
+                    let nodeToRemove = R.find(R.propEq('data',filter.value),this._selectedNodes);
 
                     if (nodeToRemove)
                     {
@@ -187,12 +188,12 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
             if (nodesToRemove.length > 0)
             {
-                this.selectedNodes = R.without(nodesToRemove,this.selectedNodes);
+                this._selectedNodes = R.without(nodesToRemove,this._selectedNodes);
             }
         }
     }
 
-    private onNodeExpand(event : any) : void
+    public _onNodeExpand(event : any) : void
     {
         // load node children, relevant only if 'inLazyMode' and node children weren't loaded already
         if (this.inLazyMode && event && event.node instanceof PrimeTreeNode)
@@ -236,19 +237,19 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    private onSelectionModeChanged(value)
+    public _onSelectionModeChanged(value)
     {
-        this.autoSelectChildren = value;
+        this._autoSelectChildren = value;
 
-        this.browserService.setInLocalStorage("categoriesTree.autoSelectChildren", this.autoSelectChildren);
+        this.browserService.setInLocalStorage("categoriesTree.autoSelectChildren", this._autoSelectChildren);
 
         // clear current selection
-        this.selectedNodes = [];
+        this._selectedNodes = [];
         this.syncTreeFilters();
     }
 
-    private clearAll(){
-        this.selectedNodes = [];
+    public _clearAll(){
+        this._selectedNodes = [];
         this.syncTreeFilters();
     }
 

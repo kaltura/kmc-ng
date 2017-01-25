@@ -1,13 +1,13 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {ReplaySubject} from 'rxjs/ReplaySubject';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
-import {KalturaServerClient, KalturaMetadataObjectType, KalturaMultiRequest} from '@kaltura-ng2/kaltura-api';
-import {FlavorParamsListAction} from '@kaltura-ng2/kaltura-api/services/flavor-params';
-import {MetadataProfileListAction} from '@kaltura-ng2/kaltura-api/services/metadata-profile';
-import {AccessControlListAction} from '@kaltura-ng2/kaltura-api/services/access-control';
-import {DistributionProfileListAction} from '@kaltura-ng2/kaltura-api/services/distribution-profile';
-import {MetadataProfileParser, MetadataFieldTypes} from '@kaltura-ng2/kaltura-common/kaltura-metadata-parser';
+import { KalturaServerClient, KalturaMetadataObjectType, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
+import { FlavorParamsListAction } from '@kaltura-ng2/kaltura-api/services/flavor-params';
+import { MetadataProfileListAction } from '@kaltura-ng2/kaltura-api/services/metadata-profile';
+import { AccessControlListAction } from '@kaltura-ng2/kaltura-api/services/access-control';
+import { DistributionProfileListAction } from '@kaltura-ng2/kaltura-api/services/distribution-profile';
+import { MetadataProfileParser, MetadataFieldTypes } from '@kaltura-ng2/kaltura-common/kaltura-metadata-parser';
 
 import {
     KalturaAccessControlFilter,
@@ -21,7 +21,7 @@ import {
     KalturaResponseProfileType
 } from '@kaltura-ng2/kaltura-api/types'
 
-import {ConstantsFilters} from './constant-filters';
+import { ConstantsFilters } from './constant-filters';
 
 import * as R from 'ramda';
 

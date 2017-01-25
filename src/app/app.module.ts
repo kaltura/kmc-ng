@@ -26,9 +26,9 @@ import { LanguageMenuComponent } from './components/language-menu/language-menu.
 import { LoginComponent } from './components/login/login.component';
 import { ErrorComponent } from './components/error/error.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
-import {KalturaHttpConfigurationAdapter} from "./services/kaltura-http-configuration-adapter.service";
+import { KalturaHttpConfigurationAdapter } from "./services/kaltura-http-configuration-adapter.service";
 
-import { ButtonModule, InputTextModule, TieredMenuModule} from 'primeng/primeng';
+import { ButtonModule, InputTextModule, TieredMenuModule } from 'primeng/primeng';
 
 import { KMCContentUIModule } from 'kmc-content-ui/kmc-content-ui.module';
 

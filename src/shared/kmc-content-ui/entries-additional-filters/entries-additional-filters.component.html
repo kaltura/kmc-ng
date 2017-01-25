@@ -7,23 +7,23 @@
             <span>{{'applications.content.filters.additionalFilters' | translate | uppercase}}</span>
         </div>
         <p>{{'applications.content.filters.createdBetween' | translate}}</p>
-        <p-calendar [(ngModel)]="createdAfter" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="onCreatedChanged()"></p-calendar>
+        <p-calendar [(ngModel)]="_createdAfter" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
         <span class="kCalendarSeparator">-</span>
-        <p-calendar [(ngModel)]="createdBefore" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="onCreatedChanged()"></p-calendar>
-        <a class="kClearAll" (click)="clearCreatedComponents()">{{'applications.content.filters.clearDates' | translate}}</a>
+        <p-calendar [(ngModel)]="_createdBefore" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
+        <a class="kClearAll" (click)="_clearCreatedComponents()">{{'applications.content.filters.clearDates' | translate}}</a>
 
         <div *ngFor="let primeGroup of primeGroups">
             <div *ngIf="primeGroup.groupName" class="kFiltersGroupTitle">
                 <span>{{primeGroup.groupName | uppercase}}</span>
             </div>
-            <p-tree [value]="primeGroup.items" selectionMode="checkbox" [selection]="selectedNodes"  (onNodeSelect)="onTreeSelectionChanged()" (onNodeUnselect)="onTreeSelectionChanged()" >
-                <template let-node  pTemplate type="default">
+            <p-tree [value]="primeGroup.items" selectionMode="checkbox" [selection]="_selectedNodes"  (onNodeSelect)="_onTreeSelectionChanged()" (onNodeUnselect)="_onTreeSelectionChanged()" >
+                <template let-node  pTemplate="default">
                     <span  class="kTreeNodeLabel">{{node.label}} <span *ngIf="node.childrenCount">({{ node.childrenCount}})</span></span>
-                    <div *ngIf="node.data==='scheduled'" (click)="blockScheduleToggle($event)">
+                    <div *ngIf="node.data==='scheduled'" (click)="_blockScheduleToggle($event)">
                         <div>
-                            <p-calendar #scheduledfrom [(ngModel)]="scheduledAfter" [showIcon]="true" icon="kIconcalendar" [disabled]="!scheduledSelected" [monthNavigator]="true" [yearNavigator]="true"  yearRange="2005:2030"[readonlyInput]="true" (onSelect)="onSchedulingChanged(scheduledfrom)"></p-calendar>
+                            <p-calendar #scheduledfrom [(ngModel)]="_scheduledAfter" [showIcon]="true" icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true" [yearNavigator]="true"  yearRange="2005:2030"[readonlyInput]="true" (onSelect)="_onSchedulingChanged(scheduledfrom)"></p-calendar>
                             <span class="kCalendarSeparator">-</span>
-                            <p-calendar #scheduledto [(ngModel)]="scheduledBefore" [showIcon]="true" icon="kIconcalendar" [disabled]="!scheduledSelected" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" [readonlyInput]="true" (onSelect)="onSchedulingChanged(scheduledto)"></p-calendar>
+                            <p-calendar #scheduledto [(ngModel)]="_scheduledBefore" [showIcon]="true" icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" [readonlyInput]="true" (onSelect)="_onSchedulingChanged(scheduledto)"></p-calendar>
                         </div>
                     </div>
                 </template>
@@ -32,8 +32,8 @@
     </div>
 
     <p>
-        <a class="clearAll" [class.disabled]="selectedNodes.length === 0" (click)="clearAllComponents()">{{'applications.content.filters.clearAll' | translate}}</a>
-        <a class="kClose" (click)="close()">{{'applications.content.filters.close' | translate}}</a>
+        <a class="clearAll" [class.disabled]="_selectedNodes.length === 0" (click)="_clearAllComponents()">{{'applications.content.filters.clearAll' | translate}}</a>
+        <a class="kClose" (click)="_close()">{{'applications.content.filters.close' | translate}}</a>
     </p>
 </div>
 

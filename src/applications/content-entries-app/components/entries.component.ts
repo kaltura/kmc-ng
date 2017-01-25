@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy,  ViewChild  } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
-import {AppLocalization} from '@kaltura-ng2/kaltura-common';
+import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
-import {EntriesStore, SortDirection} from 'kmc-content-ui/entries-store/entries-store.service';
-import {kEntriesTable} from "./entries-table.component";
+import { EntriesStore, SortDirection } from 'kmc-content-ui/entries-store/entries-store.service';
+import { kEntriesTableComponent } from "./entries-table.component";
 
-import {FreetextFilter} from "../../../shared/kmc-content-ui/entries-store/filters/freetext-filter";
-import {EntriesAdditionalFiltersStore} from "../../../shared/kmc-content-ui/entries-additional-filters/entries-additional-filters-store.service";
+import { FreetextFilter } from "../../../shared/kmc-content-ui/entries-store/filters/freetext-filter";
+import { EntriesAdditionalFiltersStore } from "../../../shared/kmc-content-ui/entries-additional-filters/entries-additional-filters-store.service";
 
 export interface Entry {
     id: string;
@@ -21,21 +21,21 @@ export interface Entry {
 }
 
 @Component({
-    selector: 'kmc-entries',
+    selector: 'kKMCEntries',
     templateUrl: './entries.component.html',
     styleUrls: ['./entries.component.scss'],
     providers : [EntriesStore]
 })
 export class EntriesComponent implements OnInit, OnDestroy {
 
-    @ViewChild(kEntriesTable) private dataTable: kEntriesTable;
+    @ViewChild(kEntriesTableComponent) private dataTable: kEntriesTableComponent;
 
     private querySubscription : Subscription;
     private additionalFiltersSubscription : Subscription;
-    private selectedEntries: any[] = [];
-    private bulkActionsMenu: MenuItem[] = [];
+    public _selectedEntries: any[] = [];
+    public _bulkActionsMenu: MenuItem[] = [];
 
-    private filter = {
+    public _filter = {
         pageIndex : 0,
         freetextSearch : '',
         pageSize : 50,
@@ -43,55 +43,55 @@ export class EntriesComponent implements OnInit, OnDestroy {
         sortDirection : SortDirection.Asc
     };
 
-    constructor(private entriesStore : EntriesStore, private additionalFilters : EntriesAdditionalFiltersStore, private appLocalization: AppLocalization) {
+    constructor(public _entriesStore : EntriesStore, private additionalFilters : EntriesAdditionalFiltersStore, private appLocalization: AppLocalization) {
     }
 
     removeTag(tag: any){
-        this.entriesStore.removeFilters(tag);
+        this._entriesStore.removeFilters(tag);
     }
 
     removeAllTags(){
-        this.entriesStore.clearAllFilters();
+        this._entriesStore.clearAllFilters();
     }
 
     onFreetextChanged() : void{
 
-        this.entriesStore.removeFiltersByType(FreetextFilter);
+        this._entriesStore.removeFiltersByType(FreetextFilter);
 
-        if (this.filter.freetextSearch)
+        if (this._filter.freetextSearch)
         {
-            this.entriesStore.addFilters(new FreetextFilter(this.filter.freetextSearch));
+            this._entriesStore.addFilters(new FreetextFilter(this._filter.freetextSearch));
         }
     }
 
     onSortChanged(event) {
 
-        this.filter.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
-        this.filter.sortBy = event.field;
+        this._filter.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
+        this._filter.sortBy = event.field;
 
-        this.entriesStore.updateQuery({
-            sortBy : this.filter.sortBy,
-            sortDirection : this.filter.sortDirection
+        this._entriesStore.updateQuery({
+            sortBy : this._filter.sortBy,
+            sortDirection : this._filter.sortDirection
         });
     }
 
     onPaginationChanged(state : any) : void {
-        this.filter.pageIndex = state.page;
-        this.filter.pageSize = state.rows;
+        this._filter.pageIndex = state.page;
+        this._filter.pageSize = state.rows;
 
-        this.entriesStore.updateQuery({
-            pageIndex : this.filter.pageIndex+1,
-            pageSize : this.filter.pageSize
+        this._entriesStore.updateQuery({
+            pageIndex : this._filter.pageIndex+1,
+            pageSize : this._filter.pageSize
         });
     }
 
     ngOnInit() {
-        this.bulkActionsMenu = this.getBulkActionItems();
-        this.querySubscription = this.entriesStore.query$.subscribe(
+        this._bulkActionsMenu = this.getBulkActionItems();
+        this.querySubscription = this._entriesStore.query$.subscribe(
             query => {
                this.syncFreetextComponents();
 
-               this.filter.pageIndex = query.data.pageIndex-1;
+               this._filter.pageIndex = query.data.pageIndex-1;
             }
         );
 
@@ -104,18 +104,18 @@ export class EntriesComponent implements OnInit, OnDestroy {
                     if (isFirstRequest)
                     {
                         isFirstRequest = false;
-                        this.entriesStore.updateQuery({
-                            pageIndex : this.filter.pageIndex+1,
-                            pageSize : this.filter.pageSize,
-                            sortBy : this.filter.sortBy,
-                            sortDirection : this.filter.sortDirection,
+                        this._entriesStore.updateQuery({
+                            pageIndex : this._filter.pageIndex+1,
+                            pageSize : this._filter.pageSize,
+                            sortBy : this._filter.sortBy,
+                            sortDirection : this._filter.sortDirection,
                             metadataProfiles : data.metadataProfiles,
                             fields :'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status'
                         });
 
                     }else
                     {
-                        this.entriesStore.updateQuery({ metadataProfiles : data.metadataProfiles});
+                        this._entriesStore.updateQuery({ metadataProfiles : data.metadataProfiles});
 
                     }
                 }
@@ -130,24 +130,24 @@ export class EntriesComponent implements OnInit, OnDestroy {
         this.additionalFiltersSubscription.unsubscribe();
         this.additionalFiltersSubscription = null;
 
-        this.entriesStore.dispose();
+        this._entriesStore.dispose();
     }
 
-    private reload()
+    public _reload()
     {
-        this.entriesStore.reload();
+        this._entriesStore.reload();
     }
 
     private syncFreetextComponents()
     {
-        const freetextFilter = this.entriesStore.getFirstFilterByType(FreetextFilter);
+        const freetextFilter = this._entriesStore.getFirstFilterByType(FreetextFilter);
 
         if (freetextFilter)
         {
-            this.filter.freetextSearch = freetextFilter.value;
+            this._filter.freetextSearch = freetextFilter.value;
         }else
         {
-            this.filter.freetextSearch = null;
+            this._filter.freetextSearch = null;
         }
     }
 
@@ -156,7 +156,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
     }
 
     clearSelection(){
-        this.selectedEntries = [];
+        this._selectedEntries = [];
         this.dataTable.tableSelectedEntries = [];
     }
 

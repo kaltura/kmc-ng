@@ -9,7 +9,7 @@
               <div class="pullRight">
                 <span><a (click)="openUserManual()">{{'app.helpMenu.userManual' | translate}}</a></span>
                 <span class="separator">|</span>
-                <kmc-language-menu class="langMenu"></kmc-language-menu>
+                <kKMCLanguageMenu class="langMenu"></kKMCLanguageMenu>
               </div>
             </div>
         </div>
@@ -20,11 +20,11 @@
                   <div class="loginForm">
                       <div class="loginAlert" *ngIf="errorMessage">{{ errorMessage }}</div>
                       <form role="form" (submit)="login(username.value, password.value, $event)">
-                          <div [hidden]="userContext && userContext.ks">
+                          <div>
                               <label for="username">Username</label>
                               <input type="text" pInputText #username id="username" placeholder="Username">
                           </div>
-                          <div [hidden]="userContext && userContext.ks">
+                          <div>
                               <label for="password">Password</label>
                               <input type="password" pInputText #password id="password" placeholder="Password">
                           </div>

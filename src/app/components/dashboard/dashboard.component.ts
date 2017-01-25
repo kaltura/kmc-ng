@@ -1,16 +1,14 @@
-import { Component, OnInit,AfterViewInit,ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
 import { AppShellService } from "kmc-shell";
-
-import {AppMenuComponent} from "../app-menu/app-menu.component";
 
 import * as $ from 'jquery';
 
 @Component({
-  selector: 'kmc-dashboard',
+  selector: 'kKMCDashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('appMenu',true) private _appMenuRef : any;
   private onResize : () => void;
 

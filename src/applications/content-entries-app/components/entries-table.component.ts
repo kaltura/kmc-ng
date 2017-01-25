@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
-import {ISubscription} from 'rxjs/Subscription';
+import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { KalturaMediaType, KalturaEntryStatus } from '@kaltura-ng2/kaltura-api';
@@ -11,9 +11,9 @@ import { EntriesStore } from "kmc-content-ui/entries-store/entries-store.service
   templateUrl: './entries-table.component.html',
   styleUrls: ['./entries-table.component.scss']
 })
-export class kEntriesTable implements AfterViewInit, OnInit, OnDestroy{
+export class kEntriesTableComponent implements AfterViewInit, OnInit, OnDestroy{
 
-  private loadingError = null;
+  public _loadingError = null;
   @Input() entries: any[] = [];
   @Input() filter: any = {};
   @Input() selectedEntries: any[] = [];
@@ -30,12 +30,12 @@ export class kEntriesTable implements AfterViewInit, OnInit, OnDestroy{
   private actionsMenuEntryId: string = "";
   private entriesStoreStatusSubscription : ISubscription;
 
-  private items: MenuItem[];
+  public _items: MenuItem[];
   tableSelectedEntries: Entry[] = [];
 
 
 
-  constructor(private appLocalization: AppLocalization, private entriesStore : EntriesStore) {
+  constructor(private appLocalization: AppLocalization, public entriesStore : EntriesStore) {
   }
 
 
@@ -46,10 +46,10 @@ export class kEntriesTable implements AfterViewInit, OnInit, OnDestroy{
                 if (result.errorMessage)
                 {
                     // TODO [kmcng] show retry only if network connectivity
-                    this.loadingError = { message : result.errorMessage, buttons : { retry : 'Retry'}};
+                    this._loadingError = { message : result.errorMessage, buttons : { retry : 'Retry'}};
                 }else
                 {
-                    this.loadingError = null;
+                    this._loadingError = null;
                 }
           },
           error =>
@@ -68,7 +68,7 @@ export class kEntriesTable implements AfterViewInit, OnInit, OnDestroy{
 
     buildMenu(mediaType: string = null, status: string = null) : void
   {
-    this.items = [
+    this._items = [
       {label: this.appLocalization.get("applications.content.table.previewAndEmbed"), command: (event) => {
         this.onActionSelected("preview", this.actionsMenuEntryId);
       }},
@@ -80,9 +80,9 @@ export class kEntriesTable implements AfterViewInit, OnInit, OnDestroy{
       }}
     ];
     if (status && status != KalturaEntryStatus.Ready.toString()){
-        this.items.shift();
+        this._items.shift();
         if (mediaType && mediaType == KalturaMediaType.LiveStreamFlash.toString()){
-            this.items.pop();
+            this._items.pop();
         }
     }
   }

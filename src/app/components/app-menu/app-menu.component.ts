@@ -1,27 +1,24 @@
-import {Component, OnInit} from '@angular/core';
-import {Router, NavigationEnd} from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 
-import {AppAuthentication, AppUser, AppNavigator} from '@kaltura-ng2/kaltura-common';
-import {AppMenuConfig} from '../../services/app-menu-config';
-import {AppMenuService} from '../../services/app-menu.service';
-import {AppMenuItem} from "../../services/app-menu-config";
-
-import { MenuItem} from 'primeng/primeng';
+import { AppAuthentication, AppUser, AppNavigator } from '@kaltura-ng2/kaltura-common';
+import { AppMenuConfig } from '../../services/app-menu-config';
+import { AppMenuService } from '../../services/app-menu.service';
+import { AppMenuItem } from "../../services/app-menu-config";
 
 import * as R from 'ramda';
 
-
 @Component({
-    selector: 'kmc-app-menu',
+    selector: 'kKMCAppMenu',
     templateUrl: './app-menu.component.html',
     styleUrls: ['./app-menu.component.scss']
 })
-export class AppMenuComponent implements OnInit{
+export class AppMenuComponent implements OnInit, OnDestroy{
 
     private sub: any;
-    private _userContext: AppUser;
-    private userSettingsOpen = false;
-    private helpOpen = false;
+    public _userContext: AppUser;
+    public _userSettingsOpen = false;
+    public _helpOpen = false;
 
     constructor(private userAuthentication: AppAuthentication, private appMenuService: AppMenuService, private appNavigator : AppNavigator, private router: Router) {
         this.sub = router.events.subscribe((event) => {

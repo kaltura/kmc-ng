@@ -4,7 +4,7 @@ import { AppConfig, AppStorage, AppLocalization } from '@kaltura-ng2/kaltura-com
 import * as R from 'ramda';
 
 @Component({
-  selector: 'kmc-language-menu',
+  selector: 'kKMCLanguageMenu',
   templateUrl: './language-menu.component.html',
   styleUrls: ['./language-menu.component.scss']
 })

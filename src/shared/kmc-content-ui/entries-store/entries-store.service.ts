@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observable } from 'rxjs/Observable';
-import {ISubscription} from 'rxjs/Subscription';
-import {Scheduler} from 'rxjs';
+import { ISubscription } from 'rxjs/Subscription';
+import { Scheduler } from 'rxjs';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
@@ -19,13 +19,13 @@ import {
     KalturaSearchOperator
 } from '@kaltura-ng2/kaltura-api/types'
 
-import { KalturaSearchOperatorType} from '@kaltura-ng2/kaltura-api/kaltura-enums'
+import { KalturaSearchOperatorType } from '@kaltura-ng2/kaltura-api/kaltura-enums'
 
-import {KalturaServerClient, KalturaResponse} from '@kaltura-ng2/kaltura-api';
-import {BaseEntryListAction} from '@kaltura-ng2/kaltura-api/services/base-entry';
+import { KalturaServerClient, KalturaResponse } from '@kaltura-ng2/kaltura-api';
+import { BaseEntryListAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
 
 import * as R from 'ramda';
-import {FilterItem} from "./filter-item";
+import { FilterItem } from "./filter-item";
 
 export type UpdateStatus = {
     loading : boolean;

@@ -1,6 +1,4 @@
-
-
-import {FilterItem} from "./filter-item";
+import { FilterItem } from "./filter-item";
 export abstract class ValueFilter<T> extends FilterItem{
 
     private _value : T;
