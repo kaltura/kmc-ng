@@ -97,7 +97,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
         let isFirstRequest = true;
 
-        this.additionalFiltersSubscription = this.additionalFilters.additionalFilters$.subscribe(
+        this.additionalFiltersSubscription = this.additionalFilters.filters$.subscribe(
             data => {
                 if (data.metadataProfiles)
                 {

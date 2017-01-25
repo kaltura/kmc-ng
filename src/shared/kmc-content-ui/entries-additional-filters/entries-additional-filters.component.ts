@@ -79,9 +79,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
             }
         );
 
-        // load addition filters from additino filter service.
-        this.loading = true;
-        this.additionalFiltersSubscription = this.additionalFiltersStore.additionalFilters$.subscribe(
+        this.additionalFiltersSubscription = this.additionalFiltersStore.filters$.subscribe(
             (filters: AdditionalFilters) => {
                 this.primeGroups = [];
 
@@ -110,12 +108,10 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                     });
 
                 });
-
-                this.loading = false;
             },
             (error) => {
-                // TODO [KMC] - handle error
-                this.loading = false;
+                // TODO [kmc] navigate to error page
+                throw error;
             });
     }
 

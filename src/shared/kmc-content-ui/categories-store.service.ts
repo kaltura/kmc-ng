@@ -4,8 +4,10 @@ import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/multicast';
+import 'rxjs/add/operator/delay';
 
-import { KalturaServerClient, KalturaResponse } from '@kaltura-ng2/kaltura-api';
+
+import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { CategoryListAction } from '@kaltura-ng2/kaltura-api/services/category';
 import { KalturaCategoryFilter, KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaCategoryListResponse } from '@kaltura-ng2/kaltura-api/types'
 
@@ -68,10 +70,9 @@ export class CategoriesStore {
                 // no request found in queue - get from cache if already queried those categories
                 const cachedResponse = this.categories[requestToken];
 
-                if (cachedResponse)
-                {
+                if (cachedResponse) {
                     fetchingObservable = <CategoryFetchQueueType>ConnectableObservable.of(cachedResponse);
-                }else {
+                } else {
                     const categoryListRequest = this.buildCategoryListRequest(parentId);
 
                     // 'multicast' function will share the observable if concurrent requests to the same parent will be executed).
@@ -80,17 +81,19 @@ export class CategoriesStore {
                         .map(response => {
                             this._fetchingQueue[requestToken] = null;
 
-                            if (response.error) {
-                                return Observable.throw(response.error);
-                            } else {
-                                // parse response into categories items
-                                const retrievedItems = this.parseCategoriesItems(response.result);
+                            // parse response into categories items
+                            const retrievedItems = this.parseCategoriesItems(response);
 
-                                // update internal state
-                                this.categories[requestToken] = retrievedItems;
+                            // update internal state
+                            this.categories[requestToken] = retrievedItems;
 
-                                return retrievedItems;
-                            }
+                            return retrievedItems;
+
+                        }).catch(error => {
+                            this._fetchingQueue[requestToken] = null;
+
+                            // re-throw the provided error
+                            return Observable.throw(error);
                         })
                         .multicast(() => new ReplaySubject(1));
 
@@ -130,8 +133,7 @@ export class CategoriesStore {
         return result;
     }
 
-    private buildCategoryListRequest(parentId? : number) : Observable<KalturaResponse<KalturaCategoryListResponse>>
-    {
+    private buildCategoryListRequest(parentId? : number) : Observable<KalturaCategoryListResponse> {
         const filter = new KalturaCategoryFilter();
         filter.orderBy = '+name';
         if (parentId !== null && typeof parentId !== 'undefined') {

@@ -21,7 +21,7 @@ import {
 
 import { KalturaSearchOperatorType } from '@kaltura-ng2/kaltura-api/kaltura-enums'
 
-import { KalturaServerClient, KalturaResponse } from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { BaseEntryListAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
 
 import * as R from 'ramda';
@@ -84,11 +84,12 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
     private _activeFilters : FilterItem[] = [];
     private _activeFiltersMap : {[key : string] : FilterItem[]} = {};
     private _queryData : QueryData = { sortDirection : SortDirection.Asc};
+    private executeQuerySubscription : ISubscription = null;
 
     public entries$: Observable<Entries> = this._entries.asObservable();
     public status$: Observable<UpdateStatus> = this._status.asObservable();
     public query$ : Observable<QueryRequestArgs> = this._query.asObservable();
-    public executeQuerySubscription : ISubscription = null;
+
 
 
     constructor(private kalturaServerClient: KalturaServerClient) {
@@ -235,18 +236,12 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             response => {
                 this.executeQuerySubscription = null;
 
-                if (response.error)
-                {
-                    this._status.next({loading: false, errorMessage: response.error.message});
-                }else {
+                this._status.next({loading: false, errorMessage: null});
 
-                    this._status.next({loading: false, errorMessage: null});
-
-                    this._entries.next({
-                        items: <any[]>response.result.objects,
-                        totalCount: <number>response.result.totalCount
-                    });
-                }
+                this._entries.next({
+                    items: <any[]>response.objects,
+                    totalCount: <number>response.totalCount
+                });
             },
             error => {
                 this.executeQuerySubscription = null;
@@ -255,7 +250,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
     }
 
-    private buildQueryRequest({filters : activeFilers, data : queryData } : { filters : FilterItem[], data : QueryData}) : Observable<KalturaResponse<KalturaBaseEntryListResponse>> {
+    private buildQueryRequest({filters : activeFilers, data : queryData } : { filters : FilterItem[], data : QueryData}) : Observable<KalturaBaseEntryListResponse> {
 
         try {
             let filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter();
