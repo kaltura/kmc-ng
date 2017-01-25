@@ -11,8 +11,8 @@
         <i class="kIconfolder_large"></i>
         <i class="kIconuser"></i>
         <i class="kIcongear"></i>
-        <i #help class="kIconhelp"  [class.open]="helpOpen"></i>
-        <div #username class="kUserName" [class.open]="userSettingsOpen">
+        <i #help class="kIconhelp"  [class.open]="_helpOpen"></i>
+        <div #username class="kUserName" [class.open]="_userSettingsOpen">
             <span>{{_userContext.fullName}}</span>
             <i class="kIcondropdown_arrow_bottom"></i>
         </div>
@@ -28,11 +28,11 @@
     </div>
 </div>
 
-<kPopupWidget #usersettings [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="username" [targetOffset]="{'x':-50, 'y': 30}" (onOpen)="userSettingsOpen=true" (onClose)="userSettingsOpen=false">
+<kPopupWidget #usersettings [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="username" [targetOffset]="{'x':-50, 'y': 30}" (onOpen)="_userSettingsOpen=true" (onClose)="_userSettingsOpen=false">
     <kKMCUserSettings></kKMCUserSettings>
 </kPopupWidget>
 
-<kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="helpOpen=true" (onClose)="helpOpen=false">
+<kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="_helpOpen=true" (onClose)="_helpOpen=false">
     <p class="kHelpTitle">{{'app.helpMenu.gettingStarted' | translate | uppercase}}</p>
     <p class="kHelpLink">{{'app.helpMenu.kmcOverview' | translate}}</p>
     <p class="kHelpLink">{{'app.helpMenu.mediaManagement' | translate}}</p>

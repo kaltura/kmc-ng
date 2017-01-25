@@ -1,4 +1,4 @@
-<div [kLoader]="(entriesStore.status$ | async)?.loading" [loadingError]="loadingError" (onActionRequested)="onLoadingAction($event)" fillHeight class="kEntriesTable col">
+<div [kLoader]="(entriesStore.status$ | async)?.loading" [loadingError]="_loadingError" (onActionRequested)="onLoadingAction($event)" fillHeight class="kEntriesTable col">
     <p-dataTable #dataTable [value]="entries" [sortField]="filter.sortBy"
                  [sortOrder]="filter.sortDirection " scrollable="true" scrollHeight="100%"
                  (selectionChange)="onSelectionChange($event)" (onSort)="onSortChanged($event)"
@@ -46,5 +46,5 @@
             </template>
         </p-column>
     </p-dataTable>
-    <p-menu #actionsmenu popup="popup" [model]="items" [appendTo]="'body'"></p-menu>
+    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'"></p-menu>
 </div>

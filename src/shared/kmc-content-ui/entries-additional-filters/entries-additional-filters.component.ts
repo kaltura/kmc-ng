@@ -38,15 +38,15 @@ function toServerDate(value? : Date) : number
     styleUrls: ['./entries-additional-filters.component.scss']
 })
 export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit, OnDestroy{
-    createdAfter: Date;
-    createdBefore: Date;
-    scheduledAfter: Date;
-    scheduledBefore: Date;
-    scheduledSelected : boolean = false;
+    public _createdAfter: Date;
+    public _createdBefore: Date;
+    public _scheduledAfter: Date;
+    public _scheduledBefore: Date;
+    public _scheduledSelected : boolean = false;
 
     private additionalFiltersSubscription : ISubscription;
     private filterUpdateSubscription : ISubscription;
-    private selectedNodes: PrimeTreeNode[] = [];
+    public _selectedNodes: PrimeTreeNode[] = [];
     private loading = false;
     private primeGroups : { groupName : string, items : PrimeTreeNode[] }[] = [];
 
@@ -142,12 +142,12 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
         if (createdAtFilter)
         {
-            this.createdAfter = createdAtFilter.createdAfter;
-            this.createdBefore = createdAtFilter.createdBefore;
+            this._createdAfter = createdAtFilter.createdAfter;
+            this._createdBefore = createdAtFilter.createdBefore;
         }else
         {
-            this.createdAfter = null;
-            this.createdBefore = null;
+            this._createdAfter = null;
+            this._createdBefore = null;
         }
     }
 
@@ -156,14 +156,14 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
         if (scheduledFilterItem !== null)
         {
-            this.scheduledSelected = true;
-            this.scheduledAfter = scheduledFilterItem.scheduledAfter;
-            this.scheduledBefore = scheduledFilterItem.scheduledBefore;
+            this._scheduledSelected = true;
+            this._scheduledAfter = scheduledFilterItem.scheduledAfter;
+            this._scheduledBefore = scheduledFilterItem.scheduledBefore;
         }
         else {
-            this.scheduledBefore = null;
-            this.scheduledAfter = null;
-            this.scheduledSelected = false;
+            this._scheduledBefore = null;
+            this._scheduledAfter = null;
+            this._scheduledSelected = false;
         }
     }
 
@@ -178,7 +178,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
             {
                 if (filter instanceof ValueFilter && this.isFilterOriginatedByTreeComponent(filter))
                 {
-                    let nodeToRemove = R.find(R.propEq('data',filter.value),this.selectedNodes);
+                    let nodeToRemove = R.find(R.propEq('data',filter.value),this._selectedNodes);
 
                     if (nodeToRemove && nodeToRemove.data === 'scheduled' && this.getScheduledFilter() !== null)
                     {
@@ -196,15 +196,15 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
             if (nodesToRemove.length > 0)
             {
-                this.selectedNodes = R.without(nodesToRemove,this.selectedNodes);
+                this._selectedNodes = R.without(nodesToRemove,this._selectedNodes);
             }
         }
     }
 
     private syncSchedulingFilters() : boolean
     {
-        if (this.scheduledBefore && this.scheduledAfter) {
-            const isValid = this.scheduledAfter <= this.scheduledBefore;
+        if (this._scheduledBefore && this._scheduledAfter) {
+            const isValid = this._scheduledAfter <= this._scheduledBefore;
 
             if (!isValid)
             {
@@ -225,7 +225,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
             // make sure the filter is already set for 'schedule', otherwise ignore update
             this.entriesStore.removeFiltersByType(TimeSchedulingFilter);
             this.entriesStore.addFilters(
-                new TimeSchedulingFilter(previousValue, previousLabel, this.scheduledBefore, this.scheduledAfter)
+                new TimeSchedulingFilter(previousValue, previousLabel, this._scheduledBefore, this._scheduledAfter)
             );
         }
 
@@ -234,8 +234,8 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
     private syncCreatedFilters()
     {
-        if (this.createdBefore && this.createdAfter) {
-            const isValid = this.createdAfter <= this.createdBefore;
+        if (this._createdBefore && this._createdAfter) {
+            const isValid = this._createdAfter <= this._createdBefore;
 
             if (!isValid)
             {
@@ -249,9 +249,9 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
         this.entriesStore.removeFiltersByType(CreatedAtFilter);
 
-        if (this.createdAfter || this.createdBefore)
+        if (this._createdAfter || this._createdBefore)
         {
-            this.entriesStore.addFilters(new CreatedAtFilter(this.createdAfter, this.createdBefore));
+            this.entriesStore.addFilters(new CreatedAtFilter(this._createdAfter, this._createdBefore));
         }
     }
 
@@ -261,7 +261,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         let newFilters : FilterItem[] = [];
         let removedFilters : FilterItem[] = [];
 
-        const selectionChanges = this.treeSelectionsDiffer.diff(this.selectedNodes);
+        const selectionChanges = this.treeSelectionsDiffer.diff(this._selectedNodes);
 
         if (selectionChanges)
         {
@@ -296,15 +296,15 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         }
     }
 
-    private clearCreatedComponents(){
-        this.createdAfter = null;
-        this.createdBefore = null;
+    public _clearCreatedComponents(){
+        this._createdAfter = null;
+        this._createdBefore = null;
 
         this.syncCreatedFilters();
     }
 
-    private clearAllComponents(){
-        this.selectedNodes = [];
+    public _clearAllComponents(){
+        this._selectedNodes = [];
         this.syncTreeFilters();
 
     }
@@ -371,7 +371,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                         }
                         break;
                     case "timeScheduling":
-                        result = new TimeSchedulingFilter(<string>node.data, node.label, this.scheduledBefore, this.scheduledAfter);
+                        result = new TimeSchedulingFilter(<string>node.data, node.label, this._scheduledBefore, this._scheduledAfter);
                         break;
                     case "moderationStatuses":
                         result = new ModerationStatusesFilter(<string>node.data, node.label);
@@ -442,12 +442,12 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         }
     }
 
-    private onCreatedChanged() : void
+    public _onCreatedChanged() : void
     {
         this.syncCreatedFilters();
     }
 
-    private onSchedulingChanged(calendarRef : any) : void
+    public _onSchedulingChanged(calendarRef : any) : void
     {
         if (this.syncSchedulingFilters())
         {
@@ -457,7 +457,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         }
     }
 
-    private onTreeSelectionChanged() : void
+    public _onTreeSelectionChanged() : void
     {
         this.syncTreeFilters();
     }
@@ -475,11 +475,11 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         return result;
     }
 
-    private blockScheduleToggle(event){
+    public _blockScheduleToggle(event){
         event.stopPropagation();
     }
 
-    private close(){
+    public _close(){
         if (this.parentPopupWidget){
             this.parentPopupWidget.close();
         }

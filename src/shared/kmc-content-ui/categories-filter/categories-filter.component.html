@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="kTreeContainer">
-        <p-tree [kTreeHierarchySelection]="autoSelectChildren" [value]="categories" selectionMode="checkbox" [(selection)]="selectedNodes" (onNodeSelect)="onTreeSelectionChanged()" (onNodeUnselect)="onTreeSelectionChanged()" (onNodeExpand)="onNodeExpand($event)">
+        <p-tree [kTreeHierarchySelection]="_autoSelectChildren" [value]="_categories" selectionMode="checkbox" [(selection)]="_selectedNodes" (onNodeSelect)="_onTreeSelectionChanged()" (onNodeUnselect)="_onTreeSelectionChanged()" (onNodeExpand)="_onNodeExpand($event)">
         <template let-node  pTemplate="default">
             <div>
                 <span class="kTreeNodeLabel">{{node.label}}</span>
@@ -22,10 +22,10 @@
     </div>
 
     <p>
-        <a [class.disabled]="selectedNodes?.length === 0" (click)="clearAll()">{{'applications.content.filters.clearAll' | translate}}</a>
+        <a [class.disabled]="_selectedNodes?.length === 0" (click)="_clearAll()">{{'applications.content.filters.clearAll' | translate}}</a>
         <a class="kClose" (click)="close()">{{'applications.content.filters.close' | translate}}</a>
     </p>
 </div>
 <kPopupWidget #categoriesPref [modal]="true" [popupWidth]="360" [popupHeight]="220" [closeBtn]="true" [targetRef]="config" [targetOffset]="{'x':-324, 'y': -24}" [parentPopup]="parentPopupWidget">
-    <kCategoriesFilterPrefs [showChildren]="autoSelectChildren" (showChildrenChange)="onSelectionModeChanged($event)"></kCategoriesFilterPrefs>
+    <kCategoriesFilterPrefs [showChildren]="_autoSelectChildren" (showChildrenChange)="_onSelectionModeChanged($event)"></kCategoriesFilterPrefs>
 </kPopupWidget>

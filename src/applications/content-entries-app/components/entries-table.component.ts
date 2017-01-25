@@ -13,7 +13,7 @@ import { EntriesStore } from "kmc-content-ui/entries-store/entries-store.service
 })
 export class kEntriesTableComponent implements AfterViewInit, OnInit, OnDestroy{
 
-  private loadingError = null;
+  public _loadingError = null;
   @Input() entries: any[] = [];
   @Input() filter: any = {};
   @Input() selectedEntries: any[] = [];
@@ -30,12 +30,12 @@ export class kEntriesTableComponent implements AfterViewInit, OnInit, OnDestroy{
   private actionsMenuEntryId: string = "";
   private entriesStoreStatusSubscription : ISubscription;
 
-  private items: MenuItem[];
+  public _items: MenuItem[];
   tableSelectedEntries: Entry[] = [];
 
 
 
-  constructor(private appLocalization: AppLocalization, private entriesStore : EntriesStore) {
+  constructor(private appLocalization: AppLocalization, public entriesStore : EntriesStore) {
   }
 
 
@@ -46,10 +46,10 @@ export class kEntriesTableComponent implements AfterViewInit, OnInit, OnDestroy{
                 if (result.errorMessage)
                 {
                     // TODO [kmcng] show retry only if network connectivity
-                    this.loadingError = { message : result.errorMessage, buttons : { retry : 'Retry'}};
+                    this._loadingError = { message : result.errorMessage, buttons : { retry : 'Retry'}};
                 }else
                 {
-                    this.loadingError = null;
+                    this._loadingError = null;
                 }
           },
           error =>
@@ -68,7 +68,7 @@ export class kEntriesTableComponent implements AfterViewInit, OnInit, OnDestroy{
 
     buildMenu(mediaType: string = null, status: string = null) : void
   {
-    this.items = [
+    this._items = [
       {label: this.appLocalization.get("applications.content.table.previewAndEmbed"), command: (event) => {
         this.onActionSelected("preview", this.actionsMenuEntryId);
       }},
@@ -80,9 +80,9 @@ export class kEntriesTableComponent implements AfterViewInit, OnInit, OnDestroy{
       }}
     ];
     if (status && status != KalturaEntryStatus.Ready.toString()){
-        this.items.shift();
+        this._items.shift();
         if (mediaType && mediaType == KalturaMediaType.LiveStreamFlash.toString()){
-            this.items.pop();
+            this._items.pop();
         }
     }
   }

@@ -10,7 +10,7 @@ import { Md5 } from 'ts-md5/dist/md5';
 })
 export class UserSettingsComponent {
   timeoutID: number = null;
-  private _userContext: AppUser;
+  public _userContext: AppUser;
 
   constructor(private userAuthentication: AppAuthentication, private appNavigator : AppNavigator, private browserService: BrowserService, private appConfig: AppConfig) {
     this._userContext = userAuthentication.appUser;
