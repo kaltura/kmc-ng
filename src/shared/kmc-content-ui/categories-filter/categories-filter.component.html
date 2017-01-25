@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="kTreeContainer">
-        <p-tree [kTreeHierarchySelection]="_autoSelectChildren" [value]="_categories" selectionMode="checkbox" [(selection)]="_selectedNodes" (onNodeSelect)="_onTreeSelectionChanged()" (onNodeUnselect)="_onTreeSelectionChanged()" (onNodeExpand)="_onNodeExpand($event)">
+        <p-tree kTreeHierarchySelection="_autoSelectChildren" [value]="_categories" selectionMode="checkbox" [(selection)]="_selectedNodes" (onNodeSelect)="_onTreeSelectionChanged()" (onNodeUnselect)="_onTreeSelectionChanged()" (onNodeExpand)="_onNodeExpand($event)">
         <template let-node  pTemplate="default">
             <div>
                 <span class="kTreeNodeLabel">{{node.label}}</span>
