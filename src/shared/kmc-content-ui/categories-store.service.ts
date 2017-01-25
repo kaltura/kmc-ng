@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
-import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/multicast';
-import 'rxjs/add/operator/delay';
-
 
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { CategoryListAction } from '@kaltura-ng2/kaltura-api/services/category';
