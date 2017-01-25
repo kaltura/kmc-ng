@@ -1,7 +1,11 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Output, ViewChild, Input, IterableDiffer, IterableDiffers, AfterViewInit, ElementRef} from '@angular/core';
 import { Tree } from 'primeng/primeng';
-import {PrimeTreeNode, TreeDataHandler} from '@kaltura-ng2/kaltura-primeng-ui';
+import {PrimeTreeNode, TreeDataHandler, NodeChildrenStatuses} from '@kaltura-ng2/kaltura-primeng-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
+import {AppUser,AppAuthentication} from '@kaltura-ng2/kaltura-common';
+import {  AppConfig } from '@kaltura-ng2/kaltura-common';
+import {AppLocalization} from '@kaltura-ng2/kaltura-common';
+
 
 import {ISubscription} from 'rxjs/Subscription';
 import * as R from 'ramda';
@@ -20,20 +24,35 @@ import {CategoriesFilter, CategoriesFilterModes} from "../entries-store/filters/
 })
 export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestroy{
 
+    private loading : boolean = false;
+    private errorMessage : string = null;
     private categories: PrimeTreeNode[] = [];
-    private categoriesSubscription : ISubscription;
+    private appUser : AppUser;
+    private inLazyMode : boolean = false;
     private filterUpdateSubscription : ISubscription;
     private parentPopupStateChangeSubscription : ISubscription;
     private selectedNodes: PrimeTreeNode[] = [];
     private autoSelectChildren:boolean = false;
     private treeSelectionsDiffer : IterableDiffer = null;
+
+    public NodeChildrenStatuses : any = NodeChildrenStatuses; // we expose the enum so we will be able to use it as part of template expression
     @ViewChild(Tree)
     private categoriesTree: Tree;
 
     @Input() parentPopupWidget: PopupWidgetComponent;
 
-    constructor(public filtersRef: ElementRef, public categoriesStore: CategoriesStore, public browserService: BrowserService,
-                private entriesStore : EntriesStore, private treeDataHandler : TreeDataHandler, private differs: IterableDiffers) {
+    constructor(
+        appAuthentication : AppAuthentication,
+        private appConfig: AppConfig,
+        private appLocalization: AppLocalization,
+        private differs: IterableDiffers,
+        private entriesStore : EntriesStore,
+        private treeDataHandler : TreeDataHandler,
+        public browserService: BrowserService,
+        public categoriesStore: CategoriesStore,
+        public filtersRef: ElementRef
+    ) {
+        this.appUser = appAuthentication.appUser;
     }
 
     ngOnInit() {
@@ -50,27 +69,32 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             }
         );
 
-        this.categoriesSubscription = this.categoriesStore.categories$.subscribe(
-            (result) => {
-                this.categories = this.treeDataHandler.create(
-                    {
-                        data: result.items,
-                        idProperty: 'id',
-                        nameProperty: 'name',
-                        parentIdProperty : 'parentId',
-                        sortByType : 'number',
-                        sortByProperty : 'sortValue'
-                    }
-                );
-            },
-            (error) => {
-                // TODO [KMC] - handle error
-            });
-
-        this.categoriesStore.getCategories();
-
         const savedAutoSelectChildren: boolean = this.browserService.getFromLocalStorage("categoriesTree.autoSelectChildren");
         this.autoSelectChildren = savedAutoSelectChildren === null ? false : savedAutoSelectChildren;
+
+
+        // TODO [kmcng] consider using constants for permissions flags
+        this.inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
+        this.reloadCategories();
+    }
+
+    private reloadCategories() : void
+    {
+        this.loading = true;
+        this.errorMessage = null;
+
+        const categories$ = this.inLazyMode ? this.categoriesStore.getRootCategories() : this.categoriesStore.getAllCategories();
+
+        categories$.subscribe(result => {
+                this.loading = false;
+                this.categories = this.treeDataHandler.create(
+                    this.createTreeHandlerArguments(result.items)
+                );
+            },
+            error => {
+                this.loading = false;
+                this.errorMessage = error.message || 'failed to extract categories';
+            });
     }
 
     ngAfterViewInit(){
@@ -168,6 +192,50 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
+    private onNodeExpand(event : any) : void
+    {
+        // load node children, relevant only if 'inLazyMode' and node children weren't loaded already
+        if (this.inLazyMode && event && event.node instanceof PrimeTreeNode)
+        {
+            const node : PrimeTreeNode = <PrimeTreeNode>event.node;
+
+            // make sure the node children weren't loaded already.
+            if (node.childrenStatus !== NodeChildrenStatuses.loaded && node.childrenStatus !== NodeChildrenStatuses.loading) {
+
+                const maxNumberOfChildren = this.appConfig.get('entriesShared.categoriesFilters.maxChildrenToShow',100);
+                if (node.childrenCount > maxNumberOfChildren)
+                {
+                    node.setChildrenLoadStatus(NodeChildrenStatuses.error,
+                                                this.appLocalization.get('entriesShared.categoriesFilters.maxChildrenExceeded', { childrenCount : maxNumberOfChildren}));
+                }else {
+                    node.setChildrenLoadStatus(NodeChildrenStatuses.loading);
+                    this.categoriesStore.getChildrenCategories(<number>node.data).subscribe(result => {
+                            node.setChildren(this.treeDataHandler.create(
+                                this.createTreeHandlerArguments(result.items, node.data)
+                            ));
+                        },
+                        error => {
+                            node.setChildrenLoadStatus(NodeChildrenStatuses.error,
+                                error.message );
+                        });
+                }
+            }
+        }
+    }
+
+    private createTreeHandlerArguments(data : any[], parentId : any = null) : any {
+        return {
+            data: data,
+            idProperty: 'id',
+            nameProperty: 'name',
+            parentIdProperty: 'parentId',
+            sortByType: 'number',
+            sortByProperty: 'sortValue',
+            childrenCountProperty: 'childrenCount',
+            rootParentId : parentId
+        }
+    }
+
     private onSelectionModeChanged(value)
     {
         this.autoSelectChildren = value;
@@ -194,10 +262,6 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         if (this.parentPopupStateChangeSubscription) {
             this.parentPopupStateChangeSubscription.unsubscribe();
             this.parentPopupStateChangeSubscription = null;
-        }
-        if (this.categoriesSubscription) {
-            this.categoriesSubscription.unsubscribe();
-            this.categoriesSubscription = null;
         }
     }
 

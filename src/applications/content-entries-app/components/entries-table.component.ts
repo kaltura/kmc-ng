@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import {ISubscription} from 'rxjs/Subscription';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { KalturaMediaType, KalturaEntryStatus } from '@kaltura-ng2/kaltura-api';
@@ -10,8 +11,9 @@ import { EntriesStore } from "kmc-content-ui/entries-store/entries-store.service
   templateUrl: './entries-table.component.html',
   styleUrls: ['./entries-table.component.scss']
 })
-export class kEntriesTable implements AfterViewInit{
+export class kEntriesTable implements AfterViewInit, OnInit, OnDestroy{
 
+  private loadingError = null;
   @Input() entries: any[] = [];
   @Input() filter: any = {};
   @Input() selectedEntries: any[] = [];
@@ -26,15 +28,45 @@ export class kEntriesTable implements AfterViewInit{
   @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
   private actionsMenuEntryId: string = "";
+  private entriesStoreStatusSubscription : ISubscription;
 
   private items: MenuItem[];
   tableSelectedEntries: Entry[] = [];
 
 
+
   constructor(private appLocalization: AppLocalization, private entriesStore : EntriesStore) {
   }
 
-  buildMenu(mediaType: string = null, status: string = null) : void
+
+  ngOnInit() {
+
+      this.entriesStoreStatusSubscription = this.entriesStore.status$.subscribe(
+          result => {
+                if (result.errorMessage)
+                {
+                    // TODO [kmcng] show retry only if network connectivity
+                    this.loadingError = { message : result.errorMessage, buttons : { retry : 'Retry'}};
+                }else
+                {
+                    this.loadingError = null;
+                }
+          },
+          error =>
+          {
+              // TODO [kmc] navigate to error page
+              throw error;
+          });
+
+  }
+
+  ngOnDestroy()
+  {
+      this.entriesStoreStatusSubscription.unsubscribe();
+      this.entriesStoreStatusSubscription = null;
+  }
+
+    buildMenu(mediaType: string = null, status: string = null) : void
   {
     this.items = [
       {label: this.appLocalization.get("applications.content.table.previewAndEmbed"), command: (event) => {
@@ -64,6 +96,14 @@ export class kEntriesTable implements AfterViewInit{
       }
     }
   }
+
+    onLoadingAction(actionKey : string)
+    {
+        if (actionKey === 'retry')
+        {
+            this.entriesStore.reload();
+        }
+    }
 
   openActionsMenu(event: any, entry: Entry){
     if (this.actionsMenu){
