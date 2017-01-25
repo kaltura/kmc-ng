@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Observable } from 'rxjs/Observable';
+import { ISubscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/throw';
 
 import { KalturaServerClient, KalturaMetadataObjectType, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
 import { FlavorParamsListAction } from '@kaltura-ng2/kaltura-api/services/flavor-params';
@@ -24,6 +27,11 @@ import {
 import { ConstantsFilters } from './constant-filters';
 
 import * as R from 'ramda';
+
+export type UpdateStatus = {
+    loading : boolean;
+    errorMessage : string;
+};
 
 export class FilterGroupType
 {
@@ -66,9 +74,14 @@ export enum AdditionalFilterLoadingStatus
 export class EntriesAdditionalFiltersStore {
 
     // TODO [KMC] - clear cached data on logout
-    private _additionalFilters: ReplaySubject<AdditionalFilters> = new ReplaySubject<AdditionalFilters>(1);
-    public additionalFilters$ = this._additionalFilters.asObservable();
-    private _status : BehaviorSubject<{ dataLoad? : AdditionalFilterLoadingStatus, error? : string}> = new BehaviorSubject<{ dataLoad? : AdditionalFilterLoadingStatus, error? : string}>(null);
+    private _filters: ReplaySubject<AdditionalFilters> = new ReplaySubject<AdditionalFilters>(1);
+    private _status: BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({
+        loading: false,
+        errorMessage: null
+    });
+    private executeQuerySubscription: ISubscription = null;
+
+    public filters$ = this._filters.asObservable();
     public status$ = this._status.asObservable();
 
 
@@ -76,10 +89,155 @@ export class EntriesAdditionalFiltersStore {
         this.load();
     }
 
-    private load() : void {
-        if (!this._status.getValue()) {
-            this._status.next({dataLoad: AdditionalFilterLoadingStatus.Loading});
+    private load() {
+        // cancel previous requests
+        if (this.executeQuerySubscription) {
+            this.executeQuerySubscription.unsubscribe();
+            this.executeQuerySubscription = null;
+        }
 
+        // execute the request
+        this.executeQuerySubscription = Observable.create(observer => {
+            this._status.next({loading: true, errorMessage: null});
+
+            let requestSubscription = this.buildQueryRequest().subscribe(observer);
+
+            return () => {
+                if (requestSubscription) {
+                    requestSubscription.unsubscribe();
+                    requestSubscription = null;
+                }
+            }
+        }).subscribe(
+            (responses) => {
+                this.executeQuerySubscription = null;
+
+                if (responses.hasErrors()) {
+                    this._status.next({loading: false, errorMessage: 'failed to load refine filters'});
+
+                } else {
+
+                    const filters : AdditionalFilters = {groups : [], metadataProfiles : []};
+
+                    const defaultFilterGroup = this._buildDefaultFiltersGroup(responses);
+                    filters.groups.push(defaultFilterGroup);
+
+                    const metadataData = this._buildMetadataFiltersGroups(responses);
+                    filters.groups = [...filters.groups, ...metadataData.groups];
+
+                    filters.metadataProfiles = metadataData.metadataProfiles;
+
+                    this._status.next({ loading : false, errorMessage : null});
+                    this._filters.next(filters);
+                }
+            },
+            (error) => {
+                this.executeQuerySubscription = null;
+
+                this._status.next({loading: false, errorMessage: (<Error>error).message || <string>error});
+
+            }
+        );
+    }
+
+    private _buildMetadataFiltersGroups(responses : KalturaMultiRequest) : { metadataProfiles : number[] , groups : FilterGroup[]}{
+
+        const result :  { metadataProfiles : number[] , groups : FilterGroup[]} = {metadataProfiles : [], groups : []};
+
+        // build metadata profile filters
+        const parser = new MetadataProfileParser();
+
+        if (responses[0].result.objects && responses[0].result.objects.length > 0)
+        {
+            responses[0].result.objects.forEach(kalturaProfile =>
+            {
+                const metadataProfile = parser.parse(kalturaProfile);
+
+                if (metadataProfile)
+                {
+                    result.metadataProfiles.push(metadataProfile.id);
+
+                    // get only fields that are list, searchable and has values
+                    const profileLists = R.filter(field =>
+                    {
+                        return (field.type === MetadataFieldTypes.List && field.isSearchable && field.optionalValues.length > 0);
+                    }, metadataProfile.fields);
+
+                    // if found relevant lists, create a group for that profile
+                    if (profileLists && profileLists.length > 0) {
+                        const filterGroup = {groupName: metadataProfile.name, filtersTypes: [], filtersByType : {}};
+                        result.groups.push(filterGroup);
+
+                        profileLists.forEach(list => {
+                            filterGroup.filtersTypes.push(new filterGroupMetadataProfileType(list.id, list.label, metadataProfile.id,list.path));
+                            const items = filterGroup.filtersByType[list.id] = [];
+
+                            list.optionalValues.forEach(value => {
+                                items.push({
+                                    id: value,
+                                    name: value
+                                })
+
+                            });
+                        });
+                    }
+
+                }
+            });
+        }
+
+        return result;
+    }
+
+    private _buildDefaultFiltersGroup(responses : KalturaMultiRequest) : FilterGroup{
+        const result = {groupName : '', filtersTypes : [], filtersByType : {}};
+
+        // build constant filters
+        ConstantsFilters.forEach((filter) =>
+        {
+            result.filtersTypes.push(new FilterGroupType(filter.type,filter.name));
+            const items = result.filtersByType[filter.type] = [];
+            filter.items.forEach((item: any) => {
+                items.push({id : item.id, name : item.name});
+            });
+        });
+
+        // build distributions filters
+        if (responses[1].result.objects.length > 0) {
+            result.filtersTypes.push(new FilterGroupType('distributions',"Destinations"));
+            const items = result.filtersByType['distributions'] = [];
+            responses[1].result.objects.forEach((distributionProfile: KalturaDistributionProfile) => {
+                items.push({id : distributionProfile.id, name : distributionProfile.name});
+            });
+        }
+
+        // build flavors filters
+        if (responses[2].result.objects.length > 0) {
+            result.filtersTypes.push(new FilterGroupType('flavors',"Flavors"));
+            const items = result.filtersByType['flavors'] = [];
+            responses[2].result.objects.forEach((flavor: KalturaFlavorParams) => {
+                items.push({id: flavor.id, name: flavor.name});
+            });
+        }
+
+        // build access control profile filters
+        if (responses[3].result.objects.length > 0) {
+            result.filtersTypes.push(new FilterGroupType('accessControlProfiles','Access Control Profiles'));
+            const items = result.filtersByType['accessControlProfiles'] = [];
+            responses[3].result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
+                items.push({
+                    id: accessControlProfile.id,
+                    name: accessControlProfile.name
+                });
+            });
+        }
+
+        return result;
+    }
+
+    private buildQueryRequest(): Observable<KalturaMultiRequest> {
+
+        try {
             const metadataProfilesFilter = new KalturaMetadataProfileFilter();
             metadataProfilesFilter.createModeNotEqual = KalturaMetadataProfileCreateMode.App;
             metadataProfilesFilter.orderBy = '-createdAt';
@@ -111,115 +269,9 @@ export class EntriesAdditionalFiltersStore {
                 }),
             );
 
-            this.kalturaServerClient.multiRequest(request)
-                .subscribe(
-                    (responses) => {
-                        if (responses.hasErrors()) {
-                            this._status.next({
-                                dataLoad: AdditionalFilterLoadingStatus.FailedToLoad,
-                                error: 'failed to load refine filters'
-                            });
-
-                        } else {
-
-                            const filters : AdditionalFilters = {groups : [], metadataProfiles : []};
-
-                            const defaultFilterGroup = {groupName : '', filtersTypes : [], filtersByType : {}};
-                            filters.groups.push(defaultFilterGroup);
-
-                            // build constant filters
-                            ConstantsFilters.forEach((filter) =>
-                            {
-                                defaultFilterGroup.filtersTypes.push(new FilterGroupType(filter.type,filter.name));
-                                const items = defaultFilterGroup.filtersByType[filter.type] = [];
-                                filter.items.forEach((item: any) => {
-                                    items.push({id : item.id, name : item.name});
-                                });
-                            });
-
-                            // build distributions filters
-                            if (responses[1].result.objects.length > 0) {
-                                defaultFilterGroup.filtersTypes.push(new FilterGroupType('distributions',"Destinations"));
-                                const items = defaultFilterGroup.filtersByType['distributions'] = [];
-                                responses[1].result.objects.forEach((distributionProfile: KalturaDistributionProfile) => {
-                                    items.push({id : distributionProfile.id, name : distributionProfile.name});
-                                });
-                            }
-
-                            // build flavors filters
-                            if (responses[2].result.objects.length > 0) {
-                                defaultFilterGroup.filtersTypes.push(new FilterGroupType('flavors',"Flavors"));
-                                const items = defaultFilterGroup.filtersByType['flavors'] = [];
-                                responses[2].result.objects.forEach((flavor: KalturaFlavorParams) => {
-                                    items.push({id: flavor.id, name: flavor.name});
-                                });
-                            }
-
-                            // build access control profile filters
-                            if (responses[3].result.objects.length > 0) {
-                                defaultFilterGroup.filtersTypes.push(new FilterGroupType('accessControlProfiles','Access Control Profiles'));
-                                const items = defaultFilterGroup.filtersByType['accessControlProfiles'] = [];
-                                responses[3].result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
-                                    items.push({
-                                        id: accessControlProfile.id,
-                                        name: accessControlProfile.name
-                                    });
-                                });
-                            }
-
-                            // build metadata profile filters
-                            const parser = new MetadataProfileParser();
-
-                            if (responses[0].result.objects && responses[0].result.objects.length > 0)
-                            {
-                                responses[0].result.objects.forEach(kalturaProfile =>
-                                {
-                                    const metadataProfile = parser.parse(kalturaProfile);
-
-                                    if (metadataProfile)
-                                    {
-                                        filters.metadataProfiles.push(metadataProfile.id);
-
-                                        // get only fields that are list, searchable and has values
-                                        const profileLists = R.filter(field =>
-                                        {
-                                            return (field.type === MetadataFieldTypes.List && field.isSearchable && field.optionalValues.length > 0);
-                                        }, metadataProfile.fields);
-
-                                        // if found relevant lists, create a group for that profile
-                                        if (profileLists && profileLists.length > 0) {
-                                            const filterGroup = {groupName: metadataProfile.name, filtersTypes: [], filtersByType : {}};
-                                            filters.groups.push(filterGroup);
-
-                                            profileLists.forEach(list => {
-                                                filterGroup.filtersTypes.push(new filterGroupMetadataProfileType(list.id, list.label, metadataProfile.id,list.path));
-                                                const items = filterGroup.filtersByType[list.id] = [];
-
-                                                list.optionalValues.forEach(value => {
-                                                    items.push({
-                                                        id: value,
-                                                        name: value
-                                                    })
-
-                                                });
-                                            });
-                                        }
-
-                                    }
-                                });
-                            }
-
-                            this._additionalFilters.next(filters);
-                            this._status.next({ dataLoad : AdditionalFilterLoadingStatus.Loaded});
-                        }
-                    },
-                    () => {
-                        this._status.next({
-                            dataLoad: AdditionalFilterLoadingStatus.FailedToLoad,
-                            error: 'failed to load redine filters'
-                        });
-                    }
-                )
+            return <any>this.kalturaServerClient.multiRequest(request);
+        } catch (error) {
+            return Observable.throw(error);
         }
     }
 }
