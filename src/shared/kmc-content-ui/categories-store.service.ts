@@ -1,94 +1,151 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { ISubscription } from 'rxjs/Subscription';
+import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/share';
+import 'rxjs/add/operator/multicast';
 
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient, KalturaResponse } from '@kaltura-ng2/kaltura-api';
 import { CategoryListAction } from '@kaltura-ng2/kaltura-api/services/category';
-import { KalturaCategoryFilter, KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType } from '@kaltura-ng2/kaltura-api/types'
+import { KalturaCategoryFilter, KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaCategoryListResponse } from '@kaltura-ng2/kaltura-api/types'
 
-const allCategoriesFetchToken = 'all_categories';
-
-export interface Categories{
-    items : {parentId? : number, id : number, name : string, sortValue : number, fullName : string}[],
+export interface CategoryData
+{
+    parentId? : number,
+    id : number,
+    name : string,
+    sortValue : number,
+    fullName : string,
+    childrenCount : number
 }
 
-export type UpdateStatus = {
-    loading : boolean;
-    errorMessage : string;
-};
+
+export interface CategoriesQuery{
+    items : CategoryData[];
+}
+
+
+const allCategoriesFetchToken = 'all_categories_token';
+declare type CategoryFetchQueueType = ConnectableObservable<CategoryData[]>;
+
 
 @Injectable()
 export class CategoriesStore {
-    private _fetchingQueue: {[key: string]: ISubscription } = {};
-    private _status: BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({
-        loading: false,
-        errorMessage: null
-    });
-    private _categories: BehaviorSubject<Categories> = new BehaviorSubject({
-        items: []
-    });
-
-    public categories$: Observable<Categories> = this._categories.asObservable();
+    private _fetchingQueue: {[key: string]: CategoryFetchQueueType } = {};
+    private categories: {[key: string] : CategoryData[]} = {};
 
     constructor(private kalturaServerClient: KalturaServerClient) {
-
     }
 
-    public getCategories(parentId?: number): void {
-        const fetchingToken = parentId || allCategoriesFetchToken;
+    public getAllCategories() : Observable<CategoriesQuery>{
+        return this.getCategories();
+    }
 
-        let fetchingObservable = this._fetchingQueue[fetchingToken];
-        if (!fetchingObservable) {
+    public getRootCategories() : Observable<CategoriesQuery>{
+        return this.getCategories(0);
+    }
 
-            const filter = new KalturaCategoryFilter();
-            filter.orderBy = '+name';
-            if (parentId) {
-                Object.assign(filter, {parentIdEqual: parentId});
+    public getChildrenCategories(parentId : number) : Observable<CategoriesQuery>{
+
+        if (parentId === null)
+        {
+            throw new Error('missing parent id argument');
+        }
+
+        return this.getCategories(parentId);
+    }
+
+    private getCategories(parentId?: number): Observable<CategoriesQuery> {
+
+        return Observable.create(observer => {
+            const requestToken = parentId + '' || allCategoriesFetchToken;
+
+            let fetchingObservable: CategoryFetchQueueType = this._fetchingQueue[requestToken];
+
+            // get queue request from those categories if any
+            if (!fetchingObservable) {
+
+                // no request found in queue - get from cache if already queried those categories
+                const cachedResponse = this.categories[requestToken];
+
+                if (cachedResponse)
+                {
+                    fetchingObservable = <CategoryFetchQueueType>ConnectableObservable.of(cachedResponse);
+                }else {
+                    const categoryListRequest = this.buildCategoryListRequest(parentId);
+
+                    // 'multicast' function will share the observable if concurrent requests to the same parent will be executed).
+                    // we don't use 'share' function since it is more relevant to hot/persist origin.
+                    fetchingObservable = this._fetchingQueue[requestToken] = categoryListRequest
+                        .map(response => {
+                            this._fetchingQueue[requestToken] = null;
+
+                            if (response.error) {
+                                return Observable.throw(response.error);
+                            } else {
+                                // parse response into categories items
+                                const retrievedItems = this.parseCategoriesItems(response.result);
+
+                                // update internal state
+                                this.categories[requestToken] = retrievedItems;
+
+                                return retrievedItems;
+                            }
+                        })
+                        .multicast(() => new ReplaySubject(1));
+
+                    fetchingObservable.connect();
+                }
             }
 
-            const responseProfile = new KalturaDetachedResponseProfile()
-                .setData(data => {
-                    data.fields = "id,name,parentId,partnerSortValue,fullName";
-                    data.type = KalturaResponseProfileType.IncludeFields;
-                });
-
-            this._fetchingQueue[fetchingToken] = this.kalturaServerClient.request(
-                new CategoryListAction({filter, responseProfile})
-            ).subscribe(
-                result =>
-                {
-                    this._fetchingQueue[fetchingToken] = null;
-
-                    if (result.error)
-                    {
-                        // TODO [kmcng] should handle
-                    }else
-                    {
-                        if (result.result.objects) {
-                            const items = this._categories.getValue().items;
-
-                            result.result.objects.forEach((category : KalturaCategory) =>
-                            {
-                               items.push({
-                                   id : category.id,
-                                   name : category.name,
-                                   parentId : category.parentId !== 0 ? category.parentId : null,
-                                   sortValue : category.partnerSortValue,
-                                   fullName : category.fullName
-                               });
-                            });
-
-                            this._categories.next({items: items});
-                        }
-                    }
-
-                }, () =>
-                {
-                    this._fetchingQueue[fetchingToken] = null;
+            fetchingObservable.subscribe(
+                items => {
+                    observer.next({
+                        items : items
+                    });
+                }, (error) => {
+                    observer.error(error);
                 }
             );
+        });
+    }
+
+    private parseCategoriesItems(response : KalturaCategoryListResponse) : CategoryData[]
+    {
+        let result = [];
+
+        if (response && response.objects) {
+            response.objects.forEach((category: KalturaCategory) => {
+                result.push({
+                    id: category.id,
+                    name: category.name,
+                    parentId: category.parentId !== 0 ? category.parentId : null,
+                    sortValue: category.partnerSortValue,
+                    fullName: category.fullName,
+                    childrenCount : category.directSubCategoriesCount
+                });
+            });
         }
+
+        return result;
+    }
+
+    private buildCategoryListRequest(parentId? : number) : Observable<KalturaResponse<KalturaCategoryListResponse>>
+    {
+        const filter = new KalturaCategoryFilter();
+        filter.orderBy = '+name';
+        if (parentId !== null && typeof parentId !== 'undefined') {
+            Object.assign(filter, {parentIdEqual: parentId});
+        }
+
+        const responseProfile = new KalturaDetachedResponseProfile()
+            .setData(data => {
+                data.fields = "id,name,parentId,partnerSortValue,fullName,directSubCategoriesCount";
+                data.type = KalturaResponseProfileType.IncludeFields;
+            });
+
+        return <any>this.kalturaServerClient.request(
+            new CategoryListAction({filter, responseProfile})
+        )
     }
 }

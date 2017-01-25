@@ -70,3 +70,15 @@ a.disabled{
 .kHeader{
     padding-top: 8px;
 }
+
+
+/* Make sure toggler and checkbox remain aligned even if the node height changes */
+:host /deep/ .ui-treenode .ui-tree-toggler{
+    vertical-align: top;
+    margin-top: 13px;
+}
+
+:host /deep/ .ui-tree .ui-chkbox{
+    vertical-align: top;
+    margin-top: 11px;
+}

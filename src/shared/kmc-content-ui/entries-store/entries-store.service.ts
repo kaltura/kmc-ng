@@ -21,7 +21,7 @@ import {
 
 import { KalturaSearchOperatorType } from '@kaltura-ng2/kaltura-api/kaltura-enums'
 
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient, KalturaResponse } from '@kaltura-ng2/kaltura-api';
 import { BaseEntryListAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
 
 import * as R from 'ramda';
@@ -222,6 +222,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             this._status.next({loading: true, errorMessage: null});
             this._query.next(args);
 
+
             let requestSubscription = this.buildQueryRequest(args).subscribe(observer);
 
             return () => {
@@ -239,22 +240,22 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
                     this._status.next({loading: false, errorMessage: response.error.message});
                 }else {
 
+                    this._status.next({loading: false, errorMessage: null});
+
                     this._entries.next({
                         items: <any[]>response.result.objects,
                         totalCount: <number>response.result.totalCount
                     });
                 }
-                this._status.next({loading: false, errorMessage: null});
             },
             error => {
                 this.executeQuerySubscription = null;
-                this._status.next({loading: false, errorMessage: (<Error>error).message});
-            }
-        );
+                this._status.next({loading: false, errorMessage: (<Error>error).message || <string>error});
+            });
 
     }
 
-    private buildQueryRequest({filters : activeFilers, data : queryData } : { filters : FilterItem[], data : QueryData}) : Observable<KalturaBaseEntryListResponse> {
+    private buildQueryRequest({filters : activeFilers, data : queryData } : { filters : FilterItem[], data : QueryData}) : Observable<KalturaResponse<KalturaBaseEntryListResponse>> {
 
         try {
             let filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter();

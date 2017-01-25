@@ -1,16 +1,22 @@
 <div #categoriesTree class="kUseKMCngIcons">
     <div class="kHeader">
-        <p-autoComplete width="300px" [(ngModel)]="currentSearch"  field="label" placeholder="{{'applications.content.filters.findCategory' | translate}}" [minLength]="3" ></p-autoComplete>
+        <p-autoComplete width="300px" [(ngModel)]="_currentSearch"  field="label" placeholder="{{'applications.content.filters.findCategory' | translate}}" [minLength]="3" ></p-autoComplete>
         <i #config class="kIcongear kTreeConfig" pTooltip="{{'applications.content.filters.preferences.preferences' | translate}}"></i>
         <div class="kAllCategories">
             <span>{{'applications.content.filters.allCategories' | translate | uppercase}} </span>
         </div>
     </div>
     <div class="kTreeContainer">
-        <p-tree [kTreeHierarchySelection]="autoSelectChildren" [value]="categories" selectionMode="checkbox" [(selection)]="selectedNodes" (onNodeSelect)="onTreeSelectionChanged()" (onNodeUnselect)="onTreeSelectionChanged()">
-        <template let-node  pTemplate="default">
-            <span class="kTreeNodeLabel">{{node.label}}</span>
-            <span class="kTreeNodeNumChildren" *ngIf="node.children && node.children.length">{{node.children.length}}</span>
+        <p-tree [kTreeHierarchySelection]="autoSelectChildren" [value]="categories" selectionMode="checkbox" [(selection)]="selectedNodes" (onNodeSelect)="onTreeSelectionChanged()" (onNodeUnselect)="onTreeSelectionChanged()" (onNodeExpand)="onNodeExpand($event)">
+        <template let-node  pTemplate type="default">
+            <div>
+                <span class="kTreeNodeLabel">{{node.label}}</span>
+                <span class="kTreeNodeNumChildren" *ngIf="node.childrenCount">{{node.childrenCount}}</span>
+            </div>
+            <div *ngIf="node.expanded && node.childrenStatus === NodeChildrenStatuses.loading">- loading -</div>
+            <div *ngIf="node.expanded && node.childrenStatus === NodeChildrenStatuses.error">
+                {{ node.childrenLoadError || "Failed to load children" }}
+            </div>
         </template>
         </p-tree>
     </div>

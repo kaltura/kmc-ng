@@ -7,7 +7,6 @@
     }
   },
   "core" : {
-
     "kaltura" : {
       "apiUrl" : "",
       "expiry" : "86400",
@@ -36,6 +35,11 @@
   "modules": {
     "studio_universal" : {
       "apiUrl" : "http://www.kaltura.com"
+    }
+  },
+  "entriesShared": {
+    "categoriesFilters" : {
+        "maxChildrenToShow" : 500
     }
   }
 }

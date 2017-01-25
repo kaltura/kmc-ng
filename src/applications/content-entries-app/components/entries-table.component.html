@@ -1,4 +1,4 @@
-<div [kLoader]="(entriesStore.status$ | async)?.loading" fillHeight class="kEntriesTable col">
+<div [kLoader]="(entriesStore.status$ | async)?.loading" [loadingError]="loadingError" (onActionRequested)="onLoadingAction($event)" fillHeight class="kEntriesTable col">
     <p-dataTable #dataTable [value]="entries" [sortField]="filter.sortBy"
                  [sortOrder]="filter.sortDirection " scrollable="true" scrollHeight="100%"
                  (selectionChange)="onSelectionChange($event)" (onSort)="onSortChanged($event)"
