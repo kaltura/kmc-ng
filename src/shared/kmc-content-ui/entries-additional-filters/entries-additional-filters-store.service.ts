@@ -127,7 +127,7 @@ export class EntriesAdditionalFiltersStore {
 
                     filters.metadataProfiles = metadataData.metadataProfiles;
 
-                    this._status.next({ loading : true, errorMessage : null});
+                    this._status.next({ loading : false, errorMessage : null});
                     this._filters.next(filters);
                 }
             },
