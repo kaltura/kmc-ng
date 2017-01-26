@@ -102,7 +102,9 @@
     },
     "entriesShared": {
         "categoriesFilters" : {
-            "maxChildrenExceeded" : "Number of categories exceeds {{childrenCount}} and cannot be displayed. Please use the search category control"
+            "loading": "Loading...",
+            "loadingError": "Failed to load children",
+            "maxChildrenExceeded" : "Number of categories exceeds {{childrenCount}}\nand cannot be displayed.\nPlease use the search category control."
         }
     }
 }

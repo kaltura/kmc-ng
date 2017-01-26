@@ -70,8 +70,18 @@ a.disabled{
 .kHeader{
     padding-top: 8px;
 }
-
-
+.kLoadingMessage{
+    cursor: auto;
+    color: $kPrimary;
+    padding-left: 6px;
+}
+.kLoadingErrorMessage{
+    cursor: auto;
+    white-space: pre-line;
+    margin-top: -16px;
+    color: $kGrayscale3;
+    padding-left: 6px;
+}
 /* Make sure toggler and checkbox remain aligned even if the node height changes */
 :host /deep/ .ui-treenode .ui-tree-toggler{
     vertical-align: top;
