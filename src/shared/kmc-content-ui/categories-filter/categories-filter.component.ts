@@ -253,6 +253,11 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         this.syncTreeFilters();
     }
 
+    public _blockTreeSelection(e: MouseEvent){
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
     close(){
         if (this.parentPopupWidget){
             this.parentPopupWidget.close();
