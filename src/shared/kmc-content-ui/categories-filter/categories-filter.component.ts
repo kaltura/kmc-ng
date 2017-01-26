@@ -230,7 +230,6 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             idProperty: 'id',
             nameProperty: 'name',
             parentIdProperty: 'parentId',
-            sortByType: 'number',
             sortByProperty: 'sortValue',
             childrenCountProperty: 'childrenCount',
             rootParentId : parentId
