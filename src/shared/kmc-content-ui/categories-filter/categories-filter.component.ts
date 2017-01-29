@@ -10,7 +10,7 @@ import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { ISubscription } from 'rxjs/Subscription';
 import * as R from 'ramda';
 
-import { TreeHierarchySelectionDirective, OnSelectionChangedArgs } from '@kaltura-ng2/kaltura-primeng-ui/directives/tree-hierarchy-selection.directive';
+import { TreeSelection, OnSelectionChangedArgs,TreeSelectionModes,TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
 import { CategoriesStore } from '../categories-store.service';
 import { BrowserService } from "../../kmc-shell/providers/browser.service";
 import { FilterItem } from "../entries-store/filter-item";
@@ -32,10 +32,10 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     private inLazyMode : boolean = false;
     private filterUpdateSubscription : ISubscription;
     private parentPopupStateChangeSubscription : ISubscription;
-    public _autoSelectChildren:boolean = false;
+    public _selectionMode :TreeSelectionModes = TreeSelectionModes.Exact;
 
-    @ViewChild(TreeHierarchySelectionDirective)
-    private _treeSelection : TreeHierarchySelectionDirective= null;
+    @ViewChild(TreeSelection)
+    private _treeSelection : TreeSelection= null;
 
     public _currentSearch: string = "";
 
@@ -72,14 +72,14 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             }
         );
 
-        const savedAutoSelectChildren: boolean = this.browserService.getFromLocalStorage("categoriesTree.autoSelectChildren");
-        this._autoSelectChildren = savedAutoSelectChildren === null ? false : savedAutoSelectChildren;
-
+        const savedAutoSelectChildren: TreeSelectionModes = this.browserService.getFromLocalStorage("contentShared.categoriesTree.selectionMode");
+        this._selectionMode = savedAutoSelectChildren ? savedAutoSelectChildren : TreeSelectionModes.Exact;
 
         // TODO [kmcng] consider using constants for permissions flags
         this.inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
         this.reloadCategories();
     }
+
 
     private reloadCategories() : void
     {
@@ -123,14 +123,14 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     public _onTreeSelectionChanged(args : OnSelectionChangedArgs) : void {
 
-        // should handle only updates done by the tree (we already handled updates from the filters)
-        if (args.originatedByTree) {
+        // update filters only if the change was done from this component (either by the user selecting inside the tree or when the user clicks on 'clear all'
+        if (args.origin === TreeSelectionChangedOrigins.UnselectAll || args.origin === TreeSelectionChangedOrigins.UserSelection) {
             let newFilters: FilterItem[] = [];
             let removedFilters: FilterItem[] = [];
 
 
             args.added.forEach((node: PrimeTreeNode) => {
-                const mode = this._autoSelectChildren ? CategoriesFilterModes.Hierarchy : CategoriesFilterModes.Exact;
+                const mode = this._selectionMode === TreeSelectionModes.Nested ? CategoriesFilterModes.Nested : CategoriesFilterModes.Exact;
                 newFilters.push(new CategoriesFilter(<number>node.data, mode, node.label, node.origin.fullName));
             });
 
@@ -230,20 +230,16 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     public _onSelectionModeChanged(value)
     {
-        this._autoSelectChildren = value;
-
-        this.browserService.setInLocalStorage("categoriesTree.autoSelectChildren", this._autoSelectChildren);
-
         // clear current selection
-        this._removeAllFilters();
+        this._clearAll();
+
+        // important - updates selection mode only after the remove all filters was invoked to be sure the component is sync correctly.
+        this._selectionMode = value;
+        this.browserService.setInLocalStorage("contentShared.categoriesTree.selectionMode", this._selectionMode);
     }
 
     public _clearAll(){
-        this._removeAllFilters();
-    }
-
-    private _removeAllFilters() {
-        this.entriesStore.removeFiltersByType(CategoriesFilter);
+        this._treeSelection.unselectAll();
     }
 
     close(){

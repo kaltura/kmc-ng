@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="kTreeContainer">
-        <p-tree [kTreeHierarchySelection]="_autoSelectChildren" (onSelectionChanged)="_onTreeSelectionChanged($event)" [value]="_categories" selectionMode="checkbox"  (onNodeExpand)="_onNodeExpand($event)">
+        <p-tree kTreeSelection [treeSelectionMode]="_selectionMode" (onTreeSelectionChanged)="_onTreeSelectionChanged($event)" [value]="_categories" (onNodeExpand)="_onNodeExpand($event)">
         <template let-node  pTemplate="default">
             <div >
                 <span [ngClass]="{'kDisabled' : node.isDisabled}" class="kTreeNodeLabel">{{node.label}}</span>
@@ -27,5 +27,5 @@
     </p>
 </div>
 <kPopupWidget #categoriesPref [modal]="true" [popupWidth]="360" [popupHeight]="220" [closeBtn]="true" [targetRef]="config" [targetOffset]="{'x':-324, 'y': -24}" [parentPopup]="parentPopupWidget">
-    <kCategoriesFilterPrefs [showChildren]="_autoSelectChildren" (showChildrenChange)="_onSelectionModeChanged($event)"></kCategoriesFilterPrefs>
+    <kCategoriesFilterPrefs [selectionMode]="_selectionMode" (selectionModeChange)="_onSelectionModeChanged($event)"></kCategoriesFilterPrefs>
 </kPopupWidget>
