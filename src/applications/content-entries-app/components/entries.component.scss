@@ -16,9 +16,14 @@
         font-size: 24px;
         border: none;
         min-width: inherit;
-        margin-top: -7px;
+        margin-right: 16px;
+        width: 40px;
+        outline: 0;
         &:active{
             box-shadow: none;
+        }
+        &:hover{
+            color: $kPrimary;
         }
     }
     .kEntriesTableFilters {
@@ -31,10 +36,6 @@
         border-bottom: none;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
-
-        div {
-            padding-right: 6px;
-        }
     }
     .kEntriesTableTags {
         width: 100%;

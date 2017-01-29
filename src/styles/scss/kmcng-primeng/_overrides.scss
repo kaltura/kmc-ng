@@ -280,6 +280,7 @@
 .ui-tree .ui-tree-container{
     padding-left: 0px;
     padding-top: 0px;
+    overflow: hidden;
 }
 .ui-tree.ui-widget.ui-widget-content.ui-corner-all.ui-tree-selectable{
     border: none;
@@ -333,7 +334,7 @@
         @extend .ui-button.kButtonDefault;
     }
     .ui-datepicker-prev, .ui-datepicker-next{
-        color: #ffffff;
+        color: #ffffff !important;
     }
     .ui-datepicker-prev-hover, .ui-datepicker-next-hover{
         background: #01ACCD;
