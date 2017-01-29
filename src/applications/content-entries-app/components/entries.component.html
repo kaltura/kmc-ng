@@ -33,7 +33,7 @@
             <p-paginator [rows]="_filter.pageSize" (onPageChange)="onPaginationChanged($event)"
                          [first]="_filter.pageIndex * _filter.pageSize"
                          [totalRecords]="(_entriesStore.entries$ | async)?.totalCount"
-                         [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
+                         [rowsPerPageOptions]="[25,50,75,100, 150, 200, 250]"></p-paginator>
             <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
         </div>
     </div>

@@ -88,8 +88,9 @@ export class kEntriesTableComponent implements AfterViewInit, OnInit, OnDestroy{
   }
 
   ngAfterViewInit(){
-    if (this.dataTable.scrollBody) {
-      this.dataTable.scrollBody.onscroll = () => {
+      const scrollBody = this.dataTable.el.nativeElement.getElementsByClassName("ui-datatable-scrollable-body")[0];
+    if (scrollBody) {
+        scrollBody.onscroll = () => {
         if (this.actionsMenu){
           this.actionsMenu.hide();
         }

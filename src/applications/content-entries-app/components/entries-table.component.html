@@ -1,6 +1,6 @@
 <div [kLoader]="(entriesStore.status$ | async)?.loading" [loadingError]="_loadingError" (onActionRequested)="onLoadingAction($event)" kFillHeight class="kEntriesTable col">
     <p-dataTable #dataTable [value]="entries" [sortField]="filter.sortBy"
-                 [sortOrder]="filter.sortDirection " scrollable="true" scrollHeight="100%"
+                 [sortOrder]="filter.sortDirection" scrollable="true" scrollHeight="100%"
                  (selectionChange)="onSelectionChange($event)" (onSort)="onSortChanged($event)"
                  [(selection)]="tableSelectedEntries">
         <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
@@ -16,18 +16,18 @@
         </p-column>
         <p-column field="id" header="ID" [sortable]="'custom'" [style]="{'width':'100px'}"></p-column>
         <p-column field="mediaType" header="{{'applications.content.table.type' | translate}}" [sortable]="'custom'"
-                  [style]="{'width':'80px', 'text-align': 'center'}">
+                  [style]="{'width':'80px', 'text-align': 'right'}">
             <template let-col let-entry="rowData" pTemplate="body">
                 <div [class]="entry[col.field] | entryType"></div>
             </template>
         </p-column>
-        <p-column field="plays" header="{{'applications.content.table.plays' | translate}}" [sortable]="'custom'" [style]="{'width':'80px'}"></p-column>
+        <p-column field="plays" header="{{'applications.content.table.plays' | translate}}" [sortable]="'custom'" [style]="{'width':'76px'}"></p-column>
         <p-column field="createdAt" header="Created On" [sortable]="true" [style]="{'width':'140px'}">
             <template let-col let-entry="rowData" pTemplate="body">
                 <span>{{entry[col.field] * 1000 | date:'MM/dd/y HH:MM'}}</span>
             </template>
         </p-column>
-        <p-column field="duration" header="{{'applications.content.table.duration' | translate}}" [sortable]="'custom'" [style]="{'width':'100px'}">
+        <p-column field="duration" header="{{'applications.content.table.duration' | translate}}" [sortable]="'custom'" [style]="{'width':'104px'}">
             <template let-col let-entry="rowData" pTemplate="body">
                 <span>{{entry[col.field] | time}}</span>
             </template>
