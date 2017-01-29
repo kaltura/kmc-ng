@@ -8,6 +8,11 @@
     color: $kGrayscale1;
     text-overflow: ellipsis;
     margin-left: 5px;
+
+    &.kDisabled
+    {
+        color:darkgray;
+    }
 }
 .kTreeNodeNumChildren{
     font-size: 14px;
@@ -70,6 +75,7 @@ a.disabled{
 .kHeader{
     padding-top: 8px;
 }
+
 
 
 /* Make sure toggler and checkbox remain aligned even if the node height changes */

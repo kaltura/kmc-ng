@@ -16,11 +16,6 @@ export class CategoriesFilterPrefsComponent{
     prefChange(){
         // use timeout to allow data binding to update showChildren before emitting the change event and saving to local storage
         setTimeout(()=>{
-            if (this.showChildren)
-            {
-                window.alert("This feature is currently not supported");
-                this.showChildren = false;
-            }
             this.showChildrenChange.emit(this.showChildren);
         },0);
     }
