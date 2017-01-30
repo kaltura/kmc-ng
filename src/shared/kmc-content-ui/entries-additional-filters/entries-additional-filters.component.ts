@@ -71,14 +71,8 @@ class TypesToFiltersManager
     styleUrls: ['./entries-additional-filters.component.scss']
 })
 export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit, OnDestroy{
-    public _createdAfter: Date;
-    public _createdBefore: Date;
-    public _scheduledAfter: Date;
-    public _scheduledBefore: Date;
-    public _scheduledSelected : boolean = false;
 
     private _typesToFiltersManager : TypesToFiltersManager = new TypesToFiltersManager();
-
     private additionalFiltersSubscription : ISubscription;
     private filterUpdateSubscription : ISubscription;
     private loading = false;
@@ -86,10 +80,14 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
     @ViewChildren(TreeSelection)
     private _treeSelections : QueryList<TreeSelection> = null;
+    private _typesToTreeSelectionMapping : { [key : string] : TreeSelection} = {};
 
-    // expose enum to be used in the template
-    public _treeSelectionModes = TreeSelectionModes;
-
+    public _createdAfter: Date;
+    public _createdBefore: Date;
+    public _scheduledAfter: Date;
+    public _scheduledBefore: Date;
+    public _scheduledSelected : boolean = false;
+    public _treeSelectionModes = TreeSelectionModes; // expose enum to be used in the template
 
     @Input() parentPopupWidget: PopupWidgetComponent;
     parentPopupStateChangeSubscribe : ISubscription;
@@ -155,10 +153,28 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
             });
     }
 
+
     ngAfterViewInit(){
 
         this._treeSelections.changes.subscribe((query : QueryList<TreeSelection>) =>
         {
+            this._typesToTreeSelectionMapping = {};
+
+            if (query)
+            {
+                query.forEach(tree =>
+                {
+                    const treeTypes = tree.treeSelectionContext;
+
+                    if (treeTypes && treeTypes.length)
+                    {
+                        treeTypes.forEach(type =>
+                        {
+                           this._typesToTreeSelectionMapping[type] = tree;
+                        });
+                    }
+                })
+            }
         });
 
         if (this.parentPopupWidget){
@@ -272,14 +288,12 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         {
             const nodesToRemove : PrimeTreeNode[] = [];
 
-            removedFilters.forEach((filter : ValueFilter<any>) =>
-            {
+            removedFilters.forEach((filter : ValueFilter<any>) => {
                 if (filter instanceof ValueFilter) {
                     const filterTypeName = this._typesToFiltersManager.getNameByFilter(filter);
 
-                    if (filterTypeName)
-
-                        var relevantTreeSelection : TreeSelection = null;
+                    if (filterTypeName) {
+                        const relevantTreeSelection: TreeSelection = this._typesToTreeSelectionMapping[filterTypeName];
 
                         if (relevantTreeSelection) {
                             let nodeToRemove = R.find(R.propEq('data', filter.value), relevantTreeSelection.getSelections());
@@ -295,6 +309,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                             }
                         }
                     }
+                }
             });
         }
     }
