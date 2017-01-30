@@ -28,6 +28,8 @@ import {
 import { MetadataProfileFilter } from "../entries-store/filters/metadata-profile-filter";
 import { CreatedAtFilter } from "../entries-store/filters/created-at-filter";
 
+const MetadataProfileTypeName = 'metadataProfiles';
+
 declare type ValueFilterType = {new(...args : any[]) : ValueFilter<any>;};
 
 class TypesToFiltersManager
@@ -243,7 +245,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         {
             return new DistributionsFilter(<number>node.data, node.label);
         });
-        this._typesToFiltersManager.registerType('metadataProfiles',MetadataProfileFilter, (node : PrimeTreeNode)  =>
+        this._typesToFiltersManager.registerType(MetadataProfileTypeName,MetadataProfileFilter, (node : PrimeTreeNode)  =>
         {
             const filterType : filterGroupMetadataProfileType = <filterGroupMetadataProfileType>node.payload;
 
@@ -295,9 +297,9 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
                     if (filterTypeName) {
 
-                        if (filterTypeName === 'metadataProfiles')
+                        if (filterTypeName === MetadataProfileTypeName)
                         {
-                            // fix the list name to the actual value
+                            // use the actual metdata profile list id
                             filterTypeName = filter instanceof MetadataProfileFilter ? filter.listTypeName : null;
                         }
 
@@ -421,7 +423,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
             if (node.payload instanceof filterGroupMetadataProfileType) {
                 // create metadata profile filter
-                result = this._typesToFiltersManager.createNewFilter('metadataProfiles',node);
+                result = this._typesToFiltersManager.createNewFilter(MetadataProfileTypeName,node);
             } else if (node.payload instanceof FilterGroupType && node.payload && (<FilterGroupType>node.payload).type)  {
                 result = this._typesToFiltersManager.createNewFilter((<FilterGroupType>node.payload).type,node);
             }
@@ -437,7 +439,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
             let nodeType : string = null;
             if (node.payload instanceof filterGroupMetadataProfileType) {
-                nodeType = 'metadataProfiles';
+                nodeType = MetadataProfileTypeName;
             } else if (node.payload instanceof FilterGroupType) {
                 nodeType = (<FilterGroupType>node.payload).type;
             }
@@ -508,14 +510,21 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         }
     }
 
-    private findFilterOfSelectedNode(node : PrimeTreeNode)
-    {
-        let result : FilterItem = null;
+    private findFilterOfSelectedNode(node : PrimeTreeNode) {
+        let result: FilterItem = null;
 
-        let filterType = this.getFilterTypeByTreeNode(node);
+        if (node.payload instanceof filterGroupMetadataProfileType) {
+            // find the filter using both value and listType
+            result = R.find(item => {
+                return item instanceof MetadataProfileFilter && item.value === node.data && item.listTypeName === node.payload.type;
+            }, this.entriesStore.getFiltersByType(MetadataProfileFilter));
+        } else if (node.payload instanceof FilterGroupType && node.payload && (<FilterGroupType>node.payload).type) {
+            let filterType = this.getFilterTypeByTreeNode(node);
 
-        if (filterType) {
-            result = R.find(R.propEq('value', node.data), this.entriesStore.getFiltersByType(filterType));
+            if (filterType) {
+                // find the filter using value only (each list has its' own filter type)
+                result = R.find(R.propEq('value', node.data), this.entriesStore.getFiltersByType(filterType));
+            }
         }
 
         return result;
