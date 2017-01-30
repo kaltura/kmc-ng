@@ -27,7 +27,7 @@ import {
 } from "./entries-additional-filters-store.service";
 import { MetadataProfileFilter } from "../entries-store/filters/metadata-profile-filter";
 import { CreatedAtFilter } from "../entries-store/filters/created-at-filter";
-import {ListsToFilterTypesManager} from "./filter-types-manager";
+import {ListsToFilterTypesManager} from "./lists-to-filter-types-manager";
 
 const MetadataProfileTypeName = 'metadataProfiles';
 
@@ -301,7 +301,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         {
             removedFilters.forEach((filter : ValueFilter<any>) => {
                 if (filter instanceof ValueFilter) {
-                    let filterTypeName = this._filterTypesManager.getNameByFilter(filter);
+                    let filterTypeName = this._filterTypesManager.getListNameByFilter(filter);
 
                     if (filterTypeName) {
 
@@ -591,7 +591,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
             } else if (node.payload instanceof FilterGroupType) {
                 nodeType = (<FilterGroupType>node.payload).type;
             }
-            result = nodeType ? this._filterTypesManager.getFilterByName(nodeType) : null;
+            result = nodeType ? this._filterTypesManager.getFilterByListName(nodeType) : null;
 
             return result;
         }

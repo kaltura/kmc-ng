@@ -72,14 +72,8 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             }
         );
 
-        if (this.inLazyMode)
-        {
-            // in lazy mode we must assume that the node children weren't fetched yet
-            this._selectionMode = TreeSelectionModes.Exact;
-        }else {
-            const savedAutoSelectChildren: TreeSelectionModes = this.browserService.getFromLocalStorage("contentShared.categoriesTree.selectionMode");
-            this._selectionMode = savedAutoSelectChildren ? savedAutoSelectChildren : TreeSelectionModes.Exact;
-        }
+        const savedAutoSelectChildren: TreeSelectionModes = this.browserService.getFromLocalStorage("contentShared.categoriesTree.selectionMode");
+        this._selectionMode = savedAutoSelectChildren ? savedAutoSelectChildren : TreeSelectionModes.Exact;
 
         // TODO [kmcng] consider using constants for permissions flags
         this.inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
@@ -233,18 +227,13 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    public _onSelectionModeChanged(value)
-    {
-        // allow changing of selection mode only if not in lazy mode
-        if (!this.inLazyMode) {
+    public _onSelectionModeChanged(value) {
+        // clear current selection
+        this._clearAll();
 
-            // clear current selection
-            this._clearAll();
-
-            // important - updates selection mode only after the remove all filters was invoked to be sure the component is sync correctly.
-            this._selectionMode = value;
-            this.browserService.setInLocalStorage("contentShared.categoriesTree.selectionMode", this._selectionMode);
-        }
+        // important - updates selection mode only after the remove all filters was invoked to be sure the component is sync correctly.
+        this._selectionMode = value;
+        this.browserService.setInLocalStorage("contentShared.categoriesTree.selectionMode", this._selectionMode);
     }
 
     public _clearAll(){
