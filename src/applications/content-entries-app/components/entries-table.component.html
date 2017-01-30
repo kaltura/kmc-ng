@@ -32,12 +32,12 @@
                 <span>{{entry[col.field] | time}}</span>
             </template>
         </p-column>
-        <p-column field="status" header="{{'applications.content.table.status' | translate}}" [sortable]="'custom'" [style]="{'width':'140px'}">
+        <p-column field="status" header="{{'applications.content.table.status' | translate}}" [sortable]="'custom'" [style]="{'width':'100px'}">
             <template let-col let-entry="rowData" pTemplate="body">
                 <span>{{entry[col.field] | entryStatus}}</span>
             </template>
         </p-column>
-        <p-column header="" [style]="{'overflow':'visible', 'width':'100px'}">
+        <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
             <template let-col let-entry="rowData" pTemplate="body">
                 <div class="kEntriesTableActions">
                     <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, entry)"></button>

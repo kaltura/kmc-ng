@@ -132,6 +132,10 @@
         @extend .kCategoriesFilter;
         width: 140px;
     }
+    .kHidden{
+        visibility: hidden;
+        width: 0px;
+    }
 }
 
 :host /deep/ .ui-tree{
