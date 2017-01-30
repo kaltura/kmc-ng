@@ -27,7 +27,7 @@ import {
 } from "./entries-additional-filters-store.service";
 import { MetadataProfileFilter } from "../entries-store/filters/metadata-profile-filter";
 import { CreatedAtFilter } from "../entries-store/filters/created-at-filter";
-import {FilterTypesManager} from "./filter-types-manager";
+import {ListsToFilterTypesManager} from "./filter-types-manager";
 
 const MetadataProfileTypeName = 'metadataProfiles';
 
@@ -42,7 +42,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     /*
     Manages the supported filters, expose useful helpers like getting filter type by name, getting filter factory etc...
      */
-    private _filterTypesManager : FilterTypesManager = new FilterTypesManager();
+    private _filterTypesManager : ListsToFilterTypesManager = new ListsToFilterTypesManager();
 
     // subscription that will be disposed later upon ngDestroy
     private _additionalFiltersSubscription : ISubscription;
