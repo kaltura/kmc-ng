@@ -205,6 +205,10 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                             node.setChildren(this.treeDataHandler.create(
                                 this.createTreeHandlerArguments(result.items, node.data)
                             ));
+
+                            // ask tree selection to refresh node status, required in
+                            // 'ExactBlockChildren' mode to update children status if needed
+                            this._treeSelection.syncItemStatus(node);
                         },
                         error => {
                             node.setChildrenLoadStatus(NodeChildrenStatuses.error,
