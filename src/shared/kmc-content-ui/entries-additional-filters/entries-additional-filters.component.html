@@ -12,7 +12,7 @@
         <p-calendar [(ngModel)]="_createdBefore" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
         <a class="kClearAll" (click)="_clearCreatedComponents()">{{'applications.content.filters.clearDates' | translate}}</a>
 
-        <div *ngFor="let primeGroup of primeGroups">
+        <div *ngFor="let primeGroup of _primeGroups">
             <div *ngIf="primeGroup.groupName" class="kFiltersGroupTitle">
                 <span>{{primeGroup.groupName | uppercase}}</span>
             </div>
