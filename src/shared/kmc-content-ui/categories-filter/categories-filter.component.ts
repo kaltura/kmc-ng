@@ -227,7 +227,6 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             idProperty: 'id',
             nameProperty: 'name',
             parentIdProperty: 'parentId',
-            sortByType: 'number',
             sortByProperty: 'sortValue',
             childrenCountProperty: 'childrenCount',
             rootParentId : parentId
@@ -250,6 +249,11 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     public _clearAll(){
         this._treeSelection.unselectAll();
+    }
+
+    public _blockTreeSelection(e: MouseEvent){
+        e.preventDefault();
+        e.stopPropagation();
     }
 
     close(){

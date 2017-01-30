@@ -15,12 +15,20 @@
         font-size: 24px;
         border: none;
         min-width: inherit;
-        margin-top: -7px;
+        margin-right: 16px;
+        width: 40px;
+        outline: 0;
+        color: $kGrayscale3;
         &:active{
             box-shadow: none;
         }
+        &:hover{
+            background-color: #ffffff;
+            color: $kPrimary;
+        }
     }
     .kEntriesTableFilters {
+        color: $kGrayscale1;
         width: 100%;
         height: 66px;
         background-color: white;
@@ -30,10 +38,6 @@
         border-bottom: none;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
-
-        div {
-            padding-right: 6px;
-        }
     }
     .kEntriesTableTags {
         width: 100%;
@@ -59,24 +63,31 @@
         margin-left: 5px;
     }
     .kSearchInput {
-        background: url(../styles/assets/magnifier.png) no-repeat 7px 4px;
-        padding-left:30px;
+        background: url(../styles/assets/magnifier.png) no-repeat 7px 9px;
         background-color: $kGrayscale6;
+        padding-left:30px;
         margin-right: 8px;
     }
     .kBulkOperations{
-        width: 360px;
+        width: 400px;
     }
     .kPaginatorShowRowsLabel{
+        color: $kGrayscale1;
         position: absolute;
         top: 7px;
-        right: 70px;
+        right: 80px;
     }
     .kBulkCancel{
         margin-left: 10px;
     }
     .kBulkDeleteBtn{
         margin-right: 10px;
+        width: 44px;
+        font-size: 18px;
+    }
+    .kBulkActionsBtn{
+        font-weight: 400;
+        font-size: 15px;
     }
     .kFilters{
         display: flex;
@@ -87,35 +98,59 @@
         border-radius: 4px;
         display: flex;
         background-color: #ffffff;
-        height: 26px;
+        height: 34px;
         align-items: center;
         cursor: pointer;
-        color: $kGrayscale3;
+        color: $kGrayscale1;
         width: 180px;
         position: relative;
         margin-right: 8px;
         i{
-            margin-right: 8px;
+            margin-right: 12px;
             margin-left: 8px;
+            color: $kGrayscale4;
             &.dropdown{
                 font-size: 10px;
             }
         }
         &:hover{
             color: $kPrimary;
+            i{
+                color: $kPrimary;
+            }
+            .dropdown{
+                color: $kPrimary;
+            }
         }
         .dropdown{
             position: absolute;
             right: 4px;
-            top: 8px;
+            top: 12px;
         }
     }
     .kRefine{
         @extend .kCategoriesFilter;
         width: 140px;
     }
+    .kHidden{
+        visibility: hidden;
+        width: 0px;
+    }
 }
 
 :host /deep/ .ui-tree{
     width: 380px;
+}
+
+:host /deep/ .ui-button-icon-right.kIcondropdown_arrow_bottom{
+    font-size: 10px;
+    margin-right: 2px;
+}
+
+:host /deep/ .ui-tieredmenu.ui-menu{
+    width: 250px;
+    .ui-submenu-icon{
+        font-size: 10px;
+        margin-top: 3px;
+    }
 }

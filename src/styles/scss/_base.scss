@@ -12,11 +12,11 @@ label{
 
 .link{
     font-size: 15px;
-    color: $kGrayscale1;
+    color: $kTertiary;
     text-decoration: underline;
     cursor: pointer;
     &:hover{
-      color: darken($kGrayscale1, 10%);
+      color: darken($kTertiary, 10%);
     }
     &:active{
         color: $kTertiary;

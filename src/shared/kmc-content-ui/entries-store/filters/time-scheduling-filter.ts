@@ -35,22 +35,34 @@ EntriesStore.registerFilterType(TimeSchedulingFilter, (items, request) =>
         switch (item.value)
         {
             case 'past':
-                request.filter.endDateLessThanOrEqual = toServerDate(new Date());
+                if (request.filter.endDateLessThanOrEqual === undefined || request.filter.endDateLessThanOrEqual < toServerDate(new Date())) {
+                    request.filter.endDateLessThanOrEqual = toServerDate(new Date());
+                }
                 break;
             case 'live':
-                request.filter.startDateLessThanOrEqualOrNull = toServerDate(new Date());
-                request.filter.endDateGreaterThanOrEqualOrNull = toServerDate(new Date());
+                if (request.filter.startDateLessThanOrEqualOrNull === undefined || request.filter.startDateLessThanOrEqualOrNull > toServerDate(new Date())) {
+                    request.filter.startDateLessThanOrEqualOrNull = toServerDate(new Date());
+                }
+                if (request.filter.endDateGreaterThanOrEqualOrNull === undefined || request.filter.endDateGreaterThanOrEqualOrNull < toServerDate(new Date())) {
+                    request.filter.endDateGreaterThanOrEqualOrNull = toServerDate(new Date());
+                }
                 break;
             case 'future':
-                request.filter.startDateGreaterThanOrEqual = toServerDate(new Date());
+                if (request.filter.startDateGreaterThanOrEqual === undefined || request.filter.startDateGreaterThanOrEqual > toServerDate(new Date())) {
+                    request.filter.startDateGreaterThanOrEqual = toServerDate(new Date());
+                }
                 break;
             case 'scheduled':
                 if (item.scheduledAfter) {
-                    request.filter.startDateGreaterThanOrEqual = toServerDate(item.scheduledAfter);
+                    if (request.filter.startDateGreaterThanOrEqual === undefined || request.filter.startDateGreaterThanOrEqual > toServerDate(item.scheduledAfter)) {
+                        request.filter.startDateGreaterThanOrEqual = toServerDate(item.scheduledAfter);
+                    }
                 }
 
                 if (item.scheduledBefore) {
-                    request.filter.endDateLessThanOrEqual = toServerDate(item.scheduledBefore);
+                    if (request.filter.endDateLessThanOrEqual === undefined || request.filter.endDateLessThanOrEqual < toServerDate(item.scheduledBefore)) {
+                        request.filter.endDateLessThanOrEqual = toServerDate(item.scheduledBefore);
+                    }
                 }
 
                 break;

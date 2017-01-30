@@ -4,13 +4,13 @@
         <div class="kEntriesTableFilters grid col-12">
             <span *ngIf="(_entriesStore.entries$ | async)?.totalCount">{{(_entriesStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
 
-            <div [style.visibility]="_selectedEntries.length ? 'visible' : 'hidden'" class="kBulkOperations">
+            <div [class.kHidden]="!_selectedEntries.length" class="kBulkOperations">
                 <span class="kSelectedEntriesLabel">• {{_selectedEntries.length}} {{'applications.content.entries.selected' | translate}}</span>
                 <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"></button>
-                <button class="kButtonDefault small" [disabled]="!_selectedEntries.length" pButton label="{{'applications.content.entries.bulkActions' | translate}}" (click)="menu.toggle($event)"></button>
+                <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" [disabled]="!_selectedEntries.length" pButton label="{{'applications.content.entries.bulkActions' | translate}}" (click)="menu.toggle($event)"></button>
                 <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
             </div>
-            <div [style.visibility]="_selectedEntries.length ? 'hidden' : 'visible'" class="kFilters">
+            <div [class.kHidden]="_selectedEntries.length" class="kFilters">
                     <input type="text" pInputText class="kSearchInput"
                            [(ngModel)]="_filter.freetextSearch"
                            (keyup.enter)="onFreetextChanged()"
@@ -41,7 +41,7 @@
 </div>
 
 <!-- popup widgets section -->
-<kPopupWidget #categoriesFilterPopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="categoriesFilterBtn" [targetOffset]="{'x':-20, 'y': -21}">
+<kPopupWidget #categoriesFilterPopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="categoriesFilterBtn" [targetOffset]="{'x':-10, 'y': -21}">
     <kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup"></kCategoriesFilter>
 </kPopupWidget>
 
