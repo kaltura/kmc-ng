@@ -26,9 +26,6 @@
             text-decoration: none;
             color: $mainLinkActiveColor;
         }
-        &.uploadOpen {
-            color: $mainLinkActiveColor;
-        }
     }
     i {
         display: flex;
@@ -54,6 +51,8 @@
         height: 1px;
         margin-left: -20px;
         margin-right: -20px;
+        border: 0;
+        border-top: 1px solid $kGrayscale6;
     }
     .widgetLink {
         color: $widgetLinkColor;
@@ -70,12 +69,15 @@
         align-items: center;
     }
     .kUploadBtn {
-        height: 32px;
-        font-size: 13px;
+        height: 28px;
+        font-size: 12px;
         letter-spacing: 0.1em;
         font-weight: 700;
-        border: 1px solid $menuBkgColor;
+        border: 0px solid $menuBkgColor;
+        color: $kGrayscale1;
         margin-right: 12px;
+        padding-left: 6px;
+        padding-right: 6px;
     }
     .kUserName {
         display: flex;
@@ -103,13 +105,14 @@
 }
 .kHelpTitle{
     font-size: 14px;
-    color: $kGrayscale4;
+    color: $kGrayscale3;
 }
 .kHelpLink{
     font-size: 14px;
     cursor: pointer;
+    color: $kGrayscale1;
     &:hover{
-        color: $kPrimary;
+        color: #000000;
     }
 }
 .kContexualHelp{
@@ -121,7 +124,7 @@
 }
 .appSubMenu {
     background-color: white;
-    border-bottom: 1px solid grey;
+    border-bottom: 2px solid $kGrayscale5;
     a {
         color: $subLinkColor;
         line-height: $appMenuHeight;
@@ -136,11 +139,11 @@
         }
         &:hover {
             text-decoration: none;
-            color: $subLinkActiveColor;
+            color: $menuBkgColor;
         }
         &.activeLink {
             text-decoration: none;
-            color: $subLinkActiveColor;
+            color: $menuBkgColor;
         }
     }
     .subMenuContainer {
@@ -156,7 +159,7 @@
         width: 100%;
         height: 4px;
         position: absolute;
-        background-color: #D5D5D5;
+        background-color: $menuBkgColor;
         opacity: 0;
         bottom: 0px;
         transition: opacity .3s ease-in-out;
