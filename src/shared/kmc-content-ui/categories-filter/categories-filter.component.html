@@ -22,7 +22,7 @@
     </div>
 
     <p>
-        <a [class.disabled]="_selectedNodes?.length === 0" (click)="_clearAll()">{{'applications.content.filters.clearAll' | translate}}</a>
+        <a (click)="_clearAll()">{{'applications.content.filters.clearAll' | translate}}</a>
         <a class="kClose" (click)="close()">{{'applications.content.filters.close' | translate}}</a>
     </p>
 </div>

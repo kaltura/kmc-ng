@@ -72,8 +72,14 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             }
         );
 
-        const savedAutoSelectChildren: TreeSelectionModes = this.browserService.getFromLocalStorage("contentShared.categoriesTree.selectionMode");
-        this._selectionMode = savedAutoSelectChildren ? savedAutoSelectChildren : TreeSelectionModes.Exact;
+        if (this.inLazyMode)
+        {
+            // in lazy mode we must assume that the node children weren't fetched yet
+            this._selectionMode = TreeSelectionModes.Exact;
+        }else {
+            const savedAutoSelectChildren: TreeSelectionModes = this.browserService.getFromLocalStorage("contentShared.categoriesTree.selectionMode");
+            this._selectionMode = savedAutoSelectChildren ? savedAutoSelectChildren : TreeSelectionModes.Exact;
+        }
 
         // TODO [kmcng] consider using constants for permissions flags
         this.inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
@@ -130,7 +136,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
 
             args.added.forEach((node: PrimeTreeNode) => {
-                const mode = this._selectionMode === TreeSelectionModes.Nested ? CategoriesFilterModes.Nested : CategoriesFilterModes.Exact;
+                const mode = this._selectionMode === TreeSelectionModes.ExactBlockChildren ? CategoriesFilterModes.Ancestor : CategoriesFilterModes.Exact;
                 newFilters.push(new CategoriesFilter(<number>node.data, mode, node.label, node.origin.fullName));
             });
 
@@ -230,12 +236,16 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     public _onSelectionModeChanged(value)
     {
-        // clear current selection
-        this._clearAll();
+        // allow changing of selection mode only if not in lazy mode
+        if (!this.inLazyMode) {
 
-        // important - updates selection mode only after the remove all filters was invoked to be sure the component is sync correctly.
-        this._selectionMode = value;
-        this.browserService.setInLocalStorage("contentShared.categoriesTree.selectionMode", this._selectionMode);
+            // clear current selection
+            this._clearAll();
+
+            // important - updates selection mode only after the remove all filters was invoked to be sure the component is sync correctly.
+            this._selectionMode = value;
+            this.browserService.setInLocalStorage("contentShared.categoriesTree.selectionMode", this._selectionMode);
+        }
     }
 
     public _clearAll(){

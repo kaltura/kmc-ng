@@ -1,6 +1,8 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, Input, IterableDiffer, IterableDiffers, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, Input,  ElementRef } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { PrimeTreeNode, TreeDataHandler } from '@kaltura-ng2/kaltura-primeng-ui';
+import { TreeSelection, OnSelectionChangedArgs,TreeSelectionModes,TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
+
 import { EntriesStore } from "../entries-store/entries-store.service";
 import { FilterItem } from "../entries-store/filter-item";
 import { MediaTypesFilter } from "../entries-store/filters/media-types-filter";
@@ -46,23 +48,21 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
     private additionalFiltersSubscription : ISubscription;
     private filterUpdateSubscription : ISubscription;
-    public _selectedNodes: PrimeTreeNode[] = [];
     private loading = false;
     private primeGroups : { groupName : string, items : PrimeTreeNode[] }[] = [];
 
+    // expose enum to be used in the template
+    public _treeSelectionModes = TreeSelectionModes;
 
-    private treeSelectionsDiffer : IterableDiffer = null;
 
     @Input() parentPopupWidget: PopupWidgetComponent;
     parentPopupStateChangeSubscribe : ISubscription;
 
     constructor(public additionalFiltersStore: EntriesAdditionalFiltersStore, private treeDataHandler : TreeDataHandler,
-                private entriesStore : EntriesStore, private differs: IterableDiffers, private elementRef: ElementRef) {
+                private entriesStore : EntriesStore, private elementRef: ElementRef) {
     }
 
     ngOnInit() {
-        // manage differences of selections
-        this.treeSelectionsDiffer = this.differs.find([]).create(null);
 
         // update components when the active filter list is updated
         this.filterUpdateSubscription = this.entriesStore.query$.subscribe(
@@ -132,6 +132,8 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         this.additionalFiltersSubscription.unsubscribe();
     }
 
+
+
     private syncCreatedComponents() : void {
 
         const createdAtFilter = this.entriesStore.getFirstFilterByType(CreatedAtFilter);
@@ -166,35 +168,35 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     private syncTreeComponents(removedFilters : FilterItem[]) : void
     {
         // traverse on removed filters and update tree selection accordingly
-        if (removedFilters)
-        {
-            const nodesToRemove : PrimeTreeNode[] = [];
-
-            removedFilters.forEach(filter =>
-            {
-                if (filter instanceof ValueFilter && this.isFilterOriginatedByTreeComponent(filter))
-                {
-                    let nodeToRemove = R.find(R.propEq('data',filter.value),this._selectedNodes);
-
-                    if (nodeToRemove && nodeToRemove.data === 'scheduled' && this.getScheduledFilter() !== null)
-                    {
-                        // 'scheduled' filter item has a special behavior. when a user modify the scheduled To/From dates
-                        // a filter is being re-created. in such a scenario we don't want to remove the selection
-                        nodeToRemove = null;
-                    }
-
-                    if (nodeToRemove)
-                    {
-                        nodesToRemove.push(nodeToRemove);
-                    }
-                }
-            });
-
-            if (nodesToRemove.length > 0)
-            {
-                this._selectedNodes = R.without(nodesToRemove,this._selectedNodes);
-            }
-        }
+        // if (removedFilters)
+        // {
+        //     const nodesToRemove : PrimeTreeNode[] = [];
+        //
+        //     removedFilters.forEach(filter =>
+        //     {
+        //         if (filter instanceof ValueFilter && this.isFilterOriginatedByTreeComponent(filter))
+        //         {
+        //             let nodeToRemove = R.find(R.propEq('data',filter.value),this._selectedNodes);
+        //
+        //             if (nodeToRemove && nodeToRemove.data === 'scheduled' && this.getScheduledFilter() !== null)
+        //             {
+        //                 // 'scheduled' filter item has a special behavior. when a user modify the scheduled To/From dates
+        //                 // a filter is being re-created. in such a scenario we don't want to remove the selection
+        //                 nodeToRemove = null;
+        //             }
+        //
+        //             if (nodeToRemove)
+        //             {
+        //                 nodesToRemove.push(nodeToRemove);
+        //             }
+        //         }
+        //     });
+        //
+        //     if (nodesToRemove.length > 0)
+        //     {
+        //         this._selectedNodes = R.without(nodesToRemove,this._selectedNodes);
+        //     }
+        // }
     }
 
     private syncSchedulingFilters() : boolean
@@ -251,46 +253,6 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         }
     }
 
-    private syncTreeFilters()
-    {
-
-        let newFilters : FilterItem[] = [];
-        let removedFilters : FilterItem[] = [];
-
-        const selectionChanges = this.treeSelectionsDiffer.diff(this._selectedNodes);
-
-        if (selectionChanges)
-        {
-            selectionChanges.forEachAddedItem((record) => {
-                const node : PrimeTreeNode = record.item;
-                const filter = this.createTreeFilters(node);
-
-                if (filter)
-                {
-                    newFilters.push(filter);
-                }
-            });
-
-            selectionChanges.forEachRemovedItem((record) => {
-                const node : PrimeTreeNode = record.item;
-
-                const filter = this.findFilterOfSelectedNode(node);
-
-                if (filter)
-                {
-                    removedFilters.push(filter);
-                }
-            });
-        }
-
-        if (newFilters.length > 0) {
-            this.entriesStore.addFilters(...newFilters);
-        }
-
-        if (removedFilters.length > 0) {
-            this.entriesStore.removeFilters(...removedFilters);
-        }
-    }
 
     public _clearCreatedComponents(){
         this._createdAfter = null;
@@ -300,9 +262,6 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     }
 
     public _clearAllComponents(){
-        this._selectedNodes = [];
-        this.syncTreeFilters();
-
     }
 
     private getScheduledFilter() : TimeSchedulingFilter
@@ -453,9 +412,50 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         }
     }
 
-    public _onTreeSelectionChanged() : void
-    {
-        this.syncTreeFilters();
+    public _onTreeSelectionChanged(args : OnSelectionChangedArgs) : void {
+
+        // update filters only if the change was done from this component (either by the user selecting inside the tree or when the user clicks on 'clear all'
+        if (args.origin === TreeSelectionChangedOrigins.UnselectAll || args.origin === TreeSelectionChangedOrigins.UserSelection) {
+
+            let newFilters : FilterItem[] = [];
+            let removedFilters : FilterItem[] = [];
+
+            if (args.added)
+            {
+                args.added.forEach((node : PrimeTreeNode) =>
+                {
+                    if (node instanceof PrimeTreeNode) {
+                        const filter = this.createTreeFilters(node);
+
+                        if (filter) {
+                            newFilters.push(filter);
+                        }
+                    }
+                });
+            }
+
+            if (args.removed) {
+                args.removed.forEach((node: PrimeTreeNode) => {
+                    if (node instanceof PrimeTreeNode) {
+                        const filter = this.findFilterOfSelectedNode(node);
+
+                        if (filter)
+                        {
+                            removedFilters.push(filter);
+                        }
+                    }
+                });
+            }
+
+            if (newFilters.length > 0) {
+                this.entriesStore.addFilters(...newFilters);
+            }
+
+            if (removedFilters.length > 0) {
+                this.entriesStore.removeFilters(...removedFilters);
+            }
+
+        }
     }
 
     private findFilterOfSelectedNode(node : PrimeTreeNode)

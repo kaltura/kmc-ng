@@ -16,7 +16,7 @@
             <div *ngIf="primeGroup.groupName" class="kFiltersGroupTitle">
                 <span>{{primeGroup.groupName | uppercase}}</span>
             </div>
-            <p-tree [value]="primeGroup.items" selectionMode="checkbox" [selection]="_selectedNodes"  (onNodeSelect)="_onTreeSelectionChanged()" (onNodeUnselect)="_onTreeSelectionChanged()" >
+            <p-tree [value]="primeGroup.items" kTreeSelection [treeSelectionMode]="_treeSelectionModes.PrimeDefault"  (onTreeSelectionChanged)="_onTreeSelectionChanged($event)" >
                 <template let-node  pTemplate="default">
                     <span  class="kTreeNodeLabel">{{node.label}} <span *ngIf="node.childrenCount">({{ node.childrenCount}})</span></span>
                     <div *ngIf="node.data==='scheduled'" (click)="_blockScheduleToggle($event)">
@@ -32,7 +32,7 @@
     </div>
 
     <p>
-        <a class="clearAll" [class.disabled]="_selectedNodes.length === 0" (click)="_clearAllComponents()">{{'applications.content.filters.clearAll' | translate}}</a>
+        <a class="clearAll"  (click)="_clearAllComponents()">{{'applications.content.filters.clearAll' | translate}}</a>
         <a class="kClose" (click)="_close()">{{'applications.content.filters.close' | translate}}</a>
     </p>
 </div>
