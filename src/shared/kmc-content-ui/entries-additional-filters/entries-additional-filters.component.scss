@@ -1,10 +1,10 @@
-@import "../../../styles/scss/variables";
+@import "../../../styles/scss/_variables";
 
 .kHeader{
     padding-top: 8px;
     margin-right: 2px;
     .kTitle{
-        line-height: 28px;
+        line-height: 36px;
         background-color: $kGrayscale6;
         border: 0px solid $kGrayscale6;
         border-radius: 3px;
@@ -61,16 +61,21 @@ a.disabled{
     color: $kGrayscale5;
     border: none;
 }
-
+.kTreeNodeNumChildren{
+    font-size: 14px;
+    font-weight: 400;
+    color: $kGrayscale3;
+    margin-left: 10px;
+}
 /* Make sure the checkbox remain aligned even if the node height changes */
 :host /deep/ .ui-tree .ui-chkbox{
     vertical-align: top;
     margin-top: 11px;
 }
 /* prevent calendars from being cut by the popup widget borders */
-:host /deep/ .pullLeft30 .ui-datepicker.ui-widget {
+:host /deep/ .kPullLeft30 .ui-datepicker.ui-widget {
     margin-left: -30px;
 }
-:host /deep/ .pullLeft90 .ui-datepicker.ui-widget {
+:host /deep/ .kPullLeft90 .ui-datepicker.ui-widget {
     margin-left: -90px;
 }

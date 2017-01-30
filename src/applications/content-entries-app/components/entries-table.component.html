@@ -1,6 +1,6 @@
 <div [kLoader]="(entriesStore.status$ | async)?.loading" [loadingError]="_loadingError" (onActionRequested)="onLoadingAction($event)" kFillHeight class="kEntriesTable col">
     <p-dataTable #dataTable [value]="entries" [sortField]="filter.sortBy"
-                 [sortOrder]="filter.sortDirection" scrollable="true" scrollHeight="100%"
+                 scrollable="true" scrollHeight="100%"
                  (selectionChange)="onSelectionChange($event)" (onSort)="onSortChanged($event)"
                  [(selection)]="tableSelectedEntries">
         <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
@@ -14,7 +14,7 @@
                 <span class="kTitle" [class.disable]="!allowDrilldown(entry.mediaType,entry.status)" (click)="onActionSelected('view',entry.id,entry.mediaType,entry.status)">{{entry[col.field]}}</span>
             </template>
         </p-column>
-        <p-column field="id" header="ID" [sortable]="'custom'" [style]="{'width':'100px'}"></p-column>
+        <p-column field="id" header="ID" [sortable]="false" [style]="{'width':'100px'}"></p-column>
         <p-column field="mediaType" header="{{'applications.content.table.type' | translate}}" [sortable]="'custom'"
                   [style]="{'width':'80px', 'text-align': 'right'}">
             <template let-col let-entry="rowData" pTemplate="body">
@@ -40,8 +40,7 @@
         <p-column header="" [style]="{'overflow':'visible', 'width':'100px'}">
             <template let-col let-entry="rowData" pTemplate="body">
                 <div class="kEntriesTableActions">
-                    <button type="button" pButton icon="kIconmore"
-                            (click)="openActionsMenu($event, entry)"></button>
+                    <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, entry)"></button>
                 </div>
             </template>
         </p-column>

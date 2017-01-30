@@ -1,6 +1,6 @@
 <div #categoriesTree class="kUseKMCngIcons">
     <div class="kHeader">
-        <p-autoComplete width="300px" [(ngModel)]="_currentSearch"  field="label" placeholder="{{'applications.content.filters.findCategory' | translate}}" [minLength]="3" ></p-autoComplete>
+        <p-autoComplete inputStyleClass="kSearchCategory" [(ngModel)]="_currentSearch"  field="label" placeholder="{{'applications.content.filters.findCategory' | translate}}" [minLength]="3" ></p-autoComplete>
         <i #config class="kIcongear kTreeConfig" pTooltip="{{'applications.content.filters.preferences.preferences' | translate}}"></i>
         <div class="kAllCategories">
             <span>{{'applications.content.filters.allCategories' | translate | uppercase}} </span>
