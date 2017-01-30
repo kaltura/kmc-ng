@@ -246,7 +246,8 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         this._typesToFiltersManager.registerType('metadataProfiles',MetadataProfileFilter, (node : PrimeTreeNode)  =>
         {
             const filterType : filterGroupMetadataProfileType = <filterGroupMetadataProfileType>node.payload;
-            return new MetadataProfileFilter(filterType.metadataProfileId,filterType.fieldPath,<any>node.data);
+
+            return new MetadataProfileFilter(filterType.metadataProfileId,filterType.type, filterType.fieldPath,<any>node.data);
         });
     }
 
@@ -290,12 +291,26 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
             removedFilters.forEach((filter : ValueFilter<any>) => {
                 if (filter instanceof ValueFilter) {
-                    const filterTypeName = this._typesToFiltersManager.getNameByFilter(filter);
+                    let filterTypeName = this._typesToFiltersManager.getNameByFilter(filter);
 
                     if (filterTypeName) {
-                        const relevantTreeSelection: TreeSelection = this._typesToTreeSelectionMapping[filterTypeName];
+
+                        if (filterTypeName === 'metadataProfiles')
+                        {
+                            // fix the list name to the actual value
+                            filterTypeName = filter instanceof MetadataProfileFilter ? filter.listTypeName : null;
+                        }
+
+                        const relevantTreeSelection: TreeSelection = filterTypeName ? this._typesToTreeSelectionMapping[filterTypeName] : null;
 
                         if (relevantTreeSelection) {
+                            if (filter instanceof MetadataProfileFilter)
+                            {
+
+                            }else
+                            {
+
+                            }
                             let nodeToRemove = R.find(R.propEq('data', filter.value), relevantTreeSelection.getSelections());
 
                             if (nodeToRemove && nodeToRemove.data === 'scheduled' && this.getScheduledFilter() !== null) {
@@ -377,6 +392,10 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     }
 
     public _clearAllComponents(){
+        this._treeSelections.forEach(tree =>
+        {
+            tree.unselectAll();
+        });
     }
 
     private getScheduledFilter() : TimeSchedulingFilter

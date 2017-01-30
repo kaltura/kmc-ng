@@ -20,9 +20,17 @@ export class MetadataProfileFilter  extends ValueFilter<string>{
     public get fieldPath() : string[]{
         return this._fieldPath;
     }
-    constructor(metadataProfileId : number, fieldPath : string[], value : string)
+
+    private _listTypeName : string;
+
+    public get listTypeName() : string{
+        return this._listTypeName;
+    }
+
+    constructor(metadataProfileId : number, listTypeName : string,  fieldPath : string[], value : string)
     {
         super(value, value);
+        this._listTypeName = listTypeName;
         this._metadataProfileId = metadataProfileId;
         this._fieldPath = fieldPath;
     }
