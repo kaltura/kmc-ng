@@ -1,8 +1,10 @@
-import { Component, OnInit, OnDestroy,  ViewChild  } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
+import { BrowserService } from "../../../shared/kmc-shell/providers/browser.service";
 import { EntriesStore, SortDirection } from 'kmc-content-ui/entries-store/entries-store.service';
 import { kEntriesTableComponent } from "./entries-table.component";
 
@@ -26,9 +28,10 @@ export interface Entry {
     styleUrls: ['./entries.component.scss'],
     providers : [EntriesStore]
 })
-export class EntriesComponent implements OnInit, OnDestroy {
+export class EntriesComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @ViewChild(kEntriesTableComponent) private dataTable: kEntriesTableComponent;
+    @ViewChild('releaseNotes') private releaseNotesPopup: PopupWidgetComponent;
 
     private querySubscription : Subscription;
     private additionalFiltersSubscription : Subscription;
@@ -43,7 +46,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
         sortDirection : SortDirection.Asc
     };
 
-    constructor(public _entriesStore : EntriesStore, private additionalFilters : EntriesAdditionalFiltersStore, private appLocalization: AppLocalization) {
+    constructor(public _entriesStore : EntriesStore, private additionalFilters : EntriesAdditionalFiltersStore, private appLocalization: AppLocalization, private browserService: BrowserService) {
     }
 
     removeTag(tag: any){
@@ -122,6 +125,13 @@ export class EntriesComponent implements OnInit, OnDestroy {
             }
         );
     }
+    ngAfterViewInit(){
+        if (this.browserService.getFromLocalStorage("hideReleaseNotes") === true){
+            this._removeReleaseNotes();
+        }else {
+            this.releaseNotesPopup.open();
+        }
+    }
 
     ngOnDestroy(){
         this.querySubscription.unsubscribe();
@@ -131,6 +141,17 @@ export class EntriesComponent implements OnInit, OnDestroy {
         this.additionalFiltersSubscription = null;
 
         this._entriesStore.dispose();
+    }
+
+    public _removeReleaseNotes(){
+        const releaseNotes = this.releaseNotesPopup.popup.nativeElement;
+        if (releaseNotes && releaseNotes.parentNode) {
+            releaseNotes.parentNode.removeChild(releaseNotes);
+        }
+    }
+
+    public _toggleReleaseNotes(dontShowAgain){
+        this.browserService.setInLocalStorage("hideReleaseNotes", dontShowAgain);
     }
 
     public _reload()

@@ -63,7 +63,7 @@ $invalidInputBorderColor: #cd0a0a;
 }
 
 /* checkboxes */
-.ui-datatable .ui-selection-column .ui-chkbox-box, .ui-tree .ui-chkbox-box{
+.ui-chkbox .ui-chkbox-box, .ui-datatable .ui-selection-column .ui-chkbox-box, .ui-tree .ui-chkbox-box{
     width: 16px;
     height: 16px;
     border: 1px solid $kGrayscale4;

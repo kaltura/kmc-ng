@@ -1,23 +1,31 @@
 import { NgModule,SkipSelf, Optional, ModuleWithProviders } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+import { CheckboxModule, SharedModule } from 'primeng/primeng';
 
 import { AppShellService } from "./providers/app-shell.service";
 import { BrowserService } from "./providers/browser.service";
 import { TimePipe } from "./pipes/time.pipe";
 import { AppContainerComponent } from "./components/app-container/app-container.component";
+import { ReleaseNotesComponent } from "./components/release-notes/release-notes.component";
 
 @NgModule({
     imports: <any[]>[
-        CommonModule
+        CommonModule,
+        FormsModule,
+        CheckboxModule,
+        SharedModule
     ],
     declarations: <any[]>[
         TimePipe,
-        AppContainerComponent
+        AppContainerComponent,
+        ReleaseNotesComponent
     ],
     exports: <any[]>[
         TimePipe,
-        AppContainerComponent
+        AppContainerComponent,
+        ReleaseNotesComponent
     ],
     providers: <any[]>[
     ]
