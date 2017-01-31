@@ -143,5 +143,12 @@ export class kEntriesTableComponent implements AfterViewInit, OnInit, OnDestroy{
     this.selectedEntriesChange.emit(this.selectedEntries);
   }
 
+  scrollToTop() {
+      const scrollBodyArr = this.dataTable.el.nativeElement.getElementsByClassName("ui-datatable-scrollable-body");
+      if (scrollBodyArr && scrollBodyArr.length > 0) {
+          const scrollBody: HTMLDivElement = scrollBodyArr[0];
+          scrollBody.scrollTop = 0;
+      }
+  }
 }
 
