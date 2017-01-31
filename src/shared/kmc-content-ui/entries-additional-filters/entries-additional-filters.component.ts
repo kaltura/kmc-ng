@@ -27,7 +27,7 @@ import {
 } from "./entries-additional-filters-store.service";
 import { MetadataProfileFilter } from "../entries-store/filters/metadata-profile-filter";
 import { CreatedAtFilter } from "../entries-store/filters/created-at-filter";
-import { ListsToFilterTypesManager} from "./lists-to-filter-types-manager";
+import { ListsToFilterTypesManager } from "./lists-to-filter-types-manager";
 
 const MetadataProfileTypeName = 'metadataProfiles';
 
