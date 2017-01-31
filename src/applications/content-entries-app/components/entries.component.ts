@@ -95,6 +95,7 @@ export class EntriesComponent implements OnInit, AfterViewInit, OnDestroy {
                this.syncFreetextComponents();
 
                this._filter.pageIndex = query.data.pageIndex-1;
+               this.dataTable.scrollToTop();
             }
         );
 
