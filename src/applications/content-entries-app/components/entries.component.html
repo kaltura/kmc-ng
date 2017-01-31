@@ -48,3 +48,7 @@
 <kPopupWidget #refinePopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="refineBtn" [targetOffset]="{'x':-220, 'y': -22}">
     <kEntriesAdditionalFilter [parentPopupWidget]="refinePopup" ></kEntriesAdditionalFilter>
 </kPopupWidget>
+
+<kPopupWidget #releaseNotes [centerOnScreen]="true" [popupWidth]="705" [popupHeight]="540" [modal]="true" [closeBtn]="true" (onClose)="_removeReleaseNotes()">
+    <kReleaseNotes (onChange)="_toggleReleaseNotes($event)"></kReleaseNotes>
+</kPopupWidget>

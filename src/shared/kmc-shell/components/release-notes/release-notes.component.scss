@@ -1,0 +1,10 @@
+@import "../../../../styles/scss/_variables.scss";
+
+.kReleaseNotes{
+    color: $kGrayscale1;
+    padding: 20px;
+    .kTitle{
+        font-size: 18px;
+        font-weight: 700;
+    }
+}
