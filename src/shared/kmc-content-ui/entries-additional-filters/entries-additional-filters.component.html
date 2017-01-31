@@ -12,11 +12,11 @@
         <p-calendar [(ngModel)]="_createdBefore" class="kPullLeft30" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
         <a class="kClearAll" (click)="_clearCreatedComponents()">{{'applications.content.filters.clearDates' | translate}}</a>
 
-        <div *ngFor="let primeGroup of primeGroups">
+        <div *ngFor="let primeGroup of _primeGroups">
             <div *ngIf="primeGroup.groupName" class="kFiltersGroupTitle">
                 <span>{{primeGroup.groupName | uppercase}}</span>
             </div>
-            <p-tree [value]="primeGroup.items" selectionMode="checkbox" [selection]="_selectedNodes"  (onNodeSelect)="_onTreeSelectionChanged()" (onNodeUnselect)="_onTreeSelectionChanged()" >
+            <p-tree [value]="primeGroup.items" kTreeSelection [treeSelectionMode]="_treeSelectionModes.PrimeDefault" [treeSelectionContext]="primeGroup.groupTypes"  (onTreeSelectionChanged)="_onTreeSelectionChanged($event)" >
                 <template let-node  pTemplate="default">
                     <span  class="kTreeNodeLabel">{{node.label}} <span *ngIf="node.childrenCount" class="kTreeNodeNumChildren">{{ node.childrenCount}}</span></span>
                     <div *ngIf="node.data==='scheduled'" (click)="_blockScheduleToggle($event)">
@@ -32,7 +32,7 @@
     </div>
 
     <p>
-        <a class="clearAll" [class.disabled]="_selectedNodes.length === 0" (click)="_clearAllComponents()">{{'applications.content.filters.clearAll' | translate}}</a>
+        <a class="clearAll"  (click)="_clearAllComponents()">{{'applications.content.filters.clearAll' | translate}}</a>
         <a class="kClose" (click)="_close()">{{'applications.content.filters.close' | translate}}</a>
     </p>
 </div>

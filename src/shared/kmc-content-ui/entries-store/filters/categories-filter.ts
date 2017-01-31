@@ -6,7 +6,7 @@ import { ValueFilter } from '../value-filter';
 export enum CategoriesFilterModes
 {
     Exact,
-    Hierarchy
+    Ancestor
 }
 
 export class CategoriesFilter extends ValueFilter<number>{
@@ -32,7 +32,7 @@ EntriesStore.registerFilterType(CategoriesFilter, (items, request) =>
     const groupedItems = R.groupBy(item => item.mode +'', items);
 
     const exactModeItems = groupedItems[CategoriesFilterModes.Exact + ''];
-    const hierarchyModeItems = groupedItems[CategoriesFilterModes.Hierarchy + ''];
+    const hierarchyModeItems = groupedItems[CategoriesFilterModes.Ancestor + ''];
 
     if (exactModeItems)
     {

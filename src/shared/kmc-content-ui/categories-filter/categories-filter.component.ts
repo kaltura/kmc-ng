@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Output, ViewChild, Input, IterableDiffer, IterableDiffers, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy,  ViewChild, Input,  AfterViewInit, ElementRef } from '@angular/core';
 import { Tree } from 'primeng/primeng';
 import { PrimeTreeNode, TreeDataHandler, NodeChildrenStatuses } from '@kaltura-ng2/kaltura-primeng-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
@@ -10,6 +10,7 @@ import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { ISubscription } from 'rxjs/Subscription';
 import * as R from 'ramda';
 
+import { TreeSelection, OnSelectionChangedArgs,TreeSelectionModes,TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
 import { CategoriesStore } from '../categories-store.service';
 import { BrowserService } from "../../kmc-shell/providers/browser.service";
 import { FilterItem } from "../entries-store/filter-item";
@@ -31,12 +32,15 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     private inLazyMode : boolean = false;
     private filterUpdateSubscription : ISubscription;
     private parentPopupStateChangeSubscription : ISubscription;
-    public _selectedNodes: PrimeTreeNode[] = [];
-    public _autoSelectChildren:boolean = false;
-    private treeSelectionsDiffer : IterableDiffer = null;
+    public _selectionMode :TreeSelectionModes = TreeSelectionModes.Exact;
+
+    @ViewChild(TreeSelection)
+    private _treeSelection : TreeSelection= null;
+
     public _currentSearch: string = "";
 
     public NodeChildrenStatuses : any = NodeChildrenStatuses; // we expose the enum so we will be able to use it as part of template expression
+
     @ViewChild(Tree)
     private categoriesTree: Tree;
 
@@ -46,7 +50,6 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         appAuthentication : AppAuthentication,
         private appConfig: AppConfig,
         private appLocalization: AppLocalization,
-        private differs: IterableDiffers,
         private entriesStore : EntriesStore,
         private treeDataHandler : TreeDataHandler,
         public browserService: BrowserService,
@@ -57,8 +60,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     ngOnInit() {
-        // manage differences of selections
-        this.treeSelectionsDiffer = this.differs.find([]).create(null);
+
 
         // update components when the active filter list is updated
         this.filterUpdateSubscription = this.entriesStore.query$.subscribe(
@@ -70,14 +72,14 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             }
         );
 
-        const savedAutoSelectChildren: boolean = this.browserService.getFromLocalStorage("categoriesTree.autoSelectChildren");
-        this._autoSelectChildren = savedAutoSelectChildren === null ? false : savedAutoSelectChildren;
-
+        const savedAutoSelectChildren: TreeSelectionModes = this.browserService.getFromLocalStorage("contentShared.categoriesTree.selectionMode");
+        this._selectionMode = savedAutoSelectChildren ? savedAutoSelectChildren : TreeSelectionModes.Exact;
 
         // TODO [kmcng] consider using constants for permissions flags
         this.inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
         this.reloadCategories();
     }
+
 
     private reloadCategories() : void
     {
@@ -119,50 +121,39 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    public _onTreeSelectionChanged() : void
-    {
-        this.syncTreeFilters();
-    }
+    public _onTreeSelectionChanged(args : OnSelectionChangedArgs) : void {
 
-    private syncTreeFilters()
-    {
-        let newFilters : FilterItem[] = [];
-        let removedFilters : FilterItem[] = [];
+        // update filters only if the change was done from this component (either by the user selecting inside the tree or when the user clicks on 'clear all'
+        if (args.origin === TreeSelectionChangedOrigins.UnselectAll || args.origin === TreeSelectionChangedOrigins.UserSelection) {
+            let newFilters: FilterItem[] = [];
+            let removedFilters: FilterItem[] = [];
 
-        const selectionChanges = this.treeSelectionsDiffer.diff(this._selectedNodes);
 
-        if (selectionChanges)
-        {
-            selectionChanges.forEachAddedItem((record) => {
-                const node : PrimeTreeNode = record.item;
-                const mode = this._autoSelectChildren ? CategoriesFilterModes.Hierarchy : CategoriesFilterModes.Exact;
-
-                newFilters.push(new CategoriesFilter(<number>node.data,mode, node.label,node.origin.fullName));
+            args.added.forEach((node: PrimeTreeNode) => {
+                const mode = this._selectionMode === TreeSelectionModes.ExactBlockChildren ? CategoriesFilterModes.Ancestor : CategoriesFilterModes.Exact;
+                newFilters.push(new CategoriesFilter(<number>node.data, mode, node.label, node.origin.fullName));
             });
 
             let categoriesFilters = this.entriesStore.getFiltersByType(CategoriesFilter);
 
             if (categoriesFilters) {
-                selectionChanges.forEachRemovedItem((record) => {
-                    const node : PrimeTreeNode = record.item;
 
+                args.removed.forEach((node: PrimeTreeNode) => {
                     const filter = R.find(R.propEq('value', node.data), categoriesFilters);
 
-                    if (filter)
-                    {
+                    if (filter) {
                         removedFilters.push(filter);
                     }
                 });
             }
 
-        }
+            if (newFilters.length > 0) {
+                this.entriesStore.addFilters(...newFilters);
+            }
 
-        if (newFilters.length > 0) {
-            this.entriesStore.addFilters(...newFilters);
-        }
-
-        if (removedFilters.length > 0) {
-            this.entriesStore.removeFilters(...removedFilters);
+            if (removedFilters.length > 0) {
+                this.entriesStore.removeFilters(...removedFilters);
+            }
         }
     }
 
@@ -177,7 +168,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             {
                 if (filter instanceof ValueFilter)
                 {
-                    let nodeToRemove = R.find(R.propEq('data',filter.value),this._selectedNodes);
+                    let nodeToRemove = R.find(R.propEq('data',filter.value),this._treeSelection.getSelections());
 
                     if (nodeToRemove)
                     {
@@ -188,7 +179,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
             if (nodesToRemove.length > 0)
             {
-                this._selectedNodes = R.without(nodesToRemove,this._selectedNodes);
+                this._treeSelection.unselectItems(nodesToRemove);
             }
         }
     }
@@ -214,6 +205,10 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                             node.setChildren(this.treeDataHandler.create(
                                 this.createTreeHandlerArguments(result.items, node.data)
                             ));
+
+                            // ask tree selection to refresh node status, required in
+                            // 'ExactBlockChildren' mode to update children status if needed
+                            this._treeSelection.syncItemStatus(node);
                         },
                         error => {
                             node.setChildrenLoadStatus(NodeChildrenStatuses.error,
@@ -236,20 +231,17 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    public _onSelectionModeChanged(value)
-    {
-        this._autoSelectChildren = value;
-
-        this.browserService.setInLocalStorage("categoriesTree.autoSelectChildren", this._autoSelectChildren);
-
+    public _onSelectionModeChanged(value) {
         // clear current selection
-        this._selectedNodes = [];
-        this.syncTreeFilters();
+        this._clearAll();
+
+        // important - updates selection mode only after the remove all filters was invoked to be sure the component is sync correctly.
+        this._selectionMode = value;
+        this.browserService.setInLocalStorage("contentShared.categoriesTree.selectionMode", this._selectionMode);
     }
 
     public _clearAll(){
-        this._selectedNodes = [];
-        this.syncTreeFilters();
+        this._treeSelection.unselectAll();
     }
 
     public _blockTreeSelection(e: MouseEvent){

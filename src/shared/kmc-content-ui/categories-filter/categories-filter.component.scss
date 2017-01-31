@@ -8,6 +8,11 @@
     color: $kGrayscale1;
     text-overflow: ellipsis;
     margin-left: 5px;
+
+    &.kDisabled
+    {
+        color:darkgray;
+    }
 }
 .kTreeNodeNumChildren{
     font-size: 14px;
