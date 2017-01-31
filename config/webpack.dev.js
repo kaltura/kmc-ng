@@ -55,9 +55,9 @@ module.exports = webpackMerge(commonConfig, {
     loaders: [
       // Add loader that will monitor changes in @kaltura-ng2 (needed during deployment)
       {
-        test: /node_modules\/@kaltura-ng2\/\.ts/,
-            loaders : [],
-          exclude : []
+	      test: /\.ts$/,
+	      include : [helpers.root('node_modules/@kaltura-ng2')],
+          loaders : []
       }
     ]
   },
@@ -136,8 +136,7 @@ module.exports = webpackMerge(commonConfig, {
    */
   tslint: {
     emitErrors: false,
-    failOnHint: false,
-    resourcePath: 'src'
+    failOnHint: false
   },
 
   /**
