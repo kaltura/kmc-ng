@@ -183,7 +183,6 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                                 listRootNode.children.forEach(childNode => {
                                     childNode.parent = listRootNode;
                                 });
-
                             }
                             primeGroup.items.push(listRootNode);
                         }
