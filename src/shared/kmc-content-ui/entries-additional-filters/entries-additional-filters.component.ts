@@ -166,17 +166,25 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                         primeGroup.groupTypes.push(filterType.type);
 
                         if (filterItems && filterItems.length > 0) {
-                            primeGroup.items.push(
-                                new PrimeTreeNode(null, filterType.caption,
-                                    this.treeDataHandler.create(
-                                        {
-                                            data: filterItems,
-                                            idProperty: 'id',
-                                            nameProperty: 'name',
-                                            payload: filterType,
-                                        }
-                                    ),null,null)
-                            );
+                            const listRootNode = new PrimeTreeNode(null, filterType.caption,
+                                this.treeDataHandler.create(
+                                    {
+                                        data: filterItems,
+                                        idProperty: 'id',
+                                        nameProperty: 'name',
+                                        payload: filterType,
+                                    }
+                                ),null,null);
+
+                            // assign a reference to the parent in each children. This is needed
+                            // for the unselection propagation to work as expected when
+                            // invoked from the the entries store
+                            listRootNode.children.forEach(childNode =>
+                            {
+                                childNode.parent = listRootNode;
+                            });
+
+                            primeGroup.items.push(listRootNode);
                         }
                     });
 
