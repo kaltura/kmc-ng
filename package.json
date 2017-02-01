@@ -1,6 +1,6 @@
 {
-  "name": "app",
-  "version": "0.0.0",
+  "name": "KMCng",
+  "version": "0.1.0-rc.1",
   "license": "AGPL-3.0",
   "scripts": {
     "build:dev": "webpack --config config/webpack.dev.js --progress --profile",
