@@ -179,11 +179,12 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                             // assign a reference to the parent in each children. This is needed
                             // for the unselection propagation to work as expected when
                             // invoked from the the entries store
-                            listRootNode.children.forEach(childNode =>
-                            {
-                                childNode.parent = listRootNode;
-                            });
+                            if (listRootNode.children) {
+                                listRootNode.children.forEach(childNode => {
+                                    childNode.parent = listRootNode;
+                                });
 
+                            }
                             primeGroup.items.push(listRootNode);
                         }
                     });
