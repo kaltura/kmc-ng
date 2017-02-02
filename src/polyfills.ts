@@ -2,8 +2,6 @@ require('core-js/shim');
 import 'reflect-metadata';
 require('zone.js/dist/zone');
 
-import 'ts-helpers';
-
 if (process.env.ENV === 'build') {
   // Production
 
