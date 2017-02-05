@@ -1,15 +1,11 @@
-/**
- * @author: @AngularClass
- */
-
 const helpers = require('./helpers');
 const webpackMerge = require('webpack-merge'); // used to merge webpack configs
-const webpackMergeDll = webpackMerge.strategy({plugins: 'replace'});
 const commonConfig = require('./webpack.common.js'); // the settings that are common to prod and dev
 
 /**
  * Webpack Plugins
  */
+const AssetsPlugin = require('assets-webpack-plugin');
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const DefinePlugin = require('webpack/lib/DefinePlugin');
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
@@ -29,70 +25,23 @@ const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
   HMR: HMR
 });
 
-
-const DllBundlesPlugin = require('webpack-dll-bundles-plugin').DllBundlesPlugin;
-
-/**
- * Webpack configuration
- *
- * See: http://webpack.github.io/docs/configuration.html#cli
- */
 module.exports = function (options) {
   return webpackMerge(commonConfig({env: ENV}), {
 
     /**
      * Developer tool to enhance debugging
      *
-     * See: http://webpack.github.io/docs/configuration.html#devtool
-     * See: https://github.com/webpack/docs/wiki/build-performance#sourcemaps
      */
     devtool: 'cheap-module-source-map',
 
-    /**
-     * Options affecting the output of the compilation.
-     *
-     * See: http://webpack.github.io/docs/configuration.html#output
-     */
     output: {
-
-      /**
-       * The output directory as absolute path (required).
-       *
-       * See: http://webpack.github.io/docs/configuration.html#output-path
-       */
       path: helpers.root('dist'),
-
-	    // KMCng - adjustments
-      /**
-       * Specifies the name of each output file on disk.
-       * IMPORTANT: You must not specify an absolute path here!
-       *
-       * See: http://webpack.github.io/docs/configuration.html#output-filename
-       */
       filename: 'js/[name].bundle.js',
-
-      /**
-       * The filename of the SourceMaps for the JavaScript files.
-       * They are inside the output.path directory.
-       *
-       * See: http://webpack.github.io/docs/configuration.html#output-sourcemapfilename
-       */
       sourceMapFilename: 'js/[file].map',
-
-      /** The filename of non-entry chunks as relative path
-       * inside the output.path directory.
-       *
-       * See: http://webpack.github.io/docs/configuration.html#output-chunkfilename
-       */
-      chunkFilename: 'js/[id].chunk.js',
-
-	    // KMCng - end of adjustments
-      library: 'ac_[name]',
-      libraryTarget: 'var',
+      chunkFilename: 'js/[id].chunk.js'
     },
 
     module: {
-
       rules: [
 
         /*
@@ -103,7 +52,10 @@ module.exports = function (options) {
         {
           test: /\.css$/,
           use: ['style-loader', 'css-loader'],
-	        include: [helpers.root('node_modules')]
+	        include: [
+	            helpers.root('src','styles'),
+	            helpers.root('node_modules')
+            ]
         },
 
 
@@ -115,13 +67,22 @@ module.exports = function (options) {
 	      {
 		      test: /\.scss$/,
 		      use: ['style-loader', 'css-loader', 'sass-loader'],
-		      include: [helpers.root('src', 'styles'), helpers.root('node_modules')]
-	      },
+		      include: [
+			      helpers.root('src','styles'),
+			      helpers.root('node_modules')
+		      ]
+	      }
       ]
 
     },
 
     plugins: [
+
+	    new AssetsPlugin({
+		    path: helpers.root('dist'),
+		    filename: 'webpack-assets.json',
+		    prettyPrint: true
+	    }),
 
       /**
        * Plugin: DefinePlugin
@@ -143,58 +104,13 @@ module.exports = function (options) {
         }
       }),
 
-      new DllBundlesPlugin({
-        bundles: {
-          polyfills: [
-            'core-js',
-            {
-              name: 'zone.js',
-              path: 'zone.js/dist/zone.js'
-            },
-            {
-              name: 'zone.js',
-              path: 'zone.js/dist/long-stack-trace-zone.js'
-            },
-          ],
-          vendor: [
-            '@angular/platform-browser',
-            '@angular/platform-browser-dynamic',
-            '@angular/core',
-            '@angular/common',
-            '@angular/forms',
-            '@angular/http',
-            '@angular/router',
-            '@angularclass/hmr',
-            'rxjs',
-          ]
-        },
-        dllDir: helpers.root('dll'),
-        webpackConfig: webpackMergeDll(commonConfig({env: ENV}), {
-          devtool: 'cheap-module-source-map',
-          plugins: []
-        })
-      }),
-
-      /**
-       * Plugin: AddAssetHtmlPlugin
-       * Description: Adds the given JS or CSS file to the files
-       * Webpack knows about, and put it into the list of assets
-       * html-webpack-plugin injects into the generated html.
-       *
-       * See: https://github.com/SimenB/add-asset-html-webpack-plugin
-       */
-      new AddAssetHtmlPlugin([
-        { filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile('polyfills')}`) },
-        { filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile('vendor')}`) }
-      ]),
-
       /**
        * Plugin: NamedModulesPlugin (experimental)
        * Description: Uses file names as module name.
        *
        * See: https://github.com/webpack/webpack/commit/a04ffb928365b19feb75087c63f13cadfc08e1eb
        */
-      // new NamedModulesPlugin(),
+       new NamedModulesPlugin(),
 
       /**
        * Plugin LoaderOptionsPlugin (experimental)
