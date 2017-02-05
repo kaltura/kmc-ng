@@ -5,11 +5,11 @@ const commonConfig = require('./webpack.common.js'); // the settings that are co
 /**
  * Webpack Plugins
  */
+const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 const AssetsPlugin = require('assets-webpack-plugin');
-const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const DefinePlugin = require('webpack/lib/DefinePlugin');
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
-const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
+
 
 /**
  * Webpack Constants
@@ -26,7 +26,7 @@ const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
 });
 
 module.exports = function (options) {
-  return webpackMerge(commonConfig({env: ENV}), {
+  const webpackConfig = webpackMerge(commonConfig({env: ENV}), {
 
     /**
      * Developer tool to enhance debugging
@@ -66,7 +66,13 @@ module.exports = function (options) {
          */
 	      {
 		      test: /\.scss$/,
-		      use: ['style-loader', 'css-loader', 'sass-loader'],
+		      use: ['style-loader', 'css-loader', 'resolve-url-loader',
+			      {
+			      	loader : 'sass-loader',
+				      options : {
+					      sourceMap : true
+				      }
+			      }],
 		      include: [
 			      helpers.root('src','styles'),
 			      helpers.root('node_modules')
@@ -110,20 +116,7 @@ module.exports = function (options) {
        *
        * See: https://github.com/webpack/webpack/commit/a04ffb928365b19feb75087c63f13cadfc08e1eb
        */
-       new NamedModulesPlugin(),
-
-      /**
-       * Plugin LoaderOptionsPlugin (experimental)
-       *
-       * See: https://gist.github.com/sokra/27b24881210b56bbaff7
-       */
-      new LoaderOptionsPlugin({
-        debug: true,
-        options: {
-
-        }
-      }),
-
+       new NamedModulesPlugin()
     ],
 
     /**
@@ -160,4 +153,19 @@ module.exports = function (options) {
     }
 
   });
+
+	webpackConfig.plugins.push(
+		/**
+		 * Plugin LoaderOptionsPlugin (experimental)
+		 *
+		 * See: https://gist.github.com/sokra/27b24881210b56bbaff7
+		 */
+		new LoaderOptionsPlugin({
+			debug: true,
+			context : webpackConfig.context,
+			output: webpackConfig.output
+		})
+	);
+
+  return webpackConfig;
 }

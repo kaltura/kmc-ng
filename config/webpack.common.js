@@ -63,10 +63,7 @@ module.exports =  function (options) {
 					test: /\.ts$/,
 					use: [
 						{
-							loader: 'awesome-typescript-loader',
-							options: {
-								configFileName: 'tsconfig.webpack.json'
-							}
+							loader: 'awesome-typescript-loader'
 						},
 						'angular2-template-loader'
 					],
@@ -93,7 +90,13 @@ module.exports =  function (options) {
 				 */
 				{
 					test: /\.scss$/,
-					use: ['to-string-loader', 'css-loader', 'sass-loader'],
+					use: ['to-string-loader', 'css-loader','resolve-url-loader',
+						{
+							loader : 'sass-loader',
+							options : {
+								sourceMap : true
+							}
+						}],
 					exclude: [
 						helpers.root('src', 'styles')
 					]

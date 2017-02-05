@@ -1,13 +1,13 @@
 @import '~normalize.css/normalize.css';
-@import "_variables.scss";
+@import "variables";
 
-@import './kmcng-primeng/index.scss';
+@import 'kmcng-primeng/index';
 
-@import '~gridlex/src/gridlex.scss';
+@import '~gridlex/src/gridlex';
 
-@import '~@kaltura-ng2/kaltura-ui/styles/scss/index.scss';
+@import '~@kaltura-ng2/kaltura-ui/styles/scss/index';
 
-@import '_icons.scss';
+@import 'icons';
 
-@import '_base.scss';
-@import '_components.scss';
+@import 'base';
+@import 'components';
