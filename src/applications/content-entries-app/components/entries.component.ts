@@ -11,17 +11,6 @@ import { kEntriesTableComponent } from "./entries-table.component";
 import { FreetextFilter } from "../../../shared/kmc-content-ui/entries-store/filters/freetext-filter";
 import { EntriesAdditionalFiltersStore } from "../../../shared/kmc-content-ui/entries-additional-filters/entries-additional-filters-store.service";
 
-export interface Entry {
-    id: string;
-    name: string;
-    thumbnailUrl: string;
-    mediaType: string;
-    plays: string;
-    createdAt: string;
-    duration: string;
-    status: string;
-}
-
 @Component({
     selector: 'kKMCEntries',
     templateUrl: './entries.component.html',
@@ -114,7 +103,7 @@ export class EntriesComponent implements OnInit, AfterViewInit, OnDestroy {
                             sortBy : this._filter.sortBy,
                             sortDirection : this._filter.sortDirection,
                             metadataProfiles : data.metadataProfiles,
-                            fields :'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status'
+                            fields :'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus'
                         });
 
                     }else

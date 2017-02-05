@@ -6,7 +6,7 @@
         <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
         <p-column field="thumbnailUrl" header="{{'applications.content.table.thumbnail' | translate}}" [style]="{'width':'100px', 'text-align': 'center'}">
             <template let-col let-entry="rowData" pTemplate="body">
-                <div class="kThumbnailHolder"><span class="kHelper"></span><img src="{{entry[col.field]}}" [class.disable]="!allowDrilldown(entry.mediaType,entry.status)" (click)="onActionSelected('view',entry.id,entry.mediaType,entry.status)"></div>
+                <div class="kThumbnailHolder"><span class="kHelper"></span><img src="{{entry[col.field]}}" [class.disable]="!allowDrilldown(entry.mediaType,entry.status)" (click)="onActionSelected('view',entry.id,entry.mediaType,entry.status)" onError="this.onerror=null;this.style.display='none'"></div>
             </template>
         </p-column>
         <p-column field="name" header="{{'applications.content.table.name' | translate}}" [sortable]="'custom'">
@@ -34,7 +34,7 @@
         </p-column>
         <p-column field="status" header="{{'applications.content.table.status' | translate}}" [sortable]="'custom'" [style]="{'width':'100px'}">
             <template let-col let-entry="rowData" pTemplate="body">
-                <span>{{entry[col.field] | entryStatus}}</span>
+                <span>{{entry | entryStatus}}</span>
             </template>
         </p-column>
         <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
