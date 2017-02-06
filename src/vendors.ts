@@ -1,4 +1,3 @@
-import 'tslib';
 
 // Angular 2
 import '@angular/platform-browser';
