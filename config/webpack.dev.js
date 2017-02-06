@@ -44,6 +44,24 @@ module.exports = function (options) {
     module: {
       rules: [
 
+	      {
+		      test: /\.ts$/,
+		      enforce: 'pre',
+		      use: [
+			      {
+				      loader: 'tslint-loader',
+				      options: {
+					      configFile: 'tslint.json',
+					      emitErrors : false
+				      }
+			      }
+		      ],
+		      exclude: [
+		      	/\.(spec|e2e)\.ts$/,
+			      helpers.root('node_modules')
+		      ]
+	      },
+
         /*
          * css loader support for *.css files (styles directory only)
          * Loads external css styles into the DOM, supports HMR
