@@ -1,0 +1,76 @@
+@startuml
+skinparam backgroundColor #EEEBDC
+skinparam handwritten true
+
+title KMC[ng] Application Bootstrapping Diagram
+actor Angular
+box "KMC[ng] shell"
+participant AppShell
+participant KalturaAPIConfigAdapter
+participant KMCngServer as "Application Server"
+endbox
+box "KMC[ng] infrastructure" #LightGreen
+participant AppAuthService
+
+participant AppConfigService
+endbox
+box "Kaltura Server" #LightBlue
+
+participant KalturaAPI
+endbox
+
+
+
+== Angular config phase ==
+
+
+ AppConfigService <- AppShell  : register KalturaAPIConfigAdapter
+
+ == Angular run phase ==
+
+autonumber "<b> [00]"
+Angular -> KalturaAPIConfigAdapter : << create >>
+activate  KalturaAPIConfigAdapter
+
+Angular -> AppConfigService : << create >>
+activate  AppConfigService
+
+AppConfigService -> KMCngServer : load configuration
+activate KMCngServer
+
+Angular -> AppAuthService : << create >>
+activate AppAuthService
+AppAuthService -> AppConfigService : register to status initialized
+AppShell -> AppAuthService : register to status changes
+...
+KMCngServer --> AppConfigService : << KMC[ng] config >>
+activate AppConfigService
+AppConfigService -> AppConfigService : store configuration
+AppConfigService -> Angular : get registered config adapters list
+Angular --> AppConfigService : << adapters[] >>
+AppConfigService -> KalturaAPIConfigAdapter : execute(config)
+hnote over KalturaAPIConfigAdapter: update kaltura-api\nconfiguration with\nserver endpoint
+hnote over AppConfigService: execute other\nadapters if exists
+
+AppConfigService -> AppConfigService: update status initialized
+
+AppConfigService --> AppAuthService: << initialized >>
+alt has user token in local storage
+    AppAuthService -> AppAuthService : get user token from local storage
+    AppAuthService -> KalturaAPI: request user information
+    activate KalturaAPI
+    ...
+    KalturaAPI --> AppAuthService: << user information | nothing if invalid token >>
+    destroy KalturaAPI
+    AppAuthService -> AppAuthService: update status authenticated / annonymous
+else no user token found
+    AppAuthService -> AppAuthService : update status annonymous
+end
+AppAuthService --> AppShell : << updated auth status >>
+alt user authenticated
+AppShell -> AppShell: navigate to default view
+else user is annonymous
+AppShell -> AppShell: navigate to login view
+end
+
+@enduml

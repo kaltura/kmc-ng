@@ -1,0 +1,111 @@
+@startuml
+skinparam backgroundColor #EEEBDC
+skinparam handwritten true
+
+title KMC[ng] Application Bootstrapping Diagram
+actor Angular
+participant AngularRouter
+box "KMC[ng] shell"
+participant AppShell
+participant KalturaAPIConfigAdapter
+endbox
+box "KMC[ng] infrastructure" #LightGreen
+participant AppBootstrapRouter as "AppBootstrap (CanActivate)"
+participant AppBootstrap
+participant AppAuthService
+participant AppConfigService
+endbox
+box "KMC[ng] Server"
+participant KMCngServer as "Application Server"
+endbox
+box "Kaltura Server" #LightBlue
+participant KalturaAPI
+endbox
+
+
+== Angular Dependency Injection configuration ==
+
+AppShell --> Angular  : register KalturaAPIConfigAdapter\n[post-config phase]
+AppShell -> AngularRouter  : assign AppBootstrap\nas 'canActivate' on root route
+
+ == Angular run phase ==
+
+autonumber "<b> [00]"
+activate AppBootstrapRouter
+AngularRouter -> AppBootstrapRouter : canActivate()
+AppBootstrapRouter --> AngularRouter : << observe status >>
+
+AppShell -> AppBootstrap: initApp(defaultConfiguration)
+activate AppBootstrap
+alt configuration not valid
+AppBootstrap -> AppBootstrap : update status to 'error'
+AppBootstrap --> AppBootstrapRouter : << status >>
+AppBootstrapRouter -> AngularRouter: navigate to error view
+end
+
+hnote over AppBootstrap: << handle 'pre-config' adapters >>
+AppBootstrap -> AppConfigService : load(configUri)
+activate AppConfigService
+AppConfigService -> KMCngServer : get config file
+activate KMCngServer
+...
+KMCngServer --> AppConfigService : << KMC[ng] config >>
+destroy KMCngServer
+
+AppConfigService -> AppConfigService: update status initialized
+AppConfigService --> AppBootstrap: << initialized | failure >>
+destroy AppConfigService
+
+alt failure
+AppBootstrap -> AppBootstrap : update status to 'error'
+AppBootstrap --> AppBootstrapRouter : << status >>
+AppBootstrapRouter -> AngularRouter: navigate to error view
+end
+
+hnote over AppBootstrap: << handle 'post-config' adapters >>
+
+AppBootstrap --> KalturaAPIConfigAdapter : execute()
+activate KalturaAPIConfigAdapter
+KalturaAPIConfigAdapter -> KalturaAPIConfigAdapter : update kaltura-api configuration
+KalturaAPIConfigAdapter -> KalturaAPIConfigAdapter : update bootstrapping default path configuration
+KalturaAPIConfigAdapter --> AppBootstrap
+destroy KalturaAPIConfigAdapter
+
+
+hnote over AppBootstrap: << handle 'pre-auth' adapters >>
+
+AppBootstrap -> AppAuthService : load()
+activate AppAuthService
+
+alt has user token in local storage
+    AppAuthService -> AppAuthService : get user token from local storage
+    AppAuthService -> KalturaAPI: request user information
+    activate KalturaAPI
+    ...
+    KalturaAPI --> AppAuthService: << user information | nothing if no session >>
+    destroy KalturaAPI
+    AppAuthService -> AppAuthService: update status authenticated / annonymous
+else no user token found
+    AppAuthService -> AppAuthService : update status annonymous
+end
+AppAuthService --> AppBootstrap : << updated auth status | failure >>
+destroy AppAuthService
+
+alt failure
+AppBootstrap -> AppBootstrap : update status to 'error'
+AppBootstrap --> AppBootstrapRouter : << status >>
+AppBootstrapRouter -> AngularRouter: navigate to error view
+end
+
+hnote over AppBootstrap: << handle 'post-auth' adapters >>
+
+AppBootstrap -> AppBootstrap : update status to 'bootstrapped'
+AppBootstrap --> AppBootstrapRouter : << status >>
+
+alt user authenticated
+AppBootstrapRouter -> AngularRouter : navigate to default view\nallow requested kmcng-app
+else user is annonymous
+AppBootstrapRouter -> AppShell: navigate to login view
+end
+
+@enduml
