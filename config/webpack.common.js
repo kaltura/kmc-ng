@@ -117,7 +117,10 @@ module.exports =  function (options) {
 				 */
 				{
 					test: /\.(png|jpe?g|gif|svg|ico)$/,
-					loader: 'file-loader'
+					loader: 'file-loader',
+					options : {
+						name: 'assets/[name].[hash].[ext]'
+					}
 				},
 
 				{

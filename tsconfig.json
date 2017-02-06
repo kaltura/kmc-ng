@@ -12,6 +12,7 @@
     "noEmitHelpers": true,
     "importHelpers": true,
     "strictNullChecks": false,
+    "skipLibCheck" : true,
     "suppressImplicitAnyIndexErrors" : true,
     "noImplicitAny" : false,
     "lib": [
