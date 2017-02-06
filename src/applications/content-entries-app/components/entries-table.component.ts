@@ -65,7 +65,7 @@ export class kEntriesTableComponent implements AfterViewInit, OnInit, OnDestroy{
       this.entriesStoreStatusSubscription = null;
   }
 
-    buildMenu(mediaType: any = null, status: any = null) : void
+    buildMenu(mediaType: KalturaMediaType = null, status: any = null) : void
   {
     this._items = [
       {label: this.appLocalization.get("applications.content.table.previewAndEmbed"), command: (event) => {
@@ -78,7 +78,7 @@ export class kEntriesTableComponent implements AfterViewInit, OnInit, OnDestroy{
         this.onActionSelected("view", this.actionsMenuEntryId);
       }}
     ];
-    if (status && status.toString() != KalturaEntryStatus.Ready.toString()){
+    if (status instanceof KalturaEntryStatus && status.toString() != KalturaEntryStatus.Ready.toString()){
         this._items.shift();
         if (mediaType && mediaType.toString() == KalturaMediaType.LiveStreamFlash.toString()){
             this._items.pop();
