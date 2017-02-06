@@ -18,7 +18,8 @@ export class UserSettingsComponent {
 
   logout() {
     this.userAuthentication.logout();
-    this.appNavigator.navigateToLogout();
+    //this.appNavigator.navigateToLogout();
+    document.location.reload();
   }
 
   openUserManual() {
