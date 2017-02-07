@@ -41,8 +41,8 @@ export class BrowserService implements IAppStorage {
         for (var key of Object.keys(params)) {
           baseUrl += key + "=" + params[key] + "&";
         }
+        baseUrl = baseUrl.slice(0, - 1); // remove last &
       }
-      baseUrl = baseUrl.slice(0, - 1); // remove last &
     }
     window.open(baseUrl, target);
   }
