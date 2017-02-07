@@ -37,7 +37,7 @@ module.exports = function (options) {
     output: {
       path: helpers.root('dist'),
       filename: 'js/[name].bundle.js',
-      sourceMapFilename: 'js/[file].map',
+      sourceMapFilename: 'js/[name].map',
       chunkFilename: 'js/[id].chunk.js'
     },
 

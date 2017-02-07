@@ -1,3 +1,5 @@
+// Kaltura
+import '@kaltura-ng2/kaltura-api';
 
 // Angular 2
 import '@angular/platform-browser';

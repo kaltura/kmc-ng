@@ -39,7 +39,7 @@ module.exports = function (env) {
 		output: {
 			path: helpers.root('dist'),
 			filename: 'js/[name].[chunkhash].bundle.js',
-			sourceMapFilename: 'js/[name].[[chunkhash]].bundle.map',
+			sourceMapFilename: 'js/[name].[chunkhash].bundle.map',
 			chunkFilename: 'js/[id].[chunkhash].chunk.js'
 		},
 
@@ -109,6 +109,37 @@ module.exports = function (env) {
 			}),
 
 			/**
+			 * Plugin LoaderOptionsPlugin (experimental)
+			 *
+			 * See: https://gist.github.com/sokra/27b24881210b56bbaff7
+			 */
+			new LoaderOptionsPlugin({
+				minimize: true,
+				debug: false,
+				options: {
+
+					/**
+					 * Html loader advanced options
+					 *
+					 * See: https://github.com/webpack/html-loader#advanced-options
+					 */
+					// TODO: Need to workaround Angular 2's html syntax => #id [bind] (event) *ngFor
+					htmlLoader: {
+						minimize: true,
+						removeAttributeQuotes: false,
+						caseSensitive: true,
+						customAttrSurround: [
+							[/#/, /(?:)/],
+							[/\*/, /(?:)/],
+							[/\[?\(?/, /(?:)/]
+						],
+						customAttrAssign: [/\)?\]?=/]
+					},
+
+				}
+			}),
+
+			/**
 			 * Plugin: UglifyJsPlugin
 			 * Description: Minimize all JavaScript output of chunks.
 			 * Loaders are switched into minimizing mode.
@@ -130,6 +161,8 @@ module.exports = function (env) {
 				//   unused: false
 				// }, // debug
 				//comments: true, //debug
+
+				sourceMap: true,
 
 				beautify: false, //prod
 				output: {

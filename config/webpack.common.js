@@ -32,8 +32,7 @@ module.exports =  function (options) {
 			'polyfills': './src/polyfills.ts',
 			'theme': './src/theme.ts',
 			'vendors': './src/vendors.ts',
-			'kaltura': './src/kaltura-vendor.ts',
-			'app': './src/main.ts' // our angular app
+			'app': './src/main.ts'
 		},
 
 		resolve: {
@@ -62,6 +61,14 @@ module.exports =  function (options) {
 				{
 					test: /\.ts$/,
 					use: [
+						{ // MAKE SURE TO CHAIN VANILLA JS CODE, I.E. TS COMPILATION OUTPUT.
+							loader: 'ng-router-loader',
+							options: {
+								loader: 'async-import',
+								genDir: 'compiled',
+								aot: false
+							}
+						},
 						{
 							loader: 'awesome-typescript-loader'
 						},
@@ -116,6 +123,7 @@ module.exports =  function (options) {
 					test: /\.(png|jpe?g|gif|svg|ico)$/,
 					loader: 'file-loader',
 					options : {
+						limit: 10000,
 						name: 'assets/[name].[hash].[ext]'
 					}
 				},
@@ -124,6 +132,7 @@ module.exports =  function (options) {
 					test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
 					loader: 'url-loader',
 					options: {
+						limit: 10000,
 						name: 'fonts/[name].[hash].[ext]',
 						mimetype: 'application/font-woff'
 					}
@@ -132,6 +141,7 @@ module.exports =  function (options) {
 					test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
 					loader: 'url-loader',
 					options: {
+						limit: 10000,
 						name: 'fonts/[name].[hash].[ext]',
 						mimetype: 'application/octet-stream'
 					}
@@ -140,6 +150,7 @@ module.exports =  function (options) {
 					test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
 					loader: 'url-loader',
 					options: {
+						limit: 10000,
 						name: 'fonts/[name].[hash].[ext]'
 					}
 				},
@@ -147,6 +158,7 @@ module.exports =  function (options) {
 					test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
 					loader: 'url-loader',
 					options: {
+						limit: 10000,
 						name: 'assets/[name].[hash].[ext]',
 						mimetype: 'application/image/svg+xml'
 					}
@@ -187,7 +199,11 @@ module.exports =  function (options) {
 			 * See: https://github.com/webpack/docs/wiki/optimization#multi-page-app
 			 */
 			new CommonsChunkPlugin({
-				name: ['polyfills', 'vendors', 'kaltura', 'theme'].reverse()
+				name: 'vendor',
+				minChunks: function (module) {
+					// this assumes your vendor imports exist in the node_modules directory
+					return module.context && module.context.indexOf('node_modules') !== -1;
+				}
 			}),
 
 			/*
