@@ -69,18 +69,26 @@
             }
             ,
             "entryStatus":{
-                "errorImporting": "Error Importing",
-                "errorConverting": "Error Converting",
+                "errorImporting": "Error Uploading",
+                "errorConverting": "Error",
                 "scanFailure": "Scan Failure",
                 "import": "Uploading",
                 "infected": "Infected",
-                "preconvert": "Preconvert",
+                "preconvert": "Converting",
                 "ready": "Ready",
                 "deleted": "Deleted",
                 "pending": "Pending",
                 "moderate": "Moderate",
                 "blocked": "Blocked",
-                "noContent": "No Content"
+                "noContent": "No Content",
+                "provisioning": "Provisioning",
+                "pendingStatus": "Pending",
+                "finishedStatus": "Past Scheduling",
+                "rejectedStatus": "Rejected",
+                "scheduledStatus": "Scheduled",
+                "approvedStatus": "Approved",
+                "autoApprovedStatus": "Auto Approved",
+                "flaggedStatus": "Flagged"
             },
             "bulkActions":{
                 "setScheduling": "Set Scheduling",
