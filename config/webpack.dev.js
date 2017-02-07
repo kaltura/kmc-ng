@@ -43,25 +43,6 @@ module.exports = function (options) {
 
     module: {
       rules: [
-
-	      {
-		      test: /\.ts$/,
-		      enforce: 'pre',
-		      use: [
-			      {
-				      loader: 'tslint-loader',
-				      options: {
-					      configFile: 'tslint.json',
-					      emitErrors : false
-				      }
-			      }
-		      ],
-		      exclude: [
-		      	/\.(spec|e2e)\.ts$/,
-			      helpers.root('node_modules')
-		      ]
-	      },
-
         /*
          * css loader support for *.css files (styles directory only)
          * Loads external css styles into the DOM, supports HMR
@@ -71,7 +52,6 @@ module.exports = function (options) {
           test: /\.css$/,
           use: ['style-loader', 'css-loader'],
 	        include: [
-	            helpers.root('src','styles'),
 	            helpers.root('node_modules')
             ]
         },
@@ -84,7 +64,10 @@ module.exports = function (options) {
          */
 	      {
 		      test: /\.scss$/,
-		      use: ['style-loader', 'css-loader', 'resolve-url-loader',
+		      use: [
+		      	'style-loader',
+			     'css-loader',
+			     'resolve-url-loader',
 			      {
 			      	loader : 'sass-loader',
 				      options : {

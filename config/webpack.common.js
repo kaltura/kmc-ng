@@ -26,7 +26,7 @@ const METADATA = {
 };
 
 module.exports =  function (options) {
-
+	isProd = options.env === 'production';
 	return {
 		entry: {
 			'polyfills': './src/polyfills.ts',
@@ -65,23 +65,20 @@ module.exports =  function (options) {
 						{
 							loader: 'awesome-typescript-loader'
 						},
-						'angular2-template-loader'
+						'angular2-template-loader',
+						{
+							loader: 'tslint-loader',
+							options: {
+								configFile: 'tslint.json',
+								emitErrors : isProd
+							}
+						}
 					],
+					include : appScriptsFolders,
 					exclude: [/\.(spec|e2e)\.ts$/]
 				},
 
-				/*
-				 * to string and css loader support for *.css files (from Angular components)
-				 * Returns file content as string
-				 *
-				 */
-				{
-					test: /\.css$/,
-					use: ['to-string-loader', 'css-loader'],
-					exclude: [
-						helpers.root('src', 'styles')
-					]
-				},
+
 
 				/*
 				 * to string and sass loader support for *.scss files (from Angular components)
@@ -97,8 +94,8 @@ module.exports =  function (options) {
 								sourceMap : true
 							}
 						}],
-					exclude: [
-						helpers.root('src', 'styles')
+					include: [
+						appScriptsFolders
 					]
 				},
 
