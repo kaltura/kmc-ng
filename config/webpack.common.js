@@ -29,9 +29,8 @@ module.exports =  function (options) {
 	isProd = options.env === 'production';
 	return {
 		entry: {
-			'polyfills': './src/polyfills.ts',
 			'theme': './src/theme.ts',
-			'vendors': './src/vendors.ts',
+			'polyfills': './src/polyfills.ts',
 			'app': './src/main.ts'
 		},
 
@@ -189,6 +188,13 @@ module.exports =  function (options) {
 			 * See: https://github.com/s-panferov/awesome-typescript-loader#forkchecker-boolean-defaultfalse
 			 */
 			new CheckerPlugin(),
+			//
+			// new CommonsChunkPlugin({
+			// 	name: 'common',
+			// 	minChunks: function(module, count) {
+			// 		return count > 3 && (module.context && module.context.indexOf('node_modules') === -1);
+			// 	}
+			// }),
 
 			/*
 			 * Plugin: CommonsChunkPlugin
@@ -202,8 +208,16 @@ module.exports =  function (options) {
 				name: 'vendor',
 				minChunks: function (module) {
 					// this assumes your vendor imports exist in the node_modules directory
-					return module.context && module.context.indexOf('node_modules') !== -1;
+					// since during dev we link to kaltura-ng2 locally, their context doesn't
+					// seeem to be node_modules
+					return module.context && (
+						module.context.indexOf('node_modules') !== -1 ||
+						module.context.indexOf('kaltura-ng2') !== -1);
 				}
+			}),
+
+			new CommonsChunkPlugin({
+				name: 'manifest'
 			}),
 
 			/*

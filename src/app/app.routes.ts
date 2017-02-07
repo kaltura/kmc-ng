@@ -19,7 +19,7 @@ const routes: Routes = <Routes>[
         path: '', component: DashboardComponent, canActivate: [AuthCanActivate], children: [
         { path: 'content', children: [
           { path: '', redirectTo: 'entries', pathMatch: 'full' },
-          { path: 'entries', loadChildren: () => '../applications/content-entries-app/content-entries-app.module#ContentEntriesAppModule' }
+          { path: 'entries', loadChildren: '../applications/content-entries-app/content-entries-app.module#ContentEntriesAppModule' }
         ]}
       ]
       },
