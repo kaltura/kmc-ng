@@ -129,15 +129,15 @@ module.exports = function (env) {
 				//   dead_code: false,
 				//   unused: false
 				// }, // debug
-				// comments: true, //debug
-
+				//comments: true, //debug
 
 				beautify: false, //prod
 				output: {
 					comments: false
 				}, //prod
 				mangle: {
-					screw_ie8: true
+					screw_ie8: true,
+					keep_fnames: true// This is a must to support constructor.name with minified code
 				}, //prod
 				compress: {
 					screw_ie8: true,
@@ -151,7 +151,7 @@ module.exports = function (env) {
 					if_return: true,
 					join_vars: true,
 					negate_iife: false // we need this for lazy v8
-				},
+				} // prod
 			}),
 
 			/**
