@@ -31,7 +31,7 @@ module.exports =  function (options) {
 		entry: {
 			'theme': './src/theme.ts',
 			'polyfills': './src/polyfills.ts',
-			'app': './src/main.ts'
+			'main': './src/main.ts'
 		},
 
 		resolve: {
@@ -188,6 +188,7 @@ module.exports =  function (options) {
 			 * See: https://github.com/s-panferov/awesome-typescript-loader#forkchecker-boolean-defaultfalse
 			 */
 			new CheckerPlugin(),
+
 			//
 			// new CommonsChunkPlugin({
 			// 	name: 'common',
@@ -195,6 +196,12 @@ module.exports =  function (options) {
 			// 		return count > 3 && (module.context && module.context.indexOf('node_modules') === -1);
 			// 	}
 			// }),
+
+
+			new CommonsChunkPlugin({
+				name: 'polyfills',
+				chunks: ['polyfills']
+			}),
 
 			/*
 			 * Plugin: CommonsChunkPlugin
@@ -206,6 +213,7 @@ module.exports =  function (options) {
 			 */
 			new CommonsChunkPlugin({
 				name: 'vendor',
+				chunks : ['main'],
 				minChunks: function (module) {
 					// this assumes your vendor imports exist in the node_modules directory
 					// since during dev we link to kaltura-ng2 locally, their context doesn't
@@ -216,10 +224,11 @@ module.exports =  function (options) {
 				}
 			}),
 
-
+			// Specify the correct order the scripts will be injected in
 			new CommonsChunkPlugin({
-				name: 'manifest'
+				name: ['polyfills', 'vendor'].reverse()
 			}),
+
 
 			/*
 			 * Plugin: CopyWebpackPlugin
