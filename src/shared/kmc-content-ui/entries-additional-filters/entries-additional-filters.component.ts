@@ -49,8 +49,6 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     private _filterUpdateSubscription : ISubscription;
     private _parentPopupStateChangeSubscribe : ISubscription;
 
-    private _loading = false;
-
     // Synced list of ui directives of type 'TreeSelection'
     @ViewChildren(TreeSelection) private _treeSelections : QueryList<TreeSelection> = null;
 
