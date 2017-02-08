@@ -30,7 +30,7 @@ const METADATA = webpackMerge(commonConfig({
 });
 
 module.exports = function (env) {
-	return webpackMerge(commonConfig({
+	var webpackConfig = webpackMerge(commonConfig({
 		env: ENV
 	}), {
 
@@ -108,36 +108,6 @@ module.exports = function (env) {
 				}
 			}),
 
-			/**
-			 * Plugin LoaderOptionsPlugin (experimental)
-			 *
-			 * See: https://gist.github.com/sokra/27b24881210b56bbaff7
-			 */
-			new LoaderOptionsPlugin({
-				minimize: true,
-				debug: false,
-				options: {
-
-					/**
-					 * Html loader advanced options
-					 *
-					 * See: https://github.com/webpack/html-loader#advanced-options
-					 */
-					// TODO: Need to workaround Angular 2's html syntax => #id [bind] (event) *ngFor
-					htmlLoader: {
-						minimize: true,
-						removeAttributeQuotes: false,
-						caseSensitive: true,
-						customAttrSurround: [
-							[/#/, /(?:)/],
-							[/\*/, /(?:)/],
-							[/\[?\(?/, /(?:)/]
-						],
-						customAttrAssign: [/\)?\]?=/]
-					},
-
-				}
-			}),
 
 			/**
 			 * Plugin: UglifyJsPlugin
@@ -216,4 +186,21 @@ module.exports = function (env) {
 		}
 
 	});
+
+	webpackConfig.plugins.push(
+		/**
+		 * Plugin LoaderOptionsPlugin (experimental)
+		 *
+		 * See: https://gist.github.com/sokra/27b24881210b56bbaff7
+		 */
+		new LoaderOptionsPlugin({
+			minimize : true,
+			debug: false,
+			context : webpackConfig.context, // when using 'LoaderOptionsPlugin we must explicitly specify context otherwise some loaders will fail to work like sass-loader
+			output: webpackConfig.output
+			//options: {} // this is currently disabled since sass-loader fail to work once 'LoaderOptionsPlugin' explicitly set options - it has a PR for that - https://github.com/webpack-contrib/css-loader/pull/356
+		})
+	);
+
+	return webpackConfig;
 }

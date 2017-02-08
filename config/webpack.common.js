@@ -216,6 +216,7 @@ module.exports =  function (options) {
 				}
 			}),
 
+
 			new CommonsChunkPlugin({
 				name: 'manifest'
 			}),

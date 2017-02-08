@@ -156,7 +156,7 @@ module.exports = function (options) {
 		 */
 		new LoaderOptionsPlugin({
 			debug: true,
-			context : webpackConfig.context,
+			context : webpackConfig.context, // when using 'LoaderOptionsPlugin we must explicitly specify context otherwise some loaders will fail to work like sass-loader
 			output: webpackConfig.output
 		})
 	);
