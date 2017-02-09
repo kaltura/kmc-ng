@@ -1,4 +1,4 @@
-import { NgModule, enableProdMode } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
@@ -31,12 +31,6 @@ import { KalturaHttpConfigurationAdapter } from "./services/kaltura-http-configu
 import { ButtonModule, InputTextModule, TieredMenuModule } from 'primeng/primeng';
 
 import { KMCContentUIModule } from 'kmc-content-ui/kmc-content-ui.module';
-
-
-// depending on the env mode, enable prod mode or add debugging modules
-if (process.env.ENV === 'build') {
-  enableProdMode();
-}
 
 @NgModule({
   imports: <any>[
