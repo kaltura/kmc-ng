@@ -1,29 +1,55 @@
+<a name="0.1.0-rc.2"></a>
+# [0.1.0-rc.2](https://github.com/kaltura/KMCng/compare/v0.1.0-rc.1...v0.1.0-rc.2) (2017-02-09)
+
+### Features
+
+- **Entries list -> Entries Table**: Implement entry status logic.
+
+- **General -> logout**: The logout process was implemented with basic support. It will be handled as part of future delivry. At the moment, logout from the application will clear cache and reload the application.
+
+- **DevOp**: Upgrade dev dependencies:
+  - Upgrade webpack to 2.x and all its' loaders accordingly
+  - Upgrade typescript to 2.2.x
+  - Remove typings usage
+  - Add @Types dependencies
+ 
+- **DevOp**: Optimize build process and deployed package: 
+  - Reduce javascript bundle sized
+  - Minify javascript code
+  - Lazy loading support for views
+  - Angular2 component template & styles support
+  - Theme bundling and assets re-organization.
+
+### Bug Fixes
+
+- **Login**: fix broken 'download user manual' link.
+
+---
+
 <a name="0.1.0-rc.1"></a>
 # 0.1.0-rc.1 (2017-02-01)
 
-## Features
+### Features
 
-**General -> KMCng theme**: Creation of KMCng theme based on the [style guide](https://projects.invisionapp.com/d/main#/projects/prototypes/9700090) provided by the UI/UX team.
+- **General -> KMCng theme**: Creation of KMCng theme based on the [style guide](https://projects.invisionapp.com/d/main#/projects/prototypes/9700090) provided by the UI/UX team.
 
-**Entries list -> Entries Table**: A list of all entries with support for sorting, pagination, filtering, custom number of rows per page.
+- **Entries list -> Entries Table**: A list of all entries with support for sorting, pagination, filtering, custom number of rows per page.
 
-**Entries list -> Free text search**: Support free text entries search.
+- **Entries list -> Free text search**: Support free text entries search.
 
-**Entries list -> Category Filters**: Support filtering entries by Categories. Support lazy loading for large categories data sets and special visualization for large amount of categories.
+- **Entries list -> Category Filters**: Support filtering entries by Categories. Support lazy loading for large categories data sets and special visualization for large amount of categories.
 
-**Entries list -> Additional Filters**: Support additional filters.
+- **Entries list -> Additional Filters**: Support additional filters.
 
-**Entries list -> Metadata Filters**: Support metadata filters.
+- **Entries list -> Metadata Filters**: Support metadata filters.
 
-**Entries list -> Metadata Search**: Support free text search based on metadata profile values.
+- **Entries list -> Metadata Search**: Support free text search based on metadata profile values.
 
-**Entries list -> Filters management**: Filters can be managed from within filter drop-downs as well as from filter tags list.
+- **Entries list -> Filters management**: Filters can be managed from within filter drop-downs as well as from filter tags list.
 
-**Entries list -> Bulk Selection**: Multiple entries can be selected in the table exposing the Bulk operations menu and allowing bulk operation selection.
+- **Entries list -> Bulk Selection**: Multiple entries can be selected in the table exposing the Bulk operations menu and allowing bulk operation selection.
 
-
-
-## Known Issues
+### Known Issues
 **Entries -> Search categories**: This feature is currently under development and will be released shortly.
 
 **KMCng Login process**: The login process presents basic abilities needed to access the entries list. It lacks graphic design and addtional screens (register, forgot password etc.). It contains the following:
