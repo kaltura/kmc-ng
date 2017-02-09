@@ -26,14 +26,12 @@ const METADATA = {
 };
 
 module.exports =  function (options) {
-
+	isProd = options.env === 'production';
 	return {
 		entry: {
-			'polyfills': './src/polyfills.ts',
 			'theme': './src/theme.ts',
-			'vendors': './src/vendors.ts',
-			'kaltura': './src/kaltura-vendor.ts',
-			'app': './src/main.ts' // our angular app
+			'polyfills': './src/polyfills.ts',
+			'main': './src/main.ts'
 		},
 
 		resolve: {
@@ -62,26 +60,31 @@ module.exports =  function (options) {
 				{
 					test: /\.ts$/,
 					use: [
+						{ // MAKE SURE TO CHAIN VANILLA JS CODE, I.E. TS COMPILATION OUTPUT.
+							loader: 'ng-router-loader',
+							options: {
+								loader: 'async-import',
+								genDir: 'compiled',
+								aot: false
+							}
+						},
 						{
 							loader: 'awesome-typescript-loader'
 						},
-						'angular2-template-loader'
+						'angular2-template-loader',
+						{
+							loader: 'tslint-loader',
+							options: {
+								configFile: 'tslint.json',
+								emitErrors : isProd
+							}
+						}
 					],
+					include : appScriptsFolders,
 					exclude: [/\.(spec|e2e)\.ts$/]
 				},
 
-				/*
-				 * to string and css loader support for *.css files (from Angular components)
-				 * Returns file content as string
-				 *
-				 */
-				{
-					test: /\.css$/,
-					use: ['to-string-loader', 'css-loader'],
-					exclude: [
-						helpers.root('src', 'styles')
-					]
-				},
+
 
 				/*
 				 * to string and sass loader support for *.scss files (from Angular components)
@@ -97,8 +100,8 @@ module.exports =  function (options) {
 								sourceMap : true
 							}
 						}],
-					exclude: [
-						helpers.root('src', 'styles')
+					include: [
+						appScriptsFolders
 					]
 				},
 
@@ -119,6 +122,7 @@ module.exports =  function (options) {
 					test: /\.(png|jpe?g|gif|svg|ico)$/,
 					loader: 'file-loader',
 					options : {
+						limit: 10000,
 						name: 'assets/[name].[hash].[ext]'
 					}
 				},
@@ -127,6 +131,7 @@ module.exports =  function (options) {
 					test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
 					loader: 'url-loader',
 					options: {
+						limit: 10000,
 						name: 'fonts/[name].[hash].[ext]',
 						mimetype: 'application/font-woff'
 					}
@@ -135,6 +140,7 @@ module.exports =  function (options) {
 					test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
 					loader: 'url-loader',
 					options: {
+						limit: 10000,
 						name: 'fonts/[name].[hash].[ext]',
 						mimetype: 'application/octet-stream'
 					}
@@ -143,6 +149,7 @@ module.exports =  function (options) {
 					test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
 					loader: 'url-loader',
 					options: {
+						limit: 10000,
 						name: 'fonts/[name].[hash].[ext]'
 					}
 				},
@@ -150,6 +157,7 @@ module.exports =  function (options) {
 					test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
 					loader: 'url-loader',
 					options: {
+						limit: 10000,
 						name: 'assets/[name].[hash].[ext]',
 						mimetype: 'application/image/svg+xml'
 					}
@@ -181,6 +189,20 @@ module.exports =  function (options) {
 			 */
 			new CheckerPlugin(),
 
+			//
+			// new CommonsChunkPlugin({
+			// 	name: 'common',
+			// 	minChunks: function(module, count) {
+			// 		return count > 3 && (module.context && module.context.indexOf('node_modules') === -1);
+			// 	}
+			// }),
+
+
+			new CommonsChunkPlugin({
+				name: 'polyfills',
+				chunks: ['polyfills']
+			}),
+
 			/*
 			 * Plugin: CommonsChunkPlugin
 			 * Description: Shares common code between the pages.
@@ -190,8 +212,23 @@ module.exports =  function (options) {
 			 * See: https://github.com/webpack/docs/wiki/optimization#multi-page-app
 			 */
 			new CommonsChunkPlugin({
-				name: ['polyfills', 'vendors', 'kaltura', 'theme'].reverse()
+				name: 'vendor',
+				chunks : ['main'],
+				minChunks: function (module) {
+					// this assumes your vendor imports exist in the node_modules directory
+					// since during dev we link to kaltura-ng2 locally, their context doesn't
+					// seeem to be node_modules
+					return module.context && (
+						module.context.indexOf('node_modules') !== -1 ||
+						module.context.indexOf('kaltura-ng2') !== -1);
+				}
 			}),
+
+			// Specify the correct order the scripts will be injected in
+			new CommonsChunkPlugin({
+				name: ['polyfills', 'vendor'].reverse()
+			}),
+
 
 			/*
 			 * Plugin: CopyWebpackPlugin

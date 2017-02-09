@@ -10,7 +10,7 @@
     "sourceMap": true,
     "noEmit": true,
     "noEmitHelpers": true,
-    "importHelpers": true,
+    "importHelpers": false,
     "strictNullChecks": false,
     "skipLibCheck" : true,
     "suppressImplicitAnyIndexErrors" : true,
