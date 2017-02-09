@@ -24,6 +24,7 @@
 
 - **Login**: fix broken 'download user manual' link.
 
+---
 
 <a name="0.1.0-rc.1"></a>
 # 0.1.0-rc.1 (2017-02-01)
