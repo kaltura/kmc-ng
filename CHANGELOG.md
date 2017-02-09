@@ -8,17 +8,24 @@
 - **General -> logout**: The logout process was implemented with basic support. It will be handled as part of future delivry. At the moment, logout from the application will clear cache and reload the application.
 
 - **DevOp**: Upgrade dev dependencies:
-  - Upgrade webpack to 2.x and all its' loaders accordingly
-  - Upgrade typescript to 2.2.x
-  - Remove typings usage
-  - Add @Types dependencies
+  - Upgrade webpack to 2.x and all its' loaders accordingly.
+  - Upgrade typescript to 2.2.x.
+  - Remove typings usage.
+  - Add @Types dependencies.
  
 - **DevOp**: Optimize build process and deployed package: 
-  - Reduce javascript bundle sized
-  - Minify javascript code
-  - Lazy loading support for views
-  - Angular2 component template & styles support
+  - Reduce javascript bundle sized.
+  - Minify javascript code.
+  - Lazy loading support for views.
+  - Angular2 component template & styles support.
   - Theme bundling and assets re-organization.
+  - Enable Angular runtime production mode.
+  - Enable [angular debug tools](https://github.com/angular/angular/blob/86405345b781a9dc2438c0fbe3e9409245647019/TOOLS_JS.md).  
+  
+ 
+- **DevOp**: Print application version in console during app load.
+
+
 
 ### Bug Fixes
 
