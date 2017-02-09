@@ -1,8 +1,9 @@
 // Note: in this file, try using either commonjs or es2015 module imports (the currently selected approach is commonjs)
-require('tslib');
-
 require ('core-js/shim');
 require ('zone.js/dist/zone');
+
+//require('tslib');
+import 'ts-helpers';
 
 if (process.env.ENV === 'build') {
   // Production
