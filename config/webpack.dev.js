@@ -1,12 +1,12 @@
 const helpers = require('./helpers');
 const webpackMerge = require('webpack-merge'); // used to merge webpack configs
 const commonConfig = require('./webpack.common.js'); // the settings that are common to prod and dev
+const packageJson = require('../package.json');
 
 /**
  * Webpack Plugins
  */
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
-const AssetsPlugin = require('assets-webpack-plugin');
 const DefinePlugin = require('webpack/lib/DefinePlugin');
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
 
@@ -37,31 +37,12 @@ module.exports = function (options) {
     output: {
       path: helpers.root('dist'),
       filename: 'js/[name].bundle.js',
-      sourceMapFilename: 'js/[file].map',
+      sourceMapFilename: 'js/[name].map',
       chunkFilename: 'js/[id].chunk.js'
     },
 
     module: {
       rules: [
-
-	      {
-		      test: /\.ts$/,
-		      enforce: 'pre',
-		      use: [
-			      {
-				      loader: 'tslint-loader',
-				      options: {
-					      configFile: 'tslint.json',
-					      emitErrors : false
-				      }
-			      }
-		      ],
-		      exclude: [
-		      	/\.(spec|e2e)\.ts$/,
-			      helpers.root('node_modules')
-		      ]
-	      },
-
         /*
          * css loader support for *.css files (styles directory only)
          * Loads external css styles into the DOM, supports HMR
@@ -71,7 +52,6 @@ module.exports = function (options) {
           test: /\.css$/,
           use: ['style-loader', 'css-loader'],
 	        include: [
-	            helpers.root('src','styles'),
 	            helpers.root('node_modules')
             ]
         },
@@ -84,7 +64,10 @@ module.exports = function (options) {
          */
 	      {
 		      test: /\.scss$/,
-		      use: ['style-loader', 'css-loader', 'resolve-url-loader',
+		      use: [
+		      	'style-loader',
+			     'css-loader',
+			     'resolve-url-loader',
 			      {
 			      	loader : 'sass-loader',
 				      options : {
@@ -112,12 +95,16 @@ module.exports = function (options) {
        */
       // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
       new DefinePlugin({
+      	'__KMCng__' :
+	        {
+		        version : JSON.stringify(packageJson.version)
+	        },
         'ENV': JSON.stringify(METADATA.ENV),
         'HMR': METADATA.HMR,
         'process.env': {
           'ENV': JSON.stringify(METADATA.ENV),
           'NODE_ENV': JSON.stringify(METADATA.ENV),
-          'HMR': METADATA.HMR,
+          'HMR': METADATA.HMR
         }
       }),
 
@@ -173,7 +160,7 @@ module.exports = function (options) {
 		 */
 		new LoaderOptionsPlugin({
 			debug: true,
-			context : webpackConfig.context,
+			context : webpackConfig.context, // when using 'LoaderOptionsPlugin we must explicitly specify context otherwise some loaders will fail to work like sass-loader
 			output: webpackConfig.output
 		})
 	);
