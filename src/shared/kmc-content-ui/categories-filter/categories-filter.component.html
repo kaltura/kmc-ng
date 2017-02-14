@@ -1,31 +1,44 @@
-<div #categoriesTree class="kUseKMCngIcons">
-    <div class="kHeader">
-        <p-autoComplete inputStyleClass="kSearchCategory" [(ngModel)]="_currentSearch"  field="label" placeholder="{{'applications.content.filters.findCategory' | translate}}" [minLength]="3" ></p-autoComplete>
-        <i #config class="kIcongear kTreeConfig" pTooltip="{{'applications.content.filters.preferences.preferences' | translate}}"></i>
-        <div class="kAllCategories">
-            <span>{{'applications.content.filters.allCategories' | translate | uppercase}} </span>
-        </div>
-    </div>
-    <div class="kTreeContainer">
-        <p-tree kTreeSelection [treeSelectionMode]="_selectionMode" (onTreeSelectionChanged)="_onTreeSelectionChanged($event)" [value]="_categories" (onNodeExpand)="_onNodeExpand($event)">
-        <template let-node  pTemplate="default">
-            <div >
-                <span [class.kDisabled]="node.isDisabled" class="kTreeNodeLabel">{{node.label}}</span>
-                <span class="kTreeNodeNumChildren" *ngIf="node.childrenCount">{{node.childrenCount}}</span>
-            </div>
-            <div *ngIf="node.expanded && node.childrenStatus === NodeChildrenStatuses.loading" class="kLoadingMessage" (click)="_blockTreeSelection($event)">{{'entriesShared.categoriesFilters.loading' | translate}}</div>
-            <div *ngIf="node.expanded && node.childrenStatus === NodeChildrenStatuses.error" class="kLoadingErrorMessage" (click)="_blockTreeSelection($event)">
-                {{ node.childrenLoadError || 'entriesShared.categoriesFilters.loadingError' | translate }}
-            </div>
-        </template>
-        </p-tree>
-    </div>
+<kLoader [loading]="loading">
+	<div #categoriesTree class="kUseKMCngIcons">
+		<div class="kHeader">
+			<p-autoComplete inputStyleClass="kSearchCategory" [(ngModel)]="_currentSearch" field="label"
+							placeholder="{{'applications.content.filters.findCategory' | translate}}"
+							[minLength]="3"></p-autoComplete>
+			<i #config class="kIcongear kTreeConfig"
+			   pTooltip="{{'applications.content.filters.preferences.preferences' | translate}}"></i>
+			<div class="kAllCategories">
+				<span>{{'applications.content.filters.allCategories' | translate | uppercase}} </span>
+			</div>
+		</div>
+		<div class="kTreeContainer">
+			<p-tree kTreeSelection [treeSelectionMode]="_selectionMode"
+					(onTreeSelectionChanged)="_onTreeSelectionChanged($event)" [value]="_categories"
+					(onNodeExpand)="_onNodeExpand($event)">
+				<template let-node pTemplate="default">
+					<div>
+						<span [class.kDisabled]="node.isDisabled" class="kTreeNodeLabel">{{node.label}}</span>
+						<span class="kTreeNodeNumChildren" *ngIf="node.childrenCount">{{node.childrenCount}}</span>
+					</div>
+					<div *ngIf="node.expanded && node.childrenStatus === NodeChildrenStatuses.loading"
+						 class="kLoadingMessage" (click)="_blockTreeSelection($event)">
+						{{'entriesShared.categoriesFilters.loading' | translate}}
+					</div>
+					<div *ngIf="node.expanded && node.childrenStatus === NodeChildrenStatuses.error"
+						 class="kLoadingErrorMessage" (click)="_blockTreeSelection($event)">
+						{{ node.childrenLoadError || 'entriesShared.categoriesFilters.loadingError' | translate }}
+					</div>
+				</template>
+			</p-tree>
+		</div>
 
-    <p>
-        <a (click)="_clearAll()">{{'applications.content.filters.clearAll' | translate}}</a>
-        <a class="kClose" (click)="close()">{{'applications.content.filters.close' | translate}}</a>
-    </p>
-</div>
-<kPopupWidget #categoriesPref [modal]="true" [popupWidth]="360" [popupHeight]="220" [closeBtn]="true" [targetRef]="config" [targetOffset]="{'x':-324, 'y': -24}" [parentPopup]="parentPopupWidget">
-    <kCategoriesFilterPrefs [selectionMode]="_selectionMode" (selectionModeChange)="_onSelectionModeChanged($event)"></kCategoriesFilterPrefs>
+		<p>
+			<a (click)="_clearAll()">{{'applications.content.filters.clearAll' | translate}}</a>
+			<a class="kClose" (click)="close()">{{'applications.content.filters.close' | translate}}</a>
+		</p>
+	</div>
+</kLoader>
+<kPopupWidget #categoriesPref [modal]="true" [popupWidth]="360" [popupHeight]="220" [closeBtn]="true"
+			  [targetRef]="config" [targetOffset]="{'x':-324, 'y': -24}" [parentPopup]="parentPopupWidget">
+	<kCategoriesFilterPrefs [selectionMode]="_selectionMode"
+							(selectionModeChange)="_onSelectionModeChanged($event)"></kCategoriesFilterPrefs>
 </kPopupWidget>
