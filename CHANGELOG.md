@@ -1,3 +1,11 @@
+<a name="0.1.0-rc.3"></a>
+# [0.1.0-rc.3](https://github.com/kaltura/KMCng/compare/v0.1.0-rc.2...v0.1.0-rc.3) (2017-02-20)
+
+## Features
+- **General**: Update libraries version
+
+---
+
 <a name="0.1.0-rc.2"></a>
 # [0.1.0-rc.2](https://github.com/kaltura/KMCng/compare/v0.1.0-rc.1...v0.1.0-rc.2) (2017-02-09)
 
