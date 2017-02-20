@@ -25,7 +25,7 @@ import { CategoriesFilter, CategoriesFilterModes } from "../entries-store/filter
 })
 export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestroy{
 
-    private loading : boolean = false;
+    public _loading : boolean = false;
     private errorMessage : string = null;
     public _categories: PrimeTreeNode[] = [];
     private appUser : AppUser;
@@ -83,19 +83,19 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     private reloadCategories() : void
     {
-        this.loading = true;
+        this._loading = true;
         this.errorMessage = null;
 
         const categories$ = this.inLazyMode ? this.categoriesStore.getRootCategories() : this.categoriesStore.getAllCategories();
 
         categories$.subscribe(result => {
-                this.loading = false;
+                this._loading = false;
                 this._categories = this.treeDataHandler.create(
                     this.createTreeHandlerArguments(result.items)
                 );
             },
             error => {
-                this.loading = false;
+                this._loading = false;
                 this.errorMessage = error.message || 'failed to extract categories';
             });
     }

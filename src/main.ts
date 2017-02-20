@@ -12,9 +12,9 @@ if (window) {
 {
     platformBrowserDynamic()
         .bootstrapModule(AppModule)
-        .then(decorateModuleRef)
-        .catch(function(err)
-        {
-            console.error(err);
-        });
+        .then(decorateModuleRef);
+        // .catch(function(err)
+        // {
+        //     console.error(err);
+        // });
 })();

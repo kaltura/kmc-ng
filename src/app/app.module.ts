@@ -36,7 +36,6 @@ import { KMCContentUIModule } from 'kmc-content-ui/kmc-content-ui.module';
   imports: <any>[
     routing,
     CommonModule,
-    RouterModule.forRoot([]),
     KMCShellModule.forRoot(),
     BrowserModule,
     TieredMenuModule,
@@ -48,16 +47,20 @@ import { KMCContentUIModule } from 'kmc-content-ui/kmc-content-ui.module';
     ButtonModule,
     PopupWidgetModule,
     InputTextModule
-  ],       // module dependencies
-  declarations: <any>[ AppComponent,
+  ],
+  declarations: <any>[
+      AppComponent,
     DashboardComponent,
     AppMenuComponent,
     LanguageMenuComponent,
     LoginComponent,
     ErrorComponent,
-    UserSettingsComponent ],   // components and directives
-  bootstrap: <any>[ AppComponent ],     // root component
-  exports: [DashboardComponent,LoginComponent ],
+    UserSettingsComponent
+  ],
+  bootstrap: <any>[
+      AppComponent
+  ],
+  exports: [ ],
   providers: <any>[
     AppMenuService,
     GetBootstrapProvider(KalturaAPIConfigAdapter),
