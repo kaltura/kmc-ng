@@ -68,7 +68,7 @@ export class EntriesComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     onPaginationChanged(state : any) : void {
-    	if (state.page !== this._filter.pageIndex) {
+    	if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
 		    this._filter.pageIndex = state.page;
 		    this._filter.pageSize = state.rows;
 
