@@ -32,7 +32,7 @@ module.exports = function (options) {
      * Developer tool to enhance debugging
      *
      */
-    devtool: 'cheap-module-source-map',
+    devtool: 'inline-source-map', //'cheap-module-source-map',
 
     output: {
       path: helpers.root('dist'),
