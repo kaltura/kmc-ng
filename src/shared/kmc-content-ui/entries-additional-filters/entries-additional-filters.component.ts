@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChildren, QueryList, OnDestroy, AfterViewInit, Input,  ElementRef } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
+
+import { KalturaUtils } from '@kaltura-ng2/kaltura-api';
 import { PrimeTreeNode, TreeDataHandler } from '@kaltura-ng2/kaltura-primeng-ui';
 import { TreeSelection, OnSelectionChangedArgs,TreeSelectionModes,TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
 
@@ -380,7 +382,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
             // make sure the filter is already set for 'schedule', otherwise ignore update
             this.entriesStore.removeFiltersByType(TimeSchedulingFilter);
             this.entriesStore.addFilters(
-                new TimeSchedulingFilter(previousValue, previousLabel, this._scheduledBefore, this._scheduledAfter)
+                new TimeSchedulingFilter(previousValue, previousLabel, KalturaUtils.getEndDateValue(this._scheduledBefore), KalturaUtils.getStartDateValue(this._scheduledAfter))
             );
         }
 
@@ -410,7 +412,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
         if (this._createdAfter || this._createdBefore)
         {
-            this.entriesStore.addFilters(new CreatedAtFilter(this._createdAfter, this._createdBefore));
+            this.entriesStore.addFilters(new CreatedAtFilter(KalturaUtils.getStartDateValue(this._createdAfter), KalturaUtils.getEndDateValue(this._createdBefore)));
         }
     }
 
