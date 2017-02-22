@@ -5,7 +5,7 @@ import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
 import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 import { TagsModule } from '@kaltura-ng2/kaltura-ui/tags';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
-import { TreeModule, TieredMenuModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, ButtonModule, AccordionModule, CalendarModule,  MultiSelectModule, PaginatorModule, MenuModule } from 'primeng/primeng';
+import { TreeModule, TieredMenuModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, ButtonModule, AccordionModule, CalendarModule,  MultiSelectModule, PaginatorModule, MenuModule, TooltipModule } from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 
 
@@ -23,6 +23,7 @@ import { KMCContentUIModule } from "../../shared/kmc-content-ui/kmc-content-ui.m
       CalendarModule,
       CheckboxModule,
       CommonModule,
+	  TooltipModule,
       KalturaCommonModule,
       DataTableModule,
       FormsModule,
