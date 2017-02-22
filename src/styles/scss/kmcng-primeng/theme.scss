@@ -357,3 +357,21 @@ $invalidInputBorderColor: #cd0a0a;
         color: #ffffff;
     }
 }
+// tooltips
+.ui-tooltip .ui-tooltip-text {
+	background-color: #000000;
+	color: #ffffff;
+	font-size: 14px;
+}
+.ui-tooltip-top .ui-tooltip-arrow {
+	border-top-color: #000000;
+}
+.ui-tooltip-bottom .ui-tooltip-arrow {
+	border-bottom-color: #000000;
+}
+.ui-tooltip-right .ui-tooltip-arrow {
+	border-right-color: #000000;
+}
+.ui-tooltip-left .ui-tooltip-arrow {
+	border-left-color: #000000;
+}
