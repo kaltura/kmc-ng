@@ -1,12 +1,8 @@
 import * as moment from 'moment';
 
+import { KalturaUtils } from '@kaltura-ng2/kaltura-api';
 import { EntriesStore } from "../entries-store.service";
 import { FilterItem } from "../filter-item";
-
-
-function toServerDate(value?: Date): number {
-    return value ? value.getTime() / 1000 : null;
-}
 
 export class CreatedAtFilter  extends FilterItem{
 
@@ -46,10 +42,10 @@ EntriesStore.registerFilterType(CreatedAtFilter, (items, request) =>
     const firstItem = items[0];
 
     if (firstItem.createdBefore) {
-        request.filter.createdAtLessThanOrEqual = toServerDate(firstItem.createdBefore);
+        request.filter.createdAtLessThanOrEqual = KalturaUtils.toServerDate(firstItem.createdBefore);
     }
 
     if (firstItem.createdAfter) {
-        request.filter.createdAtGreaterThanOrEqual = toServerDate(firstItem.createdAfter);
+        request.filter.createdAtGreaterThanOrEqual = KalturaUtils.toServerDate(firstItem.createdAfter);
     }
 });
