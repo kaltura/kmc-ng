@@ -14,7 +14,7 @@ export class KalturaHttpConfigurationAdapter implements BootstrapAdapter
     execute() : void {
         // TODO [kmc] should remove on logout
         this.kalturaHttpConfiguration.ks = this.appAuthentication.appUser.ks;
-        // TODO [kmc] should set partner id?
+        this.kalturaHttpConfiguration.partnerId = this.appAuthentication.appUser.partnerId;
 
     }
 }
