@@ -11,7 +11,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import * as R from 'ramda';
 
 import { TreeSelection, OnSelectionChangedArgs,TreeSelectionModes,TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
-import {CategoriesStore, CategoryData} from '../categories-store.service';
+import { CategoriesStore, CategoryData } from '../categories-store.service';
 import { BrowserService } from "../../kmc-shell/providers/browser.service";
 import { FilterItem } from "../entries-store/filter-item";
 import { ValueFilter } from "../entries-store/value-filter";
@@ -38,7 +38,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     @ViewChild(TreeSelection)
     private _treeSelection : TreeSelection= null;
 
-    public _currentSearch: CategoryData = null;
+    public _currentSearch: { data : CategoryData } = null;
 
     public NodeChildrenStatuses : any = NodeChildrenStatuses; // we expose the enum so we will be able to use it as part of template expression
 
@@ -128,9 +128,9 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
         if (item) {
             if (item instanceof PrimeTreeNode) {
-                return new CategoriesFilter(<number>item.data, mode, item.label, item.origin.fullName);
+                return new CategoriesFilter(<number>item.data, mode, item.label, (item.origin.fullNamePath || '').join(' > '));
             } else {
-                return new CategoriesFilter(item.id, mode, item.name, item.fullName);
+                return new CategoriesFilter(item.id, mode, item.name, (item.fullNamePath || '').join(' > '));
             }
         }
     }
@@ -277,8 +277,33 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     _onUserSelectCategory() : void {
-        if (this._currentSearch) {
-            this.entriesStore.addFilters(this._createFilter(this._currentSearch));
+
+        if (this._currentSearch && this._currentSearch.data) {
+
+            const data : CategoryData = this._currentSearch.data;
+
+            // find the item in the tree (if found)
+            let treeItem : PrimeTreeNode = null;
+            for(let i=0,length=data.fullIdPath.length; i<length ; i++)
+            {
+                const itemIdToSearchFor = data.fullIdPath[i];
+                treeItem = ((treeItem ? treeItem.children : this._categories) || []).find(child => child.data  === itemIdToSearchFor);
+
+                if (!treeItem)
+                {
+                    break;
+                }
+            }
+
+            if (treeItem)
+            {
+                this._treeSelection.simulateUserInteraction(treeItem);
+            }else {
+                // add new filter
+                this.entriesStore.addFilters(this._createFilter(data));
+            }
+
+            // clear user text from component
             this._currentSearch = null;
         }
     }
@@ -289,8 +314,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             const suggestions = [];
                 (data.items || []).forEach(item =>
                 {
-                    let label = item.fullName + (item.referenceId ? ` (${item.referenceId})` : '');
-                    label = label.replace(/>/g, " > ");
+                    let label = item.fullNamePath.join(' > ') + (item.referenceId ? ` (${item.referenceId})` : '');
                     const isSelectable =  !this._treeSelection.getSelections().find(selectedCategory =>
                     {
                         return selectedCategory.data === item.id;

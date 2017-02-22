@@ -375,3 +375,10 @@ $invalidInputBorderColor: #cd0a0a;
 .ui-tooltip-left .ui-tooltip-arrow {
 	border-left-color: #000000;
 }
+
+// auto complete
+.ui-autocomplete-panel .ui-autocomplete-list-item{
+    &.ui-state-highlight, &:hover{
+        background-color: $kGrayscale7;
+    }
+}

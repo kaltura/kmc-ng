@@ -14,10 +14,11 @@ export interface CategoryData
 {
     parentId? : number,
     id : number,
+    fullIdPath : number[],
     name : string,
     referenceId : string,
     sortValue : number,
-    fullName : string,
+    fullNamePath : string[],
     childrenCount : number
 }
 
@@ -153,13 +154,15 @@ export class CategoriesStore {
 
         if (response && response.objects) {
             response.objects.forEach((category: KalturaCategory) => {
+                const fullIdPath = (category.fullIds ? category.fullIds.split('>') : []).map((item : any) => item * 1);
                 result.push({
                     id: category.id,
                     name: category.name,
+                    fullIdPath : fullIdPath,
                     referenceId : category.referenceId,
                     parentId: category.parentId !== 0 ? category.parentId : null,
                     sortValue: category.partnerSortValue,
-                    fullName: category.fullName,
+                    fullNamePath: category.fullName ? category.fullName.split('>') : [],
                     childrenCount : category.directSubCategoriesCount
                 });
             });
