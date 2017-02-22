@@ -11,7 +11,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import * as R from 'ramda';
 
 import { TreeSelection, OnSelectionChangedArgs,TreeSelectionModes,TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
-import { CategoriesStore } from '../categories-store.service';
+import {CategoriesStore, CategoryData} from '../categories-store.service';
 import { BrowserService } from "../../kmc-shell/providers/browser.service";
 import { FilterItem } from "../entries-store/filter-item";
 import { ValueFilter } from "../entries-store/value-filter";
@@ -38,7 +38,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     @ViewChild(TreeSelection)
     private _treeSelection : TreeSelection= null;
 
-    public _currentSearch: string = "";
+    public _currentSearch: CategoryData = null;
 
     public NodeChildrenStatuses : any = NodeChildrenStatuses; // we expose the enum so we will be able to use it as part of template expression
 
@@ -122,6 +122,19 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
+    private _createFilter(item : CategoryData | PrimeTreeNode)
+    {
+        const mode = this._selectionMode === TreeSelectionModes.ExactBlockChildren ? CategoriesFilterModes.Ancestor : CategoriesFilterModes.Exact;
+
+        if (item) {
+            if (item instanceof PrimeTreeNode) {
+                return new CategoriesFilter(<number>item.data, mode, item.label, item.origin.fullName);
+            } else {
+                return new CategoriesFilter(item.id, mode, item.name, item.fullName);
+            }
+        }
+    }
+
     public _onTreeSelectionChanged(args : OnSelectionChangedArgs) : void {
 
         // update filters only if the change was done from this component (either by the user selecting inside the tree or when the user clicks on 'clear all'
@@ -131,8 +144,8 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
 
             args.added.forEach((node: PrimeTreeNode) => {
-                const mode = this._selectionMode === TreeSelectionModes.ExactBlockChildren ? CategoriesFilterModes.Ancestor : CategoriesFilterModes.Exact;
-                newFilters.push(new CategoriesFilter(<number>node.data, mode, node.label, node.origin.fullName));
+
+                newFilters.push(this._createFilter(node));
             });
 
             let categoriesFilters = this.entriesStore.getFiltersByType(CategoriesFilter);
@@ -264,14 +277,16 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     _onUserSelectCategory() : void {
-        this._currentSearch = null;
+        if (this._currentSearch) {
+            this.entriesStore.addFilters(this._createFilter(this._currentSearch));
+            this._currentSearch = null;
+        }
     }
 
     _searchCategories(event) : void {
         this.categoriesStore.getSuggestions(event.query).subscribe(data => {
 
             const suggestions = [];
-
                 (data.items || []).forEach(item =>
                 {
                     let label = item.fullName + (item.referenceId ? ` (${item.referenceId})` : '');
@@ -282,6 +297,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                     });
                     suggestions.push({ data : item,  label : label, isSelectable : isSelectable });
                 });
+
             this._suggestedCategories =suggestions;
         },
             (err) => {
