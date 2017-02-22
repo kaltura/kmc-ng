@@ -26,6 +26,7 @@ import { CategoriesFilter, CategoriesFilterModes } from "../entries-store/filter
 export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestroy{
 
     public _loading : boolean = false;
+    public _suggestedCategories = [];
     private errorMessage : string = null;
     public _categories: PrimeTreeNode[] = [];
     private appUser : AppUser;
@@ -260,6 +261,32 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             this.parentPopupStateChangeSubscription.unsubscribe();
             this.parentPopupStateChangeSubscription = null;
         }
+    }
+
+    _onUserSelectCategory() : void {
+        this._currentSearch = null;
+    }
+
+    _searchCategories(event) : void {
+        this.categoriesStore.getSuggestions(event.query).subscribe(data => {
+
+            const suggestions = [];
+
+                (data.items || []).forEach(item =>
+                {
+                    let label = item.fullName + (item.referenceId ? ` (${item.referenceId})` : '');
+                    label = label.replace(/>/g, " > ");
+                    const isSelectable =  !this._treeSelection.getSelections().find(selectedCategory =>
+                    {
+                        return selectedCategory.data === item.id;
+                    });
+                    suggestions.push({ data : item,  label : label, isSelectable : isSelectable });
+                });
+            this._suggestedCategories =suggestions;
+        },
+            (err) => {
+            // TODO [kmcng] handle error
+            });
     }
 
 }

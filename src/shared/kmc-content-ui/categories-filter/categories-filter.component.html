@@ -1,9 +1,19 @@
 <kLoader [loading]="_loading">
 	<div #categoriesTree class="kUseKMCngIcons">
 		<div class="kHeader">
-			<p-autoComplete inputStyleClass="kSearchCategory" [(ngModel)]="_currentSearch" field="label"
+			<kAutoComplete inputStyleClass="kSearchCategory" [(ngModel)]="_currentSearch" field="label"
 							placeholder="{{'applications.content.filters.findCategory' | translate}}"
-							[minLength]="3"></p-autoComplete>
+							[minLength]="3"
+						    [IsSelectableField]="'isSelectable'"
+							(onSelect)="_onUserSelectCategory()"
+							[suggestions]="_suggestedCategories" (completeMethod)="_searchCategories($event)"
+			>
+				<template let-brand pTemplate="item">
+					<div [class.kItemSelected]="!brand.isSelectable">
+						{{brand.label}}
+					</div>
+				</template>
+			</kAutoComplete>
 			<i #config class="kIcongear kTreeConfig"
 			   pTooltip="{{'applications.content.filters.preferences.preferences' | translate}}"></i>
 			<div class="kAllCategories">

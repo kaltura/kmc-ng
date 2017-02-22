@@ -5,14 +5,17 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/multicast';
 
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { AppAuthentication } from '@kaltura-ng2/kaltura-common';
+
 import { CategoryListAction } from '@kaltura-ng2/kaltura-api/services/category';
-import { KalturaCategoryFilter, KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaCategoryListResponse } from '@kaltura-ng2/kaltura-api/types'
+import { KalturaCategoryFilter,KalturaFilterPager,  KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaCategoryListResponse } from '@kaltura-ng2/kaltura-api/types'
 
 export interface CategoryData
 {
     parentId? : number,
     id : number,
     name : string,
+    referenceId : string,
     sortValue : number,
     fullName : string,
     childrenCount : number
@@ -33,7 +36,7 @@ export class CategoriesStore {
     private _fetchingQueue: {[key: string]: CategoryFetchQueueType } = {};
     private categories: {[key: string] : CategoryData[]} = {};
 
-    constructor(private kalturaServerClient: KalturaServerClient) {
+    constructor(private kalturaServerClient: KalturaServerClient, private appAuthentication : AppAuthentication) {
     }
 
     public getAllCategories() : Observable<CategoriesQuery>{
@@ -52,6 +55,40 @@ export class CategoriesStore {
         }
 
         return this.getCategories(parentId);
+    }
+
+    public getSuggestions(text:string) : Observable<{ error : {}, items : CategoryData[]}>
+    {
+        if (text) {
+            return Observable.create(observer => {
+                const filter = new KalturaCategoryFilter();
+                filter.nameOrReferenceIdStartsWith = text;
+                filter.orderBy = '+fullName';
+
+                const pager = new KalturaFilterPager();
+                pager.pageIndex = 0;
+                pager.pageSize = 30;
+
+
+                this.kalturaServerClient.request(
+                    new CategoryListAction({filter})
+                ).subscribe(result =>
+                {
+                    const items = this.parseCategoriesItems(result);
+
+
+                    observer.next({ error : null, items : items});
+                },
+                    err =>
+                    {
+                        observer.error({ error : err, items : []});
+                        observer.complete();
+                    });
+            });
+        }else
+        {
+            return Observable.of({error : null, items : []});
+        }
     }
 
     private getCategories(parentId?: number): Observable<CategoriesQuery> {
@@ -119,6 +156,7 @@ export class CategoriesStore {
                 result.push({
                     id: category.id,
                     name: category.name,
+                    referenceId : category.referenceId,
                     parentId: category.parentId !== 0 ? category.parentId : null,
                     sortValue: category.partnerSortValue,
                     fullName: category.fullName,
