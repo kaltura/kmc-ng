@@ -66,8 +66,7 @@
             },
             "paginator":{
                 "showRows": "Show rows:"
-            }
-            ,
+            },
             "entryStatus":{
                 "errorImporting": "Error Uploading",
                 "errorConverting": "Error",
@@ -90,6 +89,14 @@
                 "autoApprovedStatus": "Auto Approved",
                 "flaggedStatus": "Flagged"
             },
+			"entryType":{
+				"video": "Video",
+				"audio": "Audio",
+				"image": "Image",
+				"videoMix": "Video Mix",
+				"live": "Live",
+				"unknown": "Unknown"
+			},
             "bulkActions":{
                 "setScheduling": "Set Scheduling",
                 "setAccessControl": "Set Access Control",
