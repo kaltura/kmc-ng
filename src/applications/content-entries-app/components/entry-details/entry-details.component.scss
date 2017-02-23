@@ -1,0 +1,94 @@
+@import '../../../../styles/scss/_variables.scss';
+@import '~kmc-content-ui/styles/scss/_entry-types.scss';
+
+.kEntryDetails {
+	font-size: 15px;
+	background-color: $appBkgColor;
+	height: $contentArea;
+	padding-top: 30px;
+	width: 100%;
+	button{
+		cursor: pointer;
+	}
+	.kEntryDetailsWrapper{
+		display: flex;
+		flex-direction: column;
+		padding-right: 20px;
+		height: 100%;
+		.kEntryDetailsHeader{
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			padding-right: 50px;
+			.kBackToEntriesBtn{
+				border: none;
+				outline: none;
+				background-color: $appBkgColor;
+				color: $kGrayscale3;
+				margin-right: 16px;
+				&:active{
+					box-shadow: none;
+				}
+				&:hover{
+					color: $kPrimary;
+				}
+			}
+			.kMediaTypeIcon{
+				width: 24px;
+				height: 24px;
+			}
+			.kEntryTitle{
+				color: $kGrayscale1;
+				font-size: 24px;
+				font-weight: 700;
+				margin-left: 8px;
+			}
+			.kSaveBtn{
+				margin-left: auto;
+				width: 100px;
+				height: 34px;
+				font-weight: 400;
+			}
+			.kNavigationBtn{
+				margin-left: auto;
+				width: 40px;
+				height: 34px;
+				margin-left: 12px;
+				font-weight: 400;
+			}
+		}
+		.kEntryDetailsMain{
+			display: flex;
+			flex-direction: row;
+			padding-right: 50px;
+			padding-top: 30px;
+			height: 100%;
+			.kEntryDetailsSections{
+				width: 155px;
+				background-color: #ffffff;
+				border: 1px solid $kGrayscale4;
+				border-top-left-radius: 3px;
+				margin-left: 50px;
+				padding: 8px;
+			}
+			.kEntryDetailsContent{
+				background-color: #ffffff;
+				border: 1px solid $kGrayscale4;
+				border-left: none;
+				border-top-right-radius: 3px;
+				flex: 1 1 auto;
+				margin-right: 30px;
+				padding: 8px;
+			}
+			.kEntryDetailsPreview{
+				margin-left: auto;
+				width: 280px;
+				background-color: #ffffff;
+				border: 1px solid $kGrayscale4;
+				border-radius: 3px;
+				padding: 8px;
+			}
+		}
+	}
+
+}
