@@ -128,9 +128,9 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
         if (item) {
             if (item instanceof PrimeTreeNode) {
-                return new CategoriesFilter(<number>item.data, mode, item.label, (item.origin.fullNamePath || '').join(' > '));
+                return new CategoriesFilter(<number>item.data, mode, item.label, (item.origin.fullNamePath || []).join(' > '));
             } else {
-                return new CategoriesFilter(item.id, mode, item.name, (item.fullNamePath || '').join(' > '));
+                return new CategoriesFilter(item.id, mode, item.name, (item.fullNamePath || []).join(' > '));
             }
         }
     }
@@ -215,10 +215,31 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                                                 this.appLocalization.get('entriesShared.categoriesFilters.maxChildrenExceeded', { childrenCount : maxNumberOfChildren}));
                 }else {
                     node.setChildrenLoadStatus(NodeChildrenStatuses.loading);
+
                     this.categoriesStore.getChildrenCategories(<number>node.data).subscribe(result => {
                             node.setChildren(this.treeDataHandler.create(
-                                this.createTreeHandlerArguments(result.items, node.data)
+                                this.createTreeHandlerArguments(result.items, node)
                             ));
+
+                            const newSelectedChildren = [];
+                            this.entriesStore.getFiltersByType(CategoriesFilter).forEach(filter =>
+                            {
+                                const child = node.children.find(childToCompare => filter.value === childToCompare.data);
+
+                                if (child)
+                                {
+                                    newSelectedChildren.push(child);
+                                }
+                            });
+
+                            if (newSelectedChildren.length)
+                            {
+                                setTimeout(() => {
+                                        this._treeSelection.selectItems(newSelectedChildren);
+                                    }
+                                ,300);
+
+                            }
 
                             // ask tree selection to refresh node status, required in
                             // 'ExactBlockChildren' mode to update children status if needed
@@ -233,15 +254,15 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    private createTreeHandlerArguments(data : any[], parentId : any = null) : any {
+    private createTreeHandlerArguments(items : any[], parentNode : PrimeTreeNode = null) : any {
         return {
-            data: data,
+            items: items,
             idProperty: 'id',
             nameProperty: 'name',
             parentIdProperty: 'parentId',
             sortByProperty: 'sortValue',
             childrenCountProperty: 'childrenCount',
-            rootParentId : parentId
+            rootParent : parentNode
         }
     }
 
@@ -297,7 +318,17 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
             if (treeItem)
             {
+                // select the node to create the filter and update tree status
                 this._treeSelection.simulateUserInteraction(treeItem);
+
+                // expand tree to show selected node
+                let nodeParent= treeItem.parent;
+
+                while(nodeParent != null)
+                {
+                    nodeParent.expanded = true;
+                    nodeParent = nodeParent.parent;
+                }
             }else {
                 // add new filter
                 this.entriesStore.addFilters(this._createFilter(data));

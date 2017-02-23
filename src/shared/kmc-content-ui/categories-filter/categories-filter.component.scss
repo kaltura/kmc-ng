@@ -112,3 +112,10 @@ a.disabled{
     color:darkgray;
     cursor: default;
 }
+
+:host /deep/ .kHighlightedText
+{
+    font-weight: bolder;
+    text-decoration: underline;
+}
+

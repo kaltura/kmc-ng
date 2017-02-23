@@ -377,8 +377,20 @@ $invalidInputBorderColor: #cd0a0a;
 }
 
 // auto complete
-.ui-autocomplete-panel .ui-autocomplete-list-item{
-    &.ui-state-highlight, &:hover{
-        background-color: $kGrayscale7;
+.ui-autocomplete-panel {
+    .ui-autocomplete-list-item {
+        min-height: 50px;
+        border-left: none;
+        border-right: none;
+        border-bottom: 2px solid $kGrayscale5;
+        display: flex;
+        align-items: center;
+
+        &:last-child {
+            border-bottom: none;
+        }
+        &.ui-state-highlight, &:hover {
+            background-color: $kGrayscale7;
+        }
     }
 }
