@@ -32,17 +32,19 @@ export class EntriesComponent implements OnInit, AfterViewInit, OnDestroy {
         freetextSearch : '',
         pageSize : 50,
         sortBy : 'createdAt',
-        sortDirection : SortDirection.Asc
+        sortDirection : SortDirection.Desc
     };
 
     constructor(public _entriesStore : EntriesStore, private additionalFilters : EntriesAdditionalFiltersStore, private appLocalization: AppLocalization, private browserService: BrowserService) {
     }
 
     removeTag(tag: any){
+	    this.clearSelection();
         this._entriesStore.removeFilters(tag);
     }
 
     removeAllTags(){
+	    this.clearSelection();
         this._entriesStore.clearAllFilters();
     }
 
@@ -72,6 +74,7 @@ export class EntriesComponent implements OnInit, AfterViewInit, OnDestroy {
 		    this._filter.pageIndex = state.page;
 		    this._filter.pageSize = state.rows;
 
+		    this.clearSelection();
 		    this._entriesStore.updateQuery({
 			    pageIndex: this._filter.pageIndex + 1,
 			    pageSize: this._filter.pageSize
@@ -148,6 +151,7 @@ export class EntriesComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public _reload()
     {
+    	this.clearSelection();
         this._entriesStore.reload();
     }
 
