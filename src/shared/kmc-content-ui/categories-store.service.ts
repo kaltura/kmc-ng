@@ -5,7 +5,6 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/multicast';
 
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
-import { AppAuthentication } from '@kaltura-ng2/kaltura-common';
 
 import { CategoryListAction } from '@kaltura-ng2/kaltura-api/services/category';
 import { KalturaCategoryFilter,KalturaFilterPager,  KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaCategoryListResponse } from '@kaltura-ng2/kaltura-api/types'
@@ -37,7 +36,7 @@ export class CategoriesStore {
     private _fetchingQueue: {[key: string]: CategoryFetchQueueType } = {};
     private categories: {[key: string] : CategoryData[]} = {};
 
-    constructor(private kalturaServerClient: KalturaServerClient, private appAuthentication : AppAuthentication) {
+    constructor(private kalturaServerClient: KalturaServerClient) {
     }
 
     public getAllCategories() : Observable<CategoriesQuery>{

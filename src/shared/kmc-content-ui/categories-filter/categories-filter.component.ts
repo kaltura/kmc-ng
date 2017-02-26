@@ -8,7 +8,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui
 import { AppUser,AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { AppConfig } from '@kaltura-ng2/kaltura-common';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui';
+import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 
 import * as R from 'ramda';
 
@@ -248,10 +248,14 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                     node.setChildrenLoadStatus(NodeChildrenStatuses.loading);
 
                     this.categoriesStore.getChildrenCategories(<number>node.data).subscribe(result => {
+                            // add children to the node
                             node.setChildren(this.treeDataHandler.create(
                                 this.createTreeHandlerArguments(result.items, node)
                             ));
 
+                            // check if one of the children was already selected and should be added to
+                            // tree selection. Scenario: in lazy tree and selection mode SelfAndChildren when the user select a
+                            // child node using the search component and then expand its' parent
                             const newSelectedChildren = [];
                             this.entriesStore.getFiltersByType(CategoriesFilter).forEach(filter =>
                             {
@@ -332,7 +336,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    _onUserSelectCategory() : void {
+    _onSuggestionSelected() : void {
 
         if (this._currentSearch && this._currentSearch.data) {
 
@@ -376,7 +380,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
 
 
-    _searchCategories(event) : void {
+    _searchSuggestions(event) : void {
         this._suggestionsProvider.next({ suggestions : [], isLoading : true});
 
         if (this._searchCategoriesRequest$)
