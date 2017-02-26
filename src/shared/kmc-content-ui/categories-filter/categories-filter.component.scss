@@ -88,7 +88,7 @@ a.disabled{
     color: $kGrayscale3;
     padding-left: 6px;
 }
-/* Make sure toggler and checkbox remain aligned even if the node height changes */
+/* Make sure  toggler and checkbox remain aligned even if the node height changes */
 :host /deep/ .ui-treenode .ui-tree-toggler{
     vertical-align: top;
     margin-top: 13px;
@@ -105,12 +105,6 @@ a.disabled{
 :host /deep/ .kSearchCategory{
     width: 338px;
     height: 34px;
-}
-
-:host /deep/ .kIsItemDisabled
-{
-    color:darkgray;
-    cursor: default;
 }
 
 :host /deep/ .kHighlightedText
