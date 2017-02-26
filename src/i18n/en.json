@@ -112,7 +112,28 @@
                 "changeOwner": "Change Owner",
                 "download": "Download",
                 "delete": "Delete"
-            }
+            },
+			"entryDetails": {
+				"preview": {
+					"pande": "Preview & Embed",
+					"details": "Details",
+					"entryID": "Entry ID",
+					"creator": "Creator",
+					"creationDate": "Creation date",
+					"landingPage": "Landing page",
+					"vodEntry": "VOD Entry",
+					"archiveOf": "Archive of",
+					"type": "Type",
+					"moderation": "Moderation",
+					"plays": "Plays",
+					"rating": "Avg. Rating",
+					"duration": "Duration",
+					"flags": "Flags",
+					"votes": "Votes",
+					"clippedFrom": "Clipped from"
+				}
+
+			}
         }
     },
     "entriesShared": {
