@@ -63,7 +63,9 @@
 			padding-right: 50px;
 			padding-top: 30px;
 			height: 100%;
+			min-height: 0;
 			.kEntryDetailsSections{
+				overflow-y: auto;
 				width: 155px;
 				background-color: #ffffff;
 				border: 1px solid $kGrayscale4;
@@ -72,6 +74,7 @@
 				padding: 8px;
 			}
 			.kEntryDetailsContent{
+				overflow-y: auto;
 				background-color: #ffffff;
 				border: 1px solid $kGrayscale4;
 				border-left: none;
@@ -81,6 +84,7 @@
 				padding: 8px;
 			}
 			.kEntryDetailsPreview{
+				overflow-y: auto;
 				margin-left: auto;
 				width: 280px;
 				background-color: #ffffff;
@@ -90,5 +94,8 @@
 			}
 		}
 	}
-
+	.kSpacer{
+		display: block;
+		height: 40px;
+	}
 }
