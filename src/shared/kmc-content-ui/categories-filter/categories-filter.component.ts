@@ -36,7 +36,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     private parentPopupStateChangeSubscription : ISubscription;
     public _suggestionsProvider = new Subject<SuggestionsProviderData>();
     private _searchCategoriesRequest$ : ISubscription;
-    public _selectionMode :TreeSelectionModes = TreeSelectionModes.Exact;
+    public _selectionMode :TreeSelectionModes = TreeSelectionModes.Self;
 
     @ViewChild(TreeSelection)
     private _treeSelection : TreeSelection= null;
@@ -76,7 +76,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         );
 
         const savedAutoSelectChildren: TreeSelectionModes = this.browserService.getFromLocalStorage("contentShared.categoriesTree.selectionMode");
-        this._selectionMode = savedAutoSelectChildren ? savedAutoSelectChildren : TreeSelectionModes.Exact;
+        this._selectionMode = savedAutoSelectChildren ? savedAutoSelectChildren : TreeSelectionModes.Self;
 
         // TODO [kmcng] consider using constants for permissions flags
         this.inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
@@ -126,7 +126,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     private _createFilter(item : CategoryData | PrimeTreeNode) : CategoriesFilter
     {
-        const mode = this._selectionMode === TreeSelectionModes.ExactBlockChildren ? CategoriesFilterModes.Ancestor : CategoriesFilterModes.Exact;
+        const mode = this._selectionMode === TreeSelectionModes.SelfAndChildren ? CategoriesFilterModes.Ancestor : CategoriesFilterModes.Exact;
 
         if (item) {
             if (item instanceof PrimeTreeNode) {
@@ -172,7 +172,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
         let categoriesFilters = this.entriesStore.getFiltersByType(CategoriesFilter);
 
-        if (categoriesFilters && this._selectionMode === TreeSelectionModes.ExactBlockChildren && this.inLazyMode) {
+        if (categoriesFilters && this._selectionMode === TreeSelectionModes.SelfAndChildren && this.inLazyMode) {
             newFilters.forEach((newFilter: CategoriesFilter) => {
                 // when this component is running with ExactIncludingChildren mode, in lazy mode we need to manually unselect
                 // the first nested child (if any) that currently selected
@@ -308,6 +308,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     public _clearAll(){
         this.entriesStore.removeFiltersByType(CategoriesFilter);
+        this._treeSelection.unselectAll();
     }
 
     public _blockTreeSelection(e: MouseEvent){
@@ -393,7 +394,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
                     const isSelectable = !this.entriesStore.getFiltersByType(CategoriesFilter).find(categoryFilter => {
 
-                        if (this._selectionMode === TreeSelectionModes.ExactBlockChildren) {
+                        if (this._selectionMode === TreeSelectionModes.SelfAndChildren) {
                             let alreadySelected = false;
                             for (let length = item.fullIdPath.length,i = length-1;i >= 0 && !alreadySelected;i--)
                             {
