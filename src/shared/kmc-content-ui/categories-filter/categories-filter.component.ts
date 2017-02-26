@@ -124,15 +124,15 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    private _createFilter(item : CategoryData | PrimeTreeNode)
+    private _createFilter(item : CategoryData | PrimeTreeNode) : CategoriesFilter
     {
         const mode = this._selectionMode === TreeSelectionModes.ExactBlockChildren ? CategoriesFilterModes.Ancestor : CategoriesFilterModes.Exact;
 
         if (item) {
             if (item instanceof PrimeTreeNode) {
-                return new CategoriesFilter(<number>item.data, mode, item.label, (item.origin.fullNamePath || []).join(' > '));
+                return new CategoriesFilter(<number>item.data, mode, item.label, (item.origin.fullNamePath || []).join(' > '), item.origin.fullIdPath);
             } else {
-                return new CategoriesFilter(item.id, mode, item.name, (item.fullNamePath || []).join(' > '));
+                return new CategoriesFilter(item.id, mode, item.name, (item.fullNamePath || []).join(' > '),item.fullIdPath);
             }
         }
     }
@@ -141,16 +141,14 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
         // update filters only if the change was done from this component (either by the user selecting inside the tree or when the user clicks on 'clear all'
         if (args.origin === TreeSelectionChangedOrigins.UnselectAll || args.origin === TreeSelectionChangedOrigins.UserSelection) {
-            let newFilters: FilterItem[] = [];
-            let removedFilters: FilterItem[] = [];
-
-
-            args.added.forEach((node: PrimeTreeNode) => {
-
-                newFilters.push(this._createFilter(node));
-            });
+            let newFilters: CategoriesFilter[] = [];
+            let removedFilters: CategoriesFilter[] = [];
 
             let categoriesFilters = this.entriesStore.getFiltersByType(CategoriesFilter);
+
+            args.added.forEach((node: PrimeTreeNode) => {
+                newFilters.push(this._createFilter(node));
+            });
 
             if (categoriesFilters) {
 
@@ -163,13 +161,44 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                 });
             }
 
-            if (newFilters.length > 0) {
-                this.entriesStore.addFilters(...newFilters);
-            }
+            this.updateFilters(newFilters,removedFilters);
+        }
+    }
 
-            if (removedFilters.length > 0) {
-                this.entriesStore.removeFilters(...removedFilters);
-            }
+    private updateFilters(newFilters : CategoriesFilter[], removedFilters : CategoriesFilter[]) : void{
+
+        removedFilters = removedFilters || [];
+        newFilters = newFilters || [];
+
+        let categoriesFilters = this.entriesStore.getFiltersByType(CategoriesFilter);
+
+        if (categoriesFilters && this._selectionMode === TreeSelectionModes.ExactBlockChildren && this.inLazyMode) {
+            newFilters.forEach((newFilter: CategoriesFilter) => {
+                // when this component is running with ExactIncludingChildren mode, in lazy mode we need to manually unselect
+                // the first nested child (if any) that currently selected
+                const childToRemove = categoriesFilters.find(filter => {
+                    let result = false;
+
+                    // check if this item is a parent of another item (don't validate last item which is the node itself)
+                    for (let i = 0, length = filter.fullIdPath.length; i < length - 1 && !result; i++) {
+                        result = filter.fullIdPath[i] === newFilter.value;
+                    }
+
+                    return result;
+                });
+
+                if (childToRemove) {
+                    removedFilters.push(childToRemove);
+                }
+            });
+        }
+
+        if (newFilters.length > 0) {
+            this.entriesStore.addFilters(...newFilters);
+        }
+
+        if (removedFilters.length > 0) {
+            this.entriesStore.removeFilters(...removedFilters);
         }
     }
 
@@ -278,7 +307,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     public _clearAll(){
-        this._treeSelection.unselectAll();
+        this.entriesStore.removeFiltersByType(CategoriesFilter);
     }
 
     public _blockTreeSelection(e: MouseEvent){
@@ -308,7 +337,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
             const data : CategoryData = this._currentSearch.data;
 
-            // find the item in the tree (if found)
+            // find the item in the tree (if exists)
             let treeItem : PrimeTreeNode = null;
             for(let i=0,length=data.fullIdPath.length; i<length ; i++)
             {
@@ -336,7 +365,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                 }
             }else {
                 // add new filter
-                this.entriesStore.addFilters(this._createFilter(data));
+                this.updateFilters([this._createFilter(data)],null);
             }
 
             // clear user text from component
@@ -363,7 +392,17 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                     let label = item.fullNamePath.join(' > ') + (item.referenceId ? ` (${item.referenceId})` : '');
 
                     const isSelectable = !this.entriesStore.getFiltersByType(CategoriesFilter).find(categoryFilter => {
-                        return categoryFilter.value === item.id;
+
+                        if (this._selectionMode === TreeSelectionModes.ExactBlockChildren) {
+                            let alreadySelected = false;
+                            for (let length = item.fullIdPath.length,i = length-1;i >= 0 && !alreadySelected;i--)
+                            {
+                                alreadySelected = item.fullIdPath[i] === categoryFilter.value;
+                            }
+                            return alreadySelected;
+                        }else {
+                            return categoryFilter.value === item.id;
+                        }
                     });
                     suggestions.push({data: item, label: label, isSelectable: isSelectable});
                 });

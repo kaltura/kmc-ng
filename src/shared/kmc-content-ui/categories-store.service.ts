@@ -78,11 +78,11 @@ export class CategoriesStore {
                     const items = this.parseCategoriesItems(result);
 
 
-                    observer.next({ error : null, items : items});
+                    observer.next({items : items});
                 },
                     err =>
                     {
-                        observer.error({ error : err, items : []});
+                        observer.error(err);
                         observer.complete();
                     });
 
@@ -190,7 +190,7 @@ export class CategoriesStore {
 
         const responseProfile = new KalturaDetachedResponseProfile()
             .setData(data => {
-                data.fields = "id,name,parentId,partnerSortValue,fullName,directSubCategoriesCount";
+                data.fields = "id,name,parentId,partnerSortValue,fullName,fullIds,directSubCategoriesCount";
                 data.type = KalturaResponseProfileType.IncludeFields;
             });
 
