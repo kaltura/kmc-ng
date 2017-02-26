@@ -14,6 +14,7 @@ import { routing } from './content-entries-app.routes';
 import { EntriesComponent } from './components/entries.component';
 import { KMCShellModule } from 'kmc-shell';
 import { kEntriesTableComponent } from './components/entries-table.component';
+import { EntryDetailsComponent } from './components/entry-details/entry-details.component';
 import { KMCContentUIModule } from "../../shared/kmc-content-ui/kmc-content-ui.module";
 
 @NgModule({
@@ -45,7 +46,8 @@ import { KMCContentUIModule } from "../../shared/kmc-content-ui/kmc-content-ui.m
     ],
   declarations: [
     EntriesComponent,
-      kEntriesTableComponent
+      kEntriesTableComponent,
+	  EntryDetailsComponent
   ],
   providers:    [
   ]
