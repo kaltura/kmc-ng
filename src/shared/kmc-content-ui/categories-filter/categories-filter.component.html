@@ -4,13 +4,13 @@
 			<kAutoComplete #autoComplete inputStyleClass="kSearchCategory" [(ngModel)]="_currentSearch" field="label"
 							placeholder="{{'applications.content.filters.findCategory' | translate}}"
 							[minLength]="3"
-						    [IsSelectableField]="'isSelectable'"
+						    [isSelectableField]="'isSelectable'"
 							(onSelect)="_onUserSelectCategory()"
-							[suggestions]="_suggestedCategories" (completeMethod)="_searchCategories($event)"
+						    [suggestionsProvider]="_suggestionsProvider"
+							(completeMethod)="_searchCategories($event)"
 			>
 				<template let-brand pTemplate="item">
-					<div class="" [class.kItemSelected]="!brand.isSelectable"
-						 [innerHTML]="brand.label | kHighlight : autoComplete.searchText ">
+					<div [innerHTML]="brand.label | kHighlight : autoComplete.searchText ">
 					</div>
 				</template>
 			</kAutoComplete>

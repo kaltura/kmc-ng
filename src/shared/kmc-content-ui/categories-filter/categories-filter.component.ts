@@ -1,13 +1,15 @@
 import { Component, OnInit, OnDestroy,  ViewChild, Input,  AfterViewInit, ElementRef } from '@angular/core';
 import { Tree } from 'primeng/primeng';
+import { Subject } from 'rxjs/Subject';
+import { ISubscription } from 'rxjs/Subscription';
+
 import { PrimeTreeNode, TreeDataHandler, NodeChildrenStatuses } from '@kaltura-ng2/kaltura-primeng-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { AppUser,AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { AppConfig } from '@kaltura-ng2/kaltura-common';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui';
 
-
-import { ISubscription } from 'rxjs/Subscription';
 import * as R from 'ramda';
 
 import { TreeSelection, OnSelectionChangedArgs,TreeSelectionModes,TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
@@ -26,13 +28,14 @@ import { CategoriesFilter, CategoriesFilterModes } from "../entries-store/filter
 export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestroy{
 
     public _loading : boolean = false;
-    public _suggestedCategories = [];
     private errorMessage : string = null;
     public _categories: PrimeTreeNode[] = [];
     private appUser : AppUser;
     private inLazyMode : boolean = false;
     private filterUpdateSubscription : ISubscription;
     private parentPopupStateChangeSubscription : ISubscription;
+    public _suggestionsProvider = new Subject<SuggestionsProviderData>();
+    private _searchCategoriesRequest$ : ISubscription;
     public _selectionMode :TreeSelectionModes = TreeSelectionModes.Exact;
 
     @ViewChild(TreeSelection)
@@ -61,7 +64,6 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     ngOnInit() {
-
 
         // update components when the active filter list is updated
         this.filterUpdateSubscription = this.entriesStore.query$.subscribe(
@@ -291,6 +293,9 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     ngOnDestroy(){
+
+        this._suggestionsProvider.complete();
+
         if (this.parentPopupStateChangeSubscription) {
             this.parentPopupStateChangeSubscription.unsubscribe();
             this.parentPopupStateChangeSubscription = null;
@@ -339,24 +344,34 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    _searchCategories(event) : void {
-        this.categoriesStore.getSuggestions(event.query).subscribe(data => {
 
-            const suggestions = [];
-                (data.items || []).forEach(item =>
-                {
+
+    _searchCategories(event) : void {
+        this._suggestionsProvider.next({ suggestions : [], isLoading : true});
+
+        if (this._searchCategoriesRequest$)
+        {
+            // abort previous request
+            this._searchCategoriesRequest$.unsubscribe();
+            this._searchCategoriesRequest$ = null;
+        }
+
+        this._searchCategoriesRequest$ = this.categoriesStore.getSuggestions(event.query).subscribe(data => {
+                const suggestions = [];
+
+                (data.items || []).forEach(item => {
                     let label = item.fullNamePath.join(' > ') + (item.referenceId ? ` (${item.referenceId})` : '');
-                    const isSelectable =  !this._treeSelection.getSelections().find(selectedCategory =>
-                    {
-                        return selectedCategory.data === item.id;
+
+                    const isSelectable = !this.entriesStore.getFiltersByType(CategoriesFilter).find(categoryFilter => {
+                        return categoryFilter.value === item.id;
                     });
-                    suggestions.push({ data : item,  label : label, isSelectable : isSelectable });
+                    suggestions.push({data: item, label: label, isSelectable: isSelectable});
                 });
 
-            this._suggestedCategories =suggestions;
-        },
+                this._suggestionsProvider.next({suggestions: suggestions, isLoading: false});
+            },
             (err) => {
-            // TODO [kmcng] handle error
+                this._suggestionsProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
             });
     }
 

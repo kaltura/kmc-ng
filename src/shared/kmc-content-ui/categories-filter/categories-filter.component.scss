@@ -107,7 +107,7 @@ a.disabled{
     height: 34px;
 }
 
-.kItemSelected
+:host /deep/ .kIsItemDisabled
 {
     color:darkgray;
     cursor: default;

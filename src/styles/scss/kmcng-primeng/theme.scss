@@ -393,4 +393,18 @@ $invalidInputBorderColor: #cd0a0a;
             background-color: $kGrayscale7;
         }
     }
+
+    .ui-autocomplete-notification-item
+    {
+        min-height: 50px;
+        border-left: none;
+        border-right: none;
+        display: flex;
+        align-items: center;
+
+        &.ui-state-highlight, &:hover {
+            background-color: transparent;
+            cursor: default;
+        }
+    }
 }

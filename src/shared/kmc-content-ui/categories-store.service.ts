@@ -71,7 +71,7 @@ export class CategoriesStore {
                 pager.pageSize = 30;
 
 
-                this.kalturaServerClient.request(
+                const requestSubscription = this.kalturaServerClient.request(
                     new CategoryListAction({filter})
                 ).subscribe(result =>
                 {
@@ -85,6 +85,16 @@ export class CategoriesStore {
                         observer.error({ error : err, items : []});
                         observer.complete();
                     });
+
+
+                return () =>
+                {
+                    if (requestSubscription)
+                    {
+                        requestSubscription.unsubscribe();
+                        requestSubscription;
+                    }
+                }
             });
         }else
         {
