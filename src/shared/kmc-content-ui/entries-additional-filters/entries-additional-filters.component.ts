@@ -169,7 +169,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                             const listRootNode = new PrimeTreeNode(null, filterType.caption,
                                 this.treeDataHandler.create(
                                     {
-                                        data: filterItems,
+                                        items: filterItems,
                                         idProperty: 'id',
                                         nameProperty: 'name',
                                         payload: filterType,
@@ -434,6 +434,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
      * Not part of the API, don't use it from outside this component
      */
     public _clearAllComponents() : void {
+    	this._clearCreatedComponents();
         this._treeSelections.forEach(tree =>
         {
             tree.unselectAll();

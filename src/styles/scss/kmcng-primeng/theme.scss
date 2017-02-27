@@ -258,6 +258,7 @@ $invalidInputBorderColor: #cd0a0a;
 .ui-paginator .ui-paginator-pages {
     padding-left: 0px;
     padding-right: 0px;
+	line-height: 18px;
 }
 
 .ui-paginator .ui-paginator-rpp-options {
@@ -377,4 +378,37 @@ $invalidInputBorderColor: #cd0a0a;
 }
 .ui-tooltip-left .ui-tooltip-arrow {
 	border-left-color: #000000;
+}
+
+// auto complete
+.ui-autocomplete-panel {
+    .ui-autocomplete-list-item {
+        min-height: 50px;
+        border-left: none;
+        border-right: none;
+        border-bottom: 2px solid $kGrayscale5;
+        display: flex;
+        align-items: center;
+
+        &:last-child {
+            border-bottom: none;
+        }
+        &.ui-state-highlight, &:hover {
+            background-color: $kGrayscale7;
+        }
+    }
+
+    .ui-autocomplete-notification-item
+    {
+        min-height: 50px;
+        border-left: none;
+        border-right: none;
+        display: flex;
+        align-items: center;
+
+        &.ui-state-highlight, &:hover {
+            background-color: transparent;
+            cursor: default;
+        }
+    }
 }

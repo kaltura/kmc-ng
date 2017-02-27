@@ -1,3 +1,17 @@
+<a name="0.1.0-rc.4"></a>
+# [0.1.0-rc.4](https://github.com/kaltura/KMCng/compare/v0.1.0-rc.3...v0.1.0-rc.4) (2017-02-27)
+
+## Features
+- **Entries list -> Entries Table**: Add tooltips to media type column.
+- **Entries list -> Category Filters**: Search for categories with auto-complete. Support both default mode when nodes are loaded upon initialize and when lazy loading tree nodes.
+- **Entries list -> Refine filters**: Correct start/end date filter times (start dates are adjusted to 00:00:00, end dates are adjusted to 23:59:59). 
+
+## Bugs
+- **Entries list -> Entries Table**: Fix some quirks with the bulk selection.
+- **Entries list -> Entries Table**: Fix default sort order.
+
+---
+
 <a name="0.1.0-rc.3"></a>
 # [0.1.0-rc.3](https://github.com/kaltura/KMCng/compare/v0.1.0-rc.2...v0.1.0-rc.3) (2017-02-20)
 
