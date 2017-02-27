@@ -106,3 +106,10 @@ a.disabled{
     width: 338px;
     height: 34px;
 }
+
+:host /deep/ .kHighlightedText
+{
+    font-weight: 700;
+    text-decoration: underline;
+}
+

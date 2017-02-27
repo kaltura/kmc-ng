@@ -5,16 +5,19 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/multicast';
 
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+
 import { CategoryListAction } from '@kaltura-ng2/kaltura-api/services/category';
-import { KalturaCategoryFilter, KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaCategoryListResponse } from '@kaltura-ng2/kaltura-api/types'
+import { KalturaCategoryFilter,KalturaFilterPager,  KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaCategoryListResponse } from '@kaltura-ng2/kaltura-api/types'
 
 export interface CategoryData
 {
     parentId? : number,
     id : number,
+    fullIdPath : number[],
     name : string,
+    referenceId : string,
     sortValue : number,
-    fullName : string,
+    fullNamePath : string[],
     childrenCount : number
 }
 
@@ -52,6 +55,50 @@ export class CategoriesStore {
         }
 
         return this.getCategories(parentId);
+    }
+
+    public getSuggestions(text:string) : Observable<{ error : {}, items : CategoryData[]}>
+    {
+        if (text) {
+            return Observable.create(observer => {
+                const filter = new KalturaCategoryFilter();
+                filter.nameOrReferenceIdStartsWith = text;
+                filter.orderBy = '+fullName';
+
+                const pager = new KalturaFilterPager();
+                pager.pageIndex = 0;
+                pager.pageSize = 30;
+
+
+                const requestSubscription = this.kalturaServerClient.request(
+                    new CategoryListAction({filter})
+                ).subscribe(result =>
+                {
+                    const items = this.parseCategoriesItems(result);
+
+
+                    observer.next({items : items});
+                },
+                    err =>
+                    {
+                        observer.error(err);
+                        observer.complete();
+                    });
+
+
+                return () =>
+                {
+                    if (requestSubscription)
+                    {
+                        requestSubscription.unsubscribe();
+                        requestSubscription;
+                    }
+                }
+            });
+        }else
+        {
+            return Observable.of({error : null, items : []});
+        }
     }
 
     private getCategories(parentId?: number): Observable<CategoriesQuery> {
@@ -116,12 +163,15 @@ export class CategoriesStore {
 
         if (response && response.objects) {
             response.objects.forEach((category: KalturaCategory) => {
+                const fullIdPath = (category.fullIds ? category.fullIds.split('>') : []).map((item : any) => item * 1);
                 result.push({
                     id: category.id,
                     name: category.name,
+                    fullIdPath : fullIdPath,
+                    referenceId : category.referenceId,
                     parentId: category.parentId !== 0 ? category.parentId : null,
                     sortValue: category.partnerSortValue,
-                    fullName: category.fullName,
+                    fullNamePath: category.fullName ? category.fullName.split('>') : [],
                     childrenCount : category.directSubCategoriesCount
                 });
             });
@@ -139,7 +189,7 @@ export class CategoriesStore {
 
         const responseProfile = new KalturaDetachedResponseProfile()
             .setData(data => {
-                data.fields = "id,name,parentId,partnerSortValue,fullName,directSubCategoriesCount";
+                data.fields = "id,name,parentId,partnerSortValue,fullName,fullIds,directSubCategoriesCount";
                 data.type = KalturaResponseProfileType.IncludeFields;
             });
 
