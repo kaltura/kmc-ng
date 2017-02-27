@@ -17,7 +17,7 @@ export class CategoriesFilter extends ValueFilter<number>{
         return this._mode;
     }
 
-    constructor(value : number, mode : CategoriesFilterModes, label : string, tooltip : string)
+    constructor(value : number, mode : CategoriesFilterModes, label : string, tooltip : string, public fullIdPath : number[])
     {
         super(value, label, tooltip);
         this._mode = mode;

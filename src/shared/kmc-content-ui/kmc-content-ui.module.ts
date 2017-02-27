@@ -7,8 +7,9 @@ import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
 import { TreeSelectionModule } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
 import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
+import { AutoCompleteModule } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 
-import { TreeModule, SharedModule, AutoCompleteModule, RadioButtonModule, TooltipModule, CalendarModule } from 'primeng/primeng';
+import { TreeModule, SharedModule,  RadioButtonModule, TooltipModule, CalendarModule } from 'primeng/primeng';
 
 import { CategoriesFilterComponent } from './categories-filter/categories-filter.component';
 import { CategoriesFilterPrefsComponent } from './categories-filter-preferences/categories-filter-preferences.component';
@@ -26,11 +27,12 @@ import { EntriesAdditionalFiltersStore } from "./entries-additional-filters/entr
 @NgModule({
     imports:      [
         AutoCompleteModule,
+        CalendarModule,
         CommonModule,
         FormsModule,
-        CalendarModule,
-        KalturaPrimeNgUIModule,
+        AutoCompleteModule,
         KalturaCommonModule,
+        KalturaPrimeNgUIModule,
         KMCShellModule,
         PopupWidgetModule,
         RadioButtonModule,

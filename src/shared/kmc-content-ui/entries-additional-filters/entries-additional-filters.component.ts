@@ -169,7 +169,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                             const listRootNode = new PrimeTreeNode(null, filterType.caption,
                                 this.treeDataHandler.create(
                                     {
-                                        data: filterItems,
+                                        items: filterItems,
                                         idProperty: 'id',
                                         nameProperty: 'name',
                                         payload: filterType,
