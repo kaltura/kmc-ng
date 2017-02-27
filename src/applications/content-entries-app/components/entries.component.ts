@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
@@ -35,7 +36,7 @@ export class EntriesComponent implements OnInit, AfterViewInit, OnDestroy {
         sortDirection : SortDirection.Desc
     };
 
-    constructor(public _entriesStore : EntriesStore, private additionalFilters : EntriesAdditionalFiltersStore, private appLocalization: AppLocalization, private browserService: BrowserService) {
+    constructor(public _entriesStore : EntriesStore, private additionalFilters : EntriesAdditionalFiltersStore, private appLocalization: AppLocalization, private browserService: BrowserService, private router: Router) {
     }
 
     removeTag(tag: any){
@@ -169,7 +170,11 @@ export class EntriesComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     onActionSelected(event){
-        alert("Selected Action: "+event.action+"\nEntry ID: "+event.entryID);
+    	if (event.action === "view"){
+		    this.router.navigate(['/content/entries/entry', event.entryID]);
+	    }else {
+		    alert("Selected Action: " + event.action + "\nEntry ID: " + event.entryID);
+	    }
     }
 
     clearSelection(){

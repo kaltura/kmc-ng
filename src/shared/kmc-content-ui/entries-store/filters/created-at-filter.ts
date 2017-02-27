@@ -42,10 +42,10 @@ EntriesStore.registerFilterType(CreatedAtFilter, (items, request) =>
     const firstItem = items[0];
 
     if (firstItem.createdBefore) {
-        request.filter.createdAtLessThanOrEqual = KalturaUtils.toServerDate(firstItem.createdBefore);
+        request.filter.createdAtLessThanOrEqual = KalturaUtils.toServerDate(KalturaUtils.getEndDateValue(firstItem.createdBefore));
     }
 
     if (firstItem.createdAfter) {
-        request.filter.createdAtGreaterThanOrEqual = KalturaUtils.toServerDate(firstItem.createdAfter);
+        request.filter.createdAtGreaterThanOrEqual = KalturaUtils.toServerDate(KalturaUtils.getStartDateValue(firstItem.createdAfter));
     }
 });
