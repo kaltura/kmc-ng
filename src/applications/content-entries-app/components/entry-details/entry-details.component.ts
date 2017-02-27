@@ -1,6 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
+import { KalturaBaseEntry } from '@kaltura-ng2/kaltura-api/types';
+import { EntryStore } from 'kmc-content-ui/entry-store.service';
+
 @Component({
     selector: 'kEntryDetails',
     templateUrl: './entry-details.component.html',
@@ -8,13 +11,20 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class EntryDetailsComponent implements OnInit {
 
-	entryID: string;
+	currentEntry: KalturaBaseEntry = null;
 
-    constructor(private route: ActivatedRoute, private router: Router) {
+    constructor(private route: ActivatedRoute, private router: Router, private entryStore: EntryStore) {
     }
 
     ngOnInit() {
-    	this.entryID = this.route.snapshot.params['id'];
+    	const entryID = this.route.snapshot.params['id'];
+	    this.entryStore.getEntry(entryID).subscribe(
+		    result => {
+		    	if (result && result.entry) {
+				    this.currentEntry = result.entry;
+			    }
+		    }
+	    );
     }
 
     backToList(){

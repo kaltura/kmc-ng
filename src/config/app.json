@@ -12,7 +12,7 @@
 	  "cdnUrl": "http://cdnapi.kaltura.com",
       "expiry" : "86400",
       "privileges" : "disableentitlement",
-	  "previewUIConf": "38506821"
+	  "previewUIConf": "38524931"
     },
     "menuConfig": [
         { "routePath" : "content", "titleToken" : "Content", "showSubMenu": true, "children" : [

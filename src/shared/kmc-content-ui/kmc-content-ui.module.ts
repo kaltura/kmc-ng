@@ -14,6 +14,7 @@ import { TreeModule, SharedModule,  RadioButtonModule, TooltipModule, CalendarMo
 import { CategoriesFilterComponent } from './categories-filter/categories-filter.component';
 import { CategoriesFilterPrefsComponent } from './categories-filter-preferences/categories-filter-preferences.component';
 import { CategoriesStore } from './categories-store.service';
+import { EntryStore } from './entry-store.service';
 import { KMCShellModule } from 'kmc-shell';
 
 import { EntryTypePipe, EntryStatusPipe, PlaylistTypePipe, SafePipe } from './pipes/index';
@@ -68,7 +69,8 @@ export class KMCContentUIModule {
         return {
             ngModule: KMCContentUIModule,
             providers: [
-                CategoriesStore
+                CategoriesStore,
+	            EntryStore
             ]
         };
     }
