@@ -12,13 +12,14 @@ import { EntryStore } from 'kmc-content-ui/entry-store.service';
 export class EntryDetailsComponent implements OnInit {
 
 	currentEntry: KalturaBaseEntry = null;
+	entryID: string;
 
     constructor(private route: ActivatedRoute, private router: Router, private entryStore: EntryStore) {
+	    this.entryID = this.route.snapshot.params['id'];
     }
 
     ngOnInit() {
-    	const entryID = this.route.snapshot.params['id'];
-	    this.entryStore.getEntry(entryID).subscribe(
+	    this.entryStore.getEntry(this.entryID).subscribe(
 		    result => {
 		    	if (result && result.entry) {
 				    this.currentEntry = result.entry;
