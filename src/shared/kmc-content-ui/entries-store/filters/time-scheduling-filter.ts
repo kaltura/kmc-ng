@@ -52,14 +52,14 @@ EntriesStore.registerFilterType(TimeSchedulingFilter, (items, request) =>
                 break;
             case 'scheduled':
                 if (item.scheduledAfter) {
-                    if (request.filter.startDateGreaterThanOrEqual === undefined || request.filter.startDateGreaterThanOrEqual > KalturaUtils.toServerDate(item.scheduledAfter)) {
-                        request.filter.startDateGreaterThanOrEqual = KalturaUtils.toServerDate(item.scheduledAfter);
+                    if (request.filter.startDateGreaterThanOrEqual === undefined || request.filter.startDateGreaterThanOrEqual > KalturaUtils.toServerDate(KalturaUtils.getStartDateValue(item.scheduledAfter))) {
+                        request.filter.startDateGreaterThanOrEqual = KalturaUtils.toServerDate(KalturaUtils.getStartDateValue(item.scheduledAfter));
                     }
                 }
 
                 if (item.scheduledBefore) {
-                    if (request.filter.endDateLessThanOrEqual === undefined || request.filter.endDateLessThanOrEqual < KalturaUtils.toServerDate(item.scheduledBefore)) {
-                        request.filter.endDateLessThanOrEqual = KalturaUtils.toServerDate(item.scheduledBefore);
+                    if (request.filter.endDateLessThanOrEqual === undefined || request.filter.endDateLessThanOrEqual < KalturaUtils.toServerDate(KalturaUtils.getEndDateValue(item.scheduledBefore))) {
+                        request.filter.endDateLessThanOrEqual = KalturaUtils.toServerDate(KalturaUtils.getEndDateValue(item.scheduledBefore));
                     }
                 }
 
