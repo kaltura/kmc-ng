@@ -434,6 +434,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
      * Not part of the API, don't use it from outside this component
      */
     public _clearAllComponents() : void {
+    	this._clearCreatedComponents();
         this._treeSelections.forEach(tree =>
         {
             tree.unselectAll();
