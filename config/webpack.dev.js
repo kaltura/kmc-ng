@@ -43,6 +43,11 @@ module.exports = function (options) {
 
     module: {
       rules: [
+		// TODO [kmcng] comment this rule
+	      {
+	      	test : /.*/,
+		      include : helpers.root('node_modules/@kaltura-ng2')
+	      },
         /*
          * css loader support for *.css files (styles directory only)
          * Loads external css styles into the DOM, supports HMR

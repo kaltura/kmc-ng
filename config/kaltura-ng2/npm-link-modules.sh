@@ -6,11 +6,15 @@ cd `dirname $0`
 
 LIST="$(cat ../../package.json | bash $(npm bin)/JSON.sh -b | grep dependencies | grep kaltura | cut -f 1 | cut -d ',' -f2 | cut -d '"' -f 2 | cut -d "/" -f 2)"
 
-echo $LIST
+NPM_MODULES_BASE=$(npm config get prefix)/lib/node_modules
+
+wml rm all
+
 for PACKAGE in ${LIST} ;
 do
-  echo "======================== Running npm link for package '${PACKAGE}' ======================== "
-  npm link @kaltura-ng2/${PACKAGE}
+  echo "======================== Running wml add for package '${PACKAGE}' ======================== "
+  PACKAGE_SRC=$(readlink ${NPM_MODULES_BASE}/@kaltura-ng2/${PACKAGE})
+  wml add ${PACKAGE_SRC} ../../node_modules/@kaltura-ng2/${PACKAGE}
 
 done
 
