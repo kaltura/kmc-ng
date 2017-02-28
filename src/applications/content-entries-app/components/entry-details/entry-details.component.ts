@@ -14,7 +14,7 @@ export class EntryDetailsComponent implements OnInit {
 	currentEntry: KalturaBaseEntry = null;
 	entryID: string;
 
-    constructor(private route: ActivatedRoute, private router: Router, private entryStore: EntryStore) {
+    constructor(private route: ActivatedRoute, private router: Router, public entryStore: EntryStore) {
 	    this.entryID = this.route.snapshot.params['id'];
     }
 

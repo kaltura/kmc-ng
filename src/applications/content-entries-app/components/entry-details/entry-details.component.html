@@ -1,4 +1,4 @@
-<kLoader [loading]="false">
+<kLoader [loading]="(entryStore.status$ | async)?.loading">
 	<div class="kEntryDetails kUseKMCngIcons">
 		<div class="kContent kEntryDetailsWrapper">
 			<div class="kEntryDetailsHeader">
