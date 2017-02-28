@@ -15,6 +15,7 @@ import { EntriesComponent } from './entries/entries.component';
 import { KMCShellModule } from 'kmc-shell';
 import { kEntriesTableComponent } from './entries-table/entries-table.component';
 import { EntryDetailsComponent } from './components/entry-details/entry-details.component';
+import { PreviewComponent } from './components/entry-details/preview/preview.component';
 import { KMCContentUIModule } from "../../shared/kmc-content-ui/kmc-content-ui.module";
 import {EntryMetadata} from "./entry-metadata/entry-metadata.component";
 import {EntryUsers} from "./entry-users/entry-users.component";
@@ -52,6 +53,8 @@ import {EntryUsers} from "./entry-users/entry-users.component";
       EntryUsers,
       kEntriesTableComponent,
       EntriesComponent
+	  EntryDetailsComponent,
+	  PreviewComponent
   ],
   providers:    [
   ]

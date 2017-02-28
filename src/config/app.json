@@ -9,8 +9,10 @@
   "core" : {
     "kaltura" : {
       "apiUrl" : "",
+	  "cdnUrl": "http://cdnapi.kaltura.com",
       "expiry" : "86400",
-      "privileges" : "disableentitlement"
+      "privileges" : "disableentitlement",
+	  "previewUIConf": "38524931"
     },
     "menuConfig": [
         { "routePath" : "content", "titleToken" : "Content", "showSubMenu": true, "children" : [

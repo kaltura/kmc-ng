@@ -1,0 +1,58 @@
+@import '../../../../../styles/scss/_variables.scss';
+
+.kEntryPreview {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	iframe{
+		flex-shrink: 0;
+	}
+	.kPreviewAndEmbedContainer{
+		height: 40px;
+		flex-shrink: 0;
+		padding-top: 20px;
+		padding-left: 12px;
+		cursor: pointer;
+		border-bottom: 1px solid $kGrayscale4;
+		i{
+			cursor: pointer;
+			color: $kGrayscale3;
+			margin-right: 8px;
+		}
+		a{
+			color: $kGrayscale1;
+			text-decoration: none;
+			&:hover{
+				color: #000000;
+			}
+			&:active{
+				color: $kGrayscale2;
+			}
+		}
+	}
+	.kPreviewDetails{
+		padding-top: 20px;
+		padding-left: 12px;
+		overflow-y: auto;
+		height: calc(100vh - 442px);
+		.kHeader{
+			color: $kGrayscale1;
+			font-size: 20px;
+			font-weight: 700;
+			margin-bottom: 12px;
+			display: block;
+		}
+		table{
+			color: $kGrayscale1;
+			width: 100%;
+		}
+		tr{
+			height: 30px;
+			td:first-child{
+				white-space: nowrap;
+				padding-right: 8px;
+				color: $kGrayscale3;
+			}
+		}
+	}
+}
