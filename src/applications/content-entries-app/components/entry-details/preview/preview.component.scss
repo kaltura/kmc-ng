@@ -44,10 +44,13 @@
 		}
 		table{
 			color: $kGrayscale1;
+			width: 100%;
 		}
 		tr{
 			height: 30px;
 			td:first-child{
+				white-space: nowrap;
+				padding-right: 8px;
 				color: $kGrayscale3;
 			}
 		}

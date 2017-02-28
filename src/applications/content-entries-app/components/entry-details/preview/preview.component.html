@@ -1,22 +1,22 @@
 <div class="kEntryPreview kUseKMCngIcons">
-	<iframe [src]="iFrameSrc | safe" width="280" height="158" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
-	<div class="kPreviewAndEmbedContainer">
-		<i class="kIconshare"></i><a>{{'applications.content.entryDetails.preview.pande' | translate}}</a>
+	<iframe [src]="_iFrameSrc | safe" width="280" height="158" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
+	<div class="kPreviewAndEmbedContainer" *ngIf="entryReady">
+		<i (click)="openPreviewAndEmbed()" class="kIconshare"></i><a (click)="openPreviewAndEmbed()">{{'applications.content.entryDetails.preview.pande' | translate}}</a>
 	</div>
 	<div class="kPreviewDetails">
 		<span class="kHeader">{{'applications.content.entryDetails.preview.details' | translate}}</span>
-		<table style="width:100%">
+		<table>
 			<tr>
 				<td>{{'applications.content.entryDetails.preview.entryID' | translate}}</td>
-				<td>Entry ID</td>
+				<td>{{currentEntry?.id}}</td>
 			</tr>
 			<tr>
 				<td>{{'applications.content.entryDetails.preview.creator' | translate}}</td>
-				<td>Creator</td>
+				<td>{{currentEntry?.creatorId}}</td>
 			</tr>
 			<tr>
 				<td>{{'applications.content.entryDetails.preview.creationDate' | translate}}</td>
-				<td>Creation date</td>
+				<td>{{currentEntry?.createdAt * 1000 | date:'MM/dd/y HH:MM'}}</td>
 			</tr>
 			<tr>
 				<td>{{'applications.content.entryDetails.preview.landingPage' | translate}}</td>
