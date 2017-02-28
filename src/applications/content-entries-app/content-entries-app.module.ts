@@ -11,11 +11,13 @@ import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 
 
 import { routing } from './content-entries-app.routes';
-import { EntriesComponent } from './components/entries.component';
+import { EntriesComponent } from './entries/entries.component';
 import { KMCShellModule } from 'kmc-shell';
-import { kEntriesTableComponent } from './components/entries-table.component';
+import { kEntriesTableComponent } from './entries-table/entries-table.component';
 import { EntryDetailsComponent } from './components/entry-details/entry-details.component';
 import { KMCContentUIModule } from "../../shared/kmc-content-ui/kmc-content-ui.module";
+import {EntryMetadata} from "./entry-metadata/entry-metadata.component";
+import {EntryUsers} from "./entry-users/entry-users.component";
 
 @NgModule({
   imports:      [
@@ -45,9 +47,11 @@ import { KMCContentUIModule } from "../../shared/kmc-content-ui/kmc-content-ui.m
       TagsModule
     ],
   declarations: [
-    EntriesComponent,
+	  EntryDetailsComponent,
+      EntryMetadata,
+      EntryUsers,
       kEntriesTableComponent,
-	  EntryDetailsComponent
+      EntriesComponent
   ],
   providers:    [
   ]

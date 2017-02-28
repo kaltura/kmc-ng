@@ -7,7 +7,7 @@ import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup
 
 import { BrowserService } from "../../../shared/kmc-shell/providers/browser.service";
 import { EntriesStore, SortDirection } from 'kmc-content-ui/entries-store/entries-store.service';
-import { kEntriesTableComponent } from "./entries-table.component";
+import { kEntriesTableComponent } from "../entries-table/entries-table.component";
 
 import { FreetextFilter } from "../../../shared/kmc-content-ui/entries-store/filters/freetext-filter";
 import { EntriesAdditionalFiltersStore } from "../../../shared/kmc-content-ui/entries-additional-filters/entries-additional-filters-store.service";
