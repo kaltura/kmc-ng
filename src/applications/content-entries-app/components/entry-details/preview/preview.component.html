@@ -1,6 +1,6 @@
 <div class="kEntryPreview kUseKMCngIcons">
 	<iframe [src]="_iFrameSrc | safe" width="280" height="158" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
-	<div class="kPreviewAndEmbedContainer" *ngIf="entryReady">
+	<div class="kPreviewAndEmbedContainer" *ngIf="_entryReady">
 		<i (click)="openPreviewAndEmbed()" class="kIconshare"></i><a (click)="openPreviewAndEmbed()">{{'applications.content.entryDetails.preview.pande' | translate}}</a>
 	</div>
 	<div class="kPreviewDetails">
@@ -12,55 +12,55 @@
 			</tr>
 			<tr>
 				<td>{{'applications.content.entryDetails.preview.creator' | translate}}</td>
-				<td>{{currentEntry?.creatorId}}</td>
+				<td pTooltip="{{currentEntry?.creatorId}}" tooltipPosition="top">{{currentEntry?.creatorId}}</td>
 			</tr>
 			<tr>
 				<td>{{'applications.content.entryDetails.preview.creationDate' | translate}}</td>
 				<td>{{currentEntry?.createdAt * 1000 | date:'MM/dd/y HH:MM'}}</td>
 			</tr>
-			<tr>
+			<tr *ngIf="_landingPage">
 				<td>{{'applications.content.entryDetails.preview.landingPage' | translate}}</td>
-				<td>Landing page</td>
+				<td pTooltip="{{_landingPage}}" tooltipPosition="top"><a (click)="openLandingPage()">{{_landingPage}}</a></td>
 			</tr>
-			<tr>
+			<tr *ngIf="_isLive && currentEntry?.recordedEntryId">
 				<td>{{'applications.content.entryDetails.preview.vodEntry' | translate}}</td>
-				<td>VOD Entry</td>
+				<td><a (click)="navigateToEntry(currentEntry.recordedEntryId)">{{currentEntry?.recordedEntryId}}</a></td>
 			</tr>
-			<tr>
+			<tr *ngIf="_isRecordedLive && currentEntry?.rootEntryId">
 				<td>{{'applications.content.entryDetails.preview.archiveOf' | translate}}</td>
-				<td>Archive of</td>
+				<td><a (click)="navigateToEntry(currentEntry.rootEntryId)">{{currentEntry?.rootEntryId}}</a></td>
 			</tr>
 			<tr>
 				<td>{{'applications.content.entryDetails.preview.type' | translate}}</td>
-				<td>Type</td>
+				<td>{{currentEntry?.mediaType | entryType: true}}</td>
 			</tr>
 			<tr>
 				<td>{{'applications.content.entryDetails.preview.moderation' | translate}}</td>
-				<td>Moderation</td>
+				<td>{{currentEntry?.moderationStatus | moderation}}</td>
 			</tr>
-			<tr>
+			<tr *ngIf="_entryReady">
 				<td>{{'applications.content.entryDetails.preview.plays' | translate}}</td>
-				<td>Plays</td>
+				<td>{{currentEntry?.plays}}</td>
 			</tr>
-			<tr>
+			<tr *ngIf="_entryReady && currentEntry?.rank">
 				<td>{{'applications.content.entryDetails.preview.rating' | translate}}</td>
-				<td>Avg. Rating</td>
+				<td>{{currentEntry?.rank}}</td>
 			</tr>
-			<tr>
+			<tr *ngIf="_hasDuration">
 				<td>{{'applications.content.entryDetails.preview.duration' | translate}}</td>
-				<td>Duration</td>
+				<td>{{currentEntry?.duration | time}}</td>
 			</tr>
-			<tr>
+			<tr *ngIf="_entryReady && currentEntry?.moderationCount">
 				<td>{{'applications.content.entryDetails.preview.flags' | translate}}</td>
-				<td>Flags</td>
+				<td>{{currentEntry?.moderationCount}}</td>
 			</tr>
-			<tr>
+			<tr *ngIf="_entryReady && currentEntry?.votes">
 				<td>{{'applications.content.entryDetails.preview.votes' | translate}}</td>
-				<td>Votes</td>
+				<td>{{currentEntry?.votes}}</td>
 			</tr>
-			<tr>
+			<tr *ngIf="_isClip">
 				<td>{{'applications.content.entryDetails.preview.clippedFrom' | translate}}</td>
-				<td>Clipped from</td>
+				<td><a (click)="navigateToEntry(currentEntry.rootEntryId)">{{currentEntry?.rootEntryId}}</a></td>
 			</tr>
 		</table>
 	</div>
