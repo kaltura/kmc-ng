@@ -1,0 +1,67 @@
+<div class="kEntryPreview kUseKMCngIcons">
+	<iframe [src]="_iFrameSrc | safe" width="280" height="158" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
+	<div class="kPreviewAndEmbedContainer" *ngIf="entryReady">
+		<i (click)="openPreviewAndEmbed()" class="kIconshare"></i><a (click)="openPreviewAndEmbed()">{{'applications.content.entryDetails.preview.pande' | translate}}</a>
+	</div>
+	<div class="kPreviewDetails">
+		<span class="kHeader">{{'applications.content.entryDetails.preview.details' | translate}}</span>
+		<table>
+			<tr>
+				<td>{{'applications.content.entryDetails.preview.entryID' | translate}}</td>
+				<td>{{currentEntry?.id}}</td>
+			</tr>
+			<tr>
+				<td>{{'applications.content.entryDetails.preview.creator' | translate}}</td>
+				<td>{{currentEntry?.creatorId}}</td>
+			</tr>
+			<tr>
+				<td>{{'applications.content.entryDetails.preview.creationDate' | translate}}</td>
+				<td>{{currentEntry?.createdAt * 1000 | date:'MM/dd/y HH:MM'}}</td>
+			</tr>
+			<tr>
+				<td>{{'applications.content.entryDetails.preview.landingPage' | translate}}</td>
+				<td>Landing page</td>
+			</tr>
+			<tr>
+				<td>{{'applications.content.entryDetails.preview.vodEntry' | translate}}</td>
+				<td>VOD Entry</td>
+			</tr>
+			<tr>
+				<td>{{'applications.content.entryDetails.preview.archiveOf' | translate}}</td>
+				<td>Archive of</td>
+			</tr>
+			<tr>
+				<td>{{'applications.content.entryDetails.preview.type' | translate}}</td>
+				<td>Type</td>
+			</tr>
+			<tr>
+				<td>{{'applications.content.entryDetails.preview.moderation' | translate}}</td>
+				<td>Moderation</td>
+			</tr>
+			<tr>
+				<td>{{'applications.content.entryDetails.preview.plays' | translate}}</td>
+				<td>Plays</td>
+			</tr>
+			<tr>
+				<td>{{'applications.content.entryDetails.preview.rating' | translate}}</td>
+				<td>Avg. Rating</td>
+			</tr>
+			<tr>
+				<td>{{'applications.content.entryDetails.preview.duration' | translate}}</td>
+				<td>Duration</td>
+			</tr>
+			<tr>
+				<td>{{'applications.content.entryDetails.preview.flags' | translate}}</td>
+				<td>Flags</td>
+			</tr>
+			<tr>
+				<td>{{'applications.content.entryDetails.preview.votes' | translate}}</td>
+				<td>Votes</td>
+			</tr>
+			<tr>
+				<td>{{'applications.content.entryDetails.preview.clippedFrom' | translate}}</td>
+				<td>Clipped from</td>
+			</tr>
+		</table>
+	</div>
+</div>
