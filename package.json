@@ -17,10 +17,10 @@
   "homepage": "https://github.com/kaltura/KMCng#readme",
   "scripts": {
     "build": "npm run build:dev",
-    "build:dev": "npm run clean:dist && webpack --config config/webpack.dev.js --progress --profile",
-    "build:prod": "npm run clean:dist && webpack --config config/webpack.prod.js  --progress --profile --bail",
+    "build:dev": "npm run clean:dist && wml once && webpack --config config/webpack.dev.js --progress --profile",
+    "build:prod": "npm run clean:dist && wml once && webpack --config config/webpack.prod.js  --progress --profile --bail",
     "ci": "npm run ci:jit",
-    "ci:jit": "npm run lint && npm run test && npm run build:prod",
+    "ci:jit": "npm run lint && npm run test && wml once && npm run build:prod",
     "ci:nobuild": "npm run lint && npm test",
     "clean": "npm cache clean && npm run rimraf -- node_modules doc coverage dist compiled",
     "clean:aot": "npm run rimraf -- compiled",
@@ -33,7 +33,8 @@
     "preclean:install": "npm run clean",
     "rimraf": "rimraf",
     "server": "npm run server:dev",
-    "server:dev": "webpack-dev-server --config config/webpack.dev.js --open --progress --profile --watch --content-base src/",
+    "wml": "wml",
+    "server:dev": "wml start & webpack-dev-server --config config/webpack.dev.js --open --progress --profile --watch --content-base src/",
     "server:prod": "http-server dist -c-1 --cors",
     "server:prod:ci": "http-server dist -p 3000 -c-1 --cors",
     "start": "npm run server:dev",
@@ -141,7 +142,8 @@
     "webpack-dev-middleware": "^1.9.0",
     "webpack-dev-server": "2.2.0",
     "webpack-dll-bundles-plugin": "^1.0.0-beta.5",
-    "webpack-merge": "~2.6.1"
+    "webpack-merge": "~2.6.1",
+    "wml": "github:esakal/wml"
   },
   "engines": {
     "node": ">= 4.0.0"
