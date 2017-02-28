@@ -14,7 +14,7 @@ for PACKAGE in ${LIST} ;
 do
   echo "======================== Running wml add for package '${PACKAGE}' ======================== "
   PACKAGE_SRC=$(readlink ${NPM_MODULES_BASE}/@kaltura-ng2/${PACKAGE})
-  wml add ${PACKAGE_SRC} ../../node_modules/@kaltura-ng2/${PACKAGE}
+  printf "Y" | wml add ${PACKAGE_SRC} ../../node_modules/@kaltura-ng2/${PACKAGE}
 
 done
 
