@@ -14,7 +14,7 @@ import { KMCShellModule } from 'kmc-shell';
 import { EntriesComponent } from './entries.component';
 
 import { EntriesTableComponent } from './entries-table.component';
-import { KMCContentUIModule } from "../../../shared/kmc-content-ui/kmc-content-ui.module";
+import { KMCContentUIModule } from "kmc-content-ui/kmc-content-ui.module";
 import { EntriesListComponent } from "./entries-list.component";
 
 

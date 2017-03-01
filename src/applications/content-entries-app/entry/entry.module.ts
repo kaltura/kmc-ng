@@ -9,7 +9,7 @@ import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 
-import { KMCContentUIModule } from "../../../shared/kmc-content-ui/kmc-content-ui.module";
+import { KMCContentUIModule } from "kmc-content-ui/kmc-content-ui.module";
 
 import { EntryMetadata } from "./entry-metadata/entry-metadata.component";
 import { EntryUsers } from "./entry-users/entry-users.component";

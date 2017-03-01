@@ -1,2 +1,2 @@
-// Import application theme (not pure vendor but we want is to bundle in vendor)
-import './styles/scss/index.scss';
+// Import application theme
+import './shared/kmcng-theme/scss/index.scss';
