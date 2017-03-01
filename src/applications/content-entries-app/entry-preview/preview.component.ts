@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { EntryStore } from '../entry-store/entry-store.service';
+
 
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { KalturaMediaEntry, KalturaEntryStatus, KalturaSourceType, KalturaMediaType } from '@kaltura-ng2/kaltura-api/types';
@@ -49,7 +51,7 @@ export class PreviewComponent implements OnInit {
 
 
 
-    constructor(private appConfig: AppConfig, private appAuthentication: AppAuthentication, private router: Router, private browserService: BrowserService) {
+    constructor(private appConfig: AppConfig, private appAuthentication: AppAuthentication, private router: Router, private browserService: BrowserService,public _entryStore: EntryStore) {
     }
 
     ngOnInit() {
@@ -57,8 +59,11 @@ export class PreviewComponent implements OnInit {
     }
 
     private reloadEntry(){
+
 	    this._landingPage = this.appAuthentication.appUser.partnerInfo.landingPage;
-	    this._landingPage.replace("{entryId}", this._entryId);
+	    if (this._landingPage) {
+			this._landingPage.replace("{entryId}", this._entryId);
+		}
 
 	    const UIConfID = this.appConfig.get('core.kaltura.previewUIConf');
 	    const partnerID = this.appAuthentication.appUser.partnerId;
@@ -74,7 +79,7 @@ export class PreviewComponent implements OnInit {
 	}
 
 	navigateToEntry(entryId){
-		this.router.navigate(['content/entries/entry/'+entryId]);
+		this._entryStore.openEntry(entryId);
 	}
 
 }

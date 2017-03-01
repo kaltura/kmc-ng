@@ -143,6 +143,11 @@ export class EntryStore implements OnInit{
 		}
 	}
 
+	public openEntry(entryId : string)
+	{
+		alert(`open entry ${entryId}`);
+	}
+
 	public returnToEntries(params : {force? : boolean} = {})
 	{
 		this._router.navigate(['content/entries']);
