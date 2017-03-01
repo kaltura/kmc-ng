@@ -2,7 +2,6 @@ import { Injectable, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';

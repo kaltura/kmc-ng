@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { EntryStore, EntrySectionTypes } from '../entry-store/entry-store.service';
+import { EntryStore, EntrySectionTypes } from '../../entry-store/entry-store.service';
 import { Section } from "./Section";
 
 

@@ -16,7 +16,7 @@ import { CategoriesFilterPrefsComponent } from './categories-filter-preferences/
 import { CategoriesStore } from './categories-store.service';
 import { KMCShellModule } from 'kmc-shell';
 
-import { EntryTypePipe, EntryStatusPipe, PlaylistTypePipe, SafePipe, ModerationPipe } from './pipes/index';
+import { EntryTypePipe, EntryStatusPipe, PlaylistTypePipe, ModerationPipe } from './pipes/index';
 import {
     EntriesAdditionalFiltersComponent
 } from "./entries-additional-filters/entries-additional-filters.component";
@@ -46,7 +46,6 @@ import { EntriesAdditionalFiltersStore } from "./entries-additional-filters/entr
         EntryStatusPipe,
         EntryTypePipe,
         PlaylistTypePipe,
-	    SafePipe,
 	    ModerationPipe
     ],
     providers:    [
@@ -59,7 +58,6 @@ import { EntriesAdditionalFiltersStore } from "./entries-additional-filters/entr
         EntryStatusPipe,
         EntryTypePipe,
         PlaylistTypePipe,
-	    SafePipe,
 	    ModerationPipe
     ]
 })

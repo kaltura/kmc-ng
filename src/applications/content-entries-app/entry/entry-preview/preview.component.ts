@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { EntryStore } from '../entry-store/entry-store.service';
+import { EntryStore } from '../../entry-store/entry-store.service';
 
 
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';

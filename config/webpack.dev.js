@@ -57,6 +57,7 @@ module.exports = function (options) {
           test: /\.css$/,
           use: ['style-loader', 'css-loader'],
 	        include: [
+	        	helpers.root('src/shared/kmcng-theme'),
 	            helpers.root('node_modules')
             ]
         },
@@ -80,12 +81,11 @@ module.exports = function (options) {
 				      }
 			      }],
 		      include: [
-			      helpers.root('src','styles'),
+			      helpers.root('src/shared/kmcng-theme'),
 			      helpers.root('node_modules')
 		      ]
 	      }
       ]
-
     },
 
     plugins: [

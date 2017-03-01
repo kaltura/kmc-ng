@@ -15,6 +15,7 @@ const NormalModuleReplacementPlugin = require('webpack/lib/NormalModuleReplaceme
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 
 const appScriptsFolders = [helpers.root('src/app'),helpers.root('src/applications'),helpers.root('src/shared')];
+const appThemeFolders = [helpers.root('src/shared/kmcng-theme')];
 
 /*
  * Webpack Constants
@@ -103,6 +104,9 @@ module.exports =  function (options) {
 						}],
 					include: [
 						appScriptsFolders
+					],
+					exclude : [
+						appThemeFolders
 					]
 				},
 

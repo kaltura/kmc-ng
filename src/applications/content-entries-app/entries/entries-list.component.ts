@@ -5,12 +5,12 @@ import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
-import { BrowserService } from "../../../shared/kmc-shell/providers/browser.service";
+import { BrowserService } from "kmc-shell/providers/browser.service";
 import { EntriesStore, SortDirection } from '../entries-store/entries-store.service';
 import { EntriesTableComponent } from "./entries-table.component";
 
 import { FreetextFilter } from "../entries-store/filters/freetext-filter";
-import { EntriesAdditionalFiltersStore } from "../../../shared/kmc-content-ui/entries-additional-filters/entries-additional-filters-store.service";
+import { EntriesAdditionalFiltersStore } from "kmc-content-ui/entries-additional-filters/entries-additional-filters-store.service";
 
 @Component({
     selector: 'kEntriesList',

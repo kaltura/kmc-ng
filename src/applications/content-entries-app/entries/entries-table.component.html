@@ -32,7 +32,7 @@
 			</p-column>
 			<p-column field="duration" header="{{'applications.content.table.duration' | translate}}" [sortable]="'custom'" [style]="{'width':'104px'}">
 				<template let-col let-entry="rowData" pTemplate="body">
-					<span>{{entry[col.field] | time}}</span>
+					<span>{{entry[col.field] | kTime}}</span>
 				</template>
 			</p-column>
 			<p-column field="status" header="{{'applications.content.table.status' | translate}}" [sortable]="'custom'" [style]="{'width':'100px'}">

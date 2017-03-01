@@ -1,13 +1,12 @@
-import { ModuleWithProviders } from '@angular/core';
-import { RouterModule }        from '@angular/router';
+import { Route }        from '@angular/router';
 
 import { EntriesComponent } from './entries/entries.component';
 import { EntriesListComponent } from './entries/entries-list.component';
 import { EntryComponent } from './entry/entry.component';
-import { EntryMetadata } from "./entry-metadata/entry-metadata.component";
-import { EntryUsers } from "./entry-users/entry-users.component";
+import { EntryMetadata } from "./entry/entry-metadata/entry-metadata.component";
+import { EntryUsers } from "./entry/entry-users/entry-users.component";
 
-export const routing: ModuleWithProviders = RouterModule.forChild([
+export const routing: Route[] = [
 	{path: '', component: EntriesComponent,
 		children:[
 			{path: '', redirectTo: 'list', pathMatch: 'full'},
@@ -24,4 +23,4 @@ export const routing: ModuleWithProviders = RouterModule.forChild([
 			}
 	]},
 
-]);
+];

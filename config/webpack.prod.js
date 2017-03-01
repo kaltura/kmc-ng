@@ -57,6 +57,7 @@ module.exports = function (env) {
 						loader: 'css-loader'
 					}),
 					include: [
+						helpers.root('src/shared/kmcng-theme'),
 						helpers.root('node_modules')
 					]
 				},
@@ -71,7 +72,7 @@ module.exports = function (env) {
 						loader: 'css-loader!resolve-url-loader!sass-loader?sourceMap'
 					}),
 					include: [
-						helpers.root('src','styles'),
+						helpers.root('src/shared/kmcng-theme'),
 						helpers.root('node_modules')
 					]
 				},
