@@ -5,30 +5,30 @@ import { KalturaUtils } from '@kaltura-ng2/kaltura-api';
 import { PrimeTreeNode, TreeDataHandler } from '@kaltura-ng2/kaltura-primeng-ui';
 import { TreeSelection, OnSelectionChangedArgs,TreeSelectionModes,TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
 
-import { EntriesStore } from "../entries-store/entries-store.service";
-import { FilterItem } from "../entries-store/filter-item";
-import { MediaTypesFilter } from "../entries-store/filters/media-types-filter";
+import { EntriesStore } from "../../../applications/content-entries-app/entries-store/entries-store.service";
+import { FilterItem } from "../../../applications/content-entries-app/entries-store/filter-item";
+import { MediaTypesFilter } from "../../../applications/content-entries-app/entries-store/filters/media-types-filter";
 
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
 import * as R from 'ramda';
-import { FlavorsFilter } from "../entries-store/filters/flavors-filter";
+import { FlavorsFilter } from "../../../applications/content-entries-app/entries-store/filters/flavors-filter";
 
-import { IngestionStatusesFilter } from "../entries-store/filters/ingestion-statuses-filter";
-import { DurationsFilters } from "../entries-store/filters/durations-filter";
-import { OriginalClippedFilter } from "../entries-store/filters/original-clipped-filter";
-import { TimeSchedulingFilter } from "../entries-store/filters/time-scheduling-filter";
-import { ModerationStatusesFilter } from "../entries-store/filters/moderation-statuses-filter";
-import { ReplacementStatusesFilter } from "../entries-store/filters/replacement-statuses-filter";
-import { AccessControlProfilesFilter } from "../entries-store/filters/access-control-profiles-filter";
-import { DistributionsFilter } from "../entries-store/filters/distributions-filter";
-import { ValueFilter } from "../entries-store/value-filter";
+import { IngestionStatusesFilter } from "../../../applications/content-entries-app/entries-store/filters/ingestion-statuses-filter";
+import { DurationsFilters } from "../../../applications/content-entries-app/entries-store/filters/durations-filter";
+import { OriginalClippedFilter } from "../../../applications/content-entries-app/entries-store/filters/original-clipped-filter";
+import { TimeSchedulingFilter } from "../../../applications/content-entries-app/entries-store/filters/time-scheduling-filter";
+import { ModerationStatusesFilter } from "../../../applications/content-entries-app/entries-store/filters/moderation-statuses-filter";
+import { ReplacementStatusesFilter } from "../../../applications/content-entries-app/entries-store/filters/replacement-statuses-filter";
+import { AccessControlProfilesFilter } from "../../../applications/content-entries-app/entries-store/filters/access-control-profiles-filter";
+import { DistributionsFilter } from "../../../applications/content-entries-app/entries-store/filters/distributions-filter";
+import { ValueFilter } from "../../../applications/content-entries-app/entries-store/value-filter";
 import {
     EntriesAdditionalFiltersStore, AdditionalFilters,
     FilterGroupType, filterGroupMetadataProfileType
 } from "./entries-additional-filters-store.service";
-import { MetadataProfileFilter } from "../entries-store/filters/metadata-profile-filter";
-import { CreatedAtFilter } from "../entries-store/filters/created-at-filter";
+import { MetadataProfileFilter } from "../../../applications/content-entries-app/entries-store/filters/metadata-profile-filter";
+import { CreatedAtFilter } from "../../../applications/content-entries-app/entries-store/filters/created-at-filter";
 import { ListsToFilterTypesManager } from "./lists-to-filter-types-manager";
 
 const MetadataProfileTypeName = 'metadataProfiles';

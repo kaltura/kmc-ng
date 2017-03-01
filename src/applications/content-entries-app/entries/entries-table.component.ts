@@ -3,14 +3,14 @@ import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { KalturaMediaType, KalturaEntryStatus, KalturaMediaEntry } from '@kaltura-ng2/kaltura-api';
-import { EntriesStore } from "kmc-content-ui/entries-store/entries-store.service";
+import { EntriesStore } from "../entries-store/entries-store.service";
 
 @Component({
   selector: 'kEntriesTable',
   templateUrl: './entries-table.component.html',
   styleUrls: ['./entries-table.component.scss']
 })
-export class kEntriesTableComponent implements AfterViewInit, OnInit, OnDestroy{
+export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy{
 
   public _loadingError = null;
   @Input() entries: any[] = [];

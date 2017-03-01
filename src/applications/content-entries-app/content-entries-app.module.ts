@@ -11,12 +11,16 @@ import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 
 
 import { routing } from './content-entries-app.routes';
-import { EntriesComponent } from './components/entries.component';
+import { EntriesComponent } from './entries/entries.component';
 import { KMCShellModule } from 'kmc-shell';
-import { kEntriesTableComponent } from './components/entries-table.component';
-import { EntryDetailsComponent } from './components/entry-details/entry-details.component';
+import { EntriesTableComponent } from './entries/entries-table.component';
+import { EntryComponent } from './entry/entry.component';
 import { PreviewComponent } from './components/entry-details/preview/preview.component';
 import { KMCContentUIModule } from "../../shared/kmc-content-ui/kmc-content-ui.module";
+import { EntryMetadata } from "./entry-metadata/entry-metadata.component";
+import { EntryUsers } from "./entry-users/entry-users.component";
+import { EntrySectionsList } from "./entry-sections-list/entry-sections-list.component";
+import { EntriesListComponent } from "./entries/entries-list.component";
 
 @NgModule({
   imports:      [
@@ -46,10 +50,14 @@ import { KMCContentUIModule } from "../../shared/kmc-content-ui/kmc-content-ui.m
       TagsModule
     ],
   declarations: [
-    EntriesComponent,
-      kEntriesTableComponent,
-	  EntryDetailsComponent,
-	  PreviewComponent
+	  EntryComponent,
+	  PreviewComponent,
+      EntriesComponent,
+      EntriesListComponent,
+      EntriesTableComponent,
+      EntryMetadata,
+      EntrySectionsList,
+      EntryUsers
   ],
   providers:    [
   ]

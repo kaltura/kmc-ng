@@ -1,5 +1,5 @@
 export type ValueFilterType = {new(...args : any[]) : ValueFilter<any>;};
-import { ValueFilter } from "../entries-store/value-filter";
+import { ValueFilter } from "../../../applications/content-entries-app/entries-store/value-filter";
 import { PrimeTreeNode } from '@kaltura-ng2/kaltura-primeng-ui';
 
 /**
