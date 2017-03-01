@@ -4,5 +4,6 @@ export interface Section
     label : string,
     enabled : boolean,
     hasError : boolean,
+	active?: boolean,
     sectionType : EntrySectionTypes
 }

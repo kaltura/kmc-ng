@@ -12,8 +12,15 @@ import { BaseEntryGetAction } from '@kaltura-ng2/kaltura-api/services/base-entry
 export enum EntrySectionTypes
 {
 	Metadata,
-	Users,
-	Thumbnails
+	Thumbnails,
+	AccessControl,
+	Scheduling,
+	Flavours,
+	Captions,
+	Live,
+	Related,
+	Clips,
+	Users
 }
 
 export type UpdateStatus = {

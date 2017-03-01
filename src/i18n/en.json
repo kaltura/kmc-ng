@@ -114,6 +114,18 @@
                 "delete": "Delete"
             },
 			"entryDetails": {
+				"sections": {
+					"metadata": "Metadata",
+					"thumbnails": "Thumbnails",
+					"accessControl": "Access Control",
+					"scheduling": "Scheduling",
+					"flavours": "Flavours",
+					"captions": "Captions",
+					"live": "Live Stream",
+					"relatedFiles": "Related Files",
+					"clips": "Clips",
+					"users": "Users"
+				},
 				"preview": {
 					"pande": "Preview & Embed",
 					"details": "Details",

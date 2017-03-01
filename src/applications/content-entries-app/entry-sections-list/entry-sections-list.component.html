@@ -1,7 +1,7 @@
 <kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
 	<ul>
-		<li *ngFor="let section of _sections">
-			<div [class.kSectionHasErrors]="section.hasErrors"  (click)="navigateToSection(section)">{{section.label}}</div>
+		<li *ngFor="let section of _sections" [class.active]="section.active">
+			<div [class.kSectionHasErrors]="section.hasErrors" (click)="navigateToSection(section)">{{section.label}}</div>
 		</li>
 	</ul>
 </kLoader>
