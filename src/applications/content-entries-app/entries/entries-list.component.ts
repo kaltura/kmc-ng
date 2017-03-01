@@ -6,21 +6,21 @@ import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
 import { BrowserService } from "../../../shared/kmc-shell/providers/browser.service";
-import { EntriesStore, SortDirection } from 'kmc-content-ui/entries-store/entries-store.service';
-import { kEntriesTableComponent } from "./entries-table.component";
+import { EntriesStore, SortDirection } from '../entries-store/entries-store.service';
+import { EntriesTableComponent } from "./entries-table.component";
 
-import { FreetextFilter } from "../../../shared/kmc-content-ui/entries-store/filters/freetext-filter";
+import { FreetextFilter } from "../entries-store/filters/freetext-filter";
 import { EntriesAdditionalFiltersStore } from "../../../shared/kmc-content-ui/entries-additional-filters/entries-additional-filters-store.service";
 
 @Component({
-    selector: 'kKMCEntries',
-    templateUrl: './entries.component.html',
-    styleUrls: ['./entries.component.scss'],
+    selector: 'kEntriesList',
+    templateUrl: './entries-list.component.html',
+    styleUrls: ['./entries-list.component.scss'],
     providers : [EntriesStore]
 })
-export class EntriesComponent implements OnInit, AfterViewInit, OnDestroy {
+export class EntriesListComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    @ViewChild(kEntriesTableComponent) private dataTable: kEntriesTableComponent;
+    @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
     @ViewChild('releaseNotes') private releaseNotesPopup: PopupWidgetComponent;
 
     private querySubscription : Subscription;

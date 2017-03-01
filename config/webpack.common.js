@@ -35,6 +35,7 @@ module.exports =  function (options) {
 		},
 
 		resolve: {
+			symlinks: false,
 			extensions: ['.ts', '.js', '.json'],
 			modules: [
 				helpers.root('src', 'shared'),
@@ -218,6 +219,7 @@ module.exports =  function (options) {
 					// this assumes your vendor imports exist in the node_modules directory
 					// since during dev we link to kaltura-ng2 locally, their context doesn't
 					// seeem to be node_modules
+					// TODO [kmcng] check is still needed once using wix/wml
 					return module.context && (
 						module.context.indexOf('node_modules') !== -1 ||
 						module.context.indexOf('kaltura-ng2') !== -1);

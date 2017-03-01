@@ -1,10 +1,27 @@
 import { ModuleWithProviders } from '@angular/core';
 import { RouterModule }        from '@angular/router';
 
-import { EntriesComponent } from './components/entries.component';
-import { EntryDetailsComponent } from './components/entry-details/entry-details.component';
+import { EntriesComponent } from './entries/entries.component';
+import { EntriesListComponent } from './entries/entries-list.component';
+import { EntryComponent } from './entry/entry.component';
+import { EntryMetadata } from "./entry-metadata/entry-metadata.component";
+import { EntryUsers } from "./entry-users/entry-users.component";
 
 export const routing: ModuleWithProviders = RouterModule.forChild([
-	{path: '', component: EntriesComponent},
-	{path: 'entry/:id', component: EntryDetailsComponent}
+	{path: '', component: EntriesComponent,
+		children:[
+			{path: '', redirectTo: 'list', pathMatch: 'full'},
+			{path: 'list', component: EntriesListComponent},
+			{path: 'entry/:id', component: EntryComponent,
+				data : {
+					entryRootBase : true
+				},
+				children : [
+					{path: '', redirectTo: 'metadata', pathMatch: 'full'},
+					{path: 'metadata', component: EntryMetadata},
+					{path: 'users', component: EntryUsers}
+				]
+			}
+	]},
+
 ]);
