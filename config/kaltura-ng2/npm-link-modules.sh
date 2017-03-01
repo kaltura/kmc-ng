@@ -14,8 +14,9 @@ for PACKAGE in ${LIST} ;
 do
   echo "======================== Running wml add for package '${PACKAGE}' ======================== "
   PACKAGE_SRC=$(readlink ${NPM_MODULES_BASE}/@kaltura-ng2/${PACKAGE})
-  printf "Y" | wml add ${PACKAGE_SRC} ../../node_modules/@kaltura-ng2/${PACKAGE}
-
+  PACKAGE_DEST=../../node_modules/@kaltura-ng2/${PACKAGE}
+  #printf "Y" | wml add ${PACKAGE_SRC} ${PACKAGE_DEST}
+  npm link @kaltura-ng2/${PACKAGE}
 done
 
 echo "=== All libraries were linked successfully ==="

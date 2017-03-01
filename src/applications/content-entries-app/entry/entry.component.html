@@ -1,23 +1,23 @@
-<kLoader [loading]="(entryStore.status$ | async)?.loading">
+<kLoader [loading]="(_entryStore.status$ | async)?.loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
 	<div class="kEntryDetails kUseKMCngIcons">
 		<div class="kContent kEntryDetailsWrapper">
 			<div class="kEntryDetailsHeader">
-				<button pButton class="kButtonDefault kBackToEntriesBtn small" icon="kIconarrow_backward" (click)="backToList()"></button>
+				<button pButton class="kButtonDefault kBackToEntriesBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
 				<div class="k-entry-media kMediaTypeIcon"></div>
-				<div class="kEntryTitle">Entry Name</div>
+				<div class="kEntryTitle">Entry Name - {{ _currentEntry?.id }}</div>
 				<button pButton class="kButtonBranded kSaveBtn" label="Save"></button>
 				<button pButton class="kButtonDefault kNavigationBtn" icon="kIconarrow_backward"></button>
 				<button pButton class="kButtonDefault kNavigationBtn" icon="kIconarrow_forward"></button>
 			</div>
 			<div class="kEntryDetailsMain">
 				<div class="kEntryDetailsSections">
-					Sections Navigation
+					<kEntrySectionsList></kEntrySectionsList>
 				</div>
 				<div class="kEntryDetailsContent">
-					Content
+					<router-outlet></router-outlet>
 				</div>
 				<div class="kEntryDetailsPreview">
-					<kEntryPreview [currentEntry]="currentEntry" [entryId]="entryID"></kEntryPreview>
+					<kEntryPreview [currentEntry]="_currentEntry" [entryId]="_currentEntry?.id"></kEntryPreview>
 				</div>
 			</div>
 			<div class="kSpacer"></div>

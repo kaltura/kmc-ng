@@ -12,7 +12,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     public _loading = false;
     public _loadingError = null;
 
-    constructor(private appLocalization: AppLocalization) {
+    constructor(private _appLocalization: AppLocalization) {
     }
 
 

@@ -27,7 +27,7 @@
     "clean:dist": "npm run rimraf -- dist",
     "clean:install": "npm set progress=false && npm install",
     "docs": "npm run typedoc -- --options typedoc.json --exclude '**/*.spec.ts' ./src/",
-    "link:kaltura": "bash ./config/kaltura-ng2/npm-link-modules.sh",
+    "prepare": "bash ./config/kaltura-ng2/npm-link-modules.sh && npm run build",
     "lint": "npm run tslint \"src/**/*.ts\"",
     "lint:rules": "npm run lint | grep -e '^src/' | cut -d':' -f2- | sort -u",
     "preclean:install": "npm run clean",
