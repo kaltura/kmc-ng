@@ -5,9 +5,9 @@ import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
 import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 import { TagsModule } from '@kaltura-ng2/kaltura-ui/tags';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
-import { TreeModule, TieredMenuModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, ButtonModule, AccordionModule, CalendarModule,  MultiSelectModule, PaginatorModule, MenuModule, TooltipModule } from 'primeng/primeng';
+import { TreeModule, TieredMenuModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, ButtonModule, AccordionModule, CalendarModule, InputTextareaModule, MultiSelectModule, PaginatorModule, MenuModule, TooltipModule } from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
-
+import { AutoCompleteModule } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 
 
 import { routing } from './content-entries-app.routes';
@@ -34,8 +34,10 @@ import { EntriesListComponent } from "./entries/entries-list.component";
       DataTableModule,
       FormsModule,
       InputTextModule,
+	  InputTextareaModule,
       KalturaPrimeNgUIModule,
       KalturaUIModule,
+	  AutoCompleteModule,
       KMCContentUIModule,
       KMCShellModule,
       MenuModule,
