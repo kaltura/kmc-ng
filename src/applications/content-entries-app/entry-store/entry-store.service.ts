@@ -5,10 +5,9 @@ import { ISubscription } from 'rxjs/Subscription';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { KalturaBaseEntry } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { BaseEntryGetAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
-import { EntryLoading, EntryLoaded } from "./entry-events";
 
 export enum EntrySectionTypes
 {
@@ -19,23 +18,25 @@ export enum EntrySectionTypes
 
 export type UpdateStatus = {
 	loading : boolean;
-	errorMessage : string;
+	errorMessage? : string;
+	entryId? : string;
 };
 
 @Injectable()
 export class EntryStore implements OnInit{
 
 	private _status: BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({
-		loading: false,
-		errorMessage: null
+		loading : false
 	});
-	private _entryLoading: ReplaySubject<EntryLoading> = new ReplaySubject<EntryLoading>(1);
-	private _entryLoaded: ReplaySubject<EntryLoaded> = new ReplaySubject<EntryLoaded>(1);
+	private _entry: BehaviorSubject<KalturaMediaEntry> = new BehaviorSubject<KalturaMediaEntry>(null);
 	private _routeParamsChangedSubscription : ISubscription = null;
 
-	public entryLoaded$ = this._entryLoaded.asObservable();
-	public entryLoading$ = this._entryLoading.asObservable();
+	public entry$ = this._entry.asObservable();
 	public status$ = this._status.asObservable();
+	public get entry() : KalturaMediaEntry
+	{
+		return this._entry.getValue();
+	}
 
     constructor(private kalturaServerClient: KalturaServerClient,
 				private _router: Router,
@@ -54,8 +55,7 @@ export class EntryStore implements OnInit{
 		}
 
 		this._status.complete();
-		this._entryLoading.complete();
-    	this._entryLoaded.complete();
+    	this._entry.complete();
 	}
 
 	private _onParamsChanged() : ISubscription
@@ -63,18 +63,17 @@ export class EntryStore implements OnInit{
 		return this._route.params
         .do((params : Params) =>
 		{
-			this._status.next({loading: true, errorMessage: null});
-			this._entryLoading.next({ entryId : params['id'] })
+			this._status.next({loading: true, errorMessage: null, entryId : params['id']});
 		})
         .switchMap((params: Params) => this._getEntry(params['id']))
         .subscribe((response) =>
 			{
-				if (response instanceof KalturaBaseEntry)
+				if (response instanceof KalturaMediaEntry)
 				{
 					this._status.next({loading: false, errorMessage: null});
 
 					// TODO [kmcng] handle situations when the subscribers has errors!!
-					this._entryLoaded.next({ entry : response});
+					this._entry.next(response);
 				}else
 				{
 					// handle error
@@ -113,7 +112,7 @@ export class EntryStore implements OnInit{
 		}
 	}
 
-	private _getEntry(entryId:string) : Observable<KalturaBaseEntry | Error>
+	private _getEntry(entryId:string) : Observable<KalturaMediaEntry | Error>
 	{
 		if (entryId) {
 
@@ -122,7 +121,11 @@ export class EntryStore implements OnInit{
 					new BaseEntryGetAction({entryId})
 				).subscribe(entry =>
 					{
-						observer.next(entry);
+						if (entry instanceof KalturaMediaEntry) {
+							observer.next(entry);
+						}else {
+							observer.next(new Error("invalid entry type, expected KalturaMediaEntry"));
+						}
 					},
 					err =>
 					{

@@ -4,7 +4,7 @@
 			<div class="kEntryDetailsHeader">
 				<button pButton class="kButtonDefault kBackToEntriesBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
 				<div class="k-entry-media kMediaTypeIcon"></div>
-				<div class="kEntryTitle">Entry Name - {{ _currentEntry?.id }}</div>
+				<div class="kEntryTitle">{{ _entryName }}</div>
 				<button pButton class="kButtonBranded kSaveBtn" label="Save"></button>
 				<button pButton class="kButtonDefault kNavigationBtn" icon="kIconarrow_backward"></button>
 				<button pButton class="kButtonDefault kNavigationBtn" icon="kIconarrow_forward"></button>
@@ -17,7 +17,7 @@
 					<router-outlet></router-outlet>
 				</div>
 				<div class="kEntryDetailsPreview">
-					<kEntryPreview [currentEntry]="_currentEntry" [entryId]="_currentEntry?.id"></kEntryPreview>
+					<kEntryPreview></kEntryPreview>
 				</div>
 			</div>
 			<div class="kSpacer"></div>

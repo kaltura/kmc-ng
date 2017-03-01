@@ -12,7 +12,7 @@ import { EntryStore } from '../entry-store/entry-store.service';
 })
 export class EntryComponent implements OnInit, OnDestroy {
 
-	_currentEntry: KalturaBaseEntry = null;
+	_entryName: string;
 
 	public _loadingError = null;
 
@@ -47,10 +47,11 @@ export class EntryComponent implements OnInit, OnDestroy {
 				throw error;
 			});
 
-		// TODO [kmcng] will be removed soon
-		this._entryStore.entryLoaded$.subscribe(
+		this._entryStore.entry$.subscribe(
 		    response => {
-				this._currentEntry = response.entry;
+		    	if (response) {
+				    this._entryName = response.name;
+			    }
 			}
 	    );
     }
