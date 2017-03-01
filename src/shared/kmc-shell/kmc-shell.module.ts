@@ -6,7 +6,6 @@ import { CheckboxModule, SharedModule } from 'primeng/primeng';
 
 import { AppShellService } from "./providers/app-shell.service";
 import { BrowserService } from "./providers/browser.service";
-import { TimePipe } from "./pipes/time.pipe";
 import { AppContainerComponent } from "./components/app-container/app-container.component";
 import { ReleaseNotesComponent } from "./components/release-notes/release-notes.component";
 
@@ -18,12 +17,10 @@ import { ReleaseNotesComponent } from "./components/release-notes/release-notes.
         SharedModule
     ],
     declarations: <any[]>[
-        TimePipe,
         AppContainerComponent,
         ReleaseNotesComponent
     ],
     exports: <any[]>[
-        TimePipe,
         AppContainerComponent,
         ReleaseNotesComponent
     ],

@@ -48,7 +48,7 @@
 			</tr>
 			<tr *ngIf="_hasDuration">
 				<td>{{'applications.content.entryDetails.preview.duration' | translate}}</td>
-				<td>{{currentEntry?.duration | time}}</td>
+				<td>{{currentEntry?.duration | kTime}}</td>
 			</tr>
 			<tr *ngIf="_entryReady && currentEntry?.moderationCount">
 				<td>{{'applications.content.entryDetails.preview.flags' | translate}}</td>
