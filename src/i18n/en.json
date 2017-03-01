@@ -143,8 +143,17 @@
 					"flags": "Flags",
 					"votes": "Votes",
 					"clippedFrom": "Clipped from"
+				},
+				"metadata":{
+					"entryID": "ID",
+					"entryName": "Name",
+					"description": "Description",
+					"tags": "Tags",
+					"categories": "Categories",
+					"offlineMsg": "Offline Message",
+					"refId": "Reference ID",
+					"jumpTo": "Jump to"
 				}
-
 			}
         }
     },

@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { MenuItem, Menu } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
@@ -11,12 +12,24 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
     public _loading = false;
     public _loadingError = null;
+	public _jumpToMenu: MenuItem[] = [];
 
     constructor(private _appLocalization: AppLocalization) {
     }
 
 
     ngOnInit() {
+    	this._jumpToMenu = [
+		    {label: "Section 1", command: (event) => {
+			    this._jumpTo("Section 1");
+		    }},
+		    {label: "Section 2", command: (event) => {
+			    this._jumpTo("Section 2");
+		    }},
+		    {label: "Section 3", command: (event) => {
+			    this._jumpTo("Section 3");
+		    }}
+	    ];
     }
 
     ngOnDestroy() {
@@ -25,6 +38,10 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
     ngAfterViewInit() {
 
+    }
+
+    private _jumpTo(section: string){
+    	alert("Jump to: "+section);
     }
 
     _onLoadingAction(actionKey: string) {

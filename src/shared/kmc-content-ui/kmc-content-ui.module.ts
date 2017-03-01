@@ -29,7 +29,6 @@ import { EntriesAdditionalFiltersStore } from "./entries-additional-filters/entr
         CalendarModule,
         CommonModule,
         FormsModule,
-        AutoCompleteModule,
         KalturaCommonModule,
         KalturaPrimeNgUIModule,
         KMCShellModule,

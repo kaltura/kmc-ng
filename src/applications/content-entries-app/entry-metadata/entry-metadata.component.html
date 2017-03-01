@@ -1,5 +1,39 @@
 <kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
-	<div>
-		Metadata
+	<div class="jumpTo">
+		<p-menu #menu popup="popup" [model]="_jumpToMenu" [appendTo]="'body'"></p-menu>
+		<button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right" label="{{'applications.content.entryDetails.metadata.jumpTo' | translate}}" (click)="menu.toggle($event)"></button>
+	</div>
+	<div class="kMetadataDetails">
+		<table>
+			<tr>
+				<td>{{'applications.content.entryDetails.metadata.entryID' | translate}}</td>
+				<td>Entry ID</td>
+			</tr>
+			<tr>
+				<td>{{'applications.content.entryDetails.metadata.entryName' | translate}}</td>
+				<td><input type="text" pInputText/></td>
+			</tr>
+			<tr>
+				<td valign="top">{{'applications.content.entryDetails.metadata.description' | translate}}</td>
+				<td valign="top"><textarea pInputTextarea></textarea></td>
+			</tr>
+			<tr>
+				<td>{{'applications.content.entryDetails.metadata.tags' | translate}}</td>
+				<td><kAutoComplete></kAutoComplete></td>
+			</tr>
+			<tr>
+				<td>{{'applications.content.entryDetails.metadata.categories' | translate}}</td>
+				<td><kAutoComplete></kAutoComplete></td>
+			</tr>
+			<tr>
+				<td valign="top">{{'applications.content.entryDetails.metadata.offlineMsg' | translate}}</td>
+				<td valign="top"><textarea pInputTextarea></textarea></td>
+			</tr>
+			<tr>
+				<td>{{'applications.content.entryDetails.metadata.refId' | translate}}</td>
+				<td><input type="text" pInputText/></td>
+			</tr>
+
+		</table>
 	</div>
 </kLoader>

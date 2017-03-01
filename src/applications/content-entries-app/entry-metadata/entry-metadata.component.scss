@@ -1,2 +1,50 @@
 @import '../../../styles/scss/variables';
 
+.jumpTo{
+	position: absolute;
+	right: 0px;
+	button{
+		font-weight: 400;
+		height: 32px;
+	}
+}
+.kMetadataDetails{
+	padding-left: 12px;
+	padding-right: 130px;
+	width: 100%;
+	table{
+		width: 100%;
+		color: $kGrayscale1;
+		white-space: nowrap;
+		table-layout: fixed;
+	}
+	td{
+		max-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	tr {
+		height: 40px;
+		td:first-child {
+			width: 140px;
+			max-width: 140px;
+		}
+	}
+	input, textarea{
+		width: calc(100% - 10px);
+	}
+	textarea{
+		height: 70px;
+	}
+}
+:host /deep/ .ui-autocomplete.ui-widget{
+	width: 100%;
+	input{
+		width: 100%;
+	}
+}
+:host /deep/ .ui-button-icon-right.ui-c.fa.fa-fw.kIcondropdown_arrow_bottom{
+	font-size: 11px;
+	padding-right: 4px;
+}
