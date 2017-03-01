@@ -1,7 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { KalturaMediaEntry, KalturaEntryStatus, KalturaSourceType, KalturaMediaType } from '@kaltura-ng2/kaltura-api/types';
+import { BrowserService } from 'kmc-shell';
 
 @Component({
     selector: 'kEntryPreview',
@@ -10,7 +12,11 @@ import { KalturaMediaEntry, KalturaEntryStatus, KalturaSourceType, KalturaMediaT
 })
 export class PreviewComponent implements OnInit {
 
-	@Input() entryId: string;
+	@Input() set entryId(entryId: string){
+		this._entryId = entryId;
+		this.reloadEntry();
+	}
+	get entryId(): string { return this._entryId; }
 
 	public _entryReady: boolean = false;
 	public _iFrameSrc: string;
@@ -21,6 +27,7 @@ export class PreviewComponent implements OnInit {
 	public _isClip: boolean = false;
 
 	private _currentEntry: KalturaMediaEntry;
+	private _entryId: string;
 
 	@Input() set currentEntry(entry: KalturaMediaEntry) {
 		this._currentEntry = entry;
@@ -42,14 +49,20 @@ export class PreviewComponent implements OnInit {
 
 
 
-    constructor(private appConfig: AppConfig, private appAuthentication: AppAuthentication) {
+    constructor(private appConfig: AppConfig, private appAuthentication: AppAuthentication, private router: Router, private browserService: BrowserService) {
     }
 
     ngOnInit() {
+    	this.reloadEntry();
+    }
+
+    private reloadEntry(){
+	    this._landingPage = this.appAuthentication.appUser.partnerInfo.landingPage;
+	    this._landingPage.replace("{entryId}", this._entryId);
+
 	    const UIConfID = this.appConfig.get('core.kaltura.previewUIConf');
 	    const partnerID = this.appAuthentication.appUser.partnerId;
-	    this._iFrameSrc = this.appConfig.get('core.kaltura.cdnUrl') + '/p/' + partnerID +'/sp/' + partnerID +'00/embedIframeJs/uiconf_id/' + UIConfID + '/partner_id/' + partnerID +'?iframeembed=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id='+ this.entryId;
-		this._landingPage = this.appAuthentication.appUser.partnerInfo.landingPage;
+	    this._iFrameSrc = this.appConfig.get('core.kaltura.cdnUrl') + '/p/' + partnerID +'/sp/' + partnerID +'00/embedIframeJs/uiconf_id/' + UIConfID + '/partner_id/' + partnerID +'?iframeembed=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id='+ this._entryId;
     }
 
 	openPreviewAndEmbed(){
@@ -57,11 +70,11 @@ export class PreviewComponent implements OnInit {
 	}
 
 	openLandingPage(){
-		window.open(this._landingPage, "_blank");
+		this.browserService.openLink(this._landingPage);
 	}
 
 	navigateToEntry(entryId){
-		alert("navigate to entry: "+entryId);
+		this.router.navigate(['content/entries/entry/'+entryId]);
 	}
 
 }
