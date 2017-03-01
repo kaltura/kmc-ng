@@ -1,10 +1,6 @@
 #!/usr/bin/env bash -e
 
 ################ Extract arguments ################
-USE_WML=
-KEEP_NODE_MODULES=
-
-
 while [[ $# -gt 0 ]]
 do
 key="$1"
@@ -26,12 +22,14 @@ done
 
 cd `dirname $0`
 
-if [ ${KEEP_NODE_MODULES} != true ]
+if [ -z "${KEEP_NODE_MODULES}" ]
 then
     printf "\e[35m%b\e[0m\n" "delete node_modules folder"
     rm -rf ../../node_modules/
 fi
 
+printf "\e[35m%b\e[0m\n" "run npm install"
+npm install
 
 ./npm-link-modules.sh ${USE_WML:+"--use-wml"}
 

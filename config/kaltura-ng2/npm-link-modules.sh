@@ -1,8 +1,6 @@
 #!/usr/bin/env bash -e
 
 ################ Extract arguments ################
-USE_WML=
-
 while [[ $# -gt 0 ]]
 do
 key="$1"
@@ -34,7 +32,7 @@ NPM_MODULES_BASE=$(npm config get prefix)/lib/node_modules
 for PACKAGE in ${LIST} ;
 do
 
-  if [ $USE_WML ]
+  if [ -n "${USE_WML}" ]
   then
       printf "\e[35m%b\e[0m\n" "Running wml add for package '${PACKAGE}'"
       PACKAGE_SRC=$(readlink ${NPM_MODULES_BASE}/@kaltura-ng2/${PACKAGE})
