@@ -15,10 +15,10 @@ import { EntryPreviewHandler } from './entry-preview-handler';
 
 @Component({
 	selector: 'kEntryPreview',
-	templateUrl: './preview.component.html',
-	styleUrls: ['./preview.component.scss']
+	templateUrl: './entry-preview.component.html',
+	styleUrls: ['./entry-preview.component.scss']
 })
-export class PreviewComponent implements OnInit {
+export class EntryPreview implements OnInit {
 
 	public _entryReady: boolean = false;
 	public _iFrameSrc: string;

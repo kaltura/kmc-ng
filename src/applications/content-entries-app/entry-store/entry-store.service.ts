@@ -25,6 +25,7 @@ export class EntryStore implements OnInit{
 		loading : false
 	});
 	private _entryRouteUrl : string = '';
+	private _sectionToRouteMapping : { [key : number] : string} = {};
 	private _entry: BehaviorSubject<KalturaMediaEntry> = new BehaviorSubject<KalturaMediaEntry>(null);
 	private _routeParamsChangedSubscription : ISubscription = null;
 	private _routerEventsSubscription : ISubscription = null;
@@ -49,10 +50,7 @@ export class EntryStore implements OnInit{
 
 	ngOnInit(){
 
-		if (!this._entryRoute.snapshot.data.entryRoute)
-		{
-			throw new Error("this service can be injected from component that is associated to the entry route");
-		}
+		this._buildSectionRouteMapping();
 
 		this._entrySectionsManager = new EntrySectionsManager(this._events.asObservable(), this._sections);
 		this._routeParamsChangedSubscription = this._onParamsChanged();
@@ -69,6 +67,24 @@ export class EntryStore implements OnInit{
 		this._events.complete();
 	}
 
+	private _buildSectionRouteMapping() : void{
+		if (!this._entryRoute || !this._entryRoute.snapshot.data.entryRoute)
+		{
+			throw new Error("this service can be injected from component that is associated to the entry route");
+		}
+
+		this._entryRoute.snapshot.routeConfig.children.forEach(childRoute =>
+		{
+			const routeSectionType = childRoute.data ? childRoute.data.sectionType : null;
+
+			if (routeSectionType !== null)
+			{
+				this._sectionToRouteMapping[routeSectionType] = childRoute.path;
+			}
+		})
+
+
+	}
 	private _onRouterEvents() : ISubscription
 	{
 		return this._router.events.subscribe(
@@ -130,50 +146,12 @@ export class EntryStore implements OnInit{
 	}
 
     public openSection(sectionType : EntrySectionTypes) : void{
-    	let navigatePath = null;
-    	switch (sectionType)
-		{
-			case EntrySectionTypes.Metadata:
-				navigatePath = ['metadata'];
-				break;
-			case EntrySectionTypes.Thumbnails:
-				navigatePath = ['thumbnails'];
-				break;
-		    case EntrySectionTypes.AccessControl:
-				navigatePath = ['accesscontrol'];
-				break;
-		    case EntrySectionTypes.Scheduling:
-				navigatePath = ['scheduling'];
-				break;
-		    case EntrySectionTypes.Flavours:
-				navigatePath = ['flavours'];
-				break;
-		    case EntrySectionTypes.Captions:
-				navigatePath = ['captions'];
-				break;
-		    case EntrySectionTypes.Live:
-				navigatePath = ['live'];
-				break;
-		    case EntrySectionTypes.Related:
-				navigatePath = ['related'];
-				break;
-			case EntrySectionTypes.Users:
-				navigatePath = ['users'];
-				break;
-			case EntrySectionTypes.Clips:
-				navigatePath = ['clips'];
-				break;
-			default:
-				break;
-		}
+		const navigatePath = this._sectionToRouteMapping[sectionType];
 
 		if (navigatePath) {
-			this._router.navigate(navigatePath, {relativeTo: this._entryRoute});
+			this._router.navigate([navigatePath], {relativeTo: this._entryRoute});
 		}
 	}
-
-
-
 
 	private _getEntry(entryId:string) : Observable<KalturaMediaEntry | Error>
 	{
