@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 
-import { KalturaBaseEntry } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaMediaType } from '@kaltura-ng2/kaltura-api/types';
 import { EntryStore } from '../entry-store/entry-store.service';
 import { EntryMetadataHandler } from './entry-metadata/entry-metadata-handler';
 import { EntrySectionHandler } from '../entry-store/entry-section-handler';
@@ -16,6 +16,7 @@ import { EntrySectionsListHandler } from './entry-sections-list/entry-sections-l
 export class EntryComponent implements OnInit, OnDestroy {
 
 	_entryName: string;
+	_entryType: KalturaMediaType;
 
 	public _loadingError = null;
 
@@ -55,6 +56,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 		    response => {
 		    	if (response) {
 				    this._entryName = response.name;
+				    this._entryType = response.mediaType;
 			    }
 			}
 	    );

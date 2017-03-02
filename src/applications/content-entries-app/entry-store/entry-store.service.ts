@@ -136,8 +136,32 @@ export class EntryStore implements OnInit{
 			case EntrySectionTypes.Metadata:
 				navigatePath = ['metadata'];
 				break;
+			case EntrySectionTypes.Thumbnails:
+				navigatePath = ['thumbnails'];
+				break;
+		    case EntrySectionTypes.AccessControl:
+				navigatePath = ['accesscontrol'];
+				break;
+		    case EntrySectionTypes.Scheduling:
+				navigatePath = ['scheduling'];
+				break;
+		    case EntrySectionTypes.Flavours:
+				navigatePath = ['flavours'];
+				break;
+		    case EntrySectionTypes.Captions:
+				navigatePath = ['captions'];
+				break;
+		    case EntrySectionTypes.Live:
+				navigatePath = ['live'];
+				break;
+		    case EntrySectionTypes.Related:
+				navigatePath = ['related'];
+				break;
 			case EntrySectionTypes.Users:
 				navigatePath = ['users'];
+				break;
+			case EntrySectionTypes.Clips:
+				navigatePath = ['clips'];
 				break;
 			default:
 				break;
