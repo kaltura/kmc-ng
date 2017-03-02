@@ -1,11 +1,12 @@
-import { Injectable, OnInit, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { EntrySectionHandler } from '../../entry-store/entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { EntryLoading, SectionEntered, EntryLoaded } from '../../entry-store/entry-sections-events';
+import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
+import { EntryLoaded, SectionEntered } from '../../entry-store/entry-sections-events';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
+import { AppLocalization } from "@kaltura-ng2/kaltura-common";
 import { SectionsList } from './sections-list';
 
 
@@ -20,7 +21,7 @@ export interface SectionData
 
 
 @Injectable()
-export class EntrySectionsListHandler extends EntrySectionHandler implements OnInit, OnDestroy
+export class EntrySectionsListHandler extends EntrySectionHandler implements  OnDestroy
 {
     private _eventSubscription : ISubscription;
     private _sections : BehaviorSubject<SectionData[]> = new BehaviorSubject<SectionData[]>(null);
@@ -32,9 +33,9 @@ export class EntrySectionsListHandler extends EntrySectionHandler implements OnI
         super();
     }
 
-    ngOnInit()
+    protected _onManagerProvided(manager : EntrySectionsManager)
     {
-        this._eventSubscription = this._manager.events$.subscribe(
+        this._eventSubscription = manager.events$.subscribe(
             event =>
             {
                 if (event instanceof SectionEntered)

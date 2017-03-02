@@ -29,7 +29,6 @@ export class EntrySectionsManager implements OnDestroy{
             sections.forEach(section =>
             {
                 section.setManager(this);
-                section.ngOnInit();
             });
         }
     }
@@ -37,14 +36,5 @@ export class EntrySectionsManager implements OnDestroy{
     ngOnDestroy()
     {
         this._notifyEventSubscription.unsubscribe();
-        this.destroySections();
-    }
-
-    public destroySections() : void
-    {
-        this.sections.forEach(section =>
-        {
-            section.ngOnDestroy();
-        });
     }
 }

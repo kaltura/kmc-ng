@@ -1,21 +1,22 @@
-import { Injectable, OnInit, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { EntrySectionHandler } from '../../entry-store/entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { EntryLoading } from '../../entry-store/entry-sections-events';
-
+import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
+import { EntryLoaded, EntryLoading } from '../../entry-store/entry-sections-events';
 
 @Injectable()
-export class EntryPreviewHandler extends EntrySectionHandler implements OnInit, OnDestroy
+export class EntryPreviewHandler extends EntrySectionHandler implements  OnDestroy
 {
     private _eventSubscription : ISubscription;
     private _previewEntryId : BehaviorSubject<string> = new BehaviorSubject<string>(null);
     public previewEntryId$ : Observable<string> = this._previewEntryId.asObservable();
 
-    ngOnInit()
+    protected _onManagerProvided(manager : EntrySectionsManager)
     {
-        this._eventSubscription = this._manager.events$.subscribe(
+
+        this._eventSubscription = manager.events$.subscribe(
             event =>
             {
                 if (event instanceof EntryLoading)

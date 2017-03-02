@@ -1,4 +1,4 @@
-import { Inject, Injectable, Optional, OnInit } from '@angular/core';
+import { Inject, Injectable, Optional, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, Route, Params, NavigationEnd, NavigationStart } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
@@ -19,7 +19,7 @@ export type UpdateStatus = {
 };
 
 @Injectable()
-export class EntryStore implements OnInit{
+export class EntryStore implements OnDestroy{
 
 	private _status: BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({
 		loading : false
@@ -46,18 +46,15 @@ export class EntryStore implements OnInit{
 				private _router: Router,
 				private _entryRoute: ActivatedRoute,
 				@Inject(EntrySectionHandler) @Optional() private  _sections : EntrySectionHandler[]) {
-    }
-
-	ngOnInit(){
 
 		this._buildSectionRouteMapping();
 
 		this._entrySectionsManager = new EntrySectionsManager(this._events.asObservable(), this._sections);
 		this._routeParamsChangedSubscription = this._onParamsChanged();
 		this._routerEventsSubscription = this._onRouterEvents();
-	}
+    }
 
-	ngOnDestory() {
+	ngOnDestroy() {
 		this._entrySectionsManager.ngOnDestroy();
 
 		this._routeParamsChangedSubscription.unsubscribe();

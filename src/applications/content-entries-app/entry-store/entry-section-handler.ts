@@ -4,15 +4,16 @@ import { EntrySectionsManager } from './entry-sections-manager';
 
 
 @Injectable()
-export abstract class EntrySectionHandler implements OnInit, OnDestroy
+export abstract class EntrySectionHandler implements OnDestroy
 {
     protected _manager : EntrySectionsManager;
 
     public setManager(manager : EntrySectionsManager)
     {
         this._manager = manager;
+        this._onManagerProvided(manager);
     }
 
-    abstract ngOnInit();
+    protected abstract _onManagerProvided(manager : EntrySectionsManager);
     abstract ngOnDestroy();
 }
