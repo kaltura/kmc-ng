@@ -1,2 +1,13 @@
 @import '~kmcng-theme/scss/variables';
 
+.kClips{
+	padding-left: 12px;
+	.kTitle{
+		color: $kGrayscale1;
+		font-size: 20px;
+		font-weight: 700;
+	}
+	.kTable{
+		margin-top: 24px;
+	}
+}

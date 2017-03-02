@@ -207,6 +207,27 @@
 					"default": "Default Caption",
 					"setDefault": "Set as default"
 				},
+				"live":{
+					"live": "Live Stream"
+				},
+				"related":{
+					"related": "Related files",
+					"add": "Add file",
+					"name": "File name",
+					"type": "File Type",
+					"size": "File size",
+					"assetId": "Asset ID"
+				},
+				"clips":{
+					"clips": "Clips",
+					"id": "ID",
+					"name": "Name",
+					"plays": "Plays",
+					"created": "Created on",
+					"offset": "Offset",
+					"duration": "Duration",
+					"status": "Status"
+				},
 				"users":{
 					"users": "Users",
 					"creator": "Creator",

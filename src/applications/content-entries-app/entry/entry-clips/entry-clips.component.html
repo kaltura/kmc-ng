@@ -1,5 +1,23 @@
 <kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
-	<div>
-		Clips View
+	<div class="kClips">
+		<p class="kTitle">{{'applications.content.entryDetails.clips.clips' | translate}}</p>
+		<div class="kTable">
+			<p-dataTable #dataTable scrollable="true" scrollHeight="100%">
+				<p-column header="{{'applications.content.entryDetails.clips.id' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.clips.name' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.clips.plays' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.clips.created' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.clips.offset' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.clips.duration' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.clips.status' | translate}}">
+				</p-column>
+			</p-dataTable>
+		</div>
 	</div>
 </kLoader>
