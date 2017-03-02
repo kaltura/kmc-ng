@@ -1,5 +1,43 @@
 <kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
-	<div>
-		Access Control View
+	<div class="kAccessControl">
+		<p class="kTitle">{{'applications.content.entryDetails.accessControl.accessControl' | translate}}</p>
+		<div class="kAccessControlDetails">
+			<table>
+				<tr>
+					<td>{{'applications.content.entryDetails.accessControl.profile' | translate}}</td>
+					<td><p-dropdown></p-dropdown></td>
+				</tr>
+				<tr>
+					<td>{{'applications.content.entryDetails.accessControl.name' | translate}}</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>{{'applications.content.entryDetails.accessControl.accessControl' | translate}}</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>{{'applications.content.entryDetails.accessControl.domains' | translate}}</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>{{'applications.content.entryDetails.accessControl.countries' | translate}}</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>{{'applications.content.entryDetails.accessControl.ips' | translate}}</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>{{'applications.content.entryDetails.accessControl.flavours' | translate}}</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>{{'applications.content.entryDetails.accessControl.advanced' | translate}}</td>
+					<td></td>
+				</tr>
+
+
+			</table>
+		</div>
 	</div>
 </kLoader>

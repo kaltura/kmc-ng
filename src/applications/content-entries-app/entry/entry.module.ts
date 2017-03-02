@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { ButtonModule, TooltipModule, InputTextareaModule, InputTextModule, MenuModule } from 'primeng/primeng';
+import { ButtonModule, TooltipModule, InputTextareaModule, InputTextModule, MenuModule, DataTableModule, DropdownModule } from 'primeng/primeng';
 
 import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
@@ -33,6 +33,8 @@ import { PreviewComponent } from './entry-preview/preview.component';
         FormsModule,
         InputTextModule,
         InputTextareaModule,
+	    DataTableModule,
+	    DropdownModule,
         KalturaCommonModule,
         KalturaUIModule,
         KMCContentUIModule,

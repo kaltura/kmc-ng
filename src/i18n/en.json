@@ -153,6 +153,26 @@
 					"offlineMsg": "Offline Message",
 					"refId": "Reference ID",
 					"jumpTo": "Jump to"
+				},
+				"thumbnails":{
+					"thumbnails": "Thumbnails",
+					"upload": "Upload",
+					"thumbnail": "Thumbnail",
+					"dimensions": "Dimensions",
+					"size": "Size",
+					"status": "Status",
+					"tags": "Tags"
+				},
+				"accessControl":{
+					"accessControl": "Access Control Profiles",
+					"profile": "Access Control Profile",
+					"name": "Profile Name",
+					"description": "Description",
+					"domains": "Domains",
+					"countries": "Countries",
+					"ips": "IPs",
+					"flavours": "Flavours",
+					"advanced": "Advanced Security"
 				}
 			}
         }
