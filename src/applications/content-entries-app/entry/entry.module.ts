@@ -12,6 +12,14 @@ import { AutoCompleteModule } from '@kaltura-ng2/kaltura-primeng-ui/auto-complet
 import { KMCContentUIModule } from "kmc-content-ui/kmc-content-ui.module";
 
 import { EntryMetadata } from "./entry-metadata/entry-metadata.component";
+import { EntryThumbnails } from "./entry-thumbnails/entry-thumbnails.component";
+import { EntryAccessControl } from "./entry-access-control/entry-access-control.component";
+import { EntryScheduling } from "./entry-scheduling/entry-scheduling.component";
+import { EntryFlavours } from "./entry-flavours/entry-flavours.component";
+import { EntryCaptions } from "./entry-captions/entry-captions.component";
+import { EntryLive } from "./entry-live/entry-live.component";
+import { EntryRelated } from "./entry-related/entry-related.component";
+import { EntryClips } from "./entry-clips/entry-clips.component";
 import { EntryUsers } from "./entry-users/entry-users.component";
 import { EntrySectionsList } from "./entry-sections-list/entry-sections-list.component";
 import { EntryComponent } from './entry.component';
@@ -36,6 +44,14 @@ import { PreviewComponent } from './entry-preview/preview.component';
     declarations: [
         EntryComponent,
         EntryMetadata,
+	    EntryThumbnails,
+	    EntryAccessControl,
+	    EntryScheduling,
+	    EntryFlavours,
+	    EntryCaptions,
+	    EntryLive,
+	    EntryRelated,
+	    EntryClips,
         EntrySectionsList,
         EntryUsers,
         PreviewComponent
@@ -43,6 +59,14 @@ import { PreviewComponent } from './entry-preview/preview.component';
     exports: [
         EntryComponent,
         EntryMetadata,
+	    EntryThumbnails,
+	    EntryAccessControl,
+	    EntryScheduling,
+	    EntryFlavours,
+	    EntryCaptions,
+	    EntryLive,
+	    EntryRelated,
+	    EntryClips,
         EntryUsers
     ],
     providers: [],
