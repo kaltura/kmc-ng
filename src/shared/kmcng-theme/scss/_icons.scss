@@ -55,4 +55,8 @@
         @extend .kIcondropdown_arrow_right:before;
         font-size: 9px;
     }
+	.ui-dropdown-trigger .fa.fa-caret-down:before{
+		@extend .kIcondropdown_arrow_bottom:before;
+		font-size: 12px;
+	}
 }

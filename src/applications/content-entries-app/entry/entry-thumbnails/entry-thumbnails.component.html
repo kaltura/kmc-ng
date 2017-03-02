@@ -1,5 +1,22 @@
 <kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
-	<div>
-		Thumbnails View
+	<div class="kThumbnails">
+		<p class="kTitle">{{'applications.content.entryDetails.thumbnails.thumbnails' | translate}}</p>
+		<p><button pButton class="kButtonDefault" icon="kIconupload" label="{{'applications.content.entryDetails.thumbnails.upload' | translate}}"></button></p>
+		<div class="kTable">
+			<p-dataTable #dataTable scrollable="true" scrollHeight="100%">
+				<p-column header="{{'applications.content.entryDetails.thumbnails.thumbnail' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.thumbnails.dimensions' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.thumbnails.size' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.thumbnails.status' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.thumbnails.tags' | translate}}">
+				</p-column>
+				<p-column>
+				</p-column>
+			</p-dataTable>
+		</div>
 	</div>
 </kLoader>

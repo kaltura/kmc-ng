@@ -1,2 +1,17 @@
 @import '~kmcng-theme/scss/variables';
 
+.kRelated{
+	padding-left: 12px;
+	button{
+		font-weight: 400;
+		height: 32px;
+	}
+	.kTitle{
+		color: $kGrayscale1;
+		font-size: 20px;
+		font-weight: 700;
+	}
+	.kTable{
+		margin-top: 24px;
+	}
+}
