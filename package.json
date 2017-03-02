@@ -27,14 +27,13 @@
     "clean:dist": "npm run rimraf -- dist",
     "clean:install": "npm set progress=false && npm install",
     "docs": "npm run typedoc -- --options typedoc.json --exclude '**/*.spec.ts' ./src/",
-    "prepare": "bash ./config/kaltura-ng2/prepare.sh",
-    "prepare:lite": "bash ./config/kaltura-ng2/prepare.sh -k",
     "lint": "npm run tslint \"src/**/*.ts\"",
     "lint:rules": "npm run lint | grep -e '^src/' | cut -d':' -f2- | sort -u",
     "preclean:install": "npm run clean",
+    "prepare": "bash ./config/kaltura-ng2/prepare.sh",
+    "prepare:lite": "bash ./config/kaltura-ng2/prepare.sh -k",
     "rimraf": "rimraf",
     "server": "npm run server:dev",
-    "wml": "wml",
     "server:dev": "wml start & webpack-dev-server --config config/webpack.dev.js --open --progress --profile --watch --content-base src/",
     "server:prod": "http-server dist -c-1 --cors",
     "server:prod:ci": "http-server dist -p 3000 -c-1 --cors",
@@ -46,7 +45,8 @@
     "watch:dev": "npm run build:dev -- --watch",
     "watch:prod": "npm run build:prod -- --watch",
     "webpack": "webpack",
-    "webpack-dev-server": "webpack-dev-server"
+    "webpack-dev-server": "webpack-dev-server",
+    "wml": "wml"
   },
   "dependencies": {
     "@angular/common": "~2.4.3",

@@ -16,6 +16,10 @@ import { EntryUsers } from "./entry-users/entry-users.component";
 import { EntrySectionsList } from "./entry-sections-list/entry-sections-list.component";
 import { EntryComponent } from './entry.component';
 import { PreviewComponent } from './entry-preview/preview.component';
+import { EntrySectionHandler } from '../entry-store/entry-section-handler';
+import { EntrySectionsListHandler } from './entry-sections-list/entry-sections-list-handler';
+import { EntryMetadataHandler } from './entry-metadata/entry-metadata-handler';
+import { EntryPreviewHandler } from './entry-preview/entry-preview-handler';
 
 @NgModule({
     imports: [
@@ -45,6 +49,13 @@ import { PreviewComponent } from './entry-preview/preview.component';
         EntryMetadata,
         EntryUsers
     ],
-    providers: [],
+    providers: [
+        EntrySectionsListHandler,
+        EntryPreviewHandler,
+        EntryMetadataHandler,
+        {provide : EntrySectionHandler, useExisting : EntrySectionsListHandler, multi:true},
+        {provide : EntrySectionHandler, useExisting : EntryPreviewHandler, multi:true},
+        {provide : EntrySectionHandler, useExisting : EntryMetadataHandler, multi:true}
+    ],
 })
 export class EntryModule { }

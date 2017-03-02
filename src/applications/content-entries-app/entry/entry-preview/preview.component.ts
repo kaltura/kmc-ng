@@ -11,6 +11,7 @@ import {
 	KalturaMediaType
 } from '@kaltura-ng2/kaltura-api/types';
 import { BrowserService } from 'kmc-shell';
+import { EntryPreviewHandler } from './entry-preview-handler';
 
 @Component({
 	selector: 'kEntryPreview',
@@ -34,14 +35,20 @@ export class PreviewComponent implements OnInit {
 	}
 
 
-	constructor(private appConfig: AppConfig, private appAuthentication: AppAuthentication, private router: Router, private browserService: BrowserService, public _entryStore: EntryStore) {
+	constructor(private appConfig: AppConfig,
+				private appAuthentication: AppAuthentication,
+				private browserService: BrowserService,
+				private _sectionHandler : EntryPreviewHandler,
+				public _entryStore: EntryStore) {
 	}
 
 	ngOnInit() {
-		this._entryStore.status$.subscribe(
-			response => {
-				if (response && response.entryId) {
-					this.reloadEntry(response.entryId);
+
+		this._sectionHandler.previewEntryId$.subscribe(
+			previewEntryId =>
+			{
+				if (previewEntryId) {
+					this.reloadEntry(previewEntryId);
 				}
 			}
 		);
