@@ -183,6 +183,30 @@
 					"end": "End Date",
 					"clear": "Clear Dates"
 				},
+				"flavours":{
+					"flavours": "Flavours",
+					"replace": "Replace Video",
+					"flavour": "Flavour",
+					"assetId": "Asset ID",
+					"format": "Format",
+					"codec": "Codec",
+					"bitrate": "Bitrate (kbps)",
+					"dimensions": "Dimensions",
+					"size": "Size (kb)",
+					"status": "Status",
+					"tags": "Tags"
+				},
+				"captions":{
+					"captions": "Captions",
+					"add": "Add Caption",
+					"label": "Label",
+					"location": "File Location",
+					"type": "File Type",
+					"language": "Language",
+					"status": "Status",
+					"default": "Default Caption",
+					"setDefault": "Set as default"
+				},
 				"users":{
 					"users": "Users",
 					"creator": "Creator",

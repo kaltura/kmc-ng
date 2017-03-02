@@ -1,5 +1,31 @@
 <kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
-	<div>
-		Flavours View
+	<div class="kFlavours">
+		<p class="kTitle">{{'applications.content.entryDetails.flavours.flavours' | translate}}</p>
+		<button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right" label="{{'applications.content.entryDetails.flavours.replace' | translate}}"></button>
+		<button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh"></button>
+		<div class="kTable">
+			<p-dataTable #dataTable scrollable="true" scrollHeight="100%">
+				<p-column header="{{'applications.content.entryDetails.flavours.flavour' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.flavours.assetId' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.flavours.format' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.flavours.codec' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.flavours.bitrate' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.flavours.dimensions' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.flavours.size' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.flavours.status' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.flavours.tags' | translate}}">
+				</p-column>
+				<p-column>
+				</p-column>
+			</p-dataTable>
+		</div>
 	</div>
 </kLoader>
