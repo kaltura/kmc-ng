@@ -1,5 +1,24 @@
 <kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
-	<div>
-		Captions View
+	<div class="kCaptions">
+		<p class="kTitle">{{'applications.content.entryDetails.captions.captions' | translate}}</p>
+		<button type="button" class="kButtonDefault" pButton label="{{'applications.content.entryDetails.captions.add' | translate}}"></button>
+		<div class="kTable">
+			<p-dataTable #dataTable scrollable="true" scrollHeight="100%">
+				<p-column header="{{'applications.content.entryDetails.captions.label' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.captions.location' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.captions.type' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.captions.language' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.captions.status' | translate}}">
+				</p-column>
+				<p-column>
+				</p-column>
+				<p-column>
+				</p-column>
+			</p-dataTable>
+		</div>
 	</div>
 </kLoader>

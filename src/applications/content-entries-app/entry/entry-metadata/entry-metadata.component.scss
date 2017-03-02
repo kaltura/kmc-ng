@@ -12,27 +12,16 @@
 	padding-left: 12px;
 	padding-right: 130px;
 	width: 100%;
-	table{
-		width: 100%;
-		color: $kGrayscale1;
-		white-space: nowrap;
-		table-layout: fixed;
+	.kRow{
+		display: flex;
+		padding-top: 20px;
 	}
-	td{
-		max-width: 0;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-	tr {
-		height: 40px;
-		td:first-child {
-			width: 140px;
-			max-width: 140px;
-		}
+	.kLabels{
+		width: 140px;
+		flex: 0 0 auto;
 	}
 	input, textarea{
-		width: calc(100% - 10px);
+		width: 100%;
 	}
 	textarea{
 		height: 70px;
@@ -47,4 +36,14 @@
 :host /deep/ .ui-button-icon-right.ui-c.fa.fa-fw.kIcondropdown_arrow_bottom{
 	font-size: 11px;
 	padding-right: 4px;
+}
+
+:host /deep/ .ui-autocomplete.ui-widget{
+	width: 100%;
+	input{
+		width: 100%;
+	}
+}
+:host /deep/ kAutoComplete{
+	width: 100%;
 }

@@ -11,6 +11,8 @@ export class EntryScheduling implements AfterViewInit, OnInit, OnDestroy {
     public _loading = false;
     public _loadingError = null;
 
+	_enableEndDate: boolean;
+
     constructor(private _appLocalization: AppLocalization) {
     }
 

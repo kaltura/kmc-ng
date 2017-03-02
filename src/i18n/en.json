@@ -153,6 +153,88 @@
 					"offlineMsg": "Offline Message",
 					"refId": "Reference ID",
 					"jumpTo": "Jump to"
+				},
+				"thumbnails":{
+					"thumbnails": "Thumbnails",
+					"upload": "Upload",
+					"thumbnail": "Thumbnail",
+					"dimensions": "Dimensions",
+					"size": "Size",
+					"status": "Status",
+					"tags": "Tags"
+				},
+				"accessControl":{
+					"accessControl": "Access Control Profiles",
+					"profile": "Access Control Profile",
+					"name": "Profile Name",
+					"description": "Description",
+					"domains": "Domains",
+					"countries": "Countries",
+					"ips": "IPs",
+					"flavours": "Flavours",
+					"advanced": "Advanced Security"
+				},
+				"scheduling":{
+					"scheduling": "Scheduling",
+					"anytime": "Anytime",
+					"range": "Specific range",
+					"note": "Note: Time Zone used - ",
+					"start": "Start Date",
+					"end": "End Date",
+					"clear": "Clear Dates"
+				},
+				"flavours":{
+					"flavours": "Flavours",
+					"replace": "Replace Video",
+					"flavour": "Flavour",
+					"assetId": "Asset ID",
+					"format": "Format",
+					"codec": "Codec",
+					"bitrate": "Bitrate (kbps)",
+					"dimensions": "Dimensions",
+					"size": "Size (kb)",
+					"status": "Status",
+					"tags": "Tags"
+				},
+				"captions":{
+					"captions": "Captions",
+					"add": "Add Caption",
+					"label": "Label",
+					"location": "File Location",
+					"type": "File Type",
+					"language": "Language",
+					"status": "Status",
+					"default": "Default Caption",
+					"setDefault": "Set as default"
+				},
+				"live":{
+					"live": "Live Stream"
+				},
+				"related":{
+					"related": "Related files",
+					"add": "Add file",
+					"name": "File name",
+					"type": "File Type",
+					"size": "File size",
+					"assetId": "Asset ID"
+				},
+				"clips":{
+					"clips": "Clips",
+					"id": "ID",
+					"name": "Name",
+					"plays": "Plays",
+					"created": "Created on",
+					"offset": "Offset",
+					"duration": "Duration",
+					"status": "Status"
+				},
+				"users":{
+					"users": "Users",
+					"creator": "Creator",
+					"owner": "Administrative Owner",
+					"changeOwner": "Change Owner",
+					"co-editors": "Co-Editors",
+					"co-publishers": "Co-Publishers"
 				}
 			}
         }

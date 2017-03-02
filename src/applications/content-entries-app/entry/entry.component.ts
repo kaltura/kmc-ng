@@ -3,6 +3,9 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 
 import { KalturaMediaType } from '@kaltura-ng2/kaltura-api/types';
 import { EntryStore } from '../entry-store/entry-store.service';
+import { EntryMetadataHandler } from './entry-metadata/entry-metadata-handler';
+import { EntrySectionHandler } from '../entry-store/entry-section-handler';
+import { EntrySectionsListHandler } from './entry-sections-list/entry-sections-list-handler';
 
 @Component({
     selector: 'kEntry',
@@ -16,6 +19,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	_entryType: KalturaMediaType;
 
 	public _loadingError = null;
+
 
     constructor(public _entryStore: EntryStore,
 				private _router: Router,

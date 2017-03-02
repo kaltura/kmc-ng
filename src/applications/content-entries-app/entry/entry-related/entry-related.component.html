@@ -1,5 +1,20 @@
 <kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
-	<div>
-		Related Files View
+	<div class="kRelated">
+		<p class="kTitle">{{'applications.content.entryDetails.related.related' | translate}}</p>
+		<button type="button" class="kButtonDefault" pButton label="{{'applications.content.entryDetails.related.add' | translate}}"></button>
+		<div class="kTable">
+			<p-dataTable #dataTable scrollable="true" scrollHeight="100%">
+				<p-column header="{{'applications.content.entryDetails.related.name' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.related.type' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.related.size' | translate}}">
+				</p-column>
+				<p-column header="{{'applications.content.entryDetails.related.assetId' | translate}}">
+				</p-column>
+				<p-column>
+				</p-column>
+			</p-dataTable>
+		</div>
 	</div>
 </kLoader>
