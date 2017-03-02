@@ -11,30 +11,19 @@
 		padding-left: 12px;
 		padding-right: 12px;
 		width: 100%;
-		table{
-			width: 100%;
-			color: $kGrayscale1;
-			white-space: nowrap;
-			table-layout: fixed;
+		.kRow{
+			display: flex;
+			padding-top: 24px;
+			align-items: center;
 		}
-		td{
-			max-width: 0;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-		}
-		tr {
-			height: 40px;
-			td:first-child {
-				width: 180px;
-				max-width: 140px;
-			}
+		.kLabels{
+			width: 180px;
 		}
 	}
 }
 :host /deep/ .ui-dropdown-trigger .fa.fa-caret-down{
-	margin-top: 5px;
-	margin-left: 0px;
+	margin-top: 2px;
+	margin-left: 1px;
 	position: absolute;
 	color: $kGrayscale1;
 }

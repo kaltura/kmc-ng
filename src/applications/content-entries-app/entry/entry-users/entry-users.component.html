@@ -1,5 +1,24 @@
 <kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
-	<div>
-		Users View
+	<div class="kUsers">
+		<p class="kTitle">{{'applications.content.entryDetails.users.users' | translate}}</p>
+		<div class="kUsersDetails">
+			<div class="kRow">
+				<span class="kLabels">{{'applications.content.entryDetails.users.creator' | translate}}</span>
+				<span>Creator</span>
+			</div>
+			<div class="kRow">
+				<span class="kLabels">{{'applications.content.entryDetails.users.owner' | translate}}</span>
+				<span>Owner</span>
+				<a class="changeOwner">{{'applications.content.entryDetails.users.changeOwner' | translate}}</a>
+			</div>
+			<div class="kRow kSeparator">
+				<span class="kLabels">{{'applications.content.entryDetails.users.co-editors' | translate}}</span>
+				<kAutoComplete></kAutoComplete>
+			</div>
+			<div class="kRow">
+				<span class="kLabels">{{'applications.content.entryDetails.users.co-publishers' | translate}}</span>
+				<kAutoComplete></kAutoComplete>
+			</div>
+		</div>
 	</div>
 </kLoader>

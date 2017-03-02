@@ -173,6 +173,23 @@
 					"ips": "IPs",
 					"flavours": "Flavours",
 					"advanced": "Advanced Security"
+				},
+				"scheduling":{
+					"scheduling": "Scheduling",
+					"anytime": "Anytime",
+					"range": "Specific range",
+					"note": "Note: Time Zone used - ",
+					"start": "Start Date",
+					"end": "End Date",
+					"clear": "Clear Dates"
+				},
+				"users":{
+					"users": "Users",
+					"creator": "Creator",
+					"owner": "Administrative Owner",
+					"changeOwner": "Change Owner",
+					"co-editors": "Co-Editors",
+					"co-publishers": "Co-Publishers"
 				}
 			}
         }
