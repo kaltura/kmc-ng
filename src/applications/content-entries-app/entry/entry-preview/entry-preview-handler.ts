@@ -3,7 +3,7 @@ import { EntrySectionHandler } from '../../entry-store/entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
+import { EntryStore } from '../../entry-store/entry-store.service';
 import { EntryLoaded, EntryLoading } from '../../entry-store/entry-sections-events';
 
 @Injectable()
@@ -13,10 +13,10 @@ export class EntryPreviewHandler extends EntrySectionHandler implements  OnDestr
     private _previewEntryId : BehaviorSubject<string> = new BehaviorSubject<string>(null);
     public previewEntryId$ : Observable<string> = this._previewEntryId.asObservable();
 
-    protected _onManagerProvided(manager : EntrySectionsManager)
+    protected _onStoreProvided(store : EntryStore)
     {
 
-        this._eventSubscription = manager.events$.subscribe(
+        this._eventSubscription = store.events$.subscribe(
             event =>
             {
                 if (event instanceof EntryLoading)

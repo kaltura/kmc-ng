@@ -3,7 +3,7 @@ import { EntrySectionHandler } from '../../entry-store/entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
+import { EntryStore } from '../../entry-store/entry-store.service';
 import { EntryLoaded } from '../../entry-store/entry-sections-events';
 
 @Injectable()
@@ -11,9 +11,9 @@ export class EntryFlavoursHandler extends EntrySectionHandler implements  OnDest
 {
     private _eventSubscription : ISubscription;
 
-    protected _onManagerProvided(manager : EntrySectionsManager)
+    protected _onStoreProvided(store : EntryStore)
     {
-        this._eventSubscription = manager.events$.subscribe(
+        this._eventSubscription = store.events$.subscribe(
             event =>
             {
 

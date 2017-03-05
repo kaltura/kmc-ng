@@ -1,5 +1,5 @@
 <div class="kEntryPreview kUseKMCngIcons">
-	<iframe [src]="_iFrameSrc | safe" width="280" height="158" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
+	<iframe *ngIf="_iFrameSrc" [src]="_iFrameSrc | safe" width="280" height="158" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
 	<div class="kPreviewAndEmbedContainer" *ngIf="_entryReady">
 		<i (click)="openPreviewAndEmbed()" class="kIconshare"></i><a (click)="openPreviewAndEmbed()">{{'applications.content.entryDetails.preview.pande' | translate}}</a>
 	</div>

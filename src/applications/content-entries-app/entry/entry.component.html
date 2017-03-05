@@ -1,4 +1,4 @@
-<kLoader [loading]="(_entryStore.status$ | async)?.loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
+<kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
 	<div class="kEntryDetails kUseKMCngIcons">
 		<div class="kContent kEntryDetailsWrapper">
 			<div class="kEntryDetailsHeader">

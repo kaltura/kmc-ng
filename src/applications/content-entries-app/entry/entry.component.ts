@@ -16,6 +16,7 @@ import { EntryFlavoursHandler } from './entry-flavours/entry-flavours-handler';
 import { EntryThumbnailsHandler } from './entry-thumbnails/entry-thumbnails-handler';
 import { EntrySchedulingHandler } from './entry-scheduling/entry-scheduling-handler';
 import { EntryUsersHandler } from './entry-users/entry-users-handler';
+import { EntryLoadingFailed, EntryLoading, EntryLoaded } from '../entry-store/entry-sections-events';
 
 @Component({
     selector: 'kEntry',
@@ -54,12 +55,11 @@ export class EntryComponent implements OnInit, OnDestroy {
 	_entryName: string;
 	_entryType: KalturaMediaType;
 
+	public _loading = false;
 	public _loadingError = null;
 
 
-    constructor(public _entryStore: EntryStore,
-				private _router: Router,
-				private _route: ActivatedRoute) {
+    constructor(public _entryStore: EntryStore) {
     }
 
     ngOnDestroy()
@@ -69,14 +69,20 @@ export class EntryComponent implements OnInit, OnDestroy {
 
 
     ngOnInit() {
-		this._entryStore.status$.subscribe(
-			result => {
-				if (result.errorMessage)
+		this._entryStore.events$.subscribe(
+			event => {
+				if (event instanceof EntryLoadingFailed)
 				{
 					// TODO [kmcng] show retry only if network connectivity
-					this._loadingError = { message : result.errorMessage, buttons : { returnToEntries : 'Back To Entries', retry : 'Retry'}};
-				}else
+					this._loading = false;
+					this._loadingError = { message : event.errorMessage, buttons : { returnToEntries : 'Back To Entries', retry : 'Retry'}};
+				}else if (event instanceof EntryLoading)
 				{
+					this._loading = true;
+					this._loadingError = null;
+				}else if (event instanceof EntryLoaded)
+				{
+					this._loading = false;
 					this._loadingError = null;
 				}
 			},

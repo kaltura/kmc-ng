@@ -1,19 +1,18 @@
 import { Injectable, OnInit, OnDestroy } from '@angular/core';
 import { EntryStore } from './entry-store.service';
-import { EntrySectionsManager } from './entry-sections-manager';
 
 
 @Injectable()
 export abstract class EntrySectionHandler implements OnDestroy
 {
-    protected _manager : EntrySectionsManager;
+    protected _store : EntryStore;
 
-    public setManager(manager : EntrySectionsManager)
+    public setStore(store : EntryStore)
     {
-        this._manager = manager;
-        this._onManagerProvided(manager);
+        this._store = store;
+        this._onStoreProvided(store);
     }
 
-    protected abstract _onManagerProvided(manager : EntrySectionsManager);
+    protected abstract _onStoreProvided(store : EntryStore);
     abstract ngOnDestroy();
 }

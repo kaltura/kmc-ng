@@ -1,41 +1,39 @@
-import { Inject, Injectable, Optional, OnDestroy } from '@angular/core';
+import { Inject, Injectable, Optional, OnDestroy, Host } from '@angular/core';
 import { ActivatedRoute, Router, Route, Params, NavigationEnd, NavigationStart } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Scheduler } from 'rxjs';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/subscribeOn';
+import 'rxjs/add/operator/switchMap';
 
 import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { KalturaServerClient, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
 import { BaseEntryGetAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
 import { EntrySectionTypes } from './entry-sections-types';
-import { EntryLoading, EntryEvents, EntryLoaded, SectionEntered, EntryRemoved } from './entry-sections-events';
-import { EntrySectionsManager } from './entry-sections-manager';
+import {
+	EntryLoading, EntryEvents, EntryLoaded, SectionEntered,
+	EntryLoadingFailed
+} from './entry-sections-events';
 import { EntrySectionHandler } from './entry-section-handler';
 
-export type UpdateStatus = {
-	loading : boolean;
-	errorMessage? : string;
-};
 
 @Injectable()
-export class EntryStore implements OnDestroy{
+export class EntryStore implements  OnDestroy{
 
-	private _status: BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({
-		loading : false
-	});
-	private _entryRouteUrl : string = '';
 	private _sectionToRouteMapping : { [key : number] : string} = {};
 	private _entry: BehaviorSubject<KalturaMediaEntry> = new BehaviorSubject<KalturaMediaEntry>(null);
 	private _routeParamsChangedSubscription : ISubscription = null;
 	private _routerEventsSubscription : ISubscription = null;
 	private _activeSectionType : EntrySectionTypes = null;
 	private _draftEntry : KalturaMediaEntry = null;
-	private _entrySectionsManager : EntrySectionsManager = null;
 	private _events : Subject<EntryEvents> = new Subject<EntryEvents>();
 
 	public entry$ = this._entry.asObservable();
-	public status$ = this._status.asObservable();
+	public events$ = this._events.asObservable();
+
 
 	public get entry() : KalturaMediaEntry
 	{
@@ -45,26 +43,23 @@ export class EntryStore implements OnDestroy{
     constructor(private kalturaServerClient: KalturaServerClient,
 				private _router: Router,
 				private _entryRoute: ActivatedRoute,
-				@Inject(EntrySectionHandler) @Optional() private  _sections : EntrySectionHandler[]) {
+				@Inject(EntrySectionHandler) @Optional() private  _sections : EntrySectionHandler[]
+				) {
 
-		this._buildSectionRouteMapping();
+		this._initializeSections();
 
-		this._entrySectionsManager = new EntrySectionsManager(this._events.asObservable(), this._sections);
 		this._routeParamsChangedSubscription = this._onParamsChanged();
 		this._routerEventsSubscription = this._onRouterEvents();
     }
 
 	ngOnDestroy() {
-		this._entrySectionsManager.ngOnDestroy();
-
 		this._routeParamsChangedSubscription.unsubscribe();
 		this._routerEventsSubscription.unsubscribe();
-		this._status.complete();
 		this._entry.complete();
 		this._events.complete();
 	}
 
-	private _buildSectionRouteMapping() : void{
+	private _initializeSections() : void{
 		if (!this._entryRoute || !this._entryRoute.snapshot.data.entryRoute)
 		{
 			throw new Error("this service can be injected from component that is associated to the entry route");
@@ -79,6 +74,14 @@ export class EntryStore implements OnDestroy{
 				this._sectionToRouteMapping[routeSectionType] = childRoute.path;
 			}
 		})
+
+		if (this._sections)
+		{
+			this._sections.forEach(section =>
+			{
+				section.setStore(this);
+			});
+		}
 
 
 	}
@@ -111,21 +114,17 @@ export class EntryStore implements OnDestroy{
 
 	private _onParamsChanged() : ISubscription
 	{
-		return this._entryRoute.params
-        .do((params : Params) =>
+		return this._entryRoute.params.do((params : Params) =>
 		{
-			this._status.next({loading: true, errorMessage: null});
-
+			// clean state of previous entry before loading the new one.
 			this._draftEntry = null;
-			this._events.next(new EntryRemoved());
 		})
         .switchMap((params: Params) => this._getEntry(params['id']))
+		.subscribeOn(Scheduler.async)
         .subscribe((response) =>
 			{
 				if (response instanceof KalturaMediaEntry)
 				{
-					this._status.next({loading: false, errorMessage: null});
-
 					// TODO [kmcng] handle situations when the subscribers has errors!!
 
 					this._draftEntry = response;
@@ -136,7 +135,7 @@ export class EntryStore implements OnDestroy{
 				{
 					// handle error
 					const errorMessage = response.message || 'Failed to load entry';
-					this._status.next({loading: false, errorMessage: errorMessage});
+					this._events.next(new EntryLoadingFailed(errorMessage));
 				}
 			}
 		);
@@ -153,41 +152,45 @@ export class EntryStore implements OnDestroy{
 	private _getEntry(entryId:string) : Observable<KalturaMediaEntry | Error>
 	{
 		if (entryId) {
-
 			return Observable.create(observer => {
 
-				const request = new KalturaMultiRequest(
-					new BaseEntryGetAction({entryId})
-						.setCompletion(
-							response =>
-							{
-								if (response.result) {
-									if (response.result instanceof KalturaMediaEntry) {
-										observer.next(response.result);
-									}else
-									{
-										observer.next(new Error("invalid entry type, expected KalturaMediaEntry"));
+				try {
+					const request = new KalturaMultiRequest(
+						new BaseEntryGetAction({entryId})
+                            .setCompletion(
+								response =>
+								{
+									if (response.result) {
+										if (response.result instanceof KalturaMediaEntry) {
+											observer.next(response.result);
+										}else
+										{
+											observer.next(new Error("invalid entry type, expected KalturaMediaEntry"));
+										}
+									}else {
+										observer.next(response.error);
 									}
-								}else {
-									observer.next(response.error);
 								}
-							}
-						)
-				);
+							)
+					);
 
-				this._events.next(new EntryLoading(entryId, request,  this._activeSectionType));
+					this._events.next(new EntryLoading(entryId, request,  this._activeSectionType));
 
-				const requestSubscription = this.kalturaServerClient.multiRequest(request).subscribe(() =>
-				{
-					// should not do anything here
-				});
-
-				return () =>
-				{
-					if (requestSubscription)
+					const requestSubscription = this.kalturaServerClient.multiRequest(request).subscribe(() =>
 					{
-						requestSubscription.unsubscribe();
+						// should not do anything here
+					});
+
+					return () =>
+					{
+						if (requestSubscription)
+						{
+							requestSubscription.unsubscribe();
+						}
 					}
+				}catch(ex)
+				{
+					observer.next(ex);
 				}
 			});
 		}else
