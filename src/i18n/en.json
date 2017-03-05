@@ -208,7 +208,36 @@
 					"setDefault": "Set as default"
 				},
 				"live":{
-					"live": "Live Stream"
+					"live": "Live Stream",
+					"urls": "Broadcasting URLs",
+					"primary": "Primary URL",
+					"backup": "Backup URL",
+					"regenerate": "Re-Generate Stream Token",
+					"streamName": "Stream name",
+					"note": "Note: When using Flash Live Media Encoder you can use %i to automatically map multiple streams, with other encoders you should substitute \"_1\" with the index of each live stream flavor.",
+					"config": "Live Stream Configuration",
+					"dvrStatus": "DVR Status",
+					"dvrWindow": "DVR Window",
+					"activeRec": "Active Recording",
+					"hlsStream": "HLS stream URL",
+					"akamaiStream": "Akamai stream ID",
+					"transcoding": "Transcoding Profile Configuration",
+					"transcodingProfile": "Transcoding Profile",
+					"bitrateConfig": "Bitrate Configuration",
+					"bitrateDoc": "Enter the bitrate configuration settings to create Multiple BitRate (MBR) encoding. When broadcasting with MBR, the player will choose the most appropriate bitrate to stream. Be certain that your client encoder (FMLE) is aligned with the same settings.",
+					"bitrate": "Bit Rate",
+					"width": "Width",
+					"height": "Height",
+					"credentials": "Broadcasting Credentials",
+					"username": "User Name",
+					"password": "Password",
+					"encoders": "Encoders IPs",
+					"primaryIP": "Primary IP",
+					"secondaryIP": "Secondary IP",
+					"export": "Export XML for FMLE",
+					"report": "Live Content Detailed Report",
+					"streamUrl": "Stream URL"
+
 				},
 				"related":{
 					"related": "Related files",
