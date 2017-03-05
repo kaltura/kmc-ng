@@ -23,6 +23,7 @@ import { EntrySectionHandler } from './entry-section-handler';
 @Injectable()
 export class EntryStore implements  OnDestroy{
 
+	private _sections : EntrySectionHandler[] = [];
 	private _sectionToRouteMapping : { [key : number] : string} = {};
 	private _entry: BehaviorSubject<KalturaMediaEntry> = new BehaviorSubject<KalturaMediaEntry>(null);
 	private _routeParamsChangedSubscription : ISubscription = null;
@@ -42,9 +43,7 @@ export class EntryStore implements  OnDestroy{
 
     constructor(private kalturaServerClient: KalturaServerClient,
 				private _router: Router,
-				private _entryRoute: ActivatedRoute,
-				@Inject(EntrySectionHandler) @Optional() private  _sections : EntrySectionHandler[]
-				) {
+				private _entryRoute: ActivatedRoute) {
 
 		this._initializeSections();
 
@@ -57,6 +56,11 @@ export class EntryStore implements  OnDestroy{
 		this._routerEventsSubscription.unsubscribe();
 		this._entry.complete();
 		this._events.complete();
+	}
+
+	public registerSection(section : EntrySectionHandler)
+	{
+		this._sections.push(section);
 	}
 
 	private _initializeSections() : void{
@@ -73,17 +77,7 @@ export class EntryStore implements  OnDestroy{
 			{
 				this._sectionToRouteMapping[routeSectionType] = childRoute.path;
 			}
-		})
-
-		if (this._sections)
-		{
-			this._sections.forEach(section =>
-			{
-				section.setStore(this);
-			});
-		}
-
-
+		});
 	}
 	private _onRouterEvents() : ISubscription
 	{

@@ -12,8 +12,10 @@ export class EntryClipsHandler extends EntrySectionHandler implements  OnDestroy
     private _eventSubscription : ISubscription;
 
 
-    protected _onStoreProvided(store : EntryStore)
+    constructor(store : EntryStore)
     {
+        super(store);
+
         this._eventSubscription = store.events$.subscribe(
             event =>
             {

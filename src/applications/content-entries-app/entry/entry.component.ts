@@ -35,19 +35,7 @@ import { EntryLoadingFailed, EntryLoading, EntryLoaded } from '../entry-store/en
 		EntryRelatedHandler,
 		EntrySchedulingHandler,
 		EntryThumbnailsHandler,
-		EntryUsersHandler,
-		{provide : EntrySectionHandler, useExisting : EntrySectionsListHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryPreviewHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryMetadataHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryAccessControlHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryCaptionsHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryClipsHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryFlavoursHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryLiveHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryRelatedHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntrySchedulingHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryThumbnailsHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryUsersHandler, multi:true}
+		EntryUsersHandler
 	]
 })
 export class EntryComponent implements OnInit, OnDestroy {

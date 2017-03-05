@@ -13,8 +13,9 @@ export class EntryPreviewHandler extends EntrySectionHandler implements  OnDestr
     private _previewEntryId : BehaviorSubject<string> = new BehaviorSubject<string>(null);
     public previewEntryId$ : Observable<string> = this._previewEntryId.asObservable();
 
-    protected _onStoreProvided(store : EntryStore)
+    constructor(store : EntryStore)
     {
+        super(store);
 
         this._eventSubscription = store.events$.subscribe(
             event =>

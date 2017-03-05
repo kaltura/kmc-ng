@@ -21,20 +21,17 @@ export interface SectionData
 
 
 @Injectable()
-export class EntrySectionsListHandler extends EntrySectionHandler implements  OnDestroy
+export class EntrySectionsListHandler extends EntrySectionHandler implements OnDestroy
 {
     private _eventSubscription : ISubscription;
     private _sections : BehaviorSubject<SectionData[]> = new BehaviorSubject<SectionData[]>(null);
     public sections$ : Observable<SectionData[]> = this._sections.asObservable();
     private _activeSectionType : EntrySectionTypes;
 
-    constructor(private _appLocalization: AppLocalization)
+    constructor(private _appLocalization: AppLocalization, store : EntryStore)
     {
-        super();
-    }
+        super(store);
 
-    protected _onStoreProvided(store : EntryStore)
-    {
         this._eventSubscription = store.events$.subscribe(
             event =>
             {
