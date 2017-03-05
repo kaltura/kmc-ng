@@ -50,6 +50,33 @@
 		margin-left: 46px;
 	}
 }
+
+:host /deep/ .ui-dropdown-trigger .fa.fa-caret-down{
+	margin-top: 2px;
+	margin-left: 1px;
+	position: absolute;
+	color: $kGrayscale1;
+}
+:host /deep/ .ui-dropdown.ui-widget{
+	width: 180px !important;
+}
+
+:host /deep/ .ui-dropdown-label.ui-inputtext{
+	background-color: #ffffff;
+}
+
+:host /deep/ .ui-multiselect-label-container{
+	width: 180px !important;
+	color: $kGrayscale3;
+}
+
+:host /deep/ .ui-multiselect-trigger .fa.fa-caret-down{
+	margin-top: 2px;
+	margin-left: 1px;
+	position: absolute;
+	color: $kGrayscale1;
+}
+
 :host /deep/ .ui-autocomplete.ui-widget{
 	width: 100%;
 	input{
@@ -68,7 +95,7 @@
 	}
 }
 :host /deep/ .ui-calendar .ui-inputtext{
-	width: 150px;
+	width: 144px;
 }
 
 :host /deep/ kAutoComplete{

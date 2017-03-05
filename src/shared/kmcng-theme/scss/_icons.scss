@@ -73,4 +73,8 @@
 	.ui-timepicker .fa.fa-angle-down{
 		@extend .kIcondropdown_arrow_bottom;
 	}
+	.ui-multiselect-trigger .fa.fa-caret-down:before{
+		@extend .kIcondropdown_arrow_bottom:before;
+		font-size: 12px;
+	}
 }
