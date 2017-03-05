@@ -2,9 +2,83 @@
 
 .kLive{
 	padding-left: 12px;
+	overflow-x: hidden;
 	.kTitle{
 		color: $kGrayscale1;
 		font-size: 20px;
 		font-weight: 700;
 	}
+	.kLiveDetails{
+		padding-right: 12px;
+		width: 100%;
+		button{
+			height: 30px;
+			font-weight: 400;
+		}
+		.kSubTitle{
+			display: block;
+			color: $kGrayscale1;
+			font-size: 15px;
+			font-weight: 700;
+			margin-top: 24px;
+		}
+		.kRow{
+			display: flex;
+			padding-top: 14px;
+			align-items: center;
+		}
+		.kTableHeader{
+			font-weight: 700;
+		}
+		.kNote{
+			display: block;
+			margin-top: 14px;
+			margin-bottom: 14px;
+		}
+		.kLabels{
+			flex: 0 0 auto;
+			width: 150px;
+		}
+		.kLiveNumber{
+			width:20px;
+		}
+		.kLiveBitrateCB{
+			width:26px;
+		}
+		.kLiveBitrate{
+			width:140px;
+		}
+		.kLiveKbps{
+			font-size:13px;
+		}
+		.kLiveWidth{
+			width:80px;
+		}
+		.kLiveX{
+			text-align: center;
+			width:40px;
+		}
+		.kLiveHeight{
+			width:80px;
+		}
+		.kReportLink{
+			margin-left: 12px;
+		}
+	}
 }
+
+:host /deep/ .ui-dropdown-trigger .fa.fa-caret-down{
+	margin-top: 2px;
+	margin-left: 1px;
+	position: absolute;
+	color: $kGrayscale1;
+}
+
+:host /deep/ .ui-dropdown-label.ui-inputtext{
+	background-color: #ffffff;
+}
+
+:host /deep/ .ui-spinner .fa{
+	margin-top: -.8em;
+}
+

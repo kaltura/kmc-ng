@@ -35,35 +35,26 @@
 		padding-left: 12px;
 		padding-right: 8px;
 		overflow-y: auto;
+		width: 252px;
 		height: calc(100vh - 442px);
 		overflow-x: hidden;
-		.kHeader{
+		.kTitle{
 			color: $kGrayscale1;
 			font-size: 20px;
 			font-weight: 700;
 			margin-bottom: 12px;
 			display: block;
 		}
-		table{
-			display: block;
-			color: $kGrayscale1;
-			width: 100%;
-			table-layout: fixed;
-			white-space: nowrap;
-			overflow: hidden;
+		.kRow{
+			display: flex;
+			padding-top: 24px;
+			align-items: center;
 		}
-		td{
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
+		.kLabels{
+			width: 100px;
+			flex: 0 0 auto;
+			color: $kGrayscale3;
 		}
-		tr{
-			height: 30px;
-			width: 100%;
-			td:first-child{
-				padding-right: 8px;
-				color: $kGrayscale3;
-			}
-		}
+
 	}
 }

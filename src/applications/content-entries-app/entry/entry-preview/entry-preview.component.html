@@ -4,64 +4,63 @@
 		<i (click)="openPreviewAndEmbed()" class="kIconshare"></i><a (click)="openPreviewAndEmbed()">{{'applications.content.entryDetails.preview.pande' | translate}}</a>
 	</div>
 	<div class="kPreviewDetails">
-		<span class="kHeader">{{'applications.content.entryDetails.preview.details' | translate}}</span>
-		<table>
-			<tr>
-				<td>{{'applications.content.entryDetails.preview.entryID' | translate}}</td>
-				<td>{{currentEntry?.id}}</td>
-			</tr>
-			<tr>
-				<td>{{'applications.content.entryDetails.preview.creator' | translate}}</td>
-				<td pTooltip="{{currentEntry?.creatorId}}" tooltipPosition="top">{{currentEntry?.creatorId}}</td>
-			</tr>
-			<tr>
-				<td>{{'applications.content.entryDetails.preview.creationDate' | translate}}</td>
-				<td>{{currentEntry?.createdAt * 1000 | date:'MM/dd/y HH:MM'}}</td>
-			</tr>
-			<tr *ngIf="_landingPage">
-				<td>{{'applications.content.entryDetails.preview.landingPage' | translate}}</td>
-				<td pTooltip="{{_landingPage}}" tooltipPosition="top"><a (click)="openLandingPage()">{{_landingPage}}</a></td>
-			</tr>
-			<tr *ngIf="_isLive && currentEntry?.recordedEntryId">
-				<td>{{'applications.content.entryDetails.preview.vodEntry' | translate}}</td>
-				<td><a (click)="navigateToEntry(currentEntry.recordedEntryId)">{{currentEntry?.recordedEntryId}}</a></td>
-			</tr>
-			<tr *ngIf="_isRecordedLive && currentEntry?.rootEntryId">
-				<td>{{'applications.content.entryDetails.preview.archiveOf' | translate}}</td>
-				<td><a (click)="navigateToEntry(currentEntry.rootEntryId)">{{currentEntry?.rootEntryId}}</a></td>
-			</tr>
-			<tr>
-				<td>{{'applications.content.entryDetails.preview.type' | translate}}</td>
-				<td>{{currentEntry?.mediaType | entryType: true}}</td>
-			</tr>
-			<tr>
-				<td>{{'applications.content.entryDetails.preview.moderation' | translate}}</td>
-				<td>{{currentEntry?.moderationStatus | moderation}}</td>
-			</tr>
-			<tr *ngIf="_entryReady">
-				<td>{{'applications.content.entryDetails.preview.plays' | translate}}</td>
-				<td>{{currentEntry?.plays}}</td>
-			</tr>
-			<tr *ngIf="_entryReady && currentEntry?.rank">
-				<td>{{'applications.content.entryDetails.preview.rating' | translate}}</td>
-				<td>{{currentEntry?.rank}}</td>
-			</tr>
-			<tr *ngIf="_hasDuration">
-				<td>{{'applications.content.entryDetails.preview.duration' | translate}}</td>
-				<td>{{currentEntry?.duration | kTime}}</td>
-			</tr>
-			<tr *ngIf="_entryReady && currentEntry?.moderationCount">
-				<td>{{'applications.content.entryDetails.preview.flags' | translate}}</td>
-				<td>{{currentEntry?.moderationCount}}</td>
-			</tr>
-			<tr *ngIf="_entryReady && currentEntry?.votes">
-				<td>{{'applications.content.entryDetails.preview.votes' | translate}}</td>
-				<td>{{currentEntry?.votes}}</td>
-			</tr>
-			<tr *ngIf="_isClip">
-				<td>{{'applications.content.entryDetails.preview.clippedFrom' | translate}}</td>
-				<td><a (click)="navigateToEntry(currentEntry.rootEntryId)">{{currentEntry?.rootEntryId}}</a></td>
-			</tr>
-		</table>
+		<span class="kTitle">{{'applications.content.entryDetails.preview.details' | translate}}</span>
+
+		<div class="kRow">
+			<span class="kLabels">{{'applications.content.entryDetails.preview.entryID' | translate}}</span>
+			<span>{{currentEntry?.id}}</span>
+		</div>
+		<div class="kRow">
+			<span class="kLabels">{{'applications.content.entryDetails.preview.creator' | translate}}</span>
+			<span pTooltip="{{currentEntry?.creatorId}}" tooltipPosition="top">{{currentEntry?.creatorId}}</span>
+		</div>
+		<div class="kRow">
+			<span class="kLabels">{{'applications.content.entryDetails.preview.creationDate' | translate}}</span>
+			<span>{{currentEntry?.createdAt * 1000 | date:'MM/dd/y HH:MM'}}</span>
+		</div>
+		<div class="kRow"  *ngIf="_landingPage">
+			<span class="kLabels">{{'applications.content.entryDetails.preview.landingPage' | translate}}</span>
+			<a  pTooltip="{{_landingPage}}" tooltipPosition="top" (click)="openLandingPage()">{{_landingPage}}</a>
+		</div>
+		<div class="kRow" *ngIf="_isLive && currentEntry?.recordedEntryId">
+			<span class="kLabels">{{'applications.content.entryDetails.preview.vodEntry' | translate}}</span>
+			<a (click)="navigateToEntry(currentEntry.recordedEntryId)">{{currentEntry?.recordedEntryId}}</a>
+		</div>
+		<div class="kRow" *ngIf="_isRecordedLive && currentEntry?.rootEntryId">
+			<span class="kLabels">{{'applications.content.entryDetails.preview.archiveOf' | translate}}</span>
+			<a (click)="navigateToEntry(currentEntry.rootEntryId)">{{currentEntry?.rootEntryId}}</a>
+		</div>
+		<div class="kRow">
+			<span class="kLabels">{{'applications.content.entryDetails.preview.type' | translate}}</span>
+			<span>{{currentEntry?.mediaType | entryType: true}}</span>
+		</div>
+		<div class="kRow">
+			<span class="kLabels">{{'applications.content.entryDetails.preview.moderation' | translate}}</span>
+			<span>{{currentEntry?.moderationStatus | moderation}}</span>
+		</div>
+		<div class="kRow" *ngIf="_entryReady">
+			<span class="kLabels">{{'applications.content.entryDetails.preview.plays' | translate}}</span>
+			<span>{{currentEntry?.plays}}</span>
+		</div>
+		<div class="kRow" *ngIf="_entryReady && currentEntry?.rank">
+			<span class="kLabels">{{'applications.content.entryDetails.preview.rating' | translate}}</span>
+			<span>{{currentEntry?.rank}}</span>
+		</div>
+		<div class="kRow" *ngIf="_hasDuration">
+			<span class="kLabels">{{'applications.content.entryDetails.preview.duration' | translate}}</span>
+			<span>{{currentEntry?.duration | kTime}}</span>
+		</div>
+		<div class="kRow" *ngIf="_entryReady && currentEntry?.moderationCount">
+			<span class="kLabels">{{'applications.content.entryDetails.preview.flags' | translate}}</span>
+			<span>{{currentEntry?.moderationCount}}</span>
+		</div>
+		<div class="kRow" *ngIf="_entryReady && currentEntry?.votes">
+			<span class="kLabels">{{'applications.content.entryDetails.preview.votes' | translate}}</span>
+			<span>{{currentEntry?.votes}}</span>
+		</div>
+		<div class="kRow" *ngIf="_isClip">
+			<span class="kLabels">{{'applications.content.entryDetails.preview.clippedFrom' | translate}}</span>
+			<span><a (click)="navigateToEntry(currentEntry.rootEntryId)">{{currentEntry?.rootEntryId}}</a></span>
+		</div>
 	</div>
 </div>

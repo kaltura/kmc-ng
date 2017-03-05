@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { ButtonModule, TooltipModule, InputTextareaModule, PaginatorModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule, CheckboxModule, CalendarModule } from 'primeng/primeng';
+import { ButtonModule, TooltipModule, InputTextareaModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule, CheckboxModule, CalendarModule, SpinnerModule } from 'primeng/primeng';
 
 import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
@@ -40,6 +41,12 @@ import { EntryPreview } from './entry-preview/entry-preview.component';
         FormsModule,
         InputTextareaModule,
         InputTextModule,
+	    DataTableModule,
+	    DropdownModule,
+	    RadioButtonModule,
+	    CheckboxModule,
+	    CalendarModule,
+	    SpinnerModule,
         KalturaCommonModule,
         KalturaPrimeNgUIModule,
         KalturaUIModule,

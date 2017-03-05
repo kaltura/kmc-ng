@@ -1,5 +1,144 @@
 <kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
 	<div class="kLive">
 		<p class="kTitle">{{'applications.content.entryDetails.live.live' | translate}}</p>
+		<div class="kLiveDetails">
+			<span class="kSubTitle">{{'applications.content.entryDetails.live.urls' | translate}}</span>
+			<div class="kRow">
+				<span class="kLabels">{{'applications.content.entryDetails.live.primary' | translate}}</span>
+				<span></span>
+			</div>
+			<div class="kRow">
+				<span class="kLabels">{{'applications.content.entryDetails.live.backup' | translate}}</span>
+				<span></span>
+			</div>
+			<div class="kRow">
+				<span class="kLabels"></span>
+				<button pButton class="kButtonDefault" label="{{'applications.content.entryDetails.live.regenerate' | translate}}"></button>
+			</div>
+
+			<span class="kSubTitle">{{'applications.content.entryDetails.live.urls' | translate}}</span>
+			<div class="kRow">
+				<span class="kLabels">{{'applications.content.entryDetails.live.streamName' | translate}}</span>
+				<span></span>
+			</div>
+			<div class="kRow">
+				<span class="kLabels"></span>
+				<span>{{'applications.content.entryDetails.live.note' | translate}}</span>
+			</div>
+
+			<span class="kSubTitle">{{'applications.content.entryDetails.live.config' | translate}}</span>
+			<div class="kRow">
+				<span class="kLabels">{{'applications.content.entryDetails.live.hlsStream' | translate}}</span>
+				<span></span>
+			</div>
+			<div class="kRow">
+				<span class="kLabels">{{'applications.content.entryDetails.live.akamaiStream' | translate}}</span>
+				<span></span>
+			</div>
+			<div class="kRow">
+				<span class="kLabels">{{'applications.content.entryDetails.live.dvrStatus' | translate}}</span>
+				<span></span>
+			</div>
+			<div class="kRow">
+				<span class="kLabels">{{'applications.content.entryDetails.live.dvrWindow' | translate}}</span>
+				<span></span>
+			</div>
+			<div class="kRow">
+				<span class="kLabels">{{'applications.content.entryDetails.live.activeRec' | translate}}</span>
+				<span></span>
+			</div>
+
+			<!-- Kaltura Live only -->
+			<span class="kSubTitle">{{'applications.content.entryDetails.live.transcoding' | translate}}</span>
+			<div class="kRow">
+				<span class="kLabels">{{'applications.content.entryDetails.live.transcodingProfile' | translate}}</span>
+				<p-dropdown></p-dropdown>
+			</div>
+
+			<!-- Universal Live only -->
+			<span class="kSubTitle">{{'applications.content.entryDetails.live.bitrateConfig' | translate}}</span>
+			<span class="kNote">{{'applications.content.entryDetails.live.bitrateDoc' | translate}}</span>
+			<div class="kRow kTableHeader">
+				<span class="kLiveNumber"></span>
+				<span class="kLiveBitrateCB"></span>
+				<span class="kLiveBitrate">{{'applications.content.entryDetails.live.bitrate' | translate}}</span>
+				<span class="kLiveWidth">{{'applications.content.entryDetails.live.width' | translate}}</span>
+				<span class="kLiveX"></span>
+				<span class="kLiveHeight">{{'applications.content.entryDetails.live.height' | translate}}</span>
+			</div>
+			<div class="kRow">
+				<span class="kLiveNumber">1.</span>
+				<div class="kLiveBitrateCB"><p-checkbox binary="true"></p-checkbox></div>
+				<div class="kLiveBitrate">
+					<p-dropdown></p-dropdown>
+					<span class="kLiveBitrate kLiveKbps"> Kbps</span>
+				</div>
+				<div class="kLiveWidth"><p-spinner size="5" [min]="0" [max]="9999"></p-spinner></div>
+				<span class="kLiveX">x</span>
+				<div class="kLiveHeight"><p-spinner size="5" [min]="0" [max]="9999"></p-spinner></div>
+			</div>
+			<div class="kRow">
+				<span class="kLiveNumber">2.</span>
+				<div class="kLiveBitrateCB"><p-checkbox binary="true"></p-checkbox></div>
+				<div class="kLiveBitrate">
+					<p-dropdown></p-dropdown>
+					<span class="kLiveBitrate kLiveKbps"> Kbps</span>
+				</div>
+				<div class="kLiveWidth"><p-spinner size="5" [min]="0" [max]="9999"></p-spinner></div>
+				<span class="kLiveX">x</span>
+				<div class="kLiveHeight"><p-spinner size="5" [min]="0" [max]="9999"></p-spinner></div>
+			</div>
+			<div class="kRow">
+				<span class="kLiveNumber">3.</span>
+				<div class="kLiveBitrateCB"><p-checkbox binary="true"></p-checkbox></div>
+				<div class="kLiveBitrate">
+					<p-dropdown></p-dropdown>
+					<span class="kLiveBitrate kLiveKbps"> Kbps</span>
+				</div>
+				<div class="kLiveWidth"><p-spinner size="5" [min]="0" [max]="9999"></p-spinner></div>
+				<span class="kLiveX">x</span>
+				<div class="kLiveHeight"><p-spinner size="5" [min]="0" [max]="9999"></p-spinner></div>
+			</div>
+
+			<!-- Universal Live only -->
+			<span class="kSubTitle">{{'applications.content.entryDetails.live.credentials' | translate}}</span>
+			<div class="kRow">
+				<span class="kLabels">{{'applications.content.entryDetails.live.username' | translate}}</span>
+				<span></span>
+			</div>
+			<div class="kRow">
+				<span class="kLabels">{{'applications.content.entryDetails.live.password' | translate}}</span>
+				<span></span>
+			</div>
+
+			<!-- Universal Live only -->
+			<span class="kSubTitle">{{'applications.content.entryDetails.live.encoders' | translate}}</span>
+			<div class="kRow">
+				<span class="kLabels">{{'applications.content.entryDetails.live.primaryIP' | translate}}</span>
+				<span></span>
+			</div>
+			<div class="kRow">
+				<span class="kLabels">{{'applications.content.entryDetails.live.secondaryIP' | translate}}</span>
+				<span></span>
+			</div>
+
+			<!-- Kaltura Live only -->
+			<div class="kRow kNote">
+				<button pButton class="kButtonDefault" label="{{'applications.content.entryDetails.live.export' | translate}}"></button>
+				<a class="kReportLink">{{'applications.content.entryDetails.live.report' | translate}}</a>
+			</div>
+
+			<!-- Manual Live only -->
+			<div class="kRow">
+				<span class="kLabels">{{'applications.content.entryDetails.live.hlsStream' | translate}}</span>
+				<span></span>
+			</div>
+			<div class="kRow"> <!-- loop through liveStreamConfigurations array -->
+				<span class="kLabels">{{'applications.content.entryDetails.live.streamUrl' | translate}}</span>
+				<span></span>
+			</div>
+
+
+		</div>
 	</div>
 </kLoader>
