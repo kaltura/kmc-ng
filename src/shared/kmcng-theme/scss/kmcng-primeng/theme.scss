@@ -334,7 +334,11 @@ $invalidInputBorderColor: #cd0a0a;
     }
     .ui-datepicker-prev, .ui-datepicker-next{
         color: #ffffff !important;
+		&:hover{
+			background: #01ACCD !important;
+		}
     }
+
     .ui-datepicker-prev-hover, .ui-datepicker-next-hover, thead{
         background: #01ACCD;
         border: 0px solid #01ACCD;
@@ -349,6 +353,14 @@ $invalidInputBorderColor: #cd0a0a;
             color: $kPrimary;
         }
     }
+	.ui-timepicker.ui-widget-header{
+		color: $kGrayscale1;
+	}
+	.ui-timepicker a{
+		color: $kGrayscale1;
+		font-size: 10px;
+		text-decoration: none;
+	}
     .link, a{
         font-size: 14px;
     }

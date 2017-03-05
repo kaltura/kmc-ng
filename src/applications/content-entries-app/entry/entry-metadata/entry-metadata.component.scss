@@ -16,6 +16,9 @@
 		display: flex;
 		padding-top: 20px;
 	}
+	.kValign{
+		align-items: center;
+	}
 	.kLabels{
 		width: 140px;
 		flex: 0 0 auto;
@@ -23,8 +26,28 @@
 	input, textarea{
 		width: 100%;
 	}
-	textarea{
-		height: 70px;
+	textarea.twoRows{
+		height: 36px;
+	}
+	textarea.threeRows{
+		height: 52px;
+	}
+	.kMultiple{
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+	}
+	.kSingleItem{
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		padding-bottom: 12px;
+	}
+	.kAdd{
+		margin-left: 14px;
+	}
+	.kAddDate{
+		margin-left: 46px;
 	}
 }
 :host /deep/ .ui-autocomplete.ui-widget{
@@ -44,6 +67,10 @@
 		width: 100%;
 	}
 }
+:host /deep/ .ui-calendar .ui-inputtext{
+	width: 150px;
+}
+
 :host /deep/ kAutoComplete{
 	width: 100%;
 }

@@ -4,33 +4,88 @@
 		<button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right" label="{{'applications.content.entryDetails.metadata.jumpTo' | translate}}" (click)="menu.toggle($event)"></button>
 	</div>
 	<div class="kMetadataDetails">
-		<div class="kRow">
+		<div class="kRow kValign">
 			<span class="kLabels">{{'applications.content.entryDetails.metadata.entryID' | translate}}</span>
 			<span>Entry ID</span>
 		</div>
-		<div class="kRow">
+		<div class="kRow kValign">
 			<span class="kLabels">{{'applications.content.entryDetails.metadata.entryName' | translate}}</span>
 			<input type="text" pInputText/>
 		</div>
 		<div class="kRow">
 			<span class="kLabels">{{'applications.content.entryDetails.metadata.description' | translate}}</span>
-			<textarea pInputTextarea></textarea>
+			<textarea class="threeRows" pInputTextarea></textarea>
 		</div>
-		<div class="kRow">
+		<div class="kRow kValign">
 			<span class="kLabels">{{'applications.content.entryDetails.metadata.tags' | translate}}</span>
 			<kAutoComplete></kAutoComplete>
 		</div>
-		<div class="kRow">
+		<div class="kRow kValign">
 			<span class="kLabels">{{'applications.content.entryDetails.metadata.categories' | translate}}</span>
 			<kAutoComplete></kAutoComplete>
 		</div>
 		<div class="kRow">
 			<span class="kLabels">{{'applications.content.entryDetails.metadata.offlineMsg' | translate}}</span>
-			<textarea pInputTextarea></textarea>
+			<textarea class="threeRows" pInputTextarea></textarea>
 		</div>
-		<div class="kRow">
+		<div class="kRow kValign">
 			<span class="kLabels">{{'applications.content.entryDetails.metadata.refId' | translate}}</span>
 			<input type="text" pInputText/>
 		</div>
+
+		<hr style="margin-top: 24px"/>
+		<!-- Text Single Value -->
+		<div class="kRow">
+			<span class="kLabels">Text Single Value</span>
+			<textarea class="twoRows" pInputTextarea></textarea>
+		</div>
+
+		<!-- Text Multiple Values -->
+		<div class="kRow">
+			<span class="kLabels">Text Multiple Values</span>
+			<div class="kMultiple">
+				<div class="kSingleItem">
+					<input type="text" pInputText/>
+					<a class="kAdd">Add</a>
+				</div>
+				<div class="kSingleItem">
+					<input type="text" pInputText/>
+					<a class="kAdd">Add</a>
+				</div>
+				<div class="kSingleItem">
+					<input type="text" pInputText/>
+					<a class="kAdd">Add</a>
+				</div>
+				<a>Delete</a>
+			</div>
+		</div>
+
+		<!-- Date Single Value -->
+		<div class="kRow kValign">
+			<span class="kLabels">Date Single Value</span>
+			<p-calendar icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showTime]="true" yearRange="2005:2030"></p-calendar>
+		</div>
+
+		<!-- Dates Multiple Values -->
+		<div class="kRow">
+			<span class="kLabels">Date Multiple Values</span>
+			<div class="kMultiple">
+				<div class="kSingleItem">
+					<p-calendar icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showTime]="true" yearRange="2005:2030"></p-calendar>
+					<a class="kAddDate">Add</a>
+				</div>
+				<div class="kSingleItem">
+					<p-calendar icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showTime]="true" yearRange="2005:2030"></p-calendar>
+					<a class="kAddDate">Add</a>
+				</div>
+				<div class="kSingleItem">
+					<p-calendar icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showTime]="true" yearRange="2005:2030"></p-calendar>
+					<a class="kAddDate">Add</a>
+				</div>
+				<a>Delete</a>
+			</div>
+		</div>
+
+
 	</div>
 </kLoader>

@@ -67,4 +67,10 @@
 		@extend .kIcondropdown_arrow_top:before;
 		font-size: 10px;
 	}
+	.ui-timepicker .fa.fa-angle-up{
+		@extend .kIcondropdown_arrow_top;
+	}
+	.ui-timepicker .fa.fa-angle-down{
+		@extend .kIcondropdown_arrow_bottom;
+	}
 }
