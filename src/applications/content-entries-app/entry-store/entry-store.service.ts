@@ -29,7 +29,6 @@ export class EntryStore implements  OnDestroy{
 	private _routeParamsChangedSubscription : ISubscription = null;
 	private _routerEventsSubscription : ISubscription = null;
 	private _activeSectionType : EntrySectionTypes = null;
-	private _draftEntry : KalturaMediaEntry = null;
 	private _events : Subject<EntryEvents> = new Subject<EntryEvents>();
 
 	public entry$ = this._entry.asObservable();
@@ -111,7 +110,7 @@ export class EntryStore implements  OnDestroy{
 		return this._entryRoute.params.do((params : Params) =>
 		{
 			// clean state of previous entry before loading the new one.
-			this._draftEntry = null;
+			this._entry.next(null);
 		})
         .switchMap((params: Params) => this._getEntry(params['id']))
 		.subscribeOn(Scheduler.async)
@@ -121,10 +120,8 @@ export class EntryStore implements  OnDestroy{
 				{
 					// TODO [kmcng] handle situations when the subscribers has errors!!
 
-					this._draftEntry = response;
-
-					this._entry.next(this._draftEntry);
-					this._events.next(new EntryLoaded(this._draftEntry));
+					this._entry.next(response);
+					this._events.next(new EntryLoaded(response));
 				}else
 				{
 					// handle error

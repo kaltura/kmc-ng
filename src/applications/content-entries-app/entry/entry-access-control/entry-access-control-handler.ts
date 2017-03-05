@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { EntrySectionHandler } from '../../entry-store/entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
@@ -8,7 +8,7 @@ import { EntryLoaded } from '../../entry-store/entry-sections-events';
 
 
 @Injectable()
-export class EntryAccessControlHandler extends EntrySectionHandler implements OnDestroy
+export class EntryAccessControlHandler extends EntrySectionHandler
 {
     private _eventSubscription : ISubscription;
 
@@ -24,7 +24,10 @@ export class EntryAccessControlHandler extends EntrySectionHandler implements On
         );
     }
 
-    ngOnDestroy()
+    /**
+     * Do some cleanups if needed once the section is removed
+     */
+    onSectionRemoved()
     {
         this._eventSubscription.unsubscribe();
     }

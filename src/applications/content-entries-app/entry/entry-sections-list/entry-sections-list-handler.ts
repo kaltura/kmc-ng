@@ -21,7 +21,7 @@ export interface SectionData
 
 
 @Injectable()
-export class EntrySectionsListHandler extends EntrySectionHandler implements OnDestroy
+export class EntrySectionsListHandler extends EntrySectionHandler
 {
     private _eventSubscription : ISubscription;
     private _sections : BehaviorSubject<SectionData[]> = new BehaviorSubject<SectionData[]>(null);
@@ -46,7 +46,10 @@ export class EntrySectionsListHandler extends EntrySectionHandler implements OnD
         );
     }
 
-    ngOnDestroy()
+    /**
+     * Do some cleanups if needed once the section is removed
+     */
+    onSectionRemoved()
     {
         this._eventSubscription.unsubscribe();
     }

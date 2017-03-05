@@ -23,9 +23,14 @@ export class EntryMetadataHandler extends EntrySectionHandler implements  OnDest
         );
     }
 
-    ngOnDestroy()
+    /**
+     * Do some cleanups if needed once the section is removed
+     */
+    onSectionRemoved()
     {
         this._eventSubscription.unsubscribe();
     }
+
+
 
 }

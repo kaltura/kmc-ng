@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { ButtonModule, TooltipModule, InputTextareaModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule, CheckboxModule, CalendarModule } from 'primeng/primeng';
+import { ButtonModule, TooltipModule, InputTextareaModule, PaginatorModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule, CheckboxModule, CalendarModule } from 'primeng/primeng';
 
 import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
+import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
 import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 
@@ -28,21 +29,23 @@ import { EntryPreview } from './entry-preview/entry-preview.component';
 
 @NgModule({
     imports: [
+	    CalendarModule,
+	    CheckboxModule,
+	    DataTableModule,
+	    DropdownModule,
+	    RadioButtonModule,
         AutoCompleteModule,
         ButtonModule,
         CommonModule,
         FormsModule,
-        InputTextModule,
         InputTextareaModule,
-	    DataTableModule,
-	    DropdownModule,
-	    RadioButtonModule,
-	    CheckboxModule,
-	    CalendarModule,
+        InputTextModule,
         KalturaCommonModule,
+        KalturaPrimeNgUIModule,
         KalturaUIModule,
         KMCContentUIModule,
         MenuModule,
+        PaginatorModule,
         ReactiveFormsModule,
         RouterModule.forChild([]),
         TooltipModule

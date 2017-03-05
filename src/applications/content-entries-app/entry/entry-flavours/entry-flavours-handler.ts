@@ -7,7 +7,7 @@ import { EntryStore } from '../../entry-store/entry-store.service';
 import { EntryLoaded } from '../../entry-store/entry-sections-events';
 
 @Injectable()
-export class EntryFlavoursHandler extends EntrySectionHandler implements  OnDestroy
+export class EntryFlavoursHandler extends EntrySectionHandler
 {
     private _eventSubscription : ISubscription;
 
@@ -23,7 +23,10 @@ export class EntryFlavoursHandler extends EntrySectionHandler implements  OnDest
         );
     }
 
-    ngOnDestroy()
+    /**
+     * Do some cleanups if needed once the section is removed
+     */
+    onSectionRemoved()
     {
         this._eventSubscription.unsubscribe();
     }

@@ -1,23 +1,38 @@
-<kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
+<kLoader [loading]="(_handler.entries$ | async)?.loading" [loadingError]="(_handler.entries$)?.error" (onActionRequested)="_onLoadingAction($event)">
 	<div class="kClips">
 		<p class="kTitle">{{'applications.content.entryDetails.clips.clips' | translate}}</p>
+
 		<div class="kTable">
-			<p-dataTable #dataTable scrollable="true" scrollHeight="100%">
-				<p-column header="{{'applications.content.entryDetails.clips.id' | translate}}">
+			<p-dataTable [value]="(_handler.entries$ | async)?.items" [sortField]="_handler.sortBy" [sortOrder]="_handler.sortAsc | kTreeBooleanPrimeSort"
+						 scrollable="true" scrollHeight="100%"
+						 (onSort)="_onSortChanged($event)"
+						 >
+				<p-column field="id" header="{{'applications.content.entryDetails.clips.id' | translate}}">
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.clips.name' | translate}}">
+				<p-column field="name" header="{{'applications.content.entryDetails.clips.name' | translate}}" [sortable]="'custom'">
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.clips.plays' | translate}}">
+				<p-column field="plays" header="{{'applications.content.entryDetails.clips.plays' | translate}}">
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.clips.created' | translate}}">
+				<p-column field="createdAt" header="{{'applications.content.entryDetails.clips.created' | translate}}" [sortable]="'custom'">
+					<template let-col let-entry="rowData" pTemplate="body">
+						<span>{{entry[col.field] * 1000 | date:'MM/dd/y HH:MM'}}</span>
+					</template>
 				</p-column>
 				<p-column header="{{'applications.content.entryDetails.clips.offset' | translate}}">
 				</p-column>
 				<p-column header="{{'applications.content.entryDetails.clips.duration' | translate}}">
 				</p-column>
 				<p-column header="{{'applications.content.entryDetails.clips.status' | translate}}">
+					<template let-col let-entry="rowData" pTemplate="body">
+						<span>{{entry | entryStatus}}</span>
+					</template>
 				</p-column>
 			</p-dataTable>
 		</div>
+
+		<p-paginator [rows]="_handler.pageSize" (onPageChange)="_onPaginationChanged($event)"
+					 [first]="_handler.pageIndex * _handler.pageSize"
+					 [totalRecords]="(_handler.entries$ | async)?.totalItems"
+					 [rowsPerPageOptions]="_handler.pageSizesAvailable"></p-paginator>
 	</div>
 </kLoader>

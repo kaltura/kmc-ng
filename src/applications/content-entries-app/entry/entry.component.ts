@@ -1,9 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 
 import { KalturaMediaType } from '@kaltura-ng2/kaltura-api/types';
 import { EntryStore } from '../entry-store/entry-store.service';
-import { EntrySectionHandler } from '../entry-store/entry-section-handler';
 import { EntrySectionsListHandler } from './entry-sections-list/entry-sections-list-handler';
 import { EntryMetadataHandler } from './entry-metadata/entry-metadata-handler';
 import { EntryPreviewHandler } from './entry-preview/entry-preview-handler';
