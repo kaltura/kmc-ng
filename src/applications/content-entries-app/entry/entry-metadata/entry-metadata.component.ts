@@ -10,6 +10,13 @@ import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 })
 export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
+	// temp arrays for custom metadata [TODO] - remove
+	textItems = ["item", "item", "item"];
+	dateItems = ["item", "item", "item"];
+	listItems = [{"label": "list item 1", "value" : 1}, {"label": "list item 2", "value" : 2}, {"label": "list item 3", "value" : 3}];
+	entries = ["Entry 1", "Entry 2", "Entry 3"];
+	selectedEntries = [];
+
     public _loading = false;
     public _loadingError = null;
 	public _jumpToMenu: MenuItem[] = [];
