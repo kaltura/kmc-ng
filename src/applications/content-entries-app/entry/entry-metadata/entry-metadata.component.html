@@ -45,15 +45,12 @@
 		<div class="kRow">
 			<span class="kLabels">Text Multiple Values</span>
 			<div class="kMultiple">
-				<div class="kSingleItem" *ngFor="let item of textItems; let i = index; let last = last">
-					<input type="text" value="item {{i+1}}" pInputText/>
-					<a class="kAdd" *ngIf="last" (click)="textItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
+				<div class="kSingleItem" *ngFor="let item of textItems; let i = index">
+					<input type="text" value="{{item}}" pInputText/>
+					<a (click)="textItems.splice(textItems.indexOf(item), 1)" class="kDelete">{{'applications.content.entryDetails.metadata.delete' | translate}}</a>
 				</div>
-				<div *ngIf="!textItems.length">
-					<a class="kAdd" (click)="textItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
-				</div>
-				<div *ngIf="textItems.length">
-					<a (click)="textItems.pop()">{{'applications.content.entryDetails.metadata.delete' | translate}}</a>
+				<div>
+					<a (click)="textItems.push('item '+(textItems.length+1))">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
 				</div>
 			</div>
 		</div>
@@ -68,15 +65,12 @@
 		<div class="kRow">
 			<span class="kLabels">Date Multiple Values</span>
 			<div class="kMultiple">
-				<div class="kSingleItem" *ngFor="let date of dateItems; let last = last">
+				<div class="kSingleItem" *ngFor="let date of dateItems">
 					<p-calendar icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showTime]="true" yearRange="2005:2030"></p-calendar>
-					<a class="kAddDate" *ngIf="last" (click)="dateItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
+					<a class="kDeleteDate" (click)="dateItems.pop()">{{'applications.content.entryDetails.metadata.delete' | translate}}</a>
 				</div>
-				<div *ngIf="!dateItems.length">
-					<a class="kAdd" (click)="dateItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
-				</div>
-				<div *ngIf="dateItems.length">
-					<a (click)="dateItems.pop()">{{'applications.content.entryDetails.metadata.delete' | translate}}</a>
+				<div>
+					<a (click)="dateItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
 				</div>
 			</div>
 		</div>
@@ -101,7 +95,9 @@
 				<div *ngIf="selectedEntries.length">
 					<span>{{selectedEntries.length}} {{'applications.content.entryDetails.metadata.selected' | translate}}</span>
 					<button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"></button>
-					<a (click)="selectedEntries=[]">{{'applications.content.entryDetails.metadata.cancel' | translate}}</a>
+					<button pButton icon="kIcondropdown_arrow_bottom" class="kButtonDefault"></button>
+					<button pButton icon="kIcondropdown_arrow_top" class="kButtonDefault"></button>
+					<a class="kDelete" (click)="selectedEntries=[]">{{'applications.content.entryDetails.metadata.cancel' | translate}}</a>
 				</div>
 				<button *ngIf="!selectedEntries.length" pButton class="kButtonDefault" (click)="entries.push('Entry '+(entries.length+1))" label="{{'applications.content.entryDetails.metadata.addEntry' | translate}}"></button>
 			</div>
@@ -137,7 +133,7 @@
 		<!-- Group -->
 		<div class="kMultiple">
 			<span class="kGroupTitle">Group Title</span>
-			<div class="kGroupContainer">
+			<div class="kGroupContainer"  *ngFor="let group of groups">
 				<!-- Group content here -->
 
 				<!-- Text Single Value -->
@@ -149,23 +145,23 @@
 				<div class="kRow">
 					<span class="kLabels">Date Multiple Values</span>
 					<div class="kMultiple">
-						<div class="kSingleItem" *ngFor="let date of dateItems; let last = last">
+						<div class="kSingleItem" *ngFor="let date of dateItems">
 							<p-calendar icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showTime]="true" yearRange="2005:2030"></p-calendar>
-							<a class="kAddDate" *ngIf="last" (click)="dateItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
+							<a class="kDeleteDate" (click)="dateItems.pop()">{{'applications.content.entryDetails.metadata.delete' | translate}}</a>
 						</div>
-						<div *ngIf="!dateItems.length">
-							<a class="kAdd" (click)="dateItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
-						</div>
-						<div *ngIf="dateItems.length">
-							<a (click)="dateItems.pop()">{{'applications.content.entryDetails.metadata.delete' | translate}}</a>
+						<div>
+							<a (click)="dateItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
 						</div>
 					</div>
 				</div>
 
+				<div class="kDeleteGroup">
+					<button pButton (click)="groups.pop()" class="kButtonDefault" label="{{'applications.content.entryDetails.metadata.deleteGroup' | translate}}"></button>
+				</div>
 			</div>
+
 			<div class="kGroupButtons">
-				<button pButton class="kButtonDefault" label="{{'applications.content.entryDetails.metadata.add' | translate}}"></button>
-				<a class="kDelete">{{'applications.content.entryDetails.metadata.delete' | translate}}</a>
+				<button pButton (click)="groups.push(item)" class="kButtonDefault" label="{{'applications.content.entryDetails.metadata.addGroup' | translate}}"></button>
 			</div>
 		</div>
 

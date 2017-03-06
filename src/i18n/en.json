@@ -159,7 +159,9 @@
 					"addEntry": "Add Entry",
 					"remove": "Remove",
 					"selected": "Selected",
-					"cancel": "Cancel"
+					"cancel": "Cancel",
+					"addGroup": "Add Group",
+					"deleteGroup": "Delete Group"
 				},
 				"thumbnails":{
 					"thumbnails": "Thumbnails",

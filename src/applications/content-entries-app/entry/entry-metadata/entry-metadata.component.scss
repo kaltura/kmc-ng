@@ -45,10 +45,10 @@
 		align-items: center;
 		padding-bottom: 12px;
 	}
-	.kAdd, .kDelete{
+	.kDelete{
 		margin-left: 14px;
 	}
-	.kAddDate{
+	.kDeleteDate{
 		margin-left: 46px;
 	}
 	.kTableHeader{
@@ -116,6 +116,7 @@
 		padding-bottom: 12px;
 	}
 	.kGroupContainer{
+		margin-bottom: 12px;
 		background-color: #ffffff;
 		border: 1px solid $kGrayscale3;
 		border-radius: 3px;
@@ -123,11 +124,15 @@
 		padding: 8px;
 	}
 	.kGroupButtons{
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		padding-top: 12px;
 		padding-bottom: 12px;
+		button{
+			height: 30px;
+			font-weight: 400;
+		}
+	}
+	.kDeleteGroup{
+		text-align: right;
+		padding-top: 16px;
 		button{
 			height: 30px;
 			font-weight: 400;
@@ -142,15 +147,16 @@
 	color: $kGrayscale1;
 }
 :host /deep/ .ui-dropdown.ui-widget{
-	width: 180px !important;
+	width: 100% !important;
 }
 
 :host /deep/ .ui-dropdown-label.ui-inputtext{
 	background-color: #ffffff;
 }
-
+:host /deep/ .ui-multiselect{
+	width: 100% !important;
+}
 :host /deep/ .ui-multiselect-label-container{
-	width: 180px !important;
 	color: $kGrayscale3;
 }
 
@@ -193,5 +199,13 @@
 }
 
 :host /deep/ kAutoComplete{
+	width: 100%;
+}
+
+:host /deep/ p-dropdown{
+	width: 100%;
+}
+
+:host /deep/ p-multiselect{
 	width: 100%;
 }

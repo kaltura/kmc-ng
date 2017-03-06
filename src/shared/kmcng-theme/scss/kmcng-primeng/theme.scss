@@ -197,11 +197,14 @@ $invalidInputBorderColor: #cd0a0a;
     &:hover{
         color: $kPrimary;
     }
-    &:active{
+    &:active:not(:disabled){
         box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
     }
     &:disabled{
-        @extend .disabled;
+		color: $kGrayscale4;
+		background: transparent;
+		border: 1px solid $kGrayscale4;
+		cursor: none;
     }
 }
 .ui-button.kButtonDanger {
@@ -215,7 +218,7 @@ $invalidInputBorderColor: #cd0a0a;
         background: darken($kDandger, 10%);
         border: 0px solid darken($kDandger, 10%);
     }
-    &:active{
+    &:active:not(:disabled){
         box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
     }
     &:disabled{
