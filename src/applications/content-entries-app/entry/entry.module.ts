@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { ButtonModule, TooltipModule, InputTextareaModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule, CheckboxModule, CalendarModule, SpinnerModule } from 'primeng/primeng';
+import { MultiSelectModule, ButtonModule, TooltipModule, InputTextareaModule, PaginatorModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule, CheckboxModule, CalendarModule, SpinnerModule } from 'primeng/primeng';
 
 import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
+import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
 import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 
@@ -30,38 +31,41 @@ import { EntryPreview } from './entry-preview/entry-preview.component';
     imports: [
         AutoCompleteModule,
         ButtonModule,
+        CalendarModule,
+        CheckboxModule,
         CommonModule,
+        DataTableModule,
+        DropdownModule,
         FormsModule,
-        InputTextModule,
         InputTextareaModule,
-	    DataTableModule,
-	    DropdownModule,
-	    RadioButtonModule,
-	    CheckboxModule,
-	    CalendarModule,
-	    SpinnerModule,
+        InputTextModule,
         KalturaCommonModule,
+        KalturaPrimeNgUIModule,
         KalturaUIModule,
         KMCContentUIModule,
         MenuModule,
+        MultiSelectModule,
+        PaginatorModule,
+        RadioButtonModule,
         ReactiveFormsModule,
         RouterModule.forChild([]),
+        SpinnerModule,
         TooltipModule
     ],
     declarations: [
+        EntryAccessControl,
+        EntryCaptions,
+        EntryClips,
         EntryComponent,
+        EntryFlavours,
+        EntryLive,
         EntryMetadata,
-	    EntryThumbnails,
-	    EntryAccessControl,
-	    EntryScheduling,
-	    EntryFlavours,
-	    EntryCaptions,
-	    EntryLive,
-	    EntryRelated,
-	    EntryClips,
+        EntryPreview,
+        EntryRelated,
+        EntryScheduling,
         EntrySectionsList,
-        EntryUsers,
-        EntryPreview
+        EntryThumbnails,
+        EntryUsers
     ],
     exports: [
     ],

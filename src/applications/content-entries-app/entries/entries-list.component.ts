@@ -103,9 +103,6 @@ export class EntriesListComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnDestroy(){
         this.querySubscription.unsubscribe();
         this.querySubscription = null;
-
-
-        this._entriesStore.dispose();
     }
 
     public _removeReleaseNotes(){

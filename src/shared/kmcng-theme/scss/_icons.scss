@@ -67,4 +67,17 @@
 		@extend .kIcondropdown_arrow_top:before;
 		font-size: 10px;
 	}
+	.ui-timepicker .fa.fa-angle-up{
+		@extend .kIcondropdown_arrow_top;
+	}
+	.ui-timepicker .fa.fa-angle-down{
+		@extend .kIcondropdown_arrow_bottom;
+	}
+	.ui-multiselect-trigger .fa.fa-caret-down:before{
+		@extend .kIcondropdown_arrow_bottom:before;
+		font-size: 12px;
+	}
+	.ui-multiselect-filter-container  .fa.fa-search:before{
+		@extend .kIconmagnifier:before;
+	}
 }

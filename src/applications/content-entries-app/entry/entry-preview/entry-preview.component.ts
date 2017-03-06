@@ -38,13 +38,13 @@ export class EntryPreview implements OnInit {
 	constructor(private appConfig: AppConfig,
 				private appAuthentication: AppAuthentication,
 				private browserService: BrowserService,
-				private _sectionHandler : EntryPreviewHandler,
+				private _handler : EntryPreviewHandler,
 				public _entryStore: EntryStore) {
 	}
 
 	ngOnInit() {
 
-		this._sectionHandler.previewEntryId$.subscribe(
+		this._handler.previewEntryId$.subscribe(
 			previewEntryId =>
 			{
 				if (previewEntryId) {

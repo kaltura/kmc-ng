@@ -3,7 +3,7 @@ import { EntrySectionHandler } from '../../entry-store/entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
+import { EntryStore } from '../../entry-store/entry-store.service';
 import { EntryLoaded, SectionEntered } from '../../entry-store/entry-sections-events';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { AppLocalization } from "@kaltura-ng2/kaltura-common";
@@ -21,21 +21,18 @@ export interface SectionData
 
 
 @Injectable()
-export class EntrySectionsListHandler extends EntrySectionHandler implements  OnDestroy
+export class EntrySectionsListHandler extends EntrySectionHandler
 {
     private _eventSubscription : ISubscription;
     private _sections : BehaviorSubject<SectionData[]> = new BehaviorSubject<SectionData[]>(null);
     public sections$ : Observable<SectionData[]> = this._sections.asObservable();
     private _activeSectionType : EntrySectionTypes;
 
-    constructor(private _appLocalization: AppLocalization)
+    constructor(private _appLocalization: AppLocalization, store : EntryStore)
     {
-        super();
-    }
+        super(store);
 
-    protected _onManagerProvided(manager : EntrySectionsManager)
-    {
-        this._eventSubscription = manager.events$.subscribe(
+        this._eventSubscription = store.events$.subscribe(
             event =>
             {
                 if (event instanceof SectionEntered)
@@ -49,7 +46,10 @@ export class EntrySectionsListHandler extends EntrySectionHandler implements  On
         );
     }
 
-    ngOnDestroy()
+    /**
+     * Do some cleanups if needed once the section is removed
+     */
+    onSectionRemoved()
     {
         this._eventSubscription.unsubscribe();
     }

@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
+
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observable } from 'rxjs/Observable';
@@ -13,6 +14,7 @@ import {
     KalturaDetachedResponseProfile,
     KalturaFilterPager,
     KalturaMediaEntryFilter,
+    KalturaMediaEntry,
     KalturaMetadataSearchItem,
     KalturaResponseProfileType,
     KalturaSearchOperator
@@ -32,7 +34,7 @@ export type UpdateStatus = {
 };
 
 export interface Entries{
-    items : any[],
+    items : KalturaMediaEntry[],
     totalCount : number
 }
 
@@ -67,7 +69,7 @@ export interface QueryRequestArgs {
 export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) : T;};
 
 @Injectable()
-    export class EntriesStore {
+    export class EntriesStore implements OnDestroy{
 
     private static filterTypeMapping = {};
 
@@ -109,20 +111,23 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         this._executeQuery({addedFilters : [], removedFilters : []});
     }
 
-    dispose()
+    ngOnDestroy()
     {
         if (this.executeQuerySubscription) {
             this.executeQuerySubscription.unsubscribe();
             this.executeQuerySubscription = null;
         }
+
         this._activeFilters = null;
         this._activeFiltersMap = null;
         this._status.complete();
-        this._status.unsubscribe();
         this._querySource.complete();
-        this._querySource.unsubscribe();
         this._entries.complete();
-        this._entries.unsubscribe();
+    }
+
+    public get entries() : KalturaMediaEntry[]
+    {
+        return this._entries.getValue().items;
     }
 
     public updateQuery(query : QueryData)
@@ -236,9 +241,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             this._status.next({loading: true, errorMessage: null});
             this._query.addedFilters = addedFilters || [];
             this._query.removedFilters = removedFilters || [];
-
             this._querySource.next(this._query);
-
 
             let requestSubscription = this.buildQueryRequest(this._query).subscribe(observer);
 

@@ -12,9 +12,10 @@ export class EntryLoading {
     }
 }
 
-export class EntryRemoved
+export class EntryLoadingFailed
 {
-
+    constructor(public errorMessage : string)
+    {}
 }
 
 export class EntryLoaded {
@@ -43,4 +44,4 @@ export class SectionEntered
 }
 
 
-export type EntryEvents = EntryRemoved | EntryLoading | EntryLoaded | SectionLeaving | SectionEntered;
+export type EntryEvents = EntryLoadingFailed | EntryLoading | EntryLoaded | SectionLeaving | SectionEntered;

@@ -3,34 +3,171 @@
 		<p-menu #menu popup="popup" [model]="_jumpToMenu" [appendTo]="'body'"></p-menu>
 		<button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right" label="{{'applications.content.entryDetails.metadata.jumpTo' | translate}}" (click)="menu.toggle($event)"></button>
 	</div>
-	<div class="kMetadataDetails">
-		<div class="kRow">
+	<div class="kMetadataDetails" *ngIf="_handler.entry">
+		<div class="kRow kValign">
 			<span class="kLabels">{{'applications.content.entryDetails.metadata.entryID' | translate}}</span>
-			<span>Entry ID</span>
+			<span>{{ _handler.entry.id }}</span>
 		</div>
-		<div class="kRow">
+		<div class="kRow kValign">
 			<span class="kLabels">{{'applications.content.entryDetails.metadata.entryName' | translate}}</span>
 			<input type="text" pInputText/>
 		</div>
 		<div class="kRow">
 			<span class="kLabels">{{'applications.content.entryDetails.metadata.description' | translate}}</span>
-			<textarea pInputTextarea></textarea>
+			<textarea class="threeRows" pInputTextarea></textarea>
 		</div>
-		<div class="kRow">
+		<div class="kRow kValign">
 			<span class="kLabels">{{'applications.content.entryDetails.metadata.tags' | translate}}</span>
 			<kAutoComplete></kAutoComplete>
 		</div>
-		<div class="kRow">
+		<div class="kRow kValign">
 			<span class="kLabels">{{'applications.content.entryDetails.metadata.categories' | translate}}</span>
 			<kAutoComplete></kAutoComplete>
 		</div>
 		<div class="kRow">
 			<span class="kLabels">{{'applications.content.entryDetails.metadata.offlineMsg' | translate}}</span>
-			<textarea pInputTextarea></textarea>
+			<textarea class="threeRows" pInputTextarea></textarea>
 		</div>
-		<div class="kRow">
+		<div class="kRow kValign">
 			<span class="kLabels">{{'applications.content.entryDetails.metadata.refId' | translate}}</span>
 			<input type="text" pInputText/>
 		</div>
+
+		<hr style="margin-top: 24px"/>
+
+		<!-- Text Single Value -->
+		<div class="kRow">
+			<span class="kLabels">Text Single Value</span>
+			<textarea class="twoRows" pInputTextarea></textarea>
+		</div>
+
+		<!-- Text Multiple Values -->
+		<div class="kRow">
+			<span class="kLabels">Text Multiple Values</span>
+			<div class="kMultiple">
+				<div class="kSingleItem" *ngFor="let item of textItems; let i = index; let last = last">
+					<input type="text" value="item {{i+1}}" pInputText/>
+					<a class="kAdd" *ngIf="last" (click)="textItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
+				</div>
+				<div *ngIf="!textItems.length">
+					<a class="kAdd" (click)="textItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
+				</div>
+				<div *ngIf="textItems.length">
+					<a (click)="textItems.pop()">{{'applications.content.entryDetails.metadata.delete' | translate}}</a>
+				</div>
+			</div>
+		</div>
+
+		<!-- Date Single Value -->
+		<div class="kRow kValign">
+			<span class="kLabels">Date Single Value</span>
+			<p-calendar icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showTime]="true" yearRange="2005:2030"></p-calendar>
+		</div>
+
+		<!-- Dates Multiple Values -->
+		<div class="kRow">
+			<span class="kLabels">Date Multiple Values</span>
+			<div class="kMultiple">
+				<div class="kSingleItem" *ngFor="let date of dateItems; let last = last">
+					<p-calendar icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showTime]="true" yearRange="2005:2030"></p-calendar>
+					<a class="kAddDate" *ngIf="last" (click)="dateItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
+				</div>
+				<div *ngIf="!dateItems.length">
+					<a class="kAdd" (click)="dateItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
+				</div>
+				<div *ngIf="dateItems.length">
+					<a (click)="dateItems.pop()">{{'applications.content.entryDetails.metadata.delete' | translate}}</a>
+				</div>
+			</div>
+		</div>
+
+		<!-- List Single Selection -->
+		<div class="kRow kValign">
+			<span class="kLabels">List Single Selection</span>
+			<p-dropdown [options]="listItems"></p-dropdown>
+		</div>
+
+		<!-- List Multiple Selection -->
+		<div class="kRow kValign">
+			<span class="kLabels">List Multiple Selection</span>
+			<p-multiSelect [options]="listItems"></p-multiSelect>
+		</div>
+
+		<hr style="margin-top: 24px"/>
+
+		<!-- Entries table -->
+		<div class="kMultiple">
+			<div class="kRow kTableHeader">
+				<div *ngIf="selectedEntries.length">
+					<span>{{selectedEntries.length}} {{'applications.content.entryDetails.metadata.selected' | translate}}</span>
+					<button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"></button>
+					<a (click)="selectedEntries=[]">{{'applications.content.entryDetails.metadata.cancel' | translate}}</a>
+				</div>
+				<button *ngIf="!selectedEntries.length" pButton class="kButtonDefault" (click)="entries.push('Entry '+(entries.length+1))" label="{{'applications.content.entryDetails.metadata.addEntry' | translate}}"></button>
+			</div>
+			<div>
+				<p-dataTable [value]="entries" [(selection)]="selectedEntries">
+					<p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
+					<p-column header="{{'applications.content.entryDetails.metadata.thumbnail' | translate}}">
+						<template let-col let-entry="rowData" pTemplate="body">
+							<div class="kThumbnailHolder"><span class="kHelper"></span><img src="" onError="this.onerror=null;this.style.display='none'"></div>
+						</template>
+					</p-column>
+					<p-column header="{{'applications.content.entryDetails.metadata.entryName' | translate}}">
+						<template let-col let-entry="rowData" pTemplate="body">
+							<span>{{entry}}</span>
+						</template>
+					</p-column>
+					<p-column header="{{'applications.content.entryDetails.metadata.entryID' | translate}}">
+						<template let-col let-entry="rowData" pTemplate="body">
+							<span>Entry ID</span>
+						</template>
+					</p-column>
+					<p-column [style]="{'width':'60px'}">
+						<template let-col let-entry="rowData" pTemplate="body">
+							<button pButton class="kButtonDefault kDeletehBtn small" type="text" icon="kIcontrash" (click)="selectedEntries=[];entries.splice(entries.indexOf(entry), 1)"></button>
+						</template>
+					</p-column>
+				</p-dataTable>
+			</div>
+		</div>
+
+		<hr style="margin-top: 24px"/>
+
+		<!-- Group -->
+		<div class="kMultiple">
+			<span class="kGroupTitle">Group Title</span>
+			<div class="kGroupContainer">
+				<!-- Group content here -->
+
+				<!-- Text Single Value -->
+				<div class="kRow">
+					<span class="kLabels">Text Single Value</span>
+					<textarea class="twoRows" pInputTextarea></textarea>
+				</div>
+				<!-- Dates Multiple Values -->
+				<div class="kRow">
+					<span class="kLabels">Date Multiple Values</span>
+					<div class="kMultiple">
+						<div class="kSingleItem" *ngFor="let date of dateItems; let last = last">
+							<p-calendar icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showTime]="true" yearRange="2005:2030"></p-calendar>
+							<a class="kAddDate" *ngIf="last" (click)="dateItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
+						</div>
+						<div *ngIf="!dateItems.length">
+							<a class="kAdd" (click)="dateItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
+						</div>
+						<div *ngIf="dateItems.length">
+							<a (click)="dateItems.pop()">{{'applications.content.entryDetails.metadata.delete' | translate}}</a>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="kGroupButtons">
+				<button pButton class="kButtonDefault" label="{{'applications.content.entryDetails.metadata.add' | translate}}"></button>
+				<a class="kDelete">{{'applications.content.entryDetails.metadata.delete' | translate}}</a>
+			</div>
+		</div>
+
 	</div>
 </kLoader>
