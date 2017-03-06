@@ -48,7 +48,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 
 	public _loading = false;
 	public _loadingError = null;
-	public _entries : KalturaBaseEntry[];
 	public _currentEntryId : string;
 	public _enablePrevButton : boolean;
 	public _enableNextButton : boolean;
@@ -64,10 +63,11 @@ export class EntryComponent implements OnInit, OnDestroy {
 
 	private _updateNavigationState()
 	{
-		if (this._entries && this._currentEntryId) {
-			const currentEntry = this._entries.find(entry => entry.id === this._currentEntryId);
-			const currentEntryIndex =  currentEntry ? this._entries.indexOf(currentEntry) : -1;
-			this._enableNextButton = currentEntryIndex >= 0 && (currentEntryIndex < this._entries.length -1);
+		const entries = this._entriesStore.entries;
+		if (entries && this._currentEntryId) {
+			const currentEntry = entries.find(entry => entry.id === this._currentEntryId);
+			const currentEntryIndex =  currentEntry ? entries.indexOf(currentEntry) : -1;
+			this._enableNextButton = currentEntryIndex >= 0 && (currentEntryIndex < entries.length -1);
 			this._enablePrevButton = currentEntryIndex > 0;
 
 		}else
@@ -78,15 +78,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 	}
 
     ngOnInit() {
-    	this._entriesStore.entries$
-            .takeUntil((<any>this).componentDestroy())
-            .subscribe(
-            	entries => {
-					this._entries = entries.items;
-					this._updateNavigationState();
-				});
-
-
 		this._entryStore.events$
             .takeUntil((<any>this).componentDestroy())
 			.subscribe(
@@ -131,12 +122,14 @@ export class EntryComponent implements OnInit, OnDestroy {
 
     public _navigateToPrevious() : void
 	{
-		if (this._entries && this._currentEntryId) {
-			const currentEntry = this._entries.find(entry => entry.id === this._currentEntryId);
-			const currentEntryIndex =  currentEntry ? this._entries.indexOf(currentEntry) : -1;
+		const entries = this._entriesStore.entries;
+
+		if (entries && this._currentEntryId) {
+			const currentEntry = entries.find(entry => entry.id === this._currentEntryId);
+			const currentEntryIndex =  currentEntry ? entries.indexOf(currentEntry) : -1;
 			if (currentEntryIndex > 0)
 			{
-				const prevEntry = this._entries[currentEntryIndex-1];
+				const prevEntry = entries[currentEntryIndex-1];
 				this._entryStore.openEntry(prevEntry.id);
 			}
 		}
@@ -144,12 +137,14 @@ export class EntryComponent implements OnInit, OnDestroy {
 
 	public _navigateToNext() : void
 	{
-		if (this._entries && this._currentEntryId) {
-			const currentEntry = this._entries.find(entry => entry.id === this._currentEntryId);
-			const currentEntryIndex =  currentEntry ? this._entries.indexOf(currentEntry) : -1;
-			if (currentEntryIndex >= 0 && (currentEntryIndex < this._entries.length -1))
+		const entries = this._entriesStore.entries;
+
+		if (entries && this._currentEntryId) {
+			const currentEntry = entries.find(entry => entry.id === this._currentEntryId);
+			const currentEntryIndex =  currentEntry ? entries.indexOf(currentEntry) : -1;
+			if (currentEntryIndex >= 0 && (currentEntryIndex < entries.length -1))
 			{
-				const nextEntry = this._entries[currentEntryIndex+1];
+				const nextEntry = entries[currentEntryIndex+1];
 				this._entryStore.openEntry(nextEntry.id);
 			}
 		}

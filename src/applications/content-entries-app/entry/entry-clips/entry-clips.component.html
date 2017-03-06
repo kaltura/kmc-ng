@@ -1,4 +1,4 @@
-<kLoader [loading]="(_handler.entries$ | async)?.loading" [loadingError]="(_handler.entries$)?.error" (onActionRequested)="_onLoadingAction($event)">
+<kLoader [loading]="(_handler.entries$ | async)?.loading" [loadingError]="(_handler.entries$ | async)?.error" (onActionRequested)="_onLoadingAction($event)">
 	<div class="kClips">
 		<p class="kTitle">{{'applications.content.entryDetails.clips.clips' | translate}}</p>
 

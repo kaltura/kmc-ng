@@ -14,6 +14,7 @@ import {
     KalturaDetachedResponseProfile,
     KalturaFilterPager,
     KalturaMediaEntryFilter,
+    KalturaMediaEntry,
     KalturaMetadataSearchItem,
     KalturaResponseProfileType,
     KalturaSearchOperator
@@ -33,7 +34,7 @@ export type UpdateStatus = {
 };
 
 export interface Entries{
-    items : any[],
+    items : KalturaMediaEntry[],
     totalCount : number
 }
 
@@ -111,6 +112,11 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         this._query.unsubscribe();
         this._entries.complete();
         this._entries.unsubscribe();
+    }
+
+    public get entries() : KalturaMediaEntry[]
+    {
+        return this._entries.getValue().items;
     }
 
     public updateQuery(query : QueryData)

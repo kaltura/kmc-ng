@@ -3,7 +3,7 @@
 		<p-menu #menu popup="popup" [model]="_jumpToMenu" [appendTo]="'body'"></p-menu>
 		<button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right" label="{{'applications.content.entryDetails.metadata.jumpTo' | translate}}" (click)="menu.toggle($event)"></button>
 	</div>
-	<div class="kMetadataDetails">
+	<div class="kMetadataDetails" *ngIf="_handler.entry">
 		<div class="kRow">
 			<span class="kLabels">{{'applications.content.entryDetails.metadata.entryID' | translate}}</span>
 			<span>{{ (_handler.entry)?.id }}</span>
