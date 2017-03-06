@@ -1,9 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 
 import { KalturaMediaType } from '@kaltura-ng2/kaltura-api/types';
 import { EntryStore } from '../entry-store/entry-store.service';
-import { EntrySectionHandler } from '../entry-store/entry-section-handler';
 import { EntrySectionsListHandler } from './entry-sections-list/entry-sections-list-handler';
 import { EntryMetadataHandler } from './entry-metadata/entry-metadata-handler';
 import { EntryPreviewHandler } from './entry-preview/entry-preview-handler';
@@ -16,6 +14,11 @@ import { EntryFlavoursHandler } from './entry-flavours/entry-flavours-handler';
 import { EntryThumbnailsHandler } from './entry-thumbnails/entry-thumbnails-handler';
 import { EntrySchedulingHandler } from './entry-scheduling/entry-scheduling-handler';
 import { EntryUsersHandler } from './entry-users/entry-users-handler';
+import { EntryLoadingFailed, EntryLoading, EntryLoaded } from '../entry-store/entry-sections-events';
+import { EntriesStore } from '../entries-store/entries-store.service';
+import TakeUntilDestroy  from "angular2-take-until-destroy";
+import { KalturaBaseEntry } from '@kaltura-ng2/kaltura-api/types';
+
 
 @Component({
     selector: 'kEntry',
@@ -34,49 +37,66 @@ import { EntryUsersHandler } from './entry-users/entry-users-handler';
 		EntryRelatedHandler,
 		EntrySchedulingHandler,
 		EntryThumbnailsHandler,
-		EntryUsersHandler,
-		{provide : EntrySectionHandler, useExisting : EntrySectionsListHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryPreviewHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryMetadataHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryAccessControlHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryCaptionsHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryClipsHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryFlavoursHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryLiveHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryRelatedHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntrySchedulingHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryThumbnailsHandler, multi:true},
-		{provide : EntrySectionHandler, useExisting : EntryUsersHandler, multi:true}
+		EntryUsersHandler
 	]
 })
+@TakeUntilDestroy
 export class EntryComponent implements OnInit, OnDestroy {
 
 	_entryName: string;
 	_entryType: KalturaMediaType;
 
+	public _loading = false;
 	public _loadingError = null;
-
+	public _currentEntryId : string;
+	public _enablePrevButton : boolean;
+	public _enableNextButton : boolean;
 
     constructor(public _entryStore: EntryStore,
-				private _router: Router,
-				private _route: ActivatedRoute) {
+	private  _entriesStore : EntriesStore) {
+
     }
 
     ngOnDestroy()
 	{
-
 	}
 
+	private _updateNavigationState()
+	{
+		const entries = this._entriesStore.entries;
+		if (entries && this._currentEntryId) {
+			const currentEntry = entries.find(entry => entry.id === this._currentEntryId);
+			const currentEntryIndex =  currentEntry ? entries.indexOf(currentEntry) : -1;
+			this._enableNextButton = currentEntryIndex >= 0 && (currentEntryIndex < entries.length -1);
+			this._enablePrevButton = currentEntryIndex > 0;
+
+		}else
+		{
+			this._enableNextButton = false;
+			this._enablePrevButton = false;
+		}
+	}
 
     ngOnInit() {
-		this._entryStore.status$.subscribe(
-			result => {
-				if (result.errorMessage)
+		this._entryStore.events$
+            .takeUntil((<any>this).componentDestroy())
+			.subscribe(
+			event => {
+				if (event instanceof EntryLoadingFailed)
 				{
 					// TODO [kmcng] show retry only if network connectivity
-					this._loadingError = { message : result.errorMessage, buttons : { returnToEntries : 'Back To Entries', retry : 'Retry'}};
-				}else
+					this._loading = false;
+					this._loadingError = { message : event.errorMessage, buttons : { returnToEntries : 'Back To Entries', retry : 'Retry'}};
+				}else if (event instanceof EntryLoading)
 				{
+					this._loading = true;
+					this._loadingError = null;
+
+					this._currentEntryId = event.entryId;
+					this._updateNavigationState();
+				}else if (event instanceof EntryLoaded)
+				{
+					this._loading = false;
 					this._loadingError = null;
 				}
 			},
@@ -99,6 +119,36 @@ export class EntryComponent implements OnInit, OnDestroy {
     public _backToList(){
     	this._entryStore.returnToEntries();
     }
+
+    public _navigateToPrevious() : void
+	{
+		const entries = this._entriesStore.entries;
+
+		if (entries && this._currentEntryId) {
+			const currentEntry = entries.find(entry => entry.id === this._currentEntryId);
+			const currentEntryIndex =  currentEntry ? entries.indexOf(currentEntry) : -1;
+			if (currentEntryIndex > 0)
+			{
+				const prevEntry = entries[currentEntryIndex-1];
+				this._entryStore.openEntry(prevEntry.id);
+			}
+		}
+	}
+
+	public _navigateToNext() : void
+	{
+		const entries = this._entriesStore.entries;
+
+		if (entries && this._currentEntryId) {
+			const currentEntry = entries.find(entry => entry.id === this._currentEntryId);
+			const currentEntryIndex =  currentEntry ? entries.indexOf(currentEntry) : -1;
+			if (currentEntryIndex >= 0 && (currentEntryIndex < entries.length -1))
+			{
+				const nextEntry = entries[currentEntryIndex+1];
+				this._entryStore.openEntry(nextEntry.id);
+			}
+		}
+	}
 
 	public _onLoadingAction(actionKey : string)
 	{

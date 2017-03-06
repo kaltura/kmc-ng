@@ -3,19 +3,21 @@ import { EntrySectionHandler } from '../../entry-store/entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
+import { EntryStore } from '../../entry-store/entry-store.service';
 import { EntryLoaded } from '../../entry-store/entry-sections-events';
 
 
 @Injectable()
-export class EntryUsersHandler extends EntrySectionHandler implements  OnDestroy
+export class EntryUsersHandler extends EntrySectionHandler
 {
     private _eventSubscription : ISubscription;
 
 
-    protected _onManagerProvided(manager : EntrySectionsManager)
+    constructor(store : EntryStore)
     {
-        this._eventSubscription = manager.events$.subscribe(
+        super(store);
+
+        this._eventSubscription = store.events$.subscribe(
             event =>
             {
 
@@ -23,7 +25,10 @@ export class EntryUsersHandler extends EntrySectionHandler implements  OnDestroy
         );
     }
 
-    ngOnDestroy()
+    /**
+     * Do some cleanups if needed once the section is removed
+     */
+    onSectionRemoved()
     {
         this._eventSubscription.unsubscribe();
     }

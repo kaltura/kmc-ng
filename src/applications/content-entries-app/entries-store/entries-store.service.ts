@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
@@ -14,6 +14,7 @@ import {
     KalturaDetachedResponseProfile,
     KalturaFilterPager,
     KalturaMediaEntryFilter,
+    KalturaMediaEntry,
     KalturaMetadataSearchItem,
     KalturaResponseProfileType,
     KalturaSearchOperator
@@ -33,7 +34,7 @@ export type UpdateStatus = {
 };
 
 export interface Entries{
-    items : any[],
+    items : KalturaMediaEntry[],
     totalCount : number
 }
 
@@ -68,7 +69,7 @@ export interface QueryRequestArgs {
 export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) : T;};
 
 @Injectable()
-    export class EntriesStore {
+    export class EntriesStore implements OnDestroy{
 
     private static filterTypeMapping = {};
 
@@ -95,12 +96,13 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
     constructor(private kalturaServerClient: KalturaServerClient) {
     }
 
-    dispose()
+    ngOnDestroy()
     {
         if (this.executeQuerySubscription) {
             this.executeQuerySubscription.unsubscribe();
             this.executeQuerySubscription = null;
         }
+
         this._activeFilters = null;
         this._activeFiltersMap = null;
         this._queryData = null;
@@ -110,6 +112,11 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         this._query.unsubscribe();
         this._entries.complete();
         this._entries.unsubscribe();
+    }
+
+    public get entries() : KalturaMediaEntry[]
+    {
+        return this._entries.getValue().items;
     }
 
     public updateQuery(query : QueryData)

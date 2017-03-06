@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit
 import { MenuItem, Menu } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { EntryMetadataHandler } from './entry-metadata-handler';
 
 @Component({
     selector: 'kEntryMetadata',
@@ -21,7 +22,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     public _loadingError = null;
 	public _jumpToMenu: MenuItem[] = [];
 
-    constructor(private _appLocalization: AppLocalization) {
+    constructor(private _appLocalization: AppLocalization, public _handler : EntryMetadataHandler) {
     }
 
 

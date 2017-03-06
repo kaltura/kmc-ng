@@ -1,19 +1,27 @@
-import { Injectable, OnInit, OnDestroy } from '@angular/core';
+import { Host, Injectable, OnDestroy } from '@angular/core';
 import { EntryStore } from './entry-store.service';
-import { EntrySectionsManager } from './entry-sections-manager';
-
+import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 
 @Injectable()
 export abstract class EntrySectionHandler implements OnDestroy
 {
-    protected _manager : EntrySectionsManager;
+    public entry : KalturaMediaEntry;
 
-    public setManager(manager : EntrySectionsManager)
+    public constructor(@Host() public store : EntryStore)
     {
-        this._manager = manager;
-        this._onManagerProvided(manager);
+        store.registerSection(this);
+
+        store.entry$.subscribe(entry =>
+        {
+            this.entry = entry;
+        });
     }
 
-    protected abstract _onManagerProvided(manager : EntrySectionsManager);
-    abstract ngOnDestroy();
+    ngOnDestroy()
+    {
+        this.onSectionRemoved();
+    }
+
+    abstract onSectionRemoved();
+
 }

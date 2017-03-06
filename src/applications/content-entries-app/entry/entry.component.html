@@ -1,4 +1,4 @@
-<kLoader [loading]="(_entryStore.status$ | async)?.loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
+<kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
 	<div class="kEntryDetails kUseKMCngIcons">
 		<div class="kContent kEntryDetailsWrapper">
 			<div class="kEntryDetailsHeader">
@@ -6,8 +6,8 @@
 				<div class="{{_entryType | entryType: false}} kMediaTypeIcon"></div>
 				<div class="kEntryTitle">{{ _entryName }}</div>
 				<button pButton class="kButtonBranded kSaveBtn" label="Save"></button>
-				<button pButton class="kButtonDefault kNavigationBtn" icon="kIconarrow_backward"></button>
-				<button pButton class="kButtonDefault kNavigationBtn" icon="kIconarrow_forward"></button>
+				<button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
+				<button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
 			</div>
 			<div class="kEntryDetailsMain">
 				<div class="kEntryDetailsSections">
