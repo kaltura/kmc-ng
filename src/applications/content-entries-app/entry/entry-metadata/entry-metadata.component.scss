@@ -49,6 +49,56 @@
 	.kAddDate{
 		margin-left: 46px;
 	}
+	.kTableHeader{
+		padding-bottom: 12px;
+		button{
+			font-weight: 400;
+			height: 30px;
+		}
+	}
+	img {
+		max-height: 100%;
+		max-width: 100%;
+		vertical-align: middle;
+		border-radius: 3px;
+	}
+	.kThumbnailHolder {
+		width: 80px;
+		height: 46px;
+		background-color: black;
+		white-space: nowrap;
+		text-align: center;
+		border-radius: 3px;
+		img{
+			cursor: pointer;
+			&.disable{
+				cursor: auto;
+			}
+		}
+	}
+	.kHelper {
+		display: inline-block;
+		height: 100%;
+		vertical-align: middle;
+	}
+	.kDeletehBtn {
+		float: right;
+		font-size: 22px;
+		border: none;
+		min-width: inherit;
+		outline: 0;
+		color: $kGrayscale3;
+		&:active{
+			box-shadow: none;
+		}
+		&:hover{
+			background-color: #ffffff;
+			color: $kPrimary;
+		}
+	}
+	.kTooltipHolder{
+		position: relative;
+	}
 }
 
 :host /deep/ .ui-dropdown-trigger .fa.fa-caret-down{

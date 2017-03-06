@@ -34,6 +34,40 @@
 		</div>
 
 		<hr style="margin-top: 24px"/>
+
+		<!-- Entries table -->
+		<div class="kMultiple">
+			<div class="kRow kTableHeader">
+				<button pButton class="kButtonDefault" (click)="entries.push('item')" label="{{'applications.content.entryDetails.metadata.addEntry' | translate}}"></button>
+			</div>
+			<div>
+				<p-dataTable [value]="entries" [(selection)]="selectedEntries">
+					<p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
+					<p-column header="{{'applications.content.entryDetails.metadata.thumbnail' | translate}}">
+						<template let-col let-entry="rowData" pTemplate="body">
+							<div class="kThumbnailHolder"><span class="kHelper"></span><img src="" onError="this.onerror=null;this.style.display='none'"></div>
+						</template>
+					</p-column>
+					<p-column header="{{'applications.content.entryDetails.metadata.entryName' | translate}}">
+						<template let-col let-entry="rowData" pTemplate="body">
+							<span>Entry Name</span>
+						</template>
+					</p-column>
+					<p-column header="{{'applications.content.entryDetails.metadata.entryID' | translate}}">
+						<template let-col let-entry="rowData" pTemplate="body">
+							<span>Entry ID</span>
+						</template>
+					</p-column>
+					<p-column [style]="{'width':'60px'}">
+						<template let-col let-entry="rowData" pTemplate="body">
+							<button pButton class="kButtonDefault kDeletehBtn small" type="text" icon="kIcontrash"></button>
+						</template>
+					</p-column>
+				</p-dataTable>
+			</div>
+		</div>
+
+
 		<!-- Text Single Value -->
 		<div class="kRow">
 			<span class="kLabels">Text Single Value</span>
@@ -44,19 +78,16 @@
 		<div class="kRow">
 			<span class="kLabels">Text Multiple Values</span>
 			<div class="kMultiple">
-				<div class="kSingleItem">
-					<input type="text" pInputText/>
-					<a class="kAdd">Add</a>
+				<div class="kSingleItem" *ngFor="let item of textItems; let i = index; let last = last">
+					<input type="text" value="item {{i+1}}" pInputText/>
+					<a class="kAdd" *ngIf="last" (click)="textItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
 				</div>
-				<div class="kSingleItem">
-					<input type="text" pInputText/>
-					<a class="kAdd">Add</a>
+				<div *ngIf="!textItems.length">
+					<a class="kAdd" (click)="textItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
 				</div>
-				<div class="kSingleItem">
-					<input type="text" pInputText/>
-					<a class="kAdd">Add</a>
+				<div *ngIf="textItems.length">
+					<a (click)="textItems.pop()">{{'applications.content.entryDetails.metadata.delete' | translate}}</a>
 				</div>
-				<a>Delete</a>
 			</div>
 		</div>
 
@@ -70,19 +101,16 @@
 		<div class="kRow">
 			<span class="kLabels">Date Multiple Values</span>
 			<div class="kMultiple">
-				<div class="kSingleItem">
+				<div class="kSingleItem" *ngFor="let date of dateItems; let last = last">
 					<p-calendar icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showTime]="true" yearRange="2005:2030"></p-calendar>
-					<a class="kAddDate">Add</a>
+					<a class="kAddDate" *ngIf="last" (click)="dateItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
 				</div>
-				<div class="kSingleItem">
-					<p-calendar icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showTime]="true" yearRange="2005:2030"></p-calendar>
-					<a class="kAddDate">Add</a>
+				<div *ngIf="!dateItems.length">
+					<a class="kAdd" (click)="dateItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
 				</div>
-				<div class="kSingleItem">
-					<p-calendar icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showTime]="true" yearRange="2005:2030"></p-calendar>
-					<a class="kAddDate">Add</a>
+				<div *ngIf="dateItems.length">
+					<a (click)="dateItems.pop()">{{'applications.content.entryDetails.metadata.delete' | translate}}</a>
 				</div>
-				<a>Delete</a>
 			</div>
 		</div>
 
@@ -91,6 +119,7 @@
 			<span class="kLabels">List Single Selection</span>
 			<p-dropdown></p-dropdown>
 		</div>
+
 		<!-- List Multiple Selection -->
 		<div class="kRow kValign">
 			<span class="kLabels">List Multiple Selection</span>

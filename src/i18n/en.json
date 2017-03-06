@@ -152,7 +152,12 @@
 					"categories": "Categories",
 					"offlineMsg": "Offline Message",
 					"refId": "Reference ID",
-					"jumpTo": "Jump to"
+					"jumpTo": "Jump to",
+					"add": "Add",
+					"delete": "Delete",
+					"thumbnail": "Thumbnail",
+					"addEntry": "Add Entry",
+					"remove": "Remove"
 				},
 				"thumbnails":{
 					"thumbnails": "Thumbnails",
