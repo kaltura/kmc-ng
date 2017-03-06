@@ -18,6 +18,7 @@ import {
 	EntryLoadingFailed
 } from './entry-sections-events';
 import { EntrySectionHandler } from './entry-section-handler';
+import { EntriesStore } from '../entries-store/entries-store.service';
 
 
 @Injectable()
@@ -30,7 +31,7 @@ export class EntryStore implements  OnDestroy{
 	private _routerEventsSubscription : ISubscription = null;
 	private _activeSectionType : EntrySectionTypes = null;
 	private _events : Subject<EntryEvents> = new Subject<EntryEvents>();
-
+	private _saveEntryInvoked = false;
 	public entry$ = this._entry.asObservable();
 	public events$ = this._events.asObservable();
 
@@ -42,6 +43,7 @@ export class EntryStore implements  OnDestroy{
 
     constructor(private kalturaServerClient: KalturaServerClient,
 				private _router: Router,
+				private _entriesStore : EntriesStore,
 				private _entryRoute: ActivatedRoute) {
 
 		this._initializeSections();
@@ -94,6 +96,10 @@ export class EntryStore implements  OnDestroy{
 		)
 	}
 
+	public saveEntry() : void
+	{
+		this._saveEntryInvoked = true;
+	}
 	private _updateActiveSection() : void{
 		let toSection : EntrySectionTypes = this._entryRoute.firstChild.snapshot.data.sectionType;
 
@@ -199,6 +205,11 @@ export class EntryStore implements  OnDestroy{
 
 	public returnToEntries(params : {force? : boolean} = {})
 	{
+		if (this._saveEntryInvoked)
+		{
+			this._entriesStore.reload();
+			this._saveEntryInvoked = false;
+		}
 		this._router.navigate(['content/entries']);
 	}
 }

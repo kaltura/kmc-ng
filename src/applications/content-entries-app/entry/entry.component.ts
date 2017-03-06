@@ -120,6 +120,11 @@ export class EntryComponent implements OnInit, OnDestroy {
     	this._entryStore.returnToEntries();
     }
 
+    public _save()
+	{
+		this._entryStore.saveEntry();
+	}
+
     public _navigateToPrevious() : void
 	{
 		const entries = this._entriesStore.entries;

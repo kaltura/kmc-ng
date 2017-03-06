@@ -80,20 +80,35 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
     private _entries: BehaviorSubject<Entries> = new BehaviorSubject({items: [], totalCount: 0});
     private _status : BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null});
-    private _query : ReplaySubject<QueryRequestArgs> = new ReplaySubject<QueryRequestArgs>(1,null);
+    private _querySource : ReplaySubject<QueryRequestArgs> = new ReplaySubject<QueryRequestArgs>(1,null);
+
+    private _query : QueryRequestArgs = {
+        filters: [],
+        addedFilters: [],
+        removedFilters: [],
+        data: {
+            pageIndex: 0,
+            pageSize: 50,
+            sortBy: 'createdAt',
+            sortDirection: SortDirection.Desc,
+            fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus'
+        }
+    };
 
     private _activeFilters : FilterItem[] = [];
     private _activeFiltersMap : {[key : string] : FilterItem[]} = {};
-    private _queryData : QueryData = { sortDirection : SortDirection.Asc};
     private executeQuerySubscription : ISubscription = null;
 
     public entries$: Observable<Entries> = this._entries.asObservable();
     public status$: Observable<UpdateStatus> = this._status.asObservable();
-    public query$ : Observable<QueryRequestArgs> = this._query.asObservable();
+    public query$ : Observable<QueryRequestArgs> = this._querySource.asObservable();
 
 
 
     constructor(private kalturaServerClient: KalturaServerClient) {
+        console.warn("KMCng entriesStore:ctor() - missing handling of metadata profiles");
+
+        this._executeQuery({addedFilters : [], removedFilters : []});
     }
 
     ngOnDestroy()
@@ -105,13 +120,9 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
         this._activeFilters = null;
         this._activeFiltersMap = null;
-        this._queryData = null;
         this._status.complete();
-        this._status.unsubscribe();
-        this._query.complete();
-        this._query.unsubscribe();
+        this._querySource.complete();
         this._entries.complete();
-        this._entries.unsubscribe();
     }
 
     public get entries() : KalturaMediaEntry[]
@@ -119,10 +130,15 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         return this._entries.getValue().items;
     }
 
+    public reload() : void
+    {
+        this._executeQuery();
+    }
+
     public updateQuery(query : QueryData)
     {
-        Object.assign(this._queryData,query);
-        this.executeQuery({ filters : this._activeFilters, removedFilters : [], addedFilters : [], data : this._queryData });
+        Object.assign(this._query.data,query);
+        this._executeQuery({ removedFilters : [], addedFilters : []});
     }
 
     public removeFiltersByType(filterType : FilterTypeConstructor<FilterItem>) : void {
@@ -155,13 +171,9 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         const previousFilters = this._activeFilters;
         this._activeFilters = [];
         this._activeFiltersMap = {};
-        this.executeQuery({ filters : this._activeFilters, removedFilters : previousFilters, addedFilters : [], data : this._queryData });
+        this._executeQuery({ removedFilters : previousFilters, addedFilters : []});
     }
 
-    public reload() : void
-    {
-        this.executeQuery({ filters : this._activeFilters, removedFilters : [], addedFilters : [], data : this._queryData });
-    }
 
     public addFilters(...filters : FilterItem[]) : void{
         if (filters)
@@ -183,8 +195,8 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             if (addedFilters.length > 0)
             {
                 this._activeFilters = [...this._activeFilters, ...addedFilters];
-                this._queryData.pageIndex = 1;
-                this.executeQuery({ filters : this._activeFilters, removedFilters : [], addedFilters : addedFilters, data : this._queryData  });
+                this._query.data.pageIndex = 1;
+                this._executeQuery({  removedFilters : [], addedFilters : addedFilters });
             }
         }
     }
@@ -210,13 +222,13 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
             if (removedFilters.length > 0)
             {
-                this._queryData.pageIndex = 1;
-                this.executeQuery({ filters : this._activeFilters, removedFilters : removedFilters, addedFilters : [], data : this._queryData  });
+                this._query.data.pageIndex = 1;
+                this._executeQuery({ removedFilters : removedFilters, addedFilters : [] });
             }
         }
     }
 
-    private executeQuery(args : QueryRequestArgs)
+    private _executeQuery({addedFilters,removedFilters} : {addedFilters: FilterItem[],removedFilters: FilterItem[]} = { addedFilters : [], removedFilters : []})
     {
         // cancel previous requests
         if (this.executeQuerySubscription)
@@ -228,10 +240,11 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         // execute the request
         this.executeQuerySubscription = Observable.create(observer => {
             this._status.next({loading: true, errorMessage: null});
-            this._query.next(args);
+            this._query.addedFilters = addedFilters || [];
+            this._query.removedFilters = removedFilters || [];
+            this._querySource.next(this._query);
 
-
-            let requestSubscription = this.buildQueryRequest(args).subscribe(observer);
+            let requestSubscription = this.buildQueryRequest(this._query).subscribe(observer);
 
             return () => {
                 if (requestSubscription) {

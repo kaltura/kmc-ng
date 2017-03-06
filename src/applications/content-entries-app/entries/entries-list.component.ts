@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
@@ -22,8 +22,7 @@ export class EntriesListComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
     @ViewChild('releaseNotes') private releaseNotesPopup: PopupWidgetComponent;
 
-    private querySubscription : Subscription;
-    private additionalFiltersSubscription : Subscription;
+    private querySubscription : ISubscription;
     public _selectedEntries: any[] = [];
     public _bulkActionsMenu: MenuItem[] = [];
 
@@ -92,33 +91,6 @@ export class EntriesListComponent implements OnInit, AfterViewInit, OnDestroy {
                this.dataTable.scrollToTop();
             }
         );
-
-        let isFirstRequest = true;
-
-        this.additionalFiltersSubscription = this.additionalFilters.filters$.subscribe(
-            data => {
-                if (data.metadataProfiles)
-                {
-                    if (isFirstRequest)
-                    {
-                        isFirstRequest = false;
-                        this._entriesStore.updateQuery({
-                            pageIndex : this._filter.pageIndex+1,
-                            pageSize : this._filter.pageSize,
-                            sortBy : this._filter.sortBy,
-                            sortDirection : this._filter.sortDirection,
-                            metadataProfiles : data.metadataProfiles,
-                            fields :'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus'
-                        });
-
-                    }else
-                    {
-                        this._entriesStore.updateQuery({ metadataProfiles : data.metadataProfiles});
-
-                    }
-                }
-            }
-        );
     }
     ngAfterViewInit(){
         if (this.browserService.getFromLocalStorage("hideReleaseNotes") === true){
@@ -131,9 +103,6 @@ export class EntriesListComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnDestroy(){
         this.querySubscription.unsubscribe();
         this.querySubscription = null;
-
-        this.additionalFiltersSubscription.unsubscribe();
-        this.additionalFiltersSubscription = null;
     }
 
     public _removeReleaseNotes(){
