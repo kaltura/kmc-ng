@@ -2,10 +2,12 @@
 
 .jumpTo{
 	position: absolute;
-	right: 0px;
+	right: 110px;
 	button{
+		position: fixed;
 		font-weight: 400;
 		height: 32px;
+		width: 110px;
 	}
 }
 .kMetadataDetails{
@@ -20,7 +22,7 @@
 		align-items: center;
 	}
 	.kLabels{
-		width: 140px;
+		width: 150px;
 		flex: 0 0 auto;
 	}
 	input, textarea{
@@ -43,7 +45,7 @@
 		align-items: center;
 		padding-bottom: 12px;
 	}
-	.kAdd{
+	.kAdd, .kDelete{
 		margin-left: 14px;
 	}
 	.kAddDate{
@@ -106,6 +108,30 @@
 		margin-left: 12px;
 		width: 36px;
 		font-size: 18px;
+	}
+	.kGroupTitle{
+		color: $kGrayscale1;
+		font-size: 15px;
+		padding-top: 12px;
+		padding-bottom: 12px;
+	}
+	.kGroupContainer{
+		background-color: #ffffff;
+		border: 1px solid $kGrayscale3;
+		border-radius: 3px;
+		width: 100%;
+		padding: 8px;
+	}
+	.kGroupButtons{
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		padding-top: 12px;
+		padding-bottom: 12px;
+		button{
+			height: 30px;
+			font-weight: 400;
+		}
 	}
 }
 
