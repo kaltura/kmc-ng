@@ -77,4 +77,7 @@
 		@extend .kIcondropdown_arrow_bottom:before;
 		font-size: 12px;
 	}
+	.ui-multiselect-filter-container  .fa.fa-search:before{
+		@extend .kIconmagnifier:before;
+	}
 }

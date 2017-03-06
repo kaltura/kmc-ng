@@ -50,7 +50,9 @@
 		margin-left: 46px;
 	}
 	.kTableHeader{
-		padding-bottom: 12px;
+		padding-bottom: 16px;
+		height: 32px;
+		align-items: center;
 		button{
 			font-weight: 400;
 			height: 30px;
@@ -99,6 +101,12 @@
 	.kTooltipHolder{
 		position: relative;
 	}
+	.kBulkDeleteBtn{
+		margin-right: 12px;
+		margin-left: 12px;
+		width: 36px;
+		font-size: 18px;
+	}
 }
 
 :host /deep/ .ui-dropdown-trigger .fa.fa-caret-down{
@@ -146,6 +154,16 @@
 }
 :host /deep/ .ui-calendar .ui-inputtext{
 	width: 144px;
+}
+
+:host /deep/ .ui-button-icon-only .fa{
+	margin-left: -.5em;
+}
+
+:host /deep/ .ui-multiselect-panel .ui-multiselect-filter-container .fa{
+	color: $kGrayscale3;
+	font-size: 14px;
+	font-weight: 400;
 }
 
 :host /deep/ kAutoComplete{

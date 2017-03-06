@@ -178,3 +178,6 @@
         margin-top: 3px;
     }
 }
+:host /deep/ .ui-button-icon-only .fa{
+	margin-left: -.5em;
+}

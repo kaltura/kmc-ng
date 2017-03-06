@@ -157,7 +157,9 @@
 					"delete": "Delete",
 					"thumbnail": "Thumbnail",
 					"addEntry": "Add Entry",
-					"remove": "Remove"
+					"remove": "Remove",
+					"selected": "Selected",
+					"cancel": "Cancel"
 				},
 				"thumbnails":{
 					"thumbnails": "Thumbnails",

@@ -35,39 +35,6 @@
 
 		<hr style="margin-top: 24px"/>
 
-		<!-- Entries table -->
-		<div class="kMultiple">
-			<div class="kRow kTableHeader">
-				<button pButton class="kButtonDefault" (click)="entries.push('item')" label="{{'applications.content.entryDetails.metadata.addEntry' | translate}}"></button>
-			</div>
-			<div>
-				<p-dataTable [value]="entries" [(selection)]="selectedEntries">
-					<p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
-					<p-column header="{{'applications.content.entryDetails.metadata.thumbnail' | translate}}">
-						<template let-col let-entry="rowData" pTemplate="body">
-							<div class="kThumbnailHolder"><span class="kHelper"></span><img src="" onError="this.onerror=null;this.style.display='none'"></div>
-						</template>
-					</p-column>
-					<p-column header="{{'applications.content.entryDetails.metadata.entryName' | translate}}">
-						<template let-col let-entry="rowData" pTemplate="body">
-							<span>Entry Name</span>
-						</template>
-					</p-column>
-					<p-column header="{{'applications.content.entryDetails.metadata.entryID' | translate}}">
-						<template let-col let-entry="rowData" pTemplate="body">
-							<span>Entry ID</span>
-						</template>
-					</p-column>
-					<p-column [style]="{'width':'60px'}">
-						<template let-col let-entry="rowData" pTemplate="body">
-							<button pButton class="kButtonDefault kDeletehBtn small" type="text" icon="kIcontrash"></button>
-						</template>
-					</p-column>
-				</p-dataTable>
-			</div>
-		</div>
-
-
 		<!-- Text Single Value -->
 		<div class="kRow">
 			<span class="kLabels">Text Single Value</span>
@@ -117,13 +84,52 @@
 		<!-- List Single Selection -->
 		<div class="kRow kValign">
 			<span class="kLabels">List Single Selection</span>
-			<p-dropdown></p-dropdown>
+			<p-dropdown [options]="listItems"></p-dropdown>
 		</div>
 
 		<!-- List Multiple Selection -->
 		<div class="kRow kValign">
 			<span class="kLabels">List Multiple Selection</span>
-			<p-multiSelect></p-multiSelect>
+			<p-multiSelect [options]="listItems"></p-multiSelect>
+		</div>
+
+		<hr style="margin-top: 24px"/>
+
+		<!-- Entries table -->
+		<div class="kMultiple">
+			<div class="kRow kTableHeader">
+				<div *ngIf="selectedEntries.length">
+					<span>{{selectedEntries.length}} {{'applications.content.entryDetails.metadata.selected' | translate}}</span>
+					<button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"></button>
+					<a (click)="selectedEntries=[]">{{'applications.content.entryDetails.metadata.cancel' | translate}}</a>
+				</div>
+				<button *ngIf="!selectedEntries.length" pButton class="kButtonDefault" (click)="entries.push('Entry '+(entries.length+1))" label="{{'applications.content.entryDetails.metadata.addEntry' | translate}}"></button>
+			</div>
+			<div>
+				<p-dataTable [value]="entries" [(selection)]="selectedEntries">
+					<p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
+					<p-column header="{{'applications.content.entryDetails.metadata.thumbnail' | translate}}">
+						<template let-col let-entry="rowData" pTemplate="body">
+							<div class="kThumbnailHolder"><span class="kHelper"></span><img src="" onError="this.onerror=null;this.style.display='none'"></div>
+						</template>
+					</p-column>
+					<p-column header="{{'applications.content.entryDetails.metadata.entryName' | translate}}">
+						<template let-col let-entry="rowData" pTemplate="body">
+							<span>{{entry}}</span>
+						</template>
+					</p-column>
+					<p-column header="{{'applications.content.entryDetails.metadata.entryID' | translate}}">
+						<template let-col let-entry="rowData" pTemplate="body">
+							<span>Entry ID</span>
+						</template>
+					</p-column>
+					<p-column [style]="{'width':'60px'}">
+						<template let-col let-entry="rowData" pTemplate="body">
+							<button pButton class="kButtonDefault kDeletehBtn small" type="text" icon="kIcontrash" (click)="selectedEntries=[];entries.splice(entries.indexOf(entry), 1)"></button>
+						</template>
+					</p-column>
+				</p-dataTable>
+			</div>
 		</div>
 
 	</div>
