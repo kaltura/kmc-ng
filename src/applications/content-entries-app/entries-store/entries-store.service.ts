@@ -130,6 +130,11 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         return this._entries.getValue().items;
     }
 
+    public reload() : void
+    {
+        this._executeQuery();
+    }
+
     public updateQuery(query : QueryData)
     {
         Object.assign(this._query.data,query);
@@ -169,10 +174,6 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         this._executeQuery({ removedFilters : previousFilters, addedFilters : []});
     }
 
-    public reload() : void
-    {
-        this._executeQuery({ removedFilters : [], addedFilters : [] });
-    }
 
     public addFilters(...filters : FilterItem[]) : void{
         if (filters)
@@ -227,7 +228,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         }
     }
 
-    private _executeQuery({addedFilters,removedFilters} : {addedFilters: FilterItem[],removedFilters: FilterItem[]})
+    private _executeQuery({addedFilters,removedFilters} : {addedFilters: FilterItem[],removedFilters: FilterItem[]} = { addedFilters : [], removedFilters : []})
     {
         // cancel previous requests
         if (this.executeQuerySubscription)

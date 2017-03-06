@@ -38,7 +38,7 @@ export class EntryPreview implements OnInit {
 	constructor(private appConfig: AppConfig,
 				private appAuthentication: AppAuthentication,
 				private browserService: BrowserService,
-				private _handler : EntryPreviewHandler,
+				public _handler : EntryPreviewHandler,
 				public _entryStore: EntryStore) {
 	}
 
