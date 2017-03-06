@@ -2,10 +2,12 @@
 
 .jumpTo{
 	position: absolute;
-	right: 0px;
+	right: 110px;
 	button{
+		position: fixed;
 		font-weight: 400;
 		height: 32px;
+		width: 110px;
 	}
 }
 .kMetadataDetails{
@@ -16,17 +18,149 @@
 		display: flex;
 		padding-top: 20px;
 	}
+	.kValign{
+		align-items: center;
+	}
 	.kLabels{
-		width: 140px;
+		width: 150px;
 		flex: 0 0 auto;
 	}
 	input, textarea{
 		width: 100%;
 	}
-	textarea{
-		height: 70px;
+	textarea.twoRows{
+		height: 36px;
+	}
+	textarea.threeRows{
+		height: 52px;
+	}
+	.kMultiple{
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+	}
+	.kSingleItem{
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		padding-bottom: 12px;
+	}
+	.kAdd, .kDelete{
+		margin-left: 14px;
+	}
+	.kAddDate{
+		margin-left: 46px;
+	}
+	.kTableHeader{
+		padding-bottom: 16px;
+		height: 32px;
+		align-items: center;
+		button{
+			font-weight: 400;
+			height: 30px;
+		}
+	}
+	img {
+		max-height: 100%;
+		max-width: 100%;
+		vertical-align: middle;
+		border-radius: 3px;
+	}
+	.kThumbnailHolder {
+		width: 80px;
+		height: 46px;
+		background-color: black;
+		white-space: nowrap;
+		text-align: center;
+		border-radius: 3px;
+		img{
+			cursor: pointer;
+			&.disable{
+				cursor: auto;
+			}
+		}
+	}
+	.kHelper {
+		display: inline-block;
+		height: 100%;
+		vertical-align: middle;
+	}
+	.kDeletehBtn {
+		float: right;
+		font-size: 22px;
+		border: none;
+		min-width: inherit;
+		outline: 0;
+		color: $kGrayscale3;
+		&:active{
+			box-shadow: none;
+		}
+		&:hover{
+			background-color: #ffffff;
+			color: $kPrimary;
+		}
+	}
+	.kTooltipHolder{
+		position: relative;
+	}
+	.kBulkDeleteBtn{
+		margin-right: 12px;
+		margin-left: 12px;
+		width: 36px;
+		font-size: 18px;
+	}
+	.kGroupTitle{
+		color: $kGrayscale1;
+		font-size: 15px;
+		padding-top: 12px;
+		padding-bottom: 12px;
+	}
+	.kGroupContainer{
+		background-color: #ffffff;
+		border: 1px solid $kGrayscale3;
+		border-radius: 3px;
+		width: 100%;
+		padding: 8px;
+	}
+	.kGroupButtons{
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		padding-top: 12px;
+		padding-bottom: 12px;
+		button{
+			height: 30px;
+			font-weight: 400;
+		}
 	}
 }
+
+:host /deep/ .ui-dropdown-trigger .fa.fa-caret-down{
+	margin-top: 2px;
+	margin-left: 1px;
+	position: absolute;
+	color: $kGrayscale1;
+}
+:host /deep/ .ui-dropdown.ui-widget{
+	width: 180px !important;
+}
+
+:host /deep/ .ui-dropdown-label.ui-inputtext{
+	background-color: #ffffff;
+}
+
+:host /deep/ .ui-multiselect-label-container{
+	width: 180px !important;
+	color: $kGrayscale3;
+}
+
+:host /deep/ .ui-multiselect-trigger .fa.fa-caret-down{
+	margin-top: 2px;
+	margin-left: 1px;
+	position: absolute;
+	color: $kGrayscale1;
+}
+
 :host /deep/ .ui-autocomplete.ui-widget{
 	width: 100%;
 	input{
@@ -44,6 +178,20 @@
 		width: 100%;
 	}
 }
+:host /deep/ .ui-calendar .ui-inputtext{
+	width: 144px;
+}
+
+:host /deep/ .ui-button-icon-only .fa{
+	margin-left: -.5em;
+}
+
+:host /deep/ .ui-multiselect-panel .ui-multiselect-filter-container .fa{
+	color: $kGrayscale3;
+	font-size: 14px;
+	font-weight: 400;
+}
+
 :host /deep/ kAutoComplete{
 	width: 100%;
 }
