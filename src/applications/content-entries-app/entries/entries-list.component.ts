@@ -15,8 +15,7 @@ import { EntriesAdditionalFiltersStore } from "kmc-content-ui/entries-additional
 @Component({
     selector: 'kEntriesList',
     templateUrl: './entries-list.component.html',
-    styleUrls: ['./entries-list.component.scss'],
-    providers : [EntriesStore]
+    styleUrls: ['./entries-list.component.scss']
 })
 export class EntriesListComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -135,8 +134,6 @@ export class EntriesListComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.additionalFiltersSubscription.unsubscribe();
         this.additionalFiltersSubscription = null;
-
-        this._entriesStore.dispose();
     }
 
     public _removeReleaseNotes(){

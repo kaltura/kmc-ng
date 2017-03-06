@@ -194,7 +194,7 @@ export class EntryStore implements  OnDestroy{
 
 	public openEntry(entryId : string)
 	{
-		alert(`open entry ${entryId}`);
+		this._router.navigate(["entry", entryId],{ relativeTo : this._entryRoute.parent});
 	}
 
 	public returnToEntries(params : {force? : boolean} = {})

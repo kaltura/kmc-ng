@@ -15,6 +15,10 @@ import { EntryThumbnailsHandler } from './entry-thumbnails/entry-thumbnails-hand
 import { EntrySchedulingHandler } from './entry-scheduling/entry-scheduling-handler';
 import { EntryUsersHandler } from './entry-users/entry-users-handler';
 import { EntryLoadingFailed, EntryLoading, EntryLoaded } from '../entry-store/entry-sections-events';
+import { EntriesStore } from '../entries-store/entries-store.service';
+import TakeUntilDestroy  from "angular2-take-until-destroy";
+import { KalturaBaseEntry } from '@kaltura-ng2/kaltura-api/types';
+
 
 @Component({
     selector: 'kEntry',
@@ -36,6 +40,7 @@ import { EntryLoadingFailed, EntryLoading, EntryLoaded } from '../entry-store/en
 		EntryUsersHandler
 	]
 })
+@TakeUntilDestroy
 export class EntryComponent implements OnInit, OnDestroy {
 
 	_entryName: string;
@@ -43,19 +48,48 @@ export class EntryComponent implements OnInit, OnDestroy {
 
 	public _loading = false;
 	public _loadingError = null;
+	public _entries : KalturaBaseEntry[];
+	public _currentEntryId : string;
+	public _enablePrevButton : boolean;
+	public _enableNextButton : boolean;
 
+    constructor(public _entryStore: EntryStore,
+	private  _entriesStore : EntriesStore) {
 
-    constructor(public _entryStore: EntryStore) {
     }
 
     ngOnDestroy()
 	{
-
 	}
 
+	private _updateNavigationState()
+	{
+		if (this._entries && this._currentEntryId) {
+			const currentEntry = this._entries.find(entry => entry.id === this._currentEntryId);
+			const currentEntryIndex =  currentEntry ? this._entries.indexOf(currentEntry) : -1;
+			this._enableNextButton = currentEntryIndex >= 0 && (currentEntryIndex < this._entries.length -1);
+			this._enablePrevButton = currentEntryIndex > 0;
+
+		}else
+		{
+			this._enableNextButton = false;
+			this._enablePrevButton = false;
+		}
+	}
 
     ngOnInit() {
-		this._entryStore.events$.subscribe(
+    	this._entriesStore.entries$
+            .takeUntil((<any>this).componentDestroy())
+            .subscribe(
+            	entries => {
+					this._entries = entries.items;
+					this._updateNavigationState();
+				});
+
+
+		this._entryStore.events$
+            .takeUntil((<any>this).componentDestroy())
+			.subscribe(
 			event => {
 				if (event instanceof EntryLoadingFailed)
 				{
@@ -66,6 +100,9 @@ export class EntryComponent implements OnInit, OnDestroy {
 				{
 					this._loading = true;
 					this._loadingError = null;
+
+					this._currentEntryId = event.entryId;
+					this._updateNavigationState();
 				}else if (event instanceof EntryLoaded)
 				{
 					this._loading = false;
@@ -91,6 +128,32 @@ export class EntryComponent implements OnInit, OnDestroy {
     public _backToList(){
     	this._entryStore.returnToEntries();
     }
+
+    public _navigateToPrevious() : void
+	{
+		if (this._entries && this._currentEntryId) {
+			const currentEntry = this._entries.find(entry => entry.id === this._currentEntryId);
+			const currentEntryIndex =  currentEntry ? this._entries.indexOf(currentEntry) : -1;
+			if (currentEntryIndex > 0)
+			{
+				const prevEntry = this._entries[currentEntryIndex-1];
+				this._entryStore.openEntry(prevEntry.id);
+			}
+		}
+	}
+
+	public _navigateToNext() : void
+	{
+		if (this._entries && this._currentEntryId) {
+			const currentEntry = this._entries.find(entry => entry.id === this._currentEntryId);
+			const currentEntryIndex =  currentEntry ? this._entries.indexOf(currentEntry) : -1;
+			if (currentEntryIndex >= 0 && (currentEntryIndex < this._entries.length -1))
+			{
+				const nextEntry = this._entries[currentEntryIndex+1];
+				this._entryStore.openEntry(nextEntry.id);
+			}
+		}
+	}
 
 	public _onLoadingAction(actionKey : string)
 	{

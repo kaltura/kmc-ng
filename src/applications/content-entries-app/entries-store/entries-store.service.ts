@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
@@ -68,7 +68,7 @@ export interface QueryRequestArgs {
 export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) : T;};
 
 @Injectable()
-    export class EntriesStore {
+    export class EntriesStore implements OnDestroy{
 
     private static filterTypeMapping = {};
 
@@ -95,12 +95,13 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
     constructor(private kalturaServerClient: KalturaServerClient) {
     }
 
-    dispose()
+    ngOnDestroy()
     {
         if (this.executeQuerySubscription) {
             this.executeQuerySubscription.unsubscribe();
             this.executeQuerySubscription = null;
         }
+
         this._activeFilters = null;
         this._activeFiltersMap = null;
         this._queryData = null;

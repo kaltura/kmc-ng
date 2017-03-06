@@ -9,6 +9,7 @@ import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { KalturaMultiRequest,KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { BaseEntryListAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
 import { KalturaBaseEntryFilter, KalturaFilterPager, KalturaDetachedResponseProfile, KalturaResponseProfileType } from '@kaltura-ng2/kaltura-api/types';
+import TakeUntilDestroy  from "angular2-take-until-destroy";
 
 export interface EntriesData
 {
@@ -21,9 +22,9 @@ export interface EntriesData
 
 
 @Injectable()
+@TakeUntilDestroy
 export class EntryClipsHandler extends EntrySectionHandler
 {
-    private _eventSubscription : ISubscription;
     private _entries : BehaviorSubject<EntriesData> = new BehaviorSubject<EntriesData>({ loading : false, items : null, totalItems : 0});
     private _entriesRequested; // default value is set in function _resetState
     public entries$ = this._entries.asObservable();
@@ -42,7 +43,9 @@ export class EntryClipsHandler extends EntrySectionHandler
 
         this._resetState();
 
-        this._eventSubscription = store.events$.subscribe(
+        store.events$
+            .takeUntil((<any>this).componentDestroy())
+            .subscribe(
             event =>
             {
                 if (event instanceof EntryLoading)
@@ -161,7 +164,6 @@ export class EntryClipsHandler extends EntrySectionHandler
      */
     onSectionRemoved()
     {
-        this._eventSubscription.unsubscribe();
         this._entries.complete();
     }
 }
