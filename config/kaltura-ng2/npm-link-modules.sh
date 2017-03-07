@@ -1,4 +1,6 @@
-#!/usr/bin/env bash -e
+#!/usr/bin/env bash
+
+set -e
 
 ################ Extract arguments ################
 while [[ $# -gt 0 ]]

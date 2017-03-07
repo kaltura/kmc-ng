@@ -35,7 +35,7 @@ npm install
 
 ./npm-link-modules.sh ${USE_WML:+"--use-wml"}
 
-if [ $USE_WML ]
+if [ -n "${USE_WML}" ]
 then
     $(npm bin)/wml once
 fi
