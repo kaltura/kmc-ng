@@ -132,7 +132,7 @@ export class EntryClipsHandler extends EntrySectionHandler
                 responseProfile: new KalturaDetachedResponseProfile()
                     .setData(responseProfile => {
                         responseProfile.type = KalturaResponseProfileType.IncludeFields;
-                        responseProfile.fields = 'id,name,plays,createdAt,duration,status,offset';
+                        responseProfile.fields = 'id,name,plays,createdAt,duration,status,offset,operationAttributes,moderationStatus';
                     })
             }).setCompletion(response => {
                 // handle response from the server

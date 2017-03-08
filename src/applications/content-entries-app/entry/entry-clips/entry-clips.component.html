@@ -3,26 +3,29 @@
 		<p class="kTitle">{{'applications.content.entryDetails.clips.clips' | translate}}</p>
 
 		<div class="kTable">
-			<p-dataTable [value]="(_handler.entries$ | async)?.items" [sortField]="_handler.sortBy" [sortOrder]="_handler.sortAsc | kTreeBooleanPrimeSort"
-						 scrollable="true" scrollHeight="100%"
-						 (onSort)="_onSortChanged($event)"
-						 >
-				<p-column field="id" header="{{'applications.content.entryDetails.clips.id' | translate}}">
+			<p-dataTable [value]="(_handler.entries$ | async)?.items" [sortField]="_handler.sortBy" [sortOrder]="_handler.sortAsc | kTreeBooleanPrimeSort" (onSort)="_onSortChanged($event)">
+				<p-column field="id" header="{{'applications.content.entryDetails.clips.id' | translate}}" [style]="{'width':'90px'}">
+					<template let-col let-entry="rowData" pTemplate="body">
+						<a>{{entry.id}}</a>
+					</template>
 				</p-column>
 				<p-column field="name" header="{{'applications.content.entryDetails.clips.name' | translate}}" [sortable]="'custom'">
 				</p-column>
-				<p-column field="plays" header="{{'applications.content.entryDetails.clips.plays' | translate}}">
+				<p-column field="plays" header="{{'applications.content.entryDetails.clips.plays' | translate}}" [style]="{'width':'50px'}">
 				</p-column>
-				<p-column field="createdAt" header="{{'applications.content.entryDetails.clips.created' | translate}}" [sortable]="'custom'">
+				<p-column field="createdAt" header="{{'applications.content.entryDetails.clips.created' | translate}}" [sortable]="'custom'" [style]="{'width':'110px'}">
 					<template let-col let-entry="rowData" pTemplate="body">
 						<span>{{entry[col.field] * 1000 | date:'MM/dd/y HH:MM'}}</span>
 					</template>
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.clips.offset' | translate}}">
+				<p-column header="{{'applications.content.entryDetails.clips.offset' | translate}}" [style]="{'width':'80px'}">
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.clips.duration' | translate}}">
+				<p-column header="{{'applications.content.entryDetails.clips.duration' | translate}}" [style]="{'width':'80px'}">
+					<template let-col let-entry="rowData" pTemplate="body">
+						<span>{{entry['duration'] | kTime}}</span>
+					</template>
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.clips.status' | translate}}">
+				<p-column header="{{'applications.content.entryDetails.clips.status' | translate}}" [style]="{'width':'70px'}">
 					<template let-col let-entry="rowData" pTemplate="body">
 						<span>{{entry | entryStatus}}</span>
 					</template>
