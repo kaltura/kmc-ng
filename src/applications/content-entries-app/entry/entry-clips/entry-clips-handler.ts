@@ -8,6 +8,7 @@ import { EntryLoaded, EntryLoading, SectionEntered } from '../../entry-store/ent
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { KalturaMultiRequest,KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { BaseEntryListAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
+import { BrowserService } from "kmc-shell/providers/browser.service";
 import { KalturaBaseEntryFilter, KalturaFilterPager, KalturaDetachedResponseProfile, KalturaResponseProfileType } from '@kaltura-ng2/kaltura-api/types';
 import TakeUntilDestroy  from "angular2-take-until-destroy";
 
@@ -32,13 +33,11 @@ export class EntryClipsHandler extends EntrySectionHandler
     public sortBy : string; // default value is set in function _resetState
     public sortAsc : boolean; // default value is set in function _resetState
     public _rootEntryId : string; // default value is set in function _resetState
-    public pageSize =  1; // TODO [kmcng] should be get/set in the local storage, default should be 50
+    public pageSize =  50;
     public pageIndex; // default value is set in function _resetState
-    public pageSizesAvailable = [1,25,50,75,100]; // TODO [kmcng] remove the option '1' from that list. consider using a configuration for this values
+    public pageSizesAvailable = [25,50,75,100];
 
-    constructor(store : EntryStore,
-                private _kalturaServerClient: KalturaServerClient)
-    {
+    constructor(store : EntryStore, private _kalturaServerClient: KalturaServerClient, private browserService: BrowserService) {
         super(store);
 
         this._resetState();
@@ -88,7 +87,9 @@ export class EntryClipsHandler extends EntrySectionHandler
         this.sortBy = 'createdAt';
         this.sortAsc = false;
         this.pageIndex = 0;
-
+	    if (this.browserService.getFromLocalStorage("clipsPageSize") !== null){
+		    this.pageSize = this.browserService.getFromLocalStorage("clipsPageSize");
+	    }
         this._entries.next({ loading : false, items : [], totalItems : 0, error : null});
     }
 
@@ -158,6 +159,9 @@ export class EntryClipsHandler extends EntrySectionHandler
             }
         }
     }
+	public navigateToEntry(entryId) {
+		this.store.openEntry(entryId);
+	}
 
     /**
      * Do some cleanups if needed once the section is removed
