@@ -21,8 +21,6 @@ import { EntryPreviewHandler } from './entry-preview-handler';
 export class EntryPreview implements OnInit {
 
 	public _entryReady: boolean = false;
-	public _iFrameSrc: string;
-	public _landingPage: string;
 	public _isLive: boolean = false;
 	public _isRecordedLive: boolean = false;
 	public _hasDuration: boolean = false;
@@ -35,24 +33,12 @@ export class EntryPreview implements OnInit {
 	}
 
 
-	constructor(private appConfig: AppConfig,
-				private appAuthentication: AppAuthentication,
-				private browserService: BrowserService,
+	constructor(private browserService: BrowserService,
 				public _handler : EntryPreviewHandler,
 				public _entryStore: EntryStore) {
 	}
 
 	ngOnInit() {
-
-		this._handler.previewEntryId$.subscribe(
-			previewEntryId =>
-			{
-				if (previewEntryId) {
-					this.reloadEntry(previewEntryId);
-				}
-			}
-		);
-
 		this._entryStore.entry$.subscribe(
 			response => {
 				if (response) {
@@ -71,24 +57,12 @@ export class EntryPreview implements OnInit {
 		);
 	}
 
-	private reloadEntry(entryId) {
-
-		this._landingPage = this.appAuthentication.appUser.partnerInfo.landingPage;
-		if (this._landingPage) {
-			this._landingPage.replace("{entryId}", entryId);
-		}
-
-		const UIConfID = this.appConfig.get('core.kaltura.previewUIConf');
-		const partnerID = this.appAuthentication.appUser.partnerId;
-		this._iFrameSrc = this.appConfig.get('core.kaltura.cdnUrl') + '/p/' + partnerID + '/sp/' + partnerID + '00/embedIframeJs/uiconf_id/' + UIConfID + '/partner_id/' + partnerID + '?iframeembed=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id=' + entryId;
-	}
-
 	openPreviewAndEmbed() {
 		alert("Open Preview & Embed Window");
 	}
 
-	openLandingPage() {
-		this.browserService.openLink(this._landingPage);
+	openLandingPage(landingPage: string) {
+		this.browserService.openLink(landingPage);
 	}
 
 	navigateToEntry(entryId) {

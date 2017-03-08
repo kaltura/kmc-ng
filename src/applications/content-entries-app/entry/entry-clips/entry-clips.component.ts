@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { Component } from '@angular/core';
+
 import { EntryClipsHandler } from './entry-clips-handler';
 
 @Component({
@@ -12,8 +12,7 @@ export class EntryClips{
     public _loading = false;
     public _loadingError = null;
 
-    constructor(private _appLocalization: AppLocalization,
-                public _handler : EntryClipsHandler) {
+    constructor(public _handler : EntryClipsHandler) {
     }
 
     public _onSortChanged(event : any)
@@ -28,12 +27,11 @@ export class EntryClips{
         if (state.page !== this._handler.pageIndex || state.rows !== this._handler.pageSize) {
             this._handler.pageIndex = state.page;
             this._handler.pageSize = state.rows;
-
             this._handler.updateEntries();
         }
     }
 
-    _onLoadingAction(actionKey: string) {
+    public _onLoadingAction(actionKey: string) {
         if (actionKey === 'retry') {
 
         }
