@@ -9,14 +9,12 @@ import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { EntryMetadataHandler } from './entry-metadata-handler';
 import { EntryStore } from '../../entry-store/entry-store.service';
-import TakeUntilDestroy  from "angular2-take-until-destroy";
 
 @Component({
     selector: 'kEntryMetadata',
     templateUrl: './entry-metadata.component.html',
     styleUrls: ['./entry-metadata.component.scss']
 })
-@TakeUntilDestroy
 export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
 	// temp arrays for custom metadata [TODO] - remove
@@ -53,7 +51,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         });
 
         this._entryStore.entry$
-            .takeUntil((<any>this).componentDestroy())
+            .cancelOnDestroy(this)
             .subscribe(
             entry => {
                 try {

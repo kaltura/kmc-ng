@@ -9,11 +9,9 @@ import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import { EntrySectionHandler } from '../../entry-store/entry-section-handler';
 import { EntryStore } from '../../entry-store/entry-store.service';
-import { EntryLoaded, EntryLoading, SectionEntered } from '../../entry-store/entry-sections-events';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { BaseEntryListAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
 import { BrowserService } from "kmc-shell/providers/browser.service";
-import TakeUntilDestroy  from "angular2-take-until-destroy";
 import { KalturaRequest } from '@kaltura-ng2/kaltura-api';
 
 export interface EntriesData
@@ -27,7 +25,6 @@ export interface EntriesData
 
 
 @Injectable()
-@TakeUntilDestroy
 export class EntryClipsHandler extends EntrySectionHandler
 {
     private _entries : BehaviorSubject<EntriesData> = new BehaviorSubject<EntriesData>({ loading : false, items : null, totalItems : 0});
@@ -36,7 +33,6 @@ export class EntryClipsHandler extends EntrySectionHandler
     private _entriesLoadSubscription : ISubscription = null;
     public sortBy : string; // default value is set in function _resetState
     public sortAsc : boolean; // default value is set in function _resetState
-    public _rootEntryId : string; // default value is set in function _resetState
 
 	private _pageSize: number = 50;
 	public set pageSize(value: number){
@@ -49,36 +45,16 @@ export class EntryClipsHandler extends EntrySectionHandler
     public pageSizesAvailable = [25,50,75,100];
 
     constructor(store : EntryStore,
-                private kalturaServerClient: KalturaServerClient,
+                kalturaServerClient: KalturaServerClient,
                 private browserService: BrowserService,
                 private _appLocalization: AppLocalization) {
-        super(store);
-
-        this._resetState(kalturaServerClient);
+        super(store, kalturaServerClient);
 
         store.events$
-            .takeUntil((<any>this).componentDestroy())
+            .cancelOnDestroy(this)
             .subscribe(
             event =>
             {
-                if (event instanceof EntryLoading)
-                {
-                    this._resetState();
-
-                    this._rootEntryId = event.entryId;
-
-                    if (event.activeSection === EntrySectionTypes.Clips) {
-                        this._updateEntries(event.request);
-                    }
-                }else if (event instanceof SectionEntered)
-                {
-                    if (!this._entriesRequested && event.to === EntrySectionTypes.Clips)
-                    {
-                        // only update entries if the user entered this section and the request was never transmitted
-                        // for that entry
-                        this._updateEntries();
-                    }
-                }
             }
         );
     }
@@ -87,11 +63,11 @@ export class EntryClipsHandler extends EntrySectionHandler
     {
         return EntrySectionTypes.Clips;
     }
+
     /**
-     * Reset handler state and abort any previous requests sent for previous entriess
-     * @private
+     * Do some cleanups if needed once the section is removed
      */
-    private _resetSection() : void{
+    protected _resetSection() : void{
 
         if (this._entriesLoadSubscription)
         {
@@ -101,7 +77,6 @@ export class EntryClipsHandler extends EntrySectionHandler
         }
 
         this._entriesRequested = false;
-        this._rootEntryId = null;
         this.sortBy = 'createdAt';
         this.sortAsc = false;
         this.pageIndex = 0;
@@ -119,7 +94,9 @@ export class EntryClipsHandler extends EntrySectionHandler
      */
     public updateEntries() : void
     {
-        this._updateEntries();
+        if (this.entry) {
+            this._updateEntries(this.entry.id);
+        }
     }
 
     /**
@@ -128,21 +105,21 @@ export class EntryClipsHandler extends EntrySectionHandler
      * @param parentRequest (KalturaMultiRequest) add the request to the entry loading global request if provided
      * @private
      */
-    private _updateEntries(parentRequest? : KalturaMultiRequest) : void {
+    private _updateEntries(entryId : string, multiRequest? : KalturaRequest<any>[]) : void {
         this._entriesRequested = true;
 
-        if (this._rootEntryId) {
+        if (entryId) {
 
             // update entries loading status.
             // show loading indication only if the request was originated from this handler
             // also preserve the entries list (otherwise the ui will remove then during the update
-            this._entries.next({loading: !parentRequest, items:  this._entries.getValue().items, totalItems: this._entries.getValue().totalItems});
+            this._entries.next({loading: !multiRequest, items:  this._entries.getValue().items, totalItems: this._entries.getValue().totalItems});
 
             // build the request
             const request = new BaseEntryListAction({
                 filter: new KalturaBaseEntryFilter()
                     .setData(filter => {
-                        filter.rootEntryIdEqual = this._rootEntryId;
+                        filter.rootEntryIdEqual = entryId;
                         filter.orderBy = `${this.sortAsc ? '' : '-'}${this.sortBy}`;
                     }),
                 pager: new KalturaFilterPager()
@@ -169,8 +146,8 @@ export class EntryClipsHandler extends EntrySectionHandler
                 }
             });
 
-            if (parentRequest) {
-                parentRequest.requests.push(request);
+            if (multiRequest) {
+                multiRequest.push(request);
             } else {
                 this._kalturaServerClient.request(request).subscribe(
                     () => {
@@ -225,15 +202,9 @@ export class EntryClipsHandler extends EntrySectionHandler
 	}
 
 
-    /**
-     * Do some cleanups if needed once the section is removed
-     */
-    _resetSection()
-    {
-        this._entries.complete();
-    }
+
 
     protected _onSectionLoading(data: {entryId: string; requests: KalturaRequest<any>[]}) {
-        return undefined;
+        this._updateEntries(data.entryId, data.requests);
     }
 }
