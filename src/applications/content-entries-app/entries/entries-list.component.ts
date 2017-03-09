@@ -17,10 +17,9 @@ import { EntriesAdditionalFiltersStore } from "kmc-content-ui/entries-additional
     templateUrl: './entries-list.component.html',
     styleUrls: ['./entries-list.component.scss']
 })
-export class EntriesListComponent implements OnInit, AfterViewInit, OnDestroy {
+export class EntriesListComponent implements OnInit, OnDestroy {
 
     @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
-    @ViewChild('releaseNotes') private releaseNotesPopup: PopupWidgetComponent;
 
     private querySubscription : ISubscription;
     public _selectedEntries: any[] = [];
@@ -92,28 +91,10 @@ export class EntriesListComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         );
     }
-    ngAfterViewInit(){
-        if (this.browserService.getFromLocalStorage("hideReleaseNotes") === true){
-            this._removeReleaseNotes();
-        }else {
-            this.releaseNotesPopup.open();
-        }
-    }
 
     ngOnDestroy(){
         this.querySubscription.unsubscribe();
         this.querySubscription = null;
-    }
-
-    public _removeReleaseNotes(){
-        const releaseNotes = this.releaseNotesPopup.popup.nativeElement;
-        if (releaseNotes && releaseNotes.parentNode) {
-            releaseNotes.parentNode.removeChild(releaseNotes);
-        }
-    }
-
-    public _toggleReleaseNotes(dontShowAgain){
-        this.browserService.setInLocalStorage("hideReleaseNotes", dontShowAgain);
     }
 
     public _reload()
