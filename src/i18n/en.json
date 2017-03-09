@@ -264,7 +264,8 @@
 					"created": "Created on",
 					"offset": "Offset",
 					"duration": "Duration",
-					"status": "Status"
+					"status": "Status",
+					"n_a": "N/A"
 				},
 				"users":{
 					"users": "Users",
