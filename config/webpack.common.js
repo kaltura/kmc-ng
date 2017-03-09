@@ -133,7 +133,7 @@ module.exports =  function (options) {
 				},
 
 				{
-					test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
+					test: /\.(woff|woff2)(\?[a-z0-9=&.]+)?$/,
 					loader: 'url-loader',
 					options: {
 						limit: 10000,
@@ -142,7 +142,7 @@ module.exports =  function (options) {
 					}
 				},
 				{
-					test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+					test: /\.ttf(\?[a-z0-9=&.]+)?$/,
 					loader: 'url-loader',
 					options: {
 						limit: 10000,
@@ -151,7 +151,7 @@ module.exports =  function (options) {
 					}
 				},
 				{
-					test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+					test: /\.eot(\?[a-z0-9=&.]+)?$/,
 					loader: 'url-loader',
 					options: {
 						limit: 10000,
@@ -159,7 +159,7 @@ module.exports =  function (options) {
 					}
 				},
 				{
-					test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+					test: /\.svg(\?[a-z0-9=&.]+)?$/,
 					loader: 'url-loader',
 					options: {
 						limit: 10000,

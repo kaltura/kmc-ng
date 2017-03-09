@@ -1,14 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { EntrySectionHandler } from '../../entry-store/entry-section-handler';
-import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntryStore } from '../../entry-store/entry-store.service';
 import { EntryLoaded, SectionEntered } from '../../entry-store/entry-sections-events';
-import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { AppLocalization } from "@kaltura-ng2/kaltura-common";
 import { SectionsList } from './sections-list';
-
+import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
+import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
+import { KalturaRequest } from '@kaltura-ng2/kaltura-api';
 
 export interface SectionData
 {
@@ -23,16 +24,19 @@ export interface SectionData
 @Injectable()
 export class EntrySectionsListHandler extends EntrySectionHandler
 {
-    private _eventSubscription : ISubscription;
     private _sections : BehaviorSubject<SectionData[]> = new BehaviorSubject<SectionData[]>(null);
     public sections$ : Observable<SectionData[]> = this._sections.asObservable();
     private _activeSectionType : EntrySectionTypes;
 
-    constructor(private _appLocalization: AppLocalization, store : EntryStore)
+    constructor(store : EntryStore,
+                kalturaServerClient: KalturaServerClient,
+                private _appLocalization: AppLocalization,)
     {
-        super(store);
+        super(store,kalturaServerClient)
 
-        this._eventSubscription = store.events$.subscribe(
+        store.events$
+            .cancelOnDestroy(this)
+            .subscribe(
             event =>
             {
                 if (event instanceof SectionEntered)
@@ -46,12 +50,17 @@ export class EntrySectionsListHandler extends EntrySectionHandler
         );
     }
 
+    public get sectionType() : EntrySectionTypes
+    {
+        return null;
+    }
+
     /**
      * Do some cleanups if needed once the section is removed
      */
-    onSectionRemoved()
+    _resetSection()
     {
-        this._eventSubscription.unsubscribe();
+
     }
 
     private _updateActiveSection(sectionType : EntrySectionTypes) : void
@@ -81,5 +90,9 @@ export class EntrySectionsListHandler extends EntrySectionHandler
         });
 
         this._sections.next(sections);
+    }
+
+    protected _onSectionLoading(data: {entryId: string; requests: KalturaRequest<any>[]}) {
+        // do nothing
     }
 }

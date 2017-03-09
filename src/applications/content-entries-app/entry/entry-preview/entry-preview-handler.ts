@@ -5,6 +5,9 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntryStore } from '../../entry-store/entry-store.service';
 import { EntryLoaded, EntryLoading } from '../../entry-store/entry-sections-events';
+import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
+import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { KalturaRequest } from '@kaltura-ng2/kaltura-api';
 
 @Injectable()
 export class EntryPreviewHandler extends EntrySectionHandler
@@ -13,9 +16,10 @@ export class EntryPreviewHandler extends EntrySectionHandler
     private _previewEntryId : BehaviorSubject<string> = new BehaviorSubject<string>(null);
     public previewEntryId$ : Observable<string> = this._previewEntryId.asObservable();
 
-    constructor(store : EntryStore)
+    constructor(store : EntryStore,
+                kalturaServerClient: KalturaServerClient)
     {
-        super(store);
+        super(store,kalturaServerClient);
 
         this._eventSubscription = store.events$.subscribe(
             event =>
@@ -28,12 +32,21 @@ export class EntryPreviewHandler extends EntrySectionHandler
         );
     }
 
+    public get sectionType() : EntrySectionTypes
+    {
+        return null;
+    }
+
     /**
      * Do some cleanups if needed once the section is removed
      */
-    onSectionRemoved()
+    _resetSection()
     {
         this._eventSubscription.unsubscribe();
         this._previewEntryId.complete();
+    }
+
+    protected _onSectionLoading(data: {entryId: string; requests: KalturaRequest<any>[]}) {
+        return undefined;
     }
 }

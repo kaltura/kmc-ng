@@ -10,6 +10,7 @@ import { KalturaMultiRequest,KalturaServerClient } from '@kaltura-ng2/kaltura-ap
 import { BaseEntryListAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
 import { KalturaBaseEntryFilter, KalturaFilterPager, KalturaDetachedResponseProfile, KalturaResponseProfileType } from '@kaltura-ng2/kaltura-api/types';
 import TakeUntilDestroy  from "angular2-take-until-destroy";
+import { KalturaRequest } from '@kaltura-ng2/kaltura-api';
 
 export interface EntriesData
 {
@@ -37,9 +38,9 @@ export class EntryClipsHandler extends EntrySectionHandler
     public pageSizesAvailable = [1,25,50,75,100]; // TODO [kmcng] remove the option '1' from that list. consider using a configuration for this values
 
     constructor(store : EntryStore,
-                private _kalturaServerClient: KalturaServerClient)
+                kalturaServerClient: KalturaServerClient)
     {
-        super(store);
+        super(store,kalturaServerClient);
 
         this._resetState();
 
@@ -70,6 +71,10 @@ export class EntryClipsHandler extends EntrySectionHandler
         );
     }
 
+    public get sectionType() : EntrySectionTypes
+    {
+        return EntrySectionTypes.Clips;
+    }
     /**
      * Reset handler state and abort any previous requests sent for previous entriess
      * @private
@@ -162,8 +167,12 @@ export class EntryClipsHandler extends EntrySectionHandler
     /**
      * Do some cleanups if needed once the section is removed
      */
-    onSectionRemoved()
+    _resetSection()
     {
         this._entries.complete();
+    }
+
+    protected _onSectionLoading(data: {entryId: string; requests: KalturaRequest<any>[]}) {
+        return undefined;
     }
 }
