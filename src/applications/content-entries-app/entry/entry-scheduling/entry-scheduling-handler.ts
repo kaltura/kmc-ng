@@ -20,8 +20,6 @@ export class EntrySchedulingHandler extends EntrySectionHandler
 	public _enableEndDate:boolean = false;
 	public _timeZone = "";
 
-	private entry: KalturaMediaEntry;
-
     constructor(store : EntryStore, private appLocalization: AppLocalization)
     {
         super(store);
@@ -57,8 +55,8 @@ export class EntrySchedulingHandler extends EntrySectionHandler
 		this._timeZone = this.appLocalization.get('applications.content.entryDetails.scheduling.note');
 		const now: any = new Date();
 		const zoneTimeOffset:number = (now.getTimezoneOffset() / 60) * (-1);
-		const ztStr: String = (zoneTimeOffset == 0) ? '' : (zoneTimeOffset > 0) ? ('+' + zoneTimeOffset) : ('-' + zoneTimeOffset);
-		this._timeZone = this._timeZone.replace("(NUM)", ztStr);
+		const ztStr: string = (zoneTimeOffset == 0) ? '' : (zoneTimeOffset > 0) ? ('+' + zoneTimeOffset) : ('-' + zoneTimeOffset);
+		this._timeZone = this._timeZone.split("(NUM)").join(ztStr);
 	}
     /**
      * Do some cleanups if needed once the section is removed
