@@ -1,8 +1,6 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { PartialObserver } from 'rxjs/Observer';
 import { EntryStore } from './entry-store.service';
 import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { KalturaRequest, KalturaMultiRequest, KalturaServerClient } from '@kaltura-ng2/kaltura-api';
@@ -32,9 +30,11 @@ export abstract class EntrySectionHandler implements OnDestroy
             .subscribe(
                 event => {
                     if (event instanceof EntryLoading) {
-                        this._resetSection();
+	                    this._sectionLoaded = false;
+                    	this._resetSection();
 
                         if (this.sectionType === event.activeSection) {
+	                        this._sectionLoaded = true;
                             const requests: KalturaRequest<any>[] = [];
                             this._onSectionLoading({entryId: event.entryId, requests});
                             requests.forEach(request => event.request.requests.push(request));

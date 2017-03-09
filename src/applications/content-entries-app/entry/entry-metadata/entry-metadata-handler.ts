@@ -42,15 +42,6 @@ export class EntryMetadataHandler extends EntrySectionHandler implements  OnDest
                 private _metadataProfileStore : MetadataProfileStore)
     {
         super(store, kalturaServerClient);
-
-        store.events$
-            .cancelOnDestroy(this)
-            .subscribe(
-            event =>
-            {
-
-            }
-        );
     }
 
     public get sectionType() : EntrySectionTypes

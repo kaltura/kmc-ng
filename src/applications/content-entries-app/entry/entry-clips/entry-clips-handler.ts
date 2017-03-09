@@ -13,6 +13,8 @@ import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { BaseEntryListAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
 import { BrowserService } from "kmc-shell/providers/browser.service";
 import { KalturaRequest } from '@kaltura-ng2/kaltura-api';
+import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
+
 
 export interface EntriesData
 {
@@ -28,9 +30,7 @@ export interface EntriesData
 export class EntryClipsHandler extends EntrySectionHandler
 {
     private _entries : BehaviorSubject<EntriesData> = new BehaviorSubject<EntriesData>({ loading : false, items : null, totalItems : 0});
-    private _entriesRequested; // default value is set in function _resetState
     public entries$ = this._entries.asObservable();
-    private _entriesLoadSubscription : ISubscription = null;
     public sortBy : string; // default value is set in function _resetState
     public sortAsc : boolean; // default value is set in function _resetState
 
@@ -49,14 +49,6 @@ export class EntryClipsHandler extends EntrySectionHandler
                 private browserService: BrowserService,
                 private _appLocalization: AppLocalization) {
         super(store, kalturaServerClient);
-
-        store.events$
-            .cancelOnDestroy(this)
-            .subscribe(
-            event =>
-            {
-            }
-        );
     }
 
     public get sectionType() : EntrySectionTypes
@@ -68,15 +60,6 @@ export class EntryClipsHandler extends EntrySectionHandler
      * Do some cleanups if needed once the section is removed
      */
     protected _resetSection() : void{
-
-        if (this._entriesLoadSubscription)
-        {
-            // stop any on-going requests of previous entry id
-            this._entriesLoadSubscription.unsubscribe();
-            this._entriesLoadSubscription = null;
-        }
-
-        this._entriesRequested = false;
         this.sortBy = 'createdAt';
         this.sortAsc = false;
         this.pageIndex = 0;
@@ -106,7 +89,6 @@ export class EntryClipsHandler extends EntrySectionHandler
      * @private
      */
     private _updateEntries(entryId : string, multiRequest? : KalturaRequest<any>[]) : void {
-        this._entriesRequested = true;
 
         if (entryId) {
 
