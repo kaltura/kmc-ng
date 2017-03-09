@@ -58,6 +58,18 @@ export class EntrySchedulingHandler extends EntrySectionHandler
 		const ztStr: string = (zoneTimeOffset == 0) ? '' : (zoneTimeOffset > 0) ? ('+' + zoneTimeOffset) : ('-' + zoneTimeOffset);
 		this._timeZone = this._timeZone.split("(NUM)").join(ztStr);
 	}
+
+	private validate(): boolean{
+		let valid = true;
+		if (this._scheduleSettings === "scheduled"){
+			valid = this._startDate !== null;
+			if (this._endDate && this._endDate <= this._startDate){
+				valid = false;
+			}
+		}
+		return valid;
+	}
+
     /**
      * Do some cleanups if needed once the section is removed
      */
