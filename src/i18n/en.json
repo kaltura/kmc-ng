@@ -187,7 +187,7 @@
 					"scheduling": "Scheduling",
 					"anytime": "Anytime",
 					"range": "Specific range",
-					"note": "Note: Time Zone used - ",
+					"note": "Note: Time Zone used is (GMT(NUM))",
 					"start": "Start Date",
 					"end": "End Date",
 					"clear": "Clear Dates"

@@ -2,42 +2,28 @@
 	<div class="kScheduling">
 		<p class="kTitle">{{'applications.content.entryDetails.scheduling.scheduling' | translate}}</p>
 		<div class="kBlock">
-			<p-radioButton name="scheduling" label="{{'applications.content.entryDetails.scheduling.anytime' | translate}}"></p-radioButton>
+			<p-radioButton name="scheduling" value="anytime" [(ngModel)]="_handler._scheduleSettings" label="{{'applications.content.entryDetails.scheduling.anytime' | translate}}"></p-radioButton>
 		</div>
 		<div class="kBlock">
-			<p-radioButton name="scheduling" label="{{'applications.content.entryDetails.scheduling.range' | translate}}"></p-radioButton>
-			<div class="kNote">{{'applications.content.entryDetails.scheduling.note' | translate}}</div>
+			<p-radioButton name="scheduling" value="scheduled" [(ngModel)]="_handler._scheduleSettings" label="{{'applications.content.entryDetails.scheduling.range' | translate}}"></p-radioButton>
+			<div class="kNote" [class.kDisabled]="_handler._scheduleSettings === 'anytime'">{{_handler._timeZone}}</div>
 			<div class="kSchedulingDetails">
 				<div class="kRow">
 					<span class="kLabels">{{'applications.content.entryDetails.scheduling.start' | translate}}</span>
-					<p-calendar icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030"></p-calendar>
+					<p-calendar [(ngModel)]="_handler._startDate" icon="kIconcalendar"[disabled]="_handler._scheduleSettings === 'anytime'" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" showTime="true"></p-calendar>
 				</div>
 				<div class="kRow">
 					<div class="kLabels">
-						<p-checkbox label="{{'applications.content.entryDetails.scheduling.end' | translate}}" [(ngModel)]="_enableEndDate" binary="true"></p-checkbox>
+						<p-checkbox [disabled]="_handler._scheduleSettings === 'anytime'" label="{{'applications.content.entryDetails.scheduling.end' | translate}}" [(ngModel)]="_handler._enableEndDate" binary="true"></p-checkbox>
 					</div>
 					<div>
-						<p-calendar icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030"></p-calendar>
+						<p-calendar [(ngModel)]="_handler._endDate" icon="kIconcalendar" [disabled]="_handler._scheduleSettings === 'anytime' || !_handler._enableEndDate" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" showTime="true"></p-calendar>
 						<p>
-							<a>{{'applications.content.entryDetails.scheduling.clear' | translate}}</a>
+							<a [class.kDisabled]="_handler._scheduleSettings === 'anytime'" (click)="_handler._clearDates()">{{'applications.content.entryDetails.scheduling.clear' | translate}}</a>
 						</p>
 					</div>
 
 				</div>
-				<!--table>
-					<tr>
-						<td>{{'applications.content.entryDetails.scheduling.start' | translate}}</td>
-						<td><p-calendar icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030"></p-calendar></td>
-					</tr>
-					<tr>
-						<td valign="top"><p-checkbox label="{{'applications.content.entryDetails.scheduling.end' | translate}}" [(ngModel)]="_enableEndDate" binary="true"></p-checkbox></td>
-						<td valign="top"><p-calendar icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030"></p-calendar>
-							<p>
-								<a>{{'applications.content.entryDetails.scheduling.clear' | translate}}</a>
-							</p>
-						</td>
-					</tr>
-				</table-->
 			</div>
 		</div>
 
