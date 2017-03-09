@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EntrySectionHandler } from '../../entry-store/entry-section-handler';
+import { EntrySectionHandler, OnSectionLoadingArgs } from '../../entry-store/entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -35,12 +35,12 @@ export class EntryThumbnailsHandler extends EntrySectionHandler
     /**
      * Do some cleanups if needed once the section is removed
      */
-    _resetSection()
+    protected _onSectionReset()
     {
         this._eventSubscription.unsubscribe();
     }
 
-    protected _onSectionLoading(data: {entryId: string; requests: KalturaRequest<any>[]}) {
+    protected _onSectionLoading(data : OnSectionLoadingArgs) {
         return undefined;
     }
 }

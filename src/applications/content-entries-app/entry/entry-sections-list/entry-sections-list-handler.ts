@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EntrySectionHandler } from '../../entry-store/entry-section-handler';
+import { EntrySectionHandler, OnSectionLoadingArgs } from '../../entry-store/entry-section-handler';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntryStore } from '../../entry-store/entry-store.service';
@@ -58,7 +58,7 @@ export class EntrySectionsListHandler extends EntrySectionHandler
     /**
      * Do some cleanups if needed once the section is removed
      */
-    _resetSection()
+    protected _onSectionReset()
     {
 
     }
@@ -92,7 +92,7 @@ export class EntrySectionsListHandler extends EntrySectionHandler
         this._sections.next(sections);
     }
 
-    protected _onSectionLoading(data: {entryId: string; requests: KalturaRequest<any>[]}) {
+    protected _onSectionLoading(data : OnSectionLoadingArgs) {
         // do nothing
     }
 }

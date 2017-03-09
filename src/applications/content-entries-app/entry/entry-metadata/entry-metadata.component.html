@@ -3,7 +3,7 @@
 		<p-menu #menu popup="popup" [model]="_jumpToMenu" [appendTo]="'body'"></p-menu>
 		<button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right" label="{{'applications.content.entryDetails.metadata.jumpTo' | translate}}" (click)="menu.toggle($event)"></button>
 	</div>
-	<div class="kMetadataDetails" *ngIf="_handler.entry">
+	<div class="kMetadataDetails" *ngIf="_handler.entry && false" >
 		{{ _metadataForm.value | json }} | {{ _metadataForm.status | json }}
 		<form [formGroup]="_metadataForm" novalidate>
 			<div class="kRow kValign">

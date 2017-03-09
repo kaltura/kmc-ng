@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EntrySectionHandler } from '../../entry-store/entry-section-handler';
+import { EntrySectionHandler, OnSectionLoadingArgs } from '../../entry-store/entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
 import { EntryStore } from '../../entry-store/entry-store.service';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
@@ -34,12 +34,12 @@ export class EntryUsersHandler extends EntrySectionHandler
     /**
      * Do some cleanups if needed once the section is removed
      */
-    _resetSection()
+    protected _onSectionReset()
     {
         this._eventSubscription.unsubscribe();
     }
 
-    protected _onSectionLoading(data: {entryId: string; requests: KalturaRequest<any>[]}) {
+    protected _onSectionLoading(data : OnSectionLoadingArgs) {
         return undefined;
     }
 }

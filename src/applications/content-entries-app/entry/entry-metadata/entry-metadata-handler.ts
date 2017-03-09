@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EntrySectionHandler } from '../../entry-store/entry-section-handler';
+import { EntrySectionHandler, OnSectionLoadingArgs } from '../../entry-store/entry-section-handler';
 import { Observable } from 'rxjs/Observable';
 
 import { KalturaResponse } from '@kaltura-ng2/kaltura-api/';
@@ -28,7 +28,6 @@ export class EntryMetadataHandler extends EntrySectionHandler implements  OnDest
 
     public entryCategories$ = this._entryCategories.asObservable();
 
-    private _metadataProfilesRequested = false;
     private _metadataProfiles : BehaviorSubject<{ items : MetadataProfile[], loading : boolean, error? : any}> = new BehaviorSubject<{ items : MetadataProfile[], loading : boolean, error? : any}>(
         { items : null, loading : false}
     );
@@ -49,7 +48,7 @@ export class EntryMetadataHandler extends EntrySectionHandler implements  OnDest
         return EntrySectionTypes.Metadata;
     }
 
-    protected _onSectionLoading(data) : void {
+    protected _onSectionLoading(data : OnSectionLoadingArgs) : void {
         data.requests.push(new CategoryEntryListAction(
             {
                 filter: new KalturaCategoryEntryFilter().setData(
@@ -60,10 +59,8 @@ export class EntryMetadataHandler extends EntrySectionHandler implements  OnDest
             }
         ).setCompletion(this._onEntryCategoriesLoaded.bind(this)));
 
-        if (!this._metadataProfilesRequested)
+        if (data.firstTime)
         {
-            this._metadataProfilesRequested = true;
-
             this._metadataProfileStore.get({ type : MetadataProfileTypes.Entry, ignoredCreateMode : MetadataProfileCreateModes.App})
                 .cancelOnDestroy(this)
                 .monitor('load metadata profiles')
@@ -85,23 +82,21 @@ export class EntryMetadataHandler extends EntrySectionHandler implements  OnDest
         if (response.result) {
             const categoriesList = response.result.objects.map(category => category.categoryId);
 
-            this._categoriesStore.getCategoriesFromList(categoriesList)
-                .cancelOnDestroy(this)
-                .subscribe(
-                categories =>
-                {
-                    console.log("entryMetadataHandler._onEntryCategoriesLoaded(): next", categories);
-                },
-                (error) =>
-                {
-                    console.log("entryMetadataHandler._onEntryCategoriesLoaded(): error",error);
-                },
-                    () =>
-                    {
-                        console.log("entryMetadataHandler._onEntryCategoriesLoaded(): complete");
-                    }
-            );
-
+            if (categoriesList.length) {
+                this._categoriesStore.getCategoriesFromList(categoriesList)
+                    .cancelOnDestroy(this)
+                    .subscribe(
+                        categories => {
+                            console.log("entryMetadataHandler._onEntryCategoriesLoaded(): next", categories);
+                        },
+                        (error) => {
+                            console.log("entryMetadataHandler._onEntryCategoriesLoaded(): error", error);
+                        },
+                        () => {
+                            console.log("entryMetadataHandler._onEntryCategoriesLoaded(): complete");
+                        }
+                    );
+            }
         } else {
             // TODO
         }
@@ -160,7 +155,7 @@ export class EntryMetadataHandler extends EntrySectionHandler implements  OnDest
     /**
      * Do some cleanups if needed once the section is removed
      */
-    _resetSection()
+    protected _onSectionReset()
     {
         this._entryCategories.next({ items : [], loading : false});
     }

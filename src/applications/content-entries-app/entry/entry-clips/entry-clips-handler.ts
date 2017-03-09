@@ -7,7 +7,7 @@ import { KalturaMultiRequest, KalturaServerClient, KalturaUtils } from '@kaltura
 import { KalturaBaseEntryFilter, KalturaFilterPager, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaMediaEntry, KalturaClipAttributes, KalturaOperationAttributes } from '@kaltura-ng2/kaltura-api/types';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
-import { EntrySectionHandler } from '../../entry-store/entry-section-handler';
+import { EntrySectionHandler, OnSectionLoadingArgs } from '../../entry-store/entry-section-handler';
 import { EntryStore } from '../../entry-store/entry-store.service';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { BaseEntryListAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
@@ -16,7 +16,7 @@ import { KalturaRequest } from '@kaltura-ng2/kaltura-api';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 
 
-export interface EntriesData
+export interface ClipsData
 {
     loading : boolean;
     items : any[];
@@ -29,11 +29,12 @@ export interface EntriesData
 @Injectable()
 export class EntryClipsHandler extends EntrySectionHandler
 {
-    private _entries : BehaviorSubject<EntriesData> = new BehaviorSubject<EntriesData>({ loading : false, items : null, totalItems : 0});
-    public entries$ = this._entries.asObservable();
-    public sortBy : string; // default value is set in function _resetState
-    public sortAsc : boolean; // default value is set in function _resetState
+    private _clips : BehaviorSubject<ClipsData> = new BehaviorSubject<ClipsData>({ loading : false, items : null, totalItems : 0});
+    public entries$ = this._clips.asObservable();
+    public sortBy : string; // default value is set in function _onSectionReset
+    public sortAsc : boolean; // default value is set in function _onSectionReset
 
+    private _updateClipsSubscription : ISubscription;
 	private _pageSize: number = 50;
 	public set pageSize(value: number){
     	this._pageSize = value;
@@ -41,7 +42,7 @@ export class EntryClipsHandler extends EntrySectionHandler
     }
     public get pageSize(){return this._pageSize;}
 
-    public pageIndex; // default value is set in function _resetState
+    public pageIndex; // default value is set in function _onSectionReset
     public pageSizesAvailable = [25,50,75,100];
 
     constructor(store : EntryStore,
@@ -59,7 +60,7 @@ export class EntryClipsHandler extends EntrySectionHandler
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _resetSection() : void{
+     protected _onSectionReset() : void{
         this.sortBy = 'createdAt';
         this.sortAsc = false;
         this.pageIndex = 0;
@@ -69,16 +70,21 @@ export class EntryClipsHandler extends EntrySectionHandler
 		    this.pageSize = defaultPageSize;
 	    }
 
-        this._entries.next({ loading : false, items : [], totalItems : 0, error : null});
+	    if (this._updateClipsSubscription) {
+            this._updateClipsSubscription.unsubscribe();
+            this._updateClipsSubscription = null;
+        }
+
+        this._clips.next({ loading : false, items : [], totalItems : 0, error : null});
     }
 
     /**
-     * Updates list of entries by another component
+     * Updates list of clips
      */
-    public updateEntries() : void
+    public updateClips() : void
     {
         if (this.entry) {
-            this._updateEntries(this.entry.id);
+            this._updateClips();
         }
     }
 
@@ -88,70 +94,69 @@ export class EntryClipsHandler extends EntrySectionHandler
      * @param parentRequest (KalturaMultiRequest) add the request to the entry loading global request if provided
      * @private
      */
-    private _updateEntries(entryId : string, multiRequest? : KalturaRequest<any>[]) : void {
-
-        if (entryId) {
-
-            // update entries loading status.
-            // show loading indication only if the request was originated from this handler
-            // also preserve the entries list (otherwise the ui will remove then during the update
-            this._entries.next({loading: !multiRequest, items:  this._entries.getValue().items, totalItems: this._entries.getValue().totalItems});
-
-            // build the request
-            const request = new BaseEntryListAction({
-                filter: new KalturaBaseEntryFilter()
-                    .setData(filter => {
-                        filter.rootEntryIdEqual = entryId;
-                        filter.orderBy = `${this.sortAsc ? '' : '-'}${this.sortBy}`;
-                    }),
-                pager: new KalturaFilterPager()
-                    .setData(pager => {
-                            pager.pageSize = this.pageSize;
-                            pager.pageIndex = this.pageIndex + 1;
-                        }
-                    ),
-                responseProfile: new KalturaDetachedResponseProfile()
-                    .setData(responseProfile => {
-                        responseProfile.type = KalturaResponseProfileType.IncludeFields;
-                        responseProfile.fields = 'id,name,plays,createdAt,duration,status,offset,operationAttributes,moderationStatus';
-                    })
-            }).setCompletion(response => {
-                // handle response from the server
-                if (response.result) {
-                    this._entries.next({
-                        loading: false,
-                        items: this.updateClipProperties(response.result.objects),
-                        totalItems: response.result.totalCount
-                    });
-                } else {
-                    this._entries.next({loading: false, items: [], totalItems: 0, error: response.error.message});
-                }
+    private _updateClips() : void {
+        if (this.entry) {
+            this._clips.next({
+                loading: true,
+                items: this._clips.getValue().items,
+                totalItems: this._clips.getValue().totalItems
             });
 
-            if (multiRequest) {
-                multiRequest.push(request);
-            } else {
-                this._kalturaServerClient.request(request).subscribe(
+            this._updateClipsSubscription = this._kalturaServerClient.request(this._getClipsRequest(this.entry.id))
+                .subscribe(
                     () => {
                         // do nothing (handled by setCompletion)
-                    }
-                )
-            }
+                    })
         }
     }
+
+    private _getClipsRequest(entryId : string) : BaseEntryListAction
+    {
+        // build the request
+        return new BaseEntryListAction({
+            filter: new KalturaBaseEntryFilter()
+                .setData(filter => {
+                    filter.rootEntryIdEqual = entryId;
+                    filter.orderBy = `${this.sortAsc ? '' : '-'}${this.sortBy}`;
+                }),
+            pager: new KalturaFilterPager()
+                .setData(pager => {
+                        pager.pageSize = this.pageSize;
+                        pager.pageIndex = this.pageIndex + 1;
+                    }
+                ),
+            responseProfile: new KalturaDetachedResponseProfile()
+                .setData(responseProfile => {
+                    responseProfile.type = KalturaResponseProfileType.IncludeFields;
+                    responseProfile.fields = 'id,name,plays,createdAt,duration,status,offset,operationAttributes,moderationStatus';
+                })
+        }).setCompletion(response => {
+            // handle response from the server
+            if (response.result) {
+                this._clips.next({
+                    loading: false,
+                    items: this._updateClipProperties(response.result.objects),
+                    totalItems: response.result.totalCount
+                });
+            } else {
+                this._clips.next({loading: false, items: [], totalItems: 0, error: response.error.message});
+            }
+        });
+    }
+
 	public navigateToEntry(entryId) {
 		this.store.openEntry(entryId);
 	}
 
-	private updateClipProperties(clips: any[]): any[]{
+	private _updateClipProperties(clips: any[]): any[]{
 		clips.forEach((clip:any) =>{
-			clip['offset'] = this.getClipOffset(clip);
-			clip['duration'] = this.getClipDuration(clip);
+			clip['offset'] = this._getClipOffset(clip);
+			clip['duration'] = this._getClipDuration(clip);
 		});
 		return clips;
 	}
 
-	private getClipOffset(entry: KalturaMediaEntry): string{
+	private _getClipOffset(entry: KalturaMediaEntry): string{
 		let offset: number = -1;
 		if (entry.operationAttributes && entry.operationAttributes.length){
 			entry.operationAttributes.forEach((attr: KalturaOperationAttributes) => {
@@ -165,7 +170,7 @@ export class EntryClipsHandler extends EntrySectionHandler
 		return offset !== -1 ? KalturaUtils.formatTime(offset) : this._appLocalization.get('applications.content.entryDetails.clips.n_a');
 	}
 
-	private getClipDuration(entry: KalturaMediaEntry): string{
+	private _getClipDuration(entry: KalturaMediaEntry): string{
 		let duration: number = -1;
 		if (entry.operationAttributes && entry.operationAttributes.length){
 			entry.operationAttributes.forEach((attr: KalturaOperationAttributes) => {
@@ -183,10 +188,16 @@ export class EntryClipsHandler extends EntrySectionHandler
 		return duration !== -1 ? KalturaUtils.formatTime(duration) : this._appLocalization.get('applications.content.entryDetails.clips.n_a');
 	}
 
+    protected _onSectionLoading(data : OnSectionLoadingArgs) {
+        if(!data.partOfEntryLoading)
+        {
+            this._clips.next({
+                loading: true,
+                items: [],
+                totalItems: 0
+            });
+        }
 
-
-
-    protected _onSectionLoading(data: {entryId: string; requests: KalturaRequest<any>[]}) {
-        this._updateEntries(data.entryId, data.requests);
+        data.requests.push(this._getClipsRequest(data.entryId));
     }
 }
