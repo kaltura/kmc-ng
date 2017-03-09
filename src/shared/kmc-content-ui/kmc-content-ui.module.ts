@@ -21,6 +21,7 @@ import {
     EntriesAdditionalFiltersComponent
 } from "./entries-additional-filters/entries-additional-filters.component";
 import { EntriesAdditionalFiltersStore } from "./entries-additional-filters/entries-additional-filters-store.service";
+import { MetadataProfileStore } from '@kaltura-ng2/kaltura-common';
 
 
 @NgModule({
@@ -49,6 +50,7 @@ import { EntriesAdditionalFiltersStore } from "./entries-additional-filters/entr
 	    ModerationPipe
     ],
     providers:    [
+        MetadataProfileStore,
         EntriesAdditionalFiltersStore
     ],
     exports: [
