@@ -11,7 +11,11 @@
 				<div class="kSchedulingDetails" [class.kDisabled]="_handler.schedulingForm.get('scheduling').value === 'anytime'">
 					<div class="kRow">
 						<span class="kLabels">{{'applications.content.entryDetails.scheduling.start' | translate}}</span>
-						<p-calendar formControlName="startDate" icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" showTime="true"></p-calendar>
+						<div>
+							<p-calendar formControlName="startDate" icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" showTime="true"></p-calendar>
+							<div class="error" *ngIf="_handler.schedulingForm.errors?.noStartDate">{{'applications.content.entryDetails.scheduling.noStartDate' | translate}}</div>
+
+						</div>
 					</div>
 					<div class="kRow">
 						<div class="kLabels">
@@ -19,6 +23,8 @@
 						</div>
 						<div>
 							<p-calendar formControlName="endDate" icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" showTime="true"></p-calendar>
+							<div class="error" *ngIf="_handler.schedulingForm.errors?.endDateBeforeStartDate">{{'applications.content.entryDetails.scheduling.endDateBefore' | translate}}</div>
+							<div class="error" *ngIf="_handler.schedulingForm.errors?.noEndDate">{{'applications.content.entryDetails.scheduling.noEndDate' | translate}}</div>
 							<p>
 								<a [class.kDisabled]="_handler.schedulingForm.get('scheduling').value === 'anytime'" (click)="_handler._clearDates()">{{'applications.content.entryDetails.scheduling.clear' | translate}}</a>
 							</p>
@@ -28,6 +34,7 @@
 				</div>
 			</div>
 		</form>
-		<p class="error">{{_handler._validationError}}</p>
+
+		<p>{{_handler.schedulingForm.errors | json}}</p>
 	</div>
 </kLoader>

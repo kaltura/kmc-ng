@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
 
 import { KalturaUtils, KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
@@ -10,20 +10,38 @@ import { EntryStore } from '../../entry-store/entry-store.service';
 import { EntryLoaded } from '../../entry-store/entry-sections-events';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 
+
+function validate(fromSave: boolean = false): ValidatorFn{
+	return (c: AbstractControl): {[key: string]: boolean} | null => {
+		const startDate = c.get('startDate').value;
+		const endDate = c.get('endDate').value;
+		const scheduling = c.get('scheduling').value;
+		const enableEndDate = c.get('enableEndDate').value;
+
+		if (fromSave && scheduling === "scheduled"){
+			if (!startDate) {
+				return { 'noStartDate': true };
+			}
+			if (enableEndDate && !endDate){
+				return { 'noEndDate': true };
+			}
+		}
+
+		if (startDate && endDate && startDate > endDate){
+			return { 'endDateBeforeStartDate': true };
+		}
+
+		return null;
+	}
+}
+
 @Injectable()
 export class EntrySchedulingHandler extends EntrySectionHandler
 {
-
-	private validationMessages = {
-		noStartDate: this.appLocalization.get('applications.content.entryDetails.scheduling.noStartDate'),
-		noEndDate: this.appLocalization.get('applications.content.entryDetails.scheduling.noEndDate'),
-		endDateBefore: this.appLocalization.get('applications.content.entryDetails.scheduling.endDateBefore')
-	}
-
 	public schedulingForm: FormGroup;
 	public _timeZone = "";
-	public _validationError = "";
-	public valid: boolean = true;
+
+	public saving: boolean = false;
 
     constructor(store : EntryStore, kalturaServerClient: KalturaServerClient, private appLocalization: AppLocalization, private fb: FormBuilder)
     {
@@ -65,7 +83,7 @@ export class EntrySchedulingHandler extends EntrySectionHandler
 		    startDate: {value: '', disabled: true},
 		    endDate: {value: '', disabled: true},
 		    enableEndDate: false
-	    });
+	    }, { validator: validate(this.saving) });
 	    this.schedulingForm.get('scheduling').valueChanges
 		    .cancelOnDestroy(this)
 		    .subscribe(
@@ -96,35 +114,8 @@ export class EntrySchedulingHandler extends EntrySectionHandler
 			    }
 		    }
 	    );
-
-	    // Validation
-	    this.schedulingForm.get('endDate').valueChanges.cancelOnDestroy(this).subscribe(value => {this.validate();});
-	    this.schedulingForm.get('startDate').valueChanges.cancelOnDestroy(this).subscribe(value => {this.validate();});
     }
 
-    // validation should also be called upon save
-    public validate(calledFromSave: boolean = false){
-	    this._validationError = "";
-	    const startDate = this.schedulingForm.get('startDate').value;
-	    const endDate = this.schedulingForm.get('endDate').value;
-	    const scheduling = this.schedulingForm.get('scheduling').value;
-	    const enableEndDate = this.schedulingForm.get('enableEndDate').value;
-
-	    if (calledFromSave && scheduling === "scheduled"){
-	    	if (!startDate) {
-			    this._validationError = this.validationMessages.noStartDate;
-		    }
-		    if (enableEndDate && !endDate){
-			    this._validationError = this.validationMessages.noEndDate;
-		    }
-	    }
-
-	    if (startDate && endDate && startDate > endDate){
-		    this._validationError = this.validationMessages.endDateBefore;
-	    }
-
-	    this.valid = this._validationError === "";
-    }
 
 	public _clearDates(){
 		this.schedulingForm.patchValue({
@@ -151,6 +142,7 @@ export class EntrySchedulingHandler extends EntrySectionHandler
 	protected _onSectionReset()
 	{
 		this.schedulingForm.reset();
+		this.saving = false;
 	}
 
 }
