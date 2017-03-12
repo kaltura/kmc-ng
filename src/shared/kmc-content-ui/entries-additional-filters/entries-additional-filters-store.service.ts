@@ -4,13 +4,15 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/throw';
+import 'rxjs/add/observable/forkJoin';
 
-import { KalturaServerClient, KalturaMetadataObjectType, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
+
+
+import { KalturaServerClient,  KalturaMultiRequest, KalturaMultiResponse } from '@kaltura-ng2/kaltura-api';
 import { FlavorParamsListAction } from '@kaltura-ng2/kaltura-api/services/flavor-params';
-import { MetadataProfileListAction } from '@kaltura-ng2/kaltura-api/services/metadata-profile';
 import { AccessControlListAction } from '@kaltura-ng2/kaltura-api/services/access-control';
 import { DistributionProfileListAction } from '@kaltura-ng2/kaltura-api/services/distribution-profile';
-import { MetadataProfileParser, MetadataFieldTypes } from '@kaltura-ng2/kaltura-common/kaltura-metadata-parser';
+import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataFieldTypes } from '@kaltura-ng2/kaltura-common';
 
 import {
     KalturaAccessControlFilter,
@@ -19,8 +21,6 @@ import {
     KalturaDistributionProfile,
     KalturaFilterPager,
     KalturaFlavorParams,
-    KalturaMetadataProfileCreateMode,
-    KalturaMetadataProfileFilter,
     KalturaResponseProfileType
 } from '@kaltura-ng2/kaltura-api/types'
 
@@ -85,7 +85,8 @@ export class EntriesAdditionalFiltersStore {
     public status$ = this._status.asObservable();
 
 
-    constructor(private kalturaServerClient: KalturaServerClient) {
+    constructor(private kalturaServerClient: KalturaServerClient,
+    private _metadataProfileStore : MetadataProfileStore) {
         this.load();
     }
 
@@ -97,32 +98,24 @@ export class EntriesAdditionalFiltersStore {
         }
 
         // execute the request
-        this.executeQuerySubscription = Observable.create(observer => {
-            this._status.next({loading: true, errorMessage: null});
-
-            let requestSubscription = this.buildQueryRequest().subscribe(observer);
-
-            return () => {
-                if (requestSubscription) {
-                    requestSubscription.unsubscribe();
-                    requestSubscription = null;
-                }
-            }
-        }).subscribe(
-            (responses) => {
+        const getMetadata$ = this._metadataProfileStore.get({ type : MetadataProfileTypes.Entry, ignoredCreateMode : MetadataProfileCreateModes.App});
+        const otherData$ = this.buildQueryRequest();
+        this.executeQuerySubscription = Observable.forkJoin(getMetadata$,otherData$)
+            .subscribe(
+                (responses) => {
                 this.executeQuerySubscription = null;
 
-                if (responses.hasErrors()) {
+                if (responses[1].hasErrors()) {
                     this._status.next({loading: false, errorMessage: 'failed to load refine filters'});
 
                 } else {
 
                     const filters : AdditionalFilters = {groups : [], metadataProfiles : []};
 
-                    const defaultFilterGroup = this._buildDefaultFiltersGroup(responses);
+                    const defaultFilterGroup = this._buildDefaultFiltersGroup(responses[1]);
                     filters.groups.push(defaultFilterGroup);
 
-                    const metadataData = this._buildMetadataFiltersGroups(responses);
+                    const metadataData = this._buildMetadataFiltersGroups(responses[0].items);
                     filters.groups = [...filters.groups, ...metadataData.groups];
 
                     filters.metadataProfiles = metadataData.metadataProfiles;
@@ -140,56 +133,42 @@ export class EntriesAdditionalFiltersStore {
         );
     }
 
-    private _buildMetadataFiltersGroups(responses : KalturaMultiRequest) : { metadataProfiles : number[] , groups : FilterGroup[]}{
+    private _buildMetadataFiltersGroups(metadataProfiles : MetadataProfile[]) : { metadataProfiles : number[] , groups : FilterGroup[]} {
 
-        const result :  { metadataProfiles : number[] , groups : FilterGroup[]} = {metadataProfiles : [], groups : []};
+        const result: { metadataProfiles: number[] , groups: FilterGroup[]} = {metadataProfiles: [], groups: []};
 
-        // build metadata profile filters
-        const parser = new MetadataProfileParser();
+        metadataProfiles.forEach(metadataProfile => {
+            result.metadataProfiles.push(metadataProfile.id);
 
-        if (responses[0].result.objects && responses[0].result.objects.length > 0)
-        {
-            responses[0].result.objects.forEach(kalturaProfile =>
-            {
-                const metadataProfile = parser.parse(kalturaProfile);
+            // get only fields that are list, searchable and has values
+            const profileLists = R.filter(field => {
+                return (field.type === MetadataFieldTypes.List && field.isSearchable && field.optionalValues.length > 0);
+            }, metadataProfile.fields);
 
-                if (metadataProfile)
-                {
-                    result.metadataProfiles.push(metadataProfile.id);
+            // if found relevant lists, create a group for that profile
+            if (profileLists && profileLists.length > 0) {
+                const filterGroup = {groupName: metadataProfile.name, filtersTypes: [], filtersByType: {}};
+                result.groups.push(filterGroup);
 
-                    // get only fields that are list, searchable and has values
-                    const profileLists = R.filter(field =>
-                    {
-                        return (field.type === MetadataFieldTypes.List && field.isSearchable && field.optionalValues.length > 0);
-                    }, metadataProfile.fields);
+                profileLists.forEach(list => {
+                    filterGroup.filtersTypes.push(new filterGroupMetadataProfileType(list.id, list.label, metadataProfile.id, list.path));
+                    const items = filterGroup.filtersByType[list.id] = [];
 
-                    // if found relevant lists, create a group for that profile
-                    if (profileLists && profileLists.length > 0) {
-                        const filterGroup = {groupName: metadataProfile.name, filtersTypes: [], filtersByType : {}};
-                        result.groups.push(filterGroup);
+                    list.optionalValues.forEach(value => {
+                        items.push({
+                            id: value,
+                            name: value
+                        })
 
-                        profileLists.forEach(list => {
-                            filterGroup.filtersTypes.push(new filterGroupMetadataProfileType(list.id, list.label, metadataProfile.id,list.path));
-                            const items = filterGroup.filtersByType[list.id] = [];
-
-                            list.optionalValues.forEach(value => {
-                                items.push({
-                                    id: value,
-                                    name: value
-                                })
-
-                            });
-                        });
-                    }
-
-                }
-            });
-        }
+                    });
+                });
+            }
+        });
 
         return result;
     }
 
-    private _buildDefaultFiltersGroup(responses : KalturaMultiRequest) : FilterGroup{
+    private _buildDefaultFiltersGroup(responses : KalturaMultiResponse) : FilterGroup{
         const result = {groupName : '', filtersTypes : [], filtersByType : {}};
 
         // build constant filters
@@ -203,28 +182,28 @@ export class EntriesAdditionalFiltersStore {
         });
 
         // build distributions filters
-        if (responses[1].result.objects.length > 0) {
+        if (responses[0].result.objects.length > 0) {
             result.filtersTypes.push(new FilterGroupType('distributions',"Destinations"));
             const items = result.filtersByType['distributions'] = [];
-            responses[1].result.objects.forEach((distributionProfile: KalturaDistributionProfile) => {
+            responses[0].result.objects.forEach((distributionProfile: KalturaDistributionProfile) => {
                 items.push({id : distributionProfile.id, name : distributionProfile.name});
             });
         }
 
         // build flavors filters
-        if (responses[2].result.objects.length > 0) {
+        if (responses[1].result.objects.length > 0) {
             result.filtersTypes.push(new FilterGroupType('flavors',"Flavors"));
             const items = result.filtersByType['flavors'] = [];
-            responses[2].result.objects.forEach((flavor: KalturaFlavorParams) => {
+            responses[1].result.objects.forEach((flavor: KalturaFlavorParams) => {
                 items.push({id: flavor.id, name: flavor.name});
             });
         }
 
         // build access control profile filters
-        if (responses[3].result.objects.length > 0) {
+        if (responses[2].result.objects.length > 0) {
             result.filtersTypes.push(new FilterGroupType('accessControlProfiles','Access Control Profiles'));
             const items = result.filtersByType['accessControlProfiles'] = [];
-            responses[3].result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
+            responses[2].result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
                 items.push({
                     id: accessControlProfile.id,
                     name: accessControlProfile.name
@@ -235,14 +214,9 @@ export class EntriesAdditionalFiltersStore {
         return result;
     }
 
-    private buildQueryRequest(): Observable<KalturaMultiRequest> {
+    private buildQueryRequest(): Observable<KalturaMultiResponse> {
 
         try {
-            const metadataProfilesFilter = new KalturaMetadataProfileFilter();
-            metadataProfilesFilter.createModeNotEqual = KalturaMetadataProfileCreateMode.App;
-            metadataProfilesFilter.orderBy = '-createdAt';
-            metadataProfilesFilter.metadataObjectTypeEqual = KalturaMetadataObjectType.Entry;
-
             const accessControlFilter = new KalturaAccessControlFilter();
             accessControlFilter.orderBy = '-createdAt';
 
@@ -259,7 +233,6 @@ export class EntriesAdditionalFiltersStore {
             });
 
             const request = new KalturaMultiRequest(
-                new MetadataProfileListAction({filter: metadataProfilesFilter}),
                 new DistributionProfileListAction({pager: distributionProfilePager}),
                 new FlavorParamsListAction({pager: distributionProfilePager, responseProfile}),
                 new AccessControlListAction({

@@ -20,14 +20,14 @@ export class EntryClips{
         this._handler.sortAsc = event.order === 1;
         this._handler.sortBy = event.field;
 
-        this._handler.updateEntries();
+        this._handler.updateClips();
     }
 
     public _onPaginationChanged(state : any) : void {
         if (state.page !== this._handler.pageIndex || state.rows !== this._handler.pageSize) {
             this._handler.pageIndex = state.page;
             this._handler.pageSize = state.rows;
-            this._handler.updateEntries();
+            this._handler.updateClips();
         }
     }
 

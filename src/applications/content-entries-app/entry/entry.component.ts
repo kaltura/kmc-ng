@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
 import { KalturaMediaType } from '@kaltura-ng2/kaltura-api/types';
 import { EntryStore } from '../entry-store/entry-store.service';
 import { EntrySectionsListHandler } from './entry-sections-list/entry-sections-list-handler';
@@ -16,8 +15,6 @@ import { EntrySchedulingHandler } from './entry-scheduling/entry-scheduling-hand
 import { EntryUsersHandler } from './entry-users/entry-users-handler';
 import { EntryLoadingFailed, EntryLoading, EntryLoaded } from '../entry-store/entry-sections-events';
 import { EntriesStore } from '../entries-store/entries-store.service';
-import TakeUntilDestroy  from "angular2-take-until-destroy";
-import { KalturaBaseEntry } from '@kaltura-ng2/kaltura-api/types';
 
 
 @Component({
@@ -40,7 +37,6 @@ import { KalturaBaseEntry } from '@kaltura-ng2/kaltura-api/types';
 		EntryUsersHandler
 	]
 })
-@TakeUntilDestroy
 export class EntryComponent implements OnInit, OnDestroy {
 
 	_entryName: string;
@@ -79,7 +75,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
 		this._entryStore.events$
-            .takeUntil((<any>this).componentDestroy())
+			.cancelOnDestroy(this)
 			.subscribe(
 			event => {
 				if (event instanceof EntryLoadingFailed)

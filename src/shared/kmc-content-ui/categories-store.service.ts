@@ -27,34 +27,46 @@ export interface CategoriesQuery{
 }
 
 
-const allCategoriesFetchToken = 'all_categories_token';
 declare type CategoryFetchQueueType = ConnectableObservable<CategoryData[]>;
 
 
 @Injectable()
 export class CategoriesStore {
-    private _fetchingQueue: {[key: string]: CategoryFetchQueueType } = {};
-    private categories: {[key: string] : CategoryData[]} = {};
+    private _getCategoriesRequests: {[key: string]: CategoryFetchQueueType } = {};
+    private _categoriesCache: {[key: string] : CategoryData[]} = {};
 
     constructor(private kalturaServerClient: KalturaServerClient) {
     }
 
     public getAllCategories() : Observable<CategoriesQuery>{
-        return this.getCategories();
+        return this._getCategoriesWithCache({requestToken : 'all_categories_token'});
     }
 
     public getRootCategories() : Observable<CategoriesQuery>{
-        return this.getCategories(0);
+        return this._getCategoriesWithCache({requestToken : 'root_categories', parentId : 0});
     }
 
+    public getCategoriesFromList(categoriesList : number[]) : Observable<CategoriesQuery>
+    {
+        if (categoriesList && categoriesList.length)
+        {
+            return this._getCategories({categoriesList});
+        }else
+        {
+            return Observable.throw({message : 'missing categoriesList argument'});
+        }
+
+
+
+    }
     public getChildrenCategories(parentId : number) : Observable<CategoriesQuery>{
 
         if (parentId === null)
         {
-            throw new Error('missing parent id argument');
+            return Observable.throw({message : 'missing parentId argument'});
         }
 
-        return this.getCategories(parentId);
+        return this._getCategoriesWithCache({requestToken : parentId + '', parentId });
     }
 
     public getSuggestions(text:string) : Observable<{ error : {}, items : CategoryData[]}>
@@ -91,7 +103,6 @@ export class CategoriesStore {
                     if (requestSubscription)
                     {
                         requestSubscription.unsubscribe();
-                        requestSubscription;
                     }
                 }
             });
@@ -101,40 +112,47 @@ export class CategoriesStore {
         }
     }
 
-    private getCategories(parentId?: number): Observable<CategoriesQuery> {
+    private _getCategories({parentId, categoriesList} : { parentId?: number, categoriesList? : number[] }): Observable<CategoriesQuery> {
+        return this.buildCategoryListRequest({parentId, categoriesList})
+            .map(response => {
+                // parse response into categories items
+                return {items: this.parseCategoriesItems(response)};
+            });
+    }
+
+    private _getCategoriesWithCache({requestToken, parentId, categoriesList} : {requestToken : string, parentId?: number, categoriesList? : number[] }): Observable<CategoriesQuery> {
 
         return Observable.create(observer => {
-            const requestToken = parentId + '' || allCategoriesFetchToken;
 
-            let fetchingObservable: CategoryFetchQueueType = this._fetchingQueue[requestToken];
+            let fetchingObservable: CategoryFetchQueueType = this._getCategoriesRequests[requestToken];
 
             // get queue request from those categories if any
             if (!fetchingObservable) {
 
                 // no request found in queue - get from cache if already queried those categories
-                const cachedResponse = this.categories[requestToken];
+                const cachedResponse = this._categoriesCache[requestToken];
 
                 if (cachedResponse) {
                     fetchingObservable = <CategoryFetchQueueType>ConnectableObservable.of(cachedResponse);
                 } else {
-                    const categoryListRequest = this.buildCategoryListRequest(parentId);
+                    const categoryListRequest = this.buildCategoryListRequest({parentId, categoriesList});
 
                     // 'multicast' function will share the observable if concurrent requests to the same parent will be executed).
                     // we don't use 'share' function since it is more relevant to hot/persist origin.
-                    fetchingObservable = this._fetchingQueue[requestToken] = categoryListRequest
+                    fetchingObservable = this._getCategoriesRequests[requestToken] = categoryListRequest
                         .map(response => {
-                            this._fetchingQueue[requestToken] = null;
+                            this._getCategoriesRequests[requestToken] = null;
 
                             // parse response into categories items
                             const retrievedItems = this.parseCategoriesItems(response);
 
                             // update internal state
-                            this.categories[requestToken] = retrievedItems;
+                            this._categoriesCache[requestToken] = retrievedItems;
 
                             return retrievedItems;
 
                         }).catch(error => {
-                            this._fetchingQueue[requestToken] = null;
+                            this._getCategoriesRequests[requestToken] = null;
 
                             // re-throw the provided error
                             return Observable.throw(error);
@@ -180,11 +198,15 @@ export class CategoriesStore {
         return result;
     }
 
-    private buildCategoryListRequest(parentId? : number) : Observable<KalturaCategoryListResponse> {
+    private buildCategoryListRequest({parentId, categoriesList} : {parentId?: number, categoriesList? : number[] }) : Observable<KalturaCategoryListResponse> {
         const filter = new KalturaCategoryFilter();
         filter.orderBy = '+name';
         if (parentId !== null && typeof parentId !== 'undefined') {
-            Object.assign(filter, {parentIdEqual: parentId});
+            filter.parentIdEqual = parentId;
+        }
+
+        if (categoriesList && categoriesList.length) {
+            filter.idIn = categoriesList.join(',');
         }
 
         const responseProfile = new KalturaDetachedResponseProfile()

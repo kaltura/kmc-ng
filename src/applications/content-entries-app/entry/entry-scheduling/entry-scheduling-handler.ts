@@ -4,6 +4,7 @@ import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { KalturaUtils } from '@kaltura-ng2/kaltura-api';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
+import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { EntrySectionHandler } from '../../entry-store/entry-section-handler';;
 import { EntryStore } from '../../entry-store/entry-store.service';
 import { EntryLoaded } from '../../entry-store/entry-sections-events';
@@ -70,11 +71,20 @@ export class EntrySchedulingHandler extends EntrySectionHandler
 		return valid;
 	}
 
+	public get sectionType() : EntrySectionTypes
+	{
+		return EntrySectionTypes.Related;
+	}
     /**
      * Do some cleanups if needed once the section is removed
      */
-    onSectionRemoved()
-    {
+	protected _onSectionReset()
+	{
+		return undefined;
+	}
 
-    }
+	protected _onSectionLoading(data : OnSectionLoadingArgs) {
+		return undefined;
+	}
+
 }
