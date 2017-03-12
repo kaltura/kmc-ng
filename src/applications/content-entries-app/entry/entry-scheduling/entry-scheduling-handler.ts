@@ -1,11 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
-import { KalturaUtils } from '@kaltura-ng2/kaltura-api';
+import { KalturaUtils, KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { EntrySectionHandler } from '../../entry-store/entry-section-handler';;
+import { EntrySectionHandler, OnSectionLoadingArgs } from '../../entry-store/entry-section-handler';
 import { EntryStore } from '../../entry-store/entry-store.service';
 import { EntryLoaded } from '../../entry-store/entry-sections-events';
 import TakeUntilDestroy  from "angular2-take-until-destroy";
@@ -15,15 +15,21 @@ import TakeUntilDestroy  from "angular2-take-until-destroy";
 export class EntrySchedulingHandler extends EntrySectionHandler
 {
 
-	public _scheduleSettings: string;
-	public _startDate;
-	public _endDate;
-	public _enableEndDate:boolean = false;
-	public _timeZone = "";
+	private validationMessages = {
+		noStartDate: this.appLocalization.get('applications.content.entryDetails.scheduling.noStartDate'),
+		noEndDate: this.appLocalization.get('applications.content.entryDetails.scheduling.noEndDate'),
+		endDateBefore: this.appLocalization.get('applications.content.entryDetails.scheduling.endDateBefore')
+	}
 
-    constructor(store : EntryStore, private appLocalization: AppLocalization)
+	public schedulingForm: FormGroup;
+	public _timeZone = "";
+	public _validationError = "";
+	public valid: boolean = true;
+
+    constructor(store : EntryStore, kalturaServerClient: KalturaServerClient, private appLocalization: AppLocalization, private fb: FormBuilder)
     {
-        super(store);
+        super(store, kalturaServerClient);
+	    this.createForm();
 	    this.getTimeZone();
 	    store.events$
 		    .takeUntil((<any>this).componentDestroy())
@@ -33,23 +39,96 @@ export class EntrySchedulingHandler extends EntrySectionHandler
 				    if (event instanceof EntryLoaded)
 				    {
 				    	this.entry = event.entry;
-						this._scheduleSettings = "anytime";
+						let scheduleSettings = "anytime";
 					    if (this.entry && this.entry.startDate){
-						    this._scheduleSettings = "scheduled";
-						    this._startDate = KalturaUtils.fromServerDate(this.entry.startDate);
+						    scheduleSettings = "scheduled";
+						    let startDate = KalturaUtils.fromServerDate(this.entry.startDate);
 						    if (this.entry.endDate){
-						    	this._enableEndDate = true;
-							    this._endDate = KalturaUtils.fromServerDate(this.entry.endDate);
+							    this.schedulingForm.get('endDate').enable();
+							    this.schedulingForm.patchValue({
+								    enableEndDate: true,
+								    endDate: KalturaUtils.fromServerDate(this.entry.endDate)
+							    });
 						    }
 					    }
+					    this.schedulingForm.get('startDate').enable();
+					    this.schedulingForm.patchValue({
+						    scheduling: scheduleSettings,
+						    startDate: startDate
+					    });
 				    }
 			    }
 		    );
     }
 
+    private createForm(): void{
+    	this.schedulingForm = this.fb.group({
+		    scheduling: 'anytime',
+		    startDate: {value: '', disabled: true},
+		    endDate: {value: '', disabled: true},
+		    enableEndDate: false
+	    });
+	    this.schedulingForm.get('scheduling').valueChanges.subscribe(
+	    	value => {
+	    		if (value === "anytime"){
+				    this.schedulingForm.get('startDate').disable();
+				    this.schedulingForm.get('endDate').disable();
+				    this.schedulingForm.get('enableEndDate').disable();
+			    }else{
+				    this.schedulingForm.get('startDate').enable();
+				    this.schedulingForm.get('enableEndDate').enable();
+				    if (this.schedulingForm.get('enableEndDate').value){
+					    this.schedulingForm.get('endDate').enable();
+				    }
+
+			    }
+		    }
+	    );
+	    this.schedulingForm.get('enableEndDate').valueChanges.subscribe(
+		    value => {
+			    if (value){
+				    this.schedulingForm.get('endDate').enable();
+			    }else{
+
+				    this.schedulingForm.get('endDate').disable();
+			    }
+		    }
+	    );
+
+	    // Validation
+	    this.schedulingForm.get('endDate').valueChanges.subscribe(value => {this.validate();});
+	    this.schedulingForm.get('startDate').valueChanges.subscribe(value => {this.validate();});
+    }
+
+    // validation should also be called upon save
+    public validate(calledFromSave: boolean = false){
+	    this._validationError = "";
+	    const startDate = this.schedulingForm.get('startDate').value;
+	    const endDate = this.schedulingForm.get('endDate').value;
+	    const scheduling = this.schedulingForm.get('scheduling').value;
+	    const enableEndDate = this.schedulingForm.get('enableEndDate').value;
+
+	    if (calledFromSave && scheduling === "scheduled"){
+	    	if (!startDate) {
+			    this._validationError = this.validationMessages.noStartDate;
+		    }
+		    if (enableEndDate && !endDate){
+			    this._validationError = this.validationMessages.noEndDate;
+		    }
+	    }
+
+	    if (startDate && endDate && startDate > endDate){
+		    this._validationError = this.validationMessages.endDateBefore;
+	    }
+
+	    this.valid = this._validationError === "";
+    }
+
 	public _clearDates(){
-		this._startDate = null;
-		this._endDate = null;
+		this.schedulingForm.patchValue({
+			startDate: '',
+			endDate: ''
+		});
 	}
 
 	private getTimeZone(){
@@ -58,17 +137,6 @@ export class EntrySchedulingHandler extends EntrySectionHandler
 		const zoneTimeOffset:number = (now.getTimezoneOffset() / 60) * (-1);
 		const ztStr: string = (zoneTimeOffset == 0) ? '' : (zoneTimeOffset > 0) ? ('+' + zoneTimeOffset) : ('-' + zoneTimeOffset);
 		this._timeZone = this._timeZone.split("(NUM)").join(ztStr);
-	}
-
-	private validate(): boolean{
-		let valid = true;
-		if (this._scheduleSettings === "scheduled"){
-			valid = this._startDate !== null;
-			if (this._endDate && this._endDate <= this._startDate){
-				valid = false;
-			}
-		}
-		return valid;
 	}
 
 	public get sectionType() : EntrySectionTypes
