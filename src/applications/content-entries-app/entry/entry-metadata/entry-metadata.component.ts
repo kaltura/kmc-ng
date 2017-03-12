@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { KalturaLiveStreamEntry } from '@kaltura-ng2/kaltura-api/types';
+
 import { Subject } from 'rxjs/Subject';
 import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 
@@ -30,54 +29,18 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     public _loading = false;
     public _loadingError = null;
 	public _jumpToMenu: MenuItem[] = [];
-	public _metadataForm : FormGroup;
 
     constructor(private _appLocalization: AppLocalization,
                 public _handler : EntryMetadataHandler,
-                private _formBuilder : FormBuilder,
                 private _entryStore : EntryStore) {
     }
 
 
     ngOnInit() {
 
-        this._metadataForm = this._formBuilder.group({
-            name : ['', Validators.required],
-            description : '',
-            tags : '',
-            categories : '',
-            offlineMessage : '',
-            referenceId : '',
-        });
 
-        this._entryStore.entry$
-            .cancelOnDestroy(this)
-            .subscribe(
-            entry => {
-                try {
-                    if (entry) {
-                        // TODO [kmcng] check how to prevent setting null as fallback value (if undefined it will kill the application)
-                        this._metadataForm.setValue(
-                            {
-                                name: entry.name,
-                                description: entry.description || null,
-                                tags: (entry.tags ? entry.tags.split(',') : null),
-                                categories: '' ,
-                                offlineMessage: entry instanceof KalturaLiveStreamEntry ? (entry.offlineMessage || null) : '',
-                                referenceId: entry.referenceId || null
-                            }
-                        );
-                    } else {
-                        // this._metadataForm.reset();
-                    }
-                }catch(err)
-                {
-                    // TODO [kmcng] replace with global error handling (try removing one of the fields from the setValue
-                    console.error(err.message);
-                    throw err;
-                }
-            }
-        );
+
+
 
     	this._jumpToMenu = [
 		    {label: "Section 1", command: (event) => {
@@ -148,7 +111,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
         this._searchCategoriesRequest$ = this._handler.searchTags(event.query).subscribe(data => {
                 const suggestions = [];
-                const existingTags = this._metadataForm.value.tags || [];
+                const existingTags = this._handler.metadataForm.value.tags || [];
 
                 (data|| []).forEach(suggestedTag => {
                     const isSelectable = !existingTags.find(tag => {

@@ -20,7 +20,8 @@ export class EntryLoadingFailed
 
 export class EntryLoaded {
     constructor(
-                public entry : KalturaMediaEntry
+                public entry : KalturaMediaEntry,
+                public activeSection: EntrySectionTypes
                 )
     {
     }

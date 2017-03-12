@@ -92,6 +92,8 @@ export class EntryComponent implements OnInit, OnDestroy {
 					this._updateNavigationState();
 				}else if (event instanceof EntryLoaded)
 				{
+					this._entryName = event.entry.name;
+					this._entryType = event.entry.mediaType;
 					this._loading = false;
 					this._loadingError = null;
 				}
@@ -101,15 +103,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 				// TODO [kmc] navigate to error page
 				throw error;
 			});
-
-		this._entryStore.entry$.subscribe(
-		    response => {
-		    	if (response) {
-				    this._entryName = response.name;
-				    this._entryType = response.mediaType;
-			    }
-			}
-	    );
     }
 
     public _backToList(){

@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EntrySectionHandler, OnSectionLoadingArgs } from '../../entry-store/entry-section-handler';
+import { EntrySectionHandler, OnSectionLoadedArgs } from '../../entry-store/entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -40,7 +40,7 @@ export class EntryThumbnailsHandler extends EntrySectionHandler
         this._eventSubscription.unsubscribe();
     }
 
-    protected _onSectionLoading(data : OnSectionLoadingArgs) {
+    protected _onSectionLoaded(data : OnSectionLoadedArgs) {
         return undefined;
     }
 }

@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {
-    EntrySectionHandler, OnSectionLoadingArgs,
+    EntrySectionHandler, OnSectionLoadedArgs,
     OnEntryLoadingArgs
 } from '../../entry-store/entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
@@ -60,7 +60,7 @@ export class EntryPreviewHandler extends EntrySectionHandler
         this.iframeSrc = this.appConfig.get('core.kaltura.cdnUrl') + '/p/' + partnerID + '/sp/' + partnerID + '00/embedIframeJs/uiconf_id/' + UIConfID + '/partner_id/' + partnerID + '?iframeembed=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id=' + data.entryId;
     }
 
-    protected _onSectionLoading(data : OnSectionLoadingArgs) {
+    protected _onSectionLoaded(data : OnSectionLoadedArgs) {
       // do nothing
     }
 }

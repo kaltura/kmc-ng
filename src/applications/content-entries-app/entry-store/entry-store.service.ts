@@ -19,6 +19,7 @@ import {
 } from './entry-sections-events';
 import { EntrySectionHandler } from './entry-section-handler';
 import { EntriesStore } from '../entries-store/entries-store.service';
+import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 
 
 @Injectable()
@@ -26,19 +27,18 @@ export class EntryStore implements  OnDestroy{
 
 	private _sections : EntrySectionHandler[] = [];
 	private _sectionToRouteMapping : { [key : number] : string} = {};
-	private _entry: BehaviorSubject<KalturaMediaEntry> = new BehaviorSubject<KalturaMediaEntry>(null);
 	private _routeParamsChangedSubscription : ISubscription = null;
 	private _routerEventsSubscription : ISubscription = null;
 	private _activeSectionType : EntrySectionTypes = null;
 	private _events : Subject<EntryEvents> = new Subject<EntryEvents>();
 	private _saveEntryInvoked = false;
-	public entry$ = this._entry.asObservable();
-	public events$ = this._events.asObservable();
+	private _entry : KalturaMediaEntry = null;
+	public events$ = this._events.monitor('entry event').share();
 
 
 	public get entry() : KalturaMediaEntry
 	{
-		return this._entry.getValue();
+		return this._entry;
 	}
 
     constructor(private kalturaServerClient: KalturaServerClient,
@@ -55,7 +55,6 @@ export class EntryStore implements  OnDestroy{
 	ngOnDestroy() {
 		this._routeParamsChangedSubscription.unsubscribe();
 		this._routerEventsSubscription.unsubscribe();
-		this._entry.complete();
 		this._events.complete();
 	}
 
@@ -115,8 +114,6 @@ export class EntryStore implements  OnDestroy{
 	{
 		return this._entryRoute.params.do((params : Params) =>
 		{
-			// clean state of previous entry before loading the new one.
-			this._entry.next(null);
 		})
         .switchMap((params: Params) => this._getEntry(params['id']))
 		.subscribeOn(Scheduler.async)
@@ -125,9 +122,7 @@ export class EntryStore implements  OnDestroy{
 				if (response instanceof KalturaMediaEntry)
 				{
 					// TODO [kmcng] handle situations when the subscribers has errors!!
-
-					this._entry.next(response);
-					this._events.next(new EntryLoaded(response));
+					this._events.next(new EntryLoaded(response,this._activeSectionType));
 				}else
 				{
 					// handle error

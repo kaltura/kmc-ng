@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EntrySectionHandler, OnSectionLoadingArgs } from '../../entry-store/entry-section-handler';
+import { EntrySectionHandler, OnSectionLoadedArgs } from '../../entry-store/entry-section-handler';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntryStore } from '../../entry-store/entry-store.service';
@@ -92,7 +92,7 @@ export class EntrySectionsListHandler extends EntrySectionHandler
         this._sections.next(sections);
     }
 
-    protected _onSectionLoading(data : OnSectionLoadingArgs) {
+    protected _onSectionLoaded(data : OnSectionLoadedArgs) {
         // do nothing
     }
 }
