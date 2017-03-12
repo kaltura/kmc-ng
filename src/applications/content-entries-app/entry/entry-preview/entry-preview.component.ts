@@ -12,6 +12,7 @@ import {
 } from '@kaltura-ng2/kaltura-api/types';
 import { BrowserService } from 'kmc-shell';
 import { EntryPreviewHandler } from './entry-preview-handler';
+import { EntryLoaded } from '../../entry-store/entry-sections-events';
 
 @Component({
 	selector: 'kEntryPreview',
@@ -39,19 +40,22 @@ export class EntryPreview implements OnInit {
 	}
 
 	ngOnInit() {
-		this._entryStore.entry$.subscribe(
+		this._entryStore.events$.subscribe(
 			response => {
 				if (response) {
-					this._currentEntry = response;
-					this._entryReady = this._currentEntry.status !== KalturaEntryStatus.NoContent;
-					const sourceType = this._currentEntry.sourceType.toString();
-					this._isLive = (sourceType === KalturaSourceType.LiveStream.toString() ||
-					sourceType === KalturaSourceType.AkamaiLive.toString() ||
-					sourceType === KalturaSourceType.AkamaiUniversalLive.toString() ||
-					sourceType === KalturaSourceType.ManualLiveStream.toString());
-					this._isRecordedLive = (sourceType === KalturaSourceType.RecordedLive.toString());
-					this._hasDuration = (this._currentEntry.status !== KalturaEntryStatus.NoContent && !this._isLive && this._currentEntry.mediaType.toString() !== KalturaMediaType.Image.toString());
-					this._isClip = !this._isRecordedLive && (this._currentEntry.id !== this._currentEntry.rootEntryId);
+
+					if (response instanceof EntryLoaded) {
+						this._currentEntry = response.entry;
+						this._entryReady = this._currentEntry.status !== KalturaEntryStatus.NoContent;
+						const sourceType = this._currentEntry.sourceType.toString();
+						this._isLive = (sourceType === KalturaSourceType.LiveStream.toString() ||
+						sourceType === KalturaSourceType.AkamaiLive.toString() ||
+						sourceType === KalturaSourceType.AkamaiUniversalLive.toString() ||
+						sourceType === KalturaSourceType.ManualLiveStream.toString());
+						this._isRecordedLive = (sourceType === KalturaSourceType.RecordedLive.toString());
+						this._hasDuration = (this._currentEntry.status !== KalturaEntryStatus.NoContent && !this._isLive && this._currentEntry.mediaType.toString() !== KalturaMediaType.Image.toString());
+						this._isClip = !this._isRecordedLive && (this._currentEntry.id !== this._currentEntry.rootEntryId);
+					}
 				}
 			}
 		);

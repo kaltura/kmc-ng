@@ -1,10 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EntrySectionHandler, OnSectionLoadingArgs } from '../../entry-store/entry-section-handler';
+import {
+    EntrySectionHandler, OnSectionLoadedArgs
+} from '../../entry-store/entry-section-handler';
+import { KalturaLiveStreamEntry } from '@kaltura-ng2/kaltura-api/types';
 import { Observable } from 'rxjs/Observable';
-
 import { KalturaResponse } from '@kaltura-ng2/kaltura-api/';
 import { CategoryEntryListAction } from '@kaltura-ng2/kaltura-api/services/category-entry';
-import { KalturaCategoryEntryFilter, KalturaCategoryEntryListResponse, KalturaCategoryListResponse } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaCategoryEntryFilter, KalturaCategoryEntryListResponse, KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntryStore } from '../../entry-store/entry-store.service';
 import { TagSearchAction } from '@kaltura-ng2/kaltura-api/services/tag'
@@ -14,6 +16,7 @@ import { CategoriesStore, CategoryData } from '../../../../shared/kmc-content-ui
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataFieldTypes } from '@kaltura-ng2/kaltura-common';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 export interface EntryCategories
 { items : CategoryData[],
@@ -25,22 +28,37 @@ export interface EntryCategories
 export class EntryMetadataHandler extends EntrySectionHandler implements  OnDestroy
 {
     private _entryCategories : BehaviorSubject<EntryCategories> = new BehaviorSubject<EntryCategories>({items : [], loading : false});
+    public metadataForm : FormGroup;
 
-    public entryCategories$ = this._entryCategories.asObservable();
+    public entryCategories$ = this._entryCategories.asObservable().monitor('entry categories');
 
     private _metadataProfiles : BehaviorSubject<{ items : MetadataProfile[], loading : boolean, error? : any}> = new BehaviorSubject<{ items : MetadataProfile[], loading : boolean, error? : any}>(
         { items : null, loading : false}
     );
 
-    public _metadataProfiles$ = this._metadataProfiles.asObservable();
-
+    public _metadataProfiles$ = this._metadataProfiles.asObservable().monitor('metadata profiles');
 
     constructor(store : EntryStore,
-                kalturaServerClient: KalturaServerClient,
+                private _kalturaServerClient: KalturaServerClient,
                 private _categoriesStore : CategoriesStore,
+                private _formBuilder : FormBuilder,
                 private _metadataProfileStore : MetadataProfileStore)
     {
-        super(store, kalturaServerClient);
+        super(store, _kalturaServerClient);
+
+        this._buildForm();
+    }
+
+
+    private _buildForm() : void{
+        this.metadataForm = this._formBuilder.group({
+            name : ['', Validators.required],
+            description : '',
+            tags : null,
+            categories : {value : null, disabled : true},
+            offlineMessage : '',
+            referenceId : '',
+        });
     }
 
     public get sectionType() : EntrySectionTypes
@@ -48,58 +66,84 @@ export class EntryMetadataHandler extends EntrySectionHandler implements  OnDest
         return EntrySectionTypes.Metadata;
     }
 
-    protected _onSectionLoading(data : OnSectionLoadingArgs) : void {
-        data.requests.push(new CategoryEntryListAction(
-            {
-                filter: new KalturaCategoryEntryFilter().setData(
-                    filter => {
-                        filter.entryIdEqual = data.entryId;
-                    }
-                )
-            }
-        ).setCompletion(this._onEntryCategoriesLoaded.bind(this)));
+    protected _onSectionLoaded(data : OnSectionLoadedArgs) : void {
 
-        if (data.firstTime)
+        this._getEntryCategories(this.entry);
+        this._resetForm(this.entry);
+
+        if (data.firstLoad)
         {
-            this._metadataProfileStore.get({ type : MetadataProfileTypes.Entry, ignoredCreateMode : MetadataProfileCreateModes.App})
-                .cancelOnDestroy(this)
-                .monitor('load metadata profiles')
-                .subscribe(
-                    response =>
-                    {
-                        this._metadataProfiles.next({items : response.items, loading : false});
-                    },
-                    error =>
-                    {
-                        this._metadataProfiles.next({items : [], loading : false, error : error});
-                    }
-                );
+            this._fetchProfileMetadata();
+
         }
     }
 
 
-    private _onEntryCategoriesLoaded(response : KalturaResponse<KalturaCategoryEntryListResponse>) : void {
-        if (response.result) {
-            const categoriesList = response.result.objects.map(category => category.categoryId);
+    private _getEntryCategories(entry : KalturaMediaEntry) : void {
+        // update entry categories
+        this._entryCategories.next({loading: true, items: []});
+        this.metadataForm.controls['categories'].disable();
 
-            if (categoriesList.length) {
-                this._categoriesStore.getCategoriesFromList(categoriesList)
-                    .cancelOnDestroy(this)
-                    .subscribe(
-                        categories => {
-                            console.log("entryMetadataHandler._onEntryCategoriesLoaded(): next", categories);
-                        },
-                        (error) => {
-                            console.log("entryMetadataHandler._onEntryCategoriesLoaded(): error", error);
-                        },
-                        () => {
-                            console.log("entryMetadataHandler._onEntryCategoriesLoaded(): complete");
-                        }
-                    );
+        this._kalturaServerClient.request(new CategoryEntryListAction(
+            {
+                filter: new KalturaCategoryEntryFilter().setData(
+                    filter => {
+                        filter.entryIdEqual = entry.id;
+                    }
+                )
             }
-        } else {
-            // TODO
-        }
+        ))
+            .subscribe(
+                (response) => {
+                    const categoriesList = response.objects.map(category => category.categoryId);
+
+                    if (categoriesList.length) {
+                        this._categoriesStore.getCategoriesFromList(categoriesList)
+                            .cancelOnDestroy(this, this.sectionReset$)
+                            .subscribe(
+                                categories => {
+                                    this._entryCategories.next({loading: false, items: categories.items});
+                                    this.metadataForm.controls['categories'].enable();
+                                },
+                                (error) => {
+                                    this._entryCategories.next({loading: false, items: [], error: error});
+                                }
+                            );
+                    }
+                },
+                error => {
+                    this._entryCategories.next({loading: false, items: [], error: error});
+                }
+            );
+
+    }
+
+    private _fetchProfileMetadata() : void{
+        this._metadataProfileStore.get({ type : MetadataProfileTypes.Entry, ignoredCreateMode : MetadataProfileCreateModes.App})
+            .cancelOnDestroy(this)
+            .monitor('load metadata profiles')
+            .subscribe(
+                response =>
+                {
+                    this._metadataProfiles.next({items : response.items, loading : false});
+                },
+                error =>
+                {
+                    this._metadataProfiles.next({items : [], loading : false, error : error});
+                }
+            );
+    }
+    private _resetForm(entry : KalturaMediaEntry) : void {
+        this.metadataForm.setValue(
+            {
+                name: entry.name,
+                description: entry.description || null,
+                tags: (entry.tags ? entry.tags.split(',') : null),
+                categories: '',
+                offlineMessage: entry instanceof KalturaLiveStreamEntry ? (entry.offlineMessage || null) : '',
+                referenceId: entry.referenceId || null
+            }
+        );
     }
 
     public searchTags(text : string)
@@ -158,6 +202,7 @@ export class EntryMetadataHandler extends EntrySectionHandler implements  OnDest
     protected _onSectionReset()
     {
         this._entryCategories.next({ items : [], loading : false});
+        this.metadataForm.reset();
     }
 
 }

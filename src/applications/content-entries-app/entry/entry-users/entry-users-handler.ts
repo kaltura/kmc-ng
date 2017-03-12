@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EntrySectionHandler, OnSectionLoadingArgs } from '../../entry-store/entry-section-handler';
+import { EntrySectionHandler, OnSectionLoadedArgs } from '../../entry-store/entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
 import { EntryStore } from '../../entry-store/entry-store.service';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
@@ -39,7 +39,7 @@ export class EntryUsersHandler extends EntrySectionHandler
         this._eventSubscription.unsubscribe();
     }
 
-    protected _onSectionLoading(data : OnSectionLoadingArgs) {
+    protected _onSectionLoaded(data : OnSectionLoadedArgs) {
         return undefined;
     }
 }
