@@ -1,45 +1,157 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EntrySectionHandler, OnSectionLoadedArgs } from '../../entry-store/entry-section-handler';
-import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { EntryStore } from '../../entry-store/entry-store.service';
+import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
+
+import { KalturaUtils, KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
-import { KalturaRequest } from '@kaltura-ng2/kaltura-api';
+import { EntrySectionHandler, OnSectionLoadedArgs } from '../../entry-store/entry-section-handler';
+import { EntryStore } from '../../entry-store/entry-store.service';
+import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
+
+function datesValidation(checkRequired: boolean = false): ValidatorFn {
+	return (c: AbstractControl): {[key: string]: boolean} | null => {
+		const startDate = c.get('startDate').value;
+		const endDate = c.get('endDate').value;
+		const scheduling = c.get('scheduling').value;
+		const enableEndDate = c.get('enableEndDate').value;
+		if (checkRequired && scheduling === "scheduled"){
+			if (!startDate) {
+				return { 'noStartDate': true };
+			}
+			if (enableEndDate && !endDate){
+				return { 'noEndDate': true };
+			}
+		}
+
+		if (startDate && endDate && startDate > endDate){
+			return { 'endDateBeforeStartDate': true };
+		}
+
+		return null;
+	}
+}
 
 @Injectable()
 export class EntrySchedulingHandler extends EntrySectionHandler
 {
-    private _eventSubscription : ISubscription;
+	public schedulingForm: FormGroup;
+	public _timeZone = "";
 
-    constructor(store : EntryStore,
-                kalturaServerClient: KalturaServerClient)
+    constructor(store : EntryStore, kalturaServerClient: KalturaServerClient, private appLocalization: AppLocalization, private fb: FormBuilder)
     {
-        super(store,kalturaServerClient);
-
-        this._eventSubscription = store.events$.subscribe(
-            event =>
-            {
-
-            }
-        );
+        super(store, kalturaServerClient);
+	    this.createForm();
+	    this.getTimeZone();
     }
 
-    public get sectionType() : EntrySectionTypes
-    {
-        return EntrySectionTypes.Scheduling;
+	protected _onSectionLoaded(data : OnSectionLoadedArgs): void {
+		this._resetForm();
+	}
+
+	private _resetForm(){
+		let scheduleSettings = "anytime";
+		let startDate = "";
+		let endDate = "";
+		let enableEndDate = false;
+		if (this.entry && this.entry.startDate){
+			scheduleSettings = "scheduled";
+			this.schedulingForm.get('startDate').enable();
+			startDate = KalturaUtils.fromServerDate(this.entry.startDate);
+			if (this.entry.endDate){
+				this.schedulingForm.get('endDate').enable();
+				enableEndDate = true;
+				endDate = KalturaUtils.fromServerDate(this.entry.endDate);
+			}
+		}
+		this.schedulingForm.reset({
+			scheduling: scheduleSettings,
+			startDate: startDate,
+			endDate: endDate,
+			enableEndDate: enableEndDate
+		});
+	}
+
+    private createForm(): void{
+    	this.schedulingForm = this.fb.group({
+		    scheduling: 'anytime',
+		    startDate: {value: '', disabled: true},
+		    endDate: {value: '', disabled: true},
+		    enableEndDate: false
+	    }, { validator: datesValidation(false) });
+	    this.schedulingForm.get('scheduling').valueChanges
+		    .cancelOnDestroy(this)
+		    .subscribe(
+	    	value => {
+	    		if (value === "anytime"){
+				    this.schedulingForm.get('startDate').disable();
+				    this.schedulingForm.get('endDate').disable();
+				    this.schedulingForm.get('enableEndDate').disable();
+			    }else{
+				    this.schedulingForm.get('startDate').enable();
+				    this.schedulingForm.get('enableEndDate').enable();
+				    if (this.schedulingForm.get('enableEndDate').value){
+					    this.schedulingForm.get('endDate').enable();
+				    }
+
+			    }
+		    }
+	    );
+	    this.schedulingForm.get('enableEndDate').valueChanges
+		    .cancelOnDestroy(this)
+		    .subscribe(
+		    value => {
+			    if (value){
+				    this.schedulingForm.get('endDate').enable();
+			    }else{
+
+				    this.schedulingForm.get('endDate').disable();
+			    }
+		    }
+	    );
     }
 
+
+	public _clearDates(){
+		this.schedulingForm.patchValue({
+			startDate: '',
+			endDate: ''
+		});
+	}
+
+	private getTimeZone(){
+		this._timeZone = this.appLocalization.get('applications.content.entryDetails.scheduling.note');
+		const now: any = new Date();
+		const zoneTimeOffset:number = (now.getTimezoneOffset() / 60) * (-1);
+		const ztStr: string = (zoneTimeOffset == 0) ? '' : (zoneTimeOffset > 0) ? ('+' + zoneTimeOffset) : ('-' + zoneTimeOffset);
+		this._timeZone = this._timeZone.split("(NUM)").join(ztStr);
+	}
+
+	private setValidators(checkRequired: boolean){
+		this.schedulingForm.clearValidators();
+		this.schedulingForm.setValidators(datesValidation(checkRequired));
+		this.schedulingForm.updateValueAndValidity();
+	}
+	public get sectionType() : EntrySectionTypes
+	{
+		return EntrySectionTypes.Scheduling;
+	}
+
+	public validate(): boolean{
+		this.setValidators(true);
+		const hasErrors = !!this.schedulingForm.errors;
+		return !hasErrors;
+	}
+	protected _onSectionEntered(){
+		this.setValidators(false);
+	}
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onSectionReset()
-    {
-        this._eventSubscription.unsubscribe();
-    }
+	protected _onSectionReset()
+	{
+		this.setValidators(false);
+		this.schedulingForm.updateValueAndValidity();
+	}
 
-    protected _onSectionLoaded(data : OnSectionLoadedArgs) {
-        return undefined;
-    }
 }

@@ -31,6 +31,11 @@
 			width: 130px;
 		}
 	}
+	.kDisabled{
+		opacity: 0.3;
+		cursor: default;
+		pointer-events: none;
+	}
 }
 :host /deep/ label{
 	font-weight: 400;
@@ -38,6 +43,6 @@
 
 
 :host /deep/ .ui-calendar .ui-inputtext{
-	width: 100px !important;
+	width: 140px !important;
 }
 

@@ -78,6 +78,10 @@ export abstract class EntrySectionHandler implements OnDestroy
 
     public abstract get sectionType() : EntrySectionTypes;
 
+	public validate(): boolean{
+		return true;
+	}
+
     protected abstract _onSectionReset() : void;
     protected _onSectionEntered() : void {}
     protected abstract _onSectionLoaded(data : OnSectionLoadedArgs);

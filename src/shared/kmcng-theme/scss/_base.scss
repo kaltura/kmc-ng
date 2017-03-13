@@ -27,6 +27,9 @@ label{
     }
     text-overflow: ellipsis;
 }
+.error{
+	color: #ff0000;
+}
 a{
     @extend .link;
     outline: none;
