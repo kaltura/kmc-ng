@@ -1,6 +1,5 @@
 <kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
 	<div class="kScheduling">
-		<button (click)="_handler.validate()">validate</button>
 		<p class="kTitle">{{'applications.content.entryDetails.scheduling.scheduling' | translate}}</p>
 		<form [formGroup]="_handler.schedulingForm" novalidate>
 			<div class="kBlock">
@@ -35,7 +34,5 @@
 				</div>
 			</div>
 		</form>
-
-		<p>{{_handler.schedulingForm.errors | json}}</p>
 	</div>
 </kLoader>
