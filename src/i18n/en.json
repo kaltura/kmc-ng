@@ -24,6 +24,12 @@
         }
     },
     "applications":{
+		"entries":{
+			"entryMetadata" : {
+				"searchTagsPH": "Search Tags",
+				"searchCategoriesPH": "Search Categories"
+			}
+		},
         "content":{
             "entries":{
                 "entries": "Entries",

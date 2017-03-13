@@ -82,17 +82,12 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
     private _status : BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null});
     private _querySource : ReplaySubject<QueryRequestArgs> = new ReplaySubject<QueryRequestArgs>(1,null);
 
-    private _query : QueryRequestArgs = {
-        filters: [],
-        addedFilters: [],
-        removedFilters: [],
-        data: {
-            pageIndex: 0,
-            pageSize: 50,
-            sortBy: 'createdAt',
-            sortDirection: SortDirection.Desc,
-            fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus'
-        }
+    private _queryData : QueryData = {
+        pageIndex: 0,
+        pageSize: 50,
+        sortBy: 'createdAt',
+        sortDirection: SortDirection.Desc,
+        fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus'
     };
 
     private _activeFilters : FilterItem[] = [];
@@ -137,7 +132,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
     public updateQuery(query : QueryData)
     {
-        Object.assign(this._query.data,query);
+        Object.assign(this._queryData,query);
         this._executeQuery({ removedFilters : [], addedFilters : []});
     }
 
@@ -195,7 +190,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             if (addedFilters.length > 0)
             {
                 this._activeFilters = [...this._activeFilters, ...addedFilters];
-                this._query.data.pageIndex = 1;
+                this._queryData.pageIndex = 1;
                 this._executeQuery({  removedFilters : [], addedFilters : addedFilters });
             }
         }
@@ -222,7 +217,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
             if (removedFilters.length > 0)
             {
-                this._query.data.pageIndex = 1;
+                this._queryData.pageIndex = 1;
                 this._executeQuery({ removedFilters : removedFilters, addedFilters : [] });
             }
         }
@@ -239,12 +234,19 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
         // execute the request
         this.executeQuerySubscription = Observable.create(observer => {
-            this._status.next({loading: true, errorMessage: null});
-            this._query.addedFilters = addedFilters || [];
-            this._query.removedFilters = removedFilters || [];
-            this._querySource.next(this._query);
 
-            let requestSubscription = this.buildQueryRequest(this._query).subscribe(observer);
+            this._status.next({loading: true, errorMessage: null});
+            const queryArgs : QueryRequestArgs = Object.assign({},
+                {
+                    filters : this._activeFilters,
+                    addedFilters : addedFilters || [],
+                    removedFilters : removedFilters || [],
+                    data : this._queryData
+                });
+
+            this._querySource.next(queryArgs);
+
+            let requestSubscription = this.buildQueryRequest(queryArgs).subscribe(observer);
 
             return () => {
                 if (requestSubscription) {
@@ -270,7 +272,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
     }
 
-    private buildQueryRequest({filters : activeFilers, data : queryData } : { filters : FilterItem[], data : QueryData}) : Observable<KalturaBaseEntryListResponse> {
+    private buildQueryRequest({filters : activeFilters, data : queryData } : { filters : FilterItem[], data : QueryData}) : Observable<KalturaBaseEntryListResponse> {
 
         try {
             let filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter();
@@ -286,7 +288,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             };
 
             // build request args by converting filters using registered handlers
-            if (activeFilers && activeFilers.length > 0) {
+            if (activeFilters && activeFilters.length > 0) {
 
                 Object.keys(this._activeFiltersMap).forEach(key => {
                     const handler = EntriesStore.filterTypeMapping[key];

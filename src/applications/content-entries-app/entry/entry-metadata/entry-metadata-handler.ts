@@ -120,6 +120,8 @@ export class EntryMetadataHandler extends EntrySectionHandler
                                     this._entryCategories.next({loading: false, items: [], error: error});
                                 }
                             );
+                    }else {
+                        this._categoriesControl.enable();
                     }
                 },
                 error => {
