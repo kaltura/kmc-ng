@@ -7,7 +7,7 @@
 						   field="label"
 							placeholder="{{'applications.content.filters.findCategory' | translate}}"
 							[minLength]="3"
-						    [isSelectableField]="'isSelectable'"
+						    suggestionSelectableField="isSelectable"
 							(onSelect)="_onSuggestionSelected()"
 						    [suggestionsProvider]="_suggestionsProvider"
 							(completeMethod)="_searchSuggestions($event)"

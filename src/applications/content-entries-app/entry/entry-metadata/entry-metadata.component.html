@@ -21,12 +21,11 @@
 			<div class="kRow kValign">
 				<span class="kLabels">{{'applications.content.entryDetails.metadata.tags' | translate}}</span>
 				<kAutoComplete formControlName="tags"
-							   field="tag"
+							   suggestionItemField="item"
+							   suggestionSelectableField="isSelectable"
 							   [multiple]="true"
-							   inputStyleClass="kSearchCategory"
 							   placeholder="{{'[search-label]' | translate}}"
 							   [minLength]="3"
-							   [isSelectableField]="'isSelectable'"
 							   [suggestionsProvider]="_tagsProvider"
 							   (completeMethod)="_searchTags($event)"
 				></kAutoComplete>
@@ -35,11 +34,11 @@
 				<span class="kLabels">{{'applications.content.entryDetails.metadata.categories' | translate}}</span>
 				<kAutoComplete formControlName="categories"
 							   field="name"
+							   suggestionItemField="item"
+							   suggestionSelectableField="isSelectable"
 							   [multiple]="true"
-							   inputStyleClass="kSearchCategory"
 							   placeholder="{{'[search-label]' | translate}}"
 							   [minLength]="3"
-							   [isSelectableField]="'isSelectable'"
 							   [suggestionsProvider]="_categoriesProvider"
 							   (completeMethod)="_searchCategories($event)"
 				></kAutoComplete>

@@ -72,10 +72,10 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
                 const entryTags = this._handler.metadataForm.value.tags || [];
 
                 (data|| []).forEach(suggestedTag => {
-                    const isSelectable = !entryTags.find(item => {
-                        return item.tag === suggestedTag;
+                    const isSelectable = !entryTags.find(tag => {
+                        return tag === suggestedTag;
                     });
-                    suggestions.push({ tag: suggestedTag, isSelectable: isSelectable});
+                    suggestions.push({ item: suggestedTag, isSelectable: isSelectable});
                 });
                 this._tagsProvider.next({suggestions: suggestions, isLoading: false});
             },

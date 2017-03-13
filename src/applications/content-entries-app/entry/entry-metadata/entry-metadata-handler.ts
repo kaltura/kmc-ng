@@ -150,9 +150,7 @@ export class EntryMetadataHandler extends EntrySectionHandler
             {
                 name: entry.name,
                 description: entry.description || null,
-                tags: (entry.tags ? entry.tags.split(', ').map(tagValue => {
-                    return {tag: tagValue}
-                }) : null), // for backward compatibility we split values by ',{space}'
+                tags: (entry.tags ? entry.tags.split(', ') : null), // for backward compatibility we split values by ',{space}'
                 categories: '',
                 offlineMessage: entry instanceof KalturaLiveStreamEntry ? (entry.offlineMessage || null) : '',
                 referenceId: entry.referenceId || null
