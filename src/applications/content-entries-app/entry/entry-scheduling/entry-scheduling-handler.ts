@@ -51,8 +51,8 @@ export class EntrySchedulingHandler extends EntrySectionHandler
 
 	private _resetForm(){
 		let scheduleSettings = "anytime";
-		let startDate = "";
-		let endDate = "";
+		let startDate = null;
+		let endDate = null;
 		let enableEndDate = false;
 		if (this.entry && this.entry.startDate){
 			scheduleSettings = "scheduled";
