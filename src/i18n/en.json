@@ -187,10 +187,13 @@
 					"scheduling": "Scheduling",
 					"anytime": "Anytime",
 					"range": "Specific range",
-					"note": "Note: Time Zone used - ",
+					"note": "Note: Time Zone used is (GMT(NUM))",
 					"start": "Start Date",
 					"end": "End Date",
-					"clear": "Clear Dates"
+					"clear": "Clear Dates",
+					"noStartDate": "You must set scheduling start date",
+					"noEndDate": "You must set scheduling end date",
+					"endDateBefore": "'Start Date' must be before 'End Date'"
 				},
 				"flavours":{
 					"flavours": "Flavours",
