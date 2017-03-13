@@ -24,8 +24,10 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 	entries = ["Entry 1", "Entry 2", "Entry 3"];
 	selectedEntries = [];
 
-    private _searchCategoriesRequest$ : ISubscription;
-    public _suggestionsProvider = new Subject<SuggestionsProviderData>();
+    private _searchCategoriesSubscription : ISubscription;
+    private _searchTagsSubscription : ISubscription;
+    public _categoriesProvider = new Subject<SuggestionsProviderData>();
+    public _tagsProvider = new Subject<SuggestionsProviderData>();
     public _loading = false;
     public _loadingError = null;
 	public _jumpToMenu: MenuItem[] = [];
@@ -55,78 +57,67 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 	    ];
     }
 
-    _onSuggestionSelected() : void {
+    _searchTags(event) : void {
+        this._tagsProvider.next({ suggestions : [], isLoading : true});
 
-        // if (this._currentSearch && this._currentSearch.data) {
-        //
-        //     const data : CategoryData = this._currentSearch.data;
-        //
-        //     // find the item in the tree (if exists)
-        //     let treeItem : PrimeTreeNode = null;
-        //     for(let i=0,length=data.fullIdPath.length; i<length ; i++)
-        //     {
-        //         const itemIdToSearchFor = data.fullIdPath[i];
-        //         treeItem = ((treeItem ? treeItem.children : this._categories) || []).find(child => child.data  === itemIdToSearchFor);
-        //
-        //         if (!treeItem)
-        //         {
-        //             break;
-        //         }
-        //     }
-        //
-        //     if (treeItem)
-        //     {
-        //         // select the node to create the filter and update tree status
-        //         this._treeSelection.simulateUserInteraction(treeItem);
-        //
-        //         // expand tree to show selected node
-        //         let nodeParent= treeItem.parent;
-        //
-        //         while(nodeParent != null)
-        //         {
-        //             nodeParent.expanded = true;
-        //             nodeParent = nodeParent.parent;
-        //         }
-        //     }else {
-        //         // add new filter
-        //         this.updateFilters([this._createFilter(data)],null);
-        //     }
-        //
-        //     // clear user text from component
-        //     this._currentSearch = null;
-        // }
-    }
-
-
-
-    _searchSuggestions(event) : void {
-        this._suggestionsProvider.next({ suggestions : [], isLoading : true});
-
-        if (this._searchCategoriesRequest$)
+        if (this._searchTagsSubscription)
         {
             // abort previous request
-            this._searchCategoriesRequest$.unsubscribe();
-            this._searchCategoriesRequest$ = null;
+            this._searchTagsSubscription.unsubscribe();
+            this._searchTagsSubscription = null;
         }
 
-        this._searchCategoriesRequest$ = this._handler.searchTags(event.query).subscribe(data => {
+        this._searchTagsSubscription = this._handler.searchTags(event.query).subscribe(data => {
                 const suggestions = [];
-                const existingTags = this._handler.metadataForm.value.tags || [];
+                const entryTags = this._handler.metadataForm.value.tags || [];
 
                 (data|| []).forEach(suggestedTag => {
-                    const isSelectable = !existingTags.find(tag => {
-                        return tag === suggestedTag;
+                    const isSelectable = !entryTags.find(item => {
+                        return item.tag === suggestedTag;
                     });
-                    suggestions.push({ label: suggestedTag, isSelectable: isSelectable});
+                    suggestions.push({ tag: suggestedTag, isSelectable: isSelectable});
                 });
-                this._suggestionsProvider.next({suggestions: suggestions, isLoading: false});
+                this._tagsProvider.next({suggestions: suggestions, isLoading: false});
             },
             (err) => {
-                this._suggestionsProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
+                this._tagsProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
+            });
+    }
+
+    _searchCategories(event) : void {
+        this._categoriesProvider.next({ suggestions : [], isLoading : true});
+
+        if (this._searchCategoriesSubscription)
+        {
+            // abort previous request
+            this._searchCategoriesSubscription.unsubscribe();
+            this._searchCategoriesSubscription = null;
+        }
+
+        this._searchCategoriesSubscription = this._handler.searchCategories(event.query).subscribe(data => {
+                const suggestions = [];
+                const entryCategories = this._handler.metadataForm.value.categories || [];
+
+                (data|| []).forEach(suggestedCategory => {
+                    const isSelectable = !entryCategories.find(category => {
+                        return category.id === suggestedCategory.id;
+                    });
+
+
+                    suggestions.push({ name: suggestedCategory, isSelectable: isSelectable, item : suggestedCategory});
+                });
+                this._categoriesProvider.next({suggestions: suggestions, isLoading: false});
+            },
+            (err) => {
+                this._categoriesProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
             });
     }
 
     ngOnDestroy() {
+        this._tagsProvider.complete();
+        this._categoriesProvider.complete();
+        this._searchTagsSubscription && this._searchTagsSubscription.unsubscribe();
+        this._searchCategoriesSubscription && this._searchCategoriesSubscription.unsubscribe();
     }
 
 
