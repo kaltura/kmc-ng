@@ -16,7 +16,7 @@ import { CategoriesStore, CategoryData } from '../../../../shared/kmc-content-ui
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataFieldTypes } from '@kaltura-ng2/kaltura-common';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 
 export interface EntryCategories
 { items : CategoryData[],
@@ -25,10 +25,11 @@ export interface EntryCategories
 };
 
 @Injectable()
-export class EntryMetadataHandler extends EntrySectionHandler implements  OnDestroy
+export class EntryMetadataHandler extends EntrySectionHandler
 {
     private _entryCategories : BehaviorSubject<EntryCategories> = new BehaviorSubject<EntryCategories>({items : [], loading : false});
     public metadataForm : FormGroup;
+    public _categoriesControl : FormControl;
 
     public entryCategories$ = this._entryCategories.asObservable().monitor('entry categories');
 
@@ -51,14 +52,16 @@ export class EntryMetadataHandler extends EntrySectionHandler implements  OnDest
 
 
     private _buildForm() : void{
+        this._categoriesControl = new FormControl();
         this.metadataForm = this._formBuilder.group({
             name : ['', Validators.required],
             description : '',
             tags : null,
-            categories : {value : null, disabled : true},
+            categories : this._categoriesControl,
             offlineMessage : '',
             referenceId : '',
         });
+
     }
 
     public get sectionType() : EntrySectionTypes
@@ -78,11 +81,10 @@ export class EntryMetadataHandler extends EntrySectionHandler implements  OnDest
         }
     }
 
-
     private _getEntryCategories(entry : KalturaMediaEntry) : void {
         // update entry categories
         this._entryCategories.next({loading: true, items: []});
-        this.metadataForm.controls['categories'].disable();
+        this._categoriesControl.disable();
 
         this._kalturaServerClient.request(new CategoryEntryListAction(
             {
@@ -93,6 +95,8 @@ export class EntryMetadataHandler extends EntrySectionHandler implements  OnDest
                 )
             }
         ))
+            .cancelOnDestroy(this,this.sectionReset$)
+            .monitor('get entry categories')
             .subscribe(
                 (response) => {
                     const categoriesList = response.objects.map(category => category.categoryId);
@@ -100,15 +104,24 @@ export class EntryMetadataHandler extends EntrySectionHandler implements  OnDest
                     if (categoriesList.length) {
                         this._categoriesStore.getCategoriesFromList(categoriesList)
                             .cancelOnDestroy(this, this.sectionReset$)
+                            .monitor('get entry categories (phase 2)')
                             .subscribe(
                                 categories => {
                                     this._entryCategories.next({loading: false, items: categories.items});
-                                    this.metadataForm.controls['categories'].enable();
+
+                                    this.metadataForm.patchValue(
+                                        {
+                                            categories : categories.items
+                                        }
+                                    );
+                                    this._categoriesControl.enable();
                                 },
                                 (error) => {
                                     this._entryCategories.next({loading: false, items: [], error: error});
                                 }
                             );
+                    }else {
+                        this._categoriesControl.enable();
                     }
                 },
                 error => {
@@ -133,12 +146,13 @@ export class EntryMetadataHandler extends EntrySectionHandler implements  OnDest
                 }
             );
     }
+
     private _resetForm(entry : KalturaMediaEntry) : void {
-        this.metadataForm.setValue(
+        this.metadataForm.reset(
             {
                 name: entry.name,
                 description: entry.description || null,
-                tags: (entry.tags ? entry.tags.split(',') : null),
+                tags: (entry.tags ? entry.tags.split(', ') : null), // for backward compatibility we split values by ',{space}'
                 categories: '',
                 offlineMessage: entry instanceof KalturaLiveStreamEntry ? (entry.offlineMessage || null) : '',
                 referenceId: entry.referenceId || null
@@ -168,25 +182,46 @@ export class EntryMetadataHandler extends EntrySectionHandler implements  OnDest
                         }
                     )
                 )
-                    .cancelOnDestroy(this)
+                    .cancelOnDestroy(this, this.sectionReset$)
                     .monitor('search tags')
                     .subscribe(
                     result =>
                     {
-                        console.log("entryMetadataHandler.searchTags(): next");
                         const tags = result.objects.map(item => item.tag);
                         observer.next(tags);
                     },
                     err =>
                     {
-                        console.log("entryMetadataHandler.searchTags(): error",err);
                         observer.error(err);
-                    },
-                        () =>
-                        {
-                            console.log("entryMetadataHandler.searchTags(): complete");
-                        }
+                    }
                 );
+
+                return () =>
+                {
+                    console.log("entryMetadataHandler.searchTags(): cancelled");
+                    requestSubscription.unsubscribe();
+                }
+            });
+    }
+
+    public searchCategories(text : string)
+    {
+        return Observable.create(
+            observer => {
+
+                const requestSubscription = this._categoriesStore.getSuggestions(text)
+                    .cancelOnDestroy(this, this.sectionReset$)
+                    .monitor('search categories')
+                    .subscribe(
+                        result =>
+                        {
+                            observer.next(result.items);
+                        },
+                        err =>
+                        {
+                            observer.error(err);
+                        }
+                    );
 
                 return () =>
                 {
@@ -202,6 +237,7 @@ export class EntryMetadataHandler extends EntrySectionHandler implements  OnDest
     protected _onSectionReset()
     {
         this._entryCategories.next({ items : [], loading : false});
+        this._categoriesControl.disable();
         this.metadataForm.reset();
     }
 

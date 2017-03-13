@@ -21,19 +21,27 @@
 			<div class="kRow kValign">
 				<span class="kLabels">{{'applications.content.entryDetails.metadata.tags' | translate}}</span>
 				<kAutoComplete formControlName="tags"
+							   suggestionItemField="item"
+							   suggestionSelectableField="isSelectable"
 							   [multiple]="true"
-							   inputStyleClass="kSearchCategory"
-							   placeholder="{{'[search-label]' | translate}}"
+							   placeholder="{{'applications.entries.entryMetadata.searchTagsPH' | translate}}"
 							   [minLength]="3"
-							   [isSelectableField]="'isSelectable'"
-							   (onSelect)="_onSuggestionSelected()"
-							   [suggestionsProvider]="_suggestionsProvider"
-							   (completeMethod)="_searchSuggestions($event)"
+							   [suggestionsProvider]="_tagsProvider"
+							   (completeMethod)="_searchTags($event)"
 				></kAutoComplete>
 			</div>
 			<div class="kRow kValign">
 				<span class="kLabels">{{'applications.content.entryDetails.metadata.categories' | translate}}</span>
-				<kAutoComplete formControlName="categories"></kAutoComplete>
+				<kAutoComplete formControlName="categories"
+							   field="name"
+							   suggestionItemField="item"
+							   suggestionSelectableField="isSelectable"
+							   [multiple]="true"
+							   placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"
+							   [minLength]="3"
+							   [suggestionsProvider]="_categoriesProvider"
+							   (completeMethod)="_searchCategories($event)"
+				></kAutoComplete>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.metadata.offlineMsg' | translate}} (<b>[TBD] HIDE</b>)</span>
