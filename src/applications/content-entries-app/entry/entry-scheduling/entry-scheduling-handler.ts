@@ -57,7 +57,7 @@ export class EntrySchedulingHandler extends EntrySectionHandler
 		if (this.entry && this.entry.startDate){
 			scheduleSettings = "scheduled";
 			this.schedulingForm.get('startDate').enable();
-				addEventListener(                               ) = KalturaUtils.fromServerDate(this.entry.startDate);
+			startDate = KalturaUtils.fromServerDate(this.entry.startDate);
 			if (this.entry.endDate){
 				this.schedulingForm.get('endDate').enable();
 				enableEndDate = true;
