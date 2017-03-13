@@ -7,18 +7,15 @@ import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { EntrySectionHandler, OnSectionLoadedArgs } from '../../entry-store/entry-section-handler';
 import { EntryStore } from '../../entry-store/entry-store.service';
-import { EntryLoaded } from '../../entry-store/entry-sections-events';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 
-
-function validate(fromSave: boolean = false): ValidatorFn{
+function datesValidation(checkRequired: boolean = false): ValidatorFn {
 	return (c: AbstractControl): {[key: string]: boolean} | null => {
 		const startDate = c.get('startDate').value;
 		const endDate = c.get('endDate').value;
 		const scheduling = c.get('scheduling').value;
 		const enableEndDate = c.get('enableEndDate').value;
-
-		if (fromSave && scheduling === "scheduled"){
+		if (checkRequired && scheduling === "scheduled"){
 			if (!startDate) {
 				return { 'noStartDate': true };
 			}
@@ -41,8 +38,6 @@ export class EntrySchedulingHandler extends EntrySectionHandler
 	public schedulingForm: FormGroup;
 	public _timeZone = "";
 
-	public saving: boolean = false;
-
     constructor(store : EntryStore, kalturaServerClient: KalturaServerClient, private appLocalization: AppLocalization, private fb: FormBuilder)
     {
         super(store, kalturaServerClient);
@@ -62,7 +57,7 @@ export class EntrySchedulingHandler extends EntrySectionHandler
 		if (this.entry && this.entry.startDate){
 			scheduleSettings = "scheduled";
 			this.schedulingForm.get('startDate').enable();
-			let startDate = KalturaUtils.fromServerDate(this.entry.startDate);
+			startDate = KalturaUtils.fromServerDate(this.entry.startDate);
 			if (this.entry.endDate){
 				this.schedulingForm.get('endDate').enable();
 				enableEndDate = true;
@@ -83,7 +78,7 @@ export class EntrySchedulingHandler extends EntrySectionHandler
 		    startDate: {value: '', disabled: true},
 		    endDate: {value: '', disabled: true},
 		    enableEndDate: false
-	    }, { validator: validate(this.saving) });
+	    }, { validator: datesValidation(false) });
 	    this.schedulingForm.get('scheduling').valueChanges
 		    .cancelOnDestroy(this)
 		    .subscribe(
@@ -132,17 +127,31 @@ export class EntrySchedulingHandler extends EntrySectionHandler
 		this._timeZone = this._timeZone.split("(NUM)").join(ztStr);
 	}
 
+	private setValidators(checkRequired: boolean){
+		this.schedulingForm.clearValidators();
+		this.schedulingForm.setValidators(datesValidation(checkRequired));
+		this.schedulingForm.updateValueAndValidity();
+	}
 	public get sectionType() : EntrySectionTypes
 	{
 		return EntrySectionTypes.Scheduling;
+	}
+
+	public validate(): boolean{
+		this.setValidators(true);
+		const hasErrors = !!this.schedulingForm.errors;
+		return !hasErrors;
+	}
+	protected _onSectionEntered(){
+		this.setValidators(false);
 	}
     /**
      * Do some cleanups if needed once the section is removed
      */
 	protected _onSectionReset()
 	{
-		this.schedulingForm.reset();
-		this.saving = false;
+		this.setValidators(false);
+		this.schedulingForm.updateValueAndValidity();
 	}
 
 }
