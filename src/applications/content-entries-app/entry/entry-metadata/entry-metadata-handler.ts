@@ -17,6 +17,7 @@ import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataFieldTypes } from '@kaltura-ng2/kaltura-common';
 import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
+import { EntrySectionValidation } from '../../entry-store/entry-data-section';
 
 export interface EntryCategories
 { items : CategoryData[],
@@ -62,6 +63,15 @@ export class EntryMetadataHandler extends EntrySectionHandler
             referenceId : '',
         });
 
+        this.metadataForm.statusChanges
+            .cancelOnDestroy(this)
+            .subscribe(
+                value =>
+                {
+                    super._notifySectionStatus({isValid : value === 'VALID'});
+                }
+            )
+
     }
 
     public get sectionType() : EntrySectionTypes
@@ -71,7 +81,7 @@ export class EntryMetadataHandler extends EntrySectionHandler
 
     protected _onSectionLoaded(data : OnSectionLoadedArgs) : void {
 
-        this._getEntryCategories(this.entry);
+        this._resetEntryCategories(this.entry);
         this._resetForm(this.entry);
 
         if (data.firstLoad)
@@ -81,7 +91,7 @@ export class EntryMetadataHandler extends EntrySectionHandler
         }
     }
 
-    private _getEntryCategories(entry : KalturaMediaEntry) : void {
+    private _resetEntryCategories(entry : KalturaMediaEntry) : void {
         // update entry categories
         this._entryCategories.next({loading: true, items: []});
         this._categoriesControl.disable();
@@ -241,4 +251,14 @@ export class EntryMetadataHandler extends EntrySectionHandler
         this.metadataForm.reset();
     }
 
+    validate() : Observable<EntrySectionValidation>
+    {
+        return Observable.create(observer =>
+        {
+            this.metadataForm.updateValueAndValidity();
+            const isValid = this.metadataForm.valid;
+            observer.next({  sectionType : this.sectionType, isValid });
+            observer.complete();
+        });
+    }
 }

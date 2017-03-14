@@ -44,5 +44,26 @@ export class SectionEntered
     }
 }
 
+export class EntrySaved
+{
+    constructor()
+    {
+    }
+}
+
+export class EntrySaving
+{
+    constructor()
+    {
+    }
+}
+
+export class EntrySavingFailure
+{
+    constructor(private error : Error)
+    {
+    }
+}
+
 
 export type EntryEvents = EntryLoadingFailed | EntryLoading | EntryLoaded | SectionLeaving | SectionEntered;

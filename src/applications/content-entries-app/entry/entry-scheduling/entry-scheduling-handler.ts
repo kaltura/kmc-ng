@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
-
+import { Observable } from 'rxjs/Observable';
+import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { KalturaUtils, KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
@@ -8,6 +9,7 @@ import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { EntrySectionHandler, OnSectionLoadedArgs } from '../../entry-store/entry-section-handler';
 import { EntryStore } from '../../entry-store/entry-store.service';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
+import { EntrySectionValidation } from '../../entry-store/entry-data-section';
 
 function datesValidation(checkRequired: boolean = false): ValidatorFn {
 	return (c: AbstractControl): {[key: string]: boolean} | null => {
@@ -109,6 +111,15 @@ export class EntrySchedulingHandler extends EntrySectionHandler
 			    }
 		    }
 	    );
+
+		this.schedulingForm.statusChanges
+            .cancelOnDestroy(this)
+            .subscribe(
+				value =>
+				{
+					super._notifySectionStatus({isValid : value === 'VALID'});
+				}
+			)
     }
 
 
@@ -137,11 +148,17 @@ export class EntrySchedulingHandler extends EntrySectionHandler
 		return EntrySectionTypes.Scheduling;
 	}
 
-	public validate(): boolean{
-		this.setValidators(true);
-		const hasErrors = !!this.schedulingForm.errors;
-		return !hasErrors;
+	validate() : Observable<EntrySectionValidation>
+	{
+		return Observable.create(observer =>
+		{
+			this.setValidators(true);
+			const isValid = !this.schedulingForm.errors;
+			observer.next({ sectionType : this.sectionType, isValid });
+			observer.complete()
+		});
 	}
+
 	protected _onSectionEntered(){
 		this.setValidators(false);
 	}

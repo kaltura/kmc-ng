@@ -1,5 +1,5 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { EntrySectionHandler, OnSectionLoadedArgs } from '../../entry-store/entry-section-handler';
+import { Injectable } from '@angular/core';
+import { EntrySectionHandler, OnSectionLoadedArgs, OnEntryLoadingArgs } from '../../entry-store/entry-section-handler';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntryStore } from '../../entry-store/entry-store.service';
@@ -9,13 +9,12 @@ import { SectionsList } from './sections-list';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { KalturaRequest } from '@kaltura-ng2/kaltura-api';
+import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 
 export interface SectionData
 {
     label : string,
-    enabled : boolean,
-    hasError : boolean,
+    hasErrors : boolean,
     active?: boolean,
     sectionType : EntrySectionTypes
 }
@@ -27,12 +26,14 @@ export class EntrySectionsListHandler extends EntrySectionHandler
     private _sections : BehaviorSubject<SectionData[]> = new BehaviorSubject<SectionData[]>(null);
     public sections$ : Observable<SectionData[]> = this._sections.asObservable();
     private _activeSectionType : EntrySectionTypes;
+    private _firstLoad = true;
 
     constructor(store : EntryStore,
                 kalturaServerClient: KalturaServerClient,
                 private _appLocalization: AppLocalization,)
     {
-        super(store,kalturaServerClient)
+        super(store,kalturaServerClient);
+
 
         store.events$
             .cancelOnDestroy(this)
@@ -48,6 +49,39 @@ export class EntrySectionsListHandler extends EntrySectionHandler
                 }
             }
         );
+    }
+
+    protected _onEntryLoading(data : OnEntryLoadingArgs) : void
+    {
+        if (this._firstLoad)
+        {
+            this._firstLoad = false;
+            this._listenToSections();
+        }
+    }
+
+    private _listenToSections()
+    {
+        if (this.store.sections && this.store.sections.length) {
+
+            Observable.merge(
+                ...this.store.sections.map(item => item.sectionStatus$)
+            ).cancelOnDestroy(this)
+                .subscribe(
+                    (sectionStatus) =>
+                    {
+                        const sections = this._sections.getValue();
+
+                        if (sections) {
+                            const section = sections.find(section => section.sectionType === sectionStatus.section);
+
+                            if (section) {
+                                section.hasErrors = !sectionStatus.isValid;
+                            }
+                        }
+                    }
+                );
+        }
     }
 
     public get sectionType() : EntrySectionTypes
@@ -78,15 +112,17 @@ export class EntrySectionsListHandler extends EntrySectionHandler
 
     private _reloadSections(entryId) : void
     {
-        const sections = SectionsList.filter(section => {
-            // TODO [kmcng] update according to entry id
-            return section.enabled && true;
-        });
-
-        sections.forEach((section : SectionData) =>
+        const sections = [];
+        SectionsList.forEach((section : any) =>
         {
-            section.label = this._appLocalization.get(section.label);
-            section.active = section.sectionType === this._activeSectionType;
+            sections.push(
+                {
+                    label : this._appLocalization.get(section.label),
+                    active : section.sectionType === this._activeSectionType,
+                    hasErrors : false,
+                    sectionType : section.sectionType
+                }
+            );
         });
 
         this._sections.next(sections);

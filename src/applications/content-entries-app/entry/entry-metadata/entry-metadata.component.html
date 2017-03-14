@@ -4,7 +4,7 @@
 		<button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right" label="{{'applications.content.entryDetails.metadata.jumpTo' | translate}}" (click)="menu.toggle($event)"></button>
 	</div>
 	<div class="kMetadataDetails" *ngIf="_handler.entry" >
-		{{ _handler.metadataForm.value | json }} | {{ _handler.metadataForm.status | json }}
+
 		<form [formGroup]="_handler.metadataForm" novalidate>
 			<div class="kRow kValign">
 				<span class="kLabels">{{'applications.content.entryDetails.metadata.entryID' | translate}}</span>
@@ -35,6 +35,7 @@
 				<kAutoComplete formControlName="categories"
 							   field="name"
 							   suggestionItemField="item"
+							   suggestionLabelField="name"
 							   suggestionSelectableField="isSelectable"
 							   [multiple]="true"
 							   placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"

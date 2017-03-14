@@ -98,13 +98,16 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
                 const suggestions = [];
                 const entryCategories = this._handler.metadataForm.value.categories || [];
 
+
                 (data|| []).forEach(suggestedCategory => {
+                    const label = suggestedCategory.fullNamePath.join(' > ') + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
+
                     const isSelectable = !entryCategories.find(category => {
                         return category.id === suggestedCategory.id;
                     });
 
 
-                    suggestions.push({ name: suggestedCategory, isSelectable: isSelectable, item : suggestedCategory});
+                    suggestions.push({ name: label, isSelectable: isSelectable, item : suggestedCategory});
                 });
                 this._categoriesProvider.next({suggestions: suggestions, isLoading: false});
             },

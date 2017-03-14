@@ -1,9 +1,7 @@
 import { Inject, Injectable, Optional, OnDestroy, Host } from '@angular/core';
-import { ActivatedRoute, Router, Route, Params, NavigationEnd, NavigationStart } from '@angular/router';
+import { ActivatedRoute, Router,  Params, NavigationEnd, NavigationStart } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import { ISubscription } from 'rxjs/Subscription';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Scheduler } from 'rxjs';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
@@ -15,27 +13,30 @@ import { BaseEntryGetAction } from '@kaltura-ng2/kaltura-api/services/base-entry
 import { EntrySectionTypes } from './entry-sections-types';
 import {
 	EntryLoading, EntryEvents, EntryLoaded, SectionEntered,
-	EntryLoadingFailed
+	EntryLoadingFailed,  EntrySaving, EntrySaved, EntrySavingFailure
 } from './entry-sections-events';
-import { EntrySectionHandler } from './entry-section-handler';
 import { EntriesStore } from '../entries-store/entries-store.service';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
+import { EntryDataSection } from './entry-data-section';
 
 
 @Injectable()
 export class EntryStore implements  OnDestroy{
 
-	private _sections : EntrySectionHandler[] = [];
+	private _sections : EntryDataSection[] = [];
 	private _sectionToRouteMapping : { [key : number] : string} = {};
-	private _routeParamsChangedSubscription : ISubscription = null;
-	private _routerEventsSubscription : ISubscription = null;
 	private _activeSectionType : EntrySectionTypes = null;
 	private _events : Subject<EntryEvents> = new Subject<EntryEvents>();
+
 	private _saveEntryInvoked = false;
 	private _entry : KalturaMediaEntry = null;
 	public events$ = this._events.monitor('entry event').share();
 
 
+	public get sections() : EntryDataSection[]
+	{
+		return [...this._sections];
+	}
 	public get entry() : KalturaMediaEntry
 	{
 		return this._entry;
@@ -48,17 +49,15 @@ export class EntryStore implements  OnDestroy{
 
 		this._initializeSections();
 
-		this._routeParamsChangedSubscription = this._onParamsChanged();
-		this._routerEventsSubscription = this._onRouterEvents();
+		this._onParamsChanged();
+		this._onRouterEvents();
     }
 
 	ngOnDestroy() {
-		this._routeParamsChangedSubscription.unsubscribe();
-		this._routerEventsSubscription.unsubscribe();
 		this._events.complete();
 	}
 
-	public registerSection(section : EntrySectionHandler)
+	public registerSection(section : EntryDataSection)
 	{
 		this._sections.push(section);
 	}
@@ -79,9 +78,11 @@ export class EntryStore implements  OnDestroy{
 			}
 		});
 	}
-	private _onRouterEvents() : ISubscription
+	private _onRouterEvents() : void
 	{
-		return this._router.events.subscribe(
+		this._router.events
+			.cancelOnDestroy(this)
+			.subscribe(
 			event =>
 			{
 				if (event instanceof NavigationStart)
@@ -98,7 +99,54 @@ export class EntryStore implements  OnDestroy{
 	public saveEntry() : void
 	{
 		this._saveEntryInvoked = true;
+
+		this._events.next(new EntrySaving());
+		const activeSection = this._getActiveSection();
+
+		if (activeSection) {
+
+			activeSection.canLeaveSection()
+				.flatMap(result =>
+				{
+					if (result)
+					{
+						return Observable.forkJoin(...this.sections.map(section =>
+						{
+							return section.validate()
+								.monitor('validate section');
+						})).map(responses =>
+						{
+							return responses.find(section => !section.isValid) === null;
+						});
+					}else
+					{
+						return Observable.of(false);
+					}
+
+				})
+                .subscribe(
+					(response) => {
+
+						if (response) {
+							this._events.next(new EntrySaved());
+						}else {
+							this._events.next(new EntrySavingFailure(null));
+						}
+					},
+					error => {
+						this._events.next(new EntrySavingFailure(error));
+					}
+				)
+		}else {
+			this._events.next(new EntrySavingFailure(new Error('Failed to extract active section')));
+		}
 	}
+
+	private _getActiveSection() : EntryDataSection
+	{
+		return this._sections.find(section => section.getSectionType() === this._activeSectionType);
+	}
+
 	private _updateActiveSection() : void{
 		let toSection : EntrySectionTypes = this._entryRoute.firstChild.snapshot.data.sectionType;
 
@@ -110,11 +158,12 @@ export class EntryStore implements  OnDestroy{
 		}
 	}
 
-	private _onParamsChanged() : ISubscription
+	private _onParamsChanged() : void
 	{
-		return this._entryRoute.params.do((params : Params) =>
+		this._entryRoute.params.do((params : Params) =>
 		{
 		})
+		.cancelOnDestroy(this)
         .switchMap((params: Params) => this._getEntry(params['id']))
 		.subscribeOn(Scheduler.async)
         .subscribe((response) =>
@@ -190,8 +239,6 @@ export class EntryStore implements  OnDestroy{
 			return Observable.of(new Error('missing entry id'));
 		}
 	}
-
-
 
 	public openEntry(entryId : string)
 	{
