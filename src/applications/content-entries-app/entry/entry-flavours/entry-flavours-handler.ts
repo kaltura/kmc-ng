@@ -8,13 +8,10 @@ import { FormSectionsManager } from '../../entry-store/form-sections-manager';
 @Injectable()
 export class EntryFlavoursHandler extends FormSectionHandler
 {
-    private _eventSubscription : ISubscription;
-
     constructor(manager : FormSectionsManager,
                 kalturaServerClient: KalturaServerClient)
     {
         super(manager,kalturaServerClient);
-
     }
 
     public get sectionType() : EntrySectionTypes
@@ -25,9 +22,8 @@ export class EntryFlavoursHandler extends FormSectionHandler
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset()
+    protected reset()
     {
-        this._eventSubscription.unsubscribe();
     }
 
     protected _activate(args : ActivateArgs) {

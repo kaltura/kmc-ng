@@ -6,7 +6,6 @@ import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { EntrySectionTypes } from './entry-sections-types';
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
-import { EntryDataSection, EntrySectionValidation } from './entry-data-section';
 import { FormSectionsManager } from './form-sections-manager';
 
 export interface OnDataLoadedArgs
@@ -28,9 +27,18 @@ export interface DeactivateArgs
 {
 }
 
+export interface ValidateArgs
+{
+
+}
+
+export interface ValidateResult
+{
+    isValid : boolean;
+}
 
 @Injectable()
-export abstract class FormSectionHandler implements OnDestroy, EntryDataSection
+export abstract class FormSectionHandler implements OnDestroy
 {
     public entry : KalturaMediaEntry;
     private _sectionActivated : boolean = false;
@@ -56,17 +64,22 @@ export abstract class FormSectionHandler implements OnDestroy, EntryDataSection
         }
     }
 
-    protected  _onSectionReset() : void{}
+    protected  _reset() : void{}
     protected  _initialize() : void{}
     protected _onDataLoaded(args : OnDataLoadedArgs) : void {}
     protected _onDataLoading(args : OnDataLoadingArgs) : void {}
     protected _activate(args : ActivateArgs) : void {}
     protected _deactivate(args : DeactivateArgs) : void {}
+    protected _validate(args : ValidateArgs) : Observable<ValidateResult>
+    {
+        return Observable.of({ isValid : true});
+    }
 
     public  initialize() : void
     {
         this._initialize();
     }
+
 
     public resetSectionState() : void
     {
@@ -75,7 +88,7 @@ export abstract class FormSectionHandler implements OnDestroy, EntryDataSection
         this._sectionReset.next('');
         this._sectionStatus.next({ section : this.sectionType, isValid : true});
 
-        this._onSectionReset();
+        this._reset();
     }
 
     public onDataLoaded(data : KalturaMediaEntry) : void {
@@ -119,8 +132,15 @@ export abstract class FormSectionHandler implements OnDestroy, EntryDataSection
         return Observable.of(true);
     }
 
-    validate() : Observable<EntrySectionValidation>
+    public validate() : Observable<ValidateResult>
     {
-        return Observable.of({ sectionType : this.sectionType, isValid : true});
+        if (this._sectionActivated) {
+            return this._validate({});
+        }else
+        {
+            return Observable.of({ isValid : true});
+        }
     }
+
+
 }

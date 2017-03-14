@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormSectionHandler, ActivateArgs } from '../../entry-store/form-section-handler';
+import { FormSectionHandler, ActivateArgs, ValidateResult } from '../../entry-store/form-section-handler';
 import { KalturaLiveStreamEntry } from '@kaltura-ng2/kaltura-api/types';
 import { Observable } from 'rxjs/Observable';
 import { CategoryEntryListAction } from '@kaltura-ng2/kaltura-api/services/category-entry';
@@ -13,7 +13,6 @@ import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataFieldTypes } from '@kaltura-ng2/kaltura-common';
 import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
-import { EntrySectionValidation } from '../../entry-store/entry-data-section';
 import { FormSectionsManager } from '../../entry-store/form-sections-manager';
 
 export interface EntryCategories
@@ -243,20 +242,20 @@ export class EntryMetadataHandler extends FormSectionHandler
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset()
+    protected reset()
     {
         this._entryCategories.next({ items : [], loading : false});
         this._categoriesControl.disable();
         this.metadataForm.reset();
     }
 
-    validate() : Observable<EntrySectionValidation>
+    _validate() : Observable<ValidateResult>
     {
         return Observable.create(observer =>
         {
             this.metadataForm.updateValueAndValidity();
             const isValid = this.metadataForm.valid;
-            observer.next({  sectionType : this.sectionType, isValid });
+            observer.next({  isValid });
             observer.complete();
         });
     }

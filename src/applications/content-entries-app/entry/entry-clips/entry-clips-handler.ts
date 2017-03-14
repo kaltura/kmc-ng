@@ -60,7 +60,7 @@ export class EntryClipsHandler extends FormSectionHandler
     /**
      * Do some cleanups if needed once the section is removed
      */
-     protected _onReset() : void{
+     protected reset() : void{
         this.sortBy = 'createdAt';
         this.sortAsc = false;
         this.pageIndex = 0;

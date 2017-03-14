@@ -5,9 +5,8 @@ import { KalturaUtils, KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { FormSectionHandler, ActivateArgs } from '../../entry-store/form-section-handler';
+import { FormSectionHandler, ActivateArgs, ValidateResult } from '../../entry-store/form-section-handler';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { EntrySectionValidation } from '../../entry-store/entry-data-section';
 import { FormSectionsManager } from '../../entry-store/form-sections-manager';
 
 function datesValidation(checkRequired: boolean = false): ValidatorFn {
@@ -47,7 +46,10 @@ export class EntrySchedulingHandler extends FormSectionHandler
     }
 
 	protected _activate(args : ActivateArgs): void {
-		this._resetForm();
+    	if (args.firstLoad) {
+			this._resetForm();
+		}
+		this.setValidators(false);
 	}
 
 	private _resetForm(){
@@ -147,24 +149,21 @@ export class EntrySchedulingHandler extends FormSectionHandler
 		return EntrySectionTypes.Scheduling;
 	}
 
-	validate() : Observable<EntrySectionValidation>
+	protected _validate() : Observable<ValidateResult>
 	{
 		return Observable.create(observer =>
 		{
 			this.setValidators(true);
 			const isValid = !this.schedulingForm.errors;
-			observer.next({ sectionType : this.sectionType, isValid });
+			observer.next({ isValid });
 			observer.complete()
 		});
 	}
 
-	protected _onSectionEntered(){
-		this.setValidators(false);
-	}
     /**
      * Do some cleanups if needed once the section is removed
      */
-	protected _onReset()
+	protected reset()
 	{
 		this.setValidators(false);
 		this.schedulingForm.updateValueAndValidity();

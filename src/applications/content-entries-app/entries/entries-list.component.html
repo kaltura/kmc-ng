@@ -37,7 +37,7 @@
 
         <div class="kEntriesTableFooter col-12" #footer>
 
-            <p-paginator [rows]="_filter.pageSize" (onPageChange)="onPaginationChanged($event)"
+            <p-paginator [rows]="_entriesStore.queryData.pageSize" (onPageChange)="onPaginationChanged($event)"
                          [first]="_filter.pageIndex * _filter.pageSize"
                          [totalRecords]="(_entriesStore.entries$ | async)?.totalCount"
                          [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>

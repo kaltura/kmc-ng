@@ -8,9 +8,6 @@ import { FormSectionsManager } from '../../entry-store/form-sections-manager';
 @Injectable()
 export class EntryThumbnailsHandler extends FormSectionHandler
 {
-    private _eventSubscription : ISubscription;
-
-
     constructor(manager : FormSectionsManager,
                 kalturaServerClient: KalturaServerClient)
     {
@@ -25,9 +22,8 @@ export class EntryThumbnailsHandler extends FormSectionHandler
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset()
+    protected reset()
     {
-        this._eventSubscription.unsubscribe();
     }
 
     protected _activate(args : ActivateArgs) {

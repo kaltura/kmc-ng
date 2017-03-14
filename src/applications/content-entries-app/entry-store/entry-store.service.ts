@@ -1,4 +1,4 @@
-import { Inject, Injectable,  OnDestroy, Host } from '@angular/core';
+import { Injectable,  OnDestroy, Host } from '@angular/core';
 import { ActivatedRoute, Router,  Params, NavigationEnd, NavigationStart } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
@@ -102,7 +102,7 @@ export class EntryStore implements  OnDestroy{
             .flatMap(
 				(response) => {
 					// save entry
-					return Observable.of(true)
+					return Observable.of(response)
 				}
 			)
             .subscribe(

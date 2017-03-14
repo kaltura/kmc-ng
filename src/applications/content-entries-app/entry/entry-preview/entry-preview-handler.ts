@@ -43,7 +43,7 @@ export class EntryPreviewHandler extends FormSectionHandler
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset()
+    protected reset()
     {
         this.landingPage = null;
         this.iframeSrc = null;

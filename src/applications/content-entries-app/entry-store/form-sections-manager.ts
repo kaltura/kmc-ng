@@ -2,7 +2,6 @@ import {  Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { EntryDataSection } from './entry-data-section';
 import { EntryStore } from './entry-store.service';
 import { EntryLoading, EntryLoaded, SectionEntered } from './entry-sections-events';
 import { FormSectionHandler } from './form-section-handler';
@@ -76,64 +75,41 @@ export class FormSectionsManager implements OnDestroy
             );
     }
 
-
-    // validate() : Observable<EntrySectionValidation>
-    // {
-    //
-    // }
-    // sectionStatus$ : Observable<{ section :EntrySectionTypes, isValid : boolean}>;
-    // canLeaveSection() : Observable<boolean>;
-    //
-    public get sections() : EntryDataSection[]
+    public get sections() : FormSectionHandler[]
     {
         return [...this._sections];
     }
 
     public canSaveData() : Observable<boolean>
     {
-        return Observable.of(true);
+        const activeSection = this._activeSection.getValue();
 
+        if (activeSection) {
+            return activeSection.canLeaveSection()
+                .flatMap(result =>
+                {
+                    if (result)
+                    {
+                        return Observable.forkJoin(...this.sections.map(section =>
+                        {
+                            return section.validate()
+                                .monitor(`validate section ${section.sectionType}`);
 
-        // const activeSection = this._getActiveSection();
+                        })).map(responses =>
+                        {
+                            const invalidResponse = responses.find(response => !response.isValid) || null;
 
-        //
-        // if (activeSection) {
-        //
-        //     activeSection.canLeaveSection()
-        //         .flatMap(result =>
-        //         {
-        //             if (result)
-        //             {
-        //                 return Observable.forkJoin(...this.sections.map(section =>
-        //                 {
-        //                     return section.validate()
-        //                         .monitor('validate section');
-        //                 })).map(responses =>
-        //                 {
-        //                     return responses.find(section => !section.isValid) === null;
-        //                 });
-        //             }else
-        //             {
-        //                 return Observable.of(false);
-        //             }
-        //
-        //         })
-        //         .subscribe(
-        //             (response) => {
-        //
-        //                 if (response) {
-        //                     this._events.next(new EntrySaved());
-        //                 }else {
-        //                     this._events.next(new EntrySavingFailure(null));
-        //                 }
-        //             },
-        //             error => {
-        //                 this._events.next(new EntrySavingFailure(error));
-        //             }
-        //         )
-        // }else {
-        //     this._events.next(new EntrySavingFailure(new Error('Failed to extract active section')));
-        // }
+                            return invalidResponse === null;
+                        });
+                    }else
+                    {
+                        return Observable.of(false);
+                    }
+
+                })
+        }else {
+            return Observable.of(false);
+        }
     }
 
     public findSectionByType(sectionType : EntrySectionTypes) : FormSectionHandler
