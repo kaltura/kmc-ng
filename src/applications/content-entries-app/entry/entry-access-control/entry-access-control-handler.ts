@@ -11,7 +11,6 @@ import { KalturaServerClient, KalturaUtils } from '@kaltura-ng2/kaltura-api';
 import { KalturaAccessControl, KalturaSiteRestriction, KalturaSiteRestrictionType, KalturaCountryRestriction, KalturaCountryRestrictionType, KalturaIpAddressRestriction,
 	KalturaIpAddressRestrictionType, KalturaLimitFlavorsRestriction, KalturaLimitFlavorsRestrictionType, KalturaSessionRestriction, KalturaPreviewRestriction, KalturaFlavorParams } from '@kaltura-ng2/kaltura-api/types'
 import { AccessControlProfileStore, FlavoursStore, AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { KalturaRequest } from '@kaltura-ng2/kaltura-api';
 
 import 'rxjs/add/observable/forkJoin';
 import * as R from 'ramda';
@@ -151,6 +150,7 @@ export class EntryAccessControlHandler extends EntrySectionHandler
 				}
 				// Flavour restrictions
 				if (restriction instanceof KalturaLimitFlavorsRestriction && this._flavourParams.length){
+					// convert flavour IDs to flavour names
 					let flavourIDs = restriction.flavorParamsIds.split(",");
 					let flavourNames = [];
 					flavourIDs.forEach(flavourId => {
