@@ -6,13 +6,14 @@ import { KalturaBaseEntryFilter, KalturaFilterPager, KalturaDetachedResponseProf
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import {
-    EntrySectionHandler, OnSectionLoadedArgs
-} from '../../entry-store/entry-section-handler';
+    FormSectionHandler, ActivateArgs
+} from '../../entry-store/form-section-handler';
 import { EntryStore } from '../../entry-store/entry-store.service';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { BaseEntryListAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
 import { BrowserService } from "kmc-shell/providers/browser.service";
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
+import { FormSectionsManager } from '../../entry-store/form-sections-manager';
 
 
 export interface ClipsData
@@ -26,7 +27,7 @@ export interface ClipsData
 
 
 @Injectable()
-export class EntryClipsHandler extends EntrySectionHandler
+export class EntryClipsHandler extends FormSectionHandler
 {
     private _clips : BehaviorSubject<ClipsData> = new BehaviorSubject<ClipsData>({ loading : false, items : null, totalItems : 0});
     public entries$ = this._clips.asObservable();
@@ -43,11 +44,12 @@ export class EntryClipsHandler extends EntrySectionHandler
     public pageIndex; // default value is set in function _onSectionReset
     public pageSizesAvailable = [25,50,75,100];
 
-    constructor(store : EntryStore,
+    constructor(manager : FormSectionsManager,
+                private _store : EntryStore,
                 private _kalturaServerClient: KalturaServerClient,
                 private browserService: BrowserService,
                 private _appLocalization: AppLocalization) {
-        super(store, _kalturaServerClient);
+        super(manager, _kalturaServerClient);
     }
 
     public get sectionType() : EntrySectionTypes
@@ -58,7 +60,7 @@ export class EntryClipsHandler extends EntrySectionHandler
     /**
      * Do some cleanups if needed once the section is removed
      */
-     protected _onSectionReset() : void{
+     protected _onReset() : void{
         this.sortBy = 'createdAt';
         this.sortAsc = false;
         this.pageIndex = 0;
@@ -82,7 +84,7 @@ export class EntryClipsHandler extends EntrySectionHandler
     }
 
 	public navigateToEntry(entryId) {
-		this.store.openEntry(entryId);
+		this._store.openEntry(entryId);
 	}
 
 	private _updateClipProperties(clips: any[]): any[]{
@@ -172,7 +174,7 @@ export class EntryClipsHandler extends EntrySectionHandler
 
     }
 
-    protected _onSectionLoaded(data : OnSectionLoadedArgs) {
+    protected _activate(args : ActivateArgs) {
 
         this._getEntryClips();
     }

@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {
-    EntrySectionHandler, OnSectionLoadedArgs,
-    OnEntryLoadingArgs
-} from '../../entry-store/entry-section-handler';
+    FormSectionHandler,
+    OnDataLoadingArgs, ActivateArgs
+} from '../../entry-store/form-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -13,6 +13,7 @@ import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { KalturaRequest } from '@kaltura-ng2/kaltura-api';
 
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
+import { FormSectionsManager } from '../../entry-store/form-sections-manager';
 
 export interface PreviewEntryData{
     landingPage : string;
@@ -20,18 +21,18 @@ export interface PreviewEntryData{
 }
 
 @Injectable()
-export class EntryPreviewHandler extends EntrySectionHandler
+export class EntryPreviewHandler extends FormSectionHandler
 {
     public landingPage : string;
     public iframeSrc : string;
 
-    constructor(store : EntryStore,
+    constructor(manager : FormSectionsManager,
                 kalturaServerClient: KalturaServerClient,
                 private appConfig: AppConfig,
                 private appAuthentication: AppAuthentication)
 
     {
-        super(store, kalturaServerClient);
+        super(manager, kalturaServerClient);
     }
 
     public get sectionType() : EntrySectionTypes
@@ -42,13 +43,13 @@ export class EntryPreviewHandler extends EntrySectionHandler
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onSectionReset()
+    protected _onReset()
     {
         this.landingPage = null;
         this.iframeSrc = null;
     }
 
-    protected _onEntryLoading(data : OnEntryLoadingArgs) {
+    protected _onDataLoading(data : OnDataLoadingArgs) {
         const landingPage = this.appAuthentication.appUser.partnerInfo.landingPage;
         if (landingPage) {
             landingPage.replace("{entryId}", data.entryId);
@@ -60,7 +61,7 @@ export class EntryPreviewHandler extends EntrySectionHandler
         this.iframeSrc = this.appConfig.get('core.kaltura.cdnUrl') + '/p/' + partnerID + '/sp/' + partnerID + '00/embedIframeJs/uiconf_id/' + UIConfID + '/partner_id/' + partnerID + '?iframeembed=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id=' + data.entryId;
     }
 
-    protected _onSectionLoaded(data : OnSectionLoadedArgs) {
+    protected _activate(args : ActivateArgs) {
       // do nothing
     }
 }

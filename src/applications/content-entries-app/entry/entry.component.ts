@@ -15,6 +15,7 @@ import { EntrySchedulingHandler } from './entry-scheduling/entry-scheduling-hand
 import { EntryUsersHandler } from './entry-users/entry-users-handler';
 import { EntryLoadingFailed, EntryLoading, EntryLoaded } from '../entry-store/entry-sections-events';
 import { EntriesStore } from '../entries-store/entries-store.service';
+import { FormSectionsManager } from '../entry-store/form-sections-manager';
 
 
 @Component({
@@ -23,6 +24,7 @@ import { EntriesStore } from '../entries-store/entries-store.service';
     styleUrls: ['./entry.component.scss'],
 	providers : [
 		EntryStore,
+		FormSectionsManager,
 		EntrySectionsListHandler,
 		EntryPreviewHandler,
 		EntryMetadataHandler,

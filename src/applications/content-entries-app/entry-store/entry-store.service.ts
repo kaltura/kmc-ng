@@ -1,4 +1,4 @@
-import { Inject, Injectable, Optional, OnDestroy, Host } from '@angular/core';
+import { Inject, Injectable,  OnDestroy, Host } from '@angular/core';
 import { ActivatedRoute, Router,  Params, NavigationEnd, NavigationStart } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
@@ -17,13 +17,12 @@ import {
 } from './entry-sections-events';
 import { EntriesStore } from '../entries-store/entries-store.service';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { EntryDataSection } from './entry-data-section';
+import { FormSectionsManager } from './form-sections-manager';
 
 
 @Injectable()
 export class EntryStore implements  OnDestroy{
 
-	private _sections : EntryDataSection[] = [];
 	private _sectionToRouteMapping : { [key : number] : string} = {};
 	private _activeSectionType : EntrySectionTypes = null;
 	private _events : Subject<EntryEvents> = new Subject<EntryEvents>();
@@ -33,10 +32,7 @@ export class EntryStore implements  OnDestroy{
 	public events$ = this._events.monitor('entry event').share();
 
 
-	public get sections() : EntryDataSection[]
-	{
-		return [...this._sections];
-	}
+
 	public get entry() : KalturaMediaEntry
 	{
 		return this._entry;
@@ -45,7 +41,10 @@ export class EntryStore implements  OnDestroy{
     constructor(private kalturaServerClient: KalturaServerClient,
 				private _router: Router,
 				private _entriesStore : EntriesStore,
+				@Host() private _sectionsManager : FormSectionsManager,
 				private _entryRoute: ActivatedRoute) {
+
+		this._sectionsManager.setStore(this);
 
 		this._initializeSections();
 
@@ -57,10 +56,7 @@ export class EntryStore implements  OnDestroy{
 		this._events.complete();
 	}
 
-	public registerSection(section : EntryDataSection)
-	{
-		this._sections.push(section);
-	}
+
 
 	private _initializeSections() : void{
 		if (!this._entryRoute || !this._entryRoute.snapshot.data.entryRoute)
@@ -96,56 +92,31 @@ export class EntryStore implements  OnDestroy{
 		)
 	}
 
-	public saveEntry() : void
-	{
+	public saveEntry() : void {
 		this._saveEntryInvoked = true;
 
 		this._events.next(new EntrySaving());
-		const activeSection = this._getActiveSection();
 
-		if (activeSection) {
-
-			activeSection.canLeaveSection()
-				.flatMap(result =>
-				{
-					if (result)
-					{
-						return Observable.forkJoin(...this.sections.map(section =>
-						{
-							return section.validate()
-								.monitor('validate section');
-						})).map(responses =>
-						{
-							return responses.find(section => !section.isValid) === null;
-						});
-					}else
-					{
-						return Observable.of(false);
+		this._sectionsManager.canSaveData()
+            .monitor('saving entry')
+            .flatMap(
+				(response) => {
+					// save entry
+					return Observable.of(true)
+				}
+			)
+            .subscribe(
+				response => {
+					if (response) {
+						this._events.next(new EntrySaved());
+					} else {
+						this._events.next(new EntrySavingFailure(null));
 					}
-
-				})
-                .subscribe(
-					(response) => {
-
-						if (response) {
-							this._events.next(new EntrySaved());
-						}else {
-							this._events.next(new EntrySavingFailure(null));
-						}
-					},
-					error => {
-						this._events.next(new EntrySavingFailure(error));
-					}
-				)
-		}else {
-			this._events.next(new EntrySavingFailure(new Error('Failed to extract active section')));
-		}
+				}
+			);
 	}
 
-	private _getActiveSection() : EntryDataSection
-	{
-		return this._sections.find(section => section.getSectionType() === this._activeSectionType);
-	}
+
 
 	private _updateActiveSection() : void{
 		let toSection : EntrySectionTypes = this._entryRoute.firstChild.snapshot.data.sectionType;
@@ -171,7 +142,7 @@ export class EntryStore implements  OnDestroy{
 				if (response instanceof KalturaMediaEntry)
 				{
 					// TODO [kmcng] handle situations when the subscribers has errors!!
-					this._events.next(new EntryLoaded(response,this._activeSectionType));
+					this._events.next(new EntryLoaded(response));
 				}else
 				{
 					// handle error
@@ -215,7 +186,7 @@ export class EntryStore implements  OnDestroy{
 							)
 					);
 
-					this._events.next(new EntryLoading(entryId, request,  this._activeSectionType));
+					this._events.next(new EntryLoading(entryId, request));
 
 					const requestSubscription = this.kalturaServerClient.multiRequest(request).subscribe(() =>
 					{

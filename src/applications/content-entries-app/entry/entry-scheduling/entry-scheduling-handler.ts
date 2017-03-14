@@ -1,15 +1,14 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { KalturaUtils, KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { EntrySectionHandler, OnSectionLoadedArgs } from '../../entry-store/entry-section-handler';
-import { EntryStore } from '../../entry-store/entry-store.service';
+import { FormSectionHandler, ActivateArgs } from '../../entry-store/form-section-handler';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { EntrySectionValidation } from '../../entry-store/entry-data-section';
+import { FormSectionsManager } from '../../entry-store/form-sections-manager';
 
 function datesValidation(checkRequired: boolean = false): ValidatorFn {
 	return (c: AbstractControl): {[key: string]: boolean} | null => {
@@ -35,19 +34,19 @@ function datesValidation(checkRequired: boolean = false): ValidatorFn {
 }
 
 @Injectable()
-export class EntrySchedulingHandler extends EntrySectionHandler
+export class EntrySchedulingHandler extends FormSectionHandler
 {
 	public schedulingForm: FormGroup;
 	public _timeZone = "";
 
-    constructor(store : EntryStore, kalturaServerClient: KalturaServerClient, private appLocalization: AppLocalization, private fb: FormBuilder)
+    constructor(manager : FormSectionsManager, kalturaServerClient: KalturaServerClient, private appLocalization: AppLocalization, private fb: FormBuilder)
     {
-        super(store, kalturaServerClient);
+        super(manager, kalturaServerClient);
 	    this.createForm();
 	    this.getTimeZone();
     }
 
-	protected _onSectionLoaded(data : OnSectionLoadedArgs): void {
+	protected _activate(args : ActivateArgs): void {
 		this._resetForm();
 	}
 
@@ -165,7 +164,7 @@ export class EntrySchedulingHandler extends EntrySectionHandler
     /**
      * Do some cleanups if needed once the section is removed
      */
-	protected _onSectionReset()
+	protected _onReset()
 	{
 		this.setValidators(false);
 		this.schedulingForm.updateValueAndValidity();

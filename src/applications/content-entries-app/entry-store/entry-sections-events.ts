@@ -6,8 +6,7 @@ import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 
 export class EntryLoading {
     constructor(public entryId: string,
-                public request: KalturaMultiRequest,
-                public activeSection: EntrySectionTypes) {
+                public request: KalturaMultiRequest) {
 
     }
 }
@@ -20,8 +19,7 @@ export class EntryLoadingFailed
 
 export class EntryLoaded {
     constructor(
-                public entry : KalturaMediaEntry,
-                public activeSection: EntrySectionTypes
+                public entry : KalturaMediaEntry
                 )
     {
     }
