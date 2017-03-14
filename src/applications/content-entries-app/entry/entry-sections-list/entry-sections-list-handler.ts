@@ -30,23 +30,11 @@ export class EntrySectionsListHandler extends FormSectionHandler
     private _activeSectionType : EntrySectionTypes;
     private _firstLoad = true;
 
-    constructor(manager : FormSectionsManager,
+    constructor(private _manager : FormSectionsManager,
                 kalturaServerClient: KalturaServerClient,
                 private _appLocalization: AppLocalization,)
     {
-        super(manager,kalturaServerClient);
-
-
-        manager.activeSection$
-            .cancelOnDestroy(this)
-            .subscribe(
-            section =>
-            {
-                if (section) {
-                    this._updateActiveSection(section.sectionType);
-                }
-            }
-        );
+        super(_manager,kalturaServerClient);
     }
 
     protected _onDataLoading(args : OnDataLoadingArgs) : void {
@@ -59,31 +47,32 @@ export class EntrySectionsListHandler extends FormSectionHandler
 
     protected _initialize() : void {
 
-        this._listenToSections();
-    }
+        this._manager.activeSection$
+            .cancelOnDestroy(this)
+            .subscribe(
+                section =>
+                {
+                    if (section) {
+                        this._updateActiveSection(section.sectionType);
+                    }
+                }
+            );
 
-    private _listenToSections()
-    {
-        // if (this.manager.sections && this.manager.sections.length) {
-        //
-        //     Observable.merge(
-        //         ...this.manager.sections.map(item => item.sectionStatus$)
-        //     ).cancelOnDestroy(this)
-        //         .subscribe(
-        //             (sectionStatus) =>
-        //             {
-        //                 const sections = this._sections.getValue();
-        //
-        //                 if (sections) {
-        //                     const section = sections.find(section => section.sectionType === sectionStatus.section);
-        //
-        //                     if (section) {
-        //                         section.hasErrors = !sectionStatus.isValid;
-        //                     }
-        //                 }
-        //             }
-        //         );
-        // }
+        this._manager.sectionsStatus$
+            .cancelOnDestroy(this)
+            .subscribe(
+                sectionsStatus => {
+                    const sections = this._sections.getValue();
+
+                    if (sections) {
+                        sections.forEach(section =>
+                        {
+                            const sectionStatus = sectionsStatus[section.sectionType];
+                            section.hasErrors =  (sectionStatus && !sectionStatus.isValid);
+                        });
+                    }
+                }
+            );
     }
 
     public get sectionType() : EntrySectionTypes

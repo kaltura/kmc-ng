@@ -7,6 +7,9 @@ import { EntryLoading, EntryLoaded, SectionEntered } from './entry-sections-even
 import { FormSectionHandler } from './form-section-handler';
 import { EntrySectionTypes } from './entry-sections-types';
 
+export declare type SectionsStatus = {
+    [key : number] : { isValid : boolean }
+}
 
 @Injectable()
 export class FormSectionsManager implements OnDestroy
@@ -16,6 +19,8 @@ export class FormSectionsManager implements OnDestroy
     private _sections : FormSectionHandler[] = [];
     private _activeSection : BehaviorSubject<FormSectionHandler> = new BehaviorSubject<FormSectionHandler>(null);
     public activeSection$  = this._activeSection.monitor('active section');
+    private _sectionsStatus : BehaviorSubject<SectionsStatus> = new BehaviorSubject<SectionsStatus>({});
+    public sectionsStatus$  = this._sectionsStatus.monitor('section status');
 
     public registerSection(section : FormSectionHandler)
     {
@@ -25,6 +30,16 @@ export class FormSectionsManager implements OnDestroy
     constructor()
     {
 
+    }
+
+    public notifySectionStatus(section : FormSectionHandler, status : {isValid : boolean}) : void {
+        let sectionsStatus = this._sectionsStatus.getValue() || {};
+        let sectionStatus = sectionsStatus[section.sectionType];
+
+        if (!sectionStatus || (sectionStatus && sectionStatus.isValid !== status.isValid)) {
+            sectionsStatus[section.sectionType] = status;
+            this._sectionsStatus.next(sectionsStatus);
+        }
     }
 
     public setStore(store : EntryStore) : void
@@ -124,6 +139,7 @@ export class FormSectionsManager implements OnDestroy
 
     ngOnDestroy()
     {
-
+        this._activeSection.complete();
+        this._sectionsStatus.complete();
     }
 }

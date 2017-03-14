@@ -60,6 +60,7 @@ export class EntryMetadataHandler extends FormSectionHandler
 
         this.metadataForm.statusChanges
             .cancelOnDestroy(this)
+            .monitor('status changes')
             .subscribe(
                 value =>
                 {

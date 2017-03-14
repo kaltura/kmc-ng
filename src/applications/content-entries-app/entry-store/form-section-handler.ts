@@ -45,8 +45,6 @@ export abstract class FormSectionHandler implements OnDestroy
     private _sectionActivatedOnce : boolean = false;
     private _sectionReset : Subject<any> = new Subject<any>();
     public sectionReset$ = this._sectionReset.asObservable();
-    private _sectionStatus : BehaviorSubject<{ section :EntrySectionTypes, isValid : boolean}> = new BehaviorSubject<{section :EntrySectionTypes, isValid : boolean}>(null);
-    public sectionStatus$ = this._sectionStatus.monitor(`section '${this.sectionType}' status changed`).share();
 
     constructor(public manager : FormSectionsManager,
                         _kalturaServerClient: KalturaServerClient) {
@@ -54,15 +52,6 @@ export abstract class FormSectionHandler implements OnDestroy
     }
 
     public abstract get sectionType() : EntrySectionTypes;
-
-    protected _notifySectionStatus(status : {isValid : boolean}) : void
-    {
-        const currentStatus = this._sectionStatus.getValue();
-        if (!currentStatus || (currentStatus && currentStatus.isValid !== status.isValid))
-        {
-            this._sectionStatus.next({section : this.sectionType, isValid : status.isValid});
-        }
-    }
 
     protected  _reset() : void{}
     protected  _initialize() : void{}
@@ -86,7 +75,6 @@ export abstract class FormSectionHandler implements OnDestroy
         this._sectionActivated = false;
         this.entry = null;
         this._sectionReset.next('');
-        this._sectionStatus.next({ section : this.sectionType, isValid : true});
 
         this._reset();
     }
@@ -99,7 +87,11 @@ export abstract class FormSectionHandler implements OnDestroy
         if (this.manager.isActiveSection(this)) {
             this.activate();
         }
+    }
 
+    protected _notifySectionStatus(status : {isValid : boolean}) : void
+    {
+        this.manager.notifySectionStatus(this,status);
     }
 
     public deactivate() : void
@@ -123,7 +115,6 @@ export abstract class FormSectionHandler implements OnDestroy
     ngOnDestroy()
     {
         this.resetSectionState();
-        this._sectionStatus.complete();
         this._sectionReset.complete();
     }
 
