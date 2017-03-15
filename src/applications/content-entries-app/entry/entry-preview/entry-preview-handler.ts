@@ -1,19 +1,11 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
-    FormSectionHandler,
-    OnDataLoadingArgs, ActivateArgs
-} from '../../entry-store/form-section-handler';
-import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { EntryStore } from '../../entry-store/entry-store.service';
-import { EntryLoaded, EntryLoading } from '../../entry-store/entry-sections-events';
+    EntrySection
+} from '../../entry-store/entry-section-handler';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
-import { KalturaRequest } from '@kaltura-ng2/kaltura-api';
-
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
-import { FormSectionsManager } from '../../entry-store/form-sections-manager';
+import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
 export interface PreviewEntryData{
     landingPage : string;
@@ -21,18 +13,18 @@ export interface PreviewEntryData{
 }
 
 @Injectable()
-export class EntryPreviewHandler extends FormSectionHandler
+export class EntryPreviewHandler extends EntrySection
 {
     public landingPage : string;
     public iframeSrc : string;
 
-    constructor(manager : FormSectionsManager,
+    constructor(manager : EntrySectionsManager,
                 kalturaServerClient: KalturaServerClient,
                 private appConfig: AppConfig,
                 private appAuthentication: AppAuthentication)
 
     {
-        super(manager, kalturaServerClient);
+        super(manager);
     }
 
     public get sectionType() : EntrySectionTypes
@@ -49,19 +41,19 @@ export class EntryPreviewHandler extends FormSectionHandler
         this.iframeSrc = null;
     }
 
-    protected _onDataLoading(data : OnDataLoadingArgs) {
+    protected _onDataLoading(dataId : any) {
         const landingPage = this.appAuthentication.appUser.partnerInfo.landingPage;
         if (landingPage) {
-            landingPage.replace("{entryId}", data.entryId);
+            landingPage.replace("{entryId}", dataId);
         }
         this.landingPage = landingPage;
 
         const UIConfID = this.appConfig.get('core.kaltura.previewUIConf');
         const partnerID = this.appAuthentication.appUser.partnerId;
-        this.iframeSrc = this.appConfig.get('core.kaltura.cdnUrl') + '/p/' + partnerID + '/sp/' + partnerID + '00/embedIframeJs/uiconf_id/' + UIConfID + '/partner_id/' + partnerID + '?iframeembed=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id=' + data.entryId;
+        this.iframeSrc = this.appConfig.get('core.kaltura.cdnUrl') + '/p/' + partnerID + '/sp/' + partnerID + '00/embedIframeJs/uiconf_id/' + UIConfID + '/partner_id/' + partnerID + '?iframeembed=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id=' + dataId;
     }
 
-    protected _activate(args : ActivateArgs) {
+    protected _activate(firstLoad : boolean) {
       // do nothing
     }
 }

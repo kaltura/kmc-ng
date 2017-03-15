@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
-import { FormSectionHandler,  ActivateArgs } from '../../entry-store/form-section-handler';
-import { ISubscription } from 'rxjs/Subscription';
+import { EntrySection } from '../../entry-store/entry-section-handler';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
-import { FormSectionsManager } from '../../entry-store/form-sections-manager';
+import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
 @Injectable()
-export class EntryAccessControlHandler extends FormSectionHandler
+export class EntryAccessControlHandler extends EntrySection
 {
-    constructor(manager : FormSectionsManager,
+    constructor(manager : EntrySectionsManager,
                 kalturaServerClient: KalturaServerClient)
     {
-        super(manager,kalturaServerClient);
+        super(manager);
     }
 
     public get sectionType() : EntrySectionTypes

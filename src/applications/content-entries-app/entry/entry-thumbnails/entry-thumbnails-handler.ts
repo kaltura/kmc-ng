@@ -1,17 +1,17 @@
 import { Injectable, } from '@angular/core';
-import { FormSectionHandler, ActivateArgs } from '../../entry-store/form-section-handler';
+import { EntrySection } from '../../entry-store/entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
-import { FormSectionsManager } from '../../entry-store/form-sections-manager';
+import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
 @Injectable()
-export class EntryThumbnailsHandler extends FormSectionHandler
+export class EntryThumbnailsHandler extends EntrySection
 {
-    constructor(manager : FormSectionsManager,
+    constructor(manager : EntrySectionsManager,
                 kalturaServerClient: KalturaServerClient)
     {
-        super(manager,kalturaServerClient);
+        super(manager);
     }
 
     public get sectionType() : EntrySectionTypes
@@ -26,7 +26,7 @@ export class EntryThumbnailsHandler extends FormSectionHandler
     {
     }
 
-    protected _activate(args : ActivateArgs) {
+    protected _activate(firstLoad : boolean) {
         return undefined;
     }
 }

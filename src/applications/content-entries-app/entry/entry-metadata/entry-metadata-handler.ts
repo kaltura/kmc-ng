@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormSectionHandler, ActivateArgs, ValidateResult } from '../../entry-store/form-section-handler';
+import { EntrySection } from '../../entry-store/entry-section-handler';
 import { KalturaLiveStreamEntry } from '@kaltura-ng2/kaltura-api/types';
 import { Observable } from 'rxjs/Observable';
 import { CategoryEntryListAction } from '@kaltura-ng2/kaltura-api/services/category-entry';
@@ -13,7 +13,7 @@ import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataFieldTypes } from '@kaltura-ng2/kaltura-common';
 import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
-import { FormSectionsManager } from '../../entry-store/form-sections-manager';
+import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
 export interface EntryCategories
 { items : CategoryData[],
@@ -22,7 +22,7 @@ export interface EntryCategories
 };
 
 @Injectable()
-export class EntryMetadataHandler extends FormSectionHandler
+export class EntryMetadataHandler extends EntrySection
 {
     private _entryCategories : BehaviorSubject<EntryCategories> = new BehaviorSubject<EntryCategories>({items : [], loading : false});
     public metadataForm : FormGroup;
@@ -36,13 +36,13 @@ export class EntryMetadataHandler extends FormSectionHandler
 
     public _metadataProfiles$ = this._metadataProfiles.asObservable().monitor('metadata profiles');
 
-    constructor(manager : FormSectionsManager,
+    constructor(manager : EntrySectionsManager,
                 private _kalturaServerClient: KalturaServerClient,
                 private _categoriesStore : CategoriesStore,
                 private _formBuilder : FormBuilder,
                 private _metadataProfileStore : MetadataProfileStore)
     {
-        super(manager, _kalturaServerClient);
+        super(manager);
 
         this._buildForm();
     }
@@ -64,7 +64,7 @@ export class EntryMetadataHandler extends FormSectionHandler
             .subscribe(
                 value =>
                 {
-                    super._notifySectionStatus({isValid : value === 'VALID'});
+                    super._onStatusChanged({isValid : value === 'VALID'});
                 }
             )
 
@@ -78,12 +78,12 @@ export class EntryMetadataHandler extends FormSectionHandler
 
 
 
-    protected _activate(args : ActivateArgs) : void {
+    protected _activate(firstLoad : boolean) : void {
 
-        this._resetEntryCategories(this.entry);
-        this._resetForm(this.entry);
+        this._resetEntryCategories(this.data);
+        this._resetForm(this.data);
 
-        if (args.firstLoad)
+        if (firstLoad)
         {
             this._fetchProfileMetadata();
 
@@ -250,7 +250,7 @@ export class EntryMetadataHandler extends FormSectionHandler
         this.metadataForm.reset();
     }
 
-    _validate() : Observable<ValidateResult>
+    _validate() : Observable<{ isValid : boolean}>
     {
         return Observable.create(observer =>
         {

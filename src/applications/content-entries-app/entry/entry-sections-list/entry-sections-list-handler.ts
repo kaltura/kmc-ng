@@ -1,17 +1,14 @@
 import { Injectable } from '@angular/core';
-import {
-    FormSectionHandler, ActivateArgs, OnDataLoadingArgs,
-    OnDataLoadedArgs
-} from '../../entry-store/form-section-handler';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { EntryLoaded, SectionEntered } from '../../entry-store/entry-sections-events';
 import { AppLocalization } from "@kaltura-ng2/kaltura-common";
 import { SectionsList } from './sections-list';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { FormSectionsManager } from '../../entry-store/form-sections-manager';
+import { EntrySection } from '../../entry-store/entry-section-handler';
+import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
+import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 
 export interface SectionData
 {
@@ -23,26 +20,26 @@ export interface SectionData
 
 
 @Injectable()
-export class EntrySectionsListHandler extends FormSectionHandler
+export class EntrySectionsListHandler extends EntrySection
 {
     private _sections : BehaviorSubject<SectionData[]> = new BehaviorSubject<SectionData[]>(null);
     public sections$ : Observable<SectionData[]> = this._sections.asObservable();
     private _activeSectionType : EntrySectionTypes;
     private _firstLoad = true;
 
-    constructor(private _manager : FormSectionsManager,
+    constructor(private _manager : EntrySectionsManager,
                 kalturaServerClient: KalturaServerClient,
                 private _appLocalization: AppLocalization,)
     {
-        super(_manager,kalturaServerClient);
+        super(_manager);
     }
 
-    protected _onDataLoading(args : OnDataLoadingArgs) : void {
+    protected _onDataLoading(dataId : any) : void {
         this._clearSections();
     }
 
-    protected _onDataLoaded(args : OnDataLoadedArgs) : void {
-        this._reloadSections(args.entry.id);
+    protected _onDataLoaded(data : KalturaMediaEntry) : void {
+        this._reloadSections(data.id);
     }
 
     protected _initialize() : void {
@@ -127,7 +124,7 @@ export class EntrySectionsListHandler extends FormSectionHandler
         this._sections.next(sections);
     }
 
-    protected _activate(args : ActivateArgs) {
+    protected _activate(firstLoad : boolean) {
         // do nothing
     }
 }

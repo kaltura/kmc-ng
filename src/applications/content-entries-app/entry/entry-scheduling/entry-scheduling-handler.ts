@@ -5,9 +5,9 @@ import { KalturaUtils, KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { FormSectionHandler, ActivateArgs, ValidateResult } from '../../entry-store/form-section-handler';
+import { EntrySection } from '../../entry-store/entry-section-handler';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { FormSectionsManager } from '../../entry-store/form-sections-manager';
+import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
 function datesValidation(checkRequired: boolean = false): ValidatorFn {
 	return (c: AbstractControl): {[key: string]: boolean} | null => {
@@ -33,20 +33,23 @@ function datesValidation(checkRequired: boolean = false): ValidatorFn {
 }
 
 @Injectable()
-export class EntrySchedulingHandler extends FormSectionHandler
+export class EntrySchedulingHandler extends EntrySection
 {
 	public schedulingForm: FormGroup;
 	public _timeZone = "";
 
-    constructor(manager : FormSectionsManager, kalturaServerClient: KalturaServerClient, private appLocalization: AppLocalization, private fb: FormBuilder)
+    constructor(manager : EntrySectionsManager, 
+				kalturaServerClient: KalturaServerClient, 
+				private _appLocalization: AppLocalization, 
+				private _fb: FormBuilder)
     {
-        super(manager, kalturaServerClient);
+        super(manager);
 	    this.createForm();
 	    this.getTimeZone();
     }
 
-	protected _activate(args : ActivateArgs): void {
-    	if (args.firstLoad) {
+	protected _activate(firstLoad : boolean): void {
+    	if (firstLoad) {
 			this._resetForm();
 		}
 		this.setValidators(false);
@@ -57,14 +60,14 @@ export class EntrySchedulingHandler extends FormSectionHandler
 		let startDate = null;
 		let endDate = null;
 		let enableEndDate = false;
-		if (this.entry && this.entry.startDate){
+		if (this.data && this.data.startDate){
 			scheduleSettings = "scheduled";
 			this.schedulingForm.get('startDate').enable();
-			startDate = KalturaUtils.fromServerDate(this.entry.startDate);
-			if (this.entry.endDate){
+			startDate = KalturaUtils.fromServerDate(this.data.startDate);
+			if (this.data.endDate){
 				this.schedulingForm.get('endDate').enable();
 				enableEndDate = true;
-				endDate = KalturaUtils.fromServerDate(this.entry.endDate);
+				endDate = KalturaUtils.fromServerDate(this.data.endDate);
 			}
 		}
 		this.schedulingForm.reset({
@@ -76,7 +79,7 @@ export class EntrySchedulingHandler extends FormSectionHandler
 	}
 
     private createForm(): void{
-    	this.schedulingForm = this.fb.group({
+    	this.schedulingForm = this._fb.group({
 		    scheduling: 'anytime',
 		    startDate: {value: '', disabled: true},
 		    endDate: {value: '', disabled: true},
@@ -118,7 +121,7 @@ export class EntrySchedulingHandler extends FormSectionHandler
             .subscribe(
 				value =>
 				{
-					super._notifySectionStatus({isValid : value === 'VALID'});
+					super._onStatusChanged({isValid : value === 'VALID'});
 				}
 			)
     }
@@ -132,7 +135,7 @@ export class EntrySchedulingHandler extends FormSectionHandler
 	}
 
 	private getTimeZone(){
-		this._timeZone = this.appLocalization.get('applications.content.entryDetails.scheduling.note');
+		this._timeZone = this._appLocalization.get('applications.content.entryDetails.scheduling.note');
 		const now: any = new Date();
 		const zoneTimeOffset:number = (now.getTimezoneOffset() / 60) * (-1);
 		const ztStr: string = (zoneTimeOffset == 0) ? '' : (zoneTimeOffset > 0) ? ('+' + zoneTimeOffset) : ('-' + zoneTimeOffset);
@@ -149,7 +152,7 @@ export class EntrySchedulingHandler extends FormSectionHandler
 		return EntrySectionTypes.Scheduling;
 	}
 
-	protected _validate() : Observable<ValidateResult>
+	protected _validate() : Observable<{ isValid : boolean}>
 	{
 		return Observable.create(observer =>
 		{

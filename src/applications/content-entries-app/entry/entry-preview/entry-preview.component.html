@@ -3,64 +3,64 @@
 	<div class="kPreviewAndEmbedContainer" *ngIf="_entryReady">
 		<i (click)="openPreviewAndEmbed()" class="kIconshare"></i><a (click)="openPreviewAndEmbed()">{{'applications.content.entryDetails.preview.pande' | translate}}</a>
 	</div>
-	<div class="kPreviewDetails" *ngIf="_handler.entry">
+	<div class="kPreviewDetails" *ngIf="_handler.data">
 		<span class="kTitle">{{'applications.content.entryDetails.preview.details' | translate}}</span>
 
 		<div class="kRow">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.entryID' | translate}}</span>
-			<span>{{_handler.entry.id }}</span>
+			<span>{{_handler.data.id }}</span>
 		</div>
 		<div class="kRow">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.creator' | translate}}</span>
-			<span pTooltip="{{_handler.entry.creatorId}}" tooltipPosition="top">{{_handler.entry.creatorId}}</span>
+			<span pTooltip="{{_handler.data.creatorId}}" tooltipPosition="top">{{_handler.data.creatorId}}</span>
 		</div>
 		<div class="kRow">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.creationDate' | translate}}</span>
-			<span>{{_handler.entry.createdAt * 1000 | date:'MM/dd/y HH:MM'}}</span>
+			<span>{{_handler.data.createdAt * 1000 | date:'MM/dd/y HH:MM'}}</span>
 		</div>
 		<div class="kRow"  *ngIf="_handler._landingPage">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.landingPage' | translate}}</span>
 			<a  pTooltip="{{_handler._landingPage}}" tooltipPosition="top" (click)="openLandingPage(_handler._landingPage)">{{_handler._landingPage}}</a>
 		</div>
-		<div class="kRow" *ngIf="_isLive && _handler.entry.recordedEntryId">
+		<div class="kRow" *ngIf="_isLive && _handler.data.recordedEntryId">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.vodEntry' | translate}}</span>
-			<a (click)="navigateToEntry(currentEntry.recordedEntryId)">{{_handler.entry.recordedEntryId}}</a>
+			<a (click)="navigateToEntry(currentEntry.recordedEntryId)">{{_handler.data.recordedEntryId}}</a>
 		</div>
-		<div class="kRow" *ngIf="_isRecordedLive && _handler.entry.rootEntryId">
+		<div class="kRow" *ngIf="_isRecordedLive && _handler.data.rootEntryId">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.archiveOf' | translate}}</span>
-			<a (click)="navigateToEntry(currentEntry.rootEntryId)">{{_handler.entry.rootEntryId}}</a>
+			<a (click)="navigateToEntry(currentEntry.rootEntryId)">{{_handler.data.rootEntryId}}</a>
 		</div>
 		<div class="kRow">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.type' | translate}}</span>
-			<span>{{_handler.entry.mediaType | entryType: true}}</span>
+			<span>{{_handler.data.mediaType | entryType: true}}</span>
 		</div>
 		<div class="kRow">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.moderation' | translate}}</span>
-			<span>{{_handler.entry.moderationStatus | moderation}}</span>
+			<span>{{_handler.data.moderationStatus | moderation}}</span>
 		</div>
 		<div class="kRow" *ngIf="_entryReady">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.plays' | translate}}</span>
-			<span>{{_handler.entry.plays}}</span>
+			<span>{{_handler.data.plays}}</span>
 		</div>
-		<div class="kRow" *ngIf="_entryReady && _handler.entry.rank">
+		<div class="kRow" *ngIf="_entryReady && _handler.data.rank">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.rating' | translate}}</span>
-			<span>{{_handler.entry.rank}}</span>
+			<span>{{_handler.data.rank}}</span>
 		</div>
 		<div class="kRow" *ngIf="_hasDuration">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.duration' | translate}}</span>
-			<span>{{_handler.entry.duration | kTime}}</span>
+			<span>{{_handler.data.duration | kTime}}</span>
 		</div>
-		<div class="kRow" *ngIf="_entryReady && _handler.entry.moderationCount">
+		<div class="kRow" *ngIf="_entryReady && _handler.data.moderationCount">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.flags' | translate}}</span>
-			<span>{{_handler.entry.moderationCount}}</span>
+			<span>{{_handler.data.moderationCount}}</span>
 		</div>
-		<div class="kRow" *ngIf="_entryReady && _handler.entry.votes">
+		<div class="kRow" *ngIf="_entryReady && _handler.data.votes">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.votes' | translate}}</span>
-			<span>{{_handler.entry.votes}}</span>
+			<span>{{_handler.data.votes}}</span>
 		</div>
 		<div class="kRow" *ngIf="_isClip">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.clippedFrom' | translate}}</span>
-			<span><a (click)="navigateToEntry(currentEntry.rootEntryId)">{{_handler.entry.rootEntryId}}</a></span>
+			<span><a (click)="navigateToEntry(currentEntry.rootEntryId)">{{_handler.data.rootEntryId}}</a></span>
 		</div>
 	</div>
 </div>
