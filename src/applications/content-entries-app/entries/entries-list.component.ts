@@ -61,7 +61,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         this._filter.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
         this._filter.sortBy = event.field;
 
-        this._entriesStore.updateQuery({
+        this._entriesStore.reload({
             sortBy : this._filter.sortBy,
             sortDirection : this._filter.sortDirection
         });
@@ -73,7 +73,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 		    this._filter.pageSize = state.rows;
 
 		    this.clearSelection();
-		    this._entriesStore.updateQuery({
+		    this._entriesStore.reload({
 			    pageIndex: this._filter.pageIndex + 1,
 			    pageSize: this._filter.pageSize
 		    });

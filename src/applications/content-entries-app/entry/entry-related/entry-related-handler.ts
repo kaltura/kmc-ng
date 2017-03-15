@@ -1,30 +1,16 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { EntrySectionHandler, OnSectionLoadedArgs } from '../../entry-store/entry-section-handler';
+import { Injectable } from '@angular/core';
+import { EntrySection } from '../../entry-store/entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { EntryStore } from '../../entry-store/entry-store.service';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
-import { KalturaRequest } from '@kaltura-ng2/kaltura-api';
+import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
 @Injectable()
-export class EntryRelatedHandler extends EntrySectionHandler
+export class EntryRelatedHandler extends EntrySection
 {
-    private _eventSubscription : ISubscription;
-
-
-    constructor(store : EntryStore,
-                kalturaServerClient: KalturaServerClient)
-    {
-        super(store,kalturaServerClient);
-
-        this._eventSubscription = store.events$.subscribe(
-            event =>
-            {
-
-            }
-        );
+    constructor(manager : EntrySectionsManager,
+                kalturaServerClient: KalturaServerClient) {
+        super(manager);
     }
 
     public get sectionType() : EntrySectionTypes
@@ -35,12 +21,11 @@ export class EntryRelatedHandler extends EntrySectionHandler
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onSectionReset()
+    protected _reset()
     {
-        this._eventSubscription.unsubscribe();
     }
 
-    protected _onSectionLoaded(data : OnSectionLoadedArgs) {
+    protected _activate(firstLoad : boolean) {
         return undefined;
     }
 }

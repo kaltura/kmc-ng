@@ -27,6 +27,7 @@ import { BaseEntryListAction } from '@kaltura-ng2/kaltura-api/services/base-entr
 
 import * as R from 'ramda';
 import { FilterItem } from "./filter-item";
+import { BrowserService } from "kmc-shell/providers/browser.service";
 
 export type UpdateStatus = {
     loading : boolean;
@@ -82,7 +83,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
     private _status : BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null});
     private _querySource : ReplaySubject<QueryRequestArgs> = new ReplaySubject<QueryRequestArgs>(1,null);
 
-    private _queryData : QueryData = {
+    public queryData : QueryData = {
         pageIndex: 0,
         pageSize: 50,
         sortBy: 'createdAt',
@@ -100,8 +101,14 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
 
 
-    constructor(private kalturaServerClient: KalturaServerClient) {
+    constructor(private kalturaServerClient: KalturaServerClient,
+                private browserService: BrowserService,) {
         console.warn("KMCng entriesStore:ctor() - missing handling of metadata profiles");
+
+        const defaultPageSize = this.browserService.getFromLocalStorage("entries.list.pageSize");
+        if (defaultPageSize !== null){
+            this.queryData.pageSize = defaultPageSize;
+        }
 
         this._executeQuery({addedFilters : [], removedFilters : []});
     }
@@ -125,16 +132,16 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         return this._entries.getValue().items;
     }
 
-    public reload() : void
+    public reload(query? : QueryData) : void
     {
+        if (query)
+        {
+            Object.assign(this.queryData,query);
+        }
+
         this._executeQuery();
     }
 
-    public updateQuery(query : QueryData)
-    {
-        Object.assign(this._queryData,query);
-        this._executeQuery({ removedFilters : [], addedFilters : []});
-    }
 
     public removeFiltersByType(filterType : FilterTypeConstructor<FilterItem>) : void {
         if (filterType && filterType.name) {
@@ -190,7 +197,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             if (addedFilters.length > 0)
             {
                 this._activeFilters = [...this._activeFilters, ...addedFilters];
-                this._queryData.pageIndex = 1;
+                this.queryData.pageIndex = 1;
                 this._executeQuery({  removedFilters : [], addedFilters : addedFilters });
             }
         }
@@ -217,7 +224,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
             if (removedFilters.length > 0)
             {
-                this._queryData.pageIndex = 1;
+                this.queryData.pageIndex = 1;
                 this._executeQuery({ removedFilters : removedFilters, addedFilters : [] });
             }
         }
@@ -232,6 +239,8 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             this.executeQuerySubscription = null;
         }
 
+        this.browserService.setInLocalStorage("entries.list.pageSize", this.queryData.pageSize);
+
         // execute the request
         this.executeQuerySubscription = Observable.create(observer => {
 
@@ -241,7 +250,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
                     filters : this._activeFilters,
                     addedFilters : addedFilters || [],
                     removedFilters : removedFilters || [],
-                    data : this._queryData
+                    data : this.queryData
                 });
 
             this._querySource.next(queryArgs);

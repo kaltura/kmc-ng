@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { EntryAccessControlHandler } from './entry-access-control-handler';
 
 @Component({
     selector: 'kEntryAccessControl',
@@ -11,7 +11,7 @@ export class EntryAccessControl implements AfterViewInit, OnInit, OnDestroy {
     public _loading = false;
     public _loadingError = null;
 
-    constructor(private _appLocalization: AppLocalization) {
+    constructor(public _handler : EntryAccessControlHandler) {
     }
 
 

@@ -1,38 +1,38 @@
-<kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
-	<div class="kAccessControl">
+<kLoader [loading]="(_handler._accessControlProfiles$ | async)?.loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
+	<div class="kAccessControl" *ngIf="_handler._selectedProfile">
 		<p class="kTitle">{{'applications.content.entryDetails.accessControl.accessControl' | translate}}</p>
 		<div class="kAccessControlDetails">
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.profile' | translate}}</span>
-				<p-dropdown></p-dropdown>
+				<p-dropdown [options]="(_handler._accessControlProfiles$ | async)?.items" [(ngModel)]="_handler._selectedProfile" (onChange)="_handler._onProfileChange($event)"></p-dropdown>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.name' | translate}}</span>
-				<span></span>
+				<span>{{_handler._selectedProfile.name}}</span>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.accessControl' | translate}}</span>
-				<span></span>
+				<span>{{_handler._selectedProfile.description}}</span>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.domains' | translate}}</span>
-				<span></span>
+				<span>{{_handler._domainsRestriction}}</span>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.countries' | translate}}</span>
-				<span></span>
+				<span>{{_handler._countriesRestriction}}</span>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.ips' | translate}}</span>
-				<span></span>
+				<span>{{_handler._ipRestriction}}</span>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.flavours' | translate}}</span>
-				<span></span>
+				<span>{{_handler._flavourRestriction}}</span>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.advanced' | translate}}</span>
-				<span></span>
+				<span>{{_handler._advancedRestriction}}</span>
 			</div>
 		</div>
 	</div>

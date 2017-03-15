@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { KalturaMediaType } from '@kaltura-ng2/kaltura-api/types';
-import { EntryStore } from '../entry-store/entry-store.service';
+import { EntryStore, ActionTypes } from '../entry-store/entry-store.service';
 import { EntrySectionsListHandler } from './entry-sections-list/entry-sections-list-handler';
 import { EntryMetadataHandler } from './entry-metadata/entry-metadata-handler';
 import { EntryPreviewHandler } from './entry-preview/entry-preview-handler';
@@ -13,8 +13,8 @@ import { EntryFlavoursHandler } from './entry-flavours/entry-flavours-handler';
 import { EntryThumbnailsHandler } from './entry-thumbnails/entry-thumbnails-handler';
 import { EntrySchedulingHandler } from './entry-scheduling/entry-scheduling-handler';
 import { EntryUsersHandler } from './entry-users/entry-users-handler';
-import { EntryLoadingFailed, EntryLoading, EntryLoaded } from '../entry-store/entry-sections-events';
 import { EntriesStore } from '../entries-store/entries-store.service';
+import { EntrySectionsManager } from '../entry-store/entry-sections-manager';
 
 
 @Component({
@@ -23,6 +23,7 @@ import { EntriesStore } from '../entries-store/entries-store.service';
     styleUrls: ['./entry.component.scss'],
 	providers : [
 		EntryStore,
+		EntrySectionsManager,
 		EntrySectionsListHandler,
 		EntryPreviewHandler,
 		EntryMetadataHandler,
@@ -74,28 +75,58 @@ export class EntryComponent implements OnInit, OnDestroy {
 	}
 
     ngOnInit() {
-		this._entryStore.events$
+
+    	this._entryStore.entry$
+            .cancelOnDestroy(this)
+            .subscribe(
+			entry =>
+			{
+				if (entry) {
+					this._entryName = entry.name;
+					this._entryType = entry.mediaType;
+					this._loading = false;
+					this._loadingError = null;
+				}
+			});
+
+		this._entryStore.status$
 			.cancelOnDestroy(this)
 			.subscribe(
-			event => {
-				if (event instanceof EntryLoadingFailed)
+			status => {
+				if (status)
 				{
-					// TODO [kmcng] show retry only if network connectivity
-					this._loading = false;
-					this._loadingError = { message : event.errorMessage, buttons : { returnToEntries : 'Back To Entries', retry : 'Retry'}};
-				}else if (event instanceof EntryLoading)
-				{
-					this._loading = true;
-					this._loadingError = null;
+					switch (status.action)
+					{
+						case ActionTypes.EntryLoading:
+							this._loading = true;
+							this._loadingError = null;
 
-					this._currentEntryId = event.entryId;
-					this._updateNavigationState();
-				}else if (event instanceof EntryLoaded)
-				{
-					this._entryName = event.entry.name;
-					this._entryType = event.entry.mediaType;
-					this._loading = false;
-					this._loadingError = null;
+							// when loading new entry in progress, the 'entryID' property
+							// reflect the entry that is currently being loaded
+							// while 'entry$' stream is null
+							this._currentEntryId = this._entryStore.entryId;
+							this._updateNavigationState();
+							break;
+						case ActionTypes.EntryLoaded:
+							this._loading = false;
+							break;
+						case ActionTypes.EntryLoadingFailed:
+							// TODO [kmcng] show retry only if network connectivity
+							this._loading = false;
+							this._loadingError = { message : status.error.message, buttons : { returnToEntries : 'Back To Entries', retry : 'Retry'}};
+							break;
+						case ActionTypes.EntrySaved:
+							break;
+						case ActionTypes.EntrySaving:
+							break;
+						case ActionTypes.EntrySavingFailed:
+							break;
+						case ActionTypes.NavigateOut:
+							this._loading = true;
+							break;
+						default:
+							break;
+					}
 				}
 			},
 			error =>

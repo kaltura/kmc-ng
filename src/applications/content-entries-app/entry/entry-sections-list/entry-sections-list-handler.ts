@@ -1,53 +1,75 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { EntrySectionHandler, OnSectionLoadedArgs } from '../../entry-store/entry-section-handler';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { EntryStore } from '../../entry-store/entry-store.service';
-import { EntryLoaded, SectionEntered } from '../../entry-store/entry-sections-events';
 import { AppLocalization } from "@kaltura-ng2/kaltura-common";
 import { SectionsList } from './sections-list';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient, KalturaMediaType } from '@kaltura-ng2/kaltura-api';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { KalturaRequest } from '@kaltura-ng2/kaltura-api';
+import { EntrySection } from '../../entry-store/entry-section-handler';
+import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
+import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 
 export interface SectionData
 {
     label : string,
-    enabled : boolean,
-    hasError : boolean,
+    hasErrors : boolean,
     active?: boolean,
     sectionType : EntrySectionTypes
 }
 
 
 @Injectable()
-export class EntrySectionsListHandler extends EntrySectionHandler
+export class EntrySectionsListHandler extends EntrySection
 {
     private _sections : BehaviorSubject<SectionData[]> = new BehaviorSubject<SectionData[]>(null);
     public sections$ : Observable<SectionData[]> = this._sections.asObservable();
     private _activeSectionType : EntrySectionTypes;
+    private _firstLoad = true;
 
-    constructor(store : EntryStore,
+    constructor(private _manager : EntrySectionsManager,
                 kalturaServerClient: KalturaServerClient,
                 private _appLocalization: AppLocalization,)
     {
-        super(store,kalturaServerClient)
+        super(_manager);
+    }
 
-        store.events$
+    protected _onDataLoading(dataId : any) : void {
+        this._clearSections();
+    }
+
+    protected _onDataLoaded(data : KalturaMediaEntry) : void {
+        this._reloadSections(data);
+    }
+
+    protected _initialize() : void {
+
+        this._manager.activeSection$
             .cancelOnDestroy(this)
             .subscribe(
-            event =>
-            {
-                if (event instanceof SectionEntered)
+                section =>
                 {
-                    this._updateActiveSection(event.to);
-                }else if (event instanceof EntryLoaded)
-                {
-                    this._reloadSections(event.entry.id);
+                    if (section) {
+                        this._updateActiveSection(section.sectionType);
+                    }
                 }
-            }
-        );
+            );
+
+        this._manager.sectionsStatus$
+            .cancelOnDestroy(this)
+            .subscribe(
+                sectionsStatus => {
+                    const sections = this._sections.getValue();
+
+                    if (sections) {
+                        sections.forEach(section =>
+                        {
+                            const sectionStatus = sectionsStatus[section.sectionType];
+                            section.hasErrors =  (sectionStatus && !sectionStatus.isValid);
+                        });
+                    }
+                }
+            );
     }
 
     public get sectionType() : EntrySectionTypes
@@ -58,7 +80,7 @@ export class EntrySectionsListHandler extends EntrySectionHandler
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onSectionReset()
+    protected _reset()
     {
 
     }
@@ -76,23 +98,59 @@ export class EntrySectionsListHandler extends EntrySectionHandler
         }
     }
 
-    private _reloadSections(entryId) : void
+    private _clearSections() : void
     {
-        const sections = SectionsList.filter(section => {
-            // TODO [kmcng] update according to entry id
-            return section.enabled && true;
-        });
+        this._sections.next([]);
 
-        sections.forEach((section : SectionData) =>
-        {
-            section.label = this._appLocalization.get(section.label);
-            section.active = section.sectionType === this._activeSectionType;
-        });
+    }
+
+    private _reloadSections(entry : KalturaMediaEntry) : void
+    {
+        const sections = [];
+
+        if (entry) {
+            SectionsList.forEach((section: any) => {
+
+                if (this._isSectionEnabled(section, entry)) {
+                    sections.push(
+                        {
+                            label: this._appLocalization.get(section.label),
+                            active: section.sectionType === this._activeSectionType,
+                            hasErrors: false,
+                            sectionType: section.sectionType
+                        }
+                    );
+                }
+            });
+        }
 
         this._sections.next(sections);
     }
 
-    protected _onSectionLoaded(data : OnSectionLoadedArgs) {
+    private _isSectionEnabled(section : SectionData, entry : KalturaMediaEntry) : boolean {
+        const mediaType = this.data.mediaType;
+        switch (section.sectionType) {
+            case EntrySectionTypes.Thumbnails:
+                return mediaType !== KalturaMediaType.Image;
+            case EntrySectionTypes.Flavours:
+                return mediaType !== KalturaMediaType.Image && !this._isLive(entry);
+            case EntrySectionTypes.Captions:
+                return mediaType !== KalturaMediaType.Image && !this._isLive(entry);
+            case EntrySectionTypes.Live:
+                return this._isLive(entry);
+            case EntrySectionTypes.Clips:
+                return true;
+            default:
+                return true;
+        }
+    }
+
+    private _isLive( entry : KalturaMediaEntry): boolean {
+        const mediaType = entry.mediaType;
+        return mediaType === KalturaMediaType.LiveStreamFlash || mediaType === KalturaMediaType.LiveStreamWindowsMedia || mediaType === KalturaMediaType.LiveStreamRealMedia || mediaType === KalturaMediaType.LiveStreamQuicktime;
+    }
+
+    protected _activate(firstLoad : boolean) {
         // do nothing
     }
 }
