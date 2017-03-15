@@ -7,14 +7,13 @@ import { EntryLoaded, SectionEntered } from '../../entry-store/entry-sections-ev
 import { AppLocalization } from "@kaltura-ng2/kaltura-common";
 import { SectionsList } from './sections-list';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient, KalturaMediaType } from '@kaltura-ng2/kaltura-api';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { KalturaRequest } from '@kaltura-ng2/kaltura-api';
 
 export interface SectionData
 {
     label : string,
-    enabled : boolean,
     hasError : boolean,
     active?: boolean,
     sectionType : EntrySectionTypes
@@ -78,9 +77,28 @@ export class EntrySectionsListHandler extends EntrySectionHandler
 
     private _reloadSections(entryId) : void
     {
-        const sections = SectionsList.filter(section => {
-            // TODO [kmcng] update according to entry id
-            return section.enabled && true;
+        const mediaType = this.entry.mediaType;
+    	const sections = SectionsList.filter((section: SectionData) => {
+    		switch (section.sectionType){
+			    case EntrySectionTypes.Thumbnails:
+    				return mediaType !== KalturaMediaType.Image;
+			        break;
+			    case EntrySectionTypes.Flavours:
+				    return mediaType !== KalturaMediaType.Image && !this._isLive();
+				    break;
+			    case EntrySectionTypes.Captions:
+				    return mediaType !== KalturaMediaType.Image && !this._isLive();
+				    break;
+			    case EntrySectionTypes.Live:
+				    return this._isLive();
+				    break;
+			    case EntrySectionTypes.Clips:
+				    return true;
+				    break;
+			    default:
+				    return true;
+			        break;
+		    }
         });
 
         sections.forEach((section : SectionData) =>
@@ -90,6 +108,11 @@ export class EntrySectionsListHandler extends EntrySectionHandler
         });
 
         this._sections.next(sections);
+    }
+
+    private _isLive(): boolean{
+    	const mediaType = this.entry.mediaType;
+    	return mediaType === KalturaMediaType.LiveStreamFlash || mediaType === KalturaMediaType.LiveStreamWindowsMedia || mediaType === KalturaMediaType.LiveStreamRealMedia || mediaType === KalturaMediaType.LiveStreamQuicktime;
     }
 
     protected _onSectionLoaded(data : OnSectionLoadedArgs) {
