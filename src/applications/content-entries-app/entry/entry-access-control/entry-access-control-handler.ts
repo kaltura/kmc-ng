@@ -4,10 +4,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SelectItem } from 'primeng/primeng';
 import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { KalturaUtils } from '@kaltura-ng2/kaltura-api';
 import { KalturaAccessControl, KalturaSiteRestriction, KalturaSiteRestrictionType, KalturaCountryRestriction, KalturaCountryRestrictionType, KalturaIpAddressRestriction,
 	KalturaIpAddressRestrictionType, KalturaLimitFlavorsRestriction, KalturaLimitFlavorsRestrictionType, KalturaSessionRestriction, KalturaPreviewRestriction, KalturaFlavorParams } from '@kaltura-ng2/kaltura-api/types'
-import { AccessControlProfileStore, FlavoursStore, AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AccessControlProfileStore, FlavoursStore, AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
 
 import 'rxjs/add/observable/forkJoin';
 import * as R from 'ramda';
@@ -23,7 +22,15 @@ export class EntryAccessControlHandler extends EntrySection
 	);
 
 	public _accessControlProfiles$ = this._accessControlProfiles.asObservable().monitor('access control profiles');
-	public _selectedProfile: KalturaAccessControl = null;
+
+	private _selectedProfile: KalturaAccessControl = null;
+	public set selectedProfile(profile: KalturaAccessControl){
+		this._selectedProfile = profile;
+		this._setRestrictions();
+	}
+	public get selectedProfile(){
+		return this._selectedProfile;
+	}
 
 	public _domainsRestriction: string = "";
 	public _countriesRestriction: string = "";
@@ -45,12 +52,6 @@ export class EntryAccessControlHandler extends EntrySection
 	 * Do some cleanups if needed once the section is removed
 	 */
 	protected _reset() {
-		this._selectedProfile = null;
-		this._domainsRestriction = null;
-		this._countriesRestriction = null;
-		this._ipRestriction = null;
-		this._flavourRestriction = null;
-		this._advancedRestriction = null;
 	}
 
     public get sectionType() : EntrySectionTypes
@@ -64,7 +65,7 @@ export class EntryAccessControlHandler extends EntrySection
 		    this._fetchAccessControlProfiles();
 	    }else
 		{
-			this._setRestrictions();
+			this._setProfile();
 		}
     }
 
@@ -92,13 +93,9 @@ export class EntryAccessControlHandler extends EntrySection
 						ACProfiles.forEach((profile: KalturaAccessControl) => {
 							profilesDataProvider.push({"label": profile.name, "value": profile});
 						});
-						// search for the current entry access profile and select it in the drop down if found
-						let entryACProfileIndex = R.findIndex(R.propEq('id', this.data.accessControlId))(ACProfiles);
-						entryACProfileIndex = entryACProfileIndex === -1 ? 0 : entryACProfileIndex;
-						this._selectedProfile = profilesDataProvider[entryACProfileIndex].value;
 						this._flavourParams = response[1].items;
-						this._setRestrictions();
 						this._accessControlProfiles.next({items : profilesDataProvider, loading : false});
+						this._setProfile();
 					}
 
 				},
@@ -109,6 +106,16 @@ export class EntryAccessControlHandler extends EntrySection
 			);
 	}
 
+	private _setProfile(){
+		// search for the current entry access profile and select it in the drop down if found
+		let profilesDataProvider = this._accessControlProfiles.getValue().items;
+		let profilesArr: KalturaAccessControl[] = [];
+		profilesDataProvider.forEach(profile => {profilesArr.push(profile.value)});
+		let entryACProfileIndex = R.findIndex(R.propEq('id', this.data.accessControlId))(profilesArr);
+		entryACProfileIndex = entryACProfileIndex === -1 ? 0 : entryACProfileIndex;
+		this.selectedProfile = profilesArr[entryACProfileIndex];
+	}
+
 	private _setRestrictions(){
 
 		this._domainsRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.anyDomain');
@@ -117,7 +124,7 @@ export class EntryAccessControlHandler extends EntrySection
 		this. _flavourRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.anyFlavour');
 		this._advancedRestriction = "";
 
-		const restrictions = this._selectedProfile.restrictions;
+		const restrictions = this.selectedProfile.restrictions;
 		if (restrictions.length){
 			restrictions.forEach(restriction => {
 				// domains restrictions
@@ -189,7 +196,4 @@ export class EntryAccessControlHandler extends EntrySection
 		return countries.join(", ");
 	}
 
-	public _onProfileChange(event){
-		this._setRestrictions();
-	}
 }

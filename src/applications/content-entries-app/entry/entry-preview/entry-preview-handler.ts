@@ -50,7 +50,8 @@ export class EntryPreviewHandler extends EntrySection
 
         const UIConfID = this.appConfig.get('core.kaltura.previewUIConf');
         const partnerID = this.appAuthentication.appUser.partnerId;
-        this.iframeSrc = this.appConfig.get('core.kaltura.cdnUrl') + '/p/' + partnerID + '/sp/' + partnerID + '00/embedIframeJs/uiconf_id/' + UIConfID + '/partner_id/' + partnerID + '?iframeembed=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id=' + dataId;
+	    const ks = this.appAuthentication.appUser.ks || "";
+        this.iframeSrc = this.appConfig.get('core.kaltura.cdnUrl') + '/p/' + partnerID + '/sp/' + partnerID + '00/embedIframeJs/uiconf_id/' + UIConfID + '/partner_id/' + partnerID + '?iframeembed=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[ks]=' + ks +'&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id=' + dataId;
     }
 
     protected _activate(firstLoad : boolean) {
