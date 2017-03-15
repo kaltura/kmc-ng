@@ -4,10 +4,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SelectItem } from 'primeng/primeng';
 import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { KalturaUtils } from '@kaltura-ng2/kaltura-api';
 import { KalturaAccessControl, KalturaSiteRestriction, KalturaSiteRestrictionType, KalturaCountryRestriction, KalturaCountryRestrictionType, KalturaIpAddressRestriction,
 	KalturaIpAddressRestrictionType, KalturaLimitFlavorsRestriction, KalturaLimitFlavorsRestrictionType, KalturaSessionRestriction, KalturaPreviewRestriction, KalturaFlavorParams } from '@kaltura-ng2/kaltura-api/types'
-import { AccessControlProfileStore, FlavoursStore, AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AccessControlProfileStore, FlavoursStore, AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
 
 import 'rxjs/add/observable/forkJoin';
 import * as R from 'ramda';
