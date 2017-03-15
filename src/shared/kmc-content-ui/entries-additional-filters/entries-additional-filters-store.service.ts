@@ -8,11 +8,10 @@ import 'rxjs/add/observable/forkJoin';
 
 
 
-import { KalturaServerClient,  KalturaMultiRequest, KalturaMultiResponse } from '@kaltura-ng2/kaltura-api';
-import { FlavorParamsListAction } from '@kaltura-ng2/kaltura-api/services/flavor-params';
+import { KalturaServerClient,  KalturaMultiRequest, KalturaMultiRespons } from '@kaltura-ng2/kaltura-api';
 import { AccessControlListAction } from '@kaltura-ng2/kaltura-api/services/access-control';
 import { DistributionProfileListAction } from '@kaltura-ng2/kaltura-api/services/distribution-profile';
-import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataFieldTypes } from '@kaltura-ng2/kaltura-common';
+import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataFieldTypes, FlavoursStore } from '@kaltura-ng2/kaltura-common';
 
 import {
     KalturaAccessControlFilter,
@@ -86,7 +85,7 @@ export class EntriesAdditionalFiltersStore {
 
 
     constructor(private kalturaServerClient: KalturaServerClient,
-    private _metadataProfileStore : MetadataProfileStore) {
+    private _metadataProfileStore : MetadataProfileStore, private _flavoursStore: FlavoursStore) {
         this.load();
     }
 
@@ -100,7 +99,8 @@ export class EntriesAdditionalFiltersStore {
         // execute the request
         const getMetadata$ = this._metadataProfileStore.get({ type : MetadataProfileTypes.Entry, ignoredCreateMode : MetadataProfileCreateModes.App});
         const otherData$ = this.buildQueryRequest();
-        this.executeQuerySubscription = Observable.forkJoin(getMetadata$,otherData$)
+	    const getFlavours$ = this._flavoursStore.get();
+        this.executeQuerySubscription = Observable.forkJoin(getMetadata$,otherData$,getFlavours$)
             .subscribe(
                 (responses) => {
                 this.executeQuerySubscription = null;
@@ -112,7 +112,7 @@ export class EntriesAdditionalFiltersStore {
 
                     const filters : AdditionalFilters = {groups : [], metadataProfiles : []};
 
-                    const defaultFilterGroup = this._buildDefaultFiltersGroup(responses[1]);
+                    const defaultFilterGroup = this._buildDefaultFiltersGroup(responses[1], responses[2].items);
                     filters.groups.push(defaultFilterGroup);
 
                     const metadataData = this._buildMetadataFiltersGroups(responses[0].items);
@@ -168,7 +168,7 @@ export class EntriesAdditionalFiltersStore {
         return result;
     }
 
-    private _buildDefaultFiltersGroup(responses : KalturaMultiResponse) : FilterGroup{
+    private _buildDefaultFiltersGroup(responses : KalturaMultiResponse, flavours: KalturaFlavorParams[]) : FilterGroup{
         const result = {groupName : '', filtersTypes : [], filtersByType : {}};
 
         // build constant filters
@@ -190,20 +190,20 @@ export class EntriesAdditionalFiltersStore {
             });
         }
 
-        // build flavors filters
-        if (responses[1].result.objects.length > 0) {
+        //build flavors filters
+        if (flavours.length > 0) {
             result.filtersTypes.push(new FilterGroupType('flavors',"Flavors"));
             const items = result.filtersByType['flavors'] = [];
-            responses[1].result.objects.forEach((flavor: KalturaFlavorParams) => {
+	        flavours.forEach((flavor: KalturaFlavorParams) => {
                 items.push({id: flavor.id, name: flavor.name});
             });
         }
 
         // build access control profile filters
-        if (responses[2].result.objects.length > 0) {
+        if (responses[1].result.objects.length > 0) {
             result.filtersTypes.push(new FilterGroupType('accessControlProfiles','Access Control Profiles'));
             const items = result.filtersByType['accessControlProfiles'] = [];
-            responses[2].result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
+            responses[1].result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
                 items.push({
                     id: accessControlProfile.id,
                     name: accessControlProfile.name
@@ -234,7 +234,6 @@ export class EntriesAdditionalFiltersStore {
 
             const request = new KalturaMultiRequest(
                 new DistributionProfileListAction({pager: distributionProfilePager}),
-                new FlavorParamsListAction({pager: distributionProfilePager, responseProfile}),
                 new AccessControlListAction({
                     pager: accessControlPager,
                     filter: accessControlFilter,

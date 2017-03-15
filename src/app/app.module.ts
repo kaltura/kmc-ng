@@ -31,9 +31,9 @@ import { KalturaHttpConfigurationAdapter } from "./services/kaltura-http-configu
 import { ButtonModule, InputTextModule, TieredMenuModule } from 'primeng/primeng';
 
 import { KMCContentUIModule } from 'kmc-content-ui/kmc-content-ui.module';
-import { MetadataProfileStore, PartnerProfileStore } from '@kaltura-ng2/kaltura-common';
+import { MetadataProfileStore, PartnerProfileStore, AccessControlProfileStore, FlavoursStore } from '@kaltura-ng2/kaltura-common';
 
-const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore];
+const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessControlProfileStore, FlavoursStore];
 @NgModule({
   imports: <any>[
     routing,
