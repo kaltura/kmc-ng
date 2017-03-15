@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppLocalization } from "@kaltura-ng2/kaltura-common";
 import { SectionsList } from './sections-list';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient, KalturaMediaType } from '@kaltura-ng2/kaltura-api';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { EntrySection } from '../../entry-store/entry-section-handler';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
@@ -39,7 +39,7 @@ export class EntrySectionsListHandler extends EntrySection
     }
 
     protected _onDataLoaded(data : KalturaMediaEntry) : void {
-        this._reloadSections(data.id);
+        this._reloadSections(data);
     }
 
     protected _initialize() : void {
@@ -80,7 +80,7 @@ export class EntrySectionsListHandler extends EntrySection
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected reset()
+    protected _reset()
     {
 
     }
@@ -104,24 +104,50 @@ export class EntrySectionsListHandler extends EntrySection
 
     }
 
-    private _reloadSections(entryId) : void
+    private _reloadSections(entry : KalturaMediaEntry) : void
     {
         const sections = [];
 
-        if (entryId) {
+        if (entry) {
             SectionsList.forEach((section: any) => {
-                sections.push(
-                    {
-                        label: this._appLocalization.get(section.label),
-                        active: section.sectionType === this._activeSectionType,
-                        hasErrors: false,
-                        sectionType: section.sectionType
-                    }
-                );
+
+                if (this._isSectionEnabled(section, entry)) {
+                    sections.push(
+                        {
+                            label: this._appLocalization.get(section.label),
+                            active: section.sectionType === this._activeSectionType,
+                            hasErrors: false,
+                            sectionType: section.sectionType
+                        }
+                    );
+                }
             });
         }
 
         this._sections.next(sections);
+    }
+
+    private _isSectionEnabled(section : SectionData, entry : KalturaMediaEntry) : boolean {
+        const mediaType = this.data.mediaType;
+        switch (section.sectionType) {
+            case EntrySectionTypes.Thumbnails:
+                return mediaType !== KalturaMediaType.Image;
+            case EntrySectionTypes.Flavours:
+                return mediaType !== KalturaMediaType.Image && !this._isLive(entry);
+            case EntrySectionTypes.Captions:
+                return mediaType !== KalturaMediaType.Image && !this._isLive(entry);
+            case EntrySectionTypes.Live:
+                return this._isLive(entry);
+            case EntrySectionTypes.Clips:
+                return true;
+            default:
+                return true;
+        }
+    }
+
+    private _isLive( entry : KalturaMediaEntry): boolean {
+        const mediaType = entry.mediaType;
+        return mediaType === KalturaMediaType.LiveStreamFlash || mediaType === KalturaMediaType.LiveStreamWindowsMedia || mediaType === KalturaMediaType.LiveStreamRealMedia || mediaType === KalturaMediaType.LiveStreamQuicktime;
     }
 
     protected _activate(firstLoad : boolean) {

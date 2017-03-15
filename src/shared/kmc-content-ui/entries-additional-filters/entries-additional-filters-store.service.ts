@@ -8,7 +8,7 @@ import 'rxjs/add/observable/forkJoin';
 
 
 
-import { KalturaServerClient,  KalturaMultiRequest, KalturaMultiRespons } from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient,  KalturaMultiRequest, KalturaMultiResponse } from '@kaltura-ng2/kaltura-api';
 import { AccessControlListAction } from '@kaltura-ng2/kaltura-api/services/access-control';
 import { DistributionProfileListAction } from '@kaltura-ng2/kaltura-api/services/distribution-profile';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataFieldTypes, FlavoursStore } from '@kaltura-ng2/kaltura-common';

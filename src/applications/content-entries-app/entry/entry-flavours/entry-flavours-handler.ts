@@ -21,7 +21,7 @@ export class EntryFlavoursHandler extends EntrySection
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected reset()
+    protected _reset()
     {
     }
 

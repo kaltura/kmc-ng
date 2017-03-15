@@ -1,5 +1,5 @@
 <kLoader [loading]="(_handler._accessControlProfiles$ | async)?.loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
-	<div class="kAccessControl">
+	<div class="kAccessControl" *ngIf="_handler._selectedProfile">
 		<p class="kTitle">{{'applications.content.entryDetails.accessControl.accessControl' | translate}}</p>
 		<div class="kAccessControlDetails">
 			<div class="kRow">
@@ -8,11 +8,11 @@
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.name' | translate}}</span>
-				<span>{{_handler._selectedProfile?.name}}</span>
+				<span>{{_handler._selectedProfile.name}}</span>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.accessControl' | translate}}</span>
-				<span>{{_handler._selectedProfile?.description}}</span>
+				<span>{{_handler._selectedProfile.description}}</span>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.domains' | translate}}</span>

@@ -80,8 +80,8 @@ export class EntryMetadataHandler extends EntrySection
 
     protected _activate(firstLoad : boolean) : void {
 
-        this._resetEntryCategories(this.data);
-        this._resetForm(this.data);
+        this._updateEntryCategories(this.data);
+        this._updateForm(this.data);
 
         if (firstLoad)
         {
@@ -90,7 +90,7 @@ export class EntryMetadataHandler extends EntrySection
         }
     }
 
-    private _resetEntryCategories(entry : KalturaMediaEntry) : void {
+    private _updateEntryCategories(entry : KalturaMediaEntry) : void {
         // update entry categories
         this._entryCategories.next({loading: true, items: []});
         this._categoriesControl.disable();
@@ -156,7 +156,7 @@ export class EntryMetadataHandler extends EntrySection
             );
     }
 
-    private _resetForm(entry : KalturaMediaEntry) : void {
+    private _updateForm(entry : KalturaMediaEntry) : void {
         this.metadataForm.reset(
             {
                 name: entry.name,
@@ -243,7 +243,7 @@ export class EntryMetadataHandler extends EntrySection
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected reset()
+    protected _reset()
     {
         this._entryCategories.next({ items : [], loading : false});
         this._categoriesControl.disable();

@@ -166,7 +166,7 @@ export class EntrySchedulingHandler extends EntrySection
     /**
      * Do some cleanups if needed once the section is removed
      */
-	protected reset()
+	protected _reset()
 	{
 		this.setValidators(false);
 		this.schedulingForm.updateValueAndValidity();

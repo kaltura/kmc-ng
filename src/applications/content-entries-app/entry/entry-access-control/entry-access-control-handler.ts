@@ -1,22 +1,21 @@
 import { Injectable } from '@angular/core';
-import { EntrySectionHandler, OnSectionLoadedArgs } from '../../entry-store/entry-section-handler';
 import { Observable } from 'rxjs/Observable';
-import { ISubscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SelectItem } from 'primeng/primeng';
-
-import { EntryStore } from '../../entry-store/entry-store.service';
+import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { KalturaServerClient, KalturaUtils } from '@kaltura-ng2/kaltura-api';
+import { KalturaUtils } from '@kaltura-ng2/kaltura-api';
 import { KalturaAccessControl, KalturaSiteRestriction, KalturaSiteRestrictionType, KalturaCountryRestriction, KalturaCountryRestrictionType, KalturaIpAddressRestriction,
 	KalturaIpAddressRestrictionType, KalturaLimitFlavorsRestriction, KalturaLimitFlavorsRestrictionType, KalturaSessionRestriction, KalturaPreviewRestriction, KalturaFlavorParams } from '@kaltura-ng2/kaltura-api/types'
 import { AccessControlProfileStore, FlavoursStore, AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import 'rxjs/add/observable/forkJoin';
 import * as R from 'ramda';
+import { EntrySection } from '../../entry-store/entry-section-handler';
+import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
 @Injectable()
-export class EntryAccessControlHandler extends EntrySectionHandler
+export class EntryAccessControlHandler extends EntrySection
 {
 
 	private _accessControlProfiles : BehaviorSubject<{ items : SelectItem[], loading : boolean, error? : any}> = new BehaviorSubject<{ items : SelectItem[], loading : boolean, error? : any}>(
@@ -34,39 +33,39 @@ export class EntryAccessControlHandler extends EntrySectionHandler
 
 	private _flavourParams: KalturaFlavorParams[] = [];
 
-	private _eventSubscription : ISubscription;
-
-    constructor(store : EntryStore, kalturaServerClient: KalturaServerClient, private _accessControlProfileStore: AccessControlProfileStore,
-                private _appLocalization: AppLocalization, private _flavoursStore: FlavoursStore)
+    constructor(manager : EntrySectionsManager,
+				private _accessControlProfileStore: AccessControlProfileStore,
+                private _appLocalization: AppLocalization,
+				private _flavoursStore: FlavoursStore)
     {
-        super(store,kalturaServerClient);
-
-        this._eventSubscription = store.events$.subscribe(
-            event =>
-            {
-
-            }
-        );
+        super(manager);
     }
+
+	/**
+	 * Do some cleanups if needed once the section is removed
+	 */
+	protected _reset() {
+		this._selectedProfile = null;
+		this._domainsRestriction = null;
+		this._countriesRestriction = null;
+		this._ipRestriction = null;
+		this._flavourRestriction = null;
+		this._advancedRestriction = null;
+	}
 
     public get sectionType() : EntrySectionTypes
     {
         return EntrySectionTypes.AccessControl;
     }
 
-    /**
-     * Do some cleanups if needed once the section is removed
-     */
-    protected _onSectionReset()
-    {
-        this._eventSubscription.unsubscribe();
-    }
-
-    protected _onSectionLoaded(data : OnSectionLoadedArgs) {
-	    if (data.firstLoad)
+    protected _activate(firstLoad : boolean) {
+	    if (firstLoad)
 	    {
 		    this._fetchAccessControlProfiles();
-	    }
+	    }else
+		{
+			this._setRestrictions();
+		}
     }
 
 	private _fetchAccessControlProfiles() : void{
@@ -94,11 +93,11 @@ export class EntryAccessControlHandler extends EntrySectionHandler
 							profilesDataProvider.push({"label": profile.name, "value": profile});
 						});
 						// search for the current entry access profile and select it in the drop down if found
-						const entryACProfileIndex = R.findIndex(R.propEq('id', this.entry.accessControlId))(ACProfiles);
+						let entryACProfileIndex = R.findIndex(R.propEq('id', this.data.accessControlId))(ACProfiles);
 						entryACProfileIndex = entryACProfileIndex === -1 ? 0 : entryACProfileIndex;
 						this._selectedProfile = profilesDataProvider[entryACProfileIndex].value;
 						this._flavourParams = response[1].items;
-						this.setRestrictions();
+						this._setRestrictions();
 						this._accessControlProfiles.next({items : profilesDataProvider, loading : false});
 					}
 
@@ -110,7 +109,7 @@ export class EntryAccessControlHandler extends EntrySectionHandler
 			);
 	}
 
-	private setRestrictions(){
+	private _setRestrictions(){
 
 		this._domainsRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.anyDomain');
 		this._countriesRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.anyCountry');
@@ -133,10 +132,10 @@ export class EntryAccessControlHandler extends EntrySectionHandler
 				// countries restrictions
 				if (restriction instanceof KalturaCountryRestriction){
 					if (restriction.countryRestrictionType === KalturaCountryRestrictionType.AllowCountryList) {
-						this._countriesRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.allowCountries').replace("%1", this.getCountriesByCode(restriction.countryList));
+						this._countriesRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.allowCountries').replace("%1", this._getCountriesByCode(restriction.countryList));
 					}
 					if (restriction.countryRestrictionType === KalturaCountryRestrictionType.RestrictCountryList) {
-						this._countriesRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.blockCountries').replace("%1", this.getCountriesByCode(restriction.countryList));
+						this._countriesRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.blockCountries').replace("%1", this._getCountriesByCode(restriction.countryList));
 					}
 				}
 				// IP restrictions
@@ -178,7 +177,7 @@ export class EntryAccessControlHandler extends EntrySectionHandler
 		}
 	}
 
-	private getCountriesByCode(codesList: string): string{
+	private _getCountriesByCode(codesList: string): string{
 		let countries = [];
 		const codes = codesList.split(",");
 		codes.forEach(code => {
@@ -191,6 +190,6 @@ export class EntryAccessControlHandler extends EntrySectionHandler
 	}
 
 	public _onProfileChange(event){
-		this.setRestrictions();
+		this._setRestrictions();
 	}
 }

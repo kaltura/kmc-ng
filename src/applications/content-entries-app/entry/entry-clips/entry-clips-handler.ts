@@ -60,7 +60,7 @@ export class EntryClipsHandler extends EntrySection
     /**
      * Do some cleanups if needed once the section is removed
      */
-     protected reset() : void{
+     protected _reset() : void{
         this.sortBy = 'createdAt';
         this.sortAsc = false;
         this.pageIndex = 0;
