@@ -14,6 +14,8 @@ import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataFieldTypes } from '@kaltura-ng2/kaltura-common';
 import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
+import { KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
+
 
 export interface EntryCategories
 { items : CategoryData[],
@@ -167,6 +169,11 @@ export class EntryMetadataHandler extends EntrySection
                 referenceId: entry.referenceId || null
             }
         );
+    }
+
+    protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
+    {
+
     }
 
     public searchTags(text : string)

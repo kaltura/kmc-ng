@@ -115,8 +115,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 							this._loading = false;
 							this._loadingError = { message : status.error.message, buttons : { returnToEntries : 'Back To Entries', retry : 'Retry'}};
 							break;
-						case ActionTypes.EntrySaved:
-							break;
 						case ActionTypes.EntrySaving:
 							break;
 						case ActionTypes.EntrySavingFailed:
