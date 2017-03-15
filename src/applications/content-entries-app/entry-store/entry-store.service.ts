@@ -9,8 +9,8 @@ import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
 import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
-import { KalturaServerClient, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
-import { BaseEntryGetAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
+import { KalturaServerClient, KalturaAPIException, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
+import { BaseEntryGetAction, BaseEntryUpdateAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
 import { EntrySectionTypes } from './entry-sections-types';
 import { EntriesStore } from '../entries-store/entries-store.service';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
@@ -22,7 +22,6 @@ export enum ActionTypes
 	EntryLoaded,
 	EntryLoadingFailed,
 	EntrySaving,
-	EntrySaved,
 	EntrySavingFailed,
 	NavigateOut
 }
@@ -56,7 +55,7 @@ export class EntryStore implements  OnDestroy {
 		return this._entry.getValue();
 	}
 
-    constructor(private kalturaServerClient: KalturaServerClient,
+    constructor(private _kalturaServerClient: KalturaServerClient,
 				private _router: Router,
 				private _entriesStore : EntriesStore,
 				@Host() private _sectionsManager : EntrySectionsManager,
@@ -119,18 +118,39 @@ export class EntryStore implements  OnDestroy {
 
 		this._status.next({ action: ActionTypes.EntrySaving});
 
-		this._sectionsManager.canSaveData()
-            .monitor('saving entry')
+		const entry = new KalturaMediaEntry();
+		const request = new KalturaMultiRequest(
+			new BaseEntryUpdateAction({
+				entryId : this.entryId,
+				baseEntry : entry
+			})
+		);
+
+		this._sectionsManager.onDataSaving(entry, request)
+            .monitor('preparing entry')
             .flatMap(
 				(response) => {
-					// save entry
-					return Observable.of(response)
+					if (response.ready)
+					{
+						return this._kalturaServerClient.multiRequest(request)
+                            .monitor('saving entry')
+							.map(
+								response =>
+								{
+									return !(response instanceof KalturaAPIException);
+								}
+							)
+					}
+					else
+					{
+						return Observable.of(false);
+					}
 				}
 			)
             .subscribe(
 				response => {
 					if (response) {
-						this._status.next({ action: ActionTypes.EntrySaved});
+						this._loadEntry(this.entryId);
 					} else {
 						this._status.next({ action: ActionTypes.EntrySavingFailed});
 					}
@@ -165,9 +185,13 @@ export class EntryStore implements  OnDestroy {
 				response => {
 					if (response instanceof KalturaMediaEntry) {
 
-						this._status.next({ action : ActionTypes.EntryLoaded });
-						this._sectionsManager.onDataLoaded(response);
 						this._entry.next(response);
+						this._entryId = response.id;
+
+						this._sectionsManager.onDataLoaded(response);
+
+						this._status.next({ action : ActionTypes.EntryLoaded });
+
 					} else {
 						this._status.next({
 							action: ActionTypes.EntryLoadingFailed,
@@ -215,7 +239,7 @@ export class EntryStore implements  OnDestroy {
 							)
 					);
 
-					const requestSubscription = this.kalturaServerClient.multiRequest(request).subscribe(() =>
+					const requestSubscription = this._kalturaServerClient.multiRequest(request).subscribe(() =>
 					{
 						// should not do anything here
 					});
