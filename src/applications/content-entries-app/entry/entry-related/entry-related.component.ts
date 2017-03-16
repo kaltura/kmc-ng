@@ -1,32 +1,58 @@
-import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { EntryRelatedHandler } from './entry-related-handler';
+import { KalturaAttachmentType, KalturaAttachmentAsset, KalturaEntryStatus } from '@kaltura-ng2/kaltura-api/types'
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { SelectItem, Menu, MenuItem } from 'primeng/primeng';
 
 @Component({
     selector: 'kEntryRelated',
     templateUrl: './entry-related.component.html',
     styleUrls: ['./entry-related.component.scss']
 })
-export class EntryRelated implements AfterViewInit, OnInit, OnDestroy {
+export class EntryRelated implements OnInit{
 
     public _loading = false;
     public _loadingError = null;
 
-    constructor(private _appLocalization: AppLocalization) {
+	@ViewChild('actionsmenu') private actionsMenu: Menu;
+	private _currentFile: KalturaAttachmentAsset;
+
+	public _fileTypes: SelectItem[] = [
+		{"label": this._appLocalization.get('applications.content.entryDetails.related.select'), "value": undefined},
+		{"label": this._appLocalization.get('applications.content.entryDetails.related.document'), "value": KalturaAttachmentType.Document},
+		{"label": this._appLocalization.get('applications.content.entryDetails.related.media'), "value": KalturaAttachmentType.Media},
+		{"label": this._appLocalization.get('applications.content.entryDetails.related.text'), "value": KalturaAttachmentType.Text},
+	];
+
+	public _actions: MenuItem[] = [];
+
+    constructor(public _handler : EntryRelatedHandler, private _appLocalization: AppLocalization) {
     }
 
+	ngOnInit() {
+		this._actions = [
+			{label: this._appLocalization.get('applications.content.entryDetails.related.edit'), command: (event) => {this.actionSelected("edit");}},
+			{label: this._appLocalization.get('applications.content.entryDetails.related.download'), command: (event) => {this.actionSelected("download");}},
+			{label: this._appLocalization.get('applications.content.entryDetails.related.delete'), command: (event) => {this.actionSelected("delete");}},
+			{label: this._appLocalization.get('applications.content.entryDetails.related.preview'), command: (event) => {this.actionSelected("preview");}}
+		];
+	}
 
-    ngOnInit() {
+	openActionsMenu(event: any, file: KalturaAttachmentAsset){
+		if (this.actionsMenu){
+			// save the selected file for usage in the actions menu
+			this._currentFile = file;
+			//disable Edit action for files that are not in "ready" state
+			if (file.status.toString() !== KalturaEntryStatus.Ready.toString()){
+				this._actions[0].disabled = true;
+			}
+			this.actionsMenu.toggle(event);
+		}
+	}
 
-    }
-
-    ngOnDestroy() {
-    }
-
-
-    ngAfterViewInit() {
-
-    }
-
+	private actionSelected(action: string){
+		alert("action: "+action+", file: "+this._currentFile.filename);
+	}
 
     _onLoadingAction(actionKey: string) {
         if (actionKey === 'retry') {

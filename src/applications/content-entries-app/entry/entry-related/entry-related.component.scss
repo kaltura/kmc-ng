@@ -14,4 +14,28 @@
 	.kTable{
 		margin-top: 24px;
 	}
+	.kRelatedTableActions {
+		width: 100%;
+		text-align: center;
+		button {
+			color: grey !important;
+			background-color: rgba(0, 0, 0, 0) !important;
+			border: none !important;
+			font-size: 16px !important;
+			outline: 0;
+		}
+	}
+}
+:host /deep/ .ui-dropdown-trigger .fa.fa-caret-down{
+	margin-top: 2px;
+	margin-left: 1px;
+	position: absolute;
+	color: $kGrayscale1;
+}
+:host /deep/ .ui-dropdown.ui-widget{
+	width: 120px;
+}
+
+:host /deep/ .ui-dropdown-label.ui-inputtext{
+	background-color: #ffffff;
 }

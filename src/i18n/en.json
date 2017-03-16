@@ -277,7 +277,15 @@
 					"name": "File name",
 					"type": "File Type",
 					"size": "File size",
-					"assetId": "Asset ID"
+					"assetId": "Asset ID",
+					"document": "Document",
+					"media": "Media",
+					"text": "Text",
+					"select": "Select Type",
+					"edit": "Edit",
+					"download": "Download",
+					"delete": "Delete",
+					"preview": "Preview"
 				},
 				"clips":{
 					"clips": "Clips",
