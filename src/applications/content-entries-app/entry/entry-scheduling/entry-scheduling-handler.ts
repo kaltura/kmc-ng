@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { KalturaUtils, KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { KalturaUtils, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
+import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
@@ -38,9 +39,8 @@ export class EntrySchedulingHandler extends EntrySection
 	public schedulingForm: FormGroup;
 	public _timeZone = "";
 
-    constructor(manager : EntrySectionsManager, 
-				kalturaServerClient: KalturaServerClient, 
-				private _appLocalization: AppLocalization, 
+    constructor(manager : EntrySectionsManager,
+				private _appLocalization: AppLocalization,
 				private _fb: FormBuilder)
     {
         super(manager);
@@ -53,6 +53,27 @@ export class EntrySchedulingHandler extends EntrySection
 			this._resetForm();
 		}
 		this.setValidators(false);
+	}
+
+	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
+	{
+		const startDate = this.schedulingForm.get('startDate').value;
+		const endDate = this.schedulingForm.get('endDate').value;
+		const scheduling = this.schedulingForm.get('scheduling').value;
+		const enableEndDate = this.schedulingForm.get('enableEndDate').value;
+
+		if (scheduling === "scheduled"){
+			if (startDate) {
+				data.startDate = KalturaUtils.toServerDate(startDate);
+			}
+			if (enableEndDate && endDate){
+				data.endDate = KalturaUtils.toServerDate(endDate);
+			}else{
+				// TODO [KMC] - delete endDate
+			}
+		}else{
+			// TODO [KMC] - delete existing startDate and endDate
+		}
 	}
 
 	private _resetForm(){
@@ -171,5 +192,4 @@ export class EntrySchedulingHandler extends EntrySection
 		this.setValidators(false);
 		this.schedulingForm.updateValueAndValidity();
 	}
-
 }

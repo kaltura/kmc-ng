@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SelectItem } from 'primeng/primeng';
-import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
+
+import { KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { KalturaAccessControl, KalturaSiteRestriction, KalturaSiteRestrictionType, KalturaCountryRestriction, KalturaCountryRestrictionType, KalturaIpAddressRestriction,
+import { KalturaMediaEntry, KalturaAccessControl, KalturaSiteRestriction, KalturaSiteRestrictionType, KalturaCountryRestriction, KalturaCountryRestrictionType, KalturaIpAddressRestriction,
 	KalturaIpAddressRestrictionType, KalturaLimitFlavorsRestriction, KalturaLimitFlavorsRestrictionType, KalturaSessionRestriction, KalturaPreviewRestriction, KalturaFlavorParams } from '@kaltura-ng2/kaltura-api/types'
 import { AccessControlProfileStore, FlavoursStore, AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
 
@@ -68,6 +69,14 @@ export class EntryAccessControlHandler extends EntrySection
 			this._setProfile();
 		}
     }
+
+	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
+	{
+		if (this.selectedProfile){
+			data.accessControlId = this.selectedProfile.id;
+		}
+
+	}
 
 	private _fetchAccessControlProfiles() : void{
 		this._accessControlProfiles.next({items : [], loading : true});
