@@ -285,7 +285,11 @@
 					"edit": "Edit",
 					"download": "Download",
 					"delete": "Delete",
-					"preview": "Preview"
+					"preview": "Preview",
+					"editTitle": "Edit File Details",
+					"title": "Title",
+					"description": "Description",
+					"done": "Done"
 				},
 				"clips":{
 					"clips": "Clips",

@@ -51,6 +51,10 @@ export class EntryRelatedHandler extends EntrySection
 		this._fetchRelatedFiles();
 	}
 
+	logItems(){
+		console.log(this._relatedFiles.getValue().items);
+	}
+
 	private _fetchRelatedFiles(){
 		this._relatedFiles.next({items : [], loading : true});
 

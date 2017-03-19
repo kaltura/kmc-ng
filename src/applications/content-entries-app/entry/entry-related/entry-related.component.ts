@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { EntryRelatedHandler } from './entry-related-handler';
-import { KalturaAttachmentType, KalturaAttachmentAsset, KalturaEntryStatus } from '@kaltura-ng2/kaltura-api/types'
+import { KalturaAttachmentType, KalturaAttachmentAsset, KalturaEntryStatus } from '@kaltura-ng2/kaltura-api/types';
+import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { SelectItem, Menu, MenuItem } from 'primeng/primeng';
 
@@ -15,10 +16,10 @@ export class EntryRelated implements OnInit{
     public _loadingError = null;
 
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
-	private _currentFile: KalturaAttachmentAsset;
+	@ViewChild('editPopup') public editPopup: PopupWidgetComponent;
+	public _currentFile: KalturaAttachmentAsset;
 
 	public _fileTypes: SelectItem[] = [
-		{"label": this._appLocalization.get('applications.content.entryDetails.related.select'), "value": undefined},
 		{"label": this._appLocalization.get('applications.content.entryDetails.related.document'), "value": KalturaAttachmentType.Document},
 		{"label": this._appLocalization.get('applications.content.entryDetails.related.media'), "value": KalturaAttachmentType.Media},
 		{"label": this._appLocalization.get('applications.content.entryDetails.related.text'), "value": KalturaAttachmentType.Text},
@@ -51,7 +52,12 @@ export class EntryRelated implements OnInit{
 	}
 
 	private actionSelected(action: string){
-		alert("action: "+action+", file: "+this._currentFile.filename);
+		switch (action){
+			case "edit":
+				this.editPopup.open();
+				break;
+		}
+		//alert("action: "+action+", file: "+this._currentFile.filename);
 	}
 
     _onLoadingAction(actionKey: string) {

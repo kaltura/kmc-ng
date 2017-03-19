@@ -1,0 +1,18 @@
+<div class="kEditWin">
+	<form [formGroup]="relatedEditForm" novalidate>
+		<div class="kEditTitle">{{'applications.content.entryDetails.related.editTitle' | translate}}</div>
+		<div class="kDivider"></div>
+		<div class="kRow">
+			<span class="kLabel">{{'applications.content.entryDetails.related.title' | translate}}</span>
+			<input formControlName="title" type="text" pInputText/>
+		</div>
+		<div class="kRow">
+			<span class="kLabel">{{'applications.content.entryDetails.related.description' | translate}}</span>
+			<textarea formControlName="description" class="threeRows" pInputTextarea></textarea>
+		</div>
+		<div class="kDivider"></div>
+		<div class="kRow kCenter">
+			<button type="button" class="kButtonBranded kDoneBtn" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.related.done' | translate}}"></button>
+		</div>
+	</form>
+</div>

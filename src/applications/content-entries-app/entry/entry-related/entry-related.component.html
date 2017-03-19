@@ -1,5 +1,5 @@
 <kLoader [loading]="(_handler._relatedFiles$ | async)?.loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
-	<div class="kRelated">
+	<div class="kRelated" #related>
 		<p class="kTitle">{{'applications.content.entryDetails.related.related' | translate}}</p>
 		<button type="button" class="kButtonDefault" pButton label="{{'applications.content.entryDetails.related.add' | translate}}"></button>
 		<div class="kTable">
@@ -8,7 +8,7 @@
 				</p-column>
 				<p-column header="{{'applications.content.entryDetails.related.type' | translate}}" [style]="{'width':'140px'}">
 					<template let-col let-file="rowData" pTemplate="body">
-						<p-dropdown [options]="_fileTypes" [appendTo]="'body'" [autoWidth]="false" [(ngModel)]="file.format"></p-dropdown>
+						<p-dropdown [options]="_fileTypes" [appendTo]="related" [autoWidth]="false" [(ngModel)]="file.format" placeholder="{{'applications.content.entryDetails.related.select' | translate}}"></p-dropdown>
 					</template>
 				</p-column>
 				<p-column field="size" header="{{'applications.content.entryDetails.related.size' | translate}}">
@@ -27,6 +27,11 @@
 				</p-column>
 			</p-dataTable>
 			<p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'"></p-menu>
+			<button #btn (click)="_handler.logItems()">log items</button>
 		</div>
 	</div>
+	<kPopupWidget #editPopup [popupWidth]="380" [popupHeight]="324" [modal]="true">
+		<kEntryRelatedEdit [currentFile]="_currentFile" [parentPopupWidget]="editPopup"></kEntryRelatedEdit>
+	</kPopupWidget>
+
 </kLoader>

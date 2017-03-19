@@ -2,6 +2,7 @@
 
 .kRelated{
 	padding-left: 12px;
+	position: relative;
 	button{
 		font-weight: 400;
 		height: 32px;
@@ -26,6 +27,7 @@
 		}
 	}
 }
+
 :host /deep/ .ui-dropdown-trigger .fa.fa-caret-down{
 	margin-top: 2px;
 	margin-left: 1px;
