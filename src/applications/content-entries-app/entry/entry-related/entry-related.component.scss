@@ -3,6 +3,8 @@
 .kRelated{
 	padding-left: 12px;
 	position: relative;
+	height: 100%;
+	overflow-y: auto;
 	button{
 		font-weight: 400;
 		height: 32px;

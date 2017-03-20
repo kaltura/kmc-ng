@@ -39,7 +39,7 @@ export class EntryRelated implements OnInit{
 		];
 	}
 
-	openActionsMenu(event: any, file: KalturaAttachmentAsset){
+	openActionsMenu(event: any, file: KalturaAttachmentAsset): void{
 		if (this.actionsMenu){
 			// save the selected file for usage in the actions menu
 			this._currentFile = file;
@@ -51,16 +51,25 @@ export class EntryRelated implements OnInit{
 		}
 	}
 
-	private actionSelected(action: string){
+	private actionSelected(action: string): void{
 		switch (action){
 			case "edit":
 				this.editPopup.open();
+				break;
+			case "delete":
+				this._handler._deleteFile(this._currentFile.id);
+				break;
+			case "download":
+				this._handler._downloadFile(this._currentFile.id);
+				break;
+			case "download":
+				this._handler._previewFile(this._currentFile.id);
 				break;
 		}
 		//alert("action: "+action+", file: "+this._currentFile.filename);
 	}
 
-    _onLoadingAction(actionKey: string) {
+    _onLoadingAction(actionKey: string): void {
         if (actionKey === 'retry') {
 
         }

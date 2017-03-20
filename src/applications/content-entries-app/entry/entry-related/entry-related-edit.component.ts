@@ -50,7 +50,7 @@ export class EntryRelatedEdit implements  AfterViewInit, OnDestroy{
 		this._parentPopupStateChangeSubscribe.unsubscribe();
 	}
 
-	public _saveAndClose(){
+	public _saveAndClose(): void{
 		if (this.relatedEditForm.dirty){
 			this.currentFile.title = this.relatedEditForm.get("title").value;
 			this.currentFile.description = this.relatedEditForm.get("description").value;
@@ -60,14 +60,14 @@ export class EntryRelatedEdit implements  AfterViewInit, OnDestroy{
 	}
 
 
-	private _createForm(){
+	private _createForm(): void{
 		this.relatedEditForm = this._fb.group({
 			title: '',
 			description: ''
 		});
 	}
 
-	private _resetForm(){
+	private _resetForm(): void{
 		this.relatedEditForm.reset({
 			title: '',
 			description: ''
