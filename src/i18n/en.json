@@ -62,7 +62,8 @@
                 "status": "Status",
                 "previewAndEmbed": "Preview & Embed",
                 "delete": "Delete",
-                "view": "View Details"
+                "view": "View Details",
+				"noResults": "No Results"
             },
             "paginator":{
                 "showRows": "Show rows:"

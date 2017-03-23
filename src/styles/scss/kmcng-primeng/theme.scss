@@ -158,7 +158,9 @@ $invalidInputBorderColor: #cd0a0a;
 .ui-datatable .ui-datatable-scrollable-body{
     border-top: 1px solid #d9d9d9;
 }
-
+td.ui-datatable-emptymessage{
+	text-align: center;
+}
 /* buttons */
 .ui-button{
     font-weight: 700;

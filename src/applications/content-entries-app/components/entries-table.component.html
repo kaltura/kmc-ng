@@ -3,7 +3,7 @@
 		<p-dataTable #dataTable [value]="entries" [sortField]="filter.sortBy" [sortOrder]="-1"
 					 scrollable="true" scrollHeight="100%"
 					 (selectionChange)="onSelectionChange($event)" (onSort)="onSortChanged($event)"
-					 [(selection)]="tableSelectedEntries">
+					 [(selection)]="tableSelectedEntries" emptyMessage="{{'applications.content.table.noResults' | translate}}">
 			<p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
 			<p-column field="thumbnailUrl" header="{{'applications.content.table.thumbnail' | translate}}" [style]="{'width':'100px', 'text-align': 'center'}">
 				<template let-col let-entry="rowData" pTemplate="body">
