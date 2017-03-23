@@ -5,7 +5,7 @@
 					 (selectionChange)="onSelectionChange($event)" (onSort)="onSortChanged($event)"
 					 [(selection)]="tableSelectedEntries" emptyMessage="{{'applications.content.table.noResults' | translate}}">
 			<p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
-			<p-column field="thumbnailUrl" header="{{'applications.content.table.thumbnail' | translate}}" [style]="{'width':'100px', 'text-align': 'center'}">
+			<p-column field="thumbnailUrl" header="{{'applications.content.table.thumbnail' | translate}}" [style]="{'width':'100px'}">
 				<template let-col let-entry="rowData" pTemplate="body">
 					<div class="kThumbnailHolder"><span class="kHelper"></span><img src="{{entry[col.field]}}" [class.disable]="!allowDrilldown(entry.mediaType,entry.status)" (click)="onActionSelected('view',entry.id,entry.mediaType,entry.status)" onError="this.onerror=null;this.style.display='none'"></div>
 				</template>
