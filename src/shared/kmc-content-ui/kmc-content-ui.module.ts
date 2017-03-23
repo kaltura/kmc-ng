@@ -16,7 +16,7 @@ import { CategoriesFilterPrefsComponent } from './categories-filter-preferences/
 import { CategoriesStore } from './categories-store.service';
 import { KMCShellModule } from 'kmc-shell';
 
-import { EntryTypePipe, EntryStatusPipe, PlaylistTypePipe } from './pipes/index';
+import { EntryTypePipe, EntryStatusPipe, PlaylistTypePipe, MaxEntriesPipe } from './pipes/index';
 import {
     EntriesAdditionalFiltersComponent
 } from "./entries-additional-filters/entries-additional-filters.component";
@@ -47,7 +47,8 @@ import { EntriesAdditionalFiltersStore } from "./entries-additional-filters/entr
         EntriesAdditionalFiltersComponent,
         EntryStatusPipe,
         EntryTypePipe,
-        PlaylistTypePipe
+        PlaylistTypePipe,
+	    MaxEntriesPipe
     ],
     providers:    [
         EntriesAdditionalFiltersStore
@@ -58,7 +59,8 @@ import { EntriesAdditionalFiltersStore } from "./entries-additional-filters/entr
         EntriesAdditionalFiltersComponent,
         EntryStatusPipe,
         EntryTypePipe,
-        PlaylistTypePipe
+        PlaylistTypePipe,
+	    MaxEntriesPipe
     ]
 })
 export class KMCContentUIModule {
