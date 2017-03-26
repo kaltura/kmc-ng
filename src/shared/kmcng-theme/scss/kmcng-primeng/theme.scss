@@ -140,6 +140,7 @@ $invalidInputBorderColor: #cd0a0a;
 }
 .ui-datatable .ui-datatable-data tr.ui-state-highlight{
     background-color: #ffffff;
+    border: none;
     cursor: auto;
 }
 
@@ -157,7 +158,9 @@ $invalidInputBorderColor: #cd0a0a;
 .ui-datatable .ui-datatable-scrollable-body{
     border-top: 1px solid #d9d9d9;
 }
-
+td.ui-datatable-emptymessage{
+	text-align: center;
+}
 /* buttons */
 .ui-button{
     font-weight: 700;
@@ -260,7 +263,6 @@ $invalidInputBorderColor: #cd0a0a;
 .ui-paginator .ui-paginator-pages {
     padding-left: 0px;
     padding-right: 0px;
-	line-height: 18px;
 }
 
 .ui-paginator .ui-paginator-rpp-options {

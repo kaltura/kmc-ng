@@ -21,7 +21,10 @@
         },
         "languageMenu":{
             "selectLang": "Select Language"
-        }
+        },
+		"common":{
+			"n_a": "N/A"
+		}
     },
     "applications":{
 		"entries":{
@@ -68,7 +71,8 @@
                 "status": "Status",
                 "previewAndEmbed": "Preview & Embed",
                 "delete": "Delete",
-                "view": "View Details"
+                "view": "View Details",
+				"noResults": "No Results"
             },
             "paginator":{
                 "showRows": "Show rows:"
