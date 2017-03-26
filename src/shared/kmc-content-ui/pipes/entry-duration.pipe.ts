@@ -9,7 +9,7 @@ export class EntryDurationPipe implements PipeTransform {
 
 	transform(value: string, entry: KalturaMediaEntry = null): string {
 	let duration = value;
-	if (entry && entry.mediaType){
+	if (entry && entry instanceof KalturaMediaEntry && entry.mediaType){
   		const type = entry.mediaType.toString();
 		if (type === KalturaMediaType.LiveStreamFlash.toString() ||
 				type === KalturaMediaType.LiveStreamQuicktime.toString() ||
