@@ -48,7 +48,6 @@ import { MetadataProfileStore } from '@kaltura-ng2/kaltura-common';
         EntryTypePipe,
         PlaylistTypePipe,
 	    ModerationPipe,
-        PlaylistTypePipe,
 	    MaxEntriesPipe,
 	    EntryDurationPipe
     ],
@@ -64,7 +63,6 @@ import { MetadataProfileStore } from '@kaltura-ng2/kaltura-common';
         EntryTypePipe,
         PlaylistTypePipe,
 	    ModerationPipe,
-        PlaylistTypePipe,
 	    MaxEntriesPipe,
 	    EntryDurationPipe
     ]
