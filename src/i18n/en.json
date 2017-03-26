@@ -21,7 +21,10 @@
         },
         "languageMenu":{
             "selectLang": "Select Language"
-        }
+        },
+		"common":{
+			"n_a": "N/A"
+		}
     },
     "applications":{
         "content":{
