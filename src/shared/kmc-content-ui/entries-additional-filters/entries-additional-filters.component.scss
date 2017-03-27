@@ -1,17 +1,5 @@
 @import "../../../styles/scss/_variables";
 
-.kHeader{
-    padding-top: 8px;
-    margin-right: 2px;
-    .kTitle{
-        line-height: 36px;
-        background-color: $kGrayscale6;
-        border: 0px solid $kGrayscale6;
-        border-radius: 3px;
-        text-align: center;
-        color: $kGrayscale3;
-    }
-}
 .kFiltersGroupTitle{
     color: $kGrayscale3;
     line-height: 40px;
@@ -22,13 +10,12 @@
     margin-left: -20px;
     padding-left: 20px;
     margin-right: -20px;
-    margin-top: 18px;
     margin-bottom: 8px;
 }
 .kTreeContainer{
     overflow-y: auto;
     overflow-x: hidden;
-    height: 400px;
+    height: 440px;
     border-bottom: 1px solid $kGrayscale6;
     margin-left: -20px;
     padding-left: 20px;
