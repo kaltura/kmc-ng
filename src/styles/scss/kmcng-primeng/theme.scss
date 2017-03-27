@@ -58,8 +58,25 @@ $invalidInputBorderColor: #cd0a0a;
 /* input */
 .ui-inputtext, .ui-inputtext:enabled, .ui-inputtext:disabled{
     background-color: $kGrayscale6;
-    border: 1px solid $kGrayscale6;
-    color: $kGrayscale2;
+    border: 1px solid white;
+    color: $kGrayscale1;
+	&:focus{
+		background-color: white;
+		border: 1px solid $kGrayscale4;
+	}
+}
+
+.ui-inputtext::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+	color: $kGrayscale3;
+}
+.ui-inputtext::-moz-placeholder { /* Firefox 19+ */
+	color: $kGrayscale3;
+}
+.ui-inputtext:-ms-input-placeholder { /* IE 10+ */
+	color: $kGrayscale3;
+}
+.ui-inputtext:-moz-placeholder { /* Firefox 18- */
+	color: $kGrayscale3;
 }
 
 /* checkboxes */

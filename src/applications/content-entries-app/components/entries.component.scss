@@ -65,9 +65,12 @@
     }
     .kSearchInput {
         background: url(../styles/assets/magnifier.png) no-repeat 7px 9px;
-        background-color: $kGrayscale6;
+		background-color: $kGrayscale6;
         padding-left:30px;
         margin-right: 8px;
+		&:focus{
+			background-color: white;
+		}
     }
     .kBulkOperations{
         width: 400px;
