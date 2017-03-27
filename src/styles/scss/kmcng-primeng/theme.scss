@@ -105,6 +105,9 @@ $invalidInputBorderColor: #cd0a0a;
         border-top: 1px solid #ffffff;
     }
 }
+.noResults .ui-datatable tbody > tr.ui-widget-content {
+	border: 1px solid white;
+}
 .ui-widget-header.ui-datatable-scrollable-header{
     background: transparent;
     height: 40px;
@@ -160,6 +163,9 @@ $invalidInputBorderColor: #cd0a0a;
 }
 td.ui-datatable-emptymessage{
 	text-align: center;
+	line-height: 200px;
+	font-size: 28px;
+	color: $kGrayscale3;
 }
 /* buttons */
 .ui-button{
