@@ -320,9 +320,17 @@ td.ui-datatable-emptymessage{
 }
 
 /* Calendar */
+.ui-calendar.ui-calendar-w-btn{
+	border: 1px solid $kGrayscale4;
+}
 .ui-calendar{
     button.ui-state-default {
-        height: 26px;
+        height: 24px;
+		border: 0px solid white;
+		color: $kGrayscale4;
+		&:active{
+			box-shadow: none;
+		}
     }
     .ui-datepicker{
         padding: 0;
@@ -334,13 +342,23 @@ td.ui-datatable-emptymessage{
         background: #01ACCD;
     }
     .ui-inputtext {
-        width: 75px;
+        width: 100px;
+		float: right;
+		margin-left: 28px;
+		background-color: white;
+		border: 0px solid white;
+		outline: hidden;
     }
     button{
         @extend .ui-button.kButtonDefault;
     }
     .ui-datepicker-prev, .ui-datepicker-next{
         color: #ffffff !important;
+		&:hover{
+			background: #01ACCD !important;
+			background-color: #01ACCD !important;
+			border: 0px solid #01ACCD !important;
+		}
     }
     .ui-datepicker-prev-hover, .ui-datepicker-next-hover, thead{
         background: #01ACCD;
@@ -363,7 +381,19 @@ td.ui-datatable-emptymessage{
         font-size: 12px;
         font-weight: 400;
         color: #ffffff;
+		opacity: 0.7;
     }
+    .ui-datepicker td{
+        padding: 0px;
+		width: 36px;
+		height: 30px;
+		border: 1px solid #d9d9d9;
+		a{
+			border: 0px solid white;
+			text-align: center;
+		}
+    }
+
 }
 // tooltips
 .ui-tooltip .ui-tooltip-text {
