@@ -19,7 +19,7 @@ export class CategoriesFilter extends ValueFilter<number>{
 
     constructor(value : number, mode : CategoriesFilterModes, label : string, tooltip : string, public fullIdPath : number[])
     {
-        super(value, label, tooltip);
+        super(value, label, '');
         this._mode = mode;
     }
 }

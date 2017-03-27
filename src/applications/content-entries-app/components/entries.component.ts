@@ -54,7 +54,7 @@ export class EntriesComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (this._filter.freetextSearch)
         {
-            this._entriesStore.addFilters(new FreetextFilter(this._filter.freetextSearch));
+            this._entriesStore.addFilters(new FreetextFilter(this._filter.freetextSearch, this._filter.freetextSearch, this.appLocalization));
         }
     }
 

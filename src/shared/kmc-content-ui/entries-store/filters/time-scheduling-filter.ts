@@ -1,4 +1,5 @@
 import { KalturaUtils } from '@kaltura-ng2/kaltura-api';
+import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import { EntriesStore } from "../entries-store.service";
 import { ValueFilter } from '../value-filter';
@@ -17,9 +18,10 @@ export class TimeSchedulingFilter  extends ValueFilter<string>{
         return this._scheduledBefore;
     }
 
-    constructor(value : string, label : string, scheduledTo? : Date, scheduledFrom? : Date)
+    constructor(value : string, label : string, scheduledTo? : Date, scheduledFrom? : Date, appLocalization: AppLocalization)
     {
-        super(value, label);
+	    let tooltip =`${appLocalization.get('applications.content.filters.scheduling').replace("%1",label)}`;
+        super(value, label, tooltip);
         this._scheduledAfter = scheduledFrom;
         this._scheduledBefore = scheduledTo;
     }

@@ -7,7 +7,7 @@ export class ReplacementStatusesFilter  extends ValueFilter<string>{
 
     constructor(value : string, label : string)
     {
-        super(value, label);
+        super(value, label, '');
     }
 }
 
