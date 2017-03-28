@@ -439,6 +439,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         {
             tree.unselectAll();
         });
+	    this._clearCreatedComponents();
     }
 
     /**
