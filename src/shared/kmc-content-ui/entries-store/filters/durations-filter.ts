@@ -7,7 +7,7 @@ export class DurationsFilters  extends ValueFilter<string>{
 
     constructor(value : string, label : string)
     {
-        super(value, label);
+        super(value, label, {token: 'applications.content.filters.duration', args: {'0': label}});
     }
 }
 
