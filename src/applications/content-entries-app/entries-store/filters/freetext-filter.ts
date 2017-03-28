@@ -5,7 +5,7 @@ export class FreetextFilter  extends ValueFilter<string>{
 
     constructor(value : string, label : string = value)
     {
-        super(value, label);
+        super(value, label, {token: 'applications.content.filters.freeText'});
     }
 }
 

@@ -371,7 +371,7 @@ td.ui-datatable-emptymessage{
 		border: 0px solid white;
 		outline: hidden;
 		&:focus{
-			border: 0px solid $kGrayscale4;
+			border: 1px solid $kGrayscale4;
 		}
     }
 
