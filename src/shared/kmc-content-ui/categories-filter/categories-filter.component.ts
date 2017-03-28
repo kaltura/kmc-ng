@@ -76,7 +76,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         );
 
         const savedAutoSelectChildren: TreeSelectionModes = this.browserService.getFromLocalStorage("contentShared.categoriesTree.selectionMode");
-        this._selectionMode = savedAutoSelectChildren ? savedAutoSelectChildren : TreeSelectionModes.Self;
+        this._selectionMode = savedAutoSelectChildren ? savedAutoSelectChildren : TreeSelectionModes.SelfAndChildren;
 
         // TODO [kmcng] consider using constants for permissions flags
         this.inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;

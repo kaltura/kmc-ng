@@ -5,6 +5,7 @@
     background-color: white;
     overflow-y: hidden;
     position: absolute;
+	padding: 0px;
     img {
         max-height: 100%;
         max-width: 100%;
@@ -18,12 +19,10 @@
         white-space: nowrap;
         text-align: center;
         border-radius: 3px;
-        img{
-            cursor: pointer;
-            &.disable{
-                cursor: auto;
-            }
-        }
+		cursor: pointer;
+		&.disable{
+			cursor: auto;
+		}
     }
     .kTitle{
         color: $kGrayscale1;
