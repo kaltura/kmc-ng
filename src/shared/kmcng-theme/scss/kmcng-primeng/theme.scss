@@ -58,8 +58,25 @@ $invalidInputBorderColor: #cd0a0a;
 /* input */
 .ui-inputtext, .ui-inputtext:enabled, .ui-inputtext:disabled{
     background-color: $kGrayscale6;
-    border: 1px solid $kGrayscale6;
-    color: $kGrayscale2;
+    border: 1px solid white;
+    color: $kGrayscale1;
+	&:focus{
+		background-color: white;
+		border: 1px solid $kGrayscale4;
+	}
+}
+
+.ui-inputtext::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+	color: $kGrayscale3;
+}
+.ui-inputtext::-moz-placeholder { /* Firefox 19+ */
+	color: $kGrayscale3;
+}
+.ui-inputtext:-ms-input-placeholder { /* IE 10+ */
+	color: $kGrayscale3;
+}
+.ui-inputtext:-moz-placeholder { /* Firefox 18- */
+	color: $kGrayscale3;
 }
 
 /* checkboxes */
@@ -79,7 +96,9 @@ $invalidInputBorderColor: #cd0a0a;
         margin-top: 3px;
     }
 }
-
+.ui-chkbox-box:not(.ui-state-disabled):not(.ui-state-active):hover{
+	border: 1px solid $kGrayscale4;
+}
 /* radio buttons */
 .ui-radiobutton-box.ui-state-active{
     background-color: $kPrimary;
@@ -104,6 +123,9 @@ $invalidInputBorderColor: #cd0a0a;
     &:first-child{
         border-top: 1px solid #ffffff;
     }
+}
+.noResults .ui-datatable tbody > tr.ui-widget-content {
+	border: 1px solid white;
 }
 .ui-widget-header.ui-datatable-scrollable-header{
     background: transparent;
@@ -160,6 +182,9 @@ $invalidInputBorderColor: #cd0a0a;
 }
 td.ui-datatable-emptymessage{
 	text-align: center;
+	line-height: 200px;
+	font-size: 28px;
+	color: $kGrayscale3;
 }
 /* buttons */
 .ui-button{
@@ -317,9 +342,17 @@ td.ui-datatable-emptymessage{
 }
 
 /* Calendar */
+.ui-calendar.ui-calendar-w-btn{
+	border: 1px solid $kGrayscale4;
+}
 .ui-calendar{
     button.ui-state-default {
-        height: 26px;
+        height: 24px;
+		border: 0px solid white;
+		color: $kGrayscale4;
+		&:active{
+			box-shadow: none;
+		}
     }
     .ui-datepicker{
         padding: 0;
@@ -331,8 +364,17 @@ td.ui-datatable-emptymessage{
         background: #01ACCD;
     }
     .ui-inputtext {
-        width: 75px;
+        width: 100px;
+		float: right;
+		margin-left: 28px;
+		background-color: white;
+		border: 0px solid white;
+		outline: hidden;
+		&:focus{
+			border: 0px solid $kGrayscale4;
+		}
     }
+
     button{
         @extend .ui-button.kButtonDefault;
     }
@@ -340,9 +382,10 @@ td.ui-datatable-emptymessage{
         color: #ffffff !important;
 		&:hover{
 			background: #01ACCD !important;
+			background-color: #01ACCD !important;
+			border: 0px solid #01ACCD !important;
 		}
     }
-
     .ui-datepicker-prev-hover, .ui-datepicker-next-hover, thead{
         background: #01ACCD;
         border: 0px solid #01ACCD;
@@ -372,7 +415,19 @@ td.ui-datatable-emptymessage{
         font-size: 12px;
         font-weight: 400;
         color: #ffffff;
+		opacity: 0.7;
     }
+    .ui-datepicker td{
+        padding: 0px;
+		width: 36px;
+		height: 30px;
+		border: 1px solid #d9d9d9;
+		a{
+			border: 0px solid white;
+			text-align: center;
+		}
+    }
+
 }
 // tooltips
 .ui-tooltip .ui-tooltip-text {
@@ -397,9 +452,10 @@ td.ui-datatable-emptymessage{
 }
 
 // auto complete
-.ui-autocomplete-panel {
+.ui-autocomplete .ui-autocomplete-panel {
     .ui-autocomplete-list-item {
         min-height: 50px;
+		height: auto;
         border-left: none;
         border-right: none;
         border-bottom: 2px solid $kGrayscale5;
