@@ -415,7 +415,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                 this._suggestionsProvider.next({suggestions: suggestions, isLoading: false});
             },
             (err) => {
-                this._suggestionsProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
+                 this._suggestionsProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
             });
     }
 

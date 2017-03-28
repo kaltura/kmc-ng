@@ -2,12 +2,11 @@ import { Injectable } from '@angular/core';
 import { EntrySection } from '../../entry-store/entry-section-handler';
 import { KalturaLiveStreamEntry } from '@kaltura-ng2/kaltura-api/types';
 import { Observable } from 'rxjs/Observable';
-import { CategoryEntryListAction } from '@kaltura-ng2/kaltura-api/services/category-entry';
 import { KalturaCategoryEntryFilter,  KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { TagSearchAction } from '@kaltura-ng2/kaltura-api/services/tag'
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
-import { KalturaTagFilter, KalturaTaggedObjectType, KalturaFilterPager } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaTagFilter, KalturaTaggedObjectType, KalturaFilterPager,
+    TagSearchAction, CategoryEntryListAction } from '@kaltura-ng2/kaltura-api/types';
 import { CategoriesStore, CategoryData } from '../../../../shared/kmc-content-ui/categories-store.service';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';

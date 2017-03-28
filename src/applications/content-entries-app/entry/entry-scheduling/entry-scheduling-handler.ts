@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { KalturaUtils, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
+import { KalturaUtils } from '@kaltura-ng2/kaltura-api/utils/kaltura-utils';
+import { KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
 import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 

@@ -6,7 +6,7 @@ import 'rxjs/add/operator/multicast';
 
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 
-import { CategoryListAction } from '@kaltura-ng2/kaltura-api/services/category';
+import { CategoryListAction } from '@kaltura-ng2/kaltura-api/types';
 import { KalturaCategoryFilter,KalturaFilterPager,  KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaCategoryListResponse } from '@kaltura-ng2/kaltura-api/types'
 
 export interface CategoryData

@@ -10,7 +10,7 @@ import 'rxjs/add/operator/switchMap';
 
 import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { KalturaServerClient, KalturaAPIException, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
-import { BaseEntryGetAction, BaseEntryUpdateAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
+import { BaseEntryGetAction, BaseEntryUpdateAction } from '@kaltura-ng2/kaltura-api/types';
 import { EntrySectionTypes } from './entry-sections-types';
 import { EntriesStore } from '../entries-store/entries-store.service';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';

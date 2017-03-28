@@ -17,13 +17,12 @@ import {
     KalturaMediaEntry,
     KalturaMetadataSearchItem,
     KalturaResponseProfileType,
-    KalturaSearchOperator
+    KalturaSearchOperator,
+    KalturaSearchOperatorType,
+    BaseEntryListAction
 } from '@kaltura-ng2/kaltura-api/types'
 
-import { KalturaSearchOperatorType } from '@kaltura-ng2/kaltura-api/kaltura-enums'
-
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
-import { BaseEntryListAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
 
 import * as R from 'ramda';
 import { FilterItem } from "./filter-item";

@@ -6,11 +6,8 @@ import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/forkJoin';
 
-
-
 import { KalturaServerClient,  KalturaMultiRequest, KalturaMultiResponse } from '@kaltura-ng2/kaltura-api';
-import { AccessControlListAction } from '@kaltura-ng2/kaltura-api/services/access-control';
-import { DistributionProfileListAction } from '@kaltura-ng2/kaltura-api/services/distribution-profile';
+import { DistributionProfileListAction, AccessControlListAction } from '@kaltura-ng2/kaltura-api/types';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataFieldTypes, FlavoursStore } from '@kaltura-ng2/kaltura-common';
 
 import {

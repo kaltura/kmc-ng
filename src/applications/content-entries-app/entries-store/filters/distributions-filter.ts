@@ -3,7 +3,7 @@ import {
     KalturaContentDistributionSearchItem
 } from '@kaltura-ng2/kaltura-api/types'
 
-import { KalturaSearchOperatorType } from '@kaltura-ng2/kaltura-api/kaltura-enums'
+import { KalturaSearchOperatorType } from '@kaltura-ng2/kaltura-api/types'
 
 import { EntriesStore } from "../entries-store.service";
 import { ValueFilter } from '../value-filter';
