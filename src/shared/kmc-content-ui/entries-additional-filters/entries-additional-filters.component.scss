@@ -1,17 +1,5 @@
 @import "../../kmcng-theme/scss/_variables";
 
-.kHeader{
-    padding-top: 8px;
-    margin-right: 2px;
-    .kTitle{
-        line-height: 36px;
-        background-color: $kGrayscale6;
-        border: 0px solid $kGrayscale6;
-        border-radius: 3px;
-        text-align: center;
-        color: $kGrayscale3;
-    }
-}
 .kFiltersGroupTitle{
     color: $kGrayscale3;
     line-height: 40px;
@@ -22,13 +10,12 @@
     margin-left: -20px;
     padding-left: 20px;
     margin-right: -20px;
-    margin-top: 18px;
     margin-bottom: 8px;
 }
 .kTreeContainer{
     overflow-y: auto;
     overflow-x: hidden;
-    height: 400px;
+    height: 440px;
     border-bottom: 1px solid $kGrayscale6;
     margin-left: -20px;
     padding-left: 20px;
@@ -36,15 +23,15 @@
     width: 387px;
     position: relative;
 }
+.kDateRange{
+	display: flex;
+	align-items: center;
+}
 .kClearAll{
-    margin-left: 44px;
+    margin-left: 12px;
 }
 .kClose{
     float: right;
-}
-.kCalendarSeparator{
-    margin-left: 40px;
-    margin-right: 5px;
 }
 .kTreeNodeLabel{
     width:100%;
@@ -74,8 +61,15 @@ a.disabled{
 }
 /* prevent calendars from being cut by the popup widget borders */
 :host /deep/ .kPullLeft30 .ui-datepicker.ui-widget {
-    margin-left: -30px;
+	margin-left: -30px;
 }
-:host /deep/ .kPullLeft90 .ui-datepicker.ui-widget {
-    margin-left: -90px;
+
+:host /deep/ .kDateRange .kDateRangeFirst .ui-calendar.ui-calendar-w-btn {
+	border-bottom-left-radius: 3px;
+	border-top-left-radius: 3px;
+}
+:host /deep/ .kDateRange .kDateRangeLast .ui-calendar.ui-calendar-w-btn {
+	border-left: 0px solid $kGrayscale4;
+	border-bottom-right-radius: 3px;
+	border-top-right-radius: 3px;
 }

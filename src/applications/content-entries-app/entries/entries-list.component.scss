@@ -57,6 +57,7 @@
     .kEntriesTable {
         border: none;
         position: relative;
+		background-color: white;
     }
     .kSelectedEntriesLabel{
         font-weight: bold;
@@ -65,9 +66,12 @@
     }
     .kSearchInput {
         background: url(../styles/assets/magnifier.png) no-repeat 7px 9px;
-        background-color: $kGrayscale6;
+		background-color: $kGrayscale6;
         padding-left:30px;
         margin-right: 8px;
+		&:focus{
+			background-color: white;
+		}
     }
     .kBulkOperations{
         width: 400px;
@@ -162,6 +166,9 @@
 	}
 }
 
+:host /deep/ span.ui-button-icon-left.fa.kIcontrash{
+    margin-left: -.5em;
+}
 :host /deep/ .ui-tree{
     width: 380px;
 }
