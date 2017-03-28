@@ -367,6 +367,9 @@ td.ui-datatable-emptymessage{
 		background-color: white;
 		border: 0px solid white;
 		outline: hidden;
+		&:focus{
+			border: 1px solid $kGrayscale4;
+		}
     }
     button{
         @extend .ui-button.kButtonDefault;
