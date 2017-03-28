@@ -7,7 +7,7 @@ export class MediaTypesFilter  extends ValueFilter<string>{
 
     constructor(value : string, label : string)
     {
-        super(value, label);
+        super(value, label, {token: 'applications.content.filters.mediaType', args: {'0': label}});
     }
 }
 
