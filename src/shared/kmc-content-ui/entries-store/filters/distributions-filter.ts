@@ -2,7 +2,7 @@ import {
     KalturaSearchOperator,
     KalturaContentDistributionSearchItem
 } from '@kaltura-ng2/kaltura-api/types'
-
+import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { KalturaSearchOperatorType } from '@kaltura-ng2/kaltura-api/kaltura-enums'
 
 import { EntriesStore } from "../entries-store.service";
@@ -10,9 +10,10 @@ import { ValueFilter } from '../value-filter';
 
 export class DistributionsFilter  extends ValueFilter<number>{
 
-    constructor(value : number, label : string)
+    constructor(value : number, label : string, appLocalization: AppLocalization)
     {
-        super(value, label);
+	    let tooltip =`${appLocalization.get('applications.content.filters.distribution').replace("%1",label)}`;
+	    super(value, label, tooltip);
     }
 }
 

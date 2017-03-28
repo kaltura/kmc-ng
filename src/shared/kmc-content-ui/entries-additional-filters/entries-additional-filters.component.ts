@@ -4,6 +4,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { KalturaUtils } from '@kaltura-ng2/kaltura-api';
 import { PrimeTreeNode, TreeDataHandler } from '@kaltura-ng2/kaltura-primeng-ui';
 import { TreeSelection, OnSelectionChangedArgs,TreeSelectionModes,TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
+import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import { EntriesStore } from "../entries-store/entries-store.service";
 import { FilterItem } from "../entries-store/filter-item";
@@ -69,7 +70,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     @Input() parentPopupWidget: PopupWidgetComponent;
 
     constructor(public additionalFiltersStore: EntriesAdditionalFiltersStore, private treeDataHandler : TreeDataHandler,
-                private entriesStore : EntriesStore, private elementRef: ElementRef) {
+                private entriesStore : EntriesStore, private elementRef: ElementRef, private _appLocalization: AppLocalization) {
     }
 
     ngOnInit() {
@@ -206,19 +207,19 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     {
         this._filterTypesManager.registerType('mediaTypes',MediaTypesFilter,(node : PrimeTreeNode)  =>
         {
-            return new MediaTypesFilter(<string>node.data, node.label);
+            return new MediaTypesFilter(<string>node.data, node.label, this._appLocalization);
         });
         this._filterTypesManager.registerType('ingestionStatuses',IngestionStatusesFilter, (node : PrimeTreeNode)  =>
         {
-            return new IngestionStatusesFilter(<string>node.data, node.label);
+            return new IngestionStatusesFilter(<string>node.data, node.label, this._appLocalization);
         });
         this._filterTypesManager.registerType('flavors',FlavorsFilter, (node : PrimeTreeNode)  =>
         {
-            return new FlavorsFilter(<string>node.data, node.label);
+            return new FlavorsFilter(<string>node.data, node.label, this._appLocalization);
         });
         this._filterTypesManager.registerType('durations',DurationsFilters, (node : PrimeTreeNode)  =>
         {
-            return new DurationsFilters(<string>node.data, node.label);
+            return new DurationsFilters(<string>node.data, node.label, this._appLocalization);
         });
         this._filterTypesManager.registerType('originalClippedEntries',OriginalClippedFilter, (node : PrimeTreeNode)  =>
         {
@@ -232,7 +233,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         });
         this._filterTypesManager.registerType('timeScheduling',TimeSchedulingFilter, (node : PrimeTreeNode)  =>
         {
-            return new TimeSchedulingFilter(<string>node.data, node.label, this._scheduledBefore, this._scheduledAfter);
+            return new TimeSchedulingFilter(<string>node.data, node.label, this._scheduledBefore, this._scheduledAfter, this._appLocalization);
         });
         this._filterTypesManager.registerType('moderationStatuses',ModerationStatusesFilter, (node : PrimeTreeNode)  =>
         {
@@ -244,17 +245,17 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         });
         this._filterTypesManager.registerType('accessControlProfiles',AccessControlProfilesFilter, (node : PrimeTreeNode)  =>
         {
-            return new AccessControlProfilesFilter(<string>node.data, node.label);
+            return new AccessControlProfilesFilter(<string>node.data, node.label, this._appLocalization);
         });
         this._filterTypesManager.registerType('distributions',DistributionsFilter, (node : PrimeTreeNode)  =>
         {
-            return new DistributionsFilter(<number>node.data, node.label);
+            return new DistributionsFilter(<number>node.data, node.label, this._appLocalization);
         });
         this._filterTypesManager.registerType(MetadataProfileTypeName,MetadataProfileFilter, (node : PrimeTreeNode)  =>
         {
             const filterType : filterGroupMetadataProfileType = <filterGroupMetadataProfileType>node.payload;
 
-            return new MetadataProfileFilter(filterType.metadataProfileId,filterType.type, filterType.fieldPath,<any>node.data);
+            return new MetadataProfileFilter(filterType.metadataProfileId, filterType.type, filterType.fieldPath, <any>node.data, filterType.caption);
         });
     }
 
@@ -382,7 +383,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
             // make sure the filter is already set for 'schedule', otherwise ignore update
             this.entriesStore.removeFiltersByType(TimeSchedulingFilter);
             this.entriesStore.addFilters(
-                new TimeSchedulingFilter(previousValue, previousLabel, KalturaUtils.getEndDateValue(this._scheduledBefore), KalturaUtils.getStartDateValue(this._scheduledAfter))
+                new TimeSchedulingFilter(previousValue, previousLabel, KalturaUtils.getEndDateValue(this._scheduledBefore), KalturaUtils.getStartDateValue(this._scheduledAfter), this._appLocalization)
             );
         }
 

@@ -27,9 +27,10 @@ export class MetadataProfileFilter  extends ValueFilter<string>{
         return this._listTypeName;
     }
 
-    constructor(metadataProfileId : number, listTypeName : string,  fieldPath : string[], value : string)
+    constructor(metadataProfileId : number, listTypeName : string,  fieldPath : string[], value : string, caption: string)
     {
-        super(value, value);
+	    let tooltip =`${caption + ': '+ value}`;
+        super(value, value, tooltip);
         this._listTypeName = listTypeName;
         this._metadataProfileId = metadataProfileId;
         this._fieldPath = fieldPath;
