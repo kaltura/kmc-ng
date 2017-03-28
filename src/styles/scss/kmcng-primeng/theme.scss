@@ -96,7 +96,9 @@ $invalidInputBorderColor: #cd0a0a;
         margin-top: 3px;
     }
 }
-
+.ui-chkbox-box:not(.ui-state-disabled):not(.ui-state-active):hover{
+	border: 1px solid $kGrayscale4;
+}
 /* radio buttons */
 .ui-radiobutton-box.ui-state-active{
     background-color: $kPrimary;
@@ -435,9 +437,10 @@ td.ui-datatable-emptymessage{
 }
 
 // auto complete
-.ui-autocomplete-panel {
+.ui-autocomplete .ui-autocomplete-panel {
     .ui-autocomplete-list-item {
         min-height: 50px;
+		height: auto;
         border-left: none;
         border-right: none;
         border-bottom: 2px solid $kGrayscale5;
