@@ -12,7 +12,7 @@ export class DistributionsFilter  extends ValueFilter<number>{
 
     constructor(value : number, label : string)
     {
-        super(value, label);
+        super(value, label, {token: 'applications.content.filters.distribution', args: {'0': label}});
     }
 }
 
