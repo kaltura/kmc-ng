@@ -19,7 +19,7 @@ export class TimeSchedulingFilter  extends ValueFilter<string>{
 
     constructor(value : string, label : string, scheduledTo? : Date, scheduledFrom? : Date)
     {
-        super(value, label);
+        super(value, label, {token: 'applications.content.filters.scheduling', args: {'0': label}});
         this._scheduledAfter = scheduledFrom;
         this._scheduledBefore = scheduledTo;
     }
