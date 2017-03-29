@@ -1,4 +1,4 @@
-import { Injectable, KeyValueDiffers } from '@angular/core';
+import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, CollectionChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
@@ -13,13 +13,12 @@ import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators'
 
-import * as R from 'ramda';
-
 @Injectable()
 export class EntryRelatedHandler extends EntrySection
 {
 
-	objDiffer = {};
+	relatedFilesListDiffer: IterableDiffer;
+	relatedFileDiffer : { [key : string] : KeyValueDiffer } = {};
 
 	private _relatedFiles : BehaviorSubject<{ items : KalturaAttachmentAsset[], loading : boolean, error? : any}> = new BehaviorSubject<{ items : KalturaAttachmentAsset[], loading : boolean, error? : any}>(
 		{ items : null, loading : false}
@@ -29,7 +28,8 @@ export class EntryRelatedHandler extends EntrySection
 
 	private _entryId: string = '';
 
-	constructor(manager : EntrySectionsManager, private _appLocalization: AppLocalization, private _kalturaServerClient: KalturaServerClient, private _browserService: BrowserService, private differs:  KeyValueDiffers) {
+	constructor(manager : EntrySectionsManager, private _appLocalization: AppLocalization, private _kalturaServerClient: KalturaServerClient,
+	            private _browserService: BrowserService, private _objectDiffers:  KeyValueDiffers, private _listDiffers : IterableDiffers) {
         super(manager);
     }
 
@@ -54,24 +54,35 @@ export class EntryRelatedHandler extends EntrySection
 
 	logItems(){
 		console.log(this._relatedFiles.getValue().items);
-		console.log("------------------");
+
+		console.log("---------> List changes <---------");
+		let changes = this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
+		if (changes) {
+			changes.forEachAddedItem((record: CollectionChangeRecord) => {
+				console.log('added ' + (record.item as KalturaAttachmentAsset).id);
+			});
+			changes.forEachRemovedItem((record: CollectionChangeRecord) => {
+				console.log('removed ' + (record.item as KalturaAttachmentAsset).id);
+			});
+		}
+
+		console.log("---------> Item changes <---------");
 		this._relatedFiles.getValue().items.forEach((asset: KalturaAttachmentAsset) => {
-			var objDiffer = this.objDiffer[asset.id];
-			var objChanges = objDiffer.diff(asset);
+			var relatedFileDiffer = this.relatedFileDiffer[asset.id];
+			var objChanges = relatedFileDiffer.diff(asset);
 			if (objChanges) {
-				console.log("detected change: "+objChanges);
+				console.log("detected change in "+ asset.id+ ": " + objChanges);
 			}
 		});
 	}
 
 	public _deleteFile(fileId: string): void{
-		const deleteIndex = R.findIndex(R.propEq('id', fileId))(this._relatedFiles.getValue().items);
-		if (deleteIndex > -1){
-			this._relatedFiles.getValue().items.splice(deleteIndex, 1);
-		}
+		// update the list by filtering the assets array. The filter filters out the deleted asset by its ID
+		this._relatedFiles.next({items : this._relatedFiles.getValue().items.filter((item: KalturaAttachmentAsset) => {return item.id !== fileId}), loading : false});
+
 		// stop tracking changes on this asset
-		if (this.objDiffer[fileId]){
-			delete this.objDiffer[fileId];
+		if (this.relatedFileDiffer[fileId]){
+			delete this.relatedFileDiffer[fileId];
 		}
 	}
 
@@ -150,10 +161,13 @@ export class EntryRelatedHandler extends EntrySection
 						}
 					});
 					this._relatedFiles.next({items : response.objects, loading : false});
-					this.objDiffer = {};
+					this.relatedFileDiffer = {};
+					this.relatedFilesListDiffer = this._listDiffers.find([]).create(null);
+					this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
+
 					this._relatedFiles.getValue().items.forEach((asset: KalturaAttachmentAsset) => {
-						this.objDiffer[asset.id] = this.differs.find([]).create(null);
-						this.objDiffer[asset.id].diff(asset);
+						this.relatedFileDiffer[asset.id] = this._objectDiffers.find([]).create(null);
+						this.relatedFileDiffer[asset.id].diff(asset);
 					});
 				},
 				error =>
