@@ -1,4 +1,4 @@
-import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, CollectionChangeRecord } from '@angular/core';
+import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, KeyValueChangeRecord, CollectionChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
@@ -71,7 +71,10 @@ export class EntryRelatedHandler extends EntrySection
 			var relatedFileDiffer = this.relatedFileDiffer[asset.id];
 			var objChanges = relatedFileDiffer.diff(asset);
 			if (objChanges) {
-				console.log("detected change in "+ asset.id+ ": " + objChanges);
+				objChanges.forEachChangedItem((record: KeyValueChangeRecord) =>{
+					console.log("detected change in "+ asset.id+ ": Changed field = " + record.key);
+				});
+
 			}
 		});
 	}
