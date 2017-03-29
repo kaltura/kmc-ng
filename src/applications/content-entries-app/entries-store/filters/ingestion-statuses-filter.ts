@@ -7,7 +7,7 @@ export class IngestionStatusesFilter  extends ValueFilter<string>{
 
     constructor(value : string, label : string)
     {
-        super(value, label);
+        super(value, label, {token: 'applications.content.filters.status', args: {'0': label}});
     }
 }
 

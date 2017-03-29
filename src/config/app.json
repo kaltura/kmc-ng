@@ -40,6 +40,7 @@
     }
   },
   "entriesShared": {
+	"MAX_ENTRIES": 10000,
     "categoriesFilters" : {
         "maxChildrenToShow" : 500
     }

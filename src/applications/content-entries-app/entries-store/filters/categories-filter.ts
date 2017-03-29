@@ -2,6 +2,7 @@ import * as R from 'ramda';
 
 import { EntriesStore } from "../entries-store.service";
 import { ValueFilter } from '../value-filter';
+import { FilterItemLocalizedTooltip } from '../filter-item';
 
 export enum CategoriesFilterModes
 {
@@ -17,7 +18,7 @@ export class CategoriesFilter extends ValueFilter<number>{
         return this._mode;
     }
 
-    constructor(value : number, mode : CategoriesFilterModes, label : string, tooltip : string, public fullIdPath : number[])
+    constructor(value : number, mode : CategoriesFilterModes, label : string, tooltip : FilterItemLocalizedTooltip, public fullIdPath : number[])
     {
         super(value, label, tooltip);
         this._mode = mode;

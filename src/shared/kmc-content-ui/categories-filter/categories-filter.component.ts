@@ -76,7 +76,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         );
 
         const savedAutoSelectChildren: TreeSelectionModes = this.browserService.getFromLocalStorage("contentShared.categoriesTree.selectionMode");
-        this._selectionMode = savedAutoSelectChildren ? savedAutoSelectChildren : TreeSelectionModes.Self;
+        this._selectionMode = savedAutoSelectChildren ? savedAutoSelectChildren : TreeSelectionModes.SelfAndChildren;
 
         // TODO [kmcng] consider using constants for permissions flags
         this.inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
@@ -130,9 +130,9 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
         if (item) {
             if (item instanceof PrimeTreeNode) {
-                return new CategoriesFilter(<number>item.data, mode, item.label, (item.origin.fullNamePath || []).join(' > '), item.origin.fullIdPath);
+                return new CategoriesFilter(<number>item.data, mode, item.label, {token: (item.origin.fullNamePath || []).join(' > ')}, item.origin.fullIdPath);
             } else {
-                return new CategoriesFilter(item.id, mode, item.name, (item.fullNamePath || []).join(' > '),item.fullIdPath);
+                return new CategoriesFilter(item.id, mode, item.name, {token: (item.fullNamePath || []).join(' > ')},item.fullIdPath);
             }
         }
     }

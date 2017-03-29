@@ -1,13 +1,13 @@
 <kLoader kFillHeight [loading]="(entriesStore.status$ | async)?.loading" [loadingError]="_loadingError" (onActionRequested)="onLoadingAction($event)">
-	<div class="kEntriesTable col">
+	<div class="kEntriesTable col" [class.noResults]="!entries.length">
 		<p-dataTable #dataTable [value]="entries" [sortField]="filter.sortBy" [sortOrder]="-1"
 					 scrollable="true" scrollHeight="100%"
 					 (selectionChange)="onSelectionChange($event)" (onSort)="onSortChanged($event)"
-					 [(selection)]="tableSelectedEntries">
+					 [(selection)]="tableSelectedEntries" emptyMessage="{{'applications.content.table.noResults' | translate}}">
 			<p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
-			<p-column field="thumbnailUrl" header="{{'applications.content.table.thumbnail' | translate}}" [style]="{'width':'100px', 'text-align': 'center'}">
+			<p-column field="thumbnailUrl" header="{{'applications.content.table.thumbnail' | translate}}" [style]="{'width':'100px'}">
 				<template let-col let-entry="rowData" pTemplate="body">
-					<div class="kThumbnailHolder"><span class="kHelper"></span><img src="{{entry[col.field]}}" [class.disable]="!allowDrilldown(entry.mediaType,entry.status)" (click)="onActionSelected('view',entry.id,entry.mediaType,entry.status)" onError="this.onerror=null;this.style.display='none'"></div>
+					<div class="kThumbnailHolder" [class.disable]="!allowDrilldown(entry.mediaType,entry.status)" (click)="onActionSelected('view',entry.id,entry.mediaType,entry.status)"><span class="kHelper"></span><img src="{{entry[col.field]}}" onError="this.onerror=null;this.style.display='none'"></div>
 				</template>
 			</p-column>
 			<p-column field="name" header="{{'applications.content.table.name' | translate}}" [sortable]="'custom'">
@@ -32,10 +32,10 @@
 			</p-column>
 			<p-column field="duration" header="{{'applications.content.table.duration' | translate}}" [sortable]="'custom'" [style]="{'width':'104px'}">
 				<template let-col let-entry="rowData" pTemplate="body">
-					<span>{{entry[col.field] | kTime}}</span>
+					<span>{{entry[col.field] | kTime | entryDuration:entry}}</span>
 				</template>
 			</p-column>
-			<p-column field="status" header="{{'applications.content.table.status' | translate}}" [sortable]="'custom'" [style]="{'width':'100px'}">
+			<p-column field="status" header="{{'applications.content.table.status' | translate}}" [style]="{'width':'100px'}">
 				<template let-col let-entry="rowData" pTemplate="body">
 					<span>{{entry | entryStatus}}</span>
 				</template>

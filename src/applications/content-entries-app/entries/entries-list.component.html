@@ -23,7 +23,7 @@
 
         <kTags [title]="'applications.content.filters.activeFilters' | translate" [data]="(this._entriesStore.query$ | async)?.filters" [labelField]="'label'" [tooltipField]="'tooltip'" (onTagRemove)="removeTag($event)" (onRemoveAll)="removeAllTags()">
 			<template let-item="item">
-				<div class="kTagContent" pTooltip="{{item.tooltip}}" tooltipPosition="top">
+				<div class="kTagContent" [pTooltip]="item.tooltip?.token | translate : item.tooltip?.args" tooltipPosition="top">
 					<span class="kTagLabel">{{item.label}}</span>
 					<i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
 				</div>
@@ -39,7 +39,7 @@
 
             <p-paginator [rows]="_entriesStore.queryData.pageSize" (onPageChange)="onPaginationChanged($event)"
                          [first]="_filter.pageIndex * _filter.pageSize"
-                         [totalRecords]="(_entriesStore.entries$ | async)?.totalCount"
+                         [totalRecords]="(_entriesStore.entries$ | async)?.totalCount | kMaxEntries"
                          [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
             <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
         </div>
