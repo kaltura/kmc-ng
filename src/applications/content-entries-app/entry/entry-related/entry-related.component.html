@@ -1,20 +1,37 @@
-<kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
-	<div class="kRelated">
+<kLoader [loading]="(_handler._relatedFiles$ | async)?.loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
+	<div class="kRelated" #related>
 		<p class="kTitle">{{'applications.content.entryDetails.related.related' | translate}}</p>
 		<button type="button" class="kButtonDefault" pButton label="{{'applications.content.entryDetails.related.add' | translate}}"></button>
 		<div class="kTable">
-			<p-dataTable #dataTable scrollable="true" scrollHeight="100%">
-				<p-column header="{{'applications.content.entryDetails.related.name' | translate}}">
+			<p-dataTable [value]="(_handler._relatedFiles$ | async)?.items" scrollable="true" scrollHeight="100%">
+				<p-column field="filename" header="{{'applications.content.entryDetails.related.name' | translate}}">
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.related.type' | translate}}">
+				<p-column header="{{'applications.content.entryDetails.related.type' | translate}}" [style]="{'width':'140px'}">
+					<template let-col let-file="rowData" pTemplate="body">
+						<p-dropdown kDropdownCloseOnScroll [scrollTarget]="related" [options]="_fileTypes" [appendTo]="'body'" [autoWidth]="false" [(ngModel)]="file.format" placeholder="{{'applications.content.entryDetails.related.select' | translate}}"></p-dropdown>
+					</template>
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.related.size' | translate}}">
+				<p-column field="size" header="{{'applications.content.entryDetails.related.size' | translate}}">
+					<template let-col let-file="rowData" pTemplate="body">
+						<span>{{file[col.field] | fileSize}}</span>
+					</template>
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.related.assetId' | translate}}">
+				<p-column field="id" header="{{'applications.content.entryDetails.related.assetId' | translate}}">
 				</p-column>
-				<p-column>
+				<p-column [style]="{'width':'80px'}">
+					<template let-col let-file="rowData" pTemplate="body">
+						<div class="kRelatedTableActions">
+							<button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, file)"></button>
+						</div>
+					</template>
 				</p-column>
 			</p-dataTable>
+			<p-menu kMenuCloseOnScroll [scrollTarget]="related" #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'"></p-menu>
+			<button #btn (click)="_handler.logItems()">log items</button>
 		</div>
 	</div>
+	<kPopupWidget #editPopup [popupWidth]="380" [popupHeight]="324" [modal]="true">
+		<kEntryRelatedEdit [currentFile]="_currentFile" [parentPopupWidget]="editPopup"></kEntryRelatedEdit>
+	</kPopupWidget>
+
 </kLoader>

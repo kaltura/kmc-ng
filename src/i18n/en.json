@@ -21,7 +21,10 @@
         },
         "languageMenu":{
             "selectLang": "Select Language"
-        }
+        },
+		"common":{
+			"n_a": "N/A"
+		}
     },
     "applications":{
 		"entries":{
@@ -50,7 +53,19 @@
                 "additionalFilters": "Additional Filters",
                 "refineSearch": "Refine Search",
                 "clearDates": "Clear Dates",
+				"dates": "Dates",
+				"after": "After",
+				"before": "Before",
                 "createdBetween": "Created Between",
+				"mediaType": "Media Type: {{0}}",
+				"status": "Status: {{0}}",
+				"duration": "Duration: {{0}}",
+				"scheduling": "Scheduling: {{0}}",
+				"accessControl": "Access Control: {{0}}",
+				"flavor": "Flavor: {{0}}",
+				"distribution": "Distribution: {{0}}",
+				"freeText": "Free text search",
+				"metaData": "{{0}}: {{1}}",
                 "preferences": {
                     "preferences": "Preferences",
                     "filterPreferences": "Filter Preferences",
@@ -68,7 +83,8 @@
                 "status": "Status",
                 "previewAndEmbed": "Preview & Embed",
                 "delete": "Delete",
-                "view": "View Details"
+                "view": "View Details",
+				"noResults": "No Results"
             },
             "paginator":{
                 "showRows": "Show rows:"
@@ -85,7 +101,7 @@
                 "pending": "Pending",
                 "moderate": "Moderate",
                 "blocked": "Blocked",
-                "noContent": "No Content",
+                "noContent": "No Media",
                 "provisioning": "Provisioning",
                 "pendingStatus": "Pending",
                 "finishedStatus": "Past Scheduling",
@@ -277,7 +293,19 @@
 					"name": "File name",
 					"type": "File Type",
 					"size": "File size",
-					"assetId": "Asset ID"
+					"assetId": "Asset ID",
+					"document": "Document",
+					"media": "Media",
+					"text": "Text",
+					"select": "Select Type",
+					"edit": "Edit",
+					"download": "Download",
+					"delete": "Delete",
+					"preview": "Preview",
+					"editTitle": "Edit File Details",
+					"title": "Title",
+					"description": "Description",
+					"done": "Done"
 				},
 				"clips":{
 					"clips": "Clips",

@@ -9,6 +9,7 @@ import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
 import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
+import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 
 import { KMCContentUIModule } from "kmc-content-ui/kmc-content-ui.module";
 
@@ -20,6 +21,7 @@ import { EntryFlavours } from "./entry-flavours/entry-flavours.component";
 import { EntryCaptions } from "./entry-captions/entry-captions.component";
 import { EntryLive } from "./entry-live/entry-live.component";
 import { EntryRelated } from "./entry-related/entry-related.component";
+import { EntryRelatedEdit } from "./entry-related/entry-related-edit.component";
 import { EntryClips } from "./entry-clips/entry-clips.component";
 import { EntryUsers } from "./entry-users/entry-users.component";
 import { EntrySectionsList } from "./entry-sections-list/entry-sections-list.component";
@@ -44,6 +46,7 @@ import { EntryPreview } from './entry-preview/entry-preview.component';
         KalturaUIModule,
         KMCContentUIModule,
         MenuModule,
+	    PopupWidgetModule,
         MultiSelectModule,
         PaginatorModule,
         RadioButtonModule,
@@ -62,6 +65,7 @@ import { EntryPreview } from './entry-preview/entry-preview.component';
         EntryMetadata,
         EntryPreview,
         EntryRelated,
+	    EntryRelatedEdit,
         EntryScheduling,
         EntrySectionsList,
         EntryThumbnails,

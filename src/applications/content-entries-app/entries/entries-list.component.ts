@@ -57,7 +57,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
 
     onSortChanged(event) {
-
+	    this.clearSelection();
         this._filter.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
         this._filter.sortBy = event.field;
 

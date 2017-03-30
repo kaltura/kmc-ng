@@ -16,7 +16,7 @@ import { CategoriesFilterPrefsComponent } from './categories-filter-preferences/
 import { CategoriesStore } from './categories-store.service';
 import { KMCShellModule } from 'kmc-shell';
 
-import { EntryTypePipe, EntryStatusPipe, PlaylistTypePipe, ModerationPipe } from './pipes/index';
+import { EntryTypePipe, EntryStatusPipe, PlaylistTypePipe, ModerationPipe, MaxEntriesPipe, EntryDurationPipe, FileSizePipe } from './pipes/index';
 import {
     EntriesAdditionalFiltersComponent
 } from "./entries-additional-filters/entries-additional-filters.component";
@@ -47,7 +47,10 @@ import { MetadataProfileStore } from '@kaltura-ng2/kaltura-common';
         EntryStatusPipe,
         EntryTypePipe,
         PlaylistTypePipe,
-	    ModerationPipe
+	    MaxEntriesPipe,
+	    EntryDurationPipe,
+	    ModerationPipe,
+	    FileSizePipe
     ],
     providers:    [
         MetadataProfileStore,
@@ -60,7 +63,10 @@ import { MetadataProfileStore } from '@kaltura-ng2/kaltura-common';
         EntryStatusPipe,
         EntryTypePipe,
         PlaylistTypePipe,
-	    ModerationPipe
+	    ModerationPipe,
+	    MaxEntriesPipe,
+	    EntryDurationPipe,
+	    FileSizePipe
     ]
 })
 export class KMCContentUIModule {

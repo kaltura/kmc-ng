@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChildren, QueryList, OnDestroy, AfterViewInit, I
 import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaUtils } from '@kaltura-ng2/kaltura-api/utils/kaltura-utils';
+import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { PrimeTreeNode, TreeDataHandler } from '@kaltura-ng2/kaltura-primeng-ui';
 import { TreeSelection, OnSelectionChangedArgs,TreeSelectionModes,TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
 
@@ -69,7 +70,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     @Input() parentPopupWidget: PopupWidgetComponent;
 
     constructor(public additionalFiltersStore: EntriesAdditionalFiltersStore, private treeDataHandler : TreeDataHandler,
-                private entriesStore : EntriesStore, private elementRef: ElementRef) {
+                private entriesStore : EntriesStore, private elementRef: ElementRef, private appLocalization: AppLocalization) {
     }
 
     ngOnInit() {
@@ -254,7 +255,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         {
             const filterType : filterGroupMetadataProfileType = <filterGroupMetadataProfileType>node.payload;
 
-            return new MetadataProfileFilter(filterType.metadataProfileId,filterType.type, filterType.fieldPath,<any>node.data);
+            return new MetadataProfileFilter(filterType.metadataProfileId,filterType.type, filterType.fieldPath,<any>node.data, filterType.caption);
         });
     }
 
@@ -412,7 +413,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
         if (this._createdAfter || this._createdBefore)
         {
-            this.entriesStore.addFilters(new CreatedAtFilter(KalturaUtils.getStartDateValue(this._createdAfter), KalturaUtils.getEndDateValue(this._createdBefore)));
+            this.entriesStore.addFilters(new CreatedAtFilter(this.appLocalization.get('applications.content.filters.dates'),KalturaUtils.getStartDateValue(this._createdAfter), KalturaUtils.getEndDateValue(this._createdBefore)));
         }
     }
 

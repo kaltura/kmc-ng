@@ -27,9 +27,9 @@ export class MetadataProfileFilter  extends ValueFilter<string>{
         return this._listTypeName;
     }
 
-    constructor(metadataProfileId : number, listTypeName : string,  fieldPath : string[], value : string)
+    constructor(metadataProfileId : number, listTypeName : string,  fieldPath : string[], value : string, caption: string)
     {
-        super(value, value);
+        super(value, value, {token: 'applications.content.filters.metaData', args: {'0': caption, '1': value}});
         this._listTypeName = listTypeName;
         this._metadataProfileId = metadataProfileId;
         this._fieldPath = fieldPath;
