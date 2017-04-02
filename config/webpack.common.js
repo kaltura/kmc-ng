@@ -324,7 +324,8 @@ module.exports =  function (options) {
 			setImmediate: false
 		},
 		watchOptions: {
-			aggregateTimeout: 500
+			aggregateTimeout: 500,
+			poll:true
 		}
 	}
 };

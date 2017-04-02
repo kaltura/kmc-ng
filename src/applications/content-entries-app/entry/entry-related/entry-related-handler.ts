@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { AttachmentAssetListAction, AttachmentAssetGetUrlAction, AttachmentAssetServeAction } from '@kaltura-ng2/kaltura-api/services/attachment-asset';
+import { AttachmentAssetListAction, AttachmentAssetGetUrlAction, AttachmentAssetServeAction } from '@kaltura-ng2/kaltura-api/types';
 import { KalturaAssetFilter, KalturaAttachmentAsset, KalturaAttachmentType } from '@kaltura-ng2/kaltura-api/types'
 import { BrowserService } from 'kmc-shell';
 

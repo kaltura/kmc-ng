@@ -53,7 +53,8 @@ export class EntryRelatedEdit implements  AfterViewInit, OnDestroy{
 	public _saveAndClose(): void{
 		if (this.relatedEditForm.dirty){
 			this.currentFile.title = this.relatedEditForm.get("title").value;
-			this.currentFile.description = this.relatedEditForm.get("description").value;
+			// TODO [amir] description is readonly
+			// this.currentFile.description = this.relatedEditForm.get("description").value;
 		}
 		this._confirmClose = false;
 		this.parentPopupWidget.close();

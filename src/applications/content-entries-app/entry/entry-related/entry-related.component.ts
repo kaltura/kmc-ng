@@ -1,16 +1,17 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { EntryRelatedHandler } from './entry-related-handler';
 import { KalturaAttachmentType, KalturaAttachmentAsset, KalturaEntryStatus } from '@kaltura-ng2/kaltura-api/types';
 import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { SelectItem, Menu, MenuItem } from 'primeng/primeng';
+import { UploadManagement, KalturaUploadFileData } from '@kaltura-ng2/kaltura-common/upload-management';
 
 @Component({
     selector: 'kEntryRelated',
     templateUrl: './entry-related.component.html',
     styleUrls: ['./entry-related.component.scss']
 })
-export class EntryRelated implements OnInit{
+export class EntryRelated implements OnInit, OnDestroy{
 
     public _loading = false;
     public _loadingError = null;
@@ -27,8 +28,15 @@ export class EntryRelated implements OnInit{
 
 	public _actions: MenuItem[] = [];
 
-    constructor(public _handler : EntryRelatedHandler, private _appLocalization: AppLocalization) {
+    constructor(public _handler : EntryRelatedHandler,
+				private _appLocalization: AppLocalization,
+				private _uploadManagement : UploadManagement) {
     }
+
+    ngOnDestroy()
+	{
+
+	}
 
 	ngOnInit() {
 		this._actions = [
@@ -37,6 +45,15 @@ export class EntryRelated implements OnInit{
 			{label: this._appLocalization.get('applications.content.entryDetails.related.delete'), command: (event) => {this.actionSelected("delete");}},
 			{label: this._appLocalization.get('applications.content.entryDetails.related.preview'), command: (event) => {this.actionSelected("preview");}}
 		];
+
+		this._uploadManagement.trackedFiles
+			.cancelOnDestroy(this)
+			.subscribe(
+				(filesStatus =>
+				{
+					console.warn('TODO [kmcng]: check for relevant upload files');
+				})
+			);
 	}
 
 	openActionsMenu(event: any, file: KalturaAttachmentAsset): void{
@@ -74,5 +91,33 @@ export class EntryRelated implements OnInit{
 
         }
     }
+
+
+	@ViewChild('fileUploader')
+	private _fileUploader : ElementRef;
+    private _handlFileDialogOnClose = false;
+    _openFileSelect(event) : void{
+    	event.preventDefault();
+    	event.stopPropagation();
+
+    	this._fileUploader.nativeElement.click();
+    	this._handlFileDialogOnClose = true;
+	}
+
+	@HostListener("window:focus")
+	_handleFileDialogClosed()
+	{
+		if (this._handlFileDialogOnClose) {
+			this._handlFileDialogOnClose = false;
+
+			const file = this._fileUploader.nativeElement.files.length ? this._fileUploader.nativeElement.files[0] : null;
+			if (file)
+			{
+				this._uploadManagement.uploadFile(new KalturaUploadFileData(file));
+			}
+		}
+	}
+
+
 }
 
