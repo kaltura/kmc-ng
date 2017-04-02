@@ -45,8 +45,8 @@ export const ConstantsFilters = [
         items : [
             {id :'2',name : 'Approved'},
             {id :'5',name : 'Flagged for review'},
-            {id :'6',name : 'Rejected'},
-            {id :'7',name : 'Auto approved'},
+            {id :'3',name : 'Rejected'},
+            {id :'6',name : 'Auto approved'},
             {id :'1',name : 'Pending moderation'}
         ]
     },
