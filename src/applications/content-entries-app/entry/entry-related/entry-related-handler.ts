@@ -2,8 +2,8 @@ import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, Iterable
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { AttachmentAssetListAction, AttachmentAssetGetUrlAction, AttachmentAssetServeAction } from '@kaltura-ng2/kaltura-api/services/attachment-asset';
+import { AppLocalization, AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
+import { AttachmentAssetListAction } from '@kaltura-ng2/kaltura-api/services/attachment-asset';
 import { KalturaAssetFilter, KalturaAttachmentAsset, KalturaAttachmentType } from '@kaltura-ng2/kaltura-api/types'
 import { BrowserService } from 'kmc-shell';
 
@@ -28,8 +28,8 @@ export class EntryRelatedHandler extends EntrySection
 
 	private _entryId: string = '';
 
-	constructor(manager : EntrySectionsManager, private _appLocalization: AppLocalization, private _kalturaServerClient: KalturaServerClient,
-	            private _browserService: BrowserService, private _objectDiffers:  KeyValueDiffers, private _listDiffers : IterableDiffers) {
+	constructor(manager : EntrySectionsManager, private _appLocalization: AppLocalization, private _appConfig: AppConfig, private _kalturaServerClient: KalturaServerClient,
+	            private _browserService: BrowserService, private _appAuthentication: AppAuthentication, private _objectDiffers:  KeyValueDiffers, private _listDiffers : IterableDiffers) {
         super(manager);
     }
 
@@ -72,7 +72,7 @@ export class EntryRelatedHandler extends EntrySection
 			var objChanges = relatedFileDiffer.diff(asset);
 			if (objChanges) {
 				objChanges.forEachChangedItem((record: KeyValueChangeRecord) =>{
-					console.log("detected change in "+ asset.id+ ": Changed field = " + record.key);
+					console.log("detected change in "+ asset.id+ ": Changed field = " + record.key + ". New value = " + record.currentValue);
 				});
 
 			}
@@ -89,35 +89,25 @@ export class EntryRelatedHandler extends EntrySection
 		}
 	}
 
-	public _downloadFile(fileId: string): void{
-		this._kalturaServerClient.request(new AttachmentAssetGetUrlAction({id: fileId}))
-			.cancelOnDestroy(this)
-			.monitor('download related file asset ID: '+fileId)
-			.subscribe(
-				response =>
-				{
-					this._browserService.openLink(response);
-				},
-				error =>
-				{
-					console.log("Error getting asset download URL");
-				}
-			);
+	private _openFile(fileId: string, operation: string): void {
+
+		const baseUrl = this._appConfig.get('core.kaltura.cdnUrl');
+		const protocol = baseUrl.split(":")[0];
+		const partnerId = this._appAuthentication.appUser.partnerId;
+		const entryId = this.data.id;
+
+		let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + entryId + '/flavorId/' + fileId + '/format/' + operation + '/protocol/' + protocol;
+		url = url.replace("cdnapi","lbd"); // TODO [KMCNG] - remove this line once this feature is available on the production server (should be until April 7)
+
+		this._browserService.openLink(url);
 	}
+
+	public _downloadFile(fileId: string): void{
+		this._openFile(fileId, 'download');
+	}
+
 	public _previewFile(fileId: string): void{
-		// this._kalturaServerClient.request(new AttachmentAssetServeAction({id: fileId}))
-		// 	.cancelOnDestroy(this)
-		// 	.monitor('preview related file asset ID: '+fileId)
-		// 	.subscribe(
-		// 		response =>
-		// 		{
-		// 			this._browserService.openLink(response);
-		// 		},
-		// 		error =>
-		// 		{
-		// 			console.log("Error getting asset download URL");
-		// 		}
-		// 	);
+		this._openFile(fileId, 'url');
 	}
 
 	private _fetchRelatedFiles(){
@@ -160,7 +150,17 @@ export class EntryRelatedHandler extends EntrySection
 								case "txt":
 									asset.format = KalturaAttachmentType.Text;
 									break;
+								default:
+									asset.format = -1; // allow change detection on the format field by initializing it to -1 if it doesn't exist on the retrieved asset data
+									break;
 							}
+						}
+						// apply empty string value for title and description if do not exist on retrieved asset data to allow change detection for these fields
+						if (!asset.title){
+							asset.title = "";
+						}
+						if (!asset.description){
+							asset.description = "";
 						}
 					});
 					this._relatedFiles.next({items : response.objects, loading : false});

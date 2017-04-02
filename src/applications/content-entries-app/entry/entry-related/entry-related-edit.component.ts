@@ -38,7 +38,7 @@ export class EntryRelatedEdit implements  AfterViewInit, OnDestroy{
 					}
 					if (event === PopupWidgetStates.Close) {
 						if (this.relatedEditForm.dirty && this._confirmClose){
-							alert("Closing withour saving data!");
+							alert("Closing without saving data!");
 						}
 
 					}

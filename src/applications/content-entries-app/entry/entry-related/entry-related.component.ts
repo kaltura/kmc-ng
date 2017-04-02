@@ -62,11 +62,10 @@ export class EntryRelated implements OnInit{
 			case "download":
 				this._handler._downloadFile(this._currentFile.id);
 				break;
-			case "download":
+			case "preview":
 				this._handler._previewFile(this._currentFile.id);
 				break;
 		}
-		//alert("action: "+action+", file: "+this._currentFile.filename);
 	}
 
     _onLoadingAction(actionKey: string): void {
