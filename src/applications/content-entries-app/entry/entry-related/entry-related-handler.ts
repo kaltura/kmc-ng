@@ -1,9 +1,9 @@
 import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, KeyValueChangeRecord, CollectionChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
 import { AppLocalization, AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
-import { AttachmentAssetListAction } from '@kaltura-ng2/kaltura-api/services/attachment-asset';
+import { AttachmentAssetListAction, AttachmentAssetDeleteAction, AttachmentAssetUpdateAction } from '@kaltura-ng2/kaltura-api/services/attachment-asset';
 import { KalturaAssetFilter, KalturaAttachmentAsset, KalturaAttachmentType } from '@kaltura-ng2/kaltura-api/types'
 import { BrowserService } from 'kmc-shell';
 
@@ -29,7 +29,7 @@ export class EntryRelatedHandler extends EntrySection
 	private _entryId: string = '';
 
 	constructor(manager : EntrySectionsManager, private _appLocalization: AppLocalization, private _appConfig: AppConfig, private _kalturaServerClient: KalturaServerClient,
-	            private _browserService: BrowserService, private _appAuthentication: AppAuthentication, private _objectDiffers:  KeyValueDiffers, private _listDiffers : IterableDiffers) {
+	            private _browserService: BrowserService, private _appAuthentication: AppAuthentication, private _objectDiffers: KeyValueDiffers, private _listDiffers : IterableDiffers) {
         super(manager);
     }
 
@@ -52,28 +52,31 @@ export class EntryRelatedHandler extends EntrySection
 		this._fetchRelatedFiles();
 	}
 
-	logItems(){
-		console.log(this._relatedFiles.getValue().items);
-
-		console.log("---------> List changes <---------");
+	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
+	{
+		// check for added and removed assets
 		let changes = this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
 		if (changes) {
 			changes.forEachAddedItem((record: CollectionChangeRecord) => {
-				console.log('added ' + (record.item as KalturaAttachmentAsset).id);
+				//console.log('added ' + (record.item as KalturaAttachmentAsset).id);
 			});
 			changes.forEachRemovedItem((record: CollectionChangeRecord) => {
-				console.log('removed ' + (record.item as KalturaAttachmentAsset).id);
+				// remove deleted assets
+				const deleteAssetRequest: AttachmentAssetDeleteAction = new AttachmentAssetDeleteAction({attachmentAssetId: (record.item as KalturaAttachmentAsset).id});
+				request.requests.push(deleteAssetRequest);
 			});
 		}
 
-		console.log("---------> Item changes <---------");
+		// update changed assets
 		this._relatedFiles.getValue().items.forEach((asset: KalturaAttachmentAsset) => {
 			var relatedFileDiffer = this.relatedFileDiffer[asset.id];
 			var objChanges = relatedFileDiffer.diff(asset);
 			if (objChanges) {
-				objChanges.forEachChangedItem((record: KeyValueChangeRecord) =>{
-					console.log("detected change in "+ asset.id+ ": Changed field = " + record.key + ". New value = " + record.currentValue);
-				});
+				const updateAssetRequest: AttachmentAssetUpdateAction = new AttachmentAssetUpdateAction({id: asset.id, attachmentAsset: asset});
+				request.requests.push(updateAssetRequest);
+				// objChanges.forEachChangedItem((record: KeyValueChangeRecord) =>{
+				// 	console.log("detected change in "+ asset.id+ ": Changed field = " + record.key + ". New value = " + record.currentValue);
+				// });
 
 			}
 		});
@@ -151,7 +154,7 @@ export class EntryRelatedHandler extends EntrySection
 									asset.format = KalturaAttachmentType.Text;
 									break;
 								default:
-									asset.format = -1; // allow change detection on the format field by initializing it to -1 if it doesn't exist on the retrieved asset data
+									asset.format = null; // allow change detection on the format field by initializing it to -1 if it doesn't exist on the retrieved asset data
 									break;
 							}
 						}
@@ -164,10 +167,10 @@ export class EntryRelatedHandler extends EntrySection
 						}
 					});
 					this._relatedFiles.next({items : response.objects, loading : false});
-					this.relatedFileDiffer = {};
 					this.relatedFilesListDiffer = this._listDiffers.find([]).create(null);
 					this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
 
+					this.relatedFileDiffer = {};
 					this._relatedFiles.getValue().items.forEach((asset: KalturaAttachmentAsset) => {
 						this.relatedFileDiffer[asset.id] = this._objectDiffers.find([]).create(null);
 						this.relatedFileDiffer[asset.id].diff(asset);

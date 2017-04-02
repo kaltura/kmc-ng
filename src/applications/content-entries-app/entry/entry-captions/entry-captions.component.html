@@ -1,24 +1,34 @@
 <kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
-	<div class="kCaptions">
+	<div class="kCaptions" #captions>
 		<p class="kTitle">{{'applications.content.entryDetails.captions.captions' | translate}}</p>
 		<button type="button" class="kButtonDefault" pButton label="{{'applications.content.entryDetails.captions.add' | translate}}"></button>
 		<div class="kTable">
-			<p-dataTable #dataTable scrollable="true" scrollHeight="100%">
-				<p-column header="{{'applications.content.entryDetails.captions.label' | translate}}">
+			<p-dataTable [value]="(_handler._captions$ | async)?.items" scrollable="true" scrollHeight="100%">
+				<p-column field="label" header="{{'applications.content.entryDetails.captions.label' | translate}}">
 				</p-column>
 				<p-column header="{{'applications.content.entryDetails.captions.location' | translate}}">
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.captions.type' | translate}}">
+				<p-column field="format" header="{{'applications.content.entryDetails.captions.type' | translate}}">
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.captions.language' | translate}}">
+				<p-column field="language" header="{{'applications.content.entryDetails.captions.language' | translate}}">
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.captions.status' | translate}}">
-				</p-column>
-				<p-column>
+				<p-column field="status" header="{{'applications.content.entryDetails.captions.status' | translate}}">
 				</p-column>
 				<p-column>
+					<template let-col let-caption="rowData" pTemplate="body">
+						<span *ngIf="caption.isDefault">{{'applications.content.entryDetails.captions.default' | translate}}</span>
+						<a (click)="_handler._setAsDefault(caption)" *ngIf="!caption.isDefault">{{'applications.content.entryDetails.captions.setDefault' | translate}}</a>
+					</template>
+				</p-column>
+				<p-column [style]="{'width':'80px'}">
+					<template let-col let-caption="rowData" pTemplate="body">
+						<div class="kCaptionsTableActions">
+							<button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, caption)"></button>
+						</div>
+					</template>
 				</p-column>
 			</p-dataTable>
+			<p-menu kMenuCloseOnScroll [scrollTarget]="captions" #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'"></p-menu>
 		</div>
 	</div>
 </kLoader>
