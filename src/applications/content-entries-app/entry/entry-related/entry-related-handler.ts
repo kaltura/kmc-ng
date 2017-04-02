@@ -1,10 +1,10 @@
 import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, KeyValueChangeRecord, CollectionChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { AttachmentAssetListAction, AttachmentAssetGetUrlAction, AttachmentAssetServeAction } from '@kaltura-ng2/kaltura-api/types';
-import { KalturaAssetFilter, KalturaAttachmentAsset, KalturaAttachmentType } from '@kaltura-ng2/kaltura-api/types'
+import { KalturaServerClient, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
+import { AppLocalization, AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
+import { KalturaAssetFilter, KalturaAttachmentAsset, KalturaAttachmentType, AttachmentAssetListAction,
+	AttachmentAssetDeleteAction, AttachmentAssetUpdateAction, KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { BrowserService } from 'kmc-shell';
 
 import { EntrySection } from '../../entry-store/entry-section-handler';
@@ -28,8 +28,8 @@ export class EntryRelatedHandler extends EntrySection
 
 	private _entryId: string = '';
 
-	constructor(manager : EntrySectionsManager, private _appLocalization: AppLocalization, private _kalturaServerClient: KalturaServerClient,
-	            private _browserService: BrowserService, private _objectDiffers:  KeyValueDiffers, private _listDiffers : IterableDiffers) {
+	constructor(manager : EntrySectionsManager, private _appLocalization: AppLocalization, private _appConfig: AppConfig, private _kalturaServerClient: KalturaServerClient,
+	            private _browserService: BrowserService, private _appAuthentication: AppAuthentication, private _objectDiffers: KeyValueDiffers, private _listDiffers : IterableDiffers) {
         super(manager);
     }
 
@@ -52,28 +52,31 @@ export class EntryRelatedHandler extends EntrySection
 		this._fetchRelatedFiles();
 	}
 
-	logItems(){
-		console.log(this._relatedFiles.getValue().items);
-
-		console.log("---------> List changes <---------");
+	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
+	{
+		// check for added and removed assets
 		let changes = this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
 		if (changes) {
 			changes.forEachAddedItem((record: CollectionChangeRecord) => {
-				console.log('added ' + (record.item as KalturaAttachmentAsset).id);
+				//console.log('added ' + (record.item as KalturaAttachmentAsset).id);
 			});
 			changes.forEachRemovedItem((record: CollectionChangeRecord) => {
-				console.log('removed ' + (record.item as KalturaAttachmentAsset).id);
+				// remove deleted assets
+				const deleteAssetRequest: AttachmentAssetDeleteAction = new AttachmentAssetDeleteAction({attachmentAssetId: (record.item as KalturaAttachmentAsset).id});
+				request.requests.push(deleteAssetRequest);
 			});
 		}
 
-		console.log("---------> Item changes <---------");
+		// update changed assets
 		this._relatedFiles.getValue().items.forEach((asset: KalturaAttachmentAsset) => {
 			var relatedFileDiffer = this.relatedFileDiffer[asset.id];
 			var objChanges = relatedFileDiffer.diff(asset);
 			if (objChanges) {
-				objChanges.forEachChangedItem((record: KeyValueChangeRecord) =>{
-					console.log("detected change in "+ asset.id+ ": Changed field = " + record.key);
-				});
+				const updateAssetRequest: AttachmentAssetUpdateAction = new AttachmentAssetUpdateAction({id: asset.id, attachmentAsset: asset});
+				request.requests.push(updateAssetRequest);
+				// objChanges.forEachChangedItem((record: KeyValueChangeRecord) =>{
+				// 	console.log("detected change in "+ asset.id+ ": Changed field = " + record.key + ". New value = " + record.currentValue);
+				// });
 
 			}
 		});
@@ -89,35 +92,25 @@ export class EntryRelatedHandler extends EntrySection
 		}
 	}
 
-	public _downloadFile(fileId: string): void{
-		this._kalturaServerClient.request(new AttachmentAssetGetUrlAction({id: fileId}))
-			.cancelOnDestroy(this)
-			.monitor('download related file asset ID: '+fileId)
-			.subscribe(
-				response =>
-				{
-					this._browserService.openLink(response);
-				},
-				error =>
-				{
-					console.log("Error getting asset download URL");
-				}
-			);
+	private _openFile(fileId: string, operation: string): void {
+
+		const baseUrl = this._appConfig.get('core.kaltura.cdnUrl');
+		const protocol = baseUrl.split(":")[0];
+		const partnerId = this._appAuthentication.appUser.partnerId;
+		const entryId = this.data.id;
+
+		let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + entryId + '/flavorId/' + fileId + '/format/' + operation + '/protocol/' + protocol;
+		url = url.replace("cdnapi","lbd"); // TODO [KMCNG] - remove this line once this feature is available on the production server (should be until April 7)
+
+		this._browserService.openLink(url);
 	}
+
+	public _downloadFile(fileId: string): void{
+		this._openFile(fileId, 'download');
+	}
+
 	public _previewFile(fileId: string): void{
-		// this._kalturaServerClient.request(new AttachmentAssetServeAction({id: fileId}))
-		// 	.cancelOnDestroy(this)
-		// 	.monitor('preview related file asset ID: '+fileId)
-		// 	.subscribe(
-		// 		response =>
-		// 		{
-		// 			this._browserService.openLink(response);
-		// 		},
-		// 		error =>
-		// 		{
-		// 			console.log("Error getting asset download URL");
-		// 		}
-		// 	);
+		this._openFile(fileId, 'url');
 	}
 
 	private _fetchRelatedFiles(){
@@ -164,10 +157,10 @@ export class EntryRelatedHandler extends EntrySection
 						}
 					});
 					this._relatedFiles.next({items : response.objects, loading : false});
-					this.relatedFileDiffer = {};
 					this.relatedFilesListDiffer = this._listDiffers.find([]).create(null);
 					this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
 
+					this.relatedFileDiffer = {};
 					this._relatedFiles.getValue().items.forEach((asset: KalturaAttachmentAsset) => {
 						this.relatedFileDiffer[asset.id] = this._objectDiffers.find([]).create(null);
 						this.relatedFileDiffer[asset.id].diff(asset);

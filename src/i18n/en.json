@@ -253,7 +253,10 @@
 					"language": "Language",
 					"status": "Status",
 					"default": "Default Caption",
-					"setDefault": "Set as default"
+					"setDefault": "Set as default",
+					"edit": "Edit",
+					"download": "Download",
+					"delete": "Delete"
 				},
 				"live":{
 					"live": "Live Stream",
