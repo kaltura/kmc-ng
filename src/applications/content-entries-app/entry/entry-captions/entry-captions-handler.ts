@@ -2,20 +2,26 @@ import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, Iterable
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { CaptionAssetSetAsDefaultAction, CaptionAssetListAction, KalturaCaptionAsset, KalturaFilterPager, KalturaAssetFilter, KalturaCaptionType, KalturaCaptionAssetStatus } from '@kaltura-ng2/kaltura-api/types';
-import { AppConfig, AppAuthentication, AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import { EntrySection } from '../../entry-store/entry-section-handler';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
+export interface CaptionRow {
+	uploadStatus: boolean,
+	uploadToken: string,
+	id: string,
+	isDefault: number
+}
 @Injectable()
 export class EntryCaptionsHandler extends EntrySection
 {
 	captionsListDiffer: IterableDiffer;
 	captionDiffer : { [key : string] : KeyValueDiffer } = {};
 
-	private _captions : BehaviorSubject<{ items : KalturaCaptionAsset[], loading : boolean, error? : any}> = new BehaviorSubject<{ items : KalturaCaptionAsset[], loading : boolean, error? : any}>(
+	private _captions : BehaviorSubject<{ items : CaptionRow[], loading : boolean, error? : any}> = new BehaviorSubject<{ items : CaptionRow[], loading : boolean, error? : any}>(
 		{ items : null, loading : false}
 	);
 
@@ -24,7 +30,7 @@ export class EntryCaptionsHandler extends EntrySection
 	private _entryId: string = '';
 
     constructor(manager : EntrySectionsManager, private _objectDiffers:  KeyValueDiffers, private _listDiffers : IterableDiffers,
-                private _kalturaServerClient: KalturaServerClient, private _appConfig:AppConfig, private _appAuthentication: AppAuthentication, private _appLocalization:AppLocalization)
+                private _kalturaServerClient: KalturaServerClient, private _appLocalization:AppLocalization)
     {
         super(manager);
     }
@@ -69,12 +75,12 @@ export class EntryCaptionsHandler extends EntrySection
 		    .subscribe(
 			    response =>
 			    {
-				    this._captions.next({items : response.objects, loading : false});
+				    this._captions.next({items : response.objects as any[], loading : false});
 				    this.captionsListDiffer = this._listDiffers.find([]).create(null);
 				    this.captionsListDiffer.diff(this._captions.getValue().items);
 
 				    this.captionDiffer = {};
-				    this._captions.getValue().items.forEach((caption: KalturaCaptionAsset) => {
+				    this._captions.getValue().items.forEach((caption) => {
 					    this.captionDiffer[caption.id] = this._objectDiffers.find([]).create(null);
 					    this.captionDiffer[caption.id].diff(caption);
 				    });
@@ -89,14 +95,10 @@ export class EntryCaptionsHandler extends EntrySection
     public _setAsDefault(caption: KalturaCaptionAsset): void{
 	    const captionId = caption.id;
 	    let captions = Array.from(this._captions.getValue().items); // create a copy of the captions array withour a reference to the original array
-	    captions.forEach((caption: KalturaCaptionAsset) => {
+	    captions.forEach((caption) => {
 		   caption.isDefault = caption.id === captionId ? 1 : 0;
 	    });
 	    this._captions.next({items : captions, loading : false, error : null});
-    }
-
-    public _getCaptionUrl(captionId: string): string{
-	    return this._appConfig.get("core.kaltura.apiUrl") + "/service/caption_captionasset/action/serve/captionAssetId/" + captionId +"/ks/" + this._appAuthentication.appUser.ks;
     }
 
     public _getCaptionType(captionFormat: KalturaCaptionType): string{
@@ -126,5 +128,9 @@ export class EntryCaptionsHandler extends EntrySection
 			    break;
 	    }
 	    return status;
+    }
+
+    public _getRowStyle(rowData, rowIndex): string{
+	    return rowData.uploadStatus ? "uoloading" : '';
     }
 }

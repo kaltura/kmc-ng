@@ -2,7 +2,9 @@ import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/
 
 import { Menu, MenuItem } from 'primeng/primeng';
 
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AppLocalization, AppAuthentication, AppConfig } from '@kaltura-ng2/kaltura-common';
+import { FileDialogComponent } from '@kaltura-ng2/kaltura-ui';
+import { BrowserService } from 'kmc-shell';
 import { KalturaCaptionAsset, KalturaCaptionAssetStatus } from '@kaltura-ng2/kaltura-api/types'
 import { EntryCaptionsHandler } from './entry-captions-handler';
 
@@ -18,10 +20,11 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 	public _actions: MenuItem[] = [];
 
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
+	@ViewChild('fileDialog') private fileDialog: FileDialogComponent;
 
 	private _currentCaption: KalturaCaptionAsset;
 
-    constructor(public _handler : EntryCaptionsHandler, private _appLocalization: AppLocalization) {
+    constructor(public _handler : EntryCaptionsHandler, private _appAuthentication: AppAuthentication, private _appConfig:AppConfig, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
     }
 
 	ngOnInit() {
@@ -29,6 +32,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 			{label: this._appLocalization.get('applications.content.entryDetails.captions.edit'), command: (event) => {this.actionSelected("edit");}},
 			{label: this._appLocalization.get('applications.content.entryDetails.captions.download'), command: (event) => {this.actionSelected("download");}},
 			{label: this._appLocalization.get('applications.content.entryDetails.captions.delete'), command: (event) => {this.actionSelected("delete");}},
+			{label: this._appLocalization.get('applications.content.entryDetails.captions.preview'), command: (event) => {this.actionSelected("preview");}}
 		];
 	}
 
@@ -38,6 +42,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 			this._currentCaption = caption;
 			//disable download action for captions that are not in "ready" state
 			this._actions[1].disabled = (caption.status !== KalturaCaptionAssetStatus.Ready);
+			this._actions[3].disabled = (caption.status !== KalturaCaptionAssetStatus.Ready);
 
 			this.actionsMenu.toggle(event);
 		}
@@ -53,10 +58,16 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 			case "download":
 				alert("download");
 				break;
+			case "preview":
+				const previewUrl = this._appConfig.get("core.kaltura.apiUrl") + "/service/caption_captionasset/action/serve/captionAssetId/" + this._currentCaption.id +"/ks/" + this._appAuthentication.appUser.ks;
+				this._browserService.openLink(previewUrl);
+				break;
 		}
 	}
 
-
+	public _addCaption(){
+		this.fileDialog.open();
+	}
     ngOnDestroy() {
     }
 
