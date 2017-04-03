@@ -133,4 +133,10 @@ export class EntryCaptionsHandler extends EntrySection
     public _getRowStyle(rowData, rowIndex): string{
 	    return rowData.uploadStatus ? "uoloading" : '';
     }
+
+    public _onFileSelected(selectedFiles: FileList){
+	    if (selectedFiles.length){
+		    alert("got the file: "+selectedFiles[0].name);
+	    }
+    }
 }
