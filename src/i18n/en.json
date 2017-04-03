@@ -256,7 +256,10 @@
 					"setDefault": "Set as default",
 					"edit": "Edit",
 					"download": "Download",
-					"delete": "Delete"
+					"delete": "Delete",
+					"processing": "Processing",
+					"error": "Error",
+					"saved": "Saved"
 				},
 				"live":{
 					"live": "Live Stream",

@@ -7,12 +7,23 @@
 				<p-column field="label" header="{{'applications.content.entryDetails.captions.label' | translate}}">
 				</p-column>
 				<p-column header="{{'applications.content.entryDetails.captions.location' | translate}}">
+					<template let-col let-caption="rowData" pTemplate="body">
+						<div #locationHolder class="kLocationHolder">
+							<span class="kCaptionLocation" pTooltip="{{_handler._getCaptionUrl(caption.id)}}" [appendTo]="'body'" tooltipPosition="top">{{_handler._getCaptionUrl(caption.id)}}</span>
+						</div>
+					</template>
 				</p-column>
 				<p-column field="format" header="{{'applications.content.entryDetails.captions.type' | translate}}">
+					<template let-col let-caption="rowData" pTemplate="body">
+						<span>{{_handler._getCaptionType(caption.format)}}</span>
+					</template>
 				</p-column>
 				<p-column field="language" header="{{'applications.content.entryDetails.captions.language' | translate}}">
 				</p-column>
 				<p-column field="status" header="{{'applications.content.entryDetails.captions.status' | translate}}">
+					<template let-col let-caption="rowData" pTemplate="body">
+						<span>{{_handler._getCaptionStatus(caption.status)}}</span>
+					</template>
 				</p-column>
 				<p-column>
 					<template let-col let-caption="rowData" pTemplate="body">

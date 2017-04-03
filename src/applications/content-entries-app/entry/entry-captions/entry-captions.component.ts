@@ -37,9 +37,8 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 			// save the selected caption for usage in the actions menu
 			this._currentCaption = caption;
 			//disable download action for captions that are not in "ready" state
-			if (caption.status.toString() !== KalturaCaptionAssetStatus.Ready.toString()){
-				this._actions[1].disabled = true;
-			}
+			this._actions[1].disabled = (caption.status !== KalturaCaptionAssetStatus.Ready);
+
 			this.actionsMenu.toggle(event);
 		}
 	}

@@ -1,7 +1,8 @@
 import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, KeyValueChangeRecord, CollectionChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { CaptionAssetSetAsDefaultAction, CaptionAssetListAction, KalturaCaptionAsset, KalturaFilterPager, KalturaAssetFilter } from '@kaltura-ng2/kaltura-api/types';
+import { CaptionAssetSetAsDefaultAction, CaptionAssetListAction, KalturaCaptionAsset, KalturaFilterPager, KalturaAssetFilter, KalturaCaptionType, KalturaCaptionAssetStatus } from '@kaltura-ng2/kaltura-api/types';
+import { AppConfig, AppAuthentication, AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import { EntrySection } from '../../entry-store/entry-section-handler';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
@@ -23,7 +24,7 @@ export class EntryCaptionsHandler extends EntrySection
 	private _entryId: string = '';
 
     constructor(manager : EntrySectionsManager, private _objectDiffers:  KeyValueDiffers, private _listDiffers : IterableDiffers,
-                private _kalturaServerClient: KalturaServerClient)
+                private _kalturaServerClient: KalturaServerClient, private _appConfig:AppConfig, private _appAuthentication: AppAuthentication, private _appLocalization:AppLocalization)
     {
         super(manager);
     }
@@ -92,5 +93,38 @@ export class EntryCaptionsHandler extends EntrySection
 		   caption.isDefault = caption.id === captionId ? 1 : 0;
 	    });
 	    this._captions.next({items : captions, loading : false, error : null});
+    }
+
+    public _getCaptionUrl(captionId: string): string{
+	    return this._appConfig.get("core.kaltura.apiUrl") + "/service/caption_captionasset/action/serve/captionAssetId/" + captionId +"/ks/" + this._appAuthentication.appUser.ks;
+    }
+
+    public _getCaptionType(captionFormat: KalturaCaptionType): string{
+	    let type = this._appLocalization.get('app.common.n_a');
+	    switch (captionFormat.toString()){
+		    case KalturaCaptionType.Srt.toString():
+		    	type = "SRT";
+			    break;
+		    case KalturaCaptionType.Dfxp.toString():
+		    	type = "DFXP";
+			    break;
+		    case KalturaCaptionType.Webvtt.toString():
+		    	type = "WEBVTT";
+			    break;
+	    }
+	    return type;
+    }
+
+    public _getCaptionStatus(captionStatus: KalturaCaptionAssetStatus): string{
+	    let status = this._appLocalization.get('applications.content.entryDetails.captions.processing');
+	    switch (captionStatus.toString()){
+		    case KalturaCaptionAssetStatus.Error.toString():
+			    status = this._appLocalization.get('applications.content.entryDetails.captions.error');
+			    break;
+		    case KalturaCaptionAssetStatus.Ready.toString():
+			    status = this._appLocalization.get('applications.content.entryDetails.captions.saved');
+			    break;
+	    }
+	    return status;
     }
 }
