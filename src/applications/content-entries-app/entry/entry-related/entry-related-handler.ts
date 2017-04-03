@@ -41,34 +41,40 @@ export class EntryRelatedHandler extends EntrySection
 				private _uploadManagement : UploadManagement) {
         super(manager);
 
-		this._uploadManagement.trackedFiles
+        this._trackUploadFiles();
+    }
+
+
+    private _trackUploadFiles() : void
+    {
+        this._uploadManagement.trackedFiles
             .cancelOnDestroy(this)
             .subscribe(
-				((filesStatus : FileChanges) =>
-				{
-					this._relatedFiles.getValue().items.forEach(file =>
-					{
-						const uploadToken = (<any>file).uploadToken;
-						if (uploadToken)
-						{
-							const uploadStatus = filesStatus[uploadToken];
-							switch(uploadStatus ? uploadStatus.status : '')
-							{
-								case 'uploaded':
-									delete (<any>file).uploadToken;
-									break;
-								case 'uploadFailure':
-									// TODO [kmcng] amir decide how to handle it
-									break;
-								case 'uploading':
-								default:
-									break;
-							}
-						}
-					});
-					console.warn('TODO [kmcng]: check for relevant upload files');
-				})
-			);
+                ((filesStatus : FileChanges) =>
+                {
+                    this._relatedFiles.getValue().items.forEach(file =>
+                    {
+                        const uploadToken = (<any>file).uploadToken;
+                        if (uploadToken)
+                        {
+                            const uploadStatus = filesStatus[uploadToken];
+                            switch(uploadStatus ? uploadStatus.status : '')
+                            {
+                                case 'uploaded':
+                                    (<any>file).uploading = false;
+                                    break;
+                                case 'uploadFailure':
+                                    // TODO [kmcng] amir decide how to handle it
+                                    break;
+                                case 'uploading':
+                                default:
+                                    break;
+                            }
+                        }
+                    });
+                    console.warn('TODO [kmcng]: check for relevant upload files');
+                })
+            );
     }
 
     public get sectionType() : EntrySectionTypes
@@ -121,18 +127,16 @@ export class EntryRelatedHandler extends EntrySection
 	}
 
 
-	private _addFile(fileName : string, uploadToken : string, format :KalturaAttachmentType) : KalturaAttachmentAsset {
+	private _addFile(fileName : string, format :KalturaAttachmentType) : KalturaAttachmentAsset {
     	const existingItems = this._relatedFiles.getValue().items;
 
 		const newFile = new KalturaAttachmentAsset({
 			filename: fileName,
-			format: KalturaAttachmentType.Document
+			format: format
 		});
 
 		// create a fake id for local usage
-		(<any>newFile)['tempId'] = FriendlyHashId.defaultInstance.generateUnique(existingItems.map(item => item.id));
-
-		this._updateFileUploadToken(newFile, uploadToken);
+		(<any>newFile)['tempId'] = FriendlyHashId.defaultInstance.generateUnique(existingItems.map(item => item.id || (<any>item).tempId));
 
 		const files = [
 			...existingItems,
@@ -246,8 +250,8 @@ export class EntryRelatedHandler extends EntrySection
 		if (selectedFiles && selectedFiles.length) {
 			const fileData = selectedFiles[0];
 
-			// create a file with dummy upload token (the actual value will be assigned once created)
-			const newFile = this._addFile(selectedFiles[0].name, '_new_file_token_',KalturaAttachmentType.Document);
+			const newFile = this._addFile(selectedFiles[0].name, KalturaAttachmentType.Document);
+            (<any>newFile).uploading = true;
 
 			this._uploadManagement.newUpload(new KalturaOVPFile(fileData))
                 .subscribe((response) => {
