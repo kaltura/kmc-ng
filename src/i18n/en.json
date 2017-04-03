@@ -248,7 +248,6 @@
 					"captions": "Captions",
 					"add": "Add Caption",
 					"label": "Label",
-					"location": "File Location",
 					"type": "File Type",
 					"language": "Language",
 					"status": "Status",
@@ -256,7 +255,11 @@
 					"setDefault": "Set as default",
 					"edit": "Edit",
 					"download": "Download",
-					"delete": "Delete"
+					"delete": "Delete",
+					"processing": "Processing",
+					"error": "Error",
+					"saved": "Saved",
+					"preview": "Preview"
 				},
 				"live":{
 					"live": "Live Stream",

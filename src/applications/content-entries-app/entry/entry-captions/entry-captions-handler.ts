@@ -1,20 +1,27 @@
 import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, KeyValueChangeRecord, CollectionChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { CaptionAssetSetAsDefaultAction, CaptionAssetListAction, KalturaCaptionAsset, KalturaFilterPager, KalturaAssetFilter } from '@kaltura-ng2/kaltura-api/types';
+import { CaptionAssetSetAsDefaultAction, CaptionAssetListAction, KalturaCaptionAsset, KalturaFilterPager, KalturaAssetFilter, KalturaCaptionType, KalturaCaptionAssetStatus } from '@kaltura-ng2/kaltura-api/types';
+import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import { EntrySection } from '../../entry-store/entry-section-handler';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
+export interface CaptionRow {
+	uploadStatus: boolean,
+	uploadToken: string,
+	id: string,
+	isDefault: number
+}
 @Injectable()
 export class EntryCaptionsHandler extends EntrySection
 {
 	captionsListDiffer: IterableDiffer;
 	captionDiffer : { [key : string] : KeyValueDiffer } = {};
 
-	private _captions : BehaviorSubject<{ items : KalturaCaptionAsset[], loading : boolean, error? : any}> = new BehaviorSubject<{ items : KalturaCaptionAsset[], loading : boolean, error? : any}>(
+	private _captions : BehaviorSubject<{ items : CaptionRow[], loading : boolean, error? : any}> = new BehaviorSubject<{ items : CaptionRow[], loading : boolean, error? : any}>(
 		{ items : null, loading : false}
 	);
 
@@ -23,7 +30,7 @@ export class EntryCaptionsHandler extends EntrySection
 	private _entryId: string = '';
 
     constructor(manager : EntrySectionsManager, private _objectDiffers:  KeyValueDiffers, private _listDiffers : IterableDiffers,
-                private _kalturaServerClient: KalturaServerClient)
+                private _kalturaServerClient: KalturaServerClient, private _appLocalization:AppLocalization)
     {
         super(manager);
     }
@@ -68,12 +75,12 @@ export class EntryCaptionsHandler extends EntrySection
 		    .subscribe(
 			    response =>
 			    {
-				    this._captions.next({items : response.objects, loading : false});
+				    this._captions.next({items : response.objects as any[], loading : false});
 				    this.captionsListDiffer = this._listDiffers.find([]).create(null);
 				    this.captionsListDiffer.diff(this._captions.getValue().items);
 
 				    this.captionDiffer = {};
-				    this._captions.getValue().items.forEach((caption: KalturaCaptionAsset) => {
+				    this._captions.getValue().items.forEach((caption) => {
 					    this.captionDiffer[caption.id] = this._objectDiffers.find([]).create(null);
 					    this.captionDiffer[caption.id].diff(caption);
 				    });
@@ -88,9 +95,48 @@ export class EntryCaptionsHandler extends EntrySection
     public _setAsDefault(caption: KalturaCaptionAsset): void{
 	    const captionId = caption.id;
 	    let captions = Array.from(this._captions.getValue().items); // create a copy of the captions array withour a reference to the original array
-	    captions.forEach((caption: KalturaCaptionAsset) => {
+	    captions.forEach((caption) => {
 		   caption.isDefault = caption.id === captionId ? 1 : 0;
 	    });
 	    this._captions.next({items : captions, loading : false, error : null});
+    }
+
+    public _getCaptionType(captionFormat: KalturaCaptionType): string{
+	    let type = this._appLocalization.get('app.common.n_a');
+	    switch (captionFormat.toString()){
+		    case KalturaCaptionType.Srt.toString():
+		    	type = "SRT";
+			    break;
+		    case KalturaCaptionType.Dfxp.toString():
+		    	type = "DFXP";
+			    break;
+		    case KalturaCaptionType.Webvtt.toString():
+		    	type = "WEBVTT";
+			    break;
+	    }
+	    return type;
+    }
+
+    public _getCaptionStatus(captionStatus: KalturaCaptionAssetStatus): string{
+	    let status = this._appLocalization.get('applications.content.entryDetails.captions.processing');
+	    switch (captionStatus.toString()){
+		    case KalturaCaptionAssetStatus.Error.toString():
+			    status = this._appLocalization.get('applications.content.entryDetails.captions.error');
+			    break;
+		    case KalturaCaptionAssetStatus.Ready.toString():
+			    status = this._appLocalization.get('applications.content.entryDetails.captions.saved');
+			    break;
+	    }
+	    return status;
+    }
+
+    public _getRowStyle(rowData, rowIndex): string{
+	    return rowData.uploadStatus ? "uoloading" : '';
+    }
+
+    public _onFileSelected(selectedFiles: FileList){
+	    if (selectedFiles.length){
+		    alert("got the file: "+selectedFiles[0].name);
+	    }
     }
 }
