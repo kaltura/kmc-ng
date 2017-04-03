@@ -48,7 +48,7 @@
     "webpack-dev-server": "webpack-dev-server",
     "wml": "wml",
     "wml:watch": "wml start",
-    "wml:build": "wml once"
+    "wml:sync": "wml once"
   },
   "dependencies": {
     "@angular/common": "~2.4.3",

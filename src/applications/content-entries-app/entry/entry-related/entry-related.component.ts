@@ -4,7 +4,8 @@ import { KalturaAttachmentType, KalturaAttachmentAsset, KalturaEntryStatus } fro
 import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { SelectItem, Menu, MenuItem } from 'primeng/primeng';
-import { UploadManagement, KalturaUploadFileData } from '@kaltura-ng2/kaltura-common/upload-management';
+import { UploadManagement } from '@kaltura-ng2/kaltura-common/upload-management';
+import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
 
 @Component({
     selector: 'kEntryRelated',
@@ -112,7 +113,15 @@ export class EntryRelated implements OnInit, OnDestroy{
 			const file = this._fileUploader.nativeElement.files.length ? this._fileUploader.nativeElement.files[0] : null;
 			if (file)
 			{
-				this._uploadManagement.uploadFile(new KalturaUploadFileData(file));
+				this._uploadManagement.newUpload(new KalturaOVPFile(file))
+					.subscribe((response) =>
+				{
+					console.log(response);
+				},
+					(error) =>
+				{
+					console.error(error);
+				});
 			}
 		}
 	}
