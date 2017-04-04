@@ -43,7 +43,7 @@ do
       PACKAGE_SRC=$(readlink ${NPM_MODULES_BASE}/@kaltura-ng2/${PACKAGE})
       PACKAGE_DEST=../../node_modules/@kaltura-ng2/${PACKAGE}
       printf "n" | $(npm bin)/wml add ${PACKAGE_SRC} ${PACKAGE_DEST}
-      npm run wml:build
+      npm run wml:sync
   fi
 done
 
