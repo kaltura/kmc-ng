@@ -2,7 +2,7 @@
 
 .jumpTo{
 	position: absolute;
-	right: 110px;
+	right: 130px;
 	button{
 		position: fixed;
 		font-weight: 400;
@@ -13,6 +13,7 @@
 .kMetadataDetails{
 	padding-left: 12px;
 	padding-right: 130px;
+	overflow-y: auto;
 	width: 100%;
 	.kRow{
 		display: flex;

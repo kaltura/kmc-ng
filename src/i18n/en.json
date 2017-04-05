@@ -254,6 +254,7 @@
 					"default": "Default Caption",
 					"setDefault": "Set as default",
 					"edit": "Edit",
+					"editCaption": "Edit Caption",
 					"download": "Download",
 					"delete": "Delete",
 					"processing": "Processing",

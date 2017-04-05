@@ -130,6 +130,18 @@ export class EntryCaptionsHandler extends EntrySection
 	    return status;
     }
 
+	public removeCaption(caption: CaptionRow): void{
+		// update the list by filtering the assets array.
+
+		this._captions.next({items : this._captions.getValue().items.filter((item: CaptionRow) => {return item !== caption}), loading : false});
+
+		// stop tracking changes on this asset
+		// if file id is empty it was added by the user so no need to track its changes.
+		if (caption.id && this.captionDiffer[caption.id]){
+			delete this.captionDiffer[caption.id];
+		}
+	}
+
     public _getRowStyle(rowData, rowIndex): string{
 	    return rowData.uploadStatus ? "uoloading" : '';
     }

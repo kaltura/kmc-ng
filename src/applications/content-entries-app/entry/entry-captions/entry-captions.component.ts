@@ -6,6 +6,8 @@ import { AppLocalization, AppAuthentication, AppConfig } from '@kaltura-ng2/kalt
 import { FileDialogComponent } from '@kaltura-ng2/kaltura-ui';
 import { BrowserService } from 'kmc-shell';
 import { KalturaCaptionAsset, KalturaCaptionAssetStatus } from '@kaltura-ng2/kaltura-api/types'
+import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
+
 import { EntryCaptionsHandler } from './entry-captions-handler';
 
 @Component({
@@ -20,9 +22,10 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 	public _actions: MenuItem[] = [];
 
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
+	@ViewChild('editPopup') public editPopup: PopupWidgetComponent;
 	@ViewChild('fileDialog') private fileDialog: FileDialogComponent;
 
-	private _currentCaption: KalturaCaptionAsset;
+	public _currentCaption: KalturaCaptionAsset;
 
     constructor(public _handler : EntryCaptionsHandler, private _appAuthentication: AppAuthentication, private _appConfig:AppConfig, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
     }
@@ -41,6 +44,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 			// save the selected caption for usage in the actions menu
 			this._currentCaption = caption;
 			//disable download action for captions that are not in "ready" state
+			this._actions[0].disabled = (caption.status !== KalturaCaptionAssetStatus.Ready);
 			this._actions[1].disabled = (caption.status !== KalturaCaptionAssetStatus.Ready);
 			this._actions[3].disabled = (caption.status !== KalturaCaptionAssetStatus.Ready);
 
@@ -50,19 +54,32 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 	private actionSelected(action: string): void{
 		switch (action){
 			case "edit":
-				alert("edit");
+				this.editPopup.open();
 				break;
 			case "delete":
-				alert("delete");
+				this._handler.removeCaption(<any>this._currentCaption);
 				break;
 			case "download":
-				alert("download");
+				this._downloadFile();
 				break;
 			case "preview":
 				const previewUrl = this._appConfig.get("core.kaltura.apiUrl") + "/service/caption_captionasset/action/serve/captionAssetId/" + this._currentCaption.id +"/ks/" + this._appAuthentication.appUser.ks;
 				this._browserService.openLink(previewUrl);
 				break;
 		}
+	}
+
+	private _downloadFile(): void {
+
+		const baseUrl = this._appConfig.get('core.kaltura.cdnUrl');
+		const protocol = baseUrl.split(":")[0];
+		const partnerId = this._appAuthentication.appUser.partnerId;
+		const entryId = this._handler.data.id;
+
+		let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + entryId + '/flavorId/' + this._currentCaption.id + '/format/download/protocol/' + protocol;
+		url = url.replace("cdnapi","lbd"); // TODO [KMCNG] - remove this line once this feature is available on the production server (should be until April 7)
+
+		this._browserService.openLink(url);
 	}
 
 	public _addCaption(){

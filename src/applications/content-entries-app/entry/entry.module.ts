@@ -19,6 +19,7 @@ import { EntryAccessControl } from "./entry-access-control/entry-access-control.
 import { EntryScheduling } from "./entry-scheduling/entry-scheduling.component";
 import { EntryFlavours } from "./entry-flavours/entry-flavours.component";
 import { EntryCaptions } from "./entry-captions/entry-captions.component";
+import { EntryCaptionsEdit } from "./entry-captions/entry-captions-edit.component";
 import { EntryLive } from "./entry-live/entry-live.component";
 import { EntryRelated } from "./entry-related/entry-related.component";
 import { EntryRelatedEdit } from "./entry-related/entry-related-edit.component";
@@ -58,6 +59,7 @@ import { EntryPreview } from './entry-preview/entry-preview.component';
     declarations: [
         EntryAccessControl,
         EntryCaptions,
+	    EntryCaptionsEdit,
         EntryClips,
         EntryComponent,
         EntryFlavours,

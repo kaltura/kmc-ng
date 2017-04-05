@@ -36,4 +36,9 @@
 			<p-menu kMenuCloseOnScroll [scrollTarget]="captions" #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'"></p-menu>
 		</div>
 	</div>
+
+	<kPopupWidget #editPopup [popupWidth]="380" [popupHeight]="400" [modal]="true">
+		<kEntryCaptionsEdit [currentCaption]="_currentCaption" [parentPopupWidget]="editPopup"></kEntryCaptionsEdit>
+	</kPopupWidget>
+
 </kLoader>

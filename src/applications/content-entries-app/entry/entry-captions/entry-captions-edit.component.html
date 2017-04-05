@@ -1,0 +1,22 @@
+<div class="kEditWin kUseKMCngIcons" #captionsEdit>
+	<form [formGroup]="captionsEditForm" novalidate>
+		<div class="kEditTitle">{{'applications.content.entryDetails.captions.editCaption' | translate}}</div>
+		<div class="kDivider"></div>
+		<div class="kRow">
+			<span class="kLabel">{{'applications.content.entryDetails.captions.label' | translate}}</span>
+			<input formControlName="label" type="text" pInputText/>
+		</div>
+		<div class="kRow">
+			<span class="kLabel">{{'applications.content.entryDetails.captions.language' | translate}}</span>
+			<p-dropdown [options]="_languages" [autoWidth]="false" formControlName="language"></p-dropdown>
+		</div>
+		<div class="kRow">
+			<span class="kLabel">{{'applications.content.entryDetails.captions.type' | translate}}</span>
+			<p-dropdown [options]="_captionFormats" [autoWidth]="false" formControlName="format"></p-dropdown>
+		</div>
+		<div class="kDivider kPushDown"></div>
+		<div class="kRow kCenter">
+			<button type="button" class="kButtonBranded kDoneBtn" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.related.done' | translate}}"></button>
+		</div>
+	</form>
+</div>
