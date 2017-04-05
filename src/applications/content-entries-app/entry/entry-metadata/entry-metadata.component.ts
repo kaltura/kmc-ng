@@ -28,9 +28,8 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     private _searchTagsSubscription : ISubscription;
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
     public _tagsProvider = new Subject<SuggestionsProviderData>();
-    public _loading = false;
-    public _loadingError = null;
 	public _jumpToMenu: MenuItem[] = [];
+
 
     constructor(private _appLocalization: AppLocalization,
                 public _handler : EntryMetadataHandler,
@@ -38,12 +37,8 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     }
 
 
+
     ngOnInit() {
-
-
-
-
-
     	this._jumpToMenu = [
 		    {label: "Section 1", command: (event) => {
 			    this._jumpTo("Section 1");

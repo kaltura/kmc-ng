@@ -73,7 +73,7 @@ const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessCo
     GetBootstrapProvider(KalturaAuthConfigAdapter),
     GetBootstrapProvider(KalturaHttpConfigurationAdapter  ),
     AppDefaultConfig,
-    { provide :KalturaServerClient, useClass : KalturaHttpPostClient},
+      { provide :KalturaServerClient, useClass : KalturaHttpPostClient},
       KalturaHttpConfiguration,
     { provide : AppStorage,  useExisting : BrowserService }
   ]

@@ -1,4 +1,4 @@
-<kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
+<kLoader [loading]="_handler._loading" [loadingError]="_handler._loadingError" (onActionRequested)="_onLoadingAction($event)">
 	<div class="jumpTo">
 		<p-menu #menu popup="popup" [model]="_jumpToMenu" [appendTo]="'body'"></p-menu>
 		<button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right" label="{{'applications.content.entryDetails.metadata.jumpTo' | translate}}" (click)="menu.toggle($event)"></button>
@@ -53,6 +53,10 @@
 				<input formControlName="referenceId" type="text" pInputText/>
 			</div>
 		</form>
+
+		<hr style="margin-top: 24px"/>
+
+		<kDynamicForm [controls]="_handler._customMetadataControls"></kDynamicForm>
 
 		<hr style="margin-top: 24px"/>
 

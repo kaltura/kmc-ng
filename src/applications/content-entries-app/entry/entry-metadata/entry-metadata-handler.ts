@@ -10,11 +10,12 @@ import { KalturaTagFilter, KalturaTaggedObjectType, KalturaFilterPager,
 import { CategoriesStore, CategoryData } from '../../../../shared/kmc-content-ui/categories-store.service';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataFieldTypes } from '@kaltura-ng2/kaltura-common';
+import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng2/kaltura-common';
 import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 import { KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
-
+import { DynamicFormControlBase } from '@kaltura-ng2/kaltura-ui/dynamic-form';
+import { PrimeTextboxControl } from '@kaltura-ng2/kaltura-primeng-ui/dynamic-form';
 
 export interface EntryCategories
 { items : CategoryData[],
@@ -27,15 +28,12 @@ export class EntryMetadataHandler extends EntrySection
 {
     private _entryCategories : BehaviorSubject<EntryCategories> = new BehaviorSubject<EntryCategories>({items : [], loading : false});
     public metadataForm : FormGroup;
+    public _customMetadataControls : DynamicFormControlBase<any>[];
     public _categoriesControl : FormControl;
+    public _loading = false;
+    public _loadingError = null;
 
     public entryCategories$ = this._entryCategories.asObservable().monitor('entry categories');
-
-    private _metadataProfiles : BehaviorSubject<{ items : MetadataProfile[], loading : boolean, error? : any}> = new BehaviorSubject<{ items : MetadataProfile[], loading : boolean, error? : any}>(
-        { items : null, loading : false}
-    );
-
-    public _metadataProfiles$ = this._metadataProfiles.asObservable().monitor('metadata profiles');
 
     constructor(manager : EntrySectionsManager,
                 private _kalturaServerClient: KalturaServerClient,
@@ -138,7 +136,6 @@ export class EntryMetadataHandler extends EntrySection
                     this._entryCategories.next({loading: false, items: [], error: error});
                 }
             );
-
     }
 
     private _fetchProfileMetadata() : void{
@@ -146,13 +143,33 @@ export class EntryMetadataHandler extends EntrySection
             .cancelOnDestroy(this)
             .monitor('load metadata profiles')
             .subscribe(
-                response =>
-                {
-                    this._metadataProfiles.next({items : response.items, loading : false});
+                response => {
+                    this._customMetadataControls =
+                        [
+                            new PrimeTextboxControl(
+                                {
+                                    key: 'firstName',
+                                    label: 'First name',
+                                    value: 'Bombasto',
+                                    required: true,
+                                    order: 1
+                                }
+                            ),
+                            new PrimeTextboxControl(
+                                {
+                                    key: 'lastName',
+                                    label: 'Last name',
+                                    value: 'sakal',
+                                    required: true,
+                                    order: 2
+                                }
+                            )
+                        ];
                 },
                 error =>
                 {
-                    this._metadataProfiles.next({items : [], loading : false, error : error});
+                    // TODO [kmcng] handle error
+                    this._loadingError = { message : error.message };
                 }
             );
     }
