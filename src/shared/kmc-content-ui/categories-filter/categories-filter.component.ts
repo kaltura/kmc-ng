@@ -106,7 +106,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     ngAfterViewInit(){
         if (this.parentPopupWidget){
             this.parentPopupStateChangeSubscription = this.parentPopupWidget.state$.subscribe(event => {
-                if (event === PopupWidgetStates.Open){
+                if (event.state === PopupWidgetStates.Open){
                     const inputFields: any[] = this.filtersRef.nativeElement.getElementsByTagName("input");
                     if (inputFields.length && inputFields[0].focus){
                         setTimeout(() => {
@@ -114,7 +114,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                         },0);
                     }
                 }
-                if (event === PopupWidgetStates.Close){
+                if (event.state === PopupWidgetStates.Close){
                     const nativeElement: HTMLElement = this.filtersRef.nativeElement;
                     if (nativeElement && nativeElement.getElementsByClassName("kTreeContainer").length > 0){
                         nativeElement.getElementsByClassName("kTreeContainer")[0].scrollTop = 0;

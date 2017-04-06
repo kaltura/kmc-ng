@@ -1,12 +1,12 @@
 import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
 
 import { Menu, MenuItem } from 'primeng/primeng';
+import { ISubscription } from 'rxjs/Subscription';
 
 import { AppLocalization, AppAuthentication, AppConfig } from '@kaltura-ng2/kaltura-common';
-import { FileDialogComponent } from '@kaltura-ng2/kaltura-ui';
 import { BrowserService } from 'kmc-shell';
 import { KalturaCaptionAsset, KalturaCaptionAssetStatus } from '@kaltura-ng2/kaltura-api/types'
-import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
 import { EntryCaptionsHandler } from './entry-captions-handler';
 
@@ -23,9 +23,10 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
 	@ViewChild('editPopup') public editPopup: PopupWidgetComponent;
-	@ViewChild('fileDialog') private fileDialog: FileDialogComponent;
 
 	public _currentCaption: KalturaCaptionAsset;
+
+	private _popupStateChangeSubscribe: ISubscription;
 
     constructor(public _handler : EntryCaptionsHandler, private _appAuthentication: AppAuthentication, private _appConfig:AppConfig, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
     }
@@ -39,10 +40,11 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 		];
 	}
 
-	openActionsMenu(event: any, caption: KalturaCaptionAsset): void{
+	openActionsMenu(event: any, caption: any): void{
 		if (this.actionsMenu){
 			// save the selected caption for usage in the actions menu
 			this._currentCaption = caption;
+			this._handler.currentCaption = caption;
 			//disable download action for captions that are not in "ready" state
 			this._actions[0].disabled = (caption.status !== KalturaCaptionAssetStatus.Ready);
 			this._actions[1].disabled = (caption.status !== KalturaCaptionAssetStatus.Ready);
@@ -50,6 +52,27 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 
 			this.actionsMenu.toggle(event);
 		}
+	}
+
+	ngAfterViewInit(){
+		if (this.editPopup) {
+			this._popupStateChangeSubscribe = this.editPopup.state$
+				.subscribe(event => {
+					if (event.state === PopupWidgetStates.Close) {
+						if (event.context && event.context.newCaptionFile){
+							this._handler.upload(event.context.newCaptionFile);
+						}
+						if (event.context && event.context.newCaptionUrl){
+							this._handler.currentCaption.uploadUrl = event.context.newCaptionUrl;
+						}
+					}
+				});
+		}
+	}
+
+	public _addCaption(){
+		this._currentCaption = this._handler._addCaption();
+		setTimeout( () => { this.editPopup.open(); }, 0); // use a timeout to allow data binding of _currentCaption to update before opening the popup widget
 	}
 	private actionSelected(action: string): void{
 		switch (action){
@@ -82,15 +105,8 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 		this._browserService.openLink(url);
 	}
 
-	public _addCaption(){
-		this.fileDialog.open();
-	}
     ngOnDestroy() {
-    }
-
-
-    ngAfterViewInit() {
-
+	    this._popupStateChangeSubscribe.unsubscribe();
     }
 
 

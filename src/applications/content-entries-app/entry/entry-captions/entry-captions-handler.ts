@@ -1,19 +1,26 @@
 import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, KeyValueChangeRecord, CollectionChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { CaptionAssetSetAsDefaultAction, CaptionAssetListAction, KalturaCaptionAsset, KalturaFilterPager, KalturaAssetFilter, KalturaCaptionType, KalturaCaptionAssetStatus } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaServerClient, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
+import { CaptionAssetSetAsDefaultAction, CaptionAssetListAction, KalturaCaptionAsset, KalturaFilterPager, KalturaAssetFilter,
+	KalturaCaptionType, KalturaCaptionAssetStatus, KalturaLanguage, KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import { EntrySection } from '../../entry-store/entry-section-handler';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
+import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
+import { UploadManagement } from '@kaltura-ng2/kaltura-common/upload-management';
 
 export interface CaptionRow {
 	uploadStatus: boolean,
 	uploadToken: string,
+	uploadUrl: string,
 	id: string,
-	isDefault: number
+	isDefault: number,
+	format: KalturaCaptionType,
+	language: KalturaLanguage,
+	label: string
 }
 @Injectable()
 export class EntryCaptionsHandler extends EntrySection
@@ -26,11 +33,12 @@ export class EntryCaptionsHandler extends EntrySection
 	);
 
 	public _captions$ = this._captions.asObservable().monitor('caption files');
+	public currentCaption: CaptionRow;
 
 	private _entryId: string = '';
 
     constructor(manager : EntrySectionsManager, private _objectDiffers:  KeyValueDiffers, private _listDiffers : IterableDiffers,
-                private _kalturaServerClient: KalturaServerClient, private _appLocalization:AppLocalization)
+                private _kalturaServerClient: KalturaServerClient, private _appLocalization:AppLocalization, private _uploadManagement : UploadManagement)
     {
         super(manager);
     }
@@ -117,18 +125,59 @@ export class EntryCaptionsHandler extends EntrySection
 	    return type;
     }
 
-    public _getCaptionStatus(captionStatus: KalturaCaptionAssetStatus): string{
-	    let status = this._appLocalization.get('applications.content.entryDetails.captions.processing');
-	    switch (captionStatus.toString()){
-		    case KalturaCaptionAssetStatus.Error.toString():
-			    status = this._appLocalization.get('applications.content.entryDetails.captions.error');
-			    break;
-		    case KalturaCaptionAssetStatus.Ready.toString():
-			    status = this._appLocalization.get('applications.content.entryDetails.captions.saved');
-			    break;
+    public _getCaptionStatus(caption: any): string{
+	    let status = "";
+	    if (caption.status) {
+		    status = this._appLocalization.get('applications.content.entryDetails.captions.processing');
+		    switch (caption.status.toString()) {
+			    case KalturaCaptionAssetStatus.Error.toString():
+				    status = this._appLocalization.get('applications.content.entryDetails.captions.error');
+				    break;
+			    case KalturaCaptionAssetStatus.Ready.toString():
+				    status = this._appLocalization.get('applications.content.entryDetails.captions.saved');
+				    break;
+		    }
+	    }else{
+		    if ((caption.uploadToken && caption.uploadToken.length) || (caption.uploadUrl && caption.uploadUrl.length)){
+			    status = this._appLocalization.get('applications.content.entryDetails.captions.ready');
+		    }
 	    }
 	    return status;
     }
+
+    public _addCaption(): any{
+
+		let newCaption: CaptionRow = {
+			uploadStatus: false,
+			uploadToken: "",
+			uploadUrl: "",
+			id: null,
+			format: KalturaCaptionType.Srt,
+	        language: KalturaLanguage.En,
+	        label: "English",
+	        isDefault: 0
+		};
+
+	    let captions = Array.from(this._captions.getValue().items); // create a copy of the captions array without a reference to the original array
+	    captions.push(newCaption);
+	    this._captions.next({items : captions, loading : false, error : null});
+	    this.currentCaption = this._captions.getValue().items[captions.length -1];
+	    return this.currentCaption;
+	}
+
+	public upload(captionFile: File):void{
+		this.currentCaption.uploadStatus = true;
+		this._uploadManagement.newUpload(new KalturaOVPFile(captionFile))
+			.subscribe((response) => {
+					// update file with actual upload token
+					this.currentCaption.uploadToken = response.uploadToken;
+					this.currentCaption.uploadStatus = false;
+				},
+				(error) => {
+					// TODO [kmcng] implement logic decided with Product
+					// remove file from list
+				});
+	}
 
 	public removeCaption(caption: CaptionRow): void{
 		// update the list by filtering the assets array.
@@ -146,9 +195,36 @@ export class EntryCaptionsHandler extends EntrySection
 	    return rowData.uploadStatus ? "uoloading" : '';
     }
 
-    public _onFileSelected(selectedFiles: FileList){
-	    if (selectedFiles.length){
-		    alert("got the file: "+selectedFiles[0].name);
-	    }
-    }
+	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
+	{
+		// check for added and removed captions
+		let changes = this.captionsListDiffer.diff(this._captions.getValue().items);
+		if (changes) {
+			changes.forEachAddedItem((record: CollectionChangeRecord) => {
+				// added captions
+				console.log('added ' + (record.item as CaptionRow).id);
+			});
+			changes.forEachRemovedItem((record: CollectionChangeRecord) => {
+				// remove deleted captions
+				console.log('deleted ' + (record.item as CaptionRow).id);
+			});
+		}
+
+		// update changed captions
+		this._captions.getValue().items.forEach((caption: CaptionRow) => {
+			var captionDiffer = this.captionDiffer[caption.id];
+			var objChanges = captionDiffer.diff(caption);
+			if (objChanges) {
+				console.log('update ' + caption.id);
+				// const updateAssetRequest: AttachmentAssetUpdateAction = new AttachmentAssetUpdateAction({id: asset.id, attachmentAsset: asset});
+				// request.requests.push(updateAssetRequest);
+				// objChanges.forEachChangedItem((record: KeyValueChangeRecord) =>{
+				// 	console.log("detected change in "+ asset.id+ ": Changed field = " + record.key + ". New value = " + record.currentValue);
+				// });
+
+			}
+		});
+	}
+
+
 }

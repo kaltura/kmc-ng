@@ -16,7 +16,7 @@
 				</p-column>
 				<p-column field="status" header="{{'applications.content.entryDetails.captions.status' | translate}}">
 					<template let-col let-caption="rowData" pTemplate="body">
-						<span>{{_handler._getCaptionStatus(caption.status)}}</span>
+						<span>{{_handler._getCaptionStatus(caption)}}</span>
 					</template>
 				</p-column>
 				<p-column>
@@ -37,7 +37,7 @@
 		</div>
 	</div>
 
-	<kPopupWidget #editPopup [popupWidth]="380" [popupHeight]="400" [modal]="true">
+	<kPopupWidget #editPopup [popupWidth]="380" [popupHeight]="440" [modal]="true">
 		<kEntryCaptionsEdit [currentCaption]="_currentCaption" [parentPopupWidget]="editPopup"></kEntryCaptionsEdit>
 	</kPopupWidget>
 

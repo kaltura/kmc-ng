@@ -30,13 +30,13 @@ export class EntryRelatedEdit implements  AfterViewInit, OnDestroy{
 		if (this.parentPopupWidget) {
 			this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$
 				.subscribe(event => {
-					if (event === PopupWidgetStates.Open) {
+					if (event.state === PopupWidgetStates.Open) {
 						this._resetForm();
 						this._confirmClose = true;
 						this.relatedEditForm.get("title").setValue(this.currentFile.title);
 						this.relatedEditForm.get("description").setValue(this.currentFile.partnerDescription);
 					}
-					if (event === PopupWidgetStates.Close) {
+					if (event.state === PopupWidgetStates.Close) {
 						if (this.relatedEditForm.dirty && this._confirmClose){
 							alert("Closing without saving data!");
 						}

@@ -260,7 +260,13 @@
 					"processing": "Processing",
 					"error": "Error",
 					"saved": "Saved",
-					"preview": "Preview"
+					"preview": "Preview",
+					"upload": "Upload",
+					"fromUrl": "From URL",
+					"uploadFile": "Upload File",
+					"urlPlaceholder": "Enter Caption URL",
+					"invalidUrl": "Please enter a valid URL",
+					"ready": "Ready For Save"
 				},
 				"live":{
 					"live": "Live Stream",

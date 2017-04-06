@@ -36,13 +36,44 @@
 		margin-top: 24px;
 		background-color: $kGrayscale4;
 	}
-	.kPushDown{
-		margin-top: 84px;
+	.kFooter{
+		position: absolute;
+		bottom: 24px;
+		right: 24px;
+		left: 14px;
 	}
 	.kDoneBtn{
 		width: 100px;
 		height: 34px;
 		font-weight: 400;
+	}
+	.kUpload{
+		display: flex;
+		align-items: center;
+		margin-top: 18px;
+	}
+	.kUploadButton{
+		font-weight: 400;
+		height: 32px;
+		margin-left: 120px;
+		flex: 0 0 auto;
+	}
+	.kCaptionUrl{
+		margin-top: 18px;
+		margin-left: 120px;
+		width: 210px;
+	}
+	.kUploadFileName{
+		white-space: nowrap;
+		padding-right: 12px;
+		overflow: hidden;
+		padding-left: 4px;
+	}
+	.kInvalid{
+		color: red;
+		font-size: 12px;
+		margin-left: 122px;
+		font-weight: 700;
 	}
 }
 

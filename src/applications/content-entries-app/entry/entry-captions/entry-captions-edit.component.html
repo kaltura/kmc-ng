@@ -1,4 +1,5 @@
 <div class="kEditWin kUseKMCngIcons" #captionsEdit>
+	<kFileDialog #fileDialog [filter]="'text/xml,.srt'" (onFileSelected)="_onFileSelected($event)"></kFileDialog>
 	<form [formGroup]="captionsEditForm" novalidate>
 		<div class="kEditTitle">{{'applications.content.entryDetails.captions.editCaption' | translate}}</div>
 		<div class="kDivider"></div>
@@ -14,9 +15,27 @@
 			<span class="kLabel">{{'applications.content.entryDetails.captions.type' | translate}}</span>
 			<p-dropdown [options]="_captionFormats" [autoWidth]="false" formControlName="format"></p-dropdown>
 		</div>
-		<div class="kDivider kPushDown"></div>
-		<div class="kRow kCenter">
-			<button type="button" class="kButtonBranded kDoneBtn" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.related.done' | translate}}"></button>
+		<div class="kRow" *ngIf="_newCaption">
+			<span class="kLabel">{{'applications.content.entryDetails.captions.add' | translate}}</span>
+			<p-radioButton name="uploadMethod" value="upload" formControlName="uploadMethod" label="{{'applications.content.entryDetails.captions.upload' | translate}}"></p-radioButton>
+			<p-radioButton name="uploadMethod" value="fromUrl" formControlName="uploadMethod" label="{{'applications.content.entryDetails.captions.fromUrl' | translate}}" style="margin-left: 12px" (click)="_resetUpload()"></p-radioButton>
 		</div>
+
+		<div class="kUpload" *ngIf="_newCaption && captionsEditForm.get('uploadMethod').value === 'upload'">
+			<button type="button" class="kButtonDefault kUploadButton" pButton label="{{'applications.content.entryDetails.captions.uploadFile' | translate}}" (click)="_uploadCaption()"></button>
+			<span class="kUploadFileName" pTooltip="{{_uploadFileName}}" tooltipPosition="top">{{_uploadFileName}}</span>
+		</div>
+		<div *ngIf="_newCaption && captionsEditForm.get('uploadMethod').value === 'fromUrl'">
+			<input class="kCaptionUrl" placeholder="{{'applications.content.entryDetails.captions.urlPlaceholder' | translate}}" formControlName="captionUrl" type="text" (blur)="_validate('captionUrl')" pInputText/>
+			<span class="kInvalid">{{_validationErrorMsg}}</span>
+		</div>
+
+		<div class="kFooter">
+			<div class="kDivider"></div>
+			<div class="kRow kCenter">
+				<button type="button" [disabled]="captionsEditForm.get('uploadMethod').value === 'fromUrl' && _validationErrorMsg?.length" class="kButtonBranded kDoneBtn" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.related.done' | translate}}"></button>
+			</div>
+		</div>
+
 	</form>
 </div>
