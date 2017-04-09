@@ -266,7 +266,9 @@
 					"uploadFile": "Upload File",
 					"urlPlaceholder": "Enter Caption URL",
 					"invalidUrl": "Please enter a valid URL",
-					"ready": "Ready For Save"
+					"ready": "Ready For Save",
+					"cancelEdit": "Cancel Edit",
+					"discard": "Discard all changes?"
 				},
 				"live":{
 					"live": "Live Stream",

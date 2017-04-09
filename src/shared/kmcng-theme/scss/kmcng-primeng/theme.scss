@@ -560,3 +560,41 @@ td.ui-datatable-emptymessage{
 		font-weight: 400;
 	}
 }
+
+// dialogues
+.ui-dialog.ui-confirmdialog {
+	.ui-dialog-titlebar {
+		height: 80px;
+		border-bottom: 1px solid $kGrayscale4;
+		text-align: center;
+		padding-top: 28px;
+	}
+	.ui-dialog-title{
+		color: $kGrayscale1;
+		font-size: 24px;
+		font-weight: 700;
+	}
+	.ui-dialog-content.ui-widget-content{
+		text-align: center;
+		padding-top: 28px;
+		padding-bottom: 28px;
+	}
+	.ui-dialog-buttonpane{
+		text-align: center;
+		button{
+			color: $kGrayscale1;
+			font-weight: 400;
+			float: none;
+			.ui-button-text{
+				padding-right: 2.1em;
+			}
+			&:hover {
+				color: $kPrimary;
+			}
+			&:active {
+				box-shadow: inset 0px 1px 3px 0 rgba(0, 0, 0, 0.50);
+			}
+		}
+	}
+}
+

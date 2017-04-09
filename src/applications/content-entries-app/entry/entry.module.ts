@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { MultiSelectModule, ButtonModule, TooltipModule, InputTextareaModule, PaginatorModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule, CheckboxModule, CalendarModule, SpinnerModule } from 'primeng/primeng';
+import { MultiSelectModule, ButtonModule, TooltipModule, InputTextareaModule, PaginatorModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule,
+	CheckboxModule, CalendarModule, SpinnerModule, ConfirmDialogModule, ConfirmationService } from 'primeng/primeng';
 
 import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
@@ -42,6 +43,7 @@ import { EntryPreview } from './entry-preview/entry-preview.component';
         FormsModule,
         InputTextareaModule,
         InputTextModule,
+	    ConfirmDialogModule,
         KalturaCommonModule,
         KalturaPrimeNgUIModule,
         KalturaUIModule,
@@ -76,6 +78,7 @@ import { EntryPreview } from './entry-preview/entry-preview.component';
     exports: [
     ],
     providers: [
+	    ConfirmationService
     ],
 })
 export class EntryModule { }

@@ -1,5 +1,6 @@
 import { Component, Input, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
+import { ConfirmationService } from 'primeng/primeng';
 
 import { ISubscription } from 'rxjs/Subscription';
 
@@ -36,7 +37,7 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
 	private _confirmClose: boolean = true;
 	private fileToUpload: File;
 
-    constructor(private _appLocalization: AppLocalization, private _fb: FormBuilder) {
+    constructor(private _appLocalization: AppLocalization, private _fb: FormBuilder, private _confirmationService: ConfirmationService) {
 	    // load all supported languages
 	    this._languages = [];
 	    for (let lang in KalturaLanguage){
@@ -65,11 +66,19 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
 						this.captionsEditForm.get("language").setValue(this.currentCaption.languageCode); //TODO [KMCNG] - update language logic after KAPI changes
 						this.captionsEditForm.get("format").setValue(this.currentCaption.format);
 					}
-					if (event.state === PopupWidgetStates.Close) {
-						if (this.captionsEditForm.dirty && this._confirmClose){
-							alert("Closing without saving data!");
+					if (event.state === PopupWidgetStates.BeforeClose) {
+						if (event.context && event.context.allowClose){
+							if (this.captionsEditForm.dirty && this._confirmClose){
+								event.context.allowClose = false;
+								this._confirmationService.confirm({
+									message: this._appLocalization.get('applications.content.entryDetails.captions.discard'),
+									accept: () => {
+										this._confirmClose = false;
+										this.parentPopupWidget.close();
+									}
+								});
+							}
 						}
-
 					}
 				});
 		}
