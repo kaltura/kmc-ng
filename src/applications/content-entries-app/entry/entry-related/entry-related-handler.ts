@@ -98,32 +98,37 @@ export class EntryRelatedHandler extends EntrySection
 
 	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
 	{
-		// check for added and removed assets
-		let changes = this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
-		if (changes) {
-			changes.forEachAddedItem((record: CollectionChangeRecord) => {
-				//console.log('added ' + (record.item as KalturaAttachmentAsset).id);
-			});
-			changes.forEachRemovedItem((record: CollectionChangeRecord) => {
-				// remove deleted assets
-				const deleteAssetRequest: AttachmentAssetDeleteAction = new AttachmentAssetDeleteAction({attachmentAssetId: (record.item as KalturaAttachmentAsset).id});
-				request.requests.push(deleteAssetRequest);
+		if (this._relatedFiles.getValue().items) {
+			// check for added and removed assets
+			if (this.relatedFilesListDiffer) {
+				let changes = this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
+				if (changes) {
+					changes.forEachAddedItem((record: CollectionChangeRecord) => {
+						//console.log('added ' + (record.item as KalturaAttachmentAsset).id);
+					});
+					changes.forEachRemovedItem((record: CollectionChangeRecord) => {
+						// remove deleted assets
+						const deleteAssetRequest: AttachmentAssetDeleteAction = new AttachmentAssetDeleteAction({attachmentAssetId: (record.item as KalturaAttachmentAsset).id});
+						request.requests.push(deleteAssetRequest);
+					});
+				}
+			}
+
+			// update changed assets
+			this._relatedFiles.getValue().items.forEach((asset: KalturaAttachmentAsset) => {
+				var relatedFileDiffer = this.relatedFileDiffer[asset.id];
+				var objChanges = relatedFileDiffer.diff(asset);
+				if (objChanges) {
+					const updateAssetRequest: AttachmentAssetUpdateAction = new AttachmentAssetUpdateAction({id: asset.id, attachmentAsset: asset});
+					request.requests.push(updateAssetRequest);
+					// objChanges.forEachChangedItem((record: KeyValueChangeRecord) =>{
+					// 	console.log("detected change in "+ asset.id+ ": Changed field = " + record.key + ". New value = " + record.currentValue);
+					// });
+
+				}
 			});
 		}
 
-		// update changed assets
-		this._relatedFiles.getValue().items.forEach((asset: KalturaAttachmentAsset) => {
-			var relatedFileDiffer = this.relatedFileDiffer[asset.id];
-			var objChanges = relatedFileDiffer.diff(asset);
-			if (objChanges) {
-				const updateAssetRequest: AttachmentAssetUpdateAction = new AttachmentAssetUpdateAction({id: asset.id, attachmentAsset: asset});
-				request.requests.push(updateAssetRequest);
-				// objChanges.forEachChangedItem((record: KeyValueChangeRecord) =>{
-				// 	console.log("detected change in "+ asset.id+ ": Changed field = " + record.key + ". New value = " + record.currentValue);
-				// });
-
-			}
-		});
 	}
 
 

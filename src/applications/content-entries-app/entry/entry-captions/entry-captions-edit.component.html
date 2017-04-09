@@ -13,11 +13,12 @@
 		</div>
 		<div class="kRow">
 			<span class="kLabel">{{'applications.content.entryDetails.captions.type' | translate}}</span>
-			<p-dropdown [options]="_captionFormats" [autoWidth]="false" formControlName="format"></p-dropdown>
+			<p-dropdown *ngIf="_newCaption" [options]="_captionFormats" [autoWidth]="false" formControlName="format"></p-dropdown>
+			<span *ngIf="!_newCaption">{{_getCaptionFormatLabel(currentCaption?.format)}}</span>
 		</div>
 		<div class="kRow" *ngIf="_newCaption">
 			<span class="kLabel">{{'applications.content.entryDetails.captions.add' | translate}}</span>
-			<p-radioButton name="uploadMethod" value="upload" formControlName="uploadMethod" label="{{'applications.content.entryDetails.captions.upload' | translate}}"></p-radioButton>
+			<p-radioButton name="uploadMethod" value="upload" formControlName="uploadMethod" label="{{'applications.content.entryDetails.captions.upload' | translate}}" (click)="_resetUpload()"></p-radioButton>
 			<p-radioButton name="uploadMethod" value="fromUrl" formControlName="uploadMethod" label="{{'applications.content.entryDetails.captions.fromUrl' | translate}}" style="margin-left: 12px" (click)="_resetUpload()"></p-radioButton>
 		</div>
 

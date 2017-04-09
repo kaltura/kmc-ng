@@ -2,9 +2,9 @@ import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, Iterable
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { KalturaServerClient, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
-import { CaptionAssetSetAsDefaultAction, CaptionAssetListAction, KalturaCaptionAsset, KalturaFilterPager, KalturaAssetFilter,
-	KalturaCaptionType, KalturaCaptionAssetStatus, KalturaLanguage, KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { CaptionAssetListAction, CaptionAssetDeleteAction, CaptionAssetSetAsDefaultAction, CaptionAssetUpdateAction, CaptionAssetSetContentAction, CaptionAssetAddAction, KalturaContentResource, KalturaUrlResource, KalturaUploadedFileTokenResource,
+	KalturaCaptionAsset, KalturaFilterPager, KalturaAssetFilter, KalturaCaptionType, KalturaCaptionAssetStatus, KalturaLanguage, KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
+import { AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
 
 import { EntrySection } from '../../entry-store/entry-section-handler';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
@@ -197,33 +197,71 @@ export class EntryCaptionsHandler extends EntrySection
 
 	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
 	{
-		// check for added and removed captions
-		let changes = this.captionsListDiffer.diff(this._captions.getValue().items);
-		if (changes) {
-			changes.forEachAddedItem((record: CollectionChangeRecord) => {
-				// added captions
-				console.log('added ' + (record.item as CaptionRow).id);
-			});
-			changes.forEachRemovedItem((record: CollectionChangeRecord) => {
-				// remove deleted captions
-				console.log('deleted ' + (record.item as CaptionRow).id);
+		if ( this._captions.getValue().items ) {
+
+			// check for added and removed captions
+			if (this.captionsListDiffer) {
+				let changes = this.captionsListDiffer.diff(this._captions.getValue().items);
+				if (changes) {
+					changes.forEachAddedItem((record: CollectionChangeRecord) => {
+						// added captions
+						let captionAsset = new KalturaCaptionAsset({language: record.item.language, format: record.item.format, label: record.item.label});
+						const addCaptionRequest: CaptionAssetAddAction = new CaptionAssetAddAction({entryId: this.data.id, captionAsset: captionAsset});
+						request.requests.push(addCaptionRequest);
+
+						let setContentRequest: CaptionAssetSetContentAction;
+						if ((record.item as CaptionRow).uploadUrl){ // add new caption from URL
+							let resource = new KalturaUrlResource();
+							resource.url = (record.item as CaptionRow).uploadUrl;
+							setContentRequest = new CaptionAssetSetContentAction({id: '0', contentResource: resource})
+								.setDependency(['id', (request.requests.length), 'id']); console.warn("Warning: should be request.requests.length-1 after KAPI fix!");
+						}
+						if ((record.item as CaptionRow).uploadToken){ // add new caption from upload token
+							let resource = new KalturaUploadedFileTokenResource();
+							resource.token = (record.item as CaptionRow).uploadToken;
+							setContentRequest = new CaptionAssetSetContentAction({id: '0', contentResource: resource})
+								.setDependency(['id', (request.requests.length), 'id']); console.warn("Warning: should be request.requests.length-1 after KAPI fix!");
+						}
+						if (setContentRequest){
+							request.requests.push(setContentRequest);
+						}
+					});
+					changes.forEachRemovedItem((record: CollectionChangeRecord) => {
+						// remove deleted captions
+						const deleteCaptionRequest: CaptionAssetDeleteAction = new CaptionAssetDeleteAction({captionAssetId: (record.item as CaptionRow).id});
+						request.requests.push(deleteCaptionRequest);
+					});
+				}
+			}
+
+			// update changed captions and setting default caption
+			this._captions.getValue().items.forEach((caption: any) => {
+				var captionDiffer = this.captionDiffer[caption.id];
+				if (captionDiffer) {
+					var objChanges = captionDiffer.diff(caption);
+					if (objChanges) {
+						let updatedCaptionIDs = [];
+						objChanges.forEachChangedItem((record: KeyValueChangeRecord) => {
+							// update default caption if changed
+							if (record.key === "isDefault" && record.currentValue === 1) {
+								const setAsDefaultRequest: CaptionAssetSetAsDefaultAction = new CaptionAssetSetAsDefaultAction({captionAssetId: caption.id});
+								request.requests.push(setAsDefaultRequest);
+							} else {
+								// update other fields
+								if (updatedCaptionIDs.indexOf(caption.id) === -1) { // make sure we update each caption only once as we update all changed fields at once
+									updatedCaptionIDs.push(caption.id);
+									const updateCaptionRequest: CaptionAssetUpdateAction = new CaptionAssetUpdateAction({
+										id: caption.id,
+										captionAsset: caption
+									});
+									request.requests.push(updateCaptionRequest);
+								}
+							}
+						});
+					}
+				}
 			});
 		}
-
-		// update changed captions
-		this._captions.getValue().items.forEach((caption: CaptionRow) => {
-			var captionDiffer = this.captionDiffer[caption.id];
-			var objChanges = captionDiffer.diff(caption);
-			if (objChanges) {
-				console.log('update ' + caption.id);
-				// const updateAssetRequest: AttachmentAssetUpdateAction = new AttachmentAssetUpdateAction({id: asset.id, attachmentAsset: asset});
-				// request.requests.push(updateAssetRequest);
-				// objChanges.forEachChangedItem((record: KeyValueChangeRecord) =>{
-				// 	console.log("detected change in "+ asset.id+ ": Changed field = " + record.key + ". New value = " + record.currentValue);
-				// });
-
-			}
-		});
 	}
 
 

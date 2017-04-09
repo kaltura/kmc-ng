@@ -5,7 +5,7 @@ import { ConfirmationService } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaCaptionAsset, KalturaLanguage, KalturaCaptionType } from '@kaltura-ng2/kaltura-api/types';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
 import { FileDialogComponent } from '@kaltura-ng2/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
@@ -40,9 +40,21 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
     constructor(private _appLocalization: AppLocalization, private _fb: FormBuilder, private _confirmationService: ConfirmationService) {
 	    // load all supported languages
 	    this._languages = [];
+	    let exludedLanguages = ['He', 'Id', 'Yi']; // duplicated languages [TODO-KMCNG] - should be checked with beckend
 	    for (let lang in KalturaLanguage){
-		    this._languages.push({label: KalturaLanguage[lang].toString(), value: lang.toLowerCase()}); //TODO [KMCNG] - update language logic after KAPI changes
+		    if (lang !== "En" && exludedLanguages.indexOf(lang) === -1) { // we push English to the top of the array after sorting
+			    this._languages.push({
+				    label: _appLocalization.get("languages." + lang.toUpperCase()), value: lang.toUpperCase() });
+		    }
 	    }
+	    // sort the language array by language alphabetically
+	    this._languages.sort(function(a, b) {
+		    var x = a["label"]; var y = b["label"];
+		    return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+	    });
+	    // put English on top
+	    this._languages.unshift({ label: _appLocalization.get("languages.EN"), value: "EN" });
+
 	    this._captionFormats = [
 	    	{label: "SRT", value: KalturaCaptionType.Srt},
 		    {label: "DFXP", value: KalturaCaptionType.Dfxp},
@@ -63,7 +75,7 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
 						this.fileToUpload = null;
 						this._newCaption = this.currentCaption.id === null;
 						this.captionsEditForm.get("label").setValue(this.currentCaption.label);
-						this.captionsEditForm.get("language").setValue(this.currentCaption.languageCode); //TODO [KMCNG] - update language logic after KAPI changes
+						this.captionsEditForm.get("language").setValue(KalturaUtils.getCodeByLanguage(this.currentCaption.language.toString()).toUpperCase()); //TODO [KMCNG] - update language logic after KAPI changes
 						this.captionsEditForm.get("format").setValue(this.currentCaption.format);
 					}
 					if (event.state === PopupWidgetStates.BeforeClose) {
@@ -89,10 +101,18 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
 	}
 
 	public _saveAndClose(): void{
-		if (this.captionsEditForm.dirty){
+		if (this.captionsEditForm.get("label").dirty) {
 			this.currentCaption.label = this.captionsEditForm.get("label").value;
-			//TODO [KMCNG] - update language logic after KAPI changes
-			//this.currentCaption.language = this.captionsEditForm.get("language").value.toString();
+		}
+		if (this.captionsEditForm.get("language").dirty) {
+			let langCode = this.captionsEditForm.get("language").value.toString().toLowerCase();
+			langCode = langCode.charAt(0).toUpperCase() + langCode.slice(1);
+			if (langCode.length === 4) {
+				langCode = langCode.substr(0, 2) + langCode.charAt(2).toUpperCase() + langCode.slice(3);
+			}
+			this.currentCaption.language = KalturaLanguage[langCode];
+		}
+		if (this.captionsEditForm.get("format").dirty) {
 			this.currentCaption.format = this.captionsEditForm.get("format").value;
 		}
 		this._confirmClose = false;
@@ -120,7 +140,7 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
 		}
 	}
 
-	public _resetUpload(){
+	public _resetUpload(uploadMethod: string){
 		this.captionsEditForm.get('captionUrl').reset();
 		this._uploadFileName = "";
 		this._validationErrorMsg = "";
@@ -134,6 +154,16 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
 				this._validationErrorMsg = this._appLocalization.get('applications.content.entryDetails.captions.invalidUrl');
 			}
 		}
+	}
+
+	public _getCaptionFormatLabel(format: KalturaCaptionType): string{
+		let label = "";
+		this._captionFormats.forEach( obj => {
+			if (format && obj.value.toString() === format.toString()){
+				label = obj.label;
+			}
+		});
+		return label;
 	}
 
 	private _createForm(): void{
