@@ -65,6 +65,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 						if (event.context && event.context.newCaptionUrl){
 							this._handler.currentCaption.uploadUrl = event.context.newCaptionUrl;
 						}
+						this._handler.removeEmptyCaptions();
 					}
 				});
 		}

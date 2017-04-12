@@ -191,6 +191,16 @@ export class EntryCaptionsHandler extends EntrySection
 		}
 	}
 
+	public removeEmptyCaptions(){
+		if (this.currentCaption) {
+			if (this.currentCaption.id === null && this.currentCaption.uploadUrl === "" && this.currentCaption.uploadToken === "" && !this.currentCaption.uploadStatus) {
+				let captions = Array.from(this._captions.getValue().items); // create a copy of the captions array without a reference to the original array
+				captions.pop(); // remove last caption
+				this._captions.next({items : captions, loading : false, error : null});
+			}
+		}
+	}
+
     public _getRowStyle(rowData, rowIndex): string{
 	    return rowData.uploadStatus ? "uoloading" : '';
     }

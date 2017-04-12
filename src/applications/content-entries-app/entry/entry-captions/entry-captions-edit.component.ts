@@ -57,8 +57,7 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
 
 	    this._captionFormats = [
 	    	{label: "SRT", value: KalturaCaptionType.Srt},
-		    {label: "DFXP", value: KalturaCaptionType.Dfxp},
-		    {label: "WEBVTT", value: KalturaCaptionType.Webvtt}
+		    {label: "DFXP", value: KalturaCaptionType.Dfxp}
 	    ];
 	    this._createForm();
     }
@@ -166,6 +165,15 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
 		return label;
 	}
 
+	public _allowSave():boolean{
+		let allow = true;
+		if (this.captionsEditForm.get('uploadMethod').value === 'fromUrl'){
+			allow = this._validationErrorMsg === "" && this.captionsEditForm.get('captionUrl').value && this.captionsEditForm.get('captionUrl').value.length;
+		}else{
+			allow = this._uploadFileName.length > 0;
+		}
+		return allow;
+	}
 	private _createForm(): void{
 		this.captionsEditForm = this._fb.group({
 			label: '',

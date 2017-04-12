@@ -34,7 +34,8 @@
 		<div class="kFooter">
 			<div class="kDivider"></div>
 			<div class="kRow kCenter">
-				<button type="button" [disabled]="captionsEditForm.get('uploadMethod').value === 'fromUrl' && _validationErrorMsg?.length" class="kButtonBranded kDoneBtn" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.related.done' | translate}}"></button>
+				<button *ngIf="!_newCaption" type="button" class="kButtonBranded kDoneBtn" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.related.done' | translate}}"></button>
+				<button *ngIf="_newCaption" type="button" [disabled]="!_allowSave()" class="kButtonBranded kDoneBtn" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.captions.add' | translate}}"></button>
 			</div>
 		</div>
 
