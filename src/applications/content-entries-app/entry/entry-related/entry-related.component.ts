@@ -50,9 +50,13 @@ export class EntryRelated implements OnInit, OnDestroy{
 			// save the selected file for usage in the actions menu
 			this._currentFile = file;
 			//disable Edit action for files that are not in "ready" state
-			if (file.status.toString() !== KalturaEntryStatus.Ready.toString()){
+			if (file.status && file.status.toString() !== KalturaEntryStatus.Ready.toString()){
 				this._actions[0].disabled = true;
 			}
+			// disable edit, download and preview for added files that were not saved to the server yet (don't have status)
+			this._actions[0].disabled = (file.status === undefined);
+			this._actions[1].disabled = (file.status === undefined);
+			this._actions[3].disabled = (file.status === undefined);
 			this.actionsMenu.toggle(event);
 		}
 	}

@@ -1,10 +1,10 @@
-import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, KeyValueChangeRecord, CollectionChangeRecord } from '@angular/core';
+import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, CollectionChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { KalturaServerClient, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
-import { KalturaAssetFilter, KalturaAttachmentAsset, KalturaAttachmentType, AttachmentAssetListAction,
-	AttachmentAssetDeleteAction, AttachmentAssetUpdateAction, KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaAssetFilter, KalturaAttachmentAsset, KalturaAttachmentType, AttachmentAssetListAction, KalturaUploadedFileTokenResource, AttachmentAssetSetContentAction,
+	AttachmentAssetDeleteAction, AttachmentAssetUpdateAction, AttachmentAssetAddAction, KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { BrowserService } from 'kmc-shell';
 
 import { EntrySection } from '../../entry-store/entry-section-handler';
@@ -104,7 +104,18 @@ export class EntryRelatedHandler extends EntrySection
 				let changes = this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
 				if (changes) {
 					changes.forEachAddedItem((record: CollectionChangeRecord) => {
-						//console.log('added ' + (record.item as KalturaAttachmentAsset).id);
+						// added assets
+						let newAsset:KalturaAttachmentAsset = record.item as KalturaAttachmentAsset;
+						const addAssetRequest: AttachmentAssetAddAction = new AttachmentAssetAddAction({entryId: this.data.id, attachmentAsset: newAsset});
+						request.requests.push(addAssetRequest);
+
+						let resource = new KalturaUploadedFileTokenResource();
+						resource.token = record.item["uploadToken"];
+						let setContentRequest: AttachmentAssetSetContentAction = new AttachmentAssetSetContentAction({id: '0', contentResource: resource})
+							.setDependency(['id', (request.requests.length), 'id']); console.warn("Warning: should be request.requests.length-1 after KAPI fix!");
+
+						request.requests.push(setContentRequest);
+
 					});
 					changes.forEachRemovedItem((record: CollectionChangeRecord) => {
 						// remove deleted assets
@@ -117,14 +128,15 @@ export class EntryRelatedHandler extends EntrySection
 			// update changed assets
 			this._relatedFiles.getValue().items.forEach((asset: KalturaAttachmentAsset) => {
 				var relatedFileDiffer = this.relatedFileDiffer[asset.id];
-				var objChanges = relatedFileDiffer.diff(asset);
-				if (objChanges) {
-					const updateAssetRequest: AttachmentAssetUpdateAction = new AttachmentAssetUpdateAction({id: asset.id, attachmentAsset: asset});
-					request.requests.push(updateAssetRequest);
-					// objChanges.forEachChangedItem((record: KeyValueChangeRecord) =>{
-					// 	console.log("detected change in "+ asset.id+ ": Changed field = " + record.key + ". New value = " + record.currentValue);
-					// });
-
+				if (relatedFileDiffer) {
+					var objChanges = relatedFileDiffer.diff(asset);
+					if (objChanges) {
+						const updateAssetRequest: AttachmentAssetUpdateAction = new AttachmentAssetUpdateAction({
+							id: asset.id,
+							attachmentAsset: asset
+						});
+						request.requests.push(updateAssetRequest);
+					}
 				}
 			});
 		}
@@ -253,9 +265,9 @@ export class EntryRelatedHandler extends EntrySection
 
 	public _onFileSelected(selectedFiles: FileList) {
 		if (selectedFiles && selectedFiles.length) {
-			const fileData = selectedFiles[0];
+			const fileData: File = selectedFiles[0];
 
-			const newFile = this._addFile(selectedFiles[0].name, KalturaAttachmentType.Document);
+			const newFile = this._addFile(fileData.name, KalturaAttachmentType.Document);
             (<any>newFile).uploading = true;
 
 			this._uploadManagement.newUpload(new KalturaOVPFile(fileData))
