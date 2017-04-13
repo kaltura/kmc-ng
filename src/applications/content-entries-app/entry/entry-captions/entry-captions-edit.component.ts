@@ -1,5 +1,5 @@
 import { Component, Input, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
+import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { ConfirmationService } from 'primeng/primeng';
 
 import { ISubscription } from 'rxjs/Subscription';
@@ -43,18 +43,19 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
 	    let exludedLanguages = ['He', 'Id', 'Yi']; // duplicated languages [TODO-KMCNG] - should be checked with beckend
 	    for (let lang in KalturaLanguage){
 		    if (lang !== "En" && exludedLanguages.indexOf(lang) === -1) { // we push English to the top of the array after sorting
-			    this._languages.push({
-				    label: _appLocalization.get("languages." + lang.toUpperCase()), value: lang.toUpperCase() });
+			    this._languages.push( {label: _appLocalization.get("languages." + lang.toUpperCase()), value: lang.toUpperCase() });
 		    }
 	    }
 	    // sort the language array by language alphabetically
 	    this._languages.sort(function(a, b) {
-		    var x = a["label"]; var y = b["label"];
+		    let x = a["label"];
+		    let y = b["label"];
 		    return ((x < y) ? -1 : ((x > y) ? 1 : 0));
 	    });
 	    // put English on top
 	    this._languages.unshift({ label: _appLocalization.get("languages.EN"), value: "EN" });
 
+	    // set caption formats array. Note that WEBVTT cannot be set on client side - only on backend so is doesn't appear in the list
 	    this._captionFormats = [
 	    	{label: "SRT", value: KalturaCaptionType.Srt},
 		    {label: "DFXP", value: KalturaCaptionType.Dfxp}
@@ -74,7 +75,7 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
 						this.fileToUpload = null;
 						this._newCaption = this.currentCaption.id === null;
 						this.captionsEditForm.get("label").setValue(this.currentCaption.label);
-						this.captionsEditForm.get("language").setValue(KalturaUtils.getCodeByLanguage(this.currentCaption.language.toString()).toUpperCase()); //TODO [KMCNG] - update language logic after KAPI changes
+						this.captionsEditForm.get("language").setValue(KalturaUtils.getCodeByLanguage(this.currentCaption.language.toString()).toUpperCase());
 						this.captionsEditForm.get("format").setValue(this.currentCaption.format);
 					}
 					if (event.state === PopupWidgetStates.BeforeClose) {

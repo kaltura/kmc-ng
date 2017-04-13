@@ -5,7 +5,7 @@ import { ISubscription } from 'rxjs/Subscription';
 
 import { AppLocalization, AppAuthentication, AppConfig } from '@kaltura-ng2/kaltura-common';
 import { BrowserService } from 'kmc-shell';
-import { KalturaCaptionAsset, KalturaCaptionAssetStatus } from '@kaltura-ng2/kaltura-api/types'
+import { KalturaCaptionAssetStatus } from '@kaltura-ng2/kaltura-api/types'
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
 import { EntryCaptionsHandler } from './entry-captions-handler';
@@ -24,8 +24,6 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
 	@ViewChild('editPopup') public editPopup: PopupWidgetComponent;
 
-	public _currentCaption: KalturaCaptionAsset;
-
 	private _popupStateChangeSubscribe: ISubscription;
 
     constructor(public _handler : EntryCaptionsHandler, private _appAuthentication: AppAuthentication, private _appConfig:AppConfig, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
@@ -43,9 +41,8 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 	openActionsMenu(event: any, caption: any): void{
 		if (this.actionsMenu){
 			// save the selected caption for usage in the actions menu
-			this._currentCaption = caption;
 			this._handler.currentCaption = caption;
-			//disable download action for captions that are not in "ready" state
+			//disable actions for captions that are not in "ready" state
 			this._actions[0].disabled = (caption.status !== KalturaCaptionAssetStatus.Ready);
 			this._actions[1].disabled = (caption.status !== KalturaCaptionAssetStatus.Ready);
 			this._actions[3].disabled = (caption.status !== KalturaCaptionAssetStatus.Ready);
@@ -65,29 +62,30 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 						if (event.context && event.context.newCaptionUrl){
 							this._handler.currentCaption.uploadUrl = event.context.newCaptionUrl;
 						}
-						this._handler.removeEmptyCaptions();
+						this._handler.removeEmptyCaptions(); // cleanup of captions that don't have assets (url or uploaded file)
 					}
 				});
 		}
 	}
 
 	public _addCaption(){
-		this._currentCaption = this._handler._addCaption();
-		setTimeout( () => { this.editPopup.open(); }, 0); // use a timeout to allow data binding of _currentCaption to update before opening the popup widget
+		this._handler._addCaption();
+		setTimeout( () => {this.editPopup.open(); }, 0); // use a timeout to allow data binding of the new caption to update before opening the popup widget
 	}
+
 	private actionSelected(action: string): void{
 		switch (action){
 			case "edit":
 				this.editPopup.open();
 				break;
 			case "delete":
-				this._handler.removeCaption(<any>this._currentCaption);
+				this._handler.removeCaption();
 				break;
 			case "download":
 				this._downloadFile();
 				break;
 			case "preview":
-				const previewUrl = this._appConfig.get("core.kaltura.apiUrl") + "/service/caption_captionasset/action/serve/captionAssetId/" + this._currentCaption.id +"/ks/" + this._appAuthentication.appUser.ks;
+				const previewUrl = this._appConfig.get("core.kaltura.apiUrl") + "/service/caption_captionasset/action/serve/captionAssetId/" + this._handler.currentCaption.id +"/ks/" + this._appAuthentication.appUser.ks;
 				this._browserService.openLink(previewUrl);
 				break;
 		}
@@ -100,7 +98,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 		const partnerId = this._appAuthentication.appUser.partnerId;
 		const entryId = this._handler.data.id;
 
-		let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + entryId + '/flavorId/' + this._currentCaption.id + '/format/download/protocol/' + protocol;
+		let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + entryId + '/flavorId/' + this._handler.currentCaption.id + '/format/download/protocol/' + protocol;
 		url = url.replace("cdnapi","lbd"); // TODO [KMCNG] - remove this line once this feature is available on the production server (should be until April 7)
 
 		this._browserService.openLink(url);
