@@ -185,7 +185,6 @@ export class EntryRelatedHandler extends EntrySection
 		const entryId = this.data.id;
 
 		let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + entryId + '/flavorId/' + fileId + '/format/' + operation + '/protocol/' + protocol;
-		url = url.replace("cdnapi","lbd"); // TODO [KMCNG] - remove this line once this feature is available on the production server (should be until April 7)
 
 		this._browserService.openLink(url);
 	}

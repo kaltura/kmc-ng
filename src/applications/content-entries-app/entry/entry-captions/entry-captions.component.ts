@@ -99,7 +99,6 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 		const entryId = this._handler.data.id;
 
 		let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + entryId + '/flavorId/' + this._handler.currentCaption.id + '/format/download/protocol/' + protocol;
-		url = url.replace("cdnapi","lbd"); // TODO [KMCNG] - remove this line once this feature is available on the production server (should be until April 7)
 
 		this._browserService.openLink(url);
 	}

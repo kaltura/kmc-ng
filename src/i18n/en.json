@@ -191,8 +191,13 @@
 					"thumbnail": "Thumbnail",
 					"dimensions": "Dimensions",
 					"size": "Size",
-					"status": "Status",
-					"tags": "Tags"
+					"distributors": "Distributors",
+					"download": "Download",
+					"delete": "Delete",
+					"preview": "Preview",
+					"defaultTitle": "Default",
+					"default": "Default Caption",
+					"setDefault": "Set as default"
 				},
 				"accessControl":{
 					"accessControl": "Access Control Profiles",
@@ -251,6 +256,7 @@
 					"type": "File Type",
 					"language": "Language",
 					"status": "Status",
+					"defaultTitle": "Default",
 					"default": "Default Caption",
 					"setDefault": "Set as default",
 					"edit": "Edit",

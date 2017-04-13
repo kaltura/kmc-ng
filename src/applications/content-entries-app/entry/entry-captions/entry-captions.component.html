@@ -19,7 +19,7 @@
 						<span>{{_handler._getCaptionStatus(caption)}}</span>
 					</template>
 				</p-column>
-				<p-column>
+				<p-column header="{{'applications.content.entryDetails.captions.defaultTitle' | translate}}">
 					<template let-col let-caption="rowData" pTemplate="body">
 						<span *ngIf="caption.isDefault">{{'applications.content.entryDetails.captions.default' | translate}}</span>
 						<a (click)="_handler._setAsDefault(caption)" *ngIf="!caption.isDefault && caption.status?.toString()==='2'">{{'applications.content.entryDetails.captions.setDefault' | translate}}</a>
