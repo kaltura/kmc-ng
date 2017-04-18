@@ -204,7 +204,7 @@ export class EntryCaptionsHandler extends EntrySection
 
 	// animate uploading caption row
     public _getRowStyle(rowData, rowIndex): string{
-	    return rowData.uploadStatus ? "uoloading" : '';
+	    return rowData.uploadStatus ? "uploading" : '';
     }
 
     // save data

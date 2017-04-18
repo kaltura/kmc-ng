@@ -87,7 +87,7 @@ export class EntryRelated implements OnInit, OnDestroy{
 	// }
 
 	public _relatedTableRowStyle(rowData, rowIndex): string{
-		return rowData.uploading ? "uoloading" : '';
+		return rowData.uploading ? "uploading" : '';
 	}
 
     _onLoadingAction(actionKey: string): void {

@@ -17,7 +17,6 @@ import { EntryCaptionsHandler } from './entry-captions-handler';
 })
 export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 
-    public _loading = false;
     public _loadingError = null;
 	public _actions: MenuItem[] = [];
 

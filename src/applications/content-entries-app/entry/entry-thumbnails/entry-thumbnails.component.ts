@@ -14,7 +14,6 @@ import { Menu, MenuItem } from 'primeng/primeng';
 })
 export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 
-    public _loading = false;
     public _loadingError = null;
 
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
@@ -24,7 +23,6 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 
     constructor(public _handler : EntryThumbnailsHandler, private _appLocalization: AppLocalization, private _browserService: BrowserService, private _appAuthentication: AppAuthentication, private _appConfig:AppConfig,) {
     }
-
 
     ngOnInit() {
 	    this._actions = [
@@ -36,12 +34,7 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 
 	openActionsMenu(event: any, thumb: ThumbnailRow): void{
 		if (this.actionsMenu){
-			// save the selected caption for usage in the actions menu
-			this.currentThumb = thumb;
-			//disable actions for captions that are not in "ready" state
-			this._actions[0].disabled = (thumb.status !== KalturaThumbAssetStatus.Ready);
-			this._actions[2].disabled = (thumb.status !== KalturaThumbAssetStatus.Ready);
-
+			this.currentThumb = thumb; // save the selected caption for usage in the actions menu
 			this.actionsMenu.toggle(event);
 		}
 	}
@@ -49,7 +42,7 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 	private actionSelected(action: string): void{
 		switch (action){
 			case "delete":
-				//this._handler.removeCaption();
+				this._handler.deleteThumbnail(this.currentThumb.id);
 				break;
 			case "download":
 				this._downloadFile();
@@ -74,11 +67,9 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
     ngOnDestroy() {
     }
 
-
     ngAfterViewInit() {
 
     }
-
 
     _onLoadingAction(actionKey: string) {
         if (actionKey === 'retry') {
@@ -86,4 +77,3 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
         }
     }
 }
-
