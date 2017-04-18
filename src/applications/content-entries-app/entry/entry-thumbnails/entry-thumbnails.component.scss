@@ -2,6 +2,7 @@
 
 .kThumbnails{
 	padding-left: 12px;
+	overflow-y: auto;
 	.kTitle{
 		color: $kGrayscale1;
 		font-size: 20px;
@@ -13,5 +14,39 @@
 	}
 	.kTable{
 		padding-top: 12px;
+	}
+	img {
+		max-height: 100%;
+		max-width: 100%;
+		vertical-align: middle;
+		border-radius: 3px;
+	}
+	.kThumbnailHolder {
+		width: 80px;
+		height: 46px;
+		background-color: black;
+		white-space: nowrap;
+		text-align: center;
+		border-radius: 3px;
+	}
+	.kHelper {
+		display: inline-block;
+		height: 100%;
+		vertical-align: middle;
+	}
+	.kDimensions{
+		font-weight: 700;
+		color: $kGrayscale1;
+	}
+	.kThumbnailsTableActions {
+		width: 100%;
+		text-align: center;
+		button {
+			color: grey !important;
+			background-color: rgba(0, 0, 0, 0) !important;
+			border: none !important;
+			font-size: 16px !important;
+			outline: 0;
+		}
 	}
 }

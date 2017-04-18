@@ -105,7 +105,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
         if (this.parentPopupWidget){
             this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$.subscribe(event => {
-                if (event === PopupWidgetStates.Close){
+                if (event.state === PopupWidgetStates.Close){
                     const nativeElement: HTMLElement = this.elementRef.nativeElement;
                     if (nativeElement && nativeElement.getElementsByClassName("kTreeContainer").length > 0){
                         nativeElement.getElementsByClassName("kTreeContainer")[0].scrollTop = 0;

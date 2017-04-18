@@ -185,6 +185,56 @@ td.ui-datatable-emptymessage{
 	font-size: 28px;
 	color: $kGrayscale3;
 }
+
+.ui-datatable .ui-datatable-data tr.uploading{
+	background: repeating-linear-gradient(
+			-75deg,
+			#ffffff,
+			#ffffff 15px,
+			$kGrayscale7 15px,
+			$kGrayscale7 30px
+	);
+	background-attachment: fixed;
+
+	-webkit-animation:progress 2s linear infinite;
+	-moz-animation:progress 2s linear infinite;
+	-ms-animation:progress 2s linear infinite;
+	animation:progress 2s linear infinite;
+}
+
+@-webkit-keyframes progress{
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: -60px 0px;
+	}
+}
+@-moz-keyframes progress{
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: -60px 0px;
+	}
+}
+@-ms-keyframes progress{
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: -60px 0px;
+	}
+}
+@keyframes progress{
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: -60px 0px;
+	}
+}
+
 /* buttons */
 .ui-button{
     font-weight: 700;
@@ -212,6 +262,7 @@ td.ui-datatable-emptymessage{
         background: transparent;
         border: 1px solid $kGrayscale4;
         cursor: none;
+		box-shadow: none;
     }
 }
 .ui-button.kButtonDefault {
@@ -492,6 +543,15 @@ td.ui-datatable-emptymessage{
 .ui-dropdown-panel .ui-dropdown-item:not(.ui-state-highlight):hover{
 	background-color: $kGrayscale6;
 }
+.ui-dropdown-trigger .fa.fa-caret-down{
+	margin-top: 2px;
+	margin-left: 1px;
+	position: absolute;
+	color: $kGrayscale1;
+}
+.ui-dropdown-label.ui-inputtext{
+	background-color: #ffffff;
+}
 
 // multi select
 .ui-multiselect-item.ui-corner-all{
@@ -500,3 +560,41 @@ td.ui-datatable-emptymessage{
 		font-weight: 400;
 	}
 }
+
+// dialogues
+.ui-dialog.ui-confirmdialog {
+	.ui-dialog-titlebar {
+		height: 80px;
+		border-bottom: 1px solid $kGrayscale4;
+		text-align: center;
+		padding-top: 28px;
+	}
+	.ui-dialog-title{
+		color: $kGrayscale1;
+		font-size: 24px;
+		font-weight: 700;
+	}
+	.ui-dialog-content.ui-widget-content{
+		text-align: center;
+		padding-top: 28px;
+		padding-bottom: 28px;
+	}
+	.ui-dialog-buttonpane{
+		text-align: center;
+		button{
+			color: $kGrayscale1;
+			font-weight: 400;
+			float: none;
+			.ui-button-text{
+				padding-right: 2.1em;
+			}
+			&:hover {
+				color: $kPrimary;
+			}
+			&:active {
+				box-shadow: inset 0px 1px 3px 0 rgba(0, 0, 0, 0.50);
+			}
+		}
+	}
+}
+

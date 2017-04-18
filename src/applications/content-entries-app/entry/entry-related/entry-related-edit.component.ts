@@ -30,13 +30,13 @@ export class EntryRelatedEdit implements  AfterViewInit, OnDestroy{
 		if (this.parentPopupWidget) {
 			this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$
 				.subscribe(event => {
-					if (event === PopupWidgetStates.Open) {
+					if (event.state === PopupWidgetStates.Open) {
 						this._resetForm();
 						this._confirmClose = true;
 						this.relatedEditForm.get("title").setValue(this.currentFile.title);
-						this.relatedEditForm.get("description").setValue(this.currentFile.description);
+						this.relatedEditForm.get("description").setValue(this.currentFile.partnerDescription);
 					}
-					if (event === PopupWidgetStates.Close) {
+					if (event.state === PopupWidgetStates.Close) {
 						if (this.relatedEditForm.dirty && this._confirmClose){
 							alert("Closing without saving data!");
 						}
@@ -53,8 +53,7 @@ export class EntryRelatedEdit implements  AfterViewInit, OnDestroy{
 	public _saveAndClose(): void{
 		if (this.relatedEditForm.dirty){
 			this.currentFile.title = this.relatedEditForm.get("title").value;
-			// TODO [amir] description is readonly
-			// this.currentFile.description = this.relatedEditForm.get("description").value;
+			this.currentFile.partnerDescription = this.relatedEditForm.get("description").value;
 		}
 		this._confirmClose = false;
 		this.parentPopupWidget.close();

@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { MultiSelectModule, ButtonModule, TooltipModule, InputTextareaModule, PaginatorModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule, CheckboxModule, CalendarModule, SpinnerModule } from 'primeng/primeng';
+import { MultiSelectModule, ButtonModule, TooltipModule, InputTextareaModule, PaginatorModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule,
+	CheckboxModule, CalendarModule, SpinnerModule, ConfirmDialogModule, ConfirmationService } from 'primeng/primeng';
 
 import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
@@ -19,6 +20,7 @@ import { EntryAccessControl } from "./entry-access-control/entry-access-control.
 import { EntryScheduling } from "./entry-scheduling/entry-scheduling.component";
 import { EntryFlavours } from "./entry-flavours/entry-flavours.component";
 import { EntryCaptions } from "./entry-captions/entry-captions.component";
+import { EntryCaptionsEdit } from "./entry-captions/entry-captions-edit.component";
 import { EntryLive } from "./entry-live/entry-live.component";
 import { EntryRelated } from "./entry-related/entry-related.component";
 import { EntryRelatedEdit } from "./entry-related/entry-related-edit.component";
@@ -44,6 +46,7 @@ import { KalturaCustomMetadataModule } from '@kaltura-ng2/kaltura-ui/dynamic-for
         FormsModule,
         InputTextareaModule,
         InputTextModule,
+	    ConfirmDialogModule,
         KalturaCommonModule,
         KalturaPrimeNgUIModule,
         KalturaUIModule,
@@ -63,6 +66,7 @@ import { KalturaCustomMetadataModule } from '@kaltura-ng2/kaltura-ui/dynamic-for
     declarations: [
         EntryAccessControl,
         EntryCaptions,
+	    EntryCaptionsEdit,
         EntryClips,
         EntryComponent,
         EntryFlavours,
@@ -79,6 +83,7 @@ import { KalturaCustomMetadataModule } from '@kaltura-ng2/kaltura-ui/dynamic-for
     exports: [
     ],
     providers: [
+	    ConfirmationService
     ],
 })
 export class EntryModule { }

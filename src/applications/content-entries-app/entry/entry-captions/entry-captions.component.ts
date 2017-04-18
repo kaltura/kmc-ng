@@ -1,11 +1,13 @@
 import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
 
 import { Menu, MenuItem } from 'primeng/primeng';
+import { ISubscription } from 'rxjs/Subscription';
 
 import { AppLocalization, AppAuthentication, AppConfig } from '@kaltura-ng2/kaltura-common';
-import { FileDialogComponent } from '@kaltura-ng2/kaltura-ui';
 import { BrowserService } from 'kmc-shell';
-import { KalturaCaptionAsset, KalturaCaptionAssetStatus } from '@kaltura-ng2/kaltura-api/types'
+import { KalturaCaptionAssetStatus } from '@kaltura-ng2/kaltura-api/types'
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
+
 import { EntryCaptionsHandler } from './entry-captions-handler';
 
 @Component({
@@ -15,14 +17,13 @@ import { EntryCaptionsHandler } from './entry-captions-handler';
 })
 export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 
-    public _loading = false;
     public _loadingError = null;
 	public _actions: MenuItem[] = [];
 
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
-	@ViewChild('fileDialog') private fileDialog: FileDialogComponent;
+	@ViewChild('editPopup') public editPopup: PopupWidgetComponent;
 
-	private _currentCaption: KalturaCaptionAsset;
+	private _popupStateChangeSubscribe: ISubscription;
 
     constructor(public _handler : EntryCaptionsHandler, private _appAuthentication: AppAuthentication, private _appConfig:AppConfig, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
     }
@@ -36,44 +37,73 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 		];
 	}
 
-	openActionsMenu(event: any, caption: KalturaCaptionAsset): void{
+	openActionsMenu(event: any, caption: any): void{
 		if (this.actionsMenu){
 			// save the selected caption for usage in the actions menu
-			this._currentCaption = caption;
-			//disable download action for captions that are not in "ready" state
+			this._handler.currentCaption = caption;
+			//disable actions for captions that are not in "ready" state
+			this._actions[0].disabled = (caption.status !== KalturaCaptionAssetStatus.Ready);
 			this._actions[1].disabled = (caption.status !== KalturaCaptionAssetStatus.Ready);
 			this._actions[3].disabled = (caption.status !== KalturaCaptionAssetStatus.Ready);
 
 			this.actionsMenu.toggle(event);
 		}
 	}
+
+	ngAfterViewInit(){
+		if (this.editPopup) {
+			this._popupStateChangeSubscribe = this.editPopup.state$
+				.subscribe(event => {
+					if (event.state === PopupWidgetStates.Close) {
+						if (event.context && event.context.newCaptionFile){
+							this._handler.upload(event.context.newCaptionFile);
+						}
+						if (event.context && event.context.newCaptionUrl){
+							this._handler.currentCaption.uploadUrl = event.context.newCaptionUrl;
+						}
+						this._handler.removeEmptyCaptions(); // cleanup of captions that don't have assets (url or uploaded file)
+					}
+				});
+		}
+	}
+
+	public _addCaption(){
+		this._handler._addCaption();
+		setTimeout( () => {this.editPopup.open(); }, 0); // use a timeout to allow data binding of the new caption to update before opening the popup widget
+	}
+
 	private actionSelected(action: string): void{
 		switch (action){
 			case "edit":
-				alert("edit");
+				this.editPopup.open();
 				break;
 			case "delete":
-				alert("delete");
+				this._handler.removeCaption();
 				break;
 			case "download":
-				alert("download");
+				this._downloadFile();
 				break;
 			case "preview":
-				const previewUrl = this._appConfig.get("core.kaltura.apiUrl") + "/service/caption_captionasset/action/serve/captionAssetId/" + this._currentCaption.id +"/ks/" + this._appAuthentication.appUser.ks;
+				const previewUrl = this._appConfig.get("core.kaltura.apiUrl") + "/service/caption_captionasset/action/serve/captionAssetId/" + this._handler.currentCaption.id +"/ks/" + this._appAuthentication.appUser.ks;
 				this._browserService.openLink(previewUrl);
 				break;
 		}
 	}
 
-	public _addCaption(){
-		this.fileDialog.open();
+	private _downloadFile(): void {
+
+		const baseUrl = this._appConfig.get('core.kaltura.cdnUrl');
+		const protocol = baseUrl.split(":")[0];
+		const partnerId = this._appAuthentication.appUser.partnerId;
+		const entryId = this._handler.data.id;
+
+		let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + entryId + '/flavorId/' + this._handler.currentCaption.id + '/format/download/protocol/' + protocol;
+
+		this._browserService.openLink(url);
 	}
+
     ngOnDestroy() {
-    }
-
-
-    ngAfterViewInit() {
-
+	    this._popupStateChangeSubscribe.unsubscribe();
     }
 
 
