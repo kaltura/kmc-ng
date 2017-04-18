@@ -24,19 +24,19 @@ EntriesStore.registerFilterType(OriginalClippedFilter, (items, request) =>
             case '0':
                 if (value == null)
                 {
-                    value  = KalturaNullableBoolean.FalseValue;
-                }else if (value === KalturaNullableBoolean.TrueValue)
+                    value  = KalturaNullableBoolean.falseValue;
+                }else if (value === KalturaNullableBoolean.trueValue)
                 {
-                    value  = KalturaNullableBoolean.NullValue;
+                    value  = KalturaNullableBoolean.nullValue;
                 }
                 break;
             case '1':
                 if (value == null)
                 {
-                    value  = KalturaNullableBoolean.TrueValue;
-                }else if (value === KalturaNullableBoolean.FalseValue)
+                    value  = KalturaNullableBoolean.trueValue;
+                }else if (value === KalturaNullableBoolean.falseValue)
                 {
-                    value  = KalturaNullableBoolean.NullValue;
+                    value  = KalturaNullableBoolean.nullValue;
                 }
                 break;
         }

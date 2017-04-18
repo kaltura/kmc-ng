@@ -108,7 +108,7 @@ export class EntryMetadataHandler extends EntrySection
                 }
             );
 
-            const metadataFormExtractValue = this._kalturaCustomMetadata.extractValue(this._entryMetadata[0], this.customMetadata);
+            const metadataFormExtractValue = this._kalturaCustomMetadata.fromServerValue(this._entryMetadata[0], this.customMetadata);
 
             if (metadataFormExtractValue.error) {
                 this.loadingError = {
@@ -177,11 +177,9 @@ export class EntryMetadataHandler extends EntrySection
             this._kalturaServerClient.request(
                 new CategoryEntryListAction(
                     {
-                        filter: new KalturaCategoryEntryFilter().setData(
-                            filter => {
-                                filter.entryIdEqual = entry.id;
-                            }
-                        )
+                        filter: new KalturaCategoryEntryFilter({
+                            entryIdEqual : entry.id
+                        })
                     }
                 ))
                 .flatMap(response => {
@@ -270,18 +268,16 @@ export class EntryMetadataHandler extends EntrySection
                 const requestSubscription = this._kalturaServerClient.request(
                     new TagSearchAction(
                         {
-                            tagFilter: new KalturaTagFilter().setData(
-                                filter => {
-                                    filter.tagStartsWith = text;
-                                    filter.objectTypeEqual = KalturaTaggedObjectType.Entry
+                            tagFilter: new KalturaTagFilter(
+                                {
+                                    tagStartsWith : text,
+                                    objectTypeEqual : KalturaTaggedObjectType.entry
                                 }
                             ),
-                            pager: new KalturaFilterPager().setData(
-                                pager => {
-                                    pager.pageIndex = 0;
-                                    pager.pageSize = 30;
-                                }
-                            )
+                            pager: new KalturaFilterPager({
+                                pageIndex : 0,
+                                pageSize : 30
+                            })
                         }
                     )
                 )

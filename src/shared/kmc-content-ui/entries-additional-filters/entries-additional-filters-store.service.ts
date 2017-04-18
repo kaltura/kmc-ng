@@ -214,19 +214,19 @@ export class EntriesAdditionalFiltersStore {
     private buildQueryRequest(): Observable<KalturaMultiResponse> {
 
         try {
-            const accessControlFilter = new KalturaAccessControlFilter();
+            const accessControlFilter = new KalturaAccessControlFilter({});
             accessControlFilter.orderBy = '-createdAt';
 
-            const distributionProfilePager = new KalturaFilterPager();
+            const distributionProfilePager = new KalturaFilterPager({});
             distributionProfilePager.pageSize = 500;
 
-            const accessControlPager = new KalturaFilterPager();
+            const accessControlPager = new KalturaFilterPager({});
             distributionProfilePager.pageSize = 1000;
 
-            const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile();
+            const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({});
             responseProfile.setData(data => {
                 data.fields = "id,name";
-                data.type = KalturaResponseProfileType.IncludeFields;
+                data.type = KalturaResponseProfileType.includeFields;
             });
 
             const request = new KalturaMultiRequest(

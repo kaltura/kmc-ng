@@ -46,10 +46,13 @@ EntriesStore.registerFilterType(MetadataProfileFilter, (items, request) =>
     {
         // create metadata search item for each profile
         const metadataProfileId = groupItems[0].metadataProfileId;
-        const metadataItem : KalturaMetadataSearchItem = new KalturaMetadataSearchItem();
-        metadataItem.metadataProfileId = metadataProfileId;
-        metadataItem.type = KalturaSearchOperatorType.SearchAnd;
-        metadataItem.items = [];
+        const metadataItem : KalturaMetadataSearchItem = new KalturaMetadataSearchItem(
+            {
+                metadataProfileId : metadataProfileId,
+                type : KalturaSearchOperatorType.searchAnd,
+                items : []
+            }
+        );
         request.advancedSearch.items.push(metadataItem);
 
         // group all metadata profile id items by filter field
@@ -58,22 +61,24 @@ EntriesStore.registerFilterType(MetadataProfileFilter, (items, request) =>
             return item.fieldPath.join(',');
         },groupItems)).forEach((filterItems : MetadataProfileFilter[])  =>
         {
-            const innerMetadataItem : KalturaMetadataSearchItem = new KalturaMetadataSearchItem();
+            const innerMetadataItem : KalturaMetadataSearchItem = new KalturaMetadataSearchItem({});
             const filterField = R.reduce((acc : string, value : string) =>
             {
                 return `${acc}/*[local-name()='${value}']`;
             },'',filterItems[0].fieldPath);
 
             innerMetadataItem.metadataProfileId = metadataProfileId;
-            innerMetadataItem.type = KalturaSearchOperatorType.SearchOr;
+            innerMetadataItem.type = KalturaSearchOperatorType.searchOr;
             innerMetadataItem.items = [];
             metadataItem.items.push(innerMetadataItem);
 
             filterItems.forEach(filterItem =>
             {
-                const searchItem = new KalturaSearchCondition();
-                searchItem.field = filterField;
-                searchItem.value = filterItem.value;
+                const searchItem = new KalturaSearchCondition({
+                    field : filterField,
+                    value : filterItem.value
+                });
+
                 innerMetadataItem.items.push(searchItem);
             });
         });

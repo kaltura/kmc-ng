@@ -20,9 +20,9 @@ export class EntryRelated implements OnInit, OnDestroy{
 	public _currentFile: KalturaAttachmentAsset;
 
 	public _fileTypes: SelectItem[] = [
-		{"label": this._appLocalization.get('applications.content.entryDetails.related.document'), "value": KalturaAttachmentType.Document},
-		{"label": this._appLocalization.get('applications.content.entryDetails.related.media'), "value": KalturaAttachmentType.Media},
-		{"label": this._appLocalization.get('applications.content.entryDetails.related.text'), "value": KalturaAttachmentType.Text},
+		{"label": this._appLocalization.get('applications.content.entryDetails.related.document'), "value": KalturaAttachmentType.document},
+		{"label": this._appLocalization.get('applications.content.entryDetails.related.media'), "value": KalturaAttachmentType.media},
+		{"label": this._appLocalization.get('applications.content.entryDetails.related.text'), "value": KalturaAttachmentType.text},
 	];
 
 	public _actions: MenuItem[] = [];
@@ -50,7 +50,7 @@ export class EntryRelated implements OnInit, OnDestroy{
 			// save the selected file for usage in the actions menu
 			this._currentFile = file;
 			//disable Edit action for files that are not in "ready" state
-			if (file.status && file.status.toString() !== KalturaEntryStatus.Ready.toString()){
+			if (file.status && file.status.toString() !== KalturaEntryStatus.ready.toString()){
 				this._actions[0].disabled = true;
 			}
 			// disable edit, download and preview for added files that were not saved to the server yet (don't have status)

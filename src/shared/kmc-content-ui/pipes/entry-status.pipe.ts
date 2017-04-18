@@ -10,50 +10,50 @@ export class EntryStatusPipe implements PipeTransform {
 
     transform(entry: KalturaMediaEntry): string {
         let ret: string = '';
-        const isLive = entry.mediaType == KalturaMediaType.LiveStreamFlash ||
-                        entry.mediaType == KalturaMediaType.LiveStreamQuicktime ||
-                        entry.mediaType == KalturaMediaType.LiveStreamRealMedia ||
-                        entry.mediaType == KalturaMediaType.LiveStreamWindowsMedia;
+        const isLive = entry.mediaType == KalturaMediaType.liveStreamFlash ||
+                        entry.mediaType == KalturaMediaType.liveStreamQuicktime ||
+                        entry.mediaType == KalturaMediaType.liveStreamRealMedia ||
+                        entry.mediaType == KalturaMediaType.liveStreamWindowsMedia;
         if (typeof(entry) !== 'undefined' && entry !== null) {
             switch (entry.status.toString()) {
-                case KalturaEntryStatus.ErrorImporting.toString():
+                case KalturaEntryStatus.errorImporting.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.errorImporting");
                     break;
-                case KalturaEntryStatus.ErrorConverting.toString():
+                case KalturaEntryStatus.errorConverting.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.errorConverting");
                     break;
-                case KalturaEntryStatus.ScanFailure.toString():
+                case KalturaEntryStatus.scanFailure.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.scanFailure");
                     break;
-                case KalturaEntryStatus.Import.toString():
+                case KalturaEntryStatus.import.toString():
                     if (isLive){
                         ret = this.appLocalization.get("applications.content.entryStatus.provisioning");
                     }else {
                         ret = this.appLocalization.get("applications.content.entryStatus.import");
                     }
                     break;
-                case KalturaEntryStatus.Infected.toString():
+                case KalturaEntryStatus.infected.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.infected");
                     break;
-                case KalturaEntryStatus.Preconvert.toString():
+                case KalturaEntryStatus.preconvert.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.preconvert");
                     break;
-                case KalturaEntryStatus.Ready.toString():
+                case KalturaEntryStatus.ready.toString():
                     ret = this.getReadyState(entry);
                     break;
-                case KalturaEntryStatus.Deleted.toString():
+                case KalturaEntryStatus.deleted.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.deleted");
                     break;
-                case KalturaEntryStatus.Pending.toString():
+                case KalturaEntryStatus.pending.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.pending");
                     break;
-                case KalturaEntryStatus.Moderate.toString():
+                case KalturaEntryStatus.moderate.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.moderate");
                     break;
-                case KalturaEntryStatus.Blocked.toString():
+                case KalturaEntryStatus.blocked.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.blocked");
                     break;
-                case KalturaEntryStatus.NoContent.toString():
+                case KalturaEntryStatus.noContent.toString():
                     ret = this.appLocalization.get("applications.content.entryStatus.noContent");
                     break;
             }
@@ -90,9 +90,9 @@ export class EntryStatusPipe implements PipeTransform {
 
         const moderationStatus: number = entry.moderationStatus;
         switch (moderationStatus) {
-            case KalturaEntryModerationStatus.Approved:
-            case KalturaEntryModerationStatus.AutoApproved:
-            case KalturaEntryModerationStatus.FlaggedForReview:
+            case KalturaEntryModerationStatus.approved:
+            case KalturaEntryModerationStatus.autoApproved:
+            case KalturaEntryModerationStatus.flaggedForReview:
                 if (schedulingType == SCHEDULING_ALL_OR_IN_FRAME){
                     result = this.appLocalization.get("applications.content.entryStatus.ready");
                 }
@@ -103,11 +103,11 @@ export class EntryStatusPipe implements PipeTransform {
                     result = this.appLocalization.get("applications.content.entryStatus.finishedStatus");
                 }
                 break;
-            case KalturaEntryModerationStatus.PendingModeration:
+            case KalturaEntryModerationStatus.pendingModeration:
                 result = this.appLocalization.get("applications.content.entryStatus.pendingStatus");
                 break;
 
-            case KalturaEntryModerationStatus.Rejected:
+            case KalturaEntryModerationStatus.rejected:
                 result = this.appLocalization.get("applications.content.entryStatus.rejectedStatus");
                 break;
 

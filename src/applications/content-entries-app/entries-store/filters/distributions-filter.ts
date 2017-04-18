@@ -18,16 +18,22 @@ export class DistributionsFilter  extends ValueFilter<number>{
 
 EntriesStore.registerFilterType(DistributionsFilter, (items, request) =>
 {
-    const distributionItem = new KalturaSearchOperator();
-    distributionItem.type = KalturaSearchOperatorType.SearchOr;
+    const distributionItem = new KalturaSearchOperator({
+        type : KalturaSearchOperatorType.searchOr
+    });
+
     request.advancedSearch.items.push(distributionItem);
 
     items.forEach(item =>
     {
-        const newItem = new KalturaContentDistributionSearchItem();
-        newItem.distributionProfileId = item.value;
-        newItem.hasEntryDistributionValidationErrors = false;
-        newItem.noDistributionProfiles = false;
+        const newItem = new KalturaContentDistributionSearchItem(
+            {
+                distributionProfileId : item.value,
+                hasEntryDistributionValidationErrors : false,
+                noDistributionProfiles : false
+            }
+        );
+
         distributionItem.items.push(newItem)
     });
 });

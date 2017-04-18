@@ -225,17 +225,17 @@ export class EntryRelatedHandler extends EntrySection
 								case "xls":
 								case "xlsx":
 								case "xml":
-									asset.format = KalturaAttachmentType.Document;
+									asset.format = KalturaAttachmentType.document;
 									break;
 								case "gif":
 								case "png":
 								case "jpg":
 								case "jpeg":
 								case "mp3":
-									asset.format = KalturaAttachmentType.Media;
+									asset.format = KalturaAttachmentType.media;
 									break;
 								case "txt":
-									asset.format = KalturaAttachmentType.Text;
+									asset.format = KalturaAttachmentType.text;
 									break;
 							}
 						}
@@ -266,7 +266,7 @@ export class EntryRelatedHandler extends EntrySection
 		if (selectedFiles && selectedFiles.length) {
 			const fileData: File = selectedFiles[0];
 
-			const newFile = this._addFile(fileData.name, KalturaAttachmentType.Document);
+			const newFile = this._addFile(fileData.name, KalturaAttachmentType.document);
             (<any>newFile).uploading = true;
 
 			this._uploadManagement.newUpload(new KalturaOVPFile(fileData))

@@ -138,28 +138,28 @@ export class EntryAccessControlHandler extends EntrySection
 			restrictions.forEach(restriction => {
 				// domains restrictions
 				if (restriction instanceof KalturaSiteRestriction){
-					if (restriction.siteRestrictionType === KalturaSiteRestrictionType.AllowSiteList) {
+					if (restriction.siteRestrictionType === KalturaSiteRestrictionType.allowSiteList) {
 						this._domainsRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.allowDomains').replace("%1", restriction.siteList);
 					}
-					if (restriction.siteRestrictionType === KalturaSiteRestrictionType.RestrictSiteList) {
+					if (restriction.siteRestrictionType === KalturaSiteRestrictionType.restrictSiteList) {
 						this._domainsRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.blockDomains').replace("%1", restriction.siteList);
 					}
 				}
 				// countries restrictions
 				if (restriction instanceof KalturaCountryRestriction){
-					if (restriction.countryRestrictionType === KalturaCountryRestrictionType.AllowCountryList) {
+					if (restriction.countryRestrictionType === KalturaCountryRestrictionType.allowCountryList) {
 						this._countriesRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.allowCountries').replace("%1", this._getCountriesByCode(restriction.countryList));
 					}
-					if (restriction.countryRestrictionType === KalturaCountryRestrictionType.RestrictCountryList) {
+					if (restriction.countryRestrictionType === KalturaCountryRestrictionType.restrictCountryList) {
 						this._countriesRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.blockCountries').replace("%1", this._getCountriesByCode(restriction.countryList));
 					}
 				}
 				// IP restrictions
 				if (restriction instanceof KalturaIpAddressRestriction){
-					if (restriction.ipAddressRestrictionType === KalturaIpAddressRestrictionType.AllowList) {
+					if (restriction.ipAddressRestrictionType === KalturaIpAddressRestrictionType.allowList) {
 						this._ipRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.allowIPs').replace("%1", restriction.ipAddressList);
 					}
-					if (restriction.ipAddressRestrictionType === KalturaIpAddressRestrictionType.RestrictList) {
+					if (restriction.ipAddressRestrictionType === KalturaIpAddressRestrictionType.restrictList) {
 						this._ipRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.blockIPs').replace("%1", restriction.ipAddressList);
 					}
 				}
@@ -175,10 +175,10 @@ export class EntryAccessControlHandler extends EntrySection
 						}
 					});
 
-					if (restriction.limitFlavorsRestrictionType === KalturaLimitFlavorsRestrictionType.AllowList) {
+					if (restriction.limitFlavorsRestrictionType === KalturaLimitFlavorsRestrictionType.allowList) {
 						this._flavourRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.allowFlavours').replace("%1", flavourNames.join(", "));
 					}
-					if (restriction.limitFlavorsRestrictionType === KalturaLimitFlavorsRestrictionType.RestrictList) {
+					if (restriction.limitFlavorsRestrictionType === KalturaLimitFlavorsRestrictionType.restrictList) {
 						this._flavourRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.blockFlavours').replace("%1", flavourNames.join(", "));
 					}
 				}
