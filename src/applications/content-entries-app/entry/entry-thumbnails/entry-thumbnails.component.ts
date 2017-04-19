@@ -1,6 +1,6 @@
 import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { ConfirmationService } from 'primeng/primeng';
 
-import { KalturaThumbAssetStatus } from '@kaltura-ng2/kaltura-api/types';
 import { AppLocalization, AppAuthentication, AppConfig } from '@kaltura-ng2/kaltura-common';
 import { BrowserService } from 'kmc-shell';
 
@@ -21,7 +21,8 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 
 	private currentThumb: ThumbnailRow;
 
-    constructor(public _handler : EntryThumbnailsHandler, private _appLocalization: AppLocalization, private _browserService: BrowserService, private _appAuthentication: AppAuthentication, private _appConfig:AppConfig,) {
+    constructor(public _handler : EntryThumbnailsHandler, private _appLocalization: AppLocalization, private _browserService: BrowserService,
+                private _appAuthentication: AppAuthentication, private _appConfig:AppConfig, private _confirmationService: ConfirmationService) {
     }
 
     ngOnInit() {
@@ -43,7 +44,12 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 	private actionSelected(action: string): void{
 		switch (action){
 			case "delete":
-				this._handler.deleteThumbnail(this.currentThumb.id);
+				this._confirmationService.confirm({
+					message: this._appLocalization.get('applications.content.entryDetails.thumbnails.deleteConfirm'),
+					accept: () => {
+						this._handler.deleteThumbnail(this.currentThumb.id);
+					}
+				});
 				break;
 			case "download":
 				this._downloadFile();

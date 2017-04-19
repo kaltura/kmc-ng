@@ -198,6 +198,7 @@
 					"defaultTitle": "Default",
 					"default": "Default Thumbnail",
 					"setDefault": "Set as default",
+					"deleteConfirmHeader": "Delete Thumbnail",
 					"deleteConfirm": "Are you sure you want to delete selected thumbnail?"
 				},
 				"accessControl":{
