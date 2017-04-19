@@ -15,7 +15,7 @@ import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 import { KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
 import { DynamicFormService, SectionFormControl } from '@kaltura-ng2/kaltura-ui/dynamic-form';
 import { KalturaCustomMetadata } from '@kaltura-ng2/kaltura-ui/dynamic-form/kaltura-custom-metadata';
-import { MetadataListAction, KalturaMetadataFilter, KalturaMetadata } from '@kaltura-ng2/kaltura-api/types';
+import { MetadataListAction, KalturaMetadataFilter, KalturaMetadata, MetadataUpdateAction } from '@kaltura-ng2/kaltura-api/types';
 
 @Injectable()
 export class EntryMetadataHandler extends EntrySection
@@ -108,7 +108,7 @@ export class EntryMetadataHandler extends EntrySection
                 }
             );
 
-            const metadataFormExtractValue = this._kalturaCustomMetadata.fromServerValue(this._entryMetadata[0], this.customMetadata);
+            const metadataFormExtractValue = this._kalturaCustomMetadata.toFormValue(this._entryMetadata[0], this.customMetadata);
 
             if (metadataFormExtractValue.error) {
                 this.loadingError = {
@@ -257,8 +257,22 @@ export class EntryMetadataHandler extends EntrySection
 
     protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
     {
+        if (this.customMetadataForm.dirty) {
+            console.warn('should check if the custom metadata form values were modified');
 
-        debugger;
+            const metadataServerValue = this._kalturaCustomMetadata.toServerValue(this.customMetadataForm.value, this.customMetadata);
+
+            if (metadataServerValue.error)
+            {
+                console.warn('stop process and show error');
+            }else
+            {
+                request.requests.push(new MetadataUpdateAction({
+                    id: this._entryMetadata[0].id,
+                    xmlData: metadataServerValue.value
+                }));
+            }
+        }
     }
 
     public searchTags(text : string)
