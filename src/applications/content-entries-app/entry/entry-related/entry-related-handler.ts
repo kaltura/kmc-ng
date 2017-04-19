@@ -67,6 +67,7 @@ export class EntryRelatedHandler extends EntrySection
                                     // TODO [kmcng] amir decide how to handle it
                                     break;
                                 case 'uploading':
+	                                (<any>file).progress = (filesStatus[uploadToken].progress * 100).toString();
                                 default:
                                     break;
                             }
@@ -280,6 +281,10 @@ export class EntryRelatedHandler extends EntrySection
 						this.removeFile(newFile);
 					});
 		}
+	}
 
+	public _cancelUpload(file: KalturaAttachmentAsset): void{
+		console.warn("Need to cancel http request");
+		this.removeFile(file);
 	}
 }

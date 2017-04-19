@@ -22,7 +22,8 @@ export interface ThumbnailRow {
 	isDefault: boolean,
 	url: string,
 	status: KalturaThumbAssetStatus,
-	uploadStatus: boolean
+	uploadStatus: boolean,
+	fileExt: string
 }
 
 @Injectable()
@@ -103,7 +104,8 @@ export class EntryThumbnailsHandler extends EntrySection
 				    isDefault: false,
 				    distributors: "",
 				    url: "",
-				    uploadStatus: false
+				    uploadStatus: false,
+				    fileExt: thumbnail.fileExt
 			    };
 			    thumb.isDefault = thumbnail.tags.indexOf("default_thumb") > -1;
 			    thumb.url = this._appConfig.get('core.kaltura.cdnUrl') + "/api_v3/index.php/service/thumbasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/thumbAssetId/" + thumb.id;
@@ -126,7 +128,7 @@ export class EntryThumbnailsHandler extends EntrySection
 			    });
 			    if (!foundCorrespondingThumbnail){
 				    // create a new missing thumb placeholder and append it to the thumbnails array
-				    let missingThumb: ThumbnailRow = {id: "", status: KalturaThumbAssetStatus.error, width: requiredWidth, height: requiredHeight, size: NaN, isDefault: false, distributors: profile.name, url: "", uploadStatus: false};
+				    let missingThumb: ThumbnailRow = {id: "", status: KalturaThumbAssetStatus.error, width: requiredWidth, height: requiredHeight, size: NaN, isDefault: false, distributors: profile.name, url: "", uploadStatus: false, fileExt: ""};
 					thumbs.push(missingThumb);
 			    }
 		    });
@@ -166,7 +168,11 @@ export class EntryThumbnailsHandler extends EntrySection
 			.subscribe(
 				() =>
 				{
-					this.reloadThumbnails();
+					thumbs.forEach(thumb =>{
+						thumb.isDefault = false;
+					});
+					thumb.isDefault = true;
+					this._thumbnails.next({items : thumbs, loading : false});
 				},
 				error =>
 				{

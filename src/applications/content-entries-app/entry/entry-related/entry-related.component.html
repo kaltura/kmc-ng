@@ -21,8 +21,12 @@
 				</p-column>
 				<p-column [style]="{'width':'80px'}">
 					<template let-col let-file="rowData" pTemplate="body">
-						<div class="kRelatedTableActions">
+						<div class="kRelatedTableActions" *ngIf="!file.uploading">
 							<button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, file)"></button>
+						</div>
+						<div *ngIf="file.uploading" class="kUploadMonitor">
+							<span>{{file.progress ? file.progress : '0'}}%</span>
+							<a (click)="_handler._cancelUpload(file)">{{'applications.content.entryDetails.related.cancel' | translate}}</a>
 						</div>
 					</template>
 				</p-column>

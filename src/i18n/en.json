@@ -328,7 +328,8 @@
 					"editTitle": "Edit File Details",
 					"title": "Title",
 					"description": "Description",
-					"done": "Done"
+					"done": "Done",
+					"cancel": "Cancel"
 				},
 				"clips":{
 					"clips": "Clips",

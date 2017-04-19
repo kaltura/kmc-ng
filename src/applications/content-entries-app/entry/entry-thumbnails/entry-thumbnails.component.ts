@@ -2,6 +2,7 @@ import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/
 import { ConfirmationService } from 'primeng/primeng';
 
 import { AppLocalization, AppAuthentication, AppConfig } from '@kaltura-ng2/kaltura-common';
+import { KalturaUtils } from '@kaltura-ng2/kaltura-common/utils/kaltura-utils';
 import { BrowserService } from 'kmc-shell';
 
 import { EntryThumbnailsHandler, ThumbnailRow } from './entry-thumbnails-handler';
@@ -61,15 +62,14 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 	}
 
 	private _downloadFile(): void {
-		//[TODO - KMCNG] - check with Liron why this code is not working
-		// const baseUrl = this._appConfig.get('core.kaltura.cdnUrl');
-		// const protocol = baseUrl.split(":")[0];
-		// const partnerId = this._appAuthentication.appUser.partnerId;
-		// const entryId = this._handler.data.id;
-		//
-		// let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + entryId + '/flavorId/' + this.currentThumb.id + '/format/download/protocol/' + protocol;
-		//
-		// this._browserService.openLink(url);
+
+		var x = new XMLHttpRequest();
+		x.open("GET", this.currentThumb.url, true);
+		x.responseType = 'blob';
+		x.onload = (e) => {
+			return KalturaUtils.download(x.response, this.currentThumb.id + "." + this.currentThumb.fileExt, "image/"+this.currentThumb.fileExt );
+		}
+		x.send();
 	}
     ngOnDestroy() {
     }
