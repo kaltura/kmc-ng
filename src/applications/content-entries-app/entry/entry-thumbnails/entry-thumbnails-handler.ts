@@ -170,7 +170,6 @@ export class EntryThumbnailsHandler extends EntrySection
 				error =>
 				{
 					this._thumbnails.next({items : thumbs, loading : false, error: error});
-					// TODO [KMCNG] - display error message
 				}
 			);
 	}
@@ -184,41 +183,42 @@ export class EntryThumbnailsHandler extends EntrySection
 			.subscribe(
 				() =>
 				{
-					debugger;
 					this.reloadThumbnails();
 				},
 				error =>
 				{
-					debugger;
-					//this._thumbnails.next({items : thumbs, loading : false, error: error});
-					// TODO [KMCNG] - display error message
+					this._thumbnails.next({items : thumbs, loading : false, error: error});
 				}
 			);
 	}
 
-	public _onFileSelected(selectedFiles: FileList) {
+	public _onFileSelected(selectedFiles: FileList):void {
 		if (selectedFiles && selectedFiles.length) {
-			const fileData: File = selectedFiles[0];
-			/*
+			const file: File = selectedFiles[0];
+			const formData : FormData = new FormData();
+			formData.append('fileName', file.name);
+			formData.append('fileData', file);
+
 			const thumbs = Array.from(this._thumbnails.getValue().items);
 			this._thumbnails.next({items : thumbs, loading : true});
-			this._kalturaServerClient.request(new ThumbAssetAddFromImageAction({entryId: this.data.id, fileData: fileData}))
+			this._kalturaServerClient.request(new ThumbAssetAddFromImageAction({entryId: this.data.id, fileData: formData}))
 				.cancelOnDestroy(this,this.sectionReset$)
 				.monitor('add thumb')
 				.subscribe(
 					() =>
 					{
-						debugger;
 						this.reloadThumbnails();
 					},
 					error =>
 					{
-						debugger;
-						//this._thumbnails.next({items : thumbs, loading : false, error: error});
-						// TODO [KMCNG] - display error message
+						this._thumbnails.next({items : thumbs, loading : false, error: error});
 					}
-				);*/
+				);
 		}
+	}
 
+	public closeError(): void{
+		const thumbs = Array.from(this._thumbnails.getValue().items);
+		this._thumbnails.next({items : thumbs, loading : false, error: false});
 	}
 }

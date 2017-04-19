@@ -1,5 +1,4 @@
 <kLoader [loading]="(_handler._captions$ | async)?.loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
-	<kFileDialog #fileDialog [filter]="'text/xml,.srt'" (onFileSelected)="_handler._onFileSelected($event)"></kFileDialog>
 	<div class="kCaptions" #captions>
 		<p class="kTitle">{{'applications.content.entryDetails.captions.captions' | translate}}</p>
 		<button type="button" class="kButtonDefault" pButton label="{{'applications.content.entryDetails.captions.add' | translate}}" (click)="_addCaption()"></button>

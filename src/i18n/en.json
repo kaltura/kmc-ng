@@ -196,8 +196,9 @@
 					"delete": "Delete",
 					"preview": "Preview",
 					"defaultTitle": "Default",
-					"default": "Default Caption",
-					"setDefault": "Set as default"
+					"default": "Default Thumbnail",
+					"setDefault": "Set as default",
+					"deleteConfirm": "Are you sure you want to delete selected thumbnail?"
 				},
 				"accessControl":{
 					"accessControl": "Access Control Profiles",
