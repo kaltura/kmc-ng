@@ -40,9 +40,9 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
     constructor(private _appLocalization: AppLocalization, private _fb: FormBuilder, private _confirmationService: ConfirmationService) {
 	    // load all supported languages
 	    this._languages = [];
-	    let exludedLanguages = ['He', 'Id', 'Yi']; // duplicated languages [TODO-KMCNG] - should be checked with beckend
+	    let exludedLanguages = ['he', 'id', 'yi']; // duplicated languages [TODO-KMCNG] - should be checked with beckend
 	    for (let lang in KalturaLanguage){
-		    if (lang !== "En" && exludedLanguages.indexOf(lang) === -1) { // we push English to the top of the array after sorting
+		    if (lang !== "en" && exludedLanguages.indexOf(lang) === -1) { // we push English to the top of the array after sorting
 			    this._languages.push( {label: _appLocalization.get("languages." + lang.toUpperCase()), value: lang.toUpperCase() });
 		    }
 	    }
@@ -106,7 +106,6 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
 		}
 		if (this.captionsEditForm.get("language").dirty) {
 			let langCode = this.captionsEditForm.get("language").value.toString().toLowerCase();
-			langCode = langCode.charAt(0).toUpperCase() + langCode.slice(1);
 			if (langCode.length === 4) {
 				langCode = langCode.substr(0, 2) + langCode.charAt(2).toUpperCase() + langCode.slice(3);
 			}
