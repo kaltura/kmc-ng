@@ -78,9 +78,9 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy{
         this.onActionSelected("view", this.actionsMenuEntryId);
       }}
     ];
-    if (status instanceof KalturaEntryStatus && status.toString() != KalturaEntryStatus.Ready.toString()){
+    if (status instanceof KalturaEntryStatus && status.toString() != KalturaEntryStatus.ready.toString()){
         this._items.shift();
-        if (mediaType && mediaType.toString() == KalturaMediaType.LiveStreamFlash.toString()){
+        if (mediaType && mediaType.toString() == KalturaMediaType.liveStreamFlash.toString()){
             this._items.pop();
         }
     }
@@ -118,7 +118,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy{
 
   allowDrilldown(mediaType: string, status: string){
       let allowed = true;
-      if ( mediaType && mediaType == KalturaMediaType.LiveStreamFlash.toString() && status && status != KalturaEntryStatus.Ready.toString()){
+      if ( mediaType && mediaType == KalturaMediaType.liveStreamFlash.toString() && status && status != KalturaEntryStatus.ready.toString()){
           allowed = false;
       }
       return allowed;

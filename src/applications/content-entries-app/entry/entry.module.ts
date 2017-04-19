@@ -29,7 +29,9 @@ import { EntryUsers } from "./entry-users/entry-users.component";
 import { EntrySectionsList } from "./entry-sections-list/entry-sections-list.component";
 import { EntryComponent } from './entry.component';
 import { EntryPreview } from './entry-preview/entry-preview.component';
-
+import { DynamicFormModule } from '@kaltura-ng2/kaltura-ui/dynamic-form';
+import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng2/kaltura-primeng-ui/dynamic-form';
+import { KalturaCustomMetadataModule } from '@kaltura-ng2/kaltura-ui/dynamic-form/kaltura-custom-metadata';
 
 @NgModule({
     imports: [
@@ -40,6 +42,7 @@ import { EntryPreview } from './entry-preview/entry-preview.component';
         CommonModule,
         DataTableModule,
         DropdownModule,
+        DynamicFormModule,
         FormsModule,
         InputTextareaModule,
         InputTextModule,
@@ -50,10 +53,12 @@ import { EntryPreview } from './entry-preview/entry-preview.component';
         KMCContentUIModule,
         MenuModule,
 	    PopupWidgetModule,
+        PrimeDynamicFormModule,
         MultiSelectModule,
         PaginatorModule,
         RadioButtonModule,
         ReactiveFormsModule,
+        KalturaCustomMetadataModule,
         RouterModule.forChild([]),
         SpinnerModule,
         TooltipModule

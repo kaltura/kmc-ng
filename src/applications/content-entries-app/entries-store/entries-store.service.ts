@@ -283,12 +283,12 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
     private buildQueryRequest({filters : activeFilters, data : queryData } : { filters : FilterItem[], data : QueryData}) : Observable<KalturaBaseEntryListResponse> {
 
         try {
-            let filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter();
+            let filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter({});
             let responseProfile: KalturaDetachedResponseProfile = null;
             let pagination: KalturaFilterPager = null;
 
-            const advancedSearch = filter.advancedSearch = new KalturaSearchOperator();
-            advancedSearch.type = KalturaSearchOperatorType.SearchAnd;
+            const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
+            advancedSearch.type = KalturaSearchOperatorType.searchAnd;
 
             const requestContext: FilterArgs = {
                 filter: filter,
@@ -325,10 +325,12 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
                 // add default values to the missing metadata profiles
                 missingMetadataProfiles.forEach((metadataProfileId: number) => {
-                    const metadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem();
-                    metadataItem.metadataProfileId = metadataProfileId;
-                    metadataItem.type = KalturaSearchOperatorType.SearchAnd;
-                    metadataItem.items = [];
+                    const metadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem({
+                        metadataProfileId : metadataProfileId,
+                        type : KalturaSearchOperatorType.searchAnd,
+                        items : []
+                    });
+
                     advancedSearch.items.push(metadataItem);
                 });
             }
@@ -355,16 +357,21 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
             // update desired fields of entries
             if (queryData.fields) {
-                responseProfile = new KalturaDetachedResponseProfile();
-                responseProfile.type = KalturaResponseProfileType.IncludeFields;
-                responseProfile.fields = queryData.fields;
+                responseProfile = new KalturaDetachedResponseProfile({
+                    type : KalturaResponseProfileType.includeFields,
+                    fields : queryData.fields
+                });
+
             }
 
             // update pagination args
             if (queryData.pageIndex || queryData.pageSize) {
-                pagination = new KalturaFilterPager();
-                pagination.pageSize = queryData.pageSize;
-                pagination.pageIndex = queryData.pageIndex;
+                pagination = new KalturaFilterPager(
+                    {
+                        pageSize: queryData.pageSize,
+                        pageIndex: queryData.pageIndex
+                    }
+                );
             }
 
             // build the request

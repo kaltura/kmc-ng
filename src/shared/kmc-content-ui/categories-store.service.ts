@@ -73,14 +73,17 @@ export class CategoriesStore {
     {
         if (text) {
             return Observable.create(observer => {
-                const filter = new KalturaCategoryFilter();
-                filter.nameOrReferenceIdStartsWith = text;
-                filter.orderBy = '+fullName';
+                const filter = new KalturaCategoryFilter(
+                    {
+                        nameOrReferenceIdStartsWith : text,
+                        orderBy : '+fullName'
+                    }
+                );
 
-                const pager = new KalturaFilterPager();
-                pager.pageIndex = 0;
-                pager.pageSize = 30;
-
+                const pager = new KalturaFilterPager({
+                    pageIndex : 0,
+                    pageSize : 30
+                });
 
                 const requestSubscription = this.kalturaServerClient.request(
                     new CategoryListAction({filter})
@@ -199,7 +202,7 @@ export class CategoriesStore {
     }
 
     private buildCategoryListRequest({parentId, categoriesList} : {parentId?: number, categoriesList? : number[] }) : Observable<KalturaCategoryListResponse> {
-        const filter = new KalturaCategoryFilter();
+        const filter = new KalturaCategoryFilter({});
         filter.orderBy = '+name';
         if (parentId !== null && typeof parentId !== 'undefined') {
             filter.parentIdEqual = parentId;
@@ -209,10 +212,10 @@ export class CategoriesStore {
             filter.idIn = categoriesList.join(',');
         }
 
-        const responseProfile = new KalturaDetachedResponseProfile()
+        const responseProfile = new KalturaDetachedResponseProfile({})
             .setData(data => {
                 data.fields = "id,name,parentId,partnerSortValue,fullName,fullIds,directSubCategoriesCount";
-                data.type = KalturaResponseProfileType.IncludeFields;
+                data.type = KalturaResponseProfileType.includeFields;
             });
 
         return <any>this.kalturaServerClient.request(

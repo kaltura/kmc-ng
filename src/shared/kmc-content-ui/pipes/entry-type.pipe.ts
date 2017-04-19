@@ -13,22 +13,22 @@ export class EntryTypePipe implements PipeTransform {
 		let tooltip = "";
 		if (typeof(value) !== 'undefined' && value !== null) {
 			switch (value) {
-				case KalturaMediaType.Video:
+				case KalturaMediaType.video:
 					className += 'media';
 					tooltip = this.appLocalization.get("applications.content.entryType.video");
 					break;
-				case KalturaMediaType.Image:
+				case KalturaMediaType.image:
 					tooltip = this.appLocalization.get("applications.content.entryType.image");
 					className += 'image';
 					break;
-				case KalturaMediaType.Audio:
+				case KalturaMediaType.audio:
 					tooltip = this.appLocalization.get("applications.content.entryType.audio");
 					className += 'audio';
 					break;
-				case KalturaMediaType.LiveStreamFlash:
-				case KalturaMediaType.LiveStreamQuicktime:
-				case KalturaMediaType.LiveStreamRealMedia:
-				case KalturaMediaType.LiveStreamWindowsMedia:
+				case KalturaMediaType.liveStreamFlash:
+				case KalturaMediaType.liveStreamQuicktime:
+				case KalturaMediaType.liveStreamRealMedia:
+				case KalturaMediaType.liveStreamWindowsMedia:
 					tooltip = this.appLocalization.get("applications.content.entryType.live");
 					className += 'live';
 					break;

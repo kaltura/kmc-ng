@@ -60,11 +60,14 @@ export class EntryThumbnailsHandler extends EntrySection
 
 	    this._thumbnails.next({items : [], loading : true});
 
-	    const getThumbnails$ = this._kalturaServerClient.request(new ThumbAssetListAction({ filter: new KalturaAssetFilter()
-		    .setData(filter => {
-				    filter.entryIdEqual = this.data.id;
-			    })
-		    }))
+	    const getThumbnails$ = this._kalturaServerClient.request(new ThumbAssetListAction(
+	    	{
+	    		filter: new KalturaAssetFilter(
+	    			{
+						entryIdEqual : this.data.id
+					}
+				)
+	    	}))
 		    .cancelOnDestroy(this,this.sectionReset$)
 		    .monitor('get thumbnails');
 
@@ -90,7 +93,7 @@ export class EntryThumbnailsHandler extends EntrySection
 	    let thumbs: ThumbnailRow[] = [];
 	    // create a ThumbnailRow data for each of the loaded thumbnails
 	    thumbnails.forEach( (thumbnail: KalturaThumbAsset) => {
-		    if (thumbnail.status.toString() === KalturaThumbAssetStatus.Ready.toString()) {
+		    if (thumbnail.status.toString() === KalturaThumbAssetStatus.ready.toString()) {
 			    let thumb: ThumbnailRow = {
 				    id: thumbnail.id,
 				    status: thumbnail.status,
@@ -123,7 +126,7 @@ export class EntryThumbnailsHandler extends EntrySection
 			    });
 			    if (!foundCorrespondingThumbnail){
 				    // create a new missing thumb placeholder and append it to the thumbnails array
-				    let missingThumb: ThumbnailRow = {id: "", status: KalturaThumbAssetStatus.Error, width: requiredWidth, height: requiredHeight, size: NaN, isDefault: false, distributors: profile.name, url: "", uploadStatus: false};
+				    let missingThumb: ThumbnailRow = {id: "", status: KalturaThumbAssetStatus.error, width: requiredWidth, height: requiredHeight, size: NaN, isDefault: false, distributors: profile.name, url: "", uploadStatus: false};
 					thumbs.push(missingThumb);
 			    }
 		    });
@@ -133,11 +136,9 @@ export class EntryThumbnailsHandler extends EntrySection
 
     private reloadThumbnails(){
 	    const thumbs = Array.from(this._thumbnails.getValue().items);
-	    this._kalturaServerClient.request(new ThumbAssetListAction({ filter: new KalturaAssetFilter()
-		    .setData(filter => {
-			    filter.entryIdEqual = this.data.id;
-		    })
-	    }))
+	    this._kalturaServerClient.request(new ThumbAssetListAction({ filter: new KalturaAssetFilter({
+			entryIdEqual : this.data.id
+		})}))
 	    .cancelOnDestroy(this,this.sectionReset$)
 	    .monitor('get thumbnails')
 	    .subscribe(
@@ -170,6 +171,7 @@ export class EntryThumbnailsHandler extends EntrySection
 				error =>
 				{
 					this._thumbnails.next({items : thumbs, loading : false, error: error});
+					// TODO [KMCNG] - display error message
 				}
 			);
 	}
@@ -192,25 +194,23 @@ export class EntryThumbnailsHandler extends EntrySection
 			);
 	}
 
-	public _onFileSelected(selectedFiles: FileList):void {
+	public _onFileSelected(selectedFiles: FileList) {
 		if (selectedFiles && selectedFiles.length) {
-			const file: File = selectedFiles[0];
-			const formData : FormData = new FormData();
-			formData.append('fileName', file.name);
-			formData.append('fileData', file);
+			const fileData: File = selectedFiles[0];
 
 			const thumbs = Array.from(this._thumbnails.getValue().items);
-			this._thumbnails.next({items : thumbs, loading : true});
-			this._kalturaServerClient.request(new ThumbAssetAddFromImageAction({entryId: this.data.id, fileData: formData}))
-				.cancelOnDestroy(this,this.sectionReset$)
-				.monitor('add thumb')
-				.subscribe(
-					() =>
-					{
+			this._thumbnails.next({items: thumbs, loading: true});
+			this._kalturaServerClient.request(new ThumbAssetAddFromImageAction({
+				entryId: this.data.id,
+				fileData: fileData
+			}))
+                .cancelOnDestroy(this, this.sectionReset$)
+                .monitor('add thumb')
+                .subscribe(
+					() => {
 						this.reloadThumbnails();
 					},
-					error =>
-					{
+					error => {
 						this._thumbnails.next({items : thumbs, loading : false, error: error});
 					}
 				);

@@ -140,22 +140,22 @@ export class EntryClipsHandler extends EntrySection
 
             // build the request
             this._kalturaServerClient.request(new BaseEntryListAction({
-                filter: new KalturaBaseEntryFilter()
-                    .setData(filter => {
-                        filter.rootEntryIdEqual = entry.id;
-                        filter.orderBy = `${this.sortAsc ? '' : '-'}${this.sortBy}`;
-                    }),
-                pager: new KalturaFilterPager()
-                    .setData(pager => {
-                            pager.pageSize = this.pageSize;
-                            pager.pageIndex = this.pageIndex + 1;
-                        }
-                    ),
-                responseProfile: new KalturaDetachedResponseProfile()
-                    .setData(responseProfile => {
-                        responseProfile.type = KalturaResponseProfileType.IncludeFields;
-                        responseProfile.fields = 'id,name,plays,createdAt,duration,status,offset,operationAttributes,moderationStatus';
-                    })
+                filter: new KalturaBaseEntryFilter(
+                    {
+                        rootEntryIdEqual : entry.id,
+                        orderBy : `${this.sortAsc ? '' : '-'}${this.sortBy}`
+                    }
+                ),
+                pager: new KalturaFilterPager(
+                    {
+                        pageSize : this.pageSize,
+                        pageIndex : this.pageIndex + 1
+                    }
+                ),
+                responseProfile: new KalturaDetachedResponseProfile({
+                    type : KalturaResponseProfileType.includeFields,
+                    fields : 'id,name,plays,createdAt,duration,status,offset,operationAttributes,moderationStatus'
+                })
             }))
                 .cancelOnDestroy(this,this.sectionReset$)
                 .monitor('get entry clips')

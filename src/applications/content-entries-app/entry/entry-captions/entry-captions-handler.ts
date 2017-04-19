@@ -70,16 +70,9 @@ export class EntryCaptionsHandler extends EntrySection
 
 
 	    this._kalturaServerClient.request(new CaptionAssetListAction({
-			    filter: new KalturaAssetFilter()
-				    .setData(filter => {
-					    filter.entryIdEqual = this._entryId;
-				    }),
-			    pager: new KalturaFilterPager().setData(
-				    pager => {
-					    pager.pageIndex = 0;
-					    pager.pageSize = 100;
-				    }
-			    )
+			    filter: new KalturaAssetFilter({
+					entryIdEqual : this._entryId
+				})
 		    }))
 		    .cancelOnDestroy(this,this.sectionReset$)
 		    .monitor('get captions')
@@ -115,13 +108,13 @@ export class EntryCaptionsHandler extends EntrySection
     public _getCaptionType(captionFormat: KalturaCaptionType): string{
 	    let type = this._appLocalization.get('app.common.n_a');
 	    switch (captionFormat.toString()){
-		    case KalturaCaptionType.Srt.toString():
+		    case KalturaCaptionType.srt.toString():
 		    	type = "SRT";
 			    break;
-		    case KalturaCaptionType.Dfxp.toString():
+		    case KalturaCaptionType.dfxp.toString():
 		    	type = "DFXP";
 			    break;
-		    case KalturaCaptionType.Webvtt.toString():
+		    case KalturaCaptionType.webvtt.toString():
 		    	type = "WEBVTT";
 			    break;
 	    }
@@ -133,10 +126,10 @@ export class EntryCaptionsHandler extends EntrySection
 	    if (caption.status) {
 		    status = this._appLocalization.get('applications.content.entryDetails.captions.processing');
 		    switch (caption.status.toString()) {
-			    case KalturaCaptionAssetStatus.Error.toString():
+			    case KalturaCaptionAssetStatus.error.toString():
 				    status = this._appLocalization.get('applications.content.entryDetails.captions.error');
 				    break;
-			    case KalturaCaptionAssetStatus.Ready.toString():
+			    case KalturaCaptionAssetStatus.ready.toString():
 				    status = this._appLocalization.get('applications.content.entryDetails.captions.saved');
 				    break;
 		    }
@@ -155,8 +148,8 @@ export class EntryCaptionsHandler extends EntrySection
 			uploadToken: "",
 			uploadUrl: "",
 			id: null,
-			format: KalturaCaptionType.Srt,
-	        language: KalturaLanguage.En,
+			format: KalturaCaptionType.srt,
+	        language: KalturaLanguage.en,
 	        label: "English",
 	        isDefault: 0
 		};
@@ -224,16 +217,19 @@ export class EntryCaptionsHandler extends EntrySection
 
 						let resource = null;
 						if ((record.item as CaptionRow).uploadUrl){ // add new caption from URL
-							resource = new KalturaUrlResource();
-							resource.url = (record.item as CaptionRow).uploadUrl;
+							resource = new KalturaUrlResource({
+								url :  (record.item as CaptionRow).uploadUrl
+							});
 						}
 						if ((record.item as CaptionRow).uploadToken){ // add new caption from upload token
-							resource = new KalturaUploadedFileTokenResource();
-							resource.token = (record.item as CaptionRow).uploadToken;
+							resource = new KalturaUploadedFileTokenResource({
+								token : (record.item as CaptionRow).uploadToken
+							});
 						}
 						if (resource){
 							let setContentRequest: CaptionAssetSetContentAction = new CaptionAssetSetContentAction({id: '0', contentResource: resource})
-								.setDependency(['id', (request.requests.length), 'id']); console.warn("Warning: should be request.requests.length-1 after KAPI fix!");
+								.setDependency(['id', (request.requests.length), 'id']);
+							console.warn("Warning: should be request.requests.length-1 after KAPI fix!");
 
 							request.requests.push(setContentRequest);
 						}

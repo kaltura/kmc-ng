@@ -132,11 +132,11 @@ export class EntrySectionsListHandler extends EntrySection
         const mediaType = this.data.mediaType;
         switch (section.sectionType) {
             case EntrySectionTypes.Thumbnails:
-                return mediaType !== KalturaMediaType.Image;
+                return mediaType !== KalturaMediaType.image;
             case EntrySectionTypes.Flavours:
-                return mediaType !== KalturaMediaType.Image && !this._isLive(entry);
+                return mediaType !== KalturaMediaType.image && !this._isLive(entry);
             case EntrySectionTypes.Captions:
-                return mediaType !== KalturaMediaType.Image && !this._isLive(entry);
+                return mediaType !== KalturaMediaType.image && !this._isLive(entry);
             case EntrySectionTypes.Live:
                 return this._isLive(entry);
             case EntrySectionTypes.Clips:
@@ -148,7 +148,7 @@ export class EntrySectionsListHandler extends EntrySection
 
     private _isLive( entry : KalturaMediaEntry): boolean {
         const mediaType = entry.mediaType;
-        return mediaType === KalturaMediaType.LiveStreamFlash || mediaType === KalturaMediaType.LiveStreamWindowsMedia || mediaType === KalturaMediaType.LiveStreamRealMedia || mediaType === KalturaMediaType.LiveStreamQuicktime;
+        return mediaType === KalturaMediaType.liveStreamFlash || mediaType === KalturaMediaType.liveStreamWindowsMedia || mediaType === KalturaMediaType.liveStreamRealMedia || mediaType === KalturaMediaType.liveStreamQuicktime;
     }
 
     protected _activate(firstLoad : boolean) {
