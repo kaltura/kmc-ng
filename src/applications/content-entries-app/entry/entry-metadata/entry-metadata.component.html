@@ -56,8 +56,8 @@
 
 		<hr style="margin-top: 24px"/>
 
-		<div *ngIf="_handler.customMetadataForm">
-			<kDynamicFormGroup [groupControl]="_handler.customMetdataGroupControl" [form]="_handler.customMetadataForm">
+		<div *ngIf="_handler.customDataForms && _handler.customDataForms.isReady">
+			<kDynamicFormGroup [dynamicSection]="_handler.customDataForms.dynamicSection" [form]="_handler.customDataForms.formGroup">
 				<template let-item="item">
 					<kPrimeControl [control]="item.control" [form]="item.form"></kPrimeControl>
 				</template>
