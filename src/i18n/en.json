@@ -329,7 +329,9 @@
 					"title": "Title",
 					"description": "Description",
 					"done": "Done",
-					"cancel": "Cancel"
+					"cancel": "Cancel",
+					"uploadError": "Upload Error",
+					"remove": "Remove"
 				},
 				"clips":{
 					"clips": "Clips",

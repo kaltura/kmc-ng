@@ -36,6 +36,9 @@
 			margin-top: 8px;
 		}
 	}
+	.kError{
+		color: $kDandger;
+	}
 }
 
 :host /deep/ .ui-dropdown.ui-widget{

@@ -186,6 +186,10 @@ td.ui-datatable-emptymessage{
 	color: $kGrayscale3;
 }
 
+.ui-datatable .ui-datatable-data tr.uploadFailure{
+	background: #ffe8e8;
+}
+
 .ui-datatable .ui-datatable-data tr.uploading{
 	background: repeating-linear-gradient(
 			-75deg,

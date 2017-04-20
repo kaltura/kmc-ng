@@ -177,7 +177,6 @@ export class EntryThumbnailsHandler extends EntrySection
 				error =>
 				{
 					this._thumbnails.next({items : thumbs, loading : false, error: error});
-					// TODO [KMCNG] - display error message
 				}
 			);
 	}
