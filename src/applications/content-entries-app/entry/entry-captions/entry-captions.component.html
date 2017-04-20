@@ -15,7 +15,10 @@
 				</p-column>
 				<p-column field="status" header="{{'applications.content.entryDetails.captions.status' | translate}}">
 					<template let-col let-caption="rowData" pTemplate="body">
-						<span>{{_handler._getCaptionStatus(caption)}}</span>
+						<span *ngIf="!caption.uploadFailure">{{_handler._getCaptionStatus(caption)}}</span>
+						<div *ngIf="caption.uploadFailure" class="kError">
+							<span>{{'applications.content.entryDetails.captions.uploadError' | translate}}</span>
+						</div>
 					</template>
 				</p-column>
 				<p-column header="{{'applications.content.entryDetails.captions.defaultTitle' | translate}}">
@@ -26,8 +29,14 @@
 				</p-column>
 				<p-column [style]="{'width':'80px'}">
 					<template let-col let-caption="rowData" pTemplate="body">
-						<div class="kCaptionsTableActions">
+						<div class="kCaptionsTableActions" *ngIf="!caption.uploading && !caption.uploadFailure">
 							<button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, caption)"></button>
+						</div>
+						<div *ngIf="caption.uploading">
+							<span>{{caption.progress ? caption.progress : '0'}}%</span>
+						</div>
+						<div *ngIf="caption.uploadFailure">
+							<a (click)="_handler.removeCaption()">{{'applications.content.entryDetails.captions.remove' | translate}}</a>
 						</div>
 					</template>
 				</p-column>

@@ -276,7 +276,9 @@
 					"invalidUrl": "Please enter a valid URL",
 					"ready": "Ready For Save",
 					"cancelEdit": "Cancel Edit",
-					"discard": "Discard all changes?"
+					"discard": "Discard all changes?",
+					"uploadError": "Upload Error",
+					"remove": "Remove"
 				},
 				"live":{
 					"live": "Live Stream",

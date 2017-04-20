@@ -187,7 +187,7 @@ td.ui-datatable-emptymessage{
 }
 
 .ui-datatable .ui-datatable-data tr.uploadFailure{
-	background: #ffe8e8;
+	background: lighten($kDandger, 45%);
 }
 
 .ui-datatable .ui-datatable-data tr.uploading{
