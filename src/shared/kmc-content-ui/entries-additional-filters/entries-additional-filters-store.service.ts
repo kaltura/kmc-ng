@@ -8,7 +8,7 @@ import 'rxjs/add/observable/forkJoin';
 
 import { KalturaServerClient,  KalturaMultiRequest, KalturaMultiResponse } from '@kaltura-ng2/kaltura-api';
 import { DistributionProfileListAction, AccessControlListAction } from '@kaltura-ng2/kaltura-api/types';
-import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataFieldTypes, FlavoursStore } from '@kaltura-ng2/kaltura-common';
+import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataItemTypes, FlavoursStore } from '@kaltura-ng2/kaltura-common';
 
 import {
     KalturaAccessControlFilter,
@@ -139,8 +139,8 @@ export class EntriesAdditionalFiltersStore {
 
             // get only fields that are list, searchable and has values
             const profileLists = R.filter(field => {
-                return (field.type === MetadataFieldTypes.List && field.isSearchable && field.optionalValues.length > 0);
-            }, metadataProfile.fields);
+                return (field.type === MetadataItemTypes.List && field.isSearchable && field.optionalValues.length > 0);
+            }, metadataProfile.items);
 
             // if found relevant lists, create a group for that profile
             if (profileLists && profileLists.length > 0) {
@@ -148,7 +148,7 @@ export class EntriesAdditionalFiltersStore {
                 result.groups.push(filterGroup);
 
                 profileLists.forEach(list => {
-                    filterGroup.filtersTypes.push(new filterGroupMetadataProfileType(list.id, list.label, metadataProfile.id, list.path));
+                    filterGroup.filtersTypes.push(new filterGroupMetadataProfileType(list.id, list.label, metadataProfile.id, ['metadata',list.name]));
                     const items = filterGroup.filtersByType[list.id] = [];
 
                     list.optionalValues.forEach(value => {

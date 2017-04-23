@@ -106,7 +106,7 @@ export class EntryMetadataHandler extends EntrySection
             );
 
             console.warn('KMCng: map the right entry metadata to the relevant custom data form');
-            this.customDataForms.syncValue(this._entryMetadata[0]);
+            this.customDataForms.syncValue(this._entryMetadata[1]);
         } else {
             const error = (this._entryCategoriesStatus instanceof Error ? this._entryCategoriesStatus : null)
                 || (this._entryMetadataStatus instanceof Error ? this._entryMetadataStatus : null)
@@ -207,7 +207,7 @@ export class EntryMetadataHandler extends EntrySection
                 .monitor('load metadata profiles')
                 .subscribe(
                     response => {
-                        this.customDataForms = this._kalturaCustomMetadata.createHandler(response.items[0]);
+                        this.customDataForms = this._kalturaCustomMetadata.createHandler(response.items[1]);
                         this._profileMetadataStatus = 'loaded';
                         this._updateForms();
                     },
