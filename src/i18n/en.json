@@ -23,7 +23,12 @@
             "selectLang": "Select Language"
         },
 		"common":{
-			"n_a": "N/A"
+			"n_a": "N/A",
+			"copyToClipboard": "Copy to clipboard",
+			"copySuccess":"Copied to clipboard",
+			"copyFailure": "Copy operation failed",
+			"on": "On",
+			"off": "Off"
 		}
     },
     "applications":{
@@ -286,6 +291,11 @@
 					"primary": "Primary URL",
 					"backup": "Backup URL",
 					"regenerate": "Re-Generate Stream Token",
+					"regenerateTooltip": "Re-generate a new RTMP token for this entry",
+					"regeneratePromptHeader": "Re-Generate Stream Token?",
+					"regeneratePrompt": "Re-generating the token requires you to update your encoder settings with the new token. Broadcasting with the old token will be rejected. Are you sure?",
+					"regenerateSuccess": "Token generated",
+					"regenerateFailure": "Error generating token",
 					"streamName": "Stream name",
 					"note": "Note: When using Flash Live Media Encoder you can use %i to automatically map multiple streams, with other encoders you should substitute \"_1\" with the index of each live stream flavor.",
 					"config": "Live Stream Configuration",
@@ -309,7 +319,8 @@
 					"secondaryIP": "Secondary IP",
 					"export": "Export XML for FMLE",
 					"report": "Live Content Detailed Report",
-					"streamUrl": "Stream URL"
+					"streamUrl": "Stream URL",
+					"hours": "hours"
 
 				},
 				"related":{

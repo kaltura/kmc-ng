@@ -1,51 +1,67 @@
-<kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
+<kLoader [loading]="(_handler._conversionProfiles$ | async)?.loading || _handler._regeneratingToken" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
 	<div class="kLive">
 		<p class="kTitle">{{'applications.content.entryDetails.live.live' | translate}}</p>
 		<div class="kLiveDetails">
-			<span class="kSubTitle">{{'applications.content.entryDetails.live.urls' | translate}}</span>
-			<div class="kRow">
-				<span class="kLabels">{{'applications.content.entryDetails.live.primary' | translate}}</span>
-				<span></span>
-			</div>
-			<div class="kRow">
-				<span class="kLabels">{{'applications.content.entryDetails.live.backup' | translate}}</span>
-				<span></span>
-			</div>
-			<div class="kRow">
-				<span class="kLabels"></span>
-				<button pButton class="kButtonDefault" label="{{'applications.content.entryDetails.live.regenerate' | translate}}"></button>
+
+			<div *ngIf="_handler._liveType !== 'manual'">
+				<span class="kSubTitle">{{'applications.content.entryDetails.live.urls' | translate}}</span>
+				<div class="kRow">
+					<span class="kLabels">{{'applications.content.entryDetails.live.primary' | translate}}</span>
+					<div>
+						<span #primaryBroadcastingUrl>{{_handler.data?.primaryBroadcastingUrl}}</span>
+						<button *ngIf="_copyToClipboardEnabled" pButton class="kButtonDefault kCopyBtn" (click)="_copyToClipboard(primaryBroadcastingUrl.textContent)" icon="kIconcalendar" pTooltip="{{'app.common.copyToClipboard' | translate}}"></button>
+					</div>
+				</div>
+				<div class="kRow">
+					<span class="kLabels">{{'applications.content.entryDetails.live.backup' | translate}}</span>
+					<div>
+						<span #secondaryBroadcastingUrl>{{_handler.data?.secondaryBroadcastingUrl}}</span>
+						<button *ngIf="_copyToClipboardEnabled" pButton class="kButtonDefault kCopyBtn" (click)="_copyToClipboard(secondaryBroadcastingUrl.textContent)" icon="kIconcalendar" pTooltip="{{'app.common.copyToClipboard' | translate}}"></button>
+					</div>
+				</div>
 			</div>
 
-			<span class="kSubTitle">{{'applications.content.entryDetails.live.urls' | translate}}</span>
-			<div class="kRow">
-				<span class="kLabels">{{'applications.content.entryDetails.live.streamName' | translate}}</span>
-				<span></span>
-			</div>
-			<div class="kRow">
+			<div class="kRow" *ngIf="_handler._liveType === 'kaltura'">
 				<span class="kLabels"></span>
-				<span>{{'applications.content.entryDetails.live.note' | translate}}</span>
+				<button pButton (click)="_regenerateToken()" class="kButtonDefault" label="{{'applications.content.entryDetails.live.regenerate' | translate}}" pTooltip="{{'applications.content.entryDetails.live.regenerateTooltip' | translate}}" tooltipPosition="top"></button>
 			</div>
 
-			<span class="kSubTitle">{{'applications.content.entryDetails.live.config' | translate}}</span>
-			<div class="kRow">
-				<span class="kLabels">{{'applications.content.entryDetails.live.hlsStream' | translate}}</span>
-				<span></span>
+			<div *ngIf="_handler._liveType !== 'manual'">
+				<div class="kRow">
+					<span class="kLabels">{{'applications.content.entryDetails.live.streamName' | translate}}</span>
+					<span>{{_handler.data?.streamName.replace('%i', '1')}}</span>
+				</div>
+				<div class="kRow">
+					<span class="kLabels"></span>
+					<span>{{'applications.content.entryDetails.live.note' | translate}}</span>
+				</div>
 			</div>
-			<div class="kRow">
-				<span class="kLabels">{{'applications.content.entryDetails.live.akamaiStream' | translate}}</span>
-				<span></span>
-			</div>
-			<div class="kRow">
-				<span class="kLabels">{{'applications.content.entryDetails.live.dvrStatus' | translate}}</span>
-				<span></span>
-			</div>
-			<div class="kRow">
-				<span class="kLabels">{{'applications.content.entryDetails.live.dvrWindow' | translate}}</span>
-				<span></span>
-			</div>
-			<div class="kRow">
-				<span class="kLabels">{{'applications.content.entryDetails.live.activeRec' | translate}}</span>
-				<span></span>
+
+			<div *ngIf="_handler._liveType !== 'manual'">
+				<span class="kSubTitle">{{'applications.content.entryDetails.live.config' | translate}}</span>
+				<div *ngIf="_handler._liveType === 'universal'">
+					<div class="kRow">
+						<span class="kLabels">{{'applications.content.entryDetails.live.hlsStream' | translate}}</span>
+						<span>{{_handler.data?.hlsStreamUrl}}</span>
+					</div>
+					<div class="kRow">
+						<span class="kLabels">{{'applications.content.entryDetails.live.akamaiStream' | translate}}</span>
+						<span>{{_handler.data?.streamRemoteId}}</span>
+					</div>
+				</div>
+
+				<div class="kRow">
+					<span class="kLabels">{{'applications.content.entryDetails.live.dvrStatus' | translate}}</span>
+					<span>{{_handler._DVRStatus}}</span>
+				</div>
+				<div class="kRow" *ngIf="_handler._showDVRWindow">
+					<span class="kLabels">{{'applications.content.entryDetails.live.dvrWindow' | translate}}</span>
+					<span>{{_handler.data?.dvrWindow | kTime}} {{'applications.content.entryDetails.live.hours' | translate}}</span>
+				</div>
+				<div class="kRow" *ngIf="_handler._liveType === 'kaltura'">
+					<span class="kLabels">{{'applications.content.entryDetails.live.activeRec' | translate}}</span>
+					<span>{{_handler._recordStatus}}</span>
+				</div>
 			</div>
 
 			<!-- Kaltura Live only -->
@@ -141,4 +157,6 @@
 
 		</div>
 	</div>
+	<p-growl [value]="_handler._msgs"></p-growl>
+	<p-confirmDialog header="{{'applications.content.entryDetails.live.regeneratePromptHeader' | translate}}" width="425"></p-confirmDialog>
 </kLoader>

@@ -27,6 +27,15 @@
 			padding-top: 14px;
 			align-items: center;
 		}
+		.kCopyBtn{
+			border: 0px solid white;
+			&:active:not(:disabled){
+				box-shadow: none;
+			}
+			outline: none;
+			height: 24px;
+		}
+
 		.kTableHeader{
 			font-weight: 700;
 		}
@@ -82,3 +91,6 @@
 	margin-top: -.8em;
 }
 
+:host /deep/ span.ui-button-icon-left.kIconcalendar{
+	padding-top: 2px !important;
+}

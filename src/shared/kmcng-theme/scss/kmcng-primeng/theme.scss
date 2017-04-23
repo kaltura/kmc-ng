@@ -602,3 +602,27 @@ td.ui-datatable-emptymessage{
 	}
 }
 
+// messages
+.ui-growl-item-container.ui-state-highlight{
+
+	color: white;
+	.ui-growl-title{
+		display: none;
+	}
+	.ui-growl-image{
+		margin-top: 5px;
+		margin-left: 10px;
+		&.fa-check:before{
+			@extend .kIconcheck_large:before;
+		}
+		&.fa-close:before{
+			@extend .kIconwarning:before;
+		}
+	}
+	&.ui-growl-message-success{
+		background-color: $kSecondary;
+	}
+	&.ui-growl-message-error{
+		background-color: $kDandger;
+	}
+}
