@@ -74,8 +74,15 @@
 			margin-left: 12px;
 		}
 	}
+
 }
 
+:host /deep/ .ui-dropdown{
+	width: 200px !important;
+}
+:host /deep/ .kLiveBitrate .ui-dropdown{
+	width: 80px !important;
+}
 :host /deep/ .ui-dropdown-trigger .fa.fa-caret-down{
 	margin-top: 2px;
 	margin-left: 1px;

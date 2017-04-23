@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Message } from 'primeng/primeng';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
-import { KalturaSourceType, KalturaLiveStreamBitrate, KalturaLiveStreamConfiguration, KalturaConversionProfile, ConversionProfileListAction, KalturaConversionProfileFilter,
+import { KalturaSourceType, KalturaLiveStreamBitrate, KalturaLiveStreamConfiguration, ConversionProfileListAction, KalturaConversionProfileFilter,
 	KalturaConversionProfileType, KalturaFilterPager, LiveStreamRegenerateStreamTokenAction, KalturaRecordStatus, KalturaLiveStreamEntry, KalturaDVRStatus } from '@kaltura-ng2/kaltura-api/types';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
@@ -16,14 +16,16 @@ export class EntryLiveHandler extends EntrySection
 	public _msgs: Message[] = [];
 	private _liveType: string = "";
 
-	private _conversionProfiles : BehaviorSubject<{ items : KalturaConversionProfile[], loading : boolean, error? : any}> =
-		new BehaviorSubject<{ items : KalturaConversionProfile[], loading : boolean, error? : any}>({ items : [], loading : false});
+	private _conversionProfiles : BehaviorSubject<{ items : any[], loading : boolean, error? : any}> =
+		new BehaviorSubject<{ items : any[], loading : boolean, error? : any}>({ items : [], loading : false});
 	public _conversionProfiles$ = this._conversionProfiles.asObservable().monitor('conversion profiles');
 
 	public _regeneratingToken: boolean = false;
 	public _recordStatus: string = "";
 	public _DVRStatus: string = "";
 	public _showDVRWindow: boolean = false;
+
+	public _selectedConversionProfile: number;
 
     constructor(manager : EntrySectionsManager, private _kalturaServerClient: KalturaServerClient, private _appLocalization: AppLocalization)
     {
@@ -88,7 +90,15 @@ export class EntryLiveHandler extends EntrySection
 						    return 1;
 					    return 0;
 				    } );
-				    this._conversionProfiles.next({items : response.objects, loading : false});
+				    // create drop down options array
+				    let conversionProfiles = [];
+				    response.objects.forEach(profile =>{
+					    conversionProfiles.push({label: profile.name, value: profile.id});
+					    if (this.data.conversionProfileId === profile.id) {
+						    this._selectedConversionProfile = profile.id; // preselect this profile in the profiles drop-down
+					    }
+				    });
+				    this._conversionProfiles.next({items : conversionProfiles, loading : false});
 			    }
 
 		    },
