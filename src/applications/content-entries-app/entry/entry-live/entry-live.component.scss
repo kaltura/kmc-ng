@@ -18,13 +18,14 @@
 		.kSubTitle{
 			display: block;
 			color: $kGrayscale1;
-			font-size: 15px;
+			font-size: 16px;
 			font-weight: 700;
-			margin-top: 24px;
+			margin-top: 48px;
+			line-height: 48px;
 		}
 		.kRow{
 			display: flex;
-			padding-top: 14px;
+			padding-top: 18px;
 			align-items: center;
 		}
 		.kCopyBtn{
@@ -48,6 +49,10 @@
 			flex: 0 0 auto;
 			width: 150px;
 		}
+		.kWideLabels{
+			flex: 0 0 auto;
+			width: 225px;
+		}
 		.kLiveNumber{
 			width:20px;
 		}
@@ -55,7 +60,8 @@
 			width:26px;
 		}
 		.kLiveBitrate{
-			width:140px;
+			width:170px;
+			flex: 0 0 auto;
 		}
 		.kLiveKbps{
 			font-size:13px;
@@ -73,6 +79,12 @@
 		.kReportLink{
 			margin-left: 12px;
 		}
+		.kError{
+			line-height: 28px;
+			padding-left: 20px;
+			color: $kDandger;
+			font-size: 13px;
+		}
 	}
 
 }
@@ -81,7 +93,7 @@
 	width: 200px !important;
 }
 :host /deep/ .kLiveBitrate .ui-dropdown{
-	width: 80px !important;
+	width: 120px !important;
 }
 :host /deep/ .ui-dropdown-trigger .fa.fa-caret-down{
 	margin-top: 2px;

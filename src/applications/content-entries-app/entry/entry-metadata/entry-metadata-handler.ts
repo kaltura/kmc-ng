@@ -258,7 +258,7 @@ export class EntryMetadataHandler extends EntrySection
     protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
     {
 
-        debugger;
+        //debugger;
     }
 
     public searchTags(text : string)

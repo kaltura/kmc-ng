@@ -38,7 +38,7 @@
 				<div class="kRow">
 					<span class="kLabels"></span>
 					<button pButton class="kButtonDefault" label="{{'applications.content.entryDetails.live.export' | translate}}"></button>
-					<a  *ngIf="_handler._liveType === 'kaltura'" class="kReportLink">{{'applications.content.entryDetails.live.report' | translate}}</a>
+					<a *ngIf="_handler._liveType === 'kaltura'" class="kReportLink" (click)="_handler._openLiveReport()">{{'applications.content.entryDetails.live.report' | translate}}</a>
 				</div>
 			</div>
 
@@ -88,40 +88,21 @@
 					<span class="kLiveX"></span>
 					<span class="kLiveHeight">{{'applications.content.entryDetails.live.height' | translate}}</span>
 				</div>
-				<div class="kRow">
-					<span class="kLiveNumber">1.</span>
-					<div class="kLiveBitrateCB"><p-checkbox binary="true"></p-checkbox></div>
-					<div class="kLiveBitrate">
-						<p-dropdown></p-dropdown>
-						<span class="kLiveBitrate kLiveKbps"> Kbps</span>
-					</div>
-					<div class="kLiveWidth"><p-spinner size="5" [min]="0" [max]="9999"></p-spinner></div>
-					<span class="kLiveX">x</span>
-					<div class="kLiveHeight"><p-spinner size="5" [min]="0" [max]="9999"></p-spinner></div>
-				</div>
-				<div class="kRow">
-					<span class="kLiveNumber">2.</span>
-					<div class="kLiveBitrateCB"><p-checkbox binary="true"></p-checkbox></div>
-					<div class="kLiveBitrate">
-						<p-dropdown></p-dropdown>
-						<span class="kLiveBitrate kLiveKbps"> Kbps</span>
-					</div>
-					<div class="kLiveWidth"><p-spinner size="5" [min]="0" [max]="9999"></p-spinner></div>
-					<span class="kLiveX">x</span>
-					<div class="kLiveHeight"><p-spinner size="5" [min]="0" [max]="9999"></p-spinner></div>
-				</div>
-				<div class="kRow">
-					<span class="kLiveNumber">3.</span>
-					<div class="kLiveBitrateCB"><p-checkbox binary="true"></p-checkbox></div>
-					<div class="kLiveBitrate">
-						<p-dropdown></p-dropdown>
-						<span class="kLiveBitrate kLiveKbps"> Kbps</span>
-					</div>
-					<div class="kLiveWidth"><p-spinner size="5" [min]="0" [max]="9999"></p-spinner></div>
-					<span class="kLiveX">x</span>
-					<div class="kLiveHeight"><p-spinner size="5" [min]="0" [max]="9999"></p-spinner></div>
-				</div>
+				<div *ngFor="let bitrate of _handler._bitrates; let i = index">
+					<div class="kRow">
+						<span class="kLiveNumber">{{i+1}}.</span>
+						<div class="kLiveBitrateCB"><p-checkbox binary="true" [(ngModel)]="bitrate.enabled"></p-checkbox></div>
+						<div class="kLiveBitrate">
+							<p-dropdown [options]="_handler._availableBitrates" [disabled]="!bitrate.enabled" [(ngModel)]="bitrate.bitrate" [placeholder]="'applications.content.entryDetails.live.selectBitrate' | translate"></p-dropdown>
+							<span class="kLiveBitrate kLiveKbps"> Kbps</span>
+						</div>
+						<div class="kLiveWidth"><p-spinner size="5" [min]="0" [max]="9999" [disabled]="!bitrate.enabled" [(ngModel)]="bitrate.width"></p-spinner></div>
+						<span class="kLiveX">x</span>
+						<div class="kLiveHeight"><p-spinner size="5" [min]="0" [max]="9999" [disabled]="!bitrate.enabled" [(ngModel)]="bitrate.height"></p-spinner></div>
 
+					</div>
+					<span *ngIf="bitrate.error?.length" class="kError">{{bitrate.error}}</span>
+				</div>
 				<span class="kSubTitle">{{'applications.content.entryDetails.live.credentials' | translate}}</span>
 				<div class="kRow">
 					<span class="kLabels">{{'applications.content.entryDetails.live.username' | translate}}</span>
@@ -145,12 +126,12 @@
 
 			<div *ngIf="_handler._liveType === 'manual'">
 				<div class="kRow">
-					<span class="kLabels">{{'applications.content.entryDetails.live.hlsStream' | translate}}</span>
+					<span class="kWideLabels">{{'applications.content.entryDetails.live.hlsStream' | translate}}</span>
 					<span>{{_handler.data?.hlsStreamUrl}}</span>
 				</div>
-				<div class="kRow"> <!-- loop through liveStreamConfigurations array -->
-					<span class="kLabels">{{'applications.content.entryDetails.live.streamUrl' | translate}}</span>
-					<span></span>
+				<div class="kRow" *ngFor="let config of _handler._manualStreamsConfiguration"> <!-- loop through liveStreamConfigurations array -->
+					<span class="kWideLabels">{{config.label}}</span>
+					<span>{{config.url}}</span>
 				</div>
 			</div>
 

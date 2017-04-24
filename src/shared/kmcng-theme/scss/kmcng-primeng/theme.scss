@@ -626,3 +626,17 @@ td.ui-datatable-emptymessage{
 		background-color: $kDandger;
 	}
 }
+
+// spinner
+.ui-spinner.ui-widget{
+	height: 24px;
+	.ui-spinner-button{
+		height: 13px;
+	}
+	.ui-spinner-up{
+		top: 1px;
+	}
+	.ui-spinner-down{
+		top: 13px;
+	}
+}
