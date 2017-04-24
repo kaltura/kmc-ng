@@ -56,13 +56,17 @@
 
 		<hr style="margin-top: 24px"/>
 
-		<div *ngIf="_handler.customDataForms && _handler.customDataForms.isReady">
-			<kDynamicFormGroup [dynamicSection]="_handler.customDataForms.dynamicSection" [form]="_handler.customDataForms.formGroup">
-				<template let-item="item">
-					<kPrimeControl [control]="item.control" [form]="item.form"></kPrimeControl>
-				</template>
-			</kDynamicFormGroup>
+		<div *ngFor="let customDataForm of _handler.customDataForms">
+			<div class="kSchemaTitle">{{customDataForm.metadataProfile.name}}</div>
+			<div *ngIf="customDataForm && customDataForm.isReady">
+				<kDynamicFormGroup [dynamicSection]="customDataForm.dynamicSection" [form]="customDataForm.formGroup">
+					<template let-item="item">
+						<kPrimeControl [control]="item.control" [form]="item.form"></kPrimeControl>
+					</template>
+				</kDynamicFormGroup>
+			</div>
 		</div>
+
 
 
 		<hr style="margin-top: 24px"/>

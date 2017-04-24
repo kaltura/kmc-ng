@@ -28,7 +28,7 @@ export class EntryMetadataHandler extends EntrySection
     private _entryMetadataStatus : 'loading' | 'loaded' | Error = null;
 
     public metadataForm : FormGroup;
-    public customDataForms : KalturaCustomDataHandler;
+    public customDataForms : KalturaCustomDataHandler[] = [];
     public loading = false;
     public loadingError = null;
 
@@ -88,6 +88,8 @@ export class EntryMetadataHandler extends EntrySection
 
     private _updateForms() : void {
         const entry = this.data;
+        let error : Error = null;
+
 
         if (entry
             && this._entryCategoriesStatus === 'loaded'
@@ -105,20 +107,30 @@ export class EntryMetadataHandler extends EntrySection
                 }
             );
 
-            console.warn('KMCng: map the right entry metadata to the relevant custom data form');
-            this.customDataForms.syncValue(this._entryMetadata[1]);
+            if (this._entryMetadata.length === this.customDataForms.length) {
+                for(let i = 0;i < this.customDataForms.length;i++)
+                {
+                    this.customDataForms[i].syncValue(this._entryMetadata[i]);
+                }
+            }else
+            {
+                console.warn('KMCng: should implement');
+                error = new Error("failed to load metadata");
+            }
+
         } else {
-            const error = (this._entryCategoriesStatus instanceof Error ? this._entryCategoriesStatus : null)
+            error = (this._entryCategoriesStatus instanceof Error ? this._entryCategoriesStatus : null)
                 || (this._entryMetadataStatus instanceof Error ? this._entryMetadataStatus : null)
                 || (this._profileMetadataStatus instanceof Error ? this._profileMetadataStatus : null);
+        }
 
-            if (error) {
-                this.loading = false;
-                this.loadingError = {
-                    message: error.message,
-                    buttons: {returnToEntries: 'Back To Entries', retry: 'Retry'}
-                };
-            }
+
+        if (error) {
+            this.loading = false;
+            this.loadingError = {
+                message: error.message,
+                buttons: {returnToEntries: 'Back To Entries', retry: 'Retry'}
+            };
         }
     }
 
@@ -207,7 +219,14 @@ export class EntryMetadataHandler extends EntrySection
                 .monitor('load metadata profiles')
                 .subscribe(
                     response => {
-                        this.customDataForms = this._kalturaCustomMetadata.createHandler(response.items[1]);
+
+                        this.customDataForms = [];
+                        if (response.items) {
+                            response.items.forEach(serverMetadata =>
+                            {
+                                this.customDataForms.push(this._kalturaCustomMetadata.createHandler(serverMetadata));
+                            });
+                        }
                         this._profileMetadataStatus = 'loaded';
                         this._updateForms();
                     },
@@ -221,23 +240,30 @@ export class EntryMetadataHandler extends EntrySection
 
     protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
     {
-        if (this.customDataForms.dirty) {
-            console.warn('should check if the custom metadata form values were modified');
+        for(let i = 0;i < this.customDataForms.length;i++)
+        {
+            const customDataForm = this.customDataForms[i];
+            if (customDataForm.dirty) {
+                console.warn('should check if the custom metadata form values were modified');
 
-            const customDataValue = this.customDataForms.getValue();
+                const customDataValue = customDataForm.getValue();
 
-            if (customDataValue.error)
-            {
-                console.warn('KMCng: stop process and show error');
-            }else
-            {
+                if (customDataValue.error) {
+                    console.warn('KMCng: stop process and show error');
+                } else {
 
-                request.requests.push(new MetadataUpdateAction({
-                    id: this._entryMetadata[0].id,
-                    xmlData: customDataValue.xml
-                }));
+                    customDataForm.metadataProfile
+                    request.requests.push(new MetadataUpdateAction({
+                        id: this._entryMetadata[i].id,
+                        xmlData: customDataValue.xml
+                    }));
+                }
             }
         }
+
+        this.customDataForms.forEach(customDataForm => {
+
+        });
     }
 
     public searchTags(text : string)

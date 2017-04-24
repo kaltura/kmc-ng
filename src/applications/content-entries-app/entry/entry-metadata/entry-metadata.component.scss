@@ -17,43 +17,185 @@
 	width: 100%;
 	overflow-y: auto;
 
-	.kRow{
-		display: flex;
-		padding-top: 20px;
+
+
+	.kSchemaTitle{
+		color: $kGrayscale1;
+		font-size: 15px;
+		padding-top: 12px;
+		padding-bottom: 12px;
 	}
+
+	/deep/ {
+
+		.kRow {
+			display: flex;
+			padding-top: 20px;
+
+			.kLabels {
+				width: 150px;
+				flex: 0 0 auto;
+			}
+
+			input, textarea {
+				width: 100%;
+			}
+
+			.kControl
+			{
+				width:100%;
+			}
+			.kControl.TextArea textarea {
+				height: 36px;
+			}
+
+			.kControl.TextArea textarea.threeRows {
+				height: 36px;
+			}
+		}
+
+
+		/*******************/
+		/* Multiple Items  */
+		/*******************/
+
+		.kMultiple{
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+		}
+		.kSingleItem{
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			padding-bottom: 12px;
+		}
+
+		.kDelete{
+			margin-left: 14px;
+		}
+		.kDeleteDate{
+			margin-left: 46px;
+		}
+
+		.kGroupTitle{
+			color: $kGrayscale1;
+			font-size: 15px;
+			padding-top: 12px;
+			padding-bottom: 12px;
+		}
+		.kGroupContainer{
+			margin-bottom: 12px;
+			background-color: #ffffff;
+			border: 1px solid $kGrayscale3;
+			border-radius: 3px;
+			width: 100%;
+			padding: 8px;
+		}
+		.kGroupButtons{
+			padding-bottom: 12px;
+			button{
+				height: 30px;
+				font-weight: 400;
+			}
+		}
+		.kDeleteGroup{
+			text-align: right;
+			padding-top: 16px;
+			button{
+				height: 30px;
+				font-weight: 400;
+			}
+		}
+
+
+		/*********************/
+		/* PrimeNG overrides */
+		/*********************/
+
+		  .ui-dropdown-trigger .fa.fa-caret-down{
+			margin-top: 2px;
+			margin-left: 1px;
+			position: absolute;
+			color: $kGrayscale1;
+		}
+		  .ui-dropdown.ui-widget{
+			width: 100% !important;
+		}
+
+		  .ui-dropdown-label.ui-inputtext{
+			background-color: #ffffff;
+		}
+		  .ui-multiselect{
+			width: 100% !important;
+		}
+		  .ui-multiselect-label-container{
+			color: $kGrayscale3;
+		}
+
+		  .ui-multiselect-trigger .fa.fa-caret-down{
+			margin-top: 2px;
+			margin-left: 1px;
+			position: absolute;
+			color: $kGrayscale1;
+		}
+
+		  .ui-autocomplete.ui-widget{
+			width: 100%;
+			input{
+				width: 100%;
+			}
+		}
+		  .ui-button-icon-right.ui-c.fa.fa-fw.kIcondropdown_arrow_bottom{
+			font-size: 11px;
+			padding-right: 4px;
+		}
+
+		  .ui-autocomplete.ui-widget{
+			width: 100%;
+			input{
+				width: 100%;
+			}
+		}
+		  .ui-calendar .ui-inputtext{
+			width: 144px;
+		}
+
+		  .ui-button-icon-only .fa{
+			margin-left: -.5em;
+		}
+
+		  .ui-multiselect-panel .ui-multiselect-filter-container .fa{
+			color: $kGrayscale3;
+			font-size: 14px;
+			font-weight: 400;
+		}
+
+		  kAutoComplete{
+			width: 100%;
+		}
+
+		  p-dropdown{
+			width: 100%;
+		}
+
+		  p-multiselect{
+			width: 100%;
+		}
+
+	}
+
 	.kValign{
 		align-items: center;
 	}
-	.kLabels{
-		width: 150px;
-		flex: 0 0 auto;
-	}
-	input, textarea{
-		width: 100%;
-	}
-	textarea.twoRows{
-		height: 36px;
-	}
-	textarea.threeRows{
-		height: 52px;
-	}
-	.kMultiple{
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-	}
-	.kSingleItem{
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		padding-bottom: 12px;
-	}
-	.kDelete{
-		margin-left: 14px;
-	}
-	.kDeleteDate{
-		margin-left: 46px;
-	}
+
+
+
+
+	/*********************/
+	/* Entry selection   */
+	/*********************/
+
 	.kTableHeader{
 		padding-bottom: 16px;
 		height: 32px;
@@ -112,103 +254,5 @@
 		width: 36px;
 		font-size: 18px;
 	}
-	.kGroupTitle{
-		color: $kGrayscale1;
-		font-size: 15px;
-		padding-top: 12px;
-		padding-bottom: 12px;
-	}
-	.kGroupContainer{
-		margin-bottom: 12px;
-		background-color: #ffffff;
-		border: 1px solid $kGrayscale3;
-		border-radius: 3px;
-		width: 100%;
-		padding: 8px;
-	}
-	.kGroupButtons{
-		padding-bottom: 12px;
-		button{
-			height: 30px;
-			font-weight: 400;
-		}
-	}
-	.kDeleteGroup{
-		text-align: right;
-		padding-top: 16px;
-		button{
-			height: 30px;
-			font-weight: 400;
-		}
-	}
-}
 
-:host /deep/ .ui-dropdown-trigger .fa.fa-caret-down{
-	margin-top: 2px;
-	margin-left: 1px;
-	position: absolute;
-	color: $kGrayscale1;
-}
-:host /deep/ .ui-dropdown.ui-widget{
-	width: 100% !important;
-}
-
-:host /deep/ .ui-dropdown-label.ui-inputtext{
-	background-color: #ffffff;
-}
-:host /deep/ .ui-multiselect{
-	width: 100% !important;
-}
-:host /deep/ .ui-multiselect-label-container{
-	color: $kGrayscale3;
-}
-
-:host /deep/ .ui-multiselect-trigger .fa.fa-caret-down{
-	margin-top: 2px;
-	margin-left: 1px;
-	position: absolute;
-	color: $kGrayscale1;
-}
-
-:host /deep/ .ui-autocomplete.ui-widget{
-	width: 100%;
-	input{
-		width: 100%;
-	}
-}
-:host /deep/ .ui-button-icon-right.ui-c.fa.fa-fw.kIcondropdown_arrow_bottom{
-	font-size: 11px;
-	padding-right: 4px;
-}
-
-:host /deep/ .ui-autocomplete.ui-widget{
-	width: 100%;
-	input{
-		width: 100%;
-	}
-}
-:host /deep/ .ui-calendar .ui-inputtext{
-	width: 144px;
-}
-
-:host /deep/ .ui-button-icon-only .fa{
-	margin-left: -.5em;
-}
-
-:host /deep/ .ui-multiselect-panel .ui-multiselect-filter-container .fa{
-	color: $kGrayscale3;
-	font-size: 14px;
-	font-weight: 400;
-}
-
-:host /deep/ kAutoComplete{
-	width: 100%;
-}
-
-:host /deep/ p-dropdown{
-	width: 100%;
-}
-
-:host /deep/ p-multiselect{
-	width: 100%;
 }
