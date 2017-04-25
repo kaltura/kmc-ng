@@ -37,7 +37,7 @@
 				</div>
 				<div class="kRow">
 					<span class="kLabels"></span>
-					<button pButton class="kButtonDefault" label="{{'applications.content.entryDetails.live.export' | translate}}"></button>
+					<button pButton class="kButtonDefault" (click)="_handler._exportXML()" label="{{'applications.content.entryDetails.live.export' | translate}}"></button>
 					<a *ngIf="_handler._liveType === 'kaltura'" class="kReportLink" (click)="_handler._openLiveReport()">{{'applications.content.entryDetails.live.report' | translate}}</a>
 				</div>
 			</div>
@@ -101,7 +101,7 @@
 						<div class="kLiveHeight"><p-spinner size="5" [min]="0" [max]="9999" [disabled]="!bitrate.enabled" [(ngModel)]="bitrate.height"></p-spinner></div>
 
 					</div>
-					<span *ngIf="bitrate.error?.length" class="kError">{{bitrate.error}}</span>
+					<span *ngIf="bitrate.errors?.length" class="kError">{{bitrate.errors}}</span>
 				</div>
 				<span class="kSubTitle">{{'applications.content.entryDetails.live.credentials' | translate}}</span>
 				<div class="kRow">
