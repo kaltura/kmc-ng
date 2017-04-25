@@ -42,7 +42,6 @@ export class EntryLiveHandler extends EntrySection {
 	public _selectedConversionProfile: number;
 	public _manualStreamsConfiguration = [];
 	public _bitrates: bitrate[] = [];
-	//public _availableBitrates = [{label: '50', value: 50}, {label: '100', value: 100}, {label: '200',value: 200}, {label: '300', value: 300}, {label: '350', value: 350}, {label: '500', value: 500}, {label: '650',value: 650}, {label: '800', value: 800}, {label: '950', value: 950}, {label: '1000', value: 1000}, {label: '1200',value: 1200}, {label: '1500', value: 1500}, {label: '1800', value: 1800}, {label: '2000', value: 2000}, {label: '2500',value: 2500}, {label: '14000', value: 14000}];
 	public _availableBitrates = AVAIL_BITRATES;
 
 	constructor(manager: EntrySectionsManager, private _kalturaServerClient: KalturaServerClient, private _appLocalization: AppLocalization, private _appConfig: AppConfig, private _browserService: BrowserService) {
@@ -138,7 +137,6 @@ export class EntryLiveHandler extends EntrySection {
 						});
 						this._conversionProfiles.next({items: conversionProfiles, loading: false});
 					}
-
 				},
 				error => {
 					this._conversionProfiles.next({items: [], loading: false, error: error});
