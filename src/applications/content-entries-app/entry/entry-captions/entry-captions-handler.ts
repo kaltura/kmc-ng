@@ -12,10 +12,10 @@ import { EntrySection } from '../../entry-store/entry-section-handler';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
-import { UploadManagement } from '@kaltura-ng2/kaltura-common/upload-management';
+import { UploadManagement, FileChanges } from '@kaltura-ng2/kaltura-common/upload-management';
 
 export interface CaptionRow {
-	uploadStatus: boolean,
+	uploading: boolean,
 	uploadToken: string,
 	uploadUrl: string,
 	id: string,
@@ -32,7 +32,7 @@ export class EntryCaptionsHandler extends EntrySection
 	captionDiffer : { [key : string] : KeyValueDiffer } = {};
 
 	private _captions : BehaviorSubject<{ items : CaptionRow[], loading : boolean, error? : any}> = new BehaviorSubject<{ items : CaptionRow[], loading : boolean, error? : any}>(
-		{ items : null, loading : false}
+		{ items : [], loading : false}
 	);
 
 	public _captions$ = this._captions.asObservable().monitor('caption files');
@@ -44,7 +44,47 @@ export class EntryCaptionsHandler extends EntrySection
                 private _kalturaServerClient: KalturaServerClient, private _appLocalization:AppLocalization, private _uploadManagement : UploadManagement)
     {
         super(manager);
+	    this._trackUploadFiles();
     }
+
+	private _trackUploadFiles() : void
+	{
+		this._uploadManagement.trackedFiles
+			.cancelOnDestroy(this)
+			.subscribe(
+				((filesStatus : FileChanges) =>
+				{
+					this._captions.getValue().items.forEach(file =>
+					{
+						const uploadToken = (<any>file).uploadToken;
+						if (uploadToken)
+						{
+							const uploadStatus = filesStatus[uploadToken];
+							switch(uploadStatus ? uploadStatus.status : '')
+							{
+								case 'uploaded':
+									(<any>file).uploading = false;
+									(<any>file).uploadFailure = false;
+									break;
+								case 'uploadFailure':
+									(<any>file).uploading = false;
+									(<any>file).uploadFailure = true;
+									break;
+								case 'uploading':
+									(<any>file).progress = (filesStatus[uploadToken].progress * 100).toFixed(0);
+									if (filesStatus[uploadToken].progress<1) {
+										(<any>file).uploading = true;
+										(<any>file).uploadFailure = false;
+									}
+								default:
+									break;
+							}
+						}
+					});
+					console.warn('TODO [kmcng]: check for relevant upload files');
+				})
+			);
+	}
 
     public get sectionType() : EntrySectionTypes
     {
@@ -144,7 +184,7 @@ export class EntryCaptionsHandler extends EntrySection
     public _addCaption(): any{
 
 		let newCaption: CaptionRow = {
-			uploadStatus: false,
+			uploading: false,
 			uploadToken: "",
 			uploadUrl: "",
 			id: null,
@@ -161,16 +201,16 @@ export class EntryCaptionsHandler extends EntrySection
 	}
 
 	public upload(captionFile: File):void{
-		this.currentCaption.uploadStatus = true;
+		this.currentCaption.uploading = true;
 		this._uploadManagement.newUpload(new KalturaOVPFile(captionFile))
 			.subscribe((response) => {
 					// update file with actual upload token
 					this.currentCaption.uploadToken = response.uploadToken;
-					this.currentCaption.uploadStatus = false;
+					this.currentCaption.uploading = false;
 				},
 				(error) => {
-					// TODO [kmcng] implement logic decided with Product
-					// remove file from list
+					this.currentCaption.uploading = false;
+					(<any>this.currentCaption).uploadFailure = true;
 				});
 	}
 
@@ -187,7 +227,7 @@ export class EntryCaptionsHandler extends EntrySection
 	// cleanup of added captions that don't have assets (url or uploaded file)
 	public removeEmptyCaptions(){
 		if (this.currentCaption) {
-			if (this.currentCaption.id === null && this.currentCaption.uploadUrl === "" && this.currentCaption.uploadToken === "" && !this.currentCaption.uploadStatus) {
+			if (this.currentCaption.id === null && this.currentCaption.uploadUrl === "" && this.currentCaption.uploadToken === "" && !this.currentCaption.uploading) {
 				let captions = Array.from(this._captions.getValue().items); // create a copy of the captions array without a reference to the original array
 				captions.pop(); // remove last caption
 				this._captions.next({items : captions, loading : false, error : null});
@@ -197,7 +237,7 @@ export class EntryCaptionsHandler extends EntrySection
 
 	// animate uploading caption row
     public _getRowStyle(rowData, rowIndex): string{
-	    return rowData.uploadStatus ? "uploading" : '';
+	    return rowData.uploading ? "uploading" : rowData.uploadFailure ? "uploadFailure" : '';
     }
 
     // save data

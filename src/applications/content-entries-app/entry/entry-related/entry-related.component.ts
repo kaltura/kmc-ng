@@ -67,7 +67,7 @@ export class EntryRelated implements OnInit, OnDestroy{
 				this.editPopup.open();
 				break;
 			case "delete":
-				this._handler.removeFile(this._currentFile);
+				this._handler._removeFile(this._currentFile);
 				break;
 			case "download":
 				this._handler.downloadFile(this._currentFile);
@@ -87,7 +87,7 @@ export class EntryRelated implements OnInit, OnDestroy{
 	// }
 
 	public _relatedTableRowStyle(rowData, rowIndex): string{
-		return rowData.uploading ? "uploading" : '';
+		return rowData.uploading ? "uploading" : rowData.uploadFailure ? "uploadFailure" : '';
 	}
 
     _onLoadingAction(actionKey: string): void {

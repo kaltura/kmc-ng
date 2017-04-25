@@ -62,11 +62,16 @@ export class EntryRelatedHandler extends EntrySection
                             {
                                 case 'uploaded':
                                     (<any>file).uploading = false;
+	                                (<any>file).uploadFailure = false;
                                     break;
                                 case 'uploadFailure':
-                                    // TODO [kmcng] amir decide how to handle it
+	                                (<any>file).uploading = false;
+	                                (<any>file).uploadFailure = true;
                                     break;
                                 case 'uploading':
+	                                (<any>file).progress = (filesStatus[uploadToken].progress * 100).toFixed(0);
+	                                (<any>file).uploading = true;
+	                                (<any>file).uploadFailure = false;
                                 default:
                                     break;
                             }
@@ -165,7 +170,7 @@ export class EntryRelatedHandler extends EntrySection
 		return newFile;
 	}
 
-	public removeFile(file: KalturaAttachmentAsset): void{
+	public _removeFile(file: KalturaAttachmentAsset): void{
 		// update the list by filtering the assets array.
 
 		this._relatedFiles.next({items : this._relatedFiles.getValue().items.filter((item: KalturaAttachmentAsset) => {return item !== file}), loading : false});
@@ -275,11 +280,14 @@ export class EntryRelatedHandler extends EntrySection
 						this._updateFileUploadToken(newFile,response.uploadToken);
 					},
 					(error) => {
-						// TODO [kmcng] implement logic decided with Product
-						// remove file from list
-						this.removeFile(newFile);
+						(<any>newFile).uploading = false;
+						(<any>newFile).uploadFailure = true;
 					});
 		}
+	}
 
+	public _cancelUpload(file: KalturaAttachmentAsset): void{
+		console.warn("Need to cancel http request");
+		this._removeFile(file);
 	}
 }

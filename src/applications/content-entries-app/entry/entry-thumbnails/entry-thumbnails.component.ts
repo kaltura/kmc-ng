@@ -1,7 +1,8 @@
 import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { ConfirmationService } from 'primeng/primeng';
 
-import { KalturaThumbAssetStatus } from '@kaltura-ng2/kaltura-api/types';
 import { AppLocalization, AppAuthentication, AppConfig } from '@kaltura-ng2/kaltura-common';
+import { KalturaUtils } from '@kaltura-ng2/kaltura-common/utils/kaltura-utils';
 import { BrowserService } from 'kmc-shell';
 
 import { EntryThumbnailsHandler, ThumbnailRow } from './entry-thumbnails-handler';
@@ -21,7 +22,8 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 
 	private currentThumb: ThumbnailRow;
 
-    constructor(public _handler : EntryThumbnailsHandler, private _appLocalization: AppLocalization, private _browserService: BrowserService, private _appAuthentication: AppAuthentication, private _appConfig:AppConfig,) {
+    constructor(public _handler : EntryThumbnailsHandler, private _appLocalization: AppLocalization, private _browserService: BrowserService,
+                private _appAuthentication: AppAuthentication, private _appConfig:AppConfig, private _confirmationService: ConfirmationService) {
     }
 
     ngOnInit() {
@@ -35,6 +37,7 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 	openActionsMenu(event: any, thumb: ThumbnailRow): void{
 		if (this.actionsMenu){
 			this.currentThumb = thumb; // save the selected caption for usage in the actions menu
+			this._actions[1].disabled = this.currentThumb.isDefault; // disable delete for default thumbnail
 			this.actionsMenu.toggle(event);
 		}
 	}
@@ -42,7 +45,12 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 	private actionSelected(action: string): void{
 		switch (action){
 			case "delete":
-				this._handler.deleteThumbnail(this.currentThumb.id);
+				this._confirmationService.confirm({
+					message: this._appLocalization.get('applications.content.entryDetails.thumbnails.deleteConfirm'),
+					accept: () => {
+						this._handler.deleteThumbnail(this.currentThumb.id);
+					}
+				});
 				break;
 			case "download":
 				this._downloadFile();
@@ -54,15 +62,14 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 	}
 
 	private _downloadFile(): void {
-		//[TODO - KMCNG] - check with Liron why this code is not working
-		// const baseUrl = this._appConfig.get('core.kaltura.cdnUrl');
-		// const protocol = baseUrl.split(":")[0];
-		// const partnerId = this._appAuthentication.appUser.partnerId;
-		// const entryId = this._handler.data.id;
-		//
-		// let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + entryId + '/flavorId/' + this.currentThumb.id + '/format/download/protocol/' + protocol;
-		//
-		// this._browserService.openLink(url);
+
+		var x = new XMLHttpRequest();
+		x.open("GET", this.currentThumb.url, true);
+		x.responseType = 'blob';
+		x.onload = (e) => {
+			return KalturaUtils.download(x.response, this.currentThumb.id + "." + this.currentThumb.fileExt, "image/"+this.currentThumb.fileExt );
+		}
+		x.send();
 	}
     ngOnDestroy() {
     }
@@ -72,8 +79,8 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
     }
 
     _onLoadingAction(actionKey: string) {
-        if (actionKey === 'retry') {
-
+        if (actionKey === 'ok') {
+			this._handler.closeError();
         }
     }
 }

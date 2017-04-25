@@ -23,7 +23,12 @@
             "selectLang": "Select Language"
         },
 		"common":{
-			"n_a": "N/A"
+			"n_a": "N/A",
+			"copyToClipboard": "Copy to clipboard",
+			"copySuccess":"Copied to clipboard",
+			"copyFailure": "Copy operation failed",
+			"on": "On",
+			"off": "Off"
 		}
     },
     "applications":{
@@ -196,8 +201,10 @@
 					"delete": "Delete",
 					"preview": "Preview",
 					"defaultTitle": "Default",
-					"default": "Default Caption",
-					"setDefault": "Set as default"
+					"default": "Default Thumbnail",
+					"setDefault": "Set as default",
+					"deleteConfirmHeader": "Delete Thumbnail",
+					"deleteConfirm": "Are you sure you want to delete selected thumbnail?"
 				},
 				"accessControl":{
 					"accessControl": "Access Control Profiles",
@@ -274,38 +281,47 @@
 					"invalidUrl": "Please enter a valid URL",
 					"ready": "Ready For Save",
 					"cancelEdit": "Cancel Edit",
-					"discard": "Discard all changes?"
+					"discard": "Discard all changes?",
+					"uploadError": "Upload Error",
+					"remove": "Remove"
 				},
 				"live":{
 					"live": "Live Stream",
 					"urls": "Broadcasting URLs",
-					"primary": "Primary URL",
-					"backup": "Backup URL",
+					"primary": "Primary URL:",
+					"backup": "Backup URL:",
 					"regenerate": "Re-Generate Stream Token",
-					"streamName": "Stream name",
+					"regenerateTooltip": "Re-generate a new RTMP token for this entry",
+					"regeneratePromptHeader": "Re-Generate Stream Token?",
+					"regeneratePrompt": "Re-generating the token requires you to update your encoder settings with the new token. Broadcasting with the old token will be rejected. Are you sure?",
+					"regenerateSuccess": "Token generated",
+					"regenerateFailure": "Error generating token",
+					"streamName": "Stream name:",
 					"note": "Note: When using Flash Live Media Encoder you can use %i to automatically map multiple streams, with other encoders you should substitute \"_1\" with the index of each live stream flavor.",
 					"config": "Live Stream Configuration",
-					"dvrStatus": "DVR Status",
-					"dvrWindow": "DVR Window",
-					"activeRec": "Active Recording",
-					"hlsStream": "HLS stream URL",
-					"akamaiStream": "Akamai stream ID",
+					"dvrStatus": "DVR Status:",
+					"dvrWindow": "DVR Window:",
+					"activeRec": "Active Recording:",
+					"hlsStream": "HLS stream URL:",
+					"akamaiStream": "Akamai stream ID:",
 					"transcoding": "Transcoding Profile Configuration",
-					"transcodingProfile": "Transcoding Profile",
+					"transcodingProfile": "Transcoding Profile:",
 					"bitrateConfig": "Bitrate Configuration",
 					"bitrateDoc": "Enter the bitrate configuration settings to create Multiple BitRate (MBR) encoding. When broadcasting with MBR, the player will choose the most appropriate bitrate to stream. Be certain that your client encoder (FMLE) is aligned with the same settings.",
 					"bitrate": "Bit Rate",
 					"width": "Width",
 					"height": "Height",
 					"credentials": "Broadcasting Credentials",
-					"username": "User Name",
-					"password": "Password",
+					"username": "User Name:",
+					"password": "Password:",
 					"encoders": "Encoders IPs",
-					"primaryIP": "Primary IP",
-					"secondaryIP": "Secondary IP",
+					"primaryIP": "Primary IP:",
+					"secondaryIP": "Secondary IP:",
 					"export": "Export XML for FMLE",
 					"report": "Live Content Detailed Report",
-					"streamUrl": "Stream URL"
+					"streamUrl": "Stream URL:",
+					"hours": "hours",
+					"selectBitrate": "Select Bitrate"
 
 				},
 				"related":{
@@ -326,7 +342,10 @@
 					"editTitle": "Edit File Details",
 					"title": "Title",
 					"description": "Description",
-					"done": "Done"
+					"done": "Done",
+					"cancel": "Cancel",
+					"uploadError": "Upload Error",
+					"remove": "Remove"
 				},
 				"clips":{
 					"clips": "Clips",
