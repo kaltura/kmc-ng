@@ -60,10 +60,18 @@ $invalidInputBorderColor: #cd0a0a;
     background-color: $kGrayscale6;
     border: 1px solid white;
     color: $kGrayscale1;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
 	&:focus{
 		background-color: white;
 		border: 1px solid $kGrayscale4;
 	}
+
+}
+
+textarea.ui-inputtext {
+	resize: none;
 }
 
 .ui-inputtext::-webkit-input-placeholder { /* Chrome/Opera/Safari */
