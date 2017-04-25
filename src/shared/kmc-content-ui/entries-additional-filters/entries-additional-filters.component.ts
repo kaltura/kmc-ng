@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChildren, QueryList, OnDestroy, AfterViewInit, Input,  ElementRef } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { KalturaUtils } from '@kaltura-ng2/kaltura-api';
+import { KalturaUtils } from '@kaltura-ng2/kaltura-api/utils/kaltura-utils';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { PrimeTreeNode, TreeDataHandler } from '@kaltura-ng2/kaltura-primeng-ui';
 import { TreeSelection, OnSelectionChangedArgs,TreeSelectionModes,TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
@@ -105,7 +105,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
         if (this.parentPopupWidget){
             this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$.subscribe(event => {
-                if (event === PopupWidgetStates.Close){
+                if (event.state === PopupWidgetStates.Close){
                     const nativeElement: HTMLElement = this.elementRef.nativeElement;
                     if (nativeElement && nativeElement.getElementsByClassName("kTreeContainer").length > 0){
                         nativeElement.getElementsByClassName("kTreeContainer")[0].scrollTop = 0;
@@ -326,17 +326,10 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                         if (relevantTreeSelection) {
                             let nodeToRemove :PrimeTreeNode = null;
 
-                            if (filter instanceof MetadataProfileFilter)
-                            {
-                                // find the filter by comparing both value and listType
-                                nodeToRemove = R.find(node => {
-                                    return node instanceof PrimeTreeNode && node.data === filter.value && filter.listTypeName === node.payload.type;
-                                }, relevantTreeSelection.getSelections());
-                            }else
-                            {
-                                // find the filter by comparing value only (each list has its' own filter type)
-                                nodeToRemove = R.find(R.propEq('data', filter.value), relevantTreeSelection.getSelections());
-                            }
+                            // find the filter by comparing both value and listType
+                            nodeToRemove = R.find(node => {
+                                return node instanceof PrimeTreeNode && node.data === filter.value && filterTypeName === node.payload.type;
+                            }, relevantTreeSelection.getSelections());
 
                             if (nodeToRemove && nodeToRemove.data === 'scheduled' && this._getScheduledFilter() !== null) {
                                 // 'scheduled' filter item has a special behavior. when a user modify the scheduled To/From dates
@@ -435,11 +428,11 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
      * Not part of the API, don't use it from outside this component
      */
     public _clearAllComponents() : void {
-    	this._clearCreatedComponents();
         this._treeSelections.forEach(tree =>
         {
             tree.unselectAll();
         });
+	    this._clearCreatedComponents();
     }
 
     /**

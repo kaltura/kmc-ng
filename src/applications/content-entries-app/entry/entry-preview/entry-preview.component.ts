@@ -39,14 +39,14 @@ export class EntryPreview implements OnInit {
 			data => {
 				if (data) {
 					this._currentEntry = data;
-					this._entryReady = this._currentEntry.status !== KalturaEntryStatus.NoContent;
+					this._entryReady = this._currentEntry.status !== KalturaEntryStatus.noContent;
 					const sourceType = this._currentEntry.sourceType.toString();
-					this._isLive = (sourceType === KalturaSourceType.LiveStream.toString() ||
-					sourceType === KalturaSourceType.AkamaiLive.toString() ||
-					sourceType === KalturaSourceType.AkamaiUniversalLive.toString() ||
-					sourceType === KalturaSourceType.ManualLiveStream.toString());
-					this._isRecordedLive = (sourceType === KalturaSourceType.RecordedLive.toString());
-					this._hasDuration = (this._currentEntry.status !== KalturaEntryStatus.NoContent && !this._isLive && this._currentEntry.mediaType.toString() !== KalturaMediaType.Image.toString());
+					this._isLive = (sourceType === KalturaSourceType.liveStream.toString() ||
+					sourceType === KalturaSourceType.akamaiLive.toString() ||
+					sourceType === KalturaSourceType.akamaiUniversalLive.toString() ||
+					sourceType === KalturaSourceType.manualLiveStream.toString());
+					this._isRecordedLive = (sourceType === KalturaSourceType.recordedLive.toString());
+					this._hasDuration = (this._currentEntry.status !== KalturaEntryStatus.noContent && !this._isLive && this._currentEntry.mediaType.toString() !== KalturaMediaType.image.toString());
 					this._isClip = !this._isRecordedLive && (this._currentEntry.id !== this._currentEntry.rootEntryId);
 				}
 			}

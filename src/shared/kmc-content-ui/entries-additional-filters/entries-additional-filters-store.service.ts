@@ -6,12 +6,9 @@ import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/forkJoin';
 
-
-
 import { KalturaServerClient,  KalturaMultiRequest, KalturaMultiResponse } from '@kaltura-ng2/kaltura-api';
-import { AccessControlListAction } from '@kaltura-ng2/kaltura-api/services/access-control';
-import { DistributionProfileListAction } from '@kaltura-ng2/kaltura-api/services/distribution-profile';
-import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataFieldTypes, FlavoursStore } from '@kaltura-ng2/kaltura-common';
+import { DistributionProfileListAction, AccessControlListAction } from '@kaltura-ng2/kaltura-api/types';
+import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataItemTypes, FlavoursStore } from '@kaltura-ng2/kaltura-common';
 
 import {
     KalturaAccessControlFilter,
@@ -142,8 +139,8 @@ export class EntriesAdditionalFiltersStore {
 
             // get only fields that are list, searchable and has values
             const profileLists = R.filter(field => {
-                return (field.type === MetadataFieldTypes.List && field.isSearchable && field.optionalValues.length > 0);
-            }, metadataProfile.fields);
+                return (field.type === MetadataItemTypes.List && field.isSearchable && field.optionalValues.length > 0);
+            }, metadataProfile.items);
 
             // if found relevant lists, create a group for that profile
             if (profileLists && profileLists.length > 0) {
@@ -151,7 +148,7 @@ export class EntriesAdditionalFiltersStore {
                 result.groups.push(filterGroup);
 
                 profileLists.forEach(list => {
-                    filterGroup.filtersTypes.push(new filterGroupMetadataProfileType(list.id, list.label, metadataProfile.id, list.path));
+                    filterGroup.filtersTypes.push(new filterGroupMetadataProfileType(list.id, list.label, metadataProfile.id, ['metadata',list.name]));
                     const items = filterGroup.filtersByType[list.id] = [];
 
                     list.optionalValues.forEach(value => {
@@ -217,19 +214,19 @@ export class EntriesAdditionalFiltersStore {
     private buildQueryRequest(): Observable<KalturaMultiResponse> {
 
         try {
-            const accessControlFilter = new KalturaAccessControlFilter();
+            const accessControlFilter = new KalturaAccessControlFilter({});
             accessControlFilter.orderBy = '-createdAt';
 
-            const distributionProfilePager = new KalturaFilterPager();
+            const distributionProfilePager = new KalturaFilterPager({});
             distributionProfilePager.pageSize = 500;
 
-            const accessControlPager = new KalturaFilterPager();
+            const accessControlPager = new KalturaFilterPager({});
             distributionProfilePager.pageSize = 1000;
 
-            const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile();
+            const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({});
             responseProfile.setData(data => {
                 data.fields = "id,name";
-                data.type = KalturaResponseProfileType.IncludeFields;
+                data.type = KalturaResponseProfileType.includeFields;
             });
 
             const request = new KalturaMultiRequest(

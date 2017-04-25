@@ -8,11 +8,14 @@
 		flex-shrink: 0;
 	}
 	.kPreviewAndEmbedContainer{
+		display: flex;
+		align-items: center;
 		height: 40px;
 		flex-shrink: 0;
-		padding-top: 20px;
+		height: 60px;
 		padding-left: 12px;
 		cursor: pointer;
+		width: 268px;
 		border-bottom: 1px solid $kGrayscale4;
 		i{
 			cursor: pointer;
@@ -21,6 +24,7 @@
 		}
 		a{
 			color: $kGrayscale1;
+			white-space: nowrap;
 			text-decoration: none;
 			&:hover{
 				color: #000000;

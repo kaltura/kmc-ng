@@ -76,7 +76,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         );
 
         const savedAutoSelectChildren: TreeSelectionModes = this.browserService.getFromLocalStorage("contentShared.categoriesTree.selectionMode");
-        this._selectionMode = savedAutoSelectChildren ? savedAutoSelectChildren : TreeSelectionModes.SelfAndChildren;
+        this._selectionMode = typeof savedAutoSelectChildren === 'number' ? savedAutoSelectChildren : TreeSelectionModes.SelfAndChildren;
 
         // TODO [kmcng] consider using constants for permissions flags
         this.inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
@@ -106,7 +106,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     ngAfterViewInit(){
         if (this.parentPopupWidget){
             this.parentPopupStateChangeSubscription = this.parentPopupWidget.state$.subscribe(event => {
-                if (event === PopupWidgetStates.Open){
+                if (event.state === PopupWidgetStates.Open){
                     const inputFields: any[] = this.filtersRef.nativeElement.getElementsByTagName("input");
                     if (inputFields.length && inputFields[0].focus){
                         setTimeout(() => {
@@ -114,7 +114,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                         },0);
                     }
                 }
-                if (event === PopupWidgetStates.Close){
+                if (event.state === PopupWidgetStates.Close){
                     const nativeElement: HTMLElement = this.filtersRef.nativeElement;
                     if (nativeElement && nativeElement.getElementsByClassName("kTreeContainer").length > 0){
                         nativeElement.getElementsByClassName("kTreeContainer")[0].scrollTop = 0;
@@ -415,7 +415,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
                 this._suggestionsProvider.next({suggestions: suggestions, isLoading: false});
             },
             (err) => {
-                this._suggestionsProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
+                 this._suggestionsProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
             });
     }
 

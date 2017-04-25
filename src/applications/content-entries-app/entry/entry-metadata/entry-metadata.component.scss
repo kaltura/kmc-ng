@@ -1,8 +1,11 @@
 @import '~kmcng-theme/scss/variables';
 
+hr{
+	margin-top: 24px;
+}
 .jumpTo{
 	position: absolute;
-	right: 110px;
+	right: 130px;
 	button{
 		position: fixed;
 		font-weight: 400;
@@ -13,199 +16,186 @@
 .kMetadataDetails{
 	padding-left: 12px;
 	padding-right: 130px;
+	overflow-y: auto;
 	width: 100%;
-	.kRow{
-		display: flex;
-		padding-top: 20px;
-	}
-	.kValign{
-		align-items: center;
-	}
-	.kLabels{
-		width: 150px;
-		flex: 0 0 auto;
-	}
-	input, textarea{
-		width: 100%;
-	}
-	textarea.twoRows{
-		height: 36px;
-	}
-	textarea.threeRows{
-		height: 52px;
-	}
-	.kMultiple{
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-	}
-	.kSingleItem{
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		padding-bottom: 12px;
-	}
-	.kDelete{
-		margin-left: 14px;
-	}
-	.kDeleteDate{
-		margin-left: 46px;
-	}
-	.kTableHeader{
-		padding-bottom: 16px;
-		height: 32px;
-		align-items: center;
-		button{
-			font-weight: 400;
-			height: 30px;
-		}
-	}
-	img {
-		max-height: 100%;
-		max-width: 100%;
-		vertical-align: middle;
-		border-radius: 3px;
-	}
-	.kThumbnailHolder {
-		width: 80px;
-		height: 46px;
-		background-color: black;
-		white-space: nowrap;
-		text-align: center;
-		border-radius: 3px;
-		img{
-			cursor: pointer;
-			&.disable{
-				cursor: auto;
-			}
-		}
-	}
-	.kHelper {
-		display: inline-block;
-		height: 100%;
-		vertical-align: middle;
-	}
-	.kDeletehBtn {
-		float: right;
-		font-size: 22px;
-		border: none;
-		min-width: inherit;
-		outline: 0;
-		color: $kGrayscale3;
-		&:active{
-			box-shadow: none;
-		}
-		&:hover{
-			background-color: #ffffff;
-			color: $kPrimary;
-		}
-	}
-	.kTooltipHolder{
-		position: relative;
-	}
-	.kBulkDeleteBtn{
-		margin-right: 12px;
-		margin-left: 12px;
-		width: 36px;
-		font-size: 18px;
-	}
-	.kGroupTitle{
+	overflow-y: auto;
+
+
+
+	.kSchemaTitle{
 		color: $kGrayscale1;
-		font-size: 15px;
+		font-size: 18px;
+		font-weight: 700;
 		padding-top: 12px;
 		padding-bottom: 12px;
 	}
-	.kGroupContainer{
-		margin-bottom: 12px;
-		background-color: #ffffff;
-		border: 1px solid $kGrayscale3;
-		border-radius: 3px;
-		width: 100%;
-		padding: 8px;
-	}
-	.kGroupButtons{
-		padding-bottom: 12px;
-		button{
-			height: 30px;
+
+	/deep/ {
+
+		.kRow {
+			display: flex;
+			padding-top: 12px;
+
+			.kLabel {
+				width: 150px;
+				flex: 0 0 auto;
+				word-wrap: break-word;
+				padding-right: 12px;
+			}
+
+			input, textarea {
+				width: 100%;
+			}
+
+			.kControl, k-prime-control
+			{
+				width:100%;
+			}
+
+			.kControl.TextAreaControl textarea {
+				height: 36px;
+				max-width: 100%;
+				min-width: 100%;
+			}
+
+			.kControl.TextAreaControl textarea.threeRows {
+				height: 36px;
+			}
+		}
+
+
+		/*******************/
+		/* Multiple Items  */
+		/*******************/
+
+		.kMultiple{
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+		}
+		.kSingleItem{
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			padding-bottom: 12px;
+		}
+
+		.kDelete{
+			margin-left: 14px;
+		}
+		.kDeleteDate{
+			margin-left: 46px;
+		}
+
+		.kGroupTitle{
+			color: $kGrayscale1;
+			font-size: 16px;
+			font-weight: 700;
+			padding-top: 12px;
+			padding-bottom: 12px;
+		}
+		.kGroupContainer{
+			margin-bottom: 12px;
+			background-color: #ffffff;
+			border: 1px solid $kGrayscale3;
+			border-radius: 3px;
+			width: 100%;
+			padding: 8px;
+		}
+		.kGroupButtons{
+			padding-bottom: 12px;
+			button{
+				height: 30px;
+				font-weight: 400;
+			}
+		}
+		.kDeleteGroup{
+			text-align: right;
+			padding-top: 16px;
+			button{
+				height: 30px;
+				font-weight: 400;
+			}
+		}
+
+
+		/*********************/
+		/* PrimeNG overrides */
+		/*********************/
+
+		  .ui-dropdown-trigger .fa.fa-caret-down{
+			margin-top: 2px;
+			margin-left: 1px;
+			position: absolute;
+			color: $kGrayscale1;
+		}
+		  .ui-dropdown.ui-widget{
+			width: 100% !important;
+		}
+
+		  .ui-dropdown-label.ui-inputtext{
+			background-color: #ffffff;
+		}
+		  .ui-multiselect{
+			width: 100% !important;
+		}
+		  .ui-multiselect-label-container{
+			color: $kGrayscale3;
+		}
+
+		  .ui-multiselect-trigger .fa.fa-caret-down{
+			margin-top: 2px;
+			margin-left: 1px;
+			position: absolute;
+			color: $kGrayscale1;
+		}
+
+		  .ui-autocomplete.ui-widget{
+			width: 100%;
+			input{
+				width: 100%;
+			}
+		}
+		  .ui-button-icon-right.ui-c.fa.fa-fw.kIcondropdown_arrow_bottom{
+			font-size: 11px;
+			padding-right: 4px;
+		}
+
+		  .ui-autocomplete.ui-widget{
+			width: 100%;
+			input{
+				width: 100%;
+			}
+		}
+		  .ui-calendar .ui-inputtext{
+			width: 144px;
+		}
+
+		  .ui-button-icon-only .fa{
+			margin-left: -.5em;
+		}
+
+		  .ui-multiselect-panel .ui-multiselect-filter-container .fa{
+			color: $kGrayscale3;
+			font-size: 14px;
 			font-weight: 400;
 		}
-	}
-	.kDeleteGroup{
-		text-align: right;
-		padding-top: 16px;
-		button{
-			height: 30px;
-			font-weight: 400;
+
+		  kAutoComplete{
+			width: 100%;
 		}
+
+		  p-dropdown{
+			width: 100%;
+		}
+
+		  p-multiselect{
+			width: 100%;
+		}
+
 	}
-}
 
-:host /deep/ .ui-dropdown-trigger .fa.fa-caret-down{
-	margin-top: 2px;
-	margin-left: 1px;
-	position: absolute;
-	color: $kGrayscale1;
-}
-:host /deep/ .ui-dropdown.ui-widget{
-	width: 100% !important;
-}
-
-:host /deep/ .ui-dropdown-label.ui-inputtext{
-	background-color: #ffffff;
-}
-:host /deep/ .ui-multiselect{
-	width: 100% !important;
-}
-:host /deep/ .ui-multiselect-label-container{
-	color: $kGrayscale3;
-}
-
-:host /deep/ .ui-multiselect-trigger .fa.fa-caret-down{
-	margin-top: 2px;
-	margin-left: 1px;
-	position: absolute;
-	color: $kGrayscale1;
-}
-
-:host /deep/ .ui-autocomplete.ui-widget{
-	width: 100%;
-	input{
-		width: 100%;
+	.kValign{
+		align-items: center;
 	}
-}
-:host /deep/ .ui-button-icon-right.ui-c.fa.fa-fw.kIcondropdown_arrow_bottom{
-	font-size: 11px;
-	padding-right: 4px;
-}
-
-:host /deep/ .ui-autocomplete.ui-widget{
-	width: 100%;
-	input{
-		width: 100%;
-	}
-}
-:host /deep/ .ui-calendar .ui-inputtext{
-	width: 144px;
-}
-
-:host /deep/ .ui-button-icon-only .fa{
-	margin-left: -.5em;
-}
-
-:host /deep/ .ui-multiselect-panel .ui-multiselect-filter-container .fa{
-	color: $kGrayscale3;
-	font-size: 14px;
-	font-weight: 400;
-}
-
-:host /deep/ kAutoComplete{
-	width: 100%;
-}
-
-:host /deep/ p-dropdown{
-	width: 100%;
-}
-
-:host /deep/ p-multiselect{
-	width: 100%;
 }

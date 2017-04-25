@@ -2,6 +2,7 @@
 
 .kCaptions{
 	padding-left: 12px;
+	overflow-y: auto;
 	button{
 		font-weight: 400;
 		height: 32px;
@@ -13,5 +14,74 @@
 	}
 	.kTable{
 		margin-top: 24px;
+	}
+	.kCaptionsTableActions {
+		width: 100%;
+		text-align: center;
+		button {
+			color: grey !important;
+			background-color: rgba(0, 0, 0, 0) !important;
+			border: none !important;
+			font-size: 16px !important;
+			outline: 0;
+		}
+	}
+	.kLocationHolder{
+		padding-right: 12px;
+		position: relative;
+		.kCaptionLocation{
+			white-space: nowrap;
+		}
+	}
+	.kError{
+		color: $kDandger;
+	}
+}
+:host /deep/ .ui-datatable .ui-datatable-data tr.uoloading{
+	background: repeating-linear-gradient(
+			-75deg,
+			#ffffff,
+			#ffffff 15px,
+			$kGrayscale7 15px,
+			$kGrayscale7 30px
+	);
+	background-attachment: fixed;
+
+	-webkit-animation:progress 2s linear infinite;
+	-moz-animation:progress 2s linear infinite;
+	-ms-animation:progress 2s linear infinite;
+	animation:progress 2s linear infinite;
+}
+
+@-webkit-keyframes progress{
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: -60px 0px;
+	}
+}
+@-moz-keyframes progress{
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: -60px 0px;
+	}
+}
+@-ms-keyframes progress{
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: -60px 0px;
+	}
+}
+@keyframes progress{
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: -60px 0px;
 	}
 }

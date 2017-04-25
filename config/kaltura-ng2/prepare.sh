@@ -11,8 +11,8 @@ case $key in
     -k|--keep-node-modules)
     KEEP_NODE_MODULES=true
     ;;
-    --use-wml)
-    USE_WML=true
+    --use-npm-link)
+    USE_NPM_LINK=true
     ;;
     *)
         # unknown option
@@ -33,9 +33,9 @@ fi
 printf "\e[35m%b\e[0m\n" "run npm install"
 npm install
 
-./npm-link-modules.sh ${USE_WML:+"--use-wml"}
+./npm-link-modules.sh ${USE_NPM_LINK:+"--use-npm-link"}
 
-if [ -n "${USE_WML}" ]
+if [ -z "${USE_NPM_LINK}" ]
 then
     $(npm bin)/wml once
 fi

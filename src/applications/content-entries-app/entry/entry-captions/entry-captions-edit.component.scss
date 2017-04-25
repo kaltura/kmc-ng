@@ -1,0 +1,81 @@
+@import '~kmcng-theme/scss/variables';
+
+.kEditWin{
+	display: flex;
+	flex-direction: column;
+	padding-top: 20px;
+	.kCenter{
+		justify-content: center;
+	}
+	.kEditTitle{
+		font-size: 24px;
+		font-weight: 700;
+		text-align: center;
+		width: 100%;
+	}
+	.kRow{
+		display: flex;
+		flex-direction: row;
+		margin-top: 24px;
+		.kLabel{
+			width: 120px;
+			flex: 0 0 auto;
+			font-size: 15px;
+		}
+		input{
+			width: 100%;
+		}
+		textarea{
+			height: 52px;
+			width: 100%;
+		}
+	}
+	.kDivider{
+		width: 100%;
+		height: 1px;
+		margin-top: 24px;
+		background-color: $kGrayscale4;
+	}
+	.kFooter{
+		position: absolute;
+		bottom: 24px;
+		right: 24px;
+		left: 14px;
+	}
+	.kDoneBtn{
+		height: 34px;
+		font-weight: 400;
+	}
+	.kUpload{
+		display: flex;
+		align-items: center;
+		margin-top: 18px;
+	}
+	.kUploadButton{
+		font-weight: 400;
+		height: 32px;
+		margin-left: 120px;
+		flex: 0 0 auto;
+	}
+	.kCaptionUrl{
+		margin-top: 18px;
+		margin-left: 120px;
+		width: 210px;
+	}
+	.kUploadFileName{
+		white-space: nowrap;
+		padding-right: 12px;
+		overflow: hidden;
+		padding-left: 4px;
+	}
+	.kInvalid{
+		color: red;
+		font-size: 12px;
+		margin-left: 122px;
+		font-weight: 700;
+	}
+}
+
+:host /deep/ .ui-dropdown.ui-widget{
+	width: 216px;
+}

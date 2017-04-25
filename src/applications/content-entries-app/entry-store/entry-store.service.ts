@@ -10,11 +10,12 @@ import 'rxjs/add/operator/switchMap';
 
 import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { KalturaServerClient, KalturaAPIException, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
-import { BaseEntryGetAction, BaseEntryUpdateAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
+import { BaseEntryGetAction, BaseEntryUpdateAction } from '@kaltura-ng2/kaltura-api/types';
 import { EntrySectionTypes } from './entry-sections-types';
 import { EntriesStore } from '../entries-store/entries-store.service';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { EntrySectionsManager } from './entry-sections-manager';
+import { KalturaTypesFactory } from '@kaltura-ng2/kaltura-api';
 
 export enum ActionTypes
 {
@@ -118,44 +119,48 @@ export class EntryStore implements  OnDestroy {
 
 		this._status.next({ action: ActionTypes.EntrySaving});
 
-		const entry = new KalturaMediaEntry();
-		const request = new KalturaMultiRequest(
-			new BaseEntryUpdateAction({
-				entryId : this.entryId,
-				baseEntry : entry
-			})
-		);
+		const newEntry = KalturaTypesFactory.createObject(this.entry);
 
-		this._sectionsManager.onDataSaving(entry, request)
-            .monitor('preparing entry')
-            .flatMap(
-				(response) => {
-					if (response.ready)
-					{
-						return this._kalturaServerClient.multiRequest(request)
-                            .monitor('saving entry')
-							.map(
-								response =>
-								{
-									return !(response instanceof KalturaAPIException);
-								}
-							)
-					}
-					else
-					{
-						return Observable.of(false);
-					}
-				}
-			)
-            .subscribe(
-				response => {
-					if (response) {
-						this._loadEntry(this.entryId);
-					} else {
-						this._status.next({ action: ActionTypes.EntrySavingFailed});
-					}
-				}
+		if (newEntry && newEntry instanceof KalturaMediaEntry) {
+			const request = new KalturaMultiRequest(
+				new BaseEntryUpdateAction({
+					entryId: this.entryId,
+					baseEntry: newEntry
+				})
 			);
+
+			this._sectionsManager.onDataSaving(newEntry, request, this.entry)
+                .monitor('preparing entry')
+                .flatMap(
+					(response) => {
+						if (response.ready) {
+							return this._kalturaServerClient.multiRequest(request)
+                                .monitor('saving entry')
+                                .map(
+									response => {
+										return !(response instanceof KalturaAPIException);
+									}
+								)
+						}
+						else {
+							return Observable.of(false);
+						}
+					}
+				)
+                .subscribe(
+					response => {
+						if (response) {
+							this._loadEntry(this.entryId);
+						} else {
+							this._status.next({action: ActionTypes.EntrySavingFailed});
+						}
+					}
+				);
+		}else
+		{
+			console.warn('KMCng: missing implementation');
+		}
+
 	}
 
 

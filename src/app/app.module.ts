@@ -32,6 +32,7 @@ import { ButtonModule, InputTextModule, TieredMenuModule } from 'primeng/primeng
 
 import { KMCContentUIModule } from 'kmc-content-ui/kmc-content-ui.module';
 import { MetadataProfileStore, PartnerProfileStore, AccessControlProfileStore, FlavoursStore } from '@kaltura-ng2/kaltura-common';
+import { UploadManagementModule } from '@kaltura-ng2/kaltura-common/upload-management';
 
 const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessControlProfileStore, FlavoursStore];
 @NgModule({
@@ -42,6 +43,7 @@ const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessCo
     BrowserModule,
     TieredMenuModule,
     HttpModule,
+    UploadManagementModule,
     KMCContentUIModule.forRoot(),
     KalturaCommonModule.forRoot(),
     KalturaApiModule,
@@ -71,7 +73,7 @@ const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessCo
     GetBootstrapProvider(KalturaAuthConfigAdapter),
     GetBootstrapProvider(KalturaHttpConfigurationAdapter  ),
     AppDefaultConfig,
-    { provide :KalturaServerClient, useClass : KalturaHttpPostClient},
+      { provide :KalturaServerClient, useClass : KalturaHttpPostClient},
       KalturaHttpConfiguration,
     { provide : AppStorage,  useExisting : BrowserService }
   ]

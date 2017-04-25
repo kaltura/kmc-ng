@@ -8,8 +8,8 @@ do
 key="$1"
 
 case $key in
-    --use-wml)
-    USE_WML=true
+    --use-npm-link)
+    USE_NPM_LINK=true
     ;;
     *)
         # unknown option
@@ -34,15 +34,16 @@ NPM_MODULES_BASE=$(npm config get prefix)/lib/node_modules
 for PACKAGE in ${LIST} ;
 do
 
-  if [ -n "${USE_WML}" ]
+  if [ -n "${USE_NPM_LINK}" ]
   then
-      printf "\e[35m%b\e[0m\n" "Running wml add for package '${PACKAGE}'"
+      printf "\e[35m%b\e[0m\n" "Running npm link for package '${PACKAGE}'"
+      npm link @kaltura-ng2/${PACKAGE}
+  else
+    printf "\e[35m%b\e[0m\n" "Running wml add for package '${PACKAGE}'"
       PACKAGE_SRC=$(readlink ${NPM_MODULES_BASE}/@kaltura-ng2/${PACKAGE})
       PACKAGE_DEST=../../node_modules/@kaltura-ng2/${PACKAGE}
       printf "n" | $(npm bin)/wml add ${PACKAGE_SRC} ${PACKAGE_DEST}
-  else
-      printf "\e[35m%b\e[0m\n" "Running npm link for package '${PACKAGE}'"
-      npm link @kaltura-ng2/${PACKAGE}
+      npm run wml:sync
   fi
 done
 

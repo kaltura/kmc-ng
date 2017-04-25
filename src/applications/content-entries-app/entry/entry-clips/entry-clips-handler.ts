@@ -3,7 +3,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import {  KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { KalturaBaseEntryFilter, KalturaFilterPager, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaMediaEntry,
-	KalturaClipAttributes, KalturaOperationAttributes } from '@kaltura-ng2/kaltura-api/types';
+	KalturaClipAttributes, KalturaOperationAttributes,
+    BaseEntryListAction } from '@kaltura-ng2/kaltura-api/types';
 import { AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
 
 import {
@@ -11,7 +12,6 @@ import {
 } from '../../entry-store/entry-section-handler';
 import { EntryStore } from '../../entry-store/entry-store.service';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { BaseEntryListAction } from '@kaltura-ng2/kaltura-api/services/base-entry';
 import { BrowserService } from "kmc-shell/providers/browser.service";
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
@@ -140,22 +140,22 @@ export class EntryClipsHandler extends EntrySection
 
             // build the request
             this._kalturaServerClient.request(new BaseEntryListAction({
-                filter: new KalturaBaseEntryFilter()
-                    .setData(filter => {
-                        filter.rootEntryIdEqual = entry.id;
-                        filter.orderBy = `${this.sortAsc ? '' : '-'}${this.sortBy}`;
-                    }),
-                pager: new KalturaFilterPager()
-                    .setData(pager => {
-                            pager.pageSize = this.pageSize;
-                            pager.pageIndex = this.pageIndex + 1;
-                        }
-                    ),
-                responseProfile: new KalturaDetachedResponseProfile()
-                    .setData(responseProfile => {
-                        responseProfile.type = KalturaResponseProfileType.IncludeFields;
-                        responseProfile.fields = 'id,name,plays,createdAt,duration,status,offset,operationAttributes,moderationStatus';
-                    })
+                filter: new KalturaBaseEntryFilter(
+                    {
+                        rootEntryIdEqual : entry.id,
+                        orderBy : `${this.sortAsc ? '' : '-'}${this.sortBy}`
+                    }
+                ),
+                pager: new KalturaFilterPager(
+                    {
+                        pageSize : this.pageSize,
+                        pageIndex : this.pageIndex + 1
+                    }
+                ),
+                responseProfile: new KalturaDetachedResponseProfile({
+                    type : KalturaResponseProfileType.includeFields,
+                    fields : 'id,name,plays,createdAt,duration,status,offset,operationAttributes,moderationStatus'
+                })
             }))
                 .cancelOnDestroy(this,this.sectionReset$)
                 .monitor('get entry clips')

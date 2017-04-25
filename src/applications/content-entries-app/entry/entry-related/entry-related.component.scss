@@ -2,6 +2,9 @@
 
 .kRelated{
 	padding-left: 12px;
+	position: relative;
+	height: 100%;
+	overflow-y: auto;
 	button{
 		font-weight: 400;
 		height: 32px;
@@ -14,4 +17,31 @@
 	.kTable{
 		margin-top: 24px;
 	}
+	.kRelatedTableActions {
+		width: 100%;
+		text-align: center;
+		button {
+			color: grey !important;
+			background-color: rgba(0, 0, 0, 0) !important;
+			border: none !important;
+			font-size: 16px !important;
+			outline: 0;
+		}
+	}
+	.kUploadMonitor{
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		a{
+			margin-top: 8px;
+		}
+	}
+	.kError{
+		color: $kDandger;
+	}
 }
+
+:host /deep/ .ui-dropdown.ui-widget{
+	width: 120px;
+}
+
