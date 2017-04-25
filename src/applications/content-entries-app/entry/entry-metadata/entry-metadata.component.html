@@ -7,56 +7,68 @@
 
 		<form [formGroup]="_handler.metadataForm" novalidate>
 			<div class="kRow kValign">
-				<span class="kLabels">{{'applications.content.entryDetails.metadata.entryID' | translate}}</span>
+				<span class="kLabel">{{'applications.content.entryDetails.metadata.entryID' | translate}}</span>
 				<span>{{ _handler.data.id }}</span>
 			</div>
 			<div class="kRow kValign">
-				<span class="kLabels">{{'applications.content.entryDetails.metadata.entryName' | translate}}</span>
-				<input formControlName="name" type="text" pInputText/>
+				<span class="kLabel">{{'applications.content.entryDetails.metadata.entryName' | translate}}</span>
+				<div class="kControl">
+					<input formControlName="name" type="text" pInputText/>
+				</div>
 			</div>
 			<div class="kRow">
-				<span class="kLabels">{{'applications.content.entryDetails.metadata.description' | translate}}</span>
-				<textarea formControlName="description" class="threeRows" pInputTextarea></textarea>
+				<span class="kLabel">{{'applications.content.entryDetails.metadata.description' | translate}}</span>
+				<div class="kControl TextAreaControl">
+					<textarea formControlName="description" class="threeRows" pInputTextarea></textarea>
+				</div>
 			</div>
 			<div class="kRow kValign">
-				<span class="kLabels">{{'applications.content.entryDetails.metadata.tags' | translate}}</span>
-				<kAutoComplete formControlName="tags"
-							   suggestionItemField="item"
-							   suggestionSelectableField="isSelectable"
-							   [multiple]="true"
-							   placeholder="{{'applications.entries.entryMetadata.searchTagsPH' | translate}}"
-							   [minLength]="3"
-							   [suggestionsProvider]="_tagsProvider"
-							   (completeMethod)="_searchTags($event)"
-				></kAutoComplete>
+				<span class="kLabel">{{'applications.content.entryDetails.metadata.tags' | translate}}</span>
+				<div class="kControl">
+					<kAutoComplete formControlName="tags"
+								   suggestionItemField="item"
+								   suggestionSelectableField="isSelectable"
+								   [multiple]="true"
+								   placeholder="{{'applications.entries.entryMetadata.searchTagsPH' | translate}}"
+								   [minLength]="3"
+								   [suggestionsProvider]="_tagsProvider"
+								   (completeMethod)="_searchTags($event)">
+					</kAutoComplete>
+				</div>
 			</div>
 			<div class="kRow kValign">
-				<span class="kLabels">{{'applications.content.entryDetails.metadata.categories' | translate}}</span>
-				<kAutoComplete formControlName="categories"
-							   field="name"
-							   suggestionItemField="item"
-							   suggestionLabelField="name"
-							   suggestionSelectableField="isSelectable"
-							   [multiple]="true"
-							   placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"
-							   [minLength]="3"
-							   [suggestionsProvider]="_categoriesProvider"
-							   (completeMethod)="_searchCategories($event)"
-				></kAutoComplete>
+				<span class="kLabel">{{'applications.content.entryDetails.metadata.categories' | translate}}</span>
+				<div class="kControl">
+					<kAutoComplete formControlName="categories"
+								   field="name"
+								   suggestionItemField="item"
+								   suggestionLabelField="name"
+								   suggestionSelectableField="isSelectable"
+								   [multiple]="true"
+								   placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"
+								   [minLength]="3"
+								   [suggestionsProvider]="_categoriesProvider"
+								   (completeMethod)="_searchCategories($event)">
+					</kAutoComplete>
+				</div>
 			</div>
 			<div class="kRow">
-				<span class="kLabels">{{'applications.content.entryDetails.metadata.offlineMsg' | translate}} (<b>[TBD] HIDE</b>)</span>
-				<textarea formControlName="offlineMessage" class="threeRows" pInputTextarea></textarea>
+				<span class="kLabel">{{'applications.content.entryDetails.metadata.offlineMsg' | translate}} (<b>[TBD] HIDE</b>)</span>
+				<div class="kControl TextAreaControl">
+					<textarea formControlName="offlineMessage" class="threeRows" pInputTextarea></textarea>
+				</div>
 			</div>
 			<div class="kRow kValign">
-				<span class="kLabels">{{'applications.content.entryDetails.metadata.refId' | translate}}</span>
-				<input formControlName="referenceId" type="text" pInputText/>
+				<span class="kLabel">{{'applications.content.entryDetails.metadata.refId' | translate}}</span>
+				<div class="kControl">
+					<input formControlName="referenceId" type="text" pInputText/>
+				</div>
 			</div>
 		</form>
 
-		<hr style="margin-top: 24px"/>
+		<hr/>
 
-		<div *ngFor="let customDataForm of _handler.customDataForms">
+		<div *ngFor="let customDataForm of _handler.customDataForms; let last = last">
 			<div class="kSchemaTitle">{{customDataForm.metadataProfile.name}}</div>
 			<div *ngIf="customDataForm && customDataForm.isReady">
 				<k-dynamic-form-item [control]="customDataForm.dynamicSection" [form]="customDataForm.formGroup">
@@ -65,6 +77,8 @@
 					</template>
 				</k-dynamic-form-item>
 			</div>
+
+			<hr *ngIf="!last" />
 		</div>
 	</div>
 </kLoader>
