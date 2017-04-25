@@ -32,7 +32,7 @@
 			display: flex;
 			padding-top: 20px;
 
-			.kLabels {
+			.kLabel {
 				width: 150px;
 				flex: 0 0 auto;
 			}
@@ -41,15 +41,16 @@
 				width: 100%;
 			}
 
-			.kControl
+			.kControl, k-prime-control
 			{
 				width:100%;
 			}
-			.kControl.TextArea textarea {
+
+			.kControl.TextAreaControl textarea {
 				height: 36px;
 			}
 
-			.kControl.TextArea textarea.threeRows {
+			.kControl.TextAreaControl textarea.threeRows {
 				height: 36px;
 			}
 		}

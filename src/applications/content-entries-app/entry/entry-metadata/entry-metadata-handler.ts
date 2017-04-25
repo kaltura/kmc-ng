@@ -14,7 +14,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 import { KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
 import { KalturaCustomMetadata } from '@kaltura-ng2/kaltura-ui/dynamic-form/kaltura-custom-metadata';
-import { MetadataListAction, KalturaMetadataFilter, KalturaMetadata, MetadataUpdateAction } from '@kaltura-ng2/kaltura-api/types';
+import { MetadataListAction, KalturaMetadataFilter, KalturaMetadata, MetadataUpdateAction, MetadataAddAction, KalturaMetadataObjectType } from '@kaltura-ng2/kaltura-api/types';
 import { KalturaCustomDataHandler } from '@kaltura-ng2/kaltura-ui/dynamic-form/kaltura-custom-metadata';
 
 @Injectable()
@@ -107,15 +107,16 @@ export class EntryMetadataHandler extends EntrySection
                 }
             );
 
-            if (this._entryMetadata.length === this.customDataForms.length) {
-                for(let i = 0;i < this.customDataForms.length;i++)
-                {
-                    this.customDataForms[i].syncValue(this._entryMetadata[i]);
-                }
-            }else
+            // map entry metadata to profile metadata
+            if (this.customDataForms)
             {
-                console.warn('KMCng: should implement');
-                error = new Error("failed to load metadata");
+                this.customDataForms.forEach(customDataForm =>
+                {
+                   const entryMetadata = this._entryMetadata.find(item => item.metadataProfileId === customDataForm.metadataProfile.id);
+
+                    // reset with either a valid entry metadata or null if not found a matching metadata for that entry
+                    customDataForm.resetForm(entryMetadata);
+                });
             }
 
         } else {
@@ -238,32 +239,41 @@ export class EntryMetadataHandler extends EntrySection
         }
     }
 
-    protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
+    protected _onDataSaving(newData : KalturaMediaEntry, request : KalturaMultiRequest) : void
     {
-        for(let i = 0;i < this.customDataForms.length;i++)
-        {
-            const customDataForm = this.customDataForms[i];
-            if (customDataForm.dirty) {
-                console.warn('should check if the custom metadata form values were modified');
 
-                const customDataValue = customDataForm.getValue();
+        if (this.customDataForms) {
+            this.customDataForms.forEach(customDataForm => {
 
-                if (customDataValue.error) {
-                    console.warn('KMCng: stop process and show error');
-                } else {
+                if (customDataForm.dirty) {
+                    console.warn('should check if the custom metadata form values were modified');
 
-                    customDataForm.metadataProfile
-                    request.requests.push(new MetadataUpdateAction({
-                        id: this._entryMetadata[i].id,
-                        xmlData: customDataValue.xml
-                    }));
+                    const customDataValue = customDataForm.getValue();
+
+                    if (customDataValue.error) {
+                        console.warn('KMCng: stop process and show error');
+                    } else {
+
+                        const entryMetadata = this._entryMetadata.find(item => item.metadataProfileId === customDataForm.metadataProfile.id);
+
+                        if (entryMetadata) {
+                            request.requests.push(new MetadataUpdateAction({
+                                id: entryMetadata.id,
+                                xmlData: customDataValue.xml
+                            }));
+                        }else
+                        {
+                            request.requests.push(new MetadataAddAction({
+                                objectType : KalturaMetadataObjectType.entry,
+                                objectId : this.data.id,
+                                metadataProfileId : customDataForm.metadataProfile.id,
+                                xmlData: customDataValue.xml
+                            }));
+                        }
+                    }
                 }
-            }
+            });
         }
-
-        this.customDataForms.forEach(customDataForm => {
-
-        });
     }
 
     public searchTags(text : string)

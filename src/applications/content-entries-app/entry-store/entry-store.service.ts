@@ -118,15 +118,15 @@ export class EntryStore implements  OnDestroy {
 
 		this._status.next({ action: ActionTypes.EntrySaving});
 
-		const entry = new KalturaMediaEntry();
+		const newEntry = new KalturaMediaEntry();
 		const request = new KalturaMultiRequest(
 			new BaseEntryUpdateAction({
 				entryId : this.entryId,
-				baseEntry : entry
+				baseEntry : newEntry
 			})
 		);
 
-		this._sectionsManager.onDataSaving(entry, request)
+		this._sectionsManager.onDataSaving(newEntry, request, this.entry)
             .monitor('preparing entry')
             .flatMap(
 				(response) => {

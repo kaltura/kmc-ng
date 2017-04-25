@@ -59,50 +59,12 @@
 		<div *ngFor="let customDataForm of _handler.customDataForms">
 			<div class="kSchemaTitle">{{customDataForm.metadataProfile.name}}</div>
 			<div *ngIf="customDataForm && customDataForm.isReady">
-				<kDynamicFormItem [control]="customDataForm.dynamicSection" [form]="customDataForm.formGroup">
+				<k-dynamic-form-item [control]="customDataForm.dynamicSection" [form]="customDataForm.formGroup">
 					<template let-item="item">
-						<kPrimeControl [control]="item.control" [form]="item.form"></kPrimeControl>
+						<k-prime-control [control]="item.control" [form]="item.form"></k-prime-control>
 					</template>
-				</kDynamicFormItem>
+				</k-dynamic-form-item>
 			</div>
 		</div>
-
-		<hr style="margin-top: 24px"/>
-
-		<!-- Group -->
-		<div class="kMultiple">
-			<span class="kGroupTitle">Group Title</span>
-			<div class="kGroupContainer"  *ngFor="let group of groups">
-				<!-- Group content here -->
-
-				<!-- Text Single Value -->
-				<div class="kRow">
-					<span class="kLabels">Text Single Value</span>
-					<textarea class="twoRows" pInputTextarea></textarea>
-				</div>
-				<!-- Dates Multiple Values -->
-				<div class="kRow">
-					<span class="kLabels">Date Multiple Values</span>
-					<div class="kMultiple">
-						<div class="kSingleItem" *ngFor="let date of dateItems">
-							<p-calendar icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showTime]="true" yearRange="2005:2030"></p-calendar>
-							<a class="kDeleteDate" (click)="dateItems.pop()">{{'applications.content.entryDetails.metadata.delete' | translate}}</a>
-						</div>
-						<div>
-							<a (click)="dateItems.push('item')">{{'applications.content.entryDetails.metadata.add' | translate}}</a>
-						</div>
-					</div>
-				</div>
-
-				<div class="kDeleteGroup">
-					<button pButton (click)="groups.pop()" class="kButtonDefault" label="{{'applications.content.entryDetails.metadata.deleteGroup' | translate}}"></button>
-				</div>
-			</div>
-
-			<div class="kGroupButtons">
-				<button pButton (click)="groups.push(item)" class="kButtonDefault" label="{{'applications.content.entryDetails.metadata.addGroup' | translate}}"></button>
-			</div>
-		</div>
-
 	</div>
 </kLoader>
