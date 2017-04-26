@@ -254,7 +254,11 @@
 					"dimensions": "Dimensions",
 					"size": "Size (kb)",
 					"status": "Status",
-					"tags": "Tags"
+					"tags": "Tags",
+					"kStatusNoContent": "No Transcoding Flavors available for this entry. Entry is not ready for publishing.",
+					"kStatusReady": "All required Transcoding Flavors are available. Entry is ready for publishing.",
+					"kStatusError": "Error occurred during flavor processing.",
+					"kStatusErrorProcessing": "Transcoding Flavors are currently being processed. Entry will be ready in a few minutes."
 				},
 				"captions":{
 					"captions": "Captions",

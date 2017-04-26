@@ -1,27 +1,39 @@
 <kLoader [loading]="(_handler._flavors$ | async)?.loading" [loadingError]="(_handler._flavors$ | async)?.error" (onActionRequested)="_onLoadingAction($event)">
-	<div class="kFlavours">
+	<div class="kFlavours kUseKMCngIcons">
 		<p class="kTitle">{{'applications.content.entryDetails.flavours.flavours' | translate}}</p>
-		<button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right" label="{{'applications.content.entryDetails.flavours.replace' | translate}}"></button>
-		<button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" (click)="_handler._fetchFlavors()"></button>
+		<div class="kEntryStatus">
+			<i class="{{_handler._entryStatusClassName}}"></i><span>{{_handler._entryStatus}}</span>
+		</div>
+		<!--button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right" label="{{'applications.content.entryDetails.flavours.replace' | translate}}"></button-->
+		<div>
+			<button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" (click)="_handler._fetchFlavors()"></button>
+		</div>
+
 		<div class="kTable">
 			<p-dataTable [value]="(_handler._flavors$ | async)?.items" scrollable="true" scrollHeight="100%">
-				<p-column header="{{'applications.content.entryDetails.flavours.flavour' | translate}}">
+				<p-column field="flavorParams.name" header="{{'applications.content.entryDetails.flavours.flavour' | translate}}" [style]="{'width':'120px'}">
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.flavours.assetId' | translate}}">
+				<p-column field="flavorAsset.id" header="{{'applications.content.entryDetails.flavours.assetId' | translate}}" [style]="{'width':'100px'}">
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.flavours.format' | translate}}">
+				<p-column field="flavorAsset.fileExt" header="{{'applications.content.entryDetails.flavours.format' | translate}}">
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.flavours.codec' | translate}}">
+				<p-column field="flavorAsset.videoCodecId" header="{{'applications.content.entryDetails.flavours.codec' | translate}}">
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.flavours.bitrate' | translate}}">
+				<p-column field="flavorAsset.bitrate" header="{{'applications.content.entryDetails.flavours.bitrate' | translate}}">
+					<template let-col let-flavor="rowData" pTemplate="body">
+						<span >{{(flavor.flavorAsset && flavor.flavorAsset.bitrate && flavor.flavorAsset.bitrate > 0) ? flavor.flavorAsset.bitrate : ''}}</span>
+					</template>
 				</p-column>
 				<p-column header="{{'applications.content.entryDetails.flavours.dimensions' | translate}}">
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.flavours.size' | translate}}">
+				<p-column field="flavorAsset.size" header="{{'applications.content.entryDetails.flavours.size' | translate}}">
 				</p-column>
 				<p-column header="{{'applications.content.entryDetails.flavours.status' | translate}}">
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.flavours.tags' | translate}}">
+				<p-column field="flavorAsset.tags" header="{{'applications.content.entryDetails.flavours.tags' | translate}}">
+					<template let-col let-flavor="rowData" pTemplate="body">
+						<span >{{(flavor.flavorAsset && flavor.flavorAsset.tags) ? flavor.flavorAsset.tags : '-'}}</span>
+					</template>
 				</p-column>
 				<p-column>
 				</p-column>

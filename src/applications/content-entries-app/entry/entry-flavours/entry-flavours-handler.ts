@@ -2,8 +2,10 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { EntrySection } from '../../entry-store/entry-section-handler';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
+
+import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
-import { KalturaFlavorAssetWithParams, FlavorAssetGetFlavorAssetsWithParamsAction, KalturaFlavorAssetStatus, KalturaLiveParams } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaFlavorAssetWithParams, FlavorAssetGetFlavorAssetsWithParamsAction, KalturaFlavorAssetStatus, KalturaLiveParams, KalturaEntryStatus } from '@kaltura-ng2/kaltura-api/types';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
 @Injectable()
@@ -14,7 +16,10 @@ export class EntryFlavoursHandler extends EntrySection
 	);
 	public _flavors$ = this._flavors.asObservable().monitor('flavors');
 
-    constructor(manager : EntrySectionsManager, private _kalturaServerClient: KalturaServerClient)
+	public _entryStatus = "";
+	public _entryStatusClassName = "";
+
+    constructor(manager : EntrySectionsManager, private _kalturaServerClient: KalturaServerClient, private _appLocalization: AppLocalization)
     {
         super(manager);
     }
@@ -32,6 +37,7 @@ export class EntryFlavoursHandler extends EntrySection
     }
 
     protected _activate(firstLoad : boolean) {
+	    this._setEntryStatus();
         this._fetchFlavors();
     }
 
@@ -60,7 +66,7 @@ export class EntryFlavoursHandler extends EntrySection
 							}
 					    });
 					    flavors = flavors.concat(flavorsWithAssets).concat(flavorsWithoutAssets); // source first, then flavors with assets, then flavors without assets
-					    this._flavors.next({items : flavors, loading : false, error : false});debugger;
+					    this._flavors.next({items : flavors, loading : false, error : false});
 				    }
 			    },
 			    error =>
@@ -68,5 +74,25 @@ export class EntryFlavoursHandler extends EntrySection
 				    this._flavors.next({items : [], loading : false, error : error});
 			    }
 		    );
+    }
+
+    private _setEntryStatus(){
+	    const status = this.data.status.toString();
+	    switch (status){
+		    case KalturaEntryStatus.noContent.toString():
+		    	this._entryStatusClassName = "kStatusNoContent kIconwarning";
+			    break;
+		    case KalturaEntryStatus.ready.toString():
+		    	this._entryStatusClassName = "kStatusReady kIconconfirmation";
+			    break;
+		    case KalturaEntryStatus.errorConverting.toString():
+		    case KalturaEntryStatus.errorImporting.toString():
+		    	this._entryStatusClassName = "kStatusError kIconwarning";
+			    break;
+		    default:
+		    	this._entryStatusClassName = "kStatusErrorProcessing kIconwarning";
+			    break;
+	    }
+	    this._entryStatus = this._appLocalization.get('applications.content.entryDetails.flavours.' + this._entryStatusClassName.split(" ")[0]);
     }
 }
