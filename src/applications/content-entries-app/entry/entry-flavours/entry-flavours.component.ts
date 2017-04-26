@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
+import { EntryFlavoursHandler } from './entry-flavours-handler';
+
 @Component({
     selector: 'kEntryFlavours',
     templateUrl: './entry-flavours.component.html',
@@ -8,10 +10,9 @@ import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 })
 export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 
-    public _loading = false;
     public _loadingError = null;
 
-    constructor(private _appLocalization: AppLocalization) {
+    constructor(public _handler: EntryFlavoursHandler, private _appLocalization: AppLocalization) {
     }
 
 
@@ -30,7 +31,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 
     _onLoadingAction(actionKey: string) {
         if (actionKey === 'retry') {
-
+			this._handler._fetchFlavors();
         }
     }
 }
