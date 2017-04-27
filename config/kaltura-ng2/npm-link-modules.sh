@@ -73,7 +73,7 @@ pushd ../../
             fs)
                 mkdir -p ${PACKAGE_DEST}
                 printf "\e[35m%b\e[0m\n" "Copy using bash copy command for package '${PACKAGE}'"
-                cp -r ${PACKAGE_SRC}/ ${PACKAGE_DEST}
+                cp -r ${PACKAGE_SRC}/* ${PACKAGE_DEST}
                 ;;
         esac
     done
