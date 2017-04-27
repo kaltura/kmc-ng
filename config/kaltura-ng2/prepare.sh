@@ -30,12 +30,16 @@ then
     rm -rf ../../node_modules/
 fi
 
-printf "\e[35m%b\e[0m\n" "run npm install"
-npm install
+printf "\e[35m%b\e[0m\n" "run yarn install"
+pushd ../../
+yarn install
+popd
 
 ./npm-link-modules.sh ${USE_NPM_LINK:+"--use-npm-link"}
 
 if [ -z "${USE_NPM_LINK}" ]
 then
+pushd ../../
     $(npm bin)/wml once
+popd
 fi

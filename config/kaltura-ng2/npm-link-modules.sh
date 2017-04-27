@@ -20,14 +20,14 @@ done
 
 
 cd `dirname $0`
-
-LIST="$(cat ../../package.json | bash $(npm bin)/JSON.sh -b | grep dependencies | grep kaltura | cut -f 1 | cut -d ',' -f2 | cut -d '"' -f 2 | cut -d "/" -f 2)"
+pushd ../../
+LIST="$(cat package.json | bash $(npm bin)/JSON.sh -b | grep dependencies | grep kaltura | cut -f 1 | cut -d ',' -f2 | cut -d '"' -f 2 | cut -d "/" -f 2)"
 
 NPM_MODULES_BASE=$(npm config get prefix)/lib/node_modules
 
     # should always run this cleanup to prevent using both npm link and wml
     printf "\e[35m%b\e[0m\n" "Delete  node_modules/@kaltura-ng2 folder"
-    rm -rf ../../node_modules/@kaltura-ng2/
+    rm -rf node_modules/@kaltura-ng2/
     printf "\e[35m%b\e[0m\n" "Remove existing wml links"
     $(npm bin)/wml rm all
 
@@ -41,10 +41,8 @@ do
   else
     printf "\e[35m%b\e[0m\n" "Running wml add for package '${PACKAGE}'"
       PACKAGE_SRC=$(readlink ${NPM_MODULES_BASE}/@kaltura-ng2/${PACKAGE})
-      PACKAGE_DEST=../../node_modules/@kaltura-ng2/${PACKAGE}
+      PACKAGE_DEST=node_modules/@kaltura-ng2/${PACKAGE}
       printf "n" | $(npm bin)/wml add ${PACKAGE_SRC} ${PACKAGE_DEST}
-      npm run wml:sync
   fi
 done
-
-
+popd

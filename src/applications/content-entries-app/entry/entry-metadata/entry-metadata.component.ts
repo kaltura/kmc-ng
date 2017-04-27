@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, Inject, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { DOCUMENT } from '@angular/platform-browser';
 
 import { Subject } from 'rxjs/Subject';
 import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
@@ -8,6 +9,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { EntryMetadataHandler } from './entry-metadata-handler';
 import { EntryStore } from '../../entry-store/entry-store.service';
+import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
 
 @Component({
     selector: 'kEntryMetadata',
@@ -30,9 +32,14 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     public _tagsProvider = new Subject<SuggestionsProviderData>();
 	public _jumpToMenu: MenuItem[] = [];
 
+	@ViewChild('metadataContainer')
+	public _container : ElementRef;
+
 
     constructor(private _appLocalization: AppLocalization,
                 public _handler : EntryMetadataHandler,
+                private _pageScrollService: PageScrollService,
+                @Inject(DOCUMENT) private document: any,
                 private _entryStore : EntryStore) {
     }
 
@@ -124,7 +131,12 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     }
 
     private _jumpTo(section: string){
-    	alert("Jump to: "+section);
+        let pageScrollInstance: PageScrollInstance = PageScrollInstance.newInstance({
+         document : document,
+            scrollTarget : "#test",
+            scrollingViews : [this._container.nativeElement]
+        });
+        this._pageScrollService.start(pageScrollInstance);
     }
 
     _onLoadingAction(actionKey: string) {

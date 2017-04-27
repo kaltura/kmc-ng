@@ -3,7 +3,7 @@
 		<p-menu #menu popup="popup" [model]="_jumpToMenu" [appendTo]="'body'"></p-menu>
 		<button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right" label="{{'applications.content.entryDetails.metadata.jumpTo' | translate}}" (click)="menu.toggle($event)"></button>
 	</div>
-	<div class="kMetadataDetails" *ngIf="_handler.data" >
+	<div class="kMetadataDetails" #metadataContainer *ngIf="_handler.data" >
 
 		<form [formGroup]="_handler.metadataForm" novalidate>
 			<div class="kRow kValign">
@@ -68,6 +68,7 @@
 
 		<hr/>
 
+		<div id="test"></div>
 		<div *ngFor="let customDataForm of _handler.customDataForms; let last = last">
 			<div class="kSchemaTitle">{{customDataForm.metadataProfile.name}}</div>
 			<div *ngIf="customDataForm && customDataForm.isReady">
