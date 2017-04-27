@@ -224,14 +224,15 @@ export class EntryLiveHandler extends EntrySection {
 		let valid = true;
 		this._bitrates.forEach((br: bitrate) => {
 			if (br.enabled) {
+				br.errors = "";
 				if (br.bitrate > 0) {
 					if (br.width === 0 || br.height === 0) {
 						valid = false;
-						br.errors = "Width and height must be larger than 0";
+						br.errors = this._appLocalization.get('applications.content.entryDetails.live.dimensionsError');
 					}
 				} else {
 					valid = false;
-					br.errors = "Bitrate must be specified";
+					br.errors = this._appLocalization.get('applications.content.entryDetails.live.bitrateError');
 				}
 			}
 		});
