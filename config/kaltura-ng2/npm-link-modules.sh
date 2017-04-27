@@ -2,28 +2,49 @@
 
 set -e
 
-################ Extract arguments ################
+#########################
+# The command line help #
+#########################
+display_help() {
+    echo "Usage: $0 [option...]" >&2
+    echo
+    echo "   -u, --use (wml,npm,fs)             choose how to sync dependencies. default value: wml"
+    echo
+    exit 1
+}
+
+#########################
+# Handle arguments      #
+#########################
+USE=wml
+
 while [[ $# -gt 0 ]]
 do
 key="$1"
 
 case $key in
-    --use-npm-link)
-    USE_NPM_LINK=true
-    ;;
+   -u|--use)
+        USE="$2"
+        shift # past argument
+        ;;
+    -*)
+        echo "Error: Unknown option: $1" >&2
+        display_help
+        ## or call function display_help
+        exit 1
+        ;;
     *)
         # unknown option
-    ;;
+        ;;
 esac
 shift # past argument or value
 done
 
-
 cd `dirname $0`
-pushd ../../
-LIST="$(cat package.json | bash $(npm bin)/JSON.sh -b | grep dependencies | grep kaltura | cut -f 1 | cut -d ',' -f2 | cut -d '"' -f 2 | cut -d "/" -f 2)"
 
-NPM_MODULES_BASE=$(npm config get prefix)/lib/node_modules
+pushd ../../
+    LIST="$(cat package.json | bash $(npm bin)/JSON.sh -b | grep dependencies | grep kaltura | cut -f 1 | cut -d ',' -f2 | cut -d '"' -f 2 | cut -d "/" -f 2)"
+    NPM_MODULES_BASE=$(npm config get prefix)/lib/node_modules
 
     # should always run this cleanup to prevent using both npm link and wml
     printf "\e[35m%b\e[0m\n" "Delete  node_modules/@kaltura-ng2 folder"
@@ -31,18 +52,34 @@ NPM_MODULES_BASE=$(npm config get prefix)/lib/node_modules
     printf "\e[35m%b\e[0m\n" "Remove existing wml links"
     $(npm bin)/wml rm all
 
-for PACKAGE in ${LIST} ;
-do
+    printf "\e[35m%b\e[0m\n" "use ${USE} to sync dependencies"
 
-  if [ -n "${USE_NPM_LINK}" ]
-  then
-      printf "\e[35m%b\e[0m\n" "Running npm link for package '${PACKAGE}'"
-      npm link @kaltura-ng2/${PACKAGE}
-  else
-    printf "\e[35m%b\e[0m\n" "Running wml add for package '${PACKAGE}'"
-      PACKAGE_SRC=$(readlink ${NPM_MODULES_BASE}/@kaltura-ng2/${PACKAGE})
-      PACKAGE_DEST=node_modules/@kaltura-ng2/${PACKAGE}
-      printf "n" | $(npm bin)/wml add ${PACKAGE_SRC} ${PACKAGE_DEST}
-  fi
-done
+    for PACKAGE in ${LIST} ;
+    do
+        PACKAGE_SRC=$(readlink ${NPM_MODULES_BASE}/@kaltura-ng2/${PACKAGE})
+        PACKAGE_DEST=node_modules/@kaltura-ng2/${PACKAGE}
+
+        case $USE in
+            wml)
+                printf "\e[35m%b\e[0m\n" "Running wml add for package '${PACKAGE}'"
+                printf "n" | $(npm bin)/wml add ${PACKAGE_SRC} ${PACKAGE_DEST}
+                ;;
+            npm)
+                set +e #allow errors during install
+                printf "\e[35m%b\e[0m\n" "Running npm link for package '${PACKAGE}'"
+                npm link @kaltura-ng2/${PACKAGE}
+                set -e
+                ;;
+            fs)
+                mkdir -p ${PACKAGE_DEST}
+                printf "\e[35m%b\e[0m\n" "Copy using bash copy command for package '${PACKAGE}'"
+                cp -r ${PACKAGE_SRC}/ ${PACKAGE_DEST}
+                ;;
+        esac
+    done
+
+    if [ "${USE}" == "wml" ]
+    then
+        npm run wml:sync
+    fi
 popd
