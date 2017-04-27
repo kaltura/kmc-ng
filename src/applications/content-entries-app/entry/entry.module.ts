@@ -8,7 +8,7 @@ import { MultiSelectModule, ButtonModule, TooltipModule, InputTextareaModule, Pa
 
 import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
-import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
+import { KalturaUIModule, ToolTipModule as newToolTipModule } from '@kaltura-ng2/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 
@@ -62,7 +62,8 @@ import { KalturaCustomMetadataModule } from '@kaltura-ng2/kaltura-ui/dynamic-for
         KalturaCustomMetadataModule,
         RouterModule.forChild([]),
         SpinnerModule,
-        TooltipModule
+        TooltipModule,
+	    newToolTipModule
     ],
     declarations: [
         EntryAccessControl,

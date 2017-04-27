@@ -258,7 +258,34 @@
 					"kStatusNoContent": "No Transcoding Flavors available for this entry. Entry is not ready for publishing.",
 					"kStatusReady": "All required Transcoding Flavors are available. Entry is ready for publishing.",
 					"kStatusError": "Error occurred during flavor processing.",
-					"kStatusErrorProcessing": "Transcoding Flavors are currently being processed. Entry will be ready in a few minutes."
+					"kStatusErrorProcessing": "Transcoding Flavors are currently being processed. Entry will be ready in a few minutes.",
+					"status":{
+						"converting": "Converting",
+						"error": "Error",
+						"deleted": "DELETED",
+						"queue": "In Queue",
+						"ready": "OK",
+						"na": "N/A",
+						"naTooltip": "Not Applicable, The source asset has lower quality than the requested output, no transcoding was performed.",
+						"waiting": "Waiting For Conversion",
+						"uploading": "Uploading",
+						"validating": "Validating",
+						"exporting": "Exporting"
+					},
+					"actions":{
+						"convert": "Convert",
+						"delete": "Delete",
+						"download": "Download",
+						"upload": "Upload",
+						"import": "Import",
+						"preview": "Preview",
+						"reconvert": "Reconvert",
+						"drm": "View DRM Details"
+					},
+					"deleteConfirm": "Are you sure you want to delete this Asset: %1 ?",
+					"deleteConfirmTitle": "Delete Flavor Asset",
+					"deleteSuccess": "Flavor asset was deleted.",
+					"deleteFailure": "Flavor asset deletion failed."
 				},
 				"captions":{
 					"captions": "Captions",
