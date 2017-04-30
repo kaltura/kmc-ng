@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, IterableDiffers, IterableDiffer, CollectionChangeRecord } from '@angular/core';
 import { EntrySection } from '../../entry-store/entry-section-handler';
 import { KalturaLiveStreamEntry } from '@kaltura-ng2/kaltura-api/types';
 import { Observable } from 'rxjs/Observable';
@@ -9,17 +9,18 @@ import { KalturaTagFilter, KalturaTaggedObjectType, KalturaFilterPager,
 import { CategoriesStore, CategoryData } from '../../../../shared/kmc-content-ui/categories-store.service';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { MetadataProfile, MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng2/kaltura-common';
+import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng2/kaltura-common';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 import { KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
 import { KalturaCustomMetadata } from '@kaltura-ng2/kaltura-ui/dynamic-form/kaltura-custom-metadata';
-import { MetadataListAction, KalturaMetadataFilter, KalturaMetadata, MetadataUpdateAction, MetadataAddAction, KalturaMetadataObjectType } from '@kaltura-ng2/kaltura-api/types';
+import { MetadataListAction, KalturaMetadataFilter, KalturaMetadata, MetadataUpdateAction, MetadataAddAction, KalturaMetadataObjectType, CategoryEntryAddAction, CategoryEntryDeleteAction, KalturaCategoryEntry } from '@kaltura-ng2/kaltura-api/types';
 import { KalturaCustomDataHandler } from '@kaltura-ng2/kaltura-ui/dynamic-form/kaltura-custom-metadata';
 
 @Injectable()
 export class EntryMetadataHandler extends EntrySection
 {
+    private _entryCategoriesDiffers : IterableDiffer;
     private _entryCategories : CategoryData[]  = [];
     private _entryMetadata : KalturaMetadata[] = [];
 
@@ -37,6 +38,7 @@ export class EntryMetadataHandler extends EntrySection
                 private _kalturaServerClient: KalturaServerClient,
                 private _categoriesStore : CategoriesStore,
                 private _formBuilder : FormBuilder,
+                private _iterableDiffers : IterableDiffers,
                 private _kalturaCustomMetadata : KalturaCustomMetadata,
                 private _metadataProfileStore : MetadataProfileStore)
     {
@@ -106,6 +108,14 @@ export class EntryMetadataHandler extends EntrySection
                     referenceId: entry.referenceId || null
                 }
             );
+
+            this._entryCategoriesDiffers = this._iterableDiffers.find([]).create(null, (index,item) =>
+            {
+                // use track by function to identify category by its' id. this will prevent sending add/remove of the same item once
+                // a user remove a category and then re-select it before he clicks the save button.
+                return item ? item.id : null;
+            });
+            this._entryCategoriesDiffers.diff(this._entryCategories);
 
             // map entry metadata to profile metadata
             if (this.customDataForms)
@@ -242,6 +252,48 @@ export class EntryMetadataHandler extends EntrySection
     protected _onDataSaving(newData : KalturaMediaEntry, request : KalturaMultiRequest) : void
     {
 
+        const metadataFormValue = this.metadataForm.value;
+
+        // save static metadata form
+        newData.name = metadataFormValue.name;
+        newData.description = metadataFormValue.description;
+        newData.referenceId = metadataFormValue.referenceId || null;
+        newData.tags = (metadataFormValue.tags || []).join(', ');
+        if (newData instanceof KalturaLiveStreamEntry)
+        {
+            newData.offlineMessage = metadataFormValue.offlineMessage;
+        }
+
+        // save changes in entry categories
+        if (this._entryCategoriesDiffers) {
+            const changes = this._entryCategoriesDiffers.diff(metadataFormValue.categories);
+
+            if (changes)
+            {
+                changes.forEachAddedItem((change : CollectionChangeRecord) =>
+                {
+                    request.requests.push(new CategoryEntryAddAction({
+                        categoryEntry : new KalturaCategoryEntry({
+                            entryId : this.data.id,
+                            categoryId : change.item.id
+                        })
+                    }));
+                });
+
+                changes.forEachRemovedItem((change : CollectionChangeRecord) =>
+                {
+                    request.requests.push(new CategoryEntryDeleteAction({
+                        entryId : this.data.id,
+                        categoryId : change.item.id
+                    }));
+                });
+            }
+        }
+
+
+        // TODO handle categories changes
+
+        // save entry custom schema forms
         if (this.customDataForms) {
             this.customDataForms.forEach(customDataForm => {
 
@@ -349,6 +401,7 @@ export class EntryMetadataHandler extends EntrySection
      * Do some cleanups if needed once the section is removed
      */
     protected _reset() {
+        this._entryCategoriesDiffers = null;
         this._entryCategories = [];
         this._entryCategoriesStatus = null;
         this._entryMetadata = [];
