@@ -2,14 +2,14 @@ import { NgModule, ModuleWithProviders }           from '@angular/core';
 import { CommonModule }       from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
+import { KalturaUIModule, TooltipModule } from '@kaltura-ng2/kaltura-ui';
 import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
 import { TreeSelectionModule } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
 import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 import { AutoCompleteModule } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 
-import { TreeModule, SharedModule,  RadioButtonModule, TooltipModule, CalendarModule } from 'primeng/primeng';
+import { TreeModule, SharedModule,  RadioButtonModule, CalendarModule } from 'primeng/primeng';
 
 import { CategoriesFilterComponent } from './categories-filter/categories-filter.component';
 import { CategoriesFilterPrefsComponent } from './categories-filter-preferences/categories-filter-preferences.component';
@@ -36,9 +36,9 @@ import { MetadataProfileStore } from '@kaltura-ng2/kaltura-common';
         PopupWidgetModule,
         RadioButtonModule,
         SharedModule, KalturaUIModule,
-        TooltipModule,
         TreeModule,
-        TreeSelectionModule
+        TreeSelectionModule,
+	    TooltipModule
     ],
     declarations: [
         CategoriesFilterComponent,

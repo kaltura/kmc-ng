@@ -96,6 +96,8 @@ export class EntryCaptionsHandler extends EntrySection
      */
     protected _reset()
     {
+	    this.captionsListDiffer = null;
+	    this.captionDiffer = {};
 	    this._entryId = '';
 	    this._captions.next({ loading : false, items : [], error : null});
     }

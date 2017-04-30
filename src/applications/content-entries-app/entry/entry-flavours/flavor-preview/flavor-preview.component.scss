@@ -1,0 +1,29 @@
+@import '~kmcng-theme/scss/variables';
+
+.kFlavorPreview{
+	display: flex;
+	flex-direction: column;
+	padding-top: 30px;
+	.kHeader{
+		font-size: 16px;
+		font-weight: 700;
+		margin-bottom: 20px;
+	}
+	.kTitle{
+		font-weight: 700;
+		margin-bottom: 30px;
+	}
+	.kRow{
+		display: flex;
+		margin-bottom: 12px;
+		flex-direction: row;
+		align-items: center;
+		.kLabel{
+			width: 150px;
+		}
+	}
+	.kPreview{
+		margin-bottom: 12px;
+	}
+}
+

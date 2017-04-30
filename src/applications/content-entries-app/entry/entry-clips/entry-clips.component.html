@@ -3,7 +3,7 @@
 		<p class="kTitle">{{'applications.content.entryDetails.clips.clips' | translate}}</p>
 
 		<div class="kTable">
-			<p-dataTable [value]="(_handler.entries$ | async)?.items" [sortField]="_handler.sortBy" [sortOrder]="_handler.sortAsc | kTreeBooleanPrimeSort" (onSort)="_onSortChanged($event)">
+			<p-dataTable [value]="(_handler.entries$ | async)?.items" scrollable="true" [sortField]="_handler.sortBy" [sortOrder]="_handler.sortAsc | kTreeBooleanPrimeSort" (onSort)="_onSortChanged($event)">
 				<p-column field="id" header="{{'applications.content.entryDetails.clips.id' | translate}}" [style]="{'width':'90px'}">
 					<template let-col let-entry="rowData" pTemplate="body">
 						<a (click)="_handler.navigateToEntry(entry.id)">{{entry.id}}</a>
@@ -31,7 +31,6 @@
 		</div>
 
 		<p-paginator [rows]="_handler.pageSize" (onPageChange)="_onPaginationChanged($event)"
-					 [first]="_handler.pageIndex * _handler.pageSize"
 					 [totalRecords]="(_handler.entries$ | async)?.totalItems"
 					 [rowsPerPageOptions]="_handler.pageSizesAvailable"></p-paginator>
 	</div>
