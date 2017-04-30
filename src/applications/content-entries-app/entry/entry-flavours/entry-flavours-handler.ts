@@ -26,7 +26,8 @@ export interface Flavor{
 	statusLabel: string,
 	statusTooltip: string,
 	errorStatus: boolean,
-	tags: string
+	tags: string,
+	drm: any
 }
 
 @Injectable()
@@ -84,12 +85,12 @@ export class EntryFlavoursHandler extends EntrySection
 					    let flavorsWithoutAssets: Flavor[] = [];
 					    response.forEach((flavor: KalturaFlavorAssetWithParams) => {
 							if (flavor.flavorAsset && flavor.flavorAsset.isOriginal){
-								flavors.push(this.createFlavor(flavor)); // this is the source. put it first in the array
+								flavors.push(this.createFlavor(flavor, response)); // this is the source. put it first in the array
 								this.sourceAvailabale = true;
 							}else if (flavor.flavorAsset && (!flavor.flavorAsset.status || (flavor.flavorAsset.status && flavor.flavorAsset.status.toString() !== KalturaFlavorAssetStatus.temp.toString()))){
-								flavorsWithAssets.push(this.createFlavor(flavor)); // flavors with assets that is not in temp status
+								flavorsWithAssets.push(this.createFlavor(flavor, response)); // flavors with assets that is not in temp status
 							}else if (!flavor.flavorAsset && flavor.flavorParams && !(flavor.flavorParams instanceof KalturaLiveParams)){
-								flavorsWithoutAssets.push(this.createFlavor(flavor)); // flavors without assets
+								flavorsWithoutAssets.push(this.createFlavor(flavor, response)); // flavors without assets
 							}
 					    });
 					    flavors = flavors.concat(flavorsWithAssets).concat(flavorsWithoutAssets); // source first, then flavors with assets, then flavors without assets
@@ -103,7 +104,7 @@ export class EntryFlavoursHandler extends EntrySection
 		    );
     }
 
-	private createFlavor(flavor: KalturaFlavorAssetWithParams): Flavor{
+	private createFlavor(flavor: KalturaFlavorAssetWithParams, allFlavors: KalturaFlavorAssetWithParams[]): Flavor{
 		let newFlavor: Flavor = {
 			name: flavor.flavorParams ? flavor.flavorParams.name : '',
 			id: flavor.flavorAsset ? flavor.flavorAsset.id : '',
@@ -119,7 +120,8 @@ export class EntryFlavoursHandler extends EntrySection
 			statusLabel: "",
 			statusTooltip: "",
 			errorStatus: false,
-			tags: flavor.flavorAsset ? flavor.flavorAsset.tags : '-'
+			tags: flavor.flavorAsset ? flavor.flavorAsset.tags : '-',
+			drm: {}
 		}
 		// set dimensions
 		const width: number = flavor.flavorAsset ? flavor.flavorAsset.width :flavor.flavorParams.width;
@@ -164,6 +166,35 @@ export class EntryFlavoursHandler extends EntrySection
 					break;
 			}
 		}
+		// add DRM details
+		if (newFlavor.isWidevine){
+			// get source flavors for DRM
+			const sourceIDs = (flavor.flavorAsset as KalturaWidevineFlavorAsset).actualSourceAssetParamsIds ? (flavor.flavorAsset as KalturaWidevineFlavorAsset).actualSourceAssetParamsIds.split(",") : [];
+			let sources = [];
+			sourceIDs.forEach(sourceId => {
+				allFlavors.forEach(flavor => {
+					if (flavor.flavorParams.id.toString() === sourceId){
+						sources.push(flavor.flavorParams.name);
+					}
+				});
+			});
+			// set start and end date
+			let startDate = (flavor.flavorAsset as KalturaWidevineFlavorAsset).widevineDistributionStartDate;
+			if (startDate == -2147483648 || startDate == 18001 || startDate == 2000001600) {
+				startDate = null;
+			}
+			let endDate = (flavor.flavorAsset as KalturaWidevineFlavorAsset).widevineDistributionEndDate;
+			if (endDate == -2147483648 || endDate == 18001 || endDate == 2000001600) {
+				endDate = null;
+			}
+			newFlavor.drm = {
+				name: flavor.flavorParams.name,
+				id: (flavor.flavorAsset as KalturaWidevineFlavorAsset).widevineAssetId,
+				flavorSources: sources,
+				startTime: startDate,
+				endTime: endDate
+			};
+		}
 		return newFlavor;
 	}
 
@@ -189,7 +220,7 @@ export class EntryFlavoursHandler extends EntrySection
 
     public deleteFlavor(flavor: Flavor): void{
 	    this._confirmationService.confirm({
-		    message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirm').replace("%1", flavor.id),
+		    message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirm',{"0": flavor.id}),
 		    accept: () => {
 			    this._kalturaServerClient.request(new FlavorAssetDeleteAction({
 					    id: flavor.id

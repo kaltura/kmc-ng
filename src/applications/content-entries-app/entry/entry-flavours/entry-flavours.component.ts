@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { KalturaFlavorAssetStatus } from '@kaltura-ng2/kaltura-api/types';
+import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { EntryFlavoursHandler, Flavor } from './entry-flavours-handler';
 
@@ -11,10 +12,12 @@ import { EntryFlavoursHandler, Flavor } from './entry-flavours-handler';
 })
 export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 
+	@ViewChild('drmPopup') drmPopup: PopupWidgetComponent;
+	@ViewChild('previewPopup') previewPopup: PopupWidgetComponent;
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
 	public _actions: MenuItem[] = [];
 
-	private _selectedFlavor: Flavor;
+	public _selectedFlavor: Flavor;
 
     public _loadingError = null;
 
@@ -75,6 +78,12 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 				break;
 			case "download":
 				this._handler.downloadFlavor(this._selectedFlavor);
+				break;
+			case "preview":
+				this.previewPopup.open();
+				break;
+			case "drm":
+				this.drmPopup.open();
 				break;
 		}
 	}

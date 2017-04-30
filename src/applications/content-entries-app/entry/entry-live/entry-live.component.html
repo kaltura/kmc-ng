@@ -9,21 +9,21 @@
 					<span class="kLabels">{{'applications.content.entryDetails.live.primary' | translate}}</span>
 					<div>
 						<span #primaryBroadcastingUrl>{{_handler.data?.primaryBroadcastingUrl}}</span>
-						<button *ngIf="_copyToClipboardEnabled" pButton class="kButtonDefault kCopyBtn" (click)="_copyToClipboard(primaryBroadcastingUrl.textContent)" icon="kIconcalendar" pTooltip="{{'app.common.copyToClipboard' | translate}}"></button>
+						<button *ngIf="_copyToClipboardEnabled" pButton class="kButtonDefault kCopyBtn" (click)="_copyToClipboard(primaryBroadcastingUrl.textContent)" icon="kIconcalendar" [kTooltip]="'app.common.copyToClipboard' | translate"></button>
 					</div>
 				</div>
 				<div class="kRow">
 					<span class="kLabels">{{'applications.content.entryDetails.live.backup' | translate}}</span>
 					<div>
 						<span #secondaryBroadcastingUrl>{{_handler.data?.secondaryBroadcastingUrl}}</span>
-						<button *ngIf="_copyToClipboardEnabled" pButton class="kButtonDefault kCopyBtn" (click)="_copyToClipboard(secondaryBroadcastingUrl.textContent)" icon="kIconcalendar" pTooltip="{{'app.common.copyToClipboard' | translate}}"></button>
+						<button *ngIf="_copyToClipboardEnabled" pButton class="kButtonDefault kCopyBtn" (click)="_copyToClipboard(secondaryBroadcastingUrl.textContent)" icon="kIconcalendar" [kTooltip]="'app.common.copyToClipboard' | translate"></button>
 					</div>
 				</div>
 			</div>
 
 			<div class="kRow" *ngIf="_handler._liveType === 'kaltura'">
 				<span class="kLabels"></span>
-				<button pButton (click)="_regenerateToken()" class="kButtonDefault" label="{{'applications.content.entryDetails.live.regenerate' | translate}}" pTooltip="{{'applications.content.entryDetails.live.regenerateTooltip' | translate}}" tooltipPosition="top"></button>
+				<button pButton (click)="_regenerateToken()" class="kButtonDefault" label="{{'applications.content.entryDetails.live.regenerate' | translate}}" [kTooltip]="'applications.content.entryDetails.live.regenerateTooltip' | translate"></button>
 			</div>
 
 			<div *ngIf="_handler._liveType !== 'manual'">

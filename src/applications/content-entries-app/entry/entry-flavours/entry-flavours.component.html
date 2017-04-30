@@ -27,7 +27,7 @@
 				</p-column>
 				<p-column field="statusLabel" header="{{'applications.content.entryDetails.flavours.status' | translate}}">
 					<template let-col let-flavor="rowData" pTemplate="body">
-						<span kTooltip content="{{flavor.statusTooltip}}">{{flavor.statusLabel}}</span>
+						<span [kTooltip]="flavor.statusTooltip">{{flavor.statusLabel}}</span>
 					</template>
 				</p-column>
 				<p-column field="tags" header="{{'applications.content.entryDetails.flavours.tags' | translate}}">
@@ -43,6 +43,14 @@
 			<p-menu kMenuCloseOnScroll [scrollTarget]="flavors" #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'"></p-menu>
 		</div>
 	</div>
+
+	<kPopupWidget #drmPopup [popupWidth]="550" [popupHeight]="440" [modal]="true">
+		<kDRMDetails [currentFlavor]="_selectedFlavor"></kDRMDetails>
+	</kPopupWidget>
+
+	<kPopupWidget #previewPopup [popupWidth]="500" [popupHeight]="640" [modal]="true">
+		<kFlavorPreview [currentFlavor]="_selectedFlavor" [parentPopupWidget]="previewPopup" [currentEntry]="_handler.data"></kFlavorPreview>
+	</kPopupWidget>
 
 	<p-growl [value]="_handler._msgs"></p-growl>
 	<p-confirmDialog header="{{'applications.content.entryDetails.flavours.deleteConfirmTitle' | translate}}" width="450"></p-confirmDialog>

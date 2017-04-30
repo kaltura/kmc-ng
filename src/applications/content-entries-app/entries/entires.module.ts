@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { KalturaUIModule } from '@kaltura-ng2/kaltura-ui';
+import { KalturaUIModule, TooltipModule } from '@kaltura-ng2/kaltura-ui';
 import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 import { TagsModule } from '@kaltura-ng2/kaltura-ui/tags';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
-import { TreeModule, TieredMenuModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, ButtonModule, AccordionModule, CalendarModule,  MultiSelectModule, PaginatorModule, MenuModule, TooltipModule } from 'primeng/primeng';
+import { TreeModule, TieredMenuModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, ButtonModule, AccordionModule, CalendarModule,  MultiSelectModule, PaginatorModule, MenuModule } from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 import { KMCShellModule } from 'kmc-shell';
 
@@ -42,8 +42,8 @@ import { EntriesListComponent } from "./entries-list.component";
         SharedModule,
         TagsModule,
         TieredMenuModule,
-        TooltipModule,
-        TreeModule
+        TreeModule,
+	    TooltipModule
     ],
     declarations: [
         EntriesComponent,

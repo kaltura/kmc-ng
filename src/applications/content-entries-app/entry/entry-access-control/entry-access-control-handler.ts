@@ -139,28 +139,28 @@ export class EntryAccessControlHandler extends EntrySection
 				// domains restrictions
 				if (restriction instanceof KalturaSiteRestriction){
 					if (restriction.siteRestrictionType === KalturaSiteRestrictionType.allowSiteList) {
-						this._domainsRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.allowDomains').replace("%1", restriction.siteList);
+						this._domainsRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.allowDomains', {"0": restriction.siteList});
 					}
 					if (restriction.siteRestrictionType === KalturaSiteRestrictionType.restrictSiteList) {
-						this._domainsRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.blockDomains').replace("%1", restriction.siteList);
+						this._domainsRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.blockDomains', {"0": restriction.siteList});
 					}
 				}
 				// countries restrictions
 				if (restriction instanceof KalturaCountryRestriction){
 					if (restriction.countryRestrictionType === KalturaCountryRestrictionType.allowCountryList) {
-						this._countriesRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.allowCountries').replace("%1", this._getCountriesByCode(restriction.countryList));
+						this._countriesRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.allowCountries', {"0": this._getCountriesByCode(restriction.countryList)});
 					}
 					if (restriction.countryRestrictionType === KalturaCountryRestrictionType.restrictCountryList) {
-						this._countriesRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.blockCountries').replace("%1", this._getCountriesByCode(restriction.countryList));
+						this._countriesRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.blockCountries', {"0": this._getCountriesByCode(restriction.countryList)});
 					}
 				}
 				// IP restrictions
 				if (restriction instanceof KalturaIpAddressRestriction){
 					if (restriction.ipAddressRestrictionType === KalturaIpAddressRestrictionType.allowList) {
-						this._ipRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.allowIPs').replace("%1", restriction.ipAddressList);
+						this._ipRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.allowIPs', {"0": restriction.ipAddressList});
 					}
 					if (restriction.ipAddressRestrictionType === KalturaIpAddressRestrictionType.restrictList) {
-						this._ipRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.blockIPs').replace("%1", restriction.ipAddressList);
+						this._ipRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.blockIPs', {"0": restriction.ipAddressList});
 					}
 				}
 				// Flavour restrictions
@@ -176,10 +176,10 @@ export class EntryAccessControlHandler extends EntrySection
 					});
 
 					if (restriction.limitFlavorsRestrictionType === KalturaLimitFlavorsRestrictionType.allowList) {
-						this._flavourRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.allowFlavours').replace("%1", flavourNames.join(", "));
+						this._flavourRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.allowFlavours', {"0": flavourNames.join(", ")});
 					}
 					if (restriction.limitFlavorsRestrictionType === KalturaLimitFlavorsRestrictionType.restrictList) {
-						this._flavourRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.blockFlavours').replace("%1", flavourNames.join(", "));
+						this._flavourRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.blockFlavours', {"0": flavourNames.join(", ")});
 					}
 				}
 				// Advanced restrictions
@@ -187,7 +187,7 @@ export class EntryAccessControlHandler extends EntrySection
 					this._advancedRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.ks');
 				}
 				if (restriction instanceof KalturaPreviewRestriction){
-					this._advancedRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.freePreview').replace("%1", KalturaUtils.formatTime(restriction.previewLength, true));
+					this._advancedRestriction = this._appLocalization.get('applications.content.entryDetails.accessControl.freePreview', {"0": KalturaUtils.formatTime(restriction.previewLength, true)});
 				}
 			});
 		}
