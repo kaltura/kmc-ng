@@ -1,0 +1,44 @@
+<div class="kFlavorPreview kUseKMCngIcons">
+	<span class="kHeader">{{'applications.content.entryDetails.flavours.preview.header' | translate}}</span>
+	<iframe class="kPreview" *ngIf="_iframeSrc !== ''" [src]="_iframeSrc | safe" width="380" height="240" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
+	<div class="kRow">
+		<span class="kLabel">{{'applications.content.entryDetails.flavours.preview.entryName' | translate}}</span>
+		<span>{{currentEntry?.name}}</span>
+	</div>
+	<div class="kRow">
+		<span class="kLabel">{{'applications.content.entryDetails.flavours.preview.entryId' | translate}}</span>
+		<span>{{currentEntry?.id}}</span>
+	</div>
+	<div class="kRow">
+		<span class="kLabel">{{'applications.content.entryDetails.flavours.preview.flavorName' | translate}}</span>
+		<span>{{currentFlavor?.name}}</span>
+	</div>
+	<div class="kRow">
+		<span class="kLabel">{{'applications.content.entryDetails.flavours.preview.flavorId' | translate}}</span>
+		<span>{{currentFlavor?.id}}</span>
+	</div>
+	<div class="kRow">
+		<span class="kLabel">{{'applications.content.entryDetails.flavours.preview.bitrate' | translate}}</span>
+		<span>{{currentFlavor?.bitrate}}</span>
+	</div>
+	<div class="kRow">
+		<span class="kLabel">{{'applications.content.entryDetails.flavours.preview.codec' | translate}}</span>
+		<span>{{currentFlavor?.codec}}</span>
+	</div>
+	<div class="kRow">
+		<span class="kLabel">{{'applications.content.entryDetails.flavours.preview.dimensions' | translate}}</span>
+		<span>{{currentFlavor?.dimensions}}</span>
+	</div>
+	<div class="kRow">
+		<span class="kLabel">{{'applications.content.entryDetails.flavours.preview.format' | translate}}</span>
+		<span>{{currentFlavor?.format}}</span>
+	</div>
+	<div class="kRow">
+		<span class="kLabel">{{'applications.content.entryDetails.flavours.preview.size' | translate}}</span>
+		<span>{{currentFlavor?.size}}</span>
+	</div>
+	<div class="kRow">
+		<span class="kLabel">{{'applications.content.entryDetails.flavours.preview.status' | translate}}</span>
+		<span>{{'app.common.ok' | translate}}</span>
+	</div>
+</div>

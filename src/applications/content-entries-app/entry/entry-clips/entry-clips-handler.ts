@@ -32,9 +32,8 @@ export class EntryClipsHandler extends EntrySection
 {
     private _clips : BehaviorSubject<ClipsData> = new BehaviorSubject<ClipsData>({ loading : false, items : null, totalItems : 0});
     public entries$ = this._clips.asObservable();
-    public sortBy : string; // default value is set in function _onSectionReset
-    public sortAsc : boolean; // default value is set in function _onSectionReset
-
+    public sortBy : string = 'createdAt';
+    public sortAsc : boolean = false;
 	private _pageSize: number = 50;
 	public set pageSize(value: number){
     	this._pageSize = value;
@@ -42,7 +41,7 @@ export class EntryClipsHandler extends EntrySection
     }
     public get pageSize(){return this._pageSize;}
 
-    public pageIndex; // default value is set in function _onSectionReset
+    public pageIndex = 0 ;
     public pageSizesAvailable = [25,50,75,100];
 
     constructor(manager : EntrySectionsManager,

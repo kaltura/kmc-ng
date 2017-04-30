@@ -19,9 +19,7 @@
 			<p-column field="mediaType" header="{{'applications.content.table.type' | translate}}" [sortable]="'custom'"
 					  [style]="{'width':'80px', 'text-align': 'center'}">
 				<template let-col let-entry="rowData" pTemplate="body">
-					<div class="kTooltipHolder" #mediaTypeTooltipHolder>
-						<div pTooltip="{{entry[col.field] | entryType: true}}" [appendTo]="mediaTypeTooltipHolder" tooltipPosition="top"  [class]="entry[col.field] | entryType: false"></div>
-					</div>
+						<div [kTooltip]="entry[col.field] | entryType: true" [class]="entry[col.field] | entryType: false"></div>
 				</template>
 			</p-column>
 			<p-column field="plays" header="{{'applications.content.table.plays' | translate}}" [sortable]="'custom'" [style]="{'width':'76px'}"></p-column>

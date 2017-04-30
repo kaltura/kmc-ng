@@ -1,11 +1,10 @@
 import { Injectable, IterableDiffers, IterableDiffer, CollectionChangeRecord } from '@angular/core';
 import { EntrySection } from '../../entry-store/entry-section-handler';
-import { KalturaLiveStreamEntry } from '@kaltura-ng2/kaltura-api/types';
 import { Observable } from 'rxjs/Observable';
 import { KalturaCategoryEntryFilter,  KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { KalturaTagFilter, KalturaTaggedObjectType, KalturaFilterPager,
-    TagSearchAction, CategoryEntryListAction } from '@kaltura-ng2/kaltura-api/types';
+    TagSearchAction, CategoryEntryListAction, KalturaLiveStreamEntry } from '@kaltura-ng2/kaltura-api/types';
 import { CategoriesStore, CategoryData } from '../../../../shared/kmc-content-ui/categories-store.service';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
@@ -28,6 +27,7 @@ export class EntryMetadataHandler extends EntrySection
     private _profileMetadataStatus : 'loading' | 'loaded' | Error = null;
     private _entryMetadataStatus : 'loading' | 'loaded' | Error = null;
 
+    public isLiveEntry : boolean;
     public metadataForm : FormGroup;
     public customDataForms : KalturaCustomDataHandler[] = [];
     public loading = false;
@@ -81,7 +81,7 @@ export class EntryMetadataHandler extends EntrySection
 
         this._loadEntryCategories(this.data);
         this._loadEntryMetadata(this.data);
-
+        this.isLiveEntry = this.data instanceof KalturaLiveStreamEntry;
 
         if (firstLoad) {
             this._loadProfileMetadata();
@@ -405,6 +405,7 @@ export class EntryMetadataHandler extends EntrySection
         this._entryCategories = [];
         this._entryCategoriesStatus = null;
         this._entryMetadata = [];
+        this.isLiveEntry = false;
         this._entryMetadataStatus = null;
 
         this.metadataForm.reset();

@@ -1,0 +1,20 @@
+<div class="kDRMDetails kUseKMCngIcons">
+	<span class="kHeader">{{'applications.content.entryDetails.flavours.drm.header' | translate}}</span>
+	<span class="kTitle">{{currentFlavor?.name}}</span>
+	<div class="kRow">
+		<span class="kLabel">{{'applications.content.entryDetails.flavours.drm.assetId' | translate}}</span>
+		<span>{{currentFlavor?.drm.id}}</span>
+	</div>
+	<div class="kRow">
+		<span class="kLabel">{{'applications.content.entryDetails.flavours.drm.start' | translate}}</span>
+		<span>{{currentFlavor?.drm.startTime *1000 | kDate}}</span>
+	</div>
+	<div class="kRow">
+		<span class="kLabel">{{'applications.content.entryDetails.flavours.drm.end' | translate}}</span>
+		<span>{{currentFlavor?.drm.endTime * 1000 | kDate}}</span>
+	</div>
+	<span>{{'applications.content.entryDetails.flavours.drm.mbr' | translate}}</span>
+	<div class="kSources">
+		<span class="kRow" *ngFor="let source of currentFlavor?.drm.flavorSources">{{source}}</span>
+	</div>
+</div>

@@ -92,6 +92,8 @@ export class EntryRelatedHandler extends EntrySection
      */
     protected _reset()
     {
+	    this.relatedFileDiffer = {};
+	    this.relatedFilesListDiffer = null;
     	this._entryId = '';
 	    this._relatedFiles.next({ loading : false, items : [], error : null});
     }
