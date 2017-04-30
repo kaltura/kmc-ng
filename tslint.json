@@ -6,7 +6,7 @@
       // The rule have the following arguments:
       // [ENABLED, "attribute" | "element", "selectorPrefix" | ["listOfPrefixes"], "camelCase" | "kebab-case"]
       "directive-selector": [true, "attribute", ["k"], "camelCase"],
-      "component-selector": [true, "element", ["k"], "kebab-case"],
+    //  "component-selector": [true, "element", ["k"], "kebab-case"],
 
       "use-input-property-decorator": true,
       "use-output-property-decorator": true,

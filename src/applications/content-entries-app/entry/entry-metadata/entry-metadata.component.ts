@@ -126,6 +126,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         this._jumpToSectionQuery.changes
             .cancelOnDestroy(this)
             .subscribe((query) => {
+
             const jumpToItems: any[] = [];
 
             if (query) {
@@ -134,7 +135,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
                     jumpToItems.push({
                         label: jumpToLabel,
                         command: (event) => {
-                            this._jumpTo(section);
+                            this._jumpTo(section.htmlElement);
                         }
                     });
 
