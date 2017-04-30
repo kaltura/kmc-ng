@@ -7,7 +7,7 @@
 
 		<k-jump-to-section [label]="'Metadata'"></k-jump-to-section>
 
-		<form [formGroup]="_handler.metadataForm" novalidate [attr.jumpto-title]="'Metadata'">
+		<form [formGroup]="_handler.metadataForm" novalidate>
 			<div class="kRow kValign">
 				<span class="kLabel">{{'applications.content.entryDetails.metadata.entryID' | translate}}</span>
 				<span>{{ _handler.data.id }}</span>
@@ -74,11 +74,13 @@
 			<k-jump-to-section [label]="customDataForm.metadataProfile.name"></k-jump-to-section>
 				<div class="kSchemaTitle">{{customDataForm.metadataProfile.name}}</div>
 				<div *ngIf="customDataForm && customDataForm.isReady">
+					<form novalidate>
 					<k-dynamic-form-item [control]="customDataForm.dynamicSection" [form]="customDataForm.formGroup">
 						<template let-item="item">
 							<k-prime-control [control]="item.control" [form]="item.form"></k-prime-control>
 						</template>
 					</k-dynamic-form-item>
+					</form>
 				</div>
 
 			<hr *ngIf="!last" />
