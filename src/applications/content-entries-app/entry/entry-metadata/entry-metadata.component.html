@@ -5,6 +5,8 @@
 	</div>
 	<div class="kMetadataDetails" #metadataContainer *ngIf="_handler.data" >
 
+		<k-jump-to-section [label]="'Metadata'"></k-jump-to-section>
+
 		<form [formGroup]="_handler.metadataForm" novalidate>
 			<div class="kRow kValign">
 				<span class="kLabel">{{'applications.content.entryDetails.metadata.entryID' | translate}}</span>
@@ -52,8 +54,8 @@
 					</kAutoComplete>
 				</div>
 			</div>
-			<div class="kRow">
-				<span class="kLabel">{{'applications.content.entryDetails.metadata.offlineMsg' | translate}} (<b>[TBD] HIDE</b>)</span>
+			<div class="kRow" *ngIf="_handler.isLiveEntry">
+				<span class="kLabel">{{'applications.content.entryDetails.metadata.offlineMsg' | translate}}</span>
 				<div class="kControl TextAreaControl">
 					<textarea formControlName="offlineMessage" class="threeRows" pInputTextarea></textarea>
 				</div>
@@ -68,16 +70,18 @@
 
 		<hr/>
 
-		<div id="test"></div>
 		<div *ngFor="let customDataForm of _handler.customDataForms; let last = last">
-			<div class="kSchemaTitle">{{customDataForm.metadataProfile.name}}</div>
-			<div *ngIf="customDataForm && customDataForm.isReady">
-				<k-dynamic-form-item [control]="customDataForm.dynamicSection" [form]="customDataForm.formGroup">
-					<template let-item="item">
-						<k-prime-control [control]="item.control" [form]="item.form"></k-prime-control>
-					</template>
-				</k-dynamic-form-item>
-			</div>
+			<k-jump-to-section [label]="customDataForm.metadataProfile.name"></k-jump-to-section>
+				<div class="kSchemaTitle">{{customDataForm.metadataProfile.name}}</div>
+				<div *ngIf="customDataForm && customDataForm.isReady">
+					<form novalidate>
+					<k-dynamic-form-item [control]="customDataForm.dynamicSection" [form]="customDataForm.formGroup">
+						<template let-item="item">
+							<k-prime-control [control]="item.control" [form]="item.form"></k-prime-control>
+						</template>
+					</k-dynamic-form-item>
+					</form>
+				</div>
 
 			<hr *ngIf="!last" />
 		</div>
