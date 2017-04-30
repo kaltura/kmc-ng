@@ -33,6 +33,7 @@ import { ButtonModule, InputTextModule, TieredMenuModule } from 'primeng/primeng
 import { KMCContentUIModule } from 'kmc-content-ui/kmc-content-ui.module';
 import { MetadataProfileStore, PartnerProfileStore, AccessControlProfileStore, FlavoursStore } from '@kaltura-ng2/kaltura-common';
 import { UploadManagementModule } from '@kaltura-ng2/kaltura-common/upload-management';
+import { Ng2PageScrollModule } from 'ng2-page-scroll';
 
 const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessControlProfileStore, FlavoursStore];
 @NgModule({
@@ -48,6 +49,7 @@ const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessCo
     KalturaCommonModule.forRoot(),
     KalturaApiModule,
     Ng2Webstorage,
+    Ng2PageScrollModule.forRoot(),
     ButtonModule,
     PopupWidgetModule,
     InputTextModule

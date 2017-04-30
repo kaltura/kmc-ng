@@ -34,6 +34,7 @@ import { EntryPreview } from './entry-preview/entry-preview.component';
 import { DynamicFormModule } from '@kaltura-ng2/kaltura-ui/dynamic-form';
 import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng2/kaltura-primeng-ui/dynamic-form';
 import { KalturaCustomMetadataModule } from '@kaltura-ng2/kaltura-ui/dynamic-form/kaltura-custom-metadata';
+import { JumpToSection } from './entry-metadata/jump-to-section.component';
 
 @NgModule({
     imports: [
@@ -67,9 +68,10 @@ import { KalturaCustomMetadataModule } from '@kaltura-ng2/kaltura-ui/dynamic-for
         SpinnerModule
     ],
     declarations: [
+	    EntryCaptionsEdit,
+	    EntryRelatedEdit,
         EntryAccessControl,
         EntryCaptions,
-	    EntryCaptionsEdit,
         EntryClips,
         EntryComponent,
         EntryFlavours,
@@ -79,11 +81,11 @@ import { KalturaCustomMetadataModule } from '@kaltura-ng2/kaltura-ui/dynamic-for
         EntryMetadata,
         EntryPreview,
         EntryRelated,
-	    EntryRelatedEdit,
         EntryScheduling,
         EntrySectionsList,
         EntryThumbnails,
-        EntryUsers
+        EntryUsers,
+        JumpToSection
     ],
     exports: [
     ],

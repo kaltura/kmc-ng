@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { Component,  QueryList, ViewChildren, ElementRef, Inject, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { DOCUMENT } from '@angular/platform-browser';
 
 import { Subject } from 'rxjs/Subject';
 import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
@@ -8,6 +9,9 @@ import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { EntryMetadataHandler } from './entry-metadata-handler';
 import { EntryStore } from '../../entry-store/entry-store.service';
+import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
+import { JumpToSection } from './jump-to-section.component';
+import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 
 @Component({
     selector: 'kEntryMetadata',
@@ -29,28 +33,27 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
     public _tagsProvider = new Subject<SuggestionsProviderData>();
 	public _jumpToMenu: MenuItem[] = [];
+   @ViewChildren(JumpToSection) private _jumpToSectionQuery : QueryList<JumpToSection> = null;
+
+	@ViewChild('metadataContainer')
+	public _container : ElementRef;
 
 
     constructor(private _appLocalization: AppLocalization,
                 public _handler : EntryMetadataHandler,
+                private _thisElement : ElementRef,
+                private _pageScrollService: PageScrollService,
+                @Inject(DOCUMENT) private document: any,
                 private _entryStore : EntryStore) {
     }
 
 
 
     ngOnInit() {
-    	this._jumpToMenu = [
-		    {label: "Section 1", command: (event) => {
-			    this._jumpTo("Section 1");
-		    }},
-		    {label: "Section 2", command: (event) => {
-			    this._jumpTo("Section 2");
-		    }},
-		    {label: "Section 3", command: (event) => {
-			    this._jumpTo("Section 3");
-		    }}
-	    ];
+
     }
+
+
 
     _searchTags(event) : void {
         this._tagsProvider.next({ suggestions : [], isLoading : true});
@@ -120,11 +123,39 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
 
     ngAfterViewInit() {
+        this._jumpToSectionQuery.changes
+            .cancelOnDestroy(this)
+            .subscribe((query) => {
 
+            const jumpToItems: any[] = [];
+
+            if (query) {
+                query.forEach((section) => {
+                    const jumpToLabel = section.label;
+                    jumpToItems.push({
+                        label: jumpToLabel,
+                        command: (event) => {
+                            this._jumpTo(section.htmlElement);
+                        }
+                    });
+
+                });
+            }
+
+            setTimeout(() =>{
+                this._jumpToMenu = jumpToItems;
+            });
+
+        });
     }
 
-    private _jumpTo(section: string){
-    	alert("Jump to: "+section);
+    private _jumpTo(element : HTMLElement){
+        let pageScrollInstance: PageScrollInstance = PageScrollInstance.newInstance({
+         document : document,
+            scrollTarget : element,
+            scrollingViews : [this._container.nativeElement]
+        });
+        this._pageScrollService.start(pageScrollInstance);
     }
 
     _onLoadingAction(actionKey: string) {
