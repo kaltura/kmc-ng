@@ -19,20 +19,18 @@ export class FlavorPreview implements AfterViewInit, OnDestroy {
 	@Input() parentPopupWidget: PopupWidgetComponent;
 
 	private _parentPopupStateChangeSubscribe: ISubscription;
-	public _iframeSrc = "";
+	public _previewSource = "";
 
 	constructor(private _kalturaServerClient: KalturaServerClient, private appConfig: AppConfig, private appAuthentication: AppAuthentication) {
 
 	}
 
 	ngAfterViewInit() {
+		this._previewSource = "";
 		if (this.parentPopupWidget) {
 			this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$
 				.subscribe(event => {
 					if (event.state === PopupWidgetStates.Open) {
-						const dimensions = this.currentFlavor.dimensions.split(" x ");
-						const width: number = dimensions.length === 2 ? parseInt(dimensions[0]) : 0;
-						const height: number = dimensions.length === 2 ? parseInt(dimensions[1]) : 0;
 						this._kalturaServerClient.request(new FlavorAssetGetUrlAction({
 							id: this.currentFlavor.id
 						}))
@@ -40,26 +38,14 @@ export class FlavorPreview implements AfterViewInit, OnDestroy {
 							.monitor('get flavor url')
 							.subscribe(
 								url => {
-									const mediaProxy = {
-										'sources': [
-											{
-												"src": url,
-												"width": width,
-												"height": height,
-												"bandwidth": this.currentFlavor.bitrate,
-												"type": "video/mp4; codecs=\"avc1.42E01E, mp4a.40.2"
-											}
-										]
-									}
-									const UIConfID = this.appConfig.get('core.kaltura.previewUIConf');
-									const partnerID = this.appAuthentication.appUser.partnerId;
-									const ks = this.appAuthentication.appUser.ks || "";
-									this._iframeSrc = this.appConfig.get('core.kaltura.cdnUrl') + '/p/' + partnerID + '/sp/' + partnerID + '00/embedIframeJs/uiconf_id/' + UIConfID + '/partner_id/' + partnerID + '?iframeembed=true&flashvars[mediaProxy]=' + JSON.stringify(mediaProxy) +'&flashvars[EmbedPlayer.SimulateMobile]=true&flashvars[ks]=' + ks +'&flashvars[EmbedPlayer.EnableMobileSkin]=true';
-								},
+									this._previewSource = url;								},
 								error => {
 									console.warn("Error getting flavor URL for flavor ID: " + this.currentFlavor.id);
 								}
 							);
+					}
+					if (event.state === PopupWidgetStates.Close) {
+						this._previewSource = "";
 					}
 				});
 		}

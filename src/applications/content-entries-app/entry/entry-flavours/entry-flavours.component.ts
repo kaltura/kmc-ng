@@ -79,6 +79,12 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 			case "download":
 				this._handler.downloadFlavor(this._selectedFlavor);
 				break;
+			case "convert":
+				this._handler.convertFlavor(this._selectedFlavor);
+				break;
+			case "reconvert":
+				this._handler.reconvertFlavor(this._selectedFlavor);
+				break;
 			case "preview":
 				this.previewPopup.open();
 				break;

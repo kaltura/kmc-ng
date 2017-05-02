@@ -7,13 +7,14 @@ import { AppLocalization, AppConfig, AppAuthentication } from '@kaltura-ng2/kalt
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { BrowserService } from 'kmc-shell';
 import { KalturaFlavorAssetWithParams, FlavorAssetGetFlavorAssetsWithParamsAction, KalturaFlavorAssetStatus, KalturaLiveParams, KalturaEntryStatus, KalturaWidevineFlavorAsset,
-	FlavorAssetDeleteAction } from '@kaltura-ng2/kaltura-api/types';
+	FlavorAssetDeleteAction, FlavorAssetConvertAction, FlavorAssetReconvertAction } from '@kaltura-ng2/kaltura-api/types';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 import { Message, ConfirmationService } from 'primeng/primeng';
 
 export interface Flavor{
 	name: string,
 	id: string,
+	paramsId: number,
 	isSource: boolean,
 	isWeb: boolean,
 	isWidevine: boolean,
@@ -108,6 +109,7 @@ export class EntryFlavoursHandler extends EntrySection
 		let newFlavor: Flavor = {
 			name: flavor.flavorParams ? flavor.flavorParams.name : '',
 			id: flavor.flavorAsset ? flavor.flavorAsset.id : '',
+			paramsId: flavor.flavorParams.id,
 			isSource: flavor.flavorAsset ? flavor.flavorAsset.isOriginal : false,
 			isWidevine: flavor.flavorAsset ? flavor.flavorAsset instanceof KalturaWidevineFlavorAsset : false,
 			isWeb: flavor.flavorAsset ? flavor.flavorAsset.isWeb : false,
@@ -252,4 +254,41 @@ export class EntryFlavoursHandler extends EntrySection
 	    let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + this.data.id + '/flavorId/' + flavor.id + '/format/download/protocol/' + protocol;
 	    this._browserService.openLink(url);
     }
+
+    public convertFlavor(flavor: Flavor): void{
+	    this._convert(flavor, flavor.paramsId, new FlavorAssetConvertAction({
+		    flavorParamsId: flavor.paramsId,
+		    entryId: this.data.id
+	    }));
+    }
+
+	public reconvertFlavor(flavor: Flavor): void {
+		this._convert(flavor, flavor.id, new FlavorAssetReconvertAction({
+			id: flavor.id
+		}));
+	}
+
+	private _convert(flavor: Flavor, id: number, request: any): void{
+		flavor.status = KalturaFlavorAssetStatus.waitForConvert.toString();
+		this._kalturaServerClient.request(request)
+			.cancelOnDestroy(this,this.sectionReset$)
+			.monitor('convert flavor')
+			.subscribe(
+				response =>
+				{
+					let flavors: Flavor[] = Array.from(this._flavors.getValue().items);
+					flavors.forEach((fl:Flavor) => {
+						if (fl.id === id){
+							fl.status = KalturaFlavorAssetStatus.converting.toString();
+						}
+					});
+					this._flavors.next({items : flavors, loading : false, error : false});
+				},
+				error =>
+				{
+					this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure')});
+					this._fetchFlavors(); // reload flavors as we need to get the flavor status from the server
+				}
+			);
+	}
 }

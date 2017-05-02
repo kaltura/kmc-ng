@@ -255,7 +255,7 @@
 					"bitrate": "Bitrate (kbps)",
 					"dimensions": "Dimensions",
 					"size": "Size (kb)",
-					"status": "Status",
+					"stat": "Status",
 					"tags": "Tags",
 					"kStatusNoContent": "No Transcoding Flavors available for this entry. Entry is not ready for publishing.",
 					"kStatusReady": "All required Transcoding Flavors are available. Entry is ready for publishing.",
@@ -302,12 +302,14 @@
 						"dimensions": "Dimensions:",
 						"format": "Format:",
 						"size": "Size (KB):",
-						"status": "Satatus:"
+						"status": "Satatus:",
+						"loading": "Loading..."
 					},
 					"deleteConfirm": "Are you sure you want to delete this Asset: {{0}} ?",
 					"deleteConfirmTitle": "Delete Flavor Asset",
 					"deleteSuccess": "Flavor asset was deleted.",
-					"deleteFailure": "Flavor asset deletion failed."
+					"deleteFailure": "Flavor asset deletion failed.",
+					"convertFailure": "Flavor conversion failed."
 				},
 				"captions":{
 					"captions": "Captions",
