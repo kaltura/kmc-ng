@@ -8,14 +8,14 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
-import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
-import { KalturaServerClient, KalturaAPIException, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
-import { BaseEntryGetAction, BaseEntryUpdateAction } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaMediaEntry } from 'kaltura-ts-api/types';
+import { KalturaServerClient, KalturaAPIException, KalturaMultiRequest } from 'kaltura-ts-api';
+import { BaseEntryGetAction, BaseEntryUpdateAction } from 'kaltura-ts-api/types';
 import { EntrySectionTypes } from './entry-sections-types';
 import { EntriesStore } from '../entries-store/entries-store.service';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { EntrySectionsManager } from './entry-sections-manager';
-import { KalturaTypesFactory } from '@kaltura-ng2/kaltura-api';
+import { KalturaTypesFactory } from 'kaltura-ts-api';
 
 export enum ActionTypes
 {

@@ -4,10 +4,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 
 import { AppLocalization, AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient } from 'kaltura-ts-api';
 import { BrowserService } from 'kmc-shell';
 import { KalturaFlavorAssetWithParams, FlavorAssetGetFlavorAssetsWithParamsAction, KalturaFlavorAssetStatus, KalturaLiveParams, KalturaEntryStatus, KalturaWidevineFlavorAsset,
-	FlavorAssetDeleteAction } from '@kaltura-ng2/kaltura-api/types';
+	FlavorAssetDeleteAction } from 'kaltura-ts-api/types';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 import { Message, ConfirmationService } from 'primeng/primeng';
 

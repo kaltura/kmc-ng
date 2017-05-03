@@ -20,9 +20,9 @@ import {
     KalturaSearchOperator,
     KalturaSearchOperatorType,
     BaseEntryListAction
-} from '@kaltura-ng2/kaltura-api/types'
+} from 'kaltura-ts-api/types'
 
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient } from 'kaltura-ts-api';
 
 import * as R from 'ramda';
 import { FilterItem } from "./filter-item";

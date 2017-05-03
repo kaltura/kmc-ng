@@ -1,4 +1,4 @@
-import { KalturaNullableBoolean } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaNullableBoolean } from 'kaltura-ts-api/types';
 
 import { EntriesStore } from "../entries-store.service";
 import { ValueFilter } from '../value-filter';

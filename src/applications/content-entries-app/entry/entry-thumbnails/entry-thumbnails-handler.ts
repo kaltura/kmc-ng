@@ -6,11 +6,11 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 
 import { ThumbAssetListAction, ThumbAssetSetAsDefaultAction, KalturaThumbAssetListResponse, KalturaThumbAsset, KalturaAssetFilter, DistributionProfileListAction, KalturaDistributionProfileListResponse,
-	KalturaDistributionProfile, KalturaThumbAssetStatus, KalturaDistributionThumbDimensions, ThumbAssetDeleteAction, ThumbAssetAddFromImageAction } from '@kaltura-ng2/kaltura-api/types';
+	KalturaDistributionProfile, KalturaThumbAssetStatus, KalturaDistributionThumbDimensions, ThumbAssetDeleteAction, ThumbAssetAddFromImageAction } from 'kaltura-ts-api/types';
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient } from 'kaltura-ts-api';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
 export interface ThumbnailRow {

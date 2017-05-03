@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChildren, QueryList, OnDestroy, AfterViewInit, Input,  ElementRef } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { KalturaUtils } from '@kaltura-ng2/kaltura-api/utils/kaltura-utils';
+import { KalturaUtils } from 'kaltura-ts-api/utils/kaltura-utils';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { PrimeTreeNode, TreeDataHandler } from '@kaltura-ng2/kaltura-primeng-ui';
 import { TreeSelection, OnSelectionChangedArgs,TreeSelectionModes,TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';

@@ -6,8 +6,8 @@ import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/forkJoin';
 
-import { KalturaServerClient,  KalturaMultiRequest, KalturaMultiResponse } from '@kaltura-ng2/kaltura-api';
-import { DistributionProfileListAction, AccessControlListAction } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaServerClient,  KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-ts-api';
+import { DistributionProfileListAction, AccessControlListAction } from 'kaltura-ts-api/types';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataItemTypes, FlavoursStore } from '@kaltura-ng2/kaltura-common';
 
 import {
@@ -18,7 +18,7 @@ import {
     KalturaFilterPager,
     KalturaFlavorParams,
     KalturaResponseProfileType
-} from '@kaltura-ng2/kaltura-api/types'
+} from 'kaltura-ts-api/types'
 
 import { ConstantsFilters } from './constant-filters';
 

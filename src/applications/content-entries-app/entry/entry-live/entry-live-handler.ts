@@ -4,9 +4,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Message } from 'primeng/primeng';
 
-import { KalturaServerClient, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient, KalturaMultiRequest } from 'kaltura-ts-api';
 import { KalturaSourceType,	KalturaLiveStreamBitrate, ConversionProfileListAction, KalturaConversionProfileFilter, KalturaConversionProfileType, KalturaFilterPager,
-	     LiveStreamRegenerateStreamTokenAction, KalturaRecordStatus, KalturaLiveStreamEntry, KalturaDVRStatus, KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
+	     LiveStreamRegenerateStreamTokenAction, KalturaRecordStatus, KalturaLiveStreamEntry, KalturaDVRStatus, KalturaMediaEntry } from 'kaltura-ts-api/types';
 import { AppLocalization, AppConfig } from '@kaltura-ng2/kaltura-common';
 import { BrowserService } from 'kmc-shell';
 

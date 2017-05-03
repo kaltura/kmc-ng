@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { EntrySection } from '../../entry-store/entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient } from 'kaltura-ts-api';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
 @Injectable()

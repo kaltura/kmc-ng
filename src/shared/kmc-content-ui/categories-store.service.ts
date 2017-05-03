@@ -4,10 +4,10 @@ import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/multicast';
 
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient } from 'kaltura-ts-api';
 
-import { CategoryListAction } from '@kaltura-ng2/kaltura-api/types';
-import { KalturaCategoryFilter,KalturaFilterPager,  KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaCategoryListResponse } from '@kaltura-ng2/kaltura-api/types'
+import { CategoryListAction } from 'kaltura-ts-api/types';
+import { KalturaCategoryFilter,KalturaFilterPager,  KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaCategoryListResponse } from 'kaltura-ts-api/types'
 
 export interface CategoryData
 {

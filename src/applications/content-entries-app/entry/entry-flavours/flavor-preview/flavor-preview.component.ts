@@ -2,8 +2,8 @@ import { Component, Input, AfterViewInit, OnDestroy, ViewChild } from '@angular/
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
-import { KalturaMediaEntry, FlavorAssetGetUrlAction } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaServerClient } from 'kaltura-ts-api';
+import { KalturaMediaEntry, FlavorAssetGetUrlAction } from 'kaltura-ts-api/types';
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { Flavor } from '../entry-flavours-handler';
 

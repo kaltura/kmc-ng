@@ -5,7 +5,7 @@ import {
 	KalturaEntryStatus,
 	KalturaSourceType,
 	KalturaMediaType
-} from '@kaltura-ng2/kaltura-api/types';
+} from 'kaltura-ts-api/types';
 import { BrowserService } from 'kmc-shell';
 import { EntryPreviewHandler } from './entry-preview-handler';
 

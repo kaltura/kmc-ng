@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { KalturaFlavorAssetStatus } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaFlavorAssetStatus } from 'kaltura-ts-api/types';
 import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { EntryFlavoursHandler, Flavor } from './entry-flavours-handler';

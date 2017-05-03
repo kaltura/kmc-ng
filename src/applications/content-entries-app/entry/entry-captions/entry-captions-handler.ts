@@ -1,10 +1,10 @@
 import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, KeyValueChangeRecord, CollectionChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { KalturaServerClient, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient, KalturaMultiRequest } from 'kaltura-ts-api';
 import { CaptionAssetListAction, CaptionAssetDeleteAction, CaptionAssetSetAsDefaultAction, CaptionAssetUpdateAction, CaptionAssetSetContentAction,
 	CaptionAssetAddAction, KalturaUrlResource, KalturaUploadedFileTokenResource, KalturaCaptionAsset, KalturaFilterPager, KalturaAssetFilter,
-	KalturaCaptionType, KalturaCaptionAssetStatus, KalturaLanguage, KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
+	KalturaCaptionType, KalturaCaptionAssetStatus, KalturaLanguage, KalturaMediaEntry } from 'kaltura-ts-api/types';
 
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 

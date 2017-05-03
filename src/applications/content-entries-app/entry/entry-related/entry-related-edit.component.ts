@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 
 import { ISubscription } from 'rxjs/Subscription';
 
-import { KalturaAttachmentAsset } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaAttachmentAsset } from 'kaltura-ts-api/types';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 

@@ -9,7 +9,7 @@ display_help() {
     echo "Usage: $0 [option...]" >&2
     echo
     echo "   -k, --keep-node-modules            same keep node_modules if exists"
-    echo "   -u, --use (wml,npm,fs)             choose how to sync dependencies. default value: wml"
+    echo "   -u, --use (wml,fs)             choose how to sync dependencies. default value: wml"
     echo
     exit 1
 }

@@ -3,7 +3,7 @@ import {
     EntrySection
 } from '../../entry-store/entry-section-handler';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { KalturaServerClient } from 'kaltura-ts-api';
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 

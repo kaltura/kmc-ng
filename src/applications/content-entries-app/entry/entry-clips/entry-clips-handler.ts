@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import {  KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import {  KalturaServerClient } from 'kaltura-ts-api';
 import { KalturaBaseEntryFilter, KalturaFilterPager, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaMediaEntry,
 	KalturaClipAttributes, KalturaOperationAttributes,
-    BaseEntryListAction } from '@kaltura-ng2/kaltura-api/types';
+    BaseEntryListAction } from 'kaltura-ts-api/types';
 import { AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
 
 import {
