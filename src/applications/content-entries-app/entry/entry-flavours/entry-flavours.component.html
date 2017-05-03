@@ -1,4 +1,5 @@
 <kLoader [loading]="(_handler._flavors$ | async)?.loading" [loadingError]="(_handler._flavors$ | async)?.error" (onActionRequested)="_onLoadingAction($event)">
+	<kFileDialog #fileDialog (onFileSelected)="_onFileSelected($event)" [filter]="_uploadFilter"></kFileDialog>
 	<div class="kFlavours kUseKMCngIcons" #flavors>
 		<p class="kTitle">{{'applications.content.entryDetails.flavours.flavours' | translate}}</p>
 		<div class="kEntryStatus">
@@ -34,10 +35,10 @@
 				</p-column>
 				<p-column [style]="{'width':'80px'}">
 					<template let-col let-flavor="rowData" pTemplate="body">
-						<div *ngIf="flavor.status !== '1' && flavor.status !== '6'" class="kFlavorsTableActions">
+						<div *ngIf="flavor.status !== '1' && flavor.status !== '6' && flavor.status !== '7' && flavor.status !== '8'" class="kFlavorsTableActions">
 							<button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, flavor)"></button>
 						</div>
-						<div *ngIf="flavor.status === '1' || flavor.status === '6'" style="position: relative">
+						<div *ngIf="flavor.status === '1' || flavor.status === '6' || flavor.status === '7' || flavor.status === '8'" style="position: relative">
 							<div class="k-spinner-background">
 								<div class="k-spinner-animation"></div>
 							</div>
@@ -56,6 +57,10 @@
 
 	<kPopupWidget #previewPopup [popupWidth]="500" [popupHeight]="640" [modal]="true">
 		<kFlavorPreview [currentFlavor]="_selectedFlavor" [parentPopupWidget]="previewPopup" [currentEntry]="_handler.data"></kFlavorPreview>
+	</kPopupWidget>
+
+	<kPopupWidget #importPopup [popupWidth]="500" [popupHeight]="240" [modal]="true">
+		<kFlavorImport [currentFlavor]="_selectedFlavor" [parentPopupWidget]="importPopup"></kFlavorImport>
 	</kPopupWidget>
 
 	<p-growl [value]="_handler._msgs"></p-growl>

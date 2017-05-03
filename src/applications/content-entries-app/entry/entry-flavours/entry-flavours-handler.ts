@@ -6,8 +6,10 @@ import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { AppLocalization, AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { BrowserService } from 'kmc-shell';
-import { KalturaFlavorAssetWithParams, FlavorAssetGetFlavorAssetsWithParamsAction, KalturaFlavorAssetStatus, KalturaLiveParams, KalturaEntryStatus, KalturaWidevineFlavorAsset,
-	FlavorAssetDeleteAction, FlavorAssetConvertAction, FlavorAssetReconvertAction } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaFlavorAsset, KalturaFlavorAssetWithParams, FlavorAssetGetFlavorAssetsWithParamsAction, KalturaFlavorAssetStatus, KalturaLiveParams, KalturaEntryStatus, KalturaWidevineFlavorAsset,
+	FlavorAssetDeleteAction, FlavorAssetConvertAction, FlavorAssetReconvertAction, KalturaUploadedFileTokenResource, FlavorAssetSetContentAction, FlavorAssetAddAction } from '@kaltura-ng2/kaltura-api/types';
+import { UploadManagement, FileChanges } from '@kaltura-ng2/kaltura-common/upload-management';
+import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 import { Message, ConfirmationService } from 'primeng/primeng';
 
@@ -28,7 +30,8 @@ export interface Flavor{
 	statusTooltip: string,
 	errorStatus: boolean,
 	tags: string,
-	drm: any
+	drm: any,
+	uploadToken: string
 }
 
 @Injectable()
@@ -45,9 +48,10 @@ export class EntryFlavoursHandler extends EntrySection
 	public _msgs: Message[] = [];
 
     constructor(manager : EntrySectionsManager, private _kalturaServerClient: KalturaServerClient, private _appLocalization: AppLocalization, private _confirmationService: ConfirmationService,
-	    private _appConfig: AppConfig, private _appAuthentication: AppAuthentication, private _browserService: BrowserService)
+	    private _appConfig: AppConfig, private _appAuthentication: AppAuthentication, private _browserService: BrowserService, private _uploadManagement : UploadManagement)
     {
         super(manager);
+	    this._trackUploadFiles();
     }
 
     public get sectionType() : EntrySectionTypes
@@ -68,8 +72,10 @@ export class EntryFlavoursHandler extends EntrySection
         this._fetchFlavors();
     }
 
-    public _fetchFlavors():void{
-	    this._flavors.next({items : [], loading : true});
+    public _fetchFlavors(reset: boolean = true):void{
+	    if (reset) {
+		    this._flavors.next({items: [], loading: true});
+	    }
 	    this.sourceAvailabale = false;
 
 	    this._kalturaServerClient.request(new FlavorAssetGetFlavorAssetsWithParamsAction({
@@ -123,7 +129,8 @@ export class EntryFlavoursHandler extends EntrySection
 			statusTooltip: "",
 			errorStatus: false,
 			tags: flavor.flavorAsset ? flavor.flavorAsset.tags : '-',
-			drm: {}
+			drm: {},
+			uploadToken: ""
 		}
 		// set dimensions
 		const width: number = flavor.flavorAsset ? flavor.flavorAsset.width :flavor.flavorParams.width;
@@ -224,6 +231,8 @@ export class EntryFlavoursHandler extends EntrySection
 	    this._confirmationService.confirm({
 		    message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirm',{"0": flavor.id}),
 		    accept: () => {
+			    let flavors: Flavor[] = Array.from(this._flavors.getValue().items);
+			    this._flavors.next({items : flavors, loading : true});
 			    this._kalturaServerClient.request(new FlavorAssetDeleteAction({
 					    id: flavor.id
 				    }))
@@ -233,10 +242,7 @@ export class EntryFlavoursHandler extends EntrySection
 					    response =>
 					    {
 						    this._msgs.push({severity: 'success', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteSuccess')});
-						    let flavors: Flavor[] = Array.from(this._flavors.getValue().items).filter( (fl: Flavor) => {
-							    return fl.id !== flavor.id;
-						    });
-						    this._flavors.next({items : flavors, loading : false, error : false});
+						    this._fetchFlavors(false);
 					    },
 					    error =>
 					    {
@@ -256,7 +262,7 @@ export class EntryFlavoursHandler extends EntrySection
     }
 
     public convertFlavor(flavor: Flavor): void{
-	    this._convert(flavor, flavor.paramsId, new FlavorAssetConvertAction({
+	    this._convert(flavor, flavor.paramsId.toString(), new FlavorAssetConvertAction({
 		    flavorParamsId: flavor.paramsId,
 		    entryId: this.data.id
 	    }));
@@ -268,7 +274,7 @@ export class EntryFlavoursHandler extends EntrySection
 		}));
 	}
 
-	private _convert(flavor: Flavor, id: number, request: any): void{
+	private _convert(flavor: Flavor, id: any, request: any): void{
 		flavor.status = KalturaFlavorAssetStatus.waitForConvert.toString();
 		this._kalturaServerClient.request(request)
 			.cancelOnDestroy(this,this.sectionReset$)
@@ -278,7 +284,7 @@ export class EntryFlavoursHandler extends EntrySection
 				{
 					let flavors: Flavor[] = Array.from(this._flavors.getValue().items);
 					flavors.forEach((fl:Flavor) => {
-						if (fl.id === id){
+						if (parseInt(fl.id) == id){
 							fl.status = KalturaFlavorAssetStatus.converting.toString();
 						}
 					});
@@ -287,8 +293,98 @@ export class EntryFlavoursHandler extends EntrySection
 				error =>
 				{
 					this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure')});
-					this._fetchFlavors(); // reload flavors as we need to get the flavor status from the server
+					this._fetchFlavors(false); // reload flavors as we need to get the flavor status from the server
 				}
 			);
 	}
+
+	public uploadFlavor(flavor: Flavor, fileData: File): void{
+		flavor.status = KalturaFlavorAssetStatus.importing.toString();
+		flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.uploading');
+		this._uploadManagement.newUpload(new KalturaOVPFile(fileData))
+			.subscribe((response) => {
+				flavor.uploadToken = response.uploadToken;
+			},
+			(error) => {
+				this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
+				this._fetchFlavors(false); // reload flavors as we need to get the flavor status from the server
+			});
+	}
+
+	private _trackUploadFiles() : void
+	{
+		this._uploadManagement.trackedFiles
+			.cancelOnDestroy(this)
+			.subscribe(
+				((filesStatus : FileChanges) =>
+				{
+					this._flavors.getValue().items.forEach((flavor: Flavor) =>
+					{
+						if (flavor.uploadToken.length)
+						{
+							const uploadStatus = filesStatus[flavor.uploadToken];
+							if (uploadStatus && uploadStatus.status === 'uploaded')
+							{
+								let resource = new KalturaUploadedFileTokenResource();
+								resource.token = flavor.uploadToken;
+								if (flavor.id.length){
+									this.updateFlavor(flavor, flavor.id, resource);
+								}else{
+									this.addNewFlavor(flavor, resource);
+								}
+							}
+						}
+					});
+				})
+			);
+	}
+
+	private updateFlavor(flavor: Flavor, id: string, resource: KalturaUploadedFileTokenResource): void{
+		this._kalturaServerClient.request(new FlavorAssetSetContentAction({
+			id: id,
+			contentResource: resource
+		}))
+		.cancelOnDestroy(this,this.sectionReset$)
+		.monitor('set flavor resource')
+		.subscribe(
+			response =>
+			{
+				this._msgs.push({severity: 'success', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadSuccess')});
+				this._fetchFlavors(false);
+			},
+			error =>
+			{
+				this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
+				this._fetchFlavors(false);
+			}
+		);
+	}
+
+	private addNewFlavor(flavor: Flavor, resource: KalturaUploadedFileTokenResource): void{
+		let flavorAsset: KalturaFlavorAsset = new KalturaFlavorAsset();
+		flavorAsset.flavorParamsId = flavor.paramsId;
+		this._kalturaServerClient.request(new FlavorAssetAddAction({
+			entryId: this.data.id,
+			flavorAsset: flavorAsset
+		}))
+		.cancelOnDestroy(this,this.sectionReset$)
+		.monitor('add new flavor')
+		.subscribe(
+			response =>
+			{
+				this.updateFlavor(flavor, response.id, resource);
+			},
+			error =>
+			{
+				this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
+				this._fetchFlavors(false); // reload flavors as we need to get the flavor status from the server
+			}
+		);
+
+	}
+
+	public importFlavor(flavor: Flavor, url: string): void{
+
+	}
+
 }

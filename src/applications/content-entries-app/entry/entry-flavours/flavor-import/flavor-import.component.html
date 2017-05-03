@@ -1,0 +1,9 @@
+<div class="kFlavorImport">
+	<span class="kHeader">{{'applications.content.entryDetails.flavours.update' | translate}} - {{currentFlavor?.name}}</span>
+	<span>{{'applications.content.entryDetails.flavours.fileUrl' | translate}}</span>
+	<input class="kFlavorUrl" placeholder="{{'applications.content.entryDetails.flavours.urlPlaceholder' | translate}}" type="text" [(ngModel)]="_flavorURL" (blur)="_validate()" (keyup)="_onChange()" pInputText/>
+	<span class="kInvalid">{{_validationErrorMsg}}</span>
+	<div class="kFooter">
+		<button type="button" class="kButtonBranded" [disabled]="_flavorURL === '' || _validationErrorMsg.length" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.flavours.actions.import' | translate}}"></button>
+	</div>
+</div>

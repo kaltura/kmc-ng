@@ -1,7 +1,9 @@
-import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { KalturaFlavorAssetStatus } from '@kaltura-ng2/kaltura-api/types';
-import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
+import { FileDialogComponent } from '@kaltura-ng2/kaltura-ui';
+import { KalturaFlavorAssetStatus, KalturaMediaEntry, KalturaMediaType } from '@kaltura-ng2/kaltura-api/types';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { EntryFlavoursHandler, Flavor } from './entry-flavours-handler';
 
@@ -14,16 +16,19 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 
 	@ViewChild('drmPopup') drmPopup: PopupWidgetComponent;
 	@ViewChild('previewPopup') previewPopup: PopupWidgetComponent;
+	@ViewChild('importPopup') importPopup: PopupWidgetComponent;
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
+	@ViewChild('fileDialog') private fileDialog: FileDialogComponent;
 	public _actions: MenuItem[] = [];
 
 	public _selectedFlavor: Flavor;
-
+	public _uploadFilter: string = "";
     public _loadingError = null;
+
+	private _importPopupStateChangeSubscribe: ISubscription;
 
     constructor(public _handler: EntryFlavoursHandler, private _appLocalization: AppLocalization) {
     }
-
 
     ngOnInit() {
     }
@@ -31,6 +36,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	openActionsMenu(event: any, flavor: Flavor): void{
 		if (this.actionsMenu){
 			this._actions = [];
+			this._uploadFilter = this._setUploadFilter(this._handler.data);
 			if (this._handler.sourceAvailabale && (flavor.id === '' || (flavor.id !== '' && flavor.status === KalturaFlavorAssetStatus.deleted.toString()))){
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.convert'), command: (event) => {this.actionSelected("convert");}});
 			}
@@ -79,6 +85,12 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 			case "download":
 				this._handler.downloadFlavor(this._selectedFlavor);
 				break;
+			case "upload":
+				this.fileDialog.open();
+				break;
+			case "import":
+				this.importPopup.open();
+				break;
 			case "convert":
 				this._handler.convertFlavor(this._selectedFlavor);
 				break;
@@ -94,12 +106,40 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 		}
 	}
 
+	private _setUploadFilter(entry: KalturaMediaEntry): string{
+		let filter = "";
+		if (entry.mediaType.toString() === KalturaMediaType.video.toString()){
+			filter = "video/*";
+		}
+		if (entry.mediaType.toString() === KalturaMediaType.audio.toString()){
+			filter = "audio/*";
+		}
+		return filter;
+	}
+
+	public _onFileSelected(selectedFiles: FileList) {
+		if (selectedFiles && selectedFiles.length) {
+			const fileData: File = selectedFiles[0];
+			this._handler.uploadFlavor(this._selectedFlavor, fileData);
+		}
+	}
+
     ngOnDestroy() {
+	    this._importPopupStateChangeSubscribe.unsubscribe();
     }
 
 
     ngAfterViewInit() {
-
+	    if (this.importPopup) {
+		    this._importPopupStateChangeSubscribe = this.importPopup.state$
+			    .subscribe(event => {
+				    if (event.state === PopupWidgetStates.Close) {
+					    if (event.context && event.context.flavorUrl){
+						    this._handler.importFlavor(this._selectedFlavor, event.context.flavorUrl);
+					    }
+				    }
+			    });
+	    }
     }
 
     _onLoadingAction(actionKey: string) {
