@@ -33,7 +33,10 @@ export class LoginComponent implements OnInit {
     this.inProgress = true;
 
 
-    this.appAuthentication.login(username, password).subscribe(
+    this.appAuthentication.login(username, password, {
+      privileges : this.appConfig.get('core.kaltura.privileges'),
+      expiry  : this.appConfig.get('core.kaltura.expiry')
+    }).subscribe(
         (result) =>
         {
           this.appNavigator.navigateToDefault();

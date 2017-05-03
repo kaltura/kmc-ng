@@ -55,10 +55,8 @@ export class CategoriesStore {
         {
             return Observable.throw({message : 'missing categoriesList argument'});
         }
-
-
-
     }
+
     public getChildrenCategories(parentId : number) : Observable<CategoriesQuery>{
 
         if (parentId === null)
