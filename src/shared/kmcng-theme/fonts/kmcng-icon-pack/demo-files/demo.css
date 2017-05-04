@@ -150,9 +150,12 @@ p {
   font-size: 12px;
 }
 .fs2 {
-  font-size: 16px;
+  font-size: 12px;
 }
 .fs3 {
+  font-size: 16px;
+}
+.fs4 {
   font-size: 24px;
 }
 

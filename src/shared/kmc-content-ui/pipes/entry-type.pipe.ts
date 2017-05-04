@@ -9,38 +9,38 @@ export class EntryTypePipe implements PipeTransform {
 	}
 
 	transform(value, isTooltip: boolean): string {
-		let className = 'k-entry-';
+		let className = "";
 		let tooltip = "";
 		if (typeof(value) !== 'undefined' && value !== null) {
 			switch (value) {
 				case KalturaMediaType.video:
-					className += 'media';
+					className = 'kIconvideo';
 					tooltip = this.appLocalization.get("applications.content.entryType.video");
 					break;
 				case KalturaMediaType.image:
 					tooltip = this.appLocalization.get("applications.content.entryType.image");
-					className += 'image';
+					className = 'kIconimage';
 					break;
 				case KalturaMediaType.audio:
 					tooltip = this.appLocalization.get("applications.content.entryType.audio");
-					className += 'audio';
+					className = 'kIconsound';
 					break;
 				case KalturaMediaType.liveStreamFlash:
 				case KalturaMediaType.liveStreamQuicktime:
 				case KalturaMediaType.liveStreamRealMedia:
 				case KalturaMediaType.liveStreamWindowsMedia:
 					tooltip = this.appLocalization.get("applications.content.entryType.live");
-					className += 'live';
+					className = 'kIconLive';
 					break;
 				default:
 					tooltip = this.appLocalization.get("applications.content.entryType.unknown");
-					className += 'unknown';
+					className = 'kIconUnknown';
 					break;
 			}
 		}
 		if (isTooltip) {
 			return tooltip;
-		}else {
+		} else {
 			return className;
 		}
 	}

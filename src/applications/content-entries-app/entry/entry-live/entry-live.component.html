@@ -9,14 +9,14 @@
 					<span class="kLabels">{{'applications.content.entryDetails.live.primary' | translate}}</span>
 					<div>
 						<span #primaryBroadcastingUrl>{{_handler.data?.primaryBroadcastingUrl}}</span>
-						<button *ngIf="_copyToClipboardEnabled" pButton class="kButtonDefault kCopyBtn" (click)="_copyToClipboard(primaryBroadcastingUrl.textContent)" icon="kIconcalendar" [kTooltip]="'app.common.copyToClipboard' | translate"></button>
+						<button *ngIf="_copyToClipboardEnabled" pButton class="kButtonDefault kCopyBtn" (click)="_copyToClipboard(primaryBroadcastingUrl.textContent)" icon="kIconCopy-to-clipboard" [kTooltip]="'app.common.copyToClipboard' | translate"></button>
 					</div>
 				</div>
 				<div class="kRow">
 					<span class="kLabels">{{'applications.content.entryDetails.live.backup' | translate}}</span>
 					<div>
 						<span #secondaryBroadcastingUrl>{{_handler.data?.secondaryBroadcastingUrl}}</span>
-						<button *ngIf="_copyToClipboardEnabled" pButton class="kButtonDefault kCopyBtn" (click)="_copyToClipboard(secondaryBroadcastingUrl.textContent)" icon="kIconcalendar" [kTooltip]="'app.common.copyToClipboard' | translate"></button>
+						<button *ngIf="_copyToClipboardEnabled" pButton class="kButtonDefault kCopyBtn" (click)="_copyToClipboard(secondaryBroadcastingUrl.textContent)" icon="kIconCopy-to-clipboard" [kTooltip]="'app.common.copyToClipboard' | translate"></button>
 					</div>
 				</div>
 			</div>
