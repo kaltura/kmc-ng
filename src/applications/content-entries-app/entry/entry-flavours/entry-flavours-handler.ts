@@ -4,10 +4,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 
 import { AppLocalization, AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
-import { KalturaServerClient } from 'kaltura-ts-api';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { BrowserService } from 'kmc-shell';
 import { KalturaFlavorAssetWithParams, FlavorAssetGetFlavorAssetsWithParamsAction, KalturaFlavorAssetStatus, KalturaLiveParams, KalturaEntryStatus, KalturaWidevineFlavorAsset,
-	FlavorAssetDeleteAction } from 'kaltura-ts-api/types';
+	FlavorAssetDeleteAction } from 'kaltura-typescript-client/types';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 import { Message, ConfirmationService } from 'primeng/primeng';
 
@@ -43,7 +43,7 @@ export class EntryFlavoursHandler extends EntrySection
 	public sourceAvailabale: boolean = false;
 	public _msgs: Message[] = [];
 
-    constructor(manager : EntrySectionsManager, private _kalturaServerClient: KalturaServerClient, private _appLocalization: AppLocalization, private _confirmationService: ConfirmationService,
+    constructor(manager : EntrySectionsManager, private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _confirmationService: ConfirmationService,
 	    private _appConfig: AppConfig, private _appAuthentication: AppAuthentication, private _browserService: BrowserService)
     {
         super(manager);

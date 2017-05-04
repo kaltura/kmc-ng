@@ -2,8 +2,8 @@ import { Component, Input, AfterViewInit, OnDestroy, ViewChild } from '@angular/
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaServerClient } from 'kaltura-ts-api';
-import { KalturaMediaEntry, FlavorAssetGetUrlAction } from 'kaltura-ts-api/types';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaMediaEntry, FlavorAssetGetUrlAction } from 'kaltura-typescript-client/types';
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { Flavor } from '../entry-flavours-handler';
 
@@ -21,7 +21,7 @@ export class FlavorPreview implements AfterViewInit, OnDestroy {
 	private _parentPopupStateChangeSubscribe: ISubscription;
 	public _iframeSrc = "";
 
-	constructor(private _kalturaServerClient: KalturaServerClient, private appConfig: AppConfig, private appAuthentication: AppAuthentication) {
+	constructor(private _kalturaServerClient: KalturaClient, private appConfig: AppConfig, private appAuthentication: AppAuthentication) {
 
 	}
 

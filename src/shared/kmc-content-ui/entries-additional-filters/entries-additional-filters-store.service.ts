@@ -6,8 +6,9 @@ import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/forkJoin';
 
-import { KalturaServerClient,  KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-ts-api';
-import { DistributionProfileListAction, AccessControlListAction } from 'kaltura-ts-api/types';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import {  KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-typescript-client';
+import { DistributionProfileListAction, AccessControlListAction } from 'kaltura-typescript-client/types';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataItemTypes, FlavoursStore } from '@kaltura-ng2/kaltura-common';
 
 import {
@@ -18,7 +19,7 @@ import {
     KalturaFilterPager,
     KalturaFlavorParams,
     KalturaResponseProfileType
-} from 'kaltura-ts-api/types'
+} from 'kaltura-typescript-client/types'
 
 import { ConstantsFilters } from './constant-filters';
 
@@ -81,7 +82,7 @@ export class EntriesAdditionalFiltersStore {
     public status$ = this._status.asObservable();
 
 
-    constructor(private kalturaServerClient: KalturaServerClient,
+    constructor(private kalturaServerClient: KalturaClient,
     private _metadataProfileStore : MetadataProfileStore, private _flavoursStore: FlavoursStore) {
         this.load();
     }

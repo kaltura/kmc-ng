@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 
-import { KalturaMetadataSearchItem, KalturaSearchCondition } from 'kaltura-ts-api/types'
-import { KalturaSearchOperatorType } from 'kaltura-ts-api/types'
+import { KalturaMetadataSearchItem, KalturaSearchCondition } from 'kaltura-typescript-client/types'
+import { KalturaSearchOperatorType } from 'kaltura-typescript-client/types'
 
 import { ValueFilter } from "../value-filter";
 import { EntriesStore } from '../entries-store.service';

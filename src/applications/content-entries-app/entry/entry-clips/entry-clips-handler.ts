@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import {  KalturaServerClient } from 'kaltura-ts-api';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaBaseEntryFilter, KalturaFilterPager, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaMediaEntry,
 	KalturaClipAttributes, KalturaOperationAttributes,
-    BaseEntryListAction } from 'kaltura-ts-api/types';
+    BaseEntryListAction } from 'kaltura-typescript-client/types';
 import { AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
 
 import {
@@ -46,7 +46,7 @@ export class EntryClipsHandler extends EntrySection
 
     constructor(manager : EntrySectionsManager,
                 private _store : EntryStore,
-                private _kalturaServerClient: KalturaServerClient,
+                private _kalturaServerClient: KalturaClient,
                 private browserService: BrowserService,
                 private _appLocalization: AppLocalization) {
         super(manager);

@@ -3,7 +3,7 @@ import {
     EntrySection
 } from '../../entry-store/entry-section-handler';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { KalturaServerClient } from 'kaltura-ts-api';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
@@ -19,7 +19,7 @@ export class EntryPreviewHandler extends EntrySection
     public iframeSrc : string;
 
     constructor(manager : EntrySectionsManager,
-                kalturaServerClient: KalturaServerClient,
+                kalturaServerClient: KalturaClient,
                 private appConfig: AppConfig,
                 private appAuthentication: AppAuthentication)
 

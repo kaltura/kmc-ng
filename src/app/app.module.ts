@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Ng2Webstorage } from 'ng2-webstorage';
 
 import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType, KalturaCommonModule, AppStorage } from '@kaltura-ng2/kaltura-common';
-import {  KalturaApiModule, KalturaHttpConfiguration, KalturaHttpPostClient,  KalturaServerClient } from 'kaltura-ts-api';
+import {  KalturaClientModule } from '@kaltura-ng/kaltura-client';
 import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 
 import { BrowserService, KMCShellModule } from 'kmc-shell';
@@ -47,7 +47,7 @@ const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessCo
     UploadManagementModule,
     KMCContentUIModule.forRoot(),
     KalturaCommonModule.forRoot(),
-    KalturaApiModule,
+    KalturaClientModule,
     Ng2Webstorage,
     Ng2PageScrollModule.forRoot(),
     ButtonModule,
@@ -75,8 +75,6 @@ const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessCo
     GetBootstrapProvider(KalturaAuthConfigAdapter),
     GetBootstrapProvider(KalturaHttpConfigurationAdapter  ),
     AppDefaultConfig,
-      { provide :KalturaServerClient, useClass : KalturaHttpPostClient},
-      KalturaHttpConfiguration,
     { provide : AppStorage,  useExisting : BrowserService }
   ]
 })

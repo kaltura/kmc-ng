@@ -2863,7 +2863,7 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.3.6"
 
-"kaltura-ts-api@file:///Users/eransakal/dev/github/kaltura/KalturaGeneratedAPIClientsTypescript/dist":
+"kaltura-typescript-client@file:///Users/eransakal/dev/github/kaltura/KalturaGeneratedAPIClientsTypescript/dist":
   version "1.0.0-beta.1"
 
 karma-chrome-launcher@^2.0.0:

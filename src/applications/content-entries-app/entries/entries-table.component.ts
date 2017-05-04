@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit
 import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { KalturaMediaType, KalturaEntryStatus, KalturaMediaEntry } from 'kaltura-ts-api/types';
+import { KalturaMediaType, KalturaEntryStatus, KalturaMediaEntry } from 'kaltura-typescript-client/types';
 import { EntriesStore } from "../entries-store/entries-store.service";
 
 @Component({

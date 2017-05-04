@@ -3,10 +3,10 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SelectItem } from 'primeng/primeng';
 
-import { KalturaMultiRequest } from 'kaltura-ts-api';
+import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { KalturaMediaEntry, KalturaAccessControl, KalturaSiteRestriction, KalturaSiteRestrictionType, KalturaCountryRestriction, KalturaCountryRestrictionType, KalturaIpAddressRestriction,
-	KalturaIpAddressRestrictionType, KalturaLimitFlavorsRestriction, KalturaLimitFlavorsRestrictionType, KalturaSessionRestriction, KalturaPreviewRestriction, KalturaFlavorParams } from 'kaltura-ts-api/types'
+	KalturaIpAddressRestrictionType, KalturaLimitFlavorsRestriction, KalturaLimitFlavorsRestrictionType, KalturaSessionRestriction, KalturaPreviewRestriction, KalturaFlavorParams } from 'kaltura-typescript-client/types'
 import { AccessControlProfileStore, FlavoursStore, AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
 
 import 'rxjs/add/observable/forkJoin';

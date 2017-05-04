@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { EntryRelatedHandler } from './entry-related-handler';
-import { KalturaAttachmentType, KalturaAttachmentAsset, KalturaEntryStatus } from 'kaltura-ts-api/types';
+import { KalturaAttachmentType, KalturaAttachmentAsset, KalturaEntryStatus } from 'kaltura-typescript-client/types';
 import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { SelectItem, Menu, MenuItem } from 'primeng/primeng';

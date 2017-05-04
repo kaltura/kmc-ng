@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { EntrySection } from '../../entry-store/entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { KalturaServerClient } from 'kaltura-ts-api';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
 @Injectable()
 export class EntryUsersHandler extends EntrySection
 {
     constructor(manager : EntrySectionsManager,
-                kalturaServerClient: KalturaServerClient)
+                kalturaServerClient: KalturaClient)
     {
         super(manager);
     }

@@ -8,14 +8,15 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
-import { KalturaMediaEntry } from 'kaltura-ts-api/types';
-import { KalturaServerClient, KalturaAPIException, KalturaMultiRequest } from 'kaltura-ts-api';
-import { BaseEntryGetAction, BaseEntryUpdateAction } from 'kaltura-ts-api/types';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types';
+import { KalturaAPIException, KalturaMultiRequest } from 'kaltura-typescript-client';
+import { BaseEntryGetAction, BaseEntryUpdateAction } from 'kaltura-typescript-client/types';
 import { EntrySectionTypes } from './entry-sections-types';
 import { EntriesStore } from '../entries-store/entries-store.service';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { EntrySectionsManager } from './entry-sections-manager';
-import { KalturaTypesFactory } from 'kaltura-ts-api';
+import { KalturaTypesFactory } from 'kaltura-typescript-client';
 
 export enum ActionTypes
 {
@@ -56,7 +57,7 @@ export class EntryStore implements  OnDestroy {
 		return this._entry.getValue();
 	}
 
-    constructor(private _kalturaServerClient: KalturaServerClient,
+    constructor(private _kalturaServerClient: KalturaClient,
 				private _router: Router,
 				private _entriesStore : EntriesStore,
 				@Host() private _sectionsManager : EntrySectionsManager,

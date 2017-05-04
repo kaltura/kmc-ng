@@ -4,10 +4,11 @@ import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/multicast';
 
-import { KalturaServerClient } from 'kaltura-ts-api';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
 
-import { CategoryListAction } from 'kaltura-ts-api/types';
-import { KalturaCategoryFilter,KalturaFilterPager,  KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaCategoryListResponse } from 'kaltura-ts-api/types'
+
+import { CategoryListAction } from 'kaltura-typescript-client/types';
+import { KalturaCategoryFilter,KalturaFilterPager,  KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaCategoryListResponse } from 'kaltura-typescript-client/types'
 
 export interface CategoryData
 {
@@ -35,7 +36,7 @@ export class CategoriesStore {
     private _getCategoriesRequests: {[key: string]: CategoryFetchQueueType } = {};
     private _categoriesCache: {[key: string] : CategoryData[]} = {};
 
-    constructor(private kalturaServerClient: KalturaServerClient) {
+    constructor(private kalturaServerClient: KalturaClient) {
     }
 
     public getAllCategories() : Observable<CategoriesQuery>{

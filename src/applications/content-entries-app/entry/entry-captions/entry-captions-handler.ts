@@ -1,10 +1,11 @@
 import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, KeyValueChangeRecord, CollectionChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { KalturaServerClient, KalturaMultiRequest } from 'kaltura-ts-api';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { CaptionAssetListAction, CaptionAssetDeleteAction, CaptionAssetSetAsDefaultAction, CaptionAssetUpdateAction, CaptionAssetSetContentAction,
 	CaptionAssetAddAction, KalturaUrlResource, KalturaUploadedFileTokenResource, KalturaCaptionAsset, KalturaFilterPager, KalturaAssetFilter,
-	KalturaCaptionType, KalturaCaptionAssetStatus, KalturaLanguage, KalturaMediaEntry } from 'kaltura-ts-api/types';
+	KalturaCaptionType, KalturaCaptionAssetStatus, KalturaLanguage, KalturaMediaEntry } from 'kaltura-typescript-client/types';
 
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
@@ -41,7 +42,7 @@ export class EntryCaptionsHandler extends EntrySection
 	private _entryId: string = '';
 
     constructor(manager : EntrySectionsManager, private _objectDiffers:  KeyValueDiffers, private _listDiffers : IterableDiffers,
-                private _kalturaServerClient: KalturaServerClient, private _appLocalization:AppLocalization, private _uploadManagement : UploadManagement)
+                private _kalturaServerClient: KalturaClient, private _appLocalization:AppLocalization, private _uploadManagement : UploadManagement)
     {
         super(manager);
 	    this._trackUploadFiles();
