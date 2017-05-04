@@ -28,17 +28,17 @@
 				</p-column>
 				<p-column field="statusLabel" header="{{'applications.content.entryDetails.flavours.stat' | translate}}">
 					<template let-col let-flavor="rowData" pTemplate="body">
-						<span [kTooltip]="flavor.statusTooltip">{{flavor.statusLabel}}</span>
+						<span [kTooltip]="flavor.statusTooltip" [class.kFlavorStatusError]="flavor.status === '-1'">{{flavor.statusLabel}}</span>
 					</template>
 				</p-column>
 				<p-column field="tags" header="{{'applications.content.entryDetails.flavours.tags' | translate}}">
 				</p-column>
 				<p-column [style]="{'width':'80px'}">
 					<template let-col let-flavor="rowData" pTemplate="body">
-						<div *ngIf="flavor.status !== '1' && flavor.status !== '6' && flavor.status !== '7' && flavor.status !== '8'" class="kFlavorsTableActions">
+						<div *ngIf="flavor.status !== '1' && flavor.status !== '6' && flavor.status !== '7' && flavor.status !== '8' && flavor.status !== '0'" class="kFlavorsTableActions">
 							<button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, flavor)"></button>
 						</div>
-						<div *ngIf="flavor.status === '1' || flavor.status === '6' || flavor.status === '7' || flavor.status === '8'" style="position: relative">
+						<div *ngIf="flavor.status === '1' || flavor.status === '6' || flavor.status === '7' || flavor.status === '8' || flavor.status === '0'" style="position: relative">
 							<div class="k-spinner-background">
 								<div class="k-spinner-animation"></div>
 							</div>
