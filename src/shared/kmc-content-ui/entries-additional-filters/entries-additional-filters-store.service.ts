@@ -224,10 +224,9 @@ export class EntriesAdditionalFiltersStore {
             const accessControlPager = new KalturaFilterPager({});
             distributionProfilePager.pageSize = 1000;
 
-            const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({});
-            responseProfile.setData(data => {
-                data.fields = "id,name";
-                data.type = KalturaResponseProfileType.includeFields;
+            const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
+                fields : "id,name",
+                type : KalturaResponseProfileType.includeFields
             });
 
             const request = new KalturaMultiRequest(

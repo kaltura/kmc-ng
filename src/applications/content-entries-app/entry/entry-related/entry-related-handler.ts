@@ -210,11 +210,11 @@ export class EntryRelatedHandler extends EntrySection
 
 
 		this._kalturaServerClient.request(new AttachmentAssetListAction({
-			filter: new KalturaAssetFilter()
-				.setData(filter => {
-					filter.entryIdEqual = this._entryId;
-				})
-			}))
+			filter: new KalturaAssetFilter(
+				{
+					entryIdEqual : this._entryId
+				}
+			)}))
 			.cancelOnDestroy(this,this.sectionReset$)
 			.monitor('get entry related files')
 			.subscribe(

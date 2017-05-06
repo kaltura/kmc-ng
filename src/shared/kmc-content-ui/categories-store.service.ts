@@ -211,11 +211,10 @@ export class CategoriesStore {
             filter.idIn = categoriesList.join(',');
         }
 
-        const responseProfile = new KalturaDetachedResponseProfile({})
-            .setData(data => {
-                data.fields = "id,name,parentId,partnerSortValue,fullName,fullIds,directSubCategoriesCount";
-                data.type = KalturaResponseProfileType.includeFields;
-            });
+        const responseProfile = new KalturaDetachedResponseProfile({
+            fields : "id,name,parentId,partnerSortValue,fullName,fullIds,directSubCategoriesCount",
+            type : KalturaResponseProfileType.includeFields
+        });
 
         return <any>this.kalturaServerClient.request(
             new CategoryListAction({filter, responseProfile})
