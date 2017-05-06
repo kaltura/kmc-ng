@@ -68,7 +68,7 @@ export class EntryStatusPipe implements PipeTransform {
 
         let result: string = '';
         const now: Date = new Date();
-        const time: number = now.getTime() / 1000;
+        const time = now;
         let schedulingType: number = 0;
 
         let undefinedDate = (date) => {return typeof date === 'undefined' || date < 0 };
