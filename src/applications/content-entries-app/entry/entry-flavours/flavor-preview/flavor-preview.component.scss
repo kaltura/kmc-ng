@@ -7,6 +7,15 @@
 	.kHeader{
 		font-size: 16px;
 		font-weight: 700;
+		margin-bottom: 10px;
+	}
+	.kLoading{
+		line-height: 252px;
+		padding-left: 130px;
+	}
+	video{
+		border: 1px solid $kGrayscale1;
+		padding: 5px;
 		margin-bottom: 20px;
 	}
 	.kTitle{

@@ -1,6 +1,9 @@
 <div class="kFlavorPreview kUseKMCngIcons">
 	<span class="kHeader">{{'applications.content.entryDetails.flavours.preview.header' | translate}}</span>
-	<iframe class="kPreview" *ngIf="_iframeSrc !== ''" [src]="_iframeSrc | safe" width="380" height="240" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
+
+	<span *ngIf="_previewSource.length===0" class="kLoading">{{'applications.content.entryDetails.flavours.preview.loading' | translate}}</span>
+	<video *ngIf="_previewSource.length" src="{{_previewSource}}" width="390" height="220" controls></video>
+
 	<div class="kRow">
 		<span class="kLabel">{{'applications.content.entryDetails.flavours.preview.entryName' | translate}}</span>
 		<span>{{currentEntry?.name}}</span>
