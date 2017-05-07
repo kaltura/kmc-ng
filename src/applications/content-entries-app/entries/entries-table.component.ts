@@ -44,7 +44,6 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy{
           result => {
                 if (result.errorMessage)
                 {
-                    // TODO [kmcng] show retry only if network connectivity
                     this._loadingError = { message : result.errorMessage, buttons : { retry : 'Retry'}};
                 }else
                 {
@@ -53,7 +52,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy{
           },
           error =>
           {
-              // TODO [kmc] navigate to error page
+              console.warn("[kmcng] -> could not load entries"); //navigate to error page
               throw error;
           });
 

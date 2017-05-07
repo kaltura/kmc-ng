@@ -111,7 +111,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 							this._loading = false;
 							break;
 						case ActionTypes.EntryLoadingFailed:
-							// TODO [kmcng] show retry only if network connectivity
 							this._loading = false;
 							this._loadingError = { message : status.error.message, buttons : { returnToEntries : 'Back To Entries', retry : 'Retry'}};
 							break;
