@@ -62,9 +62,11 @@ a.disabled{
 /* prevent calendars from being cut by the popup widget borders */
 :host /deep/ .kPullLeft30 .ui-datepicker.ui-widget {
 	margin-left: -30px;
+	left: 0px !important;
 }
 :host /deep/ .kPullLeft80 .ui-datepicker.ui-widget {
 	margin-left: -80px;
+	left: 0px !important;
 }
 
 :host /deep/ .kDateRange .kDateRangeFirst .ui-calendar.ui-calendar-w-btn {
