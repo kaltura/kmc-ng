@@ -308,7 +308,8 @@
 						"format": "Format:",
 						"size": "Size (KB):",
 						"status": "Satatus:",
-						"loading": "Loading..."
+						"loading": "Loading...",
+						"loadingError": "Error loading flavor:"
 					},
 					"deleteConfirm": "Are you sure you want to delete this Asset: {{0}} ?",
 					"deleteConfirmTitle": "Delete Flavor Asset",

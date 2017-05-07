@@ -3,7 +3,6 @@ import { ISubscription } from 'rxjs/Subscription';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
 import { KalturaMediaEntry, FlavorAssetGetUrlAction } from '@kaltura-ng2/kaltura-api/types';
-import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { Flavor } from '../entry-flavours-handler';
 
 @Component({
@@ -19,13 +18,15 @@ export class FlavorPreview implements AfterViewInit, OnDestroy {
 
 	private _parentPopupStateChangeSubscribe: ISubscription;
 	public _previewSource = "";
+	public _loadingError = "";
 
-	constructor(private _kalturaServerClient: KalturaServerClient, private appConfig: AppConfig, private appAuthentication: AppAuthentication) {
+	constructor(private _kalturaServerClient: KalturaServerClient) {
 
 	}
 
 	ngAfterViewInit() {
 		this._previewSource = "";
+		this._loadingError = "";
 		if (this.parentPopupWidget) {
 			this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$
 				.subscribe(event => {
@@ -37,9 +38,9 @@ export class FlavorPreview implements AfterViewInit, OnDestroy {
 							.monitor('get flavor url')
 							.subscribe(
 								url => {
-									this._previewSource = url;								},
+									this._previewSource = url;},
 								error => {
-									console.warn("Error getting flavor URL for flavor ID: " + this.currentFlavor.id);
+									this._loadingError = error.message;
 								}
 							);
 					}

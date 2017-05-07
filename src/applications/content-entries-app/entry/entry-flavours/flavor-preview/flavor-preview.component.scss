@@ -13,6 +13,18 @@
 		line-height: 252px;
 		padding-left: 130px;
 	}
+	.kLoadingError{
+		display: flex;
+		flex-direction: column;
+		line-height: 24px;
+		color: $kDandger;
+		height: 150px;
+		padding-top: 80px;
+		width: 100%;
+		text-align: center;
+		margin-bottom: 20px;
+		border: 1px solid $kGrayscale1;
+	}
 	video{
 		border: 1px solid $kGrayscale1;
 		padding: 5px;

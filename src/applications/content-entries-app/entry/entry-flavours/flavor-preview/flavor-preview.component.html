@@ -1,8 +1,12 @@
 <div class="kFlavorPreview kUseKMCngIcons">
 	<span class="kHeader">{{'applications.content.entryDetails.flavours.preview.header' | translate}}</span>
 
-	<span *ngIf="_previewSource.length===0" class="kLoading">{{'applications.content.entryDetails.flavours.preview.loading' | translate}}</span>
-	<video *ngIf="_previewSource.length" src="{{_previewSource}}" width="390" height="220" controls></video>
+	<span *ngIf="_previewSource.length===0 && _loadingError.length === 0" class="kLoading">{{'applications.content.entryDetails.flavours.preview.loading' | translate}}</span>
+	<div *ngIf="_loadingError.length > 0" class="kLoadingError">
+		<span>{{'applications.content.entryDetails.flavours.preview.loadingError' | translate}}</span>
+		<span>{{_loadingError}}</span>
+	</div>
+	<video *ngIf="_previewSource.length && _loadingError.length === 0" src="{{_previewSource}}" width="390" height="220" controls></video>
 
 	<div class="kRow">
 		<span class="kLabel">{{'applications.content.entryDetails.flavours.preview.entryName' | translate}}</span>
