@@ -30,7 +30,6 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 
 
     ngAfterViewInit() {
-
     }
 
     _onLoadingAction(actionKey: string) {

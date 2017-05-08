@@ -14,7 +14,8 @@
 				</div>
 				<div class="kRow kSeparator">
 					<span class="kLabels">{{'applications.content.entryDetails.users.co-editors' | translate}}</span>
-					<kAutoComplete formControlName="editors"
+					<kAutoComplete #editorsAutoComplete
+								   formControlName="editors"
 								   suggestionItemField="item"
 								   suggestionLabelField="name"
 								   field="screenName"

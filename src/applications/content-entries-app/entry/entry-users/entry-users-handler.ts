@@ -84,6 +84,8 @@ export class EntryUsersHandler extends EntrySection
 		    editors: null,
 		    publishers: null
 	    });
+        this._loading = 0;
+        this._loadingError = null;
     }
 
     protected _activate(firstLoad : boolean) {
@@ -121,7 +123,7 @@ export class EntryUsersHandler extends EntrySection
 			    error =>
 			    {
 					this._loading = 0;
-				    this._loadingError = { message : result.errorMessage, buttons : { retry : 'Retry'}};
+				    this._loadingError = { message : error.errorMessage, buttons : { retry : 'Retry'}};
 				    console.warn("[kmcng] - Error getting users data");
 			    }
 		    );
@@ -149,7 +151,7 @@ export class EntryUsersHandler extends EntrySection
 				    },
 				    error => {
 					    this._loading = 0;
-					    this._loadingError = { message : result.errorMessage, buttons : { retry : 'Retry'}};
+					    this._loadingError = { message : error.errorMessage, buttons : { retry : 'Retry'}};
 					    console.warn("[kmcng] - Error getting editors");
 				    }
 			    );
@@ -180,7 +182,7 @@ export class EntryUsersHandler extends EntrySection
 				    },
 				    error => {
 					    this._loading = 0;
-					    this._loadingError = { message : result.errorMessage, buttons : { retry : 'Retry'}};
+					    this._loadingError = { message : error.errorMessage, buttons : { retry : 'Retry'}};
 					    console.warn("[kmcng] - Error getting publishers");
 				    }
 			    );
