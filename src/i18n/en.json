@@ -29,7 +29,8 @@
 			"copyFailure": "Copy operation failed",
 			"on": "On",
 			"off": "Off",
-			"ok": "OK"
+			"ok": "OK",
+			"cancel": "Cancel"
 		}
     },
     "applications":{
@@ -248,7 +249,7 @@
 				"flavours":{
 					"flavours": "Flavors",
 					"replace": "Replace Video",
-					"flavour": "Flavour",
+					"flavour": "Flavor",
 					"assetId": "Asset ID",
 					"format": "Format",
 					"codec": "Codec",
@@ -428,6 +429,9 @@
 					"creator": "Creator",
 					"owner": "Administrative Owner",
 					"changeOwner": "Change Owner",
+					"changeOwnerText": "Set a new owner for this entry",
+					"changeOwnerPH": "Enter user name or id",
+					"save": "Save",
 					"co-editors": "Co-Editors",
 					"co-publishers": "Co-Publishers"
 				}
