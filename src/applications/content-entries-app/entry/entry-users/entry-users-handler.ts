@@ -11,6 +11,9 @@ import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 @Injectable()
 export class EntryUsersHandler extends EntrySection
 {
+	public _loading = 0;
+	public _loadingError = null;
+
     public _creator: string = "";
 	public _owner: KalturaUser = null;
 
@@ -54,6 +57,17 @@ export class EntryUsersHandler extends EntrySection
 			}
 			// save editors
 			const editors: KalturaUser[] = this.usersForm.value.editors;
+
+			if (editors.length){
+				let entitledUsersEdit = '';
+				editors.forEach(editor=>{
+					entitledUsersEdit += editor.id + ",";
+				});
+				entitledUsersEdit = entitledUsersEdit.substring(0, entitledUsersEdit.length-1); // remove last comma
+				data.entitledUsersEdit = entitledUsersEdit;
+			}else{
+				data.entitledUsersEdit = null;
+			}
 			// save publishers
 			const publishers: KalturaUser[] = this.usersForm.value.publishers;
 		}
@@ -73,7 +87,14 @@ export class EntryUsersHandler extends EntrySection
     }
 
     protected _activate(firstLoad : boolean) {
-        this._fetchUsersData();
+	    this.initData();
+    }
+
+    public initData():void{
+	    this._loading = 3;
+	    this._fetchUsersData();
+	    this._fetchEditorsData();
+	    this._fetchPublishersData();
     }
 
     private _fetchUsersData():void{
@@ -88,6 +109,7 @@ export class EntryUsersHandler extends EntrySection
 		    .subscribe(
 			    response =>
 			    {
+				    this._loading -= 1;
 				    if (response.length && response.length ===2 && response[0].result){
 					    this._creator = response[0].result.screenName ? response[0].result.screenName : response[0].result.id;
 					    if (response[1].result) {
@@ -98,9 +120,73 @@ export class EntryUsersHandler extends EntrySection
 			    },
 			    error =>
 			    {
-				    console.warn("Error getting users data");
+					this._loading = 0;
+				    this._loadingError = { message : result.errorMessage, buttons : { retry : 'Retry'}};
+				    console.warn("[kmcng] - Error getting users data");
 			    }
 		    );
+    }
+
+    private _fetchEditorsData():void{
+	    if (this.data.entitledUsersEdit && this.data.entitledUsersEdit.length) {
+		    const entitledUsersEdit = this.data.entitledUsersEdit.split(",");
+		    const request = new KalturaMultiRequest();
+		    entitledUsersEdit.forEach(entitledUser=>{
+			    request.requests.push(new UserGetAction({userId: entitledUser}));
+		    });
+
+		    this._kalturaServerClient.multiRequest(request)
+			    .cancelOnDestroy(this, this.sectionReset$)
+			    .monitor('get editors')
+			    .subscribe(
+				    response => {
+					    this._loading -= 1;
+					    let editors = [];
+					    response.forEach(res => {
+						    editors.push(res.result);
+					    });
+					    this.usersForm.patchValue({editors: editors});
+				    },
+				    error => {
+					    this._loading = 0;
+					    this._loadingError = { message : result.errorMessage, buttons : { retry : 'Retry'}};
+					    console.warn("[kmcng] - Error getting editors");
+				    }
+			    );
+	    }else{
+		    this._loading -= 1;
+	    }
+    }
+
+    private _fetchPublishersData():void{
+	    if (this.data.entitledUsersPublish && this.data.entitledUsersPublish.length) {
+		    const entitledUsersPublish = this.data.entitledUsersPublish.split(",");
+		    const request = new KalturaMultiRequest();
+		    entitledUsersPublish.forEach(entitledUser=>{
+			    request.requests.push(new UserGetAction({userId: entitledUser}));
+		    });
+
+		    this._kalturaServerClient.multiRequest(request)
+			    .cancelOnDestroy(this, this.sectionReset$)
+			    .monitor('get publishers')
+			    .subscribe(
+				    response => {
+					    this._loading -= 1;
+					    let publishers = [];
+					    response.forEach(res => {
+						    publishers.push(res.result);
+					    });
+					    this.usersForm.patchValue({publishers: publishers});
+				    },
+				    error => {
+					    this._loading = 0;
+					    this._loadingError = { message : result.errorMessage, buttons : { retry : 'Retry'}};
+					    console.warn("[kmcng] - Error getting publishers");
+				    }
+			    );
+	    }else{
+		    this._loading -= 1;
+	    }
     }
 
 	public searchUsers(text : string)

@@ -1,4 +1,4 @@
-<kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
+<kLoader [loading]="_handler._loading > 0" [loadingError]="_handler._loadingError" (onActionRequested)="_onLoadingAction($event)">
 	<form [formGroup]="_handler.usersForm" novalidate>
 		<div class="kUsers">
 			<p class="kTitle">{{'applications.content.entryDetails.users.users' | translate}}</p>

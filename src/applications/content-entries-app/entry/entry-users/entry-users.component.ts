@@ -13,9 +13,6 @@ import { EntryUsersHandler } from './entry-users-handler';
 })
 export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 
-    public _loading = false;
-    public _loadingError = null;
-
 	@ViewChild('ownerPopup') ownerPopup: PopupWidgetComponent;
 
 	private _searchUsersSubscription : ISubscription;
@@ -38,6 +35,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 
     _onLoadingAction(actionKey: string) {
         if (actionKey === 'retry') {
+	        this._handler.initData();
         }
     }
 
