@@ -70,10 +70,11 @@ export class EntrySchedulingHandler extends EntrySection
 			if (enableEndDate && endDate){
 				data.endDate = KalturaUtils.toServerDate(endDate);
 			}else{
-				// TODO [KMC] - delete endDate
+				data.endDate = null;
 			}
 		}else{
-			// TODO [KMC] - delete existing startDate and endDate
+			data.startDate = null;
+			data.endDate = null;
 		}
 	}
 
