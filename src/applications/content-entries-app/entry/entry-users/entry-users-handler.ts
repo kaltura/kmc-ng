@@ -4,8 +4,9 @@ import { EntrySection } from '../../entry-store/entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { KalturaServerClient, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
-import { KalturaUser, UserGetAction, UserListAction, KalturaUserFilter, KalturaFilterPager, KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaMultiRequest } from 'kaltura-typescript-client';
+import { KalturaUser, UserGetAction, UserListAction, KalturaUserFilter, KalturaFilterPager, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
 @Injectable()
@@ -19,7 +20,7 @@ export class EntryUsersHandler extends EntrySection
 
 	public usersForm : FormGroup;
 
-	constructor(manager : EntrySectionsManager, private _formBuilder : FormBuilder, private _kalturaServerClient: KalturaServerClient)
+	constructor(manager : EntrySectionsManager, private _formBuilder : FormBuilder, private _kalturaServerClient: KalturaClient)
     {
         super(manager);
 	    this._buildForm();
