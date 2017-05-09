@@ -43,7 +43,7 @@ done
 cd `dirname $0`
 
 pushd ../../
-    LIST="$(cat package.json | bash $(npm bin)/JSON.sh -b | grep dependencies | grep @kaltura | cut -f 1 | cut -d ',' -f2 | cut -d '"' -f 2 | cut -d "/" -f 2)"
+    LIST="$(cat package.json | bash $(npm bin)/JSON.sh -b | grep dependencies | grep kaltura | cut -f 1 | cut -d ',' -f2 | cut -d '"' -f 2)"
     NPM_MODULES_BASE=$(npm config get prefix)/lib/node_modules
 
     # should always run this cleanup to prevent using both npm link and wml
@@ -54,20 +54,24 @@ pushd ../../
 
     for PACKAGE in ${LIST} ;
     do
-        PACKAGE_SRC=$(readlink ${NPM_MODULES_BASE}/@kaltura-ng2/${PACKAGE})
-        PACKAGE_DEST=node_modules/@kaltura-ng2/${PACKAGE}
+        if [ -d "${NPM_MODULES_BASE}/${PACKAGE}" ]; then
+          PACKAGE_SRC=$(readlink ${NPM_MODULES_BASE}/${PACKAGE})
+        fi
+        PACKAGE_DEST=node_modules/${PACKAGE}
 
-        case $USE in
-            wml)
-                printf "\e[35m%b\e[0m\n" "Running wml add for package '${PACKAGE}'"
-                printf "n" | $(npm bin)/wml add ${PACKAGE_SRC} ${PACKAGE_DEST}
-                ;;
-            fs)
-                mkdir -p ${PACKAGE_DEST}
-                printf "\e[35m%b\e[0m\n" "Copy using bash copy command for package '${PACKAGE}'"
-                cp -r ${PACKAGE_SRC}/* ${PACKAGE_DEST}
-                ;;
-        esac
+        if [ -n "${PACKAGE_SRC}" ]; then
+            case $USE in
+                wml)
+                    printf "\e[35m%b\e[0m\n" "Running wml add for package '${PACKAGE}'"
+                    printf "n" | $(npm bin)/wml add ${PACKAGE_SRC} ${PACKAGE_DEST}
+                    ;;
+                fs)
+                    mkdir -p ${PACKAGE_DEST}
+                    printf "\e[35m%b\e[0m\n" "Copy using bash copy command for package '${PACKAGE}'"
+                    cp -r ${PACKAGE_SRC}/* ${PACKAGE_DEST}
+                    ;;
+            esac
+        fi
     done
 
     if [ "${USE}" == "wml" ]
