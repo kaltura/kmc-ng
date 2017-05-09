@@ -1,9 +1,14 @@
 @import '~kmcng-theme/scss/variables';
 
+form{
+	width: 100%;
+}
+
 .kUsers {
 	padding-left: 12px;
 	padding-right: 12px;
 	width: 100%;
+	box-sizing: border-box;
 	.kTitle {
 		color: $kGrayscale1;
 		font-size: 20px;
@@ -13,6 +18,7 @@
 		padding-right: 12px;
 		margin-top: 12px;
 		width: 100%;
+		box-sizing: border-box;
 		.kRow{
 			display: flex;
 			padding-top: 24px;
