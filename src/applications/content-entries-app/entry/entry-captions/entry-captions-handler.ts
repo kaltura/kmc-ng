@@ -82,7 +82,6 @@ export class EntryCaptionsHandler extends EntrySection
 							}
 						}
 					});
-					console.warn('TODO [kmcng]: check for relevant upload files');
 				})
 			);
 	}

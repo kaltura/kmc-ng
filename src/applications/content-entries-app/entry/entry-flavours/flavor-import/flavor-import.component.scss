@@ -1,0 +1,34 @@
+@import '~kmcng-theme/scss/variables';
+
+.kFlavorImport{
+	display: flex;
+	flex-direction: column;
+	padding-top: 30px;
+	.kHeader {
+		font-size: 16px;
+		font-weight: 700;
+		margin-bottom: 30px;
+	}
+	.kFlavorUrl{
+		margin-top: 6px;
+		width: 100%;
+	}
+	.kInvalid{
+		color: red;
+		font-size: 12px;
+		font-weight: 700;
+	}
+	.kFooter{
+		text-align: center;
+		height: 46px;
+		border-top: 1px solid $kGrayscale4;
+		position: absolute;
+		bottom: 0;
+		right: 28px;
+		left: 12px;
+		button{
+			margin-top: 8px;
+		}
+	}
+}
+

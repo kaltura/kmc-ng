@@ -298,7 +298,6 @@ export class EntryMetadataHandler extends EntrySection
             this.customDataForms.forEach(customDataForm => {
 
                 if (customDataForm.dirty) {
-                    console.warn('should check if the custom metadata form values were modified');
 
                     const customDataValue = customDataForm.getValue();
 

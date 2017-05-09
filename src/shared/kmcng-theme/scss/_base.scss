@@ -1,60 +1,89 @@
+html {
+	width: 100%;
+	height: 100%;
+}
+
 body {
-  background: $appBkgColor;
-  overflow: hidden;
-  font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  margin: 0;
+	background: $appBkgColor;
+	overflow: hidden;
+	font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	margin: 0;
+	width: 100%;
+	height: 100%;
 }
 
-label{
-  font-size: 14px;
-  font-weight: bold;
+label {
+	font-size: 14px;
+	font-weight: bold;
 }
 
-.link{
-    font-size: 15px;
-    color: $kTertiary;
-    text-decoration: underline;
-    cursor: pointer;
-    &:hover{
-      color: darken($kTertiary, 10%);
-    }
-    &:active{
-        color: $kTertiary;
-    }
-    &:disabled{
-        cursor: none;
-        color: $kGrayscale4;
-    }
-    text-overflow: ellipsis;
+.link {
+	font-size: 15px;
+	color: $kTertiary;
+	text-decoration: underline;
+	cursor: pointer;
+	&:hover {
+		color: darken($kTertiary, 10%);
+	}
+	&:active {
+		color: $kTertiary;
+	}
+	&:disabled {
+		cursor: none;
+		color: $kGrayscale4;
+	}
+	text-overflow: ellipsis;
 }
-.error{
+
+.error {
 	color: #ff0000;
 }
-a{
-    @extend .link;
-    outline: none;
+
+a {
+	@extend .link;
+	outline: none;
 }
-select{
-    outline: none;
+
+select {
+	outline: none;
 }
 
 /* main content width according to screen resolution */
 @media screen and (max-width: 991px) {
-	.kContent { width: 970px; margin: auto !important; display: flex;}
+	.kContent {
+		width: 970px;
+		margin: auto !important;
+		display: flex;
+	}
 }
+
 @media screen and (min-width: 992px) {
-    .kContent { width: 970px; margin: auto !important; display: flex;}
+	.kContent {
+		width: 970px;
+		margin: auto !important;
+		display: flex;
+	}
 }
+
 @media screen and (min-width: 1200px) {
-    .kContent { width: 1170px; margin: auto !important; display: flex;}
+	.kContent {
+		width: 1170px;
+		margin: auto !important;
+		display: flex;
+	}
 }
+
 @media screen and (min-width: 1440px) {
-    .kContent { width: 1400px; margin: auto !important; display: flex;}
+	.kContent {
+		width: 1400px;
+		margin: auto !important;
+		display: flex;
+	}
 }
+
 /* support retina devices */
 
-@media
-(-webkit-min-device-pixel-ratio: 2),
+@media(-webkit-min-device-pixel-ratio: 2),
 (min-resolution: 192dpi) {
 	/* Retina-specific stuff here */
 }

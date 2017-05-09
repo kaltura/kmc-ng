@@ -140,7 +140,7 @@ export class EntrySectionsListHandler extends EntrySection
             case EntrySectionTypes.Live:
                 return this._isLive(entry);
             case EntrySectionTypes.Clips:
-                return true;
+	            return mediaType !== KalturaMediaType.image
             default:
                 return true;
         }
