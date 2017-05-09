@@ -1,24 +1,71 @@
-<kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
-	<div class="kUsers">
-		<p class="kTitle">{{'applications.content.entryDetails.users.users' | translate}}</p>
-		<div class="kUsersDetails">
-			<div class="kRow">
-				<span class="kLabels">{{'applications.content.entryDetails.users.creator' | translate}}</span>
-				<span>Creator</span>
-			</div>
-			<div class="kRow">
-				<span class="kLabels">{{'applications.content.entryDetails.users.owner' | translate}}</span>
-				<span>Owner</span>
-				<a class="changeOwner">{{'applications.content.entryDetails.users.changeOwner' | translate}}</a>
-			</div>
-			<div class="kRow kSeparator">
-				<span class="kLabels">{{'applications.content.entryDetails.users.co-editors' | translate}}</span>
-				<kAutoComplete></kAutoComplete>
-			</div>
-			<div class="kRow">
-				<span class="kLabels">{{'applications.content.entryDetails.users.co-publishers' | translate}}</span>
-				<kAutoComplete></kAutoComplete>
+<kLoader [loading]="_handler._loading > 0" [loadingError]="_handler._loadingError" (onActionRequested)="_onLoadingAction($event)">
+	<form [formGroup]="_handler.usersForm" novalidate>
+		<div class="kUsers">
+			<p class="kTitle">{{'applications.content.entryDetails.users.users' | translate}}</p>
+			<div class="kUsersDetails">
+				<div class="kRow">
+					<span class="kLabels">{{'applications.content.entryDetails.users.creator' | translate}}</span>
+					<span>{{_handler._creator}}</span>
+				</div>
+				<div class="kRow">
+					<span class="kLabels">{{'applications.content.entryDetails.users.owner' | translate}}</span>
+					<span>{{_handler._owner?.screenName ? _handler._owner?.screenName : _handler._owner?.id}}</span>
+					<a class="changeOwner" (click)="_openChangeOwner()">{{'applications.content.entryDetails.users.changeOwner' | translate}}</a>
+				</div>
+				<div class="kRow kSeparator">
+					<span class="kLabels">{{'applications.content.entryDetails.users.co-editors' | translate}}</span>
+					<kAutoComplete #editorsAutoComplete
+								   formControlName="editors"
+								   suggestionItemField="item"
+								   suggestionLabelField="name"
+								   field="screenName"
+								   [multiple]="true"
+								   [limitToSuggestions]="false"
+								   [minLength]="3"
+								   suggestionSelectableField="isSelectable"
+								   [suggestionsProvider]="_usersProvider"
+								   (completeMethod)="_searchUsers($event, 'editors')">
+					</kAutoComplete>
+				</div>
+				<div class="kRow">
+					<span class="kLabels">{{'applications.content.entryDetails.users.co-publishers' | translate}}</span>
+					<kAutoComplete formControlName="publishers"
+								   suggestionItemField="item"
+								   suggestionLabelField="name"
+								   field="screenName"
+								   [multiple]="true"
+								   [limitToSuggestions]="false"
+								   [minLength]="3"
+								   suggestionSelectableField="isSelectable"
+								   [suggestionsProvider]="_usersProvider"
+								   (completeMethod)="_searchUsers($event, 'publishers')">
+					</kAutoComplete>
+				</div>
 			</div>
 		</div>
-	</div>
+
+		<kPopupWidget #ownerPopup [popupWidth]="500" [popupHeight]="240" [modal]="true">
+			<div class="kChangeOwner kUseKMCngIcons">
+				<span class="kHeader">{{'applications.content.entryDetails.users.changeOwner' | translate}}</span>
+				<span>{{'applications.content.entryDetails.users.changeOwnerText' | translate}}</span>
+				<kAutoComplete formControlName="owners"
+							   suggestionItemField="item"
+							   suggestionLabelField="name"
+							   field="screenName"
+							   [multiple]="true"
+							   [limitToSuggestions]="false"
+							   placeholder="{{'applications.content.entryDetails.users.changeOwnerPH' | translate}}"
+							   [minLength]="3"
+							   [suggestionsProvider]="_usersProvider"
+							   (completeMethod)="_searchUsers($event)">
+				</kAutoComplete>
+				<div class="kFooter">
+					<button type="button" class="kButtonDefault" [disabled]="false" (click)="ownerPopup.close()" pButton label="{{'app.common.cancel' | translate}}"></button>
+					<button type="button" class="kButtonBranded" [disabled]="false" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.users.save' | translate}}"></button>
+				</div>
+			</div>
+
+		</kPopupWidget>
+	</form>
+
 </kLoader>

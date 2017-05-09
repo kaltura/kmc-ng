@@ -1,5 +1,5 @@
 <kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
-	<div class="kEntryDetails kUseKMCngIcons">
+	<div class="kEntryDetails kUseKMCngIcons" [class.isSafari]="isSafari">
 		<div class="kContent kEntryDetailsWrapper">
 			<div class="kEntryDetailsHeader">
 				<button pButton class="kButtonDefault kBackToEntriesBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
