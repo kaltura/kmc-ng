@@ -1,9 +1,14 @@
 @import '~kmcng-theme/scss/variables';
 
+form{
+	width: 100%;
+}
+
 .kUsers {
 	padding-left: 12px;
 	padding-right: 12px;
 	width: 100%;
+	box-sizing: border-box;
 	.kTitle {
 		color: $kGrayscale1;
 		font-size: 20px;
@@ -13,6 +18,7 @@
 		padding-right: 12px;
 		margin-top: 12px;
 		width: 100%;
+		box-sizing: border-box;
 		.kRow{
 			display: flex;
 			padding-top: 24px;
@@ -30,6 +36,43 @@
 		}
 	}
 }
+.kChangeOwner{
+	display: flex;
+	flex-direction: column;
+	padding-top: 20px;
+	padding-left: 12px;
+	padding-right: 12px;
+	.kHeader {
+		font-size: 16px;
+		font-weight: 700;
+		margin-bottom: 30px;
+	}
+	.kFooter {
+		text-align: right;
+		height: 54px;
+		border-top: 1px solid $kGrayscale4;
+		position: absolute;
+		bottom: 0;
+		right: 28px;
+		left: 12px;
+		button {
+			margin-top: 12px;
+			margin-left: 4px;
+			height: 28px;
+			width: 84px;
+		}
+	}
+	/deep/ .ui-autocomplete.ui-widget{
+		width: 100%;
+		input{
+			width: 100%;
+		}
+	}
+	/deep/ kAutoComplete{
+		margin-top: 4px;
+		width: 100%;
+	}
+}
 
 :host /deep/ .ui-autocomplete.ui-widget{
 	width: 100%;
@@ -42,3 +85,9 @@
 :host /deep/ kAutoComplete{
 	width: 100%;
 }
+
+/deep/ kPopupWidget .kPopupWidget {
+	overflow: visible !important;
+}
+
+

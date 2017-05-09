@@ -101,3 +101,8 @@
 		height: 40px;
 	}
 }
+.kEntryDetails.isSafari{
+	.kEntryDetailsContent{
+		height: calc(100vh - 216px);
+	}
+}
