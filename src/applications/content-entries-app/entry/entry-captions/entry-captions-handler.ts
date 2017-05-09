@@ -270,7 +270,7 @@ export class EntryCaptionsHandler extends EntrySection
 						}
 						if (resource){
 							let setContentRequest: CaptionAssetSetContentAction = new CaptionAssetSetContentAction({id: '0', contentResource: resource})
-								.setDependency(['id', (request.requests.length), 'id']);
+								.setDependency(['id', (request.requests.length-1), 'id']);
 							console.warn("Warning: should be request.requests.length-1 after KAPI fix!");
 
 							request.requests.push(setContentRequest);

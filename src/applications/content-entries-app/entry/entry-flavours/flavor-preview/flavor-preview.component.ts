@@ -1,8 +1,8 @@
 import { Component, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
-import { KalturaMediaEntry, FlavorAssetGetUrlAction } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaMediaEntry, FlavorAssetGetUrlAction } from 'kaltura-typescript-client/types/all';
 import { Flavor } from '../entry-flavours-handler';
 
 @Component({
@@ -20,7 +20,7 @@ export class FlavorPreview implements AfterViewInit, OnDestroy {
 	public _previewSource = "";
 	public _loadingError = "";
 
-	constructor(private _kalturaServerClient: KalturaServerClient) {
+	constructor(private _kalturaServerClient: KalturaClient) {
 
 	}
 
