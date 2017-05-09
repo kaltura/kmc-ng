@@ -4,9 +4,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Message } from 'primeng/primeng';
 
-import { KalturaServerClient, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { KalturaSourceType,	KalturaLiveStreamBitrate, ConversionProfileListAction, KalturaConversionProfileFilter, KalturaConversionProfileType, KalturaFilterPager,
-	     LiveStreamRegenerateStreamTokenAction, KalturaRecordStatus, KalturaLiveStreamEntry, KalturaDVRStatus, KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
+	     LiveStreamRegenerateStreamTokenAction, KalturaRecordStatus, KalturaLiveStreamEntry, KalturaDVRStatus, KalturaMediaEntry } from 'kaltura-typescript-client/types';
 import { AppLocalization, AppConfig } from '@kaltura-ng2/kaltura-common';
 import { BrowserService } from 'kmc-shell';
 
@@ -44,7 +45,7 @@ export class EntryLiveHandler extends EntrySection {
 	public _bitrates: bitrate[] = [];
 	public _availableBitrates = AVAIL_BITRATES;
 
-	constructor(manager: EntrySectionsManager, private _kalturaServerClient: KalturaServerClient, private _appLocalization: AppLocalization, private _appConfig: AppConfig, private _browserService: BrowserService) {
+	constructor(manager: EntrySectionsManager, private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _appConfig: AppConfig, private _browserService: BrowserService) {
 		super(manager);
 	}
 

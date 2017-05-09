@@ -6,8 +6,9 @@ import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/forkJoin';
 
-import { KalturaServerClient,  KalturaMultiRequest, KalturaMultiResponse } from '@kaltura-ng2/kaltura-api';
-import { DistributionProfileListAction, AccessControlListAction } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import {  KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-typescript-client';
+import { DistributionProfileListAction, AccessControlListAction } from 'kaltura-typescript-client/types';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataItemTypes, FlavoursStore } from '@kaltura-ng2/kaltura-common';
 
 import {
@@ -18,7 +19,7 @@ import {
     KalturaFilterPager,
     KalturaFlavorParams,
     KalturaResponseProfileType
-} from '@kaltura-ng2/kaltura-api/types'
+} from 'kaltura-typescript-client/types'
 
 import { ConstantsFilters } from './constant-filters';
 
@@ -81,7 +82,7 @@ export class EntriesAdditionalFiltersStore {
     public status$ = this._status.asObservable();
 
 
-    constructor(private kalturaServerClient: KalturaServerClient,
+    constructor(private kalturaServerClient: KalturaClient,
     private _metadataProfileStore : MetadataProfileStore, private _flavoursStore: FlavoursStore) {
         this.load();
     }
@@ -223,10 +224,9 @@ export class EntriesAdditionalFiltersStore {
             const accessControlPager = new KalturaFilterPager({});
             distributionProfilePager.pageSize = 1000;
 
-            const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({});
-            responseProfile.setData(data => {
-                data.fields = "id,name";
-                data.type = KalturaResponseProfileType.includeFields;
+            const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
+                fields : "id,name",
+                type : KalturaResponseProfileType.includeFields
             });
 
             const request = new KalturaMultiRequest(

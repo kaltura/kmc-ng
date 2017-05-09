@@ -16,7 +16,7 @@
 		</div>
 		<div class="kRow">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.creationDate' | translate}}</span>
-			<span>{{_handler.data.createdAt * 1000 | date:'MM/dd/y HH:MM'}}</span>
+			<span>{{_handler.data.createdAt | date:'MM/dd/y HH:MM'}}</span>
 		</div>
 		<div class="kRow"  *ngIf="_handler._landingPage">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.landingPage' | translate}}</span>

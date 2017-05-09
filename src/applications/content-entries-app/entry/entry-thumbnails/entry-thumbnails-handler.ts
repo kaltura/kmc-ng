@@ -6,11 +6,11 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 
 import { ThumbAssetListAction, ThumbAssetSetAsDefaultAction, KalturaThumbAssetListResponse, KalturaThumbAsset, KalturaAssetFilter, DistributionProfileListAction, KalturaDistributionProfileListResponse,
-	KalturaDistributionProfile, KalturaThumbAssetStatus, KalturaDistributionThumbDimensions, ThumbAssetDeleteAction, ThumbAssetAddFromImageAction } from '@kaltura-ng2/kaltura-api/types';
+	KalturaDistributionProfile, KalturaThumbAssetStatus, KalturaDistributionThumbDimensions, ThumbAssetDeleteAction, ThumbAssetAddFromImageAction } from 'kaltura-typescript-client/types';
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
 export interface ThumbnailRow {
@@ -36,7 +36,7 @@ export class EntryThumbnailsHandler extends EntrySection
 	public _thumbnails$ = this._thumbnails.asObservable().monitor('thumbnail files');
 	private _distributionProfiles: KalturaDistributionProfile[]; // used to save the response profiles array as it is loaded only once
 
-    constructor(manager : EntrySectionsManager, private _kalturaServerClient: KalturaServerClient, private _appConfig: AppConfig, private _appAuthentication: AppAuthentication)
+    constructor(manager : EntrySectionsManager, private _kalturaServerClient: KalturaClient, private _appConfig: AppConfig, private _appAuthentication: AppAuthentication)
     {
         super(manager);
     }

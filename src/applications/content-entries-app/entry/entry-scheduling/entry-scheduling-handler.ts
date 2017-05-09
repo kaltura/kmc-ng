@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { KalturaUtils } from '@kaltura-ng2/kaltura-api/utils/kaltura-utils';
-import { KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
-import { KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
+import { KalturaMultiRequest } from 'kaltura-typescript-client';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
@@ -65,10 +65,10 @@ export class EntrySchedulingHandler extends EntrySection
 
 		if (scheduling === "scheduled"){
 			if (startDate) {
-				data.startDate = KalturaUtils.toServerDate(startDate);
+				data.startDate = startDate;
 			}
 			if (enableEndDate && endDate){
-				data.endDate = KalturaUtils.toServerDate(endDate);
+				data.endDate = endDate;
 			}else{
 				data.endDate = null;
 			}
@@ -86,11 +86,11 @@ export class EntrySchedulingHandler extends EntrySection
 		if (this.data && this.data.startDate){
 			scheduleSettings = "scheduled";
 			this.schedulingForm.get('startDate').enable();
-			startDate = KalturaUtils.fromServerDate(this.data.startDate);
+			startDate = this.data.startDate;
 			if (this.data.endDate){
 				this.schedulingForm.get('endDate').enable();
 				enableEndDate = true;
-				endDate = KalturaUtils.fromServerDate(this.data.endDate);
+				endDate = this.data.endDate;
 			}
 		}
 		this.schedulingForm.reset({

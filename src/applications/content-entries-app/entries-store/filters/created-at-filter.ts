@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 
-import { KalturaUtils } from '@kaltura-ng2/kaltura-api/utils/kaltura-utils';
+import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
 import { EntriesStore } from "../entries-store.service";
 import { FilterItem } from "../filter-item";
 
@@ -42,10 +42,10 @@ EntriesStore.registerFilterType(CreatedAtFilter, (items, request) =>
     const firstItem = items[0];
 
     if (firstItem.createdBefore) {
-        request.filter.createdAtLessThanOrEqual = KalturaUtils.toServerDate(KalturaUtils.getEndDateValue(firstItem.createdBefore));
+        request.filter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(firstItem.createdBefore);
     }
 
     if (firstItem.createdAfter) {
-        request.filter.createdAtGreaterThanOrEqual = KalturaUtils.toServerDate(KalturaUtils.getStartDateValue(firstItem.createdAfter));
+        request.filter.createdAtGreaterThanOrEqual = KalturaUtils.getStartDateValue(firstItem.createdAfter);
     }
 });

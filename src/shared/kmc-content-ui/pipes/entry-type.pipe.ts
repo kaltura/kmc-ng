@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { KalturaMediaType } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaMediaType } from 'kaltura-typescript-client/types';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 @Pipe({name: 'entryType'})
