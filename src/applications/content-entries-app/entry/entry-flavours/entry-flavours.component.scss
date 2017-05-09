@@ -4,6 +4,8 @@
 .kFlavours{
 	padding-left: 12px;
 	overflow-y: auto;
+	width: 100%;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
 	button{
@@ -16,8 +18,6 @@
 		font-weight: 700;
 	}
 	.kEntryStatus{
-		display: flex;
-		align-items: center;
 		margin-top: 12px;
 		margin-bottom: 24px;
 		span{

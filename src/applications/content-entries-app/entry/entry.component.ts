@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { KalturaMediaType } from '@kaltura-ng2/kaltura-api/types';
+import { BrowserService } from 'kmc-shell';
 import { EntryStore, ActionTypes } from '../entry-store/entry-store.service';
 import { EntrySectionsListHandler } from './entry-sections-list/entry-sections-list-handler';
 import { EntryMetadataHandler } from './entry-metadata/entry-metadata-handler';
@@ -49,9 +50,11 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _enablePrevButton : boolean;
 	public _enableNextButton : boolean;
 
-    constructor(public _entryStore: EntryStore,
-	private  _entriesStore : EntriesStore) {
+	public isSafari: boolean = false; // used for Safari specific styling
 
+    constructor(public _entryStore: EntryStore,
+		private  _entriesStore : EntriesStore,
+	    private _browserService: BrowserService) {
     }
 
     ngOnDestroy()
@@ -75,7 +78,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	}
 
     ngOnInit() {
-
+		this.isSafari = this._browserService.isSafari();
     	this._entryStore.entry$
             .cancelOnDestroy(this)
             .subscribe(

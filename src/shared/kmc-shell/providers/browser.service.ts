@@ -47,13 +47,15 @@ export class BrowserService implements IAppStorage {
 		window.open(baseUrl, target);
 	}
 
+	public isSafari(): boolean{
+		const isChrome = !!window['chrome'] && !!window['chrome'].webstore;
+		return Object.prototype.toString.call(window['HTMLElement']).indexOf('Constructor') > 0 || !isChrome && window['webkitAudioContext'] !== undefined;
+	}
 
 	public copyToClipboardEnabled(): boolean {
 		let enabled = true;
-		// detect Safari version lower than 10
-		let isChrome = !!window['chrome'] && !!window['chrome'].webstore;
-		let isSafari = Object.prototype.toString.call(window['HTMLElement']).indexOf('Constructor') > 0 || !isChrome && window['webkitAudioContext'] !== undefined;
-		if (isSafari) {
+
+		if (this.isSafari()) {
 			let nAgt = navigator.userAgent;
 			let verOffset = nAgt.indexOf("Version");
 			let fullVersion = nAgt.substring(verOffset + 8);
