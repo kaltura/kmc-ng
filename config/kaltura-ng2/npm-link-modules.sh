@@ -55,11 +55,9 @@ pushd ../../
     for PACKAGE in ${LIST} ;
     do
         if [ -d "${NPM_MODULES_BASE}/${PACKAGE}" ]; then
-          PACKAGE_SRC=$(readlink ${NPM_MODULES_BASE}/${PACKAGE})
-        fi
-        PACKAGE_DEST=node_modules/${PACKAGE}
+            PACKAGE_SRC=$(readlink ${NPM_MODULES_BASE}/${PACKAGE})
+            PACKAGE_DEST=node_modules/${PACKAGE}
 
-        if [ -n "${PACKAGE_SRC}" ]; then
             case $USE in
                 wml)
                     printf "\e[35m%b\e[0m\n" "Running wml add for package '${PACKAGE}'"

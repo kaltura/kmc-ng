@@ -20,7 +20,7 @@ import {
     KalturaSearchOperator,
     KalturaSearchOperatorType,
     BaseEntryListAction
-} from 'kaltura-typescript-client/types'
+} from 'kaltura-typescript-client/types/all'
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 

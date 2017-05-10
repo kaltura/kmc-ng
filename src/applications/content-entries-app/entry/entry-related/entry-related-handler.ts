@@ -5,7 +5,7 @@ import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { KalturaAssetFilter, KalturaAttachmentAsset, KalturaAttachmentType, AttachmentAssetListAction, KalturaUploadedFileTokenResource, AttachmentAssetSetContentAction,
-	AttachmentAssetDeleteAction, AttachmentAssetUpdateAction, AttachmentAssetAddAction, KalturaMediaEntry } from 'kaltura-typescript-client/types';
+	AttachmentAssetDeleteAction, AttachmentAssetUpdateAction, AttachmentAssetAddAction, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 import { BrowserService } from 'kmc-shell';
 
 import { EntrySection } from '../../entry-store/entry-section-handler';

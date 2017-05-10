@@ -8,7 +8,7 @@ import 'rxjs/add/observable/forkJoin';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import {  KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-typescript-client';
-import { DistributionProfileListAction, AccessControlListAction } from 'kaltura-typescript-client/types';
+import { DistributionProfileListAction, AccessControlListAction } from 'kaltura-typescript-client/types/all';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataItemTypes, FlavoursStore } from '@kaltura-ng2/kaltura-common';
 
 import {
@@ -19,7 +19,7 @@ import {
     KalturaFilterPager,
     KalturaFlavorParams,
     KalturaResponseProfileType
-} from 'kaltura-typescript-client/types'
+} from 'kaltura-typescript-client/types/all'
 
 import { ConstantsFilters } from './constant-filters';
 

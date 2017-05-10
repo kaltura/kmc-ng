@@ -7,7 +7,7 @@ import { Message } from 'primeng/primeng';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { KalturaSourceType,	KalturaLiveStreamBitrate, ConversionProfileListAction, KalturaConversionProfileFilter, KalturaConversionProfileType, KalturaFilterPager,
-	     LiveStreamRegenerateStreamTokenAction, KalturaRecordStatus, KalturaLiveStreamEntry, KalturaDVRStatus, KalturaMediaEntry } from 'kaltura-typescript-client/types';
+	     LiveStreamRegenerateStreamTokenAction, KalturaRecordStatus, KalturaLiveStreamEntry, KalturaDVRStatus, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 import { AppLocalization, AppConfig } from '@kaltura-ng2/kaltura-common';
 import { BrowserService } from 'kmc-shell';
 

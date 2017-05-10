@@ -5,7 +5,7 @@ import { ISubscription } from 'rxjs/Subscription';
 
 import { AppLocalization, AppAuthentication, AppConfig } from '@kaltura-ng2/kaltura-common';
 import { BrowserService } from 'kmc-shell';
-import { KalturaCaptionAssetStatus } from 'kaltura-typescript-client/types'
+import { KalturaCaptionAssetStatus } from 'kaltura-typescript-client/types/all'
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
 import { EntryCaptionsHandler } from './entry-captions-handler';

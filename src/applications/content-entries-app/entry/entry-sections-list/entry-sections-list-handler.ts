@@ -4,12 +4,12 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppLocalization } from "@kaltura-ng2/kaltura-common";
 import { SectionsList } from './sections-list';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { KalturaMediaType } from 'kaltura-typescript-client/types';
+import { KalturaMediaType } from 'kaltura-typescript-client/types/all';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { EntrySection } from '../../entry-store/entry-section-handler';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 
 export interface SectionData
 {

@@ -5,7 +5,7 @@ import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { CaptionAssetListAction, CaptionAssetDeleteAction, CaptionAssetSetAsDefaultAction, CaptionAssetUpdateAction, CaptionAssetSetContentAction,
 	CaptionAssetAddAction, KalturaUrlResource, KalturaUploadedFileTokenResource, KalturaCaptionAsset, KalturaFilterPager, KalturaAssetFilter,
-	KalturaCaptionType, KalturaCaptionAssetStatus, KalturaLanguage, KalturaMediaEntry } from 'kaltura-typescript-client/types';
+	KalturaCaptionType, KalturaCaptionAssetStatus, KalturaLanguage, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
