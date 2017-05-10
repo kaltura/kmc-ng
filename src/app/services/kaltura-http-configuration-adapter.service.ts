@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BootstrapAdapter, BootstrapAdapterType, AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
-import { KalturaHttpConfiguration } from '@kaltura-ng2/kaltura-api';
+import { BootstrapAdapter, BootstrapAdapterType, AppAuthentication } from '@kaltura-ng2/kaltura-common';
+import { KalturaClientConfiguration } from '@kaltura-ng/kaltura-client';
 
 
 
@@ -8,7 +8,7 @@ import { KalturaHttpConfiguration } from '@kaltura-ng2/kaltura-api';
 export class KalturaHttpConfigurationAdapter implements BootstrapAdapter
 {
     type = BootstrapAdapterType.postAuth;
-    constructor( private kalturaHttpConfiguration : KalturaHttpConfiguration,  private appAuthentication: AppAuthentication){
+    constructor( private kalturaHttpConfiguration : KalturaClientConfiguration,  private appAuthentication: AppAuthentication){
 
     }
     execute() : void {

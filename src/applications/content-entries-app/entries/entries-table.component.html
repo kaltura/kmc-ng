@@ -25,7 +25,7 @@
 			<p-column field="plays" header="{{'applications.content.table.plays' | translate}}" [sortable]="'custom'" [style]="{'width':'76px'}"></p-column>
 			<p-column field="createdAt" header="Created On" [sortable]="true" [style]="{'width':'140px'}">
 				<template let-col let-entry="rowData" pTemplate="body">
-					<span>{{entry[col.field] * 1000 | kDate}}</span>
+					<span>{{entry[col.field] | kDate}}</span>
 				</template>
 			</p-column>
 			<p-column field="duration" header="{{'applications.content.table.duration' | translate}}" [sortable]="'custom'" [style]="{'width':'104px'}">

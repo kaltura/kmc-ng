@@ -4,10 +4,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 
 import { AppLocalization, AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { BrowserService } from 'kmc-shell';
 import { KalturaFlavorAsset, KalturaFlavorAssetWithParams, FlavorAssetGetFlavorAssetsWithParamsAction, KalturaFlavorAssetStatus, KalturaLiveParams, KalturaEntryStatus, KalturaWidevineFlavorAsset,
-	FlavorAssetDeleteAction, FlavorAssetConvertAction, FlavorAssetReconvertAction, KalturaUploadedFileTokenResource, FlavorAssetSetContentAction, FlavorAssetAddAction, KalturaUrlResource, KalturaContentResource } from '@kaltura-ng2/kaltura-api/types';
+	FlavorAssetDeleteAction, FlavorAssetConvertAction, FlavorAssetReconvertAction, KalturaUploadedFileTokenResource, FlavorAssetSetContentAction, FlavorAssetAddAction, KalturaUrlResource, KalturaContentResource } from 'kaltura-typescript-client/types/all';
 import { UploadManagement, FileChanges } from '@kaltura-ng2/kaltura-common/upload-management';
 import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
 import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
@@ -45,7 +45,7 @@ export class EntryFlavoursHandler extends EntrySection
 	public sourceAvailabale: boolean = false;
 	public _msgs: Message[] = [];
 
-    constructor(manager : EntrySectionsManager, private _kalturaServerClient: KalturaServerClient, private _appLocalization: AppLocalization, private _confirmationService: ConfirmationService,
+    constructor(manager : EntrySectionsManager, private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _confirmationService: ConfirmationService,
 	    private _appConfig: AppConfig, private _appAuthentication: AppAuthentication, private _browserService: BrowserService, private _uploadManagement : UploadManagement)
     {
         super(manager);

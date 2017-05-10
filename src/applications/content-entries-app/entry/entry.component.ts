@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { KalturaMediaType } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaMediaType } from 'kaltura-typescript-client/types/all';
 import { BrowserService } from 'kmc-shell';
 import { EntryStore, ActionTypes } from '../entry-store/entry-store.service';
 import { EntrySectionsListHandler } from './entry-sections-list/entry-sections-list-handler';

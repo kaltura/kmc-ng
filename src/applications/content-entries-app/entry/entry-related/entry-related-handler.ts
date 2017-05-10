@@ -1,10 +1,11 @@
 import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, CollectionChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { KalturaServerClient, KalturaMultiRequest } from '@kaltura-ng2/kaltura-api';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { KalturaAssetFilter, KalturaAttachmentAsset, KalturaAttachmentType, AttachmentAssetListAction, KalturaUploadedFileTokenResource, AttachmentAssetSetContentAction,
-	AttachmentAssetDeleteAction, AttachmentAssetUpdateAction, AttachmentAssetAddAction, KalturaMediaEntry } from '@kaltura-ng2/kaltura-api/types';
+	AttachmentAssetDeleteAction, AttachmentAssetUpdateAction, AttachmentAssetAddAction, KalturaMediaEntry } from 'kaltura-typescript-client/types';
 import { BrowserService } from 'kmc-shell';
 
 import { EntrySection } from '../../entry-store/entry-section-handler';
@@ -33,7 +34,7 @@ export class EntryRelatedHandler extends EntrySection
 
 	constructor(manager : EntrySectionsManager,
 				private _appConfig: AppConfig,
-				private _kalturaServerClient: KalturaServerClient,
+				private _kalturaServerClient: KalturaClient,
 	            private _browserService: BrowserService,
 				private _appAuthentication: AppAuthentication,
 				private _objectDiffers: KeyValueDiffers,
@@ -118,7 +119,7 @@ export class EntryRelatedHandler extends EntrySection
 						let resource = new KalturaUploadedFileTokenResource();
 						resource.token = record.item["uploadToken"];
 						let setContentRequest: AttachmentAssetSetContentAction = new AttachmentAssetSetContentAction({id: '0', contentResource: resource})
-							.setDependency(['id', (request.requests.length), 'id']); console.warn("Warning: should be request.requests.length-1 after KAPI fix!");
+							.setDependency(['id', (request.requests.length-1), 'id']); console.warn("Warning: should be request.requests.length-1 after KAPI fix!");
 
 						request.requests.push(setContentRequest);
 
@@ -208,11 +209,11 @@ export class EntryRelatedHandler extends EntrySection
 
 
 		this._kalturaServerClient.request(new AttachmentAssetListAction({
-			filter: new KalturaAssetFilter()
-				.setData(filter => {
-					filter.entryIdEqual = this._entryId;
-				})
-			}))
+			filter: new KalturaAssetFilter(
+				{
+					entryIdEqual : this._entryId
+				}
+			)}))
 			.cancelOnDestroy(this,this.sectionReset$)
 			.monitor('get entry related files')
 			.subscribe(

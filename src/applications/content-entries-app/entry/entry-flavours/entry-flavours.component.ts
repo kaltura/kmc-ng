@@ -2,7 +2,7 @@ import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { FileDialogComponent } from '@kaltura-ng2/kaltura-ui';
-import { KalturaFlavorAssetStatus, KalturaMediaEntry, KalturaMediaType } from '@kaltura-ng2/kaltura-api/types';
+import { KalturaFlavorAssetStatus, KalturaMediaEntry, KalturaMediaType } from 'kaltura-typescript-client/types/all';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { EntryFlavoursHandler, Flavor } from './entry-flavours-handler';

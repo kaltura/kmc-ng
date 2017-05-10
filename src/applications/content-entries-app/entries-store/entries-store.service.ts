@@ -20,9 +20,10 @@ import {
     KalturaSearchOperator,
     KalturaSearchOperatorType,
     BaseEntryListAction
-} from '@kaltura-ng2/kaltura-api/types'
+} from 'kaltura-typescript-client/types'
 
-import { KalturaServerClient } from '@kaltura-ng2/kaltura-api';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
+
 
 import * as R from 'ramda';
 import { FilterItem } from "./filter-item";
@@ -100,7 +101,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
 
 
-    constructor(private kalturaServerClient: KalturaServerClient,
+    constructor(private kalturaServerClient: KalturaClient,
                 private browserService: BrowserService,) {
         console.warn("KMCng entriesStore:ctor() - missing handling of metadata profiles");
 
