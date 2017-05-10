@@ -139,7 +139,7 @@ export class EntryStore implements  OnDestroy {
                                 .monitor('saving entry')
                                 .map(
 									response => {
-										return !(response instanceof KalturaAPIException);
+										return !(response.hasErrors());
 									}
 								)
 						}

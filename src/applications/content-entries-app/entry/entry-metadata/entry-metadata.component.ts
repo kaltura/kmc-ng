@@ -160,7 +160,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
     _onLoadingAction(actionKey: string) {
         if (actionKey === 'retry') {
-
+            this._handler.activate();
         }
     }
 }

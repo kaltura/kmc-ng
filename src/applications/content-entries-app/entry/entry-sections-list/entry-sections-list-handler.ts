@@ -45,6 +45,8 @@ export class EntrySectionsListHandler extends EntrySection
 
     protected _initialize() : void {
 
+        super._initialize();
+
         this._manager.activeSection$
             .cancelOnDestroy(this)
             .subscribe(
