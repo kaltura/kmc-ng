@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EntrySectionTypes } from './entry-sections-types';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 import { FormSection } from '@kaltura-ng2/kaltura-ui/form-sections'
 
 

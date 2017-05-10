@@ -4,7 +4,7 @@
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kaltura/KMCng.git"
+    "url": "https://github.com/kaltura/KMCng.git"
   },
   "description": "",
   "keywords": [
@@ -68,7 +68,7 @@
     "core-js": "^2.4.1",
     "gridlex": "2.2.5",
     "jquery": "^3.1.0",
-    "kaltura-typescript-client": "^1.0.0",
+    "kaltura-typescript-client": "^1.1.0",
     "moment": "^2.14.1",
     "ng2-page-scroll": "~4.0.0-beta.7",
     "ng2-translate": "5.0.0",

@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaBaseEntryFilter, KalturaFilterPager, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaMediaEntry,
 	KalturaClipAttributes, KalturaOperationAttributes,
-    BaseEntryListAction } from 'kaltura-typescript-client/types';
+    BaseEntryListAction } from 'kaltura-typescript-client/types/all';
 import { AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
 
 import {

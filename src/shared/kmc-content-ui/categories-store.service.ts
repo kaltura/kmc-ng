@@ -7,8 +7,8 @@ import 'rxjs/add/operator/multicast';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 
 
-import { CategoryListAction } from 'kaltura-typescript-client/types';
-import { KalturaCategoryFilter,KalturaFilterPager,  KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaCategoryListResponse } from 'kaltura-typescript-client/types'
+import { CategoryListAction } from 'kaltura-typescript-client/types/all';
+import { KalturaCategoryFilter,KalturaFilterPager,  KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaCategoryListResponse } from 'kaltura-typescript-client/types/all'
 
 export interface CategoryData
 {

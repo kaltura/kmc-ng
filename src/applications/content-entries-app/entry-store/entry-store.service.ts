@@ -9,9 +9,9 @@ import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 import { KalturaAPIException, KalturaMultiRequest } from 'kaltura-typescript-client';
-import { BaseEntryGetAction, BaseEntryUpdateAction } from 'kaltura-typescript-client/types';
+import { BaseEntryGetAction, BaseEntryUpdateAction } from 'kaltura-typescript-client/types/all';
 import { EntrySectionTypes } from './entry-sections-types';
 import { EntriesStore } from '../entries-store/entries-store.service';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';

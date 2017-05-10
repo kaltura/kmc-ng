@@ -1,9 +1,9 @@
 import {
     KalturaSearchOperator,
     KalturaContentDistributionSearchItem
-} from 'kaltura-typescript-client/types'
+} from 'kaltura-typescript-client/types/all'
 
-import { KalturaSearchOperatorType } from 'kaltura-typescript-client/types'
+import { KalturaSearchOperatorType } from 'kaltura-typescript-client/types/all'
 
 import { EntriesStore } from "../entries-store.service";
 import { ValueFilter } from '../value-filter';
