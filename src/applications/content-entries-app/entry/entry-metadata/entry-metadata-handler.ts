@@ -30,7 +30,6 @@ export class EntryMetadataHandler extends EntrySection
     public isLiveEntry : boolean;
     public metadataForm : FormGroup;
     public customDataForms : KalturaCustomDataHandler[] = [];
-    public loading = false;
 
     constructor(manager : EntrySectionsManager,
                 private _kalturaServerClient: KalturaClient,
@@ -64,7 +63,6 @@ export class EntryMetadataHandler extends EntrySection
                     super._onStatusChanged({isValid : value === 'VALID'});
                 }
             )
-
     }
 
     public get sectionType() : EntrySectionTypes
@@ -72,11 +70,10 @@ export class EntryMetadataHandler extends EntrySection
         return EntrySectionTypes.Metadata;
     }
 
-
-
     protected _activate(firstLoad : boolean) : Observable<{failed : boolean}> {
 
-        this.loading = true;
+        super._showLoader();
+        super._removeBlockerMessage();
 
         this.isLiveEntry = this.data instanceof KalturaLiveStreamEntry;
 
@@ -84,7 +81,6 @@ export class EntryMetadataHandler extends EntrySection
             this._loadEntryCategories(this.data),
             this._loadEntryMetadata(this.data)
         ];
-
 
         if (firstLoad) {
             actions.push(this._loadProfileMetadata());
@@ -100,8 +96,14 @@ export class EntryMetadataHandler extends EntrySection
             )
             .catch((error, caught) => Observable.of({failed: true, error}))
             .do(response => {
-                this.loading = false;
-                if (!response.failed) {
+                super._hideLoader();
+
+                if (response.failed)
+                {
+                    super._showActivationError();
+                }else
+                {
+                    this._syncHandlerContent();
                 }
             });
     }

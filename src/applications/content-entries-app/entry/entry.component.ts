@@ -16,7 +16,7 @@ import { EntrySchedulingHandler } from './entry-scheduling/entry-scheduling-hand
 import { EntryUsersHandler } from './entry-users/entry-users-handler';
 import { EntriesStore } from '../entries-store/entries-store.service';
 import { EntrySectionsManager } from '../entry-store/entry-sections-manager';
-
+import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng2/kaltura-ui';
 
 @Component({
     selector: 'kEntry',
@@ -44,97 +44,115 @@ export class EntryComponent implements OnInit, OnDestroy {
 	_entryName: string;
 	_entryType: KalturaMediaType;
 
-	public _loading = false;
-	public _loadingError = null;
-	public _currentEntryId : string;
-	public _enablePrevButton : boolean;
-	public _enableNextButton : boolean;
+	public _showLoader = false;
+	public _areaBlockerMessage: AreaBlockerMessage;
+	public _currentEntryId: string;
+	public _enablePrevButton: boolean;
+	public _enableNextButton: boolean;
 
 	public isSafari: boolean = false; // used for Safari specific styling
 
-    constructor(public _entryStore: EntryStore,
-		private  _entriesStore : EntriesStore,
-	    private _browserService: BrowserService) {
-    }
-
-    ngOnDestroy()
-	{
+	constructor(public _entryStore: EntryStore,
+				private  _entriesStore: EntriesStore,
+				private _browserService: BrowserService) {
 	}
 
-	private _updateNavigationState()
-	{
+	ngOnDestroy() {
+	}
+
+	private _updateNavigationState() {
 		const entries = this._entriesStore.entries;
 		if (entries && this._currentEntryId) {
 			const currentEntry = entries.find(entry => entry.id === this._currentEntryId);
-			const currentEntryIndex =  currentEntry ? entries.indexOf(currentEntry) : -1;
-			this._enableNextButton = currentEntryIndex >= 0 && (currentEntryIndex < entries.length -1);
+			const currentEntryIndex = currentEntry ? entries.indexOf(currentEntry) : -1;
+			this._enableNextButton = currentEntryIndex >= 0 && (currentEntryIndex < entries.length - 1);
 			this._enablePrevButton = currentEntryIndex > 0;
 
-		}else
-		{
+		} else {
 			this._enableNextButton = false;
 			this._enablePrevButton = false;
 		}
 	}
 
-    ngOnInit() {
+	ngOnInit() {
 		this.isSafari = this._browserService.isSafari();
-    	this._entryStore.entry$
-            .cancelOnDestroy(this)
-            .subscribe(
-			entry =>
-			{
-				if (entry) {
-					this._entryName = entry.name;
-					this._entryType = entry.mediaType;
-					this._loading = false;
-					this._loadingError = null;
-				}
-			});
 
 		this._entryStore.status$
-			.cancelOnDestroy(this)
-			.subscribe(
-			status => {
-				if (status)
-				{
-					switch (status.action)
-					{
-						case ActionTypes.EntryLoading:
-							this._loading = true;
-							this._loadingError = null;
+            .cancelOnDestroy(this)
+            .subscribe(
+				status => {
+					if (status) {
+						switch (status.action) {
+							case ActionTypes.EntryLoading:
+								this._showLoader = true;
+								this._areaBlockerMessage = null;
 
-							// when loading new entry in progress, the 'entryID' property
-							// reflect the entry that is currently being loaded
-							// while 'entry$' stream is null
-							this._currentEntryId = this._entryStore.entryId;
-							this._updateNavigationState();
-							break;
-						case ActionTypes.EntryLoaded:
-							this._loading = false;
-							break;
-						case ActionTypes.EntryLoadingFailed:
-							this._loading = false;
-							this._loadingError = { message : status.error.message, buttons : { returnToEntries : 'Back To Entries', retry : 'Retry'}};
-							break;
-						case ActionTypes.EntrySaving:
-							break;
-						case ActionTypes.EntrySavingFailed:
-							break;
-						case ActionTypes.NavigateOut:
-							this._loading = true;
-							break;
-						default:
-							break;
+								// when loading new entry in progress, the 'entryID' property
+								// reflect the entry that is currently being loaded
+								// while 'entry$' stream is null
+								this._currentEntryId = this._entryStore.entryId;
+								this._updateNavigationState();
+								break;
+							case ActionTypes.EntryLoaded:
+								this._showLoader = false;
+								this._entryName = this._entryStore.entry.name;
+								this._entryType = this._entryStore.entry.mediaType;
+								break;
+							case ActionTypes.EntryLoadingFailed:
+								this._showLoader = false;
+								this._areaBlockerMessage = new AreaBlockerMessage({
+									message: status.error.message,
+									buttons: [
+										this._createBackToEntriesButton(),
+										{
+											label: 'Retry',
+											action: () => {
+												this._entryStore.reloadEntry();
+											}
+										}
+									]
+								});
+								break;
+							case ActionTypes.EntrySaving:
+								this._showLoader = true;
+								break;
+							case ActionTypes.EntrySavingFailed:
+								this._showLoader = false;
+								this._areaBlockerMessage = new AreaBlockerMessage({
+									message: 'Something happened during the save, please review your changes',
+									buttons: [
+										{
+											label: 'Dismiss',
+											action: () => {
+												this._entryStore.reloadEntry();
+												this._areaBlockerMessage = null;
+											}
+										}
+									]
+								});
+								break;
+							case ActionTypes.NavigateOut:
+								this._showLoader = true;
+								break;
+							default:
+								break;
+						}
 					}
-				}
-			},
-			error =>
-			{
-				// TODO [kmc] navigate to error page
-				throw error;
-			});
-    }
+				},
+				error => {
+					// TODO [kmc] navigate to error page
+					throw error;
+				});
+	}
+
+	private _createBackToEntriesButton(): AreaBlockerMessageButton {
+		return {
+			label: 'Back To Entries',
+			action: () => {
+				this._entryStore.returnToEntries();
+			}
+		};
+	}
 
     public _backToList(){
     	this._entryStore.returnToEntries();

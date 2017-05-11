@@ -63,6 +63,8 @@ export class EntryStore implements  OnDestroy {
 				@Host() private _sectionsManager : EntrySectionsManager,
 				private _entryRoute: ActivatedRoute) {
 
+		this._sectionsManager.entryStore = this;
+
 		this._mapSections();
 
 		this._onRouterEvents();
@@ -162,6 +164,14 @@ export class EntryStore implements  OnDestroy {
 			console.warn('KMCng: missing implementation');
 		}
 
+	}
+
+	public reloadEntry() : void
+	{
+		if (this.entryId)
+		{
+			this._loadEntry(this.entryId);
+		}
 	}
 
 

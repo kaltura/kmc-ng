@@ -47,7 +47,7 @@ const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessCo
     UploadManagementModule,
     KMCContentUIModule.forRoot(),
     KalturaCommonModule.forRoot(),
-    KalturaClientModule,
+    KalturaClientModule.forRoot(),
     Ng2Webstorage,
     Ng2PageScrollModule.forRoot(),
     ButtonModule,
