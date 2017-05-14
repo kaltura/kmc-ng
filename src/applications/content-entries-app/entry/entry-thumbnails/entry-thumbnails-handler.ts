@@ -33,7 +33,7 @@ export class EntryThumbnailsHandler extends EntrySection
 		{ items : null, loading : false}
 	);
 
-	public _thumbnails$ = this._thumbnails.asObservable().monitor('thumbnail files');
+	public _thumbnails$ = this._thumbnails.asObservable();
 	private _distributionProfiles: KalturaDistributionProfile[]; // used to save the response profiles array as it is loaded only once
 
     constructor(manager : EntrySectionsManager, private _kalturaServerClient: KalturaClient, private _appConfig: AppConfig, private _appAuthentication: AppAuthentication)

@@ -77,7 +77,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this.isSafari = this._browserService.isSafari();
 
-		this._entryStore.status$
+		this._entryStore.state$
             .cancelOnDestroy(this)
             .subscribe(
 				status => {

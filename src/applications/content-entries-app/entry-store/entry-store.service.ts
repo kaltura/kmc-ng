@@ -40,13 +40,13 @@ export class EntryStore implements  OnDestroy {
 	private _loadEntrySubscription : ISubscription;
 	private _sectionToRouteMapping : { [key : number] : string} = {};
 	private _activeSectionType : EntrySectionTypes = null;
-	private _status : Subject<StatusArgs> = new Subject<StatusArgs>();
-	public status$ = this._status.monitor('entry store status');
+	private _state : Subject<StatusArgs> = new Subject<StatusArgs>();
+	public state$ = this._state.asObservable();
 
 
 	private _saveEntryInvoked = false;
 	private _entry : BehaviorSubject<KalturaMediaEntry> = new BehaviorSubject<KalturaMediaEntry>(null);
-	public entry$ = this._entry.monitor("loaded entry");
+	public entry$ = this._entry.asObservable();
 	private _entryId : string;
 
 	public get entryId() : string{
@@ -72,7 +72,7 @@ export class EntryStore implements  OnDestroy {
 
 	ngOnDestroy() {
 		this._loadEntrySubscription && this._loadEntrySubscription.unsubscribe();
-		this._status.complete();
+		this._state.complete();
 		this._entry.complete();
 	}
 
@@ -120,7 +120,7 @@ export class EntryStore implements  OnDestroy {
 	public saveEntry() : void {
 		this._saveEntryInvoked = true;
 
-		this._status.next({ action: ActionTypes.EntrySaving});
+		this._state.next({ action: ActionTypes.EntrySaving});
 
 		const newEntry = KalturaTypesFactory.createObject(this.entry);
 
@@ -133,12 +133,13 @@ export class EntryStore implements  OnDestroy {
 			);
 
 			this._sectionsManager.onDataSaving(newEntry, request, this.entry)
-                .monitor('preparing entry')
+                .monitor('entry store: prepare entry for save')
                 .flatMap(
 					(response) => {
 						if (response.ready) {
+
 							return this._kalturaServerClient.multiRequest(request)
-                                .monitor('saving entry')
+                                .monitor('entry store: save entry')
                                 .map(
 									response => {
 										return !(response.hasErrors());
@@ -155,13 +156,14 @@ export class EntryStore implements  OnDestroy {
 						if (response) {
 							this._loadEntry(this.entryId);
 						} else {
-							this._status.next({action: ActionTypes.EntrySavingFailed});
+							this._state.next({action: ActionTypes.EntrySavingFailed});
 						}
 					}
 				);
 		}else
 		{
-			console.warn('KMCng: missing implementation');
+			console.error(new Error(`Failed to create a new instance of the entry type '${this.entry ?  typeof this.entry : 'n/a'}`));
+			this._state.next({action: ActionTypes.EntrySavingFailed});
 		}
 
 	}
@@ -193,7 +195,7 @@ export class EntryStore implements  OnDestroy {
 		}
 
 		this._entryId = entryId;
-		this._status.next({action: ActionTypes.EntryLoading});
+		this._state.next({action: ActionTypes.EntryLoading});
 		this._sectionsManager.onDataLoading(entryId);
 
 		this._loadEntrySubscription = this._getEntry(entryId)
@@ -206,17 +208,17 @@ export class EntryStore implements  OnDestroy {
 
 						this._sectionsManager.onDataLoaded(response);
 
-						this._status.next({ action : ActionTypes.EntryLoaded });
+						this._state.next({ action : ActionTypes.EntryLoaded });
 
 					} else {
-						this._status.next({
+						this._state.next({
 							action: ActionTypes.EntryLoadingFailed,
 							error: new Error(`entry type not supported ${response.name}`)
 						});
 					}
 				},
 				error => {
-					this._status.next({action: ActionTypes.EntryLoadingFailed, error});
+					this._state.next({action: ActionTypes.EntryLoadingFailed, error});
 
 				}
 			);
@@ -244,9 +246,11 @@ export class EntryStore implements  OnDestroy {
 									if (response.result) {
 										if (response.result instanceof KalturaMediaEntry) {
 											observer.next(response.result);
+											observer.complete();
 										}else
 										{
 											observer.next(new Error("invalid entry type, expected KalturaMediaEntry"));
+											observer.complete();
 										}
 									}else {
 										observer.next(response.error);
@@ -291,7 +295,7 @@ export class EntryStore implements  OnDestroy {
 			this._saveEntryInvoked = false;
 		}
 
-		this._status.next({action: ActionTypes.NavigateOut});
+		this._state.next({action: ActionTypes.NavigateOut});
 
 		this._router.navigate(['content/entries']);
 	}

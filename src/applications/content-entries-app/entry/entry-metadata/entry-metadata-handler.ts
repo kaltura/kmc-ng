@@ -56,11 +56,10 @@ export class EntryMetadataHandler extends EntrySection
 
         this.metadataForm.statusChanges
             .cancelOnDestroy(this)
-            .monitor('status changes')
             .subscribe(
                 value =>
                 {
-                    super._onStatusChanged({isValid : value === 'VALID'});
+                    super._onSectionStateChanged({isValid : value === 'VALID'});
                 }
             )
     }
@@ -260,9 +259,6 @@ export class EntryMetadataHandler extends EntrySection
             }
         }
 
-
-        // TODO handle categories changes
-
         // save entry custom schema forms
         if (this.customDataForms) {
             this.customDataForms.forEach(customDataForm => {
@@ -324,6 +320,7 @@ export class EntryMetadataHandler extends EntrySection
                     {
                         const tags = result.objects.map(item => item.tag);
                         observer.next(tags);
+                        observer.complete();
                     },
                     err =>
                     {
@@ -351,6 +348,7 @@ export class EntryMetadataHandler extends EntrySection
                         result =>
                         {
                             observer.next(result.items);
+                            observer.complete();
                         },
                         err =>
                         {

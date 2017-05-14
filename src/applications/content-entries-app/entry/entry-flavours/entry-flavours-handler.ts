@@ -38,7 +38,7 @@ export class EntryFlavoursHandler extends EntrySection
 	private _flavors : BehaviorSubject<{ items : Flavor[], loading : boolean, error? : any}> = new BehaviorSubject<{ items : Flavor[], loading : boolean, error? : any}>(
 		{ items : [], loading : false}
 	);
-	public _flavors$ = this._flavors.asObservable().monitor('flavors');
+	public _flavors$ = this._flavors.asObservable();
 
 	public _entryStatus = "";
 	public _entryStatusClassName = "";

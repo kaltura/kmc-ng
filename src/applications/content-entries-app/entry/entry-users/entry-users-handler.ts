@@ -34,11 +34,10 @@ export class EntryUsersHandler extends EntrySection
 
 		this.usersForm.statusChanges
 			.cancelOnDestroy(this)
-			.monitor('status changes')
 			.subscribe(
 				value =>
 				{
-					super._onStatusChanged({isValid : value === 'VALID'});
+					super._onSectionStateChanged({isValid : value === 'VALID'});
 				}
 			)
 
@@ -215,6 +214,7 @@ export class EntryUsersHandler extends EntrySection
 					result =>
 					{
 						observer.next(result.objects);
+						observer.complete();
 					},
 					err =>
 					{
