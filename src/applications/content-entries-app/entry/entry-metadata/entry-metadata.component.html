@@ -1,90 +1,92 @@
-<kLoader [loading]="_handler.loading" [loadingError]="_handler.loadingError" (onActionRequested)="_onLoadingAction($event)">
-	<div class="jumpTo">
-		<p-menu #menu popup="popup" [model]="_jumpToMenu" [appendTo]="'body'"></p-menu>
-		<button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right" label="{{'applications.content.entryDetails.metadata.jumpTo' | translate}}" (click)="menu.toggle($event)"></button>
-	</div>
-	<div class="kMetadataDetails" #metadataContainer *ngIf="_handler.data" >
+<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
+    <div class="jumpTo">
+        <p-menu #menu popup="popup" [model]="_jumpToMenu" [appendTo]="'body'"></p-menu>
+        <button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right"
+                label="{{'applications.content.entryDetails.metadata.jumpTo' | translate}}"
+                (click)="menu.toggle($event)"></button>
+    </div>
+    <div class="kMetadataDetails" #metadataContainer *ngIf="_handler.data">
 
-		<k-jump-to-section [label]="'Metadata'"></k-jump-to-section>
+        <k-jump-to-section [label]="'Metadata'"></k-jump-to-section>
 
-		<form [formGroup]="_handler.metadataForm" novalidate>
-			<div class="kRow kValign">
-				<span class="kLabel">{{'applications.content.entryDetails.metadata.entryID' | translate}}</span>
-				<span>{{ _handler.data.id }}</span>
-			</div>
-			<div class="kRow kValign">
-				<span class="kLabel">{{'applications.content.entryDetails.metadata.entryName' | translate}}</span>
-				<div class="kControl">
-					<input formControlName="name" type="text" pInputText/>
-				</div>
-			</div>
-			<div class="kRow">
-				<span class="kLabel">{{'applications.content.entryDetails.metadata.description' | translate}}</span>
-				<div class="kControl TextAreaControl">
-					<textarea formControlName="description" class="threeRows" pInputTextarea></textarea>
-				</div>
-			</div>
-			<div class="kRow kValign">
-				<span class="kLabel">{{'applications.content.entryDetails.metadata.tags' | translate}}</span>
-				<div class="kControl">
-					<kAutoComplete formControlName="tags"
-								   suggestionItemField="item"
-								   suggestionSelectableField="isSelectable"
-								   [multiple]="true"
-								   [limitToSuggestions]="false"
-								   placeholder="{{'applications.entries.entryMetadata.searchTagsPH' | translate}}"
-								   [minLength]="3"
-								   [suggestionsProvider]="_tagsProvider"
-								   (completeMethod)="_searchTags($event)">
-					</kAutoComplete>
-				</div>
-			</div>
-			<div class="kRow kValign">
-				<span class="kLabel">{{'applications.content.entryDetails.metadata.categories' | translate}}</span>
-				<div class="kControl">
-					<kAutoComplete formControlName="categories"
-								   field="name"
-								   suggestionItemField="item"
-								   suggestionLabelField="name"
-								   suggestionSelectableField="isSelectable"
-								   [multiple]="true"
-								   placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"
-								   [minLength]="3"
-								   [suggestionsProvider]="_categoriesProvider"
-								   (completeMethod)="_searchCategories($event)">
-					</kAutoComplete>
-				</div>
-			</div>
-			<div class="kRow" *ngIf="_handler.isLiveEntry">
-				<span class="kLabel">{{'applications.content.entryDetails.metadata.offlineMsg' | translate}}</span>
-				<div class="kControl TextAreaControl">
-					<textarea formControlName="offlineMessage" class="threeRows" pInputTextarea></textarea>
-				</div>
-			</div>
-			<div class="kRow kValign">
-				<span class="kLabel">{{'applications.content.entryDetails.metadata.refId' | translate}}</span>
-				<div class="kControl">
-					<input formControlName="referenceId" type="text" pInputText/>
-				</div>
-			</div>
-		</form>
+        <form [formGroup]="_handler.metadataForm" novalidate>
+            <div class="kRow kValign">
+                <span class="kLabel">{{'applications.content.entryDetails.metadata.entryID' | translate}}</span>
+                <span>{{ _handler.data.id }}</span>
+            </div>
+            <div class="kRow kValign">
+                <span class="kLabel">{{'applications.content.entryDetails.metadata.entryName' | translate}}</span>
+                <div class="kControl">
+                    <input formControlName="name" type="text" pInputText/>
+                </div>
+            </div>
+            <div class="kRow">
+                <span class="kLabel">{{'applications.content.entryDetails.metadata.description' | translate}}</span>
+                <div class="kControl TextAreaControl">
+                    <textarea formControlName="description" class="threeRows" pInputTextarea></textarea>
+                </div>
+            </div>
+            <div class="kRow kValign">
+                <span class="kLabel">{{'applications.content.entryDetails.metadata.tags' | translate}}</span>
+                <div class="kControl">
+                    <kAutoComplete formControlName="tags"
+                                   suggestionItemField="item"
+                                   suggestionSelectableField="isSelectable"
+                                   [multiple]="true"
+                                   [limitToSuggestions]="false"
+                                   placeholder="{{'applications.entries.entryMetadata.searchTagsPH' | translate}}"
+                                   [minLength]="3"
+                                   [suggestionsProvider]="_tagsProvider"
+                                   (completeMethod)="_searchTags($event)">
+                    </kAutoComplete>
+                </div>
+            </div>
+            <div class="kRow kValign">
+                <span class="kLabel">{{'applications.content.entryDetails.metadata.categories' | translate}}</span>
+                <div class="kControl">
+                    <kAutoComplete formControlName="categories"
+                                   field="name"
+                                   suggestionItemField="item"
+                                   suggestionLabelField="name"
+                                   suggestionSelectableField="isSelectable"
+                                   [multiple]="true"
+                                   placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"
+                                   [minLength]="3"
+                                   [suggestionsProvider]="_categoriesProvider"
+                                   (completeMethod)="_searchCategories($event)">
+                    </kAutoComplete>
+                </div>
+            </div>
+            <div class="kRow" *ngIf="_handler.isLiveEntry">
+                <span class="kLabel">{{'applications.content.entryDetails.metadata.offlineMsg' | translate}}</span>
+                <div class="kControl TextAreaControl">
+                    <textarea formControlName="offlineMessage" class="threeRows" pInputTextarea></textarea>
+                </div>
+            </div>
+            <div class="kRow kValign">
+                <span class="kLabel">{{'applications.content.entryDetails.metadata.refId' | translate}}</span>
+                <div class="kControl">
+                    <input formControlName="referenceId" type="text" pInputText/>
+                </div>
+            </div>
+        </form>
 
-		<hr/>
+        <hr/>
 
-		<div *ngFor="let customDataForm of _handler.customDataForms; let last = last">
-			<k-jump-to-section [label]="customDataForm.metadataProfile.name"></k-jump-to-section>
-				<div class="kSchemaTitle">{{customDataForm.metadataProfile.name}}</div>
-				<div *ngIf="customDataForm && customDataForm.isReady">
-					<form novalidate>
-					<k-dynamic-form-item [control]="customDataForm.dynamicSection" [form]="customDataForm.formGroup">
-						<template let-item="item">
-							<k-prime-control [control]="item.control" [form]="item.form"></k-prime-control>
-						</template>
-					</k-dynamic-form-item>
-					</form>
-				</div>
+        <div *ngFor="let customDataForm of _handler.customDataForms; let last = last">
+            <k-jump-to-section [label]="customDataForm.metadataProfile.name"></k-jump-to-section>
+            <div class="kSchemaTitle">{{customDataForm.metadataProfile.name}}</div>
+            <div *ngIf="customDataForm && customDataForm.isReady">
+                <form novalidate>
+                    <k-dynamic-form-item [control]="customDataForm.dynamicSection" [form]="customDataForm.formGroup">
+                        <template let-item="item">
+                            <k-prime-control [control]="item.control" [form]="item.form"></k-prime-control>
+                        </template>
+                    </k-dynamic-form-item>
+                </form>
+            </div>
 
-			<hr *ngIf="!last" />
-		</div>
-	</div>
-</kLoader>
+            <hr *ngIf="!last"/>
+        </div>
+    </div>
+</k-area-blocker>

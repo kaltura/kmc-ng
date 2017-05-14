@@ -144,7 +144,7 @@ export class EntrySchedulingHandler extends EntrySection
             .subscribe(
 				value =>
 				{
-					super._onStatusChanged({isValid : value === 'VALID'});
+					super._onSectionStateChanged({isValid : value === 'VALID'});
 				}
 			)
     }

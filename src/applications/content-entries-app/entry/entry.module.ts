@@ -31,6 +31,7 @@ import { EntryClips } from "./entry-clips/entry-clips.component";
 import { EntryUsers } from "./entry-users/entry-users.component";
 import { EntrySectionsList } from "./entry-sections-list/entry-sections-list.component";
 import { EntryComponent } from './entry.component';
+import { AreaBlockerModule } from '@kaltura-ng2/kaltura-ui';
 import { EntryPreview } from './entry-preview/entry-preview.component';
 import { DynamicFormModule } from '@kaltura-ng2/kaltura-ui/dynamic-form';
 import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng2/kaltura-primeng-ui/dynamic-form';
@@ -39,6 +40,7 @@ import { JumpToSection } from './entry-metadata/jump-to-section.component';
 
 @NgModule({
     imports: [
+        AreaBlockerModule,
         AutoCompleteModule,
         ButtonModule,
         CalendarModule,

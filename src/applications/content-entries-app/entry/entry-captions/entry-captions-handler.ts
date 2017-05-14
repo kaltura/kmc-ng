@@ -36,7 +36,7 @@ export class EntryCaptionsHandler extends EntrySection
 		{ items : [], loading : false}
 	);
 
-	public _captions$ = this._captions.asObservable().monitor('caption files');
+	public _captions$ = this._captions.asObservable();
 	public currentCaption: CaptionRow;
 
 	private _entryId: string = '';
@@ -45,7 +45,6 @@ export class EntryCaptionsHandler extends EntrySection
                 private _kalturaServerClient: KalturaClient, private _appLocalization:AppLocalization, private _uploadManagement : UploadManagement)
     {
         super(manager);
-	    this._trackUploadFiles();
     }
 
 	private _trackUploadFiles() : void
@@ -105,6 +104,11 @@ export class EntryCaptionsHandler extends EntrySection
     protected _activate(firstLoad : boolean) {
 	    this._entryId = this.data.id;
 	    this._fetchCaptions();
+
+	    if (firstLoad)
+		{
+			this._trackUploadFiles();
+		}
     }
 
     private _fetchCaptions(): void{

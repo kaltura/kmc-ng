@@ -6,5 +6,5 @@ export interface AppMenuItem {
     children?: AppMenuItem[];
 }
 export function validateConfig(config: AppMenuConfig): void {
-    // todo : check config validity
+    // todo [kmcng]: check config validity
 }

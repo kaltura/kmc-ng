@@ -92,13 +92,12 @@ export class CategoriesStore {
 
 
                     observer.next({items : items});
+                    observer.complete();
                 },
                     err =>
                     {
                         observer.error(err);
-                        observer.complete();
                     });
-
 
                 return () =>
                 {
@@ -170,6 +169,7 @@ export class CategoriesStore {
                     observer.next({
                         items : items
                     });
+                    observer.complete();
                 }, (error) => {
                     observer.error(error);
                 }

@@ -80,7 +80,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
     }
 
     private _entries: BehaviorSubject<Entries> = new BehaviorSubject({items: [], totalCount: 0});
-    private _status : BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null});
+    private _state : BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null});
     private _querySource : ReplaySubject<QueryRequestArgs> = new ReplaySubject<QueryRequestArgs>(1,null);
 
     public queryData : QueryData = {
@@ -96,7 +96,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
     private executeQuerySubscription : ISubscription = null;
 
     public entries$: Observable<Entries> = this._entries.asObservable();
-    public status$: Observable<UpdateStatus> = this._status.asObservable();
+    public state$: Observable<UpdateStatus> = this._state.asObservable();
     public query$ : Observable<QueryRequestArgs> = this._querySource.asObservable();
 
 
@@ -122,7 +122,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
         this._activeFilters = null;
         this._activeFiltersMap = null;
-        this._status.complete();
+        this._state.complete();
         this._querySource.complete();
         this._entries.complete();
     }
@@ -244,7 +244,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         // execute the request
         this.executeQuerySubscription = Observable.create(observer => {
 
-            this._status.next({loading: true, errorMessage: null});
+            this._state.next({loading: true, errorMessage: null});
             const queryArgs : QueryRequestArgs = Object.assign({},
                 {
                     filters : this._activeFilters,
@@ -267,7 +267,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             response => {
                 this.executeQuerySubscription = null;
 
-                this._status.next({loading: false, errorMessage: null});
+                this._state.next({loading: false, errorMessage: null});
 
                 this._entries.next({
                     items: <any[]>response.objects,
@@ -276,7 +276,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             },
             error => {
                 this.executeQuerySubscription = null;
-                this._status.next({loading: false, errorMessage: (<Error>error).message || <string>error});
+                this._state.next({loading: false, errorMessage: (<Error>error).message || <string>error});
             });
 
     }

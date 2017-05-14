@@ -33,7 +33,7 @@ export class EntryLiveHandler extends EntrySection {
 
 	private _conversionProfiles: BehaviorSubject<{ items: any[], loading: boolean, error?: any}> =
 		new BehaviorSubject<{ items: any[], loading: boolean, error?: any}>({items: [], loading: false});
-	public _conversionProfiles$ = this._conversionProfiles.asObservable().monitor('conversion profiles');
+	public _conversionProfiles$ = this._conversionProfiles.asObservable();
 
 	public _regeneratingToken: boolean = false;
 	public _recordStatus: string = "";

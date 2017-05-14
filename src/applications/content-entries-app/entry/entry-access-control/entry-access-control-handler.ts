@@ -22,7 +22,7 @@ export class EntryAccessControlHandler extends EntrySection
 		{ items : null, loading : false}
 	);
 
-	public _accessControlProfiles$ = this._accessControlProfiles.asObservable().monitor('access control profiles');
+	public _accessControlProfiles$ = this._accessControlProfiles.asObservable();
 
 	private _selectedProfile: KalturaAccessControl = null;
 	public set selectedProfile(profile: KalturaAccessControl){

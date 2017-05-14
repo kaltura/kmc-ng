@@ -20,14 +20,6 @@ import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 })
 export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
-	// temp arrays for custom metadata [TODO] - remove
-	textItems = ["item 1", "item 2", "item 3"];
-	dateItems = ["item", "item", "item"];
-	groups = ["group"];
-	listItems = [{"label": "list item 1", "value" : 1}, {"label": "list item 2", "value" : 2}, {"label": "list item 3", "value" : 3}];
-	entries = ["Entry 1", "Entry 2", "Entry 3"];
-	selectedEntries = [];
-
     private _searchCategoriesSubscription : ISubscription;
     private _searchTagsSubscription : ISubscription;
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
@@ -41,19 +33,13 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
     constructor(private _appLocalization: AppLocalization,
                 public _handler : EntryMetadataHandler,
-                private _thisElement : ElementRef,
                 private _pageScrollService: PageScrollService,
-                @Inject(DOCUMENT) private document: any,
-                private _entryStore : EntryStore) {
+                @Inject(DOCUMENT) private document: any) {
     }
-
-
 
     ngOnInit() {
 
     }
-
-
 
     _searchTags(event) : void {
         this._tagsProvider.next({ suggestions : [], isLoading : true});
@@ -158,10 +144,6 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         this._pageScrollService.start(pageScrollInstance);
     }
 
-    _onLoadingAction(actionKey: string) {
-        if (actionKey === 'retry') {
 
-        }
-    }
 }
 

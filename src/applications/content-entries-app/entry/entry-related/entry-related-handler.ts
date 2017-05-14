@@ -28,7 +28,7 @@ export class EntryRelatedHandler extends EntrySection
 		{ items : [], loading : false}
 	);
 
-	public _relatedFiles$ = this._relatedFiles.asObservable().monitor('related files');
+	public _relatedFiles$ = this._relatedFiles.asObservable();
 
 	private _entryId: string = '';
 
@@ -42,7 +42,6 @@ export class EntryRelatedHandler extends EntrySection
 				private _uploadManagement : UploadManagement) {
         super(manager);
 
-        this._trackUploadFiles();
     }
 
 
@@ -101,6 +100,11 @@ export class EntryRelatedHandler extends EntrySection
 	protected _activate(firstLoad : boolean) {
 		this._entryId = this.data.id;
 		this._fetchRelatedFiles();
+
+		if (firstLoad)
+		{
+			this._trackUploadFiles();
+		}
 	}
 
 	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)

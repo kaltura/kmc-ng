@@ -1,4 +1,4 @@
-<kLoader [loading]="_loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
+<k-area-blocker [showLoader]="_showLoader" [message]="_areaBlockerMessage" >
 	<div class="kEntryDetails kUseKMCngIcons" [class.isSafari]="isSafari">
 		<div class="kContent kEntryDetailsWrapper">
 			<div class="kEntryDetailsHeader">
@@ -24,4 +24,4 @@
 		</div>
 
 	</div>
-</kLoader>
+</k-area-blocker>
