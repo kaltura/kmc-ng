@@ -3,7 +3,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { KalturaMediaType, KalturaEntryStatus, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
-import { EntriesStore } from "../entries-store/entries-store.service";
+import { EntriesStore } from "./entries-store/entries-store.service";
 
 @Component({
 	selector: 'kEntriesTable',
@@ -51,7 +51,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
 
 	ngOnInit() {
-		this.entriesStoreStatusSubscription = this.entriesStore.status$.subscribe(
+		this.entriesStoreStatusSubscription = this.entriesStore.state$.subscribe(
 			result => {
 				if (result.errorMessage) {
 					this._loadingError = {message: result.errorMessage, buttons: {retry: 'Retry'}};

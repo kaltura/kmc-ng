@@ -14,7 +14,8 @@ import { EntryModule } from './entry/entry.module';
         CommonModule,
         RouterModule.forChild(routing)
     ],
-    declarations: [],
+    declarations: [
+    ],
     exports: [],
     providers: [],
 })

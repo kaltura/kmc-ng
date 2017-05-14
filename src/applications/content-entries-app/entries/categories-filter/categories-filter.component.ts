@@ -14,11 +14,11 @@ import * as R from 'ramda';
 
 import { TreeSelection, OnSelectionChangedArgs,TreeSelectionModes,TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
 import { CategoriesStore, CategoryData } from '../categories-store.service';
-import { BrowserService } from "../../kmc-shell/providers/browser.service";
-import { FilterItem } from "../../../applications/content-entries-app/entries-store/filter-item";
-import { ValueFilter } from "../../../applications/content-entries-app/entries-store/value-filter";
-import { EntriesStore } from "../../../applications/content-entries-app/entries-store/entries-store.service";
-import { CategoriesFilter, CategoriesFilterModes } from "../../../applications/content-entries-app/entries-store/filters/categories-filter";
+import { BrowserService } from "kmc-shell/providers/browser.service";
+import { FilterItem } from "../entries-store/filter-item";
+import { ValueFilter } from "../entries-store/value-filter";
+import { EntriesStore } from "../entries-store/entries-store.service";
+import { CategoriesFilter, CategoriesFilterModes } from "../entries-store/filters/categories-filter";
 
 @Component({
     selector: 'kCategoriesFilter',
@@ -39,7 +39,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     public _selectionMode :TreeSelectionModes = TreeSelectionModes.Self;
 
     @ViewChild(TreeSelection)
-    private _treeSelection : TreeSelection= null;
+    private _treeSelection : TreeSelection = null;
 
     public _currentSearch: { data : CategoryData } = null;
 

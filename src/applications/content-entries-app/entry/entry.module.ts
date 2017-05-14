@@ -12,7 +12,6 @@ import { KalturaUIModule, TooltipModule } from '@kaltura-ng2/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 
-import { KMCContentUIModule } from 'kmc-content-ui/kmc-content-ui.module';
 
 import { EntryMetadata } from './entry-metadata/entry-metadata.component';
 import { EntryThumbnails } from './entry-thumbnails/entry-thumbnails.component';
@@ -37,6 +36,10 @@ import { DynamicFormModule } from '@kaltura-ng2/kaltura-ui/dynamic-form';
 import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng2/kaltura-primeng-ui/dynamic-form';
 import { KalturaCustomMetadataModule } from '@kaltura-ng2/kaltura-ui/dynamic-form/kaltura-custom-metadata';
 import { JumpToSection } from './entry-metadata/jump-to-section.component';
+import { ContentEntriesAppSharedModule } from '../shared/content-entries-app-shared.module';
+
+import { FileSizePipe } from './pipes/file-size.pipe';
+import { ModerationPipe } from './pipes/moderation.pipe';
 
 @NgModule({
     imports: [
@@ -56,7 +59,7 @@ import { JumpToSection } from './entry-metadata/jump-to-section.component';
         KalturaCommonModule,
         KalturaPrimeNgUIModule,
         KalturaUIModule,
-        KMCContentUIModule,
+        ContentEntriesAppSharedModule,
         MenuModule,
 	    GrowlModule,
 	    PopupWidgetModule,
@@ -89,6 +92,8 @@ import { JumpToSection } from './entry-metadata/jump-to-section.component';
         EntrySectionsList,
         EntryThumbnails,
         EntryUsers,
+        ModerationPipe,
+        FileSizePipe,
         JumpToSection
     ],
     exports: [

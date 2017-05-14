@@ -1,16 +1,16 @@
 import { Injectable, IterableDiffers, IterableDiffer, CollectionChangeRecord } from '@angular/core';
-import { EntrySection } from '../../entry-store/entry-section-handler';
+import { EntrySection } from '../entry-store/entry-section-handler';
 import { Observable } from 'rxjs/Observable';
 import { KalturaCategoryEntryFilter,  KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaTagFilter, KalturaTaggedObjectType, KalturaFilterPager,
     TagSearchAction, CategoryEntryListAction, KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/all';
-import { CategoriesStore, CategoryData } from '../../../../shared/kmc-content-ui/categories-store.service';
-import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
+import { CategoriesStore, CategoryData } from '../../entries/categories-store.service';
+import { EntrySectionTypes } from '../entry-store/entry-sections-types';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng2/kaltura-common';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
+import { EntrySectionsManager } from '../entry-store/entry-sections-manager';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { KalturaCustomMetadata } from '@kaltura-ng2/kaltura-ui/dynamic-form/kaltura-custom-metadata';
 import { MetadataListAction, KalturaMetadataFilter, KalturaMetadata, MetadataUpdateAction, MetadataAddAction, KalturaMetadataObjectType, CategoryEntryAddAction, CategoryEntryDeleteAction, KalturaCategoryEntry } from 'kaltura-typescript-client/types/all';

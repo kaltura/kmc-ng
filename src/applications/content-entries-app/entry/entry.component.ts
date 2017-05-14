@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/all';
 import { BrowserService } from 'kmc-shell';
-import { EntryStore, ActionTypes } from '../entry-store/entry-store.service';
+import { EntryStore, ActionTypes } from './entry-store/entry-store.service';
 import { EntrySectionsListHandler } from './entry-sections-list/entry-sections-list-handler';
 import { EntryMetadataHandler } from './entry-metadata/entry-metadata-handler';
 import { EntryPreviewHandler } from './entry-preview/entry-preview-handler';
@@ -14,8 +14,8 @@ import { EntryFlavoursHandler } from './entry-flavours/entry-flavours-handler';
 import { EntryThumbnailsHandler } from './entry-thumbnails/entry-thumbnails-handler';
 import { EntrySchedulingHandler } from './entry-scheduling/entry-scheduling-handler';
 import { EntryUsersHandler } from './entry-users/entry-users-handler';
-import { EntriesStore } from '../entries-store/entries-store.service';
-import { EntrySectionsManager } from '../entry-store/entry-sections-manager';
+import { EntriesStore } from '../entries/entries-store/entries-store.service';
+import { EntrySectionsManager } from './entry-store/entry-sections-manager';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng2/kaltura-ui';
 
 @Component({

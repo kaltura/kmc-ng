@@ -8,9 +8,9 @@ import { KalturaAssetFilter, KalturaAttachmentAsset, KalturaAttachmentType, Atta
 	AttachmentAssetDeleteAction, AttachmentAssetUpdateAction, AttachmentAssetAddAction, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 import { BrowserService } from 'kmc-shell';
 
-import { EntrySection } from '../../entry-store/entry-section-handler';
-import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
-import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
+import { EntrySection } from '../entry-store/entry-section-handler';
+import { EntrySectionTypes } from '../entry-store/entry-sections-types';
+import { EntrySectionsManager } from '../entry-store/entry-sections-manager';
 import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
 import { UploadManagement, FileChanges } from '@kaltura-ng2/kaltura-common/upload-management';
 import { FriendlyHashId } from '@kaltura-ng2/kaltura-common/friendly-hash-id';

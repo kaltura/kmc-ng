@@ -30,7 +30,6 @@ import { KalturaHttpConfigurationAdapter } from "./services/kaltura-http-configu
 
 import { ButtonModule, InputTextModule, TieredMenuModule } from 'primeng/primeng';
 
-import { KMCContentUIModule } from 'kmc-content-ui/kmc-content-ui.module';
 import { MetadataProfileStore, PartnerProfileStore, AccessControlProfileStore, FlavoursStore } from '@kaltura-ng2/kaltura-common';
 import { UploadManagementModule } from '@kaltura-ng2/kaltura-common/upload-management';
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
@@ -45,7 +44,6 @@ const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessCo
     TieredMenuModule,
     HttpModule,
     UploadManagementModule,
-    KMCContentUIModule.forRoot(),
     KalturaCommonModule.forRoot(),
     KalturaClientModule.forRoot(),
     Ng2Webstorage,
