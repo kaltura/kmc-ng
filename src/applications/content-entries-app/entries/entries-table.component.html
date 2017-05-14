@@ -1,6 +1,6 @@
-<kLoader kFillHeight [loading]="(entriesStore.status$ | async)?.loading" [loadingError]="_loadingError" (onActionRequested)="onLoadingAction($event)">
-	<div class="kEntriesTable col" [class.noResults]="!entries.length">
-		<p-dataTable #dataTable [value]="entries" [sortField]="filter.sortBy" [sortOrder]="-1"
+<kLoader kFillHeight [loading]="(entriesStore.status$ | async)?.loading || !this._viewLoaded" [loadingError]="_loadingError" (onActionRequested)="onLoadingAction($event)">
+	<div class="kEntriesTable col" [class.noResults]="!_entriesProvider.length">
+		<p-dataTable #dataTable [value]="_entriesProvider" [sortField]="filter.sortBy" [sortOrder]="-1"
 					 scrollable="true" scrollHeight="100%"
 					 (selectionChange)="onSelectionChange($event)" (onSort)="onSortChanged($event)"
 					 [(selection)]="tableSelectedEntries" emptyMessage="{{'applications.content.table.noResults' | translate}}">
