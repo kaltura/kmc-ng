@@ -123,7 +123,7 @@ export class EntryRelatedHandler extends EntrySection
 						let resource = new KalturaUploadedFileTokenResource();
 						resource.token = record.item["uploadToken"];
 						let setContentRequest: AttachmentAssetSetContentAction = new AttachmentAssetSetContentAction({id: '0', contentResource: resource})
-							.setDependency(['id', (request.requests.length-1), 'id']); console.warn("Warning: should be request.requests.length-1 after KAPI fix!");
+							.setDependency(['id', (request.requests.length-1), 'id']);
 
 						request.requests.push(setContentRequest);
 

@@ -517,7 +517,8 @@ td.ui-datatable-emptymessage{
 .ui-autocomplete .ui-autocomplete-panel {
     .ui-autocomplete-list-item {
         min-height: 50px;
-		height: auto;
+		max-height: 70px;
+		overflow: hidden;
         border-left: none;
         border-right: none;
         border-bottom: 2px solid $kGrayscale5;
