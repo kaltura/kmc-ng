@@ -117,7 +117,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
 	onLoadingAction(actionKey: string) {
 		if (actionKey === 'retry') {
-			this.entriesStore.reload();
+			this.entriesStore.reload(true);
 		}
 	}
 

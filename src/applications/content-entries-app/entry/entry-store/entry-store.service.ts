@@ -10,13 +10,14 @@ import 'rxjs/add/operator/switchMap';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
-import { KalturaAPIException, KalturaMultiRequest } from 'kaltura-typescript-client';
+import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { BaseEntryGetAction, BaseEntryUpdateAction } from 'kaltura-typescript-client/types/all';
 import { EntrySectionTypes } from './entry-sections-types';
 import { EntriesStore } from '../../entries/entries-store/entries-store.service';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { EntrySectionsManager } from './entry-sections-manager';
 import { KalturaTypesFactory } from 'kaltura-typescript-client';
+import { OnDataSavingReasons } from '@kaltura-ng2/kaltura-ui/form-sections';
 
 export enum ActionTypes
 {
@@ -24,7 +25,10 @@ export enum ActionTypes
 	EntryLoaded,
 	EntryLoadingFailed,
 	EntrySaving,
+	EntryPrepareSavingFailed,
 	EntrySavingFailed,
+	EntryDataIsInvalid,
+	ActiveSectionBusy,
 	NavigateOut
 }
 
@@ -117,55 +121,74 @@ export class EntryStore implements  OnDestroy {
 		)
 	}
 
-	public saveEntry() : void {
-		this._saveEntryInvoked = true;
+	private _transmitSaveRequest(newEntry : KalturaMediaEntry) {
+		this._state.next({action: ActionTypes.EntrySaving});
 
-		this._state.next({ action: ActionTypes.EntrySaving});
+		const request = new KalturaMultiRequest(
+			new BaseEntryUpdateAction({
+				entryId: this.entryId,
+				baseEntry: newEntry
+			})
+		);
+
+		this._sectionsManager.onDataSaving(newEntry, request, this.entry)
+            .monitor('entry store: prepare entry for save')
+            .flatMap(
+				(response) => {
+					if (response.ready) {
+						this._saveEntryInvoked = true;
+
+						return this._kalturaServerClient.multiRequest(request)
+                            .monitor('entry store: save entry')
+                            .map(
+								response => {
+									if (response.hasErrors()) {
+										this._state.next({action: ActionTypes.EntrySavingFailed});
+									} else {
+										this._loadEntry(this.entryId);
+									}
+
+									return Observable.empty();
+								}
+							)
+					}
+					else {
+						switch (response.reason) {
+							case OnDataSavingReasons.validationErrors:
+								this._state.next({action: ActionTypes.EntryDataIsInvalid});
+								break;
+							case OnDataSavingReasons.activeSectionRefused:
+								this._state.next({action: ActionTypes.ActiveSectionBusy});
+								break;
+							case OnDataSavingReasons.buildRequestFailure:
+								this._state.next({action: ActionTypes.EntryPrepareSavingFailed});
+								break;
+						}
+
+						return Observable.empty();
+					}
+				}
+			)
+            .subscribe(
+				response => {
+					// do nothing - the service state is modified inside the map functions.
+				},
+				error => {
+					// should not reach here, this is a fallback plan.
+					this._state.next({action: ActionTypes.EntrySavingFailed});
+				}
+			);
+	}
+	public saveEntry() : void {
 
 		const newEntry = KalturaTypesFactory.createObject(this.entry);
 
 		if (newEntry && newEntry instanceof KalturaMediaEntry) {
-			const request = new KalturaMultiRequest(
-				new BaseEntryUpdateAction({
-					entryId: this.entryId,
-					baseEntry: newEntry
-				})
-			);
-
-			this._sectionsManager.onDataSaving(newEntry, request, this.entry)
-                .monitor('entry store: prepare entry for save')
-                .flatMap(
-					(response) => {
-						if (response.ready) {
-
-							return this._kalturaServerClient.multiRequest(request)
-                                .monitor('entry store: save entry')
-                                .map(
-									response => {
-										return !(response.hasErrors());
-									}
-								)
-						}
-						else {
-							return Observable.of(false);
-						}
-					}
-				)
-                .subscribe(
-					response => {
-						if (response) {
-							this._loadEntry(this.entryId);
-						} else {
-							this._state.next({action: ActionTypes.EntrySavingFailed});
-						}
-					}
-				);
-		}else
-		{
-			console.error(new Error(`Failed to create a new instance of the entry type '${this.entry ?  typeof this.entry : 'n/a'}`));
-			this._state.next({action: ActionTypes.EntrySavingFailed});
+			this._transmitSaveRequest(newEntry)
+		} else {
+			console.error(new Error(`Failed to create a new instance of the entry type '${this.entry ? typeof this.entry : 'n/a'}`));
+			this._state.next({action: ActionTypes.EntryPrepareSavingFailed});
 		}
-
 	}
 
 	public reloadEntry() : void
@@ -291,7 +314,7 @@ export class EntryStore implements  OnDestroy {
 	{
 		if (this._saveEntryInvoked)
 		{
-			this._entriesStore.reload();
+			this._entriesStore.reload(true);
 			this._saveEntryInvoked = false;
 		}
 

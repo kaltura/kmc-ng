@@ -81,11 +81,14 @@ export class EntryComponent implements OnInit, OnDestroy {
             .cancelOnDestroy(this)
             .subscribe(
 				status => {
+
+					this._showLoader = false;
+					this._areaBlockerMessage = null;
+
 					if (status) {
 						switch (status.action) {
 							case ActionTypes.EntryLoading:
 								this._showLoader = true;
-								this._areaBlockerMessage = null;
 
 								// when loading new entry in progress, the 'entryID' property
 								// reflect the entry that is currently being loaded
@@ -94,12 +97,10 @@ export class EntryComponent implements OnInit, OnDestroy {
 								this._updateNavigationState();
 								break;
 							case ActionTypes.EntryLoaded:
-								this._showLoader = false;
 								this._entryName = this._entryStore.entry.name;
 								this._entryType = this._entryStore.entry.mediaType;
 								break;
 							case ActionTypes.EntryLoadingFailed:
-								this._showLoader = false;
 								this._areaBlockerMessage = new AreaBlockerMessage({
 									message: status.error.message,
 									buttons: [
@@ -117,14 +118,55 @@ export class EntryComponent implements OnInit, OnDestroy {
 								this._showLoader = true;
 								break;
 							case ActionTypes.EntrySavingFailed:
-								this._showLoader = false;
+
 								this._areaBlockerMessage = new AreaBlockerMessage({
 									message: 'Something happened during the save, please review your changes',
 									buttons: [
 										{
-											label: 'Dismiss',
+											label: 'Reload',
 											action: () => {
 												this._entryStore.reloadEntry();
+											}
+										}
+									]
+								});
+								break;
+							case ActionTypes.EntryDataIsInvalid:
+
+								this._areaBlockerMessage = new AreaBlockerMessage({
+									message: 'The form contains some invalid information, please review sections marked as invalid',
+									buttons: [
+										{
+											label: 'Dismiss',
+											action: () => {
+												this._areaBlockerMessage = null;
+											}
+										}
+									]
+								});
+								break;
+							case ActionTypes.ActiveSectionBusy:
+
+								this._areaBlockerMessage = new AreaBlockerMessage({
+									message: 'The active section is currently busy, please wait and try again in a minute.',
+									buttons: [
+										{
+											label: 'Dismiss',
+											action: () => {
+												this._areaBlockerMessage = null;
+											}
+										}
+									]
+								});
+								break;
+							case ActionTypes.EntryPrepareSavingFailed:
+
+								this._areaBlockerMessage = new AreaBlockerMessage({
+									message: 'Something happened while preparing the save request, please try again',
+									buttons: [
+										{
+											label: 'Dismiss',
+											action: () => {
 												this._areaBlockerMessage = null;
 											}
 										}

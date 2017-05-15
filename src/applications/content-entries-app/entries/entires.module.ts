@@ -24,18 +24,17 @@ import { CategoriesStore } from './categories-store.service';
 
 import { MaxEntriesPipe } from './pipes/max-entries.pipe';
 import { EntryDurationPipe } from './pipes/entry-duration.pipe';
-
 import {
     EntriesAdditionalFiltersComponent
 } from "./entries-additional-filters/entries-additional-filters.component";
-
 import { EntriesAdditionalFiltersStore } from "./entries-additional-filters/entries-additional-filters-store.service";
 import { MetadataProfileStore } from '@kaltura-ng2/kaltura-common';
 import { ContentEntriesAppSharedModule } from '../shared/content-entries-app-shared.module';
-
+import { AreaBlockerModule } from '@kaltura-ng2/kaltura-ui';
 
 @NgModule({
     imports:      [
+        AreaBlockerModule,
         ContentEntriesAppSharedModule,
         RadioButtonModule,
         TreeSelectionModule,

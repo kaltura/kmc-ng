@@ -268,7 +268,7 @@ export class EntryMetadataHandler extends EntrySection
                     const customDataValue = customDataForm.getValue();
 
                     if (customDataValue.error) {
-                        console.warn('KMCng: stop process and show error');
+                        throw new Error('One of the metadata dynamic form is invalid');
                     } else {
 
                         const entryMetadata = this._entryMetadata.find(item => item.metadataProfileId === customDataForm.metadataProfile.id);
