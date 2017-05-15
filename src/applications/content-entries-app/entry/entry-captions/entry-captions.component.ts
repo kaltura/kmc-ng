@@ -103,6 +103,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 	}
 
     ngOnDestroy() {
+	    this.actionsMenu.hide();
 	    this._popupStateChangeSubscribe.unsubscribe();
     }
 

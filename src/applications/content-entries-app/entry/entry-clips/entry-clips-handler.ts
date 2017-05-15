@@ -1,27 +1,25 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaBaseEntryFilter, KalturaFilterPager, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaMediaEntry,
 	KalturaClipAttributes, KalturaOperationAttributes,
     BaseEntryListAction } from 'kaltura-typescript-client/types/all';
 import { AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
+import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 
-import {
-    EntrySection
-} from '../entry-store/entry-section-handler';
-import { EntryStore } from '../entry-store/entry-store.service';
-import { EntrySectionTypes } from '../entry-store/entry-sections-types';
+import { EntrySection } from '../../entry-store/entry-section-handler';
+import { EntryStore } from '../../entry-store/entry-store.service';
+import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
 import { BrowserService } from "kmc-shell/providers/browser.service";
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { EntrySectionsManager } from '../entry-store/entry-sections-manager';
+import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 
 
 export interface ClipsData
 {
-    loading : boolean;
     items : any[];
-    error? : string;
     totalItems : number;
 }
 
@@ -30,7 +28,7 @@ export interface ClipsData
 @Injectable()
 export class EntryClipsHandler extends EntrySection
 {
-    private _clips : BehaviorSubject<ClipsData> = new BehaviorSubject<ClipsData>({ loading : false, items : null, totalItems : 0});
+    private _clips = new BehaviorSubject<ClipsData>({ items : null, totalItems : 0});
     public entries$ = this._clips.asObservable();
     public sortBy : string = 'createdAt';
     public sortAsc : boolean = false;
@@ -70,7 +68,7 @@ export class EntryClipsHandler extends EntrySection
 		    this.pageSize = defaultPageSize;
 	    }
 
-        this._clips.next({ loading : false, items : [], totalItems : 0, error : null});
+        this._clips.next({ items : [], totalItems : 0});
     }
 
     /**
@@ -79,7 +77,10 @@ export class EntryClipsHandler extends EntrySection
     public updateClips() : void
     {
         if (this.data) {
-            this._getEntryClips();
+            this._getEntryClips('reload').subscribe(() =>
+            {
+	            // do nothing
+            });
         }
     }
 
@@ -127,22 +128,19 @@ export class EntryClipsHandler extends EntrySection
 		return duration !== -1 ? KalturaUtils.formatTime(duration) : this._appLocalization.get('applications.content.entryDetails.clips.n_a');
 	}
 
-	private _getEntryClips() : void {
-        const entry : KalturaMediaEntry = this.data;
+	private _getEntryClips(origin: 'activation' | 'reload') : Observable<{ failed: boolean, error?: Error }> {
+		return Observable.create(observer =>
+		{
+	        const entry : KalturaMediaEntry = this.data;
 
-        if (entry) {
-            this._clips.next({
-                loading: true,
-                items: this._clips.getValue().items,
-                totalItems: this._clips.getValue().totalItems
-            });
+            super._showLoader();
 
             // build the request
-            this._kalturaServerClient.request(new BaseEntryListAction({
+	        let requestSubscription = this._kalturaServerClient.request(new BaseEntryListAction({
                 filter: new KalturaBaseEntryFilter(
                     {
                         rootEntryIdEqual : entry.id,
-                        orderBy : `${this.sortAsc ? '' : '-'}${this.sortBy}`
+                        orderBy : `${this.sortAsc ? '+' : '-'}${this.sortBy}`
                     }
                 ),
                 pager: new KalturaFilterPager(
@@ -160,22 +158,52 @@ export class EntryClipsHandler extends EntrySection
                 .monitor('get entry clips')
                 .subscribe(
                     response => {
-                            this._clips.next({
-                                loading: false,
-                                items: this._updateClipProperties(response.objects),
-                                totalItems: response.totalCount
-                            });
+	                    super._hideLoader();
+	                    this._clips.next({items: this._updateClipProperties(response.objects), totalItems: response.totalCount});
+	                    observer.next({failed: false});
+	                    observer.complete();
                     },
                     error => {
-                        this._clips.next({loading: false, items: [], totalItems: 0, error});
+                        this._clips.next({items: [], totalItems: 0});
+	                    super._hideLoader();
+	                    if (origin === 'activation') {
+		                    super._showActivationError();
+	                    }else {
+		                    this._showBlockerMessage(new AreaBlockerMessage(
+			                    {
+				                    message: 'Error loading clips',
+				                    buttons: [
+					                    {
+						                    label: 'Retry',
+						                    action: () => {
+							                    this._getEntryClips('reload').subscribe(() =>
+							                    {
+								                    // do nothing
+							                    });
+						                    }
+					                    }
+				                    ]
+			                    }
+		                    ), true);
+	                    }
+	                    observer.error({failed: true, error: error});
 
                     });
-        }
+
+			return () =>
+			{
+				if (requestSubscription)
+				{
+					requestSubscription.unsubscribe();
+					requestSubscription = null;
+				}
+			}
+
+		});
 
     }
 
     protected _activate(firstLoad : boolean) {
-
-        this._getEntryClips();
+	    return this._getEntryClips('activation');
     }
 }

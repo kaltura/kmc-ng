@@ -1,4 +1,4 @@
-<kLoader [loading]="_handler._loading > 0" [loadingError]="_handler._loadingError" (onActionRequested)="_onLoadingAction($event)">
+<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
 	<form [formGroup]="_handler.usersForm" novalidate>
 		<div class="kUsers">
 			<p class="kTitle">{{'applications.content.entryDetails.users.users' | translate}}</p>
@@ -71,4 +71,4 @@
 		</kPopupWidget>
 	</form>
 
-</kLoader>
+</k-area-blocker>

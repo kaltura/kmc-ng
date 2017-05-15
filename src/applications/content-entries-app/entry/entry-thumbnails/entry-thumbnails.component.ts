@@ -72,15 +72,10 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 		x.send();
 	}
     ngOnDestroy() {
+	    this.actionsMenu.hide();
     }
 
     ngAfterViewInit() {
 
-    }
-
-    _onLoadingAction(actionKey: string) {
-        if (actionKey === 'ok') {
-			this._handler.closeError();
-        }
     }
 }

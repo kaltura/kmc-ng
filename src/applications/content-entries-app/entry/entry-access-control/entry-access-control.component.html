@@ -1,4 +1,4 @@
-<kLoader [loading]="(_handler._accessControlProfiles$ | async)?.loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
+<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
 	<div class="kAccessControl" *ngIf="_handler.selectedProfile">
 		<p class="kTitle">{{'applications.content.entryDetails.accessControl.accessControl' | translate}}</p>
 		<div class="kAccessControlDetails">
@@ -36,4 +36,4 @@
 			</div>
 		</div>
 	</div>
-</kLoader>
+</k-area-blocker>

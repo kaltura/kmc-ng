@@ -1,4 +1,4 @@
-<kLoader [loading]="(_handler._relatedFiles$ | async)?.loading" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
+<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
 	<kFileDialog #fileDialog (onFileSelected)="_handler._onFileSelected($event)"></kFileDialog>
 	<div class="kRelated" #related>
 		<p class="kTitle">{{'applications.content.entryDetails.related.related' | translate}}</p>
@@ -49,4 +49,4 @@
 		<kEntryRelatedEdit [currentFile]="_currentFile" [parentPopupWidget]="editPopup"></kEntryRelatedEdit>
 	</kPopupWidget>
 
-</kLoader>
+</k-area-blocker>

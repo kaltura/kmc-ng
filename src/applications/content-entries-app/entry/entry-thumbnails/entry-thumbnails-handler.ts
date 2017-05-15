@@ -8,6 +8,7 @@ import 'rxjs/add/observable/forkJoin';
 import { ThumbAssetListAction, ThumbAssetSetAsDefaultAction, KalturaThumbAssetListResponse, KalturaThumbAsset, KalturaAssetFilter, DistributionProfileListAction, KalturaDistributionProfileListResponse,
 	KalturaDistributionProfile, KalturaThumbAssetStatus, KalturaDistributionThumbDimensions, ThumbAssetDeleteAction, ThumbAssetAddFromImageAction } from 'kaltura-typescript-client/types/all';
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
+import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 
 import { EntrySectionTypes } from '../entry-store/entry-sections-types';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
@@ -29,8 +30,8 @@ export interface ThumbnailRow {
 @Injectable()
 export class EntryThumbnailsHandler extends EntrySection
 {
-	private _thumbnails : BehaviorSubject<{ items : ThumbnailRow[], loading : boolean, error? : any}> = new BehaviorSubject<{ items : ThumbnailRow[], loading : boolean, error? : any}>(
-		{ items : null, loading : false}
+	private _thumbnails = new BehaviorSubject<{ items : ThumbnailRow[]}>(
+		{ items : []}
 	);
 
 	public _thumbnails$ = this._thumbnails.asObservable();
@@ -54,41 +55,44 @@ export class EntryThumbnailsHandler extends EntrySection
     }
 
     protected _activate(firstLoad : boolean) {
-	    this.fetchThumbnailsAndDistributions();
-    }
 
-    private fetchThumbnailsAndDistributions(): void{
+	    super._showLoader();
 
-	    this._thumbnails.next({items : [], loading : true});
+	    this._thumbnails.next({items : []});
 
 	    const getThumbnails$ = this._kalturaServerClient.request(new ThumbAssetListAction(
-	    	{
-	    		filter: new KalturaAssetFilter(
-	    			{
-						entryIdEqual : this.data.id
-					}
-				)
-	    	}))
-		    .cancelOnDestroy(this,this.sectionReset$)
+		    {
+			    filter: new KalturaAssetFilter(
+				    {
+					    entryIdEqual : this.data.id
+				    }
+			    )
+		    }))
 		    .monitor('get thumbnails');
 
 	    const getProfiles$ = this._kalturaServerClient.request(new DistributionProfileListAction({}))
-		    .cancelOnDestroy(this,this.sectionReset$)
 		    .monitor('get distribution profiles');
 
 
-	    Observable.forkJoin(getThumbnails$, getProfiles$)
-		    .subscribe(
-			    (responses) => {
-				    const thumbnails = (responses[0] as KalturaThumbAssetListResponse).objects || [];
-				    this._distributionProfiles = (responses[1] as KalturaDistributionProfileListResponse).objects || [];
-				    this.buildThumbnailsData(thumbnails);
-			    },
-			    (error) => {
-				    this._thumbnails.next({items : [], loading : false, error : error});
-			    }
-		    );
+	    return Observable.forkJoin(getThumbnails$, getProfiles$)
+		    .cancelOnDestroy(this,this.sectionReset$)
+
+		    .catch((error, caught) =>
+		    {
+			    super._hideLoader();
+			    super._showActivationError();
+			    this._thumbnails.next({items : []});
+			    return Observable.throw(error);
+		    })
+		    .do(responses => {
+			    const thumbnails = (responses[0] as KalturaThumbAssetListResponse).objects || [];
+			    this._distributionProfiles = (responses[1] as KalturaDistributionProfileListResponse).objects || [];
+			    this.buildThumbnailsData(thumbnails);
+			    super._hideLoader();
+		    });
+
     }
+
 
     private buildThumbnailsData(thumbnails: KalturaThumbAsset[]): void{
 	    let thumbs: ThumbnailRow[] = [];
@@ -133,23 +137,38 @@ export class EntryThumbnailsHandler extends EntrySection
 			    }
 		    });
 	    });
-	    this._thumbnails.next({items : thumbs, loading : false, error: null});
+	    this._thumbnails.next({items : thumbs});
     }
 
     private reloadThumbnails(){
+	    super._showLoader();
 	    const thumbs = Array.from(this._thumbnails.getValue().items);
 	    this._kalturaServerClient.request(new ThumbAssetListAction({ filter: new KalturaAssetFilter({
 			entryIdEqual : this.data.id
 		})}))
 	    .cancelOnDestroy(this,this.sectionReset$)
-	    .monitor('get thumbnails')
+	    .monitor('reload thumbnails')
 	    .subscribe(
 			    (responses) => {
 				    const thumbnails = (responses as KalturaThumbAssetListResponse).objects || [];
 				    this.buildThumbnailsData(thumbnails);
+				    super._hideLoader();
 			    },
 			    (error) => {
-				    this._thumbnails.next({items : thumbs, loading : false, error : error});
+				    super._hideLoader();
+				    this._showBlockerMessage(new AreaBlockerMessage(
+					    {
+						    message: 'Error reloading thumbnails',
+						    buttons: [
+							    {
+								    label: 'Retry',
+								    action: () => {
+									    this.reloadThumbnails();
+								    }
+							    }
+						    ]
+					    }
+				    ), true);
 			    }
 		    );
     }
@@ -161,7 +180,7 @@ export class EntryThumbnailsHandler extends EntrySection
 
 	public _setAsDefault(thumb: ThumbnailRow):void{
 		const thumbs = Array.from(this._thumbnails.getValue().items);
-		this._thumbnails.next({items : thumbs, loading : true});
+		super._showLoader();
 		this._kalturaServerClient.request(new ThumbAssetSetAsDefaultAction({thumbAssetId: thumb.id}))
 			.cancelOnDestroy(this,this.sectionReset$)
 			.monitor('set thumb as default')
@@ -172,29 +191,56 @@ export class EntryThumbnailsHandler extends EntrySection
 						thumb.isDefault = false;
 					});
 					thumb.isDefault = true;
-					this._thumbnails.next({items : thumbs, loading : false});
+					super._hideLoader();
 				},
 				error =>
 				{
-					this._thumbnails.next({items : thumbs, loading : false, error: error});
+					super._hideLoader();
+					this._showBlockerMessage(new AreaBlockerMessage(
+						{
+							message: 'Error setting default thumb',
+							buttons: [
+								{
+									label: 'Retry',
+									action: () => {
+										this._setAsDefault(thumb);
+									}
+								}
+							]
+						}
+					), true);
 				}
 			);
 	}
 
 	public deleteThumbnail(id: string): void{
 		const thumbs = Array.from(this._thumbnails.getValue().items);
-		this._thumbnails.next({items : thumbs, loading : true});
+		super._showLoader();
 		this._kalturaServerClient.request(new ThumbAssetDeleteAction({thumbAssetId: id}))
 			.cancelOnDestroy(this,this.sectionReset$)
 			.monitor('delete thumb')
 			.subscribe(
 				() =>
 				{
+					super._hideLoader();
 					this.reloadThumbnails();
 				},
 				error =>
 				{
-					this._thumbnails.next({items : thumbs, loading : false, error: error});
+					super._hideLoader();
+					this._showBlockerMessage(new AreaBlockerMessage(
+						{
+							message: 'Error deleting thumbnail',
+							buttons: [
+								{
+									label: 'Retry',
+									action: () => {
+										this.deleteThumbnail(id);
+									}
+								}
+							]
+						}
+					), true);
 				}
 			);
 	}
@@ -204,7 +250,7 @@ export class EntryThumbnailsHandler extends EntrySection
 			const fileData: File = selectedFiles[0];
 
 			const thumbs = Array.from(this._thumbnails.getValue().items);
-			this._thumbnails.next({items: thumbs, loading: true});
+			super._showLoader();
 			this._kalturaServerClient.request(new ThumbAssetAddFromImageAction({
 				entryId: this.data.id,
 				fileData: fileData
@@ -216,14 +262,22 @@ export class EntryThumbnailsHandler extends EntrySection
 						this.reloadThumbnails();
 					},
 					error => {
-						this._thumbnails.next({items : thumbs, loading : false, error: error});
+						this._showBlockerMessage(new AreaBlockerMessage(
+							{
+								message: 'Error uploading thumbnail',
+								buttons: [
+									{
+										label: 'Dismiss',
+										action: () => {
+											super._removeBlockerMessage();
+										}
+									}
+								]
+							}
+						), true);
 					}
 				);
 		}
 	}
 
-	public closeError(): void{
-		const thumbs = Array.from(this._thumbnails.getValue().items);
-		this._thumbnails.next({items : thumbs, loading : false, error: false});
-	}
 }

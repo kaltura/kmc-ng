@@ -67,6 +67,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
+		this.actionsMenu.hide();
 		this.entriesStoreStatusSubscription.unsubscribe();
 		this.entriesStoreStatusSubscription = null;
 	}

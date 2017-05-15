@@ -32,12 +32,6 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
     ngAfterViewInit() {
     }
 
-    _onLoadingAction(actionKey: string) {
-        if (actionKey === 'retry') {
-	        this._handler.initData();
-        }
-    }
-
     public _openChangeOwner(): void{
 	    this._handler.usersForm.patchValue({owners: null});
 	    this.ownerPopup.open();

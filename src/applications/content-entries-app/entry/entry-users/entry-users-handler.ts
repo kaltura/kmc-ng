@@ -9,11 +9,11 @@ import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { KalturaUser, UserGetAction, UserListAction, KalturaUserFilter, KalturaFilterPager, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 import { EntrySectionsManager } from '../entry-store/entry-sections-manager';
 
+import 'rxjs/add/observable/forkJoin';
+
 @Injectable()
 export class EntryUsersHandler extends EntrySection
 {
-	public _loading = 0;
-	public _loadingError = null;
 
     public _creator: string = "";
 	public _owner: KalturaUser = null;
@@ -84,52 +84,42 @@ export class EntryUsersHandler extends EntrySection
 		    editors: null,
 		    publishers: null
 	    });
-        this._loading = 0;
-        this._loadingError = null;
     }
 
     protected _activate(firstLoad : boolean) {
-	    this.initData();
-    }
 
-    public initData():void{
-	    this._loading = 3;
-	    this._fetchUsersData();
-	    this._fetchEditorsData();
-	    this._fetchPublishersData();
-    }
+	    super._showLoader();
 
-    private _fetchUsersData():void{
-	    const request = new KalturaMultiRequest(
-		    new UserGetAction({userId: this.data.creatorId}),
-		    new UserGetAction({userId: this.data.userId})
-	    );
+	    let actions : Observable<void>[] = [];
 
-	    this._kalturaServerClient.multiRequest(request)
+	    const fetchUsersData$ = this._kalturaServerClient.multiRequest(new KalturaMultiRequest(
+			    new UserGetAction({userId: this.data.creatorId}),
+			    new UserGetAction({userId: this.data.userId})
+		    ))
 		    .cancelOnDestroy(this,this.sectionReset$)
 		    .monitor('get users details')
-		    .subscribe(
-			    response =>
+		    .map(
+		    	responses =>
 			    {
-				    this._loading -= 1;
-				    if (response.length && response.length ===2 && response[0].result){
-					    this._creator = response[0].result.screenName ? response[0].result.screenName : response[0].result.id;
-					    if (response[1].result) {
-						    this._owner = <KalturaUser>response[1].result;
+				    if (responses.hasErrors())
+				    {
+					    throw new Error('failed to fetch users data');
+				    }else
+				    {
+					    if (responses.length && responses.length ===2 && responses[0].result){
+						    this._creator = responses[0].result.screenName ? responses[0].result.screenName : responses[0].result.id;
+						    if (responses[1].result) {
+							    this._owner = <KalturaUser>responses[1].result;
+						    }
 					    }
 				    }
 
-			    },
-			    error =>
-			    {
-					this._loading = 0;
-				    this._loadingError = { message : error.errorMessage, buttons : { retry : 'Retry'}};
-				    console.warn("[kmcng] - Error getting users data");
+				    return undefined;
 			    }
 		    );
-    }
 
-    private _fetchEditorsData():void{
+	    actions.push(fetchUsersData$);
+
 	    if (this.data.entitledUsersEdit && this.data.entitledUsersEdit.length) {
 		    const entitledUsersEdit = this.data.entitledUsersEdit.split(",");
 		    const request = new KalturaMultiRequest();
@@ -137,30 +127,31 @@ export class EntryUsersHandler extends EntrySection
 			    request.requests.push(new UserGetAction({userId: entitledUser}));
 		    });
 
-		    this._kalturaServerClient.multiRequest(request)
+		    const fetchEditorsData$ = this._kalturaServerClient.multiRequest(request)
 			    .cancelOnDestroy(this, this.sectionReset$)
 			    .monitor('get editors')
-			    .subscribe(
-				    response => {
-					    this._loading -= 1;
-					    let editors = [];
-					    response.forEach(res => {
-						    editors.push(res.result);
-					    });
-					    this.usersForm.patchValue({editors: editors});
-				    },
-				    error => {
-					    this._loading = 0;
-					    this._loadingError = { message : error.errorMessage, buttons : { retry : 'Retry'}};
-					    console.warn("[kmcng] - Error getting editors");
+			    .map(
+				    responses =>
+				    {
+					    if (responses.hasErrors())
+					    {
+						    throw new Error('failed to fetch editor data');
+					    }else
+					    {
+						    let editors = [];
+						    responses.forEach(res => {
+							    editors.push(res.result);
+						    });
+						    this.usersForm.patchValue({editors: editors});
+					    }
+
+					    return undefined;
 				    }
 			    );
-	    }else{
-		    this._loading -= 1;
-	    }
-    }
 
-    private _fetchPublishersData():void{
+		    actions.push(fetchEditorsData$);
+	    }
+
 	    if (this.data.entitledUsersPublish && this.data.entitledUsersPublish.length) {
 		    const entitledUsersPublish = this.data.entitledUsersPublish.split(",");
 		    const request = new KalturaMultiRequest();
@@ -168,27 +159,44 @@ export class EntryUsersHandler extends EntrySection
 			    request.requests.push(new UserGetAction({userId: entitledUser}));
 		    });
 
-		    this._kalturaServerClient.multiRequest(request)
+		    const fetchPublishersData$ = this._kalturaServerClient.multiRequest(request)
 			    .cancelOnDestroy(this, this.sectionReset$)
 			    .monitor('get publishers')
-			    .subscribe(
-				    response => {
-					    this._loading -= 1;
-					    let publishers = [];
-					    response.forEach(res => {
-						    publishers.push(res.result);
-					    });
-					    this.usersForm.patchValue({publishers: publishers});
-				    },
-				    error => {
-					    this._loading = 0;
-					    this._loadingError = { message : error.errorMessage, buttons : { retry : 'Retry'}};
-					    console.warn("[kmcng] - Error getting publishers");
+			    .map(
+				    responses =>
+				    {
+					    if (responses.hasErrors())
+					    {
+						    throw new Error('failed to fetch publishers data');
+					    }else
+					    {
+						    let publishers = [];
+						    responses.forEach(res => {
+							    publishers.push(res.result);
+						    });
+						    this.usersForm.patchValue({publishers: publishers});
+					    }
+
+					    return undefined;
 				    }
 			    );
-	    }else{
-		    this._loading -= 1;
+
+		    actions.push(fetchPublishersData$);
 	    }
+
+	    return Observable.forkJoin(actions)
+		    .map(responses => {
+			    super._hideLoader();
+			    return {failed : false};
+		    })
+		    .catch((error, caught) =>
+		    {
+			    super._hideLoader();
+			    super._showActivationError();
+
+			    return Observable.of({failed : true, error});
+		    });
+
     }
 
 	public searchUsers(text : string)

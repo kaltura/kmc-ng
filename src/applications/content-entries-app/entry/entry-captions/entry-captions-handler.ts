@@ -1,5 +1,6 @@
 import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, KeyValueChangeRecord, CollectionChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
@@ -32,8 +33,8 @@ export class EntryCaptionsHandler extends EntrySection
 	captionsListDiffer: IterableDiffer;
 	captionDiffer : { [key : string] : KeyValueDiffer } = {};
 
-	private _captions : BehaviorSubject<{ items : CaptionRow[], loading : boolean, error? : any}> = new BehaviorSubject<{ items : CaptionRow[], loading : boolean, error? : any}>(
-		{ items : [], loading : false}
+	private _captions = new BehaviorSubject<{ items : CaptionRow[]}>(
+		{ items : []}
 	);
 
 	public _captions$ = this._captions.asObservable();
@@ -98,34 +99,29 @@ export class EntryCaptionsHandler extends EntrySection
 	    this.captionsListDiffer = null;
 	    this.captionDiffer = {};
 	    this._entryId = '';
-	    this._captions.next({ loading : false, items : [], error : null});
+	    this._captions.next({ items : []});
     }
 
     protected _activate(firstLoad : boolean) {
 	    this._entryId = this.data.id;
-	    this._fetchCaptions();
-
+		super._showLoader();
 	    if (firstLoad)
 		{
 			this._trackUploadFiles();
 		}
-    }
+	    this._captions.next({items : []});
 
-    private _fetchCaptions(): void{
-	    this._captions.next({items : [], loading : true});
-
-
-	    this._kalturaServerClient.request(new CaptionAssetListAction({
+	    return this._kalturaServerClient.request(new CaptionAssetListAction({
 			    filter: new KalturaAssetFilter({
-					entryIdEqual : this._entryId
-				})
+				    entryIdEqual : this._entryId
+			    })
 		    }))
 		    .cancelOnDestroy(this,this.sectionReset$)
 		    .monitor('get captions')
-		    .subscribe(
+		    .do(
 			    response =>
 			    {
-				    this._captions.next({items : response.objects as any[], loading : false});
+				    this._captions.next({items : response.objects as any[]});
 				    this.captionsListDiffer = this._listDiffers.find([]).create(null);
 				    this.captionsListDiffer.diff(this._captions.getValue().items);
 
@@ -134,10 +130,14 @@ export class EntryCaptionsHandler extends EntrySection
 					    this.captionDiffer[caption.id] = this._objectDiffers.find([]).create(null);
 					    this.captionDiffer[caption.id].diff(caption);
 				    });
-			    },
-			    error =>
+				    super._hideLoader();
+			    })
+		    .catch((error, caught) =>
 			    {
-				    this._captions.next({items : [], loading : false, error : error});
+				    super._hideLoader();
+				    super._showActivationError();
+				    this._captions.next({items : []});
+				    return Observable.throw(error);
 			    }
 		    );
     }
@@ -148,7 +148,7 @@ export class EntryCaptionsHandler extends EntrySection
 	    captions.forEach((caption) => {
 		   caption.isDefault = caption.id === captionId ? 1 : 0;
 	    });
-	    this._captions.next({items : captions, loading : false, error : null});
+	    this._captions.next({items : captions});
     }
 
     public _getCaptionType(captionFormat: KalturaCaptionType): string{
@@ -202,7 +202,7 @@ export class EntryCaptionsHandler extends EntrySection
 
 	    let captions = Array.from(this._captions.getValue().items); // create a copy of the captions array without a reference to the original array
 	    captions.push(newCaption);
-	    this._captions.next({items : captions, loading : false, error : null});
+	    this._captions.next({items : captions});
 	    this.currentCaption = newCaption;
 	}
 
@@ -222,7 +222,7 @@ export class EntryCaptionsHandler extends EntrySection
 
 	public removeCaption(): void{
 		// update the list by filtering the assets array.
-		this._captions.next({items : this._captions.getValue().items.filter((item: CaptionRow) => {return item !== this.currentCaption}), loading : false});
+		this._captions.next({items : this._captions.getValue().items.filter((item: CaptionRow) => {return item !== this.currentCaption})});
 
 		// stop tracking changes on this asset
 		if (this.currentCaption.id && this.captionDiffer[this.currentCaption.id]){
@@ -236,7 +236,7 @@ export class EntryCaptionsHandler extends EntrySection
 			if (this.currentCaption.id === null && this.currentCaption.uploadUrl === "" && this.currentCaption.uploadToken === "" && !this.currentCaption.uploading) {
 				let captions = Array.from(this._captions.getValue().items); // create a copy of the captions array without a reference to the original array
 				captions.pop(); // remove last caption
-				this._captions.next({items : captions, loading : false, error : null});
+				this._captions.next({items : captions});
 			}
 		}
 	}

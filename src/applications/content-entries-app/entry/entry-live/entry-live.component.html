@@ -1,9 +1,15 @@
-<kLoader [loading]="(_handler._conversionProfiles$ | async)?.loading || _handler._regeneratingToken" [loadingError]="_loadingError" (onActionRequested)="_onLoadingAction($event)">
+<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
 	<div class="kLive">
 		<p class="kTitle">{{'applications.content.entryDetails.live.live' | translate}}</p>
 		<div class="kLiveDetails">
 
-			<div *ngIf="_handler._liveType !== 'manual'">
+			<div class="kRow" *ngIf="_handler._liveType === 'kaltura'" style="flex-direction: column; font-size: 18px; font-weight: 700">
+				<p>You want this?!</p>
+				<p>Contact this guy...</p>
+				<img style="cursor: pointer; box-shadow: 5px 5px 3px #888888; border: 1px solid grey" src="https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAcBAAAAJGJkYjQ5YzMxLTVjZGMtNDI4MS1iZDczLTM1Y2FmNTJmODlhNQ.jpg" onclick="window.open('https://www.linkedin.com/in/gad-yaari-a6a76774/')">
+			</div>
+
+			<div *ngIf="_handler._liveType === 'universal'">
 				<span class="kSubTitle">{{'applications.content.entryDetails.live.urls' | translate}}</span>
 				<div class="kRow">
 					<span class="kLabels">{{'applications.content.entryDetails.live.primary' | translate}}</span>
@@ -21,12 +27,12 @@
 				</div>
 			</div>
 
-			<div class="kRow" *ngIf="_handler._liveType === 'kaltura'">
+			<!--div class="kRow" *ngIf="_handler._liveType === 'kaltura'">
 				<span class="kLabels"></span>
 				<button pButton (click)="_regenerateToken()" class="kButtonDefault" label="{{'applications.content.entryDetails.live.regenerate' | translate}}" [kTooltip]="'applications.content.entryDetails.live.regenerateTooltip' | translate"></button>
-			</div>
+			</div-->
 
-			<div *ngIf="_handler._liveType !== 'manual'">
+			<div *ngIf="_handler._liveType === 'universal'">
 				<div class="kRow">
 					<span class="kLabels">{{'applications.content.entryDetails.live.streamName' | translate}}</span>
 					<span>{{_handler.data?.streamName.replace('%i', '1')}}</span>
@@ -38,13 +44,13 @@
 				<div class="kRow">
 					<span class="kLabels"></span>
 					<button pButton class="kButtonDefault" (click)="_handler._exportXML()" label="{{'applications.content.entryDetails.live.export' | translate}}"></button>
-					<a *ngIf="_handler._liveType === 'kaltura'" class="kReportLink" (click)="_handler._openLiveReport()">{{'applications.content.entryDetails.live.report' | translate}}</a>
+					<!--a *ngIf="_handler._liveType === 'kaltura'" class="kReportLink" (click)="_handler._openLiveReport()">{{'applications.content.entryDetails.live.report' | translate}}</a-->
 				</div>
 			</div>
 
-			<div *ngIf="_handler._liveType !== 'manual'">
+			<div *ngIf="_handler._liveType === 'universal'">
 				<span class="kSubTitle">{{'applications.content.entryDetails.live.config' | translate}}</span>
-				<div *ngIf="_handler._liveType === 'universal'">
+				<div>
 					<div class="kRow">
 						<span class="kLabels">{{'applications.content.entryDetails.live.hlsStream' | translate}}</span>
 						<span>{{_handler.data?.hlsStreamUrl}}</span>
@@ -63,19 +69,19 @@
 					<span class="kLabels">{{'applications.content.entryDetails.live.dvrWindow' | translate}}</span>
 					<span>{{_handler.data?.dvrWindow | kTime}} {{'applications.content.entryDetails.live.hours' | translate}}</span>
 				</div>
-				<div class="kRow" *ngIf="_handler._liveType === 'kaltura'">
+				<!--div class="kRow" *ngIf="_handler._liveType === 'kaltura'">
 					<span class="kLabels">{{'applications.content.entryDetails.live.activeRec' | translate}}</span>
 					<span>{{_handler._recordStatus}}</span>
-				</div>
+				</div-->
 			</div>
 
-			<div  *ngIf="_handler._liveType === 'kaltura'">
+			<!--div  *ngIf="_handler._liveType === 'kaltura'">
 				<span class="kSubTitle">{{'applications.content.entryDetails.live.transcoding' | translate}}</span>
 				<div class="kRow">
 					<span class="kLabels">{{'applications.content.entryDetails.live.transcodingProfile' | translate}}</span>
 					<p-dropdown [options]="(_handler._conversionProfiles$ | async)?.items" [(ngModel)]="_handler._selectedConversionProfile"></p-dropdown>
 				</div>
-			</div>
+			</div-->
 
 			<div *ngIf="_handler._liveType === 'universal'">
 				<span class="kSubTitle">{{'applications.content.entryDetails.live.bitrateConfig' | translate}}</span>
@@ -139,4 +145,4 @@
 	</div>
 	<p-growl [value]="_handler._msgs"></p-growl>
 	<p-confirmDialog header="{{'applications.content.entryDetails.live.regeneratePromptHeader' | translate}}" width="425"></p-confirmDialog>
-</kLoader>
+</k-area-blocker>

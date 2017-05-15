@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { EntrySection } from '../entry-store/entry-section-handler';
+import { EntrySection } from '../../entry-store/entry-section-handler';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { EntrySectionTypes } from '../entry-store/entry-sections-types';
-
+import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
+import { Observable } from 'rxjs/Observable';
 import { AppLocalization, AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
+import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { BrowserService } from 'kmc-shell';
 import { KalturaFlavorAsset, KalturaFlavorAssetWithParams, FlavorAssetGetFlavorAssetsWithParamsAction, KalturaFlavorAssetStatus, KalturaLiveParams, KalturaEntryStatus, KalturaWidevineFlavorAsset,
 	FlavorAssetDeleteAction, FlavorAssetConvertAction, FlavorAssetReconvertAction, KalturaUploadedFileTokenResource, FlavorAssetSetContentAction, FlavorAssetAddAction, KalturaUrlResource, KalturaContentResource } from 'kaltura-typescript-client/types/all';
 import { UploadManagement, FileChanges } from '@kaltura-ng2/kaltura-common/upload-management';
 import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
-import { EntrySectionsManager } from '../entry-store/entry-sections-manager';
+import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 import { Message, ConfirmationService } from 'primeng/primeng';
 
 export interface Flavor extends KalturaFlavorAssetWithParams{
@@ -35,8 +36,8 @@ export interface Flavor extends KalturaFlavorAssetWithParams{
 @Injectable()
 export class EntryFlavoursHandler extends EntrySection
 {
-	private _flavors : BehaviorSubject<{ items : Flavor[], loading : boolean, error? : any}> = new BehaviorSubject<{ items : Flavor[], loading : boolean, error? : any}>(
-		{ items : [], loading : false}
+	private _flavors = new BehaviorSubject<{ items : Flavor[]}>(
+		{ items : []}
 	);
 	public _flavors$ = this._flavors.asObservable();
 
@@ -66,46 +67,85 @@ export class EntryFlavoursHandler extends EntrySection
 
     protected _activate(firstLoad : boolean) {
 	    this._setEntryStatus();
-        this._fetchFlavors();
+        return this._fetchFlavors('activation', true);
     }
 
-    public _fetchFlavors(reset: boolean = true):void{
-	    if (reset) {
-		    this._flavors.next({items: [], loading: true});
-	    }
-	    this.sourceAvailabale = false;
+    public _fetchFlavors(origin: 'activation' | 'reload' , reset: boolean = true): Observable<{ failed: boolean, error?: Error }>{
+	    return Observable.create(observer =>
+	    {
+		    super._showLoader();
+		    if (reset) {
+			    this._flavors.next({items: []});
+		    }
+		    this.sourceAvailabale = false;
 
-	    this._kalturaServerClient.request(new FlavorAssetGetFlavorAssetsWithParamsAction({
-		        entryId: this.data.id
-	        }))
-		    .cancelOnDestroy(this,this.sectionReset$)
-		    .monitor('get flavors')
-		    .subscribe(
-			    response =>
-			    {
-				    if (response && response.length) {
-					    let flavors: Flavor[] = [];
-					    let flavorsWithAssets: Flavor[] = [];
-					    let flavorsWithoutAssets: Flavor[] = [];
-					    response.forEach((flavor: KalturaFlavorAssetWithParams) => {
-							if (flavor.flavorAsset && flavor.flavorAsset.isOriginal){
-								flavors.push(this.createFlavor(flavor, response)); // this is the source. put it first in the array
-								this.sourceAvailabale = true;
-							}else if (flavor.flavorAsset && (!flavor.flavorAsset.status || (flavor.flavorAsset.status && flavor.flavorAsset.status.toString() !== KalturaFlavorAssetStatus.temp.toString()))){
-								flavorsWithAssets.push(this.createFlavor(flavor, response)); // flavors with assets that is not in temp status
-							}else if (!flavor.flavorAsset && flavor.flavorParams && !(flavor.flavorParams instanceof KalturaLiveParams)){
-								flavorsWithoutAssets.push(this.createFlavor(flavor, response)); // flavors without assets
-							}
-					    });
-					    flavors = flavors.concat(flavorsWithAssets).concat(flavorsWithoutAssets); // source first, then flavors with assets, then flavors without assets
-					    this._flavors.next({items : flavors, loading : false, error : false});
+		    let requestSubscription = this._kalturaServerClient.request(new FlavorAssetGetFlavorAssetsWithParamsAction({
+			    entryId: this.data.id
+		    }))
+			    .cancelOnDestroy(this,this.sectionReset$)
+			    .monitor('get flavors')
+			    .subscribe(
+				    response =>
+				    {
+					    if (response && response.length) {
+						    let flavors: Flavor[] = [];
+						    let flavorsWithAssets: Flavor[] = [];
+						    let flavorsWithoutAssets: Flavor[] = [];
+						    response.forEach((flavor: KalturaFlavorAssetWithParams) => {
+							    if (flavor.flavorAsset && flavor.flavorAsset.isOriginal){
+								    flavors.push(this.createFlavor(flavor, response)); // this is the source. put it first in the array
+								    this.sourceAvailabale = true;
+							    }else if (flavor.flavorAsset && (!flavor.flavorAsset.status || (flavor.flavorAsset.status && flavor.flavorAsset.status.toString() !== KalturaFlavorAssetStatus.temp.toString()))){
+								    flavorsWithAssets.push(this.createFlavor(flavor, response)); // flavors with assets that is not in temp status
+							    }else if (!flavor.flavorAsset && flavor.flavorParams && !(flavor.flavorParams instanceof KalturaLiveParams)){
+								    flavorsWithoutAssets.push(this.createFlavor(flavor, response)); // flavors without assets
+							    }
+						    });
+						    flavors = flavors.concat(flavorsWithAssets).concat(flavorsWithoutAssets); // source first, then flavors with assets, then flavors without assets
+						    super._hideLoader();
+						    this._flavors.next({items : flavors});
+						    observer.next({failed: false});
+						    observer.complete();
+					    }
+				    },
+				    error =>
+				    {
+					    this._flavors.next({items : []});
+					    super._hideLoader();
+					    if (origin === 'activation') {
+						    super._showActivationError();
+					    }else {
+						    this._showBlockerMessage(new AreaBlockerMessage(
+							    {
+								    message: 'Error reloading flavors',
+								    buttons: [
+									    {
+										    label: 'Retry',
+										    action: () => {
+											    this._fetchFlavors('reload', reset).subscribe(() =>
+											    {
+												    // do nothing
+											    });
+										    }
+									    }
+								    ]
+							    }
+						    ), true);
+					    }
+					    observer.error({failed: true, error: error});
 				    }
-			    },
-			    error =>
+			    );
+
+		    return () =>
+		    {
+			    if (requestSubscription)
 			    {
-				    this._flavors.next({items : [], loading : false, error : error});
+				    requestSubscription.unsubscribe();
+				    requestSubscription = null;
 			    }
-		    );
+		    }
+	    });
+
     }
 
 	private createFlavor(flavor: KalturaFlavorAssetWithParams, allFlavors: KalturaFlavorAssetWithParams[]): Flavor{
@@ -197,8 +237,7 @@ export class EntryFlavoursHandler extends EntrySection
 	    this._confirmationService.confirm({
 		    message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirm',{"0": flavor.id}),
 		    accept: () => {
-			    let flavors: Flavor[] = Array.from(this._flavors.getValue().items);
-			    this._flavors.next({items : flavors, loading : true});
+			    super._showLoader();
 			    this._kalturaServerClient.request(new FlavorAssetDeleteAction({
 					    id: flavor.id
 				    }))
@@ -207,11 +246,16 @@ export class EntryFlavoursHandler extends EntrySection
 				    .subscribe(
 					    response =>
 					    {
+						    super._hideLoader();
 						    this._msgs.push({severity: 'success', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteSuccess')});
-						    this._fetchFlavors(false);
+						    this._fetchFlavors('reload', false).subscribe(() =>
+						    {
+							    // do nothing
+						    });
 					    },
 					    error =>
 					    {
+						    super._hideLoader();
 						    this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteFailure')});
 					    }
 				    );
@@ -255,12 +299,15 @@ export class EntryFlavoursHandler extends EntrySection
 							fl.status = KalturaFlavorAssetStatus.converting.toString();
 						}
 					});
-					this._flavors.next({items : flavors, loading : false, error : false});
+					this._flavors.next({items : flavors});
 				},
 				error =>
 				{
 					this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure')});
-					this._fetchFlavors(false); // reload flavors as we need to get the flavor status from the server
+					this._fetchFlavors('reload', false).subscribe(() =>
+					{
+						// reload flavors as we need to get the flavor status from the server
+					});
 				}
 			);
 	}
@@ -280,7 +327,10 @@ export class EntryFlavoursHandler extends EntrySection
 			},
 			(error) => {
 				this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
-				this._fetchFlavors(false); // reload flavors as we need to get the flavor status from the server
+				this._fetchFlavors('reload', false).subscribe(() =>
+				{
+					// reload flavors as we need to get the flavor status from the server
+				});
 			});
 	}
 
@@ -294,12 +344,18 @@ export class EntryFlavoursHandler extends EntrySection
 		.subscribe(
 			response =>
 			{
-				this._fetchFlavors(false);
+				this._fetchFlavors('reload', false).subscribe(() =>
+				{
+					// do nothing
+				});
 			},
 			error =>
 			{
 				this._msgs.push({severity: 'error',	summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
-				this._fetchFlavors(false);
+				this._fetchFlavors('reload', false).subscribe(() =>
+				{
+					// do nothing
+				});
 			}
 		);
 	}
@@ -321,7 +377,10 @@ export class EntryFlavoursHandler extends EntrySection
 			error =>
 			{
 				this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
-				this._fetchFlavors(false); // reload flavors as we need to get the flavor status from the server
+				this._fetchFlavors('reload', false).subscribe(() =>
+				{
+					// reload flavors as we need to get the flavor status from the server
+				});
 			}
 		);
 	}
@@ -336,5 +395,12 @@ export class EntryFlavoursHandler extends EntrySection
 		}else {
 			this.addNewFlavor(flavor, resource);
 		}
+	}
+
+	public _refresh(){
+		this._fetchFlavors('reload', false).subscribe(() =>
+		{
+			// reload flavors on refresh
+		});
 	}
 }

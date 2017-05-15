@@ -1,4 +1,4 @@
-<kLoader [loading]="(_handler.entries$ | async)?.loading" [loadingError]="(_handler.entries$ | async)?.error" (onActionRequested)="_onLoadingAction($event)">
+<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
 	<div class="kClips">
 		<p class="kTitle">{{'applications.content.entryDetails.clips.clips' | translate}}</p>
 
@@ -34,4 +34,4 @@
 					 [totalRecords]="(_handler.entries$ | async)?.totalItems"
 					 [rowsPerPageOptions]="_handler.pageSizesAvailable"></p-paginator>
 	</div>
-</kLoader>
+</k-area-blocker>
