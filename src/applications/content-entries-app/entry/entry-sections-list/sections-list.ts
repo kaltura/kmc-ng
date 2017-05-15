@@ -1,4 +1,4 @@
-import { EntrySectionTypes } from '../entry-store/entry-sections-types';
+import { EntrySectionTypes } from '../entry-sections-types';
 
 export const SectionsList = [
     {

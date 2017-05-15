@@ -1,5 +1,5 @@
 import { Injectable, } from '@angular/core';
-import { EntrySection } from '../entry-store/entry-section-handler';
+import { EntrySection } from '../entry-section-handler';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -10,9 +10,9 @@ import { ThumbAssetListAction, ThumbAssetSetAsDefaultAction, KalturaThumbAssetLi
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 
-import { EntrySectionTypes } from '../entry-store/entry-sections-types';
+import { EntrySectionTypes } from '../entry-sections-types';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { EntrySectionsManager } from '../entry-store/entry-sections-manager';
+import { EntrySectionsManager } from '../entry-sections-manager';
 
 export interface ThumbnailRow {
 	id: string,

@@ -11,8 +11,6 @@ import { RadioButtonModule, TreeModule, TieredMenuModule, CheckboxModule, DataTa
 import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 import { KMCShellModule } from 'kmc-shell';
 
-import { EntriesComponent } from './entries.component';
-
 import { EntriesTableComponent } from './entries-table.component';
 import { EntriesListComponent } from "./entries-list.component";
 import { TreeSelectionModule } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
@@ -64,7 +62,6 @@ import { AreaBlockerModule } from '@kaltura-ng2/kaltura-ui';
 	    TooltipModule
     ],
     declarations: [
-        EntriesComponent,
         EntriesListComponent,
         EntriesTableComponent,
         CategoriesFilterComponent,
@@ -74,7 +71,6 @@ import { AreaBlockerModule } from '@kaltura-ng2/kaltura-ui';
         EntryDurationPipe
     ],
     exports: [
-        EntriesComponent
     ],
     providers:    [
         CategoriesStore,

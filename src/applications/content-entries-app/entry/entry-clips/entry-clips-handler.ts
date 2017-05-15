@@ -9,12 +9,12 @@ import { KalturaBaseEntryFilter, KalturaFilterPager, KalturaDetachedResponseProf
 import { AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 
-import { EntrySection } from '../entry-store/entry-section-handler';
-import { EntryStore } from '../entry-store/entry-store.service';
-import { EntrySectionTypes } from '../entry-store/entry-sections-types';
+import { EntrySection } from '../entry-section-handler';
+import { EntryStore } from '../entry-store.service';
+import { EntrySectionTypes } from '../entry-sections-types';
 import { BrowserService } from "kmc-shell/providers/browser.service";
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { EntrySectionsManager } from '../entry-store/entry-sections-manager';
+import { EntrySectionsManager } from '../entry-sections-manager';
 
 
 export interface ClipsData

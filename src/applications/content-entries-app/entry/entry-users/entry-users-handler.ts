@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { EntrySection } from '../entry-store/entry-section-handler';
+import { EntrySection } from '../entry-section-handler';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
-import { EntrySectionTypes } from '../entry-store/entry-sections-types';
+import { EntrySectionTypes } from '../entry-sections-types';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { KalturaUser, UserGetAction, UserListAction, KalturaUserFilter, KalturaFilterPager, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
-import { EntrySectionsManager } from '../entry-store/entry-sections-manager';
+import { EntrySectionsManager } from '../entry-sections-manager';
 
 import 'rxjs/add/observable/forkJoin';
 
