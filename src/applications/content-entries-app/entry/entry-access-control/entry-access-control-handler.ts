@@ -18,9 +18,7 @@ import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
 export class EntryAccessControlHandler extends EntrySection
 {
 
-	private _accessControlProfiles : BehaviorSubject<{ items : SelectItem[], loading : boolean, error? : any}> = new BehaviorSubject<{ items : SelectItem[], loading : boolean, error? : any}>(
-		{ items : null, loading : false}
-	);
+	private _accessControlProfiles = new BehaviorSubject<{ items : SelectItem[]}>({ items : []});
 
 	public _accessControlProfiles$ = this._accessControlProfiles.asObservable();
 
@@ -63,7 +61,45 @@ export class EntryAccessControlHandler extends EntrySection
     protected _activate(firstLoad : boolean) {
 	    if (firstLoad)
 	    {
-		    this._fetchAccessControlProfiles();
+		    super._showLoader();
+		    this._accessControlProfiles.next({items : []});
+
+		    const getAPProfiles$ = this._accessControlProfileStore.get().cancelOnDestroy(this).monitor('load access control profiles');
+		    const getFlavours$ = this._flavoursStore.get().cancelOnDestroy(this).monitor('load flavours');
+
+		    return Observable.forkJoin(getAPProfiles$,getFlavours$)
+			    .cancelOnDestroy(this)
+			    .do(
+				    response =>
+				    {
+					    let ACProfiles = response[0].items;
+					    if (ACProfiles.length){
+						    // check if any of the access control profiles is defined as default
+						    const defaultIndex = R.findIndex(R.propEq('isDefault', true))(ACProfiles);
+						    if (defaultIndex > -1){
+							    // put the default profile at the beginning of the profiles array
+							    const defaultProfile: KalturaAccessControl[] = ACProfiles.splice(defaultIndex, 1);
+							    ACProfiles.splice(0, 0, defaultProfile[0]);
+						    }
+						    let profilesDataProvider: SelectItem[] = [];
+						    ACProfiles.forEach((profile: KalturaAccessControl) => {
+							    profilesDataProvider.push({"label": profile.name, "value": profile});
+						    });
+						    this._flavourParams = response[1].items;
+						    this._accessControlProfiles.next({items : profilesDataProvider});
+						    this._setProfile();
+						    super._hideLoader();
+					    }
+
+				    })
+			    .catch((error, caught) =>
+				    {
+					    super._hideLoader();
+					    super._showActivationError();
+					    this._accessControlProfiles.next({items : []});
+					    return Observable.throw(error);
+				    }
+			    );
 	    }else
 		{
 			this._setProfile();
@@ -79,40 +115,7 @@ export class EntryAccessControlHandler extends EntrySection
 	}
 
 	private _fetchAccessControlProfiles() : void{
-		this._accessControlProfiles.next({items : [], loading : true});
 
-		const getAPProfiles$ = this._accessControlProfileStore.get().cancelOnDestroy(this).monitor('load access control profiles');
-		const getFlavours$ = this._flavoursStore.get().cancelOnDestroy(this).monitor('load flavours');
-
-		Observable.forkJoin(getAPProfiles$,getFlavours$)
-			.cancelOnDestroy(this)
-			.subscribe(
-				response =>
-				{
-					let ACProfiles = response[0].items;
-					if (ACProfiles.length){
-						// check if any of the access control profiles is defined as default
-						const defaultIndex = R.findIndex(R.propEq('isDefault', true))(ACProfiles);
-						if (defaultIndex > -1){
-							// put the default profile at the beginning of the profiles array
-							const defaultProfile: KalturaAccessControl[] = ACProfiles.splice(defaultIndex, 1);
-							ACProfiles.splice(0, 0, defaultProfile[0]);
-						}
-						let profilesDataProvider: SelectItem[] = [];
-						ACProfiles.forEach((profile: KalturaAccessControl) => {
-							profilesDataProvider.push({"label": profile.name, "value": profile});
-						});
-						this._flavourParams = response[1].items;
-						this._accessControlProfiles.next({items : profilesDataProvider, loading : false});
-						this._setProfile();
-					}
-
-				},
-				error =>
-				{
-					this._accessControlProfiles.next({items : [], loading : false, error : error});
-				}
-			);
 	}
 
 	private _setProfile(){

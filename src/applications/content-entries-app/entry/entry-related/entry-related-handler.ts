@@ -1,5 +1,6 @@
 import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, CollectionChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
@@ -24,8 +25,8 @@ export class EntryRelatedHandler extends EntrySection
 	relatedFilesListDiffer: IterableDiffer;
 	relatedFileDiffer : { [key : string] : KeyValueDiffer } = {};
 
-	private _relatedFiles : BehaviorSubject<{ items : KalturaAttachmentAsset[], loading : boolean, error? : any}> = new BehaviorSubject<{ items : KalturaAttachmentAsset[], loading : boolean, error? : any}>(
-		{ items : [], loading : false}
+	private _relatedFiles = new BehaviorSubject<{ items : KalturaAttachmentAsset[]}>(
+		{ items : []}
 	);
 
 	public _relatedFiles$ = this._relatedFiles.asObservable();
@@ -94,17 +95,56 @@ export class EntryRelatedHandler extends EntrySection
 	    this.relatedFileDiffer = {};
 	    this.relatedFilesListDiffer = null;
     	this._entryId = '';
-	    this._relatedFiles.next({ loading : false, items : [], error : null});
+	    this._relatedFiles.next({ items : [] });
     }
 
 	protected _activate(firstLoad : boolean) {
 		this._entryId = this.data.id;
-		this._fetchRelatedFiles();
+		super._showLoader();
 
 		if (firstLoad)
 		{
 			this._trackUploadFiles();
 		}
+
+		this._relatedFiles.next({items : []});
+
+		return this._kalturaServerClient.request(new AttachmentAssetListAction({
+			filter: new KalturaAssetFilter(
+				{
+					entryIdEqual : this._entryId
+				}
+			)}))
+			.cancelOnDestroy(this,this.sectionReset$)
+			.monitor('get entry related files')
+			.do(
+				response =>
+				{
+					// set file type
+					response.objects.forEach((asset: KalturaAttachmentAsset) => {
+						if (!asset.format && asset.fileExt){
+							asset.format = this._getFormatByExtension(asset.fileExt);
+						}
+					});
+					this._relatedFiles.next({items : response.objects});
+					this.relatedFilesListDiffer = this._listDiffers.find([]).create(null);
+					this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
+
+					this.relatedFileDiffer = {};
+					this._relatedFiles.getValue().items.forEach((asset: KalturaAttachmentAsset) => {
+						this.relatedFileDiffer[asset.id] = this._objectDiffers.find([]).create(null);
+						this.relatedFileDiffer[asset.id].diff(asset);
+					});
+					super._hideLoader();
+				})
+			.catch((error, caught) =>
+				{
+					this._relatedFiles.next({items : []});
+					super._hideLoader();
+					super._showActivationError();
+					return Observable.throw(error);
+				}
+			);
 	}
 
 	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
@@ -171,7 +211,7 @@ export class EntryRelatedHandler extends EntrySection
 			newFile
 		];
 
-		this._relatedFiles.next({items: files, loading: false});
+		this._relatedFiles.next({items: files});
 
 		return newFile;
 	}
@@ -179,7 +219,7 @@ export class EntryRelatedHandler extends EntrySection
 	public _removeFile(file: KalturaAttachmentAsset): void{
 		// update the list by filtering the assets array.
 
-		this._relatedFiles.next({items : this._relatedFiles.getValue().items.filter((item: KalturaAttachmentAsset) => {return item !== file}), loading : false});
+		this._relatedFiles.next({items : this._relatedFiles.getValue().items.filter((item: KalturaAttachmentAsset) => {return item !== file})});
 
 		// stop tracking changes on this asset
 		// if file id is empty it was added by the user so no need to track its changes.
@@ -206,66 +246,6 @@ export class EntryRelatedHandler extends EntrySection
 
 	public previewFile(file : KalturaAttachmentAsset): void{
 		this._openFile(file.id, 'url');
-	}
-
-	private _fetchRelatedFiles(){
-		this._relatedFiles.next({items : [], loading : true});
-
-
-		this._kalturaServerClient.request(new AttachmentAssetListAction({
-			filter: new KalturaAssetFilter(
-				{
-					entryIdEqual : this._entryId
-				}
-			)}))
-			.cancelOnDestroy(this,this.sectionReset$)
-			.monitor('get entry related files')
-			.subscribe(
-				response =>
-				{
-					// set file type
-					response.objects.forEach((asset: KalturaAttachmentAsset) => {
-						if (!asset.format && asset.fileExt){
-							switch (asset.fileExt){
-								case "doc":
-								case "docx":
-								case "dot":
-								case "pdf":
-								case "ppt":
-								case "pps":
-								case "xls":
-								case "xlsx":
-								case "xml":
-									asset.format = KalturaAttachmentType.document;
-									break;
-								case "gif":
-								case "png":
-								case "jpg":
-								case "jpeg":
-								case "mp3":
-									asset.format = KalturaAttachmentType.media;
-									break;
-								case "txt":
-									asset.format = KalturaAttachmentType.text;
-									break;
-							}
-						}
-					});
-					this._relatedFiles.next({items : response.objects, loading : false});
-					this.relatedFilesListDiffer = this._listDiffers.find([]).create(null);
-					this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
-
-					this.relatedFileDiffer = {};
-					this._relatedFiles.getValue().items.forEach((asset: KalturaAttachmentAsset) => {
-						this.relatedFileDiffer[asset.id] = this._objectDiffers.find([]).create(null);
-						this.relatedFileDiffer[asset.id].diff(asset);
-					});
-				},
-				error =>
-				{
-					this._relatedFiles.next({items : [], loading : false, error : error});
-				}
-			);
 	}
 
 	private _updateFileUploadToken(file : KalturaAttachmentAsset, newUploadToken : string)
@@ -295,5 +275,33 @@ export class EntryRelatedHandler extends EntrySection
 	public _cancelUpload(file: KalturaAttachmentAsset): void{
 		console.warn("Need to cancel http request");
 		this._removeFile(file);
+	}
+
+	private _getFormatByExtension(ext: string): KalturaAttachmentType{
+		let format : KalturaAttachmentType = null;
+		switch (ext) {
+			case "doc":
+			case "docx":
+			case "dot":
+			case "pdf":
+			case "ppt":
+			case "pps":
+			case "xls":
+			case "xlsx":
+			case "xml":
+				format = KalturaAttachmentType.document;
+				break;
+			case "gif":
+			case "png":
+			case "jpg":
+			case "jpeg":
+			case "mp3":
+				format = KalturaAttachmentType.media;
+				break;
+			case "txt":
+				format = KalturaAttachmentType.text;
+				break;
+		}
+		return format;
 	}
 }

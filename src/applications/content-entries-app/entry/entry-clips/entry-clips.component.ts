@@ -31,10 +31,5 @@ export class EntryClips{
         }
     }
 
-    public _onLoadingAction(actionKey: string) {
-        if (actionKey === 'retry') {
-
-        }
-    }
 }
 

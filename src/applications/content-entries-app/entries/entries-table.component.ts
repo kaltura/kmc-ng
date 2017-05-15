@@ -51,7 +51,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
 
 	ngOnInit() {
-		this.entriesStoreStatusSubscription = this.entriesStore.status$.subscribe(
+		this.entriesStoreStatusSubscription = this.entriesStore.state$.subscribe(
 			result => {
 				if (result.errorMessage) {
 					this._loadingError = {message: result.errorMessage, buttons: {retry: 'Retry'}};
@@ -67,6 +67,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
+		this.actionsMenu.hide();
 		this.entriesStoreStatusSubscription.unsubscribe();
 		this.entriesStoreStatusSubscription = null;
 	}

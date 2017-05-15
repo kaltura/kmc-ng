@@ -46,7 +46,7 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 			this._handler._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('app.common.copyFailure')});
 		}
 	}
-
+	/*
 	_regenerateToken():void{
 		this._confirmationService.confirm({
 			message: this._appLocalization.get('applications.content.entryDetails.live.regeneratePrompt'),
@@ -54,7 +54,7 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 				this._handler.regenerateStreamToken();
 			}
 		});
-	}
+	}*/
 
 }
 

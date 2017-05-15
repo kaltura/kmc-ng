@@ -125,6 +125,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	}
 
     ngOnDestroy() {
+	    this.actionsMenu.hide();
 	    this._importPopupStateChangeSubscribe.unsubscribe();
     }
 
@@ -140,12 +141,6 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 				    }
 			    });
 	    }
-    }
-
-    _onLoadingAction(actionKey: string) {
-        if (actionKey === 'retry') {
-			this._handler._fetchFlavors();
-        }
     }
 }
 

@@ -1,4 +1,4 @@
-<kLoader [loading]="(_handler._thumbnails$ | async)?.loading" [loadingError]="(_handler._thumbnails$ | async)?.error" (onActionRequested)="_onLoadingAction($event)">
+<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
 	<kFileDialog #fileDialog [filter]="'image/*'" (onFileSelected)="_handler._onFileSelected($event)"></kFileDialog>
 	<div class="kThumbnails" #thumbnails>
 		<p class="kTitle">{{'applications.content.entryDetails.thumbnails.thumbnails' | translate}}</p>
@@ -40,4 +40,4 @@
 		</div>
 	</div>
 	<p-confirmDialog header="{{'applications.content.entryDetails.thumbnails.deleteConfirmHeader' | translate}}" width="425"></p-confirmDialog>
-</kLoader>
+</k-area-blocker>

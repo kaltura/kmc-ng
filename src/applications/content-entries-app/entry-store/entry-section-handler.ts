@@ -12,6 +12,7 @@ export abstract class EntrySection extends FormSection<KalturaMediaEntry,EntrySe
     public showSectionLoader: boolean;
 
     protected _showLoader() {
+	    this._removeBlockerMessage();
         this.showSectionLoader = true;
     }
 
@@ -40,7 +41,7 @@ export abstract class EntrySection extends FormSection<KalturaMediaEntry,EntrySe
         this.sectionBlockerMessage = messageToShow;
     }
 
-    private _createBackToEntriesButton(): AreaBlockerMessageButton[] {
+    protected _createBackToEntriesButton(): AreaBlockerMessageButton[] {
         if (this.manager instanceof EntrySectionsManager)
         {
             return [{
