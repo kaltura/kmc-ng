@@ -86,9 +86,9 @@ export class EntryLiveHandler extends EntrySection {
 		switch (this.data.sourceType.toString()) {
 			case KalturaSourceType.liveStream.toString():
 				this._liveType = "kaltura";
-				this._fetchConversionProfiles();
-				this._setRecordStatus();
-				this._setDVRStatus();
+				// this._fetchConversionProfiles();
+				// this._setRecordStatus();
+				// this._setDVRStatus();
 				break;
 			case KalturaSourceType.akamaiUniversalLive.toString():
 				this._liveType = "universal";
@@ -103,6 +103,7 @@ export class EntryLiveHandler extends EntrySection {
 		}
 	}
 
+	/*
 	private _fetchConversionProfiles(): void {
 		this._conversionProfiles.next({items: [], loading: true});
 
@@ -161,6 +162,7 @@ export class EntryLiveHandler extends EntrySection {
 				}
 			);
 	}
+	 */
 
 	public _openLiveReport(): void {
 		const base_url = window.location.protocol + '//' + this._appConfig.get('core.kaltura.kmcUrl');
