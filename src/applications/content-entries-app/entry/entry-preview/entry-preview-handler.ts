@@ -15,7 +15,7 @@ export interface PreviewEntryData{
 @Injectable()
 export class EntryPreviewHandler extends EntrySection
 {
-    public landingPage : string;
+    public _landingPage : string;
     public iframeSrc : string;
 
     constructor(manager : EntrySectionsManager,
@@ -37,7 +37,7 @@ export class EntryPreviewHandler extends EntrySection
      */
     protected _reset()
     {
-        this.landingPage = null;
+        this._landingPage = null;
         this.iframeSrc = null;
     }
 
@@ -46,7 +46,7 @@ export class EntryPreviewHandler extends EntrySection
         if (landingPage) {
             landingPage.replace("{entryId}", dataId);
         }
-        this.landingPage = landingPage;
+        this._landingPage = landingPage;
 
         const UIConfID = this.appConfig.get('core.kaltura.previewUIConf');
         const partnerID = this.appAuthentication.appUser.partnerId;
