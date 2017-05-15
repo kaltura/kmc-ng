@@ -270,7 +270,7 @@ export class EntryMetadataHandler extends EntrySection
                     const customDataValue = customDataForm.getValue();
 
                     if (customDataValue.error) {
-                        throw new Error('One of the metadata dynamic form is invalid');
+                        throw new Error('One of the forms is invalid');
                     } else {
 
                         const entryMetadata = this._entryMetadata.find(item => item.metadataProfileId === customDataForm.metadataProfile.id);
