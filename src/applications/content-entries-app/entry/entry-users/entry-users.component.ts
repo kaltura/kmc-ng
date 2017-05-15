@@ -48,6 +48,22 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 	    this.ownerPopup.close();
     }
 
+	public _convertUserInputToValidValue(value : string) : KalturaUser {
+		let result = null;
+
+		if (value) {
+			result = new KalturaUser(
+				{
+					id : value,
+					screenName: value
+				}
+			);
+		}
+
+		return result;
+	}
+
+
 	public _searchUsers(event, formControl) : void {
 		this._usersProvider.next({ suggestions : [], isLoading : true});
 

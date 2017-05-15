@@ -138,6 +138,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         this._updateJumpToSectionsMenu();
     }
 
+
     private _jumpTo(element : HTMLElement){
         let pageScrollInstance: PageScrollInstance = PageScrollInstance.newInstance({
          document : document,
