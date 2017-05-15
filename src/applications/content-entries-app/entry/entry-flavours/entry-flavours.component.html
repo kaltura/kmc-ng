@@ -1,4 +1,4 @@
-<kLoader [loading]="(_handler._flavors$ | async)?.loading" [loadingError]="(_handler._flavors$ | async)?.error" (onActionRequested)="_onLoadingAction($event)">
+<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
 	<kFileDialog #fileDialog (onFileSelected)="_onFileSelected($event)" [filter]="_uploadFilter"></kFileDialog>
 	<div class="kFlavours kUseKMCngIcons" #flavors>
 		<p class="kTitle">{{'applications.content.entryDetails.flavours.flavours' | translate}}</p>
@@ -7,7 +7,7 @@
 		</div>
 		<!--button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right" label="{{'applications.content.entryDetails.flavours.replace' | translate}}"></button-->
 		<div>
-			<button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" (click)="_handler._fetchFlavors()"></button>
+			<button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" (click)="_handler._refresh()"></button>
 		</div>
 
 		<div class="kTable">
@@ -65,4 +65,4 @@
 
 	<p-growl [value]="_handler._msgs"></p-growl>
 	<p-confirmDialog header="{{'applications.content.entryDetails.flavours.deleteConfirmTitle' | translate}}" width="450"></p-confirmDialog>
-</kLoader>
+</k-area-blocker>

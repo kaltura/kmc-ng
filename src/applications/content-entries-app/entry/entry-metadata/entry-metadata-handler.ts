@@ -85,25 +85,17 @@ export class EntryMetadataHandler extends EntrySection
             actions.push(this._loadProfileMetadata());
         }
 
+
         return Observable.forkJoin(actions)
-            .map(
-                responses => {
-                    const failed = responses.reduce((result, response) => result || response.failed, false);
-                    const errors = responses.filter(response => response.error);
-                    return {failed, error: errors.length > 0 ? errors[0] : null};
-                }
-            )
-            .catch((error, caught) => Observable.of({failed: true, error}))
+	        .catch((error, caught) =>
+	        {
+		        super._hideLoader();
+		        super._showActivationError();
+		        return Observable.throw(error);
+	        })
             .do(response => {
                 super._hideLoader();
-
-                if (response.failed)
-                {
-                    super._showActivationError();
-                }else
-                {
-                    this._syncHandlerContent();
-                }
+	            this._syncHandlerContent();
             });
     }
 
@@ -221,7 +213,9 @@ export class EntryMetadataHandler extends EntrySection
     protected _onDataSaving(newData : KalturaMediaEntry, request : KalturaMultiRequest) : void
     {
 
-        const metadataFormValue = this.metadataForm.value;
+
+
+	    const metadataFormValue = this.metadataForm.value;
 
         // save static metadata form
         newData.name = metadataFormValue.name;

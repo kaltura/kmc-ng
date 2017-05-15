@@ -33,7 +33,7 @@ export class EntryRelated implements OnInit, OnDestroy{
 
     ngOnDestroy()
 	{
-
+		this.actionsMenu.hide();
 	}
 
 	ngOnInit() {
