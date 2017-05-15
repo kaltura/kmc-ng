@@ -89,13 +89,21 @@ export class EntryMetadataHandler extends EntrySection
         return Observable.forkJoin(actions)
 	        .catch((error, caught) =>
 	        {
-		        super._hideLoader();
-		        super._showActivationError();
-		        return Observable.throw(error);
+		        return Observable.of([{failed : true}]);
 	        })
-            .do(response => {
-                super._hideLoader();
-	            this._syncHandlerContent();
+            .map(responses => {
+	            super._hideLoader();
+
+	            const hasFailure = responses.reduce((result, response) => result || response.failed,false);
+
+	            if (hasFailure)
+	            {
+		            super._showActivationError();
+		            return { failed : true};
+	            }else {
+		            this._syncHandlerContent();
+		            return { failed : false};
+	            }
             });
     }
 

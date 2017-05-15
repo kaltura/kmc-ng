@@ -67,7 +67,7 @@ export class EntryFlavoursHandler extends EntrySection
 
     protected _activate(firstLoad : boolean) {
 	    this._setEntryStatus();
-        return this._fetchFlavors('activation',true);
+        return this._fetchFlavors('activation', true);
     }
 
     public _fetchFlavors(origin: 'activation' | 'reload' , reset: boolean = true): Observable<{ failed: boolean, error?: Error }>{
