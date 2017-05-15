@@ -1,7 +1,7 @@
 <div class="kEditWin kUseKMCngIcons" #captionsEdit>
 	<kFileDialog #fileDialog [filter]="'text/xml,.srt'" (onFileSelected)="_onFileSelected($event)"></kFileDialog>
 	<form [formGroup]="captionsEditForm" novalidate>
-		<div class="kEditTitle">{{'applications.content.entryDetails.captions.editCaption' | translate}}</div>
+		<div class="kEditTitle">{{ (_newCaption ? 'applications.content.entryDetails.captions.add' : 'applications.content.entryDetails.captions.editCaption') | translate}}</div>
 		<div class="kDivider"></div>
 		<div class="kRow">
 			<span class="kLabel">{{'applications.content.entryDetails.captions.label' | translate}}</span>
