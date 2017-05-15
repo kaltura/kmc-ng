@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { EntryStore } from '../../entry-store/entry-store.service';
+import { EntryStore } from '../entry-store/entry-store.service';
 import {
 	KalturaMediaEntry,
 	KalturaEntryStatus,

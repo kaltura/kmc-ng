@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
-import { EntryStore } from '../../entry-store/entry-store.service';
+import { EntryStore } from '../entry-store/entry-store.service';
 import { SectionData, EntrySectionsListHandler } from './entry-sections-list-handler';
-import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
+import { EntrySectionTypes } from '../entry-store/entry-sections-types';
 
 
 import { ActivatedRoute } from '@angular/router';

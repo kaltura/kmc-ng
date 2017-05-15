@@ -1,16 +1,15 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
 import { BrowserService } from "kmc-shell/providers/browser.service";
-import { EntriesStore, SortDirection } from '../entries-store/entries-store.service';
+import { EntriesStore, SortDirection } from './entries-store/entries-store.service';
 import { EntriesTableComponent } from "./entries-table.component";
 
-import { FreetextFilter } from "../entries-store/filters/freetext-filter";
-import { EntriesAdditionalFiltersStore } from "kmc-content-ui/entries-additional-filters/entries-additional-filters-store.service";
+import { FreetextFilter } from "./entries-store/filters/freetext-filter";
+import { EntriesAdditionalFiltersStore } from "./entries-additional-filters/entries-additional-filters-store.service";
 
 @Component({
     selector: 'kEntriesList',
@@ -21,6 +20,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
     @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
 
+    public showLoader = true;
     private querySubscription : ISubscription;
     public _selectedEntries: any[] = [];
     public _bulkActionsMenu: MenuItem[] = [];
@@ -28,7 +28,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     public _filter = {
         pageIndex : 0,
         freetextSearch : '',
-        pageSize : 50,
+        pageSize : null, // pageSize is set to null by design. It will be modified after the first time loading entries
         sortBy : 'createdAt',
         sortDirection : SortDirection.Desc
     };
@@ -86,10 +86,13 @@ export class EntriesListComponent implements OnInit, OnDestroy {
             query => {
                this.syncFreetextComponents();
 
+               this._filter.pageSize = query.data.pageSize;
                this._filter.pageIndex = query.data.pageIndex-1;
                this.dataTable.scrollToTop();
             }
         );
+
+        this._entriesStore.reload(false);
     }
 
     ngOnDestroy(){
@@ -100,7 +103,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     public _reload()
     {
     	this.clearSelection();
-        this._entriesStore.reload();
+        this._entriesStore.reload(true);
     }
 
     private syncFreetextComponents()

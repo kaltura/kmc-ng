@@ -56,7 +56,6 @@ export interface FilterGroup
 export interface AdditionalFilters
 {
     groups : FilterGroup[];
-    metadataProfiles : number[];
 }
 
 
@@ -108,15 +107,13 @@ export class EntriesAdditionalFiltersStore {
 
                 } else {
 
-                    const filters : AdditionalFilters = {groups : [], metadataProfiles : []};
+                    const filters : AdditionalFilters = {groups : []};
 
                     const defaultFilterGroup = this._buildDefaultFiltersGroup(responses[1], responses[2].items);
                     filters.groups.push(defaultFilterGroup);
 
                     const metadataData = this._buildMetadataFiltersGroups(responses[0].items);
                     filters.groups = [...filters.groups, ...metadataData.groups];
-
-                    filters.metadataProfiles = metadataData.metadataProfiles;
 
                     this._status.next({ loading : false, errorMessage : null});
                     this._filters.next(filters);
@@ -152,10 +149,10 @@ export class EntriesAdditionalFiltersStore {
                     filterGroup.filtersTypes.push(new filterGroupMetadataProfileType(list.id, list.label, metadataProfile.id, ['metadata',list.name]));
                     const items = filterGroup.filtersByType[list.id] = [];
 
-                    list.optionalValues.forEach(value => {
+                    list.optionalValues.forEach(item => {
                         items.push({
-                            id: value,
-                            name: value
+                            id: item.value,
+                            name: item.text
                         })
 
                     });

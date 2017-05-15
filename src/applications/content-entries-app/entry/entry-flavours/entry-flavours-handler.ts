@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { EntrySection } from '../../entry-store/entry-section-handler';
+import { EntrySection } from '../entry-store/entry-section-handler';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { EntrySectionTypes } from '../../entry-store/entry-sections-types';
+import { EntrySectionTypes } from '../entry-store/entry-sections-types';
 import { Observable } from 'rxjs/Observable';
 import { AppLocalization, AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
@@ -11,7 +11,7 @@ import { KalturaFlavorAsset, KalturaFlavorAssetWithParams, FlavorAssetGetFlavorA
 	FlavorAssetDeleteAction, FlavorAssetConvertAction, FlavorAssetReconvertAction, KalturaUploadedFileTokenResource, FlavorAssetSetContentAction, FlavorAssetAddAction, KalturaUrlResource, KalturaContentResource } from 'kaltura-typescript-client/types/all';
 import { UploadManagement, FileChanges } from '@kaltura-ng2/kaltura-common/upload-management';
 import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
-import { EntrySectionsManager } from '../../entry-store/entry-sections-manager';
+import { EntrySectionsManager } from '../entry-store/entry-sections-manager';
 import { Message, ConfirmationService } from 'primeng/primeng';
 
 export interface Flavor extends KalturaFlavorAssetWithParams{

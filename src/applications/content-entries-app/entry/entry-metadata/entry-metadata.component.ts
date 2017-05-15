@@ -8,7 +8,7 @@ import { MenuItem, Menu } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { EntryMetadataHandler } from './entry-metadata-handler';
-import { EntryStore } from '../../entry-store/entry-store.service';
+import { EntryStore } from '../entry-store/entry-store.service';
 import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
 import { JumpToSection } from './jump-to-section.component';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
@@ -107,33 +107,37 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         this._searchCategoriesSubscription && this._searchCategoriesSubscription.unsubscribe();
     }
 
+    private _updateJumpToSectionsMenu()
+    {
+        const jumpToItems: any[] = [];
+
+        this._jumpToSectionQuery.forEach(section =>
+        {
+            const jumpToLabel = section.label;
+            jumpToItems.push({
+                label: jumpToLabel,
+                command: (event) => {
+                    this._jumpTo(section.htmlElement);
+                }
+            });
+
+        });
+
+        setTimeout(() =>{
+            this._jumpToMenu = jumpToItems;
+        });
+    }
 
     ngAfterViewInit() {
         this._jumpToSectionQuery.changes
             .cancelOnDestroy(this)
             .subscribe((query) => {
-
-            const jumpToItems: any[] = [];
-
-            if (query) {
-                query.forEach((section) => {
-                    const jumpToLabel = section.label;
-                    jumpToItems.push({
-                        label: jumpToLabel,
-                        command: (event) => {
-                            this._jumpTo(section.htmlElement);
-                        }
-                    });
-
-                });
-            }
-
-            setTimeout(() =>{
-                this._jumpToMenu = jumpToItems;
-            });
-
+                this._updateJumpToSectionsMenu();
         });
+
+        this._updateJumpToSectionsMenu();
     }
+
 
     private _jumpTo(element : HTMLElement){
         let pageScrollInstance: PageScrollInstance = PageScrollInstance.newInstance({

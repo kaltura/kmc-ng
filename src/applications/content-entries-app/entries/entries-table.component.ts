@@ -3,7 +3,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { KalturaMediaType, KalturaEntryStatus, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
-import { EntriesStore } from "../entries-store/entries-store.service";
+import { EntriesStore } from "./entries-store/entries-store.service";
 
 @Component({
 	selector: 'kEntriesTable',
@@ -118,7 +118,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
 	onLoadingAction(actionKey: string) {
 		if (actionKey === 'retry') {
-			this.entriesStore.reload();
+			this.entriesStore.reload(true);
 		}
 	}
 

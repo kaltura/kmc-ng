@@ -5,6 +5,7 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { Scheduler } from 'rxjs';
+import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng2/kaltura-common';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
@@ -23,7 +24,7 @@ import {
 } from 'kaltura-typescript-client/types/all'
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-
+import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 
 import * as R from 'ramda';
 import { FilterItem } from "./filter-item";
@@ -79,11 +80,11 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         EntriesStore.filterTypeMapping[filterType.name] = handler;
     }
 
-    private _entries: BehaviorSubject<Entries> = new BehaviorSubject({items: [], totalCount: 0});
-    private _state : BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null});
+    private _entries  = new BehaviorSubject({items: [], totalCount: 0});
+    private _state = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null});
     private _querySource : ReplaySubject<QueryRequestArgs> = new ReplaySubject<QueryRequestArgs>(1,null);
 
-    public queryData : QueryData = {
+    private _queryData : QueryData = {
         pageIndex: 0,
         pageSize: 50,
         sortBy: 'createdAt',
@@ -93,6 +94,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
     private _activeFilters : FilterItem[] = [];
     private _activeFiltersMap : {[key : string] : FilterItem[]} = {};
+    private _metadataProfilesLoaded = false;
     private executeQuerySubscription : ISubscription = null;
 
     public entries$: Observable<Entries> = this._entries.asObservable();
@@ -100,17 +102,37 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
     public query$ : Observable<QueryRequestArgs> = this._querySource.asObservable();
 
 
-
     constructor(private kalturaServerClient: KalturaClient,
-                private browserService: BrowserService,) {
-        console.warn("KMCng entriesStore:ctor() - missing handling of metadata profiles");
-
+                private browserService: BrowserService,
+                private metadataProfileService : MetadataProfileStore) {
         const defaultPageSize = this.browserService.getFromLocalStorage("entries.list.pageSize");
-        if (defaultPageSize !== null){
-            this.queryData.pageSize = defaultPageSize;
+        if (defaultPageSize !== null) {
+            this._queryData.pageSize = defaultPageSize;
         }
 
-        this._executeQuery({addedFilters : [], removedFilters : []});
+        this._getMetadataProfiles();
+    }
+
+    private _getMetadataProfiles() : Observable<void> {
+        if (this._metadataProfilesLoaded) {
+            return Observable.of(undefined);
+        } else {
+            return this.metadataProfileService.get(
+                {
+                    type: MetadataProfileTypes.Entry,
+                    ignoredCreateMode: MetadataProfileCreateModes.App
+                })
+                .cancelOnDestroy(this)
+                .monitor('entries store: get metadata profiles')
+                .do(
+                    metadataProfiles => {
+                        this._queryData.metadataProfiles = metadataProfiles.items.map(metadataProfile => metadataProfile.id);
+                        this._metadataProfilesLoaded = true;
+                    }
+                ).map(() => {
+                    return undefined;
+                });
+        }
     }
 
     ngOnDestroy()
@@ -132,14 +154,18 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         return this._entries.getValue().items;
     }
 
-    public reload(query? : QueryData) : void
-    {
-        if (query)
-        {
-            Object.assign(this.queryData,query);
-        }
+    public reload(force : boolean) : void;
+    public reload(query : QueryData) : void;
+    public reload(query : boolean | QueryData) : void {
+        const forceReload = (typeof query === 'object' || (typeof query === 'boolean' && query));
 
-        this._executeQuery();
+        if (forceReload || this._entries.getValue().totalCount === 0) {
+            if (typeof query === 'object') {
+                Object.assign(this._queryData, query);
+            }
+
+            this._executeQuery();
+        }
     }
 
 
@@ -197,7 +223,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             if (addedFilters.length > 0)
             {
                 this._activeFilters = [...this._activeFilters, ...addedFilters];
-                this.queryData.pageIndex = 1;
+                this._queryData.pageIndex = 1;
                 this._executeQuery({  removedFilters : [], addedFilters : addedFilters });
             }
         }
@@ -224,7 +250,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
             if (removedFilters.length > 0)
             {
-                this.queryData.pageIndex = 1;
+                this._queryData.pageIndex = 1;
                 this._executeQuery({ removedFilters : removedFilters, addedFilters : [] });
             }
         }
@@ -239,23 +265,32 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             this.executeQuerySubscription = null;
         }
 
-        this.browserService.setInLocalStorage("entries.list.pageSize", this.queryData.pageSize);
+        this.browserService.setInLocalStorage("entries.list.pageSize", this._queryData.pageSize);
 
         // execute the request
         this.executeQuerySubscription = Observable.create(observer => {
 
             this._state.next({loading: true, errorMessage: null});
-            const queryArgs : QueryRequestArgs = Object.assign({},
+
+            let requestSubscription = this._getMetadataProfiles()
+                .flatMap(
+                () =>
                 {
-                    filters : this._activeFilters,
-                    addedFilters : addedFilters || [],
-                    removedFilters : removedFilters || [],
-                    data : this.queryData
-                });
+                    const queryArgs : QueryRequestArgs = Object.assign({},
+                        {
+                            filters : this._activeFilters,
+                            addedFilters : addedFilters || [],
+                            removedFilters : removedFilters || [],
+                            data : this._queryData
+                        });
 
-            this._querySource.next(queryArgs);
+                    this._querySource.next(queryArgs);
 
-            let requestSubscription = this.buildQueryRequest(queryArgs).subscribe(observer);
+                    return this.buildQueryRequest(queryArgs)
+                        .monitor('entries store: transmit request',queryArgs);
+                }
+            ).subscribe(observer);
+
 
             return () => {
                 if (requestSubscription) {
@@ -263,7 +298,9 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
                     requestSubscription = null;
                 }
             }
-        }).subscribeOn(Scheduler.async).subscribe(
+        }).subscribeOn(Scheduler.async) // using async scheduler go allow calling this function multiple times in the same event loop cycle before invoking the logic.
+            .monitor('entries store: get entries ()',{addedFilters, removedFilters})
+            .subscribe(
             response => {
                 this.executeQuerySubscription = null;
 

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { EntriesStore } from '../entries-store/entries-store.service';
+import { EntriesStore } from './entries-store/entries-store.service';
 
 @Component({
     selector: 'kEntries',

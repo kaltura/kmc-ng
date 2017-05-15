@@ -7,19 +7,38 @@ import { KalturaUIModule, TooltipModule } from '@kaltura-ng2/kaltura-ui';
 import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 import { TagsModule } from '@kaltura-ng2/kaltura-ui/tags';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
-import { TreeModule, TieredMenuModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, ButtonModule, AccordionModule, CalendarModule,  MultiSelectModule, PaginatorModule, MenuModule } from 'primeng/primeng';
+import { RadioButtonModule, TreeModule, TieredMenuModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, ButtonModule, AccordionModule, CalendarModule,  MultiSelectModule, PaginatorModule, MenuModule } from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 import { KMCShellModule } from 'kmc-shell';
 
 import { EntriesComponent } from './entries.component';
 
 import { EntriesTableComponent } from './entries-table.component';
-import { KMCContentUIModule } from "kmc-content-ui/kmc-content-ui.module";
 import { EntriesListComponent } from "./entries-list.component";
+import { TreeSelectionModule } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
+import { AutoCompleteModule } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 
+import { CategoriesFilterComponent } from './categories-filter/categories-filter.component';
+import { CategoriesFilterPrefsComponent } from './categories-filter-preferences/categories-filter-preferences.component';
+import { CategoriesStore } from './categories-store.service';
+
+import { MaxEntriesPipe } from './pipes/max-entries.pipe';
+import { EntryDurationPipe } from './pipes/entry-duration.pipe';
+import {
+    EntriesAdditionalFiltersComponent
+} from "./entries-additional-filters/entries-additional-filters.component";
+import { EntriesAdditionalFiltersStore } from "./entries-additional-filters/entries-additional-filters-store.service";
+import { MetadataProfileStore } from '@kaltura-ng2/kaltura-common';
+import { ContentEntriesAppSharedModule } from '../shared/content-entries-app-shared.module';
+import { AreaBlockerModule } from '@kaltura-ng2/kaltura-ui';
 
 @NgModule({
     imports:      [
+        AreaBlockerModule,
+        ContentEntriesAppSharedModule,
+        RadioButtonModule,
+        TreeSelectionModule,
+        AutoCompleteModule,
         AccordionModule,
         ButtonModule,
         CalendarModule,
@@ -31,7 +50,6 @@ import { EntriesListComponent } from "./entries-list.component";
         KalturaCommonModule,
         KalturaPrimeNgUIModule,
         KalturaUIModule,
-        KMCContentUIModule,
         KMCShellModule,
         MenuModule,
         MultiSelectModule,
@@ -48,12 +66,21 @@ import { EntriesListComponent } from "./entries-list.component";
     declarations: [
         EntriesComponent,
         EntriesListComponent,
-        EntriesTableComponent
+        EntriesTableComponent,
+        CategoriesFilterComponent,
+        CategoriesFilterPrefsComponent,
+        EntriesAdditionalFiltersComponent,
+        MaxEntriesPipe,
+        EntryDurationPipe
     ],
     exports: [
-        EntriesComponent,
+        EntriesComponent
     ],
     providers:    [
+        CategoriesStore,
+        MetadataProfileStore,
+        EntriesAdditionalFiltersStore
+
     ]
 })
 export class EntriesModule { }
