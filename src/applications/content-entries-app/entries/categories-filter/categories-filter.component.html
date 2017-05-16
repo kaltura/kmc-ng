@@ -3,7 +3,7 @@
 		<div class="kHeader">
 			<kAutoComplete
 						   inputStyleClass="kSearchCategory"
-						   [(ngModel)]="_currentSearch"
+						   #searchCategory
 						   field="label"
 							placeholder="{{'applications.content.filters.findCategory' | translate}}"
 							[minLength]="3"

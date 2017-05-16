@@ -19,6 +19,7 @@ import { FilterItem } from "../entries-store/filter-item";
 import { ValueFilter } from "../entries-store/value-filter";
 import { EntriesStore } from "../entries-store/entries-store.service";
 import { CategoriesFilter, CategoriesFilterModes } from "../entries-store/filters/categories-filter";
+import { AutoComplete } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 
 @Component({
     selector: 'kCategoriesFilter',
@@ -41,7 +42,9 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     @ViewChild(TreeSelection)
     private _treeSelection : TreeSelection = null;
 
-    public _currentSearch: { data : CategoryData } = null;
+    @ViewChild('searchCategory')
+    private _autoComplete : AutoComplete = null;
+
 
     public NodeChildrenStatuses : any = NodeChildrenStatuses; // we expose the enum so we will be able to use it as part of template expression
 
@@ -338,9 +341,10 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     _onSuggestionSelected() : void {
 
-        if (this._currentSearch && this._currentSearch.data) {
+        const selectedItem = this._autoComplete.getValue();
+        if (selectedItem) {
 
-            const data : CategoryData = this._currentSearch.data;
+            const data = selectedItem.data;
 
             // find the item in the tree (if exists)
             let treeItem : PrimeTreeNode = null;
@@ -374,7 +378,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             }
 
             // clear user text from component
-            this._currentSearch = null;
+            this._autoComplete.clearValue();
         }
     }
 
