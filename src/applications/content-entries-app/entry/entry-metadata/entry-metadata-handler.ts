@@ -375,8 +375,6 @@ export class EntryMetadataHandler extends EntrySection
         this._entryCategories = [];
         this._entryMetadata = [];
         this.isLiveEntry = false;
-
-        this.metadataForm.reset();
     }
 
     _validate() : Observable<{ isValid : boolean}>
