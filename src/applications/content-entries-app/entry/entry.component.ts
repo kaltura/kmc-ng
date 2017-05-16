@@ -120,7 +120,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 							case ActionTypes.EntrySavingFailed:
 
 								this._areaBlockerMessage = new AreaBlockerMessage({
-									message: 'Something happened during the save, please review your changes',
+									message: 'An error occurred while saving. Please review your changes',
 									buttons: [
 										{
 											label: 'Reload',
@@ -134,7 +134,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 							case ActionTypes.EntryDataIsInvalid:
 
 								this._areaBlockerMessage = new AreaBlockerMessage({
-									message: 'The form contains some invalid information, please review sections marked as invalid',
+									message: 'The form contains some invalid information. Please review the sections marked as invalid',
 									buttons: [
 										{
 											label: 'Dismiss',
@@ -148,7 +148,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 							case ActionTypes.ActiveSectionBusy:
 
 								this._areaBlockerMessage = new AreaBlockerMessage({
-									message: 'The active section is currently busy, please wait and try again in a minute.',
+									message: 'An operation is still in progress. Please try again in a while.',
 									buttons: [
 										{
 											label: 'Dismiss',
@@ -162,7 +162,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 							case ActionTypes.EntryPrepareSavingFailed:
 
 								this._areaBlockerMessage = new AreaBlockerMessage({
-									message: 'Something happened while preparing the save request, please try again',
+									message: 'An error occurred while preparing to save. Please try again',
 									buttons: [
 										{
 											label: 'Dismiss',

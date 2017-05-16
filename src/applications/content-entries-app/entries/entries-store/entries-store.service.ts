@@ -82,7 +82,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
     private _entries  = new BehaviorSubject({items: [], totalCount: 0});
     private _state = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null});
-    private _querySource : ReplaySubject<QueryRequestArgs> = new ReplaySubject<QueryRequestArgs>(1,null);
+
 
     private _queryData : QueryData = {
         pageIndex: 0,
@@ -91,6 +91,12 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         sortDirection: SortDirection.Desc,
         fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus'
     };
+    private _querySource = new BehaviorSubject<QueryRequestArgs>({
+        filters : [],
+        addedFilters : [],
+        removedFilters : [],
+        data : this._queryData
+    });
 
     private _activeFilters : FilterItem[] = [];
     private _activeFiltersMap : {[key : string] : FilterItem[]} = {};

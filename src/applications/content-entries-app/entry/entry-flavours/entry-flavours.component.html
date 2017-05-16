@@ -1,7 +1,7 @@
 <k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
 	<kFileDialog #fileDialog (onFileSelected)="_onFileSelected($event)" [filter]="_uploadFilter"></kFileDialog>
 	<div class="kFlavours kUseKMCngIcons" #flavors>
-		<p class="kTitle">{{'applications.content.entryDetails.flavours.flavours' | translate}}</p>
+		<p class="kTitle">{{'applications.content.entryDetails.flavours.flavours' | translate}}<span style="color: #ff5b00; font-size: 14px"> (UI design not final)</span></p>
 		<div class="kEntryStatus">
 			<i class="{{_handler._entryStatusClassName}}"></i><span>{{_handler._entryStatus}}</span>
 		</div>

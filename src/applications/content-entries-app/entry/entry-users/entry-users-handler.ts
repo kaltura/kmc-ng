@@ -28,8 +28,8 @@ export class EntryUsersHandler extends EntrySection
 	private _buildForm() : void{
 		this.usersForm = this._formBuilder.group({
 			owners : null,
-			editors: null,
-			publishers: null
+			editors: [],
+			publishers: []
 		});
 
 		this.usersForm.statusChanges
@@ -58,9 +58,9 @@ export class EntryUsersHandler extends EntrySection
 			// save editors
 			const editors: KalturaUser[] = this.usersForm.value.editors;
 
-			if (editors.length){
+			if (editors && editors.length){
 				let entitledUsersEdit = '';
-				editors.forEach(editor=>{
+				editors.forEach(editor => {
 					entitledUsersEdit += editor.id + ",";
 				});
 				entitledUsersEdit = entitledUsersEdit.substring(0, entitledUsersEdit.length-1); // remove last comma
@@ -70,6 +70,16 @@ export class EntryUsersHandler extends EntrySection
 			}
 			// save publishers
 			const publishers: KalturaUser[] = this.usersForm.value.publishers;
+			if (publishers && publishers.length){
+				let entitledUsersPublish = '';
+				publishers.forEach(publisher => {
+					entitledUsersPublish += publisher.id + ",";
+				});
+				entitledUsersPublish = entitledUsersPublish.substring(0, entitledUsersPublish.length-1); // remove last comma
+				data.entitledUsersPublish = entitledUsersPublish;
+			}else{
+				data.entitledUsersPublish = null;
+			}
 		}
 	}
     /**
@@ -81,8 +91,8 @@ export class EntryUsersHandler extends EntrySection
 	    this._owner = null;
 	    this.usersForm.setValue({
 		    owners: null,
-		    editors: null,
-		    publishers: null
+		    editors: [],
+		    publishers: []
 	    });
     }
 

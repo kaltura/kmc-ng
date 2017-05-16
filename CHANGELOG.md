@@ -1,3 +1,34 @@
+# Change Log
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+<a name="2.0.1"></a>
+## [2.0.1](https://github.com/kaltura/KMCng/compare/v2.0.0...v2.0.1) (2017-05-16)
+
+
+### Bug Fixes
+
+* prevent users section from failing during save when adding publisher to a new entry ([d23b2a1](https://github.com/kaltura/KMCng/commit/d23b2a1))
+
+
+
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/kaltura/KMCng/compare/v0.1.0-rc.4...v2.0.0) (2017-05-16)
+
+## Features
+- **Entry Details -> Entry details panel**: Entries navigation, data saving, error handling and recovering 
+- **Entry Details -> Entry preview panel**: Entry preview and basic details listing
+- **Entry Details -> Metadata**: Entry metadata management (basic and custom scheme)
+- **Entry Details -> Thumbnails**: Entry thumbnails management
+- **Entry Details -> Access control**: Access control management
+- **Entry Details -> Scheduling**: Scheduling setup
+- **Entry Details -> Flavors**: Entry flavors management
+- **Entry Details -> Captions**: Entry captions management
+- **Entry Details -> Related files**: Entry related files management
+- **Entry Details -> Live**: Manual and Universal live details and setup
+- **Entry Details -> Clips**: Entry clips summary
+- **Entry Details -> Users**: Entry users management
+
 <a name="0.1.0-rc.4"></a>
 # [0.1.0-rc.4](https://github.com/kaltura/KMCng/compare/v0.1.0-rc.3...v0.1.0-rc.4) (2017-02-27)
 
