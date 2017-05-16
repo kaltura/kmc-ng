@@ -5,68 +5,19 @@ All notable changes to this project will be documented in this file. See [standa
 <a name="2.0.0"></a>
 # [2.0.0](https://github.com/kaltura/KMCng/compare/v0.1.0-rc.4...v2.0.0) (2017-05-16)
 
-
-### Bug Fixes
-
-* KMCNG-323 - don't display duration for live entries ([a22ff18](https://github.com/kaltura/KMCng/commit/a22ff18))
-* **entry:** update section handlers to be be part of the entry component lifecycle (initialize/destroy) ([b108637](https://github.com/kaltura/KMCng/commit/b108637))
-* add missing module import ([b9a1624](https://github.com/kaltura/KMCng/commit/b9a1624))
-* change access control profile when changing entries ([38cc3c0](https://github.com/kaltura/KMCng/commit/38cc3c0))
-* ci process ([ffd91a9](https://github.com/kaltura/KMCng/commit/ffd91a9))
-* ci process ([dbba34b](https://github.com/kaltura/KMCng/commit/dbba34b))
-* clips offset and duration bug fix ([8825b3c](https://github.com/kaltura/KMCng/commit/8825b3c))
-* Custom metadata UI layout fixes ([cfb2964](https://github.com/kaltura/KMCng/commit/cfb2964))
-* devop scripts ([712aa43](https://github.com/kaltura/KMCng/commit/712aa43))
-* don't show validation error in metadata section after save operation ([5727ba2](https://github.com/kaltura/KMCng/commit/5727ba2))
-* entry save process ([3b30a5a](https://github.com/kaltura/KMCng/commit/3b30a5a))
-* entry save process ([6e67561](https://github.com/kaltura/KMCng/commit/6e67561))
-* error messages revision ([a2a0aff](https://github.com/kaltura/KMCng/commit/a2a0aff))
-* fix bug in which landing page doesn't show on preview panel ([5fb1349](https://github.com/kaltura/KMCng/commit/5fb1349))
-* going back from entry details to entry list persist active filters ([1347c26](https://github.com/kaltura/KMCng/commit/1347c26))
-* KMCNG-304: clear selection upon sort ([ccd51c1](https://github.com/kaltura/KMCng/commit/ccd51c1))
-* KMCNG-308 - Fix date formatters ([#127](https://github.com/kaltura/KMCng/issues/127)) ([b522856](https://github.com/kaltura/KMCng/commit/b522856))
-* KMCNG-315 - fix thumbnail header alignment ([8265a1c](https://github.com/kaltura/KMCng/commit/8265a1c))
-* KMCNG-321 - set "No Results" text aligned to center ([d99179a](https://github.com/kaltura/KMCng/commit/d99179a))
-* KMCNG-322 - prevent sorting by status ([18c34ba](https://github.com/kaltura/KMCng/commit/18c34ba))
-* KMCNG-323 - don't display duration for live entries ([#136](https://github.com/kaltura/KMCng/issues/136)) ([7640171](https://github.com/kaltura/KMCng/commit/7640171))
-* KMCNG-326 - set max entries to display ([#135](https://github.com/kaltura/KMCng/issues/135)) ([8ebb9c5](https://github.com/kaltura/KMCng/commit/8ebb9c5))
-* KMCNG-339 - hide overflow in auto-complete search result items ([e2676d1](https://github.com/kaltura/KMCng/commit/e2676d1))
-* Live stream UI Layout fix ([072cd00](https://github.com/kaltura/KMCng/commit/072cd00))
-* minor bug fixes ([8e9bdaa](https://github.com/kaltura/KMCng/commit/8e9bdaa))
-* send ks to the player to override access control restrictions ([c13464e](https://github.com/kaltura/KMCng/commit/c13464e))
-* set categories filter tooltip ([a92d671](https://github.com/kaltura/KMCng/commit/a92d671))
-* set edit / add caption title ([35223e1](https://github.com/kaltura/KMCng/commit/35223e1))
-* simplify entry section loading process ([99f8514](https://github.com/kaltura/KMCng/commit/99f8514))
-* support category search use case ([f817f38](https://github.com/kaltura/KMCng/commit/f817f38))
-* use updated version of 'kaltura-typescript-client' ([c9a1a52](https://github.com/kaltura/KMCng/commit/c9a1a52))
-
-
-### Features
-
-*  multiple entry detail tabs ([874fd91](https://github.com/kaltura/KMCng/commit/874fd91))
-* add Flavors tab ([4c08634](https://github.com/kaltura/KMCng/commit/4c08634))
-* entry access control, sections list and improved section api ([b407030](https://github.com/kaltura/KMCng/commit/b407030))
-* **entry/clips:** load entry clips ([5192164](https://github.com/kaltura/KMCng/commit/5192164))
-* entry detail layout ([0cccf8d](https://github.com/kaltura/KMCng/commit/0cccf8d))
-* entry navigation between sections ([b5ff17f](https://github.com/kaltura/KMCng/commit/b5ff17f))
-* error handling for flavor preview ([864b0c3](https://github.com/kaltura/KMCng/commit/864b0c3))
-* fix preview layout (change from table to flexbox) ([73647fb](https://github.com/kaltura/KMCng/commit/73647fb))
-* hide clips section for image type entries ([2ae2a5b](https://github.com/kaltura/KMCng/commit/2ae2a5b))
-* issue console warnings ([15fc3be](https://github.com/kaltura/KMCng/commit/15fc3be))
-* layout static metadata UI elements ([#115](https://github.com/kaltura/KMCng/issues/115)) ([af8e4f1](https://github.com/kaltura/KMCng/commit/af8e4f1))
-* Live stream UI Layout ([#120](https://github.com/kaltura/KMCng/issues/120)) ([aac49e9](https://github.com/kaltura/KMCng/commit/aac49e9))
-* save access control and scheduling changes upon save ([86e8f7f](https://github.com/kaltura/KMCng/commit/86e8f7f))
-* scheduling section ([b1d7a31](https://github.com/kaltura/KMCng/commit/b1d7a31))
-* section navigation + placeholders for all sections ([#117](https://github.com/kaltura/KMCng/issues/117)) ([cafa37f](https://github.com/kaltura/KMCng/commit/cafa37f))
-* **entry:** entry sections layout & data handlers ([a26dbde](https://github.com/kaltura/KMCng/commit/a26dbde))
-* section save process ([#134](https://github.com/kaltura/KMCng/issues/134)) ([263024f](https://github.com/kaltura/KMCng/commit/263024f))
-* set all sections localization, style and active ([1b97817](https://github.com/kaltura/KMCng/commit/1b97817))
-* set entry icon ([d55fc04](https://github.com/kaltura/KMCng/commit/d55fc04))
-* simplify entry sections ([9b6a6d3](https://github.com/kaltura/KMCng/commit/9b6a6d3))
-* use KalturaUtil from common module ([643c63f](https://github.com/kaltura/KMCng/commit/643c63f))
-* **entry/metadata:** Custom metadata UI layout ([c2f20b4](https://github.com/kaltura/KMCng/commit/c2f20b4))
-
-
+## Features
+- **Entry Details -> Entry details panel**: Entries navigation, data saving, error handling and recovering 
+- **Entry Details -> Entry preview panel**: Entry preview and basic details listing
+- **Entry Details -> Metadata**: Entry metadata management (basic and custom scheme)
+- **Entry Details -> Thumbnails**: Entry thumbnails management
+- **Entry Details -> Access control**: Access control management
+- **Entry Details -> Scheduling**: Scheduling setup
+- **Entry Details -> Flavors**: Entry flavors management
+- **Entry Details -> Captions**: Entry captions management
+- **Entry Details -> Related files**: Entry related files management
+- **Entry Details -> Live**: Manual and Universal live details and setup
+- **Entry Details -> Clips**: Entry clips summary
+- **Entry Details -> Users**: Entry users management
 
 <a name="0.1.0-rc.4"></a>
 # [0.1.0-rc.4](https://github.com/kaltura/KMCng/compare/v0.1.0-rc.3...v0.1.0-rc.4) (2017-02-27)
