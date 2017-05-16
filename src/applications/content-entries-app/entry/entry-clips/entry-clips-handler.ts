@@ -102,7 +102,7 @@ export class EntryClipsHandler extends EntrySection
 			entry.operationAttributes.forEach((attr: KalturaOperationAttributes) => {
 				if (attr instanceof KalturaClipAttributes){
 					if (attr.offset && offset === -1) { // take the first offset we find as in legacy KMC
-						offset = attr.offset;
+						offset = attr.offset / 1000;
 					}
 				}
 			});
@@ -111,21 +111,7 @@ export class EntryClipsHandler extends EntrySection
 	}
 
 	private _getClipDuration(entry: KalturaMediaEntry): string{
-		let duration: number = -1;
-		if (entry.operationAttributes && entry.operationAttributes.length){
-			entry.operationAttributes.forEach((attr: KalturaOperationAttributes) => {
-				if (attr instanceof KalturaClipAttributes){
-					if (attr.duration && duration === -1) { // take the first duration we find
-						duration = attr.duration;
-					}
-				}
-			});
-		}
-		// fallback to entry duration if no clip duration is found
-		if (duration === -1 && entry.duration){
-			duration = entry.duration;
-		}
-		return duration !== -1 ? KalturaUtils.formatTime(duration) : this._appLocalization.get('applications.content.entryDetails.clips.n_a');
+		return entry.duration ? KalturaUtils.formatTime(entry.duration) : this._appLocalization.get('applications.content.entryDetails.clips.n_a');
 	}
 
 	private _getEntryClips(origin: 'activation' | 'reload') : Observable<{ failed: boolean, error?: Error }> {

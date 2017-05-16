@@ -60,7 +60,7 @@ export abstract class EntrySection extends FormSection<KalturaMediaEntry,EntrySe
     protected _showActivationError() {
         this._showBlockerMessage(new AreaBlockerMessage(
             {
-                message: 'Something happened during section initialization',
+                message: 'An error occurred while loading data',
                 buttons: [
                     {
                         label: 'Retry',
