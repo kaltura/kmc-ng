@@ -223,22 +223,25 @@ export class EntryLiveHandler extends EntrySection {
 		}
 	}
 
-	private _validateBitrates(): boolean {
+	public _validateBitrates(event): boolean {
 		let valid = true;
-		this._bitrates.forEach((br: bitrate) => {
-			if (br.enabled) {
+		if (!event) {
+			this._bitrates.forEach((br: bitrate) => {
 				br.errors = "";
-				if (br.bitrate > 0) {
-					if (br.width === 0 || br.height === 0) {
+				if (br.enabled) {
+					if (br.bitrate > 0) {
+						if (br.width === 0 || br.height === 0) {
+							valid = false;
+							br.errors = this._appLocalization.get('applications.content.entryDetails.live.dimensionsError');
+						}
+					} else {
 						valid = false;
-						br.errors = this._appLocalization.get('applications.content.entryDetails.live.dimensionsError');
+						br.errors = this._appLocalization.get('applications.content.entryDetails.live.bitrateError');
 					}
-				} else {
-					valid = false;
-					br.errors = this._appLocalization.get('applications.content.entryDetails.live.bitrateError');
 				}
-			}
-		});
+			});
+		}
+		super._onSectionStateChanged({isValid : valid});
 		return valid;
 	}
 }
