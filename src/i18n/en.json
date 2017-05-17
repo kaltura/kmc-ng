@@ -161,6 +161,7 @@
 					"entryID": "Entry ID",
 					"creator": "Creator",
 					"creationDate": "Creation date",
+					"updateDate": "Last update",
 					"landingPage": "Landing page",
 					"vodEntry": "VOD Entry",
 					"archiveOf": "Archive of",
