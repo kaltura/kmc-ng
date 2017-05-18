@@ -11,9 +11,9 @@ import { KalturaSourceType,	KalturaLiveStreamBitrate, ConversionProfileListActio
 import { AppLocalization, AppConfig } from '@kaltura-ng2/kaltura-common';
 import { BrowserService } from 'kmc-shell';
 
-import { EntrySectionTypes } from '../entry-store/entry-sections-types';
-import { EntrySection } from '../entry-store/entry-section-handler';
-import { EntrySectionsManager } from '../entry-store/entry-sections-manager';
+import { EntrySectionTypes } from '../entry-sections-types';
+import { EntrySection } from '../entry-section-handler';
+import { EntrySectionsManager } from '../entry-sections-manager';
 import { LiveXMLExporter } from './live-xml-exporter';
 import { AVAIL_BITRATES } from './bitrates';
 

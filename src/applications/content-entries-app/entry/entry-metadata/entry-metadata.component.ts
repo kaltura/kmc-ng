@@ -8,7 +8,7 @@ import { MenuItem, Menu } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { EntryMetadataHandler } from './entry-metadata-handler';
-import { EntryStore } from '../entry-store/entry-store.service';
+import { EntryStore } from '../entry-store.service';
 import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
 import { JumpToSection } from './jump-to-section.component';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';

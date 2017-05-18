@@ -4,15 +4,15 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SelectItem } from 'primeng/primeng';
 
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { EntrySectionTypes } from '../entry-store/entry-sections-types';
+import { EntrySectionTypes } from '../entry-sections-types';
 import { KalturaMediaEntry, KalturaAccessControl, KalturaSiteRestriction, KalturaSiteRestrictionType, KalturaCountryRestriction, KalturaCountryRestrictionType, KalturaIpAddressRestriction,
 	KalturaIpAddressRestrictionType, KalturaLimitFlavorsRestriction, KalturaLimitFlavorsRestrictionType, KalturaSessionRestriction, KalturaPreviewRestriction, KalturaFlavorParams } from 'kaltura-typescript-client/types/all'
 import { AccessControlProfileStore, FlavoursStore, AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
 
 import 'rxjs/add/observable/forkJoin';
 import * as R from 'ramda';
-import { EntrySection } from '../entry-store/entry-section-handler';
-import { EntrySectionsManager } from '../entry-store/entry-sections-manager';
+import { EntrySection } from '../entry-section-handler';
+import { EntrySectionsManager } from '../entry-sections-manager';
 
 @Injectable()
 export class EntryAccessControlHandler extends EntrySection

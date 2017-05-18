@@ -6,10 +6,10 @@ import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
-import { EntrySectionTypes } from '../entry-store/entry-sections-types';
-import { EntrySection } from '../entry-store/entry-section-handler';
+import { EntrySectionTypes } from '../entry-sections-types';
+import { EntrySection } from '../entry-section-handler';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { EntrySectionsManager } from '../entry-store/entry-sections-manager';
+import { EntrySectionsManager } from '../entry-sections-manager';
 
 function datesValidation(checkRequired: boolean = false): ValidatorFn {
 	return (c: AbstractControl): {[key: string]: boolean} | null => {

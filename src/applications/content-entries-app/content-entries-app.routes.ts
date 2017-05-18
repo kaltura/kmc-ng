@@ -1,11 +1,11 @@
 import { Route }        from '@angular/router';
 
-import { EntriesComponent } from './entries/entries.component';
+import { ContentEntriesComponent } from './content-entries.component';
 import { EntriesListComponent } from './entries/entries-list.component';
 import { EntryComponent } from './entry/entry.component';
 import { EntryMetadata } from "./entry/entry-metadata/entry-metadata.component";
 import { EntryUsers } from "./entry/entry-users/entry-users.component";
-import { EntrySectionTypes } from './entry/entry-store/entry-sections-types';
+import { EntrySectionTypes } from './entry/entry-sections-types';
 import { EntryClips } from './entry/entry-clips/entry-clips.component';
 import { EntryRelated } from './entry/entry-related/entry-related.component';
 import { EntryLive } from './entry/entry-live/entry-live.component';
@@ -16,7 +16,7 @@ import { EntryAccessControl } from './entry/entry-access-control/entry-access-co
 import { EntryThumbnails } from './entry/entry-thumbnails/entry-thumbnails.component';
 
 export const routing: Route[] = [
-	{path: '', component: EntriesComponent,
+	{path: '', component: ContentEntriesComponent,
 		children:[
 			{path: '', redirectTo: 'list', pathMatch: 'full'},
 			{path: 'list', component: EntriesListComponent},

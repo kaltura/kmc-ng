@@ -13,7 +13,7 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { BaseEntryGetAction, BaseEntryUpdateAction } from 'kaltura-typescript-client/types/all';
 import { EntrySectionTypes } from './entry-sections-types';
-import { EntriesStore } from '../../entries/entries-store/entries-store.service';
+import { EntriesStore } from '../entries/entries-store/entries-store.service';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { EntrySectionsManager } from './entry-sections-manager';
 import { KalturaTypesFactory } from 'kaltura-typescript-client';

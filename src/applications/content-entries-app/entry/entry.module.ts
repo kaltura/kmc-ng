@@ -40,6 +40,7 @@ import { ContentEntriesAppSharedModule } from '../shared/content-entries-app-sha
 
 import { FileSizePipe } from './pipes/file-size.pipe';
 import { ModerationPipe } from './pipes/moderation.pipe';
+import { LinkedEntries } from './entry-metadata/entry-selector/linked-entries.component';
 
 @NgModule({
     imports: [
@@ -74,6 +75,7 @@ import { ModerationPipe } from './pipes/moderation.pipe';
         SpinnerModule
     ],
     declarations: [
+        LinkedEntries,
 	    EntryCaptionsEdit,
 	    EntryRelatedEdit,
         EntryAccessControl,
