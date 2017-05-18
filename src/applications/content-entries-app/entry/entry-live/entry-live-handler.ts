@@ -223,7 +223,7 @@ export class EntryLiveHandler extends EntrySection {
 		}
 	}
 
-	public _validateBitrates(event): boolean {
+	public _validateBitrates(event = null): boolean {
 		let valid = true;
 		if (!event) {
 			this._bitrates.forEach((br: bitrate) => {
