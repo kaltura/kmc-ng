@@ -20,7 +20,13 @@ hr{
 	width: 100%;
 	overflow-y: auto;
 
-
+	.kEditCategories{
+		margin-left: 8px;
+		cursor: pointer;
+		&:hover{
+			color: $kPrimary;
+		}
+	}
 
 	.kSchemaTitle{
 		color: $kGrayscale1;

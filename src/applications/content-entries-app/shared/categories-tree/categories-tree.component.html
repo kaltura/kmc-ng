@@ -1,0 +1,21 @@
+<div class="kTreeContainer kUseKMCngIcons">
+	<p-tree  kTreeSelection [treeSelectionMode]="_selectionMode"
+			(onTreeSelectionChanged)="_onTreeSelectionChanged($event)" [value]="_categories"
+			(onNodeExpand)="_onNodeExpand($event)">
+		<template let-node pTemplate="default">
+			<div>
+				<span [class.kDisabled]="node.isDisabled" class="kTreeNodeLabel">{{node.label}}</span>
+				<span class="kTreeNodeNumChildren" *ngIf="node.childrenCount">{{node.childrenCount}}</span>
+			</div>
+			<div *ngIf="node.expanded && node.childrenStatus === 1"
+				 class="kLoadingMessage" (click)="_blockTreeSelection($event)">
+				{{'entriesShared.categoriesFilters.loading' | translate}}
+			</div>
+			<div *ngIf="node.expanded && node.childrenStatus === 2"
+				 class="kLoadingErrorMessage" (click)="_blockTreeSelection($event)">
+				{{ node.childrenLoadError || 'entriesShared.categoriesFilters.loadingError' | translate }}
+			</div>
+		</template>
+	</p-tree>
+</div>
+

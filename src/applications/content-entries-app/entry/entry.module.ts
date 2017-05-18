@@ -14,6 +14,7 @@ import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 
 
 import { EntryMetadata } from './entry-metadata/entry-metadata.component';
+import { CategoriesSelector } from './entry-metadata/category-selector/categories-selector.component';
 import { EntryThumbnails } from './entry-thumbnails/entry-thumbnails.component';
 import { EntryAccessControl } from './entry-access-control/entry-access-control.component';
 import { EntryScheduling } from './entry-scheduling/entry-scheduling.component';
@@ -96,7 +97,8 @@ import { LinkedEntries } from './entry-metadata/entry-selector/linked-entries.co
         EntryUsers,
         ModerationPipe,
         FileSizePipe,
-        JumpToSection
+        JumpToSection,
+	    CategoriesSelector
     ],
     exports: [
     ],

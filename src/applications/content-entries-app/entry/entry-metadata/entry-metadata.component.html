@@ -42,7 +42,8 @@
                 </div>
             </div>
             <div class="kRow kValign">
-                <span class="kLabel">{{'applications.content.entryDetails.metadata.categories' | translate}}</span>
+                <span class="kLabel">{{'applications.content.entryDetails.metadata.categories' | translate}}<i class="kIconpen kEditCategories" (click)="categoriesPopup.open()"></i></span>
+
                 <div class="kControl">
                     <kAutoComplete formControlName="categories"
                                    field="name"
@@ -90,4 +91,9 @@
             <hr *ngIf="!last"/>
         </div>
     </div>
+
+	<kPopupWidget #categoriesPopup [popupWidth]="440" [popupHeight]="450" [closeBtn]="true" [modal]="true">
+		<kCategoriesSelector [parentPopupWidget]="categoriesPopup" [searchCategories]="_handler._entryCategories"></kCategoriesSelector>
+	</kPopupWidget>
+
 </k-area-blocker>
