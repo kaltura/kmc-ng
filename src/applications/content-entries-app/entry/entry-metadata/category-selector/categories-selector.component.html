@@ -9,6 +9,8 @@
 					   [multiple]="true"
 					   placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"
 					   [minLength]="3"
+					   (onSelect)="_onSuggestionSelected($event)"
+					   (onUnselect)="_onItemRemoved($event)"
 					   [suggestionsProvider]="_categoriesProvider"
 					   (completeMethod)="_searchCategories($event)">
 		</kAutoComplete>

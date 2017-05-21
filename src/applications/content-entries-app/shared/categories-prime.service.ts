@@ -77,6 +77,33 @@ export class CategoriesPrime {
 		}
 	}
 
+	public searchCategories(text : string)
+	{
+		return Observable.create(
+			observer => {
+
+				const requestSubscription = this._categoriesStore.getSuggestions(text)
+					.monitor('search categories')
+					.subscribe(
+						result =>
+						{
+							observer.next(result.items);
+							observer.complete();
+						},
+						err =>
+						{
+							observer.error(err);
+						}
+					);
+
+				return () =>
+				{
+					console.log("Categories search: cancelled");
+					requestSubscription.unsubscribe();
+				}
+			});
+	}
+
 	private createTreeHandlerArguments(items : any[], parentNode : PrimeTreeNode = null) : any {
 		return {
 			items: items,

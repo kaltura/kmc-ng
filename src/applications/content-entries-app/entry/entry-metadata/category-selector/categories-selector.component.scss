@@ -11,6 +11,11 @@
 	padding-left: 170px;
 }
 
+:host /deep/ kautocomplete .kKalturaPrimeUIComponent.ui-autocomplete-multiple{
+	width: 380px;
+}
+
+
 :host /deep/ kcategoriestree .kTreeContainer{
 	margin: 0px;
 	padding: 0px;
