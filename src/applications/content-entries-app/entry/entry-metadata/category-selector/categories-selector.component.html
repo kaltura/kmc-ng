@@ -1,6 +1,7 @@
 <k-area-blocker [showLoader]="_loading" [message]="_blockerMessage">
 	<div class="kTreeContainer kUseKMCngIcons">
-		<kAutoComplete [(ngModel)]="searchCategories"
+
+		<kAutoComplete [(ngModel)]="_searchCategories"
 					   kSuggestionHandler
 					   field="name"
 					   suggestionItemField="item"
@@ -12,8 +13,9 @@
 					   (onSelect)="_onSuggestionSelected($event)"
 					   (onUnselect)="_onItemRemoved($event)"
 					   [suggestionsProvider]="_categoriesProvider"
-					   (completeMethod)="_searchCategories($event)">
+					   (completeMethod)="_searchForCategories($event)">
 		</kAutoComplete>
+
 		<kCategoriesTree #categoriesTree [_categories]="_categories" [_selectionMode]="_selectionMode" (nodeExpand)="onNodeExpand($event)" (selectionChange)="onSelectionChange($event)"></kCategoriesTree>
 		<div class="kFooter">
 			<button pButton label="Apply"(click)="_apply()"></button>

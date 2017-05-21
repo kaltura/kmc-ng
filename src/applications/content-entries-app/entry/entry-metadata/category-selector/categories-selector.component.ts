@@ -1,16 +1,15 @@
 import { Component, OnInit, Input, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
 import { CategoriesPrime } from '../../../shared/categories-prime.service';
 import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
 import * as R from 'ramda';
 
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng2/kaltura-ui';
-import { PrimeTreeNode, TreeDataHandler, NodeChildrenStatuses } from '@kaltura-ng2/kaltura-primeng-ui';
-import { TreeSelection, OnSelectionChangedArgs, TreeSelectionModes, TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
+import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
+import { PrimeTreeNode } from '@kaltura-ng2/kaltura-primeng-ui';
+import { OnSelectionChangedArgs, TreeSelectionModes, TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
 
 import { Subject } from 'rxjs/Subject';
 import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
-import { CategoriesStore, CategoryData } from '../../../entries/categories-store.service';
+import { CategoryData } from '../../../entries/categories-store.service';
 
 import { AppUser,AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { CategoriesTreeComponent } from '../../../shared/categories-tree/categories-tree.component';
@@ -27,7 +26,8 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 
 	private _searchCategoriesSubscription : ISubscription;
 	public _categoriesProvider = new Subject<SuggestionsProviderData>();
-	@Input() searchCategories: CategoryData[]  = [];
+	@Input() searchCategories: CategoryData[]  = []; // this is the auto-complete array from the metadata component
+	public _searchCategories: CategoryData[]  = [];  // this will be used as a local provider for the auto-complete. Its a replica of the data from the metadata component
 
 	public _categories: PrimeTreeNode[] = [];
 	public _loading : boolean = false;
@@ -46,7 +46,11 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
     }
 
     public _apply():void{
-	    // apply changes
+
+	    // update searchCategories from metadata component with the updated categories array
+	    this.searchCategories.length = 0;
+	    this._searchCategories.forEach(category => { this.searchCategories.push(category)});
+
 	    if (this.parentPopupWidget){
 		    this.parentPopupWidget.close();
 	    }
@@ -86,6 +90,7 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 		if (this.parentPopupWidget){
 			this.parentPopupStateChangeSubscription = this.parentPopupWidget.state$.subscribe(event => {
 				if (event.state === PopupWidgetStates.Open){
+					this._searchCategories = Array.from(this.searchCategories);
 					this.loadCategories();
 				}
 			});
@@ -110,9 +115,9 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 		if (args.origin === TreeSelectionChangedOrigins.UserSelection){
 			if (args.removed && args.removed.length){
 				args.removed.forEach((node: PrimeTreeNode) =>{
-					let removeIndex = R.findIndex(R.propEq('id', node.data))(this.searchCategories);
+					let removeIndex = R.findIndex(R.propEq('id', node.data))(this._searchCategories);
 					if (removeIndex > -1){
-						this.searchCategories.splice(removeIndex, 1);
+						this._searchCategories.splice(removeIndex, 1);
 					}
 				});
 			}
@@ -126,13 +131,13 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 						fullIdPath.unshift(node.data);
 					}
 					newCategory['fullIdPath'] = fullIdPath;
-					this.searchCategories.push(newCategory);
+					this._searchCategories.push(newCategory);
 				});
 			}
 		}
 	}
 
-	public _searchCategories(event) : void {
+	public _searchForCategories(event) : void {
 		this._categoriesProvider.next({ suggestions : [], isLoading : true});
 
 		if (this._searchCategoriesSubscription)
@@ -144,7 +149,7 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 
 		this._searchCategoriesSubscription = this._categoriesPrime.searchCategories(event.query).subscribe(data => {
 				const suggestions = [];
-				const entryCategories = this.searchCategories || [];
+				const entryCategories = this._searchCategories || [];
 
 
 				(data|| []).forEach(suggestedCategory => {
@@ -168,15 +173,14 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 		this.categoriesTree.treeSelection.unselectAll();
 
 
-		this.searchCategories.forEach(category => {
+		this._searchCategories.forEach(category => {
 			// find the item in the tree (if exists)
 			let treeItem : PrimeTreeNode = null;
 			let selectedItems = [];
-			for(let i=0, length=category.fullIdPath.length; i<length ; i++)
+			for(let i = 0, length = category.fullIdPath.length; i < length ; i++)
 			{
 				const itemIdToSearchFor = category.fullIdPath[i];
 				treeItem = ((treeItem ? treeItem.children : this._categories) || []).find(child => child.data  === itemIdToSearchFor);
-
 			}
 			if (treeItem)
 			{
