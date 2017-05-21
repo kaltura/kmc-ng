@@ -90,7 +90,7 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 		if (this.parentPopupWidget){
 			this.parentPopupStateChangeSubscription = this.parentPopupWidget.state$.subscribe(event => {
 				if (event.state === PopupWidgetStates.Open){
-					this._searchCategories = Array.from(this.searchCategories);
+					this._searchCategories = Array.from(this.searchCategories); // create a replica of the original data to prevent bi-directional data binding
 					this.loadCategories();
 				}
 			});
