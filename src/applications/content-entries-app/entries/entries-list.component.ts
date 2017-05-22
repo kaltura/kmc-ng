@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem } from 'primeng/primeng';
@@ -19,6 +19,19 @@ import { EntriesAdditionalFiltersStore } from "./entries-additional-filters/entr
 export class EntriesListComponent implements OnInit, OnDestroy {
 
     @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
+
+    @Input()
+    public allowBulkActions = false;
+    @Input()
+    public allowEntryActions = false;
+    @Input()
+    public allowEntryDrillIn = false;
+    @Input()
+    public persistSelectionBetweenallowEntryDrillIn = false;
+    @Input()
+    public selectionMode : 'none' | 'single' | 'multiple';
+
+
 
     public showLoader = true;
     private querySubscription : ISubscription;

@@ -52,6 +52,7 @@ export class EntryMetadataHandler extends EntrySection
             categories : null,
             offlineMessage : '',
             referenceId : '',
+            entriesIdList : null
         });
 
         this.metadataForm.statusChanges
@@ -116,7 +117,8 @@ export class EntryMetadataHandler extends EntrySection
                 tags: (this.data.tags ? this.data.tags.split(', ') : null), // for backward compatibility we split values by ',{space}'
                 categories: this._entryCategories,
                 offlineMessage: this.data instanceof KalturaLiveStreamEntry ? (this.data.offlineMessage || null) : '',
-                referenceId: this.data.referenceId || null
+                referenceId: this.data.referenceId || null,
+                entriesIdList : ['1_rbyysqbe','0_hp3s3647','1_4gs7ozgq']
             }
         );
 
