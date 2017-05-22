@@ -24,7 +24,7 @@ import 'rxjs/add/operator/catch';
 export class EntryMetadataHandler extends EntrySection
 {
     private _entryCategoriesDiffers : IterableDiffer;
-    public _entryCategories : { id : number, fullIdPath : number[], name : string }[]  = [];
+    public _entryCategories : { id : string | number, fullIdPath : (string | number)[], name : string }[]  = [];
     private _entryMetadata : KalturaMetadata[] = [];
 
     public isLiveEntry : boolean;

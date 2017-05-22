@@ -26,8 +26,8 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 
 	private _searchCategoriesSubscription : ISubscription;
 	public _categoriesProvider = new Subject<SuggestionsProviderData>();
-	@Input() searchCategories: CategoryData[]  = []; // this is the auto-complete array from the metadata component
-	public _searchCategories: CategoryData[]  = [];  // this will be used as a local provider for the auto-complete. Its a replica of the data from the metadata component
+	@Input() searchCategories: { id : string | number, fullIdPath : (string | number)[], name : string }[]  = []; // this is the auto-complete array from the metadata component
+	public _searchCategories: { id : string | number, fullIdPath : (string | number)[], name : string }[]  = [];  // this will be used as a local provider for the auto-complete. Its a replica of the data from the metadata component
 
 	public _categories: PrimeTreeNode[] = [];
 	public _loading : boolean = false;
@@ -69,7 +69,7 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 			    this._categories = result.categories;
 			    setTimeout(()=>{
 				    this.updateTreeCategories();
-			    },200);
+			    },300);
 			    this._loading = false;
 		    },
 		    error => {
@@ -124,10 +124,10 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 
 			if (args.added && args.added.length){
 				args.added.forEach((node: PrimeTreeNode) =>{
-					let newCategory = {id: node.data, name: node.label};
+					let newCategory: { id : string | number, fullIdPath : (string | number)[], name : string } = {id: node.data, fullIdPath: [], name: node.label};
 					let fullIdPath = [node.data];
 					while (node.parent && node.parent.data){
-						node = node.parent;
+						node = <PrimeTreeNode>node.parent;
 						fullIdPath.unshift(node.data);
 					}
 					newCategory['fullIdPath'] = fullIdPath;
@@ -172,11 +172,11 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 	private updateTreeCategories(expandNodeId = null):void{
 		this.categoriesTree.treeSelection.unselectAll();
 
-
+		let selectedItems = [];
 		this._searchCategories.forEach(category => {
 			// find the item in the tree (if exists)
 			let treeItem : PrimeTreeNode = null;
-			let selectedItems = [];
+
 			for(let i = 0, length = category.fullIdPath.length; i < length ; i++)
 			{
 				const itemIdToSearchFor = category.fullIdPath[i];
@@ -195,10 +195,11 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 				}
 			}
 
-			if (selectedItems.length){
-				this.categoriesTree.treeSelection.selectItems(selectedItems);
-			}
+
 		});
+		if (selectedItems.length){
+			this.categoriesTree.treeSelection.selectItems(selectedItems);
+		}
 	}
 
 	public _onSuggestionSelected(category){

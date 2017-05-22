@@ -1,12 +1,12 @@
 @import "~kmcng-theme/scss/_variables.scss";
 .kTreeContainer{
 	width: 100%;
-	height: 470px;
+	height: 450px;
+	margin-top: 10px;
 	position: relative;
 }
 .kFooter{
 	position: absolute;
-	height: 42px;
 	width: 244px;
 	border-top: 1px solid $kGrayscale4;
 	bottom: 8px;
@@ -15,7 +15,7 @@
 }
 
 :host /deep/ kautocomplete .kKalturaPrimeUIComponent.ui-autocomplete-multiple{
-	width: 380px;
+	width: 100%;
 }
 
 :host /deep/ kautocomplete ul.ui-autocomplete-multiple-container{
@@ -28,5 +28,7 @@
 	margin: 0px;
 	padding: 0px;
 	width: 100%;
+	height: 330px;
+	margin-top: 4px;
 	border-bottom: 0px solid white;
 }
