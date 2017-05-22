@@ -494,7 +494,6 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
      */
     public _onSchedulingChanged(calendarRef : any) : void
     {
-	    debugger;
         if (this.syncSchedulingFilters())
         {
             if (calendarRef && calendarRef.overlayVisible){
