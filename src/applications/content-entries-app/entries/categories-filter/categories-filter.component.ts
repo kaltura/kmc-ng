@@ -8,7 +8,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui
 import { AppUser,AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 import { CategoriesTreeComponent } from '../../shared/categories-tree/categories-tree.component';
-import { CategoriesPrime } from '../../shared/categories-prime.service';
+import { CategoriesPrimeService } from '../../shared/categories-prime.service';
 import { CategoryData } from '../categories-store.service';
 
 import * as R from 'ramda';
@@ -52,7 +52,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     constructor(
         appAuthentication : AppAuthentication,
         private entriesStore : EntriesStore,
-        private _categoriesPrime: CategoriesPrime,
+        private _categoriesPrimeService: CategoriesPrimeService,
         public browserService: BrowserService,
         public filtersRef: ElementRef
     ) {
@@ -82,7 +82,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     {
 	    this._loading = true;
 	    this._blockerMessage = null;
-	    this._categoriesPrime.getCategories()
+	    this._categoriesPrimeService.getCategories()
 		    .subscribe( result => {
 				    this._categories = result.categories;
 				    this._loading = false;
@@ -235,7 +235,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             const node : PrimeTreeNode = <PrimeTreeNode>event.node;
 
 
-	        this._categoriesPrime.loadNodeChildren(node, (children) => {
+	        this._categoriesPrimeService.loadNodeChildren(node, (children) => {
 		        // check if one of the children was already selected and should be added to
 		        // tree selection. Scenario: in lazy tree and selection mode SelfAndChildren when the user select a
 		        // child node using the search component and then expand its' parent
@@ -370,7 +370,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             this._searchCategoriesRequest$ = null;
         }
 
-        this._searchCategoriesRequest$ = this._categoriesPrime.searchCategories(event.query).subscribe(data => {
+        this._searchCategoriesRequest$ = this._categoriesPrimeService.searchCategories(event.query).subscribe(data => {
                 const suggestions = [];
 
                 (data || []).forEach(item => {

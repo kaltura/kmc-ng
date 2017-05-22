@@ -6,7 +6,7 @@ import { AppAuthentication, AppConfig, AppLocalization } from '@kaltura-ng2/kalt
 import { CategoriesStore, CategoriesQuery } from '../entries/categories-store.service';
 
 @Injectable()
-export class CategoriesPrime {
+export class CategoriesPrimeService {
 
 	private inLazyMode : boolean = false;
 

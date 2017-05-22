@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
-import { CategoriesPrime } from '../../../shared/categories-prime.service';
+import { CategoriesPrimeService } from '../../../shared/categories-prime.service';
 import { ISubscription } from 'rxjs/Subscription';
 import * as R from 'ramda';
 
@@ -39,7 +39,7 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 	private parentPopupStateChangeSubscription : ISubscription;
 	@Input() parentPopupWidget: PopupWidgetComponent;
 
-    constructor(private _categoriesPrime: CategoriesPrime, private _appAuthentication : AppAuthentication) {
+    constructor(private _categoriesPrimeService: CategoriesPrimeService, private _appAuthentication : AppAuthentication) {
 	    this.appUser = this._appAuthentication.appUser;
 	    this.inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
     }
@@ -62,7 +62,7 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
     loadCategories():void{
 	    this._loading = true;
 	    this._blockerMessage = null;
-	    this._categoriesPrime.getCategories()
+	    this._categoriesPrimeService.getCategories()
 		    .subscribe( result => {
 			    this._categories = result.categories;
 			    setTimeout(()=>{
@@ -105,7 +105,7 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 	public onNodeExpand(event: any):void{
 		if (this.inLazyMode && event && event.node instanceof PrimeTreeNode) {
 			const node: PrimeTreeNode = <PrimeTreeNode>event.node;
-			this._categoriesPrime.loadNodeChildren(node, (children) => {
+			this._categoriesPrimeService.loadNodeChildren(node, (children) => {
 				// check loaded treed nodes is selected in auto-complete
 				children.forEach(child =>{
 					this._searchCategories.forEach(category => {
@@ -157,7 +157,7 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 			this._searchCategoriesSubscription = null;
 		}
 
-		this._searchCategoriesSubscription = this._categoriesPrime.searchCategories(event.query).subscribe(data => {
+		this._searchCategoriesSubscription = this._categoriesPrimeService.searchCategories(event.query).subscribe(data => {
 				const suggestions = [];
 				const entryCategories = this._searchCategories || [];
 
