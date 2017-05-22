@@ -24,7 +24,7 @@ import 'rxjs/add/operator/catch';
 export class EntryMetadataHandler extends EntrySection
 {
     private _entryCategoriesDiffers : IterableDiffer;
-    private _entryCategories : CategoryData[]  = [];
+    public _entryCategories : { id : string | number, fullIdPath : (string | number)[], name : string }[]  = [];
     private _entryMetadata : KalturaMetadata[] = [];
 
     public isLiveEntry : boolean;
@@ -191,7 +191,7 @@ export class EntryMetadataHandler extends EntrySection
             .do(
                 categories =>
                 {
-                    this._entryCategories = categories.items;
+                    this._entryCategories = categories.items.map(category => ({ id : category.id, name : category.name, fullIdPath : category.fullIdPath}));
                 }
             )
             .map(response => ({failed : false}))

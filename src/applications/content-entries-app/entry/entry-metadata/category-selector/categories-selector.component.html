@@ -1,0 +1,24 @@
+<k-area-blocker [showLoader]="_loading" [message]="_blockerMessage">
+	<div class="kTreeContainer kUseKMCngIcons">
+
+		<kAutoComplete [(ngModel)]="_searchCategories"
+					   kSuggestionHandler
+					   field="name"
+					   suggestionItemField="item"
+					   suggestionLabelField="name"
+					   suggestionSelectableField="isSelectable"
+					   [multiple]="true"
+					   placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"
+					   [minLength]="3"
+					   (onSelect)="_onSuggestionSelected($event)"
+					   (onUnselect)="_onItemRemoved($event)"
+					   [suggestionsProvider]="_categoriesProvider"
+					   (completeMethod)="_searchForCategories($event)">
+		</kAutoComplete>
+
+		<kCategoriesTree #categoriesTree [_categories]="_categories" [_selectionMode]="_selectionMode" (nodeExpand)="onNodeExpand($event)" (selectionChange)="onSelectionChange($event)"></kCategoriesTree>
+		<div class="kFooter">
+			<button pButton label="Apply"(click)="_apply()"></button>
+		</div>
+	</div>
+</k-area-blocker>

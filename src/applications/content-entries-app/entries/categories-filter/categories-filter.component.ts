@@ -1,19 +1,19 @@
 import { Component, OnInit, OnDestroy,  ViewChild, Input,  AfterViewInit, ElementRef } from '@angular/core';
-import { Tree } from 'primeng/primeng';
 import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { PrimeTreeNode, TreeDataHandler, NodeChildrenStatuses } from '@kaltura-ng2/kaltura-primeng-ui';
+import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
+import { PrimeTreeNode, NodeChildrenStatuses } from '@kaltura-ng2/kaltura-primeng-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { AppUser,AppAuthentication } from '@kaltura-ng2/kaltura-common';
-import { AppConfig } from '@kaltura-ng2/kaltura-common';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
+import { CategoriesTreeComponent } from '../../shared/categories-tree/categories-tree.component';
+import { CategoriesPrimeService } from '../../shared/categories-prime.service';
+import { CategoryData } from '../categories-store.service';
 
 import * as R from 'ramda';
 
-import { TreeSelection, OnSelectionChangedArgs,TreeSelectionModes,TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
-import { CategoriesStore, CategoryData } from '../categories-store.service';
+import { OnSelectionChangedArgs,TreeSelectionModes,TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
 import { BrowserService } from "kmc-shell/providers/browser.service";
 import { FilterItem } from "../entries-store/filter-item";
 import { ValueFilter } from "../entries-store/value-filter";
@@ -29,7 +29,6 @@ import { AutoComplete } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestroy{
 
     public _loading : boolean = false;
-    private errorMessage : string = null;
     public _categories: PrimeTreeNode[] = [];
     private appUser : AppUser;
     private inLazyMode : boolean = false;
@@ -38,9 +37,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     public _suggestionsProvider = new Subject<SuggestionsProviderData>();
     private _searchCategoriesRequest$ : ISubscription;
     public _selectionMode :TreeSelectionModes = TreeSelectionModes.Self;
-
-    @ViewChild(TreeSelection)
-    private _treeSelection : TreeSelection = null;
+	public _blockerMessage: AreaBlockerMessage = null;
 
     @ViewChild('searchCategory')
     private _autoComplete : AutoComplete = null;
@@ -48,26 +45,21 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     public NodeChildrenStatuses : any = NodeChildrenStatuses; // we expose the enum so we will be able to use it as part of template expression
 
-    @ViewChild(Tree)
-    private categoriesTree: Tree;
+	@ViewChild('categoriesTree') categoriesTree: CategoriesTreeComponent;
 
     @Input() parentPopupWidget: PopupWidgetComponent;
 
     constructor(
         appAuthentication : AppAuthentication,
-        private appConfig: AppConfig,
-        private appLocalization: AppLocalization,
         private entriesStore : EntriesStore,
-        private treeDataHandler : TreeDataHandler,
+        private _categoriesPrimeService: CategoriesPrimeService,
         public browserService: BrowserService,
-        public categoriesStore: CategoriesStore,
         public filtersRef: ElementRef
     ) {
         this.appUser = appAuthentication.appUser;
     }
 
     ngOnInit() {
-
         // update components when the active filter list is updated
         this.filterUpdateSubscription = this.entriesStore.query$.subscribe(
             filter => {
@@ -86,24 +78,27 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         this.reloadCategories();
     }
 
-
     private reloadCategories() : void
     {
-        this._loading = true;
-        this.errorMessage = null;
-
-        const categories$ = this.inLazyMode ? this.categoriesStore.getRootCategories() : this.categoriesStore.getAllCategories();
-
-        categories$.subscribe(result => {
-                this._loading = false;
-                this._categories = this.treeDataHandler.create(
-                    this.createTreeHandlerArguments(result.items)
-                );
-            },
-            error => {
-                this._loading = false;
-                this.errorMessage = error.message || 'failed to extract categories';
-            });
+	    this._loading = true;
+	    this._blockerMessage = null;
+	    this._categoriesPrimeService.getCategories()
+		    .subscribe( result => {
+				    this._categories = result.categories;
+				    this._loading = false;
+			    },
+			    error => {
+				    this._blockerMessage = new AreaBlockerMessage({
+					    message: error.message || "Error loading categories",
+					    buttons: [{
+						    label: 'Retry',
+						    action: () => {
+							    this.reloadCategories();
+						    }}
+					    ]
+				    })
+				    this._loading = false;
+			    });
     }
 
     ngAfterViewInit(){
@@ -216,7 +211,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             {
                 if (filter instanceof ValueFilter)
                 {
-                    let nodeToRemove = R.find(R.propEq('data',filter.value),this._treeSelection.getSelections());
+                    let nodeToRemove = R.find(R.propEq('data',filter.value),this.categoriesTree.treeSelection.getSelections());
 
                     if (nodeToRemove)
                     {
@@ -227,7 +222,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
             if (nodesToRemove.length > 0)
             {
-                this._treeSelection.unselectItems(nodesToRemove);
+                this.categoriesTree.treeSelection.unselectItems(nodesToRemove);
             }
         }
     }
@@ -239,56 +234,37 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         {
             const node : PrimeTreeNode = <PrimeTreeNode>event.node;
 
-            // make sure the node children weren't loaded already.
-            if (node.childrenStatus !== NodeChildrenStatuses.loaded && node.childrenStatus !== NodeChildrenStatuses.loading) {
 
-                const maxNumberOfChildren = this.appConfig.get('entriesShared.categoriesFilters.maxChildrenToShow',100);
-                if (node.childrenCount > maxNumberOfChildren)
-                {
-                    node.setChildrenLoadStatus(NodeChildrenStatuses.error,
-                                                this.appLocalization.get('entriesShared.categoriesFilters.maxChildrenExceeded', { childrenCount : maxNumberOfChildren}));
-                }else {
-                    node.setChildrenLoadStatus(NodeChildrenStatuses.loading);
+	        this._categoriesPrimeService.loadNodeChildren(node, (children) => {
+		        // check if one of the children was already selected and should be added to
+		        // tree selection. Scenario: in lazy tree and selection mode SelfAndChildren when the user select a
+		        // child node using the search component and then expand its' parent
+		        const newSelectedChildren = [];
+		        this.entriesStore.getFiltersByType(CategoriesFilter).forEach(filter =>
+		        {
+			        const child = children.find(childToCompare => filter.value === childToCompare.data);
 
-                    this.categoriesStore.getChildrenCategories(<number>node.data).subscribe(result => {
-                            // add children to the node
-                            node.setChildren(this.treeDataHandler.create(
-                                this.createTreeHandlerArguments(result.items, node)
-                            ));
+			        if (child)
+			        {
+				        newSelectedChildren.push(child);
+			        }
+		        });
 
-                            // check if one of the children was already selected and should be added to
-                            // tree selection. Scenario: in lazy tree and selection mode SelfAndChildren when the user select a
-                            // child node using the search component and then expand its' parent
-                            const newSelectedChildren = [];
-                            this.entriesStore.getFiltersByType(CategoriesFilter).forEach(filter =>
-                            {
-                                const child = node.children.find(childToCompare => filter.value === childToCompare.data);
+		        if (newSelectedChildren.length)
+		        {
+			        setTimeout(() => {
+					        this.categoriesTree.treeSelection.selectItems(newSelectedChildren);
+				        }
+				        ,300);
 
-                                if (child)
-                                {
-                                    newSelectedChildren.push(child);
-                                }
-                            });
+		        }
+		        // ask tree selection to refresh node status, required in
+		        // 'ExactBlockChildren' mode to update children status if needed
+		        this.categoriesTree.treeSelection.syncItemStatus(node);
 
-                            if (newSelectedChildren.length)
-                            {
-                                setTimeout(() => {
-                                        this._treeSelection.selectItems(newSelectedChildren);
-                                    }
-                                ,300);
+		        return children;
+	        });
 
-                            }
-
-                            // ask tree selection to refresh node status, required in
-                            // 'ExactBlockChildren' mode to update children status if needed
-                            this._treeSelection.syncItemStatus(node);
-                        },
-                        error => {
-                            node.setChildrenLoadStatus(NodeChildrenStatuses.error,
-                                error.message );
-                        });
-                }
-            }
         }
     }
 
@@ -315,7 +291,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     public _clearAll(){
         this.entriesStore.removeFiltersByType(CategoriesFilter);
-        this._treeSelection.unselectAll();
+        this.categoriesTree.treeSelection.unselectAll();
     }
 
     public _blockTreeSelection(e: MouseEvent){
@@ -362,7 +338,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             if (treeItem)
             {
                 // select the node to create the filter and update tree status
-                this._treeSelection.simulateUserInteraction(treeItem);
+                this.categoriesTree.treeSelection.simulateUserInteraction(treeItem);
 
                 // expand tree to show selected node
                 let nodeParent= treeItem.parent;
@@ -394,10 +370,10 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             this._searchCategoriesRequest$ = null;
         }
 
-        this._searchCategoriesRequest$ = this.categoriesStore.getSuggestions(event.query).subscribe(data => {
+        this._searchCategoriesRequest$ = this._categoriesPrimeService.searchCategories(event.query).subscribe(data => {
                 const suggestions = [];
 
-                (data.items || []).forEach(item => {
+                (data || []).forEach(item => {
                     let label = item.fullNamePath.join(' > ') + (item.referenceId ? ` (${item.referenceId})` : '');
 
                     const isSelectable = !this.entriesStore.getFiltersByType(CategoriesFilter).find(categoryFilter => {
