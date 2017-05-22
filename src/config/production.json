@@ -1,8 +1,7 @@
 {
   "core" : {
     "kaltura" : {
-      "apiUrl" : "https://admin.kaltura.com/api_v3",
-      "apiVersion" : "3.3.0"
+
     },
     "diagnostic" : {
       "debugging": false
