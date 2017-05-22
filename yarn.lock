@@ -3092,9 +3092,9 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.3.6"
 
-kaltura-typescript-client@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/kaltura-typescript-client/-/kaltura-typescript-client-1.1.0.tgz#5ce726c68c0ceccd6ec33a8520dc9491d0e1f52e"
+kaltura-typescript-client@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/kaltura-typescript-client/-/kaltura-typescript-client-2.1.0.tgz#0b4beba88238cfb13276e1dae0250d5c477ad2e9"
 
 karma-chrome-launcher@^2.0.0:
   version "2.0.0"

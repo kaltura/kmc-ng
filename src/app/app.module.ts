@@ -14,7 +14,6 @@ import { BrowserService, KMCShellModule } from 'kmc-shell';
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
 
-import { KalturaAPIConfigAdapter } from './services/kaltura-api-config-adapter.service';
 import { KalturaAuthConfigAdapter } from './services/kaltura-auth-config-adapter.service';
 import { KalturaLocalizationAdapter } from './services/kaltura-localization-adapter.service';
 import { AppDefaultConfig } from "./services/app-default-config.service";
@@ -45,7 +44,12 @@ const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessCo
     HttpModule,
     UploadManagementModule,
     KalturaCommonModule.forRoot(),
-    KalturaClientModule.forRoot(),
+    KalturaClientModule.forRoot(
+        {
+          endpointUrl : 'https://www.kaltura.com/api_v3/index.php',
+          clientTag : 'kmcng'
+        }
+    ),
     Ng2Webstorage,
     Ng2PageScrollModule.forRoot(),
     ButtonModule,
@@ -68,7 +72,6 @@ const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessCo
   providers: <any>[
       ...partnerProviders,
     AppMenuService,
-    GetBootstrapProvider(KalturaAPIConfigAdapter),
     GetBootstrapProvider(KalturaLocalizationAdapter),
     GetBootstrapProvider(KalturaAuthConfigAdapter),
     GetBootstrapProvider(KalturaHttpConfigurationAdapter  ),
