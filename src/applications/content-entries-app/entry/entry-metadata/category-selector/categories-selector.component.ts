@@ -42,7 +42,7 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 
     constructor(private _categoriesPrime: CategoriesPrime, private _appAuthentication : AppAuthentication) {
 	    this.appUser = this._appAuthentication.appUser;
-	    this.inLazyMode = true;//this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
+	    this.inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
     }
 
     public _apply():void{
@@ -61,7 +61,6 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
     }
 
     loadCategories():void{
-	    const inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
 	    this._loading = true;
 	    this._blockerMessage = null;
 	    this._categoriesPrime.getCategories()
