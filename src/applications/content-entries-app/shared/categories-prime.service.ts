@@ -11,7 +11,7 @@ export class CategoriesPrime {
 	private inLazyMode : boolean = false;
 
 	constructor(private _categoriesStore: CategoriesStore, private treeDataHandler : TreeDataHandler, private appAuthentication : AppAuthentication, private appConfig: AppConfig, private appLocalization: AppLocalization) {
-		this.inLazyMode = this.appAuthentication.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
+		this.inLazyMode = true;//this.appAuthentication.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
 	}
 
 	public getCategories(): Observable<{ categories : PrimeTreeNode[]}> {

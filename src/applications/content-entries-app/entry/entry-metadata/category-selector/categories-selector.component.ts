@@ -42,7 +42,7 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 
     constructor(private _categoriesPrime: CategoriesPrime, private _appAuthentication : AppAuthentication) {
 	    this.appUser = this._appAuthentication.appUser;
-	    this.inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
+	    this.inLazyMode = true;//this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
     }
 
     public _apply():void{
@@ -107,7 +107,19 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 	public onNodeExpand(event: any):void{
 		if (this.inLazyMode && event && event.node instanceof PrimeTreeNode) {
 			const node: PrimeTreeNode = <PrimeTreeNode>event.node;
-			this._categoriesPrime.loadNodeChildren(node);
+			this._categoriesPrime.loadNodeChildren(node, (children) => {
+				// check loaded treed nodes is selected in auto-complete
+				children.forEach(child =>{
+					this._searchCategories.forEach(category => {
+						if (child.data === category.id){
+							let selectedNodes = this.categoriesTree.treeSelection.getSelections();
+							selectedNodes.push(child);
+							this.categoriesTree.treeSelection.selectItems(selectedNodes);
+						}
+					});
+				});
+				return children;
+			});
 		}
 	}
 
