@@ -9,7 +9,6 @@ import { OnSelectionChangedArgs, TreeSelectionModes, TreeSelectionChangedOrigins
 
 import { Subject } from 'rxjs/Subject';
 import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
-import { CategoryData } from '../../../entries/categories-store.service';
 
 import { AppUser,AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { CategoriesTreeComponent } from '../../../shared/categories-tree/categories-tree.component';
