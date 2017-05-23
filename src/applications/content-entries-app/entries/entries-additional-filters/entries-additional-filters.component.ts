@@ -174,6 +174,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                                         idProperty: 'id',
                                         nameProperty: 'name',
                                         payload: filterType,
+	                                    preventSort: true
                                     }
                                 ),null,null);
 

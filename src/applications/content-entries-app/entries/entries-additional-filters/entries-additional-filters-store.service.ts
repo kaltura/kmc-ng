@@ -176,24 +176,6 @@ export class EntriesAdditionalFiltersStore {
             });
         });
 
-        // build distributions filters
-        if (responses[0].result.objects.length > 0) {
-            result.filtersTypes.push(new FilterGroupType('distributions',"Destinations"));
-            const items = result.filtersByType['distributions'] = [];
-            responses[0].result.objects.forEach((distributionProfile: KalturaDistributionProfile) => {
-                items.push({id : distributionProfile.id, name : distributionProfile.name});
-            });
-        }
-
-        //build flavors filters
-        if (flavours.length > 0) {
-            result.filtersTypes.push(new FilterGroupType('flavors',"Flavors"));
-            const items = result.filtersByType['flavors'] = [];
-	        flavours.forEach((flavor: KalturaFlavorParams) => {
-                items.push({id: flavor.id, name: flavor.name});
-            });
-        }
-
         // build access control profile filters
         if (responses[1].result.objects.length > 0) {
             result.filtersTypes.push(new FilterGroupType('accessControlProfiles','Access Control Profiles'));
@@ -206,7 +188,25 @@ export class EntriesAdditionalFiltersStore {
             });
         }
 
-        return result;
+	    //build flavors filters
+	    if (flavours.length > 0) {
+		    result.filtersTypes.push(new FilterGroupType('flavors',"Flavors"));
+		    const items = result.filtersByType['flavors'] = [];
+		    flavours.forEach((flavor: KalturaFlavorParams) => {
+			    items.push({id: flavor.id, name: flavor.name});
+		    });
+	    }
+
+	    // build distributions filters
+	    if (responses[0].result.objects.length > 0) {
+		    result.filtersTypes.push(new FilterGroupType('distributions',"Destinations"));
+		    const items = result.filtersByType['distributions'] = [];
+		    responses[0].result.objects.forEach((distributionProfile: KalturaDistributionProfile) => {
+			    items.push({id : distributionProfile.id, name : distributionProfile.name});
+		    });
+	    }
+
+	    return result;
     }
 
     private buildQueryRequest(): Observable<KalturaMultiResponse> {
