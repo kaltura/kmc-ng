@@ -16,7 +16,7 @@
 					   (completeMethod)="_searchForCategories($event)">
 		</kAutoComplete>
 
-		<kCategoriesTree #categoriesTree [_categories]="_categories" [_selectionMode]="_selectionMode" (nodeExpand)="onNodeExpand($event)" (selectionChange)="onSelectionChange($event)"></kCategoriesTree>
+		<kCategoriesTree #categoriesTree [categories]="_categories" [selectionMode]="_TreeSelectionModes.Self" (nodeExpand)="onNodeExpand($event)" (selectionChange)="onSelectionChange($event)"></kCategoriesTree>
 		<div class="kFooter">
 			<button class="kButtonBranded" pButton label="Apply"(click)="_apply()"></button>
 		</div>

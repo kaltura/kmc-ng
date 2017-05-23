@@ -60,9 +60,9 @@
   dependencies:
     tsickle "^0.2"
 
-"@kaltura-ng/kaltura-client@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-client/-/kaltura-client-2.0.0.tgz#320b297013bb2732624e8a269ae7b107d80f8dbe"
+"@kaltura-ng/kaltura-client@2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-client/-/kaltura-client-2.1.0.tgz#d5f0f040f007e241ef2db9c02d839c34a702c0f2"
 
 "@kaltura-ng2/kaltura-common@~0.0.2":
   version "0.0.2"

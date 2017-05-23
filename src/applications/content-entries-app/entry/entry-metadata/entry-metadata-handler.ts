@@ -5,7 +5,7 @@ import { KalturaCategoryEntryFilter,  KalturaMediaEntry } from 'kaltura-typescri
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaTagFilter, KalturaTaggedObjectType, KalturaFilterPager,
     TagSearchAction, CategoryEntryListAction, KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/all';
-import { CategoriesStore, CategoryData } from '../../entries/categories-store.service';
+import { CategoriesStore, CategoryData } from '../../shared/categories-store.service';
 import { EntrySectionTypes } from '../entry-sections-types';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng2/kaltura-common';
@@ -52,6 +52,7 @@ export class EntryMetadataHandler extends EntrySection
             categories : null,
             offlineMessage : '',
             referenceId : '',
+            entriesIdList : null
         });
 
         this.metadataForm.statusChanges
@@ -116,7 +117,8 @@ export class EntryMetadataHandler extends EntrySection
                 tags: (this.data.tags ? this.data.tags.split(', ') : null), // for backward compatibility we split values by ',{space}'
                 categories: this._entryCategories,
                 offlineMessage: this.data instanceof KalturaLiveStreamEntry ? (this.data.offlineMessage || null) : '',
-                referenceId: this.data.referenceId || null
+                referenceId: this.data.referenceId || null,
+                entriesIdList : ['1_rbyysqbe','0_hp3s3647','1_4gs7ozgq']
             }
         );
 

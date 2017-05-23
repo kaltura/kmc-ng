@@ -12,6 +12,7 @@ import { EntryStore } from '../entry-store.service';
 import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
 import { JumpToSection } from './jump-to-section.component';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
+import { LinkedEntriesPopup } from './entry-selector/linked-entries-popup.component';
 
 @Component({
     selector: 'kEntryMetadata',

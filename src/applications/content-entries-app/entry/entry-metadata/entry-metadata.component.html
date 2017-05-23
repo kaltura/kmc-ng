@@ -78,10 +78,10 @@
             <k-jump-to-section [label]="customDataForm.metadataProfile.name"></k-jump-to-section>
             <div class="kSchemaTitle">{{customDataForm.metadataProfile.name}}</div>
             <div *ngIf="customDataForm && customDataForm.isReady">
-                <form novalidate>
+                <form novalidate [formGroup]="customDataForm.formGroup">
                     <k-dynamic-form-item [control]="customDataForm.dynamicSection" [form]="customDataForm.formGroup">
                         <template let-item="item">
-                            <k-linked-entries *ngIf="item.control.controlType === 'LinkedEntries'" [control]="item.control" [form]="item.form"></k-linked-entries>
+                            <k-linked-entries *ngIf="item.control.controlType === 'LinkedEntries'" [formControlName]="item.control.key" [control]="item.control" [form]="item.form"></k-linked-entries>
                             <k-prime-control *ngIf="item.control.controlType !== 'LinkedEntries'" [control]="item.control" [form]="item.form"></k-prime-control>
                         </template>
                     </k-dynamic-form-item>

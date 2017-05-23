@@ -31,7 +31,8 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 	public _categories: PrimeTreeNode[] = [];
 	public _loading : boolean = false;
 	public _blockerMessage: AreaBlockerMessage = null;
-	public _selectionMode :TreeSelectionModes = TreeSelectionModes.Self;
+
+	public _TreeSelectionModes = TreeSelectionModes;
 
 	private appUser : AppUser;
 	private inLazyMode: boolean = false;
