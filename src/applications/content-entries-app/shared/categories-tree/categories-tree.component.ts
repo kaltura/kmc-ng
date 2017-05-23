@@ -1,7 +1,7 @@
 import { Component, Input, Output,  ViewChild, EventEmitter } from '@angular/core';
 import { Tree } from 'primeng/primeng';
 
-import { PrimeTreeNode, NodeChildrenStatuses } from '@kaltura-ng2/kaltura-primeng-ui';
+import { PrimeTreeNode } from '@kaltura-ng2/kaltura-primeng-ui';
 
 import { TreeSelection, OnSelectionChangedArgs,TreeSelectionModes } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
 
@@ -13,11 +13,9 @@ import { TreeSelection, OnSelectionChangedArgs,TreeSelectionModes } from '@kaltu
 export class CategoriesTreeComponent{
 
 	@Input()
-	_selectionMode :TreeSelectionModes;
+	selectionMode :TreeSelectionModes;
 	@Input()
-	_categories: PrimeTreeNode[] = [];
-	@Input()
-	NodeChildrenStatuses : any = NodeChildrenStatuses;
+	categories: PrimeTreeNode[] = [];
 
 	@Output()
 	nodeExpand = new EventEmitter<any>();
@@ -30,11 +28,6 @@ export class CategoriesTreeComponent{
 	public get treeSelection(){
 		return this._treeSelection;
 	}
-
-    @ViewChild(Tree)
-    private categoriesTree: Tree;
-
-
 
     constructor() {
     }

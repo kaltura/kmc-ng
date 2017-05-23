@@ -1,6 +1,6 @@
 <div class="kTreeContainer kUseKMCngIcons">
-	<p-tree  kTreeSelection [treeSelectionMode]="_selectionMode"
-			(onTreeSelectionChanged)="_onTreeSelectionChanged($event)" [value]="_categories"
+	<p-tree  kTreeSelection [treeSelectionMode]="selectionMode"
+			(onTreeSelectionChanged)="_onTreeSelectionChanged($event)" [value]="categories"
 			(onNodeExpand)="_onNodeExpand($event)">
 		<template let-node pTemplate="default">
 			<div>

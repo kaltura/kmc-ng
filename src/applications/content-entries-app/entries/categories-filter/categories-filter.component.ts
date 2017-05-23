@@ -9,7 +9,7 @@ import { AppUser,AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 import { CategoriesTreeComponent } from '../../shared/categories-tree/categories-tree.component';
 import { CategoriesPrimeService } from '../../shared/categories-prime.service';
-import { CategoryData } from '../categories-store.service';
+import { CategoryData } from '../../shared/categories-store.service';
 
 import * as R from 'ramda';
 

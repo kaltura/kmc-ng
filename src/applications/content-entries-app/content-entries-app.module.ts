@@ -24,12 +24,12 @@ import { AreaBlockerModule } from '@kaltura-ng2/kaltura-ui';
 import { DynamicFormModule } from '@kaltura-ng2/kaltura-ui/dynamic-form';
 import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng2/kaltura-primeng-ui/dynamic-form';
 import { KalturaCustomMetadataModule } from '@kaltura-ng2/kaltura-ui/dynamic-form/kaltura-custom-metadata';
-import { EntryTypePipe } from './pipes/entry-type.pipe';
-import { EntryStatusPipe } from './pipes/entry-status.pipe';
 import { EntryComponentsList } from './entry/entry-components-list';
 import { EntriesComponentsList } from './entries/entries-components-list';
-import { CategoriesStore } from './entries/categories-store.service';
+import { CategoriesStore } from './shared/categories-store.service';
 import { EntriesAdditionalFiltersStore } from './entries/entries-additional-filters/entries-additional-filters-store.service';
+import { CategoriesPrimeService } from './shared/categories-prime.service';
+import { SharedComponentsList } from './shared/shared-components-list';
 
 @NgModule({
     imports: [
@@ -71,15 +71,15 @@ import { EntriesAdditionalFiltersStore } from './entries/entries-additional-filt
     ],
     declarations: [
         ContentEntriesComponent,
-        EntryStatusPipe,
-        EntryTypePipe,
         EntryComponentsList,
-        EntriesComponentsList
+        EntriesComponentsList,
+        SharedComponentsList
     ],
     exports: [],
     providers: [
         ConfirmationService,
         CategoriesStore,
+        CategoriesPrimeService,
         MetadataProfileStore,
         EntriesAdditionalFiltersStore
     ],

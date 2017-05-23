@@ -21,32 +21,31 @@ import { FileSizePipe } from './pipes/file-size.pipe';
 import { ModerationPipe } from './pipes/moderation.pipe';
 import { LinkedEntries } from './entry-metadata/entry-selector/linked-entries.component';
 import { LinkedEntriesPopup } from './entry-metadata/entry-selector/linked-entries-popup.component';
-import { CategoriesSelector } from './entry-metadata/category-selector/categories-selector.component';
+import { LinkedEntriesPopup } from './entry-metadata/entry-selector/linked-entries-popup.component';
 
 
 export const EntryComponentsList = [
-    CategoriesSelector,
-    DRMDetails,
+    LinkedEntriesPopup,
+    LinkedEntries,
+    EntryCaptionsEdit,
+    EntryRelatedEdit,
     EntryAccessControl,
     EntryCaptions,
-    EntryCaptionsEdit,
     EntryClips,
     EntryComponent,
     EntryFlavours,
+    DRMDetails,
+    FlavorPreview,
+    FlavorImport,
     EntryLive,
     EntryMetadata,
     EntryPreview,
     EntryRelated,
-    EntryRelatedEdit,
     EntryScheduling,
     EntrySectionsList,
     EntryThumbnails,
     EntryUsers,
+    ModerationPipe,
     FileSizePipe,
-    FlavorImport,
-    FlavorPreview,
-    JumpToSection,
-    LinkedEntries,
-    LinkedEntriesPopup,
-    ModerationPipe
+    JumpToSection
 ];

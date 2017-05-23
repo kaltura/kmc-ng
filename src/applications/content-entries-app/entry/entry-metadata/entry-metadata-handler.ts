@@ -5,7 +5,7 @@ import { KalturaCategoryEntryFilter,  KalturaMediaEntry } from 'kaltura-typescri
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaTagFilter, KalturaTaggedObjectType, KalturaFilterPager,
     TagSearchAction, CategoryEntryListAction, KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/all';
-import { CategoriesStore, CategoryData } from '../../entries/categories-store.service';
+import { CategoriesStore, CategoryData } from '../../shared/categories-store.service';
 import { EntrySectionTypes } from '../entry-sections-types';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng2/kaltura-common';
