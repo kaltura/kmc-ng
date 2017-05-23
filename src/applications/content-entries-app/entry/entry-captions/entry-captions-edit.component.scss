@@ -34,17 +34,20 @@
 		width: 100%;
 		height: 1px;
 		margin-top: 24px;
+		margin-left: -20px;
+		padding-right: 50px;
 		background-color: $kGrayscale4;
 	}
 	.kFooter{
 		position: absolute;
-		bottom: 24px;
-		right: 24px;
-		left: 14px;
+		bottom: 12px;
+		right: 0px;
+		left: 0px;
 	}
 	.kDoneBtn{
 		height: 34px;
 		font-weight: 400;
+		margin-top: -10px;
 	}
 	.kUpload{
 		display: flex;
