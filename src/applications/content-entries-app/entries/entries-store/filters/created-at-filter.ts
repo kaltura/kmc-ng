@@ -25,10 +25,10 @@ export class CreatedAtFilter  extends FilterItem{
             tooltip =`${moment(createdAfter).format('LL')} - ${moment(createdBefore).format('LL')}`;
         }else if (createdAfter)
         {
-            tooltip =`After ${moment(createdAfter).format('LL')}`;
+            tooltip =`From ${moment(createdAfter).format('LL')}`;
         }else if (createdBefore)
         {
-            tooltip =`Before ${moment(createdBefore).format('LL')}`;
+            tooltip =`Until ${moment(createdBefore).format('LL')}`;
         }
 
         super(label, {token: tooltip});
