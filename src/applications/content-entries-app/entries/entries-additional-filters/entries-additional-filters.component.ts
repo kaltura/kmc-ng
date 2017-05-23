@@ -368,14 +368,14 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
             }
         }
 
-        const previousFilter = this.entriesStore.getFirstFilterByType(TimeSchedulingFilter);
+        const previousFilter = this.entriesStore.getFiltersByType(TimeSchedulingFilter).find(filter => filter.value === 'scheduled' );
 
         if (previousFilter)
         {
             const previousValue = previousFilter.value;
             const previousLabel = previousFilter.label;
             // make sure the filter is already set for 'schedule', otherwise ignore update
-            this.entriesStore.removeFiltersByType(TimeSchedulingFilter);
+            this.entriesStore.removeFilters(previousFilter);
             this.entriesStore.addFilters(
                 new TimeSchedulingFilter(previousValue, previousLabel, KalturaUtils.getEndDateValue(this._scheduledBefore), KalturaUtils.getStartDateValue(this._scheduledAfter))
             );
