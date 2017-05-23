@@ -18,6 +18,7 @@ import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { EntrySectionsManager } from './entry-sections-manager';
 import { KalturaTypesFactory } from 'kaltura-typescript-client';
 import { OnDataSavingReasons } from '@kaltura-ng2/kaltura-ui/form-sections';
+import { BrowserService } from '../../../shared/kmc-shell/providers/browser.service';
 
 export enum ActionTypes
 {
@@ -63,6 +64,7 @@ export class EntryStore implements  OnDestroy {
 
     constructor(private _kalturaServerClient: KalturaClient,
 				private _router: Router,
+				private _browserService : BrowserService,
 				private _entriesStore : EntriesStore,
 				@Host() private _sectionsManager : EntrySectionsManager,
 				private _entryRoute: ActivatedRoute) {
@@ -307,19 +309,60 @@ export class EntryStore implements  OnDestroy {
 
 	public openEntry(entryId : string)
 	{
-		this._router.navigate(["entry", entryId],{ relativeTo : this._entryRoute.parent});
+		this._canLeaveWithoutSaving().subscribe(
+			response =>
+			{
+				if (response.allowed)
+				{
+					this._router.navigate(["entry", entryId],{ relativeTo : this._entryRoute.parent});
+				}
+			}
+		);
+	}
+
+	private _canLeaveWithoutSaving() : Observable<{ allowed : boolean}>
+	{
+		return Observable.create(observer =>
+		{
+			console.warn('[kmcng] can leave without saving customize message');
+
+			this._browserService.confirm(
+				{
+					message : 'are you sure?',
+					accept : () =>
+					{
+						observer.next({allowed : true});
+						observer.complete();
+					},
+					reject : () =>
+					{
+						observer.next({allowed : false});
+						observer.complete();
+					}
+				}
+			)
+		});
 	}
 
 	public returnToEntries(params : {force? : boolean} = {})
 	{
-		if (this._saveEntryInvoked)
-		{
-			this._entriesStore.reload(true);
-			this._saveEntryInvoked = false;
-		}
+		this._canLeaveWithoutSaving()
+			.subscribe(
+				response =>
+				{
+					if (response.allowed)
+					{
+						if (this._saveEntryInvoked)
+						{
+							this._entriesStore.reload(true);
+							this._saveEntryInvoked = false;
+						}
 
-		this._state.next({action: ActionTypes.NavigateOut});
+						this._state.next({action: ActionTypes.NavigateOut});
 
-		this._router.navigate(['content/entries']);
+						this._router.navigate(['content/entries']);
+					}
+				}
+			);
 	}
 }

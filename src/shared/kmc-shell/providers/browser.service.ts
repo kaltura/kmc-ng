@@ -1,12 +1,66 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { LocalStorageService, SessionStorageService } from 'ng2-webstorage';
 import { IAppStorage } from '@kaltura-ng2/kaltura-common';
 
 
+export interface Confirmation {
+	message: string;
+	key?: string;
+	icon?: string;
+	header?: string;
+	accept?: Function;
+	reject?: Function;
+	acceptVisible?: boolean;
+	rejectVisible?: boolean;
+	acceptEvent?: EventEmitter<any>;
+	rejectEvent?: EventEmitter<any>;
+}
+
+export type OnShowConfirmationFn = (confirmation : Confirmation) => void;
+
 @Injectable()
 export class BrowserService implements IAppStorage {
 
+	private _onConfirmationFn : OnShowConfirmationFn = (confirmation : Confirmation) => {
+		// this is the default confirmation dialog provided by the browser.
+		if (confirm(confirmation.message))
+		{
+			if (confirmation.accept)
+			{
+				confirmation.accept.apply(null);
+			}
+
+			if (confirmation.acceptEvent)
+			{
+				confirmation.acceptEvent.next();
+			}
+		}else
+		{
+			if (confirmation.reject)
+			{
+				confirmation.reject.apply(null);
+			}
+
+			if (confirmation.rejectEvent)
+			{
+				confirmation.rejectEvent.next();
+			}
+		}
+	};
+
 	constructor(private localStorage: LocalStorageService, private sessionStorage: SessionStorageService) {
+	}
+
+
+	public registerOnShowConfirmation(fn : OnShowConfirmationFn)
+	{
+		if (fn) {
+			this._onConfirmationFn = fn;
+		}
+	}
+
+	public confirm(confirmation : Confirmation) {
+		this._onConfirmationFn(confirmation);
 	}
 
 	public setInLocalStorage(key: string, value: any): void {

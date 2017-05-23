@@ -1,4 +1,4 @@
-import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
 
 import { Menu, MenuItem } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
@@ -21,6 +21,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 	public _actions: MenuItem[] = [];
 
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
+	@ViewChild('sectionContainer') private bla: ElementRef;
 	@ViewChild('editPopup') public editPopup: PopupWidgetComponent;
 
 	private _popupStateChangeSubscribe: ISubscription;

@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { CommonModule } from '@angular/common';
@@ -32,29 +31,29 @@ import { ButtonModule, InputTextModule, TieredMenuModule } from 'primeng/primeng
 import { MetadataProfileStore, PartnerProfileStore, AccessControlProfileStore, FlavoursStore } from '@kaltura-ng2/kaltura-common';
 import { UploadManagementModule } from '@kaltura-ng2/kaltura-common/upload-management';
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
-import { AppConfig } from '@kaltura-ng2/kaltura-common';
-
+import { ConfirmDialogModule, ConfirmationService } from 'primeng/primeng';
 
 const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessControlProfileStore, FlavoursStore];
 @NgModule({
   imports: <any>[
-    routing,
-    CommonModule,
-    KMCShellModule.forRoot(),
     BrowserModule,
-    TieredMenuModule,
-    HttpModule,
-    UploadManagementModule,
-    KalturaCommonModule.forRoot(),
-    KalturaClientModule.forRoot({
-      endpointUrl : 'https://www.kaltura.com/api_v3/index.php',
-      clientTag : 'kmcng'
-    }),
-    Ng2Webstorage,
-    Ng2PageScrollModule.forRoot(),
     ButtonModule,
+    CommonModule,
+    ConfirmDialogModule,
+    HttpModule,
+    InputTextModule,
+    KalturaClientModule.forRoot({
+          clientTag : 'kmcng',
+          endpointUrl : 'https://www.kaltura.com/api_v3/index.php'
+    }),
+    KalturaCommonModule.forRoot(),
+    KMCShellModule.forRoot(),
+    Ng2PageScrollModule.forRoot(),
+    Ng2Webstorage,
     PopupWidgetModule,
-    InputTextModule
+    routing,
+    TieredMenuModule,
+    UploadManagementModule
   ],
   declarations: <any>[
       AppComponent,
@@ -76,8 +75,10 @@ const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessCo
     GetBootstrapProvider(KalturaAuthConfigAdapter),
     GetBootstrapProvider(KalturaHttpConfigurationAdapter  ),
     AppDefaultConfig,
-    { provide : AppStorage,  useExisting : BrowserService }
-  ]
+    { provide : AppStorage,  useExisting : BrowserService },
+    ConfirmationService
+  ],
+
 })
 export class AppModule {
   constructor(appBootstrap: AppBootstrap, config: AppDefaultConfig){
