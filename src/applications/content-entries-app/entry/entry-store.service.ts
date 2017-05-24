@@ -47,6 +47,11 @@ export class EntryStore implements  OnDestroy {
 	private _activeSectionType : EntrySectionTypes = null;
 	private _state : Subject<StatusArgs> = new Subject<StatusArgs>();
 	public state$ = this._state.asObservable();
+	private _entryIsDirty : boolean;
+
+	public get entryIsDirty() : boolean{
+		return this._entryIsDirty;
+	}
 
 
 	private _saveEntryInvoked = false;
@@ -73,8 +78,24 @@ export class EntryStore implements  OnDestroy {
 
 		this._mapSections();
 
+		this._onSectionsStateChanges();
 		this._onRouterEvents();
     }
+
+    private _onSectionsStateChanges()
+	{
+		this._sectionsManager.sectionsState$
+            .cancelOnDestroy(this)
+            .monitor('entry store: update entry is dirty state')
+            .debounce(() => Observable.timer(500))
+            .subscribe(
+				sectionsState =>
+				{
+					this._entryIsDirty = Object.keys(sectionsState).reduce((result, sectionName) => result || sectionsState[sectionName].isDirty,false);
+				}
+			);
+
+	}
 
 	ngOnDestroy() {
 		this._loadEntrySubscription && this._loadEntrySubscription.unsubscribe();
@@ -134,6 +155,7 @@ export class EntryStore implements  OnDestroy {
 		);
 
 		this._sectionsManager.onDataSaving(newEntry, request, this.entry)
+            .cancelOnDestroy(this)
             .monitor('entry store: prepare entry for save')
             .flatMap(
 				(response) => {
@@ -220,10 +242,12 @@ export class EntryStore implements  OnDestroy {
 		}
 
 		this._entryId = entryId;
+		this._entryIsDirty = false;
 		this._state.next({action: ActionTypes.EntryLoading});
 		this._sectionsManager.onDataLoading(entryId);
 
 		this._loadEntrySubscription = this._getEntry(entryId)
+            .cancelOnDestroy(this)
             .subscribe(
 				response => {
 					if (response instanceof KalturaMediaEntry) {
@@ -309,7 +333,9 @@ export class EntryStore implements  OnDestroy {
 
 	public openEntry(entryId : string)
 	{
-		this._canLeaveWithoutSaving().subscribe(
+		this._canLeaveWithoutSaving()
+            .cancelOnDestroy(this)
+			.subscribe(
 			response =>
 			{
 				if (response.allowed)
@@ -324,29 +350,34 @@ export class EntryStore implements  OnDestroy {
 	{
 		return Observable.create(observer =>
 		{
-			console.warn('[kmcng] can leave without saving customize message');
-
-			this._browserService.confirm(
-				{
-					message : 'are you sure?',
-					accept : () =>
+			if (this._entryIsDirty) {
+				this._browserService.confirm(
 					{
-						observer.next({allowed : true});
-						observer.complete();
-					},
-					reject : () =>
-					{
-						observer.next({allowed : false});
-						observer.complete();
+						header: 'Cancel Edit',
+						message: 'Discard all changes?',
+						accept: () => {
+							observer.next({allowed: true});
+							observer.complete();
+						},
+						reject: () => {
+							observer.next({allowed: false});
+							observer.complete();
+						}
 					}
-				}
-			)
-		});
+				)
+			}else
+			{
+				observer.next({allowed: true});
+				observer.complete();
+			}
+		}).monitor('entry store: check if can leave section without saving');
 	}
 
 	public returnToEntries(params : {force? : boolean} = {})
 	{
 		this._canLeaveWithoutSaving()
+            .cancelOnDestroy(this)
+			.monitor('entry store: return to entries list')
 			.subscribe(
 				response =>
 				{

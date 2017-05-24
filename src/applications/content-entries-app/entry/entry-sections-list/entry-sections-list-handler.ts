@@ -58,17 +58,23 @@ export class EntrySectionsListHandler extends EntrySection
                 }
             );
 
-        this._manager.sectionsStatus$
+        this._manager.sectionsState$
             .cancelOnDestroy(this)
+            .monitor('entry sections list: update sections validation state')
             .subscribe(
-                sectionsStatus => {
+                sectionsState => {
                     const sections = this._sections.getValue();
 
                     if (sections) {
                         sections.forEach(section =>
                         {
-                            const sectionStatus = sectionsStatus[section.sectionType];
-                            section.hasErrors =  (sectionStatus && !sectionStatus.isValid);
+                            const sectionStatus = sectionsState[section.sectionType];
+                            const hasErrors = (!!sectionStatus && !sectionStatus.isValid);
+
+                            if (section.hasErrors  !== hasErrors) {
+                                console.log(`entry sections list: update section '${section.sectionType}' has errors state to '${hasErrors}'`);
+                                section.hasErrors  = hasErrors;
+                            }
                         });
                     }
                 }
@@ -110,16 +116,19 @@ export class EntrySectionsListHandler extends EntrySection
     private _reloadSections(entry : KalturaMediaEntry) : void
     {
         const sections = [];
+        const sectionsState = this._manager.sectionsState;
 
         if (entry) {
             SectionsList.forEach((section: any) => {
+
+                const sectionState =  sectionsState ? sectionsState[section.sectionType] : null;
 
                 if (this._isSectionEnabled(section, entry)) {
                     sections.push(
                         {
                             label: this._appLocalization.get(section.label),
                             active: section.sectionType === this._activeSectionType,
-                            hasErrors: false,
+                            hasErrors: sectionState ? sectionState.isValid : false,
                             sectionType: section.sectionType
                         }
                     );

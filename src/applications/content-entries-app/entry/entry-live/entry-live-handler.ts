@@ -6,8 +6,8 @@ import { Message } from 'primeng/primeng';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { KalturaSourceType,	KalturaLiveStreamBitrate, ConversionProfileListAction, KalturaConversionProfileFilter, KalturaConversionProfileType, KalturaFilterPager,
-	     LiveStreamRegenerateStreamTokenAction, KalturaRecordStatus, KalturaLiveStreamEntry, KalturaDVRStatus, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
+import { KalturaSourceType,	KalturaLiveStreamBitrate,
+	     KalturaRecordStatus, KalturaLiveStreamEntry, KalturaDVRStatus, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 import { AppLocalization, AppConfig } from '@kaltura-ng2/kaltura-common';
 import { BrowserService } from 'kmc-shell';
 
@@ -30,6 +30,7 @@ export class EntryLiveHandler extends EntrySection {
 
 	public _msgs: Message[] = [];
 	private _liveType: string = "";
+	private dirty: boolean;
 
 	private _conversionProfiles: BehaviorSubject<{ items: any[], loading: boolean, error?: any}> =
 		new BehaviorSubject<{ items: any[], loading: boolean, error?: any}>({items: [], loading: false});
@@ -54,19 +55,21 @@ export class EntryLiveHandler extends EntrySection {
 	}
 
 	protected _reset() {
+		this.dirty = false;
 		this._msgs = [];
 	}
 
 	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
-		if (this._liveType === "kaltura") {
-			data.conversionProfileId = this._selectedConversionProfile; // save conversion profile if changed
-		}
 		if (this._liveType === "universal") {
 			// create bitrate array for saving
 			let bitrates: KalturaLiveStreamBitrate[] = [];
 			this._bitrates.forEach((br: bitrate) => {
 				if (br.enabled) {
-					bitrates.push(new KalturaLiveStreamBitrate({ bitrate: br.bitrate, width: br.width, height: br.height }));
+					bitrates.push(new KalturaLiveStreamBitrate({
+						bitrate: br.bitrate,
+						width: br.width,
+						height: br.height
+					}));
 				}
 			});
 			(data as KalturaLiveStreamEntry).bitrates = bitrates;
@@ -75,7 +78,7 @@ export class EntryLiveHandler extends EntrySection {
 
 	protected _validate(): Observable<{ isValid: boolean}> {
 		return Observable.create(observer => {
-			const isValid = this._liveType === "universal" ? this._validateBitrates() : true;
+			const isValid = this._liveType === "universal" ? this._validateBitrates({updateDirtyMode: false}) : true;
 			observer.next({isValid});
 			observer.complete()
 		});
@@ -104,64 +107,64 @@ export class EntryLiveHandler extends EntrySection {
 	}
 
 	/*
-	private _fetchConversionProfiles(): void {
-		this._conversionProfiles.next({items: [], loading: true});
+	 private _fetchConversionProfiles(): void {
+	 this._conversionProfiles.next({items: [], loading: true});
 
-		this._kalturaServerClient.request(new ConversionProfileListAction({
-			filter: new KalturaConversionProfileFilter({
-				typeEqual: KalturaConversionProfileType.liveStream
-			}),
-			pager: new KalturaFilterPager({
-				pageIndex: 1,
-				pageSize: 500
-			})
-		}))
-			.cancelOnDestroy(this, this.sectionReset$)
-			.monitor('get conversion profiles')
-			.subscribe(
-				response => {
-					if (response.objects && response.objects.length) {
-						// set the default profile first in the array
-						response.objects.sort(function (a, b) {
-							if (a.isDefault > b.isDefault)
-								return -1;
-							if (a.isDefault < b.isDefault)
-								return 1;
-							return 0;
-						});
-						// create drop down options array
-						let conversionProfiles = [];
-						response.objects.forEach(profile => {
-							conversionProfiles.push({label: profile.name, value: profile.id});
-							if (this.data.conversionProfileId === profile.id) {
-								this._selectedConversionProfile = profile.id; // preselect this profile in the profiles drop-down
-							}
-						});
-						this._conversionProfiles.next({items: conversionProfiles, loading: false});
-					}
-				},
-				error => {
-					this._conversionProfiles.next({items: [], loading: false, error: error});
-				}
-			);
-	}
+	 this._kalturaServerClient.request(new ConversionProfileListAction({
+	 filter: new KalturaConversionProfileFilter({
+	 typeEqual: KalturaConversionProfileType.liveStream
+	 }),
+	 pager: new KalturaFilterPager({
+	 pageIndex: 1,
+	 pageSize: 500
+	 })
+	 }))
+	 .cancelOnDestroy(this, this.sectionReset$)
+	 .monitor('get conversion profiles')
+	 .subscribe(
+	 response => {
+	 if (response.objects && response.objects.length) {
+	 // set the default profile first in the array
+	 response.objects.sort(function (a, b) {
+	 if (a.isDefault > b.isDefault)
+	 return -1;
+	 if (a.isDefault < b.isDefault)
+	 return 1;
+	 return 0;
+	 });
+	 // create drop down options array
+	 let conversionProfiles = [];
+	 response.objects.forEach(profile => {
+	 conversionProfiles.push({label: profile.name, value: profile.id});
+	 if (this.data.conversionProfileId === profile.id) {
+	 this._selectedConversionProfile = profile.id; // preselect this profile in the profiles drop-down
+	 }
+	 });
+	 this._conversionProfiles.next({items: conversionProfiles, loading: false});
+	 }
+	 },
+	 error => {
+	 this._conversionProfiles.next({items: [], loading: false, error: error});
+	 }
+	 );
+	 }
 
-	public regenerateStreamToken(): void {
-		this._regeneratingToken = true;
-		this._kalturaServerClient.request(new LiveStreamRegenerateStreamTokenAction({entryId: this.data.id}))
-			.cancelOnDestroy(this, this.sectionReset$)
-			.monitor('regenerate stream token')
-			.subscribe(
-				response => {
-					this._regeneratingToken = false;
-					this._msgs.push({severity: 'success', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.live.regenerateSuccess')});
-				},
-				error => {
-					this._regeneratingToken = false;
-					this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.live.regenerateFailure')});
-				}
-			);
-	}
+	 public regenerateStreamToken(): void {
+	 this._regeneratingToken = true;
+	 this._kalturaServerClient.request(new LiveStreamRegenerateStreamTokenAction({entryId: this.data.id}))
+	 .cancelOnDestroy(this, this.sectionReset$)
+	 .monitor('regenerate stream token')
+	 .subscribe(
+	 response => {
+	 this._regeneratingToken = false;
+	 this._msgs.push({severity: 'success', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.live.regenerateSuccess')});
+	 },
+	 error => {
+	 this._regeneratingToken = false;
+	 this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.live.regenerateFailure')});
+	 }
+	 );
+	 }
 	 */
 
 	public _openLiveReport(): void {
@@ -213,7 +216,13 @@ export class EntryLiveHandler extends EntrySection {
 		let entry: KalturaLiveStreamEntry = this.data as KalturaLiveStreamEntry;
 		if (entry.bitrates) {
 			entry.bitrates.forEach((br: KalturaLiveStreamBitrate) => {
-				let bitRate: bitrate = { enabled: true, bitrate: br.bitrate, width: br.width, height: br.height, errors: ""};
+				let bitRate: bitrate = {
+					enabled: true,
+					bitrate: br.bitrate,
+					width: br.width,
+					height: br.height,
+					errors: ""
+				};
 				this._bitrates.push(bitRate);
 			});
 			// prepare empty bitrate slots for missing bitrates
@@ -223,25 +232,30 @@ export class EntryLiveHandler extends EntrySection {
 		}
 	}
 
-	public _validateBitrates(event = null): boolean {
+	public _validateBitrates({updateDirtyMode = true} : {updateDirtyMode: boolean}): boolean {
 		let valid = true;
-		if (!event) {
-			this._bitrates.forEach((br: bitrate) => {
-				br.errors = "";
-				if (br.enabled) {
-					if (br.bitrate > 0) {
-						if (br.width === 0 || br.height === 0) {
-							valid = false;
-							br.errors = this._appLocalization.get('applications.content.entryDetails.live.dimensionsError');
-						}
-					} else {
+
+		this._bitrates.forEach((br: bitrate) => {
+			br.errors = "";
+			if (br.enabled) {
+				if (br.bitrate > 0) {
+					if (br.width === 0 || br.height === 0) {
 						valid = false;
-						br.errors = this._appLocalization.get('applications.content.entryDetails.live.bitrateError');
+						br.errors = this._appLocalization.get('applications.content.entryDetails.live.dimensionsError');
 					}
+				} else {
+					valid = false;
+					br.errors = this._appLocalization.get('applications.content.entryDetails.live.bitrateError');
 				}
-			});
+			}
+		});
+
+
+		if (updateDirtyMode) {
+			this.dirty = true;
 		}
-		super._onSectionStateChanged({isValid : valid});
+
+		super._onSectionStateChanged({isValid: valid, isDirty: this.dirty});
 		return valid;
 	}
 }

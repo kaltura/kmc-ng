@@ -44,25 +44,28 @@ export class EntryMetadataHandler extends EntrySection
         this._buildForm();
     }
 
-    private _buildForm() : void{
+    private _buildForm() : void {
         this.metadataForm = this._formBuilder.group({
-            name : ['', Validators.required],
-            description : '',
-            tags : null,
-            categories : null,
-            offlineMessage : '',
-            referenceId : '',
-            entriesIdList : null
+            name: ['', Validators.required],
+            description: '',
+            tags: null,
+            categories: null,
+            offlineMessage: '',
+            referenceId: '',
+            entriesIdList: null
         });
 
-        this.metadataForm.statusChanges
+        Observable.merge(this.metadataForm.valueChanges,
+            this.metadataForm.statusChanges)
             .cancelOnDestroy(this)
             .subscribe(
-                value =>
-                {
-                    super._onSectionStateChanged({isValid : value === 'VALID'});
+                () => {
+                    super._onSectionStateChanged({
+                        isValid: this.metadataForm.status === 'VALID',
+                        isDirty: this.metadataForm.dirty
+                    });
                 }
-            )
+            );
     }
 
     public get sectionType() : EntrySectionTypes
@@ -373,6 +376,7 @@ export class EntryMetadataHandler extends EntrySection
      */
     protected _reset() {
 
+        this.metadataForm.reset({});
         this._entryCategoriesDiffers = null;
         this._entryCategories = [];
         this._entryMetadata = [];

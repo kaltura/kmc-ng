@@ -5,7 +5,7 @@
 				<button pButton class="kButtonDefault kBackToEntriesBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
 				<div class="{{_entryType | entryType: false}} kMediaTypeIcon"></div>
 				<div class="kEntryTitle">{{ _entryName }}</div>
-				<button pButton class="kButtonBranded kSaveBtn" label="Save" (click)="_save()"></button>
+				<button pButton class="kButtonBranded kSaveBtn" [disabled]="!_entryStore.entryIsDirty" label="Save" (click)="_save()"></button>
 				<button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
 				<button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
 			</div>

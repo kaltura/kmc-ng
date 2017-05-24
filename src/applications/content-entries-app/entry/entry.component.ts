@@ -49,6 +49,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _currentEntryId: string;
 	public _enablePrevButton: boolean;
 	public _enableNextButton: boolean;
+	public _entryHasChanges : boolean;
 
 	public isSafari: boolean = false; // used for Safari specific styling
 
@@ -95,6 +96,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 								// while 'entry$' stream is null
 								this._currentEntryId = this._entryStore.entryId;
 								this._updateNavigationState();
+								this._entryHasChanges = false;
 								break;
 							case ActionTypes.EntryLoaded:
 								this._entryName = this._entryStore.entry.name;

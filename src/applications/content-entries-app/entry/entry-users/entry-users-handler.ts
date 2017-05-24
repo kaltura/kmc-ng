@@ -32,15 +32,17 @@ export class EntryUsersHandler extends EntrySection
 			publishers: []
 		});
 
-		this.usersForm.statusChanges
-			.cancelOnDestroy(this)
-			.subscribe(
-				value =>
-				{
-					super._onSectionStateChanged({isValid : value === 'VALID'});
+		Observable.merge(this.usersForm.valueChanges,
+			this.usersForm.statusChanges)
+            .cancelOnDestroy(this)
+            .subscribe(
+				() => {
+					super._onSectionStateChanged({
+						isValid: this.usersForm.status === 'VALID',
+						isDirty: this.usersForm.dirty
+					});
 				}
-			)
-
+			);
 	}
 
 
@@ -89,7 +91,7 @@ export class EntryUsersHandler extends EntrySection
     {
 	    this._creator = "";
 	    this._owner = null;
-	    this.usersForm.setValue({
+	    this.usersForm.reset({
 		    owners: null,
 		    editors: [],
 		    publishers: []

@@ -139,14 +139,17 @@ export class EntrySchedulingHandler extends EntrySection
 		    }
 	    );
 
-		this.schedulingForm.statusChanges
+		Observable.merge(this.schedulingForm.valueChanges,
+			this.schedulingForm.statusChanges)
             .cancelOnDestroy(this)
             .subscribe(
-				value =>
-				{
-					super._onSectionStateChanged({isValid : value === 'VALID'});
+				() => {
+					super._onSectionStateChanged({
+						isValid: this.schedulingForm.status === 'VALID',
+						isDirty: this.schedulingForm.dirty
+					});
 				}
-			)
+			);
     }
 
 
@@ -191,6 +194,7 @@ export class EntrySchedulingHandler extends EntrySection
      */
 	protected _reset()
 	{
+		this.schedulingForm.reset();
 		this.setValidators(false);
 		this.schedulingForm.updateValueAndValidity();
 	}
