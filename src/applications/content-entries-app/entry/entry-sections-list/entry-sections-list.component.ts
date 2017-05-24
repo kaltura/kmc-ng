@@ -16,7 +16,6 @@ import { ActivatedRoute } from '@angular/router';
 export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
 
     public _loading = false;
-    public _loadingError = null;
     public _showSections = false;
     public _sections : SectionData[] = [];
 
@@ -33,9 +32,11 @@ export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
 
 
     ngOnInit() {
+	    this._loading = true;
 		this._sectionHandler.sections$.subscribe(
 			sections =>
 			{
+				this._loading = false;
 			    this._sections = sections;
 			    this._showSections = sections && sections.length > 0;
 			}
@@ -50,9 +51,5 @@ export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
 
     }
 
-    _onLoadingAction(actionKey: string) {
-        if (actionKey === 'retry') {
-        }
-    }
 }
 

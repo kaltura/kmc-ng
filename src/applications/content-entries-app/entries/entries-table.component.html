@@ -1,4 +1,4 @@
-<kLoader kFillHeight [loading]="(entriesStore.state$ | async)?.loading || !this._viewLoaded" [loadingError]="_loadingError" (onActionRequested)="onLoadingAction($event)">
+<k-area-blocker [showLoader]="(entriesStore.state$ | async)?.loading || !this._viewLoaded" [message]="_blockerMessage">
 	<div class="kEntriesTable col" [class.noResults]="!_entriesProvider.length">
 		<p-dataTable #dataTable [value]="_entriesProvider" [sortField]="filter.sortBy" [sortOrder]="-1"
 					 scrollable="true" scrollHeight="100%"
@@ -48,4 +48,4 @@
 		</p-dataTable>
 		<p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'"></p-menu>
 	</div>
-</kLoader>
+</k-area-blocker>

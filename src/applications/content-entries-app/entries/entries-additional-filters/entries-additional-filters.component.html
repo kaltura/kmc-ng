@@ -1,4 +1,4 @@
-<kLoader [loading]="(additionalFiltersStore.status$ | async)?.loading">
+<k-area-blocker [showLoader]="(additionalFiltersStore.status$ | async)?.loading">
 	<div class="kUseKMCngIcons kRefineFilters">
 		<div #refine class="kTreeContainer">
 			<div class="kFiltersGroupTitle">
@@ -35,4 +35,5 @@
 			<a class="kClose" (click)="_close()">{{'applications.content.filters.close' | translate}}</a>
 		</p>
 	</div>
-</kLoader>
+</k-area-blocker>
+
