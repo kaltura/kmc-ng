@@ -157,10 +157,10 @@ export class EntryClipsHandler extends EntrySection
 	                    }else {
 		                    this._showBlockerMessage(new AreaBlockerMessage(
 			                    {
-				                    message: 'Error loading clips',
+				                    message: this._appLocalization.get('applications.content.entryDetails.errors.clipsLoadError'),
 				                    buttons: [
 					                    {
-						                    label: 'Retry',
+						                    label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
 						                    action: () => {
 							                    this._getEntryClips('reload').subscribe(() =>
 							                    {

@@ -29,12 +29,5 @@ export class EntryScheduling implements AfterViewInit, OnInit, OnDestroy {
     ngAfterViewInit() {
 
     }
-
-
-    _onLoadingAction(actionKey: string) {
-        if (actionKey === 'retry') {
-
-        }
-    }
 }
 

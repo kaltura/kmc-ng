@@ -10,7 +10,7 @@ import { OnSelectionChangedArgs, TreeSelectionModes, TreeSelectionChangedOrigins
 import { Subject } from 'rxjs/Subject';
 import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 
-import { AppUser,AppAuthentication } from '@kaltura-ng2/kaltura-common';
+import { AppUser,AppAuthentication, AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { CategoriesTreeComponent } from '../../../shared/categories-tree/categories-tree.component';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
@@ -40,7 +40,7 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 	private parentPopupStateChangeSubscription : ISubscription;
 	@Input() parentPopupWidget: PopupWidgetComponent;
 
-    constructor(private _categoriesPrimeService: CategoriesPrimeService, private _appAuthentication : AppAuthentication) {
+    constructor(private _categoriesPrimeService: CategoriesPrimeService, private _appAuthentication : AppAuthentication, private _appLocalization: AppLocalization) {
 	    this.appUser = this._appAuthentication.appUser;
 	    this.inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
     }
@@ -73,9 +73,9 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 		    },
 		    error => {
 			    this._blockerMessage = new AreaBlockerMessage({
-				    message: error.message || "Error loading categories",
+				    message: error.message || this._appLocalization.get('applications.content.entryDetails.errors.categoriesLoadError'),
 				    buttons: [{
-					    label: 'Retry',
+					    label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
 					    action: () => {
 						    this.loadCategories();
 					    }}

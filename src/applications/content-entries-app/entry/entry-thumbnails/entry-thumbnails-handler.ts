@@ -7,7 +7,7 @@ import 'rxjs/add/observable/forkJoin';
 
 import { ThumbAssetListAction, ThumbAssetSetAsDefaultAction, KalturaThumbAssetListResponse, KalturaThumbAsset, KalturaAssetFilter, DistributionProfileListAction, KalturaDistributionProfileListResponse,
 	KalturaDistributionProfile, KalturaThumbAssetStatus, KalturaDistributionThumbDimensions, ThumbAssetDeleteAction, ThumbAssetAddFromImageAction } from 'kaltura-typescript-client/types/all';
-import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
+import { AppConfig, AppAuthentication, AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 
 import { EntrySectionTypes } from '../entry-sections-types';
@@ -37,7 +37,11 @@ export class EntryThumbnailsHandler extends EntrySection
 	public _thumbnails$ = this._thumbnails.asObservable();
 	private _distributionProfiles: KalturaDistributionProfile[]; // used to save the response profiles array as it is loaded only once
 
-    constructor(manager : EntrySectionsManager, private _kalturaServerClient: KalturaClient, private _appConfig: AppConfig, private _appAuthentication: AppAuthentication)
+    constructor(manager : EntrySectionsManager,
+                private _kalturaServerClient: KalturaClient,
+                private _appConfig: AppConfig,
+                private _appAuthentication: AppAuthentication,
+                private _appLocalization: AppLocalization)
     {
         super(manager);
     }
@@ -158,10 +162,10 @@ export class EntryThumbnailsHandler extends EntrySection
 				    super._hideLoader();
 				    this._showBlockerMessage(new AreaBlockerMessage(
 					    {
-						    message: 'Error reloading thumbnails',
+						    message: this._appLocalization.get('applications.content.entryDetails.errors.thumbnailsError'),
 						    buttons: [
 							    {
-								    label: 'Retry',
+								    label: this._appLocalization.get('applications.content.entryDetails.errors.reload'),
 								    action: () => {
 									    this.reloadThumbnails();
 								    }

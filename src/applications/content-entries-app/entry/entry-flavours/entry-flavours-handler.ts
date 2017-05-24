@@ -117,10 +117,10 @@ export class EntryFlavoursHandler extends EntrySection
 					    }else {
 						    this._showBlockerMessage(new AreaBlockerMessage(
 							    {
-								    message: 'Error reloading flavors',
+								    message: this._appLocalization.get('applications.content.entryDetails.errors.flavorsLoadError'),
 								    buttons: [
 									    {
-										    label: 'Retry',
+										    label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
 										    action: () => {
 											    this._fetchFlavors('reload', reset).subscribe(() =>
 											    {

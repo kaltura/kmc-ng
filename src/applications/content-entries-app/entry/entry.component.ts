@@ -17,6 +17,7 @@ import { EntryUsersHandler } from './entry-users/entry-users-handler';
 import { EntriesStore } from '../entries/entries-store/entries-store.service';
 import { EntrySectionsManager } from './entry-sections-manager';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng2/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 @Component({
     selector: 'kEntry',
@@ -53,8 +54,9 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public isSafari: boolean = false; // used for Safari specific styling
 
 	constructor(public _entryStore: EntryStore,
-				private  _entriesStore: EntriesStore,
-				private _browserService: BrowserService) {
+				private _entriesStore: EntriesStore,
+				private _browserService: BrowserService,
+				private _appLocalization: AppLocalization) {
 	}
 
 	ngOnDestroy() {
@@ -106,7 +108,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 									buttons: [
 										this._createBackToEntriesButton(),
 										{
-											label: 'Retry',
+											label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
 											action: () => {
 												this._entryStore.reloadEntry();
 											}
@@ -120,10 +122,10 @@ export class EntryComponent implements OnInit, OnDestroy {
 							case ActionTypes.EntrySavingFailed:
 
 								this._areaBlockerMessage = new AreaBlockerMessage({
-									message: 'An error occurred while saving. Please review your changes',
+									message: this._appLocalization.get('applications.content.entryDetails.errors.saveError'),
 									buttons: [
 										{
-											label: 'Reload',
+											label: this._appLocalization.get('applications.content.entryDetails.errors.reload'),
 											action: () => {
 												this._entryStore.reloadEntry();
 											}
@@ -134,10 +136,10 @@ export class EntryComponent implements OnInit, OnDestroy {
 							case ActionTypes.EntryDataIsInvalid:
 
 								this._areaBlockerMessage = new AreaBlockerMessage({
-									message: 'The form contains some invalid information. Please review the sections marked as invalid',
+									message: this._appLocalization.get('applications.content.entryDetails.errors.validationError'),
 									buttons: [
 										{
-											label: 'Dismiss',
+											label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
 											action: () => {
 												this._areaBlockerMessage = null;
 											}
@@ -148,10 +150,10 @@ export class EntryComponent implements OnInit, OnDestroy {
 							case ActionTypes.ActiveSectionBusy:
 
 								this._areaBlockerMessage = new AreaBlockerMessage({
-									message: 'An operation is still in progress. Please try again in a while.',
+									message: this._appLocalization.get('applications.content.entryDetails.errors.busyError'),
 									buttons: [
 										{
-											label: 'Dismiss',
+											label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
 											action: () => {
 												this._areaBlockerMessage = null;
 											}
@@ -162,10 +164,10 @@ export class EntryComponent implements OnInit, OnDestroy {
 							case ActionTypes.EntryPrepareSavingFailed:
 
 								this._areaBlockerMessage = new AreaBlockerMessage({
-									message: 'An error occurred while preparing to save. Please try again',
+									message: this._appLocalization.get('applications.content.entryDetails.errors.savePrepareError'),
 									buttons: [
 										{
-											label: 'Dismiss',
+											label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
 											action: () => {
 												this._areaBlockerMessage = null;
 											}
@@ -232,17 +234,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 				const nextEntry = entries[currentEntryIndex+1];
 				this._entryStore.openEntry(nextEntry.id);
 			}
-		}
-	}
-
-	public _onLoadingAction(actionKey : string)
-	{
-		if (actionKey === 'returnToEntries')
-		{
-			this._entryStore.returnToEntries({force:true});
-		}else if (actionKey == 'retry')
-		{
-
 		}
 	}
 
