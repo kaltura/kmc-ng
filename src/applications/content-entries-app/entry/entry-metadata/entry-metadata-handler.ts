@@ -6,7 +6,7 @@ import { KalturaCategoryEntryFilter,  KalturaMediaEntry } from 'kaltura-typescri
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaTagFilter, KalturaTaggedObjectType, KalturaFilterPager,
     TagSearchAction, CategoryEntryListAction, KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/all';
-import { CategoriesStore, CategoryData } from '../../shared/categories-store.service';
+import { CategoriesStore } from '../../shared/categories-store.service';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng2/kaltura-common';
@@ -207,7 +207,10 @@ export class EntryMetadataHandler extends EntryFormWidget
                     this.customDataForms = [];
                     if (response.items) {
                         response.items.forEach(serverMetadata => {
-                            this.customDataForms.push(this._kalturaCustomMetadata.createHandler(serverMetadata));
+                            const newCustomDataForm = this._kalturaCustomMetadata.createHandler(serverMetadata);
+
+
+                            this.customDataForms.push(newCustomDataForm);
                         });
                     }
             })

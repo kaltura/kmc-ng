@@ -95,10 +95,22 @@ export class EntryStore implements  OnDestroy {
 					{
 						console.log(`entry store: update entry is dirty state to ${newDirtyState}`);
 						this._entryIsDirty = newDirtyState;
+
+						this._updatePageExitVerification();
+
 					}
 				}
 			);
 
+	}
+
+	private _updatePageExitVerification() {
+		if (this._entryIsDirty) {
+			this._browserService.enablePageExitVerification();
+		}
+		else {
+			this._browserService.disablePageExitVerification();
+		}
 	}
 
 	ngOnDestroy() {
@@ -178,7 +190,7 @@ export class EntryStore implements  OnDestroy {
 							case OnDataSavingReasons.validationErrors:
 								this._state.next({action: ActionTypes.EntryDataIsInvalid});
 								break;
-							case OnDataSavingReasons.activeWidgetsRefused:
+							case OnDataSavingReasons.attachedWidgetBusy:
 								this._state.next({action: ActionTypes.ActiveSectionBusy});
 								break;
 							case OnDataSavingReasons.buildRequestFailure:
@@ -228,6 +240,8 @@ export class EntryStore implements  OnDestroy {
 
 		this._entryId = entryId;
 		this._entryIsDirty = false;
+		this._updatePageExitVerification();
+
 		this._state.next({action: ActionTypes.EntryLoading});
 		this._sectionsManager.onDataLoading(entryId);
 

@@ -51,7 +51,7 @@ export class EntrySectionsListHandler extends EntryFormWidget
                 sectionsState => {
                     this._sections.getValue().forEach((section: SectionWidgetItem) => {
                         const sectionState = sectionsState[section.key];
-                        const isValid = (!sectionState || sectionState.isBusy || sectionState.isValid);
+                        const isValid = (!sectionState || sectionState.isBusy || sectionState.isValid || !sectionState.isActive);
                         const isAttached = (!!sectionState && sectionState.isAttached);
 
                         if (section.attached !== isAttached || section.isValid !== isValid) {
