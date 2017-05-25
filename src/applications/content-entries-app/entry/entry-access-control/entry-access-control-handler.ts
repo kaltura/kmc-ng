@@ -4,18 +4,18 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SelectItem } from 'primeng/primeng';
 
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { EntrySectionTypes } from '../entry-sections-types';
+import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaMediaEntry, KalturaAccessControl, KalturaSiteRestriction, KalturaSiteRestrictionType, KalturaCountryRestriction, KalturaCountryRestrictionType, KalturaIpAddressRestriction,
 	KalturaIpAddressRestrictionType, KalturaLimitFlavorsRestriction, KalturaLimitFlavorsRestrictionType, KalturaSessionRestriction, KalturaPreviewRestriction, KalturaFlavorParams } from 'kaltura-typescript-client/types/all'
 import { AccessControlProfileStore, FlavoursStore, AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
 
 import 'rxjs/add/observable/forkJoin';
 import * as R from 'ramda';
-import { EntrySection } from '../entry-section-handler';
-import { EntrySectionsManager } from '../entry-sections-manager';
+import { EntryFormWidget } from '../entry-form-widget';
+
 
 @Injectable()
-export class EntryAccessControlHandler extends EntrySection
+export class EntryAccessControlHandler extends EntryFormWidget
 {
 
 	private _accessControlProfiles = new BehaviorSubject<{ items : SelectItem[]}>({ items : []});
@@ -39,27 +39,22 @@ export class EntryAccessControlHandler extends EntrySection
 
 	private _flavourParams: KalturaFlavorParams[] = [];
 
-    constructor(manager : EntrySectionsManager,
+    constructor(
 				private _accessControlProfileStore: AccessControlProfileStore,
                 private _appLocalization: AppLocalization,
 				private _flavoursStore: FlavoursStore)
     {
-        super(manager);
+        super(EntryWidgetKeys.AccessControl);
     }
 
 	/**
 	 * Do some cleanups if needed once the section is removed
 	 */
-	protected _reset() {
+	protected _onReset() {
 	}
 
-    public get sectionType() : EntrySectionTypes
-    {
-        return EntrySectionTypes.AccessControl;
-    }
-
-    protected _activate(firstLoad : boolean) {
-	    if (firstLoad)
+    protected _onActivate(firstTimeActivating: boolean) {
+	    if (firstTimeActivating)
 	    {
 		    super._showLoader();
 		    this._accessControlProfiles.next({items : []});

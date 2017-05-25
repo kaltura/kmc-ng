@@ -1,10 +1,7 @@
 import { Component, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-
 import { ISubscription } from 'rxjs/Subscription';
-
 import { KalturaAttachmentAsset } from 'kaltura-typescript-client/types/all';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
@@ -22,7 +19,7 @@ export class EntryRelatedEdit implements  AfterViewInit, OnDestroy{
 	private _parentPopupStateChangeSubscribe : ISubscription;
 	private _confirmClose: boolean = true;
 
-    constructor(private _appLocalization: AppLocalization, private _fb: FormBuilder) {
+    constructor(private _fb: FormBuilder) {
 	    this._createForm();
     }
 

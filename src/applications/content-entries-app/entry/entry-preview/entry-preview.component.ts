@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { EntryStore } from '../entry-store.service';
 import {
 	KalturaMediaEntry,
@@ -8,13 +8,14 @@ import {
 } from 'kaltura-typescript-client/types/all';
 import { BrowserService } from 'kmc-shell';
 import { EntryPreviewHandler } from './entry-preview-handler';
+import { EntryFormManager } from '../entry-form-manager';
 
 @Component({
 	selector: 'kEntryPreview',
 	templateUrl: './entry-preview.component.html',
 	styleUrls: ['./entry-preview.component.scss']
 })
-export class EntryPreview implements OnInit {
+export class EntryPreview implements OnInit, OnDestroy {
 
 	public _entryReady: boolean = false;
 	public _isLive: boolean = false;
@@ -27,14 +28,18 @@ export class EntryPreview implements OnInit {
 	get currentEntry(): KalturaMediaEntry {
 		return this._currentEntry;
 	}
+	public _handler : EntryPreviewHandler;
 
 
-	constructor(private browserService: BrowserService,
-				public _handler : EntryPreviewHandler,
+	constructor(private _entryFormManager : EntryFormManager,
+				private browserService: BrowserService,
+
 				public _entryStore: EntryStore) {
 	}
 
 	ngOnInit() {
+
+		this._handler = this._entryFormManager.attachWidget(EntryPreviewHandler);
 		this._handler.data$.subscribe(
 			data => {
 				if (data) {
@@ -65,5 +70,9 @@ export class EntryPreview implements OnInit {
 		this._entryStore.openEntry(entryId);
 	}
 
+
+	ngOnDestroy() {
+		this._entryFormManager.detachWidget(this._handler);
+	}
 }
 

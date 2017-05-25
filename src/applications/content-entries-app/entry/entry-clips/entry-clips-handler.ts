@@ -9,12 +9,12 @@ import { KalturaBaseEntryFilter, KalturaFilterPager, KalturaDetachedResponseProf
 import { AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 
-import { EntrySection } from '../entry-section-handler';
+import { EntryFormWidget } from '../entry-form-widget';
 import { EntryStore } from '../entry-store.service';
-import { EntrySectionTypes } from '../entry-sections-types';
+import { EntryWidgetKeys } from '../entry-widget-keys';
 import { BrowserService } from "kmc-shell/providers/browser.service";
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { EntrySectionsManager } from '../entry-sections-manager';
+import { EntryFormManager } from '../entry-form-manager';
 
 
 export interface ClipsData
@@ -23,10 +23,8 @@ export interface ClipsData
     totalItems : number;
 }
 
-
-
 @Injectable()
-export class EntryClipsHandler extends EntrySection
+export class EntryClipsHandler extends EntryFormWidget
 {
     private _clips = new BehaviorSubject<ClipsData>({ items : null, totalItems : 0});
     public entries$ = this._clips.asObservable();
@@ -42,23 +40,18 @@ export class EntryClipsHandler extends EntrySection
     public pageIndex = 0 ;
     public pageSizesAvailable = [25,50,75,100];
 
-    constructor(manager : EntrySectionsManager,
+    constructor(
                 private _store : EntryStore,
                 private _kalturaServerClient: KalturaClient,
                 private browserService: BrowserService,
                 private _appLocalization: AppLocalization) {
-        super(manager);
-    }
-
-    public get sectionType() : EntrySectionTypes
-    {
-        return EntrySectionTypes.Clips;
+        super(EntryWidgetKeys.Clips);
     }
 
     /**
      * Do some cleanups if needed once the section is removed
      */
-     protected _reset() : void{
+     protected _onReset() : void{
         this.sortBy = 'createdAt';
         this.sortAsc = false;
         this.pageIndex = 0;
@@ -140,7 +133,7 @@ export class EntryClipsHandler extends EntrySection
                     fields : 'id,name,plays,createdAt,duration,status,offset,operationAttributes,moderationStatus'
                 })
             }))
-                .cancelOnDestroy(this,this.sectionReset$)
+                .cancelOnDestroy(this,this.widgetReset$)
                 .monitor('get entry clips')
                 .subscribe(
                     response => {
@@ -189,7 +182,7 @@ export class EntryClipsHandler extends EntrySection
 
     }
 
-    protected _activate(firstLoad : boolean) {
+    protected _onActivate(firstTimeActivating: boolean) {
 	    return this._getEntryClips('activation');
     }
 }

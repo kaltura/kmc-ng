@@ -1,5 +1,5 @@
-import { Injectable, } from '@angular/core';
-import { EntrySection } from '../entry-section-handler';
+import { Injectable } from '@angular/core';
+import { EntryFormWidget } from '../entry-form-widget';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -10,9 +10,8 @@ import { ThumbAssetListAction, ThumbAssetSetAsDefaultAction, KalturaThumbAssetLi
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 
-import { EntrySectionTypes } from '../entry-sections-types';
+import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { EntrySectionsManager } from '../entry-sections-manager';
 
 export interface ThumbnailRow {
 	id: string,
@@ -28,7 +27,7 @@ export interface ThumbnailRow {
 }
 
 @Injectable()
-export class EntryThumbnailsHandler extends EntrySection
+export class EntryThumbnailsHandler extends EntryFormWidget
 {
 	private _thumbnails = new BehaviorSubject<{ items : ThumbnailRow[]}>(
 		{ items : []}
@@ -37,24 +36,19 @@ export class EntryThumbnailsHandler extends EntrySection
 	public _thumbnails$ = this._thumbnails.asObservable();
 	private _distributionProfiles: KalturaDistributionProfile[]; // used to save the response profiles array as it is loaded only once
 
-    constructor(manager : EntrySectionsManager, private _kalturaServerClient: KalturaClient, private _appConfig: AppConfig, private _appAuthentication: AppAuthentication)
+    constructor( private _kalturaServerClient: KalturaClient, private _appConfig: AppConfig, private _appAuthentication: AppAuthentication)
     {
-        super(manager);
-    }
-
-    public get sectionType() : EntrySectionTypes
-    {
-        return EntrySectionTypes.Thumbnails;
+        super(EntryWidgetKeys.Thumbnails);
     }
 
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _reset()
+    protected _onReset()
     {
     }
 
-    protected _activate(firstLoad : boolean) {
+    protected _onActivate(firstTimeActivating: boolean) {
 
 	    super._showLoader();
 
@@ -75,7 +69,7 @@ export class EntryThumbnailsHandler extends EntrySection
 
 
 	    return Observable.forkJoin(getThumbnails$, getProfiles$)
-		    .cancelOnDestroy(this,this.sectionReset$)
+		    .cancelOnDestroy(this,this.widgetReset$)
 
 		    .catch((error, caught) =>
 		    {
@@ -146,7 +140,7 @@ export class EntryThumbnailsHandler extends EntrySection
 	    this._kalturaServerClient.request(new ThumbAssetListAction({ filter: new KalturaAssetFilter({
 			entryIdEqual : this.data.id
 		})}))
-	    .cancelOnDestroy(this,this.sectionReset$)
+	    .cancelOnDestroy(this,this.widgetReset$)
 	    .monitor('reload thumbnails')
 	    .subscribe(
 			    (responses) => {
@@ -182,7 +176,7 @@ export class EntryThumbnailsHandler extends EntrySection
 		const thumbs = Array.from(this._thumbnails.getValue().items);
 		super._showLoader();
 		this._kalturaServerClient.request(new ThumbAssetSetAsDefaultAction({thumbAssetId: thumb.id}))
-			.cancelOnDestroy(this,this.sectionReset$)
+			.cancelOnDestroy(this,this.widgetReset$)
 			.monitor('set thumb as default')
 			.subscribe(
 				() =>
@@ -217,7 +211,7 @@ export class EntryThumbnailsHandler extends EntrySection
 		const thumbs = Array.from(this._thumbnails.getValue().items);
 		super._showLoader();
 		this._kalturaServerClient.request(new ThumbAssetDeleteAction({thumbAssetId: id}))
-			.cancelOnDestroy(this,this.sectionReset$)
+			.cancelOnDestroy(this,this.widgetReset$)
 			.monitor('delete thumb')
 			.subscribe(
 				() =>
@@ -255,7 +249,7 @@ export class EntryThumbnailsHandler extends EntrySection
 				entryId: this.data.id,
 				fileData: fileData
 			}))
-                .cancelOnDestroy(this, this.sectionReset$)
+                .cancelOnDestroy(this, this.widgetReset$)
                 .monitor('add thumb')
                 .subscribe(
 					() => {

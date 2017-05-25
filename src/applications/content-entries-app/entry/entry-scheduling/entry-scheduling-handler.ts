@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
-import { EntrySectionTypes } from '../entry-sections-types';
-import { EntrySection } from '../entry-section-handler';
+import { EntryWidgetKeys } from '../entry-widget-keys';
+import { EntryFormWidget } from '../entry-form-widget';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { EntrySectionsManager } from '../entry-sections-manager';
 
 function datesValidation(checkRequired: boolean = false): ValidatorFn {
 	return (c: AbstractControl): {[key: string]: boolean} | null => {
@@ -35,22 +33,22 @@ function datesValidation(checkRequired: boolean = false): ValidatorFn {
 }
 
 @Injectable()
-export class EntrySchedulingHandler extends EntrySection
+export class EntrySchedulingHandler extends EntryFormWidget
 {
 	public schedulingForm: FormGroup;
 	public _timeZone = "";
 
-    constructor(manager : EntrySectionsManager,
+    constructor(
 				private _appLocalization: AppLocalization,
 				private _fb: FormBuilder)
     {
-        super(manager);
+        super(EntryWidgetKeys.Scheduling);
 	    this.createForm();
 	    this.getTimeZone();
     }
 
-	protected _activate(firstLoad : boolean): void {
-    	if (firstLoad) {
+	protected _onActivate(firstTimeActivating: boolean): void {
+    	if (firstTimeActivating) {
 			this._resetForm();
 		}
 		this.setValidators(false);
@@ -144,7 +142,7 @@ export class EntrySchedulingHandler extends EntrySection
             .cancelOnDestroy(this)
             .subscribe(
 				() => {
-					super._onSectionStateChanged({
+					super._updateWidgetState({
 						isValid: this.schedulingForm.status === 'VALID',
 						isDirty: this.schedulingForm.dirty
 					});
@@ -173,12 +171,8 @@ export class EntrySchedulingHandler extends EntrySection
 		this.schedulingForm.setValidators(datesValidation(checkRequired));
 		this.schedulingForm.updateValueAndValidity();
 	}
-	public get sectionType() : EntrySectionTypes
-	{
-		return EntrySectionTypes.Scheduling;
-	}
 
-	protected _validate() : Observable<{ isValid : boolean}>
+	protected _onValidate() : Observable<{ isValid : boolean}>
 	{
 		return Observable.create(observer =>
 		{
@@ -192,7 +186,7 @@ export class EntrySchedulingHandler extends EntrySection
     /**
      * Do some cleanups if needed once the section is removed
      */
-	protected _reset()
+	protected _onReset()
 	{
 		this.schedulingForm.reset();
 		this.setValidators(false);

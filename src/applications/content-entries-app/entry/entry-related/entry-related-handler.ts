@@ -1,4 +1,5 @@
-import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, CollectionChangeRecord } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, CollectionChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
@@ -9,9 +10,8 @@ import { KalturaAssetFilter, KalturaAttachmentAsset, KalturaAttachmentType, Atta
 	AttachmentAssetDeleteAction, AttachmentAssetUpdateAction, AttachmentAssetAddAction, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 import { BrowserService } from 'kmc-shell';
 
-import { EntrySection } from '../entry-section-handler';
-import { EntrySectionTypes } from '../entry-sections-types';
-import { EntrySectionsManager } from '../entry-sections-manager';
+import { EntryFormWidget } from '../entry-form-widget';
+import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
 import { UploadManagement, FileChanges } from '@kaltura-ng2/kaltura-common/upload-management';
 import { FriendlyHashId } from '@kaltura-ng2/kaltura-common/friendly-hash-id';
@@ -19,7 +19,7 @@ import { FriendlyHashId } from '@kaltura-ng2/kaltura-common/friendly-hash-id';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators'
 
 @Injectable()
-export class EntryRelatedHandler extends EntrySection
+export class EntryRelatedHandler extends EntryFormWidget
 {
 
 	relatedFilesListDiffer: IterableDiffer;
@@ -33,7 +33,7 @@ export class EntryRelatedHandler extends EntrySection
 
 	private _entryId: string = '';
 
-	constructor(manager : EntrySectionsManager,
+	constructor(
 				private _appConfig: AppConfig,
 				private _kalturaServerClient: KalturaClient,
 	            private _browserService: BrowserService,
@@ -41,8 +41,7 @@ export class EntryRelatedHandler extends EntrySection
 				private _objectDiffers: KeyValueDiffers,
 				private _listDiffers : IterableDiffers,
 				private _uploadManagement : UploadManagement) {
-        super(manager);
-
+        super(EntryWidgetKeys.Related);
     }
 
 
@@ -82,15 +81,11 @@ export class EntryRelatedHandler extends EntrySection
             );
     }
 
-    public get sectionType() : EntrySectionTypes
-    {
-        return EntrySectionTypes.Related;
-    }
 
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _reset()
+    protected _onReset()
     {
 	    this.relatedFileDiffer = {};
 	    this.relatedFilesListDiffer = null;
@@ -98,11 +93,11 @@ export class EntryRelatedHandler extends EntrySection
 	    this._relatedFiles.next({ items : [] });
     }
 
-	protected _activate(firstLoad : boolean) {
+	protected _onActivate(firstTimeActivating: boolean) {
 		this._entryId = this.data.id;
 		super._showLoader();
 
-		if (firstLoad)
+		if (firstTimeActivating)
 		{
 			this._trackUploadFiles();
 		}
@@ -115,7 +110,7 @@ export class EntryRelatedHandler extends EntrySection
 					entryIdEqual : this._entryId
 				}
 			)}))
-			.cancelOnDestroy(this,this.sectionReset$)
+			.cancelOnDestroy(this,this.widgetReset$)
 			.monitor('get entry related files')
 			.do(
 				response =>

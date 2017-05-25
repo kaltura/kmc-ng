@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
 import { EntryAccessControlHandler } from './entry-access-control-handler';
+import { EntryFormManager } from '../entry-form-manager';
 
 @Component({
     selector: 'kEntryAccessControl',
@@ -10,13 +11,14 @@ export class EntryAccessControl implements AfterViewInit, OnInit, OnDestroy {
 
     public _loading = false;
     public _loadingError = null;
+    public _handler : EntryAccessControlHandler;
 
-    constructor(public _handler : EntryAccessControlHandler) {
+    constructor(private _entryFormManager : EntryFormManager) {
     }
 
 
     ngOnInit() {
-
+        this._handler = this._entryFormManager.attachWidget(EntryAccessControlHandler);
     }
 
     ngOnDestroy() {
@@ -24,7 +26,7 @@ export class EntryAccessControl implements AfterViewInit, OnInit, OnDestroy {
 
 
     ngAfterViewInit() {
-
+        this._entryFormManager.detachWidget(this._handler);
     }
 }
 

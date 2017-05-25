@@ -1,15 +1,19 @@
 import { Injectable } from '@angular/core';
-import { EntrySectionTypes } from './entry-sections-types';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
-import { FormSection } from '@kaltura-ng2/kaltura-ui/form-sections';
+import { FormWidget } from '@kaltura-ng2/kaltura-ui';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng2/kaltura-ui';
-import { EntrySectionsManager } from './entry-sections-manager';
+import { EntryFormManager } from './entry-form-manager';
 
 @Injectable()
-export abstract class EntrySection extends FormSection<KalturaMediaEntry,EntrySectionTypes> {
+export abstract class EntryFormWidget extends FormWidget<KalturaMediaEntry> {
     public sectionBlockerMessage: AreaBlockerMessage;
     public showSectionLoader: boolean;
+
+    constructor(private _widgetKey : string)
+    {
+        super(_widgetKey);
+    }
 
     protected _showLoader() {
 	    this._removeBlockerMessage();
@@ -42,12 +46,12 @@ export abstract class EntrySection extends FormSection<KalturaMediaEntry,EntrySe
     }
 
     protected _createBackToEntriesButton(): AreaBlockerMessageButton[] {
-        if (this.manager instanceof EntrySectionsManager)
+        if (this._manager instanceof EntryFormManager)
         {
             return [{
                 label: 'Back To Entries',
                 action: () => {
-                    (<EntrySectionsManager>this.manager).returnToEntries();
+                    (<EntryFormManager>this._manager).returnToEntries();
                 }
             }];
         }else

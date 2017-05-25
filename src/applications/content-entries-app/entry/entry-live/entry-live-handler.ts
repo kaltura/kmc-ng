@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Message } from 'primeng/primeng';
@@ -11,9 +10,9 @@ import { KalturaSourceType,	KalturaLiveStreamBitrate,
 import { AppLocalization, AppConfig } from '@kaltura-ng2/kaltura-common';
 import { BrowserService } from 'kmc-shell';
 
-import { EntrySectionTypes } from '../entry-sections-types';
-import { EntrySection } from '../entry-section-handler';
-import { EntrySectionsManager } from '../entry-sections-manager';
+import { EntryWidgetKeys } from '../entry-widget-keys';
+import { EntryFormWidget } from '../entry-form-widget';
+import { EntryFormManager } from '../entry-form-manager';
 import { LiveXMLExporter } from './live-xml-exporter';
 import { AVAIL_BITRATES } from './bitrates';
 
@@ -26,7 +25,7 @@ export interface bitrate {
 }
 
 @Injectable()
-export class EntryLiveHandler extends EntrySection {
+export class EntryLiveHandler extends EntryFormWidget {
 
 	public _msgs: Message[] = [];
 	private _liveType: string = "";
@@ -46,15 +45,12 @@ export class EntryLiveHandler extends EntrySection {
 	public _bitrates: bitrate[] = [];
 	public _availableBitrates = AVAIL_BITRATES;
 
-	constructor(manager: EntrySectionsManager, private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _appConfig: AppConfig, private _browserService: BrowserService) {
-		super(manager);
+	constructor(manager: EntryFormManager, private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _appConfig: AppConfig, private _browserService: BrowserService) {
+		super(EntryWidgetKeys.Live);
 	}
 
-	public get sectionType(): EntrySectionTypes {
-		return EntrySectionTypes.Live;
-	}
 
-	protected _reset() {
+	protected _onReset() {
 		this.dirty = false;
 		this._msgs = [];
 	}
@@ -76,7 +72,7 @@ export class EntryLiveHandler extends EntrySection {
 		}
 	}
 
-	protected _validate(): Observable<{ isValid: boolean}> {
+	protected _onValidate(): Observable<{ isValid: boolean}> {
 		return Observable.create(observer => {
 			const isValid = this._liveType === "universal" ? this._validateBitrates({updateDirtyMode: false}) : true;
 			observer.next({isValid});
@@ -84,7 +80,7 @@ export class EntryLiveHandler extends EntrySection {
 		});
 	}
 
-	protected _activate(firstLoad: boolean) {
+	protected _onActivate(firstTimeActivating : boolean) {
 		// set live type
 		switch (this.data.sourceType.toString()) {
 			case KalturaSourceType.liveStream.toString():
@@ -119,7 +115,7 @@ export class EntryLiveHandler extends EntrySection {
 	 pageSize: 500
 	 })
 	 }))
-	 .cancelOnDestroy(this, this.sectionReset$)
+	 .cancelOnDestroy(this, this.widgetReset$)
 	 .monitor('get conversion profiles')
 	 .subscribe(
 	 response => {
@@ -152,7 +148,7 @@ export class EntryLiveHandler extends EntrySection {
 	 public regenerateStreamToken(): void {
 	 this._regeneratingToken = true;
 	 this._kalturaServerClient.request(new LiveStreamRegenerateStreamTokenAction({entryId: this.data.id}))
-	 .cancelOnDestroy(this, this.sectionReset$)
+	 .cancelOnDestroy(this, this.widgetReset$)
 	 .monitor('regenerate stream token')
 	 .subscribe(
 	 response => {
@@ -255,7 +251,8 @@ export class EntryLiveHandler extends EntrySection {
 			this.dirty = true;
 		}
 
-		super._onSectionStateChanged({isValid: valid, isDirty: this.dirty});
+		super._updateWidgetState({isValid: valid, isDirty: this.dirty});
+
 		return valid;
 	}
 }

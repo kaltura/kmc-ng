@@ -9,6 +9,7 @@ import { KalturaCaptionAssetStatus } from 'kaltura-typescript-client/types/all'
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
 import { EntryCaptionsHandler } from './entry-captions-handler';
+import { EntryFormManager } from '../entry-form-manager';
 
 @Component({
     selector: 'kEntryCaptions',
@@ -23,13 +24,15 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
 	@ViewChild('sectionContainer') private bla: ElementRef;
 	@ViewChild('editPopup') public editPopup: PopupWidgetComponent;
+	public _handler : EntryCaptionsHandler;
 
 	private _popupStateChangeSubscribe: ISubscription;
-
-    constructor(public _handler : EntryCaptionsHandler, private _appAuthentication: AppAuthentication, private _appConfig:AppConfig, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+	constructor(private _entryFormManager : EntryFormManager, private _appAuthentication: AppAuthentication, private _appConfig:AppConfig, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
     }
 
 	ngOnInit() {
+		this._handler = this._entryFormManager.attachWidget(EntryCaptionsHandler);
+
 		this._actions = [
 			{label: this._appLocalization.get('applications.content.entryDetails.captions.edit'), command: (event) => {this.actionSelected("edit");}},
 			{label: this._appLocalization.get('applications.content.entryDetails.captions.download'), command: (event) => {this.actionSelected("download");}},
@@ -106,7 +109,10 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
     ngOnDestroy() {
 	    this.actionsMenu.hide();
 	    this._popupStateChangeSubscribe.unsubscribe();
-    }
+
+		this._entryFormManager.detachWidget(this._handler);
+
+	}
 
 
     _onLoadingAction(actionKey: string) {

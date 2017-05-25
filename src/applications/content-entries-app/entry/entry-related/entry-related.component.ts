@@ -4,6 +4,7 @@ import { KalturaAttachmentType, KalturaAttachmentAsset, KalturaEntryStatus } fro
 import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { SelectItem, Menu, MenuItem } from 'primeng/primeng';
+import { EntryFormManager } from '../entry-form-manager';
 
 @Component({
     selector: 'kEntryRelated',
@@ -18,7 +19,7 @@ export class EntryRelated implements OnInit, OnDestroy{
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
 	@ViewChild('editPopup') public editPopup: PopupWidgetComponent;
 	public _currentFile: KalturaAttachmentAsset;
-
+	public _handler : EntryRelatedHandler;
 	public _fileTypes: SelectItem[] = [
 		{"label": this._appLocalization.get('applications.content.entryDetails.related.document'), "value": KalturaAttachmentType.document},
 		{"label": this._appLocalization.get('applications.content.entryDetails.related.media'), "value": KalturaAttachmentType.media},
@@ -27,16 +28,21 @@ export class EntryRelated implements OnInit, OnDestroy{
 
 	public _actions: MenuItem[] = [];
 
-    constructor(public _handler : EntryRelatedHandler,
+	constructor(private _entryFormManager : EntryFormManager,
 				private _appLocalization: AppLocalization) {
     }
 
     ngOnDestroy()
 	{
 		this.actionsMenu.hide();
+		this._entryFormManager.detachWidget(this._handler);
+
 	}
 
 	ngOnInit() {
+
+		this._handler = this._entryFormManager.attachWidget(EntryRelatedHandler);
+
 		this._actions = [
 			{label: this._appLocalization.get('applications.content.entryDetails.related.edit'), command: (event) => {this.actionSelected("edit");}},
 			{label: this._appLocalization.get('applications.content.entryDetails.related.download'), command: (event) => {this.actionSelected("download");}},

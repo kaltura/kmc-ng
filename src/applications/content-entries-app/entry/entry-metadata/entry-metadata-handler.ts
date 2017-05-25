@@ -1,16 +1,16 @@
-import { Injectable, IterableDiffers, IterableDiffer, CollectionChangeRecord } from '@angular/core';
-import { EntrySection } from '../entry-section-handler';
+import { Injectable } from '@angular/core';
+import { IterableDiffers, IterableDiffer, CollectionChangeRecord } from '@angular/core';
+import { EntryFormWidget } from '../entry-form-widget';
 import { Observable } from 'rxjs/Observable';
 import { KalturaCategoryEntryFilter,  KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaTagFilter, KalturaTaggedObjectType, KalturaFilterPager,
     TagSearchAction, CategoryEntryListAction, KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/all';
 import { CategoriesStore, CategoryData } from '../../shared/categories-store.service';
-import { EntrySectionTypes } from '../entry-sections-types';
+import { EntryWidgetKeys } from '../entry-widget-keys';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng2/kaltura-common';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { EntrySectionsManager } from '../entry-sections-manager';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { KalturaCustomMetadata } from '@kaltura-ng2/kaltura-ui/dynamic-form/kaltura-custom-metadata';
 import { MetadataListAction, KalturaMetadataFilter, KalturaMetadata, MetadataUpdateAction, MetadataAddAction, KalturaMetadataObjectType, CategoryEntryAddAction, CategoryEntryDeleteAction, KalturaCategoryEntry } from 'kaltura-typescript-client/types/all';
@@ -21,7 +21,7 @@ import 'rxjs/add/operator/catch';
 
 
 @Injectable()
-export class EntryMetadataHandler extends EntrySection
+export class EntryMetadataHandler extends EntryFormWidget
 {
     private _entryCategoriesDiffers : IterableDiffer;
     public _entryCategories : { id : string | number, fullIdPath : (string | number)[], name : string }[]  = [];
@@ -31,15 +31,14 @@ export class EntryMetadataHandler extends EntrySection
     public metadataForm : FormGroup;
     public customDataForms : KalturaCustomDataHandler[] = [];
 
-    constructor(manager : EntrySectionsManager,
-                private _kalturaServerClient: KalturaClient,
+    constructor(private _kalturaServerClient: KalturaClient,
                 private _categoriesStore : CategoriesStore,
                 private _formBuilder : FormBuilder,
                 private _iterableDiffers : IterableDiffers,
                 private _kalturaCustomMetadata : KalturaCustomMetadata,
                 private _metadataProfileStore : MetadataProfileStore)
     {
-        super(manager);
+        super(EntryWidgetKeys.Metadata);
 
         this._buildForm();
     }
@@ -60,7 +59,7 @@ export class EntryMetadataHandler extends EntrySection
             .cancelOnDestroy(this)
             .subscribe(
                 () => {
-                    super._onSectionStateChanged({
+                    super._updateWidgetState({
                         isValid: this.metadataForm.status === 'VALID',
                         isDirty: this.metadataForm.dirty
                     });
@@ -68,12 +67,7 @@ export class EntryMetadataHandler extends EntrySection
             );
     }
 
-    public get sectionType() : EntrySectionTypes
-    {
-        return EntrySectionTypes.Metadata;
-    }
-
-    protected _activate(firstLoad : boolean) : Observable<{failed : boolean}> {
+    protected _onActivate(firstTimeActivating : boolean) : Observable<{failed : boolean}> {
 
         super._showLoader();
         super._removeBlockerMessage();
@@ -85,29 +79,27 @@ export class EntryMetadataHandler extends EntrySection
             this._loadEntryMetadata(this.data)
         ];
 
-        if (firstLoad) {
+        if (firstTimeActivating) {
             actions.push(this._loadProfileMetadata());
         }
 
 
         return Observable.forkJoin(actions)
-	        .catch((error, caught) =>
-	        {
-		        return Observable.of([{failed : true}]);
-	        })
+            .catch((error, caught) => {
+                return Observable.of([{failed: true}]);
+            })
             .map(responses => {
-	            super._hideLoader();
+                super._hideLoader();
 
-	            const hasFailure = responses.reduce((result, response) => result || response.failed,false);
+                const hasFailure = responses.reduce((result, response) => result || response.failed, false);
 
-	            if (hasFailure)
-	            {
-		            super._showActivationError();
-		            return { failed : true};
-	            }else {
-		            this._syncHandlerContent();
-		            return { failed : false};
-	            }
+                if (hasFailure) {
+                    super._showActivationError();
+                    return {failed: true};
+                } else {
+                    this._syncHandlerContent();
+                    return {failed: false};
+                }
             });
     }
 
@@ -160,7 +152,7 @@ export class EntryMetadataHandler extends EntrySection
                 )
             }
         ))
-            .cancelOnDestroy(this, this.sectionReset$)
+            .cancelOnDestroy(this, this.widgetReset$)
             .monitor('get entry custom metadata')
             .do(response => {
                     this._entryMetadata = response.objects;
@@ -192,7 +184,7 @@ export class EntryMetadataHandler extends EntrySection
                 }
             })
             .monitor('get entry categories')
-            .cancelOnDestroy(this, this.sectionReset$)
+            .cancelOnDestroy(this, this.widgetReset$)
             .do(
                 categories =>
                 {
@@ -320,7 +312,7 @@ export class EntryMetadataHandler extends EntrySection
                         }
                     )
                 )
-                    .cancelOnDestroy(this, this.sectionReset$)
+                    .cancelOnDestroy(this, this.widgetReset$)
                     .monitor('search tags')
                     .subscribe(
                     result =>
@@ -349,7 +341,7 @@ export class EntryMetadataHandler extends EntrySection
             observer => {
 
                 const requestSubscription = this._categoriesStore.getSuggestions(text)
-                    .cancelOnDestroy(this, this.sectionReset$)
+                    .cancelOnDestroy(this, this.widgetReset$)
                     .monitor('search categories')
                     .subscribe(
                         result =>
@@ -374,7 +366,7 @@ export class EntryMetadataHandler extends EntrySection
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _reset() {
+    protected _onReset() {
 
         this.metadataForm.reset({});
         this._entryCategoriesDiffers = null;
@@ -383,7 +375,7 @@ export class EntryMetadataHandler extends EntrySection
         this.isLiveEntry = false;
     }
 
-    _validate() : Observable<{ isValid : boolean}>
+    _onValidate() : Observable<{ isValid : boolean}>
     {
         return Observable.create(observer =>
         {

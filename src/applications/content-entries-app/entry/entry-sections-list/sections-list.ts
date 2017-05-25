@@ -1,44 +1,44 @@
-import { EntrySectionTypes } from '../entry-sections-types';
+import { EntryWidgetKeys } from '../entry-widget-keys';
 
 export const SectionsList = [
     {
         label : 'applications.content.entryDetails.sections.metadata',
-        sectionType : EntrySectionTypes.Metadata
+        key : EntryWidgetKeys.Metadata
     },
     {
         label : 'applications.content.entryDetails.sections.thumbnails',
-        sectionType : EntrySectionTypes.Thumbnails
+        key : EntryWidgetKeys.Thumbnails
     },
     {
         label : 'applications.content.entryDetails.sections.accessControl',
-        sectionType : EntrySectionTypes.AccessControl
+        key : EntryWidgetKeys.AccessControl
     },
     {
         label : 'applications.content.entryDetails.sections.scheduling',
-        sectionType : EntrySectionTypes.Scheduling
+        key : EntryWidgetKeys.Scheduling
     },
     {
         label : 'applications.content.entryDetails.sections.flavours',
-        sectionType : EntrySectionTypes.Flavours
+        key : EntryWidgetKeys.Flavours
     },
     {
         label : 'applications.content.entryDetails.sections.captions',
-        sectionType : EntrySectionTypes.Captions
+        key : EntryWidgetKeys.Captions
     },
     {
         label : 'applications.content.entryDetails.sections.live',
-        sectionType : EntrySectionTypes.Live
+        key : EntryWidgetKeys.Live
     },
     {
         label : 'applications.content.entryDetails.sections.relatedFiles',
-        sectionType : EntrySectionTypes.Related
+        key : EntryWidgetKeys.Related
     },
     {
         label : 'applications.content.entryDetails.sections.clips',
-        sectionType : EntrySectionTypes.Clips
+        key : EntryWidgetKeys.Clips
     },
     {
         label : 'applications.content.entryDetails.sections.users',
-        sectionType : EntrySectionTypes.Users
+        key : EntryWidgetKeys.Users
     }
 ];
