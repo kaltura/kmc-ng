@@ -190,6 +190,9 @@ export class EntryAccessControlHandler extends EntryFormWidget
 			});
 		}
 	}
+	public setDirty(){
+		super._updateWidgetState({isDirty: true});
+	}
 
 	private _getCountriesByCode(codesList: string): string{
 		let countries = [];
