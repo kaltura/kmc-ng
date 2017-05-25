@@ -107,4 +107,16 @@ export class BrowserService implements IAppStorage {
 		}
 	}
 
+	public enablePageExitVerification(verificationMsg: string = null): void{
+		window.onbeforeunload = (e) => {
+			const confirmationMessage = verificationMsg ? verificationMsg : "Are you sure you want to leave this page?";
+			(e || window.event).returnValue = confirmationMessage; // Gecko + IE
+			return confirmationMessage;                            // Webkit, Safari, Chrome
+		};
+	}
+
+	public disablePageExitVerification(): void{
+		window.onbeforeunload = (e) => {};
+	}
+
 }
