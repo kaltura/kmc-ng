@@ -227,10 +227,8 @@ export class EntryLiveHandler extends EntryFormWidget {
 			}
 		}
 	}
-
-	public _validateBitrates({updateDirtyMode = true} : {updateDirtyMode: boolean}): boolean {
+	public _validateBitrates({updateDirtyMode} : {updateDirtyMode: boolean}): boolean {
 		let valid = true;
-
 		this._bitrates.forEach((br: bitrate) => {
 			br.errors = "";
 			if (br.enabled) {
@@ -245,13 +243,14 @@ export class EntryLiveHandler extends EntryFormWidget {
 				}
 			}
 		});
+		const newStatus: any = {isValid: valid};
 
-
-		if (updateDirtyMode) {
-			this.dirty = true;
+		if (updateDirtyMode)
+		{
+			newStatus.isDirty = true;
 		}
 
-		super._updateWidgetState({isValid: valid, isDirty: this.dirty});
+		super._updateWidgetState(newStatus);
 
 		return valid;
 	}

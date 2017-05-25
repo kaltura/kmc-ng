@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
+import { ISubscription } from 'rxjs/Subscription';
 import { EntryRelatedHandler } from './entry-related-handler';
 import { KalturaAttachmentType, KalturaAttachmentAsset, KalturaEntryStatus } from 'kaltura-typescript-client/types/all';
-import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { SelectItem, Menu, MenuItem } from 'primeng/primeng';
 import { EntryFormManager } from '../entry-form-manager';
@@ -11,7 +12,7 @@ import { EntryFormManager } from '../entry-form-manager';
     templateUrl: './entry-related.component.html',
     styleUrls: ['./entry-related.component.scss']
 })
-export class EntryRelated implements OnInit, OnDestroy{
+export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
 
     public _loading = false;
     public _loadingError = null;
@@ -28,6 +29,8 @@ export class EntryRelated implements OnInit, OnDestroy{
 
 	public _actions: MenuItem[] = [];
 
+	private _editPopupStateChangeSubscribe : ISubscription;
+
 	constructor(private _entryFormManager : EntryFormManager,
 				private _appLocalization: AppLocalization) {
     }
@@ -36,6 +39,9 @@ export class EntryRelated implements OnInit, OnDestroy{
 	{
 		this.actionsMenu.hide();
 		this._entryFormManager.detachWidget(this._handler);
+		if (this._editPopupStateChangeSubscribe) {
+			this._editPopupStateChangeSubscribe.unsubscribe();
+		}
 
 	}
 
@@ -49,6 +55,17 @@ export class EntryRelated implements OnInit, OnDestroy{
 			{label: this._appLocalization.get('applications.content.entryDetails.related.delete'), command: (event) => {this.actionSelected("delete");}},
 			{label: this._appLocalization.get('applications.content.entryDetails.related.preview'), command: (event) => {this.actionSelected("preview");}}
 		];
+	}
+
+	ngAfterViewInit(){
+		if (this.editPopup) {
+			this._editPopupStateChangeSubscribe = this.editPopup.state$
+				.subscribe(event => {
+					if (event.state === PopupWidgetStates.Close && event.context && event.context.dataChanged) {
+						this._handler._setDirty();
+					}
+				});
+		}
 	}
 
 	openActionsMenu(event: any, file: KalturaAttachmentAsset): void{
@@ -95,13 +112,5 @@ export class EntryRelated implements OnInit, OnDestroy{
 	public _relatedTableRowStyle(rowData, rowIndex): string{
 		return rowData.uploading ? "uploading" : rowData.uploadFailure ? "uploadFailure" : '';
 	}
-
-    _onLoadingAction(actionKey: string): void {
-        if (actionKey === 'retry') {
-
-        }
-    }
-
-
 }
 
