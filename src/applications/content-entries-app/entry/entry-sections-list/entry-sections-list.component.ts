@@ -16,7 +16,6 @@ import { EntryFormManager } from '../entry-form-manager';
 export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
 
     public _loading = false;
-    public _loadingError = null;
     public _showList = false;
     public _sections : SectionWidgetItem[] = [];
     private _handler : EntrySectionsListHandler;
@@ -32,11 +31,13 @@ export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
 
 
     ngOnInit() {
-        this._handler = this._entryFormManager.attachWidget(EntrySectionsListHandler);
+		this._loading = true;
+		this._handler = this._entryFormManager.attachWidget(EntrySectionsListHandler);
 
 		this._handler.sections$.subscribe(
 			sections =>
 			{
+				this._loading = false;
 			    this._sections = sections;
 			    this._showList = sections && sections.length > 0;
 			}
@@ -53,9 +54,5 @@ export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
 
     }
 
-    _onLoadingAction(actionKey: string) {
-        if (actionKey === 'retry') {
-        }
-    }
 }
 

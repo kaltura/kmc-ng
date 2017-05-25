@@ -112,10 +112,19 @@ a.disabled{
     font-weight: 700;
     text-decoration: underline;
 }
-/deep/ .ui-autocomplete.ui-widget{
-	input{
-		width: 324px;
-		height: 24px;
+:host /deep/ .ui-autocomplete ul.ui-autocomplete-multiple-container.ui-inputtext{
+	padding: 0px;
+	.ui-autocomplete-input-token{
+		padding: 0px;
+		input.ui-autocomplete.ui-widget{
+			height: 34px;
+			padding-left: 4px;
+		}
+		.ui-inputtext{
+			width: 324px;
+			height: 34px;
+			padding-left: 4px;
+		}
 	}
 }
 

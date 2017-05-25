@@ -1,4 +1,4 @@
-<kLoader [loading]="(additionalFiltersStore.status$ | async)?.loading">
+<k-area-blocker [showLoader]="(additionalFiltersStore.status$ | async)?.loading">
 	<div class="kUseKMCngIcons kRefineFilters">
 		<div #refine class="kTreeContainer">
 			<div class="kFiltersGroupTitle">
@@ -10,6 +10,7 @@
 				<p-calendar class="kDateRangeLast kPullLeft30" [(ngModel)]="_createdBefore" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
 				<a class="kClearAll" (click)="_clearCreatedComponents()">{{'applications.content.filters.clearDates' | translate}}</a>
 			</div>
+			<span *ngIf="_createdFilterError" class="kError">{{_createdFilterError}}</span>
 			<div *ngFor="let primeGroup of _primeGroups">
 				<div *ngIf="primeGroup.groupName" class="kFiltersGroupTitle">
 					<span>{{primeGroup.groupName | uppercase}}</span>
@@ -23,6 +24,7 @@
 									<p-calendar class="kDateRangeFirst" #scheduledfrom [(ngModel)]="_scheduledAfter" [showIcon]="true" icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true" [yearNavigator]="true"  yearRange="2005:2030" [readonlyInput]="true" (onSelect)="_onSchedulingChanged(scheduledfrom)"></p-calendar>
 									<p-calendar class="kDateRangeLast kPullLeft80" #scheduledto [(ngModel)]="_scheduledBefore" [showIcon]="true" icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" [readonlyInput]="true" (onSelect)="_onSchedulingChanged(scheduledto)"></p-calendar>
 								</div>
+								<span *ngIf="_scheduledSelected && _scheduledFilterError" class="kError">{{_scheduledFilterError}}</span>
 							</div>
 						</div>
 					</template>
@@ -35,4 +37,5 @@
 			<a class="kClose" (click)="_close()">{{'applications.content.filters.close' | translate}}</a>
 		</p>
 	</div>
-</kLoader>
+</k-area-blocker>
+

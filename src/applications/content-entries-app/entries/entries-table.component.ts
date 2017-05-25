@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter,	ViewChild, AfterViewInit, OnIni
 import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 import { KalturaMediaType, KalturaEntryStatus, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 import { EntriesStore } from "./entries-store/entries-store.service";
 
@@ -12,7 +13,7 @@ import { EntriesStore } from "./entries-store/entries-store.service";
 })
 export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
-	public _loadingError = null;
+	public _blockerMessage: AreaBlockerMessage = null;
 
 	private _entries: any[] = [];
 	@Input() set entries(data: any[]) {
@@ -51,19 +52,27 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
 
 	ngOnInit() {
+		this._blockerMessage = null;
 		this.entriesStoreStatusSubscription = this.entriesStore.state$.subscribe(
 			result => {
 				if (result.errorMessage) {
-					this._loadingError = {message: result.errorMessage, buttons: {retry: 'Retry'}};
+					this._blockerMessage = new AreaBlockerMessage({
+						message: result.errorMessage || "Error loading entries",
+						buttons: [{
+							label: 'Retry',
+							action: () => {
+								this.entriesStore.reload(true);
+							}}
+						]
+					})
 				} else {
-					this._loadingError = null;
+					this._blockerMessage = null;
 				}
 			},
 			error => {
 				console.warn("[kmcng] -> could not load entries"); //navigate to error page
 				throw error;
 			});
-
 	}
 
 	ngOnDestroy() {
@@ -113,12 +122,6 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 				this._viewLoaded = true;
 				this._entriesProvider = this._entries;
 			}, 0);
-		}
-	}
-
-	onLoadingAction(actionKey: string) {
-		if (actionKey === 'retry') {
-			this.entriesStore.reload(true);
 		}
 	}
 

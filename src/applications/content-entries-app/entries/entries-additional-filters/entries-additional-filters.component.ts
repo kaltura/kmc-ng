@@ -62,8 +62,10 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     public _primeGroups : { groupName : string, groupTypes : string[], items : PrimeTreeNode[] }[] = [];
     public _createdAfter: Date;
     public _createdBefore: Date;
+	public _createdFilterError: string = null;
     public _scheduledAfter: Date;
     public _scheduledBefore: Date;
+	public _scheduledFilterError: string = null;
     public _scheduledSelected : boolean = false;
     public _treeSelectionModes = TreeSelectionModes; // expose enum to be used in the template
 
@@ -355,6 +357,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
      */
     private syncSchedulingFilters() : boolean
     {
+	    this._scheduledFilterError = null;
         if (this._scheduledBefore && this._scheduledAfter) {
             const isValid = this._scheduledAfter <= this._scheduledBefore;
 
@@ -363,7 +366,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                 // TODO [kmcng] replace with dialog
                 setTimeout(this.syncScheduledComponents.bind(this),0);
 
-                window.alert("'From Date' must be before 'To Date'");
+                this._scheduledFilterError = this.appLocalization.get('applications.content.entryDetails.errors.schedulingError');
                 return false;
             }
         }
@@ -390,6 +393,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
      */
     private syncCreatedFilters()
     {
+	    this._createdFilterError = null;
         if (this._createdBefore && this._createdAfter) {
             const isValid = this._createdAfter <= this._createdBefore;
 
@@ -398,7 +402,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                 // TODO [kmcng] replace with dialog
                 setTimeout(this.syncCreatedComponents.bind(this),0);
 
-                window.alert("'From Date' must be before 'To Date'");
+                this._createdFilterError = this.appLocalization.get('applications.content.entryDetails.errors.schedulingError');
                 return;
             }
         }
@@ -429,6 +433,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
      * Not part of the API, don't use it from outside this component
      */
     public _clearAllComponents() : void {
+	    this._scheduledFilterError = null;
         this._treeSelections.forEach(tree =>
         {
             tree.unselectAll();
@@ -495,12 +500,12 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
      */
     public _onSchedulingChanged(calendarRef : any) : void
     {
-        if (this.syncSchedulingFilters())
-        {
-            if (calendarRef && calendarRef.overlayVisible){
-                calendarRef.overlayVisible = false;
-            }
+        this.syncSchedulingFilters();
+
+        if (calendarRef && calendarRef.overlayVisible){
+            calendarRef.overlayVisible = false;
         }
+
     }
 
     /**
@@ -534,10 +539,12 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                 args.removed.forEach((node: PrimeTreeNode) => {
                     if (node instanceof PrimeTreeNode) {
                         const filter = this._getFilterOfSelectedNode(node);
-
                         if (filter)
                         {
                             removedFilters.push(filter);
+	                        if (node.data === "scheduled"){
+		                        this._scheduledFilterError = null;
+	                        }
                         }
                     }
                 });

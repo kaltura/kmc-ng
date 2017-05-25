@@ -1,7 +1,10 @@
 import { Component, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ISubscription } from 'rxjs/Subscription';
+import { ConfirmationService } from 'primeng/primeng';
+
 import { KalturaAttachmentAsset } from 'kaltura-typescript-client/types/all';
+import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
@@ -19,7 +22,7 @@ export class EntryRelatedEdit implements  AfterViewInit, OnDestroy{
 	private _parentPopupStateChangeSubscribe : ISubscription;
 	private _confirmClose: boolean = true;
 
-    constructor(private _fb: FormBuilder) {
+    constructor(private _appLocalization: AppLocalization, private _fb: FormBuilder, private _confirmationService: ConfirmationService) {
 	    this._createForm();
     }
 
@@ -33,11 +36,19 @@ export class EntryRelatedEdit implements  AfterViewInit, OnDestroy{
 						this.relatedEditForm.get("title").setValue(this.currentFile.title);
 						this.relatedEditForm.get("description").setValue(this.currentFile.partnerDescription);
 					}
-					if (event.state === PopupWidgetStates.Close) {
-						if (this.relatedEditForm.dirty && this._confirmClose){
-							alert("Closing without saving data!");
+					if (event.state === PopupWidgetStates.BeforeClose) {
+						if (event.context && event.context.allowClose) {
+							if (this.relatedEditForm.dirty && this._confirmClose) {
+								event.context.allowClose = false;
+								this._confirmationService.confirm({
+									message: this._appLocalization.get('applications.content.entryDetails.captions.discard'),
+									accept: () => {
+										this._confirmClose = false;
+										this.parentPopupWidget.close();
+									}
+								});
+							}
 						}
-
 					}
 				});
 		}

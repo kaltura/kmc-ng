@@ -88,6 +88,7 @@ hr{
 
 		.kDelete{
 			margin-left: 14px;
+			color: $kDandger;
 		}
 		.kDeleteDate{
 			margin-left: 46px;
@@ -113,14 +114,29 @@ hr{
 			button{
 				height: 30px;
 				font-weight: 400;
+				color: $kGrayscale1;
+				background: white;
+				border: 1px solid $kGrayscale4;
+				cursor: pointer;
+				border-radius: 3px;
+				&:focus {
+					outline:0;
+				}
+				&:hover{
+					color: $kPrimary;
+				}
+				&:active:not(:disabled){
+					box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
+				}
 			}
 		}
 		.kDeleteGroup{
-			text-align: right;
-			padding-top: 16px;
-			button{
-				height: 30px;
-				font-weight: 400;
+			text-align: left;
+			padding-left: 162px;
+			padding-top: 8px;
+			padding-bottom: 4px;
+			a{
+				color: $kDandger;
 			}
 		}
 

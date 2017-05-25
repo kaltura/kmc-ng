@@ -8,7 +8,7 @@ import { BaseEntryGetAction } from 'kaltura-typescript-client/types/BaseEntryGet
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/forkJoin';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
+import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 
 @Component({
@@ -41,7 +41,7 @@ export class LinkedEntries implements OnInit, OnDestroy, ControlValueAccessor {
     private onChangeCallback: (_: any) => void = () => void{};
 
     constructor(
-        private _kalturaClient : KalturaClient) {
+        private _kalturaClient : KalturaClient, private _appLocalization: AppLocalization) {
     }
 
     ngOnDestroy() {
@@ -62,9 +62,9 @@ export class LinkedEntries implements OnInit, OnDestroy, ControlValueAccessor {
                     responses => {
                         if (responses.hasErrors()) {
                             this._blockerMessage = new AreaBlockerMessage({
-                                message: 'Error loading entries', buttons: [
+                                message: this._appLocalization.get('applications.content.entryDetails.errors.entriesLoadError'), buttons: [
                                     {
-                                        label: 'Retry',
+                                        label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
                                         action: () => {
                                             this._updateEntries();
                                         }
