@@ -47,11 +47,13 @@ export class EntryRelatedHandler extends EntryFormWidget
 
     private _trackUploadFiles() : void
     {
+	    console.warn("[kmcng] - should track files only when uploading new files");
         this._uploadManagement.trackedFiles
             .cancelOnDestroy(this)
             .subscribe(
                 ((filesStatus : FileChanges) =>
                 {
+	                let uploading = false;
                     this._relatedFiles.getValue().items.forEach(file =>
                     {
                         const uploadToken = (<any>file).uploadToken;
@@ -72,11 +74,16 @@ export class EntryRelatedHandler extends EntryFormWidget
 	                                (<any>file).progress = (filesStatus[uploadToken].progress * 100).toFixed(0);
 	                                (<any>file).uploading = true;
 	                                (<any>file).uploadFailure = false;
+		                            uploading = true;
                                 default:
                                     break;
                             }
                         }
                     });
+
+	                //if (this.isBusy !== uploading) {
+		                super._updateWidgetState({isBusy: uploading});
+	                //}
                 })
             );
     }
@@ -208,6 +215,8 @@ export class EntryRelatedHandler extends EntryFormWidget
 
 		this._relatedFiles.next({items: files});
 
+		this._setDirty();
+
 		return newFile;
 	}
 
@@ -221,6 +230,8 @@ export class EntryRelatedHandler extends EntryFormWidget
 		if (file.id && this.relatedFileDiffer[file.id]){
 			delete this.relatedFileDiffer[file.id];
 		}
+
+		this._setDirty();
 	}
 
 	private _openFile(fileId: string, operation: string): void {
@@ -250,6 +261,7 @@ export class EntryRelatedHandler extends EntryFormWidget
 
 	public _onFileSelected(selectedFiles: FileList) {
 		if (selectedFiles && selectedFiles.length) {
+
 			const fileData: File = selectedFiles[0];
 
 			const newFile = this._addFile(fileData.name, KalturaAttachmentType.document);
@@ -298,5 +310,9 @@ export class EntryRelatedHandler extends EntryFormWidget
 				break;
 		}
 		return format;
+	}
+
+	public _setDirty(){
+		super._updateWidgetState({isDirty: true});
 	}
 }

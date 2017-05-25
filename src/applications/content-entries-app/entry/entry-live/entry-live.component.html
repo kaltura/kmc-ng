@@ -97,14 +97,14 @@
 				<div *ngFor="let bitrate of _handler._bitrates; let i = index">
 					<div class="kRow">
 						<span class="kLiveNumber">{{i+1}}.</span>
-						<div class="kLiveBitrateCB"><p-checkbox binary="true" [(ngModel)]="bitrate.enabled" (onChange)="_handler._validateBitrates($event)"></p-checkbox></div>
+						<div class="kLiveBitrateCB"><p-checkbox binary="true" [(ngModel)]="bitrate.enabled" (onChange)="_handler._validateBitrates({updateDirtyMode : true})"></p-checkbox></div>
 						<div class="kLiveBitrate">
-							<p-dropdown [options]="_handler._availableBitrates" [disabled]="!bitrate.enabled" [(ngModel)]="bitrate.bitrate" (onChange)="_handler._validateBitrates()" [placeholder]="'applications.content.entryDetails.live.selectBitrate' | translate"></p-dropdown>
+							<p-dropdown [options]="_handler._availableBitrates" [disabled]="!bitrate.enabled" [(ngModel)]="bitrate.bitrate" (onChange)="_handler._validateBitrates({updateDirtyMode : true})" [placeholder]="'applications.content.entryDetails.live.selectBitrate' | translate"></p-dropdown>
 							<span class="kLiveBitrate kLiveKbps"> Kbps</span>
 						</div>
-						<div class="kLiveWidth"><p-spinner size="5" [min]="0" [max]="9999" [disabled]="!bitrate.enabled" [(ngModel)]="bitrate.width" (onChange)="_handler._validateBitrates()"></p-spinner></div>
+						<div class="kLiveWidth"><p-spinner size="5" [min]="0" [max]="9999" [disabled]="!bitrate.enabled" [(ngModel)]="bitrate.width" (onChange)="_handler._validateBitrates({updateDirtyMode : true})"></p-spinner></div>
 						<span class="kLiveX">x</span>
-						<div class="kLiveHeight"><p-spinner size="5" [min]="0" [max]="9999" [disabled]="!bitrate.enabled" [(ngModel)]="bitrate.height" (onChange)="_handler._validateBitrates()"></p-spinner></div>
+						<div class="kLiveHeight"><p-spinner size="5" [min]="0" [max]="9999" [disabled]="!bitrate.enabled" [(ngModel)]="bitrate.height" (onChange)="_handler._validateBitrates({updateDirtyMode : true})"></p-spinner></div>
 
 					</div>
 					<span *ngIf="bitrate.errors?.length" class="kError">{{bitrate.errors}}</span>

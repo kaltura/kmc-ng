@@ -50,11 +50,13 @@ export class EntryCaptionsHandler extends EntryFormWidget
 
 	private _trackUploadFiles() : void
 	{
+		console.warn("[kmcng] - should track files only when uploading new files");
 		this._uploadManagement.trackedFiles
 			.cancelOnDestroy(this)
 			.subscribe(
 				((filesStatus : FileChanges) =>
 				{
+					let uploading = false;
 					this._captions.getValue().items.forEach(file =>
 					{
 						const uploadToken = (<any>file).uploadToken;
@@ -76,12 +78,16 @@ export class EntryCaptionsHandler extends EntryFormWidget
 									if (filesStatus[uploadToken].progress<1) {
 										(<any>file).uploading = true;
 										(<any>file).uploadFailure = false;
+										uploading = true;
 									}
 								default:
 									break;
 							}
 						}
 					});
+					//if (this.isBusy !== uploading) {
+						super._updateWidgetState({isBusy: uploading});
+					//}
 				})
 			);
 	}
@@ -145,6 +151,7 @@ export class EntryCaptionsHandler extends EntryFormWidget
 		   caption.isDefault = caption.id === captionId ? 1 : 0;
 	    });
 	    this._captions.next({items : captions});
+	    this.setDirty();
     }
 
     public _getCaptionType(captionFormat: KalturaCaptionType): string{
@@ -224,6 +231,7 @@ export class EntryCaptionsHandler extends EntryFormWidget
 		if (this.currentCaption.id && this.captionDiffer[this.currentCaption.id]){
 			delete this.captionDiffer[this.currentCaption.id];
 		}
+		this.setDirty();
 	}
 
 	// cleanup of added captions that don't have assets (url or uploaded file)
@@ -308,6 +316,10 @@ export class EntryCaptionsHandler extends EntryFormWidget
 				}
 			});
 		}
+	}
+
+	public setDirty(){
+		super._updateWidgetState({isDirty: true});
 	}
 
 }
