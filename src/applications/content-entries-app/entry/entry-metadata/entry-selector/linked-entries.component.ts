@@ -18,7 +18,7 @@ import { AppLocalization } from '@kaltura-ng2/kaltura-common';
     providers : [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => LinkedEntries),
+            useExisting: LinkedEntries,
             multi: true
         }
     ]
