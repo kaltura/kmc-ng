@@ -81,9 +81,9 @@ export class EntryRelatedHandler extends EntryFormWidget
                         }
                     });
 
-	                //if (this.isBusy !== uploading) {
+	                if (this.isBusy !== uploading) {
 		                super._updateWidgetState({isBusy: uploading});
-	                //}
+	                }
                 })
             );
     }

@@ -17,6 +17,7 @@ import { MetadataListAction, KalturaMetadataFilter, KalturaMetadata, MetadataUpd
 import { KalturaCustomDataHandler } from '@kaltura-ng2/kaltura-ui/dynamic-form/kaltura-custom-metadata';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import 'rxjs/add/observable/forkJoin';
+import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
 
 
@@ -53,16 +54,35 @@ export class EntryMetadataHandler extends EntryFormWidget
             referenceId: '',
             entriesIdList: null
         });
+    }
 
-        Observable.merge(this.metadataForm.valueChanges,
-            this.metadataForm.statusChanges)
-            .cancelOnDestroy(this)
+    private _monitorFormChanges() {
+        const formGroups = [this.metadataForm, ...this.customDataForms.map(customDataForm => customDataForm.formGroup)];
+        const formsChanges: Observable<any>[] = [];
+
+        formGroups.forEach(formGroup => {
+            formsChanges.push(formGroup.valueChanges, formGroup.statusChanges);
+        });
+
+        Observable.merge(...formsChanges)
+            .cancelOnDestroy(this, this.widgetReset$)
             .subscribe(
                 () => {
-                    super._updateWidgetState({
-                        isValid: this.metadataForm.status === 'VALID',
-                        isDirty: this.metadataForm.dirty
+                    let isValid = true;
+                    let isDirty = false;
+
+                    formGroups.forEach(formGroup => {
+                        isValid = isValid || formGroup.status === 'VALID';
+                        isDirty = isDirty || formGroup.dirty;
+
                     });
+
+                    if (this.isDirty !== isDirty || this.isValid !== isValid) {
+                        super._updateWidgetState({
+                            isValid: isValid,
+                            isDirty: isDirty
+                        });
+                    }
                 }
             );
     }
@@ -97,8 +117,16 @@ export class EntryMetadataHandler extends EntryFormWidget
                     super._showActivationError();
                     return {failed: true};
                 } else {
-                    this._syncHandlerContent();
-                    return {failed: false};
+                    try {
+                        // the sync function is dealing with dynamically created forms so mistakes can happen
+                        // as result of undesired metadata schema.
+                        this._syncHandlerContent();
+                        return {failed: false};
+                    }catch(e)
+                    {
+                        super._showActivationError();
+                        return {failed: true,error : e};
+                    }
                 }
             });
     }
@@ -136,6 +164,8 @@ export class EntryMetadataHandler extends EntryFormWidget
                 customDataForm.resetForm(entryMetadata);
             });
         }
+
+        this._monitorFormChanges();
     }
 
     private _loadEntryMetadata(entry : KalturaMediaEntry) : Observable<{failed : boolean, error? : Error}> {
@@ -204,24 +234,20 @@ export class EntryMetadataHandler extends EntryFormWidget
             .monitor('load metadata profiles')
             .do(response => {
 
-                    this.customDataForms = [];
-                    if (response.items) {
-                        response.items.forEach(serverMetadata => {
-                            const newCustomDataForm = this._kalturaCustomMetadata.createHandler(serverMetadata);
-
-
-                            this.customDataForms.push(newCustomDataForm);
-                        });
-                    }
+                this.customDataForms = [];
+                if (response.items) {
+                    response.items.forEach(serverMetadata => {
+                        const newCustomDataForm = this._kalturaCustomMetadata.createHandler(serverMetadata);
+                        this.customDataForms.push(newCustomDataForm);
+                    });
+                }
             })
-            .map(response => ({failed : false}))
-            .catch((error,caught) => Observable.of({failed: true, error}));
+            .map(response => ({failed: false}))
+            .catch((error, caught) => Observable.of({failed: true, error}));
     }
 
     protected _onDataSaving(newData : KalturaMediaEntry, request : KalturaMultiRequest) : void
     {
-
-
 
 	    const metadataFormValue = this.metadataForm.value;
 
