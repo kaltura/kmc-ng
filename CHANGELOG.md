@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.0"></a>
+# [2.1.0](https://github.com/kaltura/KMCng/compare/v2.0.1...v2.1.0) (2017-05-28)
+
+
+### Bug Fixes
+
+* move files in content entries app ([9b398bc](https://github.com/kaltura/KMCng/commit/9b398bc))
+* **content - entries:** Additional Filters: filters names are not listed as in the same order as in legacy KMC ([b7857dc](https://github.com/kaltura/KMCng/commit/b7857dc))
+* **content - entry:** Style fixes for floaters ([9cce3f0](https://github.com/kaltura/KMCng/commit/9cce3f0))
+* **content - entry:** Universal live - set the section global validation status when validating bitrate changes ([7f9025e](https://github.com/kaltura/KMCng/commit/7f9025e))
+* **content - entry:** Universal live - set the section global validation status when validating bitrate changes ([71fe181](https://github.com/kaltura/KMCng/commit/71fe181))
+* **content-entries:** Additional Filters: Creation filter tooltip fix ("From" instead of "After", "Until" instead of "Before") ([971c50d](https://github.com/kaltura/KMCng/commit/971c50d))
+* **content-entries:** Additional Filters: Make sure scheduling filter allows setting custom scheduling along with other scheduling filter types ([7396e59](https://github.com/kaltura/KMCng/commit/7396e59))
+* **content-entry:** Metadata tab - custom metadata style fixes ([a4c5160](https://github.com/kaltura/KMCng/commit/a4c5160))
+
+
+### Features
+
+* add linked entries ([c373541](https://github.com/kaltura/KMCng/commit/c373541))
+* **content - entry:** Add last update field display in the entry preview panel ([e12477e](https://github.com/kaltura/KMCng/commit/e12477e))
+* **content-entries / entry:** notify user before leaving entry details without saving changed data ([eb5a5a2](https://github.com/kaltura/KMCng/commit/eb5a5a2))
+* **content-entries / entry:** use category selector popup to select/unselect entry categories in  entry metadata section ([8fd4035](https://github.com/kaltura/KMCng/commit/8fd4035))
+* **content-entries/entry:** show linked entries component in entry metadata schema and allow delete/reorder of entries ([52ebefc](https://github.com/kaltura/KMCng/commit/52ebefc))
+* **shell:** enable and disable page leave verification + custom message (for supporting browsers) ([706bd18](https://github.com/kaltura/KMCng/commit/706bd18))
+
+
+
 <a name="2.0.1"></a>
 ## [2.0.1](https://github.com/kaltura/KMCng/compare/v2.0.0...v2.0.1) (2017-05-16)
 
