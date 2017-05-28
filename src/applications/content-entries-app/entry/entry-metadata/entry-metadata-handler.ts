@@ -87,6 +87,13 @@ export class EntryMetadataHandler extends EntryFormWidget
             );
     }
 
+    public setDirty()
+    {
+	    super._updateWidgetState({
+		    isDirty: true
+	    });
+    }
+
     protected _onActivate(firstTimeActivating : boolean) : Observable<{failed : boolean}> {
 
         super._showLoader();
