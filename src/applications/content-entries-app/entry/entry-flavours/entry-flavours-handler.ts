@@ -64,10 +64,12 @@ export class EntryFlavoursHandler extends EntryFormWidget
         return this._fetchFlavors('activation', true);
     }
 
-    public _fetchFlavors(origin: 'activation' | 'reload' , reset: boolean = true): Observable<{ failed: boolean, error?: Error }>{
+    public _fetchFlavors(origin: 'activation' | 'reload' , reset: boolean = true, showLoader: boolean = true): Observable<{ failed: boolean, error?: Error }>{
 	    return Observable.create(observer =>
 	    {
-		    super._showLoader();
+		    if (showLoader) {
+			    super._showLoader();
+		    }
 		    if (reset) {
 			    this._flavors.next({items: []});
 		    }
@@ -338,7 +340,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 		.subscribe(
 			response =>
 			{
-				this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
+				this._fetchFlavors('reload', false, false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 				{
 					// do nothing
 				});
