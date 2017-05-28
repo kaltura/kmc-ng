@@ -14,7 +14,7 @@
 				</p-column>
 				<p-column field="size" header="{{'applications.content.entryDetails.related.size' | translate}}">
 					<template let-col let-file="rowData" pTemplate="body">
-						<span>{{file[col.field] | fileSize}}</span>
+						<span>{{file[col.field] | kFileSize}}</span>
 					</template>
 				</p-column>
 				<p-column field="id" header="{{'applications.content.entryDetails.related.assetId' | translate}}">

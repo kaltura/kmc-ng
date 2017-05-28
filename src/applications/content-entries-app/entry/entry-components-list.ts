@@ -17,7 +17,6 @@ import { EntrySectionsList } from "./entry-sections-list/entry-sections-list.com
 import { EntryComponent } from './entry.component';
 import { EntryPreview } from './entry-preview/entry-preview.component';
 import { JumpToSection } from './entry-metadata/jump-to-section.component';
-import { FileSizePipe } from './pipes/file-size.pipe';
 import { ModerationPipe } from './pipes/moderation.pipe';
 import { LinkedEntries } from './entry-metadata/entry-selector/linked-entries.component';
 import { LinkedEntriesPopup } from './entry-metadata/entry-selector/linked-entries-popup.component';
@@ -42,7 +41,6 @@ export const EntryComponentsList = [
     EntrySectionsList,
     EntryThumbnails,
     EntryUsers,
-    FileSizePipe,
     FlavorImport,
     FlavorPreview,
     JumpToSection,

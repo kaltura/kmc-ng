@@ -17,7 +17,7 @@
 				</p-column>
 				<p-column field="size" header="{{'applications.content.entryDetails.thumbnails.size' | translate}}">
 					<template let-col let-thumb="rowData" pTemplate="body">
-						<span>{{thumb[col.field] | fileSize}}</span>
+						<span>{{thumb[col.field] | kFileSize}}</span>
 					</template>
 				</p-column>
 				<p-column field="distributors" header="{{'applications.content.entryDetails.thumbnails.distributors' | translate}}">
