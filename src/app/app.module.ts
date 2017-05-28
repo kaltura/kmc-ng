@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
 import { CommonModule } from '@angular/common';
 import { Ng2Webstorage } from 'ng2-webstorage';
+
 
 import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType, KalturaCommonModule, AppStorage } from '@kaltura-ng2/kaltura-common';
 import {  KalturaClientModule } from '@kaltura-ng/kaltura-client';
@@ -37,6 +39,7 @@ const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessCo
 @NgModule({
   imports: <any>[
     BrowserModule,
+    BrowserAnimationsModule,
     ButtonModule,
     CommonModule,
     ConfirmDialogModule,
