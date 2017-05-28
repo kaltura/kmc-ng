@@ -24,7 +24,7 @@ function datesValidation(checkRequired: boolean = false): ValidatorFn {
 			}
 		}
 
-		if (startDate && endDate && startDate > endDate){
+		if (scheduling === "scheduled" && startDate && endDate && startDate > endDate){
 			return { 'endDateBeforeStartDate': true };
 		}
 
