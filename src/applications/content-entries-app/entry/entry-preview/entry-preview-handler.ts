@@ -31,11 +31,13 @@ export class EntryPreviewHandler extends EntryFormWidget
      */
     protected _onReset()
     {
-        this._landingPage = null;
-        this.iframeSrc = null;
+
     }
 
     protected _onDataLoading(dataId : any) {
+	    this._landingPage = null;
+	    this.iframeSrc = null;
+
         const landingPage = this.appAuthentication.appUser.partnerInfo.landingPage;
         if (landingPage) {
             landingPage.replace("{entryId}", dataId);

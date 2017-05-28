@@ -116,7 +116,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 									    {
 										    label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
 										    action: () => {
-											    this._fetchFlavors('reload', reset).subscribe(() =>
+											    this._fetchFlavors('reload', reset).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 											    {
 												    // do nothing
 											    });
@@ -242,7 +242,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 					    {
 						    super._hideLoader();
 						    this._msgs.push({severity: 'success', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteSuccess')});
-						    this._fetchFlavors('reload', false).subscribe(() =>
+						    this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 						    {
 							    // do nothing
 						    });
@@ -298,7 +298,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 				error =>
 				{
 					this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure')});
-					this._fetchFlavors('reload', false).subscribe(() =>
+					this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 					{
 						// reload flavors as we need to get the flavor status from the server
 					});
@@ -321,7 +321,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 			},
 			(error) => {
 				this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
-				this._fetchFlavors('reload', false).subscribe(() =>
+				this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 				{
 					// reload flavors as we need to get the flavor status from the server
 				});
@@ -338,7 +338,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 		.subscribe(
 			response =>
 			{
-				this._fetchFlavors('reload', false).subscribe(() =>
+				this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 				{
 					// do nothing
 				});
@@ -346,7 +346,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 			error =>
 			{
 				this._msgs.push({severity: 'error',	summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
-				this._fetchFlavors('reload', false).subscribe(() =>
+				this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 				{
 					// do nothing
 				});
@@ -371,7 +371,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 			error =>
 			{
 				this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
-				this._fetchFlavors('reload', false).subscribe(() =>
+				this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 				{
 					// reload flavors as we need to get the flavor status from the server
 				});
@@ -392,7 +392,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 	}
 
 	public _refresh(){
-		this._fetchFlavors('reload', false).subscribe(() =>
+		this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 		{
 			// reload flavors on refresh
 		});

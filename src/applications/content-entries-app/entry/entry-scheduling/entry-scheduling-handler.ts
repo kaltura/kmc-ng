@@ -48,9 +48,7 @@ export class EntrySchedulingHandler extends EntryFormWidget
     }
 
 	protected _onActivate(firstTimeActivating: boolean): void {
-    	if (firstTimeActivating) {
-			this._resetForm();
-		}
+		this._syncForm();
 		this.setValidators(false);
 	}
 
@@ -76,7 +74,7 @@ export class EntrySchedulingHandler extends EntryFormWidget
 		}
 	}
 
-	private _resetForm(){
+	private _syncForm(){
 		let scheduleSettings = "anytime";
 		let startDate = null;
 		let endDate = null;
@@ -189,7 +187,5 @@ export class EntrySchedulingHandler extends EntryFormWidget
 	protected _onReset()
 	{
 		this.schedulingForm.reset();
-		this.setValidators(false);
-		this.schedulingForm.updateValueAndValidity();
 	}
 }
