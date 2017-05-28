@@ -52,7 +52,7 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 	    this._searchCategories.forEach(category => { this.searchCategories.push(category)});
 
 	    if (this.parentPopupWidget){
-		    this.parentPopupWidget.close();
+		    this.parentPopupWidget.close({isDirty: true});
 	    }
     }
 

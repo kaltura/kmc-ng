@@ -3,6 +3,7 @@ import { DOCUMENT } from '@angular/platform-browser';
 
 import { Subject } from 'rxjs/Subject';
 import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
 import { MenuItem } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
@@ -24,7 +25,9 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
     public _tagsProvider = new Subject<SuggestionsProviderData>();
 	public _jumpToMenu: MenuItem[] = [];
-   @ViewChildren(JumpToSection) private _jumpToSectionQuery : QueryList<JumpToSection> = null;
+	@ViewChild('categoriesPopup') public categoriesPopup: PopupWidgetComponent;
+	private _popupStateChangeSubscribe: ISubscription;
+    @ViewChildren(JumpToSection) private _jumpToSectionQuery : QueryList<JumpToSection> = null;
 
 	@ViewChild('metadataContainer')
 	public _container : ElementRef;
@@ -104,6 +107,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         this._categoriesProvider.complete();
         this._searchTagsSubscription && this._searchTagsSubscription.unsubscribe();
         this._searchCategoriesSubscription && this._searchCategoriesSubscription.unsubscribe();
+	    this._popupStateChangeSubscribe && this._popupStateChangeSubscribe.unsubscribe();
 
         this._entryFormManager.detachWidget(this._handler);
     }
@@ -130,6 +134,20 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     }
 
     ngAfterViewInit() {
+
+	    if (this.categoriesPopup) {
+		    this._popupStateChangeSubscribe = this.categoriesPopup.state$
+			    .subscribe(event => {
+				    if (event.state === PopupWidgetStates.Close) {
+					    if (event.context && event.context.isDirty){
+						    this._handler._updateWidgetState({
+							    isDirty: event.context.isDirty
+						    });
+					    }
+				    }
+			    });
+	    }
+
         this._jumpToSectionQuery.changes
             .cancelOnDestroy(this)
             .subscribe((query) => {
