@@ -140,9 +140,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 			    .subscribe(event => {
 				    if (event.state === PopupWidgetStates.Close) {
 					    if (event.context && event.context.isDirty){
-						    this._handler._updateWidgetState({
-							    isDirty: event.context.isDirty
-						    });
+						   this._handler.setDirty();
 					    }
 				    }
 			    });
