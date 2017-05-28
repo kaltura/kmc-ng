@@ -1,6 +1,6 @@
-import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { Component, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
 import { EntrySchedulingHandler } from './entry-scheduling-handler';
+import { EntryFormManager } from '../entry-form-manager';
 
 @Component({
     selector: 'kEntryScheduling',
@@ -13,16 +13,18 @@ export class EntryScheduling implements AfterViewInit, OnInit, OnDestroy {
     public _loadingError = null;
 
 	_enableEndDate: boolean;
+    public _handler : EntrySchedulingHandler;
 
-    constructor(private _appLocalization: AppLocalization, public _handler : EntrySchedulingHandler) {
+    constructor(private _entryFormManager : EntryFormManager) {
     }
 
 
     ngOnInit() {
-
+        this._handler = this._entryFormManager.attachWidget(EntrySchedulingHandler);
     }
 
     ngOnDestroy() {
+        this._entryFormManager.detachWidget(this._handler);
     }
 
 

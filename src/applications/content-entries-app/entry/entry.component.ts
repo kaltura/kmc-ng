@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/all';
 import { BrowserService } from 'kmc-shell';
 import { EntryStore, ActionTypes } from './entry-store.service';
@@ -15,8 +15,9 @@ import { EntryThumbnailsHandler } from './entry-thumbnails/entry-thumbnails-hand
 import { EntrySchedulingHandler } from './entry-scheduling/entry-scheduling-handler';
 import { EntryUsersHandler } from './entry-users/entry-users-handler';
 import { EntriesStore } from '../entries/entries-store/entries-store.service';
-import { EntrySectionsManager } from './entry-sections-manager';
+import { EntryFormManager } from './entry-form-manager';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng2/kaltura-ui';
+import { EntryFormWidget } from './entry-form-widget';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 @Component({
@@ -25,19 +26,67 @@ import { AppLocalization } from '@kaltura-ng2/kaltura-common';
     styleUrls: ['./entry.component.scss'],
 	providers : [
 		EntryStore,
-		EntrySectionsManager,
-		EntrySectionsListHandler,
-		EntryPreviewHandler,
-		EntryMetadataHandler,
-		EntryAccessControlHandler,
-		EntryCaptionsHandler,
-		EntryClipsHandler,
-		EntryFlavoursHandler,
-		EntryLiveHandler,
-		EntryRelatedHandler,
-		EntrySchedulingHandler,
-		EntryThumbnailsHandler,
-		EntryUsersHandler
+		EntryFormManager,
+		{
+			provide: EntryFormWidget,
+			useClass: EntrySectionsListHandler,
+			multi: true
+		},
+		{
+			provide: EntryFormWidget,
+			useClass: EntryUsersHandler,
+			multi: true
+		},
+		{
+			provide: EntryFormWidget,
+			useClass: EntryThumbnailsHandler,
+			multi: true
+		},
+		{
+			provide: EntryFormWidget,
+			useClass: EntrySchedulingHandler,
+			multi: true
+		},
+		{
+			provide: EntryFormWidget,
+			useClass: EntryRelatedHandler,
+			multi: true
+		},
+		{
+			provide: EntryFormWidget,
+			useClass: EntryFlavoursHandler,
+			multi: true
+		},
+		{
+			provide: EntryFormWidget,
+			useClass: EntryLiveHandler,
+			multi: true
+		},
+		{
+			provide: EntryFormWidget,
+			useClass: EntryClipsHandler,
+			multi: true
+		},
+		{
+			provide: EntryFormWidget,
+			useClass: EntryCaptionsHandler,
+			multi: true
+		},
+		{
+			provide: EntryFormWidget,
+			useClass: EntryAccessControlHandler,
+			multi: true
+		},
+		{
+			provide: EntryFormWidget,
+			useClass: EntryMetadataHandler,
+			multi: true
+		},
+		{
+			provide: EntryFormWidget,
+			useClass: EntryPreviewHandler,
+			multi: true
+		}
 	]
 })
 export class EntryComponent implements OnInit, OnDestroy {
@@ -50,12 +99,15 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _currentEntryId: string;
 	public _enablePrevButton: boolean;
 	public _enableNextButton: boolean;
+	public _entryHasChanges : boolean;
 
 	public isSafari: boolean = false; // used for Safari specific styling
 
 	constructor(public _entryStore: EntryStore,
-				private _entriesStore: EntriesStore,
+				private  _entriesStore: EntriesStore,
+				private _entryFormManager : EntryFormManager,
 				private _browserService: BrowserService,
+				@Inject(EntryFormWidget)private  _widgets : EntryFormWidget[],
 				private _appLocalization: AppLocalization) {
 	}
 
@@ -77,6 +129,9 @@ export class EntryComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+
+		this._entryFormManager.registerWidgets(this._widgets);
+
 		this.isSafari = this._browserService.isSafari();
 
 		this._entryStore.state$
@@ -97,14 +152,17 @@ export class EntryComponent implements OnInit, OnDestroy {
 								// while 'entry$' stream is null
 								this._currentEntryId = this._entryStore.entryId;
 								this._updateNavigationState();
+								this._entryHasChanges = false;
 								break;
 							case ActionTypes.EntryLoaded:
 								this._entryName = this._entryStore.entry.name;
 								this._entryType = this._entryStore.entry.mediaType;
 								break;
 							case ActionTypes.EntryLoadingFailed:
+								let message = status.error ? status.error.message : '';
+								message = message || this._appLocalization.get('applications.content.errors.loadError');
 								this._areaBlockerMessage = new AreaBlockerMessage({
-									message: status.error.message,
+									message: message,
 									buttons: [
 										this._createBackToEntriesButton(),
 										{

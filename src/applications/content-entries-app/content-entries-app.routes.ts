@@ -5,7 +5,7 @@ import { EntriesListComponent } from './entries/entries-list.component';
 import { EntryComponent } from './entry/entry.component';
 import { EntryMetadata } from "./entry/entry-metadata/entry-metadata.component";
 import { EntryUsers } from "./entry/entry-users/entry-users.component";
-import { EntrySectionTypes } from './entry/entry-sections-types';
+import { EntryWidgetKeys } from './entry/entry-widget-keys';
 import { EntryClips } from './entry/entry-clips/entry-clips.component';
 import { EntryRelated } from './entry/entry-related/entry-related.component';
 import { EntryLive } from './entry/entry-live/entry-live.component';
@@ -26,16 +26,16 @@ export const routing: Route[] = [
 				},
 				children : [
 					{path: '', redirectTo: 'metadata', pathMatch: 'full'},
-					{ path: 'metadata', component: EntryMetadata, data : { sectionType : EntrySectionTypes.Metadata } },
-					{ path: 'thumbnails', component: EntryThumbnails, data : { sectionType : EntrySectionTypes.Thumbnails } },
-					{ path: 'accesscontrol', component: EntryAccessControl, data : { sectionType : EntrySectionTypes.AccessControl } },
-					{ path: 'scheduling', component: EntryScheduling, data : { sectionType : EntrySectionTypes.Scheduling } },
-					{ path: 'flavours', component: EntryFlavours, data : { sectionType : EntrySectionTypes.Flavours } },
-					{ path: 'captions', component: EntryCaptions, data : { sectionType : EntrySectionTypes.Captions } },
-					{ path: 'live', component: EntryLive, data : { sectionType : EntrySectionTypes.Live } },
-					{ path: 'related', component: EntryRelated, data : { sectionType : EntrySectionTypes.Related } },
-					{ path: 'clips', component: EntryClips, data : { sectionType : EntrySectionTypes.Clips } },
-					{ path: 'users', component: EntryUsers, data : { sectionType : EntrySectionTypes.Users } }
+					{ path: 'metadata', component: EntryMetadata, data : { sectionKey : EntryWidgetKeys.Metadata } },
+					{ path: 'thumbnails', component: EntryThumbnails, data : { sectionKey : EntryWidgetKeys.Thumbnails } },
+					{ path: 'accesscontrol', component: EntryAccessControl, data : { sectionKey : EntryWidgetKeys.AccessControl } },
+					{ path: 'scheduling', component: EntryScheduling, data : { sectionKey : EntryWidgetKeys.Scheduling } },
+					{ path: 'flavours', component: EntryFlavours, data : { sectionKey : EntryWidgetKeys.Flavours } },
+					{ path: 'captions', component: EntryCaptions, data : { sectionKey : EntryWidgetKeys.Captions } },
+					{ path: 'live', component: EntryLive, data : { sectionKey : EntryWidgetKeys.Live } },
+					{ path: 'related', component: EntryRelated, data : { sectionKey : EntryWidgetKeys.Related } },
+					{ path: 'clips', component: EntryClips, data : { sectionKey : EntryWidgetKeys.Clips } },
+					{ path: 'users', component: EntryUsers, data : { sectionKey : EntryWidgetKeys.Users } }
 				]
 			}
 	]},

@@ -1,6 +1,5 @@
 import { Component, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-
 import { ISubscription } from 'rxjs/Subscription';
 import { ConfirmationService } from 'primeng/primeng';
 
@@ -60,12 +59,14 @@ export class EntryRelatedEdit implements  AfterViewInit, OnDestroy{
 	}
 
 	public _saveAndClose(): void{
+		this._confirmClose = false;
 		if (this.relatedEditForm.dirty){
 			this.currentFile.title = this.relatedEditForm.get("title").value;
 			this.currentFile.partnerDescription = this.relatedEditForm.get("description").value;
+			this.parentPopupWidget.close({dataChanged: true});
+		}else{
+			this.parentPopupWidget.close();
 		}
-		this._confirmClose = false;
-		this.parentPopupWidget.close();
 	}
 
 

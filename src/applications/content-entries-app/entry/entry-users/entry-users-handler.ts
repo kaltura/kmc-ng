@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { EntrySection } from '../entry-section-handler';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { EntryFormWidget } from '../entry-form-widget';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
-import { EntrySectionTypes } from '../entry-sections-types';
+import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { KalturaUser, UserGetAction, UserListAction, KalturaUserFilter, KalturaFilterPager, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
-import { EntrySectionsManager } from '../entry-sections-manager';
 
 import 'rxjs/add/observable/forkJoin';
 
 @Injectable()
-export class EntryUsersHandler extends EntrySection
+export class EntryUsersHandler extends EntryFormWidget
 {
 
     public _creator: string = "";
@@ -20,9 +19,9 @@ export class EntryUsersHandler extends EntrySection
 
 	public usersForm : FormGroup;
 
-	constructor(manager : EntrySectionsManager, private _formBuilder : FormBuilder, private _kalturaServerClient: KalturaClient)
+	constructor( private _formBuilder : FormBuilder, private _kalturaServerClient: KalturaClient)
     {
-        super(manager);
+        super(EntryWidgetKeys.Users);
 	    this._buildForm();
     }
 	private _buildForm() : void{
@@ -32,22 +31,18 @@ export class EntryUsersHandler extends EntrySection
 			publishers: []
 		});
 
-		this.usersForm.statusChanges
-			.cancelOnDestroy(this)
-			.subscribe(
-				value =>
-				{
-					super._onSectionStateChanged({isValid : value === 'VALID'});
+		Observable.merge(this.usersForm.valueChanges,
+			this.usersForm.statusChanges)
+            .cancelOnDestroy(this)
+            .subscribe(
+				() => {
+					super._updateWidgetState({
+						isValid: this.usersForm.status === 'VALID',
+						isDirty: this.usersForm.dirty
+					});
 				}
-			)
-
+			);
 	}
-
-
-    public get sectionType() : EntrySectionTypes
-    {
-        return EntrySectionTypes.Users;
-    }
 
 	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest){
 		if (this.usersForm.dirty){
@@ -85,18 +80,18 @@ export class EntryUsersHandler extends EntrySection
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _reset()
+    protected _onReset()
     {
 	    this._creator = "";
 	    this._owner = null;
-	    this.usersForm.setValue({
+	    this.usersForm.reset({
 		    owners: null,
 		    editors: [],
 		    publishers: []
 	    });
     }
 
-    protected _activate(firstLoad : boolean) {
+    protected _onActivate(firstTimeActivating: boolean) {
 
 	    super._showLoader();
 
@@ -106,7 +101,7 @@ export class EntryUsersHandler extends EntrySection
 			    new UserGetAction({userId: this.data.creatorId}),
 			    new UserGetAction({userId: this.data.userId})
 		    ))
-		    .cancelOnDestroy(this,this.sectionReset$)
+		    .cancelOnDestroy(this,this.widgetReset$)
 		    .monitor('get users details')
 		    .map(
 		    	responses =>
@@ -138,7 +133,7 @@ export class EntryUsersHandler extends EntrySection
 		    });
 
 		    const fetchEditorsData$ = this._kalturaServerClient.multiRequest(request)
-			    .cancelOnDestroy(this, this.sectionReset$)
+			    .cancelOnDestroy(this, this.widgetReset$)
 			    .monitor('get editors')
 			    .map(
 				    responses =>
@@ -170,7 +165,7 @@ export class EntryUsersHandler extends EntrySection
 		    });
 
 		    const fetchPublishersData$ = this._kalturaServerClient.multiRequest(request)
-			    .cancelOnDestroy(this, this.sectionReset$)
+			    .cancelOnDestroy(this, this.widgetReset$)
 			    .monitor('get publishers')
 			    .map(
 				    responses =>
@@ -226,7 +221,7 @@ export class EntryUsersHandler extends EntrySection
 						}
 					)
 				)
-				.cancelOnDestroy(this, this.sectionReset$)
+				.cancelOnDestroy(this, this.widgetReset$)
 				.monitor('search owners')
 				.subscribe(
 					result =>

@@ -3,16 +3,15 @@ import { DOCUMENT } from '@angular/platform-browser';
 
 import { Subject } from 'rxjs/Subject';
 import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
-import { MenuItem, Menu } from 'primeng/primeng';
+import { MenuItem } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { EntryMetadataHandler } from './entry-metadata-handler';
-import { EntryStore } from '../entry-store.service';
 import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
 import { JumpToSection } from './jump-to-section.component';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { LinkedEntriesPopup } from './entry-selector/linked-entries-popup.component';
+import { EntryFormManager } from '../entry-form-manager';
 
 @Component({
     selector: 'kEntryMetadata',
@@ -26,19 +25,21 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
     public _tagsProvider = new Subject<SuggestionsProviderData>();
 	public _jumpToMenu: MenuItem[] = [];
-   @ViewChildren(JumpToSection) private _jumpToSectionQuery : QueryList<JumpToSection> = null;
+	@ViewChild('categoriesPopup') public categoriesPopup: PopupWidgetComponent;
+	private _popupStateChangeSubscribe: ISubscription;
+    @ViewChildren(JumpToSection) private _jumpToSectionQuery : QueryList<JumpToSection> = null;
 
 	@ViewChild('metadataContainer')
 	public _container : ElementRef;
+    public _handler : EntryMetadataHandler;
 
-
-    constructor(private _appLocalization: AppLocalization,
-                public _handler : EntryMetadataHandler,
+    constructor(private _entryFormManager : EntryFormManager,
                 private _pageScrollService: PageScrollService,
                 @Inject(DOCUMENT) private document: any) {
     }
 
     ngOnInit() {
+        this._handler = this._entryFormManager.attachWidget(EntryMetadataHandler);
 
     }
 
@@ -106,6 +107,9 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         this._categoriesProvider.complete();
         this._searchTagsSubscription && this._searchTagsSubscription.unsubscribe();
         this._searchCategoriesSubscription && this._searchCategoriesSubscription.unsubscribe();
+	    this._popupStateChangeSubscribe && this._popupStateChangeSubscribe.unsubscribe();
+
+        this._entryFormManager.detachWidget(this._handler);
     }
 
     private _updateJumpToSectionsMenu()
@@ -130,6 +134,18 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     }
 
     ngAfterViewInit() {
+
+	    if (this.categoriesPopup) {
+		    this._popupStateChangeSubscribe = this.categoriesPopup.state$
+			    .subscribe(event => {
+				    if (event.state === PopupWidgetStates.Close) {
+					    if (event.context && event.context.isDirty){
+						   this._handler.setDirty();
+					    }
+				    }
+			    });
+	    }
+
         this._jumpToSectionQuery.changes
             .cancelOnDestroy(this)
             .subscribe((query) => {
@@ -142,7 +158,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
     private _jumpTo(element : HTMLElement){
         let pageScrollInstance: PageScrollInstance = PageScrollInstance.newInstance({
-         document : document,
+         document : this.document,
             scrollTarget : element,
             scrollingViews : [this._container.nativeElement]
         });

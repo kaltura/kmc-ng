@@ -6,6 +6,7 @@ import { KalturaFlavorAssetStatus, KalturaMediaEntry, KalturaMediaType } from 'k
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { EntryFlavoursHandler, Flavor } from './entry-flavours-handler';
+import { EntryFormManager } from '../entry-form-manager';
 
 @Component({
     selector: 'kEntryFlavours',
@@ -24,13 +25,15 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	public _selectedFlavor: Flavor;
 	public _uploadFilter: string = "";
     public _loadingError = null;
+	public _handler: EntryFlavoursHandler;
 
 	private _importPopupStateChangeSubscribe: ISubscription;
 
-    constructor(public _handler: EntryFlavoursHandler, private _appLocalization: AppLocalization) {
+	constructor(private _entryFormManager : EntryFormManager, private _appLocalization: AppLocalization) {
     }
 
     ngOnInit() {
+		this._handler = this._entryFormManager.attachWidget(EntryFlavoursHandler);
     }
 
 	openActionsMenu(event: any, flavor: Flavor): void{
@@ -127,7 +130,10 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
     ngOnDestroy() {
 	    this.actionsMenu.hide();
 	    this._importPopupStateChangeSubscribe.unsubscribe();
-    }
+
+		this._entryFormManager.detachWidget(this._handler);
+
+	}
 
 
     ngAfterViewInit() {

@@ -1,4 +1,5 @@
-import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, CollectionChangeRecord } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, CollectionChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
@@ -9,9 +10,8 @@ import { KalturaAssetFilter, KalturaAttachmentAsset, KalturaAttachmentType, Atta
 	AttachmentAssetDeleteAction, AttachmentAssetUpdateAction, AttachmentAssetAddAction, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 import { BrowserService } from 'kmc-shell';
 
-import { EntrySection } from '../entry-section-handler';
-import { EntrySectionTypes } from '../entry-sections-types';
-import { EntrySectionsManager } from '../entry-sections-manager';
+import { EntryFormWidget } from '../entry-form-widget';
+import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
 import { UploadManagement, FileChanges } from '@kaltura-ng2/kaltura-common/upload-management';
 import { FriendlyHashId } from '@kaltura-ng2/kaltura-common/friendly-hash-id';
@@ -19,7 +19,7 @@ import { FriendlyHashId } from '@kaltura-ng2/kaltura-common/friendly-hash-id';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators'
 
 @Injectable()
-export class EntryRelatedHandler extends EntrySection
+export class EntryRelatedHandler extends EntryFormWidget
 {
 
 	relatedFilesListDiffer: IterableDiffer;
@@ -33,7 +33,7 @@ export class EntryRelatedHandler extends EntrySection
 
 	private _entryId: string = '';
 
-	constructor(manager : EntrySectionsManager,
+	constructor(
 				private _appConfig: AppConfig,
 				private _kalturaServerClient: KalturaClient,
 	            private _browserService: BrowserService,
@@ -41,18 +41,19 @@ export class EntryRelatedHandler extends EntrySection
 				private _objectDiffers: KeyValueDiffers,
 				private _listDiffers : IterableDiffers,
 				private _uploadManagement : UploadManagement) {
-        super(manager);
-
+        super(EntryWidgetKeys.Related);
     }
 
 
     private _trackUploadFiles() : void
     {
+	    console.warn("[kmcng] - should track files only when uploading new files");
         this._uploadManagement.trackedFiles
             .cancelOnDestroy(this)
             .subscribe(
                 ((filesStatus : FileChanges) =>
                 {
+	                let uploading = false;
                     this._relatedFiles.getValue().items.forEach(file =>
                     {
                         const uploadToken = (<any>file).uploadToken;
@@ -73,24 +74,25 @@ export class EntryRelatedHandler extends EntrySection
 	                                (<any>file).progress = (filesStatus[uploadToken].progress * 100).toFixed(0);
 	                                (<any>file).uploading = true;
 	                                (<any>file).uploadFailure = false;
+		                            uploading = true;
                                 default:
                                     break;
                             }
                         }
                     });
+
+	                if (this.isBusy !== uploading) {
+		                super._updateWidgetState({isBusy: uploading});
+	                }
                 })
             );
     }
 
-    public get sectionType() : EntrySectionTypes
-    {
-        return EntrySectionTypes.Related;
-    }
 
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _reset()
+    protected _onReset()
     {
 	    this.relatedFileDiffer = {};
 	    this.relatedFilesListDiffer = null;
@@ -98,11 +100,11 @@ export class EntryRelatedHandler extends EntrySection
 	    this._relatedFiles.next({ items : [] });
     }
 
-	protected _activate(firstLoad : boolean) {
+	protected _onActivate(firstTimeActivating: boolean) {
 		this._entryId = this.data.id;
 		super._showLoader();
 
-		if (firstLoad)
+		if (firstTimeActivating)
 		{
 			this._trackUploadFiles();
 		}
@@ -115,7 +117,7 @@ export class EntryRelatedHandler extends EntrySection
 					entryIdEqual : this._entryId
 				}
 			)}))
-			.cancelOnDestroy(this,this.sectionReset$)
+			.cancelOnDestroy(this,this.widgetReset$)
 			.monitor('get entry related files')
 			.do(
 				response =>
@@ -213,6 +215,8 @@ export class EntryRelatedHandler extends EntrySection
 
 		this._relatedFiles.next({items: files});
 
+		this._setDirty();
+
 		return newFile;
 	}
 
@@ -226,6 +230,8 @@ export class EntryRelatedHandler extends EntrySection
 		if (file.id && this.relatedFileDiffer[file.id]){
 			delete this.relatedFileDiffer[file.id];
 		}
+
+		this._setDirty();
 	}
 
 	private _openFile(fileId: string, operation: string): void {
@@ -255,6 +261,7 @@ export class EntryRelatedHandler extends EntrySection
 
 	public _onFileSelected(selectedFiles: FileList) {
 		if (selectedFiles && selectedFiles.length) {
+
 			const fileData: File = selectedFiles[0];
 
 			const newFile = this._addFile(fileData.name, KalturaAttachmentType.document);
@@ -303,5 +310,9 @@ export class EntryRelatedHandler extends EntrySection
 				break;
 		}
 		return format;
+	}
+
+	public _setDirty(){
+		super._updateWidgetState({isDirty: true});
 	}
 }

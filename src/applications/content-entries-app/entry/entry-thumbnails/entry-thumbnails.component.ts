@@ -7,6 +7,7 @@ import { BrowserService } from 'kmc-shell';
 
 import { EntryThumbnailsHandler, ThumbnailRow } from './entry-thumbnails-handler';
 import { Menu, MenuItem } from 'primeng/primeng';
+import { EntryFormManager } from '../entry-form-manager';
 
 @Component({
     selector: 'kEntryThumbnails',
@@ -19,14 +20,16 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
 	public _actions: MenuItem[] = [];
-
+	public _handler : EntryThumbnailsHandler;
 	private currentThumb: ThumbnailRow;
 
-    constructor(public _handler : EntryThumbnailsHandler, private _appLocalization: AppLocalization, private _browserService: BrowserService,
+	constructor(private _entryFormManager : EntryFormManager, private _appLocalization: AppLocalization, private _browserService: BrowserService,
                 private _appAuthentication: AppAuthentication, private _appConfig:AppConfig, private _confirmationService: ConfirmationService) {
     }
 
     ngOnInit() {
+		this._handler = this._entryFormManager.attachWidget(EntryThumbnailsHandler);
+
 	    this._actions = [
 		    {label: this._appLocalization.get('applications.content.entryDetails.thumbnails.download'), command: (event) => {this.actionSelected("download");}},
 		    {label: this._appLocalization.get('applications.content.entryDetails.thumbnails.delete'), command: (event) => {this.actionSelected("delete");}},
@@ -73,7 +76,9 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 	}
     ngOnDestroy() {
 	    this.actionsMenu.hide();
-    }
+
+		this._entryFormManager.detachWidget(this._handler);
+	}
 
     ngAfterViewInit() {
 

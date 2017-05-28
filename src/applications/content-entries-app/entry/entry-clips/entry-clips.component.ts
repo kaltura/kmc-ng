@@ -1,18 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { EntryClipsHandler } from './entry-clips-handler';
+import { EntryFormManager } from '../entry-form-manager';
 
 @Component({
     selector: 'kEntryClips',
     templateUrl: './entry-clips.component.html',
     styleUrls: ['./entry-clips.component.scss']
 })
-export class EntryClips{
+export class EntryClips implements OnInit, OnDestroy {
 
     public _loading = false;
     public _loadingError = null;
+    public _handler : EntryClipsHandler;
 
-    constructor(public _handler : EntryClipsHandler) {
+    constructor(private _entryFormManager : EntryFormManager)
+    {
     }
 
     public _onSortChanged(event : any)
@@ -31,5 +34,13 @@ export class EntryClips{
         }
     }
 
+    ngOnInit() {
+        this._handler = this._entryFormManager.attachWidget(EntryClipsHandler);
+    }
+
+    ngOnDestroy() {
+        this._entryFormManager.detachWidget(this._handler);
+
+    }
 }
 

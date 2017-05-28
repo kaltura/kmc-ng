@@ -1,10 +1,10 @@
-import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
 import { EntryStore } from '../entry-store.service';
-import { SectionData, EntrySectionsListHandler } from './entry-sections-list-handler';
-import { EntrySectionTypes } from '../entry-sections-types';
+import { SectionWidgetItem, EntrySectionsListHandler } from './entry-sections-list-handler';
 
 
-import { ActivatedRoute } from '@angular/router';
+
+import { EntryFormManager } from '../entry-form-manager';
 
 
 
@@ -16,34 +16,37 @@ import { ActivatedRoute } from '@angular/router';
 export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
 
     public _loading = false;
-    public _showSections = false;
-    public _sections : SectionData[] = [];
+    public _showList = false;
+    public _sections : SectionWidgetItem[] = [];
+    private _handler : EntrySectionsListHandler;
 
-	private _activeSection : EntrySectionTypes = null;
-
-    constructor(public _entryStore : EntryStore, private _sectionHandler : EntrySectionsListHandler)  {
+    constructor(private _entryFormManager : EntryFormManager, public _entryStore : EntryStore)  {
     }
 
 
-    public navigateToSection(section : SectionData) : void
+    public navigateToSection(widget : SectionWidgetItem) : void
     {
-        this._entryStore.openSection(section.sectionType);
+        this._entryStore.openSection(widget.key);
     }
 
 
     ngOnInit() {
-	    this._loading = true;
-		this._sectionHandler.sections$.subscribe(
+		this._loading = true;
+		this._handler = this._entryFormManager.attachWidget(EntrySectionsListHandler);
+
+		this._handler.sections$.subscribe(
 			sections =>
 			{
 				this._loading = false;
 			    this._sections = sections;
-			    this._showSections = sections && sections.length > 0;
+			    this._showList = sections && sections.length > 0;
 			}
 		);
 	}
 
     ngOnDestroy() {
+        this._entryFormManager.detachWidget(this._handler);
+
     }
 
 

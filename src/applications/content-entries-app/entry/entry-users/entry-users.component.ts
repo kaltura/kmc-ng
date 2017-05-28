@@ -5,6 +5,7 @@ import { KalturaUser } from 'kaltura-typescript-client/types/all';
 import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { EntryUsersHandler } from './entry-users-handler';
+import { EntryFormManager } from '../entry-form-manager';
 
 @Component({
   selector: 'kEntryUsers',
@@ -17,16 +18,19 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 
 	private _searchUsersSubscription : ISubscription;
 	public _usersProvider = new Subject<SuggestionsProviderData>();
+	public _handler : EntryUsersHandler;
 
-    constructor(public _handler : EntryUsersHandler) {
+	constructor(private _entryFormManager : EntryFormManager) {
     }
 
 
     ngOnInit() {
+		this._handler = this._entryFormManager.attachWidget(EntryUsersHandler);
     }
 
     ngOnDestroy() {
-    }
+		this._entryFormManager.detachWidget(this._handler);
+	}
 
 
     ngAfterViewInit() {

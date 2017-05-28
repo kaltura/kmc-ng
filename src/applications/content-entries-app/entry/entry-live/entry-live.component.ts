@@ -1,8 +1,9 @@
-import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { BrowserService } from 'kmc-shell';
 import { ConfirmationService } from 'primeng/primeng';
 import { EntryLiveHandler } from './entry-live-handler';
+import { EntryFormManager } from '../entry-form-manager';
 
 @Component({
     selector: 'kEntryLive',
@@ -13,18 +14,21 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
     public _loadingError = null;
 	public _copyToClipboardEnabled: boolean = false;
+	public _handler : EntryLiveHandler;
 
-
-    constructor(public _handler : EntryLiveHandler, private _appLocalization: AppLocalization, private _browserService: BrowserService, private _confirmationService: ConfirmationService) {
+	constructor(private _entryFormManager : EntryFormManager, private _appLocalization: AppLocalization, private _browserService: BrowserService, private _confirmationService: ConfirmationService) {
     }
 
 
     ngOnInit() {
+		this._handler = this._entryFormManager.attachWidget(EntryLiveHandler);
 		this._copyToClipboardEnabled = this._browserService.copyToClipboardEnabled();
     }
 
     ngOnDestroy() {
-    }
+		this._entryFormManager.detachWidget(this._handler);
+
+	}
 
 
     ngAfterViewInit() {

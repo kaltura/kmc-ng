@@ -1,4 +1,5 @@
-import { Injectable, KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, KeyValueChangeRecord, CollectionChangeRecord } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, KeyValueChangeRecord, CollectionChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
@@ -10,9 +11,8 @@ import { CaptionAssetListAction, CaptionAssetDeleteAction, CaptionAssetSetAsDefa
 
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
-import { EntrySection } from '../entry-section-handler';
-import { EntrySectionTypes } from '../entry-sections-types';
-import { EntrySectionsManager } from '../entry-sections-manager';
+import { EntryFormWidget } from '../entry-form-widget';
+import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
 import { UploadManagement, FileChanges } from '@kaltura-ng2/kaltura-common/upload-management';
 
@@ -28,7 +28,7 @@ export interface CaptionRow {
 }
 
 @Injectable()
-export class EntryCaptionsHandler extends EntrySection
+export class EntryCaptionsHandler extends EntryFormWidget
 {
 	captionsListDiffer: IterableDiffer;
 	captionDiffer : { [key : string] : KeyValueDiffer } = {};
@@ -42,19 +42,21 @@ export class EntryCaptionsHandler extends EntrySection
 
 	private _entryId: string = '';
 
-    constructor(manager : EntrySectionsManager, private _objectDiffers:  KeyValueDiffers, private _listDiffers : IterableDiffers,
+    constructor( private _objectDiffers:  KeyValueDiffers, private _listDiffers : IterableDiffers,
                 private _kalturaServerClient: KalturaClient, private _appLocalization:AppLocalization, private _uploadManagement : UploadManagement)
     {
-        super(manager);
+        super(EntryWidgetKeys.Captions);
     }
 
 	private _trackUploadFiles() : void
 	{
+		console.warn("[kmcng] - should track files only when uploading new files");
 		this._uploadManagement.trackedFiles
 			.cancelOnDestroy(this)
 			.subscribe(
 				((filesStatus : FileChanges) =>
 				{
+					let uploading = false;
 					this._captions.getValue().items.forEach(file =>
 					{
 						const uploadToken = (<any>file).uploadToken;
@@ -76,25 +78,25 @@ export class EntryCaptionsHandler extends EntrySection
 									if (filesStatus[uploadToken].progress<1) {
 										(<any>file).uploading = true;
 										(<any>file).uploadFailure = false;
+										uploading = true;
 									}
 								default:
 									break;
 							}
 						}
 					});
+					//if (this.isBusy !== uploading) {
+						super._updateWidgetState({isBusy: uploading});
+					//}
 				})
 			);
 	}
 
-    public get sectionType() : EntrySectionTypes
-    {
-        return EntrySectionTypes.Captions;
-    }
 
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _reset()
+    protected _onReset()
     {
 	    this.captionsListDiffer = null;
 	    this.captionDiffer = {};
@@ -102,10 +104,10 @@ export class EntryCaptionsHandler extends EntrySection
 	    this._captions.next({ items : []});
     }
 
-    protected _activate(firstLoad : boolean) {
+    protected _onActivate(firstTimeActivating: boolean) {
 	    this._entryId = this.data.id;
 		super._showLoader();
-	    if (firstLoad)
+	    if (firstTimeActivating)
 		{
 			this._trackUploadFiles();
 		}
@@ -116,7 +118,7 @@ export class EntryCaptionsHandler extends EntrySection
 				    entryIdEqual : this._entryId
 			    })
 		    }))
-		    .cancelOnDestroy(this,this.sectionReset$)
+		    .cancelOnDestroy(this,this.widgetReset$)
 		    .monitor('get captions')
 		    .do(
 			    response =>
@@ -149,6 +151,7 @@ export class EntryCaptionsHandler extends EntrySection
 		   caption.isDefault = caption.id === captionId ? 1 : 0;
 	    });
 	    this._captions.next({items : captions});
+	    this.setDirty();
     }
 
     public _getCaptionType(captionFormat: KalturaCaptionType): string{
@@ -228,6 +231,7 @@ export class EntryCaptionsHandler extends EntrySection
 		if (this.currentCaption.id && this.captionDiffer[this.currentCaption.id]){
 			delete this.captionDiffer[this.currentCaption.id];
 		}
+		this.setDirty();
 	}
 
 	// cleanup of added captions that don't have assets (url or uploaded file)
@@ -312,6 +316,10 @@ export class EntryCaptionsHandler extends EntrySection
 				}
 			});
 		}
+	}
+
+	public setDirty(){
+		super._updateWidgetState({isDirty: true});
 	}
 
 }

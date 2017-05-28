@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { OnInit, Component } from '@angular/core';
+import { ConfirmationService, Confirmation } from 'primeng/primeng';
+import { BrowserService } from 'kmc-shell/providers/browser.service';
 
 /*
  * App Component
@@ -8,10 +10,16 @@ import { Component } from '@angular/core';
   selector: 'kKMCRoot',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  providers : [ConfirmationService]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
-  constructor() {
+  constructor(private _confirmationService : ConfirmationService, private _browserService : BrowserService ) {
 
+  }
+
+  ngOnInit()
+  {
+      this._browserService.registerOnShowConfirmation(this._confirmationService.confirm.bind(this._confirmationService));
   }
 }

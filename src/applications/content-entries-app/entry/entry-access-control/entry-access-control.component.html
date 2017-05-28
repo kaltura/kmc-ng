@@ -4,7 +4,7 @@
 		<div class="kAccessControlDetails">
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.profile' | translate}}</span>
-				<p-dropdown [options]="(_handler._accessControlProfiles$ | async)?.items" [(ngModel)]="_handler.selectedProfile"></p-dropdown>
+				<p-dropdown [options]="(_handler._accessControlProfiles$ | async)?.items" [(ngModel)]="_handler.selectedProfile" (onChange)="_handler.setDirty()"></p-dropdown>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.name' | translate}}</span>

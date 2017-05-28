@@ -12,12 +12,12 @@ import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { BaseEntryGetAction, BaseEntryUpdateAction } from 'kaltura-typescript-client/types/all';
-import { EntrySectionTypes } from './entry-sections-types';
 import { EntriesStore } from '../entries/entries-store/entries-store.service';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { EntrySectionsManager } from './entry-sections-manager';
+import { EntryFormManager } from './entry-form-manager';
 import { KalturaTypesFactory } from 'kaltura-typescript-client';
-import { OnDataSavingReasons } from '@kaltura-ng2/kaltura-ui/form-sections';
+import { OnDataSavingReasons } from '@kaltura-ng2/kaltura-ui';
+import { BrowserService } from '../../../shared/kmc-shell/providers/browser.service';
 
 export enum ActionTypes
 {
@@ -38,14 +38,19 @@ declare type StatusArgs =
 	error? : Error;
 
 }
+
 @Injectable()
 export class EntryStore implements  OnDestroy {
 
 	private _loadEntrySubscription : ISubscription;
 	private _sectionToRouteMapping : { [key : number] : string} = {};
-	private _activeSectionType : EntrySectionTypes = null;
 	private _state : Subject<StatusArgs> = new Subject<StatusArgs>();
 	public state$ = this._state.asObservable();
+	private _entryIsDirty : boolean;
+
+	public get entryIsDirty() : boolean{
+		return this._entryIsDirty;
+	}
 
 
 	private _saveEntryInvoked = false;
@@ -63,16 +68,50 @@ export class EntryStore implements  OnDestroy {
 
     constructor(private _kalturaServerClient: KalturaClient,
 				private _router: Router,
+				private _browserService : BrowserService,
 				private _entriesStore : EntriesStore,
-				@Host() private _sectionsManager : EntrySectionsManager,
+				@Host() private _sectionsManager : EntryFormManager,
 				private _entryRoute: ActivatedRoute) {
 
 		this._sectionsManager.entryStore = this;
 
 		this._mapSections();
 
+		this._onSectionsStateChanges();
 		this._onRouterEvents();
     }
+
+    private _onSectionsStateChanges()
+	{
+		this._sectionsManager.widgetsState$
+            .cancelOnDestroy(this)
+            .debounce(() => Observable.timer(500))
+            .subscribe(
+				sectionsState =>
+				{
+					const newDirtyState = Object.keys(sectionsState).reduce((result, sectionName) => result || sectionsState[sectionName].isDirty,false);
+
+					if (this._entryIsDirty !== newDirtyState)
+					{
+						console.log(`entry store: update entry is dirty state to ${newDirtyState}`);
+						this._entryIsDirty = newDirtyState;
+
+						this._updatePageExitVerification();
+
+					}
+				}
+			);
+
+	}
+
+	private _updatePageExitVerification() {
+		if (this._entryIsDirty) {
+			this._browserService.enablePageExitVerification();
+		}
+		else {
+			this._browserService.disablePageExitVerification();
+		}
+	}
 
 	ngOnDestroy() {
 		this._loadEntrySubscription && this._loadEntrySubscription.unsubscribe();
@@ -88,7 +127,7 @@ export class EntryStore implements  OnDestroy {
 
 		this._entryRoute.snapshot.routeConfig.children.forEach(childRoute =>
 		{
-			const routeSectionType = childRoute.data ? childRoute.data.sectionType : null;
+			const routeSectionType = childRoute.data ? childRoute.data.sectionKey : null;
 
 			if (routeSectionType !== null)
 			{
@@ -97,28 +136,21 @@ export class EntryStore implements  OnDestroy {
 		});
 	}
 
-	private _onRouterEvents() : void
-	{
+	private _onRouterEvents() : void {
 		this._router.events
-			.cancelOnDestroy(this)
-			.subscribe(
-			event =>
-			{
-				if (event instanceof NavigationStart)
-				{
-				}else if (event instanceof NavigationEnd)
-				{
-					const currentEntryId =this._entryRoute.snapshot.params.id;
-					const entry = this._entry.getValue();
-					if (!entry || (entry && entry.id !== currentEntryId))
-					{
-						this._loadEntry(currentEntryId);
+            .cancelOnDestroy(this)
+            .subscribe(
+				event => {
+					if (event instanceof NavigationStart) {
+					} else if (event instanceof NavigationEnd) {
+						const currentEntryId = this._entryRoute.snapshot.params.id;
+						const entry = this._entry.getValue();
+						if (!entry || (entry && entry.id !== currentEntryId)) {
+							this._loadEntry(currentEntryId);
+						}
 					}
-
-					this._updateActiveSection();
 				}
-			}
-		)
+			)
 	}
 
 	private _transmitSaveRequest(newEntry : KalturaMediaEntry) {
@@ -132,6 +164,7 @@ export class EntryStore implements  OnDestroy {
 		);
 
 		this._sectionsManager.onDataSaving(newEntry, request, this.entry)
+            .cancelOnDestroy(this)
             .monitor('entry store: prepare entry for save')
             .flatMap(
 				(response) => {
@@ -157,7 +190,7 @@ export class EntryStore implements  OnDestroy {
 							case OnDataSavingReasons.validationErrors:
 								this._state.next({action: ActionTypes.EntryDataIsInvalid});
 								break;
-							case OnDataSavingReasons.activeSectionRefused:
+							case OnDataSavingReasons.attachedWidgetBusy:
 								this._state.next({action: ActionTypes.ActiveSectionBusy});
 								break;
 							case OnDataSavingReasons.buildRequestFailure:
@@ -199,18 +232,6 @@ export class EntryStore implements  OnDestroy {
 		}
 	}
 
-
-
-	private _updateActiveSection() : void{
-		let toSection : EntrySectionTypes = this._entryRoute.firstChild.snapshot.data.sectionType;
-
-		if (toSection !== this._activeSectionType)
-		{
-			this._activeSectionType = toSection;
-			this._sectionsManager.onSectionActivated(toSection);
-		}
-	}
-
 	private _loadEntry(entryId : string) : void {
 		if (this._loadEntrySubscription) {
 			this._loadEntrySubscription.unsubscribe();
@@ -218,10 +239,14 @@ export class EntryStore implements  OnDestroy {
 		}
 
 		this._entryId = entryId;
+		this._entryIsDirty = false;
+		this._updatePageExitVerification();
+
 		this._state.next({action: ActionTypes.EntryLoading});
 		this._sectionsManager.onDataLoading(entryId);
 
 		this._loadEntrySubscription = this._getEntry(entryId)
+            .cancelOnDestroy(this)
             .subscribe(
 				response => {
 					if (response instanceof KalturaMediaEntry) {
@@ -229,9 +254,15 @@ export class EntryStore implements  OnDestroy {
 						this._entry.next(response);
 						this._entryId = response.id;
 
-						this._sectionsManager.onDataLoaded(response);
+						const dataLoadedResult = this._sectionsManager.onDataLoaded(response);
 
-						this._state.next({ action : ActionTypes.EntryLoaded });
+						if (dataLoadedResult.errors.length)
+						{
+							this._state.next({action: ActionTypes.EntryLoadingFailed,
+								error: new Error(`one of the widgets failed while handling data loaded event`)});
+						}else {
+							this._state.next({action: ActionTypes.EntryLoaded});
+						}
 
 					} else {
 						this._state.next({
@@ -247,8 +278,8 @@ export class EntryStore implements  OnDestroy {
 			);
 	}
 
-    public openSection(sectionType : EntrySectionTypes) : void{
-		const navigatePath = this._sectionToRouteMapping[sectionType];
+    public openSection(sectionKey : string) : void{
+		const navigatePath = this._sectionToRouteMapping[sectionKey];
 
 		if (navigatePath) {
 			this._router.navigate([navigatePath], {relativeTo: this._entryRoute});
@@ -307,19 +338,67 @@ export class EntryStore implements  OnDestroy {
 
 	public openEntry(entryId : string)
 	{
-		this._router.navigate(["entry", entryId],{ relativeTo : this._entryRoute.parent});
+		this._canLeaveWithoutSaving()
+            .cancelOnDestroy(this)
+			.subscribe(
+			response =>
+			{
+				if (response.allowed)
+				{
+					this._router.navigate(["entry", entryId],{ relativeTo : this._entryRoute.parent});
+				}
+			}
+		);
+	}
+
+	private _canLeaveWithoutSaving() : Observable<{ allowed : boolean}>
+	{
+		return Observable.create(observer =>
+		{
+			if (this._entryIsDirty) {
+				this._browserService.confirm(
+					{
+						header: 'Cancel Edit',
+						message: 'Discard all changes?',
+						accept: () => {
+							observer.next({allowed: true});
+							observer.complete();
+						},
+						reject: () => {
+							observer.next({allowed: false});
+							observer.complete();
+						}
+					}
+				)
+			}else
+			{
+				observer.next({allowed: true});
+				observer.complete();
+			}
+		}).monitor('entry store: check if can leave section without saving');
 	}
 
 	public returnToEntries(params : {force? : boolean} = {})
 	{
-		if (this._saveEntryInvoked)
-		{
-			this._entriesStore.reload(true);
-			this._saveEntryInvoked = false;
-		}
+		this._canLeaveWithoutSaving()
+            .cancelOnDestroy(this)
+			.monitor('entry store: return to entries list')
+			.subscribe(
+				response =>
+				{
+					if (response.allowed)
+					{
+						if (this._saveEntryInvoked)
+						{
+							this._entriesStore.reload(true);
+							this._saveEntryInvoked = false;
+						}
 
-		this._state.next({action: ActionTypes.NavigateOut});
+						this._state.next({action: ActionTypes.NavigateOut});
 
-		this._router.navigate(['content/entries']);
+						this._router.navigate(['content/entries']);
+					}
+				}
+			);
 	}
 }

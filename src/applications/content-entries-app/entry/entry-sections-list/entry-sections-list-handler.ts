@@ -3,105 +3,79 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppLocalization } from "@kaltura-ng2/kaltura-common";
 import { SectionsList } from './sections-list';
-import { EntrySectionTypes } from '../entry-sections-types';
+import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/all';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { EntrySection } from '../entry-section-handler';
-import { EntrySectionsManager } from '../entry-sections-manager';
+import { EntryFormWidget } from '../entry-form-widget';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
 
-export interface SectionData
+export interface SectionWidgetItem
 {
     label : string,
-    hasErrors : boolean,
-    active?: boolean,
-    sectionType : EntrySectionTypes
+    isValid : boolean,
+    attached: boolean,
+    key : string
 }
 
-
 @Injectable()
-export class EntrySectionsListHandler extends EntrySection
+export class EntrySectionsListHandler extends EntryFormWidget
 {
-    private _sections : BehaviorSubject<SectionData[]> = new BehaviorSubject<SectionData[]>(null);
-    public sections$ : Observable<SectionData[]> = this._sections.asObservable();
-    private _activeSectionType : EntrySectionTypes;
-    private _firstLoad = true;
+    private _sections = new BehaviorSubject<SectionWidgetItem[]>([]);
+    public sections$ : Observable<SectionWidgetItem[]> = this._sections.asObservable();
 
-    constructor(private _manager : EntrySectionsManager,
-                kalturaServerClient: KalturaClient,
-                private _appLocalization: AppLocalization,)
+    constructor(private _appLocalization: AppLocalization)
     {
-        super(_manager);
+        super('sectionsList');
     }
 
     protected _onDataLoading(dataId : any) : void {
-        this._clearSections();
+        this._clearWidgets();
+    }
+
+    protected _onActivate(firstTimeActivating: boolean)
+    {
+        if (firstTimeActivating)
+        {
+            this._initialize();
+        }
     }
 
     protected _onDataLoaded(data : KalturaMediaEntry) : void {
         this._reloadSections(data);
     }
 
-    protected _initialize() : void {
-
-        super._initialize();
-
-        this._manager.activeSection$
+    private _initialize() : void {
+        this._manager.widgetsState$
             .cancelOnDestroy(this)
             .subscribe(
-                section =>
-                {
-                    if (section) {
-                        this._updateActiveSection(section.sectionType);
-                    }
+                sectionsState => {
+                    this._sections.getValue().forEach((section: SectionWidgetItem) => {
+                        const sectionState = sectionsState[section.key];
+                        const isValid = (!sectionState || sectionState.isBusy || sectionState.isValid || !sectionState.isActive);
+                        const isAttached = (!!sectionState && sectionState.isAttached);
+
+                        if (section.attached !== isAttached || section.isValid !== isValid) {
+                            console.log(`entry sections list: updated section '${section.key}' state`, {
+                                isAttached,
+                                isValid
+                            });
+                            section.attached = isAttached;
+                            section.isValid = isValid;
+                        }
+                    });
                 }
             );
-
-        this._manager.sectionsStatus$
-            .cancelOnDestroy(this)
-            .subscribe(
-                sectionsStatus => {
-                    const sections = this._sections.getValue();
-
-                    if (sections) {
-                        sections.forEach(section =>
-                        {
-                            const sectionStatus = sectionsStatus[section.sectionType];
-                            section.hasErrors =  (sectionStatus && !sectionStatus.isValid);
-                        });
-                    }
-                }
-            );
-    }
-
-    public get sectionType() : EntrySectionTypes
-    {
-        return null;
     }
 
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _reset()
+    protected _onReset()
     {
 
     }
 
-    private _updateActiveSection(sectionType : EntrySectionTypes) : void
-    {
-        this._activeSectionType = sectionType;
-
-        if (this._sections.getValue())
-        {
-            this._sections.getValue().forEach((section : SectionData) =>
-            {
-                section.active = section.sectionType === this._activeSectionType;
-            });
-        }
-    }
-
-    private _clearSections() : void
+    private _clearWidgets() : void
     {
         this._sections.next([]);
 
@@ -110,17 +84,21 @@ export class EntrySectionsListHandler extends EntrySection
     private _reloadSections(entry : KalturaMediaEntry) : void
     {
         const sections = [];
+        const formWidgetsState = this._manager.widgetsState;
 
         if (entry) {
-            SectionsList.forEach((section: any) => {
+            SectionsList.forEach((section) => {
 
-                if (this._isSectionEnabled(section, entry)) {
+                const sectionFormWidgetState =  formWidgetsState ? formWidgetsState[section.key] : null;
+                const isSectionActive = sectionFormWidgetState && sectionFormWidgetState.isActive;
+
+                if (this._isSectionEnabled(section.key, entry)) {
                     sections.push(
                         {
                             label: this._appLocalization.get(section.label),
-                            active: section.sectionType === this._activeSectionType,
-                            hasErrors: false,
-                            sectionType: section.sectionType
+                            active: isSectionActive,
+                            hasErrors: sectionFormWidgetState ? sectionFormWidgetState.isValid : false,
+                            key: section.key
                         }
                     );
                 }
@@ -130,19 +108,19 @@ export class EntrySectionsListHandler extends EntrySection
         this._sections.next(sections);
     }
 
-    private _isSectionEnabled(section : SectionData, entry : KalturaMediaEntry) : boolean {
+    private _isSectionEnabled(sectionKey : string, entry : KalturaMediaEntry) : boolean {
         const mediaType = this.data.mediaType;
-        switch (section.sectionType) {
-            case EntrySectionTypes.Thumbnails:
+        switch (sectionKey) {
+            case EntryWidgetKeys.Thumbnails:
                 return mediaType !== KalturaMediaType.image;
-            case EntrySectionTypes.Flavours:
+            case EntryWidgetKeys.Flavours:
                 return mediaType !== KalturaMediaType.image && !this._isLive(entry);
-            case EntrySectionTypes.Captions:
+            case EntryWidgetKeys.Captions:
                 return mediaType !== KalturaMediaType.image && !this._isLive(entry);
-            case EntrySectionTypes.Live:
+            case EntryWidgetKeys.Live:
                 return this._isLive(entry);
-            case EntrySectionTypes.Clips:
-	            return mediaType !== KalturaMediaType.image
+            case EntryWidgetKeys.Clips:
+	            return mediaType !== KalturaMediaType.image;
             default:
                 return true;
         }
@@ -151,9 +129,5 @@ export class EntrySectionsListHandler extends EntrySection
     private _isLive( entry : KalturaMediaEntry): boolean {
         const mediaType = entry.mediaType;
         return mediaType === KalturaMediaType.liveStreamFlash || mediaType === KalturaMediaType.liveStreamWindowsMedia || mediaType === KalturaMediaType.liveStreamRealMedia || mediaType === KalturaMediaType.liveStreamQuicktime;
-    }
-
-    protected _activate(firstLoad : boolean) {
-        // do nothing
     }
 }

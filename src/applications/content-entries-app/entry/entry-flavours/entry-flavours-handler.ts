@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { EntrySection } from '../entry-section-handler';
+import { EntryFormWidget } from '../entry-form-widget';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { EntrySectionTypes } from '../entry-sections-types';
+import { EntryWidgetKeys } from '../entry-widget-keys';
 import { Observable } from 'rxjs/Observable';
 import { AppLocalization, AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
@@ -9,9 +9,8 @@ import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { BrowserService } from 'kmc-shell';
 import { KalturaFlavorAsset, KalturaFlavorAssetWithParams, FlavorAssetGetFlavorAssetsWithParamsAction, KalturaFlavorAssetStatus, KalturaLiveParams, KalturaEntryStatus, KalturaWidevineFlavorAsset,
 	FlavorAssetDeleteAction, FlavorAssetConvertAction, FlavorAssetReconvertAction, KalturaUploadedFileTokenResource, FlavorAssetSetContentAction, FlavorAssetAddAction, KalturaUrlResource, KalturaContentResource } from 'kaltura-typescript-client/types/all';
-import { UploadManagement, FileChanges } from '@kaltura-ng2/kaltura-common/upload-management';
+import { UploadManagement } from '@kaltura-ng2/kaltura-common/upload-management';
 import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
-import { EntrySectionsManager } from '../entry-sections-manager';
 import { Message, ConfirmationService } from 'primeng/primeng';
 
 export interface Flavor extends KalturaFlavorAssetWithParams{
@@ -34,7 +33,7 @@ export interface Flavor extends KalturaFlavorAssetWithParams{
 }
 
 @Injectable()
-export class EntryFlavoursHandler extends EntrySection
+export class EntryFlavoursHandler extends EntryFormWidget
 {
 	private _flavors = new BehaviorSubject<{ items : Flavor[]}>(
 		{ items : []}
@@ -46,26 +45,21 @@ export class EntryFlavoursHandler extends EntrySection
 	public sourceAvailabale: boolean = false;
 	public _msgs: Message[] = [];
 
-    constructor(manager : EntrySectionsManager, private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _confirmationService: ConfirmationService,
+    constructor( private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _confirmationService: ConfirmationService,
 	    private _appConfig: AppConfig, private _appAuthentication: AppAuthentication, private _browserService: BrowserService, private _uploadManagement : UploadManagement)
     {
-        super(manager);
-    }
-
-    public get sectionType() : EntrySectionTypes
-    {
-        return EntrySectionTypes.Flavours;
+        super(EntryWidgetKeys.Flavours);
     }
 
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _reset()
+    protected _onReset()
     {
 	    this._msgs = [];
     }
 
-    protected _activate(firstLoad : boolean) {
+    protected _onActivate(firstTimeActivating: boolean) {
 	    this._setEntryStatus();
         return this._fetchFlavors('activation', true);
     }
@@ -82,7 +76,7 @@ export class EntryFlavoursHandler extends EntrySection
 		    let requestSubscription = this._kalturaServerClient.request(new FlavorAssetGetFlavorAssetsWithParamsAction({
 			    entryId: this.data.id
 		    }))
-			    .cancelOnDestroy(this,this.sectionReset$)
+			    .cancelOnDestroy(this,this.widgetReset$)
 			    .monitor('get flavors')
 			    .subscribe(
 				    response =>
@@ -122,7 +116,7 @@ export class EntryFlavoursHandler extends EntrySection
 									    {
 										    label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
 										    action: () => {
-											    this._fetchFlavors('reload', reset).subscribe(() =>
+											    this._fetchFlavors('reload', reset).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 											    {
 												    // do nothing
 											    });
@@ -241,14 +235,14 @@ export class EntryFlavoursHandler extends EntrySection
 			    this._kalturaServerClient.request(new FlavorAssetDeleteAction({
 					    id: flavor.id
 				    }))
-				    .cancelOnDestroy(this,this.sectionReset$)
+				    .cancelOnDestroy(this,this.widgetReset$)
 				    .monitor('delete flavor: '+flavor.id)
 				    .subscribe(
 					    response =>
 					    {
 						    super._hideLoader();
 						    this._msgs.push({severity: 'success', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteSuccess')});
-						    this._fetchFlavors('reload', false).subscribe(() =>
+						    this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 						    {
 							    // do nothing
 						    });
@@ -288,7 +282,7 @@ export class EntryFlavoursHandler extends EntrySection
 		flavor.status = KalturaFlavorAssetStatus.waitForConvert.toString();
 		flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.converting');
 		this._kalturaServerClient.request(request)
-			.cancelOnDestroy(this,this.sectionReset$)
+			.cancelOnDestroy(this,this.widgetReset$)
 			.monitor('convert flavor')
 			.subscribe(
 				response =>
@@ -304,7 +298,7 @@ export class EntryFlavoursHandler extends EntrySection
 				error =>
 				{
 					this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure')});
-					this._fetchFlavors('reload', false).subscribe(() =>
+					this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 					{
 						// reload flavors as we need to get the flavor status from the server
 					});
@@ -327,7 +321,7 @@ export class EntryFlavoursHandler extends EntrySection
 			},
 			(error) => {
 				this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
-				this._fetchFlavors('reload', false).subscribe(() =>
+				this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 				{
 					// reload flavors as we need to get the flavor status from the server
 				});
@@ -339,12 +333,12 @@ export class EntryFlavoursHandler extends EntrySection
 			id: id,
 			contentResource: resource
 		}))
-		.cancelOnDestroy(this,this.sectionReset$)
+		.cancelOnDestroy(this,this.widgetReset$)
 		.monitor('set flavor resource')
 		.subscribe(
 			response =>
 			{
-				this._fetchFlavors('reload', false).subscribe(() =>
+				this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 				{
 					// do nothing
 				});
@@ -352,7 +346,7 @@ export class EntryFlavoursHandler extends EntrySection
 			error =>
 			{
 				this._msgs.push({severity: 'error',	summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
-				this._fetchFlavors('reload', false).subscribe(() =>
+				this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 				{
 					// do nothing
 				});
@@ -367,7 +361,7 @@ export class EntryFlavoursHandler extends EntrySection
 			entryId: this.data.id,
 			flavorAsset: flavorAsset
 		}))
-		.cancelOnDestroy(this,this.sectionReset$)
+		.cancelOnDestroy(this,this.widgetReset$)
 		.monitor('add new flavor')
 		.subscribe(
 			response =>
@@ -377,7 +371,7 @@ export class EntryFlavoursHandler extends EntrySection
 			error =>
 			{
 				this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
-				this._fetchFlavors('reload', false).subscribe(() =>
+				this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 				{
 					// reload flavors as we need to get the flavor status from the server
 				});
@@ -398,7 +392,7 @@ export class EntryFlavoursHandler extends EntrySection
 	}
 
 	public _refresh(){
-		this._fetchFlavors('reload', false).subscribe(() =>
+		this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 		{
 			// reload flavors on refresh
 		});
