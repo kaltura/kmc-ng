@@ -24,8 +24,7 @@
 .kTreeContainer{
     overflow-y: auto;
     overflow-x: hidden;
-    height: 340px;
-    border-bottom: 1px solid $kGrayscale6;
+    min-height: 340px;
     margin-left: -20px;
     padding-left: 20px;
     margin-right: -20px;
