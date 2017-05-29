@@ -2,7 +2,7 @@
 	<p-tree  kTreeSelection [treeSelectionMode]="selectionMode"
 			(onTreeSelectionChanged)="_onTreeSelectionChanged($event)" [value]="categories"
 			(onNodeExpand)="_onNodeExpand($event)">
-		<template let-node pTemplate="default">
+		<ng-template let-node pTemplate="default">
 			<div>
 				<span [class.kDisabled]="node.isDisabled" class="kTreeNodeLabel">{{node.label}}</span>
 				<span class="kTreeNodeNumChildren" *ngIf="node.childrenCount">{{node.childrenCount}}</span>
@@ -15,7 +15,7 @@
 				 class="kLoadingErrorMessage" (click)="_blockTreeSelection($event)">
 				{{ node.childrenLoadError || 'entriesShared.categoriesFilters.loadingError' | translate }}
 			</div>
-		</template>
+		</ng-template>
 	</p-tree>
 </div>
 

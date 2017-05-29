@@ -15,24 +15,24 @@
         <p-dataTable [value]="entries" [(selection)]="selectedEntries">
             <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
             <p-column header="{{'applications.content.entryDetails.metadata.thumbnail' | translate}}">
-                <template let-col let-entry="rowData" pTemplate="body">
+                <ng-template let-col let-entry="rowData" pTemplate="body">
                     <div class="kThumbnailHolder"><span class="kHelper"></span><img src="" onError="this.onerror=null;this.style.display='none'"></div>
-                </template>
+                </ng-template>
             </p-column>
             <p-column header="{{'applications.content.entryDetails.metadata.entryName' | translate}}">
-                <template let-col let-entry="rowData" pTemplate="body">
+                <ng-template let-col let-entry="rowData" pTemplate="body">
                     <span>{{entry}}</span>
-                </template>
+                </ng-template>
             </p-column>
             <p-column header="{{'applications.content.entryDetails.metadata.entryID' | translate}}">
-                <template let-col let-entry="rowData" pTemplate="body">
+                <ng-template let-col let-entry="rowData" pTemplate="body">
                     <span>Entry ID</span>
-                </template>
+                </ng-template>
             </p-column>
             <p-column [style]="{'width':'60px'}">
-                <template let-col let-entry="rowData" pTemplate="body">
+                <ng-template let-col let-entry="rowData" pTemplate="body">
                     <button pButton class="kButtonDefault kDeletehBtn small" type="text" icon="kIcontrash" (click)="selectedEntries=[];entries.splice(entries.indexOf(entry), 1)"></button>
-                </template>
+                </ng-template>
             </p-column>
         </p-dataTable>
     </div>

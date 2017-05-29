@@ -85,7 +85,7 @@
   },
   "devDependencies": {
     "@angular/compiler-cli": "^4.0.0",
-    "@types/core-js": "^0.9.41",
+    "@types/core-js": "0.9.28",
     "@types/jasmine": "^2.2.29",
     "@types/jquery": "^2.0.40",
     "@types/protractor": "^1.5.16",

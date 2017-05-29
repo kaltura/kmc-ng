@@ -16,7 +16,7 @@
 					<span>{{primeGroup.groupName | uppercase}}</span>
 				</div>
 				<p-tree [value]="primeGroup.items" kTreeSelection [treeSelectionMode]="_treeSelectionModes.PrimeDefault" [treeSelectionContext]="primeGroup.groupTypes"  (onTreeSelectionChanged)="_onTreeSelectionChanged($event)" >
-					<template let-node  pTemplate="default">
+					<ng-template let-node  pTemplate="default">
 						<span  class="kTreeNodeLabel">{{node.label}} <span *ngIf="node.childrenCount" class="kTreeNodeNumChildren">{{ node.childrenCount}}</span></span>
 						<div *ngIf="node.data==='scheduled'" (click)="_blockScheduleToggle($event)">
 							<div>
@@ -27,7 +27,7 @@
 								<span *ngIf="_scheduledSelected && _scheduledFilterError" class="kError">{{_scheduledFilterError}}</span>
 							</div>
 						</div>
-					</template>
+					</ng-template>
 				</p-tree>
 			</div>
 		</div>

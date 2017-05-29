@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, KeyValueChangeRecord, CollectionChangeRecord } from '@angular/core';
+import { KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, KeyValueChangeRecord, IterableChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
@@ -30,8 +30,8 @@ export interface CaptionRow {
 @Injectable()
 export class EntryCaptionsHandler extends EntryFormWidget
 {
-	captionsListDiffer: IterableDiffer;
-	captionDiffer : { [key : string] : KeyValueDiffer } = {};
+	captionsListDiffer: IterableDiffer<CaptionRow>;
+	captionDiffer : { [key : string] : KeyValueDiffer<string, any> } = {};
 
 	private _captions = new BehaviorSubject<{ items : CaptionRow[]}>(
 		{ items : []}
@@ -129,7 +129,7 @@ export class EntryCaptionsHandler extends EntryFormWidget
 
 				    this.captionDiffer = {};
 				    this._captions.getValue().items.forEach((caption) => {
-					    this.captionDiffer[caption.id] = this._objectDiffers.find([]).create(null);
+					    this.captionDiffer[caption.id] = this._objectDiffers.find([]).create();
 					    this.captionDiffer[caption.id].diff(caption);
 				    });
 				    super._hideLoader();
@@ -259,7 +259,7 @@ export class EntryCaptionsHandler extends EntryFormWidget
 			if (this.captionsListDiffer) {
 				let changes = this.captionsListDiffer.diff(this._captions.getValue().items);
 				if (changes) {
-					changes.forEachAddedItem((record: CollectionChangeRecord) => {
+					changes.forEachAddedItem((record: IterableChangeRecord<CaptionRow>) => {
 						// added captions
 						let captionAsset = new KalturaCaptionAsset({language: record.item.language, format: record.item.format, label: record.item.label, isDefault: 0});
 						const addCaptionRequest: CaptionAssetAddAction = new CaptionAssetAddAction({entryId: this.data.id, captionAsset: captionAsset});
@@ -283,7 +283,7 @@ export class EntryCaptionsHandler extends EntryFormWidget
 							request.requests.push(setContentRequest);
 						}
 					});
-					changes.forEachRemovedItem((record: CollectionChangeRecord) => {
+					changes.forEachRemovedItem((record: IterableChangeRecord<CaptionRow>) => {
 						// remove deleted captions
 						const deleteCaptionRequest: CaptionAssetDeleteAction = new CaptionAssetDeleteAction({captionAssetId: (record.item as CaptionRow).id});
 						request.requests.push(deleteCaptionRequest);
@@ -298,7 +298,7 @@ export class EntryCaptionsHandler extends EntryFormWidget
 					let objChanges = captionDiffer.diff(caption);
 					if (objChanges) {
 						let updatedCaptionIDs = []; // array holding changed caption IDs. Used to verify we update each caption only once even if more than one fields was updated
-						objChanges.forEachChangedItem((record: KeyValueChangeRecord) => {
+						objChanges.forEachChangedItem((record: KeyValueChangeRecord<string,any>) => {
 							// update default caption if changed
 							if (record.key === "isDefault" && record.currentValue === 1) {
 								const setAsDefaultRequest: CaptionAssetSetAsDefaultAction = new CaptionAssetSetAsDefaultAction({captionAssetId: caption.id});

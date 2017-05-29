@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/multicast';
 
@@ -28,13 +27,9 @@ export interface CategoriesQuery{
 }
 
 
-declare type CategoryFetchQueueType = ConnectableObservable<CategoryData[]>;
-
-
 @Injectable()
 export class CategoriesStore {
-    private _getCategoriesRequests: {[key: string]: CategoryFetchQueueType } = {};
-    private _categoriesCache: {[key: string] : CategoryData[]} = {};
+    private _categoriesCache: {[key: string] : Observable<{items : CategoryData[]}>} = {};
 
     constructor(private kalturaServerClient: KalturaClient) {
     }
@@ -123,58 +118,30 @@ export class CategoriesStore {
 
     private _getCategoriesWithCache({requestToken, parentId, categoriesList} : {requestToken : string, parentId?: number, categoriesList? : number[] }): Observable<CategoriesQuery> {
 
-        return Observable.create(observer => {
 
-            let fetchingObservable: CategoryFetchQueueType = this._getCategoriesRequests[requestToken];
+        // no request found in queue - get from cache if already queried those categories
+        let cachedResponse = this._categoriesCache[requestToken];
 
-            // get queue request from those categories if any
-            if (!fetchingObservable) {
+        if (!cachedResponse) {
+            const categoryListRequest = this.buildCategoryListRequest({parentId, categoriesList});
 
-                // no request found in queue - get from cache if already queried those categories
-                const cachedResponse = this._categoriesCache[requestToken];
+            // 'multicast' function will share the observable if concurrent requests to the same parent will be executed).
+            // we don't use 'share' function since it is more relevant to hot/persist origin.
+            cachedResponse = categoryListRequest
+                .map(response => {
+                    // parse response into categories items
+                    return {items : this.parseCategoriesItems(response)};
+                }).catch(error => {
+                    this._categoriesCache[requestToken] = null;
 
-                if (cachedResponse) {
-                    fetchingObservable = <CategoryFetchQueueType>ConnectableObservable.of(cachedResponse);
-                } else {
-                    const categoryListRequest = this.buildCategoryListRequest({parentId, categoriesList});
+                    // re-throw the provided error
+                    return Observable.throw(error);
+                })
+                .publishReplay(1)
+                .refCount();
+        }
 
-                    // 'multicast' function will share the observable if concurrent requests to the same parent will be executed).
-                    // we don't use 'share' function since it is more relevant to hot/persist origin.
-                    fetchingObservable = this._getCategoriesRequests[requestToken] = categoryListRequest
-                        .map(response => {
-                            this._getCategoriesRequests[requestToken] = null;
-
-                            // parse response into categories items
-                            const retrievedItems = this.parseCategoriesItems(response);
-
-                            // update internal state
-                            this._categoriesCache[requestToken] = retrievedItems;
-
-                            return retrievedItems;
-
-                        }).catch(error => {
-                            this._getCategoriesRequests[requestToken] = null;
-
-                            // re-throw the provided error
-                            return Observable.throw(error);
-                        })
-                        .multicast(() => new ReplaySubject(1));
-
-                    fetchingObservable.connect();
-                }
-            }
-
-            fetchingObservable.subscribe(
-                items => {
-                    observer.next({
-                        items : items
-                    });
-                    observer.complete();
-                }, (error) => {
-                    observer.error(error);
-                }
-            );
-        });
+        return cachedResponse;
     }
 
     private parseCategoriesItems(response : KalturaCategoryListResponse) : CategoryData[]
