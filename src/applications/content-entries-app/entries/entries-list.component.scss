@@ -7,10 +7,16 @@
     padding-top: 30px;
     width: 100%;
 	min-width: $minAppWidth;
+	box-sizing: border-box;
+	display: flex;
+	flex-flow: row wrap;
+	margin: 0px;
     .kEntriesHolder {
         height: 100%;
         border: 1px solid $kGrayscale6;
         position: relative;
+		display: flex;
+		flex-direction: column;
     }
     .kRefreshBtn {
         font-size: 24px;
@@ -35,11 +41,14 @@
         background-color: white;
         flex: 0 0 auto;
         align-items: center;
-        padding-left: 16px;
 		margin-left: 0px;
         border-bottom: none;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
+		display: flex;
+		.kSelectedEntriesNum{
+			padding-left: 16px;
+		}
     }
     .kEntriesTableTags {
         width: 100%;
@@ -54,12 +63,22 @@
         background-color: white;
         border-top: 1px solid $kGrayscale6;
         position: relative;
+		box-sizing: border-box;
+		flex: 0 0 auto;
+		padding: 0 14px 28px;
+		display: block;
     }
     .kEntriesTable {
         border: none;
         position: relative;
 		background-color: white;
 		flex: 1 1 auto;
+/*
+		flex-direction: column;
+		margin: 0;
+		box-sizing: border-box;
+		display: flex;
+		flex-flow: row wrap;*/
     }
     .kSelectedEntriesLabel{
         font-weight: bold;

@@ -1,7 +1,7 @@
-<div class="kEntries grid-noGutter kUseKMCngIcons">
-    <div #entriesTableHolder class="kEntriesHolder kContent grid-column-noGutter">
-        <div class="kEntriesTableFilters grid col-12">
-            <span *ngIf="(_entriesStore.entries$ | async)?.totalCount">{{(_entriesStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
+<div class="kEntries kUseKMCngIcons">
+    <div #entriesTableHolder class="kEntriesHolder kContent">
+        <div class="kEntriesTableFilters">
+            <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries$ | async)?.totalCount">{{(_entriesStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
 
             <div [class.kHidden]="!_selectedEntries.length" class="kBulkOperations">
                 <span class="kSelectedEntriesLabel">• {{_selectedEntries.length}} {{'applications.content.entries.selected' | translate}}</span>
@@ -33,7 +33,7 @@
                        [(selectedEntries)]="_selectedEntries" (sortChanged)="onSortChanged($event)"
                        (actionSelected)="onActionSelected($event)"></kEntriesTable>
 
-        <div class="kEntriesTableFooter col-12" #footer *ngIf="(_entriesStore.entries$ | async)?.totalCount">
+        <div class="kEntriesTableFooter" #footer *ngIf="(_entriesStore.entries$ | async)?.totalCount">
 
             <p-paginator
                     [rows]="_filter.pageSize" (onPageChange)="onPaginationChanged($event)"
