@@ -80,10 +80,10 @@
             <div *ngIf="customDataForm && customDataForm.isReady">
                 <form novalidate [formGroup]="customDataForm.formGroup">
                     <k-dynamic-form-item [control]="customDataForm.dynamicSection" [form]="customDataForm.formGroup">
-                        <template let-item="item">
+                        <ng-template let-item="item">
                             <k-linked-entries *ngIf="item.control.controlType === 'LinkedEntries'" [formControlName]="item.control.key" [control]="item.control" [form]="item.form"></k-linked-entries>
                             <k-prime-control *ngIf="item.control.controlType !== 'LinkedEntries'" [control]="item.control" [form]="item.form"></k-prime-control>
-                        </template>
+                        </ng-template>
                     </k-dynamic-form-item>
                 </form>
             </div>

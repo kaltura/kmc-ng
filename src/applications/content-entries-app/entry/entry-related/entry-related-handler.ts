@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, CollectionChangeRecord } from '@angular/core';
+import { KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, IterableChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
@@ -22,8 +22,8 @@ import '@kaltura-ng2/kaltura-common/rxjs/add/operators'
 export class EntryRelatedHandler extends EntryFormWidget
 {
 
-	relatedFilesListDiffer: IterableDiffer;
-	relatedFileDiffer : { [key : string] : KeyValueDiffer } = {};
+	relatedFilesListDiffer: IterableDiffer<KalturaAttachmentAsset>;
+	relatedFileDiffer : { [key : string] : KeyValueDiffer<string,any> } = {};
 
 	private _relatedFiles = new BehaviorSubject<{ items : KalturaAttachmentAsset[]}>(
 		{ items : []}
@@ -129,7 +129,7 @@ export class EntryRelatedHandler extends EntryFormWidget
 						}
 					});
 					this._relatedFiles.next({items : response.objects});
-					this.relatedFilesListDiffer = this._listDiffers.find([]).create(null);
+					this.relatedFilesListDiffer = this._listDiffers.find([]).create();
 					this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
 
 					this.relatedFileDiffer = {};
@@ -156,7 +156,7 @@ export class EntryRelatedHandler extends EntryFormWidget
 			if (this.relatedFilesListDiffer) {
 				let changes = this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
 				if (changes) {
-					changes.forEachAddedItem((record: CollectionChangeRecord) => {
+					changes.forEachAddedItem((record: IterableChangeRecord<KalturaAttachmentAsset>) => {
 						// added assets
 						let newAsset:KalturaAttachmentAsset = record.item as KalturaAttachmentAsset;
 						const addAssetRequest: AttachmentAssetAddAction = new AttachmentAssetAddAction({entryId: this.data.id, attachmentAsset: newAsset});
@@ -170,7 +170,7 @@ export class EntryRelatedHandler extends EntryFormWidget
 						request.requests.push(setContentRequest);
 
 					});
-					changes.forEachRemovedItem((record: CollectionChangeRecord) => {
+					changes.forEachRemovedItem((record: IterableChangeRecord<KalturaAttachmentAsset>) => {
 						// remove deleted assets
 						const deleteAssetRequest: AttachmentAssetDeleteAction = new AttachmentAssetDeleteAction({attachmentAssetId: (record.item as KalturaAttachmentAsset).id});
 						request.requests.push(deleteAssetRequest);

@@ -75,9 +75,9 @@
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@kaltura-ng2/kaltura-ui/-/kaltura-ui-0.0.2.tgz#1646993cdb1c95afe538ab36476e206cd42cb729"
 
-"@types/core-js@^0.9.41":
-  version "0.9.41"
-  resolved "https://registry.yarnpkg.com/@types/core-js/-/core-js-0.9.41.tgz#cfeceb63c2beaa29f882252c7c18e0e9471ff4e2"
+"@types/core-js@0.9.28":
+  version "0.9.28"
+  resolved "https://registry.yarnpkg.com/@types/core-js/-/core-js-0.9.28.tgz#60bcc76e108f60e012ae48e9864727e293245853"
 
 "@types/fs-extra@0.0.33":
   version "0.0.33"

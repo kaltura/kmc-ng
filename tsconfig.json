@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl" : ".",
     "target": "es5",
-    "module": "es2015",
+    "module": "commonjs",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -22,6 +22,7 @@
       "*": ["src/shared/*"]
     }
   },
+  "lib": [ "es6" ],
   "exclude": [
     "node_modules",
     "dist",

@@ -20,12 +20,12 @@
             <button pButton class="kButtonDefault kRefreshBtn small" type="text" (click)="_reload()" icon="kIconrefresh" title="{{'applications.content.entries.refresh' | translate}}"></button>
         </div>
         <kTags [title]="'applications.content.filters.activeFilters' | translate" [data]="(this._entriesStore.query$ | async)?.filters" [labelField]="'label'" [tooltipField]="'tooltip'" (onTagRemove)="removeTag($event)" (onRemoveAll)="removeAllTags()">
-			<template let-item="item">
+			<ng-template let-item="item">
 				<div class="kTagContent" [kTooltip]="item.tooltip?.token | translate : item.tooltip?.args">
 					<span class="kTagLabel">{{item.label}}</span>
 					<i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
 				</div>
-			</template>
+			</ng-template>
 		</kTags>
 
         <kEntriesTable class="kEntriesTable grid-column-noGutter col"
