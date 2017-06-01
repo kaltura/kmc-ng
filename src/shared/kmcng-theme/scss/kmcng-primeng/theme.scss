@@ -548,6 +548,17 @@ td.ui-datatable-emptymessage{
         }
     }
 }
+.ui-autocomplete-input-token input {
+	background-color: $kGrayscale6;
+	border: 0px solid $kGrayscale6;
+	color: $kGrayscale1;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box; /* Firefox, other Gecko */
+	box-sizing: border-box; /* Opera/IE 8+ */
+	&:focus {
+		background-color: white;
+	}
+}
 
 // drop down
 .ui-dropdown-item.ui-corner-all.ui-state-highlight{
