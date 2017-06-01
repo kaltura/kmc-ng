@@ -1,7 +1,7 @@
 <k-area-blocker kFillHeight [showLoader]="(entriesStore.state$ | async)?.loading || !this._viewLoaded" [message]="_blockerMessage">
 	<div class="kEntriesTable" [class.noResults]="!_entriesProvider.length">
 		<p-dataTable #dataTable [value]="_entriesProvider" [sortField]="filter.sortBy" [sortOrder]="-1"
-					 scrollable="true" scrollHeight="100%"
+					 scrollable="true" scrollHeight="100%" dataKey="id" [rowTrackBy]="rowTrackBy"
 					 (selectionChange)="onSelectionChange($event)" (onSort)="onSortChanged($event)"
 					 [(selection)]="tableSelectedEntries" emptyMessage="{{'applications.content.table.noResults' | translate}}">
 			<p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>

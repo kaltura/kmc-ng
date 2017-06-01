@@ -45,6 +45,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 	public _items: MenuItem[];
 	tableSelectedEntries: KalturaMediaEntry[] = [];
 
+	public rowTrackBy: Function = (index: number, item: any) => {return item.id};
 
 	constructor(private appLocalization: AppLocalization, public entriesStore: EntriesStore) {
 		this._viewLoaded = false;
