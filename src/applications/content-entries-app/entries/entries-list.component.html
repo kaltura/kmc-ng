@@ -17,7 +17,7 @@
                 <div #categoriesFilterBtn class="kCategoriesFilter"><i class="kIconfolder"></i><span>{{'applications.content.entries.filterCategories' | translate}}</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
                 <div #refineBtn class="kRefine"><i class="kIconfilter"></i><span>{{'applications.content.entries.refine' | translate}}</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
             </div>
-            <button pButton class="kButtonDefault kRefreshBtn small" type="text" (click)="_reload()" icon="kIconrefresh" title="{{'applications.content.entries.refresh' | translate}}"></button>
+            <button pButton class="kButtonDefault kRefreshBtn small" type="text" (click)="_reload()" icon="kIconrefresh" [kTooltip]="'applications.content.entries.refresh' | translate"></button>
         </div>
         <kTags [title]="'applications.content.filters.activeFilters' | translate" [data]="(this._entriesStore.query$ | async)?.filters" [labelField]="'label'" [tooltipField]="'tooltip'" (onTagRemove)="removeTag($event)" (onRemoveAll)="removeAllTags()">
 			<ng-template let-item="item">
