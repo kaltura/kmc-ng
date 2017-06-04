@@ -41,9 +41,9 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
 	public _viewLoaded = false;
 	public _entriesProvider: any[] = [];
+	public _emptyMessage: string = "";
 
 	public _items: MenuItem[];
-	tableSelectedEntries: KalturaMediaEntry[] = [];
 
 	public rowTrackBy: Function = (index: number, item: any) => {return item.id};
 
@@ -54,6 +54,8 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._blockerMessage = null;
+		this._emptyMessage = "";
+		let loadedOnce = false; // used to set the empty message to "no results" only after search
 		this.entriesStoreStatusSubscription = this.entriesStore.state$.subscribe(
 			result => {
 				if (result.errorMessage) {
@@ -68,6 +70,14 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 					})
 				} else {
 					this._blockerMessage = null;
+					if (result.loading){
+						this._emptyMessage = "";
+						loadedOnce = true;
+					}else {
+						if (loadedOnce) {
+							this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
+						}
+					}
 				}
 			},
 			error => {
@@ -156,11 +166,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 	}
 
 	onSelectionChange(event) {
-		this.selectedEntries = [];
-		event.forEach((entry: KalturaMediaEntry) => {
-			this.selectedEntries.push(entry.id)
-		});
-		this.selectedEntriesChange.emit(this.selectedEntries);
+		this.selectedEntriesChange.emit(event);
 	}
 
 	scrollToTop() {

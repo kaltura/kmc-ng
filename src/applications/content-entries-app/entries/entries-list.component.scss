@@ -28,6 +28,7 @@
         color: $kGrayscale3;
         &:active{
             box-shadow: none;
+			transform: rotate(45deg);
         }
         &:hover{
             background-color: #ffffff;

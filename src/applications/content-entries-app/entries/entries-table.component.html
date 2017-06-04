@@ -3,7 +3,7 @@
 		<p-dataTable #dataTable [value]="_entriesProvider" [sortField]="filter.sortBy" [sortOrder]="-1"
 					 scrollable="true" scrollHeight="100%" dataKey="id" [rowTrackBy]="rowTrackBy"
 					 (selectionChange)="onSelectionChange($event)" (onSort)="onSortChanged($event)"
-					 [(selection)]="tableSelectedEntries" emptyMessage="{{'applications.content.table.noResults' | translate}}">
+					 [(selection)]="selectedEntries" emptyMessage="{{_emptyMessage}}">
 			<p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
 			<p-column field="thumbnailUrl" header="{{'applications.content.table.thumbnail' | translate}}" [style]="{'width':'100px'}">
 				<ng-template let-col let-entry="rowData" pTemplate="body">

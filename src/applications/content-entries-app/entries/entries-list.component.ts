@@ -142,7 +142,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
     clearSelection(){
         this._selectedEntries = [];
-        this.dataTable.tableSelectedEntries = [];
     }
 
     executeBulkAction(action: string){
@@ -169,6 +168,10 @@ export class EntriesListComponent implements OnInit, OnDestroy {
             { label: this.appLocalization.get('applications.content.bulkActions.delete'), command: (event) => { this.executeBulkAction("delete") } }
         ];
     }
+
+	onSelectedEntriesChange(event):void{
+		this._selectedEntries = event;
+	}
 
 }
 
