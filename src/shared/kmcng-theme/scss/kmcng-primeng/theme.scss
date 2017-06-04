@@ -559,6 +559,19 @@ td.ui-datatable-emptymessage{
 		background-color: white;
 	}
 }
+.ui-autocomplete-token-icon.fa-close{
+	flex: 0 0 auto;
+	margin-top: -10px;
+	right: 0px;
+	padding: 4px;
+	cursor: pointer;
+	font-size: 12px;
+	&:hover{
+		background-color: rgba(255,255,255,0.3);
+		border: 0px solid rgba(255,255,255,0.3);
+		border-radius: 3px;
+	}
+}
 
 // drop down
 .ui-dropdown-item.ui-corner-all.ui-state-highlight{
