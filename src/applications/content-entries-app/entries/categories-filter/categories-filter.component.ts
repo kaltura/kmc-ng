@@ -204,28 +204,28 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     private syncTreeComponents(removedFilters : FilterItem[]) : void
     {
         // traverse on removed filters and update tree selection accordingly
-        if (removedFilters)
-        {
-            const nodesToRemove : PrimeTreeNode[] = [];
-
-            removedFilters.forEach(filter =>
-            {
-                if (filter instanceof ValueFilter)
-                {
-                    let nodeToRemove = R.find(R.propEq('data',filter.value),this.categoriesTree.treeSelection.getSelections());
-
-                    if (nodeToRemove)
-                    {
-                        nodesToRemove.push(nodeToRemove);
-                    }
-                }
-            });
-
-            if (nodesToRemove.length > 0)
-            {
-                this.categoriesTree.treeSelection.unselectItems(nodesToRemove);
-            }
-        }
+        // if (removedFilters)
+        // {
+        //     const nodesToRemove : PrimeTreeNode[] = [];
+        //
+        //     removedFilters.forEach(filter =>
+        //     {
+        //         if (filter instanceof ValueFilter)
+        //         {
+        //             let nodeToRemove = R.find(R.propEq('data',filter.value),this.categoriesTree.treeSelection.getSelections());
+        //
+        //             if (nodeToRemove)
+        //             {
+        //                 nodesToRemove.push(nodeToRemove);
+        //             }
+        //         }
+        //     });
+        //
+        //     if (nodesToRemove.length > 0)
+        //     {
+        //         this.categoriesTree.treeSelection.unselectItems(nodesToRemove);
+        //     }
+        // }
     }
 
     public _onNodeExpand(event : any) : void
@@ -259,15 +259,64 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 				        ,300);
 
 		        }
+
+		        if (node.children)
+                {
+
+                }
 		        // ask tree selection to refresh node status, required in
 		        // 'ExactBlockChildren' mode to update children status if needed
-		        this.categoriesTree.treeSelection.syncItemStatus(node);
+		        //this.categoriesTree.treeSelection.syncItemStatus(node);
 
 		        return children;
 	        });
 
         }
     }
+
+
+    /**
+     * Sync a tree status based on a provided node.
+     * Useful in 'ExactBlockChildren' mode when lazy loading its children, should update
+     * their status to disabled
+     * @param item
+     */
+    public syncItemStatus(item : PrimeTreeNode) : void{
+        // if (this.treeSelectionMode === TreeSelectionModes.SelfAndChildren)
+        // {
+        //     // in 'ExactBlockChildren' mode we need to make sure children status is updated correctly.
+        //     if (this._tree.selection)
+        //     {
+        //         if (this._tree.selection.indexOf(item) !== -1)
+        //         {
+        //             // TODO [kmcng] refactor
+        //             //this._tree.propagateSelectionDown.call(this._tree, item, true, false);
+        //         }else {
+        //             // TODO [kmcng] refactor
+        //             // const shouldBeDisabledFunc = (itemToCheck: PrimeTreeNode): boolean => {
+        //             //
+        //             // if (itemToCheck.isDisabled) {
+        //             //   return true;
+        //             // } else {
+        //             //   return itemToCheck.parent instanceof PrimeTreeNode ? shouldBeDisabledFunc(itemToCheck.parent) : false;
+        //             // }
+        //             //};
+        //
+        //             // if (shouldBeDisabledFunc(item)) {
+        //             //   // make sure item and its' children are disabled
+        //             //   // TODO [kmcng] refactor
+        //             //   // this._tree.propagateSelectionDown.call(this._tree, item, false, true);
+        //             // } else {
+        //             //   // make sure item and its' children are enabled
+        //             //   // TODO [kmcng] refactor
+        //             //   // this._tree.propagateSelectionDown.call(this._tree, item, false, false);
+        //             // }
+        //         }
+        //     }
+        //
+        // }
+    }
+
 
     private createTreeHandlerArguments(items : any[], parentNode : PrimeTreeNode = null) : any {
         return {

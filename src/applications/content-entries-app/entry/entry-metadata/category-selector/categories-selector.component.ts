@@ -1,16 +1,10 @@
-import { Component, OnInit, Input, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, OnDestroy, ViewChild, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { CategoriesPrimeService } from '../../../shared/categories-prime.service';
 import { ISubscription } from 'rxjs/Subscription';
-import * as R from 'ramda';
 
-import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 import { PrimeTreeNode } from '@kaltura-ng2/kaltura-primeng-ui';
-import { OnSelectionChangedArgs, TreeSelectionModes, TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
-
 import { Subject } from 'rxjs/Subject';
 import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
-
-import { AppUser,AppAuthentication, AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { CategoriesTreeComponent } from '../../../shared/categories-tree/categories-tree.component';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
@@ -19,7 +13,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui
     templateUrl: './categories-selector.component.html',
     styleUrls: ['./categories-selector.component.scss']
 })
-export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
+export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy, AfterViewChecked {
 
 	@ViewChild('categoriesTree') categoriesTree: CategoriesTreeComponent;
 
@@ -28,21 +22,10 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 	@Input() searchCategories: { id : string | number, fullIdPath : (string | number)[], name : string }[]  = []; // this is the auto-complete array from the metadata component
 	public _searchCategories: { id : string | number, fullIdPath : (string | number)[], name : string }[]  = [];  // this will be used as a local provider for the auto-complete. Its a replica of the data from the metadata component
 
-	public _categories: PrimeTreeNode[] = [];
-	public _loading : boolean = false;
-	public _blockerMessage: AreaBlockerMessage = null;
-
-	public _TreeSelectionModes = TreeSelectionModes;
-
-	private appUser : AppUser;
-	private inLazyMode: boolean = false;
-
 	private parentPopupStateChangeSubscription : ISubscription;
 	@Input() parentPopupWidget: PopupWidgetComponent;
 
-    constructor(private _categoriesPrimeService: CategoriesPrimeService, private _appAuthentication : AppAuthentication, private _appLocalization: AppLocalization) {
-	    this.appUser = this._appAuthentication.appUser;
-	    this.inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
+    constructor(private _categoriesPrimeService: CategoriesPrimeService, private cdRef:ChangeDetectorRef) {
     }
 
     public _apply():void{
@@ -60,37 +43,43 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 
     }
 
-    loadCategories():void{
-	    this._loading = true;
-	    this._blockerMessage = null;
-	    this._categoriesPrimeService.getCategories()
-		    .subscribe( result => {
-			    this._categories = result.categories;
-			    setTimeout(()=>{
-				    this.updateTreeCategories();
-			    },300);
-			    this._loading = false;
-		    },
-		    error => {
-			    this._blockerMessage = new AreaBlockerMessage({
-				    message: error.message || this._appLocalization.get('applications.content.entryDetails.errors.categoriesLoadError'),
-				    buttons: [{
-					    label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
-					    action: () => {
-						    this.loadCategories();
-					    }}
-				    ]
-			    })
-			    this._loading = false;
-		    });
-    }
+	_autoCompleteSelectionChanged : boolean = false;
+	_autoCompleteLastSelection : any = null;
+
+    ngAfterViewChecked()
+	{
+		if (this._autoCompleteSelectionChanged)
+		{
+			this.updateTreeSelections(this._autoCompleteLastSelection);
+
+			this._autoCompleteLastSelection = null;
+			this._autoCompleteSelectionChanged = false;
+			this.cdRef.detectChanges();
+		}
+	}
+    public _onNodesAttached({categories})
+	{
+		const selectedNodes : PrimeTreeNode[] = [];
+
+		categories.forEach((attachedCategory) =>
+		{
+			if (this._searchCategories.find(category => category.id === attachedCategory.data))
+			{
+				selectedNodes.push(attachedCategory);
+			}
+		});
+
+		if (selectedNodes.length) {
+			this.categoriesTree.selection = [...this.categoriesTree.selection || [], ...selectedNodes];
+		}
+	}
 
 	ngAfterViewInit(){
 		if (this.parentPopupWidget){
 			this.parentPopupStateChangeSubscription = this.parentPopupWidget.state$.subscribe(event => {
 				if (event.state === PopupWidgetStates.Open){
 					this._searchCategories = Array.from(this.searchCategories); // create a replica of the original data to prevent bi-directional data binding
-					this.loadCategories();
+					this.categoriesTree.loadCategories();
 				}
 			});
 		}
@@ -103,50 +92,34 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 		}
 	}
 
-	public onNodeExpand(event: any):void{
-		if (this.inLazyMode && event && event.node instanceof PrimeTreeNode) {
-			const node: PrimeTreeNode = <PrimeTreeNode>event.node;
-			this._categoriesPrimeService.loadNodeChildren(node, (children) => {
-				// check loaded treed nodes is selected in auto-complete
-				children.forEach(child =>{
-					this._searchCategories.forEach(category => {
-						if (child.data === category.id){
-							let selectedNodes = this.categoriesTree.treeSelection.getSelections();
-							selectedNodes.push(child);
-							this.categoriesTree.treeSelection.selectItems(selectedNodes);
-						}
-					});
-				});
-				return children;
-			});
-		}
-	}
+	public onSelectionChange(args) : void {
 
-	public onSelectionChange(args : OnSelectionChangedArgs) : void {
-		if (args.origin === TreeSelectionChangedOrigins.UserSelection){
-			if (args.removed && args.removed.length){
-				args.removed.forEach((node: PrimeTreeNode) =>{
-					let removeIndex = R.findIndex(R.propEq('id', node.data))(this._searchCategories);
-					if (removeIndex > -1){
-						this._searchCategories.splice(removeIndex, 1);
-					}
-				});
+		if (args.removed) {
+			const node = args.removed;
+			const matchingCategory = this._searchCategories.find(category => category.id === node.data);
+
+			if (matchingCategory) {
+				const matchingCategoryIndex = this._searchCategories.indexOf(matchingCategory);
+				this._searchCategories.splice(matchingCategoryIndex, 1);
 			}
+		}
 
-			if (args.added && args.added.length){
-				args.added.forEach((node: PrimeTreeNode) =>{
-					let newCategory: { id : string | number, fullIdPath : (string | number)[], name : string } = {id: node.data, fullIdPath: [], name: node.label};
-					let fullIdPath = [node.data];
-					while (node.parent && node.parent.data){
-						node = <PrimeTreeNode>node.parent;
-						fullIdPath.unshift(node.data);
+		if (args.added) {
+			const node = args.added;
+			const nodeIndex = this._searchCategories.indexOf(node);
+
+			if (nodeIndex === -1) {
+				this._searchCategories.push(
+					{
+						id: node.origin.id,
+						fullIdPath: node.origin.fullIdPath,
+						name: node.origin.name
 					}
-					newCategory['fullIdPath'] = fullIdPath;
-					this._searchCategories.push(newCategory);
-				});
+				)
 			}
 		}
 	}
+
 
 	public _searchForCategories(event) : void {
 		this._categoriesProvider.next({ suggestions : [], isLoading : true});
@@ -180,26 +153,22 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 			});
 	}
 
-	private updateTreeCategories(expandNodeId = null):void{
-		this.categoriesTree.treeSelection.unselectAll();
+	private updateTreeSelections(expandNodeId = null):void {
 
 		let selectedItems = [];
 		this._searchCategories.forEach(category => {
 			// find the item in the tree (if exists)
-			let treeItem : PrimeTreeNode = null;
+			let treeItem: PrimeTreeNode = null;
 
-			for(let i = 0, length = category.fullIdPath.length; i < length ; i++)
-			{
+			for (let i = 0, length = category.fullIdPath.length; i < length; i++) {
 				const itemIdToSearchFor = category.fullIdPath[i];
-				treeItem = ((treeItem ? treeItem.children : this._categories) || []).find(child => child.data  === itemIdToSearchFor);
+				treeItem = ((treeItem ? treeItem.children : this.categoriesTree.categories) || []).find(child => child.data === itemIdToSearchFor);
 			}
-			if (treeItem)
-			{
+			if (treeItem) {
 				selectedItems.push(treeItem);
-				if (expandNodeId && expandNodeId === category.id){
-					let nodeParent= treeItem.parent;
-					while(nodeParent != null)
-					{
+				if (expandNodeId && expandNodeId === category.id) {
+					let nodeParent = treeItem.parent;
+					while (nodeParent != null) {
 						nodeParent.expanded = true;
 						nodeParent = nodeParent.parent;
 					}
@@ -208,17 +177,17 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 
 
 		});
-		if (selectedItems.length){
-			this.categoriesTree.treeSelection.selectItems(selectedItems);
-		}
+
+		this.categoriesTree.selection = selectedItems;
 	}
 
-	public _onSuggestionSelected(category){
-		this.updateTreeCategories(category.id);
+	public _onAutoCompleteSelect(category){
+		this._autoCompleteLastSelection = category.id;
+		this._autoCompleteSelectionChanged = true;
 	}
 
-	public _onItemRemoved(category){
-		this.updateTreeCategories();
+	public _onAutoCompleteUnselect(){
+		this._autoCompleteSelectionChanged = true;
 	}
 
 }

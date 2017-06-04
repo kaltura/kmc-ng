@@ -101,7 +101,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
     private _activeFilters : FilterItem[] = [];
     private _activeFiltersMap : {[key : string] : FilterItem[]} = {};
     private _metadataProfilesLoaded = false;
-    private executeQuerySubscription : ISubscription = null;
+    private executeQueryState  : { subscription : ISubscription, deferredRemovedFilters : any[], deferredAddedFilters : any[]} = { subscription : null, deferredAddedFilters : [], deferredRemovedFilters : []};
 
     public entries$: Observable<Entries> = this._entries.asObservable();
     public state$: Observable<UpdateStatus> = this._state.asObservable();
@@ -143,9 +143,9 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
     ngOnDestroy()
     {
-        if (this.executeQuerySubscription) {
-            this.executeQuerySubscription.unsubscribe();
-            this.executeQuerySubscription = null;
+        if (this.executeQueryState.subscription) {
+            this.executeQueryState.subscription.unsubscribe();
+            this.executeQueryState.subscription = null;
         }
 
         this._activeFilters = null;
@@ -265,16 +265,19 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
     private _executeQuery({addedFilters,removedFilters} : {addedFilters: FilterItem[],removedFilters: FilterItem[]} = { addedFilters : [], removedFilters : []})
     {
         // cancel previous requests
-        if (this.executeQuerySubscription)
+        if (this.executeQueryState.subscription)
         {
-            this.executeQuerySubscription.unsubscribe();
-            this.executeQuerySubscription = null;
+            this.executeQueryState.subscription.unsubscribe();
+            this.executeQueryState.subscription = null;
         }
+
+        this.executeQueryState.deferredAddedFilters.push(...addedFilters);
+        this.executeQueryState.deferredRemovedFilters.push(...removedFilters);
 
         this.browserService.setInLocalStorage("entries.list.pageSize", this._queryData.pageSize);
 
         // execute the request
-        this.executeQuerySubscription = Observable.create(observer => {
+        this.executeQueryState.subscription = Observable.create(observer => {
 
             this._state.next({loading: true, errorMessage: null});
 
@@ -285,12 +288,16 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
                     const queryArgs : QueryRequestArgs = Object.assign({},
                         {
                             filters : this._activeFilters,
-                            addedFilters : addedFilters || [],
-                            removedFilters : removedFilters || [],
+                            addedFilters : this.executeQueryState.deferredAddedFilters || [],
+                            removedFilters : this.executeQueryState.deferredRemovedFilters || [],
                             data : this._queryData
                         });
 
                     this._querySource.next(queryArgs);
+
+                    this.executeQueryState.deferredAddedFilters = [];
+                    this.executeQueryState.deferredRemovedFilters = [];
+
 
                     return this.buildQueryRequest(queryArgs)
                         .monitor('entries store: transmit request',queryArgs);
@@ -308,7 +315,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             .monitor('entries store: get entries ()',{addedFilters, removedFilters})
             .subscribe(
             response => {
-                this.executeQuerySubscription = null;
+                this.executeQueryState.subscription = null;
 
                 this._state.next({loading: false, errorMessage: null});
 
@@ -318,7 +325,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
                 });
             },
             error => {
-                this.executeQuerySubscription = null;
+                this.executeQueryState.subscription = null;
                 this._state.next({loading: false, errorMessage: (<Error>error).message || <string>error});
             });
 

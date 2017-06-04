@@ -4,7 +4,6 @@ import { ISubscription } from 'rxjs/Subscription';
 import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { PrimeTreeNode, TreeDataHandler } from '@kaltura-ng2/kaltura-primeng-ui';
-import { TreeSelection, OnSelectionChangedArgs,TreeSelectionModes,TreeSelectionChangedOrigins } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
 
 import { EntriesStore } from "../entries-store/entries-store.service";
 import { FilterItem } from "../entries-store/filter-item";
@@ -23,17 +22,22 @@ import { ModerationStatusesFilter } from "../entries-store/filters/moderation-st
 import { ReplacementStatusesFilter } from "../entries-store/filters/replacement-statuses-filter";
 import { AccessControlProfilesFilter } from "../entries-store/filters/access-control-profiles-filter";
 import { DistributionsFilter } from "../entries-store/filters/distributions-filter";
-import { ValueFilter } from "../entries-store/value-filter";
 import {
-    EntriesAdditionalFiltersStore, AdditionalFilters,
-    FilterGroupType, filterGroupMetadataProfileType
+    EntriesAdditionalFiltersStore,
+    RefineFilterGroup
 } from "./entries-additional-filters-store.service";
 import { MetadataProfileFilter } from "../entries-store/filters/metadata-profile-filter";
 import { CreatedAtFilter } from "../entries-store/filters/created-at-filter";
 import { ListsToFilterTypesManager } from "./lists-to-filter-types-manager";
+import { ValueFilter } from '../entries-store/value-filter';
 
-const MetadataProfileTypeName = 'metadataProfiles';
 
+export interface TreeSection
+{
+    label : string;
+    items : PrimeTreeNode[];
+    selections : PrimeTreeNode[];
+}
 
 @Component({
     selector: 'kEntriesAdditionalFilter',
@@ -52,14 +56,9 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     private _filterUpdateSubscription : ISubscription;
     private _parentPopupStateChangeSubscribe : ISubscription;
 
-    // Synced list of ui directives of type 'TreeSelection'
-    @ViewChildren(TreeSelection) private _treeSelections : QueryList<TreeSelection> = null;
-
-    // Concrete mapping between lists shown to the user from '_primeGroups' and their matching tree selection directive
-    private _typesToTreeSelectionMapping : { [key : string] : TreeSelection} = {};
-
     // properties that are exposed to the template
-    public _primeGroups : { groupName : string, groupTypes : string[], items : PrimeTreeNode[] }[] = [];
+    public _treeSections : TreeSection[] = [];
+    private _nodeFilterNameToSectionMapping : {[key : string] : TreeSection} = {};
     public _createdAfter: Date;
     public _createdBefore: Date;
 	public _createdFilterError: string = null;
@@ -67,7 +66,6 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     public _scheduledBefore: Date;
 	public _scheduledFilterError: string = null;
     public _scheduledSelected : boolean = false;
-    public _treeSelectionModes = TreeSelectionModes; // expose enum to be used in the template
 
     @Input() parentPopupWidget: PopupWidgetComponent;
 
@@ -76,35 +74,12 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     }
 
     ngOnInit() {
-        this._registerSupportedFilters();
         this._registerToFilterUpdates();
         this._registerToAdditionalFiltersSource();
     }
 
 
     ngAfterViewInit(){
-
-        this._treeSelections.changes.subscribe((query : QueryList<TreeSelection>) =>
-        {
-            this._typesToTreeSelectionMapping = {};
-
-            if (query)
-            {
-                query.forEach(tree =>
-                {
-                    const treeTypes = tree.treeSelectionContext;
-
-                    if (treeTypes && treeTypes.length)
-                    {
-                        treeTypes.forEach(type =>
-                        {
-                           this._typesToTreeSelectionMapping[type] = tree;
-                        });
-                    }
-                })
-            }
-        });
-
         if (this.parentPopupWidget){
             this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$.subscribe(event => {
                 if (event.state === PopupWidgetStates.Close){
@@ -154,31 +129,30 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     private _registerToAdditionalFiltersSource() : void
     {
         this._additionalFiltersSubscription = this.additionalFiltersStore.filters$.subscribe(
-            (filters: AdditionalFilters) => {
-                this._primeGroups = [];
+            (filters) => {
+                this._treeSections = [];
+                this._nodeFilterNameToSectionMapping = {};
 
                 // create root nodes
                 filters.groups.forEach(group => {
-                    const primeGroup = { groupName : group.groupName, groupTypes : [] , items : [] };
-                    this._primeGroups.push(primeGroup);
+                    const treeSection = { label : group.label, items : [], selections : [] };
+                    this._treeSections.push(treeSection);
 
                     // filters is part of the default group (additional information)
-                    group.filtersTypes.forEach(filterType => {
-                        const filterItems = group.filtersByType[filterType.type];
+                    group.filters.forEach(filter => {
+                        if (filter.items.length > 0) {
+                            this._nodeFilterNameToSectionMapping[filter.name] = treeSection;
 
-                        primeGroup.groupTypes.push(filterType.type);
-
-                        if (filterItems && filterItems.length > 0) {
-                            const listRootNode = new PrimeTreeNode(null, filterType.caption,
+                            const listRootNode = new PrimeTreeNode(null, filter.label,
                                 this.treeDataHandler.create(
                                     {
-                                        items: filterItems,
+                                        items: filter.items,
                                         idProperty: 'id',
                                         nameProperty: 'name',
-                                        payload: filterType,
+                                        payload: { filterName : filter.name },
 	                                    preventSort: true
                                     }
-                                ),null,null);
+                                ),null,{ filterName : filter.name });
 
                             // assign a reference to the parent in each children. This is needed
                             // for the unselection propagation to work as expected when
@@ -188,11 +162,13 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                                     childNode.parent = listRootNode;
                                 });
                             }
-                            primeGroup.items.push(listRootNode);
+                            treeSection.items.push(listRootNode);
                         }
                     });
 
                 });
+
+                this._registerSupportedFilters(filters.groups);
             },
             (error) => {
                 // TODO [kmc] navigate to error page
@@ -206,26 +182,22 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
      *
      * @private
      */
-    private _registerSupportedFilters() : void
-    {
-        this._filterTypesManager.registerType('mediaTypes',MediaTypesFilter,(node : PrimeTreeNode)  =>
-        {
+    private _registerSupportedFilters(groups : RefineFilterGroup[]) : void {
+        this._filterTypesManager.reset();
+
+        this._filterTypesManager.registerType('mediaTypes', MediaTypesFilter, (node: PrimeTreeNode) => {
             return new MediaTypesFilter(<string>node.data, node.label);
         });
-        this._filterTypesManager.registerType('ingestionStatuses',IngestionStatusesFilter, (node : PrimeTreeNode)  =>
-        {
+        this._filterTypesManager.registerType('ingestionStatuses', IngestionStatusesFilter, (node: PrimeTreeNode) => {
             return new IngestionStatusesFilter(<string>node.data, node.label);
         });
-        this._filterTypesManager.registerType('flavors',FlavorsFilter, (node : PrimeTreeNode)  =>
-        {
+        this._filterTypesManager.registerType('flavors', FlavorsFilter, (node: PrimeTreeNode) => {
             return new FlavorsFilter(<string>node.data, node.label);
         });
-        this._filterTypesManager.registerType('durations',DurationsFilters, (node : PrimeTreeNode)  =>
-        {
+        this._filterTypesManager.registerType('durations', DurationsFilters, (node: PrimeTreeNode) => {
             return new DurationsFilters(<string>node.data, node.label);
         });
-        this._filterTypesManager.registerType('originalClippedEntries',OriginalClippedFilter, (node : PrimeTreeNode)  =>
-        {
+        this._filterTypesManager.registerType('originalClippedEntries', OriginalClippedFilter, (node: PrimeTreeNode) => {
             let result = null;
             const value: '0' | '1' = node.data === '0' ? '0' : node.data === '1' ? '1' : null;
             if (value !== null) {
@@ -234,31 +206,35 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
             return result;
         });
-        this._filterTypesManager.registerType('timeScheduling',TimeSchedulingFilter, (node : PrimeTreeNode)  =>
-        {
+        this._filterTypesManager.registerType('timeScheduling', TimeSchedulingFilter, (node: PrimeTreeNode) => {
             return new TimeSchedulingFilter(<string>node.data, node.label, this._scheduledBefore, this._scheduledAfter);
         });
-        this._filterTypesManager.registerType('moderationStatuses',ModerationStatusesFilter, (node : PrimeTreeNode)  =>
-        {
+        this._filterTypesManager.registerType('moderationStatuses', ModerationStatusesFilter, (node: PrimeTreeNode) => {
             return new ModerationStatusesFilter(<string>node.data, node.label);
         });
-        this._filterTypesManager.registerType('replacementStatuses',ReplacementStatusesFilter, (node : PrimeTreeNode)  =>
-        {
+        this._filterTypesManager.registerType('replacementStatuses', ReplacementStatusesFilter, (node: PrimeTreeNode) => {
             return new ReplacementStatusesFilter(<string>node.data, node.label);
         });
-        this._filterTypesManager.registerType('accessControlProfiles',AccessControlProfilesFilter, (node : PrimeTreeNode)  =>
-        {
+        this._filterTypesManager.registerType('accessControlProfiles', AccessControlProfilesFilter, (node: PrimeTreeNode) => {
             return new AccessControlProfilesFilter(<string>node.data, node.label);
         });
-        this._filterTypesManager.registerType('distributions',DistributionsFilter, (node : PrimeTreeNode)  =>
-        {
+        this._filterTypesManager.registerType('distributions', DistributionsFilter, (node: PrimeTreeNode) => {
             return new DistributionsFilter(<number>node.data, node.label);
         });
-        this._filterTypesManager.registerType(MetadataProfileTypeName,MetadataProfileFilter, (node : PrimeTreeNode)  =>
-        {
-            const filterType : filterGroupMetadataProfileType = <filterGroupMetadataProfileType>node.payload;
 
-            return new MetadataProfileFilter(filterType.metadataProfileId,filterType.type, filterType.fieldPath,<any>node.data, filterType.caption);
+        groups.filter(group => group.isMetadataGroup).forEach(group => {
+
+            group.filters.forEach(filter =>
+            {
+                this._filterTypesManager.registerType(filter.name, MetadataProfileFilter, (node: PrimeTreeNode) => {
+                    if (node.payload && node.payload.filterName) {
+                        return new MetadataProfileFilter(filter.metadataProfileId, filter.name, filter.fieldPath, <any>node.data, filter.label);
+                    }else
+                    {
+                        return null;
+                    }
+                });
+            });
         });
     }
 
@@ -302,54 +278,6 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         }
     }
 
-    /**
-     * Update content tree components when filters are modified somewhere outside of this component
-     * @private
-     */
-    private syncTreeComponents(removedFilters : FilterItem[]) : void
-    {
-        // traverse on removed filters and update tree selection accordingly
-        if (removedFilters)
-        {
-            removedFilters.forEach((filter : ValueFilter<any>) => {
-                if (filter instanceof ValueFilter) {
-                    let filterTypeName = this._filterTypesManager.getListNameByFilter(filter);
-
-                    if (filterTypeName) {
-
-                        if (filterTypeName === MetadataProfileTypeName)
-                        {
-                            // use the actual metdata profile list id
-                            filterTypeName = filter instanceof MetadataProfileFilter ? filter.listTypeName : null;
-                        }
-
-                        // get the relevant tree selection
-                        const relevantTreeSelection: TreeSelection = filterTypeName ? this._typesToTreeSelectionMapping[filterTypeName] : null;
-
-                        if (relevantTreeSelection) {
-                            let nodeToRemove :PrimeTreeNode = null;
-
-                            // find the filter by comparing both value and listType
-                            nodeToRemove = R.find(node => {
-                                return node instanceof PrimeTreeNode && node.data === filter.value && filterTypeName === node.payload.type;
-                            }, relevantTreeSelection.getSelections());
-
-                            if (nodeToRemove && nodeToRemove.data === 'scheduled' && this._getScheduledFilter() !== null) {
-                                // 'scheduled' filter item has a special behavior. when a user modify the scheduled To/From dates
-                                // a filter is being re-created. in such a scenario we don't want to remove the selection
-                                nodeToRemove = null;
-                            }
-
-                            if (nodeToRemove) {
-                                // update tree selection (will update tree component)
-                                relevantTreeSelection.unselectItems([nodeToRemove]);
-                            }
-                        }
-                    }
-                }
-            });
-        }
-    }
 
     /**
      * Update entries store filters with changes in the content scheduling components
@@ -424,6 +352,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
         this._createdAfter = null;
         this._createdBefore = null;
 
+
         this.syncCreatedFilters();
     }
 
@@ -434,10 +363,12 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
      */
     public _clearAllComponents() : void {
 	    this._scheduledFilterError = null;
-        this._treeSelections.forEach(tree =>
+
+	    this._filterTypesManager.getFilterTypes().forEach(filterType =>
         {
-            tree.unselectAll();
+            this.entriesStore.removeFiltersByType(filterType);    
         });
+        
 	    this._clearCreatedComponents();
     }
 
@@ -458,28 +389,6 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     }
 
 
-    /**
-     * Create a new filter based on the provided node.
-     *
-     * @param {PrimeTreeNode} node  The node that will be used to create a relevant filter from
-     */
-    private _createTreeFilters(node : PrimeTreeNode) : FilterItem
-    {
-        let result : FilterItem = null;
-
-        // ignore undefined/null filters data (the virtual roots has undefined/null data)
-        if (node instanceof PrimeTreeNode && typeof node.data !== 'undefined' && node.data !== null) {
-
-            if (node.payload instanceof filterGroupMetadataProfileType) {
-                // create metadata profile filter
-                result = this._filterTypesManager.createNewFilter(MetadataProfileTypeName,node);
-            } else if (node.payload instanceof FilterGroupType && node.payload && (<FilterGroupType>node.payload).type)  {
-                result = this._filterTypesManager.createNewFilter((<FilterGroupType>node.payload).type,node);
-            }
-        }
-
-        return result;
-    }
 
 
 
@@ -508,106 +417,139 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
     }
 
+
     /**
-     * Create or update trees components filters once the component data was changed by the user
-     *
-     * Not part of the API, don't use it from outside this component
+     * Update content tree components when filters are modified somewhere outside of this component
+     * @private
      */
-    public _onTreeSelectionChanged(args : OnSelectionChangedArgs) : void {
+    private syncTreeComponents(removedFilters : FilterItem[]) : void {
+        //traverse on removed filters and update tree selection accordingly
+        if (removedFilters) {
+            removedFilters.forEach((filter: ValueFilter<any>) => {
+                if (filter instanceof ValueFilter) {
+                    let nodeTypeName = this._filterTypesManager.getNameByFilterType(filter);
 
-        // update filters only if the change was done from this component (either by the user selecting inside the tree or when the user clicks on 'clear all'
-        if (args.origin === TreeSelectionChangedOrigins.UnselectAll || args.origin === TreeSelectionChangedOrigins.UserSelection) {
+                    if (nodeTypeName) {
+                        const treeSection = this._nodeFilterNameToSectionMapping[nodeTypeName];
 
-            let newFilters : FilterItem[] = [];
-            let removedFilters : FilterItem[] = [];
+                        if (treeSection) {
+                            const selectedNodesMatchingFilter = (treeSection.selections || []).filter(selectedNode => selectedNode.data + '' === filter.value + '');
 
-            if (args.added)
-            {
-                args.added.forEach((node : PrimeTreeNode) =>
-                {
-                    if (node instanceof PrimeTreeNode) {
-                        const filter = this._createTreeFilters(node);
-
-                        if (filter) {
-                            newFilters.push(filter);
+                            if (selectedNodesMatchingFilter.length) {
+                                selectedNodesMatchingFilter.forEach(selectedNode => {
+                                    const indexOf = treeSection.selections.indexOf(selectedNode);
+                                    treeSection.selections.splice(indexOf, 1);
+                                })
+                            }
                         }
                     }
-                });
-            }
-
-            if (args.removed) {
-                args.removed.forEach((node: PrimeTreeNode) => {
-                    if (node instanceof PrimeTreeNode) {
-                        const filter = this._getFilterOfSelectedNode(node);
-                        if (filter)
-                        {
-                            removedFilters.push(filter);
-	                        if (node.data === "scheduled"){
-		                        this._scheduledFilterError = null;
-	                        }
-                        }
-                    }
-                });
-            }
-
-            if (newFilters.length > 0) {
-                this.entriesStore.addFilters(...newFilters);
-            }
-
-            if (removedFilters.length > 0) {
-                this.entriesStore.removeFilters(...removedFilters);
-            }
-
+                }
+            });
         }
     }
 
-    /**
-     * Get filter from entries store of the provided node.
-     *
-     * @param {PrimeTreeNode} node  The node that will be used to to find a matching filter.
-     */
-    private _getFilterOfSelectedNode(node : PrimeTreeNode) : FilterItem {
-        let result: FilterItem = null;
+    private _createFiltersByNode(node : PrimeTreeNode) : FilterItem[]
+    {
+        let result: FilterItem[] = [];
 
-        if (node.payload instanceof filterGroupMetadataProfileType) {
-            // find the filter by comparing both value and listType
-            result = R.find(item => {
-                return item instanceof MetadataProfileFilter && item.value === node.data && item.listTypeName === node.payload.type;
-            }, this.entriesStore.getFiltersByType(MetadataProfileFilter));
-        } else if (node.payload instanceof FilterGroupType && node.payload && (<FilterGroupType>node.payload).type) {
-            let filterType = this._getFilterTypeByTreeNode(node);
+        if (node instanceof PrimeTreeNode) {
+            // ignore undefined/null filters data (the virtual roots has undefined/null data)
+            const isDataNode = typeof node.data !== 'undefined' && node.data !== null;
 
-            if (filterType) {
-                // find the filter by comparing value only (each list has its' own filter type)
-                result = R.find(R.propEq('value', node.data), this.entriesStore.getFiltersByType(filterType));
+            if (isDataNode) {
+                // create metadata profile filter
+                const filter = (this._filterTypesManager.createNewFilter(node.payload.filterName, node));
+
+                if (filter) {
+                    result.push(filter);
+                }
+            } else if (node.children.length) {
+                node.children.forEach(childNode => {
+                    const childFilter = this._createFiltersByNode(childNode);
+
+                    if (childFilter) {
+                        result.push(...childFilter);
+                    }
+                });
             }
         }
 
         return result;
     }
 
+
     /**
-     * Get filter type of the provided node.
+     * Get filter from entries store of the provided node.
      *
-     * @param {PrimeTreeNode} node  The node that will be used to find a matching filter type
+     * @param {PrimeTreeNode} node  The node that will be used to to find a matching filter.
      */
-    private _getFilterTypeByTreeNode(node : PrimeTreeNode) : {new(...args : any[]) : ValueFilter<any>;} {
-        let result = null;
-        // ignore undefined/null filters data (the virtual roots has undefined/null data)
-        if (node instanceof PrimeTreeNode && typeof node.data !== 'undefined' && node.data !== null) {
+    private _getFiltersByNode(node : PrimeTreeNode) : FilterItem[] {
 
-            let nodeType : string = null;
-            if (node.payload instanceof filterGroupMetadataProfileType) {
-                nodeType = MetadataProfileTypeName;
-            } else if (node.payload instanceof FilterGroupType) {
-                nodeType = (<FilterGroupType>node.payload).type;
+        let result: FilterItem[] = [];
+
+        if (node instanceof PrimeTreeNode) {
+
+            const nodeFilterType = this._filterTypesManager.getFilterTypeByName(node.payload.filterName);
+            const existingFilters = this.entriesStore.getFiltersByType(nodeFilterType);
+
+            // ignore undefined/null filters data (the virtual roots has undefined/null data)
+            const isDataNode = typeof node.data !== 'undefined' && node.data !== null;
+
+            if (isDataNode) {
+                const filter = existingFilters.find(filter => filter instanceof ValueFilter && filter.value+'' === node.data+'');
+
+                if (filter) {
+                    result.push(filter);
+                }
+            } else if (node.children.length) {
+                node.children.forEach(childNode => {
+                    const childFilter = this._getFiltersByNode(childNode);
+
+                    if (childFilter) {
+                        result.push(...childFilter);
+                    }
+                });
             }
-            result = nodeType ? this._filterTypesManager.getFilterByListName(nodeType) : null;
+        }
 
-            return result;
+        return result;
+    }
+
+
+    public _onTreeNodeSelect({node} : { node : PrimeTreeNode}, treeSection :TreeSection ) {
+        if (node instanceof PrimeTreeNode) {
+            const newFilters = this._createFiltersByNode(node);
+            const nodeFilterType = this._filterTypesManager.getFilterTypeByName(node.payload.filterName);
+            const existingFilters = this.entriesStore.getFiltersByType(nodeFilterType);
+
+            existingFilters.forEach(existingFilter =>
+            {
+                const duplicatedFilterIndex = newFilters.findIndex(newFilter => newFilter.isEqual(existingFilter));
+                if (duplicatedFilterIndex > -1)
+                {
+                    newFilters.splice(duplicatedFilterIndex,1);
+                }
+            });
+
+            if (newFilters && newFilters.length)
+            {
+                this.entriesStore.addFilters(...newFilters);
+            }
         }
     }
 
+    public _onTreeNodeUnselect({node} : { node : PrimeTreeNode}, treeSection :TreeSection) {
+        if (node instanceof PrimeTreeNode) {
+            const filters = this._getFiltersByNode(node);
+            if (filters && filters.length) {
+                this.entriesStore.removeFilters(...filters);
+            }
+
+            if (node.data === "scheduled") {
+                this._scheduledFilterError = null;
+            }
+        }
+    }
 
     /**
      * Stop propagating clicks of the provided event.
@@ -628,4 +570,6 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
             this.parentPopupWidget.close();
         }
     }
+
+
 }

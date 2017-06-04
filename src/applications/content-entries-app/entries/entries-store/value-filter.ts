@@ -12,4 +12,10 @@ export abstract class ValueFilter<T> extends FilterItem{
         super(label, tooltip);
         this._value = value;
     }
+
+    public isEqual(otherFilter : FilterItem) : boolean
+    {
+        return otherFilter instanceof ValueFilter && (typeof otherFilter === typeof this) && this.value === otherFilter.value;
+    }
+
 }
