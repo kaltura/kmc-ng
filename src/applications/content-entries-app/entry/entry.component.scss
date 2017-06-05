@@ -26,7 +26,8 @@
 				color: $kGrayscale3;
 				margin-right: 20px;
 				height: 20px;
-				margin-top: 8px;
+				margin-top: 6px;
+				font-size: 16px;
 				&:active{
 					box-shadow: none;
 				}
@@ -37,15 +38,16 @@
 			.kMediaTypeIcon{
 				width: 24px;
 				height: 24px;
-				margin-top: 10px;
-				font-size: 18px;
+				margin-top: 2px;
+				font-size: 24px;
 				color: $kGrayscale3;
 			}
 			.kEntryTitle{
 				color: $kGrayscale1;
 				font-size: 24px;
 				font-weight: 700;
-				margin-left: 8px;
+				margin-left: 12px;
+				margin-right: 100px;
 			}
 			.kSaveBtn{
 				margin-left: auto;
