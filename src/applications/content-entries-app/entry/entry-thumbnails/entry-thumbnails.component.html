@@ -10,7 +10,7 @@
 						<div class="kThumbnailHolder" ><span class="kHelper"></span><img src="{{thumb[col.field]}}" onError="this.onerror=null;this.style.display='none'"></div>
 					</ng-template>
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.thumbnails.dimensions' | translate}}">
+				<p-column field="width" header="{{'applications.content.entryDetails.thumbnails.dimensions' | translate}}" sortable="true">
 					<ng-template let-col let-thumb="rowData" pTemplate="body">
 						<span class="kDimensions">{{thumb.width}}x{{thumb.height}}</span>
 					</ng-template>
