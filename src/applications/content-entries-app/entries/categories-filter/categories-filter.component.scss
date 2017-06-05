@@ -1,25 +1,62 @@
 @import "~kmcng-theme/scss/_variables.scss";
 
-.kTreeNodeLabel{
-    width:100%;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 43px;
-    color: $kGrayscale1;
-    text-overflow: ellipsis;
-    margin-left: 5px;
+:host /deep/ p-tree{
+    .ui-treenode-content {
+        color: $kGrayscale4;
+        cursor: default;
 
-    &.kDisabled
-    {
-        color:darkgray;
+
+        .kTreeNodeLabel{
+            width:100%;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 43px;
+            text-overflow: ellipsis;
+            margin-left: 5px;
+        }
+
+        .kTreeNodeNumChildren{
+            font-size: 14px;
+            font-weight: 400;
+            color: $kGrayscale3;
+            margin-left: 10px;
+        }
+
+        .ui-chkbox-icon {
+            background-color: $kPrimary;
+            border: 1px solid $kPrimary;
+            cursor: default;
+
+            &::before {
+                content: "\E91A";
+            }
+        }
+
+        &.ui-treenode-selectable {
+            color: $kGrayscale1;
+            cursor: pointer;
+
+            .ui-chkbox {
+                .ui-chkbox-box {
+                    border: none;
+
+                }
+
+                .ui-chkbox-icon {
+                    border: 1px solid $kGrayscale4;
+                    background-color: white;
+                    height: 100%;
+
+                    &.fa-check {
+                        background-color: $kPrimary;
+                        border: 1px solid $kPrimary;
+                    }
+                }
+            }
+        }
     }
 }
-.kTreeNodeNumChildren{
-    font-size: 14px;
-    font-weight: 400;
-    color: $kGrayscale3;
-    margin-left: 10px;
-}
+
 .kClose{
     float: right;
 }

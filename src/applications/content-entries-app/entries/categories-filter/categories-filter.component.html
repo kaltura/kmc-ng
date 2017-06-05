@@ -1,35 +1,59 @@
 <k-area-blocker [showLoader]="_loading" [message]="_blockerMessage">
-	<div class="kUseKMCngIcons">
-		<div class="kHeader">
-			<kAutoComplete
-						   inputStyleClass="kSearchCategory"
-						   #searchCategory
-						   field="label"
-							placeholder="{{'applications.content.filters.findCategory' | translate}}"
-							[minLength]="3"
-						    suggestionSelectableField="isSelectable"
-							(onSelect)="_onSuggestionSelected()"
-						    [suggestionsProvider]="_suggestionsProvider"
-							(completeMethod)="_searchSuggestions($event)"
-			></kAutoComplete>
-			<i #config class="kIcongear kTreeConfig"
-			   [kTooltip]="'applications.content.filters.preferences.preferences' | translate"></i>
-			<div class="kAllCategories">
-				<span>{{'applications.content.filters.allCategories' | translate | uppercase}} </span>
-			</div>
-		</div>
-		<div class="kTreeContainer">
-			<!--<k-categories-tree #categoriesTree [categories]="_categories" [selectionMode]="_selectionMode" (nodeExpand)="_onNodeExpand($event)" (selectionChange)="_onTreeSelectionChanged($event)"></k-categories-tree>-->
-		</div>
+    <div class="kUseKMCngIcons">
+        <div class="kHeader">
+            <kAutoComplete
+                    inputStyleClass="kSearchCategory"
+                    #searchCategory
+                    field="label"
+                    placeholder="{{'applications.content.filters.findCategory' | translate}}"
+                    [minLength]="3"
+                    suggestionSelectableField="isSelectable"
+                    (onSelect)="_onSuggestionSelected()"
+                    [suggestionsProvider]="_suggestionsProvider"
+                    (completeMethod)="_searchSuggestions($event)"
+            ></kAutoComplete>
+            <i #config class="kIcongear kTreeConfig"
+               [kTooltip]="'applications.content.filters.preferences.preferences' | translate"></i>
+            <div class="kAllCategories">
+                <span>{{'applications.content.filters.allCategories' | translate | uppercase}} </span>
+            </div>
+        </div>
+        <div class="kTreeContainer">
 
-		<p>
-			<a (click)="_clearAll()">{{'applications.content.filters.clearAll' | translate}}</a>
-			<a class="kClose" (click)="close()">{{'applications.content.filters.close' | translate}}</a>
-		</p>
-	</div>
+            <p-tree #categoriesTree
+                    [selectionMode] = "'checkbox'"
+                    [propagateSelectionUp] = "false"
+                    [propagateSelectionDown] = "false"
+                    [value]="_categories"
+                    [(selection)]="_selection"
+                    (onNodeSelect)="_onTreeNodeSelected($event)"
+                    (onNodeUnselect)="_onTreeNodeUnselected($event)"
+                    (onNodeExpand)="_onNodeExpand($event)">
+                <ng-template let-node pTemplate="default">
+                    <div>
+                        <span class="kTreeNodeLabel">{{node.label}}</span>
+                        <span class="kTreeNodeNumChildren" *ngIf="node.childrenCount">{{node.childrenCount}}</span>
+                    </div>
+                    <div *ngIf="node.expanded && node.childrenStatus === 1"
+                         class="kLoadingMessage" (click)="_blockTreeSelection($event)">
+                        {{'entriesShared.categoriesFilters.loading' | translate}}
+                    </div>
+                    <div *ngIf="node.expanded && node.childrenStatus === 2"
+                         class="kLoadingErrorMessage" (click)="_blockTreeSelection($event)">
+                        {{ node.childrenLoadError || 'entriesShared.categoriesFilters.loadingError' | translate }}
+                    </div>
+                </ng-template>
+            </p-tree>
+        </div>
+
+        <p>
+            <a (click)="_clearAll()">{{'applications.content.filters.clearAll' | translate}}</a>
+            <a class="kClose" (click)="close()">{{'applications.content.filters.close' | translate}}</a>
+        </p>
+    </div>
 </k-area-blocker>
 <kPopupWidget #categoriesPref [modal]="true" [popupWidth]="360" [popupHeight]="220" [closeBtn]="true"
-			  [targetRef]="config" [targetOffset]="{'x':-324, 'y': -24}" [parentPopup]="parentPopupWidget">
-	<kCategoriesFilterPrefs [selectionMode]="_selectionMode"
-							(selectionModeChange)="_onSelectionModeChanged($event)"></kCategoriesFilterPrefs>
+              [targetRef]="config" [targetOffset]="{'x':-324, 'y': -24}" [parentPopup]="parentPopupWidget">
+    <kCategoriesFilterPrefs [selectionMode]="_selectionMode"
+                            (selectionModeChange)="_onSelectionModeChanged($event)"></kCategoriesFilterPrefs>
 </kPopupWidget>

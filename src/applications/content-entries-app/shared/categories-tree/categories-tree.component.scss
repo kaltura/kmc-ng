@@ -7,63 +7,7 @@
         color:#a9a9a9;
         cursor: default;
 
-        .kTreeNodeLabel
-        {
-            font-size: 14px;
-            font-weight: 700;
-            line-height: 43px;
-            text-overflow: ellipsis;
-            margin-left: 5px;
-        }
 
-        &.ui-treenode-selectable
-        {
-            color: $kGrayscale1;
-            cursor: pointer;
-        }
-
-        .kTreeNodeNumChildren{
-            font-size: 14px;
-            font-weight: 400;
-            color: $kGrayscale3;
-            margin-left: 10px;
-        }
-
-        .ui-chkbox
-        {
-            .ui-chkbox-box
-            {
-                border : none;
-
-            }
-
-            .ui-chkbox-icon
-            {
-                border : 1px solid $kGrayscale4;
-                background-color: white;
-                height:100%;
-
-                &.fa-check
-                {
-                    background-color: $kPrimary;
-                    border : 1px solid $kPrimary;
-                }
-            }
-        }
-
-        &:not(.ui-treenode-selectable)
-        {
-            .ui-chkbox-icon
-            {
-                background-color: $kPrimary;
-                border : 1px solid $kPrimary;
-                cursor:default;
-
-                &::before{
-                    content : "\E91A";
-                }
-            }
-        }
     }
 }
 

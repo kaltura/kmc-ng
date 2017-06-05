@@ -42,12 +42,6 @@ export interface OnSelectionChangedArgs
 export class CategoriesFilterSelection implements AfterContentInit {
 
     /**
-     * An optional context to be attached to the tree selection directive
-     * @type {any}
-     */
-    @Input() treeSelectionContext : any = "";
-
-    /**
      * The mode to be used by this tree selection directive
      * @type {TreeSelectionModes}
      */

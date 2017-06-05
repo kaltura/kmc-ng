@@ -25,7 +25,11 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy, Aft
 	private parentPopupStateChangeSubscription : ISubscription;
 	@Input() parentPopupWidget: PopupWidgetComponent;
 
-    constructor(private _categoriesPrimeService: CategoriesPrimeService, private cdRef:ChangeDetectorRef) {
+
+	_autoCompleteSelectionChanged : boolean = false;
+	_autoCompleteLastSelection : any = null;
+
+	constructor(private _categoriesPrimeService: CategoriesPrimeService, private cdRef:ChangeDetectorRef) {
     }
 
     public _apply():void{
@@ -42,9 +46,6 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy, Aft
     ngOnInit(){
 
     }
-
-	_autoCompleteSelectionChanged : boolean = false;
-	_autoCompleteLastSelection : any = null;
 
     ngAfterViewChecked()
 	{
