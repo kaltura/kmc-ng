@@ -109,3 +109,6 @@
 		height: calc(100vh - 216px);
 	}
 }
+:host /deep/ span.ui-button-icon-left.fa.kIconarrow_forward, :host /deep/ span.ui-button-icon-left.fa.kIconarrow_backward{
+	margin-left: -.5em;
+}
