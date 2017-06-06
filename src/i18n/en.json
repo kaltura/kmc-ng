@@ -3,7 +3,8 @@
         "menu": {
             "upload":"Upload",
             "Content": "Content",
-            "Entries": "Entries"
+            "Entries": "Entries",
+			"Playlists": "Playlists"
         },
         "userSettings":{
             "changeAccount": "Change Acoount",
