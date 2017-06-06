@@ -61,7 +61,7 @@ export class ListsToFilterTypesManager
      * @param name
      * @returns {ValueFilterType}
      */
-    public getFilterTypeByName(name : string) : ValueFilterType
+    public getFilterTypeByListName(name : string) : ValueFilterType
     {
         return this._nameToTypeMapping[name];
     }
@@ -71,7 +71,7 @@ export class ListsToFilterTypesManager
      * @param filter
      * @returns {string}
      */
-    public getNameByFilterType(filter : ValueFilter<any>) : string
+    public getListNameByFilterType(filter : ValueFilter<any>) : string
     {
         return this._filterTypeToNameMapping[<any>filter.constructor.name];
     }

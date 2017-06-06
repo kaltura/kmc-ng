@@ -17,6 +17,9 @@ export class CategoriesTreeComponent implements OnInit {
 	public _blockerMessage: AreaBlockerMessage = null;
 	public _categories: PrimeTreeNode[] = [];
 
+	@Output()
+	onCategoriesLoad = new EventEmitter<{ categories : PrimeTreeNode[]}>();
+
 	@Input()
 	autoLoad :boolean = true;
 
@@ -78,6 +81,7 @@ export class CategoriesTreeComponent implements OnInit {
             .subscribe( result => {
 					this._categories = result.categories;
 					this._loading = false;
+					this.onCategoriesLoad.emit({ categories : this._categories});
 				},
 				error => {
 					this._blockerMessage = new AreaBlockerMessage({

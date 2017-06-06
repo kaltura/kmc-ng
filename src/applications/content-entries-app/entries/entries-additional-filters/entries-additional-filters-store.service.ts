@@ -78,7 +78,7 @@ export class EntriesAdditionalFiltersStore {
         this.load();
     }
 
-    private load() {
+    public load() {
         // cancel previous requests
         if (this.executeQuerySubscription) {
             this.executeQuerySubscription.unsubscribe();

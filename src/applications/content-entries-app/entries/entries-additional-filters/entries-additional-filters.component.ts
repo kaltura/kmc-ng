@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChildren, QueryList, OnDestroy, AfterViewInit, Input,  ElementRef } from '@angular/core';
+import { Component, OnInit,  OnDestroy, AfterViewInit, Input,  ElementRef } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { PrimeTreeNode, TreeDataHandler } from '@kaltura-ng2/kaltura-primeng-ui';
-
+import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 import { EntriesStore } from "../entries-store/entries-store.service";
 import { FilterItem } from "../entries-store/filter-item";
 import { MediaTypesFilter } from "../entries-store/filters/media-types-filter";
@@ -30,7 +30,7 @@ import { MetadataProfileFilter } from "../entries-store/filters/metadata-profile
 import { CreatedAtFilter } from "../entries-store/filters/created-at-filter";
 import { ListsToFilterTypesManager } from "./lists-to-filter-types-manager";
 import { ValueFilter } from '../entries-store/value-filter';
-
+import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 
 export interface TreeSection
 {
@@ -50,9 +50,10 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     Manages the supported filters, expose useful helpers like getting filter type by name, getting filter factory etc...
      */
     private _filterTypesManager : ListsToFilterTypesManager = new ListsToFilterTypesManager();
+    public _showLoader = false;
+    public _blockerMessage : AreaBlockerMessage= null;
 
     // subscription that will be disposed later upon ngDestroy
-    private _additionalFiltersSubscription : ISubscription;
     private _filterUpdateSubscription : ISubscription;
     private _parentPopupStateChangeSubscribe : ISubscription;
 
@@ -74,8 +75,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     }
 
     ngOnInit() {
-        this._registerToFilterUpdates();
-        this._registerToAdditionalFiltersSource();
+        this._registerToAdditionalFiltersStore();
     }
 
 
@@ -93,7 +93,6 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     }
 
     ngOnDestroy(){
-        this._additionalFiltersSubscription.unsubscribe();
         this._filterUpdateSubscription.unsubscribe();
         this._parentPopupStateChangeSubscribe.unsubscribe();
     }
@@ -104,6 +103,27 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
      * @private
      **/
     private _registerToFilterUpdates() : void{
+
+        this.entriesStore.activeFilters$
+            .cancelOnDestroy(this)
+            .first()
+            .subscribe(result => {
+                // sync components
+                this.syncScheduledComponents();
+                this.syncCreatedComponents();
+
+                if (result.filters) {
+                    result.filters.forEach(filter =>
+                    {
+                        if (filter instanceof ValueFilter)
+                        {
+                            this._onFilterAdded(filter);
+                        }
+                    })
+                }
+            });
+
+
         // update content components when the filter list is being updated.
         this._filterUpdateSubscription = this.entriesStore.query$.subscribe(
             filter => {
@@ -112,9 +132,15 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                 this.syncScheduledComponents();
                 this.syncCreatedComponents();
 
-                if (filter.removedFilters && filter.removedFilters.length > 0) {
-                    // only removedFilters items should be handled (because relevant addedFilters filters are originated from this component)
-                    this.syncTreeComponents(filter.removedFilters);
+
+                if (filter.removedFilters) {
+                    filter.removedFilters.forEach(filter =>
+                    {
+                        if (filter instanceof ValueFilter)
+                        {
+                            this._onFilterRemoved(filter);
+                        }
+                    });
                 }
             }
         );
@@ -126,9 +152,36 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
      *
      * @private
      */
-    private _registerToAdditionalFiltersSource() : void
+    private _registerToAdditionalFiltersStore() : void
     {
-        this._additionalFiltersSubscription = this.additionalFiltersStore.filters$.subscribe(
+        this.additionalFiltersStore.status$
+            .cancelOnDestroy(this)
+            .subscribe(
+                result => {
+                    this._showLoader = result.loading;
+
+                    if (result.errorMessage) {
+                        this._blockerMessage = new AreaBlockerMessage({
+                            message: result.errorMessage || "Error loading filters",
+                            buttons: [{
+                                label: 'Retry',
+                                action: () => {
+                                    this.additionalFiltersStore.load();
+                                }}
+                            ]
+                        })
+                    } else {
+                        this._blockerMessage = null;
+                    }
+                },
+                error => {
+                    console.warn("[kmcng] -> could not load entries"); //navigate to error page
+                    throw error;
+                });
+
+        this.additionalFiltersStore.filters$
+            .cancelOnDestroy(this)
+            .subscribe(
             (filters) => {
                 this._treeSections = [];
                 this._nodeFilterNameToSectionMapping = {};
@@ -169,6 +222,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                 });
 
                 this._registerSupportedFilters(filters.groups);
+                this._registerToFilterUpdates();
             },
             (error) => {
                 // TODO [kmc] navigate to error page
@@ -283,26 +337,23 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
      * Update entries store filters with changes in the content scheduling components
      * @private
      */
-    private syncSchedulingFilters() : boolean
-    {
-	    this._scheduledFilterError = null;
+    private syncSchedulingFilters() : boolean {
+        this._scheduledFilterError = null;
         if (this._scheduledBefore && this._scheduledAfter) {
             const isValid = this._scheduledAfter <= this._scheduledBefore;
 
-            if (!isValid)
-            {
+            if (!isValid) {
                 // TODO [kmcng] replace with dialog
-                setTimeout(this.syncScheduledComponents.bind(this),0);
+                setTimeout(this.syncScheduledComponents.bind(this), 0);
 
                 this._scheduledFilterError = this.appLocalization.get('applications.content.entryDetails.errors.schedulingError');
                 return false;
             }
         }
 
-        const previousFilter = this.entriesStore.getFiltersByType(TimeSchedulingFilter).find(filter => filter.value === 'scheduled' );
+        const previousFilter = this.entriesStore.getFiltersByType(TimeSchedulingFilter).find(filter => filter.value === 'scheduled');
 
-        if (previousFilter)
-        {
+        if (previousFilter) {
             const previousValue = previousFilter.value;
             const previousLabel = previousFilter.label;
             // make sure the filter is already set for 'schedule', otherwise ignore update
@@ -418,33 +469,56 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     }
 
 
-    /**
-     * Update content tree components when filters are modified somewhere outside of this component
-     * @private
-     */
-    private syncTreeComponents(removedFilters : FilterItem[]) : void {
-        //traverse on removed filters and update tree selection accordingly
-        if (removedFilters) {
-            removedFilters.forEach((filter: ValueFilter<any>) => {
-                if (filter instanceof ValueFilter) {
-                    let nodeTypeName = this._filterTypesManager.getNameByFilterType(filter);
+    private _getNodeByFilterItem(filterItem : FilterItem) : { node : PrimeTreeNode, nodeSection : TreeSection } {
+        let result: { node: PrimeTreeNode, nodeSection: TreeSection } = null;
+        if (filterItem instanceof ValueFilter) {
+            let nodeTypeName = this._filterTypesManager.getListNameByFilterType(filterItem);
 
-                    if (nodeTypeName) {
-                        const treeSection = this._nodeFilterNameToSectionMapping[nodeTypeName];
+            if (nodeTypeName) {
+                const treeSection = this._nodeFilterNameToSectionMapping[nodeTypeName];
 
-                        if (treeSection) {
-                            const selectedNodesMatchingFilter = (treeSection.selections || []).filter(selectedNode => selectedNode.data + '' === filter.value + '');
+                if (treeSection) {
+                    let filterNode: PrimeTreeNode = null;
+                    for (let i = 0, length = treeSection.items.length; i < length && !filterNode; i++) {
+                        filterNode = (treeSection.items[i].children || []).find(childNode => childNode.data + '' === filterItem.value + '');
+                    }
 
-                            if (selectedNodesMatchingFilter.length) {
-                                selectedNodesMatchingFilter.forEach(selectedNode => {
-                                    const indexOf = treeSection.selections.indexOf(selectedNode);
-                                    treeSection.selections.splice(indexOf, 1);
-                                })
-                            }
-                        }
+                    if (filterNode) {
+                        result = {node: filterNode, nodeSection: treeSection};
                     }
                 }
-            });
+            }
+        }
+
+        return result;
+    }
+
+
+
+    private _onFilterAdded(filter : ValueFilter<any>) {
+        if (filter) {
+            const { node, nodeSection } = this._getNodeByFilterItem(filter) || { node : null, nodeSection : null };
+
+            if (node) {
+                const filterNodeSelectionIndex = nodeSection && nodeSection.selections ? nodeSection.selections.indexOf(node) : -1;
+
+                if (filterNodeSelectionIndex === -1) {
+                    nodeSection.selections.push(node);
+                }
+            }
+        }
+    }
+
+    private _onFilterRemoved(filter : ValueFilter<any>) {
+        if (filter) {
+            const {node, nodeSection} = this._getNodeByFilterItem(filter) || {node: null, nodeSection: null};
+
+            if (node && nodeSection) {
+                const filterNodeSelectionIndex = nodeSection.selections ? nodeSection.selections.indexOf(node) : -1;
+                if (filterNodeSelectionIndex > -1) {
+                    nodeSection.selections.splice(filterNodeSelectionIndex, 1);
+                }
+            }
         }
     }
 
@@ -489,7 +563,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
         if (node instanceof PrimeTreeNode) {
 
-            const nodeFilterType = this._filterTypesManager.getFilterTypeByName(node.payload.filterName);
+            const nodeFilterType = this._filterTypesManager.getFilterTypeByListName(node.payload.filterName);
             const existingFilters = this.entriesStore.getFiltersByType(nodeFilterType);
 
             // ignore undefined/null filters data (the virtual roots has undefined/null data)
@@ -519,7 +593,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
     public _onTreeNodeSelect({node} : { node : PrimeTreeNode}, treeSection :TreeSection ) {
         if (node instanceof PrimeTreeNode) {
             const newFilters = this._createFiltersByNode(node);
-            const nodeFilterType = this._filterTypesManager.getFilterTypeByName(node.payload.filterName);
+            const nodeFilterType = this._filterTypesManager.getFilterTypeByListName(node.payload.filterName);
             const existingFilters = this.entriesStore.getFiltersByType(nodeFilterType);
 
             existingFilters.forEach(existingFilter =>

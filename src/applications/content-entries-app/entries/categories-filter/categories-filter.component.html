@@ -1,6 +1,7 @@
     <div class="kUseKMCngIcons">
         <div class="kHeader">
             <kAutoComplete
+                    [disabled]="!_isReadyForUse"
                     inputStyleClass="kSearchCategory"
                     #searchCategory
                     field="label"
@@ -23,6 +24,7 @@
                     [(selection)]="_selection"
                     (onNodeSelect)="_onTreeNodeSelected($event)"
                     (onNodeUnselect)="_onTreeNodeUnselected($event)"
+                    (onCategoriesLoad)="_onCategoriesLoad($event)"
                     (onNodeChildrenLoaded)="_onNodeChildrenLoaded($event)">
             </k-categories-tree>
         </div>

@@ -1,4 +1,4 @@
-<k-area-blocker kFillHeight [showLoader]="(entriesStore.state$ | async)?.loading || !this._viewLoaded" [message]="_blockerMessage">
+<k-area-blocker kFillHeight [showLoader]="(entriesStore.state$ | async)?.loading || this._deferredLoading" [message]="_blockerMessage">
 	<div class="kEntriesTable col" [class.noResults]="!_entriesProvider.length">
 		<p-dataTable #dataTable [value]="_entriesProvider" [sortField]="filter.sortBy" [sortOrder]="-1"
 					 scrollable="true" scrollHeight="100%"

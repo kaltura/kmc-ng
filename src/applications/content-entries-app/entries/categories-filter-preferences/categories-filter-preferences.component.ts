@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { TreeSelectionModes } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
+import { TreeSelectionModes } from '../categories-filter/categories-filter.component';
 
 @Component({
     selector: 'kCategoriesFilterPrefs',

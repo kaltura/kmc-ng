@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="(additionalFiltersStore.status$ | async)?.loading">
+<k-area-blocker [showLoader]="_showLoader" [message]="_blockerMessage">
 	<div class="kUseKMCngIcons kRefineFilters">
 		<div #refine class="kTreeContainer">
 			<div class="kFiltersGroupTitle">

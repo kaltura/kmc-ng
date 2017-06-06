@@ -15,6 +15,7 @@ import { EntriesStore } from "../entries-store/entries-store.service";
 import { CategoriesFilter, CategoriesFilterModes } from "../entries-store/filters/categories-filter";
 import { AutoComplete } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 import { CategoriesTreeComponent } from '../../shared/categories-tree/categories-tree.component';
+import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 
 
 export enum TreeSelectionModes
@@ -32,6 +33,8 @@ export enum TreeSelectionModes
 export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
+
+    public _isReadyForUse : boolean = false;
 
     private filterUpdateSubscription : ISubscription;
     private parentPopupStateChangeSubscription : ISubscription;
@@ -56,30 +59,6 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     ngOnInit() {
         // update components when the active filter list is updated
-        this.filterUpdateSubscription = this._entriesStore.query$.subscribe(
-            filter => {
-                if (filter.removedFilters && filter.removedFilters.length > 0) {
-                    filter.removedFilters.forEach(removedFilter =>
-                    {
-                        if (removedFilter instanceof CategoriesFilter)
-                        {
-                            this._onFilterRemoved(removedFilter);
-                        }
-                    });
-                }
-
-                if (filter.addedFilters && filter.addedFilters.length > 0) {
-                    filter.addedFilters.forEach(addedFilter =>
-                    {
-                        if (addedFilter instanceof CategoriesFilter)
-                        {
-                            this._onFilterAdded(addedFilter);
-                        }
-                    });
-                }
-            }
-        );
-
         const savedAutoSelectChildren: TreeSelectionModes = this._browserService.getFromLocalStorage("contentShared.categoriesTree.selectionMode");
         this._selectionMode = typeof savedAutoSelectChildren === 'number' ? savedAutoSelectChildren : TreeSelectionModes.SelfAndChildren;
 
@@ -334,6 +313,44 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
+    public _onCategoriesLoad({ categories } : { categories : PrimeTreeNode[] }) : void
+    {
+        this._isReadyForUse = categories && categories.length > 0;
+
+        if (!this.filterUpdateSubscription) {
+            this._entriesStore.activeFilters$
+                .cancelOnDestroy(this)
+                .first()
+                .subscribe(result => {
+                result.filters.forEach(filter => {
+                    if (filter instanceof CategoriesFilter) {
+                        this._onFilterAdded(filter);
+                    }
+                });
+            });
+
+            this.filterUpdateSubscription = this._entriesStore.query$.subscribe(
+                filter => {
+                    if (filter.removedFilters && filter.removedFilters.length > 0) {
+                        filter.removedFilters.forEach(removedFilter => {
+                            if (removedFilter instanceof CategoriesFilter) {
+                                this._onFilterRemoved(removedFilter);
+                            }
+                        });
+                    }
+
+                    if (filter.addedFilters && filter.addedFilters.length > 0) {
+                        filter.addedFilters.forEach(addedFilter => {
+                            if (addedFilter instanceof CategoriesFilter) {
+                                this._onFilterAdded(addedFilter);
+                            }
+                        });
+                    }
+                }
+            );
+        }
+    }
+
     private createTreeHandlerArguments(items : any[], parentNode : PrimeTreeNode = null) : any {
         return {
             items: items,
@@ -349,6 +366,15 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     public _onSelectionModeChanged(value) {
         // clear current selection
         this._clearAll();
+
+        if (value === TreeSelectionModes.Self) {
+            // in self mode all nodes are selectable by default. must update their status
+            if (this._categoriesTree.categories) {
+                this._categoriesTree.categories.forEach(categoryNode => {
+                    this._updateNodeState(categoryNode, {nodeIsSelectable: true, nodeChildrenAreSelectable: true});
+                })
+            }
+        }
 
         // important - updates selection mode only after the remove all filters was invoked to be sure the component is sync correctly.
         this._selectionMode = value;
@@ -373,6 +399,12 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
     ngOnDestroy(){
 
         this._suggestionsProvider.complete();
+
+        if (this.filterUpdateSubscription)
+        {
+            this.filterUpdateSubscription.unsubscribe();
+            this.filterUpdateSubscription = null;
+        }
 
         if (this.parentPopupStateChangeSubscription) {
             this.parentPopupStateChangeSubscription.unsubscribe();

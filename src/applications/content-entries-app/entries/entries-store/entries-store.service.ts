@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { Scheduler } from 'rxjs';
@@ -80,6 +80,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         EntriesStore.filterTypeMapping[filterType.name] = handler;
     }
 
+    private _activeFilters  = new BehaviorSubject<{ filters : FilterItem[] }>({ filters : []});
     private _entries  = new BehaviorSubject({items: [], totalCount: 0});
     private _state = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null});
 
@@ -91,21 +92,16 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         sortDirection: SortDirection.Desc,
         fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus'
     };
-    private _querySource = new BehaviorSubject<QueryRequestArgs>({
-        filters : [],
-        addedFilters : [],
-        removedFilters : [],
-        data : this._queryData
-    });
+    private _querySource = new Subject<QueryRequestArgs>();
 
-    private _activeFilters : FilterItem[] = [];
     private _activeFiltersMap : {[key : string] : FilterItem[]} = {};
     private _metadataProfilesLoaded = false;
     private executeQueryState  : { subscription : ISubscription, deferredRemovedFilters : any[], deferredAddedFilters : any[]} = { subscription : null, deferredAddedFilters : [], deferredRemovedFilters : []};
 
-    public entries$: Observable<Entries> = this._entries.asObservable();
-    public state$: Observable<UpdateStatus> = this._state.asObservable();
-    public query$ : Observable<QueryRequestArgs> = this._querySource.asObservable();
+    public activeFilters$ =  this._activeFilters.asObservable();
+    public entries$ = this._entries.asObservable();
+    public state$ = this._state.asObservable();
+    public query$ = this._querySource.asObservable();
 
 
     constructor(private kalturaServerClient: KalturaClient,
@@ -117,6 +113,10 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         }
 
         this._getMetadataProfiles();
+    }
+
+    public get queryData() : QueryData{
+        return Object.assign({}, this._queryData);
     }
 
     private _getMetadataProfiles() : Observable<void> {
@@ -202,8 +202,8 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
     public clearAllFilters()
     {
-        const previousFilters = this._activeFilters;
-        this._activeFilters = [];
+        const previousFilters = this._activeFilters.getValue().filters;
+        this._activeFilters.next({ filters : []});
         this._activeFiltersMap = {};
         this._executeQuery({ removedFilters : previousFilters, addedFilters : []});
     }
@@ -213,10 +213,11 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         if (filters)
         {
             const addedFilters = [];
+            const activeFilters = this._activeFilters.getValue().filters;
 
             filters.forEach(filter =>
             {
-                const index = this._activeFilters.indexOf(filter);
+                const index = activeFilters.indexOf(filter);
 
                 if (index === -1 )
                 {
@@ -228,7 +229,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
             if (addedFilters.length > 0)
             {
-                this._activeFilters = [...this._activeFilters, ...addedFilters];
+                this._activeFilters.next({ filters : [...activeFilters, ...addedFilters] });
                 this._queryData.pageIndex = 1;
                 this._executeQuery({  removedFilters : [], addedFilters : addedFilters });
             }
@@ -239,23 +240,27 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         if (filters)
         {
             const removedFilters : FilterItem[] = [];
+            const activeFilters = this._activeFilters.getValue().filters;
+            const modifiedActiveFilters = [...activeFilters];
 
             filters.forEach(filter =>
             {
-               const index = this._activeFilters.indexOf(filter);
+               const index = modifiedActiveFilters.indexOf(filter);
 
                if (index >= 0)
                {
                    removedFilters.push(filter);
-                   this._activeFilters = R.remove(index,1, this._activeFilters);
+                   modifiedActiveFilters.splice(index,1);
 
                    const filterByType = this._activeFiltersMap[filter.constructor.name];
-                   this._activeFiltersMap[filter.constructor.name] = R.remove(filterByType.indexOf(filter),1, filterByType);
+                   filterByType.splice(filterByType.indexOf(filter),1);
                }
             });
 
             if (removedFilters.length > 0)
             {
+                this._activeFilters.next({ filters : modifiedActiveFilters});
+
                 this._queryData.pageIndex = 1;
                 this._executeQuery({ removedFilters : removedFilters, addedFilters : [] });
             }
@@ -287,7 +292,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
                 {
                     const queryArgs : QueryRequestArgs = Object.assign({},
                         {
-                            filters : this._activeFilters,
+                            filters : this._activeFilters.getValue().filters,
                             addedFilters : this.executeQueryState.deferredAddedFilters || [],
                             removedFilters : this.executeQueryState.deferredRemovedFilters || [],
                             data : this._queryData

@@ -18,7 +18,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 	private _entries: any[] = [];
 	@Input() set entries(data: any[]) {
 		this._entries = data;
-		if (this._viewLoaded) {
+		if (!this._deferredLoading) {
 			// This prevents the screen from hanging during datagrid rendering of the data.
 			this._entriesProvider = this._entries;
 		}
@@ -39,7 +39,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 	private actionsMenuEntryId: string = "";
 	private entriesStoreStatusSubscription: ISubscription;
 
-	public _viewLoaded = false;
+	public _deferredLoading = true;
 	public _entriesProvider: any[] = [];
 
 	public _items: MenuItem[];
@@ -47,7 +47,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
 
 	constructor(private appLocalization: AppLocalization, public entriesStore: EntriesStore) {
-		this._viewLoaded = false;
+		this._deferredLoading = true;
 	}
 
 
@@ -116,10 +116,10 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 				}
 			}
 		}
-		if (!this._viewLoaded) {
+		if (this._deferredLoading) {
 			// use timeout to allow the DOM to render before setting the data to the datagrid. This prevents the screen from hanging during datagrid rendering of the data.
 			setTimeout(()=> {
-				this._viewLoaded = true;
+				this._deferredLoading = false;
 				this._entriesProvider = this._entries;
 			}, 0);
 		}
