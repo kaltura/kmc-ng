@@ -50,9 +50,9 @@
 
 <!-- popup widgets section -->
 <kPopupWidget #categoriesFilterPopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="categoriesFilterBtn" [targetOffset]="{'x':-10, 'y': -21}">
-    <kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup"></kCategoriesFilter>
+	<kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup"></kCategoriesFilter>
 </kPopupWidget>
 
 <kPopupWidget #refinePopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="refineBtn" [targetOffset]="{'x':-200, 'y': -20}">
-    <kEntriesAdditionalFilter [parentPopupWidget]="refinePopup" ></kEntriesAdditionalFilter>
+	<kEntriesAdditionalFilter [parentPopupWidget]="refinePopup" ></kEntriesAdditionalFilter>
 </kPopupWidget>

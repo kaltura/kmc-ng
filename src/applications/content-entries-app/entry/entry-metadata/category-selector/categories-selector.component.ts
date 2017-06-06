@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild, OnChanges } from '@angular/core';
 import { CategoriesPrimeService } from '../../../shared/categories-prime.service';
 import { ISubscription } from 'rxjs/Subscription';
 import * as R from 'ramda';
@@ -15,11 +15,11 @@ import { CategoriesTreeComponent } from '../../../shared/categories-tree/categor
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
-    selector: 'kCategoriesSelector',
-    templateUrl: './categories-selector.component.html',
-    styleUrls: ['./categories-selector.component.scss']
+	selector: 'kCategoriesSelector',
+	templateUrl: './categories-selector.component.html',
+	styleUrls: ['./categories-selector.component.scss']
 })
-export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
+export class CategoriesSelector implements OnInit, OnDestroy, OnChanges{
 
 	@ViewChild('categoriesTree') categoriesTree: CategoriesTreeComponent;
 
@@ -40,60 +40,54 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy{
 	private parentPopupStateChangeSubscription : ISubscription;
 	@Input() parentPopupWidget: PopupWidgetComponent;
 
-    constructor(private _categoriesPrimeService: CategoriesPrimeService, private _appAuthentication : AppAuthentication, private _appLocalization: AppLocalization) {
-	    this.appUser = this._appAuthentication.appUser;
-	    this.inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
-    }
+	constructor(private _categoriesPrimeService: CategoriesPrimeService, private _appAuthentication : AppAuthentication, private _appLocalization: AppLocalization) {
+		this.appUser = this._appAuthentication.appUser;
+		this.inLazyMode = this.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
+	}
 
-    public _apply():void{
+	public _apply():void{
 
-	    // update searchCategories from metadata component with the updated categories array
-	    this.searchCategories.length = 0;
-	    this._searchCategories.forEach(category => { this.searchCategories.push(category)});
+		// update searchCategories from metadata component with the updated categories array
+		this.searchCategories.length = 0;
+		this._searchCategories.forEach(category => { this.searchCategories.push(category)});
 
-	    if (this.parentPopupWidget){
-		    this.parentPopupWidget.close({isDirty: true});
-	    }
-    }
-
-    ngOnInit(){
-
-    }
-
-    loadCategories():void{
-	    this._loading = true;
-	    this._blockerMessage = null;
-	    this._categoriesPrimeService.getCategories()
-		    .subscribe( result => {
-			    this._categories = result.categories;
-			    setTimeout(()=>{
-				    this.updateTreeCategories();
-			    },300);
-			    this._loading = false;
-		    },
-		    error => {
-			    this._blockerMessage = new AreaBlockerMessage({
-				    message: error.message || this._appLocalization.get('applications.content.entryDetails.errors.categoriesLoadError'),
-				    buttons: [{
-					    label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
-					    action: () => {
-						    this.loadCategories();
-					    }}
-				    ]
-			    })
-			    this._loading = false;
-		    });
-    }
-
-	ngAfterViewInit(){
 		if (this.parentPopupWidget){
-			this.parentPopupStateChangeSubscription = this.parentPopupWidget.state$.subscribe(event => {
-				if (event.state === PopupWidgetStates.Open){
-					this._searchCategories = Array.from(this.searchCategories); // create a replica of the original data to prevent bi-directional data binding
-					this.loadCategories();
-				}
-			});
+			this.parentPopupWidget.close({isDirty: true});
 		}
+	}
+
+	ngOnInit(){
+		this.loadCategories();
+	}
+
+	ngOnChanges(changes){
+		if (changes.searchCategories){
+			this._searchCategories = Array.from(<{id : string | number, fullIdPath : (string | number)[], name : string }[]>changes.searchCategories.currentValue);
+		}
+	}
+	loadCategories():void{
+		this._loading = true;
+		this._blockerMessage = null;
+		this._categoriesPrimeService.getCategories()
+			.subscribe( result => {
+					this._categories = result.categories;
+					setTimeout(()=>{
+						this.updateTreeCategories();
+					},300);
+					this._loading = false;
+				},
+				error => {
+					this._blockerMessage = new AreaBlockerMessage({
+						message: error.message || this._appLocalization.get('applications.content.entryDetails.errors.categoriesLoadError'),
+						buttons: [{
+							label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
+							action: () => {
+								this.loadCategories();
+							}}
+						]
+					})
+					this._loading = false;
+				});
 	}
 
 	ngOnDestroy(){

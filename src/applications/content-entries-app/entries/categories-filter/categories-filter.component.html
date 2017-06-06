@@ -28,8 +28,8 @@
 		</p>
 	</div>
 </k-area-blocker>
-<kPopupWidget #categoriesPref [modal]="true" [popupWidth]="360" [popupHeight]="220" [closeBtn]="true"
-			  [targetRef]="config" [targetOffset]="{'x':-324, 'y': -24}" [parentPopup]="parentPopupWidget">
-	<kCategoriesFilterPrefs [selectionMode]="_selectionMode"
-							(selectionModeChange)="_onSelectionModeChanged($event)"></kCategoriesFilterPrefs>
+<kPopupWidget #categoriesPref [modal]="true" [popupWidth]="360" [popupHeight]="220" [closeBtn]="true" [targetRef]="config" [targetOffset]="{'x':-324, 'y': -24}" [parentPopup]="parentPopupWidget">
+	<ng-template>
+		<kCategoriesFilterPrefs [selectionMode]="_selectionMode" (selectionModeChange)="_onSelectionModeChanged($event)"></kCategoriesFilterPrefs>
+	</ng-template>
 </kPopupWidget>

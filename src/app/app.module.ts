@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
@@ -33,16 +34,18 @@ import { ButtonModule, InputTextModule, TieredMenuModule } from 'primeng/primeng
 import { MetadataProfileStore, PartnerProfileStore, AccessControlProfileStore, FlavoursStore } from '@kaltura-ng2/kaltura-common';
 import { UploadManagementModule } from '@kaltura-ng2/kaltura-common/upload-management';
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
-import { ConfirmDialogModule, ConfirmationService } from 'primeng/primeng';
+import { ConfirmDialogModule, ConfirmationService, DropdownModule } from 'primeng/primeng';
 
 const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessControlProfileStore, FlavoursStore];
 @NgModule({
   imports: <any>[
+	FormsModule,
     BrowserModule,
     BrowserAnimationsModule,
     ButtonModule,
     CommonModule,
     ConfirmDialogModule,
+	DropdownModule,
     HttpModule,
     InputTextModule,
     KalturaClientModule.forRoot({
