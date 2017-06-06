@@ -7,7 +7,6 @@ import { TagsModule } from '@kaltura-ng2/kaltura-ui/tags';
 import {
      TreeModule, TieredMenuModule,  SharedModule,   AccordionModule,  ButtonModule, InputTextareaModule, PaginatorModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule, MultiSelectModule, CheckboxModule, CalendarModule, SpinnerModule, ConfirmDialogModule, ConfirmationService, GrowlModule } from 'primeng/primeng';
 import { KMCShellModule } from 'kmc-shell';
-import { TreeSelectionModule } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
 
 import { routing } from './content-entries-app.routes';
 import { ContentEntriesComponent } from './content-entries.component';
@@ -66,8 +65,7 @@ import { SharedComponentsList } from './shared/shared-components-list';
         TagsModule,
         TieredMenuModule,
         TooltipModule,
-        TreeModule,
-        TreeSelectionModule,
+        TreeModule
     ],
     declarations: [
         ContentEntriesComponent,

@@ -7,7 +7,6 @@ import { EntryDurationPipe } from './pipes/entry-duration.pipe';
 import {
     EntriesAdditionalFiltersComponent
 } from "./entries-additional-filters/entries-additional-filters.component";
-import { CategoriesFilterSelection } from './categories-filter/categories-filter-selection.directive';
 
 export const EntriesComponentsList = [
     EntriesListComponent,
@@ -16,6 +15,5 @@ export const EntriesComponentsList = [
     CategoriesFilterPrefsComponent,
     EntriesAdditionalFiltersComponent,
     MaxEntriesPipe,
-    EntryDurationPipe,
-    CategoriesFilterSelection
+    EntryDurationPipe
 ];

@@ -16,8 +16,9 @@
     </kAutoComplete>
 
 
-        <k-categories-tree #categoriesTree [autoLoad]="false"
-                         (onNodesAttached)="_onNodesAttached($event)"
+        <k-categories-tree #categoriesTree
+                           [(selection)]="_treeSelection"
+                           (onNodeChildrenLoaded)="_onNodeChildrenLoaded($event)"
                          (onSelectionChanged)="onSelectionChange($event)"></k-categories-tree>
 
 

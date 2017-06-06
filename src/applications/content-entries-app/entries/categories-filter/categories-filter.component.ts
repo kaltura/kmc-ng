@@ -1,9 +1,8 @@
 
-import { Component, OnInit, OnDestroy,  ChangeDetectorRef, ViewChild, Input, AfterViewChecked, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy,  ChangeDetectorRef, ViewChild, Input, AfterViewInit, ElementRef } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 import { PrimeTreeNode } from '@kaltura-ng2/kaltura-primeng-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { AppAuthentication } from '@kaltura-ng2/kaltura-common';
@@ -12,10 +11,10 @@ import { CategoriesPrimeService } from '../../shared/categories-prime.service';
 import { CategoryData } from '../../shared/categories-store.service';
 
 import { BrowserService } from "kmc-shell/providers/browser.service";
-import { FilterItem } from "../entries-store/filter-item";
 import { EntriesStore } from "../entries-store/entries-store.service";
 import { CategoriesFilter, CategoriesFilterModes } from "../entries-store/filters/categories-filter";
 import { AutoComplete } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
+import { CategoriesTreeComponent } from '../../shared/categories-tree/categories-tree.component';
 
 
 export enum TreeSelectionModes
@@ -30,17 +29,15 @@ export enum TreeSelectionModes
     templateUrl: './categories-filter.component.html',
     styleUrls: ['./categories-filter.component.scss']
 })
-export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked{
+export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    public _loading : boolean = false;
-    public _categories: PrimeTreeNode[] = [];
-    private inLazyMode : boolean = false;
+    @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
+
     private filterUpdateSubscription : ISubscription;
     private parentPopupStateChangeSubscription : ISubscription;
     public _suggestionsProvider = new Subject<SuggestionsProviderData>();
     private _searchCategoriesRequest$ : ISubscription;
     public _selectionMode :TreeSelectionModes = TreeSelectionModes.Self;
-	public _blockerMessage: AreaBlockerMessage = null;
 	public _selection : PrimeTreeNode[] = [];
 
     @ViewChild('searchCategory')
@@ -53,8 +50,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         private _entriesStore : EntriesStore,
         private _categoriesPrimeService: CategoriesPrimeService,
         private _browserService: BrowserService,
-        private _filtersRef: ElementRef,
-        private cdRef:ChangeDetectorRef
+        private _filtersRef: ElementRef
     ) {
     }
 
@@ -87,32 +83,6 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         const savedAutoSelectChildren: TreeSelectionModes = this._browserService.getFromLocalStorage("contentShared.categoriesTree.selectionMode");
         this._selectionMode = typeof savedAutoSelectChildren === 'number' ? savedAutoSelectChildren : TreeSelectionModes.SelfAndChildren;
 
-        // TODO [kmcng] consider using constants for permissions flags
-        this.inLazyMode = this._appAuthentication.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
-        this.reloadCategories();
-    }
-
-    private reloadCategories() : void
-    {
-	    this._loading = true;
-	    this._blockerMessage = null;
-	    this._categoriesPrimeService.getCategories()
-		    .subscribe( result => {
-				    this._categories = result.categories;
-				    this._loading = false;
-			    },
-			    error => {
-				    this._blockerMessage = new AreaBlockerMessage({
-					    message: error.message || "Error loading categories",
-					    buttons: [{
-						    label: 'Retry',
-						    action: () => {
-							    this.reloadCategories();
-						    }}
-					    ]
-				    })
-				    this._loading = false;
-			    });
     }
 
     ngAfterViewInit(){
@@ -151,8 +121,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
 
     public _onFilterAdded(filter : CategoriesFilter) {
-
-        const nodeOfFilter = this._findNodeByFullIdPath(filter.fullIdPath);
+        const nodeOfFilter = this._categoriesTree.findNodeByFullIdPath(filter.fullIdPath);
 
         if (nodeOfFilter) {
 
@@ -172,7 +141,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     public _onFilterRemoved(filter : CategoriesFilter) {
 
-        const nodeOfFilter = this._findNodeByFullIdPath(filter.fullIdPath);
+        const nodeOfFilter = this._categoriesTree.findNodeByFullIdPath(filter.fullIdPath);
 
         if (nodeOfFilter) {
 
@@ -335,47 +304,33 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    private _viewCheckedContext = {  };
 
-    ngAfterViewChecked()
+    public _onNodeChildrenLoaded({node})
     {
-
-    }
-
-    public _onNodeExpand(event : any) : void
-    {
-        // load node children, relevant only if 'inLazyMode' and node children weren't loaded already
-        if (this.inLazyMode && event && event.node instanceof PrimeTreeNode)
+        if (node instanceof PrimeTreeNode)
         {
-            const expandedNode : PrimeTreeNode = <PrimeTreeNode>event.node;
+            const categoriesFilters = this._entriesStore.getFiltersByType(CategoriesFilter);
+            const expandedNodeIsSelectable = !this._isParentOfNodeSelected(node);
+            const expandedNodeIsSelected = this._isNodeSelected(node);
 
-	        this._categoriesPrimeService.loadNodeChildren(expandedNode, (children) => {
+            node.children.forEach(nodeChild =>
+            {
 
-	            const categoriesFilters = this._entriesStore.getFiltersByType(CategoriesFilter);
-                const expandedNodeIsSelectable = !this._isParentOfNodeSelected(expandedNode);
-                const expandedNodeIsSelected = this._isNodeSelected(expandedNode);
-
-                (children || []).forEach(nodeChild =>
+                if (categoriesFilters.find(categoryFilter => categoryFilter.value + '' === nodeChild.data + ''))
                 {
+                    // handle new child that already has an active filter
+                    this._selection.push(nodeChild); // add to tree selections
 
-                    if (categoriesFilters.find(categoryFilter => categoryFilter.value + '' === nodeChild.data + ''))
+                    if (this._selectionMode == TreeSelectionModes.SelfAndChildren)
                     {
-                        // handle new child that already has an active filter
-                        this._selection.push(nodeChild); // add to tree selections
-
-                        if (this._selectionMode == TreeSelectionModes.SelfAndChildren)
-                        {
-                            // mark child node as selectable and its children as disabled
-                            this._updateNodeState(nodeChild, {nodeIsSelectable: true, nodeChildrenAreSelectable: false});
-                        }
-                    }else if (expandedNodeIsSelected || !expandedNodeIsSelectable) {
-                        // update node state and node children state
-                        this._updateNodeState(nodeChild, {nodeIsSelectable: false, nodeChildrenAreSelectable: false});
+                        // mark child node as selectable and its children as disabled
+                        this._updateNodeState(nodeChild, {nodeIsSelectable: true, nodeChildrenAreSelectable: false});
                     }
-                });
-
-		        return children;
-	        });
+                }else if (expandedNodeIsSelected || !expandedNodeIsSelectable) {
+                    // update node state and node children state
+                    this._updateNodeState(nodeChild, {nodeIsSelectable: false, nodeChildrenAreSelectable: false});
+                }
+            });
         }
     }
 
@@ -425,31 +380,13 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    private _findNodeByFullIdPath(fullIdPath : number[]) : PrimeTreeNode
-    {
-        // find the item in the tree (if exists)
-        let result : PrimeTreeNode = null;
-        for(let i=0,length=fullIdPath.length; i<length ; i++)
-        {
-            const itemIdToSearchFor = fullIdPath[i];
-            result = ((result ? result.children : this._categories) || []).find(child => child.data  === itemIdToSearchFor);
-
-            if (!result)
-            {
-                break;
-            }
-        }
-
-        return result;
-    }
-
     _onSuggestionSelected() : void {
 
         const selectedItem = this._autoComplete.getValue();
         if (selectedItem) {
             const data = selectedItem.data;
 
-            const nodeToBeSelected = this._findNodeByFullIdPath(data.fullIdPath);
+            const nodeToBeSelected = this._categoriesTree.findNodeByFullIdPath(data.fullIdPath);
             if (nodeToBeSelected)
             {
                 // the requested node found in the tree - select that node

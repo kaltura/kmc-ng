@@ -1,4 +1,3 @@
-<k-area-blocker [showLoader]="_loading" [message]="_blockerMessage">
     <div class="kUseKMCngIcons">
         <div class="kHeader">
             <kAutoComplete
@@ -20,30 +19,12 @@
         </div>
         <div class="kTreeContainer">
 
-            <p-tree #categoriesTree
-                    [selectionMode] = "'checkbox'"
-                    [propagateSelectionUp] = "false"
-                    [propagateSelectionDown] = "false"
-                    [value]="_categories"
+            <k-categories-tree #categoriesTree
                     [(selection)]="_selection"
                     (onNodeSelect)="_onTreeNodeSelected($event)"
                     (onNodeUnselect)="_onTreeNodeUnselected($event)"
-                    (onNodeExpand)="_onNodeExpand($event)">
-                <ng-template let-node pTemplate="default">
-                    <div>
-                        <span class="kTreeNodeLabel">{{node.label}}</span>
-                        <span class="kTreeNodeNumChildren" *ngIf="node.childrenCount">{{node.childrenCount}}</span>
-                    </div>
-                    <div *ngIf="node.expanded && node.childrenStatus === 1"
-                         class="kLoadingMessage" (click)="_blockTreeSelection($event)">
-                        {{'entriesShared.categoriesFilters.loading' | translate}}
-                    </div>
-                    <div *ngIf="node.expanded && node.childrenStatus === 2"
-                         class="kLoadingErrorMessage" (click)="_blockTreeSelection($event)">
-                        {{ node.childrenLoadError || 'entriesShared.categoriesFilters.loadingError' | translate }}
-                    </div>
-                </ng-template>
-            </p-tree>
+                    (onNodeChildrenLoaded)="_onNodeChildrenLoaded($event)">
+            </k-categories-tree>
         </div>
 
         <p>
@@ -51,7 +32,6 @@
             <a class="kClose" (click)="close()">{{'applications.content.filters.close' | translate}}</a>
         </p>
     </div>
-</k-area-blocker>
 <kPopupWidget #categoriesPref [modal]="true" [popupWidth]="360" [popupHeight]="220" [closeBtn]="true"
               [targetRef]="config" [targetOffset]="{'x':-324, 'y': -24}" [parentPopup]="parentPopupWidget">
     <kCategoriesFilterPrefs [selectionMode]="_selectionMode"

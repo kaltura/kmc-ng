@@ -18,7 +18,7 @@ export class CategoriesTreeComponent implements OnInit {
 	public _categories: PrimeTreeNode[] = [];
 
 	@Input()
-	autoLoad :boolean;
+	autoLoad :boolean = true;
 
 	@Input()
 	selection : PrimeTreeNode[];
@@ -27,17 +27,38 @@ export class CategoriesTreeComponent implements OnInit {
 	selectionChange = new EventEmitter<PrimeTreeNode[]>();
 
 	@Output()
-	onNodesAttached = new EventEmitter<{categories : PrimeTreeNode[]}>();
+	onNodeChildrenLoaded = new EventEmitter<{node : PrimeTreeNode}>();
 
-	@Output()
-	onSelectionChanged = new EventEmitter<{added : PrimeTreeNode, removed : PrimeTreeNode}>();
+	@Output() onNodeSelect: EventEmitter<any> = new EventEmitter();
+
+	@Output() onNodeUnselect: EventEmitter<any> = new EventEmitter();
+
 
 	get categories() : PrimeTreeNode[]
 	{
-		return this._categories;
+		return this._categories ;
 	}
 
-    constructor(private _categoriesPrimeService: CategoriesPrimeService,private _appAuthentication : AppAuthentication, private _appLocalization: AppLocalization) {
+	public findNodeByFullIdPath(fullIdPath : (number | string)[]) : PrimeTreeNode
+	{
+		// find the item in the tree (if exists)
+		let result : PrimeTreeNode = null;
+		for(let i=0,length=fullIdPath.length; i<length ; i++)
+		{
+			const itemIdToSearchFor = fullIdPath[i];
+			result = ((result ? result.children : this._categories) || []).find(child => child.data + ''  === itemIdToSearchFor + '');
+
+			if (!result)
+			{
+				break;
+			}
+		}
+
+		return result;
+	}
+
+
+	constructor(private _categoriesPrimeService: CategoriesPrimeService,private _appAuthentication : AppAuthentication, private _appLocalization: AppLocalization) {
     }
 
     ngOnInit()
@@ -56,9 +77,6 @@ export class CategoriesTreeComponent implements OnInit {
 		this._categoriesPrimeService.getCategories()
             .subscribe( result => {
 					this._categories = result.categories;
-					setTimeout(()=>{
-						this.onNodesAttached.emit({categories : result.categories});
-					},300);
 					this._loading = false;
 				},
 				error => {
@@ -76,15 +94,6 @@ export class CategoriesTreeComponent implements OnInit {
 	}
 
 
-	public _onNodeSelect({node})
-	{
-		this.onSelectionChanged.emit({ added : node, removed : null});
-	}
-
-	public _onNodeUnselect({node})
-	{
-		this.onSelectionChanged.emit({ added : null, removed : node});
-	}
 
     public _onNodeExpand(event : any) : void {
 		const node: PrimeTreeNode = event && event.node instanceof PrimeTreeNode ? event.node : null;
@@ -93,11 +102,9 @@ export class CategoriesTreeComponent implements OnInit {
 			if (this.inLazyMode) {
 				const node: PrimeTreeNode = <PrimeTreeNode>event.node;
 				this._categoriesPrimeService.loadNodeChildren(node, (children) => {
-					this.onNodesAttached.emit({categories : children});
+					this.onNodeChildrenLoaded.emit({node});
 					return children;
 				});
-			} else {
-				this.onNodesAttached.emit({categories : node.children});
 			}
 		}
 	}

@@ -5,8 +5,8 @@ import { ISubscription } from 'rxjs/Subscription';
 import { PrimeTreeNode } from '@kaltura-ng2/kaltura-primeng-ui';
 import { Subject } from 'rxjs/Subject';
 import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
-import { CategoriesTreeComponent } from '../../../shared/categories-tree/categories-tree.component';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
+import { CategoriesTreeComponent } from '../../../shared/categories-tree/categories-tree.component';
 
 @Component({
     selector: 'kCategoriesSelector',
@@ -15,7 +15,9 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui
 })
 export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy, AfterViewChecked {
 
-	@ViewChild('categoriesTree') categoriesTree: CategoriesTreeComponent;
+	@ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
+
+	public _treeSelection : any[] = [];
 
 	private _searchCategoriesSubscription : ISubscription;
 	public _categoriesProvider = new Subject<SuggestionsProviderData>();
@@ -58,20 +60,20 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy, Aft
 			this.cdRef.detectChanges();
 		}
 	}
-    public _onNodesAttached({categories})
+	public _onNodeChildrenLoaded({node})
 	{
-		const selectedNodes : PrimeTreeNode[] = [];
+		if (node instanceof PrimeTreeNode) {
+			const selectedNodes: PrimeTreeNode[] = [];
 
-		categories.forEach((attachedCategory) =>
-		{
-			if (this._searchCategories.find(category => category.id === attachedCategory.data))
-			{
-				selectedNodes.push(attachedCategory);
+			node.children.forEach((attachedCategory) => {
+				if (this._searchCategories.find(category => category.id === attachedCategory.data)) {
+					selectedNodes.push(attachedCategory);
+				}
+			});
+
+			if (selectedNodes.length) {
+				this._treeSelection = [...this._treeSelection || [], ...selectedNodes];
 			}
-		});
-
-		if (selectedNodes.length) {
-			this.categoriesTree.selection = [...this.categoriesTree.selection || [], ...selectedNodes];
 		}
 	}
 
@@ -80,7 +82,6 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy, Aft
 			this.parentPopupStateChangeSubscription = this.parentPopupWidget.state$.subscribe(event => {
 				if (event.state === PopupWidgetStates.Open){
 					this._searchCategories = Array.from(this.searchCategories); // create a replica of the original data to prevent bi-directional data binding
-					this.categoriesTree.loadCategories();
 				}
 			});
 		}
@@ -161,25 +162,17 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy, Aft
 			// find the item in the tree (if exists)
 			let treeItem: PrimeTreeNode = null;
 
-			for (let i = 0, length = category.fullIdPath.length; i < length; i++) {
-				const itemIdToSearchFor = category.fullIdPath[i];
-				treeItem = ((treeItem ? treeItem.children : this.categoriesTree.categories) || []).find(child => child.data === itemIdToSearchFor);
-			}
+			treeItem = this._categoriesTree.findNodeByFullIdPath(category.fullIdPath);
+
 			if (treeItem) {
 				selectedItems.push(treeItem);
 				if (expandNodeId && expandNodeId === category.id) {
-					let nodeParent = treeItem.parent;
-					while (nodeParent != null) {
-						nodeParent.expanded = true;
-						nodeParent = nodeParent.parent;
-					}
+					treeItem.expand();
 				}
 			}
-
-
 		});
 
-		this.categoriesTree.selection = selectedItems;
+		this._treeSelection = selectedItems;
 	}
 
 	public _onAutoCompleteSelect(category){
