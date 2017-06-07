@@ -1,2 +1,53 @@
 @import 'theme';
 @import '~primeng/resources/primeng.min.css';
+@import "../_variables.scss";
+
+.ui-treenode-content
+{
+  width:100%;
+  color:#a9a9a9;
+  cursor: default;
+
+
+  &.ui-treenode-selectable
+  {
+    color: $kGrayscale1;
+    cursor: pointer;
+  }
+
+  .ui-chkbox
+  {
+    .ui-chkbox-box
+    {
+      border : none;
+
+    }
+
+    .ui-chkbox-icon
+    {
+      border : 1px solid $kGrayscale4;
+      background-color: white;
+      height:100%;
+
+      &.fa-check
+      {
+        background-color: $kPrimary;
+        border : 1px solid $kPrimary;
+      }
+    }
+  }
+
+  &:not(.ui-treenode-selectable)
+  {
+    .ui-chkbox-icon
+    {
+      background-color: $kPrimary;
+      border : 1px solid $kPrimary;
+      cursor:default;
+
+      &::before{
+        content : "\E91A";
+      }
+    }
+  }
+}

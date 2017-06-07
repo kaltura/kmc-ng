@@ -5,6 +5,7 @@ import { KalturaSearchOperatorType } from 'kaltura-typescript-client/types/all'
 
 import { ValueFilter } from "../value-filter";
 import { EntriesStore } from '../entries-store.service';
+import { FilterItem } from '../filter-item';
 
 
 export class MetadataProfileFilter  extends ValueFilter<string>{
@@ -33,6 +34,14 @@ export class MetadataProfileFilter  extends ValueFilter<string>{
         this._listTypeName = listTypeName;
         this._metadataProfileId = metadataProfileId;
         this._fieldPath = fieldPath;
+    }
+
+    public isEqual(otherFilter : FilterItem) : boolean
+    {
+        return otherFilter instanceof MetadataProfileFilter
+            && otherFilter._metadataProfileId === this._metadataProfileId
+            && otherFilter._fieldPath === this._fieldPath
+            && this.value === otherFilter.value;
     }
 }
 
