@@ -1,19 +1,48 @@
 @import "~kmcng-theme/scss/_variables.scss";
 .kTreeContainer{
 	width: 100%;
-	height: 450px;
+	height: 534px;
 	margin-top: 40px;
 	position: relative;
+	.kHeader{
+		width: 100%;
+		text-align: center;
+		padding: 12px;
+		margin-left: -12px;
+		border-bottom: 1px solid $kGrayscale4;
+	}
+	.kTitle{
+		color: $kGrayscale1;
+		font-size: 24px;
+		font-weight: 700;
+	}
+	.kTagsContainer{
+		height: 80px;
+		text-align: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.kMain{
+		margin-left: 20px;
+		border: 1px solid $kGrayscale4;
+		border-radius: 4px;
+		width: 520px;
+		height: 330px;
+		padding: 12px;
+		box-sizing: border-box;
+	}
+	.kFooter{
+		position: absolute;
+		width: 586px;
+		border-top: 1px solid $kGrayscale4;
+		bottom: 0px;
+		padding-top: 12px;
+		text-align: center;
+		margin-left: -12px;
+	}
 }
-.kFooter{
-	position: absolute;
-	width: 264px;
-	border-top: 1px solid $kGrayscale4;
-	bottom: 12px;
-	padding-top: 12px;
-	padding-left: 190px;
-	margin-left: -20px;
-}
+
 
 :host /deep/ kautocomplete .kKalturaPrimeUIComponent.ui-autocomplete-multiple{
 	width: 100%;
@@ -29,13 +58,12 @@
 	margin: 0px;
 	padding: 0px;
 	width: 100%;
-	height: 325px;
 	margin-top: 4px;
 	border-bottom: 0px solid white;
 }
 
 
 :host /deep/ k-area-blocker{
-	height: 330px;
+	height: 265px;
 	overflow-y: hidden;
 }
