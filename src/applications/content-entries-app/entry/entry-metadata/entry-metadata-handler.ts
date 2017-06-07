@@ -20,14 +20,14 @@ import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
 
-export interface entryCategoryItem
+export interface EntryCategoryItem
 { id : number, fullIdPath : (string | number)[], name : string }
 
 @Injectable()
 export class EntryMetadataHandler extends EntryFormWidget
 {
-    private _entryCategoriesDiffers : IterableDiffer<entryCategoryItem>;
-    public _entryCategories : entryCategoryItem[]  = [];
+    private _entryCategoriesDiffers : IterableDiffer<EntryCategoryItem>;
+    public _entryCategories : EntryCategoryItem[]  = [];
     private _entryMetadata : KalturaMetadata[] = [];
 
     public isLiveEntry : boolean;
@@ -153,7 +153,7 @@ export class EntryMetadataHandler extends EntryFormWidget
             }
         );
 
-        this._entryCategoriesDiffers = this._iterableDiffers.find([]).create<entryCategoryItem>((index,item) =>
+        this._entryCategoriesDiffers = this._iterableDiffers.find([]).create<EntryCategoryItem>((index, item) =>
         {
             // use track by function to identify category by its' id. this will prevent sending add/remove of the same item once
             // a user remove a category and then re-select it before he clicks the save button.
@@ -275,7 +275,7 @@ export class EntryMetadataHandler extends EntryFormWidget
 
             if (changes)
             {
-                changes.forEachAddedItem((change : IterableChangeRecord<entryCategoryItem>) =>
+                changes.forEachAddedItem((change : IterableChangeRecord<EntryCategoryItem>) =>
                 {
                     request.requests.push(new CategoryEntryAddAction({
                         categoryEntry : new KalturaCategoryEntry({
@@ -285,7 +285,7 @@ export class EntryMetadataHandler extends EntryFormWidget
                     }));
                 });
 
-                changes.forEachRemovedItem((change : IterableChangeRecord<entryCategoryItem>) =>
+                changes.forEachRemovedItem((change : IterableChangeRecord<EntryCategoryItem>) =>
                 {
                     request.requests.push(new CategoryEntryDeleteAction({
                         entryId : this.data.id,

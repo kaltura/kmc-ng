@@ -1,7 +1,7 @@
 <div class="kTreeContainer kUseKMCngIcons">
 
-    <kAutoComplete [(ngModel)]="_searchCategories"
-                   kSuggestionHandler
+    <kAutoComplete [(ngModel)]="_autoCompleteItems"
+                   [disabled]="!_categoriesLoaded"
                    field="name"
                    suggestionItemField="item"
                    suggestionLabelField="name"
@@ -12,14 +12,16 @@
                    (onSelect)="_onAutoCompleteSelect($event)"
                    (onUnselect)="_onAutoCompleteUnselect($event)"
                    [suggestionsProvider]="_categoriesProvider"
-                   (completeMethod)="_searchForCategories($event)">
+                   (completeMethod)="_onAutoCompleteSearch($event)">
     </kAutoComplete>
 
 
         <k-categories-tree #categoriesTree
                            [(selection)]="_treeSelection"
-                           (onNodeChildrenLoaded)="_onNodeChildrenLoaded($event)"
-                         (onSelectionChanged)="onSelectionChange($event)"></k-categories-tree>
+                           (onCategoriesLoad)="_onCategoriesLoad($event)"
+                           (onNodeSelect)="_onTreeNodeSelected($event)"
+                           (onNodeUnselect)="_onTreeNodeUnselected($event)"
+                           (onNodeChildrenLoaded)="_onNodeChildrenLoaded($event)"></k-categories-tree>
 
 
     <div class="kFooter">

@@ -34,7 +34,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
 
-    public _isReadyForUse : boolean = false;
+    public _categoriesLoaded : boolean = false;
 
     private filterUpdateSubscription : ISubscription;
     private parentPopupStateChangeSubscription : ISubscription;
@@ -315,7 +315,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
     public _onCategoriesLoad({ categories } : { categories : PrimeTreeNode[] }) : void
     {
-        this._isReadyForUse = categories && categories.length > 0;
+        this._categoriesLoaded = categories && categories.length > 0;
 
         if (!this.filterUpdateSubscription) {
             this._entriesStore.activeFilters$

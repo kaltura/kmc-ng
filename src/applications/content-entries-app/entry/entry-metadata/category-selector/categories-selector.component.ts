@@ -1,72 +1,79 @@
-import { Component, OnInit, Input, AfterViewInit, OnDestroy, ViewChild, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, ViewChild, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { CategoriesPrimeService } from '../../../shared/categories-prime.service';
 import { ISubscription } from 'rxjs/Subscription';
 
 import { PrimeTreeNode } from '@kaltura-ng2/kaltura-primeng-ui';
 import { Subject } from 'rxjs/Subject';
 import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { CategoriesTreeComponent } from '../../../shared/categories-tree/categories-tree.component';
+import { EntryCategoryItem } from '../entry-metadata-handler';
 
 @Component({
     selector: 'kCategoriesSelector',
     templateUrl: './categories-selector.component.html',
     styleUrls: ['./categories-selector.component.scss']
 })
-export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy, AfterViewChecked {
+export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 
 	@ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
 
-	public _treeSelection : any[] = [];
+	public _categoriesLoaded = false;
+	public _treeSelection : PrimeTreeNode[] = [];
 
 	private _searchCategoriesSubscription : ISubscription;
 	public _categoriesProvider = new Subject<SuggestionsProviderData>();
-	@Input() searchCategories: { id : string | number, fullIdPath : (string | number)[], name : string }[]  = []; // this is the auto-complete array from the metadata component
-	public _searchCategories: { id : string | number, fullIdPath : (string | number)[], name : string }[]  = [];  // this will be used as a local provider for the auto-complete. Its a replica of the data from the metadata component
+	@Input() value: EntryCategoryItem[]  = [];
+	@Output() valueChange = new EventEmitter<EntryCategoryItem[]>();
+
+	public _autoCompleteItems: EntryCategoryItem[]  = [];
 
 	private parentPopupStateChangeSubscription : ISubscription;
 	@Input() parentPopupWidget: PopupWidgetComponent;
 
-
-	_autoCompleteSelectionChanged : boolean = false;
-	_autoCompleteLastSelection : any = null;
+	private _ngAfterViewCheckedContext : { autoCompleteSelectionChanged : boolean, autoCompleteLastSelection : any} = {
+		autoCompleteSelectionChanged : false,
+		autoCompleteLastSelection : null
+	};
 
 	constructor(private _categoriesPrimeService: CategoriesPrimeService, private cdRef:ChangeDetectorRef) {
     }
 
     public _apply():void{
 
-	    // update searchCategories from metadata component with the updated categories array
-	    this.searchCategories.length = 0;
-	    this._searchCategories.forEach(category => { this.searchCategories.push(category)});
+	    this.valueChange.emit(this._autoCompleteItems);
 
 	    if (this.parentPopupWidget){
 		    this.parentPopupWidget.close({isDirty: true});
 	    }
     }
 
-    ngOnInit(){
-
-    }
 
     ngAfterViewChecked()
 	{
-		if (this._autoCompleteSelectionChanged)
+		if (this._ngAfterViewCheckedContext.autoCompleteSelectionChanged)
 		{
-			this.updateTreeSelections(this._autoCompleteLastSelection);
+			this.updateTreeSelections(this._ngAfterViewCheckedContext.autoCompleteLastSelection);
 
-			this._autoCompleteLastSelection = null;
-			this._autoCompleteSelectionChanged = false;
+			this._ngAfterViewCheckedContext.autoCompleteLastSelection = null;
+			this._ngAfterViewCheckedContext.autoCompleteSelectionChanged = false;
 			this.cdRef.detectChanges();
 		}
 	}
+
+	public _onCategoriesLoad({ categories } : { categories : PrimeTreeNode[] }) : void
+	{
+		this._categoriesLoaded = categories && categories.length > 0;
+		this.updateTreeSelections();
+	}
+
 	public _onNodeChildrenLoaded({node})
 	{
 		if (node instanceof PrimeTreeNode) {
 			const selectedNodes: PrimeTreeNode[] = [];
 
 			node.children.forEach((attachedCategory) => {
-				if (this._searchCategories.find(category => category.id === attachedCategory.data)) {
+				if (this._autoCompleteItems.find(category => category.id === attachedCategory.data)) {
 					selectedNodes.push(attachedCategory);
 				}
 			});
@@ -77,53 +84,26 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy, Aft
 		}
 	}
 
-	ngAfterViewInit(){
-		if (this.parentPopupWidget){
-			this.parentPopupStateChangeSubscription = this.parentPopupWidget.state$.subscribe(event => {
-				if (event.state === PopupWidgetStates.Open){
-					this._searchCategories = Array.from(this.searchCategories); // create a replica of the original data to prevent bi-directional data binding
-				}
-			});
-		}
+	ngOnInit()
+	{
+		this._autoCompleteItems = Array.from(this.value); // create a replica of the original data to prevent bi-directional data binding
 	}
 
 	ngOnDestroy(){
+
+		if (this._searchCategoriesSubscription)
+		{
+			this._searchCategoriesSubscription.unsubscribe();
+			this._searchCategoriesSubscription = null;
+		}
+
 		if (this.parentPopupStateChangeSubscription) {
 			this.parentPopupStateChangeSubscription.unsubscribe();
 			this.parentPopupStateChangeSubscription = null;
 		}
 	}
 
-	public onSelectionChange(args) : void {
-
-		if (args.removed) {
-			const node = args.removed;
-			const matchingCategory = this._searchCategories.find(category => category.id === node.data);
-
-			if (matchingCategory) {
-				const matchingCategoryIndex = this._searchCategories.indexOf(matchingCategory);
-				this._searchCategories.splice(matchingCategoryIndex, 1);
-			}
-		}
-
-		if (args.added) {
-			const node = args.added;
-			const nodeIndex = this._searchCategories.indexOf(node);
-
-			if (nodeIndex === -1) {
-				this._searchCategories.push(
-					{
-						id: node.origin.id,
-						fullIdPath: node.origin.fullIdPath,
-						name: node.origin.name
-					}
-				)
-			}
-		}
-	}
-
-
-	public _searchForCategories(event) : void {
+	public _onAutoCompleteSearch(event) : void {
 		this._categoriesProvider.next({ suggestions : [], isLoading : true});
 
 		if (this._searchCategoriesSubscription)
@@ -135,7 +115,7 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy, Aft
 
 		this._searchCategoriesSubscription = this._categoriesPrimeService.searchCategories(event.query).subscribe(data => {
 				const suggestions = [];
-				const entryCategories = this._searchCategories || [];
+				const entryCategories = this._autoCompleteItems || [];
 
 
 				(data|| []).forEach(suggestedCategory => {
@@ -157,31 +137,56 @@ export class CategoriesSelector implements AfterViewInit, OnInit, OnDestroy, Aft
 
 	private updateTreeSelections(expandNodeId = null):void {
 
-		let selectedItems = [];
-		this._searchCategories.forEach(category => {
-			// find the item in the tree (if exists)
-			let treeItem: PrimeTreeNode = null;
+		let treeSelectedItems = [];
 
-			treeItem = this._categoriesTree.findNodeByFullIdPath(category.fullIdPath);
+		this._autoCompleteItems.forEach(category => {
+			const treeItem = this._categoriesTree.findNodeByFullIdPath(category.fullIdPath);
 
 			if (treeItem) {
-				selectedItems.push(treeItem);
+				treeSelectedItems.push(treeItem);
 				if (expandNodeId && expandNodeId === category.id) {
 					treeItem.expand();
 				}
 			}
 		});
 
-		this._treeSelection = selectedItems;
+		this._treeSelection = treeSelectedItems;
 	}
 
 	public _onAutoCompleteSelect(category){
-		this._autoCompleteLastSelection = category.id;
-		this._autoCompleteSelectionChanged = true;
+		this._ngAfterViewCheckedContext.autoCompleteLastSelection = category.id;
+		this._ngAfterViewCheckedContext.autoCompleteSelectionChanged = true;
 	}
 
 	public _onAutoCompleteUnselect(){
-		this._autoCompleteSelectionChanged = true;
+		this._ngAfterViewCheckedContext.autoCompleteSelectionChanged = true;
 	}
 
+
+	public _onTreeNodeUnselected({node} : { node : PrimeTreeNode }) {
+		if (node instanceof PrimeTreeNode) {
+			const autoCompleteItemIndex = this._autoCompleteItems.findIndex(item => item.id + '' === node.data + '');
+
+			if (autoCompleteItemIndex > -1)
+			{
+				this._autoCompleteItems.splice(autoCompleteItemIndex,1);
+			}
+
+		}
+	}
+
+	public _onTreeNodeSelected({node} : { node : any }) {
+		if (node instanceof PrimeTreeNode) {
+			const autoCompleteItemIndex = this._autoCompleteItems.findIndex(item => item.id + '' === node.data + '');
+
+
+			if (autoCompleteItemIndex === -1) {
+				this._autoCompleteItems.push({
+					id: node.origin.id,
+					fullIdPath: node.origin.fullIdPath,
+					name: node.origin.name
+				});
+			}
+		}
+	}
 }
