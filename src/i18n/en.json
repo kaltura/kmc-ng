@@ -83,6 +83,9 @@
             },
             "table":{
                 "thumbnail": "Thumbnail",
+				"thumb" : "Thumb",
+				"id" :	"ID",
+				"playlistType" : "Playlist Type",
                 "name": "Name",
                 "type": "Type",
                 "plays": "Plays",
@@ -125,6 +128,12 @@
 				"image": "Image",
 				"videoMix": "Video Mix",
 				"live": "Live",
+				"unknown": "Unknown"
+			},
+			"playlistType":{
+				"dynamic": "Rule Based",
+				"external": "External RSS",
+				"staticList": "Manual",
 				"unknown": "Unknown"
 			},
             "bulkActions":{

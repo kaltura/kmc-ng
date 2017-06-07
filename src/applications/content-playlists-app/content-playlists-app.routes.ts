@@ -1,7 +1,8 @@
-import { Route }        from '@angular/router';
+import { Route } from '@angular/router';
 
-import { ContentPlaylistsComponent } from './content-playlists.component';
+import { PlaylistsListComponent } from './playlists';
 
 export const routing: Route[] = [
-	{path: '', component: ContentPlaylistsComponent}
+	{path: '', redirectTo: 'list', pathMatch: 'full'},
+	{path: 'list', component: PlaylistsListComponent}
 ];
