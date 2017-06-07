@@ -15,6 +15,7 @@ import { MetadataProfileStore } from '@kaltura-ng2/kaltura-common';
 
 import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
+import { PrimeTreeModule } from '@kaltura-ng2/kaltura-primeng-ui/prime-tree';
 import { KalturaUIModule, TooltipModule } from '@kaltura-ng2/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
@@ -61,6 +62,7 @@ import { SharedComponentsList } from './shared/shared-components-list';
         ReactiveFormsModule,
         RouterModule.forChild(routing),
         SharedModule,
+        PrimeTreeModule,
         SpinnerModule,
         TagsModule,
         TieredMenuModule,

@@ -3,7 +3,7 @@ import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { PrimeTreeNode, TreeDataHandler } from '@kaltura-ng2/kaltura-primeng-ui';
+import { PrimeTreeNode, PrimeTreeDataProvider } from '@kaltura-ng2/kaltura-primeng-ui';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 import { EntriesStore } from "../entries-store/entries-store.service";
 import { FilterItem } from "../entries-store/filter-item";
@@ -70,7 +70,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
 
     @Input() parentPopupWidget: PopupWidgetComponent;
 
-    constructor(public additionalFiltersStore: EntriesAdditionalFiltersStore, private treeDataHandler : TreeDataHandler,
+    constructor(public additionalFiltersStore: EntriesAdditionalFiltersStore, private primeTreeDataProvider : PrimeTreeDataProvider,
                 private entriesStore : EntriesStore, private elementRef: ElementRef, private appLocalization: AppLocalization) {
     }
 
@@ -197,7 +197,7 @@ export class EntriesAdditionalFiltersComponent implements OnInit, AfterViewInit,
                             this._nodeFilterNameToSectionMapping[filter.name] = treeSection;
 
                             const listRootNode = new PrimeTreeNode(null, filter.label,
-                                this.treeDataHandler.create(
+                                this.primeTreeDataProvider.create(
                                     {
                                         items: filter.items,
                                         idProperty: 'id',
