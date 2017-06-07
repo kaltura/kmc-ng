@@ -1,6 +1,7 @@
 
 export const ConstantsFilters = [
-    {type : 'mediaTypes', name : 'Media Types',
+    {
+        id : 'mediaTypes', name : 'Media Types',
         items :
     [
         {id :'1',name : 'Video'},
@@ -10,7 +11,7 @@ export const ConstantsFilters = [
         {id :'201',name : 'Live Stream'}
 
     ]},
-    {type : 'ingestionStatuses', name : 'Ingestion Statuses',
+    {id : 'ingestionStatuses', name : 'Ingestion Statuses',
         items : [
                 {id :'2',name : 'Ready'},
                 {id :'7',name : 'No Media'},
@@ -20,20 +21,20 @@ export const ConstantsFilters = [
                 {id :'-1,-2',name : 'Error'}
             ]
     },
-    {type : 'durations', name : 'Durations',
+    {id : 'durations', name : 'Durations',
         items : [
             {id :'short',name : 'Short (0-4 min.)'},
             {id :'medium',name : 'Medium (4-20 min.)'},
             {id :'long',name : 'Long (20+ min.)'}
         ]
     },
-    {type : 'originalClippedEntries', name : 'Original & Clipped Entries',
+    {id : 'originalClippedEntries', name : 'Original & Clipped Entries',
         items : [
             {id :'1', name : 'Original Entries'},
             {id :'0', name : 'Clipped Entries'}
         ]
     },
-    {type : 'timeScheduling', name : 'Time Scheduling',
+    {id : 'timeScheduling', name : 'Time Scheduling',
         items : [
             {id :'past',name : 'Past Scheduling'},
             {id :'live',name : 'Live'},
@@ -41,7 +42,7 @@ export const ConstantsFilters = [
             {id :'scheduled',name : 'Scheduled'}
         ]
     },
-    {type : 'moderationStatuses', name : 'Moderation Statuses',
+    {id : 'moderationStatuses', name : 'Moderation Statuses',
         items : [
             {id :'2',name : 'Approved'},
             {id :'5',name : 'Flagged for review'},
@@ -50,7 +51,7 @@ export const ConstantsFilters = [
             {id :'1',name : 'Pending moderation'}
         ]
     },
-    {type : 'replacementStatuses', name : 'Replacement Statuses',
+    {id : 'replacementStatuses', name : 'Replacement Statuses',
         items : [
             {id :'3,1',name : 'Processing new files'},
             {id :'2',name : 'Ready for review'}

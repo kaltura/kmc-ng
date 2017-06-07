@@ -80,10 +80,10 @@
             <div *ngIf="customDataForm && customDataForm.isReady">
                 <form novalidate [formGroup]="customDataForm.formGroup">
                     <k-dynamic-form-item [control]="customDataForm.dynamicSection" [form]="customDataForm.formGroup">
-                        <template let-item="item">
+                        <ng-template let-item="item">
                             <k-linked-entries *ngIf="item.control.controlType === 'LinkedEntries'" [formControlName]="item.control.key" [control]="item.control" [form]="item.form"></k-linked-entries>
                             <k-prime-control *ngIf="item.control.controlType !== 'LinkedEntries'" [control]="item.control" [form]="item.form"></k-prime-control>
-                        </template>
+                        </ng-template>
                     </k-dynamic-form-item>
                 </form>
             </div>
@@ -92,8 +92,11 @@
         </div>
     </div>
 
+
 	<kPopupWidget #categoriesPopup [popupWidth]="440" [popupHeight]="490" [closeBtn]="true" [modal]="true">
-		<kCategoriesSelector [parentPopupWidget]="categoriesPopup" [searchCategories]="_handler._entryCategories"></kCategoriesSelector>
+		<ng-template>
+			<kCategoriesSelector [parentPopupWidget]="categoriesPopup" (valueChange)="_updateEntryCategories($event)" [value]="_handler.metadataForm.value.categories"></kCategoriesSelector>
+		</ng-template>
 	</kPopupWidget>
 
 </k-area-blocker>

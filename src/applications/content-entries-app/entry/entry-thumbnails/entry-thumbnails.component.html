@@ -6,34 +6,34 @@
 		<div class="kTable">
 			<p-dataTable [value]="(_handler._thumbnails$ | async)?.items" scrollable="true" scrollHeight="100%" [rowStyleClass]="_handler._getRowStyle">
 				<p-column field="url" header="{{'applications.content.entryDetails.thumbnails.thumbnail' | translate}}">
-					<template let-col let-thumb="rowData" pTemplate="body">
+					<ng-template let-col let-thumb="rowData" pTemplate="body">
 						<div class="kThumbnailHolder" ><span class="kHelper"></span><img src="{{thumb[col.field]}}" onError="this.onerror=null;this.style.display='none'"></div>
-					</template>
+					</ng-template>
 				</p-column>
-				<p-column header="{{'applications.content.entryDetails.thumbnails.dimensions' | translate}}">
-					<template let-col let-thumb="rowData" pTemplate="body">
+				<p-column field="width" header="{{'applications.content.entryDetails.thumbnails.dimensions' | translate}}" sortable="true">
+					<ng-template let-col let-thumb="rowData" pTemplate="body">
 						<span class="kDimensions">{{thumb.width}}x{{thumb.height}}</span>
-					</template>
+					</ng-template>
 				</p-column>
 				<p-column field="size" header="{{'applications.content.entryDetails.thumbnails.size' | translate}}">
-					<template let-col let-thumb="rowData" pTemplate="body">
+					<ng-template let-col let-thumb="rowData" pTemplate="body">
 						<span>{{thumb[col.field] | kFileSize}}</span>
-					</template>
+					</ng-template>
 				</p-column>
 				<p-column field="distributors" header="{{'applications.content.entryDetails.thumbnails.distributors' | translate}}">
 				</p-column>
 				<p-column field="isDefault" header="{{'applications.content.entryDetails.thumbnails.defaultTitle' | translate}}">
-					<template let-col let-thumb="rowData" pTemplate="body">
+					<ng-template let-col let-thumb="rowData" pTemplate="body">
 						<span *ngIf="thumb.isDefault">{{'applications.content.entryDetails.thumbnails.default' | translate}}</span>
 						<a (click)="_handler._setAsDefault(thumb)" *ngIf="!thumb.isDefault && thumb.status?.toString()==='2'">{{'applications.content.entryDetails.thumbnails.setDefault' | translate}}</a>
-					</template>
+					</ng-template>
 				</p-column>
 				<p-column [style]="{'width':'80px'}">
-					<template let-col let-thumb="rowData" pTemplate="body">
+					<ng-template let-col let-thumb="rowData" pTemplate="body">
 						<div class="kThumbnailsTableActions" *ngIf="thumb.id!==''">
 							<button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, thumb)"></button>
 						</div>
-					</template>
+					</ng-template>
 				</p-column>
 			</p-dataTable>
 			<p-menu kMenuCloseOnScroll [scrollTarget]="thumbnails" #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'"></p-menu>

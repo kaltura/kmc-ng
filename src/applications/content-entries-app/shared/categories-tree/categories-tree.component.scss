@@ -1,31 +1,33 @@
 @import "~kmcng-theme/scss/_variables.scss";
 
-.kTreeNodeLabel{
-    width:100%;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 43px;
-    color: $kGrayscale1;
-    text-overflow: ellipsis;
-    margin-left: 5px;
-
-    &.kDisabled
+:host /deep/ {
+    .ui-treenode-content
     {
-        color:darkgray;
+
+        .kTreeNodeLabel
+        {
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 43px;
+            text-overflow: ellipsis;
+            margin-left: 5px;
+        }
+
+        .kTreeNodeNumChildren{
+            font-size: 14px;
+            font-weight: 400;
+            color: $kGrayscale3;
+            margin-left: 10px;
+        }
     }
 }
-.kTreeNodeNumChildren{
-    font-size: 14px;
-    font-weight: 400;
-    color: $kGrayscale3;
-    margin-left: 10px;
-}
+
+
 
 .kTreeContainer{
     overflow-y: auto;
     overflow-x: hidden;
-    height: 340px;
-    border-bottom: 1px solid $kGrayscale6;
+    min-height: 340px;
     margin-left: -20px;
     padding-left: 20px;
     margin-right: -20px;

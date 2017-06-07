@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IterableDiffers, IterableDiffer, CollectionChangeRecord } from '@angular/core';
+import { IterableDiffers, IterableDiffer, IterableChangeRecord } from '@angular/core';
 import { EntryFormWidget } from '../entry-form-widget';
 import { Observable } from 'rxjs/Observable';
 import { KalturaCategoryEntryFilter,  KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
@@ -20,12 +20,14 @@ import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
 
+export interface EntryCategoryItem
+{ id : number, fullIdPath : (string | number)[], name : string }
 
 @Injectable()
 export class EntryMetadataHandler extends EntryFormWidget
 {
-    private _entryCategoriesDiffers : IterableDiffer;
-    public _entryCategories : { id : string | number, fullIdPath : (string | number)[], name : string }[]  = [];
+    private _entryCategoriesDiffers : IterableDiffer<EntryCategoryItem>;
+    public _entryCategories : EntryCategoryItem[]  = [];
     private _entryMetadata : KalturaMetadata[] = [];
 
     public isLiveEntry : boolean;
@@ -118,7 +120,7 @@ export class EntryMetadataHandler extends EntryFormWidget
             .map(responses => {
                 super._hideLoader();
 
-                const hasFailure = responses.reduce((result, response) => result || response.failed, false);
+                let hasFailure = (<Array<{failed: boolean, error?: Error}>>responses).reduce((result, response) => result || response.failed, false);;
 
                 if (hasFailure) {
                     super._showActivationError();
@@ -129,10 +131,9 @@ export class EntryMetadataHandler extends EntryFormWidget
                         // as result of undesired metadata schema.
                         this._syncHandlerContent();
                         return {failed: false};
-                    }catch(e)
-                    {
+                    } catch (e) {
                         super._showActivationError();
-                        return {failed: true,error : e};
+                        return {failed: true, error: e};
                     }
                 }
             });
@@ -152,7 +153,7 @@ export class EntryMetadataHandler extends EntryFormWidget
             }
         );
 
-        this._entryCategoriesDiffers = this._iterableDiffers.find([]).create(null, (index,item) =>
+        this._entryCategoriesDiffers = this._iterableDiffers.find([]).create<EntryCategoryItem>((index, item) =>
         {
             // use track by function to identify category by its' id. this will prevent sending add/remove of the same item once
             // a user remove a category and then re-select it before he clicks the save button.
@@ -274,7 +275,7 @@ export class EntryMetadataHandler extends EntryFormWidget
 
             if (changes)
             {
-                changes.forEachAddedItem((change : CollectionChangeRecord) =>
+                changes.forEachAddedItem((change : IterableChangeRecord<EntryCategoryItem>) =>
                 {
                     request.requests.push(new CategoryEntryAddAction({
                         categoryEntry : new KalturaCategoryEntry({
@@ -284,7 +285,7 @@ export class EntryMetadataHandler extends EntryFormWidget
                     }));
                 });
 
-                changes.forEachRemovedItem((change : CollectionChangeRecord) =>
+                changes.forEachRemovedItem((change : IterableChangeRecord<EntryCategoryItem>) =>
                 {
                     request.requests.push(new CategoryEntryDeleteAction({
                         entryId : this.data.id,

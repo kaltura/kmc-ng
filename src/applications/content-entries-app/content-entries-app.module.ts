@@ -7,7 +7,6 @@ import { TagsModule } from '@kaltura-ng2/kaltura-ui/tags';
 import {
      TreeModule, TieredMenuModule,  SharedModule,   AccordionModule,  ButtonModule, InputTextareaModule, PaginatorModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule, MultiSelectModule, CheckboxModule, CalendarModule, SpinnerModule, ConfirmDialogModule, ConfirmationService, GrowlModule } from 'primeng/primeng';
 import { KMCShellModule } from 'kmc-shell';
-import { TreeSelectionModule } from '@kaltura-ng2/kaltura-primeng-ui/tree-selection';
 
 import { routing } from './content-entries-app.routes';
 import { ContentEntriesComponent } from './content-entries.component';
@@ -16,6 +15,7 @@ import { MetadataProfileStore } from '@kaltura-ng2/kaltura-common';
 
 import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
+import { PrimeTreeModule } from '@kaltura-ng2/kaltura-primeng-ui/prime-tree';
 import { KalturaUIModule, TooltipModule } from '@kaltura-ng2/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
@@ -62,12 +62,12 @@ import { SharedComponentsList } from './shared/shared-components-list';
         ReactiveFormsModule,
         RouterModule.forChild(routing),
         SharedModule,
+        PrimeTreeModule,
         SpinnerModule,
         TagsModule,
         TieredMenuModule,
         TooltipModule,
-        TreeModule,
-        TreeSelectionModule,
+        TreeModule
     ],
     declarations: [
         ContentEntriesComponent,

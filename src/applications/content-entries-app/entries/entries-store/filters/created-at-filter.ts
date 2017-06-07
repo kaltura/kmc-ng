@@ -35,6 +35,12 @@ export class CreatedAtFilter  extends FilterItem{
         this._createdAfter = createdAfter;
         this._createdBefore = createdBefore;
     }
+
+
+    public isEqual(otherFilter : FilterItem) : boolean
+    {
+        return otherFilter instanceof CreatedAtFilter && this._createdAfter === otherFilter._createdAfter && this._createdBefore === otherFilter._createdBefore;
+    }
 }
 
 EntriesStore.registerFilterType(CreatedAtFilter, (items, request) =>

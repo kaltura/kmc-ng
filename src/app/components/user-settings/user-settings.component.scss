@@ -16,7 +16,7 @@ hr{
 }
 .kMenuItemLabel{
     font-size: 15px;
-    color: $kGrayscale3;
+    color: $kGrayscale1;
 }
 .kMenuItem{
     display: flex;
@@ -34,13 +34,10 @@ hr{
         }
     }
 }
-.kLanguagesTitle{
-    background-color: $kGrayscale6;
-    width: 100%;
-    height: 28px;
-    text-align: center;
-    padding-top: 6px;
+.kIcon{
+	color: $kGrayscale3;
+	font-size: 18px;
 }
-.kLanguages{
-
+:host /deep/ .ui-dropdown.ui-widget{
+	width: 215px !important;
 }
