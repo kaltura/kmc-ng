@@ -2,7 +2,7 @@
 .kTreeContainer{
 	width: 100%;
 	height: 450px;
-	margin-top: 10px;
+	margin-top: 40px;
 	position: relative;
 }
 .kFooter{
@@ -32,4 +32,10 @@
 	height: 325px;
 	margin-top: 4px;
 	border-bottom: 0px solid white;
+}
+
+
+:host /deep/ k-area-blocker{
+	height: 330px;
+	overflow-y: hidden;
 }
