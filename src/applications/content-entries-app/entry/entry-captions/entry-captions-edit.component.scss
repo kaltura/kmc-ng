@@ -17,16 +17,12 @@
 		display: flex;
 		flex-direction: row;
 		margin-top: 24px;
+		font-size: 15px;
 		.kLabel{
 			width: 120px;
 			flex: 0 0 auto;
-			font-size: 15px;
 		}
 		input{
-			width: 100%;
-		}
-		textarea{
-			height: 52px;
 			width: 100%;
 		}
 	}

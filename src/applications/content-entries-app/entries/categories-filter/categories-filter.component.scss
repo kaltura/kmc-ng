@@ -92,18 +92,14 @@ a.disabled{
     font-weight: 700;
     text-decoration: underline;
 }
-:host /deep/ .ui-autocomplete ul.ui-autocomplete-multiple-container.ui-inputtext{
+:host /deep/ kautocomplete ul.ui-autocomplete-multiple-container.ui-inputtext{
 	padding: 0px;
 	.ui-autocomplete-input-token{
 		padding: 0px;
-		input.ui-autocomplete.ui-widget{
+		input{
 			height: 34px;
 			padding-left: 4px;
-		}
-		.ui-inputtext{
-			width: 324px;
-			height: 34px;
-			padding-left: 4px;
+			width: 328px;
 		}
 	}
 }

@@ -52,3 +52,9 @@
         }
     }
 }
+:host{
+	display: flex;
+	flex-flow: row wrap;
+	margin: 0px;
+	flex-direction: column;
+}

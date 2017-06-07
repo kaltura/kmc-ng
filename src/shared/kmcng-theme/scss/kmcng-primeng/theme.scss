@@ -357,6 +357,7 @@ td.ui-datatable-emptymessage{
     margin-top: 4px;
     color: $kGrayscale2;
     font-weight: 400;
+	margin-right: 0px;
 }
 .ui-paginator-rpp-options.ui-widget.ui-state-default{
     border: none;
@@ -546,6 +547,30 @@ td.ui-datatable-emptymessage{
             cursor: default;
         }
     }
+}
+.ui-autocomplete-input-token input {
+	background-color: $kGrayscale6;
+	border: 0px solid $kGrayscale6;
+	color: $kGrayscale1;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box; /* Firefox, other Gecko */
+	box-sizing: border-box; /* Opera/IE 8+ */
+	&:focus {
+		background-color: white;
+	}
+}
+.ui-autocomplete-token-icon.fa-close{
+	flex: 0 0 auto;
+	margin-top: -10px;
+	right: 0px;
+	padding: 4px;
+	cursor: pointer;
+	font-size: 12px;
+	&:hover{
+		background-color: rgba(255,255,255,0.3);
+		border: 0px solid rgba(255,255,255,0.3);
+		border-radius: 3px;
+	}
 }
 
 // drop down
