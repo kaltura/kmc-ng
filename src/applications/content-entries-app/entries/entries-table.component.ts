@@ -50,6 +50,10 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 	constructor(private appLocalization: AppLocalization, public entriesStore: EntriesStore) {
 	}
 
+	_convertSortValue(value: boolean): number {
+		return value ? 1 : -1;
+
+	}
 
 	ngOnInit() {
 		this._blockerMessage = null;

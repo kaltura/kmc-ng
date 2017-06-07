@@ -7,6 +7,7 @@ import { EntryDurationPipe } from './pipes/entry-duration.pipe';
 import {
     EntriesAdditionalFiltersComponent
 } from "./entries-additional-filters/entries-additional-filters.component";
+import { PrimeTableSortDirectionPipe } from './pipes/prime-table-sort-direction.pipe';
 
 export const EntriesComponentsList = [
     EntriesListComponent,
@@ -15,5 +16,6 @@ export const EntriesComponentsList = [
     CategoriesFilterPrefsComponent,
     EntriesAdditionalFiltersComponent,
     MaxEntriesPipe,
-    EntryDurationPipe
+    EntryDurationPipe,
+    PrimeTableSortDirectionPipe
 ];

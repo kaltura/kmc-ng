@@ -86,7 +86,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
 
     private _queryData : QueryData = {
-        pageIndex: 0,
+        pageIndex: 1,
         pageSize: 50,
         sortBy: 'createdAt',
         sortDirection: SortDirection.Desc,
