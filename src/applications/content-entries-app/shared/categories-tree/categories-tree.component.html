@@ -2,9 +2,9 @@
     <div class="kTreeContainer kUseKMCngIcons">
 
         <p-tree #tree
-                [selectionMode] = "'checkbox'"
-                [propagateSelectionUp] = "false"
-                [propagateSelectionDown] = "false"
+                kPrimeTreePropagation
+                [propagateDownMode]="disablePropagation ? 'preventNested' : 'none'"
+                [propagateUpMode]="disablePropagation ? 'visualOnly' : 'none'"
                 [value]="_categories"
                 [selection]="selection"
                 (selectionChange)="selectionChange.emit($event)"

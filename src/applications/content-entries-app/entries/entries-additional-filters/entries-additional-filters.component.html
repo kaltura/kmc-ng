@@ -16,15 +16,14 @@
 					<span>{{treeSection.label | uppercase}}</span>
 				</div>
 				<p-tree [value]="treeSection.items"
-						[selectionMode] = "'checkbox'"
-						[propagateSelectionUp] = "true"
-						[propagateSelectionDown] = "true"
+						kPrimeTreePropagation
+						[disableTrackByData]="true"
 						[(selection)]="treeSection.selections"
 						(onNodeSelect)="_onTreeNodeSelect($event, treeSection)"
 						(onNodeUnselect)="_onTreeNodeUnselect($event, treeSection)"
 						>
 					<ng-template let-node  pTemplate="default">
-						<span  class="kTreeNodeLabel">{{node.label}} <span *ngIf="node.childrenCount" class="kTreeNodeNumChildren">{{ node.childrenCount}}</span></span>
+						<span  class="kTreeNodeLabel">{{node.label}} ({{ treeSection.selections?.length }}) <span *ngIf="node.childrenCount" class="kTreeNodeNumChildren">{{ node.childrenCount}}</span></span>
 						<div *ngIf="node.data==='scheduled'" (click)="_blockScheduleToggle($event)">
 							<div>
 								<div class="kDateRange">
