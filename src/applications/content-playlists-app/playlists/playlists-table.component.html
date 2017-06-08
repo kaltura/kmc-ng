@@ -6,11 +6,6 @@
 			scrollable="true"
 			scrollHeight="100%">
 			<p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
-			<p-column field="thumbnailUrl" header="{{'applications.content.table.thumb' | translate}}">
-				<template let-col let-entry="rowData" pTemplate="body">
-					<div class="kThumbnailHolder"><span class="kHelper"></span><img src="{{entry[col.field]}}" onError="this.onerror=null;this.style.display='none'"></div>
-				</template>
-			</p-column>
 			<p-column field="name" header="{{'applications.content.table.name' | translate}}"></p-column>
 			<p-column field="id" header="{{'applications.content.table.id' | translate}}"></p-column>
 			<p-column field="playlistType" header="{{'applications.content.table.playlistType' | translate}}">
@@ -23,7 +18,6 @@
 					<span>{{entry[col.field] | kDate}}</span>
 				</template>
 			</p-column>
-			<p-column field="duration" header="{{'applications.content.table.duration' | translate}}"></p-column>
 		</p-dataTable>
 	</div>
 </k-area-blocker>
