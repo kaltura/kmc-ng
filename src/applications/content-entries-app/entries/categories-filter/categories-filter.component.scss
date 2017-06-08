@@ -1,25 +1,5 @@
 @import "~kmcng-theme/scss/_variables.scss";
 
-.kTreeNodeLabel{
-    width:100%;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 43px;
-    color: $kGrayscale1;
-    text-overflow: ellipsis;
-    margin-left: 5px;
-
-    &.kDisabled
-    {
-        color:darkgray;
-    }
-}
-.kTreeNodeNumChildren{
-    font-size: 14px;
-    font-weight: 400;
-    color: $kGrayscale3;
-    margin-left: 10px;
-}
 .kClose{
     float: right;
 }
@@ -64,8 +44,8 @@ a.disabled{
 .kTreeConfig{
     font-size: 24px;
     position: absolute;
-	right: 2px;
-	top: 14px;
+	right: 18px;
+	top: 26px;
     color: $kGrayscale3;
     cursor: pointer;
     &:hover{
@@ -112,18 +92,14 @@ a.disabled{
     font-weight: 700;
     text-decoration: underline;
 }
-:host /deep/ .ui-autocomplete ul.ui-autocomplete-multiple-container.ui-inputtext{
+:host /deep/ kautocomplete ul.ui-autocomplete-multiple-container.ui-inputtext{
 	padding: 0px;
 	.ui-autocomplete-input-token{
 		padding: 0px;
-		input.ui-autocomplete.ui-widget{
+		input{
 			height: 34px;
 			padding-left: 4px;
-		}
-		.ui-inputtext{
-			width: 324px;
-			height: 34px;
-			padding-left: 4px;
+			width: 328px;
 		}
 	}
 }

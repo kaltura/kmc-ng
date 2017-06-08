@@ -18,6 +18,10 @@ export class EntryClips implements OnInit, OnDestroy {
     {
     }
 
+    _convertSortValue(value: boolean): number {
+        return value ? 1 : -1;
+
+    }
     public _onSortChanged(event : any)
     {
         this._handler.sortAsc = event.order === 1;

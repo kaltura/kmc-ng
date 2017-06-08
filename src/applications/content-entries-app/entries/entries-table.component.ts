@@ -18,7 +18,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 	private _entries: any[] = [];
 	@Input() set entries(data: any[]) {
 		this._entries = data;
-		if (this._viewLoaded) {
+		if (!this._deferredLoading) {
 			// This prevents the screen from hanging during datagrid rendering of the data.
 			this._entriesProvider = this._entries;
 		}
@@ -39,20 +39,26 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 	private actionsMenuEntryId: string = "";
 	private entriesStoreStatusSubscription: ISubscription;
 
-	public _viewLoaded = false;
+	public _deferredLoading = true;
 	public _entriesProvider: any[] = [];
+	public _emptyMessage: string = "";
 
 	public _items: MenuItem[];
-	tableSelectedEntries: KalturaMediaEntry[] = [];
 
+	public rowTrackBy: Function = (index: number, item: any) => {return item.id};
 
 	constructor(private appLocalization: AppLocalization, public entriesStore: EntriesStore) {
-		this._viewLoaded = false;
 	}
 
+	_convertSortValue(value: boolean): number {
+		return value ? 1 : -1;
+
+	}
 
 	ngOnInit() {
 		this._blockerMessage = null;
+		this._emptyMessage = "";
+		let loadedOnce = false; // used to set the empty message to "no results" only after search
 		this.entriesStoreStatusSubscription = this.entriesStore.state$.subscribe(
 			result => {
 				if (result.errorMessage) {
@@ -67,6 +73,14 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 					})
 				} else {
 					this._blockerMessage = null;
+					if (result.loading){
+						this._emptyMessage = "";
+						loadedOnce = true;
+					}else {
+						if (loadedOnce) {
+							this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
+						}
+					}
 				}
 			},
 			error => {
@@ -116,10 +130,10 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 				}
 			}
 		}
-		if (!this._viewLoaded) {
+		if (this._deferredLoading) {
 			// use timeout to allow the DOM to render before setting the data to the datagrid. This prevents the screen from hanging during datagrid rendering of the data.
 			setTimeout(()=> {
-				this._viewLoaded = true;
+				this._deferredLoading = false;
 				this._entriesProvider = this._entries;
 			}, 0);
 		}
@@ -155,11 +169,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 	}
 
 	onSelectionChange(event) {
-		this.selectedEntries = [];
-		event.forEach((entry: KalturaMediaEntry) => {
-			this.selectedEntries.push(entry.id)
-		});
-		this.selectedEntriesChange.emit(this.selectedEntries);
+		this.selectedEntriesChange.emit(event);
 	}
 
 	scrollToTop() {

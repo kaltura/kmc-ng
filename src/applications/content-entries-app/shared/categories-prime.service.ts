@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { PrimeTreeNode, TreeDataHandler, NodeChildrenStatuses } from '@kaltura-ng2/kaltura-primeng-ui';
+import { PrimeTreeNode, PrimeTreeDataProvider, NodeChildrenStatuses } from '@kaltura-ng2/kaltura-primeng-ui';
 import { AppAuthentication, AppConfig, AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { CategoriesStore, CategoriesQuery } from './categories-store.service';
 
@@ -10,7 +10,7 @@ export class CategoriesPrimeService {
 
 	private inLazyMode : boolean = false;
 
-	constructor(private _categoriesStore: CategoriesStore, private treeDataHandler : TreeDataHandler, private appAuthentication : AppAuthentication, private appConfig: AppConfig, private appLocalization: AppLocalization) {
+	constructor(private _categoriesStore: CategoriesStore, private primeTreeDataProvider : PrimeTreeDataProvider, private appAuthentication : AppAuthentication, private appConfig: AppConfig, private appLocalization: AppLocalization) {
 		this.inLazyMode = this.appAuthentication.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
 	}
 
@@ -19,7 +19,7 @@ export class CategoriesPrimeService {
 			const categories$ = this.inLazyMode ? this._categoriesStore.getRootCategories() : this._categoriesStore.getAllCategories();
 			let categories = [];
 			const categoriesSubsciption = categories$.subscribe(result => {
-					categories = this.treeDataHandler.create(
+					categories = this.primeTreeDataProvider.create(
 						this.createTreeHandlerArguments(result.items)
 					);
 					observer.next({categories: categories});
@@ -54,7 +54,7 @@ export class CategoriesPrimeService {
 
 					this._categoriesStore.getChildrenCategories(<number>node.data).subscribe(result => {
 							// add children to the node
-							let nodeChildren = this.treeDataHandler.create(
+							let nodeChildren = this.primeTreeDataProvider.create(
 								this.createTreeHandlerArguments(result.items, node)
 							);
 

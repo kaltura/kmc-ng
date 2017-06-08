@@ -28,28 +28,42 @@ export class ListsToFilterTypesManager
      */
     private _filterTypeToNameMapping : {[key : string] : string} = {};
 
+    private _filtersList : ValueFilterType[];
 
+
+    public getFilterTypes() : ValueFilterType[]
+    {
+        return [...this._filtersList];
+    }
     /**
      * Update the internal mapping with the provided data
-     * @param typeName
+     * @param name
      * @param filterType
      * @param factory
      */
-    public registerType(typeName : string, filterType : ValueFilterType, factory : (node : PrimeTreeNode) => ValueFilter<any>) : void
+    public registerType(name : string, filterType : ValueFilterType, factory : (node : PrimeTreeNode) => ValueFilter<any>) : void
     {
-        this._nameToTypeMapping[typeName] = filterType;
-        this._nameToFactoryMapping[typeName] = factory;
-        this._filterTypeToNameMapping[filterType.name] = typeName;
+        this._nameToTypeMapping[name] = filterType;
+        this._nameToFactoryMapping[name] = factory;
+        this._filterTypeToNameMapping[filterType.name] = name;
+        this._filtersList.push(filterType);
+    }
+
+    public reset() : void{
+        this._nameToTypeMapping = {};
+        this._nameToFactoryMapping = {};
+        this._filterTypeToNameMapping = {};
+        this._filtersList = [];
     }
 
     /**
-     * Get a filter type by list name
-     * @param listName
+     * Get a filter type by id
+     * @param name
      * @returns {ValueFilterType}
      */
-    public getFilterByListName(listName : string) : ValueFilterType
+    public getFilterTypeByListName(name : string) : ValueFilterType
     {
-        return this._nameToTypeMapping[listName];
+        return this._nameToTypeMapping[name];
     }
 
     /**
@@ -57,7 +71,7 @@ export class ListsToFilterTypesManager
      * @param filter
      * @returns {string}
      */
-    public getListNameByFilter(filter : ValueFilter<any>) : string
+    public getListNameByFilterType(filter : ValueFilter<any>) : string
     {
         return this._filterTypeToNameMapping[<any>filter.constructor.name];
     }
@@ -65,13 +79,13 @@ export class ListsToFilterTypesManager
 
     /**
      * Create a new filter instance by list name and prime node
-     * @param listName
+     * @param name
      * @param node
      * @returns {ValueFilter<any>}
      */
-    public createNewFilter(listName : string, node : PrimeTreeNode) : ValueFilter<any>
+    public createNewFilter(name : string, node : PrimeTreeNode) : ValueFilter<any>
     {
-        const factory = this._nameToFactoryMapping[listName];
+        const factory = this._nameToFactoryMapping[name];
 
         return factory ? factory(node) : null;
     }

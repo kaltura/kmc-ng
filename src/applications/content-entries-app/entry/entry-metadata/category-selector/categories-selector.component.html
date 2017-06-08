@@ -1,24 +1,30 @@
-<k-area-blocker [showLoader]="_loading" [message]="_blockerMessage">
-	<div class="kTreeContainer kUseKMCngIcons">
+<div class="kTreeContainer kUseKMCngIcons">
 
-		<kAutoComplete [(ngModel)]="_searchCategories"
-					   kSuggestionHandler
-					   field="name"
-					   suggestionItemField="item"
-					   suggestionLabelField="name"
-					   suggestionSelectableField="isSelectable"
-					   [multiple]="true"
-					   placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"
-					   [minLength]="3"
-					   (onSelect)="_onSuggestionSelected($event)"
-					   (onUnselect)="_onItemRemoved($event)"
-					   [suggestionsProvider]="_categoriesProvider"
-					   (completeMethod)="_searchForCategories($event)">
-		</kAutoComplete>
+    <kAutoComplete [(ngModel)]="_autoCompleteItems"
+                   [disabled]="!_categoriesLoaded"
+                   field="name"
+                   suggestionItemField="item"
+                   suggestionLabelField="name"
+                   suggestionSelectableField="isSelectable"
+                   [multiple]="true"
+                   placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"
+                   [minLength]="3"
+                   (onSelect)="_onAutoCompleteSelect($event)"
+                   (onUnselect)="_onAutoCompleteUnselect($event)"
+                   [suggestionsProvider]="_categoriesProvider"
+                   (completeMethod)="_onAutoCompleteSearch($event)">
+    </kAutoComplete>
 
-		<kCategoriesTree #categoriesTree [categories]="_categories" [selectionMode]="_TreeSelectionModes.Self" (nodeExpand)="onNodeExpand($event)" (selectionChange)="onSelectionChange($event)"></kCategoriesTree>
-		<div class="kFooter">
-			<button class="kButtonBranded" pButton label="Apply"(click)="_apply()"></button>
-		</div>
-	</div>
-</k-area-blocker>
+
+        <k-categories-tree #categoriesTree
+                           [(selection)]="_treeSelection"
+                           (onCategoriesLoad)="_onCategoriesLoad($event)"
+                           (onNodeSelect)="_onTreeNodeSelected($event)"
+                           (onNodeUnselect)="_onTreeNodeUnselected($event)"
+                           (onNodeChildrenLoaded)="_onNodeChildrenLoaded($event)"></k-categories-tree>
+
+
+    <div class="kFooter">
+        <button class="kButtonBranded" pButton label="Apply" (click)="_apply()"></button>
+    </div>
+</div>

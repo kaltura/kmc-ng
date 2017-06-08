@@ -13,6 +13,8 @@ export abstract class FilterItem
 		return this._label;
 	}
 
+	public abstract isEqual(otherFilter : FilterItem) : boolean;
+
 	private _tooltip : FilterItemLocalizedTooltip;
 
 	public get tooltip() : FilterItemLocalizedTooltip{

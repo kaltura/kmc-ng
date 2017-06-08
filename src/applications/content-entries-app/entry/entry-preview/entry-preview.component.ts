@@ -44,7 +44,7 @@ export class EntryPreview implements OnInit, OnDestroy {
 			data => {
 				if (data) {
 					this._currentEntry = data;
-					this._entryReady = this._currentEntry.status !== KalturaEntryStatus.noContent;
+					this._entryReady = this._currentEntry.status.toString() !== KalturaEntryStatus.noContent.toString();
 					const sourceType = this._currentEntry.sourceType.toString();
 					this._isLive = (sourceType === KalturaSourceType.liveStream.toString() ||
 					sourceType === KalturaSourceType.akamaiLive.toString() ||

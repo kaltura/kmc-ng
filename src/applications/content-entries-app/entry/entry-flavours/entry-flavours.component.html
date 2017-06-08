@@ -27,14 +27,14 @@
 				<p-column field="size" header="{{'applications.content.entryDetails.flavours.size' | translate}}">
 				</p-column>
 				<p-column field="statusLabel" header="{{'applications.content.entryDetails.flavours.stat' | translate}}">
-					<template let-col let-flavor="rowData" pTemplate="body">
+					<ng-template let-col let-flavor="rowData" pTemplate="body">
 						<span [kTooltip]="flavor.statusTooltip" [class.kFlavorStatusError]="flavor.status === '-1'">{{flavor.statusLabel}}</span>
-					</template>
+					</ng-template>
 				</p-column>
 				<p-column field="tags" header="{{'applications.content.entryDetails.flavours.tags' | translate}}">
 				</p-column>
 				<p-column [style]="{'width':'80px'}">
-					<template let-col let-flavor="rowData" pTemplate="body">
+					<ng-template let-col let-flavor="rowData" pTemplate="body">
 						<div *ngIf="flavor.status !== '1' && flavor.status !== '6' && flavor.status !== '7' && flavor.status !== '8' && flavor.status !== '0'" class="kFlavorsTableActions">
 							<button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, flavor)"></button>
 						</div>
@@ -44,7 +44,7 @@
 							</div>
 
 						</div>
-					</template>
+					</ng-template>
 				</p-column>
 			</p-dataTable>
 			<p-menu kMenuCloseOnScroll [scrollTarget]="flavors" #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'"></p-menu>

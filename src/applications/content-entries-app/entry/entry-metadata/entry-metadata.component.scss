@@ -20,14 +20,6 @@ hr{
 	width: 100%;
 	overflow-y: auto;
 
-	.kEditCategories{
-		margin-left: 8px;
-		cursor: pointer;
-		&:hover{
-			color: $kPrimary;
-		}
-	}
-
 	.kSchemaTitle{
 		color: $kGrayscale1;
 		font-size: 18px;
@@ -219,5 +211,11 @@ hr{
 
 	.kValign{
 		align-items: center;
+	}
+	.kLink{
+		margin-top: -4px;
+		margin-bottom: 4px;
+		cursor: pointer;
+		color: $kBlack;
 	}
 }

@@ -1,7 +1,7 @@
-<k-area-blocker [showLoader]="_loading" [message]="_blockerMessage">
 	<div class="kUseKMCngIcons">
 		<div class="kHeader">
 			<kAutoComplete
+							[disabled]="!_categoriesLoaded"
 						   inputStyleClass="kSearchCategory"
 						   #searchCategory
 						   field="label"
@@ -19,7 +19,13 @@
 			</div>
 		</div>
 		<div class="kTreeContainer">
-			<kCategoriesTree #categoriesTree [categories]="_categories" [selectionMode]="_selectionMode" (nodeExpand)="_onNodeExpand($event)" (selectionChange)="_onTreeSelectionChanged($event)"></kCategoriesTree>
+			<k-categories-tree #categoriesTree
+							   [(selection)]="_selection"
+							   (onNodeSelect)="_onTreeNodeSelected($event)"
+							   (onNodeUnselect)="_onTreeNodeUnselected($event)"
+							   (onCategoriesLoad)="_onCategoriesLoad($event)"
+							   (onNodeChildrenLoaded)="_onNodeChildrenLoaded($event)">
+			</k-categories-tree>
 		</div>
 
 		<p>
@@ -27,9 +33,10 @@
 			<a class="kClose" (click)="close()">{{'applications.content.filters.close' | translate}}</a>
 		</p>
 	</div>
-</k-area-blocker>
 <kPopupWidget #categoriesPref [modal]="true" [popupWidth]="360" [popupHeight]="220" [closeBtn]="true"
 			  [targetRef]="config" [targetOffset]="{'x':-324, 'y': -24}" [parentPopup]="parentPopupWidget">
-	<kCategoriesFilterPrefs [selectionMode]="_selectionMode"
+	<ng-template>
+		<kCategoriesFilterPrefs [selectionMode]="_selectionMode"
 							(selectionModeChange)="_onSelectionModeChanged($event)"></kCategoriesFilterPrefs>
+	</ng-template>
 </kPopupWidget>

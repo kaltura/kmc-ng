@@ -30,32 +30,24 @@ export type UpdateStatus = {
     errorMessage : string;
 };
 
-export class FilterGroupType
+export class RefineFilter
 {
-    constructor(public type : string, public caption : string)
+    public items :{id : string, name : string}[] = [];
+    public metadataProfileId : number;
+    public fieldPath : string[] = [];
+
+    constructor(public name : string, public label : string )
     {
 
     }
 }
 
-export class filterGroupMetadataProfileType extends FilterGroupType
-{
-    constructor(type : string,caption : string, public metadataProfileId : number, public fieldPath : string[])
-    {
-        super(type,caption);
-    }
-}
 
-export interface FilterGroup
+export interface RefineFilterGroup
 {
-    groupName : string,
-    filtersTypes : FilterGroupType[]
-    filtersByType : { [key : string] : {id : string, name : string}[]}
-}
-
-export interface AdditionalFilters
-{
-    groups : FilterGroup[];
+    label : string;
+    filters : RefineFilter[];
+    isMetadataGroup : boolean;
 }
 
 
@@ -70,7 +62,7 @@ export enum AdditionalFilterLoadingStatus
 export class EntriesAdditionalFiltersStore {
 
     // TODO [KMC] - clear cached data on logout
-    private _filters: ReplaySubject<AdditionalFilters> = new ReplaySubject<AdditionalFilters>(1);
+    private _filters = new ReplaySubject<{groups : RefineFilterGroup[]}>(1);
     private _status: BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({
         loading: false,
         errorMessage: null
@@ -86,7 +78,7 @@ export class EntriesAdditionalFiltersStore {
         this.load();
     }
 
-    private load() {
+    public load() {
         // cancel previous requests
         if (this.executeQuerySubscription) {
             this.executeQuerySubscription.unsubscribe();
@@ -101,36 +93,30 @@ export class EntriesAdditionalFiltersStore {
             .subscribe(
                 (responses) => {
                 this.executeQuerySubscription = null;
+                    if (responses[1].hasErrors()) {
+                        this._filters.next({ groups : []});
+                        this._status.next({loading: false, errorMessage: 'failed to load refine filters'});
 
-                if (responses[1].hasErrors()) {
-                    this._status.next({loading: false, errorMessage: 'failed to load refine filters'});
+                    } else {
+                        const metadataData = this._buildMetadataFiltersGroups(responses[0].items);
+                        const defaultFilterGroup = this._buildDefaultFiltersGroup(responses[1], responses[2].items);
 
-                } else {
-
-                    const filters : AdditionalFilters = {groups : []};
-
-                    const defaultFilterGroup = this._buildDefaultFiltersGroup(responses[1], responses[2].items);
-                    filters.groups.push(defaultFilterGroup);
-
-                    const metadataData = this._buildMetadataFiltersGroups(responses[0].items);
-                    filters.groups = [...filters.groups, ...metadataData.groups];
-
-                    this._status.next({ loading : false, errorMessage : null});
-                    this._filters.next(filters);
-                }
+                        this._filters.next({groups: [defaultFilterGroup, ...metadataData.groups]});
+                        this._status.next({loading: false, errorMessage: null});
+                    }
             },
             (error) => {
                 this.executeQuerySubscription = null;
 
+                this._filters.next({ groups : []});
                 this._status.next({loading: false, errorMessage: (<Error>error).message || <string>error});
-
             }
         );
     }
 
-    private _buildMetadataFiltersGroups(metadataProfiles : MetadataProfile[]) : { metadataProfiles : number[] , groups : FilterGroup[]} {
+    private _buildMetadataFiltersGroups(metadataProfiles : MetadataProfile[]) : { metadataProfiles : number[] , groups : RefineFilterGroup[]} {
 
-        const result: { metadataProfiles: number[] , groups: FilterGroup[]} = {metadataProfiles: [], groups: []};
+        const result: { metadataProfiles: number[] , groups: RefineFilterGroup[]} = {metadataProfiles: [], groups: []};
 
         metadataProfiles.forEach(metadataProfile => {
             result.metadataProfiles.push(metadataProfile.id);
@@ -142,15 +128,17 @@ export class EntriesAdditionalFiltersStore {
 
             // if found relevant lists, create a group for that profile
             if (profileLists && profileLists.length > 0) {
-                const filterGroup = {groupName: metadataProfile.name, filtersTypes: [], filtersByType: {}};
+                const filterGroup = { label: metadataProfile.name, filters: [],isMetadataGroup : true };
                 result.groups.push(filterGroup);
 
                 profileLists.forEach(list => {
-                    filterGroup.filtersTypes.push(new filterGroupMetadataProfileType(list.id, list.label, metadataProfile.id, ['metadata',list.name]));
-                    const items = filterGroup.filtersByType[list.id] = [];
+                    const refineFilter = new RefineFilter(list.id, list.label);
+                    refineFilter.metadataProfileId = metadataProfile.id;
+                    refineFilter.fieldPath = ['metadata',list.name];
+                    filterGroup.filters.push(refineFilter);
 
                     list.optionalValues.forEach(item => {
-                        items.push({
+                        refineFilter.items.push({
                             id: item.value,
                             name: item.text
                         })
@@ -163,26 +151,26 @@ export class EntriesAdditionalFiltersStore {
         return result;
     }
 
-    private _buildDefaultFiltersGroup(responses : KalturaMultiResponse, flavours: KalturaFlavorParams[]) : FilterGroup{
-        const result = {groupName : '', filtersTypes : [], filtersByType : {}};
+    private _buildDefaultFiltersGroup(responses : KalturaMultiResponse, flavours: KalturaFlavorParams[]) : RefineFilterGroup{
+        const result : RefineFilterGroup = {label : '', filters : [], isMetadataGroup : false};
 
         // build constant filters
-        ConstantsFilters.forEach((filter) =>
+        ConstantsFilters.forEach((constantFilter) =>
         {
-            result.filtersTypes.push(new FilterGroupType(filter.type,filter.name));
-            const items = result.filtersByType[filter.type] = [];
-            filter.items.forEach((item: any) => {
-                items.push({id : item.id, name : item.name});
+            const newRefineFilter = new RefineFilter(constantFilter.id,constantFilter.name);
+            result.filters.push(newRefineFilter);
+            constantFilter.items.forEach((item: any) => {
+                newRefineFilter.items.push({id : item.id, name : item.name});
             });
         });
 
         // build access control profile filters
         if (responses[1].result.objects.length > 0) {
-            result.filtersTypes.push(new FilterGroupType('accessControlProfiles','Access Control Profiles'));
-            const items = result.filtersByType['accessControlProfiles'] = [];
+            const newRefineFilter = new RefineFilter('accessControlProfiles','Access Control Profiles');
+            result.filters.push(newRefineFilter);
             responses[1].result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
-                items.push({
-                    id: accessControlProfile.id,
+                newRefineFilter.items.push({
+                    id: accessControlProfile.id + '',
                     name: accessControlProfile.name
                 });
             });
@@ -190,19 +178,19 @@ export class EntriesAdditionalFiltersStore {
 
 	    //build flavors filters
 	    if (flavours.length > 0) {
-		    result.filtersTypes.push(new FilterGroupType('flavors',"Flavors"));
-		    const items = result.filtersByType['flavors'] = [];
+            const newRefineFilter = new RefineFilter('flavors',"Flavors");
+		    result.filters.push(newRefineFilter);
 		    flavours.forEach((flavor: KalturaFlavorParams) => {
-			    items.push({id: flavor.id, name: flavor.name});
+                newRefineFilter.items.push({id: flavor.id+'', name: flavor.name});
 		    });
 	    }
 
 	    // build distributions filters
 	    if (responses[0].result.objects.length > 0) {
-		    result.filtersTypes.push(new FilterGroupType('distributions',"Destinations"));
-		    const items = result.filtersByType['distributions'] = [];
+            const newRefineFilter = new RefineFilter('distributions',"Destinations")
+		    result.filters.push(newRefineFilter);
 		    responses[0].result.objects.forEach((distributionProfile: KalturaDistributionProfile) => {
-			    items.push({id : distributionProfile.id, name : distributionProfile.name});
+                newRefineFilter.items.push({id : distributionProfile.id+'', name : distributionProfile.name});
 		    });
 	    }
 

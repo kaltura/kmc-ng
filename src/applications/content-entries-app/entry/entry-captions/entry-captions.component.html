@@ -7,28 +7,28 @@
 				<p-column field="label" header="{{'applications.content.entryDetails.captions.label' | translate}}">
 				</p-column>
 				<p-column field="format" header="{{'applications.content.entryDetails.captions.type' | translate}}">
-					<template let-col let-caption="rowData" pTemplate="body">
+					<ng-template let-col let-caption="rowData" pTemplate="body">
 						<span>{{_handler._getCaptionType(caption.format)}}</span>
-					</template>
+					</ng-template>
 				</p-column>
 				<p-column field="language" header="{{'applications.content.entryDetails.captions.language' | translate}}">
 				</p-column>
 				<p-column field="status" header="{{'applications.content.entryDetails.captions.status' | translate}}">
-					<template let-col let-caption="rowData" pTemplate="body">
+					<ng-template let-col let-caption="rowData" pTemplate="body">
 						<span *ngIf="!caption.uploadFailure">{{_handler._getCaptionStatus(caption)}}</span>
 						<div *ngIf="caption.uploadFailure" class="kError">
 							<span>{{'applications.content.entryDetails.captions.uploadError' | translate}}</span>
 						</div>
-					</template>
+					</ng-template>
 				</p-column>
 				<p-column header="{{'applications.content.entryDetails.captions.defaultTitle' | translate}}">
-					<template let-col let-caption="rowData" pTemplate="body">
+					<ng-template let-col let-caption="rowData" pTemplate="body">
 						<span *ngIf="caption.isDefault">{{'applications.content.entryDetails.captions.default' | translate}}</span>
 						<a (click)="_handler._setAsDefault(caption)" *ngIf="!caption.isDefault && caption.status?.toString()==='2'">{{'applications.content.entryDetails.captions.setDefault' | translate}}</a>
-					</template>
+					</ng-template>
 				</p-column>
 				<p-column [style]="{'width':'80px'}">
-					<template let-col let-caption="rowData" pTemplate="body">
+					<ng-template let-col let-caption="rowData" pTemplate="body">
 						<div class="kCaptionsTableActions" *ngIf="!caption.uploading && !caption.uploadFailure">
 							<button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, caption)"></button>
 						</div>
@@ -38,7 +38,7 @@
 						<div *ngIf="caption.uploadFailure">
 							<a (click)="_handler.removeCaption()">{{'applications.content.entryDetails.captions.remove' | translate}}</a>
 						</div>
-					</template>
+					</ng-template>
 				</p-column>
 			</p-dataTable>
 			<p-menu kMenuCloseOnScroll [scrollTarget]="captions" #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'"></p-menu>

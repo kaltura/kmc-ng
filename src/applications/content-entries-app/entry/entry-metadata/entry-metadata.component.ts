@@ -7,7 +7,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui
 
 import { MenuItem } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
-import { EntryMetadataHandler } from './entry-metadata-handler';
+import { EntryMetadataHandler, EntryCategoryItem } from './entry-metadata-handler';
 import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
 import { JumpToSection } from './jump-to-section.component';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
@@ -20,6 +20,7 @@ import { EntryFormManager } from '../entry-form-manager';
 })
 export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
+    public _categoriesSelectorValue : EntryCategoryItem[] = [];
     private _searchCategoriesSubscription : ISubscription;
     private _searchTagsSubscription : ISubscription;
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
@@ -155,6 +156,12 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         this._updateJumpToSectionsMenu();
     }
 
+    _updateEntryCategories($event : any) : void{
+        if ($event && $event instanceof Array)
+        {
+            this._handler.metadataForm.patchValue({ categories : $event});
+        }
+    }
 
     private _jumpTo(element : HTMLElement){
         let pageScrollInstance: PageScrollInstance = PageScrollInstance.newInstance({

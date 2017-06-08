@@ -95,6 +95,18 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._bulkActionsMenu = this.getBulkActionItems();
+
+        const query = this._entriesStore.queryData;
+
+        if (query) {
+            this.syncFreetextComponents();
+            this._filter.pageSize = query.pageSize;
+            this._filter.pageIndex = query.pageIndex - 1;
+            this._filter.sortBy = query.sortBy;
+            this._filter.sortDirection = query.sortDirection;
+        }
+
+
         this.querySubscription = this._entriesStore.query$.subscribe(
             query => {
                this.syncFreetextComponents();
@@ -142,7 +154,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
     clearSelection(){
         this._selectedEntries = [];
-        this.dataTable.tableSelectedEntries = [];
     }
 
     executeBulkAction(action: string){
@@ -169,6 +180,10 @@ export class EntriesListComponent implements OnInit, OnDestroy {
             { label: this.appLocalization.get('applications.content.bulkActions.delete'), command: (event) => { this.executeBulkAction("delete") } }
         ];
     }
+
+	onSelectedEntriesChange(event):void{
+		this._selectedEntries = event;
+	}
 
 }
 
