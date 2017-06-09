@@ -1,10 +1,17 @@
-<k-area-blocker kFillHeight>
-	<div class="kPlaylistsTable">
+<k-area-blocker kFillHeight
+	[showLoader]="(playlistsStore.state$ | async)?.loading || this._deferredLoading"
+	[message]="_blockerMessage">
+	<div class="kPlaylistsTable" [class.noResults]="!_playlistsProvider.length">
 		<p-dataTable
 			#dataTable
 			[value]="_playlistsProvider"
+			(selectionChange)="onSelectionChange($event)"
+			(onSort)="onSortChanged($event)"
+			[(selection)]="selectedPlaylists"
+			[sortField]="filter.sortBy"
+			emptyMessage="{{_emptyMessage}}"
 			scrollable="true"
-			scrollHeight="100%"
+			scrollHeight="500px"
 			dataKey="id"
 			[rowTrackBy]="rowTrackBy">
 			<p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
@@ -15,7 +22,7 @@
 					<span>{{entry[col.field] | playlistType}}</span>
 				</template>
 			</p-column>
-			<p-column field="createdAt" header="{{'applications.content.table.createdOn' | translate}}">
+			<p-column field="createdAt" [sortable]="true" header="{{'applications.content.table.createdOn' | translate}}">
 				<template let-col let-entry="rowData" pTemplate="body">
 					<span>{{entry[col.field] | kDate}}</span>
 				</template>

@@ -52,6 +52,12 @@
                 "refine": "Refine",
                 "refresh": "Refresh"
             },
+			"playlists": {
+				"playlists": "Playlists",
+				"selected": "Selected",
+				"bulkActions": "Bulk Actions",
+				"cancel": "Cancel"
+			},
             "filters":{
                 "activeFilters": "Active Filters:",
                 "clearAll": "Clear All",

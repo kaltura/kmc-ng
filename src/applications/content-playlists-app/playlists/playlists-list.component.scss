@@ -18,26 +18,82 @@
 		display: flex;
 		flex-direction: column;
     }
-    .kRefreshBtn {
-        font-size: 24px;
-        border: none;
-        min-width: inherit;
-        margin-right: 16px;
-        width: 40px;
-        outline: 0;
-        color: $kGrayscale3;
-        &:active{
-            box-shadow: none;
-        }
-        &:hover{
-            background-color: #ffffff;
-            color: $kPrimary;
-        }
-    }
     .kPlaylistsTable {
         border: none;
         position: relative;
 		background-color: white;
 		flex: 1 1 auto;
     }
+	.kPlaylistsTableFooter {
+		width: 100%;
+		height: 34px;
+		background-color: white;
+		border-top: 1px solid $kGrayscale6;
+		position: relative;
+		box-sizing: border-box;
+		flex: 0 0 auto;
+		padding: 0 14px 28px;
+		display: block;
+	}
+	.kPaginatorShowRowsLabel{
+		color: $kGrayscale1;
+		position: absolute;
+		top: 7px;
+		right: 80px;
+	}
+	.kPlaylistsTableFilters {
+		color: $kGrayscale1;
+		width: 100%;
+		height: 66px;
+		background-color: white;
+		flex: 0 0 auto;
+		align-items: center;
+		margin-left: 0px;
+		border-bottom: none;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+		display: flex;
+		.kSelectedPlaylistsNum{
+			padding-left: 16px;
+		}
+	}
+	.kRefreshBtn {
+		font-size: 24px;
+		border: none;
+		min-width: inherit;
+		margin-right: 16px;
+		width: 40px;
+		outline: 0;
+		color: $kGrayscale3;
+		&:active{
+			box-shadow: none;
+			transform: rotate(45deg);
+		}
+		&:hover{
+			background-color: #ffffff;
+			color: $kPrimary;
+		}
+	}
+	.kBulkOperations{
+		width: 400px;
+	}
+	.kSelectedPlaylistsLabel{
+		font-weight: bold;
+		margin-right: 36px;
+		margin-left: 5px;
+	}
+	.kBulkDeleteBtn{
+		margin-right: 10px;
+		width: 44px;
+		font-size: 18px;
+	}
+	.kBulkActionsBtn{
+		font-weight: 400;
+		font-size: 15px;
+	}
+	.kHidden{
+		visibility: hidden;
+		width: 0;
+		height: 0;
+	}
 }
