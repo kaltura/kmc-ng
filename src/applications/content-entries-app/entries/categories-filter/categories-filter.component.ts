@@ -93,9 +93,10 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
         if (item) {
             if (item instanceof PrimeTreeNode) {
-                return new CategoriesFilter(<number>item.data, mode, item.label, {token: (item.origin.fullNamePath || []).join(' > ')}, item.origin.fullIdPath);
+                return new CategoriesFilter(item.label, <number>item.data, mode, {token: (item.origin.fullNamePath || []).join(' > ')}, item.origin.fullIdPath);
             } else {
-                return new CategoriesFilter(item.id, mode, item.name, {token: (item.fullNamePath || []).join(' > ')},item.fullIdPath);
+                // create filter directly from auto complete selection (lazy mode)
+                return new CategoriesFilter(item.name, item.id, mode, {token: (item.fullNamePath || []).join(' > ')},item.fullIdPath);
             }
         }
     }

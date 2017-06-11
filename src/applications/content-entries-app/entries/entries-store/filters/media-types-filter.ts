@@ -5,9 +5,9 @@ import { ValueFilter } from '../value-filter';
 
 export class MediaTypesFilter  extends ValueFilter<string>{
 
-    constructor(value : string, label : string)
+    constructor( value : string, label : string)
     {
-        super(value, label, {token: 'applications.content.filters.mediaType', args: {'0': label}});
+        super(label, value, {token: 'applications.content.filters.mediaType', args: {'0': label}});
     }
 }
 

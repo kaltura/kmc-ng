@@ -5,9 +5,9 @@ import { ValueFilter } from '../value-filter';
 
 export class ModerationStatusesFilter  extends ValueFilter<string>{
 
-    constructor(value : string, label : string)
+    constructor( value : string, label)
     {
-        super(value, label);
+        super(label, value,{token: 'applications.content.filters.moderation', args: {'0': label}});
     }
 }
 

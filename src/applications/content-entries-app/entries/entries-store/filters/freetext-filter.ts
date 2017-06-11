@@ -3,9 +3,9 @@ import { ValueFilter } from '../value-filter';
 
 export class FreetextFilter  extends ValueFilter<string>{
 
-    constructor(value : string, label : string = value)
+    constructor(value : string)
     {
-        super(value, label, {token: 'applications.content.filters.freeText'});
+        super(value+'', value, {token: 'applications.content.filters.freeText'});
     }
 }
 

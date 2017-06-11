@@ -4,17 +4,16 @@ import { CategoriesFilterComponent } from './categories-filter/categories-filter
 import { CategoriesFilterPrefsComponent } from './categories-filter-preferences/categories-filter-preferences.component';
 import { MaxEntriesPipe } from './pipes/max-entries.pipe';
 import { EntryDurationPipe } from './pipes/entry-duration.pipe';
-import {
-    EntriesAdditionalFiltersComponent
-} from "./entries-additional-filters/entries-additional-filters.component";
+
 import { PrimeTableSortDirectionPipe } from './pipes/prime-table-sort-direction.pipe';
+import { EntriesRefineFilters } from './entries-refine-filters/entries-refine-filters.component';
 
 export const EntriesComponentsList = [
     EntriesListComponent,
     EntriesTableComponent,
     CategoriesFilterComponent,
     CategoriesFilterPrefsComponent,
-    EntriesAdditionalFiltersComponent,
+    EntriesRefineFilters,
     MaxEntriesPipe,
     EntryDurationPipe,
     PrimeTableSortDirectionPipe
