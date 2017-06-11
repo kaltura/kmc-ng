@@ -74,7 +74,7 @@ export class EntryMetadataHandler extends EntryFormWidget
                     let isDirty = false;
 
                     formGroups.forEach(formGroup => {
-                        isValid = isValid || formGroup.status === 'VALID';
+                        isValid = isValid && formGroup.status === 'VALID';
                         isDirty = isDirty || formGroup.dirty;
 
                     });
