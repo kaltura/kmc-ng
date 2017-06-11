@@ -109,7 +109,8 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
 
             // update selection of tree - handle situation when the node was added by auto-complete
             if (this._selection.indexOf(nodeOfFilter) === -1) {
-                this._selection.push(nodeOfFilter);
+                // IMPORTANT - we create a new array and not altering the existing one due to out-of-sync issue with angular binding.
+                this._selection = [...this._selection, nodeOfFilter];
             }
         }
     }
@@ -124,10 +125,9 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             const nodeIndexInSelection = this._selection.indexOf(nodeOfFilter);
 
             if (nodeIndexInSelection > -1) {
-                this._selection.splice(nodeIndexInSelection, 1);
+                // IMPORTANT - we create a new array and not altering the existing one due to out-of-sync issue with angular binding.
+                this._selection = this._selection.filter(item => item !== nodeOfFilter);
             }
-
-
         }
     }
 
@@ -156,25 +156,6 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             {
                 const filtersToBeRemoved : CategoriesFilter[] =  [];
                 const newFilterByNode = this._createFilter(node);
-
-                if (this._selectionMode === TreeSelectionModes.SelfAndChildren)
-                {
-                    // remove any active filter which is a child of the selected node (will also handle lazy loading correctly).
-                    activeFilters.forEach(activeFilter =>
-                    {
-                        let isChildOfSelectedNode = false;
-                        // check if this item is a parent of another item (don't validate last item which is the node itself)
-                        for (let i = 0, length = activeFilter.fullIdPath.length; i < length - 1 && !isChildOfSelectedNode; i++) {
-                            isChildOfSelectedNode = (activeFilter.fullIdPath[i] + '' === node.data+'');
-                        }
-
-                        if (isChildOfSelectedNode)
-                        {
-                            filtersToBeRemoved.push(activeFilter);
-                        }
-                    });
-
-                }
 
                 this.updateFilters([ newFilterByNode],filtersToBeRemoved);
             }

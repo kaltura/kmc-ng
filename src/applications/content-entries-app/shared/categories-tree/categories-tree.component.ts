@@ -52,6 +52,11 @@ export class CategoriesTreeComponent implements OnInit {
 		return this._categories ;
 	}
 
+	public _selectionChange(selection : PrimeTreeNode[])
+	{
+		this.selection = selection;
+		this.selectionChange.emit(selection);
+	}
 	public findNodeByFullIdPath(fullIdPath : (number | string)[]) : PrimeTreeNode
 	{
 		// find the item in the tree (if exists)
