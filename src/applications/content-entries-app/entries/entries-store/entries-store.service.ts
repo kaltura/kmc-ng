@@ -191,11 +191,18 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         return filters && filters.length > 0 ? filters[0] : null;
     }
 
-    public getFiltersByType<T extends FilterItem>(filterType : FilterTypeConstructor<T>) : T[] {
-        if (filterType.name) {
+    public getFiltersByType<T extends FilterItem>(filter : FilterItem) : T[]
+    public getFiltersByType<T extends FilterItem>(filterType : FilterTypeConstructor<T>) : T[];
+    public getFiltersByType<T extends FilterItem>(filterType : FilterItem | FilterTypeConstructor<T>) : T[] {
+        if (filterType instanceof FilterItem) {
+            const filtersOfType = <T[]>this._activeFiltersMap[filterType.constructor.name];
+            return filtersOfType ? [...filtersOfType] : [];
+        }
+        if (filterType instanceof Function) {
             const filtersOfType = <T[]>this._activeFiltersMap[filterType.name];
             return filtersOfType ? [...filtersOfType] : [];
-        } else {
+        }
+        else {
             return [];
         }
     }

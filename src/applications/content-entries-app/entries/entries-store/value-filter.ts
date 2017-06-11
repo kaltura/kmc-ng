@@ -7,7 +7,7 @@ export abstract class ValueFilter<T> extends FilterItem{
         return this._value;
     }
 
-    constructor(value : T, label : string, tooltip? : FilterItemLocalizedTooltip)
+    constructor(label : string, value : T, tooltip? : FilterItemLocalizedTooltip)
     {
         super(label, tooltip);
         this._value = value;
@@ -15,7 +15,9 @@ export abstract class ValueFilter<T> extends FilterItem{
 
     public isEqual(otherFilter : FilterItem) : boolean
     {
-        return otherFilter instanceof ValueFilter && (typeof otherFilter === typeof this) && this.value === otherFilter.value;
+        return super.isEqual(otherFilter)
+            && otherFilter instanceof ValueFilter
+            && this.value === otherFilter.value;
     }
 
 }

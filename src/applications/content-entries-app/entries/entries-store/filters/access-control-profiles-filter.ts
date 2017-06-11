@@ -7,7 +7,7 @@ export class AccessControlProfilesFilter  extends ValueFilter<string>{
 
     constructor(value : string, label : string)
     {
-        super(value, label, {token: 'applications.content.filters.accessControl', args: {'0': label}});
+        super(label, value, {token: 'applications.content.filters.accessControl', args: {'0': label}});
     }
 }
 

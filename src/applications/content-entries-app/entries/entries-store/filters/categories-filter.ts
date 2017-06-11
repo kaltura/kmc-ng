@@ -2,7 +2,7 @@ import * as R from 'ramda';
 
 import { EntriesStore } from "../entries-store.service";
 import { ValueFilter } from '../value-filter';
-import { FilterItemLocalizedTooltip } from '../filter-item';
+import { FilterItemLocalizedTooltip, FilterItem } from '../filter-item';
 
 export enum CategoriesFilterModes
 {
@@ -10,18 +10,23 @@ export enum CategoriesFilterModes
     Ancestor
 }
 
-export class CategoriesFilter extends ValueFilter<number>{
+export class CategoriesFilter extends ValueFilter<number> {
 
-    private _mode : CategoriesFilterModes;
+    private _mode: CategoriesFilterModes;
 
-    public get mode() : CategoriesFilterModes{
+    public get mode(): CategoriesFilterModes {
         return this._mode;
     }
 
-    constructor(value : number, mode : CategoriesFilterModes, label : string, tooltip : FilterItemLocalizedTooltip, public fullIdPath : number[])
-    {
-        super(value, label, tooltip);
+    constructor(label : string, value: number, mode: CategoriesFilterModes, tooltip: FilterItemLocalizedTooltip, public fullIdPath: number[]) {
+        super(label, value, tooltip);
         this._mode = mode;
+    }
+
+    public isEqual(otherFilter: FilterItem): boolean {
+        return super.isEqual(otherFilter)
+            && otherFilter instanceof CategoriesFilter
+            && this.mode === otherFilter._mode;
     }
 }
 
