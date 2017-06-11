@@ -17,7 +17,6 @@
 				</div>
 				<div *ngFor="let treeInstance of filtersGroup.trees">
 					<p-tree [value]="treeInstance.items"
-							*ngIf="treeInstance"
 							kPrimeTreePropagation
 							[disableTrackByData]="true"
 							[(selection)]="treeInstance.selections"
