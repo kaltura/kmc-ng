@@ -117,6 +117,8 @@ export class EntryStore implements  OnDestroy {
 		this._loadEntrySubscription && this._loadEntrySubscription.unsubscribe();
 		this._state.complete();
 		this._entry.complete();
+
+		this._browserService.disablePageExitVerification();
 	}
 
 	private _mapSections() : void{
