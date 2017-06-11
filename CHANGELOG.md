@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.2.1"></a>
+## [2.2.1](https://github.com/kaltura/KMCng/compare/v2.2.0...v2.2.1) (2017-06-11)
+
+
+### Bug Fixes
+
+* **content-entries:** fix out-of-sync issue in the categories tree when selecting a parent of already selected node. ([bb1a9da](https://github.com/kaltura/KMCng/commit/bb1a9da))
+
+
+
 <a name="2.2.0"></a>
 # [2.2.0](https://github.com/kaltura/KMCng/compare/v2.1.0...v2.2.0) (2017-06-11)
 
