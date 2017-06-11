@@ -10,14 +10,13 @@ All notable changes to this project will be documented in this file. See [standa
 
 * **content-entries:** highlight metadata in sections list when it contains validation errors ([582f7e1](https://github.com/kaltura/KMCng/commit/582f7e1))
 * **content-entries / entry:** disable page exit verification check when leaving entry details without saving ([e428d92](https://github.com/kaltura/KMCng/commit/e428d92))
-
+* **content-entries:** restore active filters when returning from entry details (sort, pagination, selected categories and refine filters).
 
 ### Features
 
 * upgrade Angular to version 4.x and any other library that depends on Angular (angular, prime, webpack, typescript) ([c6980dd](https://github.com/kaltura/KMCng/commit/c6980dd))
 * **content-entries:** show partial selection state in categories/refine filters ([6a33f94](https://github.com/kaltura/KMCng/commit/6a33f94))
 * **content-entries / entries:** show file sizes in various measurements (bytes, KB, MB, GB, TB, PB) in thumbnail and related sections ([226db93](https://github.com/kaltura/KMCng/commit/226db93))
-* **content-playlists:** add playlists tab and update the upper menu ([877d8bd](https://github.com/kaltura/KMCng/commit/877d8bd))
 
 
 
