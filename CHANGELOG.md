@@ -11,6 +11,11 @@ All notable changes to this project will be documented in this file. See [standa
 * **content-entries:** highlight metadata in sections list when it contains validation errors ([582f7e1](https://github.com/kaltura/KMCng/commit/582f7e1))
 * **content-entries / entry:** disable page exit verification check when leaving entry details without saving ([e428d92](https://github.com/kaltura/KMCng/commit/e428d92))
 * **content-entries:** restore active filters when returning from entry details (sort, pagination, selected categories and refine filters).
+* **content-entries / entry**: Preview and Embed link (in Entry Details) is hidden for 'Media-Less' entries
+* **content-entries / entry**: Remove popups when leaving the view they belong to ('jump to' floating in entry metadata)
+* **content-entries / entry**: Allow user sorting of Thumbnail section table.
+* **style**: various style issues
+
 
 ### Features
 
