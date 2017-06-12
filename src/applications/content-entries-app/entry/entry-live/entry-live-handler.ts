@@ -5,8 +5,12 @@ import { Message } from 'primeng/primeng';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { KalturaSourceType,	KalturaLiveStreamBitrate,
-	     KalturaRecordStatus, KalturaLiveStreamEntry, KalturaDVRStatus, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
+import { KalturaSourceType } from 'kaltura-typescript-client/types/KalturaSourceType';
+import { KalturaLiveStreamBitrate } from 'kaltura-typescript-client/types/KalturaLiveStreamBitrate';
+import { KalturaRecordStatus } from 'kaltura-typescript-client/types/KalturaRecordStatus';
+import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamEntry';
+import { KalturaDVRStatus } from 'kaltura-typescript-client/types/KalturaDVRStatus';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { AppLocalization, AppConfig } from '@kaltura-ng2/kaltura-common';
 import { BrowserService } from 'kmc-shell';
 

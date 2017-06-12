@@ -2,10 +2,24 @@ import { Injectable } from '@angular/core';
 import { IterableDiffers, IterableDiffer, IterableChangeRecord } from '@angular/core';
 import { EntryFormWidget } from '../entry-form-widget';
 import { Observable } from 'rxjs/Observable';
-import { KalturaCategoryEntryFilter,  KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
+import { KalturaCategoryEntryFilter } from 'kaltura-typescript-client/types/KalturaCategoryEntryFilter';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaTagFilter, KalturaTaggedObjectType, KalturaFilterPager,
-    TagSearchAction, CategoryEntryListAction, KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/all';
+import { KalturaTagFilter } from 'kaltura-typescript-client/types/KalturaTagFilter';
+import { KalturaTaggedObjectType } from 'kaltura-typescript-client/types/KalturaTaggedObjectType';
+import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
+import { TagSearchAction } from 'kaltura-typescript-client/types/TagSearchAction';
+import { CategoryEntryListAction } from 'kaltura-typescript-client/types/CategoryEntryListAction';
+import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamEntry';
+import { MetadataListAction } from 'kaltura-typescript-client/types/MetadataListAction';
+import { KalturaMetadataFilter } from 'kaltura-typescript-client/types/KalturaMetadataFilter';
+import { KalturaMetadata } from 'kaltura-typescript-client/types/KalturaMetadata';
+import { MetadataUpdateAction } from 'kaltura-typescript-client/types/MetadataUpdateAction';
+import { MetadataAddAction } from 'kaltura-typescript-client/types/MetadataAddAction';
+import { KalturaMetadataObjectType } from 'kaltura-typescript-client/types/KalturaMetadataObjectType';
+import { CategoryEntryAddAction } from 'kaltura-typescript-client/types/CategoryEntryAddAction';
+import { CategoryEntryDeleteAction } from 'kaltura-typescript-client/types/CategoryEntryDeleteAction';
+import { KalturaCategoryEntry } from 'kaltura-typescript-client/types/KalturaCategoryEntry';
 import { CategoriesStore } from '../../shared/categories-store.service';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
@@ -13,7 +27,7 @@ import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes 
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { KalturaCustomMetadata } from '@kaltura-ng2/kaltura-ui/dynamic-form/kaltura-custom-metadata';
-import { MetadataListAction, KalturaMetadataFilter, KalturaMetadata, MetadataUpdateAction, MetadataAddAction, KalturaMetadataObjectType, CategoryEntryAddAction, CategoryEntryDeleteAction, KalturaCategoryEntry } from 'kaltura-typescript-client/types/all';
+
 import { KalturaCustomDataHandler } from '@kaltura-ng2/kaltura-ui/dynamic-form/kaltura-custom-metadata';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import 'rxjs/add/observable/forkJoin';

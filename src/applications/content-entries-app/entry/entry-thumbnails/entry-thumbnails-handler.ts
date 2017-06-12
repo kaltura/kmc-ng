@@ -5,8 +5,18 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 
-import { ThumbAssetListAction, ThumbAssetSetAsDefaultAction, KalturaThumbAssetListResponse, KalturaThumbAsset, KalturaAssetFilter, DistributionProfileListAction, KalturaDistributionProfileListResponse,
-	KalturaDistributionProfile, KalturaThumbAssetStatus, KalturaDistributionThumbDimensions, ThumbAssetDeleteAction, ThumbAssetAddFromImageAction } from 'kaltura-typescript-client/types/all';
+import { ThumbAssetListAction } from 'kaltura-typescript-client/types/ThumbAssetListAction';
+import { ThumbAssetSetAsDefaultAction } from 'kaltura-typescript-client/types/ThumbAssetSetAsDefaultAction';
+import { KalturaThumbAssetListResponse } from 'kaltura-typescript-client/types/KalturaThumbAssetListResponse';
+import { KalturaThumbAsset } from 'kaltura-typescript-client/types/KalturaThumbAsset';
+import { KalturaAssetFilter } from 'kaltura-typescript-client/types/KalturaAssetFilter';
+import { DistributionProfileListAction } from 'kaltura-typescript-client/types/DistributionProfileListAction';
+import { KalturaDistributionProfileListResponse } from 'kaltura-typescript-client/types/KalturaDistributionProfileListResponse';
+import { KalturaDistributionProfile } from 'kaltura-typescript-client/types/KalturaDistributionProfile';
+import { KalturaThumbAssetStatus } from 'kaltura-typescript-client/types/KalturaThumbAssetStatus';
+import { KalturaDistributionThumbDimensions } from 'kaltura-typescript-client/types/KalturaDistributionThumbDimensions';
+import { ThumbAssetDeleteAction } from 'kaltura-typescript-client/types/ThumbAssetDeleteAction';
+import { ThumbAssetAddFromImageAction } from 'kaltura-typescript-client/types/ThumbAssetAddFromImageAction';
 import { AppConfig, AppAuthentication, AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 

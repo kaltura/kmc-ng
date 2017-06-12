@@ -1,11 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { EntryStore } from '../entry-store.service';
-import {
-	KalturaMediaEntry,
-	KalturaEntryStatus,
-	KalturaSourceType,
-	KalturaMediaType
-} from 'kaltura-typescript-client/types/all';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
+import { KalturaSourceType } from 'kaltura-typescript-client/types/KalturaSourceType';
+import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { BrowserService } from 'kmc-shell';
 import { EntryPreviewHandler } from './entry-preview-handler';
 import { EntryFormManager } from '../entry-form-manager';

@@ -3,7 +3,9 @@ import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
-import { KalturaMediaType, KalturaEntryStatus, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
+import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
+import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { EntriesStore } from "./entries-store/entries-store.service";
 
 @Component({

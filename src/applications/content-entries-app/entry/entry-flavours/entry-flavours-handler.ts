@@ -7,8 +7,21 @@ import { AppLocalization, AppConfig, AppAuthentication } from '@kaltura-ng2/kalt
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { BrowserService } from 'kmc-shell';
-import { KalturaFlavorAsset, KalturaFlavorAssetWithParams, FlavorAssetGetFlavorAssetsWithParamsAction, KalturaFlavorAssetStatus, KalturaLiveParams, KalturaEntryStatus, KalturaWidevineFlavorAsset,
-	FlavorAssetDeleteAction, FlavorAssetConvertAction, FlavorAssetReconvertAction, KalturaUploadedFileTokenResource, FlavorAssetSetContentAction, FlavorAssetAddAction, KalturaUrlResource, KalturaContentResource } from 'kaltura-typescript-client/types/all';
+import { KalturaFlavorAsset } from 'kaltura-typescript-client/types/KalturaFlavorAsset';
+import { KalturaFlavorAssetWithParams } from 'kaltura-typescript-client/types/KalturaFlavorAssetWithParams';
+import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-typescript-client/types/FlavorAssetGetFlavorAssetsWithParamsAction';
+import { KalturaFlavorAssetStatus } from 'kaltura-typescript-client/types/KalturaFlavorAssetStatus';
+import { KalturaLiveParams } from 'kaltura-typescript-client/types/KalturaLiveParams';
+import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
+import { KalturaWidevineFlavorAsset } from 'kaltura-typescript-client/types/KalturaWidevineFlavorAsset';
+import { FlavorAssetDeleteAction } from 'kaltura-typescript-client/types/FlavorAssetDeleteAction';
+import { FlavorAssetConvertAction } from 'kaltura-typescript-client/types/FlavorAssetConvertAction';
+import { FlavorAssetReconvertAction } from 'kaltura-typescript-client/types/FlavorAssetReconvertAction';
+import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
+import { FlavorAssetSetContentAction } from 'kaltura-typescript-client/types/FlavorAssetSetContentAction';
+import { FlavorAssetAddAction } from 'kaltura-typescript-client/types/FlavorAssetAddAction';
+import { KalturaUrlResource } from 'kaltura-typescript-client/types/KalturaUrlResource';
+import { KalturaContentResource } from 'kaltura-typescript-client/types/KalturaContentResource';
 import { UploadManagement } from '@kaltura-ng2/kaltura-common/upload-management';
 import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
 import { Message, ConfirmationService } from 'primeng/primeng';

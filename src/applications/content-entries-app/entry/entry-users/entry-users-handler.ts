@@ -6,7 +6,12 @@ import { Observable } from 'rxjs/Observable';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { KalturaUser, UserGetAction, UserListAction, KalturaUserFilter, KalturaFilterPager, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
+import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
+import { UserGetAction } from 'kaltura-typescript-client/types/UserGetAction';
+import { UserListAction } from 'kaltura-typescript-client/types/UserListAction';
+import { KalturaUserFilter } from 'kaltura-typescript-client/types/KalturaUserFilter';
+import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 
 import 'rxjs/add/observable/forkJoin';
 
