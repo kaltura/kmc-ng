@@ -35,7 +35,7 @@
 		padding: 0 14px 28px;
 		display: block;
 	}
-	.kPaginatorShowRowsLabel{
+	.kPaginatorShowRowsLabel {
 		color: $kGrayscale1;
 		position: absolute;
 		top: 7px;
@@ -74,26 +74,79 @@
 			color: $kPrimary;
 		}
 	}
-	.kBulkOperations{
+	.kBulkOperations {
 		width: 400px;
 	}
-	.kSelectedPlaylistsLabel{
+	.kSelectedPlaylistsLabel {
 		font-weight: bold;
 		margin-right: 36px;
 		margin-left: 5px;
 	}
-	.kBulkDeleteBtn{
+	.kSearchInput {
+		background: url(../../content-entries-app/styles/assets/magnifier.png) no-repeat 7px 9px;
+		background-color: $kGrayscale6;
+		margin-right: 8px;
+		padding: 9px 4px 8px 30px;
+		&:focus{
+			background-color: white;
+		}
+	}
+	.kAddPlaylistBtn {
+		background-color: $kPrimary;
+		color: white;
+		border: none;
+		margin-left: 14px;
+		height: 36px;
+	}
+	.kBulkCancel {
+		margin-left: 10px;
+	}
+	.kBulkDeleteBtn {
 		margin-right: 10px;
 		width: 44px;
 		font-size: 18px;
 	}
-	.kBulkActionsBtn{
+	.kBulkActionsBtn {
 		font-weight: 400;
 		font-size: 15px;
 	}
-	.kHidden{
+	.kFilters {
+		display: flex;
+		margin-left: auto;
+	}
+	.kHidden {
 		visibility: hidden;
 		width: 0;
 		height: 0;
 	}
+	.kRefine {
+		border: 1px solid $kGrayscale4;
+		border-radius: 4px;
+		display: flex;
+		background-color: #ffffff;
+		height: 34px;
+		align-items: center;
+		cursor: pointer;
+		color: $kGrayscale1;
+		position: relative;
+		padding: 0 15px;
+		margin: 0 7px;
+		i {
+			font-size: 20px;
+			color: $kGrayscale4;
+		}
+		&:hover {
+			color: $kPrimary;
+			i{
+				color: $kPrimary;
+			}
+			.dropdown {
+				color: $kPrimary;
+			}
+		}
+	}
+}
+
+:host /deep/ span.ui-button-icon-left.fa.kIcontrash{
+	margin-left: -.5em;
 }

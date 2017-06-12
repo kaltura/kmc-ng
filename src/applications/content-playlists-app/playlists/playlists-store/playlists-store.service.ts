@@ -26,6 +26,7 @@ import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
+import { FilterItem } from "./filter-item";
 import { BrowserService } from "kmc-shell/providers/browser.service";
 
 export type UpdateStatus = {
@@ -48,12 +49,21 @@ export interface QueryData
 	metadataProfiles? : number[]
 }
 
+export interface FilterArgs
+{
+	filter : KalturaPlaylistFilter
+}
+
 export interface QueryRequestArgs {
 	data : QueryData;
 }
 
+export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) : T;};
+
+
 @Injectable()
 export class PlaylistsStore implements OnDestroy {
+	private _activeFilters  = new BehaviorSubject<{ filters : FilterItem[] }>({ filters : []});
 	private _playlists  = new BehaviorSubject({items: [], totalCount: 0});
 	private _state = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null});
 	private _queryData : QueryData = {
@@ -63,13 +73,20 @@ export class PlaylistsStore implements OnDestroy {
 		sortDirection: SortDirection.Desc,
 		fields: 'id,name,createdAt,playlistType'
 	};
+	private static filterTypeMapping = {};
 	private _querySource = new Subject<QueryRequestArgs>();
+	private _activeFiltersMap : {[key : string] : FilterItem[]} = {};
 	private _metadataProfilesLoaded = false;
 	private executeQueryState  : { subscription : ISubscription, deferredRemovedFilters : any[], deferredAddedFilters : any[]} = { subscription : null, deferredAddedFilters : [], deferredRemovedFilters : []};
 
 	public playlists$ = this._playlists.asObservable();
 	public state$ = this._state.asObservable();
 	public query$ = this._querySource.asObservable();
+
+	public static registerFilterType<T extends FilterItem>(filterType : FilterTypeConstructor<T>, handler: (items : T[], request : FilterArgs) => void) : void
+	{
+		PlaylistsStore.filterTypeMapping[filterType.name] = handler;
+	}
 
 	constructor(
 		private kalturaServerClient: KalturaClient,
@@ -124,6 +141,22 @@ export class PlaylistsStore implements OnDestroy {
 		}
 	}
 
+	public getFirstFilterByType<T extends FilterItem>(filterType : FilterTypeConstructor<T>) : T
+	{
+		const filters = <T[]>this.getFiltersByType(filterType);
+		return filters && filters.length > 0 ? filters[0] : null;
+	}
+
+	public getFiltersByType<T extends FilterItem>(filterType : FilterTypeConstructor<T>) : T[] {
+		if (filterType.name) {
+			const filtersOfType = <T[]>this._activeFiltersMap[filterType.name];
+			return filtersOfType ? [...filtersOfType] : [];
+		} else {
+			return [];
+		}
+	}
+
+
 	public get playlists() : KalturaMediaEntry[]
 	{
 		return this._playlists.getValue().items;
@@ -142,7 +175,75 @@ export class PlaylistsStore implements OnDestroy {
 		}
 	}
 
-	private _executeQuery()
+	public removeFiltersByType(filterType : FilterTypeConstructor<FilterItem>) : void {
+		if (filterType && filterType.name) {
+			const filtersOfType = this._activeFiltersMap[filterType.name];
+
+			if (filtersOfType) {
+				this.removeFilters(...filtersOfType);
+			}
+		}
+	}
+
+	public removeFilters(...filters : FilterItem[]) : void{
+		if (filters)
+		{
+			const removedFilters : FilterItem[] = [];
+			const activeFilters = this._activeFilters.getValue().filters;
+			const modifiedActiveFilters = [...activeFilters];
+
+			filters.forEach(filter =>
+			{
+				const index = modifiedActiveFilters.indexOf(filter);
+
+				if (index >= 0)
+				{
+					removedFilters.push(filter);
+					modifiedActiveFilters.splice(index,1);
+
+					const filterByType = this._activeFiltersMap[filter.constructor.name];
+					filterByType.splice(filterByType.indexOf(filter),1);
+				}
+			});
+
+			if (removedFilters.length > 0)
+			{
+				this._activeFilters.next({ filters : modifiedActiveFilters});
+
+				this._queryData.pageIndex = 1;
+				this._executeQuery({ removedFilters : removedFilters, addedFilters : [] });
+			}
+		}
+	}
+
+	public addFilters(...filters : FilterItem[]) : void{
+		if (filters)
+		{
+			const addedFilters = [];
+			const activeFilters = this._activeFilters.getValue().filters;
+
+			filters.forEach(filter =>
+			{
+				const index = activeFilters.indexOf(filter);
+
+				if (index === -1 )
+				{
+					addedFilters.push(filter);
+					this._activeFiltersMap[filter.constructor.name] = this._activeFiltersMap[filter.constructor.name] || [];
+					this._activeFiltersMap[filter.constructor.name].push(filter);
+				}
+			});
+
+			if (addedFilters.length > 0)
+			{
+				this._activeFilters.next({ filters : [...activeFilters, ...addedFilters] });
+				this._queryData.pageIndex = 1;
+				this._executeQuery({  removedFilters : [], addedFilters : addedFilters });
+			}
+		}
+	}
+
+	private _executeQuery({addedFilters,removedFilters} : {addedFilters: FilterItem[],removedFilters: FilterItem[]} = { addedFilters : [], removedFilters : []})
 	{
 		// cancel previous requests
 		if (this.executeQueryState.subscription)

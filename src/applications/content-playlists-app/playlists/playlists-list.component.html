@@ -1,6 +1,7 @@
 <div class="kPlaylists kUseKMCngIcons">
 	<div #playlistsTableHolder class="kPlaylistsHolder kContent">
 		<div class="kPlaylistsTableFilters">
+			<button pButton type="button" label="{{'applications.content.playlists.addPlaylist' | translate}}" class="kAddPlaylistBtn"></button>
 			<span
 				class="kSelectedPlaylistsNum"
 				*ngIf="(_playlistsStore.playlists$ | async)?.totalCount">
@@ -19,14 +20,13 @@
 						(click)="menu.toggle($event)"></button>
 				<a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.playlists.cancel' | translate}}</a>
 			</div>
-			<!--<div [class.kHidden]="_selectedEntries.length" class="kFilters">
+			<div [class.kHidden]="_selectedPlaylists.length" class="kFilters">
 				<input type="text" pInputText class="kSearchInput"
 					   [(ngModel)]="_filter.freetextSearch"
 					   (keyup.enter)="onFreetextChanged()"
-					   placeholder="{{'applications.content.entries.searchEntries' | translate}}">
-				<div #categoriesFilterBtn class="kCategoriesFilter"><i class="kIconfolder"></i><span>{{'applications.content.entries.filterCategories' | translate}}</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
-				<div #refineBtn class="kRefine"><i class="kIconfilter"></i><span>{{'applications.content.entries.refine' | translate}}</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
-			</div>-->
+					   placeholder="{{'applications.content.playlists.searchEntries' | translate}}">
+				<div #refineBtn class="kRefine"><i class="kIconcalendar"></i></div>
+			</div>
 			<button pButton
 				class="kButtonDefault kRefreshBtn small"
 				type="text"
@@ -51,3 +51,14 @@
 	</div>
 	<p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu"></p-tieredMenu>
 </div>
+
+<kPopupWidget
+	#refinePopup
+	[appendTo]="playlistsTableHolder"
+	[popupWidth]="350"
+	[popupHeight]="155"
+	[closeBtn]="false"
+	[targetRef]="refineBtn"
+	[targetOffset]="{'x':-200, 'y': -20}">
+	<kPlaylistsAdditionalFilter [parentPopupWidget]="refinePopup"></kPlaylistsAdditionalFilter>
+</kPopupWidget>

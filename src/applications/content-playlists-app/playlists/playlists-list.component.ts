@@ -41,6 +41,10 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 		private appLocalization: AppLocalization
 	) {}
 
+	onFreetextChanged() : void{
+		alert(`filter text value: ${this._filter.freetextSearch}`);
+	}
+
 	onPaginationChanged(state : any) : void {
 		if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
 			this._filter.pageIndex = state.page;
@@ -91,29 +95,10 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 		this._selectedPlaylists = [];
 	}
 
-	executeBulkAction(action: string){
-		alert("Execute bulk action for " + action);
-	}
-
 	getBulkActionItems(){
 		return  [
-			{ label: this.appLocalization.get('applications.content.bulkActions.setScheduling'), command: (event) => { this.executeBulkAction("setScheduling") } },
-			{ label: this.appLocalization.get('applications.content.bulkActions.setAccessControl'), command: (event) => { this.executeBulkAction("setAccessControl") } },
-			{ label: this.appLocalization.get('applications.content.bulkActions.addRemoveTags'), items: [
-				{ label: this.appLocalization.get('applications.content.bulkActions.addTags'), command: (event) => { this.executeBulkAction("addTags") } },
-				{ label: this.appLocalization.get('applications.content.bulkActions.removeTags'), command: (event) => { this.executeBulkAction("removeTags") } }]
-			},
-			{ label: this.appLocalization.get('applications.content.bulkActions.addRemoveCategories'), items: [
-				{ label: this.appLocalization.get('applications.content.bulkActions.addToCategories'), command: (event) => { this.executeBulkAction("addToCategories") } },
-				{ label: this.appLocalization.get('applications.content.bulkActions.removeFromCategories'), command: (event) => { this.executeBulkAction("removeFromCategories") } }]
-			},
-			{ label: this.appLocalization.get('applications.content.bulkActions.addToNewCategoryPlaylist'), items: [
-				{ label: this.appLocalization.get('applications.content.bulkActions.addToNewCategory'), command: (event) => { this.executeBulkAction("addToNewCategory") } },
-				{ label: this.appLocalization.get('applications.content.bulkActions.addToNewPlaylist'), command: (event) => { this.executeBulkAction("addToNewPlaylist") } }]
-			},
-			{ label: this.appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => { this.executeBulkAction("changeOwner") } },
-			{ label: this.appLocalization.get('applications.content.bulkActions.download'), command: (event) => { this.executeBulkAction("download") } },
-			{ label: this.appLocalization.get('applications.content.bulkActions.delete'), command: (event) => { this.executeBulkAction("delete") } }
+			{ label: 'bulk action 1', command: (event) => { alert('bulk action 1'); } },
+			{ label: 'bulk action 2', command: (event) => { alert('bulk action 2'); } }
 		];
 	}
 }

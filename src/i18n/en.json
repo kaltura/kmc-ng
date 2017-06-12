@@ -56,7 +56,9 @@
 				"playlists": "Playlists",
 				"selected": "Selected",
 				"bulkActions": "Bulk Actions",
-				"cancel": "Cancel"
+				"cancel": "Cancel",
+				"searchEntries": "Search Entries",
+				"addPlaylist": "Add Playlist"
 			},
             "filters":{
                 "activeFilters": "Active Filters:",

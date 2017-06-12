@@ -6,7 +6,29 @@
     position: absolute;
 	padding: 0;
 }
-:host{
+
+.kEntriesTableActions {
+	width: 100%;
+	text-align: center;
+	button {
+		color: grey !important;
+		background-color: rgba(0, 0, 0, 0) !important;
+		border: none !important;
+		font-size: 16px !important;
+		outline: 0;
+	}
+}
+
+.kTitle{
+	color: $kGrayscale1;
+	font-weight: 700;
+	cursor: pointer;
+	&:hover{
+		color: #000000;
+	}
+}
+
+:host {
 	display: flex;
 	flex-flow: row wrap;
 	margin: 0;

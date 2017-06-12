@@ -9,9 +9,18 @@ import {
 	ViewChild
 } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { DataTable } from 'primeng/primeng';
+import {
+	MenuItem,
+	DataTable,
+	Menu
+} from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
+import {
+	KalturaMediaType,
+	KalturaMediaEntry,
+	KalturaEntryStatus
+} from 'kaltura-typescript-client/types/all';
 import { PlaylistsStore } from "./playlists-store";
 
 @Component({
@@ -40,6 +49,9 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 	@Output() sortChanged = new EventEmitter<any>();
 	@Output() selectedPlaylistsChange = new EventEmitter<any>();
 	@ViewChild('dataTable') private dataTable: DataTable;
+	@ViewChild('actionsmenu') private actionsMenu: Menu;
+	private actionsMenuEntryId: string = "";
+	public _items: MenuItem[];
 
 	constructor(
 		private appLocalization: AppLocalization,
@@ -81,6 +93,14 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 	}
 
 	ngAfterViewInit() {
+		const scrollBody = this.dataTable.el.nativeElement.getElementsByClassName("ui-datatable-scrollable-body");
+		if (scrollBody && scrollBody.length > 0) {
+			scrollBody[0].onscroll = () => {
+				if (this.actionsMenu) {
+					this.actionsMenu.hide();
+				}
+			}
+		}
 		if (this._deferredLoading) {
 			// use timeout to allow the DOM to render before setting the data to the datagrid. This prevents the screen from hanging during datagrid rendering of the data.
 			setTimeout(()=> {
@@ -90,13 +110,55 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 		}
 	}
 
+	openActionsMenu(event: any, entry: KalturaMediaEntry) {
+		if (this.actionsMenu) {
+			this.actionsMenu.toggle(event);
+			if (this.actionsMenuEntryId !== entry.id) {
+				this.buildMenu(entry.mediaType, entry.status);
+				this.actionsMenuEntryId = entry.id;
+				this.actionsMenu.show(event);
+			}
+		}
+	}
+
 	ngOnDestroy() {
+		this.actionsMenu.hide();
 		this.playlistsStoreStatusSubscription.unsubscribe();
 		this.playlistsStoreStatusSubscription = null;
 	}
 
+	buildMenu(mediaType: KalturaMediaType = null, status: any = null): void {
+		this._items = [
+			{
+				label: this.appLocalization.get("applications.content.table.previewAndEmbed"), command: (event) => {
+				this.onActionSelected("preview", this.actionsMenuEntryId);
+			}
+			},
+			{
+				label: this.appLocalization.get("applications.content.table.delete"), command: (event) => {
+				this.onActionSelected("delete", this.actionsMenuEntryId);
+			}
+			},
+			{
+				label: this.appLocalization.get("applications.content.table.view"), command: (event) => {
+				this.onActionSelected("view", this.actionsMenuEntryId);
+			}
+			}
+		];
+		if (status instanceof KalturaEntryStatus && status.toString() != KalturaEntryStatus.ready.toString()) {
+			this._items.shift();
+			if (mediaType && mediaType.toString() == KalturaMediaType.liveStreamFlash.toString()) {
+				this._items.pop();
+			}
+		}
+	}
+
 	onSelectionChange(event) {
 		this.selectedPlaylistsChange.emit(event);
+	}
+
+	onActionSelected(action: string, playlistID: string, mediaType: string = null, status: string = null) {
+		alert(`action: ${ action }, playlistId: ${ playlistID }`);
 	}
 
 	onSortChanged(event) {
