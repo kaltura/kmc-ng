@@ -26,13 +26,11 @@
 						<ng-template let-node  pTemplate="default">
 							<span  class="kTreeNodeLabel">{{node.label}}<span *ngIf="node.childrenCount" class="kTreeNodeNumChildren">{{ node.childrenCount}}</span></span>
 							<div *ngIf="node.data==='scheduled'" (click)="_blockScheduleToggle($event)">
-								<div>
-									<div class="kDateRange">
-										<p-calendar class="kDateRangeFirst" #scheduledfrom [(ngModel)]="_scheduledAfter" [showIcon]="true" icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true" [yearNavigator]="true"  yearRange="2005:2030" [readonlyInput]="true" (onSelect)="_onSchedulingChanged(scheduledfrom)"></p-calendar>
-										<p-calendar class="kDateRangeLast kPullLeft80" #scheduledto [(ngModel)]="_scheduledBefore" [showIcon]="true" icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" [readonlyInput]="true" (onSelect)="_onSchedulingChanged(scheduledto)"></p-calendar>
-									</div>
-									<span *ngIf="_scheduledSelected && _scheduledFilterError" class="kError">{{_scheduledFilterError}}</span>
+								<div class="kDateRange">
+									<p-calendar class="kDateRangeFirst" #scheduledfrom [(ngModel)]="_scheduledAfter" [showIcon]="true" icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true" [yearNavigator]="true"  yearRange="2005:2030" [readonlyInput]="true" (onSelect)="_onSchedulingChanged(scheduledfrom)"></p-calendar>
+									<p-calendar class="kDateRangeLast kPullLeft80" #scheduledto [(ngModel)]="_scheduledBefore" [showIcon]="true" icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" [readonlyInput]="true" (onSelect)="_onSchedulingChanged(scheduledto)"></p-calendar>
 								</div>
+								<span *ngIf="_scheduledSelected && _scheduledFilterError" class="kError">{{_scheduledFilterError}}</span>
 							</div>
 						</ng-template>
 					</p-tree>
