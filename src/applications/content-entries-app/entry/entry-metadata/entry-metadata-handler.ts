@@ -6,7 +6,7 @@ import { KalturaCategoryEntryFilter,  KalturaMediaEntry } from 'kaltura-typescri
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaTagFilter, KalturaTaggedObjectType, KalturaFilterPager,
     TagSearchAction, CategoryEntryListAction, KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/all';
-import { CategoriesStore } from '../../shared/categories-store.service';
+import { CategoriesStore, CategoryData } from '../../shared/categories-store.service';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng2/kaltura-common';
@@ -21,7 +21,12 @@ import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
 
 export interface EntryCategoryItem
-{ id : number, fullIdPath : (string | number)[], name : string }
+{
+    id : number,
+    fullIdPath : number[],
+    name : string,
+    fullNamePath : string[],
+}
 
 @Injectable()
 export class EntryMetadataHandler extends EntryFormWidget
@@ -226,7 +231,7 @@ export class EntryMetadataHandler extends EntryFormWidget
             .do(
                 categories =>
                 {
-                    this._entryCategories = categories.items.map(category => ({ id : category.id, name : category.name, fullIdPath : category.fullIdPath}));
+                    this._entryCategories = categories.items;
                 }
             )
             .map(response => ({failed : false}))

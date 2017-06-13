@@ -21,10 +21,12 @@ import { ModerationPipe } from './pipes/moderation.pipe';
 import { LinkedEntries } from './entry-metadata/entry-selector/linked-entries.component';
 import { LinkedEntriesPopup } from './entry-metadata/entry-selector/linked-entries-popup.component';
 import { CategoriesSelector } from './entry-metadata/category-selector/categories-selector.component';
+import { CategoryTooltip } from './entry-metadata/category-selector/category-tooltip.pipe';
 
 
 export const EntryComponentsList = [
     CategoriesSelector,
+    CategoryTooltip,
     DRMDetails,
     EntryAccessControl,
     EntryCaptions,

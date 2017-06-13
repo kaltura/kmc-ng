@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { PrimeTreeNode, PrimeTreeDataProvider, NodeChildrenStatuses } from '@kaltura-ng2/kaltura-primeng-ui';
 import { AppAuthentication, AppConfig, AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { CategoriesStore, CategoriesQuery } from './categories-store.service';
+import { CategoriesStore, CategoriesQuery, CategoryData } from './categories-store.service';
 
 @Injectable()
 export class CategoriesPrimeService {
@@ -77,7 +77,7 @@ export class CategoriesPrimeService {
 		}
 	}
 
-	public searchCategories(text : string)
+	public searchCategories(text : string) : Observable<CategoryData[]>
 	{
 		return Observable.create(
 			observer => {

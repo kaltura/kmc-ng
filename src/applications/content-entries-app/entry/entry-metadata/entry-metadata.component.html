@@ -58,7 +58,7 @@
             </div>
 			<div class="kRow kValign">
 				<span class="kLabel"></span>
-				<a (click)="categoriesPopup.open()" class="kLink">Browse Categories</a>
+				<a (click)="categoriesPopup.open()" class="kLink">{{'applications.content.entryDetails.metadata.browse' | translate}}</a>
 			</div>
             <div class="kRow" *ngIf="_handler.isLiveEntry">
                 <span class="kLabel">{{'applications.content.entryDetails.metadata.offlineMsg' | translate}}</span>
@@ -95,7 +95,7 @@
     </div>
 
 
-	<kPopupWidget #categoriesPopup [popupWidth]="440" [popupHeight]="490" [closeBtn]="true" [modal]="true">
+	<kPopupWidget #categoriesPopup [popupWidth]="586" [popupHeight]="586" [closeBtn]="true" [modal]="true">
 		<ng-template>
 			<kCategoriesSelector [parentPopupWidget]="categoriesPopup" (valueChange)="_updateEntryCategories($event)" [value]="_handler.metadataForm.value.categories"></kCategoriesSelector>
 		</ng-template>
