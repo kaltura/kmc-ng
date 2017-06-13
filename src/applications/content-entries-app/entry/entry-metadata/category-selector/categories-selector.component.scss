@@ -85,6 +85,7 @@
 	.kTagContent{
 		display: flex;
 		align-items: center;
+		cursor: default;
 	}
 }
 :host /deep/ kautocomplete ul.ui-autocomplete-multiple-container.ui-inputtext{
