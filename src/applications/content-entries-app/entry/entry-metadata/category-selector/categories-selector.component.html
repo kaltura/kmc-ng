@@ -4,28 +4,27 @@
 	</div>
 
 	<div class="kTagsContainer">
-		<span *ngIf="true">{{'applications.content.entryDetails.metadata.catSelect' | translate}}</span>
-		<kTags *ngIf="false" [data]="[]" [labelField]="'label'" [tooltipField]="'tooltip'" (onTagRemove)="removeTag($event)" (onRemoveAll)="removeAllTags()">
+		<span *ngIf="!_selectedCategories.length">{{'applications.content.entryDetails.metadata.catSelect' | translate}}</span>
+		<kTags *ngIf="_selectedCategories?.length" [data]="_selectedCategories" [labelField]="'name'" [tooltipField]="'tooltip'" (onTagRemove)="_removeTag($event)" (onRemoveAll)="_removeAllTag()">
 			<ng-template let-item="item">
 				<div class="kTagContent" [kTooltip]="item.tooltip?.token | translate : item.tooltip?.args">
 					<span class="kTagLabel">{{item.label}}</span>
-					<i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
+					<i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="_removeTag(item.data)"></i>
 				</div>
 			</ng-template>
 		</kTags>
 	</div>
 	<div class="kMain">
-		<kAutoComplete [(ngModel)]="_autoCompleteItems"
+		<kAutoComplete #autoComplete
 					   [disabled]="!_categoriesLoaded"
+					   [multiple]="false"
 					   field="name"
 					   suggestionItemField="item"
 					   suggestionLabelField="name"
 					   suggestionSelectableField="isSelectable"
-					   [multiple]="true"
 					   placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"
 					   [minLength]="3"
-					   (onSelect)="_onAutoCompleteSelect($event)"
-					   (onUnselect)="_onAutoCompleteUnselect($event)"
+					   (onSelect)="_onAutoCompleteSelected($event)"
 					   [suggestionsProvider]="_categoriesProvider"
 					   (completeMethod)="_onAutoCompleteSearch($event)">
 		</kAutoComplete>
@@ -33,10 +32,10 @@
 
 		<k-categories-tree #categoriesTree
 						   [(selection)]="_treeSelection"
-						   (onCategoriesLoad)="_onCategoriesLoad($event)"
+						   (onCategoriesLoad)="_onTreeCategoriesLoad($event)"
 						   (onNodeSelect)="_onTreeNodeSelected($event)"
 						   (onNodeUnselect)="_onTreeNodeUnselected($event)"
-						   (onNodeChildrenLoaded)="_onNodeChildrenLoaded($event)"></k-categories-tree>
+						   (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)"></k-categories-tree>
 	</div>
 
     <div class="kFooter">
