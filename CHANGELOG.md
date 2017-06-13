@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.3.0"></a>
+# [2.3.0](https://github.com/kaltura/KMCng/compare/v2.2.2...v2.3.0) (2017-06-13)
+
+
+### Bug Fixes
+
+* **conent-entries:** prevent toggling of schedule filter in refine filters when user select a date from the scheduling date range component ([291a4fb](https://github.com/kaltura/KMCng/commit/291a4fb))
+
+
+### Features
+
+* **content-entries / entry:** new layout for entry details view>metadata section>categories selector popup. ([5d0b84d](https://github.com/kaltura/KMCng/commit/5d0b84d))
+
+
+### Performance Improvements
+
+* **content-entries:** improved change detection of changes in the refine filters ([557b851](https://github.com/kaltura/KMCng/commit/557b851))
+* **content-entries:** instantiate refine component only when showing the popup and destroy it once closed. remove heavy change detection of multiple tree components ([55c9afd](https://github.com/kaltura/KMCng/commit/55c9afd))
+
+
+
 <a name="2.2.2"></a>
 ## [2.2.2](https://github.com/kaltura/KMCng/compare/v2.2.1...v2.2.2) (2017-06-12)
 
