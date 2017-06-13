@@ -1,4 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -11,8 +12,7 @@ import {
 	KalturaPlaylistFilter,
 	KalturaFilterPager,
 	KalturaDetachedResponseProfile,
-	KalturaResponseProfileType,
-	KalturaMediaEntry
+	KalturaResponseProfileType
 } from 'kaltura-typescript-client/types/all';
 
 import 'rxjs/add/operator/subscribeOn';
@@ -90,8 +90,8 @@ export class PlaylistsStore implements OnDestroy {
 	}
 
 	public reload(force : boolean) : void;
-	public reload(query : QueryData) : void;
-	public reload(query : boolean | QueryData) : void {
+	public reload(query : Partial<QueryData>) : void;
+	public reload(query : boolean | Partial<QueryData>) : void {
 		const forceReload = (typeof query === 'object' || (typeof query === 'boolean' && query));
 
 		if (forceReload || this._playlistsSource.getValue().totalCount === 0) {
@@ -134,73 +134,58 @@ export class PlaylistsStore implements OnDestroy {
 	}
 
 	private buildQueryRequest(queryData : QueryData) : Observable<KalturaPlaylistListResponse> {
-		return null;
+		try {
+			let filter: KalturaPlaylistFilter = new KalturaPlaylistFilter({});
 
-		// try {
-		// 	let filter: KalturaPlaylistFilter = new KalturaPlaylistFilter({});
-		//
-		// 	if (queryData.freeText)
-		// 	{
-		// 		filter.freeText = queryData.freeText;
-		// 	}
-		//
-		// 	if (queryData.createdAfter)
-		// 	{
-		// 		filter.create
-		// 	}
-		//
-		// 	let responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
-		// 		type: KalturaResponseProfileType.includeFields,
-		// 		fields: 'id,name,createdAt,playlistType'
-		// 	});
-		// 	let pagination: KalturaFilterPager = new KalturaFilterPager({
-		// 		pageSize: this._queryData.pageSize,
-		// 		pageIndex: this._queryData.pageIndex
-		// 	});
-		// 	const partnerId = this._appAuthentication.appUser.partnerId;
-        //
-		// 	// update the sort by args
-		// 	if (queryData.sortBy) {
-		// 		filter.orderBy = `${queryData.sortDirection === SortDirection.Desc ? '-' : '+'}${queryData.sortBy}`;
-		// 	}
-        //
-		// 	// update desired fields of playlists
-		// 	if (queryData.fields) {
-		// 		responseProfile = new KalturaDetachedResponseProfile({
-		// 			type : KalturaResponseProfileType.includeFields,
-		// 			fields : queryData.fields
-		// 		});
-        //
-		// 	}
-        //
-		// 	// update pagination args
-		// 	if (queryData.pageIndex || queryData.pageSize) {
-		// 		pagination = new KalturaFilterPager(
-		// 			{
-		// 				pageSize: queryData.pageSize,
-		// 				pageIndex: queryData.pageIndex
-		// 			}
-		// 		);
-		// 	}
-        //
-		// 	// build the request
-		// 	return <any>this.kalturaServerClient.request(
-		// 		new PlaylistListAction({
-		// 			filter: filter,
-		// 			pager: pagination,
-		// 			responseProfile: responseProfile
-		// 		})
-		// 	);
-        //
-		// 	/*return this._kalturaClient.request(new PlaylistListAction({
-		// 		filter: filter,
-		// 		pager: pagination,
-		// 		partnerId: partnerId,
-		// 		responseProfile: responseProfile
-		// 	}));*/
-		// } catch(err) {
-		// 	return Observable.throw(err);
-		// }
+			if (queryData.freeText)
+			{
+				filter.freeText = queryData.freeText;
+			}
+
+			if (queryData.createdBefore)
+			{
+				filter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(queryData.createdBefore);
+			}
+
+			if (queryData.createdAfter)
+			{
+				filter.createdAtGreaterThanOrEqual = KalturaUtils.getEndDateValue(queryData.createdAfter);
+			}
+
+			let responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
+				type: KalturaResponseProfileType.includeFields,
+				fields: 'id,name,createdAt,playlistType'
+			});
+
+
+			// update the sort by args
+			if (queryData.sortBy) {
+				filter.orderBy = `${queryData.sortDirection === SortDirection.Desc ? '-' : '+'}${queryData.sortBy}`;
+			}
+
+			// update pagination args
+			let pagination: KalturaFilterPager = null;
+
+			if (queryData.pageIndex || queryData.pageSize) {
+				pagination = new KalturaFilterPager(
+					{
+						pageSize: queryData.pageSize,
+						pageIndex: queryData.pageIndex
+					}
+				);
+			}
+
+			// build the request
+			return <any>this.kalturaServerClient.request(
+				new PlaylistListAction({
+					filter: filter,
+					pager: pagination,
+					responseProfile: responseProfile
+				})
+			);
+		} catch(err) {
+			return Observable.throw(err);
+		}
 	}
 }
 

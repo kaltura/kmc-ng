@@ -60,19 +60,14 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._bulkActionsMenu = this.getBulkActionItems();
-		const query = this._playlistsStore.queryData;
-
-		if (query) {
-			this._filter.pageSize = query.pageSize;
-			this._filter.pageIndex = query.pageIndex - 1;
-			this._filter.sortBy = query.sortBy;
-			this._filter.sortDirection = query.sortDirection;
-		}
 
 		this.querySubscription = this._playlistsStore.query$.subscribe(
 			query => {
-				this._filter.pageSize = query.data.pageSize;
-				this._filter.pageIndex = query.data.pageIndex-1;
+				this._filter.pageSize = query.pageSize;
+				this._filter.pageIndex = query.pageIndex - 1;
+				this._filter.sortBy = query.sortBy;
+				this._filter.sortDirection = query.sortDirection;
+
 				this.dataTable.scrollToTop();
 			}
 		);
