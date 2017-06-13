@@ -2,7 +2,10 @@ import { Component, OnInit,  OnDestroy, AfterViewInit, Input,  ElementRef } from
 import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import {
+	AppConfig,
+	AppLocalization
+} from '@kaltura-ng2/kaltura-common';
 import { PrimeTreeNode, PrimeTreeDataProvider } from '@kaltura-ng2/kaltura-primeng-ui';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 import { EntriesStore } from "../entries-store/entries-store.service";
@@ -59,12 +62,18 @@ export class EntriesRefineFilters implements OnInit, AfterViewInit, OnDestroy{
     public _scheduledBefore: Date;
     public _scheduledFilterError: string = null;
     public _scheduledSelected : boolean = false;
+	public _createdAtDateRange: string = this._appConfig.get('modules.contentEntries.createdAtDateRange');
 
     @Input() parentPopupWidget: PopupWidgetComponent;
 
-    constructor(public additionalFiltersStore: EntriesRefineFiltersProvider, private primeTreeDataProvider : PrimeTreeDataProvider,
-                private entriesStore : EntriesStore, private elementRef: ElementRef, private appLocalization: AppLocalization) {
-    }
+    constructor(
+    	public additionalFiltersStore: EntriesRefineFiltersProvider,
+		private primeTreeDataProvider : PrimeTreeDataProvider,
+        private entriesStore : EntriesStore,
+		private elementRef: ElementRef,
+		private appLocalization: AppLocalization,
+		public _appConfig: AppConfig
+	) {}
 
     ngOnInit() {
         this._registerToAdditionalFiltersStore();

@@ -1,10 +1,15 @@
 import { Component, Input } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
+
+import {
+	AppConfig,
+	AppLocalization
+} from '@kaltura-ng2/kaltura-common';
 
 import { PlaylistsStore } from "../playlists-store/playlists-store.service";
-import { CreatedAtFilter } from "../playlists-store/filters";
+import { CreatedAtFilter } from "../playlists-store/filters/created-at-filter";
 
 @Component({
     selector: 'kPlaylistsAdditionalFilter',
@@ -18,16 +23,17 @@ export class PlaylistsAdditionalFiltersComponent{
 	public _createdAfter: Date;
 	public _createdBefore: Date;
 	public _createdFilterError: string = null;
+	public _createdAtDateRange: string = this._appConfig.get('modules.contentPlaylists.createdAtDateRange');
 
     constructor(
     	private playlistsStore : PlaylistsStore,
-		private appLocalization: AppLocalization
+		private appLocalization: AppLocalization,
+		public _appConfig: AppConfig
 	) {}
 
 	public _onCreatedChanged() : void
 	{
 		this.syncCreatedFilters();
-		alert('the date was changed');
 	}
 
 	private syncCreatedComponents() : void {
@@ -55,12 +61,17 @@ export class PlaylistsAdditionalFiltersComponent{
 			{
 				setTimeout(this.syncCreatedComponents.bind(this),0);
 
-				this._createdFilterError = this.appLocalization.get('applications.content.entryDetails.errors.schedulingError');
+				this._createdFilterError = this.appLocalization.get('applications.content.playlistsDetails.errors.schedulingError');
 				return;
 			}
 		}
 
 		this.playlistsStore.removeFiltersByType(CreatedAtFilter);
+
+		if (this._createdAfter || this._createdBefore)
+		{
+			this.playlistsStore.addFilters(new CreatedAtFilter(KalturaUtils.getStartDateValue(this._createdAfter), KalturaUtils.getEndDateValue(this._createdBefore)));
+		}
 	}
 
 	public _clearCreatedComponents() : void {

@@ -6,7 +6,8 @@ import {
 	AfterViewInit,
 	OnInit,
 	OnDestroy,
-	ViewChild
+	ViewChild,
+	ChangeDetectorRef
 } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import {
@@ -21,7 +22,7 @@ import {
 	KalturaMediaEntry,
 	KalturaEntryStatus
 } from 'kaltura-typescript-client/types/all';
-import { PlaylistsStore } from "./playlists-store";
+import { PlaylistsStore } from "./playlists-store/playlists-store.service";
 
 @Component({
 	selector: 'kPlaylistsTable',
@@ -29,19 +30,18 @@ import { PlaylistsStore } from "./playlists-store";
 	styleUrls: ['./playlists-table.component.scss']
 })
 export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy {
-	private _playlists: any[] = [];
-	public _deferredLoading = true;
-	public _playlistsProvider: any[] = [];
 	public _blockerMessage: AreaBlockerMessage = null;
-	private playlistsStoreStatusSubscription: ISubscription;
-	public _emptyMessage: string = "";
-	public rowTrackBy: Function = (index: number, item: any) => {return item.id};
+	private _playlists: any[] = [];
+	private _deferredPlaylists : any[];
 
 	@Input() set playlists(data: any[]) {
-		this._playlists = data;
 		if (!this._deferredLoading) {
-			// This prevents the screen from hanging during datagrid rendering of the data.
-			this._playlistsProvider = this._playlists;
+			this._playlists = [];
+			this.cdRef.detectChanges();
+			this._playlists = data;
+			this.cdRef.detectChanges();
+		}else {
+			this._deferredPlaylists = data
 		}
 	}
 	@Input() filter: any = {};
@@ -51,11 +51,19 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 	@ViewChild('dataTable') private dataTable: DataTable;
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
 	private actionsMenuEntryId: string = "";
+	private playlistsStoreStatusSubscription: ISubscription;
+
+	public _deferredLoading = true;
+	public _emptyMessage: string = "";
+
 	public _items: MenuItem[];
+
+	public rowTrackBy: Function = (index: number, item: any) => {return item.id};
 
 	constructor(
 		private appLocalization: AppLocalization,
-		public playlistsStore: PlaylistsStore
+		public playlistsStore: PlaylistsStore,
+		private cdRef: ChangeDetectorRef
 	) {}
 
 	ngOnInit() {
@@ -105,7 +113,8 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 			// use timeout to allow the DOM to render before setting the data to the datagrid. This prevents the screen from hanging during datagrid rendering of the data.
 			setTimeout(()=> {
 				this._deferredLoading = false;
-				this._playlistsProvider = this._playlists;
+				this._playlists = this._deferredPlaylists;
+				this._deferredPlaylists = null;
 			}, 0);
 		}
 	}

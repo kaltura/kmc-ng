@@ -22,11 +22,12 @@ import {
 	KalturaUIModule,
 	TooltipModule
 } from '@kaltura-ng2/kaltura-ui';
+import { TagsModule } from '@kaltura-ng2/kaltura-ui/tags';
 import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 
 import { ContentPlaylistsComponent } from './content-playlists.component';
-import { PlaylistsComponentsList } from './playlists';
-import { PlaylistsStore } from './playlists/playlists-store';
+import { PlaylistsComponentsList } from './playlists/playlists-components-list';
+import { PlaylistsStore } from './playlists/playlists-store/playlists-store.service';
 
 @NgModule({
     imports: [
@@ -46,6 +47,7 @@ import { PlaylistsStore } from './playlists/playlists-store';
 		PopupWidgetModule,
 		CalendarModule,
 		MenuModule,
+		TagsModule,
 		SharedModule,
         RouterModule.forChild(routing)
     ],

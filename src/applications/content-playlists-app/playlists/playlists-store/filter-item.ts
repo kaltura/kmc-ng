@@ -6,6 +6,11 @@ export interface FilterItemLocalizedTooltip
 
 export abstract class FilterItem
 {
+	private _tooltip : FilterItemLocalizedTooltip;
+
+	public get tooltip() : FilterItemLocalizedTooltip{
+		return this._tooltip;
+	}
 
 	private _label : string;
 
@@ -13,16 +18,14 @@ export abstract class FilterItem
 		return this._label;
 	}
 
-	public abstract isEqual(otherFilter : FilterItem) : boolean;
-
-	private _tooltip : FilterItemLocalizedTooltip;
-
-	public get tooltip() : FilterItemLocalizedTooltip{
-		return this._tooltip;
-	}
-
 	constructor(label : string, tooltip? : FilterItemLocalizedTooltip ) {
 		this._label = label;
 		this._tooltip = tooltip;
+	}
+
+	public isEqual(otherFilter : FilterItem) : boolean
+	{
+		return otherFilter
+			&& typeof this === typeof otherFilter;
 	}
 }

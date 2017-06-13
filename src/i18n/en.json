@@ -251,7 +251,6 @@
 					"blockFlavours": "Blocked: {{0}}",
 					"ks": "KS",
 					"freePreview": "KS, Preview ({{0}})",
-					"freePreview": "KS, Preview ({{0}})",
 					"countries": "Countries",
 					"ips": "IPs",
 					"flavours": "Flavors",
@@ -472,6 +471,11 @@
 					"categoriesLoadError": "Error loading categories",
 					"flavorsLoadError": "Error loading flavors",
 					"clipsLoadError": "Error loading clips",
+					"schedulingError": "'From Date' must be before 'To Date'"
+				}
+			},
+			"playlistsDetails": {
+				"errors": {
 					"schedulingError": "'From Date' must be before 'To Date'"
 				}
 			}
