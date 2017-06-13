@@ -30,6 +30,17 @@ export class PlaylistsAdditionalFiltersComponent{
 
 	public _onCreatedChanged() : void
 	{
+		this._createdFilterError = null;
+		if (this._createdBefore && this._createdAfter) {
+			const isValid = this._createdAfter <= this._createdBefore;
+
+			if (!isValid)
+			{
+
+				this._createdFilterError = this.appLocalization.get('applications.content.playlistsDetails.errors.schedulingError');
+				return;
+			}
+		}
 	}
 
 	public _clearCreatedComponents() : void {

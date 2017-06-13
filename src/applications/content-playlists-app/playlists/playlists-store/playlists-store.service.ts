@@ -19,7 +19,6 @@ import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
-import { FilterItem } from "./filter-item";
 import { BrowserService } from "kmc-shell/providers/browser.service";
 
 export enum SortDirection {
@@ -37,8 +36,6 @@ export interface QueryData
 	createdBefore : Date,
 	createdAfter : Date
 }
-
-export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) : T;};
 
 
 @Injectable()

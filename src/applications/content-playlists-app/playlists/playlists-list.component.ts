@@ -41,21 +41,15 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 	removeTag(tag: any){
 		this.clearSelection();
-		this._playlistsStore.removeFilters(tag);
+
 	}
 
 	removeAllTags(){
 		this.clearSelection();
-		this._playlistsStore.clearAllFilters();
+
 	}
 
 	onFreetextChanged() : void{
-		this._playlistsStore.removeFiltersByType(FreetextFilter);
-
-		if (this._filter.freetextSearch)
-		{
-			this._playlistsStore.addFilters(new FreetextFilter(this._filter.freetextSearch));
-		}
 	}
 
 	onPaginationChanged(state : any) : void {
