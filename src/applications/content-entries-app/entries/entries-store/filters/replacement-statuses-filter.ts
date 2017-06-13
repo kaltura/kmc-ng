@@ -5,9 +5,9 @@ import { ValueFilter } from '../value-filter';
 
 export class ReplacementStatusesFilter  extends ValueFilter<string>{
 
-    constructor(value : string, label : string)
+    constructor( value : string, label : string)
     {
-        super(value, label);
+        super( label, value, {token: 'applications.content.filters.replacementStatuses', args: {'0': label}});
     }
 }
 

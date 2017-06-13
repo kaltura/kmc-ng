@@ -101,14 +101,6 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
 		}
 	}
 
-
-	// TODO [kmcng] waiting for the new primeng
-	// add [rowTrackBy]="_relatedTableRowTrackBy"
-	// public _relatedTableRowTrackBy(rowData) : any
-	// {
-	// 	return rowData.id || rowData.tempId;
-	// }
-
 	public _relatedTableRowStyle(rowData, rowIndex): string{
 		return rowData.uploading ? "uploading" : rowData.uploadFailure ? "uploadFailure" : '';
 	}

@@ -20,6 +20,7 @@
 		</div>
 		<div class="kTreeContainer">
 			<k-categories-tree #categoriesTree
+							   [disablePropagation]="_selectionMode === _TreeSelectionModes.SelfAndChildren"
 							   [(selection)]="_selection"
 							   (onNodeSelect)="_onTreeNodeSelected($event)"
 							   (onNodeUnselect)="_onTreeNodeUnselected($event)"

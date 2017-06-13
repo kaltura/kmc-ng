@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/forkJoin';
+import { PrimeTreeNode } from '@kaltura-ng2/kaltura-primeng-ui';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import {  KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-typescript-client';
@@ -21,9 +22,25 @@ import {
     KalturaResponseProfileType
 } from 'kaltura-typescript-client/types/all'
 
-import { ConstantsFilters } from './constant-filters';
+import { DefaultFiltersList } from './default-filters-list';
 
 import * as R from 'ramda';
+
+import { FlavorsFilter } from "../entries-store/filters/flavors-filter";
+
+import { AccessControlProfilesFilter } from "../entries-store/filters/access-control-profiles-filter";
+import { DistributionsFilter } from "../entries-store/filters/distributions-filter";
+import { MetadataProfileFilter } from "../entries-store/filters/metadata-profile-filter";
+import { ValueFilter } from '../entries-store/value-filter';
+
+import { FilterItem } from '../entries-store/filter-item';
+
+export type EntriesFilterResolver = (node: PrimeTreeNode) => ValueFilter<any>;
+export type EntriesFilterType = { new(...args) : FilterItem};
+export type IsEntryFilterOfRefineFilter = (filter : FilterItem) => boolean;
+
+
+
 
 export type UpdateStatus = {
     loading : boolean;
@@ -33,10 +50,8 @@ export type UpdateStatus = {
 export class RefineFilter
 {
     public items :{id : string, name : string}[] = [];
-    public metadataProfileId : number;
-    public fieldPath : string[] = [];
 
-    constructor(public name : string, public label : string )
+    constructor(public name : string, public label : string , public entriesFilterType : EntriesFilterType, public isEntryFilterOfRefineFilter : IsEntryFilterOfRefineFilter, public entriesFilterResolver : EntriesFilterResolver)
     {
 
     }
@@ -47,21 +62,10 @@ export interface RefineFilterGroup
 {
     label : string;
     filters : RefineFilter[];
-    isMetadataGroup : boolean;
-}
-
-
-export enum AdditionalFilterLoadingStatus
-{
-    Loading,
-    Loaded,
-    FailedToLoad
 }
 
 @Injectable()
-export class EntriesAdditionalFiltersStore {
-
-    // TODO [KMC] - clear cached data on logout
+export class EntriesRefineFiltersProvider {
     private _filters = new ReplaySubject<{groups : RefineFilterGroup[]}>(1);
     private _status: BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({
         loading: false,
@@ -128,13 +132,30 @@ export class EntriesAdditionalFiltersStore {
 
             // if found relevant lists, create a group for that profile
             if (profileLists && profileLists.length > 0) {
-                const filterGroup = { label: metadataProfile.name, filters: [],isMetadataGroup : true };
+                const filterGroup = { label: metadataProfile.name, filters: []};
                 result.groups.push(filterGroup);
 
+              
+                
                 profileLists.forEach(list => {
-                    const refineFilter = new RefineFilter(list.id, list.label);
-                    refineFilter.metadataProfileId = metadataProfile.id;
-                    refineFilter.fieldPath = ['metadata',list.name];
+                    const metadataProfileId = metadataProfile.id;
+                    const fieldPath = ['metadata',list.name];
+
+                    const refineFilter = new RefineFilter(
+                        list.id,
+                        list.label,
+                        MetadataProfileFilter,
+                        filter => {
+                            return filter instanceof  MetadataProfileFilter && filter.name === list.id;
+                         },
+                        (node: PrimeTreeNode) => {
+                        if (node.payload && node.payload.filterName) {
+                            return new MetadataProfileFilter(list.id, <any>node.data, metadataProfileId, fieldPath, list.label);
+                        } else {
+                            return null;
+                        }
+                    });
+                    
                     filterGroup.filters.push(refineFilter);
 
                     list.optionalValues.forEach(item => {
@@ -152,21 +173,31 @@ export class EntriesAdditionalFiltersStore {
     }
 
     private _buildDefaultFiltersGroup(responses : KalturaMultiResponse, flavours: KalturaFlavorParams[]) : RefineFilterGroup{
-        const result : RefineFilterGroup = {label : '', filters : [], isMetadataGroup : false};
+        const result : RefineFilterGroup = {label : '', filters : []};
 
         // build constant filters
-        ConstantsFilters.forEach((constantFilter) =>
-        {
-            const newRefineFilter = new RefineFilter(constantFilter.id,constantFilter.name);
+        DefaultFiltersList.forEach((defaultFilterList) => {
+            const newRefineFilter = new RefineFilter(defaultFilterList.name, defaultFilterList.label, defaultFilterList.entriesFilterType, defaultFilterList.isEntryFilterOfRefineFilter, defaultFilterList.entriesFilterResolver);
             result.filters.push(newRefineFilter);
-            constantFilter.items.forEach((item: any) => {
-                newRefineFilter.items.push({id : item.id, name : item.name});
+            defaultFilterList.items.forEach((item: any) => {
+                newRefineFilter.items.push({id: item.id, name: item.name});
             });
+
         });
 
         // build access control profile filters
         if (responses[1].result.objects.length > 0) {
-            const newRefineFilter = new RefineFilter('accessControlProfiles','Access Control Profiles');
+            const newRefineFilter = new RefineFilter(
+                'accessControlProfiles',
+                'Access Control Profiles',
+                AccessControlProfilesFilter,
+                filter =>
+                {
+                    return filter instanceof AccessControlProfilesFilter;
+                },
+                (node: PrimeTreeNode) => {
+                return new AccessControlProfilesFilter( <string>node.data, node.label);
+            });
             result.filters.push(newRefineFilter);
             responses[1].result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
                 newRefineFilter.items.push({
@@ -178,7 +209,17 @@ export class EntriesAdditionalFiltersStore {
 
 	    //build flavors filters
 	    if (flavours.length > 0) {
-            const newRefineFilter = new RefineFilter('flavors',"Flavors");
+            const newRefineFilter = new RefineFilter(
+                'flavors',
+                "Flavors",
+                FlavorsFilter,
+                filter =>
+                {
+                    return filter instanceof FlavorsFilter;
+                },
+                (node: PrimeTreeNode) => {
+                return new FlavorsFilter( <string>node.data, node.label);
+            });
 		    result.filters.push(newRefineFilter);
 		    flavours.forEach((flavor: KalturaFlavorParams) => {
                 newRefineFilter.items.push({id: flavor.id+'', name: flavor.name});
@@ -187,7 +228,17 @@ export class EntriesAdditionalFiltersStore {
 
 	    // build distributions filters
 	    if (responses[0].result.objects.length > 0) {
-            const newRefineFilter = new RefineFilter('distributions',"Destinations")
+            const newRefineFilter = new RefineFilter(
+                'distributions',
+                "Destinations",
+                DistributionsFilter,
+                filter =>
+                {
+                    return filter instanceof DistributionsFilter;
+                },
+                (node: PrimeTreeNode) => {
+                return new DistributionsFilter( <number>node.data, node.label);
+            });
 		    result.filters.push(newRefineFilter);
 		    responses[0].result.objects.forEach((distributionProfile: KalturaDistributionProfile) => {
                 newRefineFilter.items.push({id : distributionProfile.id+'', name : distributionProfile.name});
@@ -196,6 +247,9 @@ export class EntriesAdditionalFiltersStore {
 
 	    return result;
     }
+
+
+
 
     private buildQueryRequest(): Observable<KalturaMultiResponse> {
 

@@ -44,6 +44,7 @@
         </div>
     </div>
     <p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu"></p-tieredMenu>
+
 </div>
 
 <!-- popup widgets section -->
@@ -52,5 +53,5 @@
 </kPopupWidget>
 
 <kPopupWidget #refinePopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="refineBtn" [targetOffset]="{'x':-200, 'y': -20}">
-	<kEntriesAdditionalFilter [parentPopupWidget]="refinePopup" ></kEntriesAdditionalFilter>
+	<k-entries-refine-filters [parentPopupWidget]="refinePopup" ></k-entries-refine-filters>
 </kPopupWidget>

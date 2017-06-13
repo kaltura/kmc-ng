@@ -3,6 +3,7 @@ import { PrimeTreeNode } from '@kaltura-ng2/kaltura-primeng-ui';
 import { AppAuthentication, AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { CategoriesPrimeService } from '../categories-prime.service';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
+import { PrimeTreePropagation } from '@kaltura-ng2/kaltura-primeng-ui/prime-tree';
 
 
 @Component({
@@ -16,6 +17,10 @@ export class CategoriesTreeComponent implements OnInit {
 	public _loading : boolean = false;
 	public _blockerMessage: AreaBlockerMessage = null;
 	public _categories: PrimeTreeNode[] = [];
+	@ViewChild(PrimeTreePropagation) _primeTreeNodesState: PrimeTreePropagation;
+
+	@Input()
+	public disablePropagation : boolean = false;
 
 	@Output()
 	onCategoriesLoad = new EventEmitter<{ categories : PrimeTreeNode[]}>();
@@ -37,11 +42,21 @@ export class CategoriesTreeComponent implements OnInit {
 	@Output() onNodeUnselect: EventEmitter<any> = new EventEmitter();
 
 
+	public updateNodeState(node : PrimeTreeNode, addToSelection : boolean) : void
+	{
+		this._primeTreeNodesState.updateNodeState(node, addToSelection );
+	}
+
 	get categories() : PrimeTreeNode[]
 	{
 		return this._categories ;
 	}
 
+	public _selectionChange(selection : PrimeTreeNode[])
+	{
+		this.selection = selection;
+		this.selectionChange.emit(selection);
+	}
 	public findNodeByFullIdPath(fullIdPath : (number | string)[]) : PrimeTreeNode
 	{
 		// find the item in the tree (if exists)

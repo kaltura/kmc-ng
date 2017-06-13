@@ -430,6 +430,11 @@ td.ui-datatable-emptymessage{
 				background-color: $kPrimary;
 				border: 1px solid $kPrimary;
 			}
+
+            &.fa-minus {
+              background-color: $kPrimary;
+              border: 1px solid $kPrimary;
+            }
 		}
 
 	}
@@ -558,10 +563,10 @@ td.ui-datatable-emptymessage{
 }
 
 // auto complete
+
 .ui-autocomplete .ui-autocomplete-panel {
     .ui-autocomplete-list-item {
         min-height: 50px;
-		max-height: 70px;
 		overflow: hidden;
         border-left: none;
         border-right: none;
@@ -696,6 +701,11 @@ td.ui-datatable-emptymessage{
 		&.fa-check:before{
 			@extend .kIconcheck_large:before;
 		}
+
+        &.fa-minus:before{
+          @extend .kIconpen:before;
+        }
+
 		&.fa-close:before{
 			@extend .kIconwarning:before;
 		}

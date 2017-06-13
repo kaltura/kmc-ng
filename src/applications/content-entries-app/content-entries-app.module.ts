@@ -27,7 +27,7 @@ import { KalturaCustomMetadataModule } from '@kaltura-ng2/kaltura-ui/dynamic-for
 import { EntryComponentsList } from './entry/entry-components-list';
 import { EntriesComponentsList } from './entries/entries-components-list';
 import { CategoriesStore } from './shared/categories-store.service';
-import { EntriesAdditionalFiltersStore } from './entries/entries-additional-filters/entries-additional-filters-store.service';
+import { EntriesRefineFiltersProvider } from './entries/entries-refine-filters/entries-refine-filters-provider.service';
 import { CategoriesPrimeService } from './shared/categories-prime.service';
 import { SharedComponentsList } from './shared/shared-components-list';
 
@@ -81,7 +81,7 @@ import { SharedComponentsList } from './shared/shared-components-list';
         CategoriesStore,
         CategoriesPrimeService,
         MetadataProfileStore,
-        EntriesAdditionalFiltersStore
+        EntriesRefineFiltersProvider
     ],
 })
 export class ContentEntriesAppModule {
