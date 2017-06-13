@@ -78,3 +78,12 @@ a.disabled{
 	border-bottom-right-radius: 3px;
 	border-top-right-radius: 3px;
 }
+
+:host /deep/ .ui-tree .ui-tree-container {
+	overflow: visible;
+}
+
+:host /deep/ .ui-tree .ui-chkbox {
+	vertical-align: top;
+	margin-top: 14px;
+}
