@@ -11,13 +11,6 @@
 				<span class="kSelectedPlaylistsLabel">
 					• {{_selectedPlaylists.length}} {{'applications.content.playlists.selected' | translate}}</span>
 				<button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"></button>
-				<button class="kButtonDefault kBulkActionsBtn"
-						icon="kIcondropdown_arrow_bottom"
-						iconPos="right"
-						[disabled]="!_selectedPlaylists.length"
-						pButton
-						label="{{'applications.content.playlists.bulkActions' | translate}}"
-						(click)="menu.toggle($event)"></button>
 				<a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.playlists.cancel' | translate}}</a>
 			</div>
 			<div [class.kHidden]="_selectedPlaylists.length" class="kFilters">
@@ -34,9 +27,24 @@
 				icon="kIconrefresh"
 				[kTooltip]="'applications.content.entries.refresh' | translate"></button>
 		</div>
+		<kTags
+			[title]="'applications.content.filters.activeFilters' | translate"
+			[data]="(this._playlistsStore.activeFilters$ | async)?.filters"
+			[labelField]="'label'"
+			[tooltipField]="'tooltip'"
+			(onTagRemove)="removeTag($event)"
+			(onRemoveAll)="removeAllTags()">
+			<ng-template let-item="item">
+				<div class="kTagContent" [kTooltip]="item.tooltip?.token | translate : item.tooltip?.args">
+					<span class="kTagLabel">{{item.label}}</span>
+					<i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
+				</div>
+			</ng-template>
+		</kTags>
 		<kPlaylistsTable
 			class="kPlaylistsTable"
 			[playlists]="(_playlistsStore.playlists$ | async)?.items"
+			[filter]="_filter"
 			[(selectedPlaylists)]="_selectedPlaylists"></kPlaylistsTable>
 
 		<div class="kPlaylistsTableFooter" #footer *ngIf="(_playlistsStore.playlists$ | async)?.totalCount">
@@ -59,6 +67,6 @@
 	[popupHeight]="155"
 	[closeBtn]="false"
 	[targetRef]="refineBtn"
-	[targetOffset]="{'x':-200, 'y': -20}">
+	[targetOffset]="{'x':-294, 'y': -20}">
 	<kPlaylistsAdditionalFilter [parentPopupWidget]="refinePopup"></kPlaylistsAdditionalFilter>
 </kPopupWidget>

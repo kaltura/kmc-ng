@@ -5,14 +5,14 @@ import {
 	ViewChild
 } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { MenuItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import {
 	PlaylistsStore,
 	SortDirection
-} from './playlists-store';
+} from './playlists-store/playlists-store.service';
 import { PlaylistsTableComponent } from "./playlists-table.component";
+
+
 
 @Component({
     selector: 'kPlaylistsList',
@@ -34,15 +34,28 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 	public showLoader = true;
 	public _selectedPlaylists: any[] = [];
 	private querySubscription : ISubscription;
-	public _bulkActionsMenu: MenuItem[] = [];
 
 	constructor(
-		public _playlistsStore: PlaylistsStore,
-		private appLocalization: AppLocalization
+		public _playlistsStore: PlaylistsStore
 	) {}
 
+	removeTag(tag: any){
+		this.clearSelection();
+		this._playlistsStore.removeFilters(tag);
+	}
+
+	removeAllTags(){
+		this.clearSelection();
+		this._playlistsStore.clearAllFilters();
+	}
+
 	onFreetextChanged() : void{
-		alert(`filter text value: ${this._filter.freetextSearch}`);
+		this._playlistsStore.removeFiltersByType(FreetextFilter);
+
+		if (this._filter.freetextSearch)
+		{
+			this._playlistsStore.addFilters(new FreetextFilter(this._filter.freetextSearch));
+		}
 	}
 
 	onPaginationChanged(state : any) : void {
@@ -59,7 +72,6 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this._bulkActionsMenu = this.getBulkActionItems();
 
 		this.querySubscription = this._playlistsStore.query$.subscribe(
 			query => {
@@ -88,13 +100,6 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 	clearSelection(){
 		this._selectedPlaylists = [];
-	}
-
-	getBulkActionItems(){
-		return  [
-			{ label: 'bulk action 1', command: (event) => { alert('bulk action 1'); } },
-			{ label: 'bulk action 2', command: (event) => { alert('bulk action 2'); } }
-		];
 	}
 }
 

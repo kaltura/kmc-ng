@@ -1,7 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+
+import {
+	AppConfig,
+	AppLocalization
+} from '@kaltura-ng2/kaltura-common';
+
+import { PlaylistsStore } from "../playlists-store/playlists-store.service";
 
 @Component({
     selector: 'kPlaylistsAdditionalFilter',
@@ -14,9 +20,12 @@ export class PlaylistsAdditionalFiltersComponent{
 	public _blockerMessage : AreaBlockerMessage = null;
 	public _createdAfter: Date;
 	public _createdBefore: Date;
+	public _createdFilterError: string = null;
+	public _createdAtDateRange: string = this._appConfig.get('modules.contentPlaylists.createdAtDateRange');
 
     constructor(
-		private appLocalization: AppLocalization
+		private appLocalization: AppLocalization,
+		public _appConfig: AppConfig
 	) {}
 
 	public _onCreatedChanged() : void
