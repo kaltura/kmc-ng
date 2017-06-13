@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file. See [standa
 <a name="2.3.1"></a>
 ## [2.3.1](https://github.com/kaltura/KMCng/compare/v2.3.0...v2.3.1) (2017-06-13)
 
+### Bug Fixes
+
+* **content-entries / entries:** fix tree height to show all nodes upon scroll down
 
 
 <a name="2.3.0"></a>
