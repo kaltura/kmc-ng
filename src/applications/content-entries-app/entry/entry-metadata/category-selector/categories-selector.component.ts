@@ -11,10 +11,6 @@ import { EntryCategoryItem } from '../entry-metadata-handler';
 import { AutoComplete } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
 
 
-export interface CategorySelectionItem extends EntryCategoryItem
-{
-	tooltip : string;
-}
 @Component({
     selector: 'kCategoriesSelector',
     templateUrl: './categories-selector.component.html',
@@ -35,7 +31,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 	@Input() value: EntryCategoryItem[]  = [];
 	@Output() valueChange = new EventEmitter<EntryCategoryItem[]>();
 
-	public _selectedCategories: CategorySelectionItem[]  = [];
+	public _selectedCategories: EntryCategoryItem[]  = [];
 
 	private parentPopupStateChangeSubscription : ISubscription;
 	@Input() parentPopupWidget: PopupWidgetComponent;
@@ -49,19 +45,8 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
     }
 
 
-	ngOnInit()
-	{
-		this._selectedCategories = this.value ?
-			this.value.map(item =>
-			{
-				return	{
-					id: item.id,
-						fullIdPath: item.fullIdPath,
-					name: item.name,
-					tooltip : this._createCategoryTooltip()
-				}
-			})
-			: [];
+	ngOnInit() {
+		this._selectedCategories = this.value && this.value instanceof Array ? [...this.value] : [];
 	}
 
 	ngOnDestroy(){
@@ -196,8 +181,8 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 		this._treeSelection = treeSelectedItems;
 	}
 
-	private _createCategoryTooltip() : string{
-		return 'tooltip';
+	private _createCategoryTooltip(fullNamePath : string[]) : string {
+		return fullNamePath ? fullNamePath.join(' > ') : null;
 	}
 
 	public _onAutoCompleteSelected(){
@@ -211,8 +196,8 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 				this._selectedCategories.push({
 					id: selectedItem.id,
 					fullIdPath: selectedItem.fullIdPath,
-					name: selectedItem.name,
-					tooltip : this._createCategoryTooltip()
+					fullNamePath : selectedItem.fullNamePath,
+					name: selectedItem.name
 				});
 
 				this._ngAfterViewCheckedContext.updateTreeSelections = true;
@@ -246,8 +231,8 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 				this._selectedCategories.push({
 					id: node.origin.id,
 					fullIdPath: node.origin.fullIdPath,
-					name: node.origin.name,
-					tooltip : this._createCategoryTooltip()
+					fullNamePath : node.origin.fullNamePath,
+					name: node.origin.name
 				});
 			}
 		}
