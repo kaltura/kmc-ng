@@ -67,3 +67,35 @@
 	height: 265px;
 	overflow-y: hidden;
 }
+
+:host /deep/ ktags{
+	margin-left: 12px;
+	.kTags{
+		border-top: 0px solid white;
+		width: 542px;
+	}
+	.kTagRemove{
+		flex: 0 0 auto;
+		margin-top: 2px;
+		margin-left: 8px;
+		padding: 4px;
+		cursor: pointer;
+		font-size: 12px;
+	}
+	.kTagContent{
+		display: flex;
+		align-items: center;
+	}
+}
+:host /deep/ kautocomplete ul.ui-autocomplete-multiple-container.ui-inputtext{
+	padding: 0px;
+	.ui-autocomplete-input-token{
+		padding: 0px;
+		input{
+			height: 34px;
+			padding-left: 4px;
+			width: 500px;
+		}
+	}
+}
+
