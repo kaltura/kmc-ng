@@ -12,7 +12,7 @@ import {
 } from './playlists-store/playlists-store.service';
 import { PlaylistsTableComponent } from "./playlists-table.component";
 
-import { FreetextFilter } from "./playlists-store/filters/freetext-filter";
+
 
 @Component({
     selector: 'kPlaylistsList',
@@ -41,21 +41,15 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 	removeTag(tag: any){
 		this.clearSelection();
-		this._playlistsStore.removeFilters(tag);
+
 	}
 
 	removeAllTags(){
 		this.clearSelection();
-		this._playlistsStore.clearAllFilters();
+
 	}
 
 	onFreetextChanged() : void{
-		this._playlistsStore.removeFiltersByType(FreetextFilter);
-
-		if (this._filter.freetextSearch)
-		{
-			this._playlistsStore.addFilters(new FreetextFilter(this._filter.freetextSearch));
-		}
 	}
 
 	onPaginationChanged(state : any) : void {
@@ -72,19 +66,14 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		const query = this._playlistsStore.queryData;
-
-		if (query) {
-			this._filter.pageSize = query.pageSize;
-			this._filter.pageIndex = query.pageIndex - 1;
-			this._filter.sortBy = query.sortBy;
-			this._filter.sortDirection = query.sortDirection;
-		}
 
 		this.querySubscription = this._playlistsStore.query$.subscribe(
 			query => {
-				this._filter.pageSize = query.data.pageSize;
-				this._filter.pageIndex = query.data.pageIndex-1;
+				this._filter.pageSize = query.pageSize;
+				this._filter.pageIndex = query.pageIndex - 1;
+				this._filter.sortBy = query.sortBy;
+				this._filter.sortDirection = query.sortDirection;
+
 				this.dataTable.scrollToTop();
 			}
 		);

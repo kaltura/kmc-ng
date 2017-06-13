@@ -31,7 +31,7 @@ import { PlaylistsStore } from "./playlists-store/playlists-store.service";
 })
 export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy {
 	public _blockerMessage: AreaBlockerMessage = null;
-	private _playlists: any[] = [];
+	public _playlists: any[] = [];
 	private _deferredPlaylists : any[];
 
 	@Input() set playlists(data: any[]) {
