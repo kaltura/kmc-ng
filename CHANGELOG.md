@@ -8,12 +8,13 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
-* **conent-entries:** prevent toggling of schedule filter in refine filters when user select a date from the scheduling date range component ([291a4fb](https://github.com/kaltura/KMCng/commit/291a4fb))
-
+* **content-entries:** fix entries view > refine filter popup > schedule filter.
+* prevent creation of multiple tooltip instances
 
 ### Features
 
 * **content-entries / entry:** new layout for entry details view>metadata section>categories selector popup. ([5d0b84d](https://github.com/kaltura/KMCng/commit/5d0b84d))
+* update style of auto-complete to match the new provided style.
 
 
 ### Performance Improvements
