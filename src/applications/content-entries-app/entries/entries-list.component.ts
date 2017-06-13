@@ -9,7 +9,7 @@ import { EntriesStore, SortDirection } from './entries-store/entries-store.servi
 import { EntriesTableComponent } from "./entries-table.component";
 
 import { FreetextFilter } from "./entries-store/filters/freetext-filter";
-import { EntriesAdditionalFiltersStore } from "./entries-additional-filters/entries-additional-filters-store.service";
+import { EntriesRefineFiltersProvider } from "./entries-refine-filters/entries-refine-filters-provider.service";
 
 @Component({
     selector: 'kEntriesList',
@@ -46,7 +46,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         sortDirection : SortDirection.Desc
     };
 
-    constructor(public _entriesStore : EntriesStore, private additionalFilters : EntriesAdditionalFiltersStore, private appLocalization: AppLocalization, private browserService: BrowserService, private router: Router) {
+    constructor(public _entriesStore : EntriesStore, private additionalFilters : EntriesRefineFiltersProvider, private appLocalization: AppLocalization, private browserService: BrowserService, private router: Router) {
     }
 
     removeTag(tag: any){

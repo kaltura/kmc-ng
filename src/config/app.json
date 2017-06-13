@@ -25,10 +25,6 @@
 					{
 						"routePath": "content/entries",
 						"titleToken": "Entries"
-					},
-					{
-						"routePath": "content/playlists",
-						"titleToken": "Playlists"
 					}
 				]
 			}

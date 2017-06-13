@@ -34,7 +34,6 @@
                                    suggestionSelectableField="isSelectable"
                                    [multiple]="true"
                                    [limitToSuggestions]="false"
-                                   placeholder="{{'applications.entries.entryMetadata.searchTagsPH' | translate}}"
                                    [minLength]="3"
                                    [suggestionsProvider]="_tagsProvider"
                                    (completeMethod)="_searchTags($event)">
@@ -51,7 +50,6 @@
                                    suggestionLabelField="name"
                                    suggestionSelectableField="isSelectable"
                                    [multiple]="true"
-                                   placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"
                                    [minLength]="3"
                                    [suggestionsProvider]="_categoriesProvider"
                                    (completeMethod)="_searchCategories($event)">

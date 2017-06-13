@@ -9,7 +9,7 @@ export class OriginalClippedFilter  extends ValueFilter<AcceptedValues>{
 
     constructor(value : AcceptedValues, label : string)
     {
-        super(value, label);
+        super(label,  value, {token: 'applications.content.filters.originalClipped', args: {'0': label}});
     }
 }
 

@@ -22,26 +22,25 @@ export class MetadataProfileFilter  extends ValueFilter<string>{
         return this._fieldPath;
     }
 
-    private _listTypeName : string;
+    private _name : string;
 
-    public get listTypeName() : string{
-        return this._listTypeName;
+    public get name() : string{
+        return this._name;
     }
 
-    constructor(metadataProfileId : number, listTypeName : string,  fieldPath : string[], value : string, caption: string)
+    constructor(name : string,  value : string, metadataProfileId : number, fieldPath : string[], listName : string)
     {
-        super(value, value, {token: 'applications.content.filters.metaData', args: {'0': caption, '1': value}});
-        this._listTypeName = listTypeName;
+        super(value+'', value, {token: 'applications.content.filters.metaData', args: {'0': listName, '1': value}});
+        this._name = name;
         this._metadataProfileId = metadataProfileId;
         this._fieldPath = fieldPath;
     }
 
     public isEqual(otherFilter : FilterItem) : boolean
     {
-        return otherFilter instanceof MetadataProfileFilter
-            && otherFilter._metadataProfileId === this._metadataProfileId
-            && otherFilter._fieldPath === this._fieldPath
-            && this.value === otherFilter.value;
+        return super.isEqual(otherFilter)
+                && otherFilter instanceof MetadataProfileFilter
+                && this.name === otherFilter.name;
     }
 }
 

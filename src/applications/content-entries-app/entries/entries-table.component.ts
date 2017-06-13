@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter,	ViewChild, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
@@ -15,12 +15,18 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
 	public _blockerMessage: AreaBlockerMessage = null;
 
-	private _entries: any[] = [];
+	public _entries: any[] = [];
+	private _deferredEntries : any[];
 	@Input() set entries(data: any[]) {
-		this._entries = data;
 		if (!this._deferredLoading) {
-			// This prevents the screen from hanging during datagrid rendering of the data.
-			this._entriesProvider = this._entries;
+			// the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
+			// (ie when returning from entry page) - we should force detect changes on an empty list
+			this._entries = [];
+			this.cdRef.detectChanges();
+			this._entries = data;
+			this.cdRef.detectChanges();
+		}else {
+			this._deferredEntries = data
 		}
 	}
 
@@ -40,14 +46,13 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 	private entriesStoreStatusSubscription: ISubscription;
 
 	public _deferredLoading = true;
-	public _entriesProvider: any[] = [];
 	public _emptyMessage: string = "";
 
 	public _items: MenuItem[];
 
 	public rowTrackBy: Function = (index: number, item: any) => {return item.id};
 
-	constructor(private appLocalization: AppLocalization, public entriesStore: EntriesStore) {
+	constructor(private appLocalization: AppLocalization, public entriesStore: EntriesStore, private cdRef:ChangeDetectorRef) {
 	}
 
 	_convertSortValue(value: boolean): number {
@@ -134,7 +139,8 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 			// use timeout to allow the DOM to render before setting the data to the datagrid. This prevents the screen from hanging during datagrid rendering of the data.
 			setTimeout(()=> {
 				this._deferredLoading = false;
-				this._entriesProvider = this._entries;
+				this._entries = this._deferredEntries;
+				this._deferredEntries = null;
 			}, 0);
 		}
 	}

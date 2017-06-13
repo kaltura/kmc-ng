@@ -11,31 +11,31 @@
 				<a class="kClearAll" (click)="_clearCreatedComponents()">{{'applications.content.filters.clearDates' | translate}}</a>
 			</div>
 			<span *ngIf="_createdFilterError" class="kError">{{_createdFilterError}}</span>
-			<div *ngFor="let treeSection of _treeSections">
-				<div *ngIf="treeSection.label" class="kFiltersGroupTitle">
-					<span>{{treeSection.label | uppercase}}</span>
+			<div *ngFor="let filtersGroup of _filtersGroupList">
+				<div *ngIf="filtersGroup.label" class="kFiltersGroupTitle">
+					<span>{{filtersGroup.label | uppercase}}</span>
 				</div>
-				<p-tree [value]="treeSection.items"
-						[selectionMode] = "'checkbox'"
-						[propagateSelectionUp] = "true"
-						[propagateSelectionDown] = "true"
-						[(selection)]="treeSection.selections"
-						(onNodeSelect)="_onTreeNodeSelect($event, treeSection)"
-						(onNodeUnselect)="_onTreeNodeUnselect($event, treeSection)"
-						>
-					<ng-template let-node  pTemplate="default">
-						<span  class="kTreeNodeLabel">{{node.label}} <span *ngIf="node.childrenCount" class="kTreeNodeNumChildren">{{ node.childrenCount}}</span></span>
-						<div *ngIf="node.data==='scheduled'" (click)="_blockScheduleToggle($event)">
-							<div>
+				<div *ngFor="let treeInstance of filtersGroup.trees">
+					<p-tree [value]="treeInstance.items"
+							kPrimeTreePropagation
+							[disableTrackByData]="false"
+							[(selection)]="treeInstance.selections"
+							(onNodeSelect)="_onTreeNodeSelect($event, treeInstance)"
+							(onNodeUnselect)="_onTreeNodeUnselect($event, treeInstance)"
+							>
+						<ng-template let-node  pTemplate="default">
+							<span  class="kTreeNodeLabel">{{node.label}}<span *ngIf="node.childrenCount" class="kTreeNodeNumChildren">{{ node.childrenCount}}</span></span>
+							<div *ngIf="node.data==='scheduled'" (click)="_blockScheduleToggle($event)">
 								<div class="kDateRange">
 									<p-calendar class="kDateRangeFirst" #scheduledfrom [(ngModel)]="_scheduledAfter" [showIcon]="true" icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true" [yearNavigator]="true"  yearRange="2005:2030" [readonlyInput]="true" (onSelect)="_onSchedulingChanged(scheduledfrom)"></p-calendar>
 									<p-calendar class="kDateRangeLast kPullLeft80" #scheduledto [(ngModel)]="_scheduledBefore" [showIcon]="true" icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" [readonlyInput]="true" (onSelect)="_onSchedulingChanged(scheduledto)"></p-calendar>
 								</div>
 								<span *ngIf="_scheduledSelected && _scheduledFilterError" class="kError">{{_scheduledFilterError}}</span>
 							</div>
-						</div>
-					</ng-template>
-				</p-tree>
+						</ng-template>
+					</p-tree>
+				</div>
+
 			</div>
 		</div>
 

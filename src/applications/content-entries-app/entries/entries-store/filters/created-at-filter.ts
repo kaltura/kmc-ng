@@ -17,7 +17,7 @@ export class CreatedAtFilter  extends FilterItem{
         return this._createdBefore;
     }
 
-    constructor(label: string, createdAfter? : Date, createdBefore? : Date)
+    constructor(createdAfter? : Date, createdBefore? : Date)
     {
         let tooltip = '';
         if (createdAfter && createdBefore)
@@ -31,15 +31,17 @@ export class CreatedAtFilter  extends FilterItem{
             tooltip =`Until ${moment(createdBefore).format('LL')}`;
         }
 
-        super(label, {token: tooltip});
+        super("Dates", {token: tooltip});
         this._createdAfter = createdAfter;
         this._createdBefore = createdBefore;
     }
 
-
     public isEqual(otherFilter : FilterItem) : boolean
     {
-        return otherFilter instanceof CreatedAtFilter && this._createdAfter === otherFilter._createdAfter && this._createdBefore === otherFilter._createdBefore;
+        return super.isEqual(otherFilter)
+            && otherFilter instanceof CreatedAtFilter
+            && this._createdAfter === otherFilter._createdAfter
+            && this._createdBefore === otherFilter._createdBefore;
     }
 }
 

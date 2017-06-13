@@ -2,9 +2,9 @@ import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
 
 import { EntriesStore } from "../entries-store.service";
 import { ValueFilter } from '../value-filter';
+import { FilterItem } from '../filter-item';
 
 export class TimeSchedulingFilter  extends ValueFilter<string>{
-
 
     private _scheduledBefore : Date;
     private _scheduledAfter : Date;
@@ -17,11 +17,19 @@ export class TimeSchedulingFilter  extends ValueFilter<string>{
         return this._scheduledBefore;
     }
 
-    constructor(value : string, label : string, scheduledTo? : Date, scheduledFrom? : Date)
+    constructor(value : string,label : string,  scheduledTo? : Date, scheduledFrom? : Date)
     {
-        super(value, label, {token: 'applications.content.filters.scheduling', args: {'0': label}});
+        super(label, value, {token: 'applications.content.filters.scheduling', args: {'0': value}});
         this._scheduledAfter = scheduledFrom;
         this._scheduledBefore = scheduledTo;
+    }
+
+    public isEqual(otherFilter : FilterItem) : boolean
+    {
+        return super.isEqual(otherFilter)
+            && otherFilter instanceof TimeSchedulingFilter
+            && this._scheduledBefore === otherFilter._scheduledBefore
+            && this._scheduledAfter === otherFilter._scheduledAfter;
     }
 }
 

@@ -7,7 +7,7 @@ export class FlavorsFilter  extends ValueFilter<string>{
 
     constructor(value : string, label : string)
     {
-        super(value, label, {token: 'applications.content.filters.flavor', args: {'0': label}});
+        super(label, value, {token: 'applications.content.filters.flavor', args: {'0': label}});
     }
 }
 
