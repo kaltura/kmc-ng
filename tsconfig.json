@@ -1,45 +1,20 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl" : ".",
-    "target": "es5",
-    "module": "commonjs",
+    "outDir": "./dist/out-tsc",
+    "baseUrl": "src",
+    "sourceMap": true,
+    "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "noEmit": true,
-    "noEmitHelpers": true,
-    "importHelpers": false,
-    "strictNullChecks": false,
-    "skipLibCheck" : true,
-    "suppressImplicitAnyIndexErrors" : true,
-    "noImplicitAny" : false,
+    "target": "es5",
     "typeRoots": [
       "node_modules/@types"
     ],
-    "paths": {
-      "*": ["src/shared/*"]
-    }
-  },
-  "lib": [ "es6" ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "src/**/*.spec.ts",
-    "src/**/*.e2e.ts"
-  ],
-  "awesomeTypescriptLoaderOptions": {
-    "forkChecker": true,
-    "useWebpackText": true
-  },
-  "angularCompilerOptions": {
-    "genDir": "./compiled",
-    "skipMetadataEmit": true
-  },
-  "compileOnSave": false,
-  "buildOnSave": false,
-  "atom": {
-    "rewriteTsconfig": false
+    "lib": [
+      "es2016",
+      "dom"
+    ]
   }
 }

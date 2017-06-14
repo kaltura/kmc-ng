@@ -7,7 +7,7 @@ import { BrowserService } from 'kmc-shell/providers/browser.service';
  * Top Level Component
  */
 @Component({
-  selector: 'kKMCRoot',
+  selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers : [ConfirmationService]
