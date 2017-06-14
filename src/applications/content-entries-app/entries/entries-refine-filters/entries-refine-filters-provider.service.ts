@@ -9,18 +9,17 @@ import { PrimeTreeNode } from '@kaltura-ng2/kaltura-primeng-ui';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import {  KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-typescript-client';
-import { DistributionProfileListAction, AccessControlListAction } from 'kaltura-typescript-client/types/all';
+import { DistributionProfileListAction } from 'kaltura-typescript-client/types/DistributionProfileListAction';
+import { AccessControlListAction } from 'kaltura-typescript-client/types/AccessControlListAction';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataItemTypes, FlavoursStore } from '@kaltura-ng2/kaltura-common';
 
-import {
-    KalturaAccessControlFilter,
-    KalturaAccessControlProfile,
-    KalturaDetachedResponseProfile,
-    KalturaDistributionProfile,
-    KalturaFilterPager,
-    KalturaFlavorParams,
-    KalturaResponseProfileType
-} from 'kaltura-typescript-client/types/all'
+import { KalturaAccessControlFilter } from 'kaltura-typescript-client/types/KalturaAccessControlFilter';
+import { KalturaAccessControlProfile } from 'kaltura-typescript-client/types/KalturaAccessControlProfile';
+import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
+import { KalturaDistributionProfile } from 'kaltura-typescript-client/types/KalturaDistributionProfile';
+import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
+import { KalturaFlavorParams } from 'kaltura-typescript-client/types/KalturaFlavorParams';
+import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
 
 import { DefaultFiltersList } from './default-filters-list';
 

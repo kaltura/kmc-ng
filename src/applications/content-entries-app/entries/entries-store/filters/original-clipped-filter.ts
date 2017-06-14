@@ -1,4 +1,4 @@
-import { KalturaNullableBoolean } from 'kaltura-typescript-client/types/all';
+import { KalturaNullableBoolean } from 'kaltura-typescript-client/types/KalturaNullableBoolean';
 
 import { EntriesStore } from "../entries-store.service";
 import { ValueFilter } from '../value-filter';

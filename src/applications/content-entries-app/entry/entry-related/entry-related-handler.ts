@@ -6,8 +6,16 @@ import { Observable } from 'rxjs/Observable';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
-import { KalturaAssetFilter, KalturaAttachmentAsset, KalturaAttachmentType, AttachmentAssetListAction, KalturaUploadedFileTokenResource, AttachmentAssetSetContentAction,
-	AttachmentAssetDeleteAction, AttachmentAssetUpdateAction, AttachmentAssetAddAction, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
+import { KalturaAssetFilter } from 'kaltura-typescript-client/types/KalturaAssetFilter';
+import { KalturaAttachmentAsset } from 'kaltura-typescript-client/types/KalturaAttachmentAsset';
+import { KalturaAttachmentType } from 'kaltura-typescript-client/types/KalturaAttachmentType';
+import { AttachmentAssetListAction } from 'kaltura-typescript-client/types/AttachmentAssetListAction';
+import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
+import { AttachmentAssetSetContentAction } from 'kaltura-typescript-client/types/AttachmentAssetSetContentAction';
+import { AttachmentAssetDeleteAction } from 'kaltura-typescript-client/types/AttachmentAssetDeleteAction';
+import { AttachmentAssetUpdateAction } from 'kaltura-typescript-client/types/AttachmentAssetUpdateAction';
+import { AttachmentAssetAddAction } from 'kaltura-typescript-client/types/AttachmentAssetAddAction';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { BrowserService } from 'kmc-shell';
 
 import { EntryFormWidget } from '../entry-form-widget';

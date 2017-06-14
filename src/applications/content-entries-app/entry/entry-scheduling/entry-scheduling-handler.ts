@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';

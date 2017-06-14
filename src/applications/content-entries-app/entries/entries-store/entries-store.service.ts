@@ -10,18 +10,16 @@ import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
-import {
-    KalturaBaseEntryListResponse,
-    KalturaDetachedResponseProfile,
-    KalturaFilterPager,
-    KalturaMediaEntryFilter,
-    KalturaMediaEntry,
-    KalturaMetadataSearchItem,
-    KalturaResponseProfileType,
-    KalturaSearchOperator,
-    KalturaSearchOperatorType,
-    BaseEntryListAction
-} from 'kaltura-typescript-client/types/all'
+import { KalturaBaseEntryListResponse } from 'kaltura-typescript-client/types/KalturaBaseEntryListResponse';
+import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
+import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
+import { KalturaMediaEntryFilter } from 'kaltura-typescript-client/types/KalturaMediaEntryFilter';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaMetadataSearchItem } from 'kaltura-typescript-client/types/KalturaMetadataSearchItem';
+import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
+import { KalturaSearchOperator } from 'kaltura-typescript-client/types/KalturaSearchOperator';
+import { KalturaSearchOperatorType } from 'kaltura-typescript-client/types/KalturaSearchOperatorType';
+import { BaseEntryListAction } from 'kaltura-typescript-client/types/BaseEntryListAction';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';

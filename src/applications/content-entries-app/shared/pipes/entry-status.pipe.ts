@@ -1,6 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { KalturaEntryStatus, KalturaEntryModerationStatus, KalturaMediaType, KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
+import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
+import { KalturaEntryModerationStatus } from 'kaltura-typescript-client/types/KalturaEntryModerationStatus';
+import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 
 @Pipe({name: 'entryStatus'})
 export class EntryStatusPipe implements PipeTransform {
