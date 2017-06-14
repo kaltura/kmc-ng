@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/all';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { FormWidget } from '@kaltura-ng2/kaltura-ui';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng2/kaltura-ui';

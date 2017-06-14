@@ -5,8 +5,19 @@ import { SelectItem } from 'primeng/primeng';
 
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { EntryWidgetKeys } from '../entry-widget-keys';
-import { KalturaMediaEntry, KalturaAccessControl, KalturaSiteRestriction, KalturaSiteRestrictionType, KalturaCountryRestriction, KalturaCountryRestrictionType, KalturaIpAddressRestriction,
-	KalturaIpAddressRestrictionType, KalturaLimitFlavorsRestriction, KalturaLimitFlavorsRestrictionType, KalturaSessionRestriction, KalturaPreviewRestriction, KalturaFlavorParams } from 'kaltura-typescript-client/types/all'
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaAccessControl } from 'kaltura-typescript-client/types/KalturaAccessControl';
+import { KalturaSiteRestriction } from 'kaltura-typescript-client/types/KalturaSiteRestriction';
+import { KalturaSiteRestrictionType } from 'kaltura-typescript-client/types/KalturaSiteRestrictionType';
+import { KalturaCountryRestriction } from 'kaltura-typescript-client/types/KalturaCountryRestriction';
+import { KalturaCountryRestrictionType } from 'kaltura-typescript-client/types/KalturaCountryRestrictionType';
+import { KalturaIpAddressRestriction } from 'kaltura-typescript-client/types/KalturaIpAddressRestriction';
+import { KalturaIpAddressRestrictionType } from 'kaltura-typescript-client/types/KalturaIpAddressRestrictionType';
+import { KalturaLimitFlavorsRestriction } from 'kaltura-typescript-client/types/KalturaLimitFlavorsRestriction';
+import { KalturaLimitFlavorsRestrictionType } from 'kaltura-typescript-client/types/KalturaLimitFlavorsRestrictionType';
+import { KalturaSessionRestriction } from 'kaltura-typescript-client/types/KalturaSessionRestriction';
+import { KalturaPreviewRestriction } from 'kaltura-typescript-client/types/KalturaPreviewRestriction';
+import { KalturaFlavorParams } from 'kaltura-typescript-client/types/KalturaFlavorParams';
 import { AccessControlProfileStore, FlavoursStore, AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
 
 import 'rxjs/add/observable/forkJoin';

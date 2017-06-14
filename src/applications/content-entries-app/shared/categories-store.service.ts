@@ -5,8 +5,13 @@ import 'rxjs/add/operator/multicast';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 
 
-import { CategoryListAction } from 'kaltura-typescript-client/types/all';
-import { KalturaCategoryFilter,KalturaFilterPager,  KalturaCategory, KalturaDetachedResponseProfile, KalturaResponseProfileType, KalturaCategoryListResponse } from 'kaltura-typescript-client/types/all'
+import { CategoryListAction } from 'kaltura-typescript-client/types/CategoryListAction';
+import { KalturaCategoryFilter } from 'kaltura-typescript-client/types/KalturaCategoryFilter';
+import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
+import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
+import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
+import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
+import { KalturaCategoryListResponse } from 'kaltura-typescript-client/types/KalturaCategoryListResponse';
 
 export interface CategoryData
 {

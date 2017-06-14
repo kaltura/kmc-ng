@@ -4,7 +4,9 @@ import { ConfirmationService } from 'primeng/primeng';
 
 import { ISubscription } from 'rxjs/Subscription';
 
-import { KalturaCaptionAsset, KalturaLanguage, KalturaCaptionType } from 'kaltura-typescript-client/types/all';
+import { KalturaCaptionAsset } from 'kaltura-typescript-client/types/KalturaCaptionAsset';
+import { KalturaLanguage } from 'kaltura-typescript-client/types/KalturaLanguage';
+import { KalturaCaptionType } from 'kaltura-typescript-client/types/KalturaCaptionType';
 import { AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
 import { FileDialogComponent } from '@kaltura-ng2/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';

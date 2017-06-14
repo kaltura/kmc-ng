@@ -128,9 +128,21 @@ export class EntriesRefineFilters implements OnInit, AfterViewInit, OnDestroy{
                 if (filter.removedFilters) {
                     filter.removedFilters.forEach(filter =>
                     {
+
                         if (filter instanceof ValueFilter)
                         {
-                            this._onFilterRemoved(filter);
+                            let shouldRemoveFilter = true;
+
+                            if (filter instanceof TimeSchedulingFilter && filter.value === 'scheduled')
+                            {
+                                const scheduledFilterItem =this._getScheduledFilter();
+
+                                shouldRemoveFilter = !scheduledFilterItem;
+                            }
+
+                            if (shouldRemoveFilter) {
+                                this._onFilterRemoved(filter);
+                            }
                         }
                     });
                 }

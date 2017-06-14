@@ -53,5 +53,7 @@
 </kPopupWidget>
 
 <kPopupWidget #refinePopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="refineBtn" [targetOffset]="{'x':-200, 'y': -20}">
-	<k-entries-refine-filters [parentPopupWidget]="refinePopup" ></k-entries-refine-filters>
+    <ng-template>
+	    <k-entries-refine-filters [parentPopupWidget]="refinePopup" ></k-entries-refine-filters>
+    </ng-template>
 </kPopupWidget>

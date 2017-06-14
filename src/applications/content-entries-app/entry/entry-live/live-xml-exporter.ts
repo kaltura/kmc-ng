@@ -1,4 +1,7 @@
-import { KalturaLiveStreamEntry, KalturaSourceType, KalturaLiveStreamBitrate } from 'kaltura-typescript-client/types/all';
+import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamEntry';
+import { KalturaSourceType } from 'kaltura-typescript-client/types/KalturaSourceType';
+import { KalturaLiveStreamBitrate } from 'kaltura-typescript-client/types/KalturaLiveStreamBitrate';
+
 export class LiveXMLExporter
 {
 	static exportXML(entry: KalturaLiveStreamEntry, liveType: string, customBitrates: any[]) {
