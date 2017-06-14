@@ -35,7 +35,12 @@ import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
 
 export interface EntryCategoryItem
-{ id : number, fullIdPath : (string | number)[], name : string }
+{
+    id : number,
+    fullIdPath : number[],
+    name : string,
+    fullNamePath : string[],
+}
 
 @Injectable()
 export class EntryMetadataHandler extends EntryFormWidget
@@ -240,7 +245,7 @@ export class EntryMetadataHandler extends EntryFormWidget
             .do(
                 categories =>
                 {
-                    this._entryCategories = categories.items.map(category => ({ id : category.id, name : category.name, fullIdPath : category.fullIdPath}));
+                    this._entryCategories = categories.items;
                 }
             )
             .map(response => ({failed : false}))
