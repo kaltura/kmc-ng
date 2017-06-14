@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 
@@ -6,8 +6,6 @@ import {
 	AppConfig,
 	AppLocalization
 } from '@kaltura-ng2/kaltura-common';
-
-import { PlaylistsStore } from "../playlists-store/playlists-store.service";
 
 @Component({
     selector: 'kPlaylistsAdditionalFilter',
@@ -18,6 +16,7 @@ export class PlaylistsAdditionalFiltersComponent{
 	@Input() parentPopupWidget: PopupWidgetComponent;
 	public _showLoader = false;
 	public _blockerMessage : AreaBlockerMessage = null;
+	@Output() createdChanged = new EventEmitter<any>();
 	public _createdAfter: Date;
 	public _createdBefore: Date;
 	public _createdFilterError: string = null;
@@ -36,21 +35,34 @@ export class PlaylistsAdditionalFiltersComponent{
 
 			if (!isValid)
 			{
-
+				/* ToDo need to figure out how to get current date and reset it by timeout */
 				this._createdFilterError = this.appLocalization.get('applications.content.playlistsDetails.errors.schedulingError');
 				return;
 			}
+		}
+		if (this._createdAfter || this._createdBefore) {
+			this._updateDates();
 		}
 	}
 
 	public _clearCreatedComponents() : void {
 		this._createdAfter = null;
 		this._createdBefore = null;
+		this._createdFilterError = null;
+		this._updateDates();
 	}
 
 	public _close(){
 		if (this.parentPopupWidget){
 			this.parentPopupWidget.close();
 		}
+	}
+
+	// emitting the createdAfter and createdBefore values
+	public _updateDates() : void {
+		this.createdChanged.emit({
+			'createdAfter': this._createdAfter,
+			'createdBefore': this._createdBefore
+		});
 	}
 }

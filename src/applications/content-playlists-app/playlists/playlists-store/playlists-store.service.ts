@@ -55,7 +55,7 @@ export class PlaylistsStore implements OnDestroy {
 
 	public playlists$ = this._playlistsSource.asObservable();
 	public state$ = this._stateSource.asObservable();
-	public query$ = this._querySource.asObservable();
+	public query$ = this._querySource.monitor('queryData update');
 
 	constructor(
 		private kalturaServerClient: KalturaClient,
@@ -84,6 +84,10 @@ export class PlaylistsStore implements OnDestroy {
 		this._stateSource.complete();
 		this._querySource.complete();
 		this._playlistsSource.complete();
+
+		if(this.requestSubscription) {
+			this.requestSubscription.unsubscribe();
+		}
 	}
 
 	public reload(force : boolean) : void;
@@ -107,6 +111,8 @@ export class PlaylistsStore implements OnDestroy {
 			this.requestSubscription.unsubscribe();
 			this.requestSubscription = null;
 		}
+
+		this._stateSource.next({loading: true, errorMessage: null});
 
 		// execute the request
 		this.requestSubscription = this.buildQueryRequest(this._querySource.getValue())
@@ -146,7 +152,7 @@ export class PlaylistsStore implements OnDestroy {
 
 			if (queryData.createdAfter)
 			{
-				filter.createdAtGreaterThanOrEqual = KalturaUtils.getEndDateValue(queryData.createdAfter);
+				filter.createdAtGreaterThanOrEqual = KalturaUtils.getStartDateValue(queryData.createdAfter);
 			}
 
 			let responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({

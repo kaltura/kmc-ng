@@ -11,6 +11,7 @@ import {
 	SortDirection
 } from './playlists-store/playlists-store.service';
 import { PlaylistsTableComponent } from "./playlists-table.component";
+import {PlaylistsAdditionalFiltersComponent} from "./playlists-additional-filters/playlists-additional-filters.component";
 
 
 
@@ -49,7 +50,26 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 	}
 
-	onFreetextChanged() : void{
+	onFreetextChanged() : void {
+		this._playlistsStore.reload({
+			freeText: this._filter.freetextSearch,
+			pageIndex: 1
+		});
+
+		this.dataTable.scrollToTop();
+	}
+
+	onSortChanged(event) : void {
+		this._filter.sortBy = event.field;
+		this._filter.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
+
+		this._playlistsStore.reload({
+			sortBy: this._filter.sortBy,
+			sortDirection: this._filter.sortDirection,
+			pageIndex: 1
+		});
+
+		this.dataTable.scrollToTop();
 	}
 
 	onPaginationChanged(state : any) : void {
@@ -63,6 +83,18 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 				pageSize: this._filter.pageSize
 			});
 		}
+
+		this.dataTable.scrollToTop();
+	}
+
+	onCreatedChanged(dates) : void {
+		this._playlistsStore.reload({
+			createdBefore: dates.createdBefore,
+			createdAfter: dates.createdAfter,
+			pageIndex: 1
+		});
+
+		this.dataTable.scrollToTop();
 	}
 
 	ngOnInit() {

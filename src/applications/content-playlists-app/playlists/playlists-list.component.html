@@ -44,6 +44,7 @@
 		<kPlaylistsTable
 			class="kPlaylistsTable"
 			[playlists]="(_playlistsStore.playlists$ | async)?.items"
+			(sortChanged)="onSortChanged($event)"
 			[filter]="_filter"
 			[(selectedPlaylists)]="_selectedPlaylists"></kPlaylistsTable>
 
@@ -63,9 +64,10 @@
 	#refinePopup
 	[appendTo]="playlistsTableHolder"
 	[popupWidth]="350"
-	[popupHeight]="155"
 	[closeBtn]="false"
 	[targetRef]="refineBtn"
 	[targetOffset]="{'x':-294, 'y': -20}">
-	<kPlaylistsAdditionalFilter [parentPopupWidget]="refinePopup"></kPlaylistsAdditionalFilter>
+	<kPlaylistsAdditionalFilter
+		[parentPopupWidget]="refinePopup"
+		(createdChanged)="onCreatedChanged($event)"></kPlaylistsAdditionalFilter>
 </kPopupWidget>
