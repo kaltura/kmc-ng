@@ -14,11 +14,11 @@ import {
 })
 export class PlaylistsAdditionalFiltersComponent{
 	@Input() parentPopupWidget: PopupWidgetComponent;
+	@Input() _createdAfter: Date;
+	@Input() _createdBefore: Date;
 	public _showLoader = false;
 	public _blockerMessage : AreaBlockerMessage = null;
 	@Output() createdChanged = new EventEmitter<any>();
-	public _createdAfter: Date;
-	public _createdBefore: Date;
 	public _createdFilterError: string = null;
 	public _createdAtDateRange: string = this._appConfig.get('modules.contentPlaylists.createdAtDateRange');
 

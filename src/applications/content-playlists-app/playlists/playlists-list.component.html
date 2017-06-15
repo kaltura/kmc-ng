@@ -29,10 +29,9 @@
 		</div>
 		<kTags
 			[title]="'applications.content.filters.activeFilters' | translate"
-			[data]="(this._playlistsStore.activeFilters$ | async)?.filters"
+			[data]="activeFilters"
 			[labelField]="'label'"
 			[tooltipField]="'tooltip'"
-			(onTagRemove)="removeTag($event)"
 			(onRemoveAll)="removeAllTags()">
 			<ng-template let-item="item">
 				<div class="kTagContent" [kTooltip]="item.tooltip?.token | translate : item.tooltip?.args">
@@ -69,5 +68,7 @@
 	[targetOffset]="{'x':-294, 'y': -20}">
 	<kPlaylistsAdditionalFilter
 		[parentPopupWidget]="refinePopup"
-		(createdChanged)="onCreatedChanged($event)"></kPlaylistsAdditionalFilter>
+		(createdChanged)="onCreatedChanged($event)"
+		[_createdAfter]="_filter.createdAfter"
+		[_createdBefore]="_filter.createdBefore"></kPlaylistsAdditionalFilter>
 </kPopupWidget>
