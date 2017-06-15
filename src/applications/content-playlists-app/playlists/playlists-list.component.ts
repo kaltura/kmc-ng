@@ -11,9 +11,6 @@ import {
 	SortDirection
 } from './playlists-store/playlists-store.service';
 import { PlaylistsTableComponent } from "./playlists-table.component";
-import {PlaylistsAdditionalFiltersComponent} from "./playlists-additional-filters/playlists-additional-filters.component";
-
-
 
 @Component({
     selector: 'kPlaylistsList',
