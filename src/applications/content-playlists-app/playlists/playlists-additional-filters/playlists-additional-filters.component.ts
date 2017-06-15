@@ -35,7 +35,6 @@ export class PlaylistsAdditionalFiltersComponent{
 
 			if (!isValid)
 			{
-				/* ToDo need to figure out how to get current date and reset it by timeout */
 				this._createdFilterError = this.appLocalization.get('applications.content.playlistsDetails.errors.schedulingError');
 				return;
 			}
