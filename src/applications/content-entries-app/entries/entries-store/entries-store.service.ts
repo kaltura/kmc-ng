@@ -11,6 +11,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
 import { KalturaBaseEntryListResponse } from 'kaltura-typescript-client/types/KalturaBaseEntryListResponse';
+import { BaseEntryDeleteAction } from 'kaltura-typescript-client/types/BaseEntryDeleteAction';
 import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
 import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
 import { KalturaMediaEntryFilter } from 'kaltura-typescript-client/types/KalturaMediaEntryFilter';
@@ -31,6 +32,7 @@ import { BrowserService } from "kmc-shell/providers/browser.service";
 export type UpdateStatus = {
     loading : boolean;
     errorMessage : string;
+	origin: 'reload' | 'delete';
 };
 
 export interface Entries{
@@ -80,7 +82,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
     private _activeFilters  = new BehaviorSubject<{ filters : FilterItem[] }>({ filters : []});
     private _entries  = new BehaviorSubject({items: [], totalCount: 0});
-    private _state = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null});
+    private _state = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null, origin: 'reload'});
 
 
     private _queryData : QueryData = {
@@ -92,6 +94,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
     };
     private _querySource = new Subject<QueryRequestArgs>();
 
+	private selectedEntryId: string = null;
     private _activeFiltersMap : {[key : string] : FilterItem[]} = {};
     private _metadataProfilesLoaded = false;
     private executeQueryState  : { subscription : ISubscription, deferredRemovedFilters : any[], deferredAddedFilters : any[]} = { subscription : null, deferredAddedFilters : [], deferredRemovedFilters : []};
@@ -167,7 +170,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             if (typeof query === 'object') {
                 Object.assign(this._queryData, query);
             }
-
+			this.selectedEntryId = null;
             this._executeQuery();
         }
     }
@@ -289,7 +292,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         // execute the request
         this.executeQueryState.subscription = Observable.create(observer => {
 
-            this._state.next({loading: true, errorMessage: null});
+            this._state.next({loading: true, errorMessage: null, origin: 'reload'});
 
             let requestSubscription = this._getMetadataProfiles()
                 .flatMap(
@@ -327,7 +330,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             response => {
                 this.executeQueryState.subscription = null;
 
-                this._state.next({loading: false, errorMessage: null});
+                this._state.next({loading: false, errorMessage: null, origin: 'reload'});
 
                 this._entries.next({
                     items: <any[]>response.objects,
@@ -336,7 +339,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             },
             error => {
                 this.executeQueryState.subscription = null;
-                this._state.next({loading: false, errorMessage: (<Error>error).message || <string>error});
+                this._state.next({loading: false, errorMessage: (<Error>error).message || <string>error, origin: 'reload'});
             });
 
     }
@@ -448,5 +451,31 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             return Observable.throw(err);
         }
 
+    }
+
+    public retry():void{
+	    const origin = this._state.getValue().origin;
+	    if (origin === "reload"){
+		    this.reload(true);
+	    }
+	    if (origin === "delete" && this.selectedEntryId){
+		    this.deleteEntry(this.selectedEntryId);
+	    }
+    }
+
+    public deleteEntry(entryId: string): void{
+	    this.selectedEntryId = entryId;
+	    if (entryId && entryId.length) {
+		    this._state.next({loading: true, errorMessage: null, origin: 'delete'});
+		    this.kalturaServerClient.request(new BaseEntryDeleteAction({entryId: entryId})).subscribe(
+			    result => {
+				    debugger;
+				    this._state.next({loading: false, errorMessage: null, origin: 'delete'});
+			    },
+			    error =>{
+				    this._state.next({loading: true, errorMessage: error.message, origin: 'delete'});
+			    }
+		    );
+	    }
     }
 }

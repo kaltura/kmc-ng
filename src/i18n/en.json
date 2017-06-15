@@ -50,7 +50,11 @@
                 "searchEntries": "Search Entries",
                 "filterCategories": "Filter Categories",
                 "refine": "Refine",
-                "refresh": "Refresh"
+                "refresh": "Refresh",
+				"deleteEntry": "Delete Entry",
+				"confirmDelete": "Are you sure you want to delete the selected entry?",
+				"entryId": "Entry ID: {{0}}",
+				"deleteNote": "Please note: the entry will be permanently deleted from your account."
             },
             "filters":{
                 "activeFilters": "Active Filters:",

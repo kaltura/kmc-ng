@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { BrowserService } from '../../../shared/kmc-shell/providers/browser.service';
 
-import { BrowserService } from "kmc-shell/providers/browser.service";
 import { EntriesStore, SortDirection } from './entries-store/entries-store.service';
 import { EntriesTableComponent } from "./entries-table.component";
 
@@ -46,7 +46,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         sortDirection : SortDirection.Desc
     };
 
-    constructor(public _entriesStore : EntriesStore, private additionalFilters : EntriesRefineFiltersProvider, private appLocalization: AppLocalization, private browserService: BrowserService, private router: Router) {
+    constructor(public _entriesStore : EntriesStore, private additionalFilters : EntriesRefineFiltersProvider, private appLocalization: AppLocalization, private router: Router, private _browserService : BrowserService,) {
     }
 
     removeTag(tag: any){
@@ -145,10 +145,24 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
 
     onActionSelected(event){
-    	if (event.action === "view"){
-		    this.router.navigate(['/content/entries/entry', event.entryID]);
-	    }else {
-		    alert("Selected Action: " + event.action + "\nEntry ID: " + event.entryID);
+	    switch (event.action){
+		    case "view":
+			    this.router.navigate(['/content/entries/entry', event.entryID]);
+			    break;
+		    case "delete":
+			    this._browserService.confirm(
+				    {
+					    header: this.appLocalization.get('applications.content.entries.deleteEntry'),
+					    message: `${this.appLocalization.get('applications.content.entries.confirmDelete')}<br/>${this.appLocalization.get('applications.content.entries.entryId', { 0: event.entryID })}<br/>${this.appLocalization.get('applications.content.entries.deleteNote')}`,
+					    accept: () => {
+						    this._entriesStore.deleteEntry(event.entryID+"a");
+					    }
+				    }
+			    )
+			    break;
+		    default:
+			    alert("Selected Action: " + event.action + "\nEntry ID: " + event.entryID);
+			    break;
 	    }
     }
 
