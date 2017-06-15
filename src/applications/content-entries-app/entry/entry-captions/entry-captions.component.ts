@@ -3,13 +3,14 @@ import { Component, ElementRef, AfterViewInit,OnInit, OnDestroy, ViewChild } fro
 import { Menu, MenuItem } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { AppLocalization, AppAuthentication, AppConfig } from '@kaltura-ng2/kaltura-common';
+import { AppLocalization, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { BrowserService } from 'kmc-shell';
 import { KalturaCaptionAssetStatus } from 'kaltura-typescript-client/types/KalturaCaptionAssetStatus'
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
 import { EntryCaptionsHandler } from './entry-captions-handler';
 import { EntryFormManager } from '../entry-form-manager';
+import { environment } from 'kmc-app';
 
 @Component({
     selector: 'kEntryCaptions',
@@ -27,7 +28,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 	public _handler : EntryCaptionsHandler;
 
 	private _popupStateChangeSubscribe: ISubscription;
-	constructor(private _entryFormManager : EntryFormManager, private _appAuthentication: AppAuthentication, private _appConfig:AppConfig, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+	constructor(private _entryFormManager : EntryFormManager, private _appAuthentication: AppAuthentication, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
     }
 
 	ngOnInit() {
@@ -91,7 +92,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 				this._downloadFile();
 				break;
 			case "preview":
-				const previewUrl = this._appConfig.get("core.kaltura.apiUrl") + "/service/caption_captionasset/action/serve/captionAssetId/" + this._handler.currentCaption.id +"/ks/" + this._appAuthentication.appUser.ks;
+				const previewUrl = environment.core.kaltura.apiUrl + "/service/caption_captionasset/action/serve/captionAssetId/" + this._handler.currentCaption.id +"/ks/" + this._appAuthentication.appUser.ks;
 				this._browserService.openLink(previewUrl);
 				break;
 		}
@@ -99,7 +100,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 
 	private _downloadFile(): void {
 
-		const baseUrl = this._appConfig.get('core.kaltura.cdnUrl');
+		const baseUrl = environment.core.kaltura.cdnUrl;
 		const protocol = baseUrl.split(":")[0];
 		const partnerId = this._appAuthentication.appUser.partnerId;
 		const entryId = this._handler.data.id;

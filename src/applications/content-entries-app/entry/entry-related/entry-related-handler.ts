@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
+import { AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { KalturaAssetFilter } from 'kaltura-typescript-client/types/KalturaAssetFilter';
 import { KalturaAttachmentAsset } from 'kaltura-typescript-client/types/KalturaAttachmentAsset';
 import { KalturaAttachmentType } from 'kaltura-typescript-client/types/KalturaAttachmentType';
@@ -25,6 +25,7 @@ import { UploadManagement, FileChanges } from '@kaltura-ng2/kaltura-common/uploa
 import { FriendlyHashId } from '@kaltura-ng2/kaltura-common/friendly-hash-id';
 
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators'
+import { environment } from 'kmc-app';
 
 @Injectable()
 export class EntryRelatedHandler extends EntryFormWidget
@@ -42,7 +43,6 @@ export class EntryRelatedHandler extends EntryFormWidget
 	private _entryId: string = '';
 
 	constructor(
-				private _appConfig: AppConfig,
 				private _kalturaServerClient: KalturaClient,
 	            private _browserService: BrowserService,
 				private _appAuthentication: AppAuthentication,
@@ -244,7 +244,7 @@ export class EntryRelatedHandler extends EntryFormWidget
 
 	private _openFile(fileId: string, operation: string): void {
 
-		const baseUrl = this._appConfig.get('core.kaltura.cdnUrl');
+		const baseUrl = environment.core.kaltura.cdnUrl;
 		const protocol = baseUrl.split(":")[0];
 		const partnerId = this._appAuthentication.appUser.partnerId;
 		const entryId = this.data.id;

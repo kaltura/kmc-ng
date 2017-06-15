@@ -1,7 +1,7 @@
 import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ConfirmationService } from 'primeng/primeng';
 
-import { AppLocalization, AppAuthentication, AppConfig } from '@kaltura-ng2/kaltura-common';
+import { AppLocalization, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { KalturaUtils } from '@kaltura-ng2/kaltura-common/utils/kaltura-utils';
 import { BrowserService } from 'kmc-shell';
 
@@ -24,7 +24,7 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 	private currentThumb: ThumbnailRow;
 
 	constructor(private _entryFormManager : EntryFormManager, private _appLocalization: AppLocalization, private _browserService: BrowserService,
-                private _appAuthentication: AppAuthentication, private _appConfig:AppConfig, private _confirmationService: ConfirmationService) {
+                private _appAuthentication: AppAuthentication, private _confirmationService: ConfirmationService) {
     }
 
     ngOnInit() {

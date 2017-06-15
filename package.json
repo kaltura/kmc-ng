@@ -48,6 +48,7 @@
     "intl": "^1.2.5",
     "jquery": "^3.1.0",
     "kaltura-typescript-client": "^2.1.0",
+    "mc-theme": "file:/Users/eransakal/dev/github/kaltura/kaltura-themes",
     "moment": "^2.14.1",
     "ng2-page-scroll": "^4.0.0-beta.7",
     "ng2-translate": "^5.0.0",

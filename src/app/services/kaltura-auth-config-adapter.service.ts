@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BootstrapAdapter, BootstrapAdapterType, AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
+import { BootstrapAdapter, BootstrapAdapterType, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { AppDefaultConfig } from "./app-default-config.service";
+import { environment } from 'kmc-app';
 
 
 
@@ -8,11 +9,11 @@ import { AppDefaultConfig } from "./app-default-config.service";
 export class KalturaAuthConfigAdapter implements BootstrapAdapter
 {
     type = BootstrapAdapterType.preAuth;
-    constructor(private appConfig: AppConfig, private appDefaultConfig: AppDefaultConfig, private appAuthentication: AppAuthentication){
+    constructor(private appDefaultConfig: AppDefaultConfig, private appAuthentication: AppAuthentication){
 
     }
     execute() : void {
-      const defaultRoute:any = this.appConfig.get("shell.defaultRoute");
+      const defaultRoute:any = environment.shell.defaultRoute;
       if (defaultRoute) {
         this.appAuthentication.defaultRoutes.defaultRoute = defaultRoute;
       }else{

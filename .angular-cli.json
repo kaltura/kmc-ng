@@ -9,6 +9,7 @@
       "outDir": "dist",
       "assets": [
         "assets",
+        "i18n",
         "favicon.ico"
       ],
       "index": "index.html",
@@ -19,7 +20,7 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "kmc",
       "styles": [
-        "./shared/kmcng-theme/scss/index.scss"
+        "../node_modules/mc-theme/src/default/scss/index.scss"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

@@ -3,7 +3,7 @@ import { EntryFormWidget } from '../entry-form-widget';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { Observable } from 'rxjs/Observable';
-import { AppLocalization, AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
+import { AppLocalization, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { BrowserService } from 'kmc-shell';
@@ -25,6 +25,7 @@ import { KalturaContentResource } from 'kaltura-typescript-client/types/KalturaC
 import { UploadManagement } from '@kaltura-ng2/kaltura-common/upload-management';
 import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
 import { Message, ConfirmationService } from 'primeng/primeng';
+import { environment } from 'kmc-app';
 
 export interface Flavor extends KalturaFlavorAssetWithParams{
 	name: string,
@@ -59,7 +60,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 	public _msgs: Message[] = [];
 
     constructor( private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _confirmationService: ConfirmationService,
-	    private _appConfig: AppConfig, private _appAuthentication: AppAuthentication, private _browserService: BrowserService, private _uploadManagement : UploadManagement)
+	     private _appAuthentication: AppAuthentication, private _browserService: BrowserService, private _uploadManagement : UploadManagement)
     {
         super(EntryWidgetKeys.Flavours);
     }
@@ -273,7 +274,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
     }
 
     public downloadFlavor (flavor: Flavor): void{
-	    const baseUrl = this._appConfig.get('core.kaltura.cdnUrl');
+	    const baseUrl = environment.core.kaltura.cdnUrl;
 	    const protocol = baseUrl.split(":")[0];
 	    const partnerId = this._appAuthentication.appUser.partnerId;
 	    let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + this.data.id + '/flavorId/' + flavor.id + '/format/download/protocol/' + protocol;
