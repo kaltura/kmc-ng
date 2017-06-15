@@ -12,6 +12,7 @@
 					[showIcon]="true"
 					[monthNavigator]="true"
 					[yearNavigator]="true"
+					[maxDate]="_createdBefore"
 					yearRange="{{_createdAtDateRange}}"
 					icon="kIconcalendar"
 					(onSelect)="_onCreatedChanged()"></p-calendar>
@@ -22,6 +23,7 @@
 					[showIcon]="true"
 					[monthNavigator]="true"
 					[yearNavigator]="true"
+					[minDate]="_createdAfter"
 					yearRange="{{_createdAtDateRange}}"
 					icon="kIconcalendar"
 					(onSelect)="_onCreatedChanged()"></p-calendar>
