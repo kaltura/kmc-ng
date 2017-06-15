@@ -38,7 +38,7 @@ export class EntryPreviewHandler extends EntryFormWidget
 	    this._landingPage = null;
 	    this.iframeSrc = null;
 
-        const landingPage = this.appAuthentication.appUser.partnerInfo.landingPage;
+        let landingPage = this.appAuthentication.appUser.partnerInfo.landingPage;
         if (landingPage) {
 	        landingPage = landingPage.replace("{entryId}", dataId);
         }
