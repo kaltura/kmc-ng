@@ -61,7 +61,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 		private appLocalization: AppLocalization
 	) {}
 
-	removeTag(tag: any){
+	removeTag(tag: Filter){
 		this.updateFilters(tag, 1);
 		let freeText = tag.type === "freeText" ? '' : this._filter.freetextSearch,
 			createdBefore = this._filter.createdBefore,
@@ -83,6 +83,16 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 	removeAllTags(){
 		this.clearSelection();
+		this._playlistsStore.reload({
+			 freeText: null,
+			 createdBefore: null,
+			 createdAfter: null,
+			 pageIndex: 1
+		 });
+		 this._filter.freetextSearch = '';
+		 this._filter.createdAfter = '';
+		 this._filter.createdBefore = '';
+		 this.activeFilters = [];
 	}
 
 	onFreetextChanged() : void {
@@ -135,7 +145,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	updateFilters(filter, flag?) { // if flag == 1 we won't push filter to activeFilters
+	updateFilters(filter: Filter, flag?: number) { // if flag == 1 we won't push filter to activeFilters
 		if(!filter.label) {
 			flag = 1;
 		}
@@ -200,16 +210,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 	}
 
 	clearSelection(){
-		this._playlistsStore.reload({
-			freeText: null,
-			createdBefore: null,
-			createdAfter: null,
-			pageIndex: 1
-		});
-		this._filter.freetextSearch = '';
-		this._filter.createdAfter = '';
-		this._filter.createdBefore = '';
-		this.activeFilters = [];
+		this._selectedPlaylists = [];
 	}
 }
 
