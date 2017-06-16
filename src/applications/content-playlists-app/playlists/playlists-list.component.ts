@@ -4,6 +4,7 @@ import {
 	OnInit,
 	ViewChild
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
@@ -58,7 +59,8 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 	constructor(
 		public _playlistsStore: PlaylistsStore,
-		private appLocalization: AppLocalization
+		private appLocalization: AppLocalization,
+		private router: Router
 	) {}
 
 	removeTag(tag: Filter){
@@ -93,6 +95,14 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 		 this._filter.createdAfter = '';
 		 this._filter.createdBefore = '';
 		 this.activeFilters = [];
+	}
+
+	onActionSelected(event) {
+		if (event.action === "view"){
+			this.router.navigate(['/content/playlists/playlist', event.playlistID]);
+		} else {
+			alert("Selected Action: " + event.action + "\nPlaylist ID: " + event.playlistID);
+		}
 	}
 
 	onFreetextChanged() : void {

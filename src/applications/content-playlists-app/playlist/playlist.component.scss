@@ -1,0 +1,56 @@
+@import '~kmcng-theme/scss/variables';
+
+.kPlaylistDetails {
+	font-size: 15px;
+	background-color: $appBkgColor;
+	height: $contentArea;
+	padding-top: 30px;
+	width: 100%;
+	button{
+		cursor: pointer;
+	}
+	.kPlaylistDetailsWrapper {
+		display: flex;
+		flex-direction: column;
+		padding-right: 20px;
+		height: 100%;
+		.kPlaylistDetailsHeader {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			padding-right: 50px;
+			.kBackToPlaylistsBtn {
+				border: none;
+				outline: none;
+				background-color: $appBkgColor;
+				color: $kGrayscale3;
+				margin-right: 20px;
+				height: 20px;
+				margin-top: 6px;
+				font-size: 16px;
+				&:active {
+					box-shadow: none;
+				}
+				&:hover {
+					color: $kPrimary;
+				}
+			}
+			.kPlaylistTitle {
+				color: $kGrayscale1;
+				font-size: 24px;
+				font-weight: 700;
+				margin-left: 12px;
+				margin-right: 100px;
+			}
+		}
+	}
+}
+.kPlaylistDetails.isSafari {
+	.kPlaylistDetailsContent {
+		height: calc(100vh - 216px);
+	}
+}
+:host /deep/ span.ui-button-icon-left.fa.kIconarrow_forward,
+:host /deep/ span.ui-button-icon-left.fa.kIconarrow_backward {
+	margin-left: -.5em;
+}

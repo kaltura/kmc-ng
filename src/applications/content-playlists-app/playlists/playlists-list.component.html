@@ -45,6 +45,7 @@
 			[playlists]="(_playlistsStore.playlists$ | async)?.items"
 			(sortChanged)="onSortChanged($event)"
 			[filter]="_filter"
+			(actionSelected)="onActionSelected($event)"
 			[(selectedPlaylists)]="_selectedPlaylists"></kPlaylistsTable>
 
 		<div class="kPlaylistsTableFooter" #footer *ngIf="(_playlistsStore.playlists$ | async)?.totalCount">

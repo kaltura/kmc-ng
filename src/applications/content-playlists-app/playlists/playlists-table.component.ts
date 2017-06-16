@@ -48,9 +48,10 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 	@Input() selectedPlaylists: any[] = [];
 	@Output() sortChanged = new EventEmitter<any>();
 	@Output() selectedPlaylistsChange = new EventEmitter<any>();
+	@Output() actionSelected = new EventEmitter<any>();
 	@ViewChild('dataTable') private dataTable: DataTable;
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
-	private actionsMenuEntryId: string = "";
+	private actionsMenuPlaylistId: string = "";
 	private playlistsStoreStatusSubscription: ISubscription;
 
 	public _deferredLoading = true;
@@ -119,12 +120,12 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 		}
 	}
 
-	openActionsMenu(event: any, entry: KalturaMediaEntry) {
+	openActionsMenu(event: any, playlist: KalturaMediaEntry) {
 		if (this.actionsMenu) {
 			this.actionsMenu.toggle(event);
-			if (this.actionsMenuEntryId !== entry.id) {
-				this.buildMenu(entry.mediaType, entry.status);
-				this.actionsMenuEntryId = entry.id;
+			if (this.actionsMenuPlaylistId !== playlist.id) {
+				this.buildMenu(playlist.mediaType, playlist.status);
+				this.actionsMenuPlaylistId = playlist.id;
 				this.actionsMenu.show(event);
 			}
 		}
@@ -140,17 +141,17 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 		this._items = [
 			{
 				label: this.appLocalization.get("applications.content.table.previewAndEmbed"), command: (event) => {
-				this.onActionSelected("preview", this.actionsMenuEntryId);
+				this.onActionSelected("preview", this.actionsMenuPlaylistId);
 			}
 			},
 			{
 				label: this.appLocalization.get("applications.content.table.delete"), command: (event) => {
-				this.onActionSelected("delete", this.actionsMenuEntryId);
+				this.onActionSelected("delete", this.actionsMenuPlaylistId);
 			}
 			},
 			{
 				label: this.appLocalization.get("applications.content.table.view"), command: (event) => {
-				this.onActionSelected("view", this.actionsMenuEntryId);
+				this.onActionSelected("view", this.actionsMenuPlaylistId);
 			}
 			}
 		];
@@ -166,8 +167,8 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 		this.selectedPlaylistsChange.emit(event);
 	}
 
-	onActionSelected(action: string, playlistID: string, mediaType: string = null, status: string = null) {
-		alert(`action: ${ action }, playlistId: ${ playlistID }`);
+	onActionSelected(action: string, playlistID: string) {
+		this.actionSelected.emit({"action": action, "playlistID": playlistID});
 	}
 
 	onSortChanged(event) {

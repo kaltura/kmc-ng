@@ -26,8 +26,10 @@ import { TagsModule } from '@kaltura-ng2/kaltura-ui/tags';
 import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 
 import { ContentPlaylistsComponent } from './content-playlists.component';
+import { PlaylistComponent } from './playlist/playlist.component';
 import { PlaylistsComponentsList } from './playlists/playlists-components-list';
 import { PlaylistsStore } from './playlists/playlists-store/playlists-store.service';
+import { PlaylistStore } from './playlist/playlist-store.service';
 
 @NgModule({
     imports: [
@@ -53,11 +55,13 @@ import { PlaylistsStore } from './playlists/playlists-store/playlists-store.serv
     ],
     declarations: [
 		ContentPlaylistsComponent,
-		PlaylistsComponentsList
+		PlaylistsComponentsList,
+		PlaylistComponent
     ],
     exports: [],
     providers: [
-		PlaylistsStore
+		PlaylistsStore,
+		PlaylistStore
 	],
 })
 export class ContentPlaylistsAppModule {
