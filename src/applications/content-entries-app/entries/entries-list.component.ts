@@ -1,8 +1,10 @@
 import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem, Message } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 import { BrowserService } from '../../../shared/kmc-shell/providers/browser.service';
 
 import { EntriesStore, SortDirection } from './entries-store/entries-store.service';
@@ -10,6 +12,11 @@ import { EntriesTableComponent } from "./entries-table.component";
 
 import { FreetextFilter } from "./entries-store/filters/freetext-filter";
 import { EntriesRefineFiltersProvider } from "./entries-refine-filters/entries-refine-filters-provider.service";
+
+export type UpdateStatus = {
+	busy : boolean;
+	errorMessage : string;
+};
 
 @Component({
     selector: 'kEntriesList',
@@ -32,8 +39,10 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     public selectionMode : 'none' | 'single' | 'multiple';
 
 
+	private _state = new BehaviorSubject<UpdateStatus>({ busy : false, errorMessage : null});
+	public state$ = this._state.asObservable();
+	public _blockerMessage: AreaBlockerMessage = null;
 
-    public showLoader = true;
     private querySubscription : ISubscription;
     public _selectedEntries: any[] = [];
     public _bulkActionsMenu: MenuItem[] = [];
@@ -156,15 +165,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 					    header: this.appLocalization.get('applications.content.entries.deleteEntry'),
 					    message: `${this.appLocalization.get('applications.content.entries.confirmDelete')}<br/>${this.appLocalization.get('applications.content.entries.entryId', { 0: event.entryID })}<br/>${this.appLocalization.get('applications.content.entries.deleteNote')}`,
 					    accept: () => {
-						    this._entriesStore.deleteEntry(event.entryID).subscribe(
-						    	result => {
-								    this._msgs = [];
-								    this._msgs.push({severity: 'success', summary: '', detail: this.appLocalization.get('applications.content.entries.deleted')});
-							    },
-							    error => {
-								    // no need to handle - handled in entries-store
-							    }
-						    );
+						    this.deleteEntry(event.entryID);
 					    }
 				    }
 			    );
@@ -173,6 +174,40 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 			    alert("Selected Action: " + event.action + "\nEntry ID: " + event.entryID);
 			    break;
 	    }
+    }
+
+    private deleteEntry(entryId: string): void{
+	    this._state.next({busy: true, errorMessage: null});
+	    this._blockerMessage = null;
+	    this._entriesStore.deleteEntry(entryId).subscribe(
+		    result => {
+			    this._state.next({busy: false, errorMessage: null});
+			    this._msgs = [];
+			    this._msgs.push({severity: 'success', summary: '', detail: this.appLocalization.get('applications.content.entries.deleted')});
+		    },
+		    error => {
+			    this._blockerMessage = new AreaBlockerMessage(
+				    {
+					    message: error.message,
+					    buttons: [
+						    {
+							    label: this.appLocalization.get('app.common.retry'),
+							    action: () => {
+								    this.deleteEntry(entryId);
+							    }
+						    },
+						    {
+							    label: this.appLocalization.get('app.common.cancel'),
+							    action: () => {
+								    this._blockerMessage = null;
+								    this._state.next({busy: false, errorMessage: null});
+							    }
+						    }
+					    ]
+				    }
+			    )
+		    }
+	    );
     }
 
     clearSelection(){

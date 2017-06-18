@@ -31,7 +31,8 @@
 			"on": "On",
 			"off": "Off",
 			"ok": "OK",
-			"cancel": "Cancel"
+			"cancel": "Cancel",
+			"retry": "Retry"
 		}
     },
     "applications":{

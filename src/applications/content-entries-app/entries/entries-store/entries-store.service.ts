@@ -32,7 +32,6 @@ import { BrowserService } from "kmc-shell/providers/browser.service";
 export type UpdateStatus = {
     loading : boolean;
     errorMessage : string;
-	origin: 'reload' | 'delete';
 };
 
 export interface Entries{
@@ -82,7 +81,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
     private _activeFilters  = new BehaviorSubject<{ filters : FilterItem[] }>({ filters : []});
     private _entries  = new BehaviorSubject({items: [], totalCount: 0});
-    private _state = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null, origin: 'reload'});
+    private _state = new BehaviorSubject<UpdateStatus>({ loading : false, errorMessage : null});
 
 
     private _queryData : QueryData = {
@@ -93,8 +92,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus'
     };
     private _querySource = new Subject<QueryRequestArgs>();
-
-	private selectedEntryId: string = null;
+	private _destoryed: boolean = false;
     private _activeFiltersMap : {[key : string] : FilterItem[]} = {};
     private _metadataProfilesLoaded = false;
     private executeQueryState  : { subscription : ISubscription, deferredRemovedFilters : any[], deferredAddedFilters : any[]} = { subscription : null, deferredAddedFilters : [], deferredRemovedFilters : []};
@@ -154,6 +152,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         this._state.complete();
         this._querySource.complete();
         this._entries.complete();
+	    this._destoryed = true;
     }
 
     public get entries() : KalturaMediaEntry[]
@@ -170,7 +169,6 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             if (typeof query === 'object') {
                 Object.assign(this._queryData, query);
             }
-			this.selectedEntryId = null;
             this._executeQuery();
         }
     }
@@ -292,7 +290,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         // execute the request
         this.executeQueryState.subscription = Observable.create(observer => {
 
-            this._state.next({loading: true, errorMessage: null, origin: 'reload'});
+            this._state.next({loading: true, errorMessage: null});
 
             let requestSubscription = this._getMetadataProfiles()
                 .flatMap(
@@ -330,7 +328,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             response => {
                 this.executeQueryState.subscription = null;
 
-                this._state.next({loading: false, errorMessage: null, origin: 'reload'});
+                this._state.next({loading: false, errorMessage: null});
 
                 this._entries.next({
                     items: <any[]>response.objects,
@@ -339,7 +337,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             },
             error => {
                 this.executeQueryState.subscription = null;
-                this._state.next({loading: false, errorMessage: (<Error>error).message || <string>error, origin: 'reload'});
+                this._state.next({loading: false, errorMessage: (<Error>error).message || <string>error});
             });
 
     }
@@ -454,37 +452,36 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
     }
 
     public retry():void{
-	    const origin = this._state.getValue().origin;
-	    if (origin === "reload"){
-		    this.reload(true);
-	    }
-	    if (origin === "delete" && this.selectedEntryId){
-		    this.deleteEntry(this.selectedEntryId);
-	    }
+	    this.reload(true);
     }
 
-    public deleteEntry(entryId: string): Observable<{ deleted: boolean, error: any}>{
+    public deleteEntry(entryId: string): Observable<void>{
+
 	    return Observable.create(observer => {
-		    this.selectedEntryId = entryId;
+		    let subscription: ISubscription;
 		    if (entryId && entryId.length) {
-			    this._state.next({loading: true, errorMessage: null, origin: 'delete'});
-			    this.kalturaServerClient.request(new BaseEntryDeleteAction({entryId: entryId})).subscribe(
+			    subscription = this.kalturaServerClient.request(new BaseEntryDeleteAction({entryId: entryId})).subscribe(
 				    result => {
-					    this._state.next({loading: false, errorMessage: null, origin: 'delete'});
-					    this.reload(true);
-					    observer.next({deleted: true, error: null});
-					    observer.complete()
+					    if (!this._destoryed) {
+						    this.reload(true);
+					    }
+					    observer.next();
+					    observer.complete();
 				    },
 				    error =>{
-					    this._state.next({loading: true, errorMessage: error.message, origin: 'delete'});
-					    observer.error({deleted: false, error: error});
-					    observer.complete()
+					    observer.error(error);
 				    }
 			    );
+		    }else
+		    {
+			    observer.error(new Error('missing entryId argument'));
+		    }
+		    return ()=>{
+			    if (subscription) {
+				    subscription.unsubscribe();
+			    }
 		    }
 	    });
-
-
 
     }
 }
