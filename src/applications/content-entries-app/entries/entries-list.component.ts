@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
-import { MenuItem } from 'primeng/primeng';
+import { MenuItem, Message } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { BrowserService } from '../../../shared/kmc-shell/providers/browser.service';
 
@@ -37,6 +37,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     private querySubscription : ISubscription;
     public _selectedEntries: any[] = [];
     public _bulkActionsMenu: MenuItem[] = [];
+	public _msgs: Message[] = [];
 
     public _filter = {
         pageIndex : 0,
@@ -155,7 +156,15 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 					    header: this.appLocalization.get('applications.content.entries.deleteEntry'),
 					    message: `${this.appLocalization.get('applications.content.entries.confirmDelete')}<br/>${this.appLocalization.get('applications.content.entries.entryId', { 0: event.entryID })}<br/>${this.appLocalization.get('applications.content.entries.deleteNote')}`,
 					    accept: () => {
-						    this._entriesStore.deleteEntry(event.entryID+"a");
+						    this._entriesStore.deleteEntry(event.entryID).subscribe(
+						    	result => {
+								    this._msgs = [];
+								    this._msgs.push({severity: 'success', summary: '', detail: this.appLocalization.get('applications.content.entries.deleted')});
+							    },
+							    error => {
+								    // no need to handle - handled in entries-store
+							    }
+						    );
 					    }
 				    }
 			    );

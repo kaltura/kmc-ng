@@ -463,19 +463,28 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 	    }
     }
 
-    public deleteEntry(entryId: string): void{
-	    this.selectedEntryId = entryId;
-	    if (entryId && entryId.length) {
-		    this._state.next({loading: true, errorMessage: null, origin: 'delete'});
-		    this.kalturaServerClient.request(new BaseEntryDeleteAction({entryId: entryId})).subscribe(
-			    result => {
-				    debugger;
-				    this._state.next({loading: false, errorMessage: null, origin: 'delete'});
-			    },
-			    error =>{
-				    this._state.next({loading: true, errorMessage: error.message, origin: 'delete'});
-			    }
-		    );
-	    }
+    public deleteEntry(entryId: string): Observable<{ deleted: boolean, error: any}>{
+	    return Observable.create(observer => {
+		    this.selectedEntryId = entryId;
+		    if (entryId && entryId.length) {
+			    this._state.next({loading: true, errorMessage: null, origin: 'delete'});
+			    this.kalturaServerClient.request(new BaseEntryDeleteAction({entryId: entryId})).subscribe(
+				    result => {
+					    this._state.next({loading: false, errorMessage: null, origin: 'delete'});
+					    this.reload(true);
+					    observer.next({deleted: true, error: null});
+					    observer.complete()
+				    },
+				    error =>{
+					    this._state.next({loading: true, errorMessage: error.message, origin: 'delete'});
+					    observer.error({deleted: false, error: error});
+					    observer.complete()
+				    }
+			    );
+		    }
+	    });
+
+
+
     }
 }

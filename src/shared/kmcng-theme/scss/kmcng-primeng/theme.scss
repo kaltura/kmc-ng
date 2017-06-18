@@ -691,6 +691,15 @@ td.ui-datatable-emptymessage{
 	.ui-growl-title{
 		display: none;
 	}
+	.ui-growl-icon-close.fa.fa-close{
+		top: 9px;
+		right: 9px;
+		font-size: 14px;
+	}
+	.ui-growl-icon-close.fa.fa-close:before{
+		@extend .kIconclose_small:before;
+
+	}
 	.ui-growl-image{
 		margin-top: 5px;
 		margin-left: 10px;
@@ -701,10 +710,6 @@ td.ui-datatable-emptymessage{
         &.fa-minus:before{
           @extend .kIconpen:before;
         }
-
-		&.fa-close:before{
-			@extend .kIconwarning:before;
-		}
 	}
 	&.ui-growl-message-success{
 		background-color: $kSecondary;

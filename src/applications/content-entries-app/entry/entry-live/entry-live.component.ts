@@ -43,6 +43,7 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
 	_copyToClipboard(text: string): void{
 		let copied: boolean = this._browserService.copyToClipboard(text);
+		this._handler._msgs=[];
 		if (copied){
 			this._handler._msgs.push({severity: 'success', summary: '', detail: this._appLocalization.get('app.common.copySuccess')});
 		}else{

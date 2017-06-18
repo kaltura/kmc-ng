@@ -53,6 +53,7 @@
                 "refresh": "Refresh",
 				"deleteEntry": "Delete Entry",
 				"confirmDelete": "Are you sure you want to delete the selected entry?",
+				"deleted": "Entry deleted successfully",
 				"entryId": "Entry ID: {{0}}",
 				"deleteNote": "Please note: the entry will be permanently deleted from your account."
             },
