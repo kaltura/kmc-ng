@@ -16,7 +16,7 @@ import { AttachmentAssetDeleteAction } from 'kaltura-typescript-client/types/Att
 import { AttachmentAssetUpdateAction } from 'kaltura-typescript-client/types/AttachmentAssetUpdateAction';
 import { AttachmentAssetAddAction } from 'kaltura-typescript-client/types/AttachmentAssetAddAction';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { BrowserService } from 'kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 import { EntryFormWidget } from '../entry-form-widget';
 import { EntryWidgetKeys } from '../entry-widget-keys';
@@ -25,7 +25,7 @@ import { UploadManagement, FileChanges } from '@kaltura-ng2/kaltura-common/uploa
 import { FriendlyHashId } from '@kaltura-ng2/kaltura-common/friendly-hash-id';
 
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators'
-import { environment } from 'kmc-app';
+import { environment } from 'app-environment';
 
 @Injectable()
 export class EntryRelatedHandler extends EntryFormWidget

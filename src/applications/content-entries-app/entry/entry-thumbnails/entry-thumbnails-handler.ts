@@ -22,7 +22,7 @@ import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { environment } from 'kmc-app';
+import { environment } from 'app-environment';
 
 export interface ThumbnailRow {
 	id: string,

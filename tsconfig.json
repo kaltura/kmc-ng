@@ -20,9 +20,9 @@
       "dom"
     ],
     "paths": {
-      "kmc-shell": ["shared/kmc-shell"],
-      "kmc-shell/*": ["shared/kmc-shell/*"],
-      "kmc-app": ["environments/environment"]
+      "app-shared/*": ["shared/*"],
+      "app-environment": ["environments/environment"],
+      "app-styles/*" : ["styles/*"]
     }
   },
   "angularCompilerOptions": {

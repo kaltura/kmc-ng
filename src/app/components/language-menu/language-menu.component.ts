@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AppStorage, AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { environment } from 'kmc-app';
+import { environment } from 'app-environment';
 import * as R from 'ramda';
 
 @Component({

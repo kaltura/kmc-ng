@@ -12,14 +12,14 @@ import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaL
 import { KalturaDVRStatus } from 'kaltura-typescript-client/types/KalturaDVRStatus';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { BrowserService } from 'kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { EntryFormWidget } from '../entry-form-widget';
 import { EntryFormManager } from '../entry-form-manager';
 import { LiveXMLExporter } from './live-xml-exporter';
 import { AVAIL_BITRATES } from './bitrates';
-import { environment } from 'kmc-app';
+import { environment } from 'app-environment';
 
 export interface bitrate {
 	enabled: boolean,

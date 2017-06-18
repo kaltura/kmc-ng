@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { environment } from 'kmc-app';
+import { environment } from 'app-environment';
 
 import { AppAuthentication, AppNavigator } from '@kaltura-ng2/kaltura-common';
-import { BrowserService } from 'kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kKMCLogin',

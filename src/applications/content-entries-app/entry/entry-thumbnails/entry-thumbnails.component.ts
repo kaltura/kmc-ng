@@ -3,7 +3,7 @@ import { ConfirmationService } from 'primeng/primeng';
 
 import { AppLocalization, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { KalturaUtils } from '@kaltura-ng2/kaltura-common/utils/kaltura-utils';
-import { BrowserService } from 'kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 import { EntryThumbnailsHandler, ThumbnailRow } from './entry-thumbnails-handler';
 import { Menu, MenuItem } from 'primeng/primeng';

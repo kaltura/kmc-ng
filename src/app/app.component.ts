@@ -1,6 +1,6 @@
 import { OnInit, Component } from '@angular/core';
 import { ConfirmationService, Confirmation } from 'primeng/primeng';
-import { BrowserService } from 'kmc-shell/providers/browser.service';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 /*
  * App Component

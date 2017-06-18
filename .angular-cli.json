@@ -54,6 +54,9 @@
   "defaults": {
     "styleExt": "scss",
     "component": {}
+  },
+  "stylePreprocessorOptions" : {
+    "includePaths" : ["shared/styles"]
   }
 }
 

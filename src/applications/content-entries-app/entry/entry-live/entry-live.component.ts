@@ -1,6 +1,6 @@
 import { Component, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { BrowserService } from 'kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell';
 import { ConfirmationService } from 'primeng/primeng';
 import { EntryLiveHandler } from './entry-live-handler';
 import { EntryFormManager } from '../entry-form-manager';

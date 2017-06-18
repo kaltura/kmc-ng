@@ -11,7 +11,7 @@ import { BootstrapAdapterToken, AppBootstrap, AppBootstrapConfig  as AppBootstra
 import {  KalturaClient, KalturaClientConfiguration } from '@kaltura-ng/kaltura-client';
 import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 
-import { BrowserService, KMCShellModule } from 'kmc-shell';
+import { BrowserService, KMCShellModule } from 'app-shared/kmc-shell';
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
@@ -34,7 +34,7 @@ import { AppLocalization, MetadataProfileModule, PartnerProfileStore, AccessCont
 import { UploadManagementModule } from '@kaltura-ng2/kaltura-common/upload-management';
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
 import { ConfirmDialogModule, ConfirmationService, DropdownModule } from 'primeng/primeng';
-import { environment } from 'kmc-app';
+import { environment } from 'app-environment';
 
 const partnerProviders : PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 

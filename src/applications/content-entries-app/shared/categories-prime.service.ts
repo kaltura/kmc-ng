@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { PrimeTreeNode, PrimeTreeDataProvider, NodeChildrenStatuses } from '@kaltura-ng2/kaltura-primeng-ui';
 import { AppAuthentication, AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { CategoriesStore, CategoryData } from './categories-store.service';
-import { environment } from 'kmc-app';
+import { environment } from 'app-environment';
 
 @Injectable()
 export class CategoriesPrimeService {

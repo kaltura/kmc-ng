@@ -4,7 +4,7 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaE
 import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
 import { KalturaSourceType } from 'kaltura-typescript-client/types/KalturaSourceType';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import { BrowserService } from 'kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell';
 import { EntryPreviewHandler } from './entry-preview-handler';
 import { EntryFormManager } from '../entry-form-manager';
 

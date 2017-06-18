@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { environment } from 'kmc-app';
+import { environment } from 'app-environment';
 
 
 @Pipe({name: 'kMaxEntries'})

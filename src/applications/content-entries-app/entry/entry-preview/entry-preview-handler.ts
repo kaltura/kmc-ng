@@ -4,7 +4,7 @@ import {
 } from '../entry-form-widget';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { AppAuthentication } from '@kaltura-ng2/kaltura-common';
-import { environment } from 'kmc-app';
+import { environment } from 'app-environment';
 
 export interface PreviewEntryData{
     landingPage : string;

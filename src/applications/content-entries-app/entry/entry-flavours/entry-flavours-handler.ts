@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { AppLocalization, AppAuthentication } from '@kaltura-ng2/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { BrowserService } from 'kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaFlavorAsset } from 'kaltura-typescript-client/types/KalturaFlavorAsset';
 import { KalturaFlavorAssetWithParams } from 'kaltura-typescript-client/types/KalturaFlavorAssetWithParams';
 import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-typescript-client/types/FlavorAssetGetFlavorAssetsWithParamsAction';
@@ -25,7 +25,7 @@ import { KalturaContentResource } from 'kaltura-typescript-client/types/KalturaC
 import { UploadManagement } from '@kaltura-ng2/kaltura-common/upload-management';
 import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
 import { Message, ConfirmationService } from 'primeng/primeng';
-import { environment } from 'kmc-app';
+import { environment } from 'app-environment';
 import { Flavor } from './flavor';
 
 @Injectable()

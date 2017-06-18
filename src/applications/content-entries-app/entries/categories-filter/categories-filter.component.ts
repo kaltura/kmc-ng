@@ -10,7 +10,7 @@ import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-co
 import { CategoriesPrimeService } from '../../shared/categories-prime.service';
 import { CategoryData } from '../../shared/categories-store.service';
 
-import { BrowserService } from "kmc-shell/providers/browser.service";
+import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 import { EntriesStore } from "../entries-store/entries-store.service";
 import { CategoriesFilter, CategoriesFilterModes } from "../entries-store/filters/categories-filter";
 import { AutoComplete } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';

@@ -4,7 +4,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
-import { BrowserService } from "kmc-shell/providers/browser.service";
+import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 import { EntriesStore, SortDirection } from './entries-store/entries-store.service';
 import { EntriesTableComponent } from "./entries-table.component";
 

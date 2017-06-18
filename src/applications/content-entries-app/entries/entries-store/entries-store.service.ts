@@ -26,7 +26,7 @@ import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 
 import * as R from 'ramda';
 import { FilterItem } from "./filter-item";
-import { BrowserService } from "kmc-shell/providers/browser.service";
+import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 
 export type UpdateStatus = {
     loading : boolean;
