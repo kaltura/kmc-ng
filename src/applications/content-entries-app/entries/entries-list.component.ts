@@ -1,15 +1,22 @@
 import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
-import { MenuItem } from 'primeng/primeng';
+import { MenuItem, Message } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
+import { BrowserService } from '../../../shared/kmc-shell/providers/browser.service';
 
-import { BrowserService } from "kmc-shell/providers/browser.service";
 import { EntriesStore, SortDirection } from './entries-store/entries-store.service';
 import { EntriesTableComponent } from "./entries-table.component";
 
 import { FreetextFilter } from "./entries-store/filters/freetext-filter";
 import { EntriesRefineFiltersProvider } from "./entries-refine-filters/entries-refine-filters-provider.service";
+
+export type UpdateStatus = {
+	busy : boolean;
+	errorMessage : string;
+};
 
 @Component({
     selector: 'kEntriesList',
@@ -32,11 +39,14 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     public selectionMode : 'none' | 'single' | 'multiple';
 
 
+	private _state = new BehaviorSubject<UpdateStatus>({ busy : false, errorMessage : null});
+	public state$ = this._state.asObservable();
+	public _blockerMessage: AreaBlockerMessage = null;
 
-    public showLoader = true;
     private querySubscription : ISubscription;
     public _selectedEntries: any[] = [];
     public _bulkActionsMenu: MenuItem[] = [];
+	public _msgs: Message[] = [];
 
     public _filter = {
         pageIndex : 0,
@@ -46,7 +56,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         sortDirection : SortDirection.Desc
     };
 
-    constructor(public _entriesStore : EntriesStore, private additionalFilters : EntriesRefineFiltersProvider, private appLocalization: AppLocalization, private browserService: BrowserService, private router: Router) {
+    constructor(public _entriesStore : EntriesStore, private additionalFilters : EntriesRefineFiltersProvider, private appLocalization: AppLocalization, private router: Router, private _browserService : BrowserService,) {
     }
 
     removeTag(tag: any){
@@ -145,11 +155,59 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
 
     onActionSelected(event){
-    	if (event.action === "view"){
-		    this.router.navigate(['/content/entries/entry', event.entryID]);
-	    }else {
-		    alert("Selected Action: " + event.action + "\nEntry ID: " + event.entryID);
+	    switch (event.action){
+		    case "view":
+			    this.router.navigate(['/content/entries/entry', event.entryID]);
+			    break;
+		    case "delete":
+			    this._browserService.confirm(
+				    {
+					    header: this.appLocalization.get('applications.content.entries.deleteEntry'),
+					    message: `${this.appLocalization.get('applications.content.entries.confirmDelete')}<br/>${this.appLocalization.get('applications.content.entries.entryId', { 0: event.entryID })}<br/>${this.appLocalization.get('applications.content.entries.deleteNote')}`,
+					    accept: () => {
+						    this.deleteEntry(event.entryID);
+					    }
+				    }
+			    );
+			    break;
+		    default:
+			    alert("Selected Action: " + event.action + "\nEntry ID: " + event.entryID);
+			    break;
 	    }
+    }
+
+    private deleteEntry(entryId: string): void{
+	    this._state.next({busy: true, errorMessage: null});
+	    this._blockerMessage = null;
+	    this._entriesStore.deleteEntry(entryId).subscribe(
+		    result => {
+			    this._state.next({busy: false, errorMessage: null});
+			    this._msgs = [];
+			    this._msgs.push({severity: 'success', summary: '', detail: this.appLocalization.get('applications.content.entries.deleted')});
+		    },
+		    error => {
+			    this._blockerMessage = new AreaBlockerMessage(
+				    {
+					    message: error.message,
+					    buttons: [
+						    {
+							    label: this.appLocalization.get('app.common.retry'),
+							    action: () => {
+								    this.deleteEntry(entryId);
+							    }
+						    },
+						    {
+							    label: this.appLocalization.get('app.common.cancel'),
+							    action: () => {
+								    this._blockerMessage = null;
+								    this._state.next({busy: false, errorMessage: null});
+							    }
+						    }
+					    ]
+				    }
+			    )
+		    }
+	    );
     }
 
     clearSelection(){

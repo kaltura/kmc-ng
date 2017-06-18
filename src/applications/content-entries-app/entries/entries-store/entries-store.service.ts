@@ -11,6 +11,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
 import { KalturaBaseEntryListResponse } from 'kaltura-typescript-client/types/KalturaBaseEntryListResponse';
+import { BaseEntryDeleteAction } from 'kaltura-typescript-client/types/BaseEntryDeleteAction';
 import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
 import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
 import { KalturaMediaEntryFilter } from 'kaltura-typescript-client/types/KalturaMediaEntryFilter';
@@ -91,7 +92,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus'
     };
     private _querySource = new Subject<QueryRequestArgs>();
-
+	private _destoryed: boolean = false;
     private _activeFiltersMap : {[key : string] : FilterItem[]} = {};
     private _metadataProfilesLoaded = false;
     private executeQueryState  : { subscription : ISubscription, deferredRemovedFilters : any[], deferredAddedFilters : any[]} = { subscription : null, deferredAddedFilters : [], deferredRemovedFilters : []};
@@ -151,6 +152,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         this._state.complete();
         this._querySource.complete();
         this._entries.complete();
+	    this._destoryed = true;
     }
 
     public get entries() : KalturaMediaEntry[]
@@ -167,7 +169,6 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             if (typeof query === 'object') {
                 Object.assign(this._queryData, query);
             }
-
             this._executeQuery();
         }
     }
@@ -447,6 +448,36 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         {
             return Observable.throw(err);
         }
+
+    }
+
+    public deleteEntry(entryId: string): Observable<void>{
+
+	    return Observable.create(observer => {
+		    let subscription: ISubscription;
+		    if (entryId && entryId.length) {
+			    subscription = this.kalturaServerClient.request(new BaseEntryDeleteAction({entryId: entryId})).subscribe(
+				    result => {
+					    if (!this._destoryed) {
+						    this.reload(true);
+					    }
+					    observer.next();
+					    observer.complete();
+				    },
+				    error =>{
+					    observer.error(error);
+				    }
+			    );
+		    }else
+		    {
+			    observer.error(new Error('missing entryId argument'));
+		    }
+		    return ()=>{
+			    if (subscription) {
+				    subscription.unsubscribe();
+			    }
+		    }
+	    });
 
     }
 }
