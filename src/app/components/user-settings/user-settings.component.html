@@ -17,6 +17,6 @@
     <span>{{'app.languageMenu.selectLang' | translate}}</span>
 </div>
 
-<ul class="kLanguages kUseKMCngIcons">
+<ul class="kLanguages kOverrideFAIcons">
 	<p-dropdown [options]="_languages" [(ngModel)]="_selectedLanguage" [appendTo]="'body'" (onChange)="onLangSelected($event)"></p-dropdown>
 </ul>

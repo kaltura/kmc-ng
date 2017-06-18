@@ -20,13 +20,16 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "kmc",
       "styles": [
-        "styles/styles.sass"
+        "shared/app-styles/styles.sass"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
         "prod": "environments/environment.prod.ts"
+      },
+      "stylePreprocessorOptions" : {
+        "includePaths" : ["shared"]
       }
     }
   ],
@@ -54,9 +57,6 @@
   "defaults": {
     "styleExt": "scss",
     "component": {}
-  },
-  "stylePreprocessorOptions" : {
-    "includePaths" : ["shared/styles"]
   }
 }
 
