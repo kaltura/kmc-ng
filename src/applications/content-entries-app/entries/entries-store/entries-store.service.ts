@@ -451,10 +451,6 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 
     }
 
-    public retry():void{
-	    this.reload(true);
-    }
-
     public deleteEntry(entryId: string): Observable<void>{
 
 	    return Observable.create(observer => {
