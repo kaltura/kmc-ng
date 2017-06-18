@@ -26,25 +26,7 @@ import { UploadManagement } from '@kaltura-ng2/kaltura-common/upload-management'
 import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
 import { Message, ConfirmationService } from 'primeng/primeng';
 import { environment } from 'kmc-app';
-
-export interface Flavor extends KalturaFlavorAssetWithParams{
-	name: string,
-	id: string,
-	paramsId: number,
-	isSource: boolean,
-	isWeb: boolean,
-	isWidevine: boolean,
-	format: string,
-	codec: string,
-	bitrate: string,
-	size: string,
-	dimensions: string,
-	status: string,
-	statusLabel: string,
-	statusTooltip: string,
-	tags: string,
-	drm: any
-}
+import { Flavor } from './flavor';
 
 @Injectable()
 export class EntryFlavoursHandler extends EntryFormWidget

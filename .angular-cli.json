@@ -20,7 +20,7 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "kmc",
       "styles": [
-        "../node_modules/mc-theme/src/default/scss/index.scss"
+        "styles/styles.sass"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
@@ -56,3 +56,4 @@
     "component": {}
   }
 }
+

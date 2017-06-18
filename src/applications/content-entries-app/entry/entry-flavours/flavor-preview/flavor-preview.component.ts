@@ -4,7 +4,8 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { FlavorAssetGetUrlAction } from 'kaltura-typescript-client/types/FlavorAssetGetUrlAction';
-import { Flavor } from '../entry-flavours-handler';
+import { Flavor } from '../flavor';
+
 
 @Component({
 	selector: 'kFlavorPreview',

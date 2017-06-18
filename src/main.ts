@@ -6,6 +6,10 @@ import { environment } from 'kmc-app';
 
 if (environment.production) {
     enableProdMode();
+    //console.log(`Running KMCng version '${__KMCng__.version}' (Production mode)`);
+}else
+{
+    //console.log(`Running KMCng version '${__KMCng__.version}' (Development mode)`);
 }
 
 platformBrowserDynamic().bootstrapModule(AppModule);

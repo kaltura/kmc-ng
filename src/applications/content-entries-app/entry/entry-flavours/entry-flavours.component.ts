@@ -7,7 +7,8 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaE
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 import { Menu, MenuItem } from 'primeng/primeng';
-import { EntryFlavoursHandler, Flavor } from './entry-flavours-handler';
+import { EntryFlavoursHandler } from './entry-flavours-handler';
+import { Flavor } from './flavor';
 import { EntryFormManager } from '../entry-form-manager';
 
 @Component({
