@@ -24,7 +24,7 @@ import { KalturaUrlResource } from 'kaltura-typescript-client/types/KalturaUrlRe
 import { KalturaContentResource } from 'kaltura-typescript-client/types/KalturaContentResource';
 import { UploadManagement } from '@kaltura-ng2/kaltura-common/upload-management';
 import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
-import { Message, ConfirmationService } from 'primeng/primeng';
+import { Message } from 'primeng/primeng';
 
 export interface Flavor extends KalturaFlavorAssetWithParams{
 	name: string,
@@ -58,8 +58,8 @@ export class EntryFlavoursHandler extends EntryFormWidget
 	public sourceAvailabale: boolean = false;
 	public _msgs: Message[] = [];
 
-    constructor( private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _confirmationService: ConfirmationService,
-	    private _appConfig: AppConfig, private _appAuthentication: AppAuthentication, private _browserService: BrowserService, private _uploadManagement : UploadManagement)
+    constructor( private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _appConfig: AppConfig, private _appAuthentication: AppAuthentication,
+                 private _browserService: BrowserService, private _uploadManagement : UploadManagement)
     {
         super(EntryWidgetKeys.Flavours);
     }
@@ -243,33 +243,36 @@ export class EntryFlavoursHandler extends EntryFormWidget
     }
 
     public deleteFlavor(flavor: Flavor): void{
-	    this._confirmationService.confirm({
-		    message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirm',{"0": flavor.id}),
-		    accept: () => {
-			    super._showLoader();
-			    this._kalturaServerClient.request(new FlavorAssetDeleteAction({
+	    this._browserService.confirm(
+		    {
+			    header: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirmTitle'),
+			    message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirm',{"0": flavor.id}),
+			    accept: () => {
+				    super._showLoader();
+				    this._kalturaServerClient.request(new FlavorAssetDeleteAction({
 					    id: flavor.id
 				    }))
-				    .cancelOnDestroy(this,this.widgetReset$)
-				    .monitor('delete flavor: '+flavor.id)
-				    .subscribe(
-					    response =>
-					    {
-						    super._hideLoader();
-						    this._msgs.push({severity: 'success', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteSuccess')});
-						    this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
+					    .cancelOnDestroy(this,this.widgetReset$)
+					    .monitor('delete flavor: '+flavor.id)
+					    .subscribe(
+						    response =>
 						    {
-							    // do nothing
-						    });
-					    },
-					    error =>
-					    {
-						    super._hideLoader();
-						    this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteFailure')});
-					    }
-				    );
+							    super._hideLoader();
+							    this._msgs.push({severity: 'success', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteSuccess')});
+							    this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
+							    {
+								    // do nothing
+							    });
+						    },
+						    error =>
+						    {
+							    super._hideLoader();
+							    this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteFailure')});
+						    }
+					    );
+			    }
 		    }
-	    });
+	    );
     }
 
     public downloadFlavor (flavor: Flavor): void{

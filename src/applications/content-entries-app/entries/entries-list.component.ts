@@ -158,7 +158,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 						    this._entriesStore.deleteEntry(event.entryID+"a");
 					    }
 				    }
-			    )
+			    );
 			    break;
 		    default:
 			    alert("Selected Action: " + event.action + "\nEntry ID: " + event.entryID);
