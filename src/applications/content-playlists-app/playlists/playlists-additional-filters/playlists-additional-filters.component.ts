@@ -35,7 +35,7 @@ export class PlaylistsAdditionalFiltersComponent{
 
 			if (!isValid)
 			{
-				this._createdFilterError = this.appLocalization.get('applications.content.playlistsDetails.errors.schedulingError');
+				this._createdFilterError = this.appLocalization.get('applications.content.playlistDetails.errors.schedulingError');
 				return;
 			}
 		}

@@ -27,6 +27,10 @@ import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
 
 import { ContentPlaylistsComponent } from './content-playlists.component';
 import { PlaylistComponent } from './playlist/playlist.component';
+import { PlaylistPreviewComponent } from './playlist/playlist-preview/playlist-preview.component';
+import { PlaylistContentComponent } from './playlist/playlist-content/playlist-content.component';
+import { PlaylistMetadataComponent } from './playlist/playlist-metadata/playlist-metadata.component';
+import { PlaylistSectionsList } from './playlist/playlist-sections-list/playlist-sections-list.component'
 import { PlaylistsComponentsList } from './playlists/playlists-components-list';
 import { PlaylistsStore } from './playlists/playlists-store/playlists-store.service';
 import { PlaylistStore } from './playlist/playlist-store.service';
@@ -56,7 +60,11 @@ import { PlaylistStore } from './playlist/playlist-store.service';
     declarations: [
 		ContentPlaylistsComponent,
 		PlaylistsComponentsList,
-		PlaylistComponent
+		PlaylistComponent,
+		PlaylistPreviewComponent,
+		PlaylistContentComponent,
+		PlaylistMetadataComponent,
+		PlaylistSectionsList
     ],
     exports: [],
     providers: [

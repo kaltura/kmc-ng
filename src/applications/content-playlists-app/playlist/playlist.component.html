@@ -3,8 +3,24 @@
 		<div class="kContent kPlaylistDetailsWrapper">
 			<div class="kPlaylistDetailsHeader">
 				<button pButton class="kButtonDefault kBackToPlaylistsBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
+				<div class="kMediaTypeIcon kIconvideo"></div>
 				<div class="kPlaylistTitle">PlaylistId: {{ _playlistId }}</div>
+				<button pButton class="kButtonBranded kSaveBtn" label="Save"></button>
+				<button pButton class="kButtonDefault kNavigationBtn" icon="kIconarrow_backward"></button>
+				<button pButton class="kButtonDefault kNavigationBtn" icon="kIconarrow_forward"></button>
 			</div>
+			<div class="kPlaylistDetailsMain">
+				<div class="kPlaylistDetailsSections">
+					<kPlaylistSectionsList></kPlaylistSectionsList>
+				</div>
+				<div class="kPlaylistDetailsContent">
+					<router-outlet></router-outlet>
+				</div>
+				<div class="kPlaylistDetailsPreview">
+					<kPlaylistPreview></kPlaylistPreview>
+				</div>
+			</div>
+			<div class="kSpacer"></div>
 		</div>
 
 	</div>

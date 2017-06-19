@@ -1,0 +1,34 @@
+@import '~kmcng-theme/scss/_variables.scss';
+
+.kPlaylistPreview {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+
+	.kPreviewDetails{
+		padding-top: 20px;
+		padding-left: 12px;
+		padding-right: 8px;
+		overflow-y: auto;
+		width: 252px;
+		height: calc(100vh - 442px);
+		overflow-x: hidden;
+		.kTitle{
+			color: $kGrayscale1;
+			font-size: 20px;
+			font-weight: 700;
+			margin-bottom: 12px;
+			display: block;
+		}
+		.kRow{
+			display: flex;
+			padding-top: 24px;
+			align-items: center;
+		}
+		.kLabels{
+			width: 100px;
+			flex: 0 0 auto;
+			color: $kGrayscale3;
+		}
+	}
+}
