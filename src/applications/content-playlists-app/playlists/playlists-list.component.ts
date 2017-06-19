@@ -196,6 +196,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 				this._filter.pageIndex = query.pageIndex - 1;
 				this._filter.sortBy = query.sortBy;
 				this._filter.sortDirection = query.sortDirection;
+				this._filter.freetextSearch = query.freeText;
 				this._filter.createdAfter = query.createdAfter;
 				this._filter.createdBefore = query.createdBefore;
 
