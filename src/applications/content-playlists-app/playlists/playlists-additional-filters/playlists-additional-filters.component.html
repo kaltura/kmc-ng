@@ -13,7 +13,7 @@
 					[monthNavigator]="true"
 					[yearNavigator]="true"
 					[maxDate]="_createdBefore"
-					yearRange="{{_createdAtDateRange}}"
+					[yearRange]="_createdAtDateRange"
 					icon="kIconcalendar"
 					(onSelect)="_onCreatedChanged()"></p-calendar>
 				<p-calendar
@@ -24,10 +24,9 @@
 					[monthNavigator]="true"
 					[yearNavigator]="true"
 					[minDate]="_createdAfter"
-					yearRange="{{_createdAtDateRange}}"
+					[yearRange]="_createdAtDateRange"
 					icon="kIconcalendar"
 					(onSelect)="_onCreatedChanged()"></p-calendar>
-				<span *ngIf="_createdFilterError" class="kError">{{_createdFilterError}}</span>
 				<div class="kClearDates"><a (click)="_clearCreatedComponents()">{{'applications.content.filters.clearDates' | translate}}</a></div>
 			</div>
 		</div>

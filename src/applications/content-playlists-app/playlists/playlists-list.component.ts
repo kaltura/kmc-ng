@@ -18,11 +18,9 @@ import { PlaylistsTableComponent } from "./playlists-table.component";
 import * as moment from 'moment';
 
 export interface Filter {
-	type: string | Date
+	type: string;
 	label: string;
-	tooltip: {
-		token: string;
-	}
+	tooltip: string
 }
 
 @Component({
@@ -49,13 +47,16 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 	private querySubscription : ISubscription;
 	public activeFilters: Filter[] = [];
 
-	public filter: Filter = {
-		type: null,
-		label: null,
-		tooltip: {
-			token : null
-		}
-	};
+	private _reloadList() : void {
+		this._playlistsStore.reload({
+			freeText: this._filter.freetextSearch,
+			createdBefore: this._filter.createdBefore,
+			createdAfter: this._filter.createdAfter,
+			sortBy: this._filter.sortBy,
+			sortDirection: this._filter.sortDirection,
+			pageIndex: this._filter.pageIndex
+		});
+	}
 
 	constructor(
 		public _playlistsStore: PlaylistsStore,
@@ -65,36 +66,26 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 	removeTag(tag: Filter){
 		this.updateFilters(tag, 1);
-		let freeText = tag.type === "freeText" ? '' : this._filter.freetextSearch,
-			createdBefore = this._filter.createdBefore,
-			createdAfter = this._filter.createdAfter;
-		if(tag.type === "Dates") {
-			createdBefore = null;
-			createdAfter = null;
+		this._filter.freetextSearch = null;
+		if(tag.type === 'freeText') {
+			this._filter.freetextSearch = null;
 		}
-		this._playlistsStore.reload({
-			freeText: freeText,
-			createdBefore: createdBefore,
-			createdAfter: createdAfter,
-			pageIndex: 1
-		});
-		this._filter.freetextSearch = freeText;
-		this._filter.createdAfter = createdAfter;
-		this._filter.createdBefore = createdBefore;
+		if(tag.type === 'Dates') {
+			this._filter.createdBefore = null;
+			this._filter.createdAfter = null;
+		}
+		this._filter.pageIndex = 1;
+		this._reloadList();
 	}
 
 	removeAllTags(){
 		this.clearSelection();
-		this._playlistsStore.reload({
-			 freeText: null,
-			 createdBefore: null,
-			 createdAfter: null,
-			 pageIndex: 1
-		 });
-		 this._filter.freetextSearch = '';
-		 this._filter.createdAfter = '';
-		 this._filter.createdBefore = '';
-		 this.activeFilters = [];
+		this._filter.freetextSearch = '';
+		this._filter.createdAfter = '';
+		this._filter.createdBefore = '';
+		this._filter.pageIndex = 1;
+		this._reloadList();
+		this.activeFilters = [];
 	}
 
 	onActionSelected(event) {
@@ -106,42 +97,29 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 	}
 
 	onFreetextChanged() : void {
-		this._playlistsStore.reload({
-			freeText: this._filter.freetextSearch,
-			pageIndex: 1
-		});
+		this._reloadList();
 	}
 
 	onSortChanged(event) : void {
 		this._filter.sortBy = event.field;
 		this._filter.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
-
-		this._playlistsStore.reload({
-			sortBy: this._filter.sortBy,
-			sortDirection: this._filter.sortDirection,
-			pageIndex: 1
-		});
+		this._reloadList();
 	}
 
 	onPaginationChanged(state : any) : void {
 		if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
-			this._filter.pageIndex = state.page;
+			this._filter.pageIndex = state.page + 1;
 			this._filter.pageSize = state.rows;
-
 			this.clearSelection();
-			this._playlistsStore.reload({
-				pageIndex: this._filter.pageIndex + 1,
-				pageSize: this._filter.pageSize
-			});
+			this._reloadList();
 		}
 	}
 
 	onCreatedChanged(dates) : void {
-		this._playlistsStore.reload({
-			createdBefore: dates.createdBefore,
-			createdAfter: dates.createdAfter,
-			pageIndex: 1
-		});
+		this._filter.createdAfter = dates.createdAfter;
+		this._filter.createdBefore = dates.createdBefore;
+		this._filter.pageIndex = 1;
+		this._reloadList();
 		if(!dates.createdAfter && !dates.createdBefore) {
 			this.clearDates();
 		}
@@ -170,22 +148,30 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 	}
 
 	syncFilters(query) {
-		this.filter.type = 'freeText';
-		this.filter.label = query.freeText;
-		this.filter.tooltip.token = this.appLocalization.get('applications.content.filters.freeText');
-		this.updateFilters(Object.assign({}, this.filter));
+		let freeTextFilter: Filter = {
+			type: 'freeText',
+			label: query.freeText,
+			tooltip: this.appLocalization.get('applications.content.filters.freeText')
+		};
+		this.updateFilters(freeTextFilter);
+
+		let dateFilter: Filter = {
+			type: 'Dates',
+			label: freeTextFilter.type,
+			tooltip: null
+		};
 
 		if (query.createdAfter || query.createdBefore) {
-			this.filter.type = 'Dates';
-			this.filter.label = this.filter.type;
+			dateFilter.type = 'Dates';
+			dateFilter.label = dateFilter.type;
 			if (!query.createdAfter) {
-				this.filter.tooltip.token = `Until ${moment(query.createdBefore).format('LL')}`;
+				dateFilter.tooltip = this.appLocalization.get('applications.content.filters.dateFilter.until', {0: moment(query.createdBefore).format('LL')});
 			} else if (!query.createdBefore) {
-				this.filter.tooltip.token = `From ${moment(query.createdAfter).format('LL')}`;
+				dateFilter.tooltip = this.appLocalization.get('applications.content.filters.dateFilter.from', {0: moment(query.createdAfter).format('LL')});
 			} else {
-				this.filter.tooltip.token = `${moment(query.createdAfter).format('LL')} - ${moment(query.createdBefore).format('LL')}`;
+				dateFilter.tooltip = `${moment(query.createdAfter).format('LL')} - ${moment(query.createdBefore).format('LL')}`;
 			}
-			this.updateFilters(Object.assign({}, this.filter));
+			this.updateFilters(dateFilter);
 		}
 	}
 
@@ -224,4 +210,3 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 		this._selectedPlaylists = [];
 	}
 }
-

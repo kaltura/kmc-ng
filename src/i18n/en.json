@@ -90,7 +90,11 @@
                     "filterPreferences": "Filter Preferences",
                     "selectedOnly": "Display entries associated with the selected category only.",
                     "subSelected": "Display entries associated with the selected category and its sub-categories."
-                }
+                },
+				"dateFilter": {
+					"until" : "Until {{0}}",
+					"from" : "From {{0}}"
+				}
             },
             "table":{
                 "thumbnail": "Thumbnail",
