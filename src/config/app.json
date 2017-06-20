@@ -25,6 +25,10 @@
 					{
 						"routePath": "content/entries",
 						"titleToken": "Entries"
+					},
+					{
+						"routePath": "content/playlists",
+						"titleToken": "Playlists"
 					}
 				]
 			}
@@ -67,6 +71,12 @@
 	"modules": {
 		"studio_universal": {
 			"apiUrl": "http://www.kaltura.com"
+		},
+		"contentEntries" : {
+			"createdAtDateRange" : "2005:2030"
+		},
+		"contentPlaylists" : {
+			"createdAtDateRange" : "2005:2030"
 		}
 	},
 	"entriesShared": {

@@ -12,7 +12,7 @@
 					<div class="kRow">
 						<span class="kLabels">{{'applications.content.entryDetails.scheduling.start' | translate}}</span>
 						<div>
-							<p-calendar formControlName="startDate" icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" showTime="true"></p-calendar>
+							<p-calendar formControlName="startDate" icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange" showTime="true"></p-calendar>
 							<div class="error" *ngIf="_handler.schedulingForm.errors?.noStartDate">{{'applications.content.entryDetails.scheduling.noStartDate' | translate}}</div>
 
 						</div>
@@ -22,7 +22,7 @@
 							<p-checkbox formControlName="enableEndDate" label="{{'applications.content.entryDetails.scheduling.end' | translate}}" binary="true"></p-checkbox>
 						</div>
 						<div>
-							<p-calendar formControlName="endDate" icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2005:2030" showTime="true"></p-calendar>
+							<p-calendar formControlName="endDate" icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange" showTime="true"></p-calendar>
 							<div class="error" *ngIf="_handler.schedulingForm.errors?.endDateBeforeStartDate">{{'applications.content.entryDetails.scheduling.endDateBefore' | translate}}</div>
 							<div class="error" *ngIf="_handler.schedulingForm.errors?.noEndDate">{{'applications.content.entryDetails.scheduling.noEndDate' | translate}}</div>
 							<p>
