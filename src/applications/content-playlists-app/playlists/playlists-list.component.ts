@@ -66,7 +66,6 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 	removeTag(tag: Filter){
 		this.updateFilters(tag, 1);
-		this._filter.freetextSearch = null;
 		if(tag.type === 'freeText') {
 			this._filter.freetextSearch = null;
 		}
