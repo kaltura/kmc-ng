@@ -15,10 +15,6 @@
     margin-right: -20px;
     margin-top: 18px;
 }
-.kPrefs{
-    padding-left: 20px;
-    padding-top: 10px;
-}
 .kFilterPrefs{
     color: $kGrayscale3;
     line-height: 40px;
@@ -100,6 +96,12 @@ a.disabled{
 			height: 34px;
 			padding-left: 4px;
 			width: 328px;
+			&:active{
+				background-color: white;
+			}
+			&:focus{
+				background-color: white;
+			}
 		}
 	}
 }

@@ -16,6 +16,7 @@ hr{
 .kMetadataDetails{
 	padding-left: 12px;
 	padding-right: 130px;
+	padding-top: 18px;
 	overflow-y: auto;
 	width: 100%;
 	overflow-y: auto;
@@ -24,7 +25,7 @@ hr{
 		color: $kGrayscale1;
 		font-size: 18px;
 		font-weight: 700;
-		padding-top: 12px;
+		padding-top: 30px;
 		padding-bottom: 12px;
 	}
 
@@ -32,7 +33,7 @@ hr{
 
 		.kRow {
 			display: flex;
-			padding-top: 12px;
+			padding-top: 16px;
 
 			.kLabel {
 				width: 150px;
@@ -41,8 +42,14 @@ hr{
 				padding-right: 12px;
 			}
 
-			input, textarea {
+			input {
 				width: 100%;
+				height: 34px;
+			}
+
+			textarea{
+				width: 100%;
+				height: 76px;
 			}
 
 			.kControl, k-prime-control
@@ -50,15 +57,6 @@ hr{
 				width:100%;
 			}
 
-			.kControl.TextAreaControl textarea {
-				height: 36px;
-				max-width: 100%;
-				min-width: 100%;
-			}
-
-			.kControl.TextAreaControl textarea.threeRows {
-				height: 62px;
-			}
 		}
 
 
@@ -217,5 +215,14 @@ hr{
 		margin-bottom: 4px;
 		cursor: pointer;
 		color: $kBlack;
+	}
+}
+:host /deep/ kautocomplete input{
+	height: auto !important;
+}
+
+:host /deep/ .ui-calendar {
+	button.ui-state-default {
+		height: 34px;
 	}
 }

@@ -29,13 +29,42 @@ export const environment = {
         "children": [
           {
             "routePath": "content/entries",
-            "titleToken": "Entries"
+            "titleToken": "Entries",
+            "enabled": true
           },
           {
-          	"routePath": "content/playlists",
-			"titleToken": "Playlists"
+            "routePath": "content/moderation",
+            "titleToken": "Moderation",
+            "enabled": false
+          },
+          {
+            "routePath": "content/playlists",
+            "titleToken": "Playlists",
+            "enabled": true
+          },
+          {
+            "routePath": "content/syndication",
+            "titleToken": "Syndication",
+            "enabled": false
+          },
+          {
+            "routePath": "content/categories",
+            "titleToken": "Categories",
+            "enabled": false
           }
         ]
+      },
+      {
+        "routePath": "studio",
+        "titleToken": "Studio",
+        "showSubMenu": false,
+        "enabled": false
+      },
+      {
+        "routePath": "analytics",
+        "titleToken": "Analytics",
+        "showSubMenu": false,
+        "enabled": false
       }
     ],
     "diagnostic" : {
