@@ -1,10 +1,10 @@
 import { Component, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ISubscription } from 'rxjs/Subscription';
-import { ConfirmationService } from 'primeng/primeng';
 
 import { KalturaAttachmentAsset } from 'kaltura-typescript-client/types/KalturaAttachmentAsset';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { BrowserService } from 'app-shared/kmc-shell';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
@@ -22,7 +22,7 @@ export class EntryRelatedEdit implements  AfterViewInit, OnDestroy{
 	private _parentPopupStateChangeSubscribe : ISubscription;
 	private _confirmClose: boolean = true;
 
-    constructor(private _appLocalization: AppLocalization, private _fb: FormBuilder, private _confirmationService: ConfirmationService) {
+    constructor(private _appLocalization: AppLocalization, private _fb: FormBuilder, private _browserService: BrowserService) {
 	    this._createForm();
     }
 
@@ -40,13 +40,16 @@ export class EntryRelatedEdit implements  AfterViewInit, OnDestroy{
 						if (event.context && event.context.allowClose) {
 							if (this.relatedEditForm.dirty && this._confirmClose) {
 								event.context.allowClose = false;
-								this._confirmationService.confirm({
-									message: this._appLocalization.get('applications.content.entryDetails.captions.discard'),
-									accept: () => {
-										this._confirmClose = false;
-										this.parentPopupWidget.close();
+								this._browserService.confirm(
+									{
+										header: this._appLocalization.get('applications.content.entryDetails.captions.cancelEdit'),
+										message: this._appLocalization.get('applications.content.entryDetails.captions.discard'),
+										accept: () => {
+											this._confirmClose = false;
+											this.parentPopupWidget.close();
+										}
 									}
-								});
+								);
 							}
 						}
 					}

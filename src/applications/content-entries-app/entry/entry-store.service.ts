@@ -18,7 +18,7 @@ import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 import { EntryFormManager } from './entry-form-manager';
 import { KalturaTypesFactory } from 'kaltura-typescript-client';
 import { OnDataSavingReasons } from '@kaltura-ng2/kaltura-ui';
-import { BrowserService } from '../../../shared/kmc-shell/providers/browser.service';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 export enum ActionTypes
 {

@@ -1,6 +1,7 @@
 import { Component, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
 import { EntrySchedulingHandler } from './entry-scheduling-handler';
 import { EntryFormManager } from '../entry-form-manager';
+import { environment } from 'app-environment';
 
 @Component({
     selector: 'kEntryScheduling',
@@ -14,9 +15,11 @@ export class EntryScheduling implements AfterViewInit, OnInit, OnDestroy {
 
 	_enableEndDate: boolean;
     public _handler : EntrySchedulingHandler;
+	public _createdAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
 
-    constructor(private _entryFormManager : EntryFormManager) {
-    }
+    constructor(
+    	private _entryFormManager : EntryFormManager
+	) {}
 
 
     ngOnInit() {

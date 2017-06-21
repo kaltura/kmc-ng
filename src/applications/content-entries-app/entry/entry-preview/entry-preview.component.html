@@ -1,7 +1,7 @@
 <div class="kEntryPreview kOverrideFAIcons">
 	<iframe *ngIf="_handler.iframeSrc" [src]="_handler.iframeSrc | safe" width="280" height="158" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
-	<div class="kPreviewAndEmbedContainer" *ngIf="_entryReady">
-		<i (click)="openPreviewAndEmbed()" class="kIconshare"></i><a (click)="openPreviewAndEmbed()">{{'applications.content.entryDetails.preview.pande' | translate}}</a>
+	<div class="kPreviewAndEmbedContainer" *ngIf="_entryHasContent">
+		<i (click)="openPreviewAndEmbed()" [class.disabled]="!_entryReady" class="kIconshare"></i><a [class.disabled]="!_entryReady" (click)="openPreviewAndEmbed()">{{'applications.content.entryDetails.preview.pande' | translate}}</a>
 	</div>
 	<div class="kPreviewDetails" *ngIf="_handler.data">
 		<span class="kTitle">{{'applications.content.entryDetails.preview.details' | translate}}</span>

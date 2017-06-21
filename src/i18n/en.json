@@ -31,7 +31,8 @@
 			"on": "On",
 			"off": "Off",
 			"ok": "OK",
-			"cancel": "Cancel"
+			"cancel": "Cancel",
+			"retry": "Retry"
 		}
     },
     "applications":{
@@ -50,8 +51,21 @@
                 "searchEntries": "Search Entries",
                 "filterCategories": "Filter Categories",
                 "refine": "Refine",
-                "refresh": "Refresh"
+                "refresh": "Refresh",
+				"deleteEntry": "Delete Entry",
+				"confirmDelete": "Are you sure you want to delete the selected entry?",
+				"deleted": "Entry deleted successfully",
+				"entryId": "Entry ID: {{0}}",
+				"deleteNote": "Please note: the entry will be permanently deleted from your account."
             },
+			"playlists": {
+				"playlists": "Playlists",
+				"selected": "Selected",
+				"bulkActions": "Bulk Actions",
+				"cancel": "Cancel",
+				"searchEntries": "Search Playlists",
+				"addPlaylist": "Add Playlist"
+			},
             "filters":{
                 "activeFilters": "Active Filters:",
                 "clearAll": "Clear All",
@@ -82,10 +96,17 @@
                     "filterPreferences": "Filter Preferences",
                     "selectedOnly": "Display entries associated with the selected category only.",
                     "subSelected": "Display entries associated with the selected category and its sub-categories."
-                }
+                },
+				"dateFilter": {
+					"until" : "Until {{0}}",
+					"from" : "From {{0}}"
+				}
             },
             "table":{
                 "thumbnail": "Thumbnail",
+				"thumb" : "Thumb",
+				"id" :	"ID",
+				"playlistType" : "Playlist Type",
                 "name": "Name",
                 "type": "Type",
                 "plays": "Plays",
@@ -129,6 +150,12 @@
 				"image": "Image",
 				"videoMix": "Video Mix",
 				"live": "Live",
+				"unknown": "Unknown"
+			},
+			"playlistType":{
+				"dynamic": "Rule Based",
+				"external": "External RSS",
+				"staticList": "Manual",
 				"unknown": "Unknown"
 			},
             "bulkActions":{
@@ -237,7 +264,6 @@
 					"allowFlavours": "Allow Flavors: {{0}}",
 					"blockFlavours": "Blocked: {{0}}",
 					"ks": "KS",
-					"freePreview": "KS, Preview ({{0}})",
 					"freePreview": "KS, Preview ({{0}})",
 					"countries": "Countries",
 					"ips": "IPs",
@@ -459,6 +485,24 @@
 					"categoriesLoadError": "Error loading categories",
 					"flavorsLoadError": "Error loading flavors",
 					"clipsLoadError": "Error loading clips",
+					"schedulingError": "'From Date' must be before 'To Date'"
+				}
+			},
+			"playlistDetails": {
+				"sections": {
+					"metadata": "Metadata",
+					"content": "Content"
+				},
+				"preview": {
+					"details": "Details",
+					"creator": "Creator",
+					"creationDate": "Creation date",
+					"type": "Type",
+					"duration": "Duration",
+					"moderation": "Moderation",
+					"plays": "Plays"
+				},
+				"errors": {
 					"schedulingError": "'From Date' must be before 'To Date'"
 				}
 			}

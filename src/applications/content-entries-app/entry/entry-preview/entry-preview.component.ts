@@ -15,6 +15,7 @@ import { EntryFormManager } from '../entry-form-manager';
 })
 export class EntryPreview implements OnInit, OnDestroy {
 
+	public _entryHasContent: boolean = false;
 	public _entryReady: boolean = false;
 	public _isLive: boolean = false;
 	public _isRecordedLive: boolean = false;
@@ -42,7 +43,8 @@ export class EntryPreview implements OnInit, OnDestroy {
 			data => {
 				if (data) {
 					this._currentEntry = data;
-					this._entryReady = this._currentEntry.status.toString() !== KalturaEntryStatus.noContent.toString();
+					this._entryHasContent = this._currentEntry.status.toString() !== KalturaEntryStatus.noContent.toString();
+					this._entryReady = this._currentEntry.status.toString() === KalturaEntryStatus.ready.toString();
 					const sourceType = this._currentEntry.sourceType.toString();
 					this._isLive = (sourceType === KalturaSourceType.liveStream.toString() ||
 					sourceType === KalturaSourceType.akamaiLive.toString() ||

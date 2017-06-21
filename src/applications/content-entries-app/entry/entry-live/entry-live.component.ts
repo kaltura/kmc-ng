@@ -1,7 +1,7 @@
 import { Component, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { ConfirmationService } from 'primeng/primeng';
+
 import { EntryLiveHandler } from './entry-live-handler';
 import { EntryFormManager } from '../entry-form-manager';
 
@@ -16,7 +16,7 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 	public _copyToClipboardEnabled: boolean = false;
 	public _handler : EntryLiveHandler;
 
-	constructor(private _entryFormManager : EntryFormManager, private _appLocalization: AppLocalization, private _browserService: BrowserService, private _confirmationService: ConfirmationService) {
+	constructor(private _entryFormManager : EntryFormManager, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
     }
 
 
@@ -44,21 +44,27 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
 	_copyToClipboard(text: string): void{
 		let copied: boolean = this._browserService.copyToClipboard(text);
+		this._handler._msgs=[];
 		if (copied){
 			this._handler._msgs.push({severity: 'success', summary: '', detail: this._appLocalization.get('app.common.copySuccess')});
 		}else{
 			this._handler._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('app.common.copyFailure')});
 		}
 	}
+
 	/*
 	_regenerateToken():void{
-		this._confirmationService.confirm({
-			message: this._appLocalization.get('applications.content.entryDetails.live.regeneratePrompt'),
-			accept: () => {
-				this._handler.regenerateStreamToken();
+		this._browserService.confirm(
+			{
+				header: this._appLocalization.get('applications.content.entryDetails.live.regeneratePromptHeader'),
+				message: this._appLocalization.get('applications.content.entryDetails.live.regeneratePrompt'),
+				accept: () => {
+					this._handler.regenerateStreamToken();
+				}
 			}
-		});
-	}*/
+		);
+	}
+	*/
 
 }
 

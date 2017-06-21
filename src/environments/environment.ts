@@ -30,6 +30,10 @@ export const environment = {
           {
             "routePath": "content/entries",
             "titleToken": "Entries"
+          },
+          {
+          	"routePath": "content/playlists",
+			"titleToken": "Playlists"
           }
         ]
       }
@@ -72,6 +76,12 @@ export const environment = {
   "modules": {
     "studio_universal": {
       "apiUrl": "http://www.kaltura.com"
+    },
+    "contentEntries" : {
+      "createdAtDateRange" : "2005:2030"
+    },
+    "contentPlaylists" : {
+      "createdAtDateRange" : "2005:2030"
     }
   },
   "entriesShared": {

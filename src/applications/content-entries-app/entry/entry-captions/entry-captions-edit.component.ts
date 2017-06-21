@@ -1,6 +1,5 @@
 import { Component, Input, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
-import { ConfirmationService } from 'primeng/primeng';
 
 import { ISubscription } from 'rxjs/Subscription';
 
@@ -8,6 +7,7 @@ import { KalturaCaptionAsset } from 'kaltura-typescript-client/types/KalturaCapt
 import { KalturaLanguage } from 'kaltura-typescript-client/types/KalturaLanguage';
 import { KalturaCaptionType } from 'kaltura-typescript-client/types/KalturaCaptionType';
 import { AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
+import { BrowserService } from 'app-shared/kmc-shell';
 import { FileDialogComponent } from '@kaltura-ng2/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
 
@@ -39,7 +39,7 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
 	private _confirmClose: boolean = true;
 	private fileToUpload: File;
 
-    constructor(private _appLocalization: AppLocalization, private _fb: FormBuilder, private _confirmationService: ConfirmationService) {
+    constructor(private _appLocalization: AppLocalization, private _fb: FormBuilder, private _browserService: BrowserService) {
 	    // load all supported languages
 	    this._languages = [];
 	    let exludedLanguages = ['he', 'id', 'yi']; // duplicated languages [TODO-KMCNG] - should be checked with beckend
@@ -84,13 +84,16 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
 						if (event.context && event.context.allowClose){
 							if (this.captionsEditForm.dirty && this._confirmClose){
 								event.context.allowClose = false;
-								this._confirmationService.confirm({
-									message: this._appLocalization.get('applications.content.entryDetails.captions.discard'),
-									accept: () => {
-										this._confirmClose = false;
-										this.parentPopupWidget.close();
+								this._browserService.confirm(
+									{
+										header: this._appLocalization.get('applications.content.entryDetails.captions.cancelEdit'),
+										message: this._appLocalization.get('applications.content.entryDetails.captions.discard'),
+										accept: () => {
+											this._confirmClose = false;
+											this.parentPopupWidget.close();
+										}
 									}
-								});
+								);
 							}
 						}
 					}

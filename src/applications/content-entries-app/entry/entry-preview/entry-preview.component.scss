@@ -14,7 +14,6 @@
 		flex-shrink: 0;
 		height: 60px;
 		padding-left: 12px;
-		cursor: pointer;
 		width: 268px;
 		border-bottom: 1px solid $kGrayscale4;
 		i{
@@ -23,15 +22,22 @@
 			margin-right: 8px;
 		}
 		a{
+			cursor: pointer;
 			color: $kGrayscale1;
 			white-space: nowrap;
 			text-decoration: none;
-			&:hover{
+			&:hover:not(.disabled){
 				color: #000000;
 			}
-			&:active{
+			&:active:not(.disabled){
 				color: $kGrayscale2;
 			}
+		}
+		.disabled{
+			color: $kGrayscale4;
+			border: 0px solid white;
+			cursor: default;
+			pointer-events: none;
 		}
 	}
 	.kPreviewDetails{
