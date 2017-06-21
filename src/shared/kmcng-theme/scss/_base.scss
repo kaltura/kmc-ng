@@ -10,6 +10,7 @@ body {
 	margin: 0;
 	width: 100%;
 	height: 100%;
+	text-rendering: geometricPrecision;
 }
 
 label {
@@ -65,17 +66,17 @@ select {
 	}
 }
 
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1280px) {
 	.kContent {
-		width: 1170px;
+		width: 1200px;
 		margin: auto !important;
 		display: flex;
 	}
 }
 
-@media screen and (min-width: 1440px) {
+@media screen and (min-width: 1600px) {
 	.kContent {
-		width: 1400px;
+		width: 1500px;
 		margin: auto !important;
 		display: flex;
 	}
