@@ -843,3 +843,8 @@ td.ui-datatable-emptymessage{
 		transform: rotate(360deg);
 	}
 }
+// modal overlay
+.kPopupWidgetModalOverlay, .ui-widget-overlay{
+	background-color: #263243 !important;
+	opacity: 0.9 !important;
+}
