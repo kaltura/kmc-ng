@@ -109,6 +109,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 				private _browserService: BrowserService,
 				@Inject(EntryFormWidget)private  _widgets : EntryFormWidget[],
 				private _appLocalization: AppLocalization) {
+
 	}
 
 	ngOnDestroy() {

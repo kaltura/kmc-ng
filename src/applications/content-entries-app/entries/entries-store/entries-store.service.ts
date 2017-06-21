@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
-import { Scheduler } from 'rxjs';
+import { async } from 'rxjs/scheduler/async';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng2/kaltura-common';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
@@ -24,9 +24,10 @@ import { BaseEntryListAction } from 'kaltura-typescript-client/types/BaseEntryLi
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
 
-import * as R from 'ramda';
 import { FilterItem } from "./filter-item";
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
+import { KalturaLiveStreamAdminEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamAdminEntry';
+import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamEntry';
 
 export type UpdateStatus = {
     loading : boolean;
@@ -321,7 +322,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
                     requestSubscription = null;
                 }
             }
-        }).subscribeOn(Scheduler.async) // using async scheduler go allow calling this function multiple times in the same event loop cycle before invoking the logic.
+        }).subscribeOn(async) // using async scheduler go allow calling this function multiple times in the same event loop cycle before invoking the logic.
             .monitor('entries store: get entries ()',{addedFilters, removedFilters})
             .subscribe(
             response => {
@@ -440,7 +441,8 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
                 new BaseEntryListAction({
                     filter: requestContext.filter,
                     pager: pagination,
-                    responseProfile: responseProfile
+                    responseProfile: responseProfile,
+                    acceptedTypes : [KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry]
                 })
             )
         }catch(err)

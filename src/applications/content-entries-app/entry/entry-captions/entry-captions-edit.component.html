@@ -19,7 +19,7 @@
 		<div class="kRow" *ngIf="_newCaption">
 			<span class="kLabel">{{'applications.content.entryDetails.captions.add' | translate}}</span>
 			<p-radioButton name="uploadMethod" value="upload" formControlName="uploadMethod" label="{{'applications.content.entryDetails.captions.upload' | translate}}" (click)="_resetUpload()"></p-radioButton>
-			<p-radioButton name="uploadMethod" value="fromUrl" formControlName="uploadMethod" label="{{'applications.content.entryDetails.captions.fromUrl' | translate}}" style="margin-left: 12px" (click)="_resetUpload()"></p-radioButton>
+			<p-radioButton name="uploadMethod" value="fromUrl" formControlName="uploadMethod" label="{{'applications.content.entryDetails.captions.fromUrl' | translate}}" [style]="{'margin-left': '12px'}" (click)="_resetUpload()"></p-radioButton>
 		</div>
 
 		<div class="kUpload" *ngIf="_newCaption && captionsEditForm.get('uploadMethod').value === 'upload'">

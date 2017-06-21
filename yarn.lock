@@ -144,11 +144,11 @@
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-client/-/kaltura-client-2.1.0.tgz#d5f0f040f007e241ef2db9c02d839c34a702c0f2"
 
-"@kaltura-ng/mc-theme@file:/Users/eransakal/dev/github/kaltura-ng-repos/packages/kaltura-ng-mc-theme":
-  version "1.0.0"
+"@kaltura-ng/mc-theme@file:/Users/eransakal/dev/github/kaltura/kmc-ng-workspace/packages/kaltura-ng-mc-theme":
+  version "0.1.0"
   dependencies:
-    "@kaltura-ng2/kaltura-primeng-ui" "^1.0.0-alpha"
-    "@kaltura-ng2/kaltura-ui" "^0.0.2"
+    "@kaltura-ng2/kaltura-primeng-ui" "*"
+    "@kaltura-ng2/kaltura-ui" "*"
     normalize.css "^7.0.0"
     primeng "4.0.3"
 
@@ -156,11 +156,11 @@
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@kaltura-ng2/kaltura-common/-/kaltura-common-0.0.2.tgz#0a6e9127436cf3b9aaff9311cebeac843b2d823c"
 
-"@kaltura-ng2/kaltura-primeng-ui@^1.0.0-alpha":
+"@kaltura-ng2/kaltura-primeng-ui@1.0.0-alpha", "@kaltura-ng2/kaltura-primeng-ui@^1.0.0-alpha":
   version "1.0.0-alpha"
   resolved "https://registry.yarnpkg.com/@kaltura-ng2/kaltura-primeng-ui/-/kaltura-primeng-ui-1.0.0-alpha.tgz#03829ec549e16452b5326beb92ec0178b010be4e"
 
-"@kaltura-ng2/kaltura-ui@^0.0.2":
+"@kaltura-ng2/kaltura-ui@*", "@kaltura-ng2/kaltura-ui@^0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@kaltura-ng2/kaltura-ui/-/kaltura-ui-0.0.2.tgz#1646993cdb1c95afe538ab36476e206cd42cb729"
 
@@ -4201,7 +4201,7 @@ pretty-error@^2.0.2:
     renderkid "^2.0.1"
     utila "~0.4"
 
-primeng@4.0.3, primeng@^4.0.0:
+primeng@4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/primeng/-/primeng-4.0.3.tgz#dbcb15b63c5549268b2d225ceb66d5653b397749"
 
