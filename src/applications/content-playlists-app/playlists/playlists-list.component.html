@@ -1,7 +1,11 @@
 <div class="kPlaylists kUseKMCngIcons">
 	<div #playlistsTableHolder class="kPlaylistsHolder kContent">
 		<div class="kPlaylistsTableFilters">
-			<button pButton type="button" label="{{'applications.content.playlists.addPlaylist' | translate}}" class="kAddPlaylistBtn"></button>
+			<button
+				pButton
+				type="button"
+				label="{{'applications.content.playlists.addPlaylist' | translate}}"
+				class="kButtonBranded kAddPlaylistBtn"></button>
 			<span
 				class="kSelectedPlaylistsNum"
 				*ngIf="(_playlistsStore.playlists$ | async)?.totalCount">
@@ -25,7 +29,7 @@
 				type="text"
 				(click)="_reload()"
 				icon="kIconrefresh"
-				[kTooltip]="'applications.content.entries.refresh' | translate"></button>
+				[kTooltip]="'applications.content.playlists.refresh' | translate"></button>
 		</div>
 		<kTags
 			[title]="'applications.content.filters.activeFilters' | translate"

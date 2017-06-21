@@ -48,7 +48,7 @@
 		background-color: white;
 		flex: 0 0 auto;
 		align-items: center;
-		margin-left: 0px;
+		margin-left: 0;
 		border-bottom: none;
 		border-top-left-radius: 5px;
 		border-top-right-radius: 5px;
@@ -61,7 +61,7 @@
 		font-size: 24px;
 		border: none;
 		min-width: inherit;
-		margin-right: 8px;
+		margin-right: 16px;
 		width: 40px;
 		outline: 0;
 		color: $kGrayscale3;
@@ -115,9 +115,6 @@
 		}
 	}
 	.kAddPlaylistBtn {
-		background-color: $kPrimary;
-		color: white;
-		border: none;
 		margin-left: 14px;
 		height: 36px;
 	}
@@ -153,7 +150,7 @@
 		color: $kGrayscale1;
 		position: relative;
 		padding: 0 15px;
-		margin: 0 10px 0 7px;
+		margin-right: 8px;
 		i {
 			font-size: 20px;
 			color: $kGrayscale4;
@@ -171,5 +168,9 @@
 }
 
 :host /deep/ span.ui-button-icon-left.fa.kIcontrash{
+	margin-left: -.5em;
+}
+
+:host /deep/ .ui-button-icon-only .fa{
 	margin-left: -.5em;
 }

@@ -64,7 +64,8 @@
 				"bulkActions": "Bulk Actions",
 				"cancel": "Cancel",
 				"searchEntries": "Search Playlists",
-				"addPlaylist": "Add Playlist"
+				"addPlaylist": "Add Playlist",
+				"refresh": "Refresh"
 			},
             "filters":{
                 "activeFilters": "Active Filters:",
