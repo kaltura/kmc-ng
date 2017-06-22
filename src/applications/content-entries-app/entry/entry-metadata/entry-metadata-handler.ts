@@ -22,14 +22,14 @@ import { CategoryEntryDeleteAction } from 'kaltura-typescript-client/types/Categ
 import { KalturaCategoryEntry } from 'kaltura-typescript-client/types/KalturaCategoryEntry';
 import { CategoriesStore } from '../../shared/categories-store.service';
 import { EntryWidgetKeys } from '../entry-widget-keys';
-import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
-import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng2/kaltura-common';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng/kaltura-common';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { KalturaCustomMetadata } from '@kaltura-ng2/kaltura-ui/dynamic-form/kaltura-custom-metadata';
+import { KalturaCustomMetadata } from '@kaltura-ng/kaltura-ui/dynamic-form/kaltura-custom-metadata';
 
-import { KalturaCustomDataHandler } from '@kaltura-ng2/kaltura-ui/dynamic-form/kaltura-custom-metadata';
-import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
+import { KalturaCustomDataHandler } from '@kaltura-ng/kaltura-ui/dynamic-form/kaltura-custom-metadata';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';

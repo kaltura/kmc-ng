@@ -1,7 +1,7 @@
 import {  Injectable } from '@angular/core';
-import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { FormManager } from '@kaltura-ng2/kaltura-ui'
+import { FormManager } from '@kaltura-ng/kaltura-ui'
 import { EntryStore } from './entry-store.service';
 
 @Injectable()

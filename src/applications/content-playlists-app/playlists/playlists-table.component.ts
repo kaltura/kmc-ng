@@ -15,8 +15,8 @@ import {
 	DataTable,
 	Menu
 } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import {
 	KalturaMediaType
 } from 'kaltura-typescript-client/types/KalturaMediaType';

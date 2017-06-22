@@ -14,10 +14,10 @@ import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { BaseEntryGetAction } from 'kaltura-typescript-client/types/BaseEntryGetAction';
 import { BaseEntryUpdateAction } from 'kaltura-typescript-client/types/BaseEntryUpdateAction';
 import { EntriesStore } from '../entries/entries-store/entries-store.service';
-import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryFormManager } from './entry-form-manager';
 import { KalturaTypesFactory } from 'kaltura-typescript-client';
-import { OnDataSavingReasons } from '@kaltura-ng2/kaltura-ui';
+import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 export enum ActionTypes

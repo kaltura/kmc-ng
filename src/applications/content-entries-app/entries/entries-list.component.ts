@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem, Message } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 
 import { EntriesStore, SortDirection } from './entries-store/entries-store.service';

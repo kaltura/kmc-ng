@@ -1,11 +1,11 @@
 import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { FileDialogComponent } from '@kaltura-ng2/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { KalturaFlavorAssetStatus } from 'kaltura-typescript-client/types/KalturaFlavorAssetStatus';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { EntryFlavoursHandler } from './entry-flavours-handler';
 import { Flavor } from './flavor';

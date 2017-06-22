@@ -6,10 +6,10 @@ import { ISubscription } from 'rxjs/Subscription';
 import { KalturaCaptionAsset } from 'kaltura-typescript-client/types/KalturaCaptionAsset';
 import { KalturaLanguage } from 'kaltura-typescript-client/types/KalturaLanguage';
 import { KalturaCaptionType } from 'kaltura-typescript-client/types/KalturaCaptionType';
-import { AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
+import { AppLocalization, KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { FileDialogComponent } from '@kaltura-ng2/kaltura-ui';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
+import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 function urlValidator(control: AbstractControl): {[key: string]: boolean} | null {
 	let v: string = control.value;

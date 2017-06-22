@@ -2,8 +2,8 @@ import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit
 import { ISubscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
-import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
-import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
+import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { EntryUsersHandler } from './entry-users-handler';
 import { EntryFormManager } from '../entry-form-manager';
 

@@ -11,7 +11,7 @@ import { KalturaRecordStatus } from 'kaltura-typescript-client/types/KalturaReco
 import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamEntry';
 import { KalturaDVRStatus } from 'kaltura-typescript-client/types/KalturaDVRStatus';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';

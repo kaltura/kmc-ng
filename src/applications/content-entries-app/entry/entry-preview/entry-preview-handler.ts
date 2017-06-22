@@ -3,7 +3,7 @@ import {
     EntryFormWidget
 } from '../entry-form-widget';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { AppAuthentication } from '@kaltura-ng2/kaltura-common';
+import { AppAuthentication } from '@kaltura-ng/kaltura-common';
 import { environment } from 'app-environment';
 
 export interface PreviewEntryData{

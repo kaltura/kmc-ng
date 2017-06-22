@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { async } from 'rxjs/scheduler/async';
-import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng2/kaltura-common';
+import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng/kaltura-common';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
@@ -23,7 +23,7 @@ import { KalturaSearchOperatorType } from 'kaltura-typescript-client/types/Kaltu
 import { BaseEntryListAction } from 'kaltura-typescript-client/types/BaseEntryListAction';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 import { FilterItem } from "./filter-item";
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";

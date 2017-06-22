@@ -89,29 +89,29 @@
       "@kaltura-ng/kaltura-client/*": [
         "../node_modules/@kaltura-ng/kaltura-client/*"
       ],
+      "@kaltura-ng/kaltura-common": [
+        "../node_modules/@kaltura-ng/kaltura-common"
+      ],
+      "@kaltura-ng/kaltura-common/*": [
+        "../node_modules/@kaltura-ng/kaltura-common/*"
+      ],
+      "@kaltura-ng/kaltura-primeng-ui": [
+        "../node_modules/@kaltura-ng/kaltura-primeng-ui"
+      ],
+      "@kaltura-ng/kaltura-primeng-ui/*": [
+        "../node_modules/@kaltura-ng/kaltura-primeng-ui/*"
+      ],
+      "@kaltura-ng/kaltura-ui": [
+        "../node_modules/@kaltura-ng/kaltura-ui"
+      ],
+      "@kaltura-ng/kaltura-ui/*": [
+        "../node_modules/@kaltura-ng/kaltura-ui/*"
+      ],
       "@kaltura-ng/mc-theme": [
         "../node_modules/@kaltura-ng/mc-theme"
       ],
       "@kaltura-ng/mc-theme/*": [
         "../node_modules/@kaltura-ng/mc-theme/*"
-      ],
-      "@kaltura-ng2/kaltura-common": [
-        "../node_modules/@kaltura-ng2/kaltura-common"
-      ],
-      "@kaltura-ng2/kaltura-common/*": [
-        "../node_modules/@kaltura-ng2/kaltura-common/*"
-      ],
-      "@kaltura-ng2/kaltura-primeng-ui": [
-        "../node_modules/@kaltura-ng2/kaltura-primeng-ui"
-      ],
-      "@kaltura-ng2/kaltura-primeng-ui/*": [
-        "../node_modules/@kaltura-ng2/kaltura-primeng-ui/*"
-      ],
-      "@kaltura-ng2/kaltura-ui": [
-        "../node_modules/@kaltura-ng2/kaltura-ui"
-      ],
-      "@kaltura-ng2/kaltura-ui/*": [
-        "../node_modules/@kaltura-ng2/kaltura-ui/*"
       ],
       "JSON.sh": [
         "../node_modules/JSON.sh"

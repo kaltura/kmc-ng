@@ -5,13 +5,13 @@ import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/forkJoin';
-import { PrimeTreeNode } from '@kaltura-ng2/kaltura-primeng-ui';
+import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import {  KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-typescript-client';
 import { DistributionProfileListAction } from 'kaltura-typescript-client/types/DistributionProfileListAction';
 import { AccessControlListAction } from 'kaltura-typescript-client/types/AccessControlListAction';
-import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataItemTypes, FlavoursStore } from '@kaltura-ng2/kaltura-common';
+import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataItemTypes, FlavoursStore } from '@kaltura-ng/kaltura-common';
 
 import { KalturaAccessControlFilter } from 'kaltura-typescript-client/types/KalturaAccessControlFilter';
 import { KalturaAccessControlProfile } from 'kaltura-typescript-client/types/KalturaAccessControlProfile';

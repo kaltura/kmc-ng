@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { PrimeTreeNode, PrimeTreeDataProvider, NodeChildrenStatuses } from '@kaltura-ng2/kaltura-primeng-ui';
-import { AppAuthentication, AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { PrimeTreeNode, PrimeTreeDataProvider, NodeChildrenStatuses } from '@kaltura-ng/kaltura-primeng-ui';
+import { AppAuthentication, AppLocalization } from '@kaltura-ng/kaltura-common';
 import { CategoriesStore, CategoryData } from './categories-store.service';
 import { environment } from 'app-environment';
 

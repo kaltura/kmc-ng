@@ -2,14 +2,14 @@ import { Component, OnInit,  OnDestroy, AfterViewInit, Input,  ElementRef } from
 import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { PrimeTreeNode, PrimeTreeDataProvider } from '@kaltura-ng2/kaltura-primeng-ui';
-import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { PrimeTreeNode, PrimeTreeDataProvider } from '@kaltura-ng/kaltura-primeng-ui';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesStore } from "../entries-store/entries-store.service";
 import { FilterItem } from "../entries-store/filter-item";
 import { environment } from 'app-environment';
 
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { TimeSchedulingFilter } from "../entries-store/filters/time-scheduling-filter";
 
 import * as R from 'ramda';
@@ -19,7 +19,7 @@ import {
 } from "./entries-refine-filters-provider.service";
 import { CreatedAtFilter } from "../entries-store/filters/created-at-filter";
 import { ValueFilter } from '../entries-store/value-filter';
-import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 export interface TreeFilterData
 {

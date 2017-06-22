@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { KalturaPlaylistType } from 'kaltura-typescript-client/types/KalturaPlaylistType';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 @Pipe({name: 'playlistType'})
 

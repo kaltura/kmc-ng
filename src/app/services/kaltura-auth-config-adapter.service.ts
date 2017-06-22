@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BootstrapAdapter, BootstrapAdapterType, AppAuthentication } from '@kaltura-ng2/kaltura-common';
+import { BootstrapAdapter, BootstrapAdapterType, AppAuthentication } from '@kaltura-ng/kaltura-common';
 import { AppDefaultConfig } from "./app-default-config.service";
 import { environment } from 'app-environment';
 

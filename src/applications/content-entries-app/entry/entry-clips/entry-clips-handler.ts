@@ -11,14 +11,14 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaE
 import { KalturaClipAttributes } from 'kaltura-typescript-client/types/KalturaClipAttributes';
 import { KalturaOperationAttributes } from 'kaltura-typescript-client/types/KalturaOperationAttributes';
 import { BaseEntryListAction } from 'kaltura-typescript-client/types/BaseEntryListAction';
-import { AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
+import { AppLocalization, KalturaUtils } from '@kaltura-ng/kaltura-common';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
 import { EntryFormWidget } from '../entry-form-widget';
 import { EntryStore } from '../entry-store.service';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
-import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryFormManager } from '../entry-form-manager';
 
 

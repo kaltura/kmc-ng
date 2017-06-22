@@ -7,7 +7,7 @@ import {
 import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 import {
 	PlaylistsStore,

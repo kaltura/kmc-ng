@@ -16,9 +16,9 @@ import { EntrySchedulingHandler } from './entry-scheduling/entry-scheduling-hand
 import { EntryUsersHandler } from './entry-users/entry-users-handler';
 import { EntriesStore } from '../entries/entries-store/entries-store.service';
 import { EntryFormManager } from './entry-form-manager';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng2/kaltura-ui';
+import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { EntryFormWidget } from './entry-form-widget';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 @Component({
     selector: 'kEntry',

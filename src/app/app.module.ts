@@ -7,9 +7,9 @@ import { CommonModule } from '@angular/common';
 import { Ng2Webstorage } from 'ng2-webstorage';
 
 
-import { BootstrapAdapterToken, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType, KalturaCommonModule, AppStorage } from '@kaltura-ng2/kaltura-common';
+import { BootstrapAdapterToken, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType, KalturaCommonModule, AppStorage } from '@kaltura-ng/kaltura-common';
 import {  KalturaClient, KalturaClientConfiguration } from '@kaltura-ng/kaltura-client';
-import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 
 import { BrowserService, KMCShellModule } from 'app-shared/kmc-shell';
 
@@ -30,8 +30,8 @@ import { KalturaHttpConfigurationAdapter } from "./services/kaltura-http-configu
 
 import { ButtonModule, InputTextModule, TieredMenuModule } from 'primeng/primeng';
 
-import { AppLocalization, MetadataProfileModule, PartnerProfileStore, AccessControlProfileStore, FlavoursStore } from '@kaltura-ng2/kaltura-common';
-import { UploadManagementModule } from '@kaltura-ng2/kaltura-common/upload-management';
+import { AppLocalization, MetadataProfileModule, PartnerProfileStore, AccessControlProfileStore, FlavoursStore } from '@kaltura-ng/kaltura-common';
+import { UploadManagementModule } from '@kaltura-ng/kaltura-common/upload-management';
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
 import { ConfirmDialogModule, ConfirmationService, DropdownModule } from 'primeng/primeng';
 import { environment } from 'app-environment';

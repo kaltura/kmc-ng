@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { AppAuthentication } from '@kaltura-ng2/kaltura-common';
+import { AppAuthentication } from '@kaltura-ng/kaltura-common';
 import { KalturaAssetFilter } from 'kaltura-typescript-client/types/KalturaAssetFilter';
 import { KalturaAttachmentAsset } from 'kaltura-typescript-client/types/KalturaAttachmentAsset';
 import { KalturaAttachmentType } from 'kaltura-typescript-client/types/KalturaAttachmentType';
@@ -20,11 +20,11 @@ import { BrowserService } from 'app-shared/kmc-shell';
 
 import { EntryFormWidget } from '../entry-form-widget';
 import { EntryWidgetKeys } from '../entry-widget-keys';
-import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
-import { UploadManagement, FileChanges } from '@kaltura-ng2/kaltura-common/upload-management';
-import { FriendlyHashId } from '@kaltura-ng2/kaltura-common/friendly-hash-id';
+import { KalturaOVPFile } from '@kaltura-ng/kaltura-common/upload-management/kaltura-ovp';
+import { UploadManagement, FileChanges } from '@kaltura-ng/kaltura-common/upload-management';
+import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 
-import '@kaltura-ng2/kaltura-common/rxjs/add/operators'
+import '@kaltura-ng/kaltura-common/rxjs/add/operators'
 import { environment } from 'app-environment';
 
 @Injectable()

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { SortDirection } from '../entries-store/entries-store.service';
 
 @Pipe({name: 'kPrimeTableSortDirection'})

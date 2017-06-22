@@ -15,10 +15,20 @@
   "bugs": {
     "url": "https://github.com/kaltura/KMCng/issues"
   },
+  "contributors": [
+    {
+      "name": "Eran Sakal",
+      "email": "eran@sakalim.com"
+    },
+    {
+      "name": "Amir Chervinsky",
+      "email": "amir.chr@gmail.com"
+    }
+  ],
   "homepage": "https://github.com/kaltura/KMCng#readme",
   "scripts": {
     "ng": "ng",
-    "postinstall": "node ./scripts/fix-npm-link",
+    "postinstall": "node ./scripts/fix-tsconfig-paths.js",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
@@ -41,11 +51,11 @@
     "@angular/platform-browser": "^4.0.0",
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
-    "@kaltura-ng/kaltura-client": "^2.1.0",
-    "@kaltura-ng/mc-theme": "file:/Users/eransakal/dev/github/kaltura/kmc-ng-workspace/packages/kaltura-ng-mc-theme",
-    "@kaltura-ng2/kaltura-common": "^0.0.2",
-    "@kaltura-ng2/kaltura-primeng-ui": "1.0.0-alpha",
-    "@kaltura-ng2/kaltura-ui": "*",
+    "@kaltura-ng/kaltura-client": "file:/Users/eransakal/dev/github/kaltura/kmc-ng-workspace/kaltura-ng/kaltura-client/dist",
+    "@kaltura-ng/kaltura-common": "file:/Users/eransakal/dev/github/kaltura/kmc-ng-workspace/kaltura-ng/kaltura-common/dist",
+    "@kaltura-ng/kaltura-primeng-ui": "file:/Users/eransakal/dev/github/kaltura/kmc-ng-workspace/kaltura-ng/kaltura-primeng-ui/dist",
+    "@kaltura-ng/kaltura-ui": "file:/Users/eransakal/dev/github/kaltura/kmc-ng-workspace/kaltura-ng/kaltura-ui/dist",
+    "@kaltura-ng/mc-theme": "file:/Users/eransakal/dev/github/kaltura/kmc-ng-workspace/kaltura-ng-mc-theme/dist",
     "JSON.sh": "^0.3.3",
     "core-js": "^2.4.1",
     "intl": "^1.2.5",
@@ -87,8 +97,7 @@
     "ts-helpers": "^1.1.2",
     "ts-node": "~3.0.4",
     "tslint": "~5.3.2",
-    "typescript": "~2.3.3",
-    "wml": "github:esakal/wml"
+    "typescript": "~2.3.3"
   },
   "engines": {
     "node": ">= 7.0.0"

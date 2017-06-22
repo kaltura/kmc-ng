@@ -3,11 +3,11 @@ import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/f
 import { Observable } from 'rxjs/Observable';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { EntryFormWidget } from '../entry-form-widget';
-import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 function datesValidation(checkRequired: boolean = false): ValidatorFn {
 	return (c: AbstractControl): {[key: string]: boolean} | null => {

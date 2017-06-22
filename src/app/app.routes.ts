@@ -1,5 +1,5 @@
 import { Routes, RouterModule } from '@angular/router';
-import { AuthCanActivate, AppBootstrap } from '@kaltura-ng2/kaltura-common';
+import { AuthCanActivate, AppBootstrap } from '@kaltura-ng/kaltura-common';
 
 import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';

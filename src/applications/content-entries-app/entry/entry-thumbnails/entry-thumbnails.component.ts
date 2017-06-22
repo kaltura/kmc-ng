@@ -1,7 +1,7 @@
 import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
 
-import { AppLocalization, AppAuthentication } from '@kaltura-ng2/kaltura-common';
-import { KalturaUtils } from '@kaltura-ng2/kaltura-common/utils/kaltura-utils';
+import { AppLocalization, AppAuthentication } from '@kaltura-ng/kaltura-common';
+import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
 import { BrowserService } from 'app-shared/kmc-shell';
 
 import { EntryThumbnailsHandler, ThumbnailRow } from './entry-thumbnails-handler';
