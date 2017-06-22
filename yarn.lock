@@ -138,20 +138,25 @@
   dependencies:
     tsickle "^0.21.0"
 
-"@kaltura-ng/kaltura-client@file:/Users/eransakal/dev/github/kaltura/kmc-ng-workspace/kaltura-ng/kaltura-client/dist":
+"@kaltura-ng/kaltura-client@^0.1.0":
   version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-client/-/kaltura-client-0.1.0.tgz#80e7f2dc4b0fce144c747c4854b2981719b8321d"
 
-"@kaltura-ng/kaltura-common@file:/Users/eransakal/dev/github/kaltura/kmc-ng-workspace/kaltura-ng/kaltura-common/dist":
-  version "0.1.0"
+"@kaltura-ng/kaltura-common@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-common/-/kaltura-common-0.2.0.tgz#e9141fa496f11d50ec3f0b5ff82316af58e58aba"
 
-"@kaltura-ng/kaltura-primeng-ui@file:/Users/eransakal/dev/github/kaltura/kmc-ng-workspace/kaltura-ng/kaltura-primeng-ui/dist":
-  version "0.1.0"
+"@kaltura-ng/kaltura-primeng-ui@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-primeng-ui/-/kaltura-primeng-ui-0.2.0.tgz#1790129b0bc3bcff6dbaefeb7269e9629f90f1c3"
 
-"@kaltura-ng/kaltura-ui@file:/Users/eransakal/dev/github/kaltura/kmc-ng-workspace/kaltura-ng/kaltura-ui/dist":
-  version "0.1.0"
+"@kaltura-ng/kaltura-ui@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-ui/-/kaltura-ui-0.2.0.tgz#4da62069e240d0b9730ec2b58702e85a494dd7e7"
 
-"@kaltura-ng/mc-theme@file:/Users/eransakal/dev/github/kaltura/kmc-ng-workspace/kaltura-ng-mc-theme/dist":
+"@kaltura-ng/mc-theme@^0.1.0":
   version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/mc-theme/-/mc-theme-0.1.0.tgz#736c804dd0234eb99fcd2c85453503a4be0b4c84"
 
 "@ngtools/json-schema@1.1.0":
   version "1.1.0"
