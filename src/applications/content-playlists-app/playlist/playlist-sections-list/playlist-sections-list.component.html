@@ -1,10 +1,14 @@
 <k-area-blocker [showLoader]="_loading">
 	<ul>
-		<li class="active">
-			<div >{{'applications.content.playlistDetails.sections.metadata' | translate}}</div>
+		<li [class.active]="!_activeSelection">
+			<div (click)="navigateToSection(0)" [class.kSectionHasErrors]="!sections.metadataIsValid">
+				{{'applications.content.playlistDetails.sections.metadata' | translate}}
+			</div>
 		</li>
-		<li>
-			<div>{{'applications.content.playlistDetails.sections.content' | translate}}</div>
+		<li [class.active]="_activeSelection">
+			<div (click)="navigateToSection(1)" [class.kSectionHasErrors]="!sections.contentIsValid">
+				{{'applications.content.playlistDetails.sections.content' | translate}}
+			</div>
 		</li>
 	</ul>
 </k-area-blocker>

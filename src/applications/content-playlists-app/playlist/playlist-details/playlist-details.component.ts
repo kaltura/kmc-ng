@@ -1,4 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { PlaylistStore } from '../playlist-store.service';
+import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
 
 @Component({
 	selector: 'kPlaylistDetails',
@@ -6,10 +8,20 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 	styleUrls: ['./playlist-details.component.scss']
 })
 export class PlaylistDetailsComponent implements OnInit, OnDestroy {
+	public playlist: KalturaPlaylist;
 
-	constructor() {}
+	constructor( public _playlistStore : PlaylistStore ) {}
 
-	ngOnInit() {}
+	ngOnInit() {
+		this._playlistStore.state$
+			.subscribe(
+				response => {
+					if(!response.isBusy) {
+						this.playlist = this._playlistStore.playlist;
+					}
+				}
+			)
+	}
 
 	ngOnDestroy() {}
 }

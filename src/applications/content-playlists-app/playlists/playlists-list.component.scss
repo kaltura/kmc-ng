@@ -10,7 +10,7 @@
 	box-sizing: border-box;
 	display: flex;
 	flex-flow: row wrap;
-	margin: 0;
+	margin: 0px;
     .kPlaylistsHolder {
         height: 100%;
         border: 1px solid $kGrayscale6;
@@ -48,7 +48,7 @@
 		background-color: white;
 		flex: 0 0 auto;
 		align-items: center;
-		margin-left: 0;
+		margin-left: 0px;
 		border-bottom: none;
 		border-top-left-radius: 5px;
 		border-top-right-radius: 5px;
@@ -63,7 +63,7 @@
 		min-width: inherit;
 		margin-right: 16px;
 		width: 40px;
-		outline: 0;
+		outline: 0px;
 		color: $kGrayscale3;
 		&:active{
 			box-shadow: none;
@@ -136,8 +136,8 @@
 	}
 	.kHidden {
 		visibility: hidden;
-		width: 0;
-		height: 0;
+		width: 0px;
+		height: 0px;
 	}
 	.kRefine {
 		border: 1px solid $kGrayscale4;

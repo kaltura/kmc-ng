@@ -1,64 +1,132 @@
-import { Injectable, OnDestroy, Host } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { PlaylistGetAction } from 'kaltura-typescript-client/types/PlaylistGetAction';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
-import { PlaylistFormManager } from './playlist-form-manager';
+import { AreaBlockerMessageButton } from '@kaltura-ng2/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
-export enum ActionTypes
+export enum PlaylistsSections
 {
-	PlaylistLoading,
-	PlaylistLoaded,
-	PlaylistLoadingFailed,
-	NavigateOut
+	Metadata,
+	Content
 }
-
-declare type StatusArgs =
-	{
-		action : ActionTypes;
-		error? : Error;
-	}
 
 @Injectable()
 export class PlaylistStore implements OnDestroy {
+	public _sectionsState = new BehaviorSubject<{ metadataIsValid: boolean, contentIsValid: boolean }>({
+		metadataIsValid: true,
+		contentIsValid: true
+	});
 	private _loadPlaylistSubscription : ISubscription;
-	private _playlist : BehaviorSubject<KalturaPlaylist> = new BehaviorSubject<KalturaPlaylist>(null);
-	private _state : Subject<StatusArgs> = new Subject<StatusArgs>();
+	public _activeSection = new BehaviorSubject<{ section: PlaylistsSections}>({section: null});
+	private _playlist = new BehaviorSubject<{ playlist: KalturaPlaylist}>({playlist: null});
+	private _state = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin: 'reload' | 'save'}}>({isBusy: false});
+
+	public sectionsState$ = this._sectionsState.asObservable();
 	public state$ = this._state.asObservable();
 	private _playlistId: string;
 
-	public get playlistId() : string{
-		return this._playlistId;
+	public get activeSection(): PlaylistsSections {
+		return this._activeSection.getValue().section;
 	}
 
 	public get playlist() : KalturaPlaylist
 	{
-		return this._playlist.getValue();
+		return this._playlist.getValue().playlist;
 	}
 
-    constructor(
+	public navigateToSection(section: PlaylistsSections): void {
+		this._router.navigate([PlaylistsSections[section].toLowerCase()], {relativeTo: this._playlistRoute});
+		this._activeSection.next({section: section});
+	}
+
+	constructor(
 		private _router: Router,
 		private _playlistRoute: ActivatedRoute,
 		private _kalturaServerClient: KalturaClient,
-		@Host() private _sectionsManager : PlaylistFormManager,
+		private _appLocalization: AppLocalization
 	) {
-		this._sectionsManager.playlistStore = this;
-
+		this._state.next({isBusy: true});
+		this._sectionsState.next({metadataIsValid: false, contentIsValid: false});
 		this._onRouterEvents();
 	}
 
-	private _canLeaveWithoutSaving() : Observable<{ allowed : boolean}>
+	private _onRouterEvents() : void {
+		this._playlistRoute.firstChild.data
+			.subscribe(
+				value => {
+					this._activeSection.next({section: +PlaylistsSections[value.sectionKey]});
+				}
+			);
+
+		this._router.events
+			.cancelOnDestroy(this)
+			.subscribe(
+				event => {
+					if (event instanceof NavigationEnd) {
+						const currentPlaylistId = this._playlistRoute.snapshot.params.id;
+						const playlist = this._playlist.getValue();
+						if (!playlist.playlist || (playlist.playlist && playlist.playlist.id !== currentPlaylistId)) {
+							this._loadPlaylist(currentPlaylistId);
+						}
+					}
+				}
+			)
+	}
+
+	private _loadPlaylist(id : string) : void  {
+		if (this._loadPlaylistSubscription) {
+			this._loadPlaylistSubscription.unsubscribe();
+			this._loadPlaylistSubscription = null;
+		}
+
+		this._playlistId = id;
+		this._state.next({isBusy: true});
+
+		this._loadPlaylistSubscription = this._kalturaServerClient.request(new PlaylistGetAction({id}))
+			.cancelOnDestroy(this)
+			.subscribe(
+				response => {
+					if (response instanceof KalturaPlaylist) {
+						this._playlist.next({playlist: response});
+						this._playlistId = response.id;
+						this._state.next({isBusy: false});
+					}
+				},
+				error => {
+					this._state.next({
+						isBusy: true,
+						error: {message: error.message, origin: 'reload'}
+					});
+					this._createBackToPlaylistsButton(),
+						{
+							label: this._appLocalization.get('applications.content.playlistDetails.errors.retry'),
+							action: () => {
+								this.reloadPlaylist();
+							}
+						}
+				}
+			);
+	}
+
+	private _createBackToPlaylistsButton(): AreaBlockerMessageButton {
+		return {
+			label: 'Back To Playlists',
+			action: () => {
+				this.returnToPlaylists();
+			}
+		};
+	}
+
+	public reloadPlaylist() : void
 	{
-		return Observable.create(observer =>
+		if (this._playlistId)
 		{
-			observer.next({allowed: true});
-			observer.complete();
-		}).monitor('playlist store: check if can leave section without saving');
+			this._loadPlaylist(this._playlistId);
+		}
 	}
 
 	ngOnDestroy() {
@@ -67,134 +135,7 @@ export class PlaylistStore implements OnDestroy {
 		this._playlist.complete();
 	}
 
-	public returnToPlaylists(params : {force? : boolean} = {})
-	{
-		this._canLeaveWithoutSaving()
-            .cancelOnDestroy(this)
-			.monitor('playlist store: return to playlists list')
-			.subscribe(
-				response =>
-				{
-					if (response.allowed)
-					{
-						this._state.next({action: ActionTypes.NavigateOut});
-
-						this._router.navigate(['content/playlists']);
-					}
-				}
-			);
-	}
-
-	public reloadEntry() : void
-	{
-		if (this.playlistId)
-		{
-			this._loadPlaylist(this.playlistId);
-		}
-	}
-
-	private _onRouterEvents() : void {
-		this._router.events
-			.cancelOnDestroy(this)
-			.subscribe(
-				event => {
-					if (event instanceof NavigationEnd) {
-						const currentPlaylistId = this._playlistRoute.snapshot.params.id;
-						const playlist = this._playlist.getValue();
-						if (!playlist || (playlist && playlist.id !== currentPlaylistId)) {
-							this._loadPlaylist(currentPlaylistId);
-						}
-					}
-				}
-			)
-	}
-
-	private _getPlaylist(id:string) : Observable<KalturaPlaylist | Error> {
-		if (id) {
-			return Observable.create(observer => {
-				try {
-					const request = new KalturaMultiRequest (
-						new PlaylistGetAction({id})
-							.setCompletion(
-								response =>
-								{
-									if (response.result) {
-										if (response.result instanceof KalturaPlaylist) {
-											observer.next(response.result);
-											observer.complete();
-										}else
-										{
-											observer.next(new Error("invalid entry type, expected KalturaPlaylist"));
-											observer.complete();
-										}
-									} else {
-										observer.next(response.error);
-									}
-								}
-							)
-					);
-
-					const requestSubscription = this._kalturaServerClient.multiRequest(request).subscribe(() =>
-					{
-
-					});
-
-					return () =>
-					{
-						if (requestSubscription)
-						{
-							requestSubscription.unsubscribe();
-						}
-					}
-				} catch(ex) {
-					observer.next(ex);
-				}
-			});
-		} else {
-			return Observable.of(new Error('missing playlist id'));
-		}
-	}
-
-
-	private _loadPlaylist(playlistId : string) : void {
-		if (this._loadPlaylistSubscription) {
-			this._loadPlaylistSubscription.unsubscribe();
-			this._loadPlaylistSubscription = null;
-		}
-
-		this._playlistId = playlistId;
-
-		this._state.next({action: ActionTypes.PlaylistLoading});
-		this._sectionsManager.onDataLoading(playlistId);
-		this._loadPlaylistSubscription = this._getPlaylist(playlistId)
-			.cancelOnDestroy(this)
-			.subscribe(
-				response => {
-					if (response instanceof KalturaPlaylist) {
-
-						this._playlist.next(response);
-						this._playlistId = response.id;
-
-						const dataLoadedResult = this._sectionsManager.onDataLoaded(response);
-
-						if (dataLoadedResult.errors.length)
-						{
-							this._state.next({action: ActionTypes.PlaylistLoadingFailed,
-								error: new Error(`one of the widgets failed while handling data loaded event`)});
-						} else {
-							this._state.next({action: ActionTypes.PlaylistLoaded});
-						}
-
-					} else {
-						this._state.next({
-							action: ActionTypes.PlaylistLoadingFailed,
-							error: new Error(`entry type not supported ${response.name}`)
-						});
-					}
-				},
-				error => {
-					this._state.next({action: ActionTypes.PlaylistLoadingFailed, error});
-				}
-			);
+	public returnToPlaylists(params : {force? : boolean} = {}) {
+		this._router.navigate(['content/playlists']);
 	}
 }
