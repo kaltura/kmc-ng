@@ -56,7 +56,8 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         sortDirection : SortDirection.Desc
     };
 
-    constructor(public _entriesStore : EntriesStore, private additionalFilters : EntriesRefineFiltersProvider, private appLocalization: AppLocalization, private router: Router, private _browserService : BrowserService,) {
+    constructor(private _entriesStore : EntriesStore, private additionalFilters : EntriesRefineFiltersProvider, private appLocalization: AppLocalization, private router: Router, private _browserService : BrowserService) {
+
     }
 
     removeTag(tag: any){

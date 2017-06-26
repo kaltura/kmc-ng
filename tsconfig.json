@@ -26,8 +26,8 @@
       "app-environment": [
         "environments/environment"
       ],
-      "app-styles/*": [
-        "styles/*"
+      "app-theme/*": [
+        "styles/app-theme/*"
       ],
       "@angular/animations": [
         "../node_modules/@angular/animations"

@@ -20,7 +20,7 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "kmc",
       "styles": [
-        "shared/app-styles/styles.sass"
+        "styles/app-theme/styles.sass"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
@@ -29,7 +29,7 @@
         "prod": "environments/environment.prod.ts"
       },
       "stylePreprocessorOptions" : {
-        "includePaths" : ["shared"]
+        "includePaths" : ["styles"]
       }
     }
   ],
