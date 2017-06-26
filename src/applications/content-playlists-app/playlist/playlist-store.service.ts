@@ -50,7 +50,7 @@ export class PlaylistStore implements OnDestroy {
 		private _appLocalization: AppLocalization
 	) {
 		this._state.next({isBusy: true});
-		this._sectionsState.next({metadataIsValid: false, contentIsValid: false});
+		this._sectionsState.next({metadataIsValid: true, contentIsValid: true});
 		this._onRouterEvents();
 	}
 

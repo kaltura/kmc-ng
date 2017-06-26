@@ -9,6 +9,7 @@ import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist
 })
 export class PlaylistDetailsComponent implements OnInit, OnDestroy {
 	public playlist: KalturaPlaylist;
+	public numberOfEntries: number;
 
 	constructor( public _playlistStore : PlaylistStore ) {}
 
@@ -18,6 +19,7 @@ export class PlaylistDetailsComponent implements OnInit, OnDestroy {
 				response => {
 					if(!response.isBusy) {
 						this.playlist = this._playlistStore.playlist;
+						this.numberOfEntries = this._playlistStore.playlist.playlistContent.split(',').length;
 					}
 				}
 			)

@@ -23,7 +23,7 @@
 
 		<div class="kRow">
 			<span class="kLabels">{{'applications.content.playlistDetails.details.type' | translate}}</span>
-			<span>{{playlist.type | playlistType}}</span> <!-- ToDo need to figure out the playlist types -->
+			<span>{{playlist.playlistType | playlistType}}</span>
 		</div>
 
 		<div class="kRow">
@@ -43,7 +43,7 @@
 
 		<div class="kRow">
 			<span class="kLabels">{{'applications.content.playlistDetails.details.numberOfEntries' | translate}}</span>
-			<span>None</span> <!-- ToDo need to figure out how to get and calculate the number of Entries -->
+			<span>{{numberOfEntries}}</span>
 		</div>
 	</div>
 </div>
