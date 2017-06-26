@@ -119,7 +119,7 @@
         border-radius: 4px;
         display: flex;
         background-color: #ffffff;
-        height: 34px;
+        height: 32px;
         align-items: center;
         cursor: pointer;
         color: $kGrayscale1;
@@ -139,8 +139,8 @@
             i{
                 color: $kPrimary;
             }
-            .dropdown{
-                color: $kPrimary;
+            i.kIcondropdown_arrow_bottom.dropdown{
+              color: $kGrayscale3;
             }
         }
         .dropdown{
