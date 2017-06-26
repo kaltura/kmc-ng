@@ -1,8 +1,9 @@
 import { Component, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
-import { Flavor } from '../entry-flavours-handler';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { Flavor } from '../flavor';
+
 
 @Component({
 	selector: 'kFlavorImport',

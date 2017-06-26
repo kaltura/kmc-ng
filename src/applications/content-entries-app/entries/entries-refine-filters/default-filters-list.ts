@@ -1,6 +1,6 @@
 import { FilterItem } from '../entries-store/filter-item';
 import { ValueFilter } from '../entries-store/value-filter';
-import { PrimeTreeNode } from '@kaltura-ng2/kaltura-primeng-ui';
+import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
 
 import { MediaTypesFilter } from "../entries-store/filters/media-types-filter";
 

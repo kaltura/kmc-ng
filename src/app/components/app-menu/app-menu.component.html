@@ -3,7 +3,7 @@
       <div class="k-logo"></div>
 
       <div *ngFor="let item of menuConfig">
-        <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]">{{'app.menu.'+item.titleToken | translate | uppercase}}</a>
+        <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]" [class.disabled]="!item.enabled">{{'app.menu.'+item.titleToken | translate | uppercase}}</a>
       </div>
 
     <div class="kMenu-right">
@@ -22,7 +22,7 @@
 <div class="appSubMenu" *ngIf="selectedMenuItem && showSubMenu && selectedMenuItem.children">
     <div class="kContent">
         <div *ngFor="let subitem of selectedMenuItem.children" class="subMenuContainer" [routerLinkActive]="['active']">
-          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+subitem.routePath]">{{'app.menu.'+subitem.titleToken | translate | uppercase}}</a>
+          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+subitem.routePath]" [class.disabled]="!subitem.enabled">{{'app.menu.'+subitem.titleToken | translate | uppercase}}</a>
           <div class="linkMarker"></div>
         </div>
     </div>

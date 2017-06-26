@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { PrimeTreeNode, PrimeTreeDataProvider, NodeChildrenStatuses } from '@kaltura-ng2/kaltura-primeng-ui';
-import { AppAuthentication, AppConfig, AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { CategoriesStore, CategoriesQuery, CategoryData } from './categories-store.service';
+import { PrimeTreeNode, PrimeTreeDataProvider, NodeChildrenStatuses } from '@kaltura-ng/kaltura-primeng-ui';
+import { AppAuthentication, AppLocalization } from '@kaltura-ng/kaltura-common';
+import { CategoriesStore, CategoryData } from './categories-store.service';
+import { environment } from 'app-environment';
 
 @Injectable()
 export class CategoriesPrimeService {
 
 	private inLazyMode : boolean = false;
 
-	constructor(private _categoriesStore: CategoriesStore, private primeTreeDataProvider : PrimeTreeDataProvider, private appAuthentication : AppAuthentication, private appConfig: AppConfig, private appLocalization: AppLocalization) {
+	constructor(private _categoriesStore: CategoriesStore, private primeTreeDataProvider : PrimeTreeDataProvider, private appAuthentication : AppAuthentication, private appLocalization: AppLocalization) {
 		this.inLazyMode = this.appAuthentication.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
 	}
 
@@ -45,7 +46,7 @@ export class CategoriesPrimeService {
 			// make sure the node children weren't loaded already.
 			if (node.childrenStatus !== NodeChildrenStatuses.loaded && node.childrenStatus !== NodeChildrenStatuses.loading) {
 
-				const maxNumberOfChildren = this.appConfig.get('entriesShared.categoriesFilters.maxChildrenToShow', 100);
+				const maxNumberOfChildren = environment.entriesShared.categoriesFilters.maxChildrenToShow;
 				if (node.childrenCount > maxNumberOfChildren) {
 					node.setChildrenLoadStatus(NodeChildrenStatuses.error,
 						this.appLocalization.get('entriesShared.categoriesFilters.maxChildrenExceeded', {childrenCount: maxNumberOfChildren}));

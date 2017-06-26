@@ -11,14 +11,15 @@ import { KalturaRecordStatus } from 'kaltura-typescript-client/types/KalturaReco
 import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamEntry';
 import { KalturaDVRStatus } from 'kaltura-typescript-client/types/KalturaDVRStatus';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { AppLocalization, AppConfig } from '@kaltura-ng2/kaltura-common';
-import { BrowserService } from 'kmc-shell';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { EntryFormWidget } from '../entry-form-widget';
 import { EntryFormManager } from '../entry-form-manager';
 import { LiveXMLExporter } from './live-xml-exporter';
 import { AVAIL_BITRATES } from './bitrates';
+import { environment } from 'app-environment';
 
 export interface bitrate {
 	enabled: boolean,
@@ -49,7 +50,7 @@ export class EntryLiveHandler extends EntryFormWidget {
 	public _bitrates: bitrate[] = [];
 	public _availableBitrates = AVAIL_BITRATES;
 
-	constructor(manager: EntryFormManager, private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _appConfig: AppConfig, private _browserService: BrowserService) {
+	constructor(manager: EntryFormManager, private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
 		super(EntryWidgetKeys.Live);
 	}
 
@@ -168,8 +169,8 @@ export class EntryLiveHandler extends EntryFormWidget {
 	 */
 
 	public _openLiveReport(): void {
-		const base_url = window.location.protocol + '//' + this._appConfig.get('core.kaltura.kmcUrl');
-		const url = base_url + '/apps/liveanalytics/' + this._appConfig.get('core.kaltura.liveAnalyticsVersion') + '/index.html#/entry/' + this.data.id + '/nonav';
+		const base_url = window.location.protocol + '//' + environment.core.kaltura.kmcUrl;
+		const url = base_url + '/apps/liveanalytics/' + environment.core.kaltura.liveAnalyticsVersion + '/index.html#/entry/' + this.data.id + '/nonav';
 		this._browserService.openLink(url);
 	}
 

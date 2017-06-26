@@ -1,4 +1,4 @@
-@import "~kmcng-theme/scss/_variables.scss";
+@import "app-theme/_variables.scss";
 
 .kClose{
     float: right;
@@ -14,10 +14,6 @@
     padding-left: 20px;
     margin-right: -20px;
     margin-top: 18px;
-}
-.kPrefs{
-    padding-left: 20px;
-    padding-top: 10px;
 }
 .kFilterPrefs{
     color: $kGrayscale3;
@@ -100,6 +96,12 @@ a.disabled{
 			height: 34px;
 			padding-left: 4px;
 			width: 328px;
+			&:active{
+				background-color: white;
+			}
+			&:focus{
+				background-color: white;
+			}
 		}
 	}
 }

@@ -4,7 +4,12 @@
             "upload":"Upload",
             "Content": "Content",
             "Entries": "Entries",
-			"Playlists": "Playlists"
+            "Moderation": "Moderation",
+			"Playlists": "Playlists",
+			"Syndication": "Syndication",
+			"Categories": "Categories",
+			"Studio": "Studio",
+			"Analytics": "Analytics"
         },
         "userSettings":{
             "changeAccount": "Change Acoount",

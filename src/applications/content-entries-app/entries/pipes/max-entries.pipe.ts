@@ -1,14 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { environment } from 'app-environment';
 
-import { AppConfig } from '@kaltura-ng2/kaltura-common';
 
 @Pipe({name: 'kMaxEntries'})
 export class MaxEntriesPipe implements PipeTransform {
-  constructor(private _appConfig: AppConfig) {
+  constructor() {
   }
 
   transform(value: number): number {
-  	const maxEntries = this._appConfig.get('entriesShared.MAX_ENTRIES',10000);
+  	const maxEntries = environment.entriesShared.MAX_ENTRIES;
     return value >  maxEntries ? maxEntries : value;
   }
 }

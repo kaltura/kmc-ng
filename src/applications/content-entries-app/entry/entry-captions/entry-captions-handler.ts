@@ -20,12 +20,12 @@ import { KalturaCaptionAssetStatus } from 'kaltura-typescript-client/types/Kaltu
 import { KalturaLanguage } from 'kaltura-typescript-client/types/KalturaLanguage';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 import { EntryFormWidget } from '../entry-form-widget';
 import { EntryWidgetKeys } from '../entry-widget-keys';
-import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
-import { UploadManagement, FileChanges } from '@kaltura-ng2/kaltura-common/upload-management';
+import { KalturaOVPFile } from '@kaltura-ng/kaltura-common/upload-management/kaltura-ovp';
+import { UploadManagement, FileChanges } from '@kaltura-ng/kaltura-common/upload-management';
 
 export interface CaptionRow {
 	uploading: boolean,

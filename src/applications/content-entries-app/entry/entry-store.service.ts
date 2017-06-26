@@ -14,11 +14,11 @@ import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { BaseEntryGetAction } from 'kaltura-typescript-client/types/BaseEntryGetAction';
 import { BaseEntryUpdateAction } from 'kaltura-typescript-client/types/BaseEntryUpdateAction';
 import { EntriesStore } from '../entries/entries-store/entries-store.service';
-import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryFormManager } from './entry-form-manager';
 import { KalturaTypesFactory } from 'kaltura-typescript-client';
-import { OnDataSavingReasons } from '@kaltura-ng2/kaltura-ui';
-import { BrowserService } from '../../../shared/kmc-shell/providers/browser.service';
+import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 export enum ActionTypes
 {
@@ -45,13 +45,15 @@ export class EntryStore implements  OnDestroy {
 
 	private _loadEntrySubscription : ISubscription;
 	private _sectionToRouteMapping : { [key : number] : string} = {};
-	private _state : Subject<StatusArgs> = new Subject<StatusArgs>();
+	private _state = new BehaviorSubject<StatusArgs>({ action : ActionTypes.EntryLoading, error : null});
+
 	public state$ = this._state.asObservable();
 	private _entryIsDirty : boolean;
 
 	public get entryIsDirty() : boolean{
 		return this._entryIsDirty;
 	}
+
 
 
 	private _saveEntryInvoked = false;
@@ -73,6 +75,7 @@ export class EntryStore implements  OnDestroy {
 				private _entriesStore : EntriesStore,
 				@Host() private _sectionsManager : EntryFormManager,
 				private _entryRoute: ActivatedRoute) {
+
 
 		this._sectionsManager.entryStore = this;
 
@@ -146,11 +149,17 @@ export class EntryStore implements  OnDestroy {
 				event => {
 					if (event instanceof NavigationStart) {
 					} else if (event instanceof NavigationEnd) {
-						const currentEntryId = this._entryRoute.snapshot.params.id;
-						const entry = this._entry.getValue();
-						if (!entry || (entry && entry.id !== currentEntryId)) {
-							this._loadEntry(currentEntryId);
-						}
+
+						// we must defer the loadEntry to the next event cycle loop to allow components
+						// to init them-selves when entering this module directly.
+						setTimeout(() =>
+						{
+							const currentEntryId = this._entryRoute.snapshot.params.id;
+							const entry = this._entry.getValue();
+							if (!entry || (entry && entry.id !== currentEntryId)) {
+								this._loadEntry(currentEntryId);
+							}
+						});
 					}
 				}
 			)

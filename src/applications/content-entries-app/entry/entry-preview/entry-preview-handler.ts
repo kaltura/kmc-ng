@@ -3,7 +3,8 @@ import {
     EntryFormWidget
 } from '../entry-form-widget';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
+import { AppAuthentication } from '@kaltura-ng/kaltura-common';
+import { environment } from 'app-environment';
 
 export interface PreviewEntryData{
     landingPage : string;
@@ -18,7 +19,6 @@ export class EntryPreviewHandler extends EntryFormWidget
 
     constructor(
                 kalturaServerClient: KalturaClient,
-                private appConfig: AppConfig,
                 private appAuthentication: AppAuthentication)
 
     {
@@ -44,10 +44,10 @@ export class EntryPreviewHandler extends EntryFormWidget
         }
         this._landingPage = landingPage;
 
-        const UIConfID = this.appConfig.get('core.kaltura.previewUIConf');
+        const UIConfID = environment.core.kaltura.previewUIConf;
         const partnerID = this.appAuthentication.appUser.partnerId;
 	    const ks = this.appAuthentication.appUser.ks || "";
-        this.iframeSrc = this.appConfig.get('core.kaltura.cdnUrl') + '/p/' + partnerID + '/sp/' + partnerID + '00/embedIframeJs/uiconf_id/' + UIConfID + '/partner_id/' + partnerID + '?iframeembed=true&flashvars[closedCaptions.plugin]=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[ks]=' + ks +'&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id=' + dataId;
+        this.iframeSrc = `${environment.core.kaltura.cdnUrl}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${UIConfID}/partner_id/${partnerID}?iframeembed=true&flashvars[closedCaptions.plugin]=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[ks]=${ks}&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id=${dataId}`;
     }
 
     protected _onActivate(firstTimeActivating: boolean) {

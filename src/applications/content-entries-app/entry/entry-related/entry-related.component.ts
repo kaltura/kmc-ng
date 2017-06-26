@@ -4,8 +4,8 @@ import { EntryRelatedHandler } from './entry-related-handler';
 import { KalturaAttachmentType } from 'kaltura-typescript-client/types/KalturaAttachmentType';
 import { KalturaAttachmentAsset } from 'kaltura-typescript-client/types/KalturaAttachmentAsset';
 import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { SelectItem, Menu, MenuItem } from 'primeng/primeng';
 import { EntryFormManager } from '../entry-form-manager';
 

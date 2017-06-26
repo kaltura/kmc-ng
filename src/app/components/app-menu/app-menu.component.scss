@@ -1,4 +1,4 @@
-@import '~kmcng-theme/scss/_variables.scss';
+@import 'app-theme/_variables.scss';
 @import '../../styles/scss/kmc-logo';
 
 .appMenu {
@@ -16,6 +16,11 @@
         margin-right: 30px;
         letter-spacing: 0.5px;
         text-decoration: none;
+		&.disabled{
+			color: $kGrayscale4;
+			border: 0px solid $menuBkgColor;
+			pointer-events: none;
+		}
         &:hover {
             text-decoration: none;
             color: $mainLinkHoverColor;
@@ -133,10 +138,11 @@
         letter-spacing: 0.5px;
         cursor: pointer;
         text-decoration: none;
-        &.disabled {
-            color: gray;
-            cursor: not-allowed;
-        }
+		&.disabled{
+			color: $kGrayscale4;
+			border: 0px solid white;
+			pointer-events: none;
+		}
         &:hover {
             text-decoration: none;
             color: $menuBkgColor;

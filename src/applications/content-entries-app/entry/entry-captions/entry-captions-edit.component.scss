@@ -1,4 +1,4 @@
-@import '~kmcng-theme/scss/variables';
+@import 'app-theme/_variables.scss';
 
 .kEditWin{
 	display: flex;
@@ -30,15 +30,20 @@
 		width: 100%;
 		height: 1px;
 		margin-top: 24px;
-		margin-left: -20px;
-		padding-right: 50px;
+		margin-left: -12px;
+		padding-right: 40px;
 		background-color: $kGrayscale4;
 	}
+
 	.kFooter{
 		position: absolute;
 		bottom: 12px;
 		right: 0px;
 		left: 0px;
+		.kDivider{
+			margin-left: 0px;
+			padding-right: 0px;
+		}
 	}
 	.kDoneBtn{
 		height: 34px;

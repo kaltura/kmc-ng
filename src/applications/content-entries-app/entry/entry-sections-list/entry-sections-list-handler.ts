@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AppLocalization } from "@kaltura-ng2/kaltura-common";
+import { AppLocalization } from "@kaltura-ng/kaltura-common";
 import { SectionsList } from './sections-list';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import '@kaltura-ng2/kaltura-common/rxjs/add/operators';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryFormWidget } from '../entry-form-widget';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 

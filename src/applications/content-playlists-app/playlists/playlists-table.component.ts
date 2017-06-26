@@ -15,13 +15,17 @@ import {
 	DataTable,
 	Menu
 } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import {
-	KalturaMediaType,
-	KalturaMediaEntry,
+	KalturaMediaType
+} from 'kaltura-typescript-client/types/KalturaMediaType';
+import {
+	KalturaMediaEntry
+} from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import {
 	KalturaEntryStatus
-} from 'kaltura-typescript-client/types/all';
+} from 'kaltura-typescript-client/types/KalturaEntryStatus';
 import { PlaylistsStore } from "./playlists-store/playlists-store.service";
 
 @Component({
