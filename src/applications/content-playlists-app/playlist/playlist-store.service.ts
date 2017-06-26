@@ -7,12 +7,7 @@ import { PlaylistGetAction } from 'kaltura-typescript-client/types/PlaylistGetAc
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
 import { AreaBlockerMessageButton } from '@kaltura-ng2/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-
-export enum PlaylistsSections
-{
-	Metadata,
-	Content
-}
+import { PlaylistSections } from './playlist-sections';
 
 @Injectable()
 export class PlaylistStore implements OnDestroy {
@@ -21,26 +16,18 @@ export class PlaylistStore implements OnDestroy {
 		contentIsValid: true
 	});
 	private _loadPlaylistSubscription : ISubscription;
-	public _activeSection = new BehaviorSubject<{ section: PlaylistsSections}>({section: null});
+	public _activeSection = new BehaviorSubject<{ section: PlaylistSections}>({section: null});
 	private _playlist = new BehaviorSubject<{ playlist: KalturaPlaylist}>({playlist: null});
 	private _state = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin: 'reload' | 'save'}}>({isBusy: false});
 
+	public playlist$ = this._playlist.asObservable();
 	public sectionsState$ = this._sectionsState.asObservable();
 	public state$ = this._state.asObservable();
 	private _playlistId: string;
 
-	public get activeSection(): PlaylistsSections {
-		return this._activeSection.getValue().section;
-	}
-
-	public get playlist() : KalturaPlaylist
-	{
-		return this._playlist.getValue().playlist;
-	}
-
-	public navigateToSection(section: PlaylistsSections): void {
-		this._router.navigate([PlaylistsSections[section].toLowerCase()], {relativeTo: this._playlistRoute});
-		this._activeSection.next({section: section});
+	public navigateToSection(section: PlaylistSections): void {
+		// this._router.navigate([PlaylistSections[section].toLowerCase()], {relativeTo: this._playlistRoute});
+		// this._activeSection.next({section: section});
 	}
 
 	constructor(
@@ -55,13 +42,6 @@ export class PlaylistStore implements OnDestroy {
 	}
 
 	private _onRouterEvents() : void {
-		this._playlistRoute.firstChild.data
-			.subscribe(
-				value => {
-					this._activeSection.next({section: +PlaylistsSections[value.sectionKey]});
-				}
-			);
-
 		this._router.events
 			.cancelOnDestroy(this)
 			.subscribe(
@@ -94,6 +74,14 @@ export class PlaylistStore implements OnDestroy {
 						this._playlist.next({playlist: response});
 						this._playlistId = response.id;
 						this._state.next({isBusy: false});
+					} else {
+						this._state.next({
+							isBusy: true,
+							error: {
+								message: this._appLocalization.get('applications.content.playlistDetails.errors.entryTypeNotSupported'),
+								origin: 'reload'
+							}
+						});
 					}
 				},
 				error => {
@@ -114,7 +102,7 @@ export class PlaylistStore implements OnDestroy {
 
 	private _createBackToPlaylistsButton(): AreaBlockerMessageButton {
 		return {
-			label: 'Back To Playlists',
+			label: this._appLocalization.get('applications.content.playlistDetails.errors.backToPlaylists'),
 			action: () => {
 				this.returnToPlaylists();
 			}

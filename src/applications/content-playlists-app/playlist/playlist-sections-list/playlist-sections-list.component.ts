@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { PlaylistStore } from '../playlist-store.service';
+import { PlaylistSections } from '../playlist-sections';
+import { ActivatedRoute } from "@angular/router";
+import { AppLocalization } from '@kaltura-ng2/kaltura-common';
 
-export interface Sections {
-	metadataIsValid: boolean,
-	contentIsValid: boolean
+export class SectionData{
+	constructor(public id: PlaylistSections, public name: string, public isActive: boolean = false, public hasErrors: boolean = false){}
 }
 
 @Component({
@@ -14,23 +16,22 @@ export interface Sections {
 
 export class PlaylistSectionsList implements OnInit {
 	public _loading = false;
-	public _activeSelection: number = this._playlistStore.activeSection;
-	public sections: Sections;
+	public sections: SectionData[] = [];
 
-    constructor( public _playlistStore : PlaylistStore ) {}
+    constructor(
+    	public _appLocalization: AppLocalization,
+    	public _playlistStore : PlaylistStore,
+		private _playlistRoute: ActivatedRoute
+	) {}
 
-	navigateToSection(section: number) {
-		this._playlistStore.navigateToSection(section);
-		this._activeSelection = this._playlistStore.activeSection;
+	navigateToSection(section: SectionData) {
+		this._playlistStore.navigateToSection(section.id);
 	}
 
     ngOnInit() {
-		this._playlistStore.sectionsState$
-			.subscribe(
-				sections => {
-					this.sections = sections;
-				}
-			)
+		this.sections = [
+			new SectionData(PlaylistSections.Metadata, this._appLocalization.get('applications.content.playlistDetails.sections.metadata')),
+			new SectionData(PlaylistSections.Content, this._appLocalization.get('applications.content.playlistDetails.sections.content'))
+		];
 	}
 }
-

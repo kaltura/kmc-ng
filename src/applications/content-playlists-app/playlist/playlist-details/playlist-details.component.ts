@@ -14,15 +14,15 @@ export class PlaylistDetailsComponent implements OnInit, OnDestroy {
 	constructor( public _playlistStore : PlaylistStore ) {}
 
 	ngOnInit() {
-		this._playlistStore.state$
+		this._playlistStore.playlist$
 			.subscribe(
 				response => {
-					if(!response.isBusy) {
-						this.playlist = this._playlistStore.playlist;
-						this.getNumberOfEntries(this._playlistStore.playlist.playlistContent);
+					if(response.playlist) {
+						this.playlist = response.playlist;
+						this.getNumberOfEntries(this.playlist.playlistContent);
 					}
 				}
-			)
+			);
 	}
 
 	getNumberOfEntries(playlistContent: string) {

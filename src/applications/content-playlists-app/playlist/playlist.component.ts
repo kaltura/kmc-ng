@@ -20,13 +20,17 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit() {
-		this._showLoader = true;
 		this._playlistStore.state$
 			.subscribe(
 				response => {
-					if(!response.isBusy) {
-						this.playlistName = this._playlistStore.playlist.name;
-						this._showLoader = false;
+					this._showLoader = response.isBusy;
+				}
+			);
+		this._playlistStore.playlist$
+			.subscribe(
+				response => {
+					if(response.playlist) {
+						this.playlistName = response.playlist.name;
 					}
 				}
 			);

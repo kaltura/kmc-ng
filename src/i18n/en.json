@@ -506,8 +506,9 @@
 					"numberOfEntries": "Number of Entries"
 				},
 				"errors": {
-					"schedulingError": "'From Date' must be before 'To Date'",
-					"retry": "Retry"
+					"retry": "Retry",
+					"backToPlaylists" : "Back To Playlists",
+					"entryTypeNotSupported" : "entry type not supported"
 				}
 			}
         }
