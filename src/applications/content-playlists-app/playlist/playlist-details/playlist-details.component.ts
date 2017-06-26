@@ -19,10 +19,14 @@ export class PlaylistDetailsComponent implements OnInit, OnDestroy {
 				response => {
 					if(!response.isBusy) {
 						this.playlist = this._playlistStore.playlist;
-						this.numberOfEntries = this._playlistStore.playlist.playlistContent.split(',').length;
+						this.getNumberOfEntries(this._playlistStore.playlist.playlistContent);
 					}
 				}
 			)
+	}
+
+	getNumberOfEntries(playlistContent: string) {
+		this.numberOfEntries = playlistContent.indexOf(',') != -1 ? playlistContent.split(',').length : 1;
 	}
 
 	ngOnDestroy() {}
