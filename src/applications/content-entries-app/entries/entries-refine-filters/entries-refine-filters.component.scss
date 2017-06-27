@@ -28,7 +28,9 @@
 	align-items: center;
 }
 .kClearAll{
-    margin-left: 12px;
+  margin-bottom: 6px;
+  margin-top: 4px;
+  display: block;
 }
 .kClose{
     float: right;
@@ -64,14 +66,20 @@ a.disabled{
 	margin-left: -30px;
 	left: 0px !important;
 }
-:host /deep/ .kPullLeft80 .ui-datepicker.ui-widget {
-	margin-left: -80px;
+:host /deep/ .kPullLeft90 .ui-datepicker.ui-widget {
+	margin-left: -90px;
 	left: 0px !important;
 }
 
 :host /deep/ .kDateRange .kDateRangeFirst .ui-calendar.ui-calendar-w-btn {
 	border-bottom-left-radius: 3px;
 	border-top-left-radius: 3px;
+}
+:host /deep/ .ui-calendar.ui-calendar-w-btn{
+  border-radius: 0px;
+}
+:host /deep/ .ui-calendar .ui-inputtext{
+  width: 120px;
 }
 :host /deep/ .kDateRange .kDateRangeLast .ui-calendar.ui-calendar-w-btn {
 	border-left: 0px solid $kGrayscale4;
