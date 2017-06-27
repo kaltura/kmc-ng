@@ -19,19 +19,28 @@ export class PlaylistSectionsList implements OnInit {
 	public sections: SectionData[] = [];
 
     constructor(
-    	public _appLocalization: AppLocalization,
-    	public _playlistStore : PlaylistStore,
-		private _playlistRoute: ActivatedRoute
+      public _appLocalization: AppLocalization,
+      public _playlistStore : PlaylistStore,
+      private _playlistRoute: ActivatedRoute
 	) {}
 
 	navigateToSection(section: SectionData) {
-		this._playlistStore.navigateToSection(section.id);
+		this._playlistStore.openSection(section.id);
 	}
 
-    ngOnInit() {
-		this.sections = [
-			new SectionData(PlaylistSections.Metadata, this._appLocalization.get('applications.content.playlistDetails.sections.metadata')),
-			new SectionData(PlaylistSections.Content, this._appLocalization.get('applications.content.playlistDetails.sections.content'))
-		];
+  ngOnInit() {
+    this.sections = [
+      new SectionData(PlaylistSections.Metadata, this._appLocalization.get('applications.content.playlistDetails.sections.metadata'), false, true),
+      new SectionData(PlaylistSections.Content, this._appLocalization.get('applications.content.playlistDetails.sections.content'), false)
+    ];
+    this._playlistStore.activeSection$
+      .subscribe(
+        response => {
+          if(response.section !== null) {
+            this.sections.map(section => section.isActive = false);
+            this.sections[response.section].isActive = true;
+          }
+        }
+      );
 	}
 }

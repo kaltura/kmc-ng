@@ -5,7 +5,6 @@ import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { PlaylistGetAction } from 'kaltura-typescript-client/types/PlaylistGetAction';
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
-import { AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PlaylistSections } from './playlist-sections';
 
@@ -16,18 +15,24 @@ export class PlaylistStore implements OnDestroy {
 		contentIsValid: true
 	});
 	private _loadPlaylistSubscription : ISubscription;
+  private _sectionToRouteMapping : { [key : number] : string} = {};
 	public _activeSection = new BehaviorSubject<{ section: PlaylistSections}>({section: null});
 	private _playlist = new BehaviorSubject<{ playlist: KalturaPlaylist}>({playlist: null});
 	private _state = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin: 'reload' | 'save'}}>({isBusy: false});
 
 	public playlist$ = this._playlist.asObservable();
+  public activeSection$ = this._activeSection.asObservable();
 	public sectionsState$ = this._sectionsState.asObservable();
 	public state$ = this._state.asObservable();
 	private _playlistId: string;
 
-	public navigateToSection(section: PlaylistSections): void {
-		// this._router.navigate([PlaylistSections[section].toLowerCase()], {relativeTo: this._playlistRoute});
-		// this._activeSection.next({section: section});
+	public openSection(sectionId: PlaylistSections): void {
+    const navigatePath = this._sectionToRouteMapping[sectionId];
+
+    if (navigatePath) {
+      this._router.navigate([navigatePath], {relativeTo: this._playlistRoute});
+    }
+		this._activeSection.next({section: sectionId});
 	}
 
 	constructor(
@@ -38,8 +43,29 @@ export class PlaylistStore implements OnDestroy {
 	) {
 		this._state.next({isBusy: true});
 		this._sectionsState.next({metadataIsValid: true, contentIsValid: true});
+
+		this._mapSections();
+
 		this._onRouterEvents();
+
+    this._activeSection.next({section: this._playlistRoute.snapshot.firstChild.data.sectionKey});
 	}
+
+  private _mapSections() : void {
+    if (!this._playlistRoute || !this._playlistRoute.snapshot.data.entryRoute)
+    {
+      throw new Error("this service can be injected from component that is associated to the playlist route");
+    }
+    this._playlistRoute.snapshot.routeConfig.children.forEach(childRoute =>
+    {
+      const routeSectionType = childRoute.data ? childRoute.data.sectionKey : null;
+
+      if (routeSectionType !== null)
+      {
+        this._sectionToRouteMapping[routeSectionType] = childRoute.path;
+      }
+    });
+  }
 
 	private _onRouterEvents() : void {
 		this._router.events
@@ -89,41 +115,21 @@ export class PlaylistStore implements OnDestroy {
 						isBusy: true,
 						error: {message: error.message, origin: 'reload'}
 					});
-					this._createBackToPlaylistsButton(),
-						{
-							label: this._appLocalization.get('applications.content.playlistDetails.errors.retry'),
-							action: () => {
-								this.reloadPlaylist();
-							}
-						}
 				}
 			);
 	}
 
-	private _createBackToPlaylistsButton(): AreaBlockerMessageButton {
-		return {
-			label: this._appLocalization.get('applications.content.playlistDetails.errors.backToPlaylists'),
-			action: () => {
-				this.returnToPlaylists();
-			}
-		};
-	}
-
-	public reloadPlaylist() : void
-	{
-		if (this._playlistId)
-		{
-			this._loadPlaylist(this._playlistId);
-		}
-	}
+  public reloadPlaylist() : void
+  {
+    if (this._playlistId)
+    {
+      this._loadPlaylist(this._playlistId);
+    }
+  }
 
 	ngOnDestroy() {
 		this._loadPlaylistSubscription && this._loadPlaylistSubscription.unsubscribe();
 		this._state.complete();
 		this._playlist.complete();
-	}
-
-	public returnToPlaylists(params : {force? : boolean} = {}) {
-		this._router.navigate(['content/playlists']);
 	}
 }
