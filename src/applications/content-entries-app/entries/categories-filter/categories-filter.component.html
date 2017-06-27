@@ -34,7 +34,7 @@
 			<a class="kClose" (click)="close()">{{'applications.content.filters.close' | translate}}</a>
 		</p>
 	</div>
-<kPopupWidget #categoriesPref [modal]="true" [popupWidth]="360" [popupHeight]="220" [closeBtn]="true"
+<kPopupWidget #categoriesPref [modal]="true" [popupWidth]="360" [popupHeight]="220" [closeBtn]="true" [closeBtnInside]="true"
 			  [targetRef]="config" [targetOffset]="{'x':-324, 'y': -24}" [parentPopup]="parentPopupWidget">
 	<ng-template>
 		<kCategoriesFilterPrefs [selectionMode]="_selectionMode"

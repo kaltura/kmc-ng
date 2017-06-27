@@ -26,6 +26,7 @@ export const environment = {
         "routePath": "content",
         "titleToken": "Content",
         "showSubMenu": true,
+        "enabled": true,
         "children": [
           {
             "routePath": "content/entries",
