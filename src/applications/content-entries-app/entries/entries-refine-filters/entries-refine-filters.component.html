@@ -28,7 +28,7 @@
 							<div *ngIf="node.data==='scheduled'" (click)="_blockScheduleToggle($event)">
 								<div class="kDateRange">
 									<p-calendar class="kDateRangeFirst" #scheduledfrom [(ngModel)]="_scheduledAfter" [showIcon]="true" icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true" [yearNavigator]="true"  [yearRange]="_createdAtDateRange" [readonlyInput]="true" (onSelect)="_onSchedulingChanged(scheduledfrom)"></p-calendar>
-									<p-calendar class="kDateRangeLast kPullLeft80" #scheduledto [(ngModel)]="_scheduledBefore" [showIcon]="true" icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange" [readonlyInput]="true" (onSelect)="_onSchedulingChanged(scheduledto)"></p-calendar>
+									<p-calendar class="kDateRangeLast kPullLeft90" #scheduledto [(ngModel)]="_scheduledBefore" [showIcon]="true" icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange" [readonlyInput]="true" (onSelect)="_onSchedulingChanged(scheduledto)"></p-calendar>
 								</div>
 								<span *ngIf="_scheduledSelected && _scheduledFilterError" class="kError">{{_scheduledFilterError}}</span>
 							</div>
