@@ -220,9 +220,3 @@ hr{
 :host /deep/ kautocomplete input{
 	height: auto !important;
 }
-
-:host /deep/ .ui-calendar {
-	button.ui-state-default {
-		height: 34px;
-	}
-}
