@@ -2,13 +2,13 @@ import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, ViewChild, A
 import { CategoriesPrimeService } from '../../../shared/categories-prime.service';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { PrimeTreeNode } from '@kaltura-ng2/kaltura-primeng-ui';
+import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
 import { Subject } from 'rxjs/Subject';
-import { SuggestionsProviderData } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
-import { PopupWidgetComponent } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
+import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { CategoriesTreeComponent } from '../../../shared/categories-tree/categories-tree.component';
 import { EntryCategoryItem } from '../entry-metadata-handler';
-import { AutoComplete } from '@kaltura-ng2/kaltura-primeng-ui/auto-complete';
+import { AutoComplete } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 
 
 @Component({

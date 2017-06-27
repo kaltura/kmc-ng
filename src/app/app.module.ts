@@ -7,17 +7,16 @@ import { CommonModule } from '@angular/common';
 import { Ng2Webstorage } from 'ng2-webstorage';
 
 
-import { GetBootstrapProvider, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType, KalturaCommonModule, AppStorage } from '@kaltura-ng2/kaltura-common';
-import {  KalturaClientModule } from '@kaltura-ng/kaltura-client';
-import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
+import { BootstrapAdapterToken, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType, KalturaCommonModule, AppStorage } from '@kaltura-ng/kaltura-common';
+import {  KalturaClient, KalturaClientConfiguration } from '@kaltura-ng/kaltura-client';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 
-import { BrowserService, KMCShellModule } from 'kmc-shell';
+import { BrowserService, KMCShellModule } from 'app-shared/kmc-shell';
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
 
 import { KalturaAuthConfigAdapter } from './services/kaltura-auth-config-adapter.service';
-import { KalturaLocalizationAdapter } from './services/kaltura-localization-adapter.service';
 import { AppDefaultConfig } from "./services/app-default-config.service";
 
 import { AppMenuService } from './services/app-menu.service';
@@ -31,12 +30,23 @@ import { KalturaHttpConfigurationAdapter } from "./services/kaltura-http-configu
 
 import { ButtonModule, InputTextModule, TieredMenuModule } from 'primeng/primeng';
 
-import { MetadataProfileStore, PartnerProfileStore, AccessControlProfileStore, FlavoursStore } from '@kaltura-ng2/kaltura-common';
-import { UploadManagementModule } from '@kaltura-ng2/kaltura-common/upload-management';
+import { AppLocalization, MetadataProfileModule, PartnerProfileStore, AccessControlProfileStore, FlavoursStore } from '@kaltura-ng/kaltura-common';
+import { UploadManagementModule } from '@kaltura-ng/kaltura-common/upload-management';
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
 import { ConfirmDialogModule, ConfirmationService, DropdownModule } from 'primeng/primeng';
+import { environment } from 'app-environment';
 
-const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessControlProfileStore, FlavoursStore];
+const partnerProviders : PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
+
+
+export function clientConfigurationFactory()
+{
+  const result = new KalturaClientConfiguration();
+  result.endpointUrl = environment.core.kaltura.apiUrl;
+  result.clientTag = 'KMCng';
+  return result;
+}
+
 @NgModule({
   imports: <any>[
 	FormsModule,
@@ -48,13 +58,10 @@ const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessCo
 	DropdownModule,
     HttpModule,
     InputTextModule,
-    KalturaClientModule.forRoot({
-          clientTag : 'kmcng',
-          endpointUrl : 'https://www.kaltura.com/api_v3/index.php'
-    }),
-    KalturaCommonModule.forRoot(),
-    KMCShellModule.forRoot(),
+    MetadataProfileModule,
     Ng2PageScrollModule.forRoot(),
+    KMCShellModule.forRoot(),
+    KalturaCommonModule.forRoot(),
     Ng2Webstorage,
     PopupWidgetModule,
     routing,
@@ -77,17 +84,33 @@ const partnerProviders : PartnerProfileStore[] = [MetadataProfileStore, AccessCo
   providers: <any>[
       ...partnerProviders,
     AppMenuService,
-    GetBootstrapProvider(KalturaLocalizationAdapter),
-    GetBootstrapProvider(KalturaAuthConfigAdapter),
-    GetBootstrapProvider(KalturaHttpConfigurationAdapter  ),
+    {
+      provide : BootstrapAdapterToken,
+      useClass : KalturaAuthConfigAdapter,
+      multi : true
+    },
+    {
+      provide : BootstrapAdapterToken,
+      useClass : KalturaHttpConfigurationAdapter,
+      multi : true
+    },
     AppDefaultConfig,
     { provide : AppStorage,  useExisting : BrowserService },
+    KalturaClient,
+    {
+      provide : KalturaClientConfiguration,
+      useFactory : clientConfigurationFactory
+    },
     ConfirmationService
-  ],
-
+  ]
 })
 export class AppModule {
-  constructor(appBootstrap: AppBootstrap, config: AppDefaultConfig){
+  constructor(appBootstrap: AppBootstrap, appLocalization : AppLocalization, config: AppDefaultConfig){
+
+
+
+    appLocalization.supportedLocales = environment.core.locales;
+
     appBootstrap.initApp(<AppBootstrapConfigType>config);
   }
 }

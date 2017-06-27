@@ -1,26 +1,33 @@
-@import '~kmcng-theme/scss/variables';
+@import 'app-theme/_variables.scss';
 
 .kEntriesTable {
     background-color: white;
     overflow-y: hidden;
     position: absolute;
 	padding: 0px;
-    img {
-        max-height: 100%;
-        max-width: 100%;
-        vertical-align: middle;
-        border-radius: 3px;
-    }
     .kThumbnailHolder {
+		overflow: hidden;
+		position: relative;
         width: 80px;
         height: 46px;
-        background-color: black;
+        background-color: $kGrayscale6;
         white-space: nowrap;
         text-align: center;
         border-radius: 3px;
 		cursor: pointer;
 		&.disable{
 			cursor: auto;
+		}
+		img {
+			position:absolute;
+			left: -100%;
+			right: -100%;
+			top: -100%;
+			bottom: -100%;
+			margin: auto;
+			width: 80px;
+			height: auto;
+			border-radius: 3px;
 		}
     }
     .kTitle{
@@ -34,11 +41,6 @@
             color: $kGrayscale4;
             cursor: auto;
         }
-    }
-    .kHelper {
-        display: inline-block;
-        height: 100%;
-        vertical-align: middle;
     }
     .kEntriesTableActions {
         width: 100%;

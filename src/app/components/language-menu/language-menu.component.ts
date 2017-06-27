@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { AppConfig, AppStorage, AppLocalization } from '@kaltura-ng2/kaltura-common';
-
+import { AppStorage, AppLocalization } from '@kaltura-ng/kaltura-common';
+import { environment } from 'app-environment';
 import * as R from 'ramda';
 
 @Component({
@@ -14,8 +14,8 @@ export class LanguageMenuComponent {
   menuOpened: boolean = false;
   languages: Array<Object> = [];
 
-  constructor(private kmcConfig: AppConfig, private appStorage: AppStorage, private appConfig: AppConfig, private appLocalization: AppLocalization) {
-    this.languages = kmcConfig.get("core.locales");
+  constructor(private appStorage: AppStorage, private appLocalization: AppLocalization) {
+    this.languages = environment.core.locales;
 
     if (typeof this.appLocalization.selectedLanguage !== "undefined"){
       this.selectedLanguage = this.getLanguageById(this.appLocalization.selectedLanguage);
@@ -36,6 +36,6 @@ export class LanguageMenuComponent {
   }
 
   private getLanguageById(langId : any) : any {
-    return R.find(R.propEq('id', langId))(this.appConfig.get('core.locales'));
+    return R.find(R.propEq('id', langId))(environment.core.locales);
   }
 }

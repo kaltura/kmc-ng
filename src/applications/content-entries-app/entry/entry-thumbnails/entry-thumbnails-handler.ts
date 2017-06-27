@@ -17,11 +17,12 @@ import { KalturaThumbAssetStatus } from 'kaltura-typescript-client/types/Kaltura
 import { KalturaDistributionThumbDimensions } from 'kaltura-typescript-client/types/KalturaDistributionThumbDimensions';
 import { ThumbAssetDeleteAction } from 'kaltura-typescript-client/types/ThumbAssetDeleteAction';
 import { ThumbAssetAddFromImageAction } from 'kaltura-typescript-client/types/ThumbAssetAddFromImageAction';
-import { AppConfig, AppAuthentication, AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
+import { AppAuthentication, AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { environment } from 'app-environment';
 
 export interface ThumbnailRow {
 	id: string,
@@ -46,7 +47,7 @@ export class EntryThumbnailsHandler extends EntryFormWidget
 	public _thumbnails$ = this._thumbnails.asObservable();
 	private _distributionProfiles: KalturaDistributionProfile[]; // used to save the response profiles array as it is loaded only once
 
-    constructor( private _kalturaServerClient: KalturaClient, private _appConfig: AppConfig, private _appAuthentication: AppAuthentication,
+    constructor( private _kalturaServerClient: KalturaClient, private _appAuthentication: AppAuthentication,
                 private _appLocalization: AppLocalization)
     {
         super(EntryWidgetKeys.Thumbnails);
@@ -117,7 +118,7 @@ export class EntryThumbnailsHandler extends EntryFormWidget
 				    fileExt: thumbnail.fileExt
 			    };
 			    thumb.isDefault = thumbnail.tags.indexOf("default_thumb") > -1;
-			    thumb.url = this._appConfig.get('core.kaltura.cdnUrl') + "/api_v3/index.php/service/thumbasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/thumbAssetId/" + thumb.id;
+			    thumb.url = environment.core.kaltura.cdnUrl + "/api_v3/index.php/service/thumbasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/thumbAssetId/" + thumb.id;
 			    thumbs.push(thumb);
 		    }
 	    });

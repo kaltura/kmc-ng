@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { BrowserService } from 'kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { ActivatedRoute } from '@angular/router';
 import { PlaylistStore } from './playlist-store.service';
 
 @Component({

@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { routing } from './content-playlists-app.routes';
 
-import { AreaBlockerModule } from '@kaltura-ng2/kaltura-ui';
+import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
 import {
 	DataTableModule,
 	PaginatorModule,
@@ -17,14 +17,14 @@ import {
 	MenuModule,
 	SharedModule
 } from 'primeng/primeng';
-import { KalturaCommonModule } from '@kaltura-ng2/kaltura-common';
-import { KalturaPrimeNgUIModule } from '@kaltura-ng2/kaltura-primeng-ui';
+import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
+import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import {
 	KalturaUIModule,
 	TooltipModule
-} from '@kaltura-ng2/kaltura-ui';
-import { TagsModule } from '@kaltura-ng2/kaltura-ui/tags';
-import { PopupWidgetModule } from '@kaltura-ng2/kaltura-ui/popup-widget';
+} from '@kaltura-ng/kaltura-ui';
+import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 
 import { ContentPlaylistsComponent } from './content-playlists.component';
 import { PlaylistsComponentsList } from './playlists/playlists-components-list';

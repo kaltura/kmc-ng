@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
-import { AppShellService } from "kmc-shell";
+import { AppShellService } from "app-shared/kmc-shell";
 
 import * as $ from 'jquery';
 

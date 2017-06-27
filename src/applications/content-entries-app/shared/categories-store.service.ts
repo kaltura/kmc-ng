@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/multicast';
+import 'rxjs/add/operator/publishReplay';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 

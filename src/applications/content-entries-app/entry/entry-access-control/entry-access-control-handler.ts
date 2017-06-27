@@ -18,7 +18,7 @@ import { KalturaLimitFlavorsRestrictionType } from 'kaltura-typescript-client/ty
 import { KalturaSessionRestriction } from 'kaltura-typescript-client/types/KalturaSessionRestriction';
 import { KalturaPreviewRestriction } from 'kaltura-typescript-client/types/KalturaPreviewRestriction';
 import { KalturaFlavorParams } from 'kaltura-typescript-client/types/KalturaFlavorParams';
-import { AccessControlProfileStore, FlavoursStore, AppLocalization, KalturaUtils } from '@kaltura-ng2/kaltura-common';
+import { AccessControlProfileStore, FlavoursStore, AppLocalization, KalturaUtils } from '@kaltura-ng/kaltura-common';
 
 import 'rxjs/add/observable/forkJoin';
 import * as R from 'ramda';

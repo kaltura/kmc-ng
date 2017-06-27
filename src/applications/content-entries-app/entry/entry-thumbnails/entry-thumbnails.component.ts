@@ -1,8 +1,8 @@
 import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
 
-import { AppLocalization, AppAuthentication, AppConfig } from '@kaltura-ng2/kaltura-common';
-import { KalturaUtils } from '@kaltura-ng2/kaltura-common/utils/kaltura-utils';
-import { BrowserService } from 'kmc-shell';
+import { AppLocalization, AppAuthentication } from '@kaltura-ng/kaltura-common';
+import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 import { EntryThumbnailsHandler, ThumbnailRow } from './entry-thumbnails-handler';
 import { Menu, MenuItem } from 'primeng/primeng';
@@ -23,7 +23,7 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 	private currentThumb: ThumbnailRow;
 
 	constructor(private _entryFormManager : EntryFormManager, private _appLocalization: AppLocalization, private _browserService: BrowserService,
-                private _appAuthentication: AppAuthentication, private _appConfig:AppConfig) {
+                private _appAuthentication: AppAuthentication) {
     }
 
     ngOnInit() {

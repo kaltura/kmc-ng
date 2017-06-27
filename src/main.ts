@@ -1,20 +1,15 @@
+import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { decorateModuleRef } from './app/environment';
-import { AppModule } from './app/app.module';
 
-if (window) {
-    window['__KMCng__'] = {
-        version: __KMCng__.version
-    };
+import { AppModule } from './app/app.module';
+import { environment } from 'app-environment';
+
+if (environment.production) {
+    enableProdMode();
+    //console.log(`Running KMCng version '${__KMCng__.version}' (Production mode)`);
+}else
+{
+    //console.log(`Running KMCng version '${__KMCng__.version}' (Development mode)`);
 }
 
-(function()
-{
-    platformBrowserDynamic()
-        .bootstrapModule(AppModule)
-        .then(decorateModuleRef);
-        // .catch(function(err)
-        // {
-        //     console.error(err);
-        // });
-})();
+platformBrowserDynamic().bootstrapModule(AppModule);

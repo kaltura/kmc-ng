@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';

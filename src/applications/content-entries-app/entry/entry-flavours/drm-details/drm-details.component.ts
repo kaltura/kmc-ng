@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Flavor } from '../entry-flavours-handler';
+import { Flavor } from '../flavor';
+
 
 @Component({
     selector: 'kDRMDetails',

@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem, Message } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
-import { BrowserService } from '../../../shared/kmc-shell/providers/browser.service';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 
 import { EntriesStore, SortDirection } from './entries-store/entries-store.service';
 import { EntriesTableComponent } from "./entries-table.component";
@@ -56,7 +56,8 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         sortDirection : SortDirection.Desc
     };
 
-    constructor(public _entriesStore : EntriesStore, private additionalFilters : EntriesRefineFiltersProvider, private appLocalization: AppLocalization, private router: Router, private _browserService : BrowserService,) {
+    constructor(private _entriesStore : EntriesStore, private additionalFilters : EntriesRefineFiltersProvider, private appLocalization: AppLocalization, private router: Router, private _browserService : BrowserService) {
+
     }
 
     removeTag(tag: any){

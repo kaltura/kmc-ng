@@ -3,10 +3,10 @@ import { EntryFormWidget } from '../entry-form-widget';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { Observable } from 'rxjs/Observable';
-import { AppLocalization, AppConfig, AppAuthentication } from '@kaltura-ng2/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng2/kaltura-ui';
+import { AppLocalization, AppAuthentication } from '@kaltura-ng/kaltura-common';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { BrowserService } from 'kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaFlavorAsset } from 'kaltura-typescript-client/types/KalturaFlavorAsset';
 import { KalturaFlavorAssetWithParams } from 'kaltura-typescript-client/types/KalturaFlavorAssetWithParams';
 import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-typescript-client/types/FlavorAssetGetFlavorAssetsWithParamsAction';
@@ -22,28 +22,11 @@ import { FlavorAssetSetContentAction } from 'kaltura-typescript-client/types/Fla
 import { FlavorAssetAddAction } from 'kaltura-typescript-client/types/FlavorAssetAddAction';
 import { KalturaUrlResource } from 'kaltura-typescript-client/types/KalturaUrlResource';
 import { KalturaContentResource } from 'kaltura-typescript-client/types/KalturaContentResource';
-import { UploadManagement } from '@kaltura-ng2/kaltura-common/upload-management';
-import { KalturaOVPFile } from '@kaltura-ng2/kaltura-common/upload-management/kaltura-ovp';
+import { UploadManagement } from '@kaltura-ng/kaltura-common/upload-management';
+import { KalturaOVPFile } from '@kaltura-ng/kaltura-common/upload-management/kaltura-ovp';
 import { Message } from 'primeng/primeng';
-
-export interface Flavor extends KalturaFlavorAssetWithParams{
-	name: string,
-	id: string,
-	paramsId: number,
-	isSource: boolean,
-	isWeb: boolean,
-	isWidevine: boolean,
-	format: string,
-	codec: string,
-	bitrate: string,
-	size: string,
-	dimensions: string,
-	status: string,
-	statusLabel: string,
-	statusTooltip: string,
-	tags: string,
-	drm: any
-}
+import { environment } from 'app-environment';
+import { Flavor } from './flavor';
 
 @Injectable()
 export class EntryFlavoursHandler extends EntryFormWidget
@@ -58,8 +41,8 @@ export class EntryFlavoursHandler extends EntryFormWidget
 	public sourceAvailabale: boolean = false;
 	public _msgs: Message[] = [];
 
-    constructor( private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _appConfig: AppConfig, private _appAuthentication: AppAuthentication,
-                 private _browserService: BrowserService, private _uploadManagement : UploadManagement)
+    constructor( private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization,
+	     private _appAuthentication: AppAuthentication, private _browserService: BrowserService, private _uploadManagement : UploadManagement)
     {
         super(EntryWidgetKeys.Flavours);
     }
@@ -273,12 +256,11 @@ export class EntryFlavoursHandler extends EntryFormWidget
 						    }
 					    );
 			    }
-		    }
-	    );
+		    });
     }
 
     public downloadFlavor (flavor: Flavor): void{
-	    const baseUrl = this._appConfig.get('core.kaltura.cdnUrl');
+	    const baseUrl = environment.core.kaltura.cdnUrl;
 	    const protocol = baseUrl.split(":")[0];
 	    const partnerId = this._appAuthentication.appUser.partnerId;
 	    let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + this.data.id + '/flavorId/' + flavor.id + '/format/download/protocol/' + protocol;

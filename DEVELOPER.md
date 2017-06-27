@@ -39,7 +39,7 @@ Fork and clone the this repository:
 
 1. Login to your GitHub account or create one by following the instructions given
    [here](https://github.com/signup/free).
-2. [Fork](http://help.github.com/forking) the [repository](https://github.com/KMCng/KMCng-infra).
+2. [Fork](http://help.github.com/forking) the [repository](https://github.com/KMCng/kaltura-ng).
 3. Clone your fork of the infrastructure repository and define an `upstream` remote pointing back to
    the Angular repository that you forked in the first place.
 
@@ -68,7 +68,7 @@ $ npm run setup
     * remove previous `node_modules` and `dist` folders
     * run `yarn install` (which is equivalent to `npm install`) 
     * run `npm run build` 
-    * configure `wml` with to local modules of [kaltura-ng](https://github.com/kaltura/KMCng-infra) if exists on your machine.
+    * configure `wml` with to local modules of [kaltura-ng](https://github.com/kaltura/kaltura-ng) if exists on your machine.
   
     
 > You should run setup every time you pull changes to make sure you are in-sync with latest libraries/changes done by others.
@@ -93,13 +93,13 @@ $ npm run serve
 
 ## Syncing changes from other local module into an other module
 
-If you are developing [kaltura-ng](https://github.com/kaltura/KMCng-infra) modules locally, and you want to sync their change into this repo do the following:
+If you are developing [kaltura-ng](https://github.com/kaltura/kaltura-ng) modules locally, and you want to sync their change into this repo do the following:
 
 ```shell
 $ npm run wml:sync 
 ```
 
-To watch for changes and sync them automatically when the local [kaltura-ng](https://github.com/kaltura/KMCng-infra) modules are being re-build do the following:
+To watch for changes and sync them automatically when the local [kaltura-ng](https://github.com/kaltura/kaltura-ng) modules are being re-build do the following:
 ```shell
 $ npm run wml:watch
 ```

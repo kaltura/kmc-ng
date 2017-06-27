@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PlaylistStore } from '../playlist-store.service';
 import { PlaylistSections } from '../playlist-sections';
 import { ActivatedRoute } from "@angular/router";
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 export class SectionData{
 	constructor(public id: PlaylistSections, public name: string, public isActive: boolean = false, public hasErrors: boolean = false){}

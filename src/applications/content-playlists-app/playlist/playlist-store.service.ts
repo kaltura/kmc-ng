@@ -5,8 +5,8 @@ import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { PlaylistGetAction } from 'kaltura-typescript-client/types/PlaylistGetAction';
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
-import { AreaBlockerMessageButton } from '@kaltura-ng2/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PlaylistSections } from './playlist-sections';
 
 @Injectable()

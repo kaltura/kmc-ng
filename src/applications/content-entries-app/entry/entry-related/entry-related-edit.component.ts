@@ -3,9 +3,9 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaAttachmentAsset } from 'kaltura-typescript-client/types/KalturaAttachmentAsset';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
-import { BrowserService } from 'kmc-shell';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng2/kaltura-ui/popup-widget/popup-widget.component';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { BrowserService } from 'app-shared/kmc-shell';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
     selector: 'kEntryRelatedEdit',

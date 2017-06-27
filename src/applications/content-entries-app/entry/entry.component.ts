@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import { BrowserService } from 'kmc-shell';
+import { BrowserService } from 'app-shared/kmc-shell';
 import { EntryStore, ActionTypes } from './entry-store.service';
 import { EntrySectionsListHandler } from './entry-sections-list/entry-sections-list-handler';
 import { EntryMetadataHandler } from './entry-metadata/entry-metadata-handler';
@@ -16,9 +16,9 @@ import { EntrySchedulingHandler } from './entry-scheduling/entry-scheduling-hand
 import { EntryUsersHandler } from './entry-users/entry-users-handler';
 import { EntriesStore } from '../entries/entries-store/entries-store.service';
 import { EntryFormManager } from './entry-form-manager';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng2/kaltura-ui';
+import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { EntryFormWidget } from './entry-form-widget';
-import { AppLocalization } from '@kaltura-ng2/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 @Component({
     selector: 'kEntry',
@@ -109,6 +109,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 				private _browserService: BrowserService,
 				@Inject(EntryFormWidget)private  _widgets : EntryFormWidget[],
 				private _appLocalization: AppLocalization) {
+
 	}
 
 	ngOnDestroy() {

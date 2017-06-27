@@ -1,5 +1,5 @@
 <k-area-blocker [showLoader]="(state$ | async)?.busy" [message]="_blockerMessage">
-	<div class="kEntries kUseKMCngIcons">
+	<div class="kEntries kOverrideFAIcons">
 		<div #entriesTableHolder class="kEntriesHolder kContent">
 			<div class="kEntriesTableFilters">
 				<span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries$ | async)?.totalCount">{{(_entriesStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>

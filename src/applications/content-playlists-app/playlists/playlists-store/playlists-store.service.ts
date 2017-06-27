@@ -6,21 +6,20 @@ import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { Scheduler } from 'rxjs';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import {
-	PlaylistListAction,
-	KalturaPlaylistListResponse,
-	KalturaPlaylistFilter,
-	KalturaFilterPager,
-	KalturaDetachedResponseProfile,
-	KalturaResponseProfileType
-} from 'kaltura-typescript-client/types/all';
+
+import { PlaylistListAction } from 'kaltura-typescript-client/types/PlaylistListAction';
+import { KalturaPlaylistListResponse } from 'kaltura-typescript-client/types/KalturaPlaylistListResponse';
+import { KalturaPlaylistFilter } from 'kaltura-typescript-client/types/KalturaPlaylistFilter';
+import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
+import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
+import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
 
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
-import { BrowserService } from 'kmc-shell/providers/browser.service';
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
+import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 
 export enum SortDirection {
 	Desc,
