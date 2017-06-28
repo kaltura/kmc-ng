@@ -44,10 +44,12 @@
 				<span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
 			</div>
 		</div>
-		<p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu"></p-tieredMenu>
 		<p-growl [value]="_msgs"></p-growl>
 	</div>
 </k-area-blocker>
+
+<p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons"></p-tieredMenu>
+
 <!-- popup widgets section -->
 <kPopupWidget #categoriesFilterPopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="categoriesFilterBtn" [targetOffset]="{'x':-10, 'y': -21}">
 	<kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup"></kCategoriesFilter>
