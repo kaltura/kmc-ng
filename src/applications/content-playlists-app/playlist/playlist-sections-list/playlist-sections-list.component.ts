@@ -21,7 +21,6 @@ export class SectionData{
 
 export class PlaylistSectionsList implements OnInit {
 	public _loading = false;
-  public _showList = false;
 	public sections: SectionData[] = [];
 
     constructor(
@@ -45,8 +44,6 @@ export class PlaylistSectionsList implements OnInit {
           if(response.section !== null) {
             this.sections.forEach(section => section.isActive = false);
             this.sections[response.section].isActive = true;
-
-            this._showList = this.sections && this.sections.length > 0;
           }
         }
       );

@@ -13,12 +13,12 @@
 
 		<div class="kRow">
 			<span class="kLabels">{{'applications.content.playlistDetails.details.creationDate' | translate}}</span>
-			<span>{{playlist.createdAt | date:'MM/dd/y'}}</span>
+			<span>{{playlist.createdAt | kDate}}</span>
 		</div>
 
 		<div class="kRow">
 			<span class="kLabels">{{'applications.content.playlistDetails.details.updatedAt' | translate}}</span>
-			<span>{{playlist.updatedAt | date:'MM/dd/y'}}</span>
+			<span>{{playlist.updatedAt | kDate}}</span>
 		</div>
 
 		<div class="kRow">
