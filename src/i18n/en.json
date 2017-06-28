@@ -510,10 +510,14 @@
 					"plays": "Plays",
 					"numberOfEntries": "Number of Entries"
 				},
+        "metadata":{
+          "playlistName": "Name",
+          "description": "Description"
+        },
 				"errors": {
 					"retry": "Retry",
 					"backToPlaylists" : "Back To Playlists",
-					"entryTypeNotSupported" : "entry type not supported"
+					"playlistTypeNotSupported" : "playlist type not supported"
 				}
 			}
         }

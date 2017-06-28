@@ -11,7 +11,7 @@ export const routing: Route[] = [
 	{path: 'list', component: PlaylistsListComponent},
 	{path: 'playlist/:id', component: PlaylistComponent,
 		data : {
-			entryRoute : true
+			playlistRoute : true
 		},
 		children : [
 			{ path: '', redirectTo: 'metadata', pathMatch: 'full' },

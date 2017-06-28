@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
   providers : [PlaylistStore]
 })
 export class PlaylistComponent implements OnInit, OnDestroy {
-	playlistName: string;
+	public playlistName: string;
 	public _showLoader = false;
 	public isSafari: boolean = false;
 	public _areaBlockerMessage: AreaBlockerMessage;
@@ -33,17 +33,18 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 				response => {
 					this._showLoader = response.isBusy;
 					if(response.error) {
-            this._areaBlockerMessage = new AreaBlockerMessage({
-              message: response.error.message,
-              buttons: [
-                this._createBackToPlaylistsButton(),
-                {
+            const buttons = [this._createBackToPlaylistsButton()];
+            if(response.error.origin === 'reload') {
+              buttons.push({
                   label: this._appLocalization.get('applications.content.playlistDetails.errors.retry'),
                   action: () => {
                     this._playlistStore.reloadPlaylist();
                   }
-                }
-              ]
+                });
+            }
+            this._areaBlockerMessage = new AreaBlockerMessage({
+              message: response.error.message,
+              buttons: buttons
             });
           }
 				}

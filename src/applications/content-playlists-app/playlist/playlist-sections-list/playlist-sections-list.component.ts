@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { PlaylistStore } from '../playlist-store.service';
 import { PlaylistSections } from '../playlist-sections';
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 export class SectionData{
-	constructor(public id: PlaylistSections, public name: string, public isActive: boolean = false, public hasErrors: boolean = false){}
+	constructor(
+	  public id: PlaylistSections,
+    public name: string,
+    public isActive: boolean = false,
+    public hasErrors: boolean = false
+  ){}
 }
 
 @Component({
@@ -16,6 +21,7 @@ export class SectionData{
 
 export class PlaylistSectionsList implements OnInit {
 	public _loading = false;
+  public _showList = false;
 	public sections: SectionData[] = [];
 
     constructor(
@@ -37,8 +43,10 @@ export class PlaylistSectionsList implements OnInit {
       .subscribe(
         response => {
           if(response.section !== null) {
-            this.sections.map(section => section.isActive = false);
+            this.sections.forEach(section => section.isActive = false);
             this.sections[response.section].isActive = true;
+
+            this._showList = this.sections && this.sections.length > 0;
           }
         }
       );

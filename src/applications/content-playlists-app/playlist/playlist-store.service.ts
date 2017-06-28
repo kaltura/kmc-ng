@@ -41,9 +41,6 @@ export class PlaylistStore implements OnDestroy {
 		private _kalturaServerClient: KalturaClient,
 		private _appLocalization: AppLocalization
 	) {
-		this._state.next({isBusy: true});
-		this._sectionsState.next({metadataIsValid: true, contentIsValid: true});
-
 		this._mapSections();
 
 		this._onRouterEvents();
@@ -52,7 +49,7 @@ export class PlaylistStore implements OnDestroy {
 	}
 
   private _mapSections() : void {
-    if (!this._playlistRoute || !this._playlistRoute.snapshot.data.entryRoute)
+    if (!this._playlistRoute || !this._playlistRoute.snapshot.data.playlistRoute)
     {
       throw new Error("this service can be injected from component that is associated to the playlist route");
     }
@@ -104,7 +101,7 @@ export class PlaylistStore implements OnDestroy {
 						this._state.next({
 							isBusy: true,
 							error: {
-								message: this._appLocalization.get('applications.content.playlistDetails.errors.entryTypeNotSupported'),
+								message: this._appLocalization.get('applications.content.playlistDetails.errors.playlistTypeNotSupported'),
 								origin: 'reload'
 							}
 						});

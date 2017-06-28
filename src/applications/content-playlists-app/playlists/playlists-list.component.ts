@@ -54,7 +54,8 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 			createdAfter: this._filter.createdAfter,
 			sortBy: this._filter.sortBy,
 			sortDirection: this._filter.sortDirection,
-			pageIndex: this._filter.pageIndex
+			pageIndex: this._filter.pageIndex,
+      pageSize: this._filter.pageSize
 		});
 	}
 

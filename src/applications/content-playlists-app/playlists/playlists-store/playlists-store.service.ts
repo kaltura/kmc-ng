@@ -91,11 +91,6 @@ export class PlaylistsStore implements OnDestroy {
 		}
 	}
 
-	public get playlists() : KalturaPlaylist[]
-	{
-		return this._playlists.getValue().items;
-	}
-
 	public reload(force : boolean) : void;
 	public reload(query : Partial<QueryData>) : void;
 	public reload(query : boolean | Partial<QueryData>) : void {
