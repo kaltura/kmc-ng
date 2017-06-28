@@ -1,22 +1,24 @@
-<ul>
+<div class="kUserSettings">
+  <ul>
     <li class="kMenuItemLabel"><span class="kIcon kIconuser_small"></span>
-        <div class="kMenuItem">
-            <span>{{_userContext.fullName}}</span>
-            <a (click)="logout()">{{'app.userSettings.logout' | translate}}</a>
-        </div>
+      <div class="kMenuItem">
+        <span>{{_userContext.fullName}}</span>
+        <a (click)="logout()">{{'app.userSettings.logout' | translate}}</a>
+      </div>
     </li>
     <li class="kMenuItemLabel"><span class="kIcon kIconhouse"></span>
-        <div class="kMenuItem">
-            <span>{{_userContext.partnerInfo.name}}</span>
-            <a>{{'app.userSettings.changeAccount' | translate}}</a>
-        </div>
+      <div class="kMenuItem">
+        <span>{{_userContext.partnerInfo.name}}</span>
+        <a>{{'app.userSettings.changeAccount' | translate}}</a>
+      </div>
     </li>
-</ul>
-<hr>
-<div class="kMenuItemLabel">
+  </ul>
+  <hr>
+  <div class="kMenuItemLabel">
     <span>{{'app.languageMenu.selectLang' | translate}}</span>
-</div>
+  </div>
 
-<ul class="kLanguages kOverrideFAIcons">
-	<p-dropdown [options]="_languages" [(ngModel)]="_selectedLanguage" [appendTo]="'body'" (onChange)="onLangSelected($event)"></p-dropdown>
-</ul>
+  <ul class="kLanguages kOverrideFAIcons">
+    <p-dropdown [options]="_languages" [(ngModel)]="_selectedLanguage" [appendTo]="'body'" (onChange)="onLangSelected($event)"></p-dropdown>
+  </ul>
+</div>

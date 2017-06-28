@@ -28,7 +28,7 @@
     </div>
 </div>
 
-<kPopupWidget #usersettings [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="username" [targetOffset]="{'x':-50, 'y': 30}" (onOpen)="_userSettingsOpen=true" (onClose)="_userSettingsOpen=false">
+<kPopupWidget #usersettings [appendTo]="appmenu" [popupWidth]="240" [popupHeight]="226" [closeBtn]="false" [targetRef]="username" [targetOffset]="{'x':-50, 'y': 30}" (onOpen)="_userSettingsOpen=true" (onClose)="_userSettingsOpen=false">
     <kKMCUserSettings></kKMCUserSettings>
 </kPopupWidget>
 

@@ -1,43 +1,62 @@
 @import 'app-theme/_variables.scss';
+
+.kUserSettings {
+  margin: 12px;
+}
+
 ul {
-    list-style-type: none;
-    padding: 0;
+  list-style-type: none;
+  padding: 0;
 }
-i{
-    margin-right: 8px;
+
+i {
+  margin-right: 8px;
 }
-li{
-    margin-top: 14px;
+
+li {
+  margin-top: 14px;
 }
-hr{
-    height: 1px;
-    margin-left: -20px;
-    margin-right: -20px;
+
+hr {
+  height: 1px;
+  border: none;
+  margin-left: -12px;
+  margin-right: -12px;
+  color: $kGrayscale4;
+  background-color: $kGrayscale4;
 }
-.kMenuItemLabel{
-    font-size: 15px;
-    color: $kGrayscale1;
+
+.kMenuItemLabel {
+  font-size: 15px;
+  color: $kGrayscale1;
 }
-.kMenuItem{
-    display: flex;
-    flex-direction: column;
-    margin-left: 30px;
-    margin-top: -18px;
-    a{
-        margin-top: 4px;
-        color: $kTertiary;
-        &:hover{
-            color: darken($kTertiary, 10%);
-        }
-        &:active{
-            color: $kTertiary;
-        }
+
+.kMenuItem {
+  display: flex;
+  flex-direction: column;
+  margin-left: 30px;
+  margin-top: -18px;
+  a {
+    margin-top: 4px;
+    color: $kTertiary;
+    &:hover {
+      color: darken($kTertiary, 10%);
     }
+    &:active {
+      color: $kTertiary;
+    }
+  }
 }
-.kIcon{
-	color: $kGrayscale3;
-	font-size: 18px;
+
+.kIcon {
+  color: $kGrayscale3;
+  font-size: 18px;
 }
-:host /deep/ .ui-dropdown.ui-widget{
-	width: 215px !important;
+
+.kLanguages {
+  margin-bottom: 12px;
+}
+
+:host /deep/ .ui-dropdown.ui-widget {
+  width: 215px !important;
 }

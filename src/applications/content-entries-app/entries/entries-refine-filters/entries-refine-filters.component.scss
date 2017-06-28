@@ -1,5 +1,7 @@
 @import "app-theme/_variables.scss";
-
+.kRefineFilters{
+  margin: 12px;
+}
 .kFiltersGroupTitle{
     color: $kGrayscale3;
     line-height: 40px;

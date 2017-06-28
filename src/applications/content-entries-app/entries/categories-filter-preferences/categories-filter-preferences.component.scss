@@ -1,46 +1,49 @@
 @import "app-theme/_variables.scss";
-.kPrefs{
-    padding-left: 20px;
-    padding-top: 10px;
-	padding-right: 12px;
+
+.kPrefs {
+  margin: 12px;
+  padding-left: 20px;
+  padding-top: 10px;
+  padding-right: 12px;
 }
-.kFilterPrefs{
-    color: $kGrayscale3;
-    line-height: 40px;
-    letter-spacing: 0.1em;
-    font-size: 13px;
+
+.kFilterPrefs {
+  color: $kGrayscale3;
+  line-height: 40px;
+  letter-spacing: 0.1em;
+  font-size: 13px;
 }
-.kRadioLabel{
+
+.kRadioLabel {
+  margin-left: 34px;
+  margin-top: -20px;
+  color: $kGrayscale3;
+  font-size: 15px;
+}
+
+.kButtons p-radiobutton:first-child:after {
+  margin-bottom: 14px;
+}
+
+:host /deep/ p-radiobutton {
+
+  &:after {
+    clear: both;
+    content: " ";
+    display: block;
+  }
+
+  .ui-radiobutton {
+    float: left;
+  }
+
+  .ui-radiobutton-label {
     margin-left: 34px;
-    margin-top: -20px;
+    margin-top: -30px;
     color: $kGrayscale3;
-    font-size: 15px;
-}
-.kButtons p-radiobutton:first-child:after{
-    margin-bottom: 14px;
-}
-
-:host /deep/ p-radiobutton
-{
-
-    &:after {
-        clear:both;
-        content:" ";
-        display:block;
-    }
-
-    .ui-radiobutton
-    {
-        float:left;
-    }
-
-    .ui-radiobutton-label {
-        margin-left: 34px;
-        margin-top: -30px;
-        color: $kGrayscale3;
-        font-size: 14px;
-        font-weight: 400;
-        letter-spacing: 0.02em;
-        cursor: pointer;
-    }
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+  }
 }
