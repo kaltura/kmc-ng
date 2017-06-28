@@ -1,42 +1,44 @@
 <div class="kEditWin kOverrideFAIcons" #captionsEdit>
 	<kFileDialog #fileDialog [filter]="'.xml,.srt'" (onFileSelected)="_onFileSelected($event)"></kFileDialog>
 	<form [formGroup]="captionsEditForm" novalidate>
-		<div class="kEditTitle">{{ (_newCaption ? 'applications.content.entryDetails.captions.add' : 'applications.content.entryDetails.captions.editCaption') | translate}}</div>
-		<div class="kDivider"></div>
-		<div class="kRow">
-			<span class="kLabel">{{'applications.content.entryDetails.captions.label' | translate}}</span>
-			<input formControlName="label" type="text" pInputText/>
-		</div>
-		<div class="kRow">
-			<span class="kLabel">{{'applications.content.entryDetails.captions.language' | translate}}</span>
-			<p-dropdown [options]="_languages" [autoWidth]="false" formControlName="language"></p-dropdown>
-		</div>
-		<div class="kRow">
-			<span class="kLabel">{{'applications.content.entryDetails.captions.type' | translate}}</span>
-			<p-dropdown *ngIf="_newCaption" [options]="_captionFormats" [autoWidth]="false" formControlName="format"></p-dropdown>
-			<span *ngIf="!_newCaption">{{_getCaptionFormatLabel(currentCaption?.format)}}</span>
-		</div>
-		<div class="kRow" *ngIf="_newCaption">
-			<span class="kLabel">{{'applications.content.entryDetails.captions.add' | translate}}</span>
-			<p-radioButton name="uploadMethod" value="upload" formControlName="uploadMethod" label="{{'applications.content.entryDetails.captions.upload' | translate}}" (click)="_resetUpload()"></p-radioButton>
-			<p-radioButton name="uploadMethod" value="fromUrl" formControlName="uploadMethod" label="{{'applications.content.entryDetails.captions.fromUrl' | translate}}" [style]="{'margin-left': '12px'}" (click)="_resetUpload()"></p-radioButton>
-		</div>
+    <div class="kHeader">
+      <span class="kTitle">{{ (_newCaption ? 'applications.content.entryDetails.captions.add' : 'applications.content.entryDetails.captions.editCaption') | translate}}</span>
+    </div>
 
-		<div class="kUpload" *ngIf="_newCaption && captionsEditForm.get('uploadMethod').value === 'upload'">
-			<button type="button" class="kButtonDefault kUploadButton" pButton label="{{'applications.content.entryDetails.captions.uploadFile' | translate}}" (click)="_uploadCaption()"></button>
-			<span class="kUploadFileName" [kTooltip]="_uploadFileName">{{_uploadFileName}}</span>
-		</div>
-		<div *ngIf="_newCaption && captionsEditForm.get('uploadMethod').value === 'fromUrl'">
-			<input class="kCaptionUrl" placeholder="{{'applications.content.entryDetails.captions.urlPlaceholder' | translate}}" formControlName="captionUrl" type="text" (blur)="_validate('captionUrl')" pInputText/>
-			<span class="kInvalid">{{_validationErrorMsg}}</span>
-		</div>
+    <div class="kContainer">
+      <div class="kRow">
+        <span class="kLabel">{{'applications.content.entryDetails.captions.label' | translate}}</span>
+        <input formControlName="label" type="text" pInputText/>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">{{'applications.content.entryDetails.captions.language' | translate}}</span>
+        <p-dropdown [options]="_languages" [autoWidth]="false" formControlName="language"></p-dropdown>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">{{'applications.content.entryDetails.captions.type' | translate}}</span>
+        <p-dropdown *ngIf="_newCaption" [options]="_captionFormats" [autoWidth]="false" formControlName="format"></p-dropdown>
+        <span *ngIf="!_newCaption">{{_getCaptionFormatLabel(currentCaption?.format)}}</span>
+      </div>
+      <div class="kRow" *ngIf="_newCaption">
+        <span class="kLabel">{{'applications.content.entryDetails.captions.add' | translate}}</span>
+        <p-radioButton name="uploadMethod" value="upload" formControlName="uploadMethod" label="{{'applications.content.entryDetails.captions.upload' | translate}}" (click)="_resetUpload()"></p-radioButton>
+        <p-radioButton name="uploadMethod" value="fromUrl" formControlName="uploadMethod" label="{{'applications.content.entryDetails.captions.fromUrl' | translate}}" [style]="{'margin-left': '12px'}" (click)="_resetUpload()"></p-radioButton>
+      </div>
+
+      <div class="kUpload" *ngIf="_newCaption && captionsEditForm.get('uploadMethod').value === 'upload'">
+        <button type="button" class="kButtonDefault kUploadButton" pButton label="{{'applications.content.entryDetails.captions.uploadFile' | translate}}" (click)="_uploadCaption()"></button>
+        <span class="kUploadFileName" [kTooltip]="_uploadFileName">{{_uploadFileName}}</span>
+      </div>
+      <div *ngIf="_newCaption && captionsEditForm.get('uploadMethod').value === 'fromUrl'">
+        <input class="kCaptionUrl" placeholder="{{'applications.content.entryDetails.captions.urlPlaceholder' | translate}}" formControlName="captionUrl" type="text" (blur)="_validate('captionUrl')" pInputText/>
+        <span class="kInvalid">{{_validationErrorMsg}}</span>
+      </div>
+    </div>
+
 
 		<div class="kFooter">
-			<div class="kDivider"></div>
-			<div class="kRow kCenter">
-				<button *ngIf="!_newCaption" type="button" class="kButtonBranded kDoneBtn" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.related.done' | translate}}"></button>
-				<button *ngIf="_newCaption" type="button" [disabled]="!_allowSave()" class="kButtonBranded kDoneBtn" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.captions.add' | translate}}"></button>
-			</div>
+				<button *ngIf="!_newCaption" type="button" class="kButtonBranded" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.related.done' | translate}}"></button>
+				<button *ngIf="_newCaption" type="button" [disabled]="!_allowSave()" class="kButtonBranded" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.captions.add' | translate}}"></button>
 		</div>
 
 	</form>

@@ -1,14 +1,23 @@
 @import 'app-theme/_variables.scss';
 
 .kFlavorPreview{
-	display: flex;
-	flex-direction: column;
-	padding-top: 30px;
-	.kHeader{
-		font-size: 16px;
-		font-weight: 700;
-		margin-bottom: 10px;
-	}
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+    .kTitle {
+      color: #333333;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+  .kContainer{
+    margin: 12px;
+    height: 70px;
+  }
 	.kLoading{
 		line-height: 252px;
 		padding-left: 130px;
@@ -29,10 +38,6 @@
 		border: 1px solid $kGrayscale1;
 		padding: 5px;
 		margin-bottom: 20px;
-	}
-	.kTitle{
-		font-weight: 700;
-		margin-bottom: 30px;
 	}
 	.kRow{
 		display: flex;

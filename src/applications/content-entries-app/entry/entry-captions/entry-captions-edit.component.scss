@@ -1,18 +1,34 @@
 @import 'app-theme/_variables.scss';
 
 .kEditWin{
-	display: flex;
-	flex-direction: column;
-	padding-top: 20px;
-	.kCenter{
-		justify-content: center;
-	}
-	.kEditTitle{
-		font-size: 24px;
-		font-weight: 700;
-		text-align: center;
-		width: 100%;
-	}
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+    .kTitle {
+      color: #333333;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+  .kContainer{
+    margin: 12px;
+    height: 258px;
+  }
+  .kFooter{
+    height: 66px;
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button{
+      height: 34px;
+    }
+  }
+
 	.kRow{
 		display: flex;
 		flex-direction: row;
@@ -26,30 +42,7 @@
 			width: 100%;
 		}
 	}
-	.kDivider{
-		width: 100%;
-		height: 1px;
-		margin-top: 24px;
-		margin-left: -12px;
-		padding-right: 40px;
-		background-color: $kGrayscale4;
-	}
 
-	.kFooter{
-		position: absolute;
-		bottom: 12px;
-		right: 0px;
-		left: 0px;
-		.kDivider{
-			margin-left: 0px;
-			padding-right: 0px;
-		}
-	}
-	.kDoneBtn{
-		height: 34px;
-		font-weight: 400;
-		margin-top: -10px;
-	}
 	.kUpload{
 		display: flex;
 		align-items: center;
@@ -64,7 +57,7 @@
 	.kCaptionUrl{
 		margin-top: 18px;
 		margin-left: 120px;
-		width: 210px;
+		width: 234px;
 	}
 	.kUploadFileName{
 		white-space: nowrap;
@@ -81,5 +74,5 @@
 }
 
 :host /deep/ .ui-dropdown.ui-widget{
-	width: 216px;
+	width: 234px;
 }

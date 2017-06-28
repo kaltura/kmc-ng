@@ -36,42 +36,56 @@ form{
 		}
 	}
 }
-.kChangeOwner{
-	display: flex;
-	flex-direction: column;
-	padding-top: 20px;
-	padding-left: 12px;
-	padding-right: 12px;
-	.kHeader {
-		font-size: 16px;
-		font-weight: 700;
-		margin-bottom: 30px;
-	}
-	.kFooter {
-		text-align: center;
-		height: 54px;
-		border-top: 1px solid $kGrayscale4;
-		position: absolute;
-		bottom: 0;
-		right: 0px;
-		left: 0px;
-		button {
-			margin-top: 12px;
-			margin-left: 4px;
-			height: 28px;
-			width: 84px;
-		}
-	}
-	/deep/ .ui-autocomplete.ui-widget{
-		width: 100%;
-		input{
-			width: 100%;
-		}
-	}
-	/deep/ kAutoComplete{
-		margin-top: 4px;
-		width: 100%;
-	}
+
+.kFloater{
+  display: flex;
+  flex-direction: column;
+  height: 240px;
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+    flex: 0 0 auto;
+    .kTitle {
+      color: #333333;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+  .kContainer{
+    flex: 0 0 auto;
+    height: 72px;
+    margin: 12px;
+    .kLabel{
+      display: block;
+      margin-bottom: 8px;
+    }
+  }
+  .kFooter{
+    flex: 0 0 auto;
+    height: 66px;
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button{
+      height: 34px;
+      margin-left: 8px;
+    }
+  }
+  /deep/ .ui-autocomplete.ui-widget{
+    width: 100%;
+    input{
+      width: 100%;
+    }
+  }
+  /deep/ kAutoComplete{
+    margin-top: 4px;
+    width: 100%;
+  }
 }
 
 :host /deep/ .ui-autocomplete.ui-widget{
@@ -80,7 +94,6 @@ form{
 		width: 100%;
 	}
 }
-
 
 :host /deep/ kAutoComplete{
 	width: 100%;

@@ -47,25 +47,31 @@
 		</div>
 
 		<kPopupWidget #ownerPopup [popupWidth]="500" [popupHeight]="240" [modal]="true">
-			<div class="kChangeOwner kOverrideFAIcons">
-				<span class="kHeader">{{'applications.content.entryDetails.users.changeOwner' | translate}}</span>
-				<span>{{'applications.content.entryDetails.users.changeOwnerText' | translate}}</span>
-				<kAutoComplete formControlName="owners"
-							   suggestionItemField="item"
-							   suggestionLabelField="name"
-							   field="screenName"
-							   [onItemAdding]="_convertUserInputToValidValue"
-							   [multiple]="false"
-							   [limitToSuggestions]="false"
-							   placeholder="{{'applications.content.entryDetails.users.changeOwnerPH' | translate}}"
-							   [minLength]="3"
-							   [suggestionsProvider]="_usersProvider"
-							   (completeMethod)="_searchUsers($event)">
-				</kAutoComplete>
-				<div class="kFooter">
-					<button type="button" class="kButtonDefault" [disabled]="false" (click)="ownerPopup.close()" pButton label="{{'app.common.cancel' | translate}}"></button>
-					<button type="button" class="kButtonBranded" [disabled]="false" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.users.save' | translate}}"></button>
-				</div>
+        <div class="kFloater kOverrideFAIcons">
+          <div class="kHeader">
+            <span class="kTitle">{{'applications.content.entryDetails.users.changeOwner' | translate}}</span>
+          </div>
+
+          <div class="kContainer">
+            <span class="kLabel">{{'applications.content.entryDetails.users.changeOwnerText' | translate}}</span>
+            <kAutoComplete formControlName="owners"
+                           suggestionItemField="item"
+                           suggestionLabelField="name"
+                           field="screenName"
+                           [onItemAdding]="_convertUserInputToValidValue"
+                           [multiple]="false"
+                           [limitToSuggestions]="false"
+                           placeholder="{{'applications.content.entryDetails.users.changeOwnerPH' | translate}}"
+                           [minLength]="3"
+                           [suggestionsProvider]="_usersProvider"
+                           (completeMethod)="_searchUsers($event)">
+            </kAutoComplete>
+          </div>
+
+          <div class="kFooter">
+            <button type="button" class="kButtonDefault" [disabled]="false" (click)="ownerPopup.close()" pButton label="{{'app.common.cancel' | translate}}"></button>
+            <button type="button" class="kButtonBranded" [disabled]="false" (click)="_saveAndClose()" pButton label="{{'applications.content.entryDetails.users.save' | translate}}"></button>
+          </div>
 			</div>
 
 		</kPopupWidget>
