@@ -18,6 +18,7 @@ import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
+import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 
 export enum SortDirection {
@@ -40,6 +41,7 @@ export interface QueryData
 @Injectable()
 export class PlaylistsStore implements OnDestroy {
 	private _playlistsSource  = new BehaviorSubject({items: [], totalCount: 0});
+	private _playlists  = new BehaviorSubject({items: [], totalCount: 0});
 	private _stateSource = new BehaviorSubject<{loading : boolean, errorMessage : string}>({ loading : false, errorMessage : null});
 	private _querySource = new BehaviorSubject<QueryData>({
 		pageIndex: 1,

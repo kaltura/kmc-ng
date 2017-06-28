@@ -1,10 +1,9 @@
-<k-area-blocker>
-	<ul>
-		<li class="active">
-			<div >{{'applications.content.playlistDetails.sections.metadata' | translate}}</div>
-		</li>
-		<li>
-			<div>{{'applications.content.playlistDetails.sections.content' | translate}}</div>
+<k-area-blocker [showLoader]="_loading">
+	<ul *ngIf="this.sections && this.sections.length > 0">
+		<li [class.active]="section.isActive" *ngFor="let section of sections">
+			<div (click)="navigateToSection(section)" [class.kSectionHasErrors]="section.hasErrors">
+				{{section.name}}
+			</div>
 		</li>
 	</ul>
 </k-area-blocker>
