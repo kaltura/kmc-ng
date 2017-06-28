@@ -20,7 +20,7 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "kmc",
       "styles": [
-        "styles/app-theme/styles.sass"
+        "styles/app-theme/styles.scss"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
