@@ -12,7 +12,7 @@
 		</div>
 		<div class="kRow">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.creator' | translate}}</span>
-			<span [kTooltip]="_handler.data.creatorId">{{_handler.data.creatorId}}</span>
+			<span [kTooltip]="_handler.data.creatorId" [placement]="'left'">{{_handler.data.creatorId}}</span>
 		</div>
 		<div class="kRow">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.creationDate' | translate}}</span>
@@ -24,7 +24,7 @@
 		</div>
 		<div class="kRow"  *ngIf="_handler._landingPage">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.landingPage' | translate}}</span>
-			<a  [kTooltip]="_handler._landingPage" (click)="openLandingPage(_handler._landingPage)">{{_handler._landingPage}}</a>
+			<a  [kTooltip]="_handler._landingPage" [placement]="'left'" (click)="openLandingPage(_handler._landingPage)">{{_handler._landingPage}}</a>
 		</div>
 		<div class="kRow" *ngIf="_isLive && _handler.data.recordedEntryId">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.vodEntry' | translate}}</span>
