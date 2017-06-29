@@ -6,8 +6,7 @@
 
 				<div [class.kHidden]="!_selectedEntries.length" class="kBulkOperations">
 					<span class="kSelectedEntriesLabel">• {{_selectedEntries.length}} {{'applications.content.entries.selected' | translate}}</span>
-					<button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"></button>
-					<button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" [disabled]="!_selectedEntries.length" pButton label="{{'applications.content.entries.bulkActions' | translate}}" (click)="menu.toggle($event)"></button>
+          <kBulkActions [selectedEntries]="_selectedEntries"></kBulkActions>
 					<a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
 				</div>
 				<div [class.kHidden]="_selectedEntries.length" class="kFilters">
@@ -47,8 +46,6 @@
 		<p-growl [value]="_msgs"></p-growl>
 	</div>
 </k-area-blocker>
-
-<p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons"></p-tieredMenu>
 
 <!-- popup widgets section -->
 <kPopupWidget #categoriesFilterPopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="categoriesFilterBtn" [targetOffset]="{'x':-10, 'y': -21}">

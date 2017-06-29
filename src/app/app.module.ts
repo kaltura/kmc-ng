@@ -8,7 +8,8 @@ import { Ng2Webstorage } from 'ng2-webstorage';
 
 
 import { BootstrapAdapterToken, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType, KalturaCommonModule, AppStorage } from '@kaltura-ng/kaltura-common';
-import {  KalturaClient, KalturaClientConfiguration } from '@kaltura-ng/kaltura-client';
+import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
+import { KalturaClient, KalturaClientConfiguration } from '@kaltura-ng/kaltura-client';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 
 import { BrowserService, KMCShellModule } from 'app-shared/kmc-shell';
@@ -66,7 +67,8 @@ export function clientConfigurationFactory()
     PopupWidgetModule,
     routing,
     TieredMenuModule,
-    UploadManagementModule
+    UploadManagementModule,
+    AreaBlockerModule
   ],
   declarations: <any>[
       AppComponent,
