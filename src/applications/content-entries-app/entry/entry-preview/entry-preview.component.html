@@ -24,7 +24,7 @@
 		</div>
 		<div class="kRow"  *ngIf="_handler._landingPage">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.landingPage' | translate}}</span>
-			<a  [kTooltip]="_handler._landingPage" [placement]="'left'" (click)="openLandingPage(_handler._landingPage)">{{_handler._landingPage}}</a>
+			<a  [kTooltip]="_handler._landingPage" [placement]="'left'" [maxWidth]="150" (click)="openLandingPage(_handler._landingPage)">{{_handler._landingPage}}</a>
 		</div>
 		<div class="kRow" *ngIf="_isLive && _handler.data.recordedEntryId">
 			<span class="kLabels">{{'applications.content.entryDetails.preview.vodEntry' | translate}}</span>
