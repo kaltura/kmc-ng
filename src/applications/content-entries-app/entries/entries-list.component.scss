@@ -192,6 +192,7 @@
 :host /deep/ .ui-button-icon-right.kIcondropdown_arrow_bottom{
     font-size: 10px;
     margin-right: 2px;
+    pointer-events: none;
 }
 
 :host /deep/ .ui-tieredmenu.ui-menu{
