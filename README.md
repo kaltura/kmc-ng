@@ -53,6 +53,9 @@ Below is a summary of the core packages being used:
 | [kaltura-primeng-ui](https://www.npmjs.com/package/@kaltura-ng/kaltura-primeng-ui) | ![npm (scoped)](https://img.shields.io/npm/v/@kaltura-ng/kaltura-primeng-ui.svg?maxAge=86400) |
 | [kaltura-typescript-client](https://www.npmjs.com/package/kaltura-typescript-client) | ![npm (scoped)](https://img.shields.io/npm/v/kaltura-typescript-client.svg?maxAge=86400) |
 | [@kaltura-ng/mc-theme](https://www.npmjs.com/package/@kaltura-ng/mc-theme) | ![npm (scoped)](https://img.shields.io/npm/v/@kaltura-ng/mc-theme.svg?maxAge=86400)
+**Note**
+
+- The version number listed above represent the latest version deployed to npm for each package. This is not necessarily the versions currently in-use by this app. You can review `package.json` to get the actual packages versions.
 
 ## FAQ
 
