@@ -1,8 +1,10 @@
 import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
+
+import { BulkScheduling } from './components/bulk-scheduling/bulk-scheduling.component';
 
 @Component({
   selector: 'kBulkActions',
@@ -13,6 +15,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   public _bulkActionsMenu: MenuItem[] = [];
   @Input() selectedEntries: any[];
+
+  @ViewChild('schedulingPopup') public schedulingPopup: PopupWidgetComponent;
 
   constructor(private _appLocalization: AppLocalization, private _browserService : BrowserService) {
 
@@ -27,7 +31,12 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   executeBulkAction(action: string){
-    // this._browserService.setAppStatus(false, "Huge mistake!");
+    switch (action){
+      case "setScheduling":
+        this.schedulingPopup.open();
+        break;
+    }
+    // this._browserService.setAppStatus({isBusy: true, errorMessage: null});
   }
 
   getBulkActionItems(): MenuItem[]{

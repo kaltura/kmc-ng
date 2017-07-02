@@ -18,6 +18,11 @@ export interface Confirmation {
 
 export type OnShowConfirmationFn = (confirmation : Confirmation) => void;
 
+export type AppStatus = {
+  isBusy : boolean;
+  errorMessage : string;
+};
+
 @Injectable()
 export class BrowserService implements IAppStorage {
 
@@ -62,8 +67,8 @@ export class BrowserService implements IAppStorage {
 		}
 	}
 
-	public setAppStatus(isBusy: boolean, errorMessage: string = null): void{
-    this._appStatus.next({isBusy, errorMessage});
+	public setAppStatus(status: AppStatus): void{
+    this._appStatus.next(status);
   }
 
 	public confirm(confirmation : Confirmation) {

@@ -6,3 +6,8 @@
 <p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons"></p-tieredMenu>
 
 
+<kPopupWidget #schedulingPopup [popupWidth]="500" [popupHeight]="500" [modal]="true">
+  <ng-template>
+    <kBulkScheduling [parentPopupWidget]="schedulingPopup"></kBulkScheduling>
+  </ng-template>
+</kPopupWidget>

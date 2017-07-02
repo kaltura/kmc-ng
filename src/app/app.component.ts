@@ -1,6 +1,6 @@
 import { OnInit, Component } from '@angular/core';
 import { ConfirmationService, Confirmation } from 'primeng/primeng';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { BrowserService, AppStatus } from 'app-shared/kmc-shell/providers/browser.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
@@ -29,11 +29,11 @@ export class AppComponent implements OnInit {
 
     // handle app status: busy and error messages. Allow closing error window using the 'OK' button
     this._browserService.appStatus$.subscribe(
-      appStatus => {
-        this._isBusy = appStatus.isBusy;
-        if ( appStatus.errorMessage !== null ){
+      (status: AppStatus) => {
+        this._isBusy = status.isBusy;
+        if ( status.errorMessage !== null ){
           this._blockerMessage = new AreaBlockerMessage({
-            message: appStatus.errorMessage,
+            message: status.errorMessage,
             buttons: [{
               label: this._appLocalization.get('app.common.ok'),
               action: () => {
