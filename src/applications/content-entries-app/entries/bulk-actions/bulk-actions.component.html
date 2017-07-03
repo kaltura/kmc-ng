@@ -8,6 +8,6 @@
 
 <kPopupWidget #schedulingPopup [popupWidth]="500" [popupHeight]="500" [modal]="true">
   <ng-template>
-    <kBulkScheduling [parentPopupWidget]="schedulingPopup"></kBulkScheduling>
+    <kBulkScheduling [parentPopupWidget]="schedulingPopup" (schedulingChanged)="onSchedulingChanged($event)"></kBulkScheduling>
   </ng-template>
 </kPopupWidget>

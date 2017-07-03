@@ -4,7 +4,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 
-import { BulkScheduling } from './components/bulk-scheduling/bulk-scheduling.component';
+import { SchedulingParams } from './components/bulk-scheduling/bulk-scheduling.component';
 
 @Component({
   selector: 'kBulkActions',
@@ -37,6 +37,11 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
         break;
     }
     // this._browserService.setAppStatus({isBusy: true, errorMessage: null});
+  }
+
+  // get scheduling changes
+  onSchedulingChanged(schedulingParams: SchedulingParams){
+    debugger;
   }
 
   getBulkActionItems(): MenuItem[]{

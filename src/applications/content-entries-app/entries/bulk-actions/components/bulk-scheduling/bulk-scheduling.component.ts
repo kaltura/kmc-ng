@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
@@ -31,6 +31,12 @@ function datesValidation(checkRequired: boolean = false): ValidatorFn {
   }
 }
 
+export type SchedulingParams = {
+  scheduling: string,
+  enableEndDate: boolean,
+  startDate: Date,
+  endDate: Date
+}
 
 @Component({
   selector: 'kBulkScheduling',
@@ -40,6 +46,7 @@ function datesValidation(checkRequired: boolean = false): ValidatorFn {
 export class BulkScheduling implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
+  @Output() schedulingChanged = new EventEmitter<any>();
 
   public _loading = false;
   public _sectionBlockerMessage: AreaBlockerMessage;
@@ -156,9 +163,17 @@ export class BulkScheduling implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public _apply(){
-    this._confirmClose = false;
-    alert("apply");
-    this.parentPopupWidget.close();
+    this.setValidators(true);
+    if (this.schedulingForm.status === 'VALID') {
+      const startDate = this.schedulingForm.get('startDate').value;
+      const endDate = this.schedulingForm.get('endDate').value;
+      const scheduling = this.schedulingForm.get('scheduling').value;
+      const enableEndDate = this.schedulingForm.get('enableEndDate').value;
+      const schedulingParams: SchedulingParams = {scheduling, startDate, enableEndDate, endDate}
+      this.schedulingChanged.emit(schedulingParams);
+      this._confirmClose = false;
+      this.parentPopupWidget.close();
+    }
   }
 }
 
