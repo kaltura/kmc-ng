@@ -1,4 +1,7 @@
 import { Component, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
+import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
+import { PlaylistStore } from '../playlist-store.service';
+import { PlaylistSections } from '../playlist-sections';
 
 @Component({
   selector: 'kPlaylistMetadata',
@@ -6,14 +9,70 @@ import { Component, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
   styleUrls: ['./playlist-metadata.component.scss']
 })
 export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestroy {
+  name : FormControl;
+  description : FormControl;
+  metadataForm: FormGroup;
 
-    constructor() {}
+  constructor(
+    private _formBuilder : FormBuilder,
+    private _playlistStore: PlaylistStore
+  ) {
+    // init form input fields
+    this.name         = new FormControl('', Validators.required);
+    this.description  = new FormControl('');
 
-    ngOnInit() {}
+    // build FormControl group
+    this.metadataForm = _formBuilder.group({
+      name        : this.name,
+      description : this.description
+    });
+  }
 
-    ngOnDestroy() {}
+  ngOnInit() {
+    this._playlistStore.playlist$
+      .subscribe(
+        response => {
+          // this.metadataForm.controls["name"].updateValueAndValidity({ onlySelf: true, emitEvent: true });
+          // this.metadataForm.updateValueAndValidity();
+          if(response.playlist) {
+            this.metadataForm.reset({
+              name: response.playlist.name,
+              description: response.playlist.description
+            });
+          } else {
+            // TODO [kmc] missing implementaion
+          }
+        }
+      );
 
-    ngAfterViewInit() {}
+    this.metadataForm.statusChanges
+      .subscribe(
+        status => {
+          // this._playlistStore.updateSectionState(PlaylistSections.Metadata, status === 'VALID');
+        }
+      );
+
+    this.metadataForm.valueChanges.subscribe(
+      form => {
+        this._playlistStore.playlist.name = form.name;
+        this._playlistStore.playlist.description = form.description;
+        /*
+        if(this._playlistStore.metadataFlag) {
+          this._playlistStore.metadataIsDirty = true;
+          this._playlistStore._sectionsState.next({
+            metadata: {
+              isValid: this._playlistStore.metadataIsValid,
+              isDirty: this._playlistStore.metadataIsDirty
+            }
+          });*/
+        });
+  }
+
+  ngOnDestroy() {
+
+  }
+
+  ngAfterViewInit() {}
 
 }
 

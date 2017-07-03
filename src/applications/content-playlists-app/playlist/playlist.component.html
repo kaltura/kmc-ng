@@ -2,10 +2,16 @@
 	<div class="kPlaylistDetails kOverrideFAIcons" [class.isSafari]="isSafari">
 		<div class="kContent kPlaylistDetailsWrapper">
 			<div class="kPlaylistDetailsHeader">
-				<button pButton class="kButtonDefault kBackToPlaylistsBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
+				<button
+          pButton
+          class="kButtonDefault kBackToPlaylistsBtn small"
+          icon="kIconarrow_backward"
+          (click)="_backToList()">
+        </button>
 				<div class="kMediaTypeIcon kIconvideo"></div>
 				<div class="kPlaylistTitle">{{ playlistName }}</div>
-				<button pButton class="kButtonBranded kSaveBtn" label="Save"></button>
+
+				<button pButton class="kButtonBranded kSaveBtn" label="Save" (click)="save()"></button> <!--[disabled]="playlistIsDirty"-->
 				<button pButton class="kButtonDefault kNavigationBtn" icon="kIconarrow_backward"></button>
 				<button pButton class="kButtonDefault kNavigationBtn" icon="kIconarrow_forward"></button>
 			</div>

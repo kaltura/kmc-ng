@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { PlaylistStore } from '../playlist-store.service';
 import { PlaylistSections } from '../playlist-sections';
-import { ActivatedRoute, Router } from "@angular/router";
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 export class SectionData{
 	constructor(
 	  public id: PlaylistSections,
     public name: string,
-    public isActive: boolean = false,
+    public isActive: boolean  = false,
     public hasErrors: boolean = false
   ){}
 }
@@ -25,8 +24,7 @@ export class PlaylistSectionsList implements OnInit {
 
     constructor(
       public _appLocalization: AppLocalization,
-      public _playlistStore : PlaylistStore,
-      private _playlistRoute: ActivatedRoute
+      public _playlistStore : PlaylistStore
 	) {}
 
 	navigateToSection(section: SectionData) {
@@ -35,8 +33,8 @@ export class PlaylistSectionsList implements OnInit {
 
   ngOnInit() {
     this.sections = [
-      new SectionData(PlaylistSections.Metadata, this._appLocalization.get('applications.content.playlistDetails.sections.metadata'), false, true),
-      new SectionData(PlaylistSections.Content, this._appLocalization.get('applications.content.playlistDetails.sections.content'), false)
+      new SectionData(PlaylistSections.Metadata, this._appLocalization.get('applications.content.playlistDetails.sections.metadata'), false, false),
+      new SectionData(PlaylistSections.Content, this._appLocalization.get('applications.content.playlistDetails.sections.content'), false, false)
     ];
     this._playlistStore.activeSection$
       .subscribe(
@@ -45,6 +43,14 @@ export class PlaylistSectionsList implements OnInit {
             this.sections.forEach(section => section.isActive = false);
             this.sections[response.section].isActive = true;
           }
+        }
+      );
+
+    this._playlistStore.sectionsState$
+      .subscribe(
+        response => {
+          this.sections[0].hasErrors = response.metadata && response.metadata.isValid != null ? !response.metadata.isValid : this.sections[0].hasErrors;
+          this.sections[1].hasErrors = response.content && response.content.isValid != null ? !response.content.isValid : this.sections[1].hasErrors;
         }
       );
 	}

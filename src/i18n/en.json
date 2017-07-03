@@ -517,7 +517,8 @@
 				"errors": {
 					"retry": "Retry",
 					"backToPlaylists" : "Back To Playlists",
-					"playlistTypeNotSupported" : "playlist type not supported"
+					"playlistTypeNotSupported" : "playlist type not supported",
+          "validationError": "The form contains some invalid information. Please review the sections marked as invalid"
 				}
 			}
         }

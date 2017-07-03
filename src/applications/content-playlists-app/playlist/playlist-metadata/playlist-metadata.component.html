@@ -1,1 +1,20 @@
-<h1>{{'applications.content.playlistDetails.sections.metadata' | translate}}</h1>
+<k-area-blocker [showLoader]="" [message]="">
+  <div class="kMetadataDetails">
+    <span class="kSchemaTitle">{{'applications.content.playlistDetails.sections.metadata' | translate}}</span>
+
+    <form [formGroup]="metadataForm" novalidate>
+      <div class="kRow kValign">
+        <span class="kLabel">{{'applications.content.playlistDetails.metadata.playlistName' | translate}}</span>
+        <div class="kControl">
+          <input formControlName="name" type="text" pInputText/>
+        </div>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">{{'applications.content.playlistDetails.metadata.description' | translate}}</span>
+        <div class="kControl">
+          <textarea formControlName="description" pInputTextarea></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+</k-area-blocker>

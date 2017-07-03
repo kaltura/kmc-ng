@@ -58,6 +58,15 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 				}
 			);
 
+		this._playlistStore.sectionsState$
+      .subscribe(
+        response => {
+          /*this._playlistStore.playlistIsDirty =
+            response.metadata && response.metadata.isDirty && !response.metadata.isValid ||
+            response.content && response.content.isDirty && !response.content.isValid;*/
+        }
+      );
+
 		this.isSafari = this._browserService.isSafari();
 	}
 
@@ -76,6 +85,24 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
   public _backToList(){
     this.returnToPlaylists();
+  }
+
+  public save() {
+    /*if(this._playlistStore.playlistIsDirty) {
+      this._areaBlockerMessage = new AreaBlockerMessage({
+        message: this._appLocalization.get('applications.content.playlistDetails.errors.validationError'),
+        buttons: [
+          {
+            label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
+            action: () => {
+              this._areaBlockerMessage = null;
+            }
+          }
+        ]
+      })
+    } else {
+      this._playlistStore.savePlaylist();
+    }*/
   }
 
 	ngOnDestroy() {}
