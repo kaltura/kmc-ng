@@ -5,8 +5,9 @@ import { ISubscription } from 'rxjs/Subscription';
 
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { SchedulingParams } from '../../services';
 
 function datesValidation(checkRequired: boolean = false): ValidatorFn {
   return (c: AbstractControl): {[key: string]: boolean} | null => {
@@ -31,13 +32,6 @@ function datesValidation(checkRequired: boolean = false): ValidatorFn {
   }
 }
 
-export type SchedulingParams = {
-  scheduling: string,
-  enableEndDate: boolean,
-  startDate: Date,
-  endDate: Date
-}
-
 @Component({
   selector: 'kBulkScheduling',
   templateUrl: './bulk-scheduling.component.html',
@@ -50,7 +44,6 @@ export class BulkScheduling implements OnInit, OnDestroy, AfterViewInit {
 
   public _loading = false;
   public _sectionBlockerMessage: AreaBlockerMessage;
-
 
   public schedulingForm: FormGroup;
   public _enableSave: boolean = false;

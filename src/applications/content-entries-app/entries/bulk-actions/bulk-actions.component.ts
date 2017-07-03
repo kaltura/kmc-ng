@@ -1,10 +1,11 @@
 import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 
-import { SchedulingParams } from './components/bulk-scheduling/bulk-scheduling.component';
+import { SchedulingParams } from './services'
+import { BulkSchedulingService } from './services';
 
 @Component({
   selector: 'kBulkActions',
@@ -18,7 +19,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   @ViewChild('schedulingPopup') public schedulingPopup: PopupWidgetComponent;
 
-  constructor(private _appLocalization: AppLocalization, private _browserService : BrowserService) {
+  constructor(private _appLocalization: AppLocalization, private _browserService : BrowserService, private _bulkSchedulingService: BulkSchedulingService) {
 
   }
 
@@ -41,7 +42,19 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   // get scheduling changes
   onSchedulingChanged(schedulingParams: SchedulingParams){
-    debugger;
+    this._browserService.setAppStatus({isBusy: true, errorMessage: null});
+    this._bulkSchedulingService.execute(this.selectedEntries, schedulingParams).subscribe(
+      result => {
+        if (result.updated === true) {
+          this._browserService.setAppStatus({isBusy: false, errorMessage: null});
+        }else{
+          this._browserService.setAppStatus({isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error')});
+        }
+      },
+      error => {
+        this._browserService.setAppStatus({isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error')});
+      }
+    );
   }
 
   getBulkActionItems(): MenuItem[]{

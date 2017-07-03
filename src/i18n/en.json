@@ -179,7 +179,8 @@
         "changeOwner": "Change Owner",
         "download": "Download",
         "delete": "Delete",
-        "apply": "Apply to all selected entries"
+        "apply": "Apply to all selected entries",
+        "error": "An error occurred during entries update."
       },
       "entryDetails": {
         "sections": {

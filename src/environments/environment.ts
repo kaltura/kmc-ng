@@ -108,7 +108,8 @@ export const environment = {
       "apiUrl": "http://www.kaltura.com"
     },
     "contentEntries" : {
-      "createdAtDateRange" : "2005:2030"
+      "createdAtDateRange" : "2005:2030",
+      "bulkActionsLimit": 2
     },
     "contentPlaylists" : {
       "createdAtDateRange" : "2005:2030"
