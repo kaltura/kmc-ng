@@ -45,11 +45,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     this._browserService.setAppStatus({isBusy: true, errorMessage: null});
     this._bulkSchedulingService.execute(this.selectedEntries, schedulingParams).subscribe(
       result => {
-        if (result.updated === true) {
-          this._browserService.setAppStatus({isBusy: false, errorMessage: null});
-        }else{
-          this._browserService.setAppStatus({isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error')});
-        }
+        this._browserService.setAppStatus({isBusy: false, errorMessage: null});
       },
       error => {
         this._browserService.setAppStatus({isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error')});

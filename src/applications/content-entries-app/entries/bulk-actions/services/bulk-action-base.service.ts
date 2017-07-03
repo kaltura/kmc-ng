@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import { environment } from 'app-environment';
 
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaRequest, KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-typescript-client';
 
@@ -10,9 +11,9 @@ export abstract class BulkActionBaseService<T> {
   constructor(private _kalturaServerClient: KalturaClient) {
   }
 
-  public abstract execute(selectedEntries: any[] , params : T) : Observable<any>;
+  public abstract execute(selectedEntries: KalturaMediaEntry[] , params : T) : Observable<any>;
 
-  transmit(requests : KalturaRequest<any>[], chunk : boolean) : Observable<{failed: boolean}>
+  transmit(requests : KalturaRequest<any>[], chunk : boolean) : Observable<{}>
   {
     let maxRequestsPerMultiRequest = requests.length;
     if (chunk){
@@ -35,16 +36,13 @@ export abstract class BulkActionBaseService<T> {
     multiRequests.push(this._kalturaServerClient.multiRequest(mr));
 
     return Observable.forkJoin(multiRequests)
-      .catch((error, caught) => {
-        return Observable.of([{failed: true}]);
-      })
       .map(responses => {
         const mergedResponses = [].concat.apply([], responses);
         let hasFailure = mergedResponses.filter(function ( response ) {return response.error}).length > 0;
         if (hasFailure) {
-          return {failed: true};
+          throw new Error("error");
         } else {
-          return {failed: false};
+          return {};
         }
       });
   }

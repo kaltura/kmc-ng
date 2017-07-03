@@ -21,7 +21,7 @@ export class BulkSchedulingService extends BulkActionBaseService<SchedulingParam
     super(_kalturaServerClient);
   }
 
-  public execute(selectedEntries: KalturaMediaEntry[], schedulingParams : SchedulingParams) : Observable<{updated: boolean, error: string}>{
+  public execute(selectedEntries: KalturaMediaEntry[], schedulingParams : SchedulingParams) : Observable<{}>{
     return Observable.create(observer =>{
 
       let requests: BaseEntryUpdateAction[] = [];
@@ -50,16 +50,11 @@ export class BulkSchedulingService extends BulkActionBaseService<SchedulingParam
 
       this.transmit(requests, true).subscribe(
         result => {
-          if (result.failed === true){
-            observer.next({updated: false})
-          }else{
-            observer.next({updated: true})
-          }
+          observer.next({})
           observer.complete();
         },
         error => {
-          observer.next({updated: false});
-          observer.complete();
+          observer.error(error);
         }
       );
     });
