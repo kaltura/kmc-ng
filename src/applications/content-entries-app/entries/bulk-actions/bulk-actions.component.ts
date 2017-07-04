@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -16,6 +16,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   public _bulkActionsMenu: MenuItem[] = [];
   @Input() selectedEntries: any[];
+
+  @Output() onBulkChange = new EventEmitter<{reload: boolean}>();
 
   @ViewChild('schedulingPopup') public schedulingPopup: PopupWidgetComponent;
 
@@ -46,6 +48,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     this._bulkSchedulingService.execute(this.selectedEntries, schedulingParams).subscribe(
       result => {
         this._browserService.setAppStatus({isBusy: false, errorMessage: null});
+        this.onBulkChange.emit({reload: true});
       },
       error => {
         this._browserService.setAppStatus({isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error')});

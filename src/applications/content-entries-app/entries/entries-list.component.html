@@ -6,7 +6,7 @@
 
 				<div [class.kHidden]="!_selectedEntries.length" class="kBulkOperations">
 					<span class="kSelectedEntriesLabel">• {{_selectedEntries.length}} {{'applications.content.entries.selected' | translate}}</span>
-          <kBulkActions [selectedEntries]="_selectedEntries"></kBulkActions>
+          <kBulkActions [selectedEntries]="_selectedEntries" (onBulkChange)="onBulkChange($event)"></kBulkActions>
 					<a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
 				</div>
 				<div [class.kHidden]="_selectedEntries.length" class="kFilters">

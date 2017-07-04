@@ -205,5 +205,13 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 		this._selectedEntries = event;
 	}
 
+  onBulkChange(event): void{
+    if (event.reload === true){
+      this._reload();
+    }else{
+      this.clearSelection();
+    }
+  }
+
 }
 
