@@ -49,8 +49,8 @@ export class PlaylistSectionsList implements OnInit {
     this._playlistStore.sectionsState$
       .subscribe(
         response => {
-          this.sections[0].hasErrors = response.metadata && response.metadata.isValid != null ? !response.metadata.isValid : this.sections[0].hasErrors;
-          this.sections[1].hasErrors = response.content && response.content.isValid != null ? !response.content.isValid : this.sections[1].hasErrors;
+          this.sections[0].hasErrors = response[0] && response[0].isValid !== null ? !response[0].isValid : this.sections[0].hasErrors;
+          this.sections[1].hasErrors = response[1] && response[1].isValid !== null ? !response[1].isValid : this.sections[1].hasErrors;
         }
       );
 	}

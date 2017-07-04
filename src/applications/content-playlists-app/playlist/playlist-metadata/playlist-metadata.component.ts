@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
-import { PlaylistStore } from '../playlist-store.service';
+import { PlaylistStore, SectionState } from '../playlist-store.service';
 import { PlaylistSections } from '../playlist-sections';
 
 @Component({
@@ -8,10 +8,13 @@ import { PlaylistSections } from '../playlist-sections';
   templateUrl: './playlist-metadata.component.html',
   styleUrls: ['./playlist-metadata.component.scss']
 })
+
+
 export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestroy {
   name : FormControl;
   description : FormControl;
   metadataForm: FormGroup;
+  sectionState: SectionState[] = [];
 
   constructor(
     private _formBuilder : FormBuilder,
@@ -29,6 +32,11 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
   }
 
   ngOnInit() {
+    this.sectionState = [
+      new SectionState(PlaylistSections.Metadata, true, false),
+      new SectionState(PlaylistSections.Content, true, false)
+    ];
+
     this._playlistStore.playlist$
       .subscribe(
         response => {
@@ -48,7 +56,8 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
     this.metadataForm.statusChanges
       .subscribe(
         status => {
-          // this._playlistStore.updateSectionState(PlaylistSections.Metadata, status === 'VALID');
+          this.sectionState[0].isValid = status === 'VALID';
+          this._playlistStore.updateSectionState(this.sectionState);
         }
       );
 

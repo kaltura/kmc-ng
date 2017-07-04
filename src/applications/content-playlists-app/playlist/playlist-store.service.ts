@@ -10,11 +10,19 @@ import { PlaylistSections } from './playlist-sections';
 import { PlaylistUpdateAction} from 'kaltura-typescript-client/types/PlaylistUpdateAction';
 import { KalturaTypesFactory } from 'kaltura-typescript-client';
 
+export class SectionState {
+  constructor(
+    public section: PlaylistSections,
+    public isValid: boolean  = true,
+    public isDirty: boolean = false
+  ){}
+}
+
 @Injectable()
 export class PlaylistStore implements OnDestroy {
 	private _sectionsState = new BehaviorSubject<{
-	  metadata: {isValid: boolean, isDirty: boolean},
-    content:  {isValid: boolean, isDirty: boolean}
+	  metadata: {isValid: boolean, isDirty?: boolean},
+    content:  {isValid: boolean, isDirty?: boolean}
 	}>({
 		metadata: {isValid: true, isDirty: false},
     content: {isValid: true, isDirty: false}
@@ -125,8 +133,8 @@ export class PlaylistStore implements OnDestroy {
 			);
 	}
 
-  public updateSectionState(section : PlaylistSections,  {isValid, isDirty}) : void {
-    // this._sectionsState.next(section, {});
+  public updateSectionState(sections) : void {
+    this._sectionsState.next(sections);
   }
 
   public savePlaylist() : void {
