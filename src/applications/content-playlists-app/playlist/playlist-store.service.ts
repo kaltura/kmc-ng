@@ -186,7 +186,7 @@ export class PlaylistStore implements OnDestroy {
       );
   }
 
-  private _canLeaveWithoutSaving() : Observable<{ allowed : boolean}>
+  public _canLeaveWithoutSaving() : Observable<{ allowed : boolean}>
   {
     return Observable.create(observer =>
     {

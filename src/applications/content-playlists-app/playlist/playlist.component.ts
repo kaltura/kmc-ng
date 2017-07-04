@@ -79,7 +79,18 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 	}
 
   public returnToPlaylists(params : {force? : boolean} = {}) {
-    this._router.navigate(['content/playlists']);
+    this._playlistStore._canLeaveWithoutSaving()
+      .cancelOnDestroy(this)
+      .monitor('playlist store: return to playlists list')
+      .subscribe(
+        response =>
+        {
+          if (response.allowed)
+          {
+            this._router.navigate(['content/playlists']);
+          }
+        }
+      );
   }
 
   private _createBackToPlaylistsButton(): AreaBlockerMessageButton {
