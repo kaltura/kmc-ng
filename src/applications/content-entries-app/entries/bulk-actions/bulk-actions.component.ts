@@ -5,7 +5,9 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 
 import { SchedulingParams } from './services'
-import { BulkSchedulingService, BulkAddTagsService } from './services';
+import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService } from './services';
+import { KalturaMediaEntry } from "kaltura-typescript-client/types/KalturaMediaEntry";
+import {BulkActionBaseService} from "./services/bulk-action-base.service";
 
 @Component({
   selector: 'kBulkActions',
@@ -15,16 +17,18 @@ import { BulkSchedulingService, BulkAddTagsService } from './services';
 export class BulkActionsComponent implements OnInit, OnDestroy {
 
   public _bulkActionsMenu: MenuItem[] = [];
-  @Input() selectedEntries: any[];
+  @Input() selectedEntries: KalturaMediaEntry[];
 
   @Output() onBulkChange = new EventEmitter<{reload: boolean}>();
 
   @ViewChild('schedulingPopup') public schedulingPopup: PopupWidgetComponent;
   @ViewChild('addTagsPopup') public addTagsPopup: PopupWidgetComponent;
+  @ViewChild('removeTagsPopup') public removeTagsPopup: PopupWidgetComponent;
 
   constructor(private _appLocalization: AppLocalization, private _browserService : BrowserService,
               private _bulkSchedulingService: BulkSchedulingService,
-              private _bulkAddTagsService: BulkAddTagsService) {
+              private _bulkAddTagsService: BulkAddTagsService,
+              private _bulkRemoveTagsService: BulkRemoveTagsService) {
 
   }
 
@@ -44,31 +48,33 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
       case "addTags":
         this.addTagsPopup.open();
         break;
+      case "removeTags":
+        this.removeTagsPopup.open();
+        break;
     }
-    // this._browserService.setAppStatus({isBusy: true, errorMessage: null});
   }
 
-  // get scheduling changes
+  // set scheduling changes
   onSchedulingChanged(schedulingParams: SchedulingParams): void{
-    this._browserService.setAppStatus({isBusy: true, errorMessage: null});
-    this._bulkSchedulingService.execute(this.selectedEntries, schedulingParams).subscribe(
-      result => {
-        this._browserService.setAppStatus({isBusy: false, errorMessage: null});
-        this.onBulkChange.emit({reload: true});
-      },
-      error => {
-        this._browserService.setAppStatus({isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error')});
-      }
-    );
+    this.executeService(this._bulkSchedulingService, schedulingParams);
   }
 
   // add tags changed
   onAddTagsChanged(tags: string[]): void{
+    this.executeService(this._bulkAddTagsService, tags, false);
+  }
+
+  // remove tags changed
+  onRemoveTagsChanged(tags: string[]): void{
+    this.executeService(this._bulkRemoveTagsService, tags);
+  }
+
+  private executeService(service: BulkActionBaseService<any>, data: any, reloadEntries: boolean = true ): void{
     this._browserService.setAppStatus({isBusy: true, errorMessage: null});
-    this._bulkAddTagsService.execute(this.selectedEntries, tags).subscribe(
+    service.execute(this.selectedEntries, data).subscribe(
       result => {
         this._browserService.setAppStatus({isBusy: false, errorMessage: null});
-        this.onBulkChange.emit({reload: false});
+        this.onBulkChange.emit({reload: reloadEntries});
       },
       error => {
         this._browserService.setAppStatus({isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error')});

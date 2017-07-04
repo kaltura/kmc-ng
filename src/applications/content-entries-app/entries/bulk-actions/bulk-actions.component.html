@@ -17,3 +17,10 @@
     <kBulkAddTags [parentPopupWidget]="addTagsPopup" (addTagsChanged)="onAddTagsChanged($event)"></kBulkAddTags>
   </ng-template>
 </kPopupWidget>
+
+
+<kPopupWidget #removeTagsPopup [popupWidth]="500" [popupHeight]="500" [modal]="true">
+  <ng-template>
+    <kBulkRemoveTags [selectedEntries]="selectedEntries" [parentPopupWidget]="removeTagsPopup" (removeTagsChanged)="onRemoveTagsChanged($event)"></kBulkRemoveTags>
+  </ng-template>
+</kPopupWidget>

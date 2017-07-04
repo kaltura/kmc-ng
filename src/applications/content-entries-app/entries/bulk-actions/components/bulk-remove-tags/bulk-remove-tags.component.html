@@ -1,0 +1,12 @@
+<k-area-blocker [showLoader]="_loading" [message]="_sectionBlockerMessage">
+  <div class="kContent kOverrideFAIcons">
+    <span class="kTitle">{{'applications.content.bulkActions.removeTags' | translate}}</span>
+    <div class="kTags">
+      <span class="kLabel">{{'applications.content.bulkActions.removeTagsLabel' | translate}}</span>
+      <p-listbox [options]="tags" [(ngModel)]="tagsToRemove" multiple="multiple" checkbox="checkbox"></p-listbox>
+    </div>
+    <div class="kFooter">
+      <button type="button" class="kButtonBranded" pButton label="{{'applications.content.bulkActions.apply' | translate}}" (click)="_apply()"></button>
+    </div>
+  </div>
+</k-area-blocker>

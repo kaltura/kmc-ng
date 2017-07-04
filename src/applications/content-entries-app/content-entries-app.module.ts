@@ -4,8 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
-import {
-     TreeModule, TieredMenuModule,  SharedModule,   AccordionModule,  ButtonModule, InputTextareaModule, PaginatorModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule, MultiSelectModule, CheckboxModule, CalendarModule, SpinnerModule, ConfirmDialogModule, ConfirmationService, GrowlModule } from 'primeng/primeng';
+import { TreeModule, TieredMenuModule,  SharedModule,   AccordionModule,  ButtonModule, InputTextareaModule, PaginatorModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule, MultiSelectModule, CheckboxModule, CalendarModule, SpinnerModule, ConfirmDialogModule, ConfirmationService, GrowlModule, ListboxModule } from 'primeng/primeng';
 import { KMCShellModule } from 'app-shared/kmc-shell';
 
 import { routing } from './content-entries-app.routes';
@@ -29,9 +28,8 @@ import { EntriesComponentsList } from './entries/entries-components-list';
 import { CategoriesStore } from './shared/categories-store.service';
 import { EntriesRefineFiltersProvider } from './entries/entries-refine-filters/entries-refine-filters-provider.service';
 import { CategoriesPrimeService } from './shared/categories-prime.service';
-import { BulkSchedulingService } from './entries/bulk-actions/services';
+import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService} from './entries/bulk-actions/services';
 import { SharedComponentsList } from './shared/shared-components-list';
-import {BulkAddTagsService} from "./entries/bulk-actions/services/bulk-add-tag.service";
 
 @NgModule({
     imports: [
@@ -48,6 +46,7 @@ import {BulkAddTagsService} from "./entries/bulk-actions/services/bulk-add-tag.s
         DynamicFormModule,
         FormsModule,
         GrowlModule,
+        ListboxModule,
         InputTextareaModule,
         InputTextModule,
         KalturaCommonModule,
@@ -85,7 +84,8 @@ import {BulkAddTagsService} from "./entries/bulk-actions/services/bulk-add-tag.s
         MetadataProfileStore,
         EntriesRefineFiltersProvider,
         BulkSchedulingService,
-        BulkAddTagsService
+        BulkAddTagsService,
+        BulkRemoveTagsService
     ],
 })
 export class ContentEntriesAppModule {
