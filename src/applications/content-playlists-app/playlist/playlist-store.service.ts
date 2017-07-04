@@ -152,8 +152,7 @@ export class PlaylistStore implements OnDestroy {
 	  let id = this._playlistId,
 	    playlist = this._playlist.getValue().playlist,
       updateStats = true;
-	  // playlist.name = this.metadataName;
-    // playlist.description = this.metadataDescription;
+
     this._state.next({isBusy: true});
     this._kalturaServerClient.request(
       new PlaylistUpdateAction({id, playlist, updateStats})
@@ -205,8 +204,7 @@ export class PlaylistStore implements OnDestroy {
             }
           }
         )
-      }else
-      {
+      } else {
         observer.next({allowed: true});
         observer.complete();
       }
