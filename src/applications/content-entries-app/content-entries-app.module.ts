@@ -31,6 +31,7 @@ import { EntriesRefineFiltersProvider } from './entries/entries-refine-filters/e
 import { CategoriesPrimeService } from './shared/categories-prime.service';
 import { BulkSchedulingService } from './entries/bulk-actions/services';
 import { SharedComponentsList } from './shared/shared-components-list';
+import {BulkAddTagsService} from "./entries/bulk-actions/services/bulk-add-tag.service";
 
 @NgModule({
     imports: [
@@ -83,7 +84,8 @@ import { SharedComponentsList } from './shared/shared-components-list';
         CategoriesPrimeService,
         MetadataProfileStore,
         EntriesRefineFiltersProvider,
-        BulkSchedulingService
+        BulkSchedulingService,
+        BulkAddTagsService
     ],
 })
 export class ContentEntriesAppModule {

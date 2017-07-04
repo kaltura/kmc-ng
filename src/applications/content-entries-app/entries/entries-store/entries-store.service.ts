@@ -90,7 +90,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         pageSize: 50,
         sortBy: 'createdAt',
         sortDirection: SortDirection.Desc,
-        fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus'
+        fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,tags'
     };
     private _querySource = new Subject<QueryRequestArgs>();
 	private _destoryed: boolean = false;

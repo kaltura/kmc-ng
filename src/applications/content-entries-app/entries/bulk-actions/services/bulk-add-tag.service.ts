@@ -21,8 +21,21 @@ export class BulkAddTagsService extends BulkActionBaseService<string[]> {
 
       selectedEntries.forEach(entry => {
         let updatedEntry: KalturaBaseEntry = new KalturaBaseEntry();
-        // update entry tags
 
+        // update entry tags. trim tags due to legacy KMC bugs
+        let entryTags = [];
+        if (entry.tags && entry.tags.length){
+          entryTags = entry.tags.split(",").map(tag => {
+            return tag.trim()
+          });
+        }
+        // add selected tags only if unique
+        tags.forEach(tag => {
+          if (entryTags.indexOf(tag) === -1){
+            entryTags.push(tag);
+          }
+        });
+        updatedEntry.tags = entryTags.toString();
         requests.push(new BaseEntryUpdateAction({
           entryId: entry.id,
           baseEntry: updatedEntry

@@ -209,7 +209,9 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     if (event.reload === true){
       this._reload();
     }else{
-      this.clearSelection();
+      // this.clearSelection();
+      this._msgs = [];
+      this._msgs.push({severity: 'success', summary: '', detail: this.appLocalization.get('applications.content.bulkActions.updated')});
     }
   }
 

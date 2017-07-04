@@ -5,7 +5,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 
 import { SchedulingParams } from './services'
-import { BulkSchedulingService } from './services';
+import { BulkSchedulingService, BulkAddTagsService } from './services';
 
 @Component({
   selector: 'kBulkActions',
@@ -22,7 +22,9 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   @ViewChild('schedulingPopup') public schedulingPopup: PopupWidgetComponent;
   @ViewChild('addTagsPopup') public addTagsPopup: PopupWidgetComponent;
 
-  constructor(private _appLocalization: AppLocalization, private _browserService : BrowserService, private _bulkSchedulingService: BulkSchedulingService) {
+  constructor(private _appLocalization: AppLocalization, private _browserService : BrowserService,
+              private _bulkSchedulingService: BulkSchedulingService,
+              private _bulkAddTagsService: BulkAddTagsService) {
 
   }
 
@@ -62,7 +64,16 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   // add tags changed
   onAddTagsChanged(tags: string[]): void{
-    debugger;
+    this._browserService.setAppStatus({isBusy: true, errorMessage: null});
+    this._bulkAddTagsService.execute(this.selectedEntries, tags).subscribe(
+      result => {
+        this._browserService.setAppStatus({isBusy: false, errorMessage: null});
+        this.onBulkChange.emit({reload: false});
+      },
+      error => {
+        this._browserService.setAppStatus({isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error')});
+      }
+    );
   }
 
   getBulkActionItems(): MenuItem[]{
