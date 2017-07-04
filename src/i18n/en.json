@@ -512,7 +512,8 @@
 				},
         "metadata":{
           "playlistName": "Name",
-          "description": "Description"
+          "description": "Description",
+          "tags": "Tags"
         },
 				"errors": {
 					"retry": "Retry",

@@ -8,15 +8,9 @@ import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PlaylistSections } from './playlist-sections';
 import { PlaylistUpdateAction} from 'kaltura-typescript-client/types/PlaylistUpdateAction';
+import { Observable } from 'rxjs/Observable';
+import { BrowserService } from "app-shared/kmc-shell";
 import { KalturaTypesFactory } from 'kaltura-typescript-client';
-
-export class SectionState {
-  constructor(
-    public section: PlaylistSections,
-    public isValid: boolean  = true,
-    public isDirty: boolean = false
-  ){}
-}
 
 @Injectable()
 export class PlaylistStore implements OnDestroy {
@@ -43,6 +37,10 @@ export class PlaylistStore implements OnDestroy {
     return this._playlist.getValue().playlist;
   }
 
+  public get sectionsState() : any {
+    return this._sectionsState.getValue();
+  }
+
 	public openSection(sectionId: PlaylistSections): void {
     const navigatePath = this._sectionToRouteMapping[sectionId];
 
@@ -56,7 +54,8 @@ export class PlaylistStore implements OnDestroy {
 		private _router: Router,
 		private _playlistRoute: ActivatedRoute,
 		private _kalturaServerClient: KalturaClient,
-		private _appLocalization: AppLocalization
+		private _appLocalization: AppLocalization,
+    private _browserService : BrowserService
 	) {
 		this._mapSections();
 
@@ -133,13 +132,25 @@ export class PlaylistStore implements OnDestroy {
 			);
 	}
 
-  public updateSectionState(sections) : void {
+  public updateSectionState(section: PlaylistSections, isValid?: boolean, isDirty?: boolean) : void {
+    const sections = Object.assign({}, this._sectionsState.getValue());
+
+    switch(section) {
+      case PlaylistSections.Metadata:
+        if(isValid !== null) sections.metadata.isValid = isValid;
+        if(isDirty !== null) sections.metadata.isDirty = isDirty;
+        break;
+      case PlaylistSections.Content:
+        if(isValid !== null) sections.content.isValid = isValid;
+        if(isDirty !== null) sections.content.isDirty = isDirty;
+        break;
+    }
     this._sectionsState.next(sections);
   }
 
   public savePlaylist() : void {
 	  let id = this._playlistId,
-	    playlist = this._playlist.getValue().playlist, //KalturaTypesFactory.createObject(this._playlist.getValue())
+	    playlist = this._playlist.getValue().playlist,
       updateStats = true;
 	  // playlist.name = this.metadataName;
     // playlist.description = this.metadataDescription;
@@ -158,6 +169,48 @@ export class PlaylistStore implements OnDestroy {
     {
       this._loadPlaylist(this._playlistId);
     }
+  }
+
+  public openPlaylist(playlistId : string)
+  {
+    this._canLeaveWithoutSaving()
+      .cancelOnDestroy(this)
+      .subscribe(
+        response =>
+        {
+          if (response.allowed)
+          {
+            this._router.navigate(["playlist", playlistId],{ relativeTo : this._playlistRoute.parent});
+          }
+        }
+      );
+  }
+
+  private _canLeaveWithoutSaving() : Observable<{ allowed : boolean}>
+  {
+    return Observable.create(observer =>
+    {
+      if (this.sectionsState.metadata.isDirty || this.sectionsState.content.isDirty) {
+        this._browserService.confirm(
+          {
+            header: 'Cancel Edit',
+            message: 'Discard all changes?',
+            accept: () => {
+              observer.next({allowed: true});
+              observer.complete();
+            },
+            reject: () => {
+              observer.next({allowed: false});
+              observer.complete();
+            }
+          }
+        )
+      }else
+      {
+        observer.next({allowed: true});
+        observer.complete();
+      }
+    }).monitor('playlist store: check if can leave section without saving');
   }
 
 	ngOnDestroy() {

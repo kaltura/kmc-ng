@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { PlaylistStore } from './playlist-store.service';
+import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 import {
   AreaBlockerMessage,
   AreaBlockerMessageButton
@@ -15,16 +16,22 @@ import { Router } from '@angular/router';
   providers : [PlaylistStore]
 })
 export class PlaylistComponent implements OnInit, OnDestroy {
-	public playlistName: string;
+  public playlistName: string;
+  public _currentPlaylistId: string;
 	public _showLoader = false;
 	public isSafari: boolean = false;
 	public _areaBlockerMessage: AreaBlockerMessage;
+  public isValid: boolean = true;
+	public isDirty: boolean = true;
+  public _enablePrevButton: boolean;
+  public _enableNextButton: boolean;
 
 	constructor(
     private _router: Router,
 		private _browserService: BrowserService,
 		private _playlistStore: PlaylistStore,
-    private _appLocalization: AppLocalization
+    private _appLocalization: AppLocalization,
+    private _playlistsStore: PlaylistsStore
 	) {}
 
 	ngOnInit() {
@@ -54,6 +61,8 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 				response => {
 					if(response.playlist) {
 						this.playlistName = response.playlist.name;
+						this._currentPlaylistId = response.playlist.id;
+            this._updateNavigationState();
 					}
 				}
 			);
@@ -61,9 +70,8 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 		this._playlistStore.sectionsState$
       .subscribe(
         response => {
-          /*this._playlistStore.playlistIsDirty =
-            response.metadata && response.metadata.isDirty && !response.metadata.isValid ||
-            response.content && response.content.isDirty && !response.content.isValid;*/
+          this.isDirty = response.metadata.isDirty || response.content.isDirty;
+          this.isValid = response.metadata.isValid && response.content.isValid;
         }
       );
 
@@ -88,7 +96,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   }
 
   public save() {
-    /*if(this._playlistStore.playlistIsDirty) {
+    if(!this.isValid) {
       this._areaBlockerMessage = new AreaBlockerMessage({
         message: this._appLocalization.get('applications.content.playlistDetails.errors.validationError'),
         buttons: [
@@ -102,7 +110,29 @@ export class PlaylistComponent implements OnInit, OnDestroy {
       })
     } else {
       this._playlistStore.savePlaylist();
-    }*/
+    }
+  }
+
+  private _updateNavigationState(flag?: string) : void {
+    const playlists = this._playlistsStore.playlists;
+    if (playlists && this._currentPlaylistId) {
+      const currentPlaylistIndex = playlists.findIndex(playlist => playlist.id === this._currentPlaylistId);
+      let newPlaylist = null;
+      this._enableNextButton = currentPlaylistIndex >= 0 && (currentPlaylistIndex < playlists.length - 1);
+      this._enablePrevButton = currentPlaylistIndex > 0;
+      if(flag && flag === '+' && this._enableNextButton) {
+        newPlaylist = playlists[currentPlaylistIndex + 1];
+      }
+      if(flag && flag === '-' && this._enablePrevButton)  {
+        newPlaylist = playlists[currentPlaylistIndex - 1];
+      }
+      if(newPlaylist) {
+        this._playlistStore.openPlaylist(newPlaylist.id);
+      }
+    } else {
+      this._enableNextButton = false;
+      this._enablePrevButton = false;
+    }
   }
 
 	ngOnDestroy() {}

@@ -81,6 +81,11 @@ export class PlaylistsStore implements OnDestroy {
 		}
 	}
 
+  public get playlists() : KalturaPlaylist[]
+  {
+    return this._playlistsSource.getValue().items;
+  }
+
 	ngOnDestroy() {
 		this._stateSource.complete();
 		this._querySource.complete();

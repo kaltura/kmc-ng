@@ -10,10 +10,15 @@
         </button>
 				<div class="kMediaTypeIcon kIconvideo"></div>
 				<div class="kPlaylistTitle">{{ playlistName }}</div>
-
-				<button pButton class="kButtonBranded kSaveBtn" label="Save" (click)="save()"></button> <!--[disabled]="playlistIsDirty"-->
-				<button pButton class="kButtonDefault kNavigationBtn" icon="kIconarrow_backward"></button>
-				<button pButton class="kButtonDefault kNavigationBtn" icon="kIconarrow_forward"></button>
+				<button pButton class="kButtonBranded kSaveBtn" label="Save" (click)="save()" [disabled]="!isDirty"></button>
+				<button pButton class="kButtonDefault kNavigationBtn"  icon="kIconarrow_backward"
+                (click)="_updateNavigationState('-')"
+                [disabled]="!_enablePrevButton">
+        </button>
+				<button pButton class="kButtonDefault kNavigationBtn" icon="kIconarrow_forward"
+                (click)="_updateNavigationState('+')"
+                [disabled]="!_enableNextButton">
+        </button>
 			</div>
 			<div class="kPlaylistDetailsMain">
 				<div class="kPlaylistDetailsSections">
