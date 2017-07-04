@@ -169,6 +169,7 @@
         "setAccessControl": "Set Access Control",
         "addRemoveTags": "Add / Remove Tags",
         "addTags": "Add Tags",
+        "addTagsLabel": "Enter tags to be appended to all selected entries.",
         "removeTags": "Remove Tags",
         "addRemoveCategories": "Add / Remove Categories",
         "addToCategories": "Add To Categories",

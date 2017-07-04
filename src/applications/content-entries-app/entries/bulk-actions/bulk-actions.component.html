@@ -11,3 +11,9 @@
     <kBulkScheduling [parentPopupWidget]="schedulingPopup" (schedulingChanged)="onSchedulingChanged($event)"></kBulkScheduling>
   </ng-template>
 </kPopupWidget>
+
+<kPopupWidget #addTagsPopup [popupWidth]="500" [popupHeight]="500" [modal]="true">
+  <ng-template>
+    <kBulkAddTags [parentPopupWidget]="addTagsPopup" (addTagsChanged)="onAddTagsChanged($event)"></kBulkAddTags>
+  </ng-template>
+</kPopupWidget>

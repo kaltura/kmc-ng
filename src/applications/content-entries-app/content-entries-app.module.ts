@@ -26,8 +26,6 @@ import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura
 import { KalturaCustomMetadataModule } from '@kaltura-ng/kaltura-ui/dynamic-form/kaltura-custom-metadata';
 import { EntryComponentsList } from './entry/entry-components-list';
 import { EntriesComponentsList } from './entries/entries-components-list';
-import { BulkActionsComponent } from './entries/bulk-actions/bulk-actions.component';
-import { BulkScheduling } from './entries/bulk-actions/components';
 import { CategoriesStore } from './shared/categories-store.service';
 import { EntriesRefineFiltersProvider } from './entries/entries-refine-filters/entries-refine-filters-provider.service';
 import { CategoriesPrimeService } from './shared/categories-prime.service';
@@ -76,9 +74,7 @@ import { SharedComponentsList } from './shared/shared-components-list';
         ContentEntriesComponent,
         EntryComponentsList,
         EntriesComponentsList,
-        SharedComponentsList,
-        BulkActionsComponent,
-        BulkScheduling
+        SharedComponentsList
     ],
     exports: [],
     providers: [

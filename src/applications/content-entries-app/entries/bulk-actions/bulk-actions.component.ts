@@ -20,6 +20,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   @Output() onBulkChange = new EventEmitter<{reload: boolean}>();
 
   @ViewChild('schedulingPopup') public schedulingPopup: PopupWidgetComponent;
+  @ViewChild('addTagsPopup') public addTagsPopup: PopupWidgetComponent;
 
   constructor(private _appLocalization: AppLocalization, private _browserService : BrowserService, private _bulkSchedulingService: BulkSchedulingService) {
 
@@ -38,12 +39,15 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
       case "setScheduling":
         this.schedulingPopup.open();
         break;
+      case "addTags":
+        this.addTagsPopup.open();
+        break;
     }
     // this._browserService.setAppStatus({isBusy: true, errorMessage: null});
   }
 
   // get scheduling changes
-  onSchedulingChanged(schedulingParams: SchedulingParams){
+  onSchedulingChanged(schedulingParams: SchedulingParams): void{
     this._browserService.setAppStatus({isBusy: true, errorMessage: null});
     this._bulkSchedulingService.execute(this.selectedEntries, schedulingParams).subscribe(
       result => {
@@ -54,6 +58,11 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
         this._browserService.setAppStatus({isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error')});
       }
     );
+  }
+
+  // add tags changed
+  onAddTagsChanged(tags: string[]): void{
+    debugger;
   }
 
   getBulkActionItems(): MenuItem[]{
