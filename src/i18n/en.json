@@ -180,6 +180,7 @@
         "addToNewCategory": "Add To New Category",
         "addToNewPlaylist": "Add To New Playlist",
         "changeOwner": "Change Owner",
+        "changeOwnerLabel": "Set a new owner for the selected entries",
         "download": "Download",
         "delete": "Delete",
         "apply": "Apply to all selected entries",

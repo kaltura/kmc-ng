@@ -5,10 +5,11 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 
 import { SchedulingParams } from './services'
-import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, EntryCategoryItem } from './services';
+import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, EntryCategoryItem, BulkChangeOwnerService } from './services';
 import { KalturaMediaEntry } from "kaltura-typescript-client/types/KalturaMediaEntry";
 import { BulkActionBaseService } from "./services/bulk-action-base.service";
 import { environment } from 'app-environment';
+import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 
 @Component({
   selector: 'kBulkActions',
@@ -26,12 +27,14 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   @ViewChild('addTagsPopup') public addTagsPopup: PopupWidgetComponent;
   @ViewChild('removeTagsPopup') public removeTagsPopup: PopupWidgetComponent;
   @ViewChild('addCategoriesPopup') public addCategoriesPopup: PopupWidgetComponent;
+  @ViewChild('changeOwnerPopup') public changeOwnerPopup: PopupWidgetComponent;
 
   constructor(private _appLocalization: AppLocalization, private _browserService : BrowserService,
               private _bulkSchedulingService: BulkSchedulingService,
               private _bulkAddTagsService: BulkAddTagsService,
               private _bulkRemoveTagsService: BulkRemoveTagsService,
-              private _bulkAddCategoriesService: BulkAddCategoriesService) {
+              private _bulkAddCategoriesService: BulkAddCategoriesService,
+              private _bulkChangeOwnerService: BulkChangeOwnerService) {
 
   }
 
@@ -57,6 +60,9 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
       case "addToCategories":
         this.addCategoriesPopup.open();
         break;
+      case "changeOwner":
+        this.changeOwnerPopup.open();
+        break;
     }
   }
 
@@ -78,6 +84,13 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   // add to categories changed
   onAddToCategoriesChanged(categories: EntryCategoryItem[]): void{
     this.executeService(this._bulkAddCategoriesService, categories);
+  }
+
+  // owner changed
+  onOwnerChanged(owners: KalturaUser[]): void{
+    if (owners && owners.length){
+      this.executeService(this._bulkChangeOwnerService, owners[0]);
+    }
   }
 
   private executeService(service: BulkActionBaseService<any>, data: any, reloadEntries: boolean = true ): void{

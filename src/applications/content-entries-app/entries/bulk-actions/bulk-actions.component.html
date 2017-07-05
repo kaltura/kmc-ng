@@ -18,7 +18,6 @@
   </ng-template>
 </kPopupWidget>
 
-
 <kPopupWidget #removeTagsPopup [popupWidth]="500" [popupHeight]="500" [modal]="true">
   <ng-template>
     <kBulkRemoveTags [selectedEntries]="selectedEntries" [parentPopupWidget]="removeTagsPopup" (removeTagsChanged)="onRemoveTagsChanged($event)"></kBulkRemoveTags>
@@ -28,5 +27,11 @@
 <kPopupWidget #addCategoriesPopup [popupWidth]="560" [popupHeight]="586" [closeBtn]="true" [modal]="true">
   <ng-template>
     <kCategoriesSelector [parentPopupWidget]="addCategoriesPopup" (valueChange)="onAddToCategoriesChanged($event)" [buttonLabel]="'applications.content.bulkActions.apply' | translate"></kCategoriesSelector>
+  </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #changeOwnerPopup [popupWidth]="500" [popupHeight]="500" [modal]="true">
+  <ng-template>
+    <kBulkChangeOwner [parentPopupWidget]="changeOwnerPopup" (ownerChanged)="onOwnerChanged($event)"></kBulkChangeOwner>
   </ng-template>
 </kPopupWidget>
