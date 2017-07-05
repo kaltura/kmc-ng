@@ -6,11 +6,14 @@ import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { PlaylistGetAction } from 'kaltura-typescript-client/types/PlaylistGetAction';
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { PlaylistSections } from './playlist-sections';
 import { PlaylistUpdateAction} from 'kaltura-typescript-client/types/PlaylistUpdateAction';
 import { Observable } from 'rxjs/Observable';
 import { BrowserService } from "app-shared/kmc-shell";
-import { KalturaTypesFactory } from 'kaltura-typescript-client';
+import { TagSearchAction } from 'kaltura-typescript-client/types/TagSearchAction';
+import { KalturaTagFilter } from 'kaltura-typescript-client/types/KalturaTagFilter';
+import { KalturaTaggedObjectType } from 'kaltura-typescript-client/types/KalturaTaggedObjectType';
+import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
+import { PlaylistSections } from './playlist-sections';
 
 @Injectable()
 export class PlaylistStore implements OnDestroy {
@@ -221,6 +224,49 @@ export class PlaylistStore implements OnDestroy {
         observer.complete();
       }
     }).monitor('playlist store: check if can leave section without saving');
+  }
+
+  public searchTags(text : string)
+  {
+    return Observable.create(
+      observer => {
+        const requestSubscription = this._kalturaServerClient.request(
+          new TagSearchAction(
+            {
+              tagFilter: new KalturaTagFilter(
+                {
+                  tagStartsWith : text,
+                  objectTypeEqual : KalturaTaggedObjectType.entry
+                }
+              ),
+              pager: new KalturaFilterPager({
+                pageIndex : 0,
+                pageSize : 30
+              })
+            }
+          )
+        )
+          // .cancelOnDestroy(this, this.widgetReset$)
+          .monitor('search tags')
+          .subscribe(
+            result =>
+            {
+              const tags = result.objects.map(item => item.tag);
+              observer.next(tags);
+              observer.complete();
+            },
+            err =>
+            {
+              observer.error(err);
+            }
+          );
+
+        return () =>
+        {
+          console.log("entryMetadataHandler.searchTags(): cancelled");
+          requestSubscription.unsubscribe();
+        }
+      });
   }
 
 	ngOnDestroy() {

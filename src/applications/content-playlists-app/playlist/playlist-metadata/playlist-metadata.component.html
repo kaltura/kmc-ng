@@ -15,7 +15,7 @@
           <textarea formControlName="description" pInputTextarea class="threeRows"></textarea>
         </div>
       </div>
-      <!--<div class="kRow kValign">
+      <div class="kRow kValign">
         <span class="kLabel">{{'applications.content.playlistDetails.metadata.tags' | translate}}</span>
         <div class="kControl">
           <kAutoComplete
@@ -25,11 +25,11 @@
             [multiple]="true"
             [limitToSuggestions]="false"
             [minLength]="3"
-            [suggestionsProvider]="_tagsProvider">
+            [suggestionsProvider]="_tagsProvider"
+            (completeMethod)="_searchTags($event)">
           </kAutoComplete>
-          &lt;!&ndash;completeMethod)="_searchTags($event)"&ndash;&gt;
         </div>
-      </div>-->
+      </div>
     </form>
   </div>
 </k-area-blocker>

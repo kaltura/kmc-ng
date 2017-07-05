@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { PlaylistStore } from '../playlist-store.service';
 import { PlaylistSections } from '../playlist-sections';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
@@ -33,13 +33,11 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
     this._playlistStore.playlist$
       .subscribe(
         response => {
-          // this.metadataForm.controls["name"].updateValueAndValidity({ onlySelf: true, emitEvent: true });
-          // this.metadataForm.updateValueAndValidity();
           if(response.playlist) {
             this.metadataForm.reset({
               name: response.playlist.name,
               description: response.playlist.description,
-              tags: response.playlist.tags
+              tags: response.playlist.tags ? response.playlist.tags.split(', ') : null
             });
           } else {
             // TODO [kmc] missing implementation
@@ -70,6 +68,39 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
         }
         this._playlistStore.playlist.name = form.name;
         this._playlistStore.playlist.description = form.description;
+        this._playlistStore.playlist.tags = form.tags.join(', ');
+      });
+  }
+
+  _searchTags(event) : void {
+    this._tagsProvider.next({ suggestions : [], isLoading : true});
+
+    if (this._searchTagsSubscription)
+    {
+      // abort previous request
+      this._searchTagsSubscription.unsubscribe();
+      this._searchTagsSubscription = null;
+    }
+
+    this._searchTagsSubscription = this._playlistStore.searchTags(event.query).subscribe(data => {
+        const suggestions = [];
+        const entryTags = this.metadataForm.value.tags || [];
+
+        (data|| []).forEach(suggestedTag => {
+          const isSelectable = !entryTags.find(tag => {
+            return tag === suggestedTag;
+          });
+          suggestions.push({ item: suggestedTag, isSelectable: isSelectable});
+        });
+        this._tagsProvider.next({suggestions: suggestions, isLoading: false});
+        this._playlistStore.updateSectionState(
+          PlaylistSections.Metadata,
+          this._playlistStore.sectionsState.metadata.isValid,
+          true
+        );
+      },
+      (err) => {
+        this._tagsProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
       });
   }
 

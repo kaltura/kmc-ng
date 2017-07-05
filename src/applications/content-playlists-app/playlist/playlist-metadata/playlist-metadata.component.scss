@@ -73,3 +73,12 @@
     }
   }
 }
+
+:host /deep/ kautocomplete input{
+  height: auto !important;
+  width: 100%;
+}
+
+:host /deep/ .ui-autocomplete {
+  width: 100%;
+}
