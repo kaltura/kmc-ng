@@ -5,9 +5,9 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 
 import { SchedulingParams } from './services'
-import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService } from './services';
+import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, EntryCategoryItem } from './services';
 import { KalturaMediaEntry } from "kaltura-typescript-client/types/KalturaMediaEntry";
-import {BulkActionBaseService} from "./services/bulk-action-base.service";
+import { BulkActionBaseService } from "./services/bulk-action-base.service";
 
 @Component({
   selector: 'kBulkActions',
@@ -24,11 +24,13 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   @ViewChild('schedulingPopup') public schedulingPopup: PopupWidgetComponent;
   @ViewChild('addTagsPopup') public addTagsPopup: PopupWidgetComponent;
   @ViewChild('removeTagsPopup') public removeTagsPopup: PopupWidgetComponent;
+  @ViewChild('addCategoriesPopup') public addCategoriesPopup: PopupWidgetComponent;
 
   constructor(private _appLocalization: AppLocalization, private _browserService : BrowserService,
               private _bulkSchedulingService: BulkSchedulingService,
               private _bulkAddTagsService: BulkAddTagsService,
-              private _bulkRemoveTagsService: BulkRemoveTagsService) {
+              private _bulkRemoveTagsService: BulkRemoveTagsService,
+              private _bulkAddCategoriesService: BulkAddCategoriesService) {
 
   }
 
@@ -51,6 +53,9 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
       case "removeTags":
         this.removeTagsPopup.open();
         break;
+      case "addToCategories":
+        this.addCategoriesPopup.open();
+        break;
     }
   }
 
@@ -67,6 +72,11 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   // remove tags changed
   onRemoveTagsChanged(tags: string[]): void{
     this.executeService(this._bulkRemoveTagsService, tags);
+  }
+
+  // add to categories changed
+  onAddToCategoriesChanged(categories: EntryCategoryItem[]): void{
+    this.executeService(this._bulkAddCategoriesService, categories);
   }
 
   private executeService(service: BulkActionBaseService<any>, data: any, reloadEntries: boolean = true ): void{

@@ -91,7 +91,7 @@
 
 	<kPopupWidget #categoriesPopup [popupWidth]="586" [popupHeight]="586" [closeBtn]="true" [modal]="true">
 		<ng-template>
-			<kCategoriesSelector [parentPopupWidget]="categoriesPopup" (valueChange)="_updateEntryCategories($event)" [value]="_handler.metadataForm.value.categories"></kCategoriesSelector>
+			<kCategoriesSelector [parentPopupWidget]="categoriesPopup" (valueChange)="_updateEntryCategories($event)" [value]="_handler.metadataForm.value.categories" [buttonLabel]="'applications.content.entryDetails.metadata.addCategories' | translate"></kCategoriesSelector>
 		</ng-template>
 	</kPopupWidget>
 
