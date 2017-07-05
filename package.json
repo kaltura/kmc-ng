@@ -5,15 +5,18 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/kaltura/KMCng.git"
+    "url": "https://github.com/kaltura/kmc-ng.git"
   },
   "description": "",
   "keywords": [
     "kaltura"
   ],
-  "author": "https://github.com/kaltura/KMCng/graphs/contributors",
+  "author": {
+    "name": "Kaltura Community",
+    "email": "community@kaltura.com"
+  },
   "bugs": {
-    "url": "https://github.com/kaltura/KMCng/issues"
+    "url": "https://github.com/kaltura/kmc-ng/issues"
   },
   "contributors": [
     {
@@ -25,7 +28,7 @@
       "email": "amir.chr@gmail.com"
     }
   ],
-  "homepage": "https://github.com/kaltura/KMCng#readme",
+  "homepage": "https://github.com/kaltura/kmc-ng#readme",
   "scripts": {
     "ng": "ng",
     "postinstall": "node ./scripts/fix-tsconfig-paths.js",
@@ -51,7 +54,6 @@
     "@kaltura-ng/kaltura-primeng-ui": "^0.2.0",
     "@kaltura-ng/kaltura-ui": "^0.2.0",
     "@kaltura-ng/mc-theme": "^0.1.0",
-    "JSON.sh": "^0.3.3",
     "core-js": "^2.4.1",
     "intl": "^1.2.5",
     "jquery": "^3.1.0",
@@ -96,6 +98,7 @@
     "typescript": "~2.3.3"
   },
   "engines": {
-    "node": ">= 7.0.0"
+    "node": ">= 7.0.0",
+    "yarn": ">= 0.24.6"
   }
 }

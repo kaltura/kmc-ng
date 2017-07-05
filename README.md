@@ -1,6 +1,9 @@
 # KMCng Application
 
-> Kaltura Management Consol HTML5 based application (a.k.a KMCng). Should replace the existing [KMC flash based application](https://kmc.kaltura.com/index.php/kmc/kmc).
+[![Gitter chat](https://badges.gitter.im/kaltura-ng/kmc-ng.png)](https://gitter.im/kaltura-ng/kmc-ng)
+
+
+> Kaltura Management Console HTML5 based application (a.k.a KMCng). Should replace the existing [KMC flash based application](https://kmc.kaltura.com/index.php/kmc/kmc).
   
 KMCng application uses the following technologies and conventions:
 * [Angular CLI](https://cli.angular.io/) to manage the application (dev)ops.

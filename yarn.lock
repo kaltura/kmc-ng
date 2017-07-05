@@ -238,10 +238,6 @@
   version "2.53.42"
   resolved "https://registry.yarnpkg.com/@types/selenium-webdriver/-/selenium-webdriver-2.53.42.tgz#74cb77fb6052edaff2a8984ddafd88d419f25cac"
 
-JSON.sh@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/JSON.sh/-/JSON.sh-0.3.3.tgz#3a054a762f32ab989a992649675415e0953ee078"
-
 JSONStream@^1.0.4:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-1.3.1.tgz#707f761e01dae9e16f1bcf93703b78c70966579a"
