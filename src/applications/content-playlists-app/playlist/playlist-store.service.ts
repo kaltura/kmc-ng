@@ -158,7 +158,19 @@ export class PlaylistStore implements OnDestroy {
       new PlaylistUpdateAction({id, playlist, updateStats})
     )
       .subscribe(
-        () => this._state.next({isBusy: false})
+        () => {
+          this._state.next({isBusy: false});
+          this._sectionsState.next({
+            metadata: {isValid: true, isDirty: false},
+            content: {isValid: true, isDirty: false}
+          });
+        },
+        error => {
+          this._state.next({
+            isBusy: true,
+            error: {message: error.message, origin: 'reload'}
+          });
+        }
       )
   }
 
