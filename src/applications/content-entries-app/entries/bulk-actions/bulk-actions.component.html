@@ -25,7 +25,7 @@
   </ng-template>
 </kPopupWidget>
 
-<kPopupWidget #addCategoriesPopup [popupWidth]="586" [popupHeight]="586" [closeBtn]="true" [modal]="true">
+<kPopupWidget #addCategoriesPopup [popupWidth]="560" [popupHeight]="586" [closeBtn]="true" [modal]="true">
   <ng-template>
     <kCategoriesSelector [parentPopupWidget]="addCategoriesPopup" (valueChange)="onAddToCategoriesChanged($event)" [buttonLabel]="'applications.content.bulkActions.apply' | translate"></kCategoriesSelector>
   </ng-template>
