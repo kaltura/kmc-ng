@@ -8,6 +8,7 @@ import { SchedulingParams } from './services'
 import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, EntryCategoryItem } from './services';
 import { KalturaMediaEntry } from "kaltura-typescript-client/types/KalturaMediaEntry";
 import { BulkActionBaseService } from "./services/bulk-action-base.service";
+import { environment } from 'app-environment';
 
 @Component({
   selector: 'kBulkActions',
@@ -66,7 +67,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   // add tags changed
   onAddTagsChanged(tags: string[]): void{
-    this.executeService(this._bulkAddTagsService, tags, false);
+    this.executeService(this._bulkAddTagsService, tags);
   }
 
   // remove tags changed
@@ -80,16 +81,26 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   private executeService(service: BulkActionBaseService<any>, data: any, reloadEntries: boolean = true ): void{
-    this._browserService.setAppStatus({isBusy: true, errorMessage: null});
-    service.execute(this.selectedEntries, data).subscribe(
-      result => {
-        this._browserService.setAppStatus({isBusy: false, errorMessage: null});
-        this.onBulkChange.emit({reload: reloadEntries});
-      },
-      error => {
-        this._browserService.setAppStatus({isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error')});
-      }
-    );
+    if (this.selectedEntries.length > environment.modules.contentEntries.bulkActionsLimit){
+      this._browserService.confirm(
+        {
+          header: this._appLocalization.get('applications.content.bulkActions.note'),
+          message: this._appLocalization.get('applications.content.bulkActions.confirm', {"0": this.selectedEntries.length}),
+          accept: () => {
+            this._browserService.setAppStatus({isBusy: true, errorMessage: null});
+            service.execute(this.selectedEntries, data).subscribe(
+              result => {
+                this._browserService.setAppStatus({isBusy: false, errorMessage: null});
+                this.onBulkChange.emit({reload: reloadEntries});
+              },
+              error => {
+                this._browserService.setAppStatus({isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error')});
+              }
+            );
+          }
+        }
+      );
+    }
   }
 
   getBulkActionItems(): MenuItem[]{

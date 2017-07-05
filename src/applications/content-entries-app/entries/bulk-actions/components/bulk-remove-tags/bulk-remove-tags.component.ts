@@ -46,7 +46,7 @@ export class BulkRemoveTags implements OnInit, OnDestroy, AfterViewInit {
         });
       }
     });
-    tags.forEach(tag => {
+    tags.sort().forEach(tag => {
       this.tags.push({label: tag, selected: false});
     });
   }

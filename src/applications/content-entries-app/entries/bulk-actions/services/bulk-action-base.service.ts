@@ -8,7 +8,7 @@ import { KalturaRequest, KalturaMultiRequest, KalturaMultiResponse } from 'kaltu
 
 export abstract class BulkActionBaseService<T> {
 
-  constructor(private _kalturaServerClient: KalturaClient) {
+  constructor(public _kalturaServerClient: KalturaClient) {
   }
 
   public abstract execute(selectedEntries: KalturaMediaEntry[] , params : T) : Observable<any>;
