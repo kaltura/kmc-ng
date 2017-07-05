@@ -47,4 +47,29 @@
   .kValign {
     align-items: center;
   }
+
+  /*********************/
+  /* PrimeNG overrides */
+  /*********************/
+
+  .ui-inputtext.ng-invalid {
+    border-bottom-color: #cd0a0a;
+  }
+
+  textarea.threeRows {
+    background: $kGrayscale6;
+    border-radius: 3px;
+    border: 1px solid white;
+    resize: none;
+    box-sizing: border-box;
+
+    &:hover {
+      border-color: #d9d9d9;
+    }
+
+    &:focus {
+      border-color: #d9d9d9;
+      background: white;
+    }
+  }
 }
