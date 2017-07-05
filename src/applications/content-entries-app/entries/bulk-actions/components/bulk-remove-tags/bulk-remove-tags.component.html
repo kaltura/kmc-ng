@@ -3,7 +3,9 @@
     <span class="kTitle">{{'applications.content.bulkActions.removeTags' | translate}}</span>
     <div class="kTags">
       <span class="kLabel">{{'applications.content.bulkActions.removeTagsLabel' | translate}}</span>
-      <p-listbox [options]="tags" [(ngModel)]="tagsToRemove" multiple="multiple" checkbox="checkbox"></p-listbox>
+      <div *ngFor="let tag of tags; let index = index" class="kTag">
+        <p-checkbox label="{{tag.label}}" [(ngModel)]="tag.selected"  binary="true" (onChange)="updateSelectedTags()"></p-checkbox>
+      </div>
     </div>
     <div class="kFooter">
       <button type="button" class="kButtonBranded" pButton label="{{'applications.content.bulkActions.apply' | translate}}" (click)="_apply()"></button>

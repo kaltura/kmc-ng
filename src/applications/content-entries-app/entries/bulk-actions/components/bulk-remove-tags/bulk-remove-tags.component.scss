@@ -15,7 +15,10 @@
   height: 500px;
   .kLabel{
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  .kTag{
+    margin-bottom: 12px;
   }
   .kTags{
     padding: 12px;
@@ -34,23 +37,9 @@
   align-items: center;
   justify-content: center;
 }
-:host /deep/ kautocomplete ul.ui-autocomplete-multiple-container.ui-inputtext{
-  padding: 0px;
-  .ui-autocomplete-input-token{
-    padding: 0px;
-    input{
-      height: 34px;
-      padding-left: 4px;
-      width: 472px;
-    }
-  }
+
+:host /deep/ p-checkbox .ui-chkbox-label{
+  font-size: 15px;
+  font-weight: 400;
 }
 
-:host /deep/ p-listbox .ui-listbox{
-  height: 300px;
-  background-color: white;
-}
-
-:host /deep/ p-listbox .ui-widget-header{
-  display: none;
-}

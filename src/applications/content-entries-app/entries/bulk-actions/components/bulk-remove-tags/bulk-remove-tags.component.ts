@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { SelectItem } from 'primeng/primeng';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -23,8 +22,8 @@ export class BulkRemoveTags implements OnInit, OnDestroy, AfterViewInit {
   public _loading = false;
   public _sectionBlockerMessage: AreaBlockerMessage;
 
-  public tags: SelectItem[] = [];
-  public tagsToRemove: string[] = [];
+  public tags: any[] = [];
+  private tagsToRemove: string[] = [];
 
   private _parentPopupStateChangeSubscribe : ISubscription;
   private _confirmClose: boolean = true;
@@ -48,7 +47,7 @@ export class BulkRemoveTags implements OnInit, OnDestroy, AfterViewInit {
       }
     });
     tags.forEach(tag => {
-      this.tags.push({label: tag, value: tag});
+      this.tags.push({label: tag, selected: false});
     });
   }
 
@@ -84,6 +83,14 @@ export class BulkRemoveTags implements OnInit, OnDestroy, AfterViewInit {
     this._parentPopupStateChangeSubscribe.unsubscribe();
   }
 
+  updateSelectedTags(){
+    this.tagsToRemove = [];
+    this.tags.forEach(tag=>{
+      if (tag.selected){
+        this.tagsToRemove.push(tag.label);
+      }
+    });
+  }
 
   public _apply(){
     this.removeTagsChanged.emit(this.tagsToRemove);
