@@ -66,12 +66,12 @@ Below is a summary of the core packages being used:
 
  Package | Version  |
 |:-------|:-------|
-|  [kaltura-client](https://www.npmjs.com/package/@kaltura-ng/kaltura-client) | ![npm (scoped)](https://img.shields.io/npm/v/@kaltura-ng/kaltura-client.svg?maxAge=86400) |
-| [kaltura-common](https://www.npmjs.com/package/@kaltura-ng/kaltura-common) | ![npm (scoped)](https://img.shields.io/npm/v/@kaltura-ng/kaltura-common.svg?maxAge=86400) |
-| [kaltura-ui](https://www.npmjs.com/package/@kaltura-ng/kaltura-ui) | ![npm (scoped)](https://img.shields.io/npm/v/@kaltura-ng/kaltura-ui.svg?maxAge=86400) |
-| [kaltura-primeng-ui](https://www.npmjs.com/package/@kaltura-ng/kaltura-primeng-ui) | ![npm (scoped)](https://img.shields.io/npm/v/@kaltura-ng/kaltura-primeng-ui.svg?maxAge=86400) |
-| [kaltura-typescript-client](https://www.npmjs.com/package/kaltura-typescript-client) | ![npm (scoped)](https://img.shields.io/npm/v/kaltura-typescript-client.svg?maxAge=86400) |
-| [@kaltura-ng/mc-theme](https://www.npmjs.com/package/@kaltura-ng/mc-theme) | ![npm (scoped)](https://img.shields.io/npm/v/@kaltura-ng/mc-theme.svg?maxAge=86400)
+|  [kaltura-client](https://www.npmjs.com/package/@kaltura-ng/kaltura-client) | [![npm version](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-client.svg)](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-client) |
+| [kaltura-common](https://www.npmjs.com/package/@kaltura-ng/kaltura-common) | [![npm version](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-common.svg)](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-common) |
+| [kaltura-ui](https://www.npmjs.com/package/@kaltura-ng/kaltura-ui) | [![npm version](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-ui.svg)](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-ui) |
+| [kaltura-primeng-ui](https://www.npmjs.com/package/@kaltura-ng/kaltura-primeng-ui) |[![npm version](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-primeng-ui.svg)](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-primeng-ui) |
+| [kaltura-typescript-client](https://www.npmjs.com/package/kaltura-typescript-client) | [![npm version](https://badge.fury.io/js/kaltura-typescript-client.svg)](https://badge.fury.io/js/kaltura-typescript-client) |
+| [@kaltura-ng/mc-theme](https://www.npmjs.com/package/@kaltura-ng/mc-theme) | [![npm version](https://badge.fury.io/js/%40kaltura-ng%2Fmc-theme.svg)](https://badge.fury.io/js/%40kaltura-ng%2Fmc-theme)
 **Note**
 
 - The version number listed above represent the latest version deployed to npm for each package. This is not necessarily the versions currently in-use by this app. You can review `package.json` to get the actual packages versions.
