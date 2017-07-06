@@ -1,3 +1,5 @@
-<router-outlet></router-outlet>
-
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+    <router-outlet></router-outlet>
+</k-area-blocker>
+<!--router-outlet></router-outlet-->
 <p-confirmDialog header="Confirmation" [closeOnEscape]="false" width="425"></p-confirmDialog>
