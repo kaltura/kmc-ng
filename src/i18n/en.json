@@ -38,7 +38,8 @@
       "ok": "OK",
       "cancel": "Cancel",
       "retry": "Retry",
-      "confirm": "Confirm"
+      "confirm": "Confirm",
+      "close": "Close"
     }
   },
   "applications": {
@@ -176,6 +177,7 @@
         "addRemoveCategories": "Add / Remove Categories",
         "addToCategories": "Add To Categories",
         "removeFromCategories": "Remove From Categories",
+        "removeFromCategoriesLabel": "Remove selected entries from these categories",
         "addToNewCategoryPlaylist": "Add To New Category / Playlist",
         "addToNewCategory": "Add To New Category",
         "addToNewPlaylist": "Add To New Playlist",

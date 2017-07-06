@@ -5,7 +5,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 
 import { SchedulingParams } from './services'
-import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, EntryCategoryItem, BulkChangeOwnerService } from './services';
+import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, EntryCategoryItem, BulkChangeOwnerService, BulkRemoveCategoriesService } from './services';
 import { KalturaMediaEntry } from "kaltura-typescript-client/types/KalturaMediaEntry";
 import { BulkActionBaseService } from "./services/bulk-action-base.service";
 import { environment } from 'app-environment';
@@ -34,7 +34,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               private _bulkAddTagsService: BulkAddTagsService,
               private _bulkRemoveTagsService: BulkRemoveTagsService,
               private _bulkAddCategoriesService: BulkAddCategoriesService,
-              private _bulkChangeOwnerService: BulkChangeOwnerService) {
+              private _bulkChangeOwnerService: BulkChangeOwnerService,
+              private _bulkRemoveCategoriesService: BulkRemoveCategoriesService) {
 
   }
 
@@ -67,13 +68,18 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   // remove tags changed
-  onRemoveTagsChanged(tags: string[]): void{
+  onRemoveTagsChanged(tags: string[]): void {
     this.executeService(this._bulkRemoveTagsService, tags);
   }
 
   // add to categories changed
   onAddToCategoriesChanged(categories: EntryCategoryItem[]): void{
     this.executeService(this._bulkAddCategoriesService, categories);
+  }
+
+  // remove categories changed
+  onRemoveCategoriesChanged(categories: number[]): void{
+    this.executeService(this._bulkRemoveCategoriesService, categories);
   }
 
   // owner changed
