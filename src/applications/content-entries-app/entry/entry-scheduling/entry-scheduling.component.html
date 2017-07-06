@@ -1,38 +1,3 @@
 <k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
-	<div class="kScheduling">
-		<p class="kTitle">{{'applications.content.entryDetails.scheduling.scheduling' | translate}}</p>
-		<form [formGroup]="_handler.schedulingForm" novalidate>
-			<div class="kBlock">
-				<p-radioButton name="scheduling" value="anytime" formControlName="scheduling" label="{{'applications.content.entryDetails.scheduling.anytime' | translate}}"></p-radioButton>
-			</div>
-			<div class="kBlock">
-				<p-radioButton name="scheduling" value="scheduled" formControlName="scheduling" label="{{'applications.content.entryDetails.scheduling.range' | translate}}"></p-radioButton>
-				<div class="kNote" [class.kDisabled]="_handler.schedulingForm.get('scheduling').value === 'anytime'">{{_handler._timeZone}}</div>
-				<div class="kSchedulingDetails" [class.kDisabled]="_handler.schedulingForm.get('scheduling').value === 'anytime'">
-					<div class="kRow">
-						<span class="kLabels">{{'applications.content.entryDetails.scheduling.start' | translate}}</span>
-						<div>
-							<p-calendar formControlName="startDate" icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange" showTime="true"></p-calendar>
-							<div class="error" *ngIf="_handler.schedulingForm.errors?.noStartDate">{{'applications.content.entryDetails.scheduling.noStartDate' | translate}}</div>
-
-						</div>
-					</div>
-					<div class="kRow">
-						<div class="kLabels">
-							<p-checkbox formControlName="enableEndDate" label="{{'applications.content.entryDetails.scheduling.end' | translate}}" binary="true"></p-checkbox>
-						</div>
-						<div>
-							<p-calendar formControlName="endDate" icon="kIconcalendar" [readonlyInput]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange" showTime="true"></p-calendar>
-							<div class="error" *ngIf="_handler.schedulingForm.errors?.endDateBeforeStartDate">{{'applications.content.entryDetails.scheduling.endDateBefore' | translate}}</div>
-							<div class="error" *ngIf="_handler.schedulingForm.errors?.noEndDate">{{'applications.content.entryDetails.scheduling.noEndDate' | translate}}</div>
-							<p>
-								<a [class.kDisabled]="_handler.schedulingForm.get('scheduling').value === 'anytime'" (click)="_handler._clearDates()">{{'applications.content.entryDetails.scheduling.clear' | translate}}</a>
-							</p>
-						</div>
-
-					</div>
-				</div>
-			</div>
-		</form>
-	</div>
+  <kScheduling [schedulingForm]="_handler.schedulingForm" (clearDates)="_handler._clearDates()"></kScheduling>
 </k-area-blocker>

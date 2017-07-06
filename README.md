@@ -1,6 +1,9 @@
 # KMCng Application
 
-> Kaltura Management Consol HTML5 based application (a.k.a KMCng). Should replace the existing [KMC flash based application](https://kmc.kaltura.com/index.php/kmc/kmc).
+[![Gitter chat](https://badges.gitter.im/kaltura-ng/kmc-ng.png)](https://gitter.im/kaltura-ng/kmc-ng)
+
+
+> Kaltura Management Console HTML5 based application (a.k.a KMCng). Should replace the existing [KMC flash based application](https://kmc.kaltura.com/index.php/kmc/kmc).
   
 KMCng application uses the following technologies and conventions:
 * [Angular CLI](https://cli.angular.io/) to manage the application (dev)ops.
@@ -19,7 +22,18 @@ KMCng application uses the following technologies and conventions:
 - [x] Ensure you have [yarn installed](https://yarnpkg.com/lang/en/docs/install/) (we use it for node package management) 
 
 ### Get the sources
-Clone the repository and load project dependencies
+> This project is developed along-side the [kaltura-ng](https://github.com/kaltura/kaltura-ng) packages and [mc-theme](https://github.com/kaltura/kaltura-ng-mc-theme) package. To simplify local development we created a tool that automagically bind them together as-if they where part of the same repository.
+
+You have two development options as described below.
+
+#### Develop kmc-ng solution (multiple repos)
+> In this option you will clone all the relevant repos to your machine and bind them together. Use this option to develop and create pull requests.
+
+Please read [docs/develop kmc-ng solution guide](./docs/develop-kmc-ng-solution.md).
+
+#### Develop kmc-ng repo
+> In this option you will work with kmc-ng repo sources only. Use this option if you want to play with workable version and not intend to create any pull reqeusts.
+
 ```bash
 # clone our repo
 $ git clone https://github.com/kaltura/kmc-ng.git 
@@ -27,8 +41,15 @@ $ git clone https://github.com/kaltura/kmc-ng.git
 # change directory to your app
 $ cd kmc-ng
 
+# checkout latest version
+$ git tag #will print you all the availble tags
+$ git checkout -b {latest_tag_version} # replace {latest_tag_version} with actual tag value
+
 # install the dependencies with npm
 $ yarn
+
+# run a local server
+$ yarn start
 ```
 
 
@@ -39,20 +60,21 @@ $ yarn start
 ```
 navigate to [http://localhost:4200](http://localhost:4200) in your browser.
 
-## Main Packages being used
+## KMC-ng solution
 KMC-ng is built on-top of several kaltura instrastructure packages. 
-
-### Kaltura-ng packages
 Below is a summary of the core packages being used:
 
  Package | Version  |
 |:-------|:-------|
-|  [kaltura-client](https://www.npmjs.com/package/@kaltura-ng/kaltura-client) | ![npm (scoped)](https://img.shields.io/npm/v/@kaltura-ng/kaltura-client.svg?maxAge=86400) |
-| [kaltura-common](https://www.npmjs.com/package/@kaltura-ng/kaltura-common) | ![npm (scoped)](https://img.shields.io/npm/v/@kaltura-ng/kaltura-common.svg?maxAge=86400) |
-| [kaltura-ui](https://www.npmjs.com/package/@kaltura-ng/kaltura-ui) | ![npm (scoped)](https://img.shields.io/npm/v/@kaltura-ng/kaltura-ui.svg?maxAge=86400) |
-| [kaltura-primeng-ui](https://www.npmjs.com/package/@kaltura-ng/kaltura-primeng-ui) | ![npm (scoped)](https://img.shields.io/npm/v/@kaltura-ng/kaltura-primeng-ui.svg?maxAge=86400) |
-| [kaltura-typescript-client](https://www.npmjs.com/package/kaltura-typescript-client) | ![npm (scoped)](https://img.shields.io/npm/v/kaltura-typescript-client.svg?maxAge=86400) |
-| [@kaltura-ng/mc-theme](https://www.npmjs.com/package/@kaltura-ng/mc-theme) | ![npm (scoped)](https://img.shields.io/npm/v/@kaltura-ng/mc-theme.svg?maxAge=86400)
+|  [kaltura-client](https://www.npmjs.com/package/@kaltura-ng/kaltura-client) | [![npm version](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-client.svg)](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-client) |
+| [kaltura-common](https://www.npmjs.com/package/@kaltura-ng/kaltura-common) | [![npm version](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-common.svg)](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-common) |
+| [kaltura-ui](https://www.npmjs.com/package/@kaltura-ng/kaltura-ui) | [![npm version](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-ui.svg)](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-ui) |
+| [kaltura-primeng-ui](https://www.npmjs.com/package/@kaltura-ng/kaltura-primeng-ui) |[![npm version](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-primeng-ui.svg)](https://badge.fury.io/js/%40kaltura-ng%2Fkaltura-primeng-ui) |
+| [kaltura-typescript-client](https://www.npmjs.com/package/kaltura-typescript-client) | [![npm version](https://badge.fury.io/js/kaltura-typescript-client.svg)](https://badge.fury.io/js/kaltura-typescript-client) |
+| [@kaltura-ng/mc-theme](https://www.npmjs.com/package/@kaltura-ng/mc-theme) | [![npm version](https://badge.fury.io/js/%40kaltura-ng%2Fmc-theme.svg)](https://badge.fury.io/js/%40kaltura-ng%2Fmc-theme)
+**Note**
+
+- The version number listed above represent the latest version deployed to npm for each package. This is not necessarily the versions currently in-use by this app. You can review `package.json` to get the actual packages versions.
 
 ## FAQ
 

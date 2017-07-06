@@ -113,12 +113,6 @@
       "@kaltura-ng/mc-theme/*": [
         "../node_modules/@kaltura-ng/mc-theme/*"
       ],
-      "JSON.sh": [
-        "../node_modules/JSON.sh"
-      ],
-      "JSON.sh/*": [
-        "../node_modules/JSON.sh/*"
-      ],
       "core-js": [
         "../node_modules/core-js"
       ],

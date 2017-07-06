@@ -282,7 +282,7 @@ export class EntryMetadataHandler extends EntryFormWidget
         newData.name = metadataFormValue.name;
         newData.description = metadataFormValue.description;
         newData.referenceId = metadataFormValue.referenceId || null;
-        newData.tags = (metadataFormValue.tags || []).join(', ');
+        newData.tags = (metadataFormValue.tags || []).join(',');
         if (newData instanceof KalturaLiveStreamEntry)
         {
             newData.offlineMessage = metadataFormValue.offlineMessage;
