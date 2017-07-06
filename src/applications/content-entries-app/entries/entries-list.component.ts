@@ -25,19 +25,7 @@ export type UpdateStatus = {
 })
 export class EntriesListComponent implements OnInit, OnDestroy {
 
-    @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
-
-    @Input()
-    public allowBulkActions = false;
-    @Input()
-    public allowEntryActions = false;
-    @Input()
-    public allowEntryDrillIn = false;
-    @Input()
-    public persistSelectionBetweenallowEntryDrillIn = false;
-    @Input()
-    public selectionMode : 'none' | 'single' | 'multiple';
-
+  @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
 
 	private _state = new BehaviorSubject<UpdateStatus>({ busy : false, errorMessage : null});
 	public state$ = this._state.asObservable();
@@ -45,7 +33,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
     private querySubscription : ISubscription;
     public _selectedEntries: any[] = [];
-    public _bulkActionsMenu: MenuItem[] = [];
 	public _msgs: Message[] = [];
 
     public _filter = {
@@ -105,7 +92,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this._bulkActionsMenu = this.getBulkActionItems();
 
         const query = this._entriesStore.queryData;
 
@@ -215,34 +201,19 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         this._selectedEntries = [];
     }
 
-    executeBulkAction(action: string){
-        alert("Execute bulk action for " + action);
-    }
-    getBulkActionItems(){
-        return  [
-            { label: this.appLocalization.get('applications.content.bulkActions.setScheduling'), command: (event) => { this.executeBulkAction("setScheduling") } },
-            { label: this.appLocalization.get('applications.content.bulkActions.setAccessControl'), command: (event) => { this.executeBulkAction("setAccessControl") } },
-            { label: this.appLocalization.get('applications.content.bulkActions.addRemoveTags'), items: [
-                { label: this.appLocalization.get('applications.content.bulkActions.addTags'), command: (event) => { this.executeBulkAction("addTags") } },
-                { label: this.appLocalization.get('applications.content.bulkActions.removeTags'), command: (event) => { this.executeBulkAction("removeTags") } }]
-            },
-            { label: this.appLocalization.get('applications.content.bulkActions.addRemoveCategories'), items: [
-                { label: this.appLocalization.get('applications.content.bulkActions.addToCategories'), command: (event) => { this.executeBulkAction("addToCategories") } },
-                { label: this.appLocalization.get('applications.content.bulkActions.removeFromCategories'), command: (event) => { this.executeBulkAction("removeFromCategories") } }]
-            },
-            { label: this.appLocalization.get('applications.content.bulkActions.addToNewCategoryPlaylist'), items: [
-                { label: this.appLocalization.get('applications.content.bulkActions.addToNewCategory'), command: (event) => { this.executeBulkAction("addToNewCategory") } },
-                { label: this.appLocalization.get('applications.content.bulkActions.addToNewPlaylist'), command: (event) => { this.executeBulkAction("addToNewPlaylist") } }]
-            },
-            { label: this.appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => { this.executeBulkAction("changeOwner") } },
-            { label: this.appLocalization.get('applications.content.bulkActions.download'), command: (event) => { this.executeBulkAction("download") } },
-            { label: this.appLocalization.get('applications.content.bulkActions.delete'), command: (event) => { this.executeBulkAction("delete") } }
-        ];
-    }
-
 	onSelectedEntriesChange(event):void{
 		this._selectedEntries = event;
 	}
+
+  onBulkChange(event): void{
+    if (event.reload === true){
+      this._reload();
+    }else{
+      // this.clearSelection();
+      this._msgs = [];
+      this._msgs.push({severity: 'success', summary: '', detail: this.appLocalization.get('applications.content.bulkActions.updated')});
+    }
+  }
 
 }
 

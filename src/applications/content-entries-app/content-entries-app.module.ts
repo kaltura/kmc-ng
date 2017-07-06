@@ -4,8 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
-import {
-     TreeModule, TieredMenuModule,  SharedModule,   AccordionModule,  ButtonModule, InputTextareaModule, PaginatorModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule, MultiSelectModule, CheckboxModule, CalendarModule, SpinnerModule, ConfirmDialogModule, ConfirmationService, GrowlModule } from 'primeng/primeng';
+import { TreeModule, TieredMenuModule,  SharedModule,   AccordionModule,  ButtonModule, InputTextareaModule, PaginatorModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule, MultiSelectModule, CheckboxModule, CalendarModule, SpinnerModule, ConfirmDialogModule, ConfirmationService, GrowlModule } from 'primeng/primeng';
 import { KMCShellModule } from 'app-shared/kmc-shell';
 
 import { routing } from './content-entries-app.routes';
@@ -29,6 +28,7 @@ import { EntriesComponentsList } from './entries/entries-components-list';
 import { CategoriesStore } from './shared/categories-store.service';
 import { EntriesRefineFiltersProvider } from './entries/entries-refine-filters/entries-refine-filters-provider.service';
 import { CategoriesPrimeService } from './shared/categories-prime.service';
+import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, BulkChangeOwnerService } from './entries/bulk-actions/services';
 import { SharedComponentsList } from './shared/shared-components-list';
 
 @NgModule({
@@ -81,7 +81,12 @@ import { SharedComponentsList } from './shared/shared-components-list';
         CategoriesStore,
         CategoriesPrimeService,
         MetadataProfileStore,
-        EntriesRefineFiltersProvider
+        EntriesRefineFiltersProvider,
+        BulkSchedulingService,
+        BulkAddTagsService,
+        BulkRemoveTagsService,
+        BulkAddCategoriesService,
+        BulkChangeOwnerService
     ],
 })
 export class ContentEntriesAppModule {

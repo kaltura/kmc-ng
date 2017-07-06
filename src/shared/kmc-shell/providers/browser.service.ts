@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { LocalStorageService, SessionStorageService } from 'ng2-webstorage';
 import { IAppStorage } from '@kaltura-ng/kaltura-common';
-
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 export interface Confirmation {
 	message: string;
@@ -18,8 +18,16 @@ export interface Confirmation {
 
 export type OnShowConfirmationFn = (confirmation : Confirmation) => void;
 
+export type AppStatus = {
+  isBusy : boolean;
+  errorMessage : string;
+};
+
 @Injectable()
 export class BrowserService implements IAppStorage {
+
+  private _appStatus = new BehaviorSubject<{isBusy : boolean, errorMessage : string}>({ isBusy : false, errorMessage : null});
+  public appStatus$ = this._appStatus.asObservable();
 
 	private _onConfirmationFn : OnShowConfirmationFn = (confirmation : Confirmation) => {
 		// this is the default confirmation dialog provided by the browser.
@@ -58,6 +66,10 @@ export class BrowserService implements IAppStorage {
 			this._onConfirmationFn = fn;
 		}
 	}
+
+	public setAppStatus(status: AppStatus): void{
+    this._appStatus.next(status);
+  }
 
 	public confirm(confirmation : Confirmation) {
 		this._onConfirmationFn(confirmation);
