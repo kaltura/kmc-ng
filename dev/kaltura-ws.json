@@ -1,0 +1,19 @@
+{
+  "version" : "2.0.0",
+  "repositories": [
+    { "origin" : "github", "uri": "https://github.com/kaltura/kaltura-ng.git"},
+    { "origin" : "github", "uri": "https://github.com/kaltura/kaltura-ng-mc-theme.git"},
+    { "origin" : "github", "uri": "https://github.com/kaltura/kmc-ng.git"}
+  ],
+  "licenses" : {
+    "ignoreList" : [
+      "@kaltura-ng/kaltura-client",
+      "@kaltura-ng/kaltura-common",
+      "@kaltura-ng/kaltura-primeng-ui",
+      "@kaltura-ng/kaltura-ui",
+      "@kaltura-ng/mc-theme",
+      "@kaltura-ng/dev-workspace",
+      "kaltura-typescript-client"
+    ]
+  }
+}
