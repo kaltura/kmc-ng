@@ -68,7 +68,9 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
         }
         this._playlistStore.playlist.name = form.name;
         this._playlistStore.playlist.description = form.description;
-        this._playlistStore.playlist.tags = form.tags.join(', ');
+        if(form.tags) {
+          this._playlistStore.playlist.tags = form.tags.join(', ');
+        }
       });
   }
 

@@ -55,12 +55,21 @@
 				font-weight: 400;
 			}
 			.kNavigationBtn{
-				margin-left: auto;
 				width: 40px;
 				height: 34px;
-				margin-left: 12px;
 				font-weight: 400;
+        margin-right: 0px;
 			}
+      .kNavigationBtnLeft {
+        margin-left: 18px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+      }
+      .kNavigationBtnRight {
+        margin-left: -1px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+      }
 		}
 		.kPlaylistDetailsMain {
 			display: flex;
