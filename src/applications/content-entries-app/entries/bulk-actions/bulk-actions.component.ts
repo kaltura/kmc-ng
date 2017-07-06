@@ -19,15 +19,15 @@ import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 export class BulkActionsComponent implements OnInit, OnDestroy {
 
   public _bulkActionsMenu: MenuItem[] = [];
+  public _bulkWindowWidth = 500;
+  public _bulkWindowHeight = 500;
+  public _bulkAction: string = "";
+
   @Input() selectedEntries: KalturaMediaEntry[];
 
   @Output() onBulkChange = new EventEmitter<{reload: boolean}>();
 
-  @ViewChild('schedulingPopup') public schedulingPopup: PopupWidgetComponent;
-  @ViewChild('addTagsPopup') public addTagsPopup: PopupWidgetComponent;
-  @ViewChild('removeTagsPopup') public removeTagsPopup: PopupWidgetComponent;
-  @ViewChild('addCategoriesPopup') public addCategoriesPopup: PopupWidgetComponent;
-  @ViewChild('changeOwnerPopup') public changeOwnerPopup: PopupWidgetComponent;
+  @ViewChild('bulkActionsPopup') public bulkActionsPopup: PopupWidgetComponent;
 
   constructor(private _appLocalization: AppLocalization, private _browserService : BrowserService,
               private _bulkSchedulingService: BulkSchedulingService,
@@ -46,24 +46,14 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   }
 
-  executeBulkAction(action: string){
-    switch (action){
-      case "setScheduling":
-        this.schedulingPopup.open();
-        break;
-      case "addTags":
-        this.addTagsPopup.open();
-        break;
-      case "removeTags":
-        this.removeTagsPopup.open();
-        break;
-      case "addToCategories":
-        this.addCategoriesPopup.open();
-        break;
-      case "changeOwner":
-        this.changeOwnerPopup.open();
-        break;
-    }
+  openBulkActionWindow(action: string, popupWidth: number, popupHeight: number){
+    this._bulkAction = action;
+    this._bulkWindowWidth = popupWidth;
+    this._bulkWindowHeight = popupHeight;
+    // use timeout to allow data binding of popup dimensions to update before opening the popup
+    setTimeout(() => {
+      this.bulkActionsPopup.open();
+    }, 0);
   }
 
   // set scheduling changes
@@ -94,48 +84,55 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   private executeService(service: BulkActionBaseService<any>, data: any, reloadEntries: boolean = true ): void{
+    this._bulkAction = "";
+
+    const execute = () => {
+      this._browserService.setAppStatus({isBusy: true, errorMessage: null});
+      service.execute(this.selectedEntries, data).subscribe(
+          result => {
+            this._browserService.setAppStatus({isBusy: false, errorMessage: null});
+            this.onBulkChange.emit({reload: reloadEntries});
+          },
+          error => {
+            this._browserService.setAppStatus({isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error')});
+          }
+      );
+    }
+
     if (this.selectedEntries.length > environment.modules.contentEntries.bulkActionsLimit){
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),
           message: this._appLocalization.get('applications.content.bulkActions.confirm', {"0": this.selectedEntries.length}),
           accept: () => {
-            this._browserService.setAppStatus({isBusy: true, errorMessage: null});
-            service.execute(this.selectedEntries, data).subscribe(
-              result => {
-                this._browserService.setAppStatus({isBusy: false, errorMessage: null});
-                this.onBulkChange.emit({reload: reloadEntries});
-              },
-              error => {
-                this._browserService.setAppStatus({isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error')});
-              }
-            );
+            execute();
           }
         }
       );
+    }else{
+      execute();
     }
   }
 
   getBulkActionItems(): MenuItem[]{
     return  [
-      { label: this._appLocalization.get('applications.content.bulkActions.setScheduling'), command: (event) => { this.executeBulkAction("setScheduling") } },
-      { label: this._appLocalization.get('applications.content.bulkActions.setAccessControl'), command: (event) => { this.executeBulkAction("setAccessControl") } },
+      { label: this._appLocalization.get('applications.content.bulkActions.setScheduling'), command: (event) => { this.openBulkActionWindow("setScheduling", 500, 500) } },
+      { label: this._appLocalization.get('applications.content.bulkActions.setAccessControl'), command: (event) => { this.openBulkActionWindow("setAccessControl", 500, 500) } },
       { label: this._appLocalization.get('applications.content.bulkActions.addRemoveTags'), items: [
-        { label: this._appLocalization.get('applications.content.bulkActions.addTags'), command: (event) => { this.executeBulkAction("addTags") } },
-        { label: this._appLocalization.get('applications.content.bulkActions.removeTags'), command: (event) => { this.executeBulkAction("removeTags") } }]
+        { label: this._appLocalization.get('applications.content.bulkActions.addTags'), command: (event) => { this.openBulkActionWindow("addTags", 500, 500) } },
+        { label: this._appLocalization.get('applications.content.bulkActions.removeTags'), command: (event) => { this.openBulkActionWindow("removeTags", 500, 500) } }]
       },
       { label: this._appLocalization.get('applications.content.bulkActions.addRemoveCategories'), items: [
-        { label: this._appLocalization.get('applications.content.bulkActions.addToCategories'), command: (event) => { this.executeBulkAction("addToCategories") } },
-        { label: this._appLocalization.get('applications.content.bulkActions.removeFromCategories'), command: (event) => { this.executeBulkAction("removeFromCategories") } }]
+        { label: this._appLocalization.get('applications.content.bulkActions.addToCategories'), command: (event) => { this.openBulkActionWindow("addToCategories", 560, 586) } },
+        { label: this._appLocalization.get('applications.content.bulkActions.removeFromCategories'), command: (event) => { this.openBulkActionWindow("removeFromCategories", 500, 500) } }]
       },
       { label: this._appLocalization.get('applications.content.bulkActions.addToNewCategoryPlaylist'), items: [
-        { label: this._appLocalization.get('applications.content.bulkActions.addToNewCategory'), command: (event) => { this.executeBulkAction("addToNewCategory") } },
-        { label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'), command: (event) => { this.executeBulkAction("addToNewPlaylist") } }]
+        { label: this._appLocalization.get('applications.content.bulkActions.addToNewCategory'), command: (event) => { this.openBulkActionWindow("addToNewCategory", 500, 500) } },
+        { label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'), command: (event) => { this.openBulkActionWindow("addToNewPlaylist", 500, 500) } }]
       },
-      { label: this._appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => { this.executeBulkAction("changeOwner") } },
-      { label: this._appLocalization.get('applications.content.bulkActions.download'), command: (event) => { this.executeBulkAction("download") } },
-      { label: this._appLocalization.get('applications.content.bulkActions.delete'), command: (event) => { this.executeBulkAction("delete") } }
+      { label: this._appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => { this.openBulkActionWindow("changeOwner", 500, 500) } },
+      { label: this._appLocalization.get('applications.content.bulkActions.download'), command: (event) => { this.openBulkActionWindow("download", 500, 500) } },
+      { label: this._appLocalization.get('applications.content.bulkActions.delete'), command: (event) => { this.openBulkActionWindow("delete", 500, 500) } }
     ];
   }
 }
-
