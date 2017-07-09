@@ -39,7 +39,8 @@
       "cancel": "Cancel",
       "retry": "Retry",
       "confirm": "Confirm",
-      "close": "Close"
+      "close": "Close",
+      "note": "Note:"
     }
   },
   "applications": {
@@ -184,6 +185,14 @@
         "changeOwner": "Change Owner",
         "changeOwnerLabel": "Set a new owner for the selected entries",
         "download": "Download",
+        "downloadEntries": "Download selected entries",
+        "download1Label": "You have selected 1 entry for download.",
+        "downloadManyLabel": "You have selected {{0}} entries for download.",
+        "downloadFlavor": "If you have selected to download a video, please choose the required format:",
+        "downloadAudio": "Audio entries will be delivered in FLV format.",
+        "downloadImage": "Images will be delivered in their original format.",
+        "downloadNote": "Downloading other types of entries is not supported and will be ignored.",
+        "downloadMsg": "Your download request is being processed. A download link will be sent to {{0}} once processing is completed.",
         "delete": "Delete",
         "apply": "Apply to all selected entries",
         "error": "An error occurred during entries update.",

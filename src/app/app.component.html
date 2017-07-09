@@ -2,4 +2,9 @@
     <router-outlet></router-outlet>
 </k-area-blocker>
 <!--router-outlet></router-outlet-->
-<p-confirmDialog header="Confirmation" [closeOnEscape]="false" width="440"></p-confirmDialog>
+<p-confirmDialog header="Confirmation" [key]="'confirm'" [closeOnEscape]="false" width="440"></p-confirmDialog>
+<p-confirmDialog header="Alert" [key]="'alert'" [closeOnEscape]="true" width="440" #cd>
+    <p-footer>
+        <button type="button" pButton icon="fa-check" label="OK" (click)="cd.accept()"></button>
+    </p-footer>
+</p-confirmDialog>

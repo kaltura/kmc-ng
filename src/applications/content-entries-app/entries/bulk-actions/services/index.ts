@@ -5,3 +5,4 @@ export { BulkAddCategoriesService, EntryCategoryItem } from './bulk-add-categori
 export { BulkChangeOwnerService } from './bulk-change-owner.service';
 export { BulkRemoveCategoriesService } from './bulk-remove-categories.service';
 export { BulkDeleteService } from './bulk-delete.service';
+export { BulkDownloadService } from './bulk-download.service';

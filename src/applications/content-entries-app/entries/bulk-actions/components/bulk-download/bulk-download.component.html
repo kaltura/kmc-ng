@@ -1,0 +1,21 @@
+<k-area-blocker [showLoader]="_loading" [message]="_sectionBlockerMessage">
+  <div class="kContent kOverrideFAIcons">
+    <span class="kTitle">{{'applications.content.bulkActions.download' | translate}}</span>
+    <div class="kDownload">
+      <span class="kLabel" *ngIf="selectedEntries?.length === 1">{{'applications.content.bulkActions.download1Label' | translate}}</span>
+      <span class="kLabel" *ngIf="selectedEntries?.length > 1">{{'applications.content.bulkActions.downloadManyLabel' | translate:_downloadLabel }}</span>
+      <span class="kLabel kSpacer">{{'applications.content.bulkActions.downloadFlavor' | translate }}</span>
+      <p-dropdown [options]="_flavors" [(ngModel)]="_selectedFlavor" (onChange)="_onSelectionChanged()"></p-dropdown>
+      <span class="kLabel">{{'applications.content.bulkActions.downloadAudio' | translate }}</span>
+      <span class="kLabel">{{'applications.content.bulkActions.downloadImage' | translate }}</span>
+      <div>
+        <span><b>{{'app.common.note' | translate }}</b></span>
+        <span>{{'applications.content.bulkActions.downloadNote' | translate }}</span>
+      </div>
+
+    </div>
+    <div class="kFooter">
+      <button type="button" class="kButtonBranded" pButton label="{{'applications.content.bulkActions.downloadEntries' | translate}}" (click)="_apply()"></button>
+    </div>
+  </div>
+</k-area-blocker>

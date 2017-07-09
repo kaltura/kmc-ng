@@ -5,11 +5,12 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 
 import { SchedulingParams } from './services'
-import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, EntryCategoryItem, BulkChangeOwnerService, BulkRemoveCategoriesService, BulkDeleteService } from './services';
+import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, EntryCategoryItem, BulkChangeOwnerService, BulkRemoveCategoriesService, BulkDeleteService, BulkDownloadService } from './services';
 import { KalturaMediaEntry } from "kaltura-typescript-client/types/KalturaMediaEntry";
 import { BulkActionBaseService } from "./services/bulk-action-base.service";
 import { environment } from 'app-environment';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
+import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 
 @Component({
   selector: 'kBulkActions',
@@ -36,6 +37,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               private _bulkAddCategoriesService: BulkAddCategoriesService,
               private _bulkChangeOwnerService: BulkChangeOwnerService,
               private _bulkRemoveCategoriesService: BulkRemoveCategoriesService,
+              private _bulkDownloadService: BulkDownloadService,
               private _bulkDeleteService: BulkDeleteService) {
 
   }
@@ -90,6 +92,19 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     }
   }
 
+  // download changed
+  onDownloadChanged(flavorId: number): void{
+    const showSuccessMsg = (result) => {
+      this._browserService.alert(
+          {
+            header: this._appLocalization.get('applications.content.bulkActions.download'),
+            message: this._appLocalization.get('applications.content.bulkActions.downloadMsg',{0: result && result.email ? result.email : ''})
+          }
+      );
+    };
+    this.executeService(this._bulkDownloadService, flavorId, false, showSuccessMsg);
+  }
+
   // bulk delete
   private deleteEntries(): void{
     let msg = '';
@@ -116,7 +131,17 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     );
   }
 
-  private executeService(service: BulkActionBaseService<any>, data: any = {}, reloadEntries: boolean = true ): void{
+  // bulk download initial check
+  private downloadEntries():void{
+    // check for single image selection - immediate download
+    if (this.selectedEntries.length === 1 && this.selectedEntries[0].mediaType === KalturaMediaType.image){
+      this._browserService.openLink(this.selectedEntries[0].downloadUrl + "/file_name/name");
+    }else{
+      this.openBulkActionWindow("download", 570, 500)
+    }
+  }
+
+  private executeService(service: BulkActionBaseService<any>, data: any = {}, reloadEntries: boolean = true, callback?: Function ): void{
     this._bulkAction = "";
 
     const execute = () => {
@@ -124,6 +149,9 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
       service.execute(this.selectedEntries, data).subscribe(
           result => {
             this._browserService.setAppStatus({isBusy: false, errorMessage: null});
+            if (callback){
+              callback(result);
+            }
             this.onBulkChange.emit({reload: reloadEntries});
           },
           error => {
@@ -164,7 +192,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
         { label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'), command: (event) => { this.openBulkActionWindow("addToNewPlaylist", 500, 500) } }]
       },
       { label: this._appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => { this.openBulkActionWindow("changeOwner", 500, 500) } },
-      { label: this._appLocalization.get('applications.content.bulkActions.download'), command: (event) => { this.openBulkActionWindow("download", 500, 500) } },
+      { label: this._appLocalization.get('applications.content.bulkActions.download'), command: (event) => { this.downloadEntries() } },
       { label: this._appLocalization.get('applications.content.bulkActions.delete'), command: (event) => { this.deleteEntries() } }
     ];
   }
