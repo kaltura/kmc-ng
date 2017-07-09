@@ -189,7 +189,10 @@
         "error": "An error occurred during entries update.",
         "updated": "Entries updated successfully",
         "note": "Update Note",
-        "confirm": "Are you sure you want to update {{0}} entries? It could take a while..."
+        "confirm": "Are you sure you want to update {{0}} entries? It could take a while...",
+        "deleteEntries": "Delete Entries",
+        "deleteConfirm": "Are you sure you want to delete the selected entries?",
+        "deleteNote": "Please note: the selected entries will be permanently deleted from your account."
       },
       "entryDetails": {
         "sections": {

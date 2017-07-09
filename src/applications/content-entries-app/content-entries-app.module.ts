@@ -28,7 +28,7 @@ import { EntriesComponentsList } from './entries/entries-components-list';
 import { CategoriesStore } from './shared/categories-store.service';
 import { EntriesRefineFiltersProvider } from './entries/entries-refine-filters/entries-refine-filters-provider.service';
 import { CategoriesPrimeService } from './shared/categories-prime.service';
-import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, BulkChangeOwnerService, BulkRemoveCategoriesService } from './entries/bulk-actions/services';
+import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, BulkChangeOwnerService, BulkRemoveCategoriesService, BulkDeleteService } from './entries/bulk-actions/services';
 import { SharedComponentsList } from './shared/shared-components-list';
 
 @NgModule({
@@ -87,7 +87,8 @@ import { SharedComponentsList } from './shared/shared-components-list';
         BulkRemoveTagsService,
         BulkAddCategoriesService,
         BulkChangeOwnerService,
-        BulkRemoveCategoriesService
+        BulkRemoveCategoriesService,
+        BulkDeleteService
     ],
 })
 export class ContentEntriesAppModule {

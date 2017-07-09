@@ -5,7 +5,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 
 import { SchedulingParams } from './services'
-import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, EntryCategoryItem, BulkChangeOwnerService, BulkRemoveCategoriesService } from './services';
+import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, EntryCategoryItem, BulkChangeOwnerService, BulkRemoveCategoriesService, BulkDeleteService } from './services';
 import { KalturaMediaEntry } from "kaltura-typescript-client/types/KalturaMediaEntry";
 import { BulkActionBaseService } from "./services/bulk-action-base.service";
 import { environment } from 'app-environment';
@@ -35,7 +35,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
               private _bulkRemoveTagsService: BulkRemoveTagsService,
               private _bulkAddCategoriesService: BulkAddCategoriesService,
               private _bulkChangeOwnerService: BulkChangeOwnerService,
-              private _bulkRemoveCategoriesService: BulkRemoveCategoriesService) {
+              private _bulkRemoveCategoriesService: BulkRemoveCategoriesService,
+              private _bulkDeleteService: BulkDeleteService) {
 
   }
 
@@ -89,7 +90,33 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private executeService(service: BulkActionBaseService<any>, data: any, reloadEntries: boolean = true ): void{
+  // bulk delete
+  private deleteEntries(): void{
+    let msg = '';
+    // display entries marked for deletion in the confirmation box if there are up to 10 selected entries. Otherwise, just confirm deletion
+    if (this.selectedEntries.length > 10){
+      msg = `${this._appLocalization.get('applications.content.bulkActions.deleteConfirm')}<br/><br/>${this._appLocalization.get('applications.content.bulkActions.deleteNote')}`;
+    }else{
+      msg = `${this._appLocalization.get('applications.content.bulkActions.deleteConfirm')}<br/><br/>`;
+      this.selectedEntries.forEach(entry => {
+        msg += `${this._appLocalization.get('applications.content.entries.entryId', { 0: entry.id })}<br/>`;
+      });
+      msg += `<br/>${this._appLocalization.get('applications.content.bulkActions.deleteNote')}`
+    }
+    this._browserService.confirm(
+        {
+          header: this._appLocalization.get('applications.content.bulkActions.deleteEntries'),
+          message: msg,
+          accept: () => {
+            setTimeout(()=>{
+              this.executeService(this._bulkDeleteService); // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
+            },0);
+          }
+        }
+    );
+  }
+
+  private executeService(service: BulkActionBaseService<any>, data: any = {}, reloadEntries: boolean = true ): void{
     this._bulkAction = "";
 
     const execute = () => {
@@ -138,7 +165,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
       },
       { label: this._appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => { this.openBulkActionWindow("changeOwner", 500, 500) } },
       { label: this._appLocalization.get('applications.content.bulkActions.download'), command: (event) => { this.openBulkActionWindow("download", 500, 500) } },
-      { label: this._appLocalization.get('applications.content.bulkActions.delete'), command: (event) => { this.openBulkActionWindow("delete", 500, 500) } }
+      { label: this._appLocalization.get('applications.content.bulkActions.delete'), command: (event) => { this.deleteEntries() } }
     ];
   }
 }
