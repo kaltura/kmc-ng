@@ -59,7 +59,8 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
     this.metadataForm.valueChanges.subscribe(
       form => {
         if( form.name !== this._playlistStore.playlist.name ||
-            form.description !== this._playlistStore.playlist.description) {
+            form.description !== this._playlistStore.playlist.description ||
+            form.tags.join(', ') !== this._playlistStore.playlist.tags) {
           this._playlistStore.updateSectionState(
             PlaylistSections.Metadata,
             this._playlistStore.sectionsState.metadata.isValid,
