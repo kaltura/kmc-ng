@@ -17,7 +17,8 @@ import { KalturaThumbAssetStatus } from 'kaltura-typescript-client/types/Kaltura
 import { KalturaDistributionThumbDimensions } from 'kaltura-typescript-client/types/KalturaDistributionThumbDimensions';
 import { ThumbAssetDeleteAction } from 'kaltura-typescript-client/types/ThumbAssetDeleteAction';
 import { ThumbAssetAddFromImageAction } from 'kaltura-typescript-client/types/ThumbAssetAddFromImageAction';
-import { AppAuthentication, AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppAuthentication } from 'app-shared/kmc-shell';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';

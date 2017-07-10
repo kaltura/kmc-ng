@@ -23,12 +23,11 @@ import { KalturaCategoryEntry } from 'kaltura-typescript-client/types/KalturaCat
 import { CategoriesStore } from '../../shared/categories-store.service';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng/kaltura-common';
+import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng/kaltura-server-utils';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { KalturaCustomMetadata } from '@kaltura-ng/kaltura-ui/dynamic-form/kaltura-custom-metadata';
+import { KalturaCustomMetadata, KalturaCustomDataHandler } from '@kaltura-ng/kaltura-server-utils/custom-metadata-form';
 
-import { KalturaCustomDataHandler } from '@kaltura-ng/kaltura-ui/dynamic-form/kaltura-custom-metadata';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/combineLatest';

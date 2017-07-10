@@ -24,7 +24,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 import { EntryFormWidget } from '../entry-form-widget';
 import { EntryWidgetKeys } from '../entry-widget-keys';
-import { KalturaOVPFile } from '@kaltura-ng/kaltura-common/upload-management/kaltura-ovp';
+import { KalturaOVPFile } from '@kaltura-ng/kaltura-server-utils/upload-management';
 import { UploadManagement, FileChanges } from '@kaltura-ng/kaltura-common/upload-management';
 
 export interface CaptionRow {

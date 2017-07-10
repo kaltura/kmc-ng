@@ -3,7 +3,8 @@ import { EntryFormWidget } from '../entry-form-widget';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { Observable } from 'rxjs/Observable';
-import { AppLocalization, AppAuthentication } from '@kaltura-ng/kaltura-common';
+import { AppAuthentication } from 'app-shared/kmc-shell';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { BrowserService } from 'app-shared/kmc-shell';
@@ -23,7 +24,7 @@ import { FlavorAssetAddAction } from 'kaltura-typescript-client/types/FlavorAsse
 import { KalturaUrlResource } from 'kaltura-typescript-client/types/KalturaUrlResource';
 import { KalturaContentResource } from 'kaltura-typescript-client/types/KalturaContentResource';
 import { UploadManagement } from '@kaltura-ng/kaltura-common/upload-management';
-import { KalturaOVPFile } from '@kaltura-ng/kaltura-common/upload-management/kaltura-ovp';
+import { KalturaOVPFile } from '@kaltura-ng/kaltura-server-utils/upload-management';
 import { Message } from 'primeng/primeng';
 import { environment } from 'app-environment';
 import { Flavor } from './flavor';

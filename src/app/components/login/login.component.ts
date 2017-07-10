@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'app-environment';
 
-import { AppAuthentication, AppNavigator } from '@kaltura-ng/kaltura-common';
+import { AppAuthentication, AppNavigator } from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
