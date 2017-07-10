@@ -65,12 +65,13 @@
         "deleteNote": "Please note: the entry will be permanently deleted from your account."
       },
       "playlists": {
-        "playlists": "Playlists",
+        "playlists": "Playlist's",
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
         "cancel": "Cancel",
         "searchEntries": "Search Playlists",
         "addPlaylist": "Add Playlist",
+        "addEntry": "Add Entry",
         "refresh": "Refresh"
       },
       "filters": {
@@ -521,12 +522,14 @@
         },
         "metadata": {
           "playlistName": "Name",
-          "description": "Description"
+          "description": "Description",
+          "tags": "Tags"
         },
         "errors": {
           "retry": "Retry",
           "backToPlaylists": "Back To Playlists",
-          "playlistTypeNotSupported": "playlist type not supported"
+          "playlistTypeNotSupported": "playlist type not supported",
+          "validationError": "The form contains some invalid information. Please review the sections marked as invalid"
         }
       }
     }
