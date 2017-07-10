@@ -28,6 +28,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 
 	private _searchCategoriesSubscription : ISubscription;
 	public _categoriesProvider = new Subject<SuggestionsProviderData>();
+  @Input() buttonLabel: string  = "";
 	@Input() value: EntryCategoryItem[]  = [];
 	@Output() valueChange = new EventEmitter<EntryCategoryItem[]>();
 
