@@ -5,13 +5,13 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 
 import { SchedulingParams } from './services'
-import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, EntryCategoryItem, BulkChangeOwnerService, BulkRemoveCategoriesService, BulkDeleteService, BulkDownloadService } from './services';
+import { BulkSchedulingService, BulkAccessControlService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, EntryCategoryItem, BulkChangeOwnerService, BulkRemoveCategoriesService, BulkDeleteService, BulkDownloadService } from './services';
 import { KalturaMediaEntry } from "kaltura-typescript-client/types/KalturaMediaEntry";
 import { BulkActionBaseService } from "./services/bulk-action-base.service";
 import { environment } from 'app-environment';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-
+import { KalturaAccessControl } from 'kaltura-typescript-client/types/KalturaAccessControl';
 @Component({
   selector: 'kBulkActions',
   templateUrl: './bulk-actions.component.html',
@@ -32,6 +32,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   constructor(private _appLocalization: AppLocalization, private _browserService : BrowserService,
               private _bulkSchedulingService: BulkSchedulingService,
+              private _bulkAccessControlService: BulkAccessControlService,
               private _bulkAddTagsService: BulkAddTagsService,
               private _bulkRemoveTagsService: BulkRemoveTagsService,
               private _bulkAddCategoriesService: BulkAddCategoriesService,
@@ -63,6 +64,11 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   // set scheduling changes
   onSchedulingChanged(schedulingParams: SchedulingParams): void{
     this.executeService(this._bulkSchedulingService, schedulingParams);
+  }
+
+  // set access control changes
+  onAccessControlChanged(profile: KalturaAccessControl): void{
+    this.executeService(this._bulkAccessControlService, profile);
   }
 
   // add tags changed
@@ -178,7 +184,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   getBulkActionItems(): MenuItem[]{
     return  [
       { label: this._appLocalization.get('applications.content.bulkActions.setScheduling'), command: (event) => { this.openBulkActionWindow("setScheduling", 500, 500) } },
-      { label: this._appLocalization.get('applications.content.bulkActions.setAccessControl'), command: (event) => { this.openBulkActionWindow("setAccessControl", 500, 500) } },
+      { label: this._appLocalization.get('applications.content.bulkActions.setAccessControl'), command: (event) => { this.openBulkActionWindow("setAccessControl", 500, 550) } },
       { label: this._appLocalization.get('applications.content.bulkActions.addRemoveTags'), items: [
         { label: this._appLocalization.get('applications.content.bulkActions.addTags'), command: (event) => { this.openBulkActionWindow("addTags", 500, 500) } },
         { label: this._appLocalization.get('applications.content.bulkActions.removeTags'), command: (event) => { this.openBulkActionWindow("removeTags", 500, 500) } }]

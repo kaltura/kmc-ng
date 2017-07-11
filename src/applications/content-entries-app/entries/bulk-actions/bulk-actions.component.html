@@ -10,6 +10,7 @@
   <ng-template>
     <div [ngSwitch]="_bulkAction">
       <kBulkScheduling *ngSwitchCase="'setScheduling'" [parentPopupWidget]="bulkActionsPopup" (schedulingChanged)="onSchedulingChanged($event)"></kBulkScheduling>
+      <kBulkAccessControl *ngSwitchCase="'setAccessControl'" [parentPopupWidget]="bulkActionsPopup" (accessControlChangedChanged)="onAccessControlChanged($event)"></kBulkAccessControl>
       <kBulkAddTags *ngSwitchCase="'addTags'" [parentPopupWidget]="bulkActionsPopup" (addTagsChanged)="onAddTagsChanged($event)"></kBulkAddTags>
       <kBulkRemoveTags *ngSwitchCase="'removeTags'" [selectedEntries]="selectedEntries" [parentPopupWidget]="bulkActionsPopup" (removeTagsChanged)="onRemoveTagsChanged($event)"></kBulkRemoveTags>
       <kCategoriesSelector *ngSwitchCase="'addToCategories'" [parentPopupWidget]="bulkActionsPopup" (valueChange)="onAddToCategoriesChanged($event)" [buttonLabel]="'applications.content.bulkActions.apply' | translate"></kCategoriesSelector>
