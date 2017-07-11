@@ -1,18 +1,14 @@
 @import 'app-theme/_variables.scss';
 
 .kMetadataDetails {
-  padding-left: 12px;
-  padding-right: 130px;
-  padding-top: 18px;
+  padding: 26px 8px 8px 20px;
   overflow-y: auto;
   width: 100%;
 
   .kSchemaTitle {
     color: $kGrayscale1;
     font-size: 18px;
-    font-weight: 700;
-    padding-top: 30px;
-    padding-bottom: 12px;
+    font-weight: bold;
   }
 
   /deep/ {

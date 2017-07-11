@@ -1,0 +1,23 @@
+@import 'app-theme/_variables.scss';
+
+.kContentDetails {
+  width: 100%;
+
+  .kPlaylistsTableFilters {
+    width: 100%;
+    height: 66px;
+    background-color: white;
+    flex: 0 0 auto;
+    align-items: center;
+    display: flex;
+
+    .kAddPlaylistBtn {
+      margin-left: 14px;
+      height: 36px;
+    }
+
+    .kSelectedPlaylistsNum{
+      padding-left: 16px;
+    }
+  }
+}

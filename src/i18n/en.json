@@ -71,6 +71,7 @@
         "cancel": "Cancel",
         "searchEntries": "Search Playlists",
         "addPlaylist": "Add Playlist",
+        "addEntry": "Add Entry",
         "refresh": "Refresh"
       },
       "filters": {
