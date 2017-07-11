@@ -22,7 +22,7 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
 import { DynamicFormModule } from '@kaltura-ng/kaltura-ui/dynamic-form';
 import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
-import { KalturaCustomMetadataModule } from '@kaltura-ng/kaltura-server-utils/custom-metadata-form';
+import { DynamicMetadataFormModule } from '@kaltura-ng/kaltura-server-utils';
 import { EntryComponentsList } from './entry/entry-components-list';
 import { EntriesComponentsList } from './entries/entries-components-list';
 import { CategoriesStore } from './shared/categories-store.service';
@@ -50,7 +50,7 @@ import { SharedComponentsList } from './shared/shared-components-list';
         InputTextModule,
         KalturaCommonModule,
         MetadataProfileModule,
-        KalturaCustomMetadataModule,
+        DynamicMetadataFormModule,
         KalturaPrimeNgUIModule,
         KalturaUIModule,
         KMCShellModule,

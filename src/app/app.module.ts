@@ -40,7 +40,7 @@ import { ConfirmDialogModule, ConfirmationService, DropdownModule } from 'primen
 import { environment } from 'app-environment';
 import { AuthModule } from 'app-shared/kmc-shell';
 const partnerProviders : PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
-
+import { KalturaServerModule } from '@kaltura-ng/kaltura-server-utils';
 
 export function clientConfigurationFactory()
 {
@@ -71,6 +71,7 @@ export function clientConfigurationFactory()
     routing,
     TieredMenuModule,
     UploadManagementModule,
+    KalturaServerModule,
     AreaBlockerModule
   ],
   declarations: <any>[

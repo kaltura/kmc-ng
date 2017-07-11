@@ -20,7 +20,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 
 import { EntryFormWidget } from '../entry-form-widget';
 import { EntryWidgetKeys } from '../entry-widget-keys';
-import { KalturaOVPFile } from '@kaltura-ng/kaltura-server-utils';
+import { KalturaServerFile } from '@kaltura-ng/kaltura-server-utils';
 import { UploadManagement, FileChanges } from '@kaltura-ng/kaltura-common/upload-management';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 
@@ -275,7 +275,7 @@ export class EntryRelatedHandler extends EntryFormWidget
 			const newFile = this._addFile(fileData.name, KalturaAttachmentType.document);
             (<any>newFile).uploading = true;
 
-			this._uploadManagement.newUpload(new KalturaOVPFile(fileData))
+			this._uploadManagement.newUpload(new KalturaServerFile(fileData))
                 .subscribe((response) => {
 						// update file with actual upload token
 						this._updateFileUploadToken(newFile,response.uploadToken);
