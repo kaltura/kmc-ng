@@ -201,7 +201,7 @@ export class PlaylistsStore implements OnDestroy {
 		}
 	}
 
-  public deletePlaylist(playlistId: string): Observable<void>{
+  public deletePlaylist(playlistId: any): Observable<void>{
 
     return Observable.create(observer => {
       let subscription: ISubscription;
@@ -218,8 +218,7 @@ export class PlaylistsStore implements OnDestroy {
             observer.error(error);
           }
         );
-      }else
-      {
+      } else {
         observer.error(new Error('missing playlistId argument'));
       }
       return ()=>{

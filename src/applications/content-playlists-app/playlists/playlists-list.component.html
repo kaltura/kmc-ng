@@ -14,7 +14,7 @@
 			<div class="kBulkOperations" [class.kHidden]="!_selectedPlaylists.length">
 				<span class="kSelectedPlaylistsLabel">
 					• {{_selectedPlaylists.length}} {{'applications.content.playlists.selected' | translate}}</span>
-				<button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"></button>
+				<button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="deletePlaylists(_selectedPlaylists)"></button>
 				<a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.playlists.cancel' | translate}}</a>
 			</div>
 			<div [class.kHidden]="_selectedPlaylists.length" class="kFilters">

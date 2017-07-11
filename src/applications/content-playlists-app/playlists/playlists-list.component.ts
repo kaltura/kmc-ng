@@ -112,9 +112,9 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
           {
             header: this.appLocalization.get('applications.content.playlists.deletePlaylist'),
             message: `
-              ${this.appLocalization.get('applications.content.playlists.confirmDelete')}<br/>
+              ${this.appLocalization.get('applications.content.playlists.confirmDelete', {0:''})}<br/>
               ${this.appLocalization.get('applications.content.playlists.playlistId', { 0: event.playlistID })}<br/>
-              ${this.appLocalization.get('applications.content.playlists.deleteNote')}`,
+              ${this.appLocalization.get('applications.content.playlists.deleteNote', {0:''})}`,
             accept: () => {
               this.deletePlaylist(event.playlistID);
             }
@@ -127,14 +127,16 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
     }
 	}
 
-  private deletePlaylist(playlistId: string): void{
+  private deletePlaylist(playlistIds: any): void{
     this._state.next({busy: true, errorMessage: null});
     this._blockerMessage = null;
-    this._playlistsStore.deletePlaylist(playlistId).subscribe(
+    // Array.isArray(playlistIds)? playlistIds.map(id => id.id) : playlistIds
+    this._playlistsStore.deletePlaylist(playlistIds).subscribe(
       result => {
         this._state.next({busy: false, errorMessage: null});
         this._msgs = [];
         this._msgs.push({severity: 'success', summary: '', detail: this.appLocalization.get('applications.content.playlists.deleted')});
+        this.clearSelection();
       },
       error => {
         this._blockerMessage = new AreaBlockerMessage(
@@ -144,7 +146,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               {
                 label: this.appLocalization.get('app.common.retry'),
                 action: () => {
-                  this.deletePlaylist(playlistId);
+                  this.deletePlaylist(playlistIds);
                 }
               },
               {
@@ -265,13 +267,30 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 		this.querySubscription = null;
 	}
 
-	public _reload()
-	{
+	public _reload() {
 		this.clearSelection();
 		this._playlistsStore.reload(true);
 	}
 
-	clearSelection(){
+	clearSelection() {
 		this._selectedPlaylists = [];
 	}
+
+  deletePlaylists(selectedPlaylists) {
+	  let playlistsToDelete = selectedPlaylists.map((playlist, index) => {
+      return `${index + 1}: ${playlist.name}`;
+    });
+    this._browserService.confirm(
+      {
+        header: this.appLocalization.get('applications.content.playlists.deletePlaylist'),
+        message: `
+              ${this.appLocalization.get('applications.content.playlists.confirmDelete', {0: selectedPlaylists.length > 1 ? 's': ''})}<br/>
+              ${playlistsToDelete.join(',').replace(/,/gi, '<br />')}<br/>
+              ${this.appLocalization.get('applications.content.playlists.deleteNote', {0: selectedPlaylists.length > 1 ? 's': ''})}`,
+        accept: () => {
+          // this.deletePlaylist(selectedPlaylists);
+        }
+      }
+    );
+  }
 }
