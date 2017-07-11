@@ -14,6 +14,9 @@ import { KalturaTagFilter } from 'kaltura-typescript-client/types/KalturaTagFilt
 import { KalturaTaggedObjectType } from 'kaltura-typescript-client/types/KalturaTaggedObjectType';
 import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
 import { PlaylistSections } from './playlist-sections';
+import { KalturaMultiRequest } from 'kaltura-typescript-client';
+import {PlaylistExecuteAction} from "kaltura-typescript-client/types/PlaylistExecuteAction";
+import {KalturaBaseEntry} from "kaltura-typescript-client/types/KalturaBaseEntry";
 
 @Injectable()
 export class PlaylistStore implements OnDestroy {
@@ -29,8 +32,10 @@ export class PlaylistStore implements OnDestroy {
 	private _activeSection = new BehaviorSubject<{ section: PlaylistSections}>({section: null});
 	private _playlist = new BehaviorSubject<{ playlist: KalturaPlaylist}>({playlist: null});
 	private _state = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin?: 'reload' | 'save'}}>({isBusy: false});
+  private _entries  = new BehaviorSubject({items: [], totalCount: 0});
 
-	public playlist$ = this._playlist.asObservable();
+  public entries$ = this._entries.asObservable();
+  public playlist$ = this._playlist.asObservable();
   public activeSection$ = this._activeSection.asObservable();
 	public sectionsState$ = this._sectionsState.asObservable();
 	public state$ = this._state.asObservable();
@@ -108,22 +113,33 @@ export class PlaylistStore implements OnDestroy {
 
 		this._state.next({isBusy: true});
 
-		this._loadPlaylistSubscription = this._kalturaServerClient.request(new PlaylistGetAction({id}))
+		this._loadPlaylistSubscription = this._kalturaServerClient.multiRequest(
+      new KalturaMultiRequest(
+        new PlaylistGetAction({id}),
+        new PlaylistExecuteAction({id})
+      ))
 			.cancelOnDestroy(this)
 			.subscribe(
-				response => {
-					if (response instanceof KalturaPlaylist) {
-						this._playlist.next({playlist: response});
-						this._state.next({isBusy: false});
-					} else {
-						this._state.next({
-							isBusy: true,
-							error: {
-								message: this._appLocalization.get('applications.content.playlistDetails.errors.playlistTypeNotSupported'),
-								origin: 'reload'
-							}
-						});
-					}
+				data => {
+				  data.forEach(response => {
+            if (response.result instanceof KalturaPlaylist) {
+              this._playlist.next({playlist: response.result});
+              this._state.next({isBusy: false});
+            } else if(response.result.length >= 1 && response.result[0] instanceof KalturaBaseEntry) {
+              this._entries.next({
+                items: <any[]>response.result,
+                totalCount: <number>response.result.length
+              });
+            } else {
+              this._state.next({
+                isBusy: true,
+                error: {
+                  message: this._appLocalization.get('applications.content.playlistDetails.errors.playlistTypeNotSupported'),
+                  origin: 'reload'
+                }
+              });
+            }
+          });
 				},
 				error => {
 					this._state.next({
