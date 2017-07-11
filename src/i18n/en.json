@@ -69,10 +69,15 @@
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
         "cancel": "Cancel",
+        "deletePlaylist": "Delete Playlist",
+        "confirmDelete": "Are you sure you want to delete the selected playlist{{0}}?",
+        "playlistId": "Playlist ID: {{0}}",
+        "deleted": "Playlist deleted successfully",
         "searchEntries": "Search Playlists",
         "addPlaylist": "Add Playlist",
         "addEntry": "Add Entry",
-        "refresh": "Refresh"
+        "refresh": "Refresh",
+        "deleteNote": "Please note: the playlist{{0}} will be permanently deleted from your account."
       },
       "filters": {
         "activeFilters": "Active Filters:",
