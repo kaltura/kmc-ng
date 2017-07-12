@@ -1,6 +1,7 @@
 import { Component, Input, Output, OnInit, ViewChild, EventEmitter } from '@angular/core';
 import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
-import { AppAuthentication, AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppAuthentication } from 'app-shared/kmc-shell';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { CategoriesPrimeService } from '../categories-prime.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PrimeTreePropagation } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';

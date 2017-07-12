@@ -4,9 +4,10 @@ import { FormWidget } from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { EntryFormManager } from './entry-form-manager';
+import { KalturaMultiRequest } from 'kaltura-typescript-client';
 
 @Injectable()
-export abstract class EntryFormWidget extends FormWidget<KalturaMediaEntry> {
+export abstract class EntryFormWidget extends FormWidget<KalturaMediaEntry, KalturaMultiRequest> {
     public sectionBlockerMessage: AreaBlockerMessage;
     public showSectionLoader: boolean;
 

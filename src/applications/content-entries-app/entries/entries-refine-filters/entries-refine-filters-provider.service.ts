@@ -11,7 +11,7 @@ import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import {  KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-typescript-client';
 import { DistributionProfileListAction } from 'kaltura-typescript-client/types/DistributionProfileListAction';
 import { AccessControlListAction } from 'kaltura-typescript-client/types/AccessControlListAction';
-import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataItemTypes, FlavoursStore } from '@kaltura-ng/kaltura-common';
+import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, MetadataProfile, MetadataItemTypes, FlavoursStore } from '@kaltura-ng/kaltura-server-utils';
 
 import { KalturaAccessControlFilter } from 'kaltura-typescript-client/types/KalturaAccessControlFilter';
 import { KalturaAccessControlProfile } from 'kaltura-typescript-client/types/KalturaAccessControlProfile';

@@ -7,7 +7,8 @@ import { CommonModule } from '@angular/common';
 import { Ng2Webstorage } from 'ng2-webstorage';
 
 
-import { BootstrapAdapterToken, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType, KalturaCommonModule, AppStorage } from '@kaltura-ng/kaltura-common';
+import { BootstrapAdapterToken, AppBootstrap, AppBootstrapConfig  as AppBootstrapConfigType } from 'app-shared/kmc-shell';
+import { KalturaCommonModule, AppStorage } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
 import { KalturaClient, KalturaClientConfiguration } from '@kaltura-ng/kaltura-client';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
@@ -31,14 +32,15 @@ import { KalturaHttpConfigurationAdapter } from "./services/kaltura-http-configu
 
 import { ButtonModule, InputTextModule, TieredMenuModule } from 'primeng/primeng';
 
-import { AppLocalization, MetadataProfileModule, PartnerProfileStore, AccessControlProfileStore, FlavoursStore } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { MetadataProfileModule, PartnerProfileStore, AccessControlProfileStore, FlavoursStore } from '@kaltura-ng/kaltura-server-utils';
 import { UploadManagementModule } from '@kaltura-ng/kaltura-common/upload-management';
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
 import { ConfirmDialogModule, ConfirmationService, DropdownModule } from 'primeng/primeng';
 import { environment } from 'app-environment';
-
+import { AuthModule } from 'app-shared/kmc-shell';
 const partnerProviders : PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
-
+import { KalturaServerModule } from '@kaltura-ng/kaltura-server-utils';
 
 export function clientConfigurationFactory()
 {
@@ -50,6 +52,7 @@ export function clientConfigurationFactory()
 
 @NgModule({
   imports: <any>[
+    AuthModule ,
 	FormsModule,
     BrowserModule,
     BrowserAnimationsModule,
@@ -68,6 +71,7 @@ export function clientConfigurationFactory()
     routing,
     TieredMenuModule,
     UploadManagementModule,
+    KalturaServerModule,
     AreaBlockerModule
   ],
   declarations: <any>[

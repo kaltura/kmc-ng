@@ -3,7 +3,8 @@ import { EntryFormWidget } from '../entry-form-widget';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { Observable } from 'rxjs/Observable';
-import { AppLocalization, AppAuthentication } from '@kaltura-ng/kaltura-common';
+import { AppAuthentication } from 'app-shared/kmc-shell';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { BrowserService } from 'app-shared/kmc-shell';
@@ -23,7 +24,7 @@ import { FlavorAssetAddAction } from 'kaltura-typescript-client/types/FlavorAsse
 import { KalturaUrlResource } from 'kaltura-typescript-client/types/KalturaUrlResource';
 import { KalturaContentResource } from 'kaltura-typescript-client/types/KalturaContentResource';
 import { UploadManagement } from '@kaltura-ng/kaltura-common/upload-management';
-import { KalturaOVPFile } from '@kaltura-ng/kaltura-common/upload-management/kaltura-ovp';
+import { KalturaServerFile } from '@kaltura-ng/kaltura-server-utils';
 import { Message } from 'primeng/primeng';
 import { environment } from 'app-environment';
 import { Flavor } from './flavor';
@@ -312,7 +313,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 	public uploadFlavor(flavor: Flavor, fileData: File): void{
 		flavor.status = KalturaFlavorAssetStatus.importing.toString();
 		flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.uploading');
-		this._uploadManagement.newUpload(new KalturaOVPFile(fileData))
+		this._uploadManagement.newUpload(new KalturaServerFile(fileData))
 			.subscribe((response) => {
 				let resource = new KalturaUploadedFileTokenResource();
 				resource.token = response.uploadToken;
