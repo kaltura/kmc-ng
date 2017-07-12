@@ -101,6 +101,12 @@
       "@kaltura-ng/kaltura-primeng-ui/*": [
         "../node_modules/@kaltura-ng/kaltura-primeng-ui/*"
       ],
+      "@kaltura-ng/kaltura-server-utils": [
+        "../node_modules/@kaltura-ng/kaltura-server-utils"
+      ],
+      "@kaltura-ng/kaltura-server-utils/*": [
+        "../node_modules/@kaltura-ng/kaltura-server-utils/*"
+      ],
       "@kaltura-ng/kaltura-ui": [
         "../node_modules/@kaltura-ng/kaltura-ui"
       ],

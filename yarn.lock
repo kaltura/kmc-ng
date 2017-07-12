@@ -195,6 +195,26 @@
     standard-version "^4.2.0"
     write-json-file "^2.2.0"
 
+"@kaltura-ng/kaltura-client@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-client/-/kaltura-client-0.1.1.tgz#c02c9c83b421c40733a76f4c68f4a5c5df9d7683"
+
+"@kaltura-ng/kaltura-common@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-common/-/kaltura-common-1.0.0.tgz#ec3bd61702869e75873aced1fd4e7f9a9ab911a1"
+
+"@kaltura-ng/kaltura-primeng-ui@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-primeng-ui/-/kaltura-primeng-ui-0.2.1.tgz#82334fffab725caad0d5afe81b0fc3bfa7e3fc0f"
+
+"@kaltura-ng/kaltura-server-utils@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-server-utils/-/kaltura-server-utils-1.0.0.tgz#2b356f4337996d2721903d201e4ad16c5252abb8"
+
+"@kaltura-ng/kaltura-ui@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-ui/-/kaltura-ui-1.0.0.tgz#f5cf943c3971bfb866d2941605299bf6e6ab89b5"
+
 "@kaltura-ng/mc-theme@^0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@kaltura-ng/mc-theme/-/mc-theme-0.1.0.tgz#736c804dd0234eb99fcd2c85453503a4be0b4c84"
