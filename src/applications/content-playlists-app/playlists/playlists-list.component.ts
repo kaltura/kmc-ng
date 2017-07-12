@@ -60,24 +60,24 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 	private querySubscription : ISubscription;
 	public activeFilters: Filter[] = [];
 
-	private _reloadList() : void {
-		this._playlistsStore.reload({
-			freeText: this._filter.freetextSearch,
-			createdBefore: this._filter.createdBefore,
-			createdAfter: this._filter.createdAfter,
-			sortBy: this._filter.sortBy,
-			sortDirection: this._filter.sortDirection,
-			pageIndex: this._filter.pageIndex,
-      pageSize: this._filter.pageSize
-		});
-	}
-
 	constructor(
 		public _playlistsStore: PlaylistsStore,
 		private appLocalization: AppLocalization,
 		private router: Router,
     private _browserService : BrowserService
 	) {}
+
+  private _reloadList() : void {
+    this._playlistsStore.reload({
+      freeText: this._filter.freetextSearch,
+      createdBefore: this._filter.createdBefore,
+      createdAfter: this._filter.createdAfter,
+      sortBy: this._filter.sortBy,
+      sortDirection: this._filter.sortDirection,
+      pageIndex: this._filter.pageIndex,
+      pageSize: this._filter.pageSize
+    });
+  }
 
 	removeTag(tag: Filter){
 		this.updateFilters(tag, 1);
@@ -131,7 +131,9 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
     this._state.next({busy: true, errorMessage: null});
     this._blockerMessage = null;
     // Array.isArray(playlistIds)? playlistIds.map(id => id.id) : playlistIds
-    this._playlistsStore.deletePlaylist(playlistIds).subscribe(
+    this._playlistsStore.deletePlaylist(playlistIds)
+      .cancelOnDestroy(this)
+      .subscribe(
       result => {
         this._state.next({busy: false, errorMessage: null});
         this._msgs = [];

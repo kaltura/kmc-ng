@@ -348,7 +348,7 @@ export class EntryMetadataHandler extends EntryFormWidget
         }
     }
 
-    public searchTags(text : string)
+    public searchTags(text : string): Observable<string[]>
     {
         return Observable.create(
             observer => {

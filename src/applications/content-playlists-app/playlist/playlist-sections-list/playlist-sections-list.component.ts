@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PlaylistStore } from '../playlist-store.service';
 import { PlaylistSections } from '../playlist-sections';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -18,7 +18,7 @@ export class SectionData{
   styleUrls: ['./playlist-sections-list.component.scss']
 })
 
-export class PlaylistSectionsList implements OnInit {
+export class PlaylistSectionsList implements OnInit, OnDestroy {
 	public _loading = false;
 	public sections: SectionData[] = [];
 
@@ -37,6 +37,7 @@ export class PlaylistSectionsList implements OnInit {
       new SectionData(PlaylistSections.Content, this._appLocalization.get('applications.content.playlistDetails.sections.content'), false, false)
     ];
     this._playlistStore.activeSection$
+      .cancelOnDestroy(this)
       .subscribe(
         response => {
           if(response.section !== null) {
@@ -47,6 +48,7 @@ export class PlaylistSectionsList implements OnInit {
       );
 
     this._playlistStore.sectionsState$
+      .cancelOnDestroy(this)
       .subscribe(
         response => {
           this.sections[PlaylistSections.Metadata].hasErrors = !response.metadata.isValid;
@@ -54,4 +56,6 @@ export class PlaylistSectionsList implements OnInit {
         }
       );
 	}
+
+	ngOnDestroy() {}
 }
