@@ -195,22 +195,6 @@
     standard-version "^4.2.0"
     write-json-file "^2.2.0"
 
-"@kaltura-ng/kaltura-client@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-client/-/kaltura-client-0.1.0.tgz#80e7f2dc4b0fce144c747c4854b2981719b8321d"
-
-"@kaltura-ng/kaltura-common@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-common/-/kaltura-common-0.2.0.tgz#e9141fa496f11d50ec3f0b5ff82316af58e58aba"
-
-"@kaltura-ng/kaltura-primeng-ui@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-primeng-ui/-/kaltura-primeng-ui-0.2.0.tgz#1790129b0bc3bcff6dbaefeb7269e9629f90f1c3"
-
-"@kaltura-ng/kaltura-ui@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-ui/-/kaltura-ui-0.2.0.tgz#4da62069e240d0b9730ec2b58702e85a494dd7e7"
-
 "@kaltura-ng/mc-theme@^0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@kaltura-ng/mc-theme/-/mc-theme-0.1.0.tgz#736c804dd0234eb99fcd2c85453503a4be0b4c84"
@@ -3501,9 +3485,9 @@ lcid@^1.0.0:
   dependencies:
     invert-kv "^1.0.0"
 
-"lerna@git+https://github.com/esakal/lerna.git#temp-publish":
+"lerna@https://github.com/esakal/lerna.git#temp-publish":
   version "0.0.2"
-  resolved "git+https://github.com/esakal/lerna.git#e2133e6a89801470060ba19ba52a604cf72406d5"
+  resolved "https://github.com/esakal/lerna.git#e2133e6a89801470060ba19ba52a604cf72406d5"
   dependencies:
     async "^1.5.0"
     chalk "^1.1.1"
@@ -4170,13 +4154,7 @@ node-sass@^4.3.0:
     sass-graph "^2.1.1"
     stdout-stream "^1.4.0"
 
-"nopt@2 || 3":
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/nopt/-/nopt-3.0.6.tgz#c6465dbf08abcd4db359317f79ac68a646b28ff9"
-  dependencies:
-    abbrev "1"
-
-nopt@^2.2.0:
+"nopt@2 || 3", nopt@^2.2.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/nopt/-/nopt-2.2.1.tgz#2aa09b7d1768487b3b89a9c5aa52335bff0baea7"
   dependencies:
@@ -4227,16 +4205,7 @@ npm-run-path@^2.0.0:
   dependencies:
     path-key "^2.0.0"
 
-"npmlog@0 || 1 || 2 || 3 || 4", npmlog@^4.0.0, npmlog@^4.0.2:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/npmlog/-/npmlog-4.1.0.tgz#dc59bee85f64f00ed424efb2af0783df25d1c0b5"
-  dependencies:
-    are-we-there-yet "~1.1.2"
-    console-control-strings "~1.1.0"
-    gauge "~2.7.3"
-    set-blocking "~2.0.0"
-
-npmlog@^4.1.0, npmlog@^4.1.2:
+"npmlog@0 || 1 || 2 || 3 || 4", npmlog@^4.0.0, npmlog@^4.0.2, npmlog@^4.1.0, npmlog@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/npmlog/-/npmlog-4.1.2.tgz#08a7f2a8bf734604779a9efa4ad5cc717abb954b"
   dependencies:
