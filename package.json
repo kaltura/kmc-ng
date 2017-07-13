@@ -38,6 +38,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "checkout-standalone" : "kws bookmark standalone",
     "compodoc": "./node_modules/.bin/compodoc -p tsconfig.json --disableGraph --disablePrivateOrInternalSupport --toggleMenuItems"
   },
   "dependencies": {
