@@ -28,7 +28,7 @@ export class PlaylistStore implements OnDestroy {
   private _sectionToRouteMapping : { [key : number] : string} = {};
 	private _activeSection = new BehaviorSubject<{ section: PlaylistSections}>({section: null});
 	private _playlist = new BehaviorSubject<{ playlist: KalturaPlaylist}>({playlist: null});
-	private _state = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin: 'reload' | 'save'}}>({isBusy: false});
+	private _state = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin?: 'reload' | 'save'}}>({isBusy: false});
 
 	public playlist$ = this._playlist.asObservable();
   public activeSection$ = this._activeSection.asObservable();
@@ -172,7 +172,7 @@ export class PlaylistStore implements OnDestroy {
     if(!this._sectionsState.getValue().metadata.isValid) {
       this._state.next({
         isBusy: false,
-        error: {message: this._appLocalization.get('applications.content.playlistDetails.errors.validationError'), origin: 'save'}
+        error: {message: this._appLocalization.get('applications.content.playlistDetails.errors.validationError')}
       });
     } else {
       let id: string = this._getPlaylistId(),

@@ -49,7 +49,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
                     this._playlistStore.reloadPlaylist();
                   }
                 });
-            } else if(response.error.origin === 'save') {
+            } else {
               buttons.push({
                 label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
                 action: () => {
@@ -71,7 +71,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 					if(response.playlist) {
 						this.playlistName = response.playlist.name;
 						this._currentPlaylistId = response.playlist.id;
-            this._navigateToPlaylist();
+            this._updateNavigationState();
 					}
 				}
 			);
@@ -105,23 +105,31 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     this._playlistStore.savePlaylist();
   }
 
-  private _navigateToPlaylist(direction?: 'next' | 'prev') : void {
+  private _navigateToPlaylist(direction: 'next' | 'prev') : void {
     // TODO [kmcng] find a better way that doesn't need access to the playlist directly
     const playlists = this._playlistsStore.playlists;
     if (playlists && this._currentPlaylistId) {
       const currentPlaylistIndex = playlists.findIndex(playlist => playlist.id === this._currentPlaylistId);
       let newPlaylist = null;
-      this._enableNextButton = currentPlaylistIndex >= 0 && (currentPlaylistIndex < playlists.length - 1);
-      this._enablePrevButton = currentPlaylistIndex > 0;
-      if(direction && direction === 'next' && this._enableNextButton) {
+      if(direction === 'next' && this._enableNextButton) {
         newPlaylist = playlists[currentPlaylistIndex + 1];
       }
-      if(direction && direction === 'prev' && this._enablePrevButton)  {
+      if(direction === 'prev' && this._enablePrevButton)  {
         newPlaylist = playlists[currentPlaylistIndex - 1];
       }
       if(newPlaylist) {
         this._playlistStore.openPlaylist(newPlaylist.id);
       }
+    }
+  }
+
+  private _updateNavigationState() : void {
+    // TODO [kmcng] find a better way that doesn't need access to the playlist directly
+    const playlists = this._playlistsStore.playlists;
+    if (playlists && this._currentPlaylistId) {
+      const currentPlaylistIndex = playlists.findIndex(playlist => playlist.id === this._currentPlaylistId);
+      this._enableNextButton = currentPlaylistIndex >= 0 && (currentPlaylistIndex < playlists.length - 1);
+      this._enablePrevButton = currentPlaylistIndex > 0;
     } else {
       this._enableNextButton = false;
       this._enablePrevButton = false;

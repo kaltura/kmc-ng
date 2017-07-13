@@ -58,11 +58,7 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
       .cancelOnDestroy(this)
       .subscribe(
         form => {
-          if( form.name !== this._playlistStore.playlist.name ||
-              form.description !== this._playlistStore.playlist.description ||
-              form.tags && form.tags.join(', ') !== this._playlistStore.playlist.tags) {
-            this._playlistStore.updateSectionState(PlaylistSections.Metadata, {isDirty: true});
-          }
+          this._playlistStore.updateSectionState(PlaylistSections.Metadata, {isDirty: this.metadataForm.dirty});
           this._playlistStore.playlist.name = form.name;
           this._playlistStore.playlist.description = form.description;
           if(form.tags) {
@@ -93,7 +89,7 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
           suggestions.push({ item: suggestedTag, isSelectable: isSelectable});
         });
         this._tagsProvider.next({suggestions: suggestions, isLoading: false});
-        this._playlistStore.updateSectionState(PlaylistSections.Metadata, {isDirty: true});
+        this._playlistStore.updateSectionState(PlaylistSections.Metadata, {isDirty: this.metadataForm.dirty});
       },
       (err) => {
         this._tagsProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
