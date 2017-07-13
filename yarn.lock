@@ -3506,9 +3506,9 @@ lcid@^1.0.0:
   dependencies:
     invert-kv "^1.0.0"
 
-"lerna@git+https://github.com/esakal/lerna.git#temp-publish":
+"lerna@https://github.com/esakal/lerna.git#temp-publish":
   version "0.0.2"
-  resolved "git+https://github.com/esakal/lerna.git#e2133e6a89801470060ba19ba52a604cf72406d5"
+  resolved "https://github.com/esakal/lerna.git#e2133e6a89801470060ba19ba52a604cf72406d5"
   dependencies:
     async "^1.5.0"
     chalk "^1.1.1"
