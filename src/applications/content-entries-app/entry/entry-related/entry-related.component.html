@@ -14,7 +14,7 @@
 				</p-column>
 				<p-column field="size" header="{{'applications.content.entryDetails.related.size' | translate}}">
 					<ng-template let-col let-file="rowData" pTemplate="body">
-						<span>{{file[col.field] | kFileSize}}</span>
+						<span>{{(file.uploading ? file.size : file[col.field]) | kFileSize}}</span>
 					</ng-template>
 				</p-column>
 				<p-column field="id" header="{{'applications.content.entryDetails.related.assetId' | translate}}">
