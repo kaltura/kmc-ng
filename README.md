@@ -22,17 +22,14 @@ KMCng application uses the following technologies and conventions:
 - [x] Ensure you have [yarn installed](https://yarnpkg.com/lang/en/docs/install/) (we use it for node package management) 
 
 ### Get the sources
-> This project is developed along-side the [kaltura-ng](https://github.com/kaltura/kaltura-ng) packages and [mc-theme](https://github.com/kaltura/kaltura-ng-mc-theme) package. To simplify local development we created a tool that automagically bind them together as-if they where part of the same repository.
+> KKC-ng solution is comprised of many packages; The KMC-ng application is developed along-side the [kaltura-ng](https://github.com/kaltura/kaltura-ng) packages and [mc-theme](https://github.com/kaltura/kaltura-ng-mc-theme) package. To simplify local development we created a tool that automagically bind them together as-if they where part of the same repository.
 
 You have two development options as described below.
 
-#### Develop kmc-ng solution (multiple repos)
-> In this option you will clone all the relevant repos to your machine and bind them together. Use this option to develop and create pull requests.
-
-Please read [docs/develop kmc-ng solution guide](./docs/develop-kmc-ng-solution.md).
-
-#### Develop kmc-ng repo
-> In this option you will work with kmc-ng repo sources only. Use this option if you want to play with workable version and not intend to create any pull reqeusts.
+#### Option I - Develop kmc-ng application
+Use this option if you want to get this app running fast and you don't care working with a code few days older.
+  
+  > If you want to later create a pull request you should use the second option.
 
 ```bash
 # clone our repo
@@ -41,16 +38,23 @@ $ git clone https://github.com/kaltura/kmc-ng.git
 # change directory to your app
 $ cd kmc-ng
 
-# checkout latest version
-$ git tag #will print you all the availble tags
-$ git checkout -b {latest_tag_version} # replace {latest_tag_version} with actual tag value
+# install the dependencies
+$ yarn
 
-# install the dependencies with npm
+# checkout latest standalone code
+$ yarn run checkout-standalone
+
+# sync dependencies to the new branch
 $ yarn
 
 # run a local server
 $ yarn start
 ```
+
+#### Option II - Develop kmc-ng complete solution (multiple repos)
+> In this option you will clone all the relevant repos to your machine and bind them together. Use this option to develop and create pull requests.
+
+Please read [docs/develop kmc-ng solution guide](./docs/develop-kmc-ng-solution.md).
 
 
 ### Run the application

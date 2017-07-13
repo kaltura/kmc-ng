@@ -24,8 +24,8 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 import { EntryFormWidget } from '../entry-form-widget';
 import { EntryWidgetKeys } from '../entry-widget-keys';
-import { KalturaOVPFile } from '@kaltura-ng/kaltura-common/upload-management/kaltura-ovp';
-import { UploadManagement, FileChanges } from '@kaltura-ng/kaltura-common/upload-management';
+import { KalturaServerFile } from '@kaltura-ng/kaltura-server-utils';
+import { UploadManagement, FileChanges } from '@kaltura-ng/kaltura-common';
 
 export interface CaptionRow {
 	uploading: boolean,
@@ -222,7 +222,7 @@ export class EntryCaptionsHandler extends EntryFormWidget
 
 	public upload(captionFile: File):void{
 		this.currentCaption.uploading = true;
-		this._uploadManagement.newUpload(new KalturaOVPFile(captionFile))
+		this._uploadManagement.newUpload(new KalturaServerFile(captionFile))
 			.subscribe((response) => {
 					// update file with actual upload token
 					this.currentCaption.uploadToken = response.uploadToken;
