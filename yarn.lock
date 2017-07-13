@@ -177,9 +177,9 @@
     q "^1.4.1"
     viz.js "^1.6.0"
 
-"@kaltura-ng/dev-workspace@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/dev-workspace/-/dev-workspace-2.0.2.tgz#dfd635d29ecf941c3eecfdfb6d44cc32fb184b78"
+"@kaltura-ng/dev-workspace@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/dev-workspace/-/dev-workspace-2.1.0.tgz#e01e346598a899d5362d6fd59c72e4a70e79171c"
   dependencies:
     babel-polyfill "^6.23.0"
     find-node-modules "^1.0.4"
@@ -190,6 +190,7 @@
     license-checker "^11.0.0"
     lodash "^4.17.4"
     npmlog "^4.1.2"
+    object-assign-deep "^0.3.1"
     read-pkg "^2.0.0"
     shelljs "^0.7.8"
     standard-version "^4.2.0"
@@ -3505,9 +3506,9 @@ lcid@^1.0.0:
   dependencies:
     invert-kv "^1.0.0"
 
-"lerna@https://github.com/esakal/lerna.git#temp-publish":
+"lerna@git+https://github.com/esakal/lerna.git#temp-publish":
   version "0.0.2"
-  resolved "https://github.com/esakal/lerna.git#e2133e6a89801470060ba19ba52a604cf72406d5"
+  resolved "git+https://github.com/esakal/lerna.git#e2133e6a89801470060ba19ba52a604cf72406d5"
   dependencies:
     async "^1.5.0"
     chalk "^1.1.1"
@@ -4255,6 +4256,10 @@ number-is-nan@^1.0.0:
 oauth-sign@~0.8.1:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.8.2.tgz#46a6ab7f0aead8deae9ec0565780b7d4efeb9d43"
+
+object-assign-deep@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/object-assign-deep/-/object-assign-deep-0.3.1.tgz#b57b7572d9a328d6448a3f4b6c0fffc8b10c61a2"
 
 object-assign@4.1.0, object-assign@^4.0.1, object-assign@^4.1.0:
   version "4.1.0"
