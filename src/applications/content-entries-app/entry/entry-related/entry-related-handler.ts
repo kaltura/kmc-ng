@@ -274,6 +274,7 @@ export class EntryRelatedHandler extends EntryFormWidget
 
 			const newFile = this._addFile(fileData.name, KalturaAttachmentType.document);
             (<any>newFile).uploading = true;
+			(<any>newFile).size = fileData.size;
 
 			this._uploadManagement.newUpload(new KalturaServerFile(fileData))
                 .subscribe((response) => {
