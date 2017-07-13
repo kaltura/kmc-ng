@@ -1,7 +1,7 @@
 {
-  "version" : "2.0.0",
-  "licenses" : {
-    "ignoreList" : [
+  "version": "2.0.0",
+  "licenses": {
+    "ignoreList": [
       "@kaltura-ng/kaltura-client",
       "@kaltura-ng/kaltura-common",
       "@kaltura-ng/kaltura-primeng-ui",
@@ -10,5 +10,12 @@
       "@kaltura-ng/dev-workspace",
       "kaltura-typescript-client"
     ]
+  },
+  "commands": {
+    "standalone": {
+      "commitId": [
+        "3a53517d2069e67c3b0a699b3a4a0b63a02bd51c"
+      ]
+    }
   }
 }
