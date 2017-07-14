@@ -19,9 +19,10 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
-import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
-import { BaseEntryDeleteAction } from 'kaltura-typescript-client/types/BaseEntryDeleteAction';
-import {PlaylistDeleteAction} from "kaltura-typescript-client/types/PlaylistDeleteAction";
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { PlaylistDeleteAction } from 'kaltura-typescript-client/types/PlaylistDeleteAction';
+import { KalturaRequest, KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-typescript-client';
+import { environment } from 'app-environment';
 
 export enum SortDirection {
 	Desc,
@@ -55,7 +56,6 @@ export class PlaylistsStore implements OnDestroy {
 		createdAfter : null
 	});
 	private requestSubscription : ISubscription = null;
-  private _destoryed: boolean = false;
 
 	public playlists$ = this._playlistsSource.asObservable();
 	public state$ = this._stateSource.asObservable();
@@ -63,7 +63,8 @@ export class PlaylistsStore implements OnDestroy {
 
 	constructor(
 		private kalturaServerClient: KalturaClient,
-		private browserService: BrowserService
+		private browserService: BrowserService,
+    public _kalturaServerClient: KalturaClient
 	) {
 		const defaultPageSize = this.browserService.getFromLocalStorage("playlists.list.pageSize");
 		if (defaultPageSize !== null) {
@@ -97,7 +98,6 @@ export class PlaylistsStore implements OnDestroy {
 		if(this.requestSubscription) {
 			this.requestSubscription.unsubscribe();
 		}
-    this._destoryed = true;
 	}
 
 	public reload(force : boolean) : void;
@@ -201,33 +201,57 @@ export class PlaylistsStore implements OnDestroy {
 		}
 	}
 
-  public deletePlaylist(playlistId: any): Observable<void>{
+  public deletePlaylist(ids: any): Observable<{}>{
+    this._stateSource.next({loading: true, errorMessage: null});
+    return Observable.create(observer =>{
+      let requests: PlaylistDeleteAction[] = [];
+      ids.forEach(id => requests.push(new PlaylistDeleteAction({ id: id })));
 
-    return Observable.create(observer => {
-      let subscription: ISubscription;
-      if (playlistId && playlistId.length) {
-        subscription = this.kalturaServerClient.request(new PlaylistDeleteAction({id: playlistId})).subscribe(
-          () => {
-            if (!this._destoryed) {
-              this.reload(true);
-            }
-            observer.next();
-            observer.complete();
-          },
-          error =>{
-            observer.error(error);
-          }
-        );
-      } else {
-        observer.error(new Error('missing playlistId argument'));
-      }
-      return ()=>{
-        if (subscription) {
-          subscription.unsubscribe();
+      this._transmit(requests, true).subscribe(
+        () => {
+          this.reload(true);
+          observer.next({});
+          observer.complete();
+        },
+        error => {
+          observer.error(error);
         }
-      }
+      );
     });
+  }
 
+  private _transmit(requests : KalturaRequest<any>[], chunk : boolean) : Observable<{}> {
+    let maxRequestsPerMultiRequest = requests.length;
+    if (chunk){
+      maxRequestsPerMultiRequest = environment.modules.contentPlaylists.bulkActionsLimit;
+    }
+
+    let multiRequests: Observable<KalturaMultiResponse>[] = [];
+    let mr :KalturaMultiRequest = new KalturaMultiRequest();
+
+    let counter = 0;
+    for (let i = 0; i < requests.length; i++){
+      if (counter === maxRequestsPerMultiRequest){
+        multiRequests.push(this._kalturaServerClient.multiRequest(mr));
+        mr = new KalturaMultiRequest();
+        counter = 0;
+      }
+      mr.requests.push(requests[i]);
+      counter++;
+    }
+
+    multiRequests.push(this._kalturaServerClient.multiRequest(mr));
+
+    return Observable.forkJoin(multiRequests)
+      .map(responses => {
+        const mergedResponses = [].concat.apply([], responses);
+        let hasFailure = mergedResponses.filter(function ( response ) {return response.error}).length > 0;
+        if (hasFailure) {
+          throw new Error("error");
+        } else {
+          return {};
+        }
+      });
   }
 }
 

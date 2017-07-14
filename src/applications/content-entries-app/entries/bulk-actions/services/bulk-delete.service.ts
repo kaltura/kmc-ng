@@ -26,7 +26,7 @@ export class BulkDeleteService extends BulkActionBaseService<{}> {
 
       this.transmit(requests, true).subscribe(
         result => {
-          observer.next({})
+          observer.next({});
           observer.complete();
         },
         error => {

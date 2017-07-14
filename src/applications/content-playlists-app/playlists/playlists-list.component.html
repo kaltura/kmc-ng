@@ -1,68 +1,70 @@
-<div class="kPlaylists kOverrideFAIcons">
-	<div #playlistsTableHolder class="kPlaylistsHolder kContent">
-		<div class="kPlaylistsTableFilters">
-			<button
-				pButton
-				type="button"
-				label="{{'applications.content.playlists.addPlaylist' | translate}}"
-				class="kButtonBranded kAddPlaylistBtn"></button>
-			<span
-				class="kSelectedPlaylistsNum"
-				*ngIf="(_playlistsStore.playlists$ | async)?.totalCount">
-				{{(_playlistsStore.playlists$ | async)?.totalCount}} {{'applications.content.playlists.playlists' | translate}}</span>
+<k-area-blocker [message]="_blockerMessage">
+  <div class="kPlaylists kOverrideFAIcons">
+    <div #playlistsTableHolder class="kPlaylistsHolder kContent">
+      <div class="kPlaylistsTableFilters">
+        <button
+          pButton
+          type="button"
+          label="{{'applications.content.playlists.addPlaylist' | translate}}"
+          class="kButtonBranded kAddPlaylistBtn"></button>
+        <span
+          class="kSelectedPlaylistsNum"
+          *ngIf="(_playlistsStore.playlists$ | async)?.totalCount">
+          {{(_playlistsStore.playlists$ | async)?.totalCount}} {{'applications.content.playlists.playlists' | translate}}</span>
 
-			<div class="kBulkOperations" [class.kHidden]="!_selectedPlaylists.length">
-				<span class="kSelectedPlaylistsLabel">
-					• {{_selectedPlaylists.length}} {{'applications.content.playlists.selected' | translate}}</span>
-				<button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="deletePlaylists(_selectedPlaylists)"></button>
-				<a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.playlists.cancel' | translate}}</a>
-			</div>
-			<div [class.kHidden]="_selectedPlaylists.length" class="kFilters">
-				<input type="text" pInputText class="kSearchInput"
-					   [(ngModel)]="_filter.freetextSearch"
-					   (keyup.enter)="onFreetextChanged()"
-					   placeholder="{{'applications.content.playlists.searchEntries' | translate}}">
-				<div #refineBtn class="kRefine"><i class="kIconcalendar"></i></div>
-			</div>
-			<button pButton
-				class="kButtonDefault kRefreshBtn small"
-				type="text"
-				(click)="_reload()"
-				icon="kIconrefresh"
-				[kTooltip]="'applications.content.playlists.refresh' | translate"></button>
-		</div>
-		<kTags
-			[title]="'applications.content.filters.activeFilters' | translate"
-			[data]="activeFilters"
-			[labelField]="'label'"
-			[tooltipField]="'tooltip'"
-			(onRemoveAll)="removeAllTags()">
-			<ng-template let-item="item">
-				<div class="kTagContent" [kTooltip]="item.tooltip">
-					<span class="kTagLabel">{{item.label}}</span>
-					<i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
-				</div>
-			</ng-template>
-		</kTags>
-		<kPlaylistsTable
-			class="kPlaylistsTable"
-			[playlists]="(_playlistsStore.playlists$ | async)?.items"
-			(sortChanged)="onSortChanged($event)"
-			[filter]="_filter"
-			(actionSelected)="onActionSelected($event)"
-			[(selectedPlaylists)]="_selectedPlaylists"></kPlaylistsTable>
+        <div class="kBulkOperations" [class.kHidden]="!_selectedPlaylists.length">
+          <span class="kSelectedPlaylistsLabel">
+            • {{_selectedPlaylists.length}} {{'applications.content.playlists.selected' | translate}}</span>
+          <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="deletePlaylists(_selectedPlaylists)"></button>
+          <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.playlists.cancel' | translate}}</a>
+        </div>
+        <div [class.kHidden]="_selectedPlaylists.length" class="kFilters">
+          <input type="text" pInputText class="kSearchInput"
+               [(ngModel)]="_filter.freetextSearch"
+               (keyup.enter)="onFreetextChanged()"
+               placeholder="{{'applications.content.playlists.searchEntries' | translate}}">
+          <div #refineBtn class="kRefine"><i class="kIconcalendar"></i></div>
+        </div>
+        <button pButton
+          class="kButtonDefault kRefreshBtn small"
+          type="text"
+          (click)="_reload()"
+          icon="kIconrefresh"
+          [kTooltip]="'applications.content.playlists.refresh' | translate"></button>
+      </div>
+      <kTags
+        [title]="'applications.content.filters.activeFilters' | translate"
+        [data]="activeFilters"
+        [labelField]="'label'"
+        [tooltipField]="'tooltip'"
+        (onRemoveAll)="removeAllTags()">
+        <ng-template let-item="item">
+          <div class="kTagContent" [kTooltip]="item.tooltip">
+            <span class="kTagLabel">{{item.label}}</span>
+            <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
+          </div>
+        </ng-template>
+      </kTags>
+      <kPlaylistsTable
+        class="kPlaylistsTable"
+        [playlists]="(_playlistsStore.playlists$ | async)?.items"
+        (sortChanged)="onSortChanged($event)"
+        [filter]="_filter"
+        (actionSelected)="onActionSelected($event)"
+        [(selectedPlaylists)]="_selectedPlaylists"></kPlaylistsTable>
 
-		<div class="kPlaylistsTableFooter" #footer *ngIf="(_playlistsStore.playlists$ | async)?.totalCount">
-			<p-paginator
-				[rows]="_filter.pageSize"
-				[first]="_filter.pageIndex * _filter.pageSize"
-				[rowsPerPageOptions]="[25,50,75,100]"
-				[totalRecords]="(_playlistsStore.playlists$ | async)?.totalCount"
-				(onPageChange)="onPaginationChanged($event)"></p-paginator>
-			<span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
-		</div>
-	</div>
-</div>
+      <div class="kPlaylistsTableFooter" #footer *ngIf="(_playlistsStore.playlists$ | async)?.totalCount">
+        <p-paginator
+          [rows]="_filter.pageSize"
+          [first]="_filter.pageIndex * _filter.pageSize"
+          [rowsPerPageOptions]="[25,50,75,100]"
+          [totalRecords]="(_playlistsStore.playlists$ | async)?.totalCount"
+          (onPageChange)="onPaginationChanged($event)"></p-paginator>
+        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+      </div>
+    </div>
+  </div>
+</k-area-blocker>
 
 <kPopupWidget
 	#refinePopup
