@@ -60,18 +60,6 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 	private querySubscription : ISubscription;
 	public activeFilters: Filter[] = [];
 
-	private _reloadList() : void {
-		this._playlistsStore.reload({
-			freeText: this._filter.freetextSearch,
-			createdBefore: this._filter.createdBefore,
-			createdAfter: this._filter.createdAfter,
-			sortBy: this._filter.sortBy,
-			sortDirection: this._filter.sortDirection,
-			pageIndex: this._filter.pageIndex,
-      pageSize: this._filter.pageSize
-		});
-	}
-
 	constructor(
 		public _playlistsStore: PlaylistsStore,
 		private appLocalization: AppLocalization,
@@ -88,17 +76,22 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 			this._filter.createdBefore = null;
 			this._filter.createdAfter = null;
 		}
-		this._filter.pageIndex = 1;
-		this._reloadList();
+		this._playlistsStore.reload({
+      freeText: this._filter.freetextSearch,
+      createdBefore: this._filter.createdBefore,
+      createdAfter: this._filter.createdAfter,
+      pageIndex: 1
+    });
 	}
 
 	removeAllTags(){
 		this.clearSelection();
-		this._filter.freetextSearch = '';
-		this._filter.createdAfter = '';
-		this._filter.createdBefore = '';
-		this._filter.pageIndex = 1;
-		this._reloadList();
+    this._playlistsStore.reload({
+      freeText: '',
+      createdBefore: null,
+      createdAfter: null,
+      pageIndex: 1
+    });
 		this.activeFilters = [];
 	}
 
@@ -131,7 +124,8 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
     this._state.next({busy: true, errorMessage: null});
     this._blockerMessage = null;
     // Array.isArray(playlistIds)? playlistIds.map(id => id.id) : playlistIds
-    this._playlistsStore.deletePlaylist(playlistIds).subscribe(
+    this._playlistsStore.deletePlaylist(playlistIds)
+      .subscribe(
       result => {
         this._state.next({busy: false, errorMessage: null});
         this._msgs = [];
@@ -164,29 +158,35 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
 	onFreetextChanged() : void {
-		this._reloadList();
+		this._playlistsStore.reload(true);
 	}
 
 	onSortChanged(event) : void {
-		this._filter.sortBy = event.field;
-		this._filter.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
-		this._reloadList();
+    this._playlistsStore.reload({
+      sortBy: event.field,
+      sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
+    });
 	}
 
 	onPaginationChanged(state : any) : void {
 		if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
 			this._filter.pageIndex = state.page + 1;
 			this._filter.pageSize = state.rows;
+			this._playlistsStore.reload({
+        pageIndex: state.page + 1,
+        pageSize: state.rows
+      });
 			this.clearSelection();
-			this._reloadList();
 		}
 	}
 
 	onCreatedChanged(dates) : void {
-		this._filter.createdAfter = dates.createdAfter;
-		this._filter.createdBefore = dates.createdBefore;
-		this._filter.pageIndex = 1;
-		this._reloadList();
+		this._playlistsStore.reload({
+      createdAfter: dates.createdAfter,
+      createdBefore: dates.createdBefore,
+      pageIndex: 1
+    });
+
 		if(!dates.createdAfter && !dates.createdBefore) {
 			this.clearDates();
 		}

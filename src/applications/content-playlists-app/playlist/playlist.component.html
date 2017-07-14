@@ -12,11 +12,11 @@
 				<div class="kPlaylistTitle">{{ playlistName }}</div>
 				<button pButton class="kButtonBranded kSaveBtn" label="Save" (click)="save()" [disabled]="!isDirty"></button>
 				<button pButton class="kButtonDefault kNavigationBtn kNavigationBtnLeft"  icon="kIconarrow_backward"
-                (click)="_updateNavigationState('-')"
+                (click)="_navigateToPlaylist('prev')"
                 [disabled]="!_enablePrevButton">
         </button>
 				<button pButton class="kButtonDefault kNavigationBtn kNavigationBtnRight" icon="kIconarrow_forward"
-                (click)="_updateNavigationState('+')"
+                (click)="_navigateToPlaylist('next')"
                 [disabled]="!_enableNextButton">
         </button>
 			</div>

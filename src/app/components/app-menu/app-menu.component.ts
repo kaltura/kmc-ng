@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
-import { AppAuthentication, AppUser, AppNavigator } from '@kaltura-ng/kaltura-common';
+import { AppAuthentication, AppUser, AppNavigator } from 'app-shared/kmc-shell';
 import { AppMenuConfig } from '../../services/app-menu-config';
 import { AppMenuService } from '../../services/app-menu.service';
 import { AppMenuItem } from "../../services/app-menu-config";

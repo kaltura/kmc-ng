@@ -1,0 +1,14 @@
+<k-area-blocker [showLoader]="_loading" [message]="_sectionBlockerMessage">
+  <div class="kContent kOverrideFAIcons">
+    <span class="kTitle">{{'applications.content.bulkActions.removeFromCategories' | translate}}</span>
+    <div class="kCategories">
+      <span class="kLabel">{{'applications.content.bulkActions.removeFromCategoriesLabel' | translate}}</span>
+      <div *ngFor="let category of categories; let index = index" class="kCategory">
+        <p-checkbox label="{{category.label}}" [(ngModel)]="category.selected"  binary="true" (onChange)="updateSelectedCategories()"></p-checkbox>
+      </div>
+    </div>
+    <div class="kFooter">
+      <button type="button" class="kButtonBranded" pButton label="{{'applications.content.bulkActions.apply' | translate}}" (click)="_apply()"></button>
+    </div>
+  </div>
+</k-area-blocker>

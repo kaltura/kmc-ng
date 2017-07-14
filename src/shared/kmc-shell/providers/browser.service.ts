@@ -72,6 +72,12 @@ export class BrowserService implements IAppStorage {
   }
 
 	public confirm(confirmation : Confirmation) {
+		confirmation.key = "confirm";
+		this._onConfirmationFn(confirmation);
+	}
+
+	public alert(confirmation : Confirmation) {
+		confirmation.key = "alert";
 		this._onConfirmationFn(confirmation);
 	}
 

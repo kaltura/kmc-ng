@@ -36,6 +36,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._playlistStore.state$
+      .cancelOnDestroy(this)
 			.subscribe(
 				response => {
 					this._showLoader = response.isBusy;
@@ -48,6 +49,13 @@ export class PlaylistComponent implements OnInit, OnDestroy {
                     this._playlistStore.reloadPlaylist();
                   }
                 });
+            } else {
+              buttons.push({
+                label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
+                action: () => {
+                  this._areaBlockerMessage = null;
+                }
+              });
             }
             this._areaBlockerMessage = new AreaBlockerMessage({
               message: response.error.message,
@@ -57,6 +65,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 				}
 			);
 		this._playlistStore.playlist$
+      .cancelOnDestroy(this)
 			.subscribe(
 				response => {
 					if(response.playlist) {
@@ -68,6 +77,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 			);
 
 		this._playlistStore.sectionsState$
+      .cancelOnDestroy(this)
       .subscribe(
         response => {
           this.isDirty = response.metadata.isDirty || response.content.isDirty;
@@ -78,68 +88,48 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 		this.isSafari = this._browserService.isSafari();
 	}
 
-  public returnToPlaylists(params : {force? : boolean} = {}) {
-    this._playlistStore._canLeaveWithoutSaving()
-      .cancelOnDestroy(this)
-      .monitor('playlist store: return to playlists list')
-      .subscribe(
-        response =>
-        {
-          if (response.allowed)
-          {
-            this._router.navigate(['content/playlists']);
-          }
-        }
-      );
-  }
-
   private _createBackToPlaylistsButton(): AreaBlockerMessageButton {
     return {
       label: this._appLocalization.get('applications.content.playlistDetails.errors.backToPlaylists'),
       action: () => {
-        this.returnToPlaylists();
+        this._playlistStore.returnToPlaylists();
       }
     };
   }
 
   public _backToList(){
-    this.returnToPlaylists();
+    this._playlistStore.returnToPlaylists();
   }
 
   public save() {
-    if(!this.isValid) {
-      this._areaBlockerMessage = new AreaBlockerMessage({
-        message: this._appLocalization.get('applications.content.playlistDetails.errors.validationError'),
-        buttons: [
-          {
-            label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
-            action: () => {
-              this._areaBlockerMessage = null;
-            }
-          }
-        ]
-      })
-    } else {
-      this._playlistStore.savePlaylist();
-    }
+    this._playlistStore.savePlaylist();
   }
 
-  private _updateNavigationState(flag?: string) : void {
+  private _navigateToPlaylist(direction: 'next' | 'prev') : void {
+    // TODO [kmcng] find a better way that doesn't need access to the playlist directly
     const playlists = this._playlistsStore.playlists;
     if (playlists && this._currentPlaylistId) {
       const currentPlaylistIndex = playlists.findIndex(playlist => playlist.id === this._currentPlaylistId);
       let newPlaylist = null;
-      this._enableNextButton = currentPlaylistIndex >= 0 && (currentPlaylistIndex < playlists.length - 1);
-      this._enablePrevButton = currentPlaylistIndex > 0;
-      if(flag && flag === '+' && this._enableNextButton) {
+      if(direction === 'next' && this._enableNextButton) {
         newPlaylist = playlists[currentPlaylistIndex + 1];
       }
-      if(flag && flag === '-' && this._enablePrevButton)  {
+      if(direction === 'prev' && this._enablePrevButton)  {
         newPlaylist = playlists[currentPlaylistIndex - 1];
       }
       if(newPlaylist) {
         this._playlistStore.openPlaylist(newPlaylist.id);
       }
+    }
+  }
+
+  private _updateNavigationState() : void {
+    // TODO [kmcng] find a better way that doesn't need access to the playlist directly
+    const playlists = this._playlistsStore.playlists;
+    if (playlists && this._currentPlaylistId) {
+      const currentPlaylistIndex = playlists.findIndex(playlist => playlist.id === this._currentPlaylistId);
+      this._enableNextButton = currentPlaylistIndex >= 0 && (currentPlaylistIndex < playlists.length - 1);
+      this._enablePrevButton = currentPlaylistIndex > 0;
     } else {
       this._enableNextButton = false;
       this._enablePrevButton = false;

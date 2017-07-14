@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { AppAuthentication, AppUser, PartnerPackageTypes, AppNavigator } from '@kaltura-ng/kaltura-common';
+import { AppAuthentication, AppUser, PartnerPackageTypes, AppNavigator } from 'app-shared/kmc-shell';
 import { environment } from 'app-environment';
 import { Md5 } from 'ts-md5/dist/md5';
 

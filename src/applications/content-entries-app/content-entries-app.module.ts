@@ -10,7 +10,7 @@ import { KMCShellModule } from 'app-shared/kmc-shell';
 import { routing } from './content-entries-app.routes';
 import { ContentEntriesComponent } from './content-entries.component';
 
-import { MetadataProfileStore } from '@kaltura-ng/kaltura-common';
+import { MetadataProfileModule } from '@kaltura-ng/kaltura-server-utils';
 
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
@@ -22,13 +22,13 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
 import { DynamicFormModule } from '@kaltura-ng/kaltura-ui/dynamic-form';
 import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
-import { KalturaCustomMetadataModule } from '@kaltura-ng/kaltura-ui/dynamic-form/kaltura-custom-metadata';
+import { DynamicMetadataFormModule } from '@kaltura-ng/kaltura-server-utils';
 import { EntryComponentsList } from './entry/entry-components-list';
 import { EntriesComponentsList } from './entries/entries-components-list';
 import { CategoriesStore } from './shared/categories-store.service';
 import { EntriesRefineFiltersProvider } from './entries/entries-refine-filters/entries-refine-filters-provider.service';
 import { CategoriesPrimeService } from './shared/categories-prime.service';
-import { BulkSchedulingService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, BulkChangeOwnerService } from './entries/bulk-actions/services';
+import { BulkSchedulingService, BulkAccessControlService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, BulkChangeOwnerService, BulkRemoveCategoriesService, BulkDeleteService, BulkDownloadService } from './entries/bulk-actions/services';
 import { SharedComponentsList } from './shared/shared-components-list';
 
 @NgModule({
@@ -49,7 +49,8 @@ import { SharedComponentsList } from './shared/shared-components-list';
         InputTextareaModule,
         InputTextModule,
         KalturaCommonModule,
-        KalturaCustomMetadataModule,
+        MetadataProfileModule,
+        DynamicMetadataFormModule,
         KalturaPrimeNgUIModule,
         KalturaUIModule,
         KMCShellModule,
@@ -80,13 +81,16 @@ import { SharedComponentsList } from './shared/shared-components-list';
         ConfirmationService,
         CategoriesStore,
         CategoriesPrimeService,
-        MetadataProfileStore,
         EntriesRefineFiltersProvider,
         BulkSchedulingService,
+        BulkAccessControlService,
         BulkAddTagsService,
         BulkRemoveTagsService,
         BulkAddCategoriesService,
-        BulkChangeOwnerService
+        BulkChangeOwnerService,
+        BulkRemoveCategoriesService,
+        BulkDeleteService,
+        BulkDownloadService
     ],
 })
 export class ContentEntriesAppModule {

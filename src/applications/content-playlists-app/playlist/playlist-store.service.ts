@@ -15,62 +15,61 @@ import { KalturaTaggedObjectType } from 'kaltura-typescript-client/types/Kaltura
 import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
 import { PlaylistSections } from './playlist-sections';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import {PlaylistExecuteAction} from "kaltura-typescript-client/types/PlaylistExecuteAction";
-import {KalturaBaseEntry} from "kaltura-typescript-client/types/KalturaBaseEntry";
+import { PlaylistExecuteAction } from "kaltura-typescript-client/types/PlaylistExecuteAction";
+import { KalturaBaseEntry } from "kaltura-typescript-client/types/KalturaBaseEntry";
 
 @Injectable()
 export class PlaylistStore implements OnDestroy {
-	private _sectionsState = new BehaviorSubject<{
-	  metadata: {isValid: boolean, isDirty?: boolean},
+  private _sectionsState = new BehaviorSubject<{
+    metadata: {isValid: boolean, isDirty?: boolean},
     content:  {isValid: boolean, isDirty?: boolean}
-	}>({
-		metadata: {isValid: true, isDirty: false},
+  }>({
+    metadata: {isValid: true, isDirty: false},
     content: {isValid: true, isDirty: false}
-	});
-	private _loadPlaylistSubscription : ISubscription;
+  });
+  private _loadPlaylistSubscription : ISubscription;
   private _sectionToRouteMapping : { [key : number] : string} = {};
-	private _activeSection = new BehaviorSubject<{ section: PlaylistSections}>({section: null});
-	private _playlist = new BehaviorSubject<{ playlist: KalturaPlaylist}>({playlist: null});
-	private _state = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin: 'reload' | 'save'}}>({isBusy: false});
+  private _activeSection = new BehaviorSubject<{ section: PlaylistSections}>({section: null});
+  private _playlist = new BehaviorSubject<{ playlist: KalturaPlaylist}>({playlist: null});
+  private _state = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin?: 'reload' | 'save'}}>({isBusy: false});
   private _entries  = new BehaviorSubject({items: [], totalCount: 0});
 
   public entries$ = this._entries.asObservable();
   public playlist$ = this._playlist.asObservable();
   public activeSection$ = this._activeSection.asObservable();
-	public sectionsState$ = this._sectionsState.asObservable();
-	public state$ = this._state.asObservable();
-	private _playlistId: string;
+  public sectionsState$ = this._sectionsState.asObservable();
+  public state$ = this._state.asObservable();
+
+  private _getPlaylistId() : string
+  {
+    return this._playlist.getValue().playlist ? this._playlist.getValue().playlist.id : null;
+  }
 
   public get playlist() : KalturaPlaylist{
     return this._playlist.getValue().playlist;
   }
 
-  public get sectionsState() : any {
-    return this._sectionsState.getValue();
+  constructor(
+    private _router: Router,
+    private _playlistRoute: ActivatedRoute,
+    private _kalturaServerClient: KalturaClient,
+    private _appLocalization: AppLocalization,
+    private _browserService : BrowserService
+  ) {
+    this._mapSections();
+
+    this._onRouterEvents();
+
+    this._activeSection.next({section: this._playlistRoute.snapshot.firstChild.data.sectionKey});
   }
 
-	public openSection(sectionId: PlaylistSections): void {
+  public openSection(sectionId: PlaylistSections): void {
     const navigatePath = this._sectionToRouteMapping[sectionId];
 
     if (navigatePath) {
       this._router.navigate([navigatePath], {relativeTo: this._playlistRoute});
     }
-		this._activeSection.next({section: sectionId});
-	}
-
-	constructor(
-		private _router: Router,
-		private _playlistRoute: ActivatedRoute,
-		private _kalturaServerClient: KalturaClient,
-		private _appLocalization: AppLocalization,
-    private _browserService : BrowserService
-	) {
-		this._mapSections();
-
-		this._onRouterEvents();
-
-    this._activeSection.next({section: this._playlistRoute.snapshot.firstChild.data.sectionKey});
-	}
+  }
 
   private _mapSections() : void {
     if (!this._playlistRoute || !this._playlistRoute.snapshot.data.playlistRoute)
@@ -88,43 +87,43 @@ export class PlaylistStore implements OnDestroy {
     });
   }
 
-	private _onRouterEvents() : void {
-		this._router.events
-			.cancelOnDestroy(this)
-			.subscribe(
-				event => {
-					if (event instanceof NavigationEnd) {
-						const currentPlaylistId = this._playlistRoute.snapshot.params.id;
-						const playlist = this._playlist.getValue();
-						if (!playlist.playlist || (playlist.playlist && playlist.playlist.id !== currentPlaylistId)) {
-							this._loadPlaylist(currentPlaylistId);
-						}
-					}
-				}
-			)
-	}
+  private _onRouterEvents() : void {
+    this._router.events
+      .cancelOnDestroy(this)
+      .subscribe(
+        event => {
+          if (event instanceof NavigationEnd) {
+            const currentPlaylistId = this._playlistRoute.snapshot.params.id;
+            const playlist = this._playlist.getValue();
+            if (!playlist.playlist || (playlist.playlist && playlist.playlist.id !== currentPlaylistId)) {
+              this._loadPlaylist(currentPlaylistId);
+            } else {
+              this._activeSection.next({section: this._playlistRoute.snapshot.firstChild.data.sectionKey});
+            }
+          }
+        }
+      )
+  }
 
-	private _loadPlaylist(id : string) : void  {
-		if (this._loadPlaylistSubscription) {
-			this._loadPlaylistSubscription.unsubscribe();
-			this._loadPlaylistSubscription = null;
-		}
+  private _loadPlaylist(id : string) : void  {
+    if (this._loadPlaylistSubscription) {
+      this._loadPlaylistSubscription.unsubscribe();
+      this._loadPlaylistSubscription = null;
+    }
 
-		this._playlistId = id;
-		this._state.next({isBusy: true});
+    this._state.next({isBusy: true});
 
-		this._loadPlaylistSubscription = this._kalturaServerClient.multiRequest(
+    this._loadPlaylistSubscription = this._kalturaServerClient.multiRequest(
       new KalturaMultiRequest(
         new PlaylistGetAction({id}),
         new PlaylistExecuteAction({id})
       ))
-			.cancelOnDestroy(this)
-			.subscribe(
-				data => {
-				  data.forEach(response => {
+      .cancelOnDestroy(this)
+      .subscribe(
+        data => {
+          data.forEach(response => {
             if (response.result instanceof KalturaPlaylist) {
               this._playlist.next({playlist: response.result});
-              this._playlistId = response.result.id;
               this._state.next({isBusy: false});
             } else if(response.result.length >= 1 && response.result[0] instanceof KalturaBaseEntry) {
               this._entries.next({
@@ -141,48 +140,6 @@ export class PlaylistStore implements OnDestroy {
               });
             }
           });
-				},
-				error => {
-					this._state.next({
-						isBusy: true,
-						error: {message: error.message, origin: 'reload'}
-					});
-				}
-			);
-	}
-
-  public updateSectionState(section: PlaylistSections, isValid?: boolean, isDirty?: boolean) : void {
-    const sections = Object.assign({}, this._sectionsState.getValue());
-
-    switch(section) {
-      case PlaylistSections.Metadata:
-        if(isValid !== null) sections.metadata.isValid = isValid;
-        if(isDirty !== null) sections.metadata.isDirty = isDirty;
-        break;
-      case PlaylistSections.Content:
-        if(isValid !== null) sections.content.isValid = isValid;
-        if(isDirty !== null) sections.content.isDirty = isDirty;
-        break;
-    }
-    this._sectionsState.next(sections);
-  }
-
-  public savePlaylist() : void {
-	  let id = this._playlistId,
-	    playlist = this._playlist.getValue().playlist,
-      updateStats = true;
-
-    this._state.next({isBusy: true});
-    this._kalturaServerClient.request(
-      new PlaylistUpdateAction({id, playlist, updateStats})
-    )
-      .subscribe(
-        () => {
-          this._state.next({isBusy: false});
-          this._sectionsState.next({
-            metadata: {isValid: true, isDirty: false},
-            content: {isValid: true, isDirty: false}
-          });
         },
         error => {
           this._state.next({
@@ -190,14 +147,81 @@ export class PlaylistStore implements OnDestroy {
             error: {message: error.message, origin: 'reload'}
           });
         }
+      );
+
+  }
+
+  public updateSectionState(section: PlaylistSections, state : {isValid?: boolean, isDirty?: boolean}) : void {
+    const sections = Object.assign({}, this._sectionsState.getValue());
+    let hasChanges = false;
+
+    switch (section) {
+      case PlaylistSections.Metadata:
+        if (typeof state.isValid !== 'undefined' && state.isValid !== null && sections.metadata.isValid !== state.isValid) {
+          sections.metadata.isValid = state.isValid;
+          hasChanges = true;
+        }
+
+        if (typeof state.isDirty !== 'undefined' && state.isDirty !== null && sections.metadata.isDirty !== state.isDirty) {
+          sections.metadata.isDirty = state.isDirty;
+          hasChanges = true;
+        }
+        break;
+      case PlaylistSections.Content:
+        if (typeof state.isValid !== 'undefined' && state.isValid !== null && sections.content.isValid !== state.isValid) {
+          sections.content.isValid = state.isValid;
+          hasChanges = true;
+        }
+
+        if (typeof state.isDirty !== 'undefined' && state.isDirty !== null && sections.content.isDirty !== state.isDirty) {
+          sections.content.isDirty = state.isDirty;
+          hasChanges = true;
+        }
+        break;
+    }
+
+    if(hasChanges) {
+      this._sectionsState.next(sections)
+    }
+  }
+
+  public savePlaylist() : void {
+    if(!this._sectionsState.getValue().metadata.isValid) {
+      this._state.next({
+        isBusy: false,
+        error: {message: this._appLocalization.get('applications.content.playlistDetails.errors.validationError')}
+      });
+    } else {
+      let id: string = this._getPlaylistId(),
+        playlist: KalturaPlaylist = new KalturaPlaylist({
+          name: this._playlist.getValue().playlist.name,
+          description: this._playlist.getValue().playlist.description,
+          tags: this._playlist.getValue().playlist.tags
+        });
+
+      this._state.next({isBusy: true});
+      this._kalturaServerClient.request(
+        new PlaylistUpdateAction({id, playlist})
       )
+        .cancelOnDestroy(this)
+        .subscribe(
+          () => {
+            this.reloadPlaylist();
+          },
+          error => {
+            this._state.next({
+              isBusy: true,
+              error: {message: error.message, origin: 'save'}
+            });
+          }
+        )
+    }
   }
 
   public reloadPlaylist() : void
   {
-    if (this._playlistId)
-    {
-      this._loadPlaylist(this._playlistId);
+    if (this._getPlaylistId()) {
+      this._loadPlaylist(this._getPlaylistId());
     }
   }
 
@@ -216,11 +240,26 @@ export class PlaylistStore implements OnDestroy {
       );
   }
 
-  public _canLeaveWithoutSaving() : Observable<{ allowed : boolean}>
+  public returnToPlaylists(params : {force? : boolean} = {}) {
+    this._canLeaveWithoutSaving()
+      .cancelOnDestroy(this)
+      .monitor('playlist store: return to playlists list')
+      .subscribe(
+        response =>
+        {
+          if (response.allowed)
+          {
+            this._router.navigate(['content/playlists']);
+          }
+        }
+      );
+  }
+
+  private _canLeaveWithoutSaving() : Observable<{ allowed : boolean}>
   {
     return Observable.create(observer =>
     {
-      if (this.sectionsState.metadata.isDirty || this.sectionsState.content.isDirty) {
+      if (this._sectionsState.getValue().metadata.isDirty || this._sectionsState.getValue().content.isDirty) {
         this._browserService.confirm(
           {
             header: 'Cancel Edit',
@@ -242,8 +281,7 @@ export class PlaylistStore implements OnDestroy {
     }).monitor('playlist store: check if can leave section without saving');
   }
 
-  public searchTags(text : string)
-  {
+  public searchTags(text : string): Observable<string[]> {
     return Observable.create(
       observer => {
         const requestSubscription = this._kalturaServerClient.request(
@@ -262,7 +300,7 @@ export class PlaylistStore implements OnDestroy {
             }
           )
         )
-          // .cancelOnDestroy(this, this.widgetReset$)
+          .cancelOnDestroy(this)
           .monitor('search tags')
           .subscribe(
             result =>
@@ -285,9 +323,10 @@ export class PlaylistStore implements OnDestroy {
       });
   }
 
-	ngOnDestroy() {
-		this._loadPlaylistSubscription && this._loadPlaylistSubscription.unsubscribe();
-		this._state.complete();
-		this._playlist.complete();
-	}
+  ngOnDestroy() {
+    this._loadPlaylistSubscription && this._loadPlaylistSubscription.unsubscribe();
+    this._state.complete();
+    this._playlist.complete();
+  }
 }
+

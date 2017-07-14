@@ -23,12 +23,11 @@ import { KalturaCategoryEntry } from 'kaltura-typescript-client/types/KalturaCat
 import { CategoriesStore } from '../../shared/categories-store.service';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng/kaltura-common';
+import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng/kaltura-server-utils';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { KalturaCustomMetadata } from '@kaltura-ng/kaltura-ui/dynamic-form/kaltura-custom-metadata';
+import { DynamicMetadataForm, DynamicMetadataFormFactory } from '@kaltura-ng/kaltura-server-utils';
 
-import { KalturaCustomDataHandler } from '@kaltura-ng/kaltura-ui/dynamic-form/kaltura-custom-metadata';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/combineLatest';
@@ -51,13 +50,13 @@ export class EntryMetadataHandler extends EntryFormWidget
 
     public isLiveEntry : boolean;
     public metadataForm : FormGroup;
-    public customDataForms : KalturaCustomDataHandler[] = [];
+    public customDataForms : DynamicMetadataForm[] = [];
 
     constructor(private _kalturaServerClient: KalturaClient,
                 private _categoriesStore : CategoriesStore,
                 private _formBuilder : FormBuilder,
                 private _iterableDiffers : IterableDiffers,
-                private _kalturaCustomMetadata : KalturaCustomMetadata,
+                private _dynamicMetadataFormFactory : DynamicMetadataFormFactory,
                 private _metadataProfileStore : MetadataProfileStore)
     {
         super(EntryWidgetKeys.Metadata);
@@ -264,7 +263,7 @@ export class EntryMetadataHandler extends EntryFormWidget
                 this.customDataForms = [];
                 if (response.items) {
                     response.items.forEach(serverMetadata => {
-                        const newCustomDataForm = this._kalturaCustomMetadata.createHandler(serverMetadata);
+                        const newCustomDataForm = this._dynamicMetadataFormFactory.createHandler(serverMetadata);
                         this.customDataForms.push(newCustomDataForm);
                     });
                 }
@@ -348,7 +347,7 @@ export class EntryMetadataHandler extends EntryFormWidget
         }
     }
 
-    public searchTags(text : string)
+    public searchTags(text : string): Observable<string[]>
     {
         return Observable.create(
             observer => {
