@@ -1,4 +1,4 @@
-import { Component, Input, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 
 import { ISubscription } from 'rxjs/Subscription';
@@ -21,7 +21,7 @@ function urlValidator(control: AbstractControl): {[key: string]: boolean} | null
     templateUrl: './entry-captions-edit.component.html',
     styleUrls: ['./entry-captions-edit.component.scss']
 })
-export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
+export class EntryCaptionsEdit implements  OnInit, AfterViewInit, OnDestroy{
 
 	@Input() currentCaption: KalturaCaptionAsset;
 	@Input() parentPopupWidget: PopupWidgetComponent;
@@ -40,12 +40,16 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
 	private fileToUpload: File;
 
     constructor(private _appLocalization: AppLocalization, private _fb: FormBuilder, private _browserService: BrowserService) {
+
+    }
+
+    ngOnInit(){
 	    // load all supported languages
 	    this._languages = [];
 	    let exludedLanguages = ['he', 'id', 'yi']; // duplicated languages [TODO-KMCNG] - should be checked with beckend
 	    for (let lang in KalturaLanguage){
 		    if (lang !== "en" && exludedLanguages.indexOf(lang) === -1) { // we push English to the top of the array after sorting
-			    this._languages.push( {label: _appLocalization.get("languages." + lang.toUpperCase()), value: lang.toUpperCase() });
+			    this._languages.push( {label: this._appLocalization.get("languages." + lang.toUpperCase()), value: lang.toUpperCase() });
 		    }
 	    }
 	    // sort the language array by language alphabetically
@@ -55,13 +59,14 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
 		    return ((x < y) ? -1 : ((x > y) ? 1 : 0));
 	    });
 	    // put English on top
-	    this._languages.unshift({ label: _appLocalization.get("languages.EN"), value: "EN" });
+	    this._languages.unshift({ label: this._appLocalization.get("languages.EN"), value: "EN" });
 
 	    // set caption formats array. Note that WEBVTT cannot be set on client side - only on backend so is doesn't appear in the list
 	    this._captionFormats = [
-	    	{label: "SRT", value: KalturaCaptionType.srt},
+		    {label: "SRT", value: KalturaCaptionType.srt},
 		    {label: "DFXP", value: KalturaCaptionType.dfxp}
 	    ];
+	    this._newCaption = this.currentCaption.id === null;
 	    this._createForm();
     }
 
@@ -75,7 +80,6 @@ export class EntryCaptionsEdit implements  AfterViewInit, OnDestroy{
 						this._uploadFileName = "";
 						this._validationErrorMsg = "";
 						this.fileToUpload = null;
-						this._newCaption = this.currentCaption.id === null;
 						this.captionsEditForm.get("label").setValue(this.currentCaption.label);
 						this.captionsEditForm.get("language").setValue(KalturaUtils.getCodeByLanguage(this.currentCaption.language.toString()).toUpperCase());
 						this.captionsEditForm.get("format").setValue(this.currentCaption.format);
