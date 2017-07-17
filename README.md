@@ -45,7 +45,7 @@ $ yarn
 $ yarn run checkout-standalone
 
 # sync dependencies to the new branch
-$ yarn
+$ yarn install --check-files
 
 # run a local server
 $ yarn start
