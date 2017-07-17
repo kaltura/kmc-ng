@@ -20,7 +20,7 @@
 								   suggestionLabelField="name"
 								   field="screenName"
 								   [multiple]="true"
-								   [onItemAdding]="_convertUserInputToValidValue"
+								   [onItemAdding]="_convertUserInputToValidValue.bind(this)"
 								   [limitToSuggestions]="false"
 								   [minLength]="3"
 								   suggestionSelectableField="isSelectable"

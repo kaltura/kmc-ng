@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { ISubscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
@@ -20,7 +21,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 	public _usersProvider = new Subject<SuggestionsProviderData>();
 	public _handler : EntryUsersHandler;
 
-	constructor(private _entryFormManager : EntryFormManager) {
+	constructor(private _entryFormManager : EntryFormManager, private _appLocalization: AppLocalization) {
     }
 
 
@@ -46,16 +47,18 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 	    this.ownerPopup.close();
     }
 
-	public _convertUserInputToValidValue(value : string) : KalturaUser {
+	public _convertUserInputToValidValue(value : string) : any {
 		let result = null;
-
+		let tt = this._appLocalization.get('applications.content.entryDetails.users.tooltip', {0: value});
 		if (value) {
-			result = new KalturaUser(
+			result =
 				{
 					id : value,
-					screenName: value
-				}
-			);
+					screenName: value,
+					userAdded: true,
+					tooltip: tt
+				};
+
 		}
 
 		return result;
