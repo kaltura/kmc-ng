@@ -158,7 +158,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
 	onFreetextChanged() : void {
-		this._playlistsStore.reload(true);
+    this._playlistsStore.reload({ freeText: this._filter.freetextSearch });
 	}
 
 	onSortChanged(event) : void {
@@ -170,9 +170,9 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 	onPaginationChanged(state : any) : void {
 		if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
-			this._filter.pageIndex = state.page + 1;
-			this._filter.pageSize = state.rows;
-			this._playlistsStore.reload({
+      this._filter.pageSize = state.page + 1;
+      this._filter.pageIndex = state.rows;
+      this._playlistsStore.reload({
         pageIndex: state.page + 1,
         pageSize: state.rows
       });
