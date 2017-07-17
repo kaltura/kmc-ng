@@ -15,6 +15,7 @@ import {
 	PlaylistsStore,
 	SortDirection
 } from './playlists-store/playlists-store.service';
+import { BulkDeleteService } from './bulk-service/bulk-delete.service';
 import { PlaylistsTableComponent } from "./playlists-table.component";
 
 import * as moment from 'moment';
@@ -35,6 +36,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 	@ViewChild(PlaylistsTableComponent) private dataTable: PlaylistsTableComponent;
 
   public _blockerMessage: AreaBlockerMessage = null;
+  private _loading: boolean = false;
 
 	_filter = {
 		pageIndex : 0,
@@ -54,7 +56,8 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 		public _playlistsStore: PlaylistsStore,
 		private appLocalization: AppLocalization,
 		private router: Router,
-    private _browserService : BrowserService
+    private _browserService : BrowserService,
+    public _bulkDeleteService : BulkDeleteService
 	) {}
 
 	removeTag(tag: Filter){
@@ -99,7 +102,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               ${this.appLocalization.get('applications.content.playlists.playlistId', { 0: event.playlistID })}<br/>
               ${this.appLocalization.get('applications.content.playlists.deleteNote', {0:''})}`,
             accept: () => {
-              this.deletePlaylist([event.playlistID]);
+              this.deleteCurrentPlaylist(event.playlistID);
             }
           }
         );
@@ -110,11 +113,12 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
     }
 	}
 
-  private deletePlaylist(ids: string[]): void{
+  private deletePlaylist(ids: string[]): void {
     const execute = () => {
-      this._playlistsStore.deletePlaylist(ids)
+      this._bulkDeleteService.deletePlaylist(ids)
         .subscribe(
           () => {
+            this._loading = false;
             this.clearSelection();
           },
           error => {
@@ -124,7 +128,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
                   label: this.appLocalization.get('app.common.ok'),
                   action: () => {
                     this._blockerMessage = null;
-                    // TODO [kmc] loading spinner should be false
+                    this._loading = false;
                   }
                 }]
             });
@@ -145,6 +149,35 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
     } else{
       execute();
     }
+  }
+
+  private deleteCurrentPlaylist(playlistId: string): void {
+	  this._loading = true;
+    this._playlistsStore.deletePlaylist(playlistId).subscribe(
+      () => { this._loading = false; },
+      error => {
+        this._blockerMessage = new AreaBlockerMessage(
+          {
+            message: error.message,
+            buttons: [
+              {
+                label: this.appLocalization.get('app.common.retry'),
+                action: () => {
+                  this.deleteCurrentPlaylist(playlistId);
+                }
+              },
+              {
+                label: this.appLocalization.get('app.common.cancel'),
+                action: () => {
+                  this._blockerMessage = null;
+                  this._loading = false;
+                }
+              }
+            ]
+          }
+        )
+      }
+    );
   }
 
 	onFreetextChanged() : void {
