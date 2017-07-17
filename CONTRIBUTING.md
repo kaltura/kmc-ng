@@ -192,7 +192,7 @@ Please sign our Contributor License Agreement (CLA) before sending pull requests
 [commit-message-format]: https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#
 [cla]: https://agentcontribs.kaltura.org/
 [dev-doc]: DEVELOPER.md
-[github]: https://github.com/kaltura/KMCng
-[github-issues]: https://github.com/kaltura/KMCng/issues
+[github]: https://github.com/kaltura/kmc-ng
+[github-issues]: https://github.com/kaltura/kmc-ng/issues
 [gitter]: https://gitter.im/kaltura-ng
 [js-style-guide]: https://google.github.io/styleguide/javascriptguide.xml

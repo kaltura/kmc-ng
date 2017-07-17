@@ -26,7 +26,7 @@ KMCng application uses the following technologies and conventions:
 
 You have two development options as described below.
 
-#### Option I - Develop kmc-ng application
+#### Option I (the blue pill) - Develop kmc-ng application
 Use this option if you want to get this app running fast and you don't care working with a code few days older.
   
   > If you want to later create a pull request you should use the second option.
@@ -45,13 +45,13 @@ $ yarn
 $ yarn run checkout-standalone
 
 # sync dependencies to the new branch
-$ yarn
+$ yarn install --check-files
 
 # run a local server
 $ yarn start
 ```
 
-#### Option II - Develop kmc-ng complete solution (multiple repos)
+#### Option II (the red pill)- Develop kmc-ng complete solution (multiple repos)
 > In this option you will clone all the relevant repos to your machine and bind them together. Use this option to develop and create pull requests.
 
 Please read [docs/develop kmc-ng solution guide](./docs/develop-kmc-ng-solution.md).
