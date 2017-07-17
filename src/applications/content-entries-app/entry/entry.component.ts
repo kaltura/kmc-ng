@@ -19,6 +19,7 @@ import { EntryFormManager } from './entry-form-manager';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { EntryFormWidget } from './entry-form-widget';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'kEntry',
@@ -234,9 +235,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 									]
 								});
 								break;
-							case ActionTypes.NavigateOut:
-								this._showLoader = true;
-								break;
 							default:
 								break;
 						}
@@ -294,6 +292,10 @@ export class EntryComponent implements OnInit, OnDestroy {
 				this._entryStore.openEntry(nextEntry.id);
 			}
 		}
+	}
+
+	public canLeave(): Observable<{ allowed : boolean}>{
+    	return this._entryStore.canLeave();
 	}
 
 }

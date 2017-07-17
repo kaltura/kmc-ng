@@ -30,6 +30,7 @@ import { EntriesRefineFiltersProvider } from './entries/entries-refine-filters/e
 import { CategoriesPrimeService } from './shared/categories-prime.service';
 import { BulkSchedulingService, BulkAccessControlService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, BulkChangeOwnerService, BulkRemoveCategoriesService, BulkDeleteService, BulkDownloadService } from './entries/bulk-actions/services';
 import { SharedComponentsList } from './shared/shared-components-list';
+import { EntryCanDeactivate } from './entry/entry-can-deactivate.service';
 
 @NgModule({
     imports: [
@@ -90,7 +91,8 @@ import { SharedComponentsList } from './shared/shared-components-list';
         BulkChangeOwnerService,
         BulkRemoveCategoriesService,
         BulkDeleteService,
-        BulkDownloadService
+        BulkDownloadService,
+        EntryCanDeactivate
     ],
 })
 export class ContentEntriesAppModule {
