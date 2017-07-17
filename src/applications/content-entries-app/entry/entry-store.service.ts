@@ -1,6 +1,6 @@
 import { Injectable,  OnDestroy, Host } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd, NavigationStart } from '@angular/router';
-import { Subject } from 'rxjs/Subject';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
@@ -29,8 +29,7 @@ export enum ActionTypes
 	EntryPrepareSavingFailed,
 	EntrySavingFailed,
 	EntryDataIsInvalid,
-	ActiveSectionBusy,
-	NavigateOut
+	ActiveSectionBusy
 }
 
 declare type StatusArgs =
@@ -74,7 +73,8 @@ export class EntryStore implements  OnDestroy {
 				private _browserService : BrowserService,
 				private _entriesStore : EntriesStore,
 				@Host() private _sectionsManager : EntryFormManager,
-				private _entryRoute: ActivatedRoute) {
+				private _entryRoute: ActivatedRoute,
+                private _appLocalization: AppLocalization) {
 
 
 		this._sectionsManager.entryStore = this;
@@ -123,6 +123,11 @@ export class EntryStore implements  OnDestroy {
 		this._entry.complete();
 
 		this._browserService.disablePageExitVerification();
+
+		if (this._saveEntryInvoked)
+		{
+			this._entriesStore.reload(true);
+		}
 	}
 
 	private _mapSections() : void{
@@ -350,7 +355,7 @@ export class EntryStore implements  OnDestroy {
 
 	public openEntry(entryId : string)
 	{
-		this._canLeaveWithoutSaving()
+		this.canLeave()
             .cancelOnDestroy(this)
 			.subscribe(
 			response =>
@@ -363,15 +368,15 @@ export class EntryStore implements  OnDestroy {
 		);
 	}
 
-	private _canLeaveWithoutSaving() : Observable<{ allowed : boolean}>
+	public canLeave() : Observable<{ allowed : boolean}>
 	{
 		return Observable.create(observer =>
 		{
 			if (this._entryIsDirty) {
 				this._browserService.confirm(
 					{
-						header: 'Cancel Edit',
-						message: 'Discard all changes?',
+						header: this._appLocalization.get('applications.content.entryDetails.captions.cancelEdit'),
+						message: this._appLocalization.get('applications.content.entryDetails.captions.discard'),
 						accept: () => {
 							observer.next({allowed: true});
 							observer.complete();
@@ -392,25 +397,7 @@ export class EntryStore implements  OnDestroy {
 
 	public returnToEntries(params : {force? : boolean} = {})
 	{
-		this._canLeaveWithoutSaving()
-            .cancelOnDestroy(this)
-			.monitor('entry store: return to entries list')
-			.subscribe(
-				response =>
-				{
-					if (response.allowed)
-					{
-						if (this._saveEntryInvoked)
-						{
-							this._entriesStore.reload(true);
-							this._saveEntryInvoked = false;
-						}
-
-						this._state.next({action: ActionTypes.NavigateOut});
-
-						this._router.navigate(['content/entries']);
-					}
-				}
-			);
+		this._router.navigate(['content/entries']);
 	}
+
 }

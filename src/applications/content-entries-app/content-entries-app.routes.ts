@@ -14,13 +14,14 @@ import { EntryFlavours } from './entry/entry-flavours/entry-flavours.component';
 import { EntryScheduling } from './entry/entry-scheduling/entry-scheduling.component';
 import { EntryAccessControl } from './entry/entry-access-control/entry-access-control.component';
 import { EntryThumbnails } from './entry/entry-thumbnails/entry-thumbnails.component';
+import { EntryCanDeactivate } from './entry/entry-can-deactivate.service';
 
 export const routing: Route[] = [
 	{path: '', component: ContentEntriesComponent,
 		children:[
 			{path: '', redirectTo: 'list', pathMatch: 'full'},
 			{path: 'list', component: EntriesListComponent},
-			{path: 'entry/:id', component: EntryComponent,
+			{path: 'entry/:id',canDeactivate: [EntryCanDeactivate], component: EntryComponent,
 				data : {
 					entryRoute : true
 				},
