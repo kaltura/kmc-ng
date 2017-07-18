@@ -13,15 +13,14 @@ import { KalturaPlaylistFilter } from 'kaltura-typescript-client/types/KalturaPl
 import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
 import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
+import { PlaylistDeleteAction } from 'kaltura-typescript-client/types/PlaylistDeleteAction';
 
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
-import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
-import { BaseEntryDeleteAction } from 'kaltura-typescript-client/types/BaseEntryDeleteAction';
-import {PlaylistDeleteAction} from "kaltura-typescript-client/types/PlaylistDeleteAction";
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 export enum SortDirection {
 	Desc,
@@ -55,7 +54,6 @@ export class PlaylistsStore implements OnDestroy {
 		createdAfter : null
 	});
 	private requestSubscription : ISubscription = null;
-  private _destoryed: boolean = false;
 
 	public playlists$ = this._playlistsSource.asObservable();
 	public state$ = this._stateSource.asObservable();
@@ -63,7 +61,8 @@ export class PlaylistsStore implements OnDestroy {
 
 	constructor(
 		private kalturaServerClient: KalturaClient,
-		private browserService: BrowserService
+		private browserService: BrowserService,
+    public _kalturaServerClient: KalturaClient
 	) {
 		const defaultPageSize = this.browserService.getFromLocalStorage("playlists.list.pageSize");
 		if (defaultPageSize !== null) {
@@ -97,7 +96,6 @@ export class PlaylistsStore implements OnDestroy {
 		if(this.requestSubscription) {
 			this.requestSubscription.unsubscribe();
 		}
-    this._destoryed = true;
 	}
 
 	public reload(force : boolean) : void;
@@ -201,33 +199,25 @@ export class PlaylistsStore implements OnDestroy {
 		}
 	}
 
-  public deletePlaylist(playlistId: any): Observable<void>{
-
+  public deletePlaylist(id: string) {
     return Observable.create(observer => {
       let subscription: ISubscription;
-      if (playlistId && playlistId.length) {
-        subscription = this.kalturaServerClient.request(new PlaylistDeleteAction({id: playlistId})).subscribe(
-          () => {
-            if (!this._destoryed) {
-              this.reload(true);
-            }
-            observer.next();
-            observer.complete();
-          },
-          error =>{
-            observer.error(error);
-          }
-        );
-      } else {
-        observer.error(new Error('missing playlistId argument'));
-      }
+      subscription = this._kalturaServerClient.request(new PlaylistDeleteAction({id})).subscribe(
+        () => {
+          this.reload(true);
+          observer.next();
+          observer.complete();
+        },
+        error =>{
+          observer.error(error);
+        }
+      );
       return ()=>{
         if (subscription) {
           subscription.unsubscribe();
         }
       }
     });
-
   }
 }
 

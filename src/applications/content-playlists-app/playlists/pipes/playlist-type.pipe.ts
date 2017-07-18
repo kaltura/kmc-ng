@@ -28,7 +28,7 @@ export class PlaylistTypePipe implements PipeTransform {
 					break;
 				default:
           className = 'kIconUnknown';
-					playlistType = this.appLocalization.get("applications.content.playlistType.unknown");;
+					playlistType = this.appLocalization.get("applications.content.playlistType.unknown");
 					break;
 			}
 		}

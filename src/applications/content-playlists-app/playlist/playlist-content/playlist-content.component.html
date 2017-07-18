@@ -1,1 +1,18 @@
-<h1>{{'applications.content.playlistDetails.sections.content' | translate}}</h1>
+<k-area-blocker [showLoader]="" [message]="">
+  <div class="kContentDetails">
+    <div class="kPlaylistsTableFilters">
+      <button
+        pButton
+        type="button"
+        label="{{'applications.content.playlists.addEntry' | translate}}"
+        class="kButtonBranded kAddPlaylistBtn"></button>
+      <span
+        class="kSelectedPlaylistsNum"
+        *ngIf="(_playlistStore.entries$ | async)?.totalCount">
+				{{(_playlistStore.entries$ | async)?.totalCount}} {{'applications.content.playlists.playlists' | translate}}</span>
+    </div>
+    <kPlaylistEntriesTable
+      class="kPlaylistEntriesTable"
+      [entries]="(_playlistStore.entries$ | async)?.items"></kPlaylistEntriesTable>
+  </div>
+</k-area-blocker>

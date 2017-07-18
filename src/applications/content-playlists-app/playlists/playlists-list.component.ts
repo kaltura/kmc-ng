@@ -6,24 +6,19 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
-import { Message } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { environment } from 'app-environment';
 
 import {
 	PlaylistsStore,
 	SortDirection
 } from './playlists-store/playlists-store.service';
+import { BulkDeleteService } from './bulk-service/bulk-delete.service';
 import { PlaylistsTableComponent } from "./playlists-table.component";
 
 import * as moment from 'moment';
-
-export type UpdateStatus = {
-  busy : boolean;
-  errorMessage : string;
-};
 
 export interface Filter {
 	type: string;
@@ -40,10 +35,8 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 	@ViewChild(PlaylistsTableComponent) private dataTable: PlaylistsTableComponent;
 
-  private _state = new BehaviorSubject<UpdateStatus>({ busy : false, errorMessage : null});
-  public state$ = this._state.asObservable();
   public _blockerMessage: AreaBlockerMessage = null;
-  public _msgs: Message[] = [];
+  private _loading: boolean = false;
 
 	_filter = {
 		pageIndex : 0,
@@ -55,7 +48,6 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 		sortDirection : SortDirection.Desc
 	};
 
-	public showLoader = true;
 	public _selectedPlaylists: any[] = [];
 	private querySubscription : ISubscription;
 	public activeFilters: Filter[] = [];
@@ -64,7 +56,8 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 		public _playlistsStore: PlaylistsStore,
 		private appLocalization: AppLocalization,
 		private router: Router,
-    private _browserService : BrowserService
+    private _browserService : BrowserService,
+    public _bulkDeleteService : BulkDeleteService
 	) {}
 
 	removeTag(tag: Filter){
@@ -109,7 +102,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               ${this.appLocalization.get('applications.content.playlists.playlistId', { 0: event.playlistID })}<br/>
               ${this.appLocalization.get('applications.content.playlists.deleteNote', {0:''})}`,
             accept: () => {
-              this.deletePlaylist(event.playlistID);
+              this.deleteCurrentPlaylist(event.playlistID);
             }
           }
         );
@@ -120,18 +113,48 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
     }
 	}
 
-  private deletePlaylist(playlistIds: any): void{
-    this._state.next({busy: true, errorMessage: null});
-    this._blockerMessage = null;
-    // Array.isArray(playlistIds)? playlistIds.map(id => id.id) : playlistIds
-    this._playlistsStore.deletePlaylist(playlistIds)
-      .subscribe(
-      result => {
-        this._state.next({busy: false, errorMessage: null});
-        this._msgs = [];
-        this._msgs.push({severity: 'success', summary: '', detail: this.appLocalization.get('applications.content.playlists.deleted')});
-        this.clearSelection();
-      },
+  private deletePlaylist(ids: string[]): void {
+    const execute = () => {
+      this._bulkDeleteService.deletePlaylist(ids)
+        .subscribe(
+          () => {
+            this._loading = false;
+            this.clearSelection();
+          },
+          error => {
+            this._blockerMessage = new AreaBlockerMessage({
+              message: this.appLocalization.get('applications.content.bulkActions.errorPlaylists'),
+              buttons: [{
+                  label: this.appLocalization.get('app.common.ok'),
+                  action: () => {
+                    this._blockerMessage = null;
+                    this._loading = false;
+                  }
+                }]
+            });
+          }
+        );
+    };
+
+    if(ids.length > environment.modules.contentEntries.bulkActionsLimit) {
+      this._browserService.confirm(
+        {
+          header: this.appLocalization.get('applications.content.bulkActions.note'),
+          message: this.appLocalization.get('applications.content.bulkActions.confirmPlaylsts', {"0": ids.length}),
+          accept: () => {
+            execute();
+          }
+        }
+      );
+    } else{
+      execute();
+    }
+  }
+
+  private deleteCurrentPlaylist(playlistId: string): void {
+	  this._loading = true;
+    this._playlistsStore.deletePlaylist(playlistId).subscribe(
+      () => { this._loading = false; },
       error => {
         this._blockerMessage = new AreaBlockerMessage(
           {
@@ -140,14 +163,14 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               {
                 label: this.appLocalization.get('app.common.retry'),
                 action: () => {
-                  this.deletePlaylist(playlistIds);
+                  this.deleteCurrentPlaylist(playlistId);
                 }
               },
               {
                 label: this.appLocalization.get('app.common.cancel'),
                 action: () => {
                   this._blockerMessage = null;
-                  this._state.next({busy: false, errorMessage: null});
+                  this._loading = false;
                 }
               }
             ]
@@ -277,18 +300,19 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 	}
 
   deletePlaylists(selectedPlaylists) {
-	  let playlistsToDelete = selectedPlaylists.map((playlist, index) => {
-      return `${index + 1}: ${playlist.name}`;
-    });
+	  let playlistsToDelete = selectedPlaylists.map((playlist, index) => `${index + 1}: ${playlist.name}`),
+        playlists: string = selectedPlaylists.length <= 10 ? playlistsToDelete.join(',').replace(/,/gi, '<br />') + '<br />' : '';
     this._browserService.confirm(
       {
         header: this.appLocalization.get('applications.content.playlists.deletePlaylist'),
         message: `
               ${this.appLocalization.get('applications.content.playlists.confirmDelete', {0: selectedPlaylists.length > 1 ? 's': ''})}<br/>
-              ${playlistsToDelete.join(',').replace(/,/gi, '<br />')}<br/>
+              ${playlists}
               ${this.appLocalization.get('applications.content.playlists.deleteNote', {0: selectedPlaylists.length > 1 ? 's': ''})}`,
         accept: () => {
-          // this.deletePlaylist(selectedPlaylists);
+          setTimeout(()=> {
+            this.deletePlaylist(selectedPlaylists.map(playlist => playlist.id));
+          }, 0);
         }
       }
     );
