@@ -20,6 +20,8 @@ import 'rxjs/add/observable/throw';
 
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
+import { BaseEntryDeleteAction } from 'kaltura-typescript-client/types/BaseEntryDeleteAction';
+import {PlaylistDeleteAction} from "kaltura-typescript-client/types/PlaylistDeleteAction";
 
 export enum SortDirection {
 	Desc,
@@ -53,6 +55,7 @@ export class PlaylistsStore implements OnDestroy {
 		createdAfter : null
 	});
 	private requestSubscription : ISubscription = null;
+  private _destoryed: boolean = false;
 
 	public playlists$ = this._playlistsSource.asObservable();
 	public state$ = this._stateSource.asObservable();
@@ -81,6 +84,11 @@ export class PlaylistsStore implements OnDestroy {
 		}
 	}
 
+  public get playlists() : KalturaPlaylist[]
+  {
+    return this._playlistsSource.getValue().items;
+  }
+
 	ngOnDestroy() {
 		this._stateSource.complete();
 		this._querySource.complete();
@@ -89,6 +97,7 @@ export class PlaylistsStore implements OnDestroy {
 		if(this.requestSubscription) {
 			this.requestSubscription.unsubscribe();
 		}
+    this._destoryed = true;
 	}
 
 	public reload(force : boolean) : void;
@@ -191,5 +200,34 @@ export class PlaylistsStore implements OnDestroy {
 			return Observable.throw(err);
 		}
 	}
+
+  public deletePlaylist(playlistId: any): Observable<void>{
+
+    return Observable.create(observer => {
+      let subscription: ISubscription;
+      if (playlistId && playlistId.length) {
+        subscription = this.kalturaServerClient.request(new PlaylistDeleteAction({id: playlistId})).subscribe(
+          () => {
+            if (!this._destoryed) {
+              this.reload(true);
+            }
+            observer.next();
+            observer.complete();
+          },
+          error =>{
+            observer.error(error);
+          }
+        );
+      } else {
+        observer.error(new Error('missing playlistId argument'));
+      }
+      return ()=>{
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+      }
+    });
+
+  }
 }
 

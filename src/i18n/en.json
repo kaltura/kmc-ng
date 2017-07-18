@@ -67,13 +67,19 @@
         "deleteNote": "Please note: the entry will be permanently deleted from your account."
       },
       "playlists": {
-        "playlists": "Playlists",
+        "playlists": "Playlist's",
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
         "cancel": "Cancel",
+        "deletePlaylist": "Delete Playlist",
+        "confirmDelete": "Are you sure you want to delete the selected playlist{{0}}?",
+        "playlistId": "Playlist ID: {{0}}",
+        "deleted": "Playlist deleted successfully",
         "searchEntries": "Search Playlists",
         "addPlaylist": "Add Playlist",
-        "refresh": "Refresh"
+        "addEntry": "Add Entry",
+        "refresh": "Refresh",
+        "deleteNote": "Please note: the playlist{{0}} will be permanently deleted from your account."
       },
       "filters": {
         "activeFilters": "Active Filters:",
@@ -536,12 +542,14 @@
         },
         "metadata": {
           "playlistName": "Name",
-          "description": "Description"
+          "description": "Description",
+          "tags": "Tags"
         },
         "errors": {
           "retry": "Retry",
           "backToPlaylists": "Back To Playlists",
-          "playlistTypeNotSupported": "playlist type not supported"
+          "playlistTypeNotSupported": "playlist type not supported",
+          "validationError": "The form contains some invalid information. Please review the sections marked as invalid"
         }
       }
     }
@@ -945,3 +953,4 @@
     "ZU": "Zulu"
   }
 }
+

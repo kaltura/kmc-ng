@@ -2,31 +2,41 @@
 
 
 .kPlaylistsTable {
-    background-color: white;
-    overflow-y: hidden;
-    position: absolute;
-	padding: 0;
-}
+  background-color: white;
+  overflow-y: hidden;
+  position: absolute;
+  padding: 0;
 
-.kPlaylistsTableActions {
-	width: 100%;
-	text-align: center;
-	button {
-		color: grey !important;
-		background-color: rgba(0, 0, 0, 0) !important;
-		border: none !important;
-		font-size: 16px !important;
-		outline: 0;
-	}
-}
+  .kPlaylistsTableActions {
+    width: 100%;
+    text-align: center;
+    button {
+      color: grey !important;
+      background-color: rgba(0, 0, 0, 0) !important;
+      border: none !important;
+      font-size: 16px !important;
+      outline: 0;
+    }
+  }
 
-.kTitle{
-	color: $kGrayscale1;
-	font-weight: 700;
-	cursor: pointer;
-	&:hover{
-		color: #000000;
-	}
+  .kTitle{
+    color: $kGrayscale1;
+    font-weight: 700;
+    cursor: pointer;
+    &:hover{
+      color: #000000;
+    }
+  }
+
+  .kPlaylistsNameWrap {
+    display: flex;
+    align-items: center;
+
+    .kMediaTypeIcon {
+      font-size: 26px;
+      margin-right: 23px;
+    }
+  }
 }
 
 :host {

@@ -1,14 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PlaylistStore } from '../playlist-store.service';
 import { PlaylistSections } from '../playlist-sections';
-import { ActivatedRoute, Router } from "@angular/router";
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 export class SectionData{
 	constructor(
 	  public id: PlaylistSections,
     public name: string,
-    public isActive: boolean = false,
+    public isActive: boolean  = false,
     public hasErrors: boolean = false
   ){}
 }
@@ -19,14 +18,13 @@ export class SectionData{
   styleUrls: ['./playlist-sections-list.component.scss']
 })
 
-export class PlaylistSectionsList implements OnInit {
+export class PlaylistSectionsList implements OnInit, OnDestroy {
 	public _loading = false;
 	public sections: SectionData[] = [];
 
     constructor(
       public _appLocalization: AppLocalization,
-      public _playlistStore : PlaylistStore,
-      private _playlistRoute: ActivatedRoute
+      public _playlistStore : PlaylistStore
 	) {}
 
 	navigateToSection(section: SectionData) {
@@ -35,10 +33,11 @@ export class PlaylistSectionsList implements OnInit {
 
   ngOnInit() {
     this.sections = [
-      new SectionData(PlaylistSections.Metadata, this._appLocalization.get('applications.content.playlistDetails.sections.metadata'), false, true),
-      new SectionData(PlaylistSections.Content, this._appLocalization.get('applications.content.playlistDetails.sections.content'), false)
+      new SectionData(PlaylistSections.Metadata, this._appLocalization.get('applications.content.playlistDetails.sections.metadata'), false, false),
+      new SectionData(PlaylistSections.Content, this._appLocalization.get('applications.content.playlistDetails.sections.content'), false, false)
     ];
     this._playlistStore.activeSection$
+      .cancelOnDestroy(this)
       .subscribe(
         response => {
           if(response.section !== null) {
@@ -47,5 +46,16 @@ export class PlaylistSectionsList implements OnInit {
           }
         }
       );
+
+    this._playlistStore.sectionsState$
+      .cancelOnDestroy(this)
+      .subscribe(
+        response => {
+          this.sections[PlaylistSections.Metadata].hasErrors = !response.metadata.isValid;
+          this.sections[PlaylistSections.Content].hasErrors = !response.content.isValid;
+        }
+      );
 	}
+
+	ngOnDestroy() {}
 }

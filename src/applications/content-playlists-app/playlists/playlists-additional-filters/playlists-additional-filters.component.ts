@@ -27,9 +27,11 @@ export class PlaylistsAdditionalFiltersComponent{
 	}
 
 	public _clearCreatedComponents() : void {
-		this._createdAfter = null;
-		this._createdBefore = null;
-		this._updateDates();
+    if(this._createdAfter || this._createdBefore) {
+      this._createdAfter = null;
+      this._createdBefore = null;
+      this._updateDates();
+    }
 	}
 
 	public _close(){

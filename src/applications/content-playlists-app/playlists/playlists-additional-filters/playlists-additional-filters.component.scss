@@ -39,6 +39,12 @@
 	float: right;
 }
 
+.disabledLink {
+  color: $kGrayscale4;
+  cursor: default;
+  text-decoration: none;
+}
+
 :host /deep/ .kDateRange .ui-calendar.ui-calendar-w-btn {
 	width: 158px;
 }
