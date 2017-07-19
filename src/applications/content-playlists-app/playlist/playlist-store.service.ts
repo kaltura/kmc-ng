@@ -172,7 +172,7 @@ export class PlaylistStore implements OnDestroy {
     if(!this._sectionsState.getValue().metadata.isValid) {
       this._state.next({
         isBusy: false,
-        error: {message: this._appLocalization.get('applications.content.playlistDetails.errors.validationError')}
+        error: {message: this._appLocalization.get('applications.content.playlistDetails.errors.validationError'), origin: 'save'}
       });
     } else {
       let id: string = this._getPlaylistId(),

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { PlaylistStore } from '../playlist-store.service';
 import { PlaylistSections } from '../playlist-sections';
@@ -16,6 +16,7 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
   metadataForm : FormGroup;
   _tagsProvider = new Subject<SuggestionsProviderData>();
   private _searchTagsSubscription : ISubscription;
+  @ViewChild('metadataNameInput') private metadataNameInput;
 
   constructor(
     private _formBuilder : FormBuilder,
@@ -100,7 +101,9 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
     this._searchTagsSubscription && this._searchTagsSubscription.unsubscribe();
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    this.metadataNameInput.nativeElement.focus();
+  }
 
 }
 

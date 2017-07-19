@@ -4,9 +4,10 @@
 
     <form [formGroup]="metadataForm" novalidate>
       <div class="kRow kValign">
-        <span class="kLabel">{{'applications.content.playlistDetails.metadata.playlistName' | translate}}</span>
+        <span class="kLabel" [ngClass]="{'extraPadding': metadataForm.invalid}">{{'applications.content.playlistDetails.metadata.playlistName' | translate}}</span>
         <div class="kControl">
-          <input formControlName="name" type="text" pInputText/>
+          <input formControlName="name" type="text" pInputText #metadataNameInput />
+          <div [ngClass]="{'invalid': metadataForm.invalid, 'hidden': metadataForm.valid}">You must enter a playlist name</div>
         </div>
       </div>
       <div class="kRow">
