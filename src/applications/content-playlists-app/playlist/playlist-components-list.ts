@@ -5,7 +5,7 @@ import { PlaylistComponent } from './playlist.component';
 import { PlaylistDetailsComponent } from './playlist-details/playlist-details.component';
 import { PlaylistEntriesTableComponent } from './playlist-entries-table/playlist-entries-table.component';
 import { ModerationPipe } from './pipes/moderation.pipe';
-
+import { EntryTypePipe } from './pipes/entry-type.pipe';
 
 export const PlaylistComponentsList = [
 	PlaylistMetadataComponent,
@@ -14,5 +14,6 @@ export const PlaylistComponentsList = [
 	PlaylistComponent,
 	PlaylistDetailsComponent,
   PlaylistEntriesTableComponent,
-  ModerationPipe
+  ModerationPipe,
+  EntryTypePipe
 ];
