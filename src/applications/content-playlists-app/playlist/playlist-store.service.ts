@@ -17,6 +17,7 @@ import { PlaylistSections } from './playlist-sections';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import {PlaylistExecuteAction} from "kaltura-typescript-client/types/PlaylistExecuteAction";
 import {KalturaBaseEntry} from "kaltura-typescript-client/types/KalturaBaseEntry";
+import {KalturaMediaEntry} from "kaltura-typescript-client/types/KalturaMediaEntry";
 
 @Injectable()
 export class PlaylistStore implements OnDestroy {
@@ -116,30 +117,21 @@ export class PlaylistStore implements OnDestroy {
 		this._loadPlaylistSubscription = this._kalturaServerClient.multiRequest(
       new KalturaMultiRequest(
         new PlaylistGetAction({id}),
-        new PlaylistExecuteAction({id})
+        new PlaylistExecuteAction({id, acceptedTypes : [KalturaMediaEntry]})
       ))
 			.cancelOnDestroy(this)
 			.subscribe(
 				data => {
-				  data.forEach(response => {
-            if (response.result instanceof KalturaPlaylist) {
-              this._playlist.next({playlist: response.result});
-              this._state.next({isBusy: false});
-            } else if(response.result.length && response.result[0] instanceof KalturaBaseEntry) {
-              this._entries.next({
-                items: <any[]>response.result,
-                totalCount: <number>response.result.length
-              });
-            } else {
-              this._state.next({
-                isBusy: true,
-                error: {
-                  message: this._appLocalization.get('applications.content.playlistDetails.errors.playlistTypeNotSupported'),
-                  origin: 'reload'
-                }
-              });
-            }
-          });
+ 				  if(data[0].result instanceof KalturaPlaylist) {
+            this._playlist.next({playlist: data[0].result});
+            this._state.next({isBusy: false});
+          }
+          if(data[1].result.length && data[1].result[0] instanceof KalturaBaseEntry) {
+            this._entries.next({
+              items: <any[]>data[1].result,
+              totalCount: <number>data[1].result.length
+            });
+          }
 				},
 				error => {
 					this._state.next({

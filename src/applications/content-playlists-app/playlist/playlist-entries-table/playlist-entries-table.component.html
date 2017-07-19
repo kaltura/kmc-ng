@@ -1,5 +1,5 @@
 <k-area-blocker kFillHeight
-	[showLoader]=""
+	[showLoader]="this._deferredLoading"
 	[message]="">
 	<div class="kPlaylistEntriesTable" [class.noResults]="!_entries.length">
 		<p-dataTable
@@ -27,7 +27,7 @@
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <div [kTooltip]="entry[col.field] | entryType: true" [class]="entry[col.field] | entryType: false"></div>
         </ng-template>
-      </p-column>x
+      </p-column>
       <p-column field="createdAt" header="Created On" [sortable]="true" [style]="{'width':'140px'}">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <span>{{entry[col.field] | kDate}}</span>
@@ -36,7 +36,7 @@
 
       <p-column field="duration" header="{{'applications.content.table.duration' | translate}}" [sortable]="'custom'" [style]="{'width':'104px'}">
         <ng-template let-col let-entry="rowData" pTemplate="body">
-          <span>{{entry[col.field]}}</span>
+          <span>{{entry[col.field] | kTime | entryDuration:entry}}</span>
         </ng-template>
       </p-column>
       <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
