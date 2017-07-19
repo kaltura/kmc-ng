@@ -2,11 +2,11 @@ import { Component, Input, Output,	EventEmitter,	AfterViewInit, OnInit, OnDestro
 import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
-import { PlaylistStore } from "../playlist-store.service";
+import { PlaylistStore } from '../playlist-store.service';
 
 @Component({
 	selector: 'kPlaylistEntriesTable',
@@ -18,6 +18,8 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   private _deferredEntries : any[];
   public _deferredLoading = true;
 	public rowTrackBy: Function = (index: number, item: any) => {return item.id};
+  private playlistStoreStatusSubscription: ISubscription;
+  public _areaBlockerMessage: AreaBlockerMessage;
 
   @Input() set entries(data: any[]) {
     if (!this._deferredLoading) {
@@ -31,20 +33,46 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   }
 
 	constructor(
-		private appLocalization: AppLocalization,
-		public playlistStore: PlaylistStore,
+		private _appLocalization: AppLocalization,
+		private _playlistStore: PlaylistStore,
 		private cdRef: ChangeDetectorRef
 	) {}
-	ngOnInit() {
-    /*this.playlistStore.entries$
-      .subscribe(response => {
 
-      });*/
+	ngOnInit() {
+    this.playlistStoreStatusSubscription = this._playlistStore.state$.subscribe(
+      response => {
+        if (response.error) {
+          const buttons = [
+            this._createBackToPlaylistsButton(),
+            {
+              label: this._appLocalization.get('applications.content.playlistDetails.errors.retry'),
+              action: () => {
+                this._playlistStore.reloadPlaylist();
+              }
+            }
+          ];
+          this._areaBlockerMessage = new AreaBlockerMessage({
+            message: response.error.message,
+            buttons: buttons
+          });
+        }
+      }
+    );
 	}
+
+  private _createBackToPlaylistsButton(): AreaBlockerMessageButton {
+    return {
+      label: this._appLocalization.get('applications.content.playlistDetails.errors.backToPlaylists'),
+      action: () => {
+        this._playlistStore.returnToPlaylists();
+      }
+    };
+  }
 
 	ngAfterViewInit() {
     if (this._deferredLoading) {
-      // use timeout to allow the DOM to render before setting the data to the datagrid. This prevents the screen from hanging during datagrid rendering of the data.
+      /* Use timeout to allow the DOM to render before setting the data to the datagrid.
+         This prevents the screen from hanging during datagrid rendering of the data.*/
       setTimeout(()=> {
         this._deferredLoading = false;
         this._entries = this._deferredEntries;

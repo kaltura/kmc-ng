@@ -68,6 +68,7 @@
       },
       "playlists": {
         "playlists": "Playlist's",
+        "entries": "Entries",
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
         "cancel": "Cancel",
