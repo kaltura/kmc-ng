@@ -125,7 +125,7 @@ export class PlaylistStore implements OnDestroy {
             if (response.result instanceof KalturaPlaylist) {
               this._playlist.next({playlist: response.result});
               this._state.next({isBusy: false});
-            } else if(response.result.length >= 1 && response.result[0] instanceof KalturaBaseEntry) {
+            } else if(response.result.length && response.result[0] instanceof KalturaBaseEntry) {
               this._entries.next({
                 items: <any[]>response.result,
                 totalCount: <number>response.result.length

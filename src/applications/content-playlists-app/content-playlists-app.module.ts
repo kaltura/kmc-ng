@@ -58,14 +58,14 @@ import { PlaylistStore } from './playlist/playlist-store.service';
       RouterModule.forChild(routing)
     ],
     declarations: [
-		ContentPlaylistsComponent,
-		PlaylistsComponentsList,
-		PlaylistComponentsList
+      ContentPlaylistsComponent,
+      PlaylistsComponentsList,
+      PlaylistComponentsList
     ],
     exports: [],
     providers: [
-		PlaylistsStore,
-		PlaylistStore
+      PlaylistsStore,
+      PlaylistStore
 	],
 })
 export class ContentPlaylistsAppModule {

@@ -25,9 +25,9 @@
       <p-column field="mediaType" header="{{'applications.content.table.type' | translate}}" [sortable]="'custom'"
                 [style]="{'width':'80px', 'text-align': 'center'}">
         <ng-template let-col let-entry="rowData" pTemplate="body">
-          <div [kTooltip]="entry[col.field]">{{entry[col.field]}}</div>
+          <div [kTooltip]="entry[col.field] | entryType: true" [class]="entry[col.field] | entryType: false"></div>
         </ng-template>
-      </p-column>
+      </p-column>x
       <p-column field="createdAt" header="Created On" [sortable]="true" [style]="{'width':'140px'}">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <span>{{entry[col.field] | kDate}}</span>
