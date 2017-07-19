@@ -12,5 +12,5 @@ export const PlaylistComponentsList = [
 	PlaylistSectionsList,
 	PlaylistComponent,
 	PlaylistDetailsComponent,
-    ModerationPipe
+  ModerationPipe
 ];

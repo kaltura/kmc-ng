@@ -23,6 +23,7 @@ import {
 	KalturaUIModule,
 	TooltipModule
 } from '@kaltura-ng/kaltura-ui';
+import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 
@@ -34,26 +35,27 @@ import { PlaylistStore } from './playlist/playlist-store.service';
 
 @NgModule({
     imports: [
-        CommonModule,
-		AreaBlockerModule,
-		DataTableModule,
-		KalturaCommonModule,
-		KalturaUIModule,
-		PaginatorModule,
-		TooltipModule,
-		ButtonModule,
-		TieredMenuModule,
-		CheckboxModule,
-		FormsModule,
-		ReactiveFormsModule,
-		InputTextModule,
-		PopupWidgetModule,
-		CalendarModule,
-		MenuModule,
-		TagsModule,
-		KalturaPrimeNgUIModule,
-		SharedModule,
-        RouterModule.forChild(routing)
+      CommonModule,
+      AreaBlockerModule,
+      DataTableModule,
+      KalturaCommonModule,
+      KalturaUIModule,
+      PaginatorModule,
+      TooltipModule,
+      ButtonModule,
+      TieredMenuModule,
+      CheckboxModule,
+      FormsModule,
+      ReactiveFormsModule,
+      InputTextModule,
+      PopupWidgetModule,
+      CalendarModule,
+      MenuModule,
+      TagsModule,
+      KalturaPrimeNgUIModule,
+      AutoCompleteModule,
+      SharedModule,
+      RouterModule.forChild(routing)
     ],
     declarations: [
 		ContentPlaylistsComponent,

@@ -1,1 +1,35 @@
-<h1>{{'applications.content.playlistDetails.sections.metadata' | translate}}</h1>
+<k-area-blocker [showLoader]="" [message]="">
+  <div class="kMetadataDetails">
+    <span class="kSchemaTitle">{{'applications.content.playlistDetails.sections.metadata' | translate}}</span>
+
+    <form [formGroup]="metadataForm" novalidate>
+      <div class="kRow kValign">
+        <span class="kLabel">{{'applications.content.playlistDetails.metadata.playlistName' | translate}}</span>
+        <div class="kControl">
+          <input formControlName="name" type="text" pInputText/>
+        </div>
+      </div>
+      <div class="kRow">
+        <span class="kLabel">{{'applications.content.playlistDetails.metadata.description' | translate}}</span>
+        <div class="kControl">
+          <textarea formControlName="description" pInputTextarea class="threeRows"></textarea>
+        </div>
+      </div>
+      <div class="kRow kValign">
+        <span class="kLabel">{{'applications.content.playlistDetails.metadata.tags' | translate}}</span>
+        <div class="kControl">
+          <kAutoComplete
+            formControlName="tags"
+            suggestionItemField="item"
+            suggestionSelectableField="isSelectable"
+            [multiple]="true"
+            [limitToSuggestions]="false"
+            [minLength]="3"
+            [suggestionsProvider]="_tagsProvider"
+            (completeMethod)="_searchTags($event)">
+          </kAutoComplete>
+        </div>
+      </div>
+    </form>
+  </div>
+</k-area-blocker>

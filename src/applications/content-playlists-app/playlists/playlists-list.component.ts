@@ -6,8 +6,11 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
-
+import { Message } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { BrowserService } from 'app-shared/kmc-shell';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
 import {
 	PlaylistsStore,
@@ -16,6 +19,11 @@ import {
 import { PlaylistsTableComponent } from "./playlists-table.component";
 
 import * as moment from 'moment';
+
+export type UpdateStatus = {
+  busy : boolean;
+  errorMessage : string;
+};
 
 export interface Filter {
 	type: string;
@@ -32,6 +40,11 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 	@ViewChild(PlaylistsTableComponent) private dataTable: PlaylistsTableComponent;
 
+  private _state = new BehaviorSubject<UpdateStatus>({ busy : false, errorMessage : null});
+  public state$ = this._state.asObservable();
+  public _blockerMessage: AreaBlockerMessage = null;
+  public _msgs: Message[] = [];
+
 	_filter = {
 		pageIndex : 0,
 		freetextSearch : '',
@@ -47,22 +60,11 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 	private querySubscription : ISubscription;
 	public activeFilters: Filter[] = [];
 
-	private _reloadList() : void {
-		this._playlistsStore.reload({
-			freeText: this._filter.freetextSearch,
-			createdBefore: this._filter.createdBefore,
-			createdAfter: this._filter.createdAfter,
-			sortBy: this._filter.sortBy,
-			sortDirection: this._filter.sortDirection,
-			pageIndex: this._filter.pageIndex,
-      pageSize: this._filter.pageSize
-		});
-	}
-
 	constructor(
 		public _playlistsStore: PlaylistsStore,
 		private appLocalization: AppLocalization,
-		private router: Router
+		private router: Router,
+    private _browserService : BrowserService
 	) {}
 
 	removeTag(tag: Filter){
@@ -74,52 +76,117 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 			this._filter.createdBefore = null;
 			this._filter.createdAfter = null;
 		}
-		this._filter.pageIndex = 1;
-		this._reloadList();
+		this._playlistsStore.reload({
+      freeText: this._filter.freetextSearch,
+      createdBefore: this._filter.createdBefore,
+      createdAfter: this._filter.createdAfter,
+      pageIndex: 1
+    });
 	}
 
 	removeAllTags(){
 		this.clearSelection();
-		this._filter.freetextSearch = '';
-		this._filter.createdAfter = '';
-		this._filter.createdBefore = '';
-		this._filter.pageIndex = 1;
-		this._reloadList();
+    this._playlistsStore.reload({
+      freeText: '',
+      createdBefore: null,
+      createdAfter: null,
+      pageIndex: 1
+    });
 		this.activeFilters = [];
 	}
 
 	onActionSelected(event) {
-		if (event.action === "view"){
-			this.router.navigate(['/content/playlists/playlist', event.playlistID]);
-		} else {
-			alert("Selected Action: " + event.action + "\nPlaylist ID: " + event.playlistID);
-		}
+    switch (event.action){
+      case "view":
+        this.router.navigate(['/content/playlists/playlist', event.playlistID]);
+        break;
+      case "delete":
+        this._browserService.confirm(
+          {
+            header: this.appLocalization.get('applications.content.playlists.deletePlaylist'),
+            message: `
+              ${this.appLocalization.get('applications.content.playlists.confirmDelete', {0:''})}<br/>
+              ${this.appLocalization.get('applications.content.playlists.playlistId', { 0: event.playlistID })}<br/>
+              ${this.appLocalization.get('applications.content.playlists.deleteNote', {0:''})}`,
+            accept: () => {
+              this.deletePlaylist(event.playlistID);
+            }
+          }
+        );
+        break;
+      default:
+        alert("Selected Action: " + event.action + "\nPlaylist ID: " + event.playlistID);
+        break;
+    }
 	}
 
+  private deletePlaylist(playlistIds: any): void{
+    this._state.next({busy: true, errorMessage: null});
+    this._blockerMessage = null;
+    // Array.isArray(playlistIds)? playlistIds.map(id => id.id) : playlistIds
+    this._playlistsStore.deletePlaylist(playlistIds)
+      .subscribe(
+      result => {
+        this._state.next({busy: false, errorMessage: null});
+        this._msgs = [];
+        this._msgs.push({severity: 'success', summary: '', detail: this.appLocalization.get('applications.content.playlists.deleted')});
+        this.clearSelection();
+      },
+      error => {
+        this._blockerMessage = new AreaBlockerMessage(
+          {
+            message: error.message,
+            buttons: [
+              {
+                label: this.appLocalization.get('app.common.retry'),
+                action: () => {
+                  this.deletePlaylist(playlistIds);
+                }
+              },
+              {
+                label: this.appLocalization.get('app.common.cancel'),
+                action: () => {
+                  this._blockerMessage = null;
+                  this._state.next({busy: false, errorMessage: null});
+                }
+              }
+            ]
+          }
+        )
+      }
+    );
+  }
+
 	onFreetextChanged() : void {
-		this._reloadList();
+    this._playlistsStore.reload({ freeText: this._filter.freetextSearch });
 	}
 
 	onSortChanged(event) : void {
-		this._filter.sortBy = event.field;
-		this._filter.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
-		this._reloadList();
+    this._playlistsStore.reload({
+      sortBy: event.field,
+      sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
+    });
 	}
 
 	onPaginationChanged(state : any) : void {
 		if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
-			this._filter.pageIndex = state.page + 1;
-			this._filter.pageSize = state.rows;
+      this._filter.pageSize = state.page + 1;
+      this._filter.pageIndex = state.rows;
+      this._playlistsStore.reload({
+        pageIndex: state.page + 1,
+        pageSize: state.rows
+      });
 			this.clearSelection();
-			this._reloadList();
 		}
 	}
 
 	onCreatedChanged(dates) : void {
-		this._filter.createdAfter = dates.createdAfter;
-		this._filter.createdBefore = dates.createdBefore;
-		this._filter.pageIndex = 1;
-		this._reloadList();
+		this._playlistsStore.reload({
+      createdAfter: dates.createdAfter,
+      createdBefore: dates.createdBefore,
+      pageIndex: 1
+    });
+
 		if(!dates.createdAfter && !dates.createdBefore) {
 			this.clearDates();
 		}
@@ -200,13 +267,30 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 		this.querySubscription = null;
 	}
 
-	public _reload()
-	{
+	public _reload() {
 		this.clearSelection();
 		this._playlistsStore.reload(true);
 	}
 
-	clearSelection(){
+	clearSelection() {
 		this._selectedPlaylists = [];
 	}
+
+  deletePlaylists(selectedPlaylists) {
+	  let playlistsToDelete = selectedPlaylists.map((playlist, index) => {
+      return `${index + 1}: ${playlist.name}`;
+    });
+    this._browserService.confirm(
+      {
+        header: this.appLocalization.get('applications.content.playlists.deletePlaylist'),
+        message: `
+              ${this.appLocalization.get('applications.content.playlists.confirmDelete', {0: selectedPlaylists.length > 1 ? 's': ''})}<br/>
+              ${playlistsToDelete.join(',').replace(/,/gi, '<br />')}<br/>
+              ${this.appLocalization.get('applications.content.playlists.deleteNote', {0: selectedPlaylists.length > 1 ? 's': ''})}`,
+        accept: () => {
+          // this.deletePlaylist(selectedPlaylists);
+        }
+      }
+    );
+  }
 }

@@ -15,6 +15,7 @@ export class PlaylistDetailsComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._playlistStore.playlist$
+      .cancelOnDestroy(this)
 			.subscribe(
 				response => {
 					if(response.playlist) {

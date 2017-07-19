@@ -27,7 +27,9 @@
 					[yearRange]="_createdAtDateRange"
 					icon="kIconcalendar"
 					(onSelect)="_onCreatedChanged()"></p-calendar>
-				<div class="kClearDates"><a (click)="_clearCreatedComponents()">{{'applications.content.filters.clearDates' | translate}}</a></div>
+				<div class="kClearDates">
+          <a (click)="_clearCreatedComponents()" [ngClass]="{disabledLink: !_createdAfter && !_createdBefore}">{{'applications.content.filters.clearDates' | translate}}</a>
+        </div>
 			</div>
 		</div>
 		<div>
