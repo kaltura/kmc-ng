@@ -17,12 +17,15 @@ const routes: Routes = <Routes>[
       { path: 'login', component: LoginComponent },
       {
         path: '', component: DashboardComponent, canActivate: [AuthCanActivate], children: [
-        { path: 'content', children: [
-          { path: '', redirectTo: 'entries', pathMatch: 'full' },
-          { path: 'entries', loadChildren: '../applications/content-entries-app/content-entries-app.module#ContentEntriesAppModule' },
-		  { path: 'playlists', loadChildren: '../applications/content-playlists-app/content-playlists-app.module#ContentPlaylistsAppModule' }
-        ]}
-      ]
+          {
+            path: 'content', children: [
+              { path: '', redirectTo: 'entries', pathMatch: 'full' },
+              { path: 'entries', loadChildren: '../applications/content-entries-app/content-entries-app.module#ContentEntriesAppModule' },
+              { path: 'playlists', loadChildren: '../applications/content-playlists-app/content-playlists-app.module#ContentPlaylistsAppModule' },
+              { path: 'categories', loadChildren: '../applications/content-categories-app/content-categories-app.module#ContentCategoriesAppModule' }
+            ]
+          }
+        ]
       },
       {
         path: '**', redirectTo: '/login', pathMatch: 'full'
@@ -32,5 +35,3 @@ const routes: Routes = <Routes>[
 ];
 
 export const routing = RouterModule.forRoot(routes);
-
-
