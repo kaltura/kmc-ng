@@ -34,6 +34,7 @@ export class PlaylistStore implements OnDestroy {
   public activeSection$ = this._activeSection.asObservable();
 	public sectionsState$ = this._sectionsState.asObservable();
 	public state$ = this._state.asObservable();
+  private _entryIsDirty : boolean = false;
 
   private _getPlaylistId() : string
   {
@@ -52,6 +53,8 @@ export class PlaylistStore implements OnDestroy {
     private _browserService : BrowserService
 	) {
 		this._mapSections();
+
+    this._onSectionsStateChanges();
 
 		this._onRouterEvents();
 
@@ -115,6 +118,10 @@ export class PlaylistStore implements OnDestroy {
 					if (response instanceof KalturaPlaylist) {
 						this._playlist.next({playlist: response});
 						this._state.next({isBusy: false});
+            this._sectionsState.next({
+              metadata: {isValid: this._sectionsState.getValue().metadata.isValid, isDirty: false},
+              content: this._sectionsState.getValue().content
+            });
 					} else {
 						this._state.next({
 							isBusy: true,
@@ -210,7 +217,7 @@ export class PlaylistStore implements OnDestroy {
 
   public openPlaylist(playlistId : string)
   {
-    this._canLeaveWithoutSaving()
+    this.canLeaveWithoutSaving()
       .cancelOnDestroy(this)
       .subscribe(
         response =>
@@ -223,8 +230,8 @@ export class PlaylistStore implements OnDestroy {
       );
   }
 
-  public returnToPlaylists(params : {force? : boolean} = {}) {
-    this._canLeaveWithoutSaving()
+  public returnToPlaylists() {
+    this.canLeaveWithoutSaving()
       .cancelOnDestroy(this)
       .monitor('playlist store: return to playlists list')
       .subscribe(
@@ -238,8 +245,29 @@ export class PlaylistStore implements OnDestroy {
       );
   }
 
-  private _canLeaveWithoutSaving() : Observable<{ allowed : boolean}>
-  {
+  private _onSectionsStateChanges() {
+    this.sectionsState$
+      .cancelOnDestroy(this)
+      .subscribe(
+        sectionState => {
+          if(sectionState.metadata.isDirty || sectionState.content.isDirty) {
+            this._entryIsDirty = true;
+            this._updatePageExitVerification();
+          }
+        }
+      )
+  }
+
+  private _updatePageExitVerification() {
+    if (this._entryIsDirty) {
+      this._browserService.enablePageExitVerification();
+    }
+    else {
+      this._browserService.disablePageExitVerification();
+    }
+  }
+
+  public canLeaveWithoutSaving() : Observable<{ allowed : boolean}> {
     return Observable.create(observer =>
     {
       if (this._sectionsState.getValue().metadata.isDirty || this._sectionsState.getValue().content.isDirty) {

@@ -5,11 +5,12 @@ import { PlaylistComponent } from './playlist/playlist.component';
 import { PlaylistMetadataComponent } from './playlist/playlist-metadata/playlist-metadata.component';
 import { PlaylistContentComponent } from './playlist/playlist-content/playlist-content.component';
 import { PlaylistSections } from './playlist/playlist-sections';
+import { EntryCanDeactivate } from './playlist/entry-can-deactivate.service';
 
 export const routing: Route[] = [
 	{path: '', redirectTo: 'list', pathMatch: 'full'},
 	{path: 'list', component: PlaylistsListComponent},
-	{path: 'playlist/:id', component: PlaylistComponent,
+	{path: 'playlist/:id', canDeactivate: [EntryCanDeactivate], component: PlaylistComponent,
 		data : {
 			playlistRoute : true
 		},

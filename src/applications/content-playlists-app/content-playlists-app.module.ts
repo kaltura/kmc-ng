@@ -32,6 +32,7 @@ import { PlaylistsComponentsList } from './playlists/playlists-components-list';
 import { PlaylistComponentsList } from './playlist/playlist-components-list';
 import { PlaylistsStore } from './playlists/playlists-store/playlists-store.service';
 import { PlaylistStore } from './playlist/playlist-store.service';
+import { EntryCanDeactivate } from './playlist/entry-can-deactivate.service';
 
 @NgModule({
     imports: [
@@ -58,14 +59,15 @@ import { PlaylistStore } from './playlist/playlist-store.service';
       RouterModule.forChild(routing)
     ],
     declarations: [
-		ContentPlaylistsComponent,
-		PlaylistsComponentsList,
-		PlaylistComponentsList
+      ContentPlaylistsComponent,
+      PlaylistsComponentsList,
+      PlaylistComponentsList
     ],
     exports: [],
     providers: [
-		PlaylistsStore,
-		PlaylistStore
+      PlaylistsStore,
+      PlaylistStore,
+      EntryCanDeactivate
 	],
 })
 export class ContentPlaylistsAppModule {
