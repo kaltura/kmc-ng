@@ -16,9 +16,8 @@
     text-align: center;
     border-radius: 3px;
     cursor: pointer;
-
     img {
-      position:absolute;
+      position: absolute;
       left: -100%;
       right: -100%;
       top: -100%;
@@ -30,16 +29,7 @@
     }
   }
 
-  .kIconvideo {
-    font-size: 20px;
-  }
-
-  .kIconimage,
-  .kIconsound {
-    font-size: 24px;
-  }
-
-  .kEntriesTableActions {
+  .kPlaylistEntriesTableActions {
     width: 100%;
     text-align: center;
     button {
@@ -50,4 +40,58 @@
       outline: 0;
     }
   }
+
+  .kPlaylistEntriesTableActions {
+    width: 100%;
+    text-align: center;
+    button {
+      color: grey !important;
+      background-color: rgba(0, 0, 0, 0) !important;
+      border: none !important;
+      font-size: 16px !important;
+      outline: 0;
+    }
+  }
+
+  .kIconvideo {
+    font-size: 20px;
+  }
+
+  .kIconsound {
+    font-size: 22px;
+  }
+
+  .kIconimage {
+    font-size: 24px;
+  }
+}
+
+:host /deep/ .selectionColumn {
+  width: 44px;
+  padding-left: 14px!important;
+}
+
+:host /deep/ .thumbnailColumn {
+  width: 100px;
+}
+
+:host /deep/ .mediaTypeColumn {
+  width: 80px;
+  text-align: center;
+}
+
+:host /deep/ .createdAtColumn {
+  width: 140px;
+}
+
+:host /deep/ .actionsColumn {
+  overflow: visible;
+  width: 80px;
+}
+
+:host {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0;
+  flex-direction: column;
 }

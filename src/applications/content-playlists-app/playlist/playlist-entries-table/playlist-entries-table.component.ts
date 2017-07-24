@@ -1,12 +1,9 @@
 import { Component, Input, Output,	EventEmitter,	AfterViewInit, OnInit, OnDestroy,	ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
 import { PlaylistStore } from '../playlist-store.service';
+import { DataTable } from 'primeng/primeng';
 
 @Component({
 	selector: 'kPlaylistEntriesTable',
@@ -17,10 +14,12 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 	public _entries: any[] = [];
   private _deferredEntries : any[];
   public _deferredLoading = true;
-	public rowTrackBy: Function = (index: number, item: any) => {return item.id};
-  private playlistStoreStatusSubscription: ISubscription;
   public _areaBlockerMessage: AreaBlockerMessage;
 
+  @ViewChild('dataTable') private dataTable: DataTable;
+
+  @Input() filter: any = {};
+  @Output() sortChanged = new EventEmitter<any>();
   @Input() set entries(data: any[]) {
     if (!this._deferredLoading) {
       this._entries = [];
@@ -34,39 +33,41 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 
 	constructor(
 		private _appLocalization: AppLocalization,
-		private _playlistStore: PlaylistStore,
+    public _playlistStore: PlaylistStore,
 		private cdRef: ChangeDetectorRef
 	) {}
 
 	ngOnInit() {
-    this.playlistStoreStatusSubscription = this._playlistStore.state$.subscribe(
+    this._areaBlockerMessage = null;
+    this._playlistStore.entriesState$
+      .cancelOnDestroy(this)
+      .subscribe(
       response => {
         if (response.error) {
-          const buttons = [
-            this._createBackToPlaylistsButton(),
-            {
+          this._areaBlockerMessage = new AreaBlockerMessage({
+            message: response.error.message,
+            buttons: [{
               label: this._appLocalization.get('applications.content.playlistDetails.errors.retry'),
               action: () => {
                 this._playlistStore.reloadPlaylist();
               }
-            }
-          ];
-          this._areaBlockerMessage = new AreaBlockerMessage({
-            message: response.error.message,
-            buttons: buttons
+            }]
           });
         }
       }
     );
 	}
 
-  private _createBackToPlaylistsButton(): AreaBlockerMessageButton {
-    return {
-      label: this._appLocalization.get('applications.content.playlistDetails.errors.backToPlaylists'),
-      action: () => {
-        this._playlistStore.returnToPlaylists();
-      }
-    };
+  onSortChanged(event) {
+    this.sortChanged.emit(event);
+  }
+
+  scrollToTop() {
+    const scrollBodyArr = this.dataTable.el.nativeElement.getElementsByClassName("ui-datatable-scrollable-body");
+    if (scrollBodyArr && scrollBodyArr.length > 0) {
+      const scrollBody: HTMLDivElement = scrollBodyArr[0];
+      scrollBody.scrollTop = 0;
+    }
   }
 
 	ngAfterViewInit() {

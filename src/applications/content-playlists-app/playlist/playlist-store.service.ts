@@ -15,9 +15,23 @@ import { KalturaTaggedObjectType } from 'kaltura-typescript-client/types/Kaltura
 import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
 import { PlaylistSections } from './playlist-sections';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { PlaylistExecuteAction } from 'kaltura-typescript-client/types/PlaylistExecuteAction';
-import { KalturaBaseEntry } from 'kaltura-typescript-client/types/KalturaBaseEntry';
-import {KalturaMediaEntry} from "kaltura-typescript-client/types/KalturaMediaEntry";
+import { PlaylistExecuteAction} from 'kaltura-typescript-client/types/PlaylistExecuteAction';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
+import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
+
+export enum SortDirection {
+  Desc,
+  Asc
+}
+
+export interface QueryData
+{
+  pageIndex : number,
+  pageSize : number,
+  sortBy : string,
+  sortDirection : SortDirection
+}
 
 @Injectable()
 export class PlaylistStore implements OnDestroy {
@@ -30,16 +44,25 @@ export class PlaylistStore implements OnDestroy {
   });
   private _loadPlaylistSubscription : ISubscription;
   private _sectionToRouteMapping : { [key : number] : string} = {};
-  private _activeSection = new BehaviorSubject<{ section: PlaylistSections}>({section: null});
-  private _playlist = new BehaviorSubject<{ playlist: KalturaPlaylist}>({playlist: null});
-  private _state = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin?: 'reload' | 'save'}}>({isBusy: false});
+	private _activeSection = new BehaviorSubject<{ section: PlaylistSections}>({section: null});
+	private _playlist = new BehaviorSubject<{ playlist: KalturaPlaylist}>({playlist: null});
+	private _state = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin?: 'reload' | 'save'}}>({isBusy: false});
+  private _entriesState = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin?: 'reload' | 'save'}}>({isBusy: false});
   private _entries  = new BehaviorSubject({items: [], totalCount: 0});
+  private _querySource = new BehaviorSubject<QueryData>({
+    pageIndex: 1,
+    pageSize: 50,
+    sortBy: 'createdAt',
+    sortDirection: SortDirection.Desc
+  });
 
   public entries$ = this._entries.asObservable();
   public playlist$ = this._playlist.asObservable();
   public activeSection$ = this._activeSection.asObservable();
-  public sectionsState$ = this._sectionsState.asObservable();
-  public state$ = this._state.asObservable();
+	public sectionsState$ = this._sectionsState.asObservable();
+	public state$ = this._state.asObservable();
+  public entriesState$ = this._entriesState.asObservable();
+  public query$ = this._querySource.monitor('queryData update');
 
   private _getPlaylistId() : string
   {
@@ -50,11 +73,15 @@ export class PlaylistStore implements OnDestroy {
     return this._playlist.getValue().playlist;
   }
 
-  constructor(
-    private _router: Router,
-    private _playlistRoute: ActivatedRoute,
-    private _kalturaServerClient: KalturaClient,
-    private _appLocalization: AppLocalization,
+  public get queryData() : QueryData{
+    return Object.assign({}, this._querySource.getValue());
+  }
+
+	constructor(
+		private _router: Router,
+		private _playlistRoute: ActivatedRoute,
+		private _kalturaServerClient: KalturaClient,
+		private _appLocalization: AppLocalization,
     private _browserService : BrowserService
   ) {
     this._mapSections();
@@ -62,7 +89,14 @@ export class PlaylistStore implements OnDestroy {
     this._onRouterEvents();
 
     this._activeSection.next({section: this._playlistRoute.snapshot.firstChild.data.sectionKey});
-  }
+
+    const defaultPageSize = this._browserService.getFromLocalStorage("entries.list.pageSize");
+    if (defaultPageSize !== null) {
+      this._updateQueryData({
+        pageSize: defaultPageSize
+      });
+    }
+	}
 
   public openSection(sectionId: PlaylistSections): void {
     const navigatePath = this._sectionToRouteMapping[sectionId];
@@ -88,23 +122,36 @@ export class PlaylistStore implements OnDestroy {
     });
   }
 
-  private _onRouterEvents() : void {
-    this._router.events
-      .cancelOnDestroy(this)
-      .subscribe(
-        event => {
-          if (event instanceof NavigationEnd) {
-            const currentPlaylistId = this._playlistRoute.snapshot.params.id;
-            const playlist = this._playlist.getValue();
-            if (!playlist.playlist || (playlist.playlist && playlist.playlist.id !== currentPlaylistId)) {
-              this._loadPlaylist(currentPlaylistId);
-            } else {
+  public reload(query : Partial<QueryData>) : void {
+    this._updateQueryData(query);
+    this._getEntries(this._getPlaylistId());
+  }
+
+  private _updateQueryData(partialData : Partial<QueryData>) : void {
+    const newQueryData =Object.assign({}, this._querySource.getValue(), partialData);
+    this._querySource.next(newQueryData);
+    if (partialData.pageSize) {
+      this._browserService.setInLocalStorage("entries.list.pageSize", partialData.pageSize);
+    }
+  }
+
+	private _onRouterEvents() : void {
+		this._router.events
+			.cancelOnDestroy(this)
+			.subscribe(
+				event => {
+					if (event instanceof NavigationEnd) {
+						const currentPlaylistId = this._playlistRoute.snapshot.params.id;
+						const playlist = this._playlist.getValue();
+						if (!playlist.playlist || (playlist.playlist && playlist.playlist.id !== currentPlaylistId)) {
+							this._loadPlaylist(currentPlaylistId);
+						} else {
               this._activeSection.next({section: this._playlistRoute.snapshot.firstChild.data.sectionKey});
             }
-          }
-        }
-      )
-  }
+					}
+				}
+			)
+	}
 
   private _loadPlaylist(id : string) : void  {
     if (this._loadPlaylistSubscription) {
@@ -114,24 +161,38 @@ export class PlaylistStore implements OnDestroy {
 
     this._state.next({isBusy: true});
 
-    this._loadPlaylistSubscription = this._kalturaServerClient.multiRequest(
+    let responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
+      type: KalturaResponseProfileType.includeFields,
+      fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration'
+    });
+
+		this._loadPlaylistSubscription = this._kalturaServerClient.multiRequest(
       new KalturaMultiRequest(
         new PlaylistGetAction({id}),
-        new PlaylistExecuteAction({id, acceptedTypes : [KalturaMediaEntry]})
+        new PlaylistExecuteAction({
+          id,
+          acceptedTypes : [KalturaMediaEntry]
+          responseProfile: responseProfile
+        })
       ))
 			.cancelOnDestroy(this)
 			.subscribe(
-				data => {
- 				  if(data[0].result instanceof KalturaPlaylist) {
-            this._playlist.next({playlist: data[0].result});
-            this._state.next({isBusy: false});
-          }
-          if(data[1].result.length && data[1].result[0] instanceof KalturaBaseEntry) {
+				response => {
+
+            this._playlist.next({playlist: response[0].result});
+
+          if(response[1].result && response[1].result.length) {
             this._entries.next({
-              items: <any[]>data[1].result,
-              totalCount: <number>data[1].result.length
+              items: <any[]>response[1].result,
+              totalCount: <number>response[1].result.length
             });
+          } else {
+              this._entries.next({
+                  items: [],
+                  totalCount: 0
+              });
           }
+                    this._state.next({isBusy: false});
 				},
 				error => {
 					this._state.next({
@@ -141,6 +202,52 @@ export class PlaylistStore implements OnDestroy {
 				}
 			);
 	}
+
+	private _getEntries(id: string) {
+    this._entriesState.next({isBusy: true});
+    let responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
+      type: KalturaResponseProfileType.includeFields,
+      fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration'
+    });
+
+    let queryData = this._querySource.getValue();
+
+    // update pagination args
+    let pagination: KalturaFilterPager = null;
+
+    if (queryData.pageIndex || queryData.pageSize) {
+      pagination = new KalturaFilterPager(
+        {
+          pageSize: queryData.pageSize,
+          pageIndex: queryData.pageIndex
+        }
+      );
+    }
+
+    this._kalturaServerClient.request( new PlaylistExecuteAction({
+        id,
+        pager: pagination,
+        responseProfile: responseProfile,
+        acceptedTypes : [KalturaMediaEntry]}
+      ))
+      .cancelOnDestroy(this)
+      .monitor('playlist store: get entries()')
+      .subscribe(
+        response => {
+          this._entries.next({
+            items: <any[]>response,
+            totalCount: <number>this._entries.getValue().totalCount
+          });
+          this._entriesState.next({isBusy: false});
+        },
+        error => {
+          this._entriesState.next({
+            isBusy: true,
+            error: {message: error.message, origin: 'reload'}
+          });
+        }
+      );
+  }
 
   public updateSectionState(section: PlaylistSections, state : {isValid?: boolean, isDirty?: boolean}) : void {
     const sections = Object.assign({}, this._sectionsState.getValue());
@@ -323,10 +430,11 @@ export class PlaylistStore implements OnDestroy {
       });
   }
 
-  ngOnDestroy() {
-    this._loadPlaylistSubscription && this._loadPlaylistSubscription.unsubscribe();
+	ngOnDestroy() {
+    this._querySource.complete();
     this._state.complete();
     this._playlist.complete();
-  }
+    this._entries.complete();
+		this._loadPlaylistSubscription && this._loadPlaylistSubscription.unsubscribe();
+	}
 }
-

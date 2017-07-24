@@ -1,18 +1,29 @@
-<k-area-blocker [showLoader]="" [message]="">
-  <div class="kContentDetails">
-    <div class="kPlaylistsTableFilters">
-      <button
-        pButton
-        type="button"
-        label="{{'applications.content.playlists.addEntry' | translate}}"
-        class="kButtonBranded kAddPlaylistBtn"></button>
-      <span
-        class="kSelectedPlaylistsNum"
-        *ngIf="(_playlistStore.entries$ | async)?.totalCount">
-				{{(_playlistStore.entries$ | async)?.totalCount}} {{'applications.content.playlists.entries' | translate}}</span>
-    </div>
-    <kPlaylistEntriesTable
-      class="kPlaylistEntriesTable"
-      [entries]="(_playlistStore.entries$ | async)?.items"></kPlaylistEntriesTable>
+<div class="kPlaylistEntriesHolder">
+  <div class="kPlaylistEntriesTableFilters">
+    <button
+      pButton
+      type="button"
+      label="{{'applications.content.playlists.addEntry' | translate}}"
+      class="kButtonBranded kAddPlaylistBtn"></button>
+    <span
+      class="kSelectedPlaylistsNum"
+      *ngIf="(_playlistStore.entries$ | async)?.totalCount">
+      {{(_playlistStore.entries$ | async)?.totalCount}} {{'applications.content.playlists.entries' | translate}}</span>
   </div>
-</k-area-blocker>
+  <kPlaylistEntriesTable
+    class="kPlaylistEntriesTable"
+    [entries]="(_playlistStore.entries$ | async)?.items"
+    [filter]="_filter"
+    (sortChanged)="onSortChanged($event)">
+  </kPlaylistEntriesTable>
+
+  <div class="kPlaylistEntriesTableFooter" #footer *ngIf="(_playlistStore.entries$ | async)?.totalCount">
+    <p-paginator
+      [rows]="_filter.pageSize"
+      [first]="_filter.pageIndex * _filter.pageSize"
+      [rowsPerPageOptions]="[25,50,75,100]"
+      [totalRecords]="(_playlistStore.entries$ | async)?.totalCount"
+      (onPageChange)="onPaginationChanged($event)"></p-paginator>
+    <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+  </div>
+</div>

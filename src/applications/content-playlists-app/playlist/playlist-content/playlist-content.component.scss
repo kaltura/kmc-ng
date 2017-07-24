@@ -1,9 +1,13 @@
 @import 'app-theme/_variables.scss';
 
-.kContentDetails {
-  width: 100%;
+.kPlaylistEntriesHolder {
+  height: 100%;
+  border: 1px solid $kGrayscale6;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 
-  .kPlaylistsTableFilters {
+  .kPlaylistEntriesTableFilters {
     width: 100%;
     height: 66px;
     background-color: white;
@@ -19,5 +23,31 @@
     .kSelectedPlaylistsNum{
       padding-left: 16px;
     }
+  }
+
+  .kPlaylistEntriesTable {
+    border: none;
+    position: relative;
+    background-color: white;
+    flex: 1 1 auto;
+  }
+
+  .kPlaylistEntriesTableFooter {
+    width: 100%;
+    height: 34px;
+    background-color: white;
+    border-top: 1px solid $kGrayscale6;
+    position: relative;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    padding: 0 14px 28px;
+    display: block;
+  }
+
+  .kPaginatorShowRowsLabel {
+    color: $kGrayscale1;
+    position: absolute;
+    top: 7px;
+    right: 80px;
   }
 }
