@@ -7,7 +7,7 @@
         <span class="kLabel" [ngClass]="{'extraPadding': metadataForm.invalid}">{{'applications.content.playlistDetails.metadata.playlistName' | translate}}</span>
         <div class="kControl">
           <input formControlName="name" type="text" pInputText #metadataNameInput />
-          <div [ngClass]="{'invalid': metadataForm.invalid, 'hidden': metadataForm.valid}">You must enter a playlist name</div>
+          <div [ngClass]="{'invalid': metadataForm.invalid, 'hidden': metadataForm.valid}">{{'applications.content.playlistDetails.metadata.nameIsMandatory' | translate}}</div>
         </div>
       </div>
       <div class="kRow">
