@@ -79,7 +79,7 @@
         "addPlaylist": "Add Playlist",
         "addEntry": "Add Entry",
         "refresh": "Refresh",
-        "deleteNote": "Please note: the selected playlist{{0}} will be permanently deleted from your account."
+        "deleteNote": "Please note: {{0}} playlist{{1}} will be permanently deleted from your account."
       },
       "filters": {
         "activeFilters": "Active Filters:",

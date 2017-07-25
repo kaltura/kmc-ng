@@ -100,7 +100,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
             message: `
               ${this.appLocalization.get('applications.content.playlists.confirmDelete', {0:''})}<br/>
               ${this.appLocalization.get('applications.content.playlists.playlistId', { 0: event.playlistID })}<br/>
-              ${this.appLocalization.get('applications.content.playlists.deleteNote', {0:''})}`,
+              ${this.appLocalization.get('applications.content.playlists.deleteNote', {0:'this', 1:''})}`,
             accept: () => {
               this.deleteCurrentPlaylist(event.playlistID);
             }
@@ -308,7 +308,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
         message: `
               ${this.appLocalization.get('applications.content.playlists.confirmDelete', {0: selectedPlaylists.length > 1 ? 's': ''})}<br/>
               ${playlists}
-              ${this.appLocalization.get('applications.content.playlists.deleteNote', {0: selectedPlaylists.length > 1 ? 's': ''})}`,
+              ${this.appLocalization.get('applications.content.playlists.deleteNote', {0: selectedPlaylists.length > 1 ? 'these' : 'this', 1: selectedPlaylists.length > 1 ? 's': ''})}`,
         accept: () => {
           setTimeout(()=> {
             this.deletePlaylist(selectedPlaylists.map(playlist => playlist.id));
