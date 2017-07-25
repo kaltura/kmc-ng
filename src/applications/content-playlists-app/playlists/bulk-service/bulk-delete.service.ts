@@ -18,44 +18,41 @@ export class BulkDeleteService {
   ) {}
 
   public deletePlaylist(ids: any): Observable<{}>{
-    this._stateDelete.next({loading: true});
     return Observable.create(observer =>{
+      this._stateDelete.next({loading: true});
       let requests: PlaylistDeleteAction[] = [];
-      ids.forEach(id => requests.push(new PlaylistDeleteAction({ id: id })));
-
-      this._transmit(requests, true).subscribe(
-        () => {
-          this._stateDelete.next({loading: false});
-          this._playlistsStore.reload(true);
-          observer.next({});
-          observer.complete();
-        },
-        error => {
-          this._stateDelete.next({loading: false});
-          observer.error(error);
-        }
-      );
+      if(ids) {
+        ids.forEach(id => requests.push(new PlaylistDeleteAction({ id: id })));
+      } else {
+        // TODO [kmc] missing implementation
+      }
+      if(requests.length) {
+        this._transmit(requests).subscribe(
+          () => {
+            this._stateDelete.next({loading: false});
+            this._playlistsStore.reload(true);
+            observer.next({});
+            observer.complete();
+          },
+          error => {
+            this._stateDelete.next({loading: false});
+            observer.error(error);
+          }
+        );
+      } else {
+        this._stateDelete.next({loading: false});
+      }
     });
   }
 
-  private _transmit(requests : KalturaRequest<any>[], chunk : boolean) : Observable<{}> {
-    let maxRequestsPerMultiRequest = requests.length;
-    if (chunk){
-      maxRequestsPerMultiRequest = environment.modules.contentPlaylists.bulkActionsLimit;
-    }
-
+  private _transmit(requests : KalturaRequest<any>[]) : Observable<{}> {
     let multiRequests: Observable<KalturaMultiResponse>[] = [];
     let mr :KalturaMultiRequest = new KalturaMultiRequest();
 
-    let counter = 0;
     for (let i = 0; i < requests.length; i++){
-      if (counter === maxRequestsPerMultiRequest){
-        multiRequests.push(this._kalturaServerClient.multiRequest(mr));
-        mr = new KalturaMultiRequest();
-        counter = 0;
-      }
+      multiRequests.push(this._kalturaServerClient.multiRequest(mr));
+      mr = new KalturaMultiRequest();
       mr.requests.push(requests[i]);
-      counter++;
     }
 
     multiRequests.push(this._kalturaServerClient.multiRequest(mr));

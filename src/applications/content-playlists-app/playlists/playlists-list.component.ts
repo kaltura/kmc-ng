@@ -29,7 +29,8 @@ export interface Filter {
 @Component({
     selector: 'kPlaylistsList',
     templateUrl: './playlists-list.component.html',
-    styleUrls: ['./playlists-list.component.scss']
+    styleUrls: ['./playlists-list.component.scss'],
+    providers: [BulkDeleteService]
 })
 export class PlaylistsListComponent implements OnInit, OnDestroy {
 
@@ -108,7 +109,6 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
         );
         break;
       default:
-        alert("Selected Action: " + event.action + "\nPlaylist ID: " + event.playlistID);
         break;
     }
 	}

@@ -10,18 +10,7 @@ export class PlaylistContentComponent implements AfterViewInit, OnInit, OnDestro
 
     constructor(public _playlistStore: PlaylistStore) {}
 
-    ngOnInit() {
-      /*this._playlistStore.entries$
-        .subscribe(
-          response => {
-            if(response.items) {
-
-            } else {
-              // TODO [kmc] missing implementation
-            }
-          }
-        );*/
-    }
+    ngOnInit() {}
 
     ngOnDestroy() {}
 

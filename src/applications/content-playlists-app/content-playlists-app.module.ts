@@ -31,8 +31,6 @@ import { ContentPlaylistsComponent } from './content-playlists.component';
 import { PlaylistsComponentsList } from './playlists/playlists-components-list';
 import { PlaylistComponentsList } from './playlist/playlist-components-list';
 import { PlaylistsStore } from './playlists/playlists-store/playlists-store.service';
-import { PlaylistStore } from './playlist/playlist-store.service';
-import { BulkDeleteService } from './playlists/bulk-service/bulk-delete.service';
 
 @NgModule({
     imports: [
@@ -65,9 +63,7 @@ import { BulkDeleteService } from './playlists/bulk-service/bulk-delete.service'
     ],
     exports: [],
     providers: [
-      PlaylistsStore,
-      PlaylistStore,
-      BulkDeleteService
+      PlaylistsStore
 	],
 })
 export class ContentPlaylistsAppModule {

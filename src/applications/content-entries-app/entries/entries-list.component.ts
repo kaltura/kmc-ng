@@ -158,7 +158,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 			    );
 			    break;
 		    default:
-			    alert("Selected Action: " + event.action + "\nEntry ID: " + event.entryID);
 			    break;
 	    }
     }
