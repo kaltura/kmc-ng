@@ -54,8 +54,6 @@ export class PlaylistStore implements OnDestroy {
 	) {
 		this._mapSections();
 
-    this._onSectionsStateChanges();
-
 		this._onRouterEvents();
 
     this._activeSection.next({section: this._playlistRoute.snapshot.firstChild.data.sectionKey});
@@ -118,10 +116,6 @@ export class PlaylistStore implements OnDestroy {
 					if (response instanceof KalturaPlaylist) {
 						this._playlist.next({playlist: response});
 						this._state.next({isBusy: false});
-            this._sectionsState.next({
-              metadata: {isValid: this._sectionsState.getValue().metadata.isValid, isDirty: false},
-              content: this._sectionsState.getValue().content
-            });
 					} else {
 						this._state.next({
 							isBusy: true,
@@ -171,7 +165,9 @@ export class PlaylistStore implements OnDestroy {
     }
 
     if(hasChanges) {
-      this._sectionsState.next(sections)
+      this._sectionsState.next(sections);
+      this._entryIsDirty = true;
+      this._updatePageExitVerification();
     }
   }
 
@@ -243,19 +239,6 @@ export class PlaylistStore implements OnDestroy {
           }
         }
       );
-  }
-
-  private _onSectionsStateChanges() {
-    this.sectionsState$
-      .cancelOnDestroy(this)
-      .subscribe(
-        sectionState => {
-          if(sectionState.metadata.isDirty || sectionState.content.isDirty) {
-            this._entryIsDirty = true;
-            this._updatePageExitVerification();
-          }
-        }
-      )
   }
 
   private _updatePageExitVerification() {

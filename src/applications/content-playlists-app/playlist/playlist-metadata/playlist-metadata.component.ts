@@ -41,6 +41,7 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
               description: response.playlist.description,
               tags: response.playlist.tags ? response.playlist.tags.split(', ') : null
             });
+            this._playlistStore.updateSectionState(PlaylistSections.Metadata, {isDirty : false});
           } else {
             // TODO [kmc] missing implementation
           }

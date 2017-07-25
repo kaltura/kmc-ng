@@ -4,7 +4,7 @@ import { PlaylistComponent } from './playlist.component';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
-export class EntryCanDeactivate implements CanDeactivate<PlaylistComponent> {
+export class PlaylistCanDeactivate implements CanDeactivate<PlaylistComponent> {
     constructor() {}
     canDeactivate(component: PlaylistComponent, currentRoute: ActivatedRouteSnapshot, currentState: RouterStateSnapshot, nextState?: RouterStateSnapshot):Observable<boolean> {
         return Observable.create((observer : any) =>
