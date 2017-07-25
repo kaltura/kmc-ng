@@ -27,8 +27,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
   @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
 
-	private _state = new BehaviorSubject<UpdateStatus>({ busy : false, errorMessage : null});
-	public state$ = this._state.asObservable();
+	public isBusy = false
 	public _blockerMessage: AreaBlockerMessage = null;
 
     private querySubscription : ISubscription;
@@ -164,15 +163,17 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
 
     private deleteEntry(entryId: string): void{
-	    this._state.next({busy: true, errorMessage: null});
+	    this.isBusy = true;
 	    this._blockerMessage = null;
 	    this._entriesStore.deleteEntry(entryId).subscribe(
 		    result => {
-			    this._state.next({busy: false, errorMessage: null});
+                this.isBusy = false;
 			    this._msgs = [];
 			    this._msgs.push({severity: 'success', summary: '', detail: this.appLocalization.get('applications.content.entries.deleted')});
 		    },
 		    error => {
+                this.isBusy = false;
+
 			    this._blockerMessage = new AreaBlockerMessage(
 				    {
 					    message: error.message,
@@ -187,7 +188,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 							    label: this.appLocalization.get('app.common.cancel'),
 							    action: () => {
 								    this._blockerMessage = null;
-								    this._state.next({busy: false, errorMessage: null});
 							    }
 						    }
 					    ]
