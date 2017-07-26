@@ -1,13 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { PlaylistStore } from './playlist-store.service';
-import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 import {
   AreaBlockerMessage,
   AreaBlockerMessageButton
 } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { PlaylistStore } from './playlist-store.service';
+import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 
 @Component({
   selector: 'kPlaylist',
@@ -137,6 +138,10 @@ export class PlaylistComponent implements OnInit, OnDestroy {
       this._enableNextButton = false;
       this._enablePrevButton = false;
     }
+  }
+
+  public canLeave(): Observable<{ allowed : boolean}>{
+    return this._playlistStore.canLeaveWithoutSaving();
   }
 
 	ngOnDestroy() {}
