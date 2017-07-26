@@ -34,7 +34,6 @@ export class PlaylistStore implements OnDestroy {
   public activeSection$ = this._activeSection.asObservable();
 	public sectionsState$ = this._sectionsState.asObservable();
 	public state$ = this._state.asObservable();
-  private _entryIsDirty : boolean = false;
 
   private _getPlaylistId() : string
   {
@@ -166,10 +165,7 @@ export class PlaylistStore implements OnDestroy {
 
     if(hasChanges) {
       this._sectionsState.next(sections);
-      this._entryIsDirty = sections.metadata.isDirty || sections.content.isDirty;
-      this._updatePageExitVerification();
-    } else {
-      this._entryIsDirty = false;
+      this._updatePageExitVerification(sections.metadata.isDirty || sections.content.isDirty);
     }
   }
 
@@ -243,8 +239,8 @@ export class PlaylistStore implements OnDestroy {
       );
   }
 
-  private _updatePageExitVerification() {
-    if (this._entryIsDirty) {
+  private _updatePageExitVerification(enable : boolean) : void {
+    if (enable) {
       this._browserService.enablePageExitVerification();
     }
     else {
