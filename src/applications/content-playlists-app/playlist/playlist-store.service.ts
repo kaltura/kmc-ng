@@ -171,7 +171,7 @@ export class PlaylistStore implements OnDestroy {
         new PlaylistGetAction({id}),
         new PlaylistExecuteAction({
           id,
-          acceptedTypes : [KalturaMediaEntry]
+          acceptedTypes : [KalturaMediaEntry],
           responseProfile: responseProfile
         })
       ))
@@ -340,7 +340,7 @@ export class PlaylistStore implements OnDestroy {
   }
 
   public returnToPlaylists() {
-    this._canLeaveWithoutSaving()
+    this.canLeaveWithoutSaving()
       .cancelOnDestroy(this)
       .monitor('playlist store: return to playlists list')
       .subscribe(
