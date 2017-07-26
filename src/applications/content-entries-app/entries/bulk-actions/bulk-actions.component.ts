@@ -164,7 +164,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
             this._browserService.setAppStatus({isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error')});
           }
       );
-    }
+    };
 
     if (this.selectedEntries.length > environment.modules.contentEntries.bulkActionsLimit){
       this._browserService.confirm(

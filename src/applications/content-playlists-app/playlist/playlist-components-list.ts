@@ -3,6 +3,7 @@ import { PlaylistContentComponent } from './playlist-content/playlist-content.co
 import { PlaylistSectionsList } from "./playlist-sections-list/playlist-sections-list.component";
 import { PlaylistComponent } from './playlist.component';
 import { PlaylistDetailsComponent } from './playlist-details/playlist-details.component';
+import { PlaylistEntriesTableComponent } from './playlist-entries-table/playlist-entries-table.component';
 import { ModerationPipe } from './pipes/moderation.pipe';
 
 
@@ -12,5 +13,6 @@ export const PlaylistComponentsList = [
 	PlaylistSectionsList,
 	PlaylistComponent,
 	PlaylistDetailsComponent,
+  PlaylistEntriesTableComponent,
   ModerationPipe
 ];

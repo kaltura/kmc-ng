@@ -1,4 +1,5 @@
 import { Component, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
+import { PlaylistStore } from '../playlist-store.service';
 
 @Component({
   selector: 'kPlaylistContent',
@@ -7,7 +8,7 @@ import { Component, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
 })
 export class PlaylistContentComponent implements AfterViewInit, OnInit, OnDestroy {
 
-    constructor() {}
+    constructor(public _playlistStore: PlaylistStore) {}
 
     ngOnInit() {}
 

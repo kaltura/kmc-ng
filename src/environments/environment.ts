@@ -112,7 +112,8 @@ export const environment = {
       "bulkActionsLimit": 50
     },
     "contentPlaylists" : {
-      "createdAtDateRange" : "2005:2030"
+      "createdAtDateRange" : "2005:2030",
+      "bulkActionsLimit": 2
     }
   },
   "entriesShared": {
