@@ -203,7 +203,6 @@ export class PlaylistsStore implements OnDestroy {
       let subscription: ISubscription;
       subscription = this._kalturaServerClient.request(new PlaylistDeleteAction({id})).subscribe(
         () => {
-          this.reload(true);
           observer.next();
           observer.complete();
         },
