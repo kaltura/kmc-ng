@@ -112,7 +112,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   // bulk delete
-  private deleteEntries(): void{
+  public deleteEntries(): void{
     let msg = '';
     // display entries marked for deletion in the confirmation box if there are up to 10 selected entries. Otherwise, just confirm deletion
     if (this.selectedEntries.length > 10){
