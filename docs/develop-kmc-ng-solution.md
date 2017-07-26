@@ -18,8 +18,8 @@ To be able to make changes across repositories we will use a tool (named **kaltu
  - [x] Ensure you have [yarn installed](https://yarnpkg.com/lang/en/docs/install/) (we use it for node package management) version 0.24.6 and above. 
  
  #### Setup your workspace
- 1. create a folder to hold your packages (your workspace root folder). Note that **it is not** the kmc-ng repository folder.
- 2. create `package.json` in your root folder by running the following command:
+ 1. create a folder to hold your packages (your workspace **root folder**). Note that **it is not** the kmc-ng repository folder.
+ 2. create `package.json` in your **root folder**  by running the following command:
  ```
   $ yarn init -y
   ```
@@ -43,7 +43,6 @@ To be able to make changes across repositories we will use a tool (named **kaltu
    
  5. add the following to your `package.json`:
  ```json
- {  
    "scripts" : {
      "kws" : "kws",
      "setup" : "kws setup",
@@ -51,10 +50,9 @@ To be able to make changes across repositories we will use a tool (named **kaltu
      "licenses" : "kws licenses --type=direct",
      "clean" : "kws clean"
    }
- }
  ```
  
- 6. run setup command to build & symlink your repositories
+ 6. run setup command to build & symlink your repositories (**Note** It might take a few minutes)
  ```bash
  $ yarn run setup 
  ```
