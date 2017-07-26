@@ -166,8 +166,10 @@ export class PlaylistStore implements OnDestroy {
 
     if(hasChanges) {
       this._sectionsState.next(sections);
-      this._entryIsDirty = true;
+      this._entryIsDirty = sections.metadata.isDirty || sections.content.isDirty;
       this._updatePageExitVerification();
+    } else {
+      this._entryIsDirty = false;
     }
   }
 
