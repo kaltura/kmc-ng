@@ -41,8 +41,7 @@ export interface QueryData
 
 @Injectable()
 export class PlaylistsStore implements OnDestroy {
-	private _playlistsSource  = new BehaviorSubject({items: [], totalCount: 0});
-	private _playlists  = new BehaviorSubject({items: [], totalCount: 0});
+	private _playlistsSource  = new BehaviorSubject<{items: KalturaPlaylist[], totalCount: number}>({items: [], totalCount: 0});
 	private _stateSource = new BehaviorSubject<{loading : boolean, errorMessage : string}>({ loading : false, errorMessage : null});
 	private _querySource = new BehaviorSubject<QueryData>({
 		pageIndex: 1,

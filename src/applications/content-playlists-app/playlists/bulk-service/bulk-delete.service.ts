@@ -17,20 +17,16 @@ export class BulkDeleteService {
     public _kalturaServerClient: KalturaClient
   ) {}
 
-  public deletePlaylist(ids: any): Observable<{}>{
+  public deletePlaylist(ids: string[]): Observable<void>{
     return Observable.create(observer =>{
       this._stateDelete.next({loading: true});
       let requests: PlaylistDeleteAction[] = [];
-      if(ids) {
+      if(ids && ids.length > 0) {
         ids.forEach(id => requests.push(new PlaylistDeleteAction({ id: id })));
-      } else {
-        // TODO [kmc] missing implementation
-      }
-      if(requests.length) {
-        this._transmit(requests).subscribe(
+
+        this._transmit(requests, true).subscribe(
           () => {
             this._stateDelete.next({loading: false});
-            this._playlistsStore.reload(true);
             observer.next({});
             observer.complete();
           },
@@ -41,18 +37,30 @@ export class BulkDeleteService {
         );
       } else {
         this._stateDelete.next({loading: false});
+        observer.next({});
+        observer.complete();
       }
     });
   }
 
-  private _transmit(requests : KalturaRequest<any>[]) : Observable<{}> {
+  private _transmit(requests : KalturaRequest<any>[], chunk : boolean) : Observable<{}> {
+    let maxRequestsPerMultiRequest = requests.length;
+    if (chunk){
+      maxRequestsPerMultiRequest = environment.modules.contentPlaylists.bulkActionsLimit;
+    }
+
     let multiRequests: Observable<KalturaMultiResponse>[] = [];
     let mr :KalturaMultiRequest = new KalturaMultiRequest();
 
+    let counter = 0;
     for (let i = 0; i < requests.length; i++){
-      multiRequests.push(this._kalturaServerClient.multiRequest(mr));
-      mr = new KalturaMultiRequest();
+      if (counter === maxRequestsPerMultiRequest){
+        multiRequests.push(this._kalturaServerClient.multiRequest(mr));
+        mr = new KalturaMultiRequest();
+        counter = 0;
+      }
       mr.requests.push(requests[i]);
+      counter++;
     }
 
     multiRequests.push(this._kalturaServerClient.multiRequest(mr));

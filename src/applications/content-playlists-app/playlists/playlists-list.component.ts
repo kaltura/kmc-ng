@@ -17,6 +17,7 @@ import {
 } from './playlists-store/playlists-store.service';
 import { BulkDeleteService } from './bulk-service/bulk-delete.service';
 import { PlaylistsTableComponent } from "./playlists-table.component";
+import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
 
 import * as moment from 'moment';
 
@@ -49,7 +50,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 		sortDirection : SortDirection.Desc
 	};
 
-	public _selectedPlaylists: any[] = [];
+	public _selectedPlaylists: KalturaPlaylist[] = [];
 	private querySubscription : ISubscription;
 	public activeFilters: Filter[] = [];
 
@@ -116,9 +117,11 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   private deletePlaylist(ids: string[]): void {
     const execute = () => {
       this._bulkDeleteService.deletePlaylist(ids)
+        .cancelOnDestroy(this)
         .subscribe(
           () => {
             this._loading = false;
+            this._playlistsStore.reload(true);
             this.clearSelection();
           },
           error => {
@@ -153,8 +156,13 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
   private deleteCurrentPlaylist(playlistId: string): void {
 	  this._loading = true;
-    this._playlistsStore.deletePlaylist(playlistId).subscribe(
-      () => { this._loading = false; },
+    this._playlistsStore.deletePlaylist(playlistId)
+      .cancelOnDestroy(this)
+      .subscribe(
+      () => {
+        this._loading = false;
+        this._playlistsStore.reload(true);
+      },
       error => {
         this._blockerMessage = new AreaBlockerMessage(
           {
@@ -299,7 +307,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 		this._selectedPlaylists = [];
 	}
 
-  deletePlaylists(selectedPlaylists) {
+  deletePlaylists(selectedPlaylists: KalturaPlaylist[]) {
 	  let playlistsToDelete = selectedPlaylists.map((playlist, index) => `${index + 1}: ${playlist.name}`),
         playlists: string = selectedPlaylists.length <= 10 ? playlistsToDelete.join(',').replace(/,/gi, '<br />') + '<br />' : '';
     this._browserService.confirm(
