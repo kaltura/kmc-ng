@@ -181,7 +181,8 @@ export class PlaylistStore implements OnDestroy {
     }
 
     if(hasChanges) {
-      this._sectionsState.next(sections)
+      this._sectionsState.next(sections);
+      this._updatePageExitVerification(sections.metadata.isDirty || sections.content.isDirty);
     }
   }
 
@@ -189,7 +190,7 @@ export class PlaylistStore implements OnDestroy {
     if(!this._sectionsState.getValue().metadata.isValid) {
       this._state.next({
         isBusy: false,
-        error: {message: this._appLocalization.get('applications.content.playlistDetails.errors.validationError')}
+        error: {message: this._appLocalization.get('applications.content.playlistDetails.errors.validationError'), origin: 'save'}
       });
     } else {
       let id: string = this._getPlaylistId(),
@@ -227,7 +228,7 @@ export class PlaylistStore implements OnDestroy {
 
   public openPlaylist(playlistId : string)
   {
-    this._canLeaveWithoutSaving()
+    this.canLeaveWithoutSaving()
       .cancelOnDestroy(this)
       .subscribe(
         response =>
@@ -240,8 +241,8 @@ export class PlaylistStore implements OnDestroy {
       );
   }
 
-  public returnToPlaylists(params : {force? : boolean} = {}) {
-    this._canLeaveWithoutSaving()
+  public returnToPlaylists() {
+    this.canLeaveWithoutSaving()
       .cancelOnDestroy(this)
       .monitor('playlist store: return to playlists list')
       .subscribe(
@@ -255,8 +256,16 @@ export class PlaylistStore implements OnDestroy {
       );
   }
 
-  private _canLeaveWithoutSaving() : Observable<{ allowed : boolean}>
-  {
+  private _updatePageExitVerification(enable : boolean) : void {
+    if (enable) {
+      this._browserService.enablePageExitVerification();
+    }
+    else {
+      this._browserService.disablePageExitVerification();
+    }
+  }
+
+  public canLeaveWithoutSaving() : Observable<{ allowed : boolean}> {
     return Observable.create(observer =>
     {
       if (this._sectionsState.getValue().metadata.isDirty || this._sectionsState.getValue().content.isDirty) {

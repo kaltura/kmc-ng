@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="(state$ | async)?.busy" [message]="_blockerMessage">
+<k-area-blocker [showLoader]="isBusy" [message]="_blockerMessage">
 	<div class="kEntries kOverrideFAIcons">
 		<div #entriesTableHolder class="kEntriesHolder kContent">
 			<div class="kEntriesTableFilters">

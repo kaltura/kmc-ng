@@ -545,7 +545,8 @@
         "metadata": {
           "playlistName": "Name",
           "description": "Description",
-          "tags": "Tags"
+          "tags": "Tags",
+          "nameIsMandatory": "You must enter a playlist name"
         },
         "errors": {
           "retry": "Retry",

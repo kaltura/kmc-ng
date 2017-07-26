@@ -30,6 +30,7 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { ContentPlaylistsComponent } from './content-playlists.component';
 import { PlaylistsComponentsList } from './playlists/playlists-components-list';
 import { PlaylistComponentsList } from './playlist/playlist-components-list';
+import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.service';
 
 @NgModule({
     imports: [
@@ -60,7 +61,11 @@ import { PlaylistComponentsList } from './playlist/playlist-components-list';
       PlaylistsComponentsList,
       PlaylistComponentsList
     ],
-    exports: []
+    exports: [
+    ],
+    providers : [
+        PlaylistCanDeactivate
+    ]
 })
 export class ContentPlaylistsAppModule {
 }

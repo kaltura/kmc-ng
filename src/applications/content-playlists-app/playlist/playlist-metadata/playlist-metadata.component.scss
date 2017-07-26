@@ -44,6 +44,22 @@
     align-items: center;
   }
 
+  .extraPadding {
+    padding-bottom: 21px;
+  }
+
+  .hidden {
+    visibility: hidden;
+    width: 0px;
+    height: 0px;
+  }
+
+  .invalid {
+    color: $kDandger;
+    visibility: visible;
+    padding-top: 5px;
+  }
+
   /*********************/
   /* PrimeNG overrides */
   /*********************/

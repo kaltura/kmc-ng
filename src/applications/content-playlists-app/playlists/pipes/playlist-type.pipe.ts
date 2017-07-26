@@ -15,15 +15,15 @@ export class PlaylistTypePipe implements PipeTransform {
 		if (typeof(value) !== 'undefined' && value !== null) {
 			switch (value) {
 				case KalturaPlaylistType.dynamic:
-				  className = 'kIconsound'; /* TODO [kmc] should be the correct icons here and below */
+				  className = 'kIconPlaylist_RuleBased'; /* TODO [kmc] should be the correct icons here and below */
 					playlistType = this.appLocalization.get("applications.content.playlistType.dynamic");
 					break;
 				case KalturaPlaylistType.external:
-          className = 'kIconimage';
+          className = 'kIconPlaylist_RuleBased';
 					playlistType = this.appLocalization.get("applications.content.playlistType.external");
 					break;
 				case KalturaPlaylistType.staticList:
-          className = 'kIconvideo';
+          className = 'kIconPlaylist_Manual';
 					playlistType = this.appLocalization.get("applications.content.playlistType.staticList");
 					break;
 				default:
