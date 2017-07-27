@@ -1,15 +1,16 @@
 <k-area-blocker kFillHeight
-  [showLoader]="(_playlistStore.entriesState$ | async)?.isBusy || this._deferredLoading"
+  [showLoader]="(_playlistStore.state$ | async)?.isBusy || this._deferredLoading"
   [message]="_areaBlockerMessage">
-	<div class="kPlaylistEntriesTable" [class.noResults]="!_entries.length">
-		<p-dataTable
-			[value]="_entries"
+  <div class="kPlaylistEntriesTable" [class.noResults]="!_entries.length">
+    <p-dataTable
+      #dataTable
+      [value]="_entries"
       (onSort)="onSortChanged($event)"
       [sortField]="filter.sortBy"
       emptyMessage="{{_areaBlockerMessage}}"
-			scrollable="true"
-			scrollHeight="100%"
-			dataKey="id"
+      scrollable="true"
+      scrollHeight="100%"
+      dataKey="id"
       [sortOrder]="filter.sortDirection | kPrimeTableSortDirection">
       <p-column styleClass="selectionColumn" selectionMode="multiple"></p-column>
       <p-column styleClass="thumbnailColumn" field="thumbnailUrl" header="{{'applications.content.table.thumbnail' | translate}}">
@@ -19,23 +20,23 @@
           </div>
         </ng-template>
       </p-column>
-      <p-column field="name" header="{{'applications.content.table.name' | translate}}" [sortable]="true">
+      <p-column field="name" header="{{'applications.content.table.name' | translate}}">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <span class="kTitle">{{entry[col.field]}}</span>
         </ng-template>
       </p-column>
-      <p-column field="mediaType" header="{{'applications.content.table.type' | translate}}" [sortable]="false" styleClass="mediaTypeColumn">
+      <p-column field="mediaType" header="{{'applications.content.table.type' | translate}}" styleClass="mediaTypeColumn">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <div [kTooltip]="entry[col.field] | entryType: true" [class]="entry[col.field] | entryType: false"></div>
         </ng-template>
       </p-column>
-      <p-column field="createdAt" header="Created On" [sortable]="true" styleClass="createdAtColumn">
+      <p-column field="createdAt" header="Created On" styleClass="createdAtColumn">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <span>{{entry[col.field] | kDate}}</span>
         </ng-template>
       </p-column>
 
-      <p-column field="duration" header="{{'applications.content.table.duration' | translate}}" [sortable]="true" styleClass="thumbnailColumn">
+      <p-column field="duration" header="{{'applications.content.table.duration' | translate}}" styleClass="durationColumn">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <span>{{entry[col.field] | kTime | entryDuration:entry}}</span>
         </ng-template>
@@ -43,10 +44,12 @@
       <p-column header="" styleClass="actionsColumn">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <div class="kPlaylistEntriesTableActions">
-            <button type="button" pButton icon="kIconmore"></button>
+            <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, entry)"></button>
           </div>
         </ng-template>
       </p-column>
-		</p-dataTable>
-	</div>
+    </p-dataTable>
+    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'"></p-menu>
+  </div>
 </k-area-blocker>
+

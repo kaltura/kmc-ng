@@ -13,17 +13,6 @@
   <kPlaylistEntriesTable
     class="kPlaylistEntriesTable"
     [entries]="(_playlistStore.entries$ | async)?.items"
-    [filter]="_filter"
-    (sortChanged)="onSortChanged($event)">
+    (actionSelected)="onActionSelected($event)">
   </kPlaylistEntriesTable>
-
-  <div class="kPlaylistEntriesTableFooter" #footer *ngIf="(_playlistStore.entries$ | async)?.totalCount">
-    <p-paginator
-      [rows]="_filter.pageSize"
-      [first]="_filter.pageIndex * _filter.pageSize"
-      [rowsPerPageOptions]="[25,50,75,100]"
-      [totalRecords]="(_playlistStore.entries$ | async)?.totalCount"
-      (onPageChange)="onPaginationChanged($event)"></p-paginator>
-    <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
-  </div>
 </div>

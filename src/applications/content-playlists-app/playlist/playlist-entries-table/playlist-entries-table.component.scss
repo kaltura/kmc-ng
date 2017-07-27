@@ -71,20 +71,26 @@
   padding-left: 14px!important;
 }
 
-:host /deep/ .thumbnailColumn {
+:host /deep/ .ui-datatable .thumbnailColumn {
   width: 100px;
 }
 
-:host /deep/ .mediaTypeColumn {
+:host /deep/ .ui-datatable .mediaTypeColumn {
   width: 80px;
   text-align: center;
 }
 
-:host /deep/ .createdAtColumn {
+:host /deep/ .ui-datatable .createdAtColumn {
   width: 140px;
+  text-align: center;
 }
 
-:host /deep/ .actionsColumn {
+:host /deep/ .ui-datatable .durationColumn {
+  width: 100px;
+  text-align: center;
+}
+
+:host /deep/ .ui-datatable .actionsColumn {
   overflow: visible;
   width: 80px;
 }

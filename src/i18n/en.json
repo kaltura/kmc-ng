@@ -210,7 +210,12 @@
         "confirmPlaylsts": "Are you sure you want to update {{0}} playlists? It could take a while...",
         "deleteEntries": "Delete Entries",
         "deleteConfirm": "Are you sure you want to delete the selected entries?",
-        "deleteNote": "Please note: the selected entries will be permanently deleted from your account."
+        "deleteNote": "Please note: the selected entries will be permanently deleted from your account.",
+        "removeFromPlaylist": "Remove from playlist",
+        "moveUp": "Move Up",
+        "moveDown": "Move Down",
+        "duplicate": "Duplicate"
+
       },
       "entryDetails": {
         "sections": {

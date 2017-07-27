@@ -20,19 +20,6 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaE
 import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
 
-export enum SortDirection {
-  Desc,
-  Asc
-}
-
-export interface QueryData
-{
-  pageIndex : number,
-  pageSize : number,
-  sortBy : string,
-  sortDirection : SortDirection
-}
-
 @Injectable()
 export class PlaylistStore implements OnDestroy {
 	private _sectionsState = new BehaviorSubject<{
@@ -49,12 +36,6 @@ export class PlaylistStore implements OnDestroy {
 	private _state = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin?: 'reload' | 'save'}}>({isBusy: false});
   private _entriesState = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin?: 'reload' | 'save'}}>({isBusy: false});
   private _entries  = new BehaviorSubject({items: [], totalCount: 0});
-  private _querySource = new BehaviorSubject<QueryData>({
-    pageIndex: 1,
-    pageSize: 50,
-    sortBy: 'createdAt',
-    sortDirection: SortDirection.Desc
-  });
 
   public entries$ = this._entries.asObservable();
   public playlist$ = this._playlist.asObservable();
@@ -62,7 +43,6 @@ export class PlaylistStore implements OnDestroy {
 	public sectionsState$ = this._sectionsState.asObservable();
 	public state$ = this._state.asObservable();
   public entriesState$ = this._entriesState.asObservable();
-  public query$ = this._querySource.monitor('queryData update');
 
   private _getPlaylistId() : string
   {
@@ -71,10 +51,6 @@ export class PlaylistStore implements OnDestroy {
 
   public get playlist() : KalturaPlaylist{
     return this._playlist.getValue().playlist;
-  }
-
-  public get queryData() : QueryData{
-    return Object.assign({}, this._querySource.getValue());
   }
 
 	constructor(
@@ -89,13 +65,6 @@ export class PlaylistStore implements OnDestroy {
     this._onRouterEvents();
 
     this._activeSection.next({section: this._playlistRoute.snapshot.firstChild.data.sectionKey});
-
-    const defaultPageSize = this._browserService.getFromLocalStorage("entries.list.pageSize");
-    if (defaultPageSize !== null) {
-      this._updateQueryData({
-        pageSize: defaultPageSize
-      });
-    }
 	}
 
   public openSection(sectionId: PlaylistSections): void {
@@ -120,19 +89,6 @@ export class PlaylistStore implements OnDestroy {
         this._sectionToRouteMapping[routeSectionType] = childRoute.path;
       }
     });
-  }
-
-  public reload(query : Partial<QueryData>) : void {
-    this._updateQueryData(query);
-    this._getEntries(this._getPlaylistId());
-  }
-
-  private _updateQueryData(partialData : Partial<QueryData>) : void {
-    const newQueryData =Object.assign({}, this._querySource.getValue(), partialData);
-    this._querySource.next(newQueryData);
-    if (partialData.pageSize) {
-      this._browserService.setInLocalStorage("entries.list.pageSize", partialData.pageSize);
-    }
   }
 
 	private _onRouterEvents() : void {
@@ -202,52 +158,6 @@ export class PlaylistStore implements OnDestroy {
 				}
 			);
 	}
-
-	private _getEntries(id: string) {
-    this._entriesState.next({isBusy: true});
-    let responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
-      type: KalturaResponseProfileType.includeFields,
-      fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration'
-    });
-
-    let queryData = this._querySource.getValue();
-
-    // update pagination args
-    let pagination: KalturaFilterPager = null;
-
-    if (queryData.pageIndex || queryData.pageSize) {
-      pagination = new KalturaFilterPager(
-        {
-          pageSize: queryData.pageSize,
-          pageIndex: queryData.pageIndex
-        }
-      );
-    }
-
-    this._kalturaServerClient.request( new PlaylistExecuteAction({
-        id,
-        pager: pagination,
-        responseProfile: responseProfile,
-        acceptedTypes : [KalturaMediaEntry]}
-      ))
-      .cancelOnDestroy(this)
-      .monitor('playlist store: get entries()')
-      .subscribe(
-        response => {
-          this._entries.next({
-            items: <any[]>response,
-            totalCount: <number>this._entries.getValue().totalCount
-          });
-          this._entriesState.next({isBusy: false});
-        },
-        error => {
-          this._entriesState.next({
-            isBusy: true,
-            error: {message: error.message, origin: 'reload'}
-          });
-        }
-      );
-  }
 
   public updateSectionState(section: PlaylistSections, state : {isValid?: boolean, isDirty?: boolean}) : void {
     const sections = Object.assign({}, this._sectionsState.getValue());
@@ -431,7 +341,6 @@ export class PlaylistStore implements OnDestroy {
   }
 
 	ngOnDestroy() {
-    this._querySource.complete();
     this._state.complete();
     this._playlist.complete();
     this._entries.complete();
