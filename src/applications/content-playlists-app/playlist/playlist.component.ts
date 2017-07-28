@@ -49,6 +49,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
                   label: this._appLocalization.get('applications.content.playlistDetails.errors.retry'),
                   action: () => {
                     this._playlistStore.reloadPlaylist();
+                    this._areaBlockerMessage = null;
                   }
                 });
             } else if(response.error.origin === 'save') {

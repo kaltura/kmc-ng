@@ -161,6 +161,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
       .subscribe(
       () => {
         this._loading = false;
+        this._blockerMessage = null;
         this._playlistsStore.reload(true);
       },
       error => {
@@ -171,6 +172,8 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               {
                 label: this.appLocalization.get('app.common.retry'),
                 action: () => {
+                  this._blockerMessage = null;
+                  this._loading = false;
                   this.deleteCurrentPlaylist(playlistId);
                 }
               },

@@ -15,8 +15,8 @@ import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntry
 export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 	public _entries: any[] = [];
   private _deferredEntries : any[];
-  public _deferredLoading = true;
-  public _areaBlockerMessage: AreaBlockerMessage;
+  public deferredLoading: boolean = true;
+  public areaBlockerMessage: AreaBlockerMessage;
   private actionsMenuEntryId: string = "";
   public _items: MenuItem[];
 
@@ -25,9 +25,8 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 
   @Input() filter: any = {};
   @Output() sortChanged = new EventEmitter<any>();
-  @Output() actionSelected = new EventEmitter<any>();
   @Input() set entries(data: any[]) {
-    if (!this._deferredLoading) {
+    if (!this.deferredLoading) {
       this._entries = [];
       this.cdRef.detectChanges();
       this._entries = data;
@@ -44,13 +43,13 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 	) {}
 
 	ngOnInit() {
-    this._areaBlockerMessage = null;
+    this.areaBlockerMessage = null;
     this._playlistStore.entriesState$
       .cancelOnDestroy(this)
       .subscribe(
         response => {
           if (response.error) {
-            this._areaBlockerMessage = new AreaBlockerMessage({
+            this.areaBlockerMessage = new AreaBlockerMessage({
               message: response.error.message || this._appLocalization.get('applications.content.entryDetails.errors.entriesLoadError'),
               buttons: [{
                 label: this._appLocalization.get('applications.content.playlistDetails.errors.retry'),
@@ -100,7 +99,20 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   }
 
   onActionSelected(action: string, entryId: string) {
-    this.actionSelected.emit({"action": action, "entryId": entryId});
+    switch (action){
+      case "remove":
+        this._deleteEntryFromPlaylist(entryId);
+        break;
+      case "moveUp":
+        break;
+      case "moveDown":
+        break;
+      case "duplicate":
+        this._duplicateEntry(entryId);
+        break;
+      default:
+        break;
+    }
   }
 
   openActionsMenu(event: any, entry: KalturaMediaEntry) {
@@ -112,6 +124,68 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
         this.actionsMenu.show(event);
       }
     }
+  }
+
+  private _deleteEntryFromPlaylist(entryId: string): void {
+    this._playlistStore.deleteEntryFromPlaylist(entryId)
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {
+          this._playlistStore.reloadEntries();
+        },
+        error => {
+          this.areaBlockerMessage = new AreaBlockerMessage(
+            {
+              message: error.message,
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this._deleteEntryFromPlaylist(entryId);
+                  }
+                },
+                {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this.areaBlockerMessage = null;
+                  }
+                }
+              ]
+            }
+          )
+        }
+      );
+  }
+
+  private _duplicateEntry(entryId: string): void {
+    this._playlistStore.duplicateEntry(entryId)
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {
+          this._playlistStore.reloadEntries();
+        },
+        error => {
+          this.areaBlockerMessage = new AreaBlockerMessage(
+            {
+              message: error.message,
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this._duplicateEntry(entryId);
+                  }
+                },
+                {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this.areaBlockerMessage = null;
+                  }
+                }
+              ]
+            }
+          )
+        }
+      );
   }
 
   scrollToTop() {
@@ -131,11 +205,11 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
         }
       }
     }
-    if (this._deferredLoading) {
+    if (this.deferredLoading) {
       /* Use timeout to allow the DOM to render before setting the data to the datagrid.
          This prevents the screen from hanging during datagrid rendering of the data.*/
       setTimeout(()=> {
-        this._deferredLoading = false;
+        this.deferredLoading = false;
         this._entries = this._deferredEntries;
         this._deferredEntries = null;
       }, 0);

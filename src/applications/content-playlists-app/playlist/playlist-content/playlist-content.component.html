@@ -12,7 +12,6 @@
   </div>
   <kPlaylistEntriesTable
     class="kPlaylistEntriesTable"
-    [entries]="(_playlistStore.entries$ | async)?.items"
-    (actionSelected)="onActionSelected($event)">
+    [entries]="(_playlistStore.entries$ | async)?.items">
   </kPlaylistEntriesTable>
 </div>
