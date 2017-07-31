@@ -19,8 +19,6 @@ import { PlaylistExecuteAction} from 'kaltura-typescript-client/types/PlaylistEx
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
-import { BaseEntryDeleteAction } from 'kaltura-typescript-client/types/BaseEntryDeleteAction';
-import { BaseEntryCloneAction } from 'kaltura-typescript-client/types/BaseEntryCloneAction';
 
 @Injectable()
 export class PlaylistStore implements OnDestroy {
@@ -34,17 +32,13 @@ export class PlaylistStore implements OnDestroy {
   private _loadPlaylistSubscription : ISubscription;
   private _sectionToRouteMapping : { [key : number] : string} = {};
 	private _activeSection = new BehaviorSubject<{ section: PlaylistSections}>({section: null});
-	private _playlist = new BehaviorSubject<{ playlist: KalturaPlaylist}>({playlist: null});
+	private _playlist = new BehaviorSubject<{ playlist: KalturaPlaylist, entries: KalturaMediaEntry[], entriesTotalCount: number}>({playlist: null, entries: [], entriesTotalCount: 0});
 	private _state = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin?: 'reload' | 'save'}}>({isBusy: false});
-  private _entriesState = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin?: 'reload' | 'save'}}>({isBusy: false});
-  private _entries  = new BehaviorSubject({items: [], totalCount: 0});
 
-  public entries$ = this._entries.asObservable();
   public playlist$ = this._playlist.asObservable();
   public activeSection$ = this._activeSection.asObservable();
 	public sectionsState$ = this._sectionsState.asObservable();
 	public state$ = this._state.asObservable();
-  public entriesState$ = this._entriesState.asObservable();
 
   private _getPlaylistId() : string {
     return this._playlistRoute.snapshot.params.id ? this._playlistRoute.snapshot.params.id : null;
@@ -52,6 +46,10 @@ export class PlaylistStore implements OnDestroy {
 
   public get playlist() : KalturaPlaylist{
     return this._playlist.getValue().playlist;
+  }
+
+  public get entries() : KalturaMediaEntry[] {
+    return this._playlist.getValue().entries;
   }
 
 	constructor(
@@ -100,7 +98,7 @@ export class PlaylistStore implements OnDestroy {
 						const currentPlaylistId = this._playlistRoute.snapshot.params.id;
 						const playlist = this._playlist.getValue();
 						if (!playlist.playlist || (playlist.playlist && playlist.playlist.id !== currentPlaylistId)) {
-							this._loadPlaylist(currentPlaylistId);
+							this._loadPlaylist();
 						} else {
               this._activeSection.next({section: this._playlistRoute.snapshot.firstChild.data.sectionKey});
             }
@@ -109,7 +107,7 @@ export class PlaylistStore implements OnDestroy {
 			)
 	}
 
-  private _loadPlaylist(id : string) : void  {
+  private _loadPlaylist() : void  {
     if (this._loadPlaylistSubscription) {
       this._loadPlaylistSubscription.unsubscribe();
       this._loadPlaylistSubscription = null;
@@ -121,6 +119,8 @@ export class PlaylistStore implements OnDestroy {
       type: KalturaResponseProfileType.includeFields,
       fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration'
     });
+
+    const id = this._getPlaylistId();
 
 		this._loadPlaylistSubscription = this._kalturaServerClient.multiRequest(
       new KalturaMultiRequest(
@@ -134,19 +134,13 @@ export class PlaylistStore implements OnDestroy {
 			.cancelOnDestroy(this)
 			.subscribe(
 				response => {
-          this._playlist.next({playlist: response[0].result});
+          this._playlist.next({playlist: response[0].result, entries: this.entries, entriesTotalCount: this._playlist.getValue().entriesTotalCount});
           if(response[1].result && response[1].result.length) {
-            this._entries.next({
-              items: <any[]>response[1].result,
-              totalCount: <number>response[1].result.length
-            });
+            this._playlist.next({playlist: this.playlist, entries: <KalturaMediaEntry[]>response[1].result, entriesTotalCount: <number>response[1].result.length});
           } else {
-              this._entries.next({
-                  items: [],
-                  totalCount: 0
-              });
+            this._playlist.next({playlist: this.playlist, entries: [], entriesTotalCount: 0});
           }
-                    this._state.next({isBusy: false});
+          this._state.next({isBusy: false});
 				},
 				error => {
 					this._state.next({
@@ -201,10 +195,11 @@ export class PlaylistStore implements OnDestroy {
     } else {
       let id: string = this._getPlaylistId(),
         playlist: KalturaPlaylist = new KalturaPlaylist({
-          name: this._playlist.getValue().playlist.name,
-          description: this._playlist.getValue().playlist.description,
-          tags: this._playlist.getValue().playlist.tags
+          name: this.playlist.name,
+          description: this.playlist.description,
+          tags: this.playlist.tags,
         });
+        playlist.playlistContent = this.entries.map(entry => entry.id).join(',');
 
       this._state.next({isBusy: true});
       this._kalturaServerClient.request(
@@ -225,104 +220,35 @@ export class PlaylistStore implements OnDestroy {
     }
   }
 
-  public reloadEntries() : void {
-    if (this._getPlaylistId()) {
-      this._getEntries(this._getPlaylistId());
-    }
+  public deleteEntryFromPlaylist(rowIndex: number) : void {
+    this.entries.splice(rowIndex, 1);
+    this._playlist.next({playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length});
+    this.updateSectionState(PlaylistSections.Content, {isDirty: true});
   }
 
-  private _getEntries(id: string) {
-    this._entriesState.next({isBusy: true});
-    let responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
-      type: KalturaResponseProfileType.includeFields,
-      fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration'
-    });
-
-    this._kalturaServerClient.request(
-      new PlaylistExecuteAction({
-        id,
-        responseProfile: responseProfile
-      })
-    )
-      .cancelOnDestroy(this)
-      .monitor('playlist store: get entries()')
-      .subscribe(
-        response => {
-          this._entries.next({
-            items: <any[]>response,
-            totalCount: <number>this._entries.getValue().totalCount
-          });
-          this._entriesState.next({isBusy: false});
-        },
-        error => {
-          this._entriesState.next({
-            isBusy: true,
-            error: {message: error.message, origin: 'reload'}
-          });
-          this._entriesState.next({isBusy: false});
-        }
-      );
+  public moveUpEntry(rowIndex: number) : void {
+    let currentEntry = this.entries[rowIndex];
+    this.entries.splice(rowIndex, 1);
+    this.entries.splice(rowIndex-1, 0, currentEntry);
+    this._playlist.next({playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length});
   }
 
-  public deleteEntryFromPlaylist(entryId: string) : Observable<void> {
-    return Observable.create(observer => {
-      this._entriesState.next({isBusy: true});
-      let subscription: ISubscription;
-      if (entryId && entryId.length > 0) {
-        subscription = this._kalturaServerClient.request(new BaseEntryDeleteAction({entryId: entryId})).subscribe(
-          () => {
-            observer.next();
-            observer.complete();
-          },
-          error =>{
-            observer.error(error);
-            this._entriesState.next({isBusy: false});
-          }
-        );
-      } else {
-        observer.error(new Error('missing entryId argument'));
-      }
-      return () => {
-        if (subscription) {
-          subscription.unsubscribe();
-        }
-      }
-    });
+  public moveDownEntry(rowIndex: number) : void {
+    let currentEntry = this.entries[rowIndex];
+    this.entries.splice(rowIndex, 1);
+    this.entries.splice(rowIndex+1, 0, currentEntry);
+    this._playlist.next({playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length});
   }
 
-  public duplicateEntry(entryId: string) : Observable<void> {
-    return Observable.create(observer => {
-      this._entriesState.next({isBusy: true});
-      let subscription: ISubscription;
-      if (entryId && entryId.length > 0) {
-        subscription = this._kalturaServerClient.request(new BaseEntryCloneAction({entryId: entryId})).subscribe(
-          response => {
-            this._entries.next({
-              items: [...this._entries.getValue().items, response],
-              totalCount: <number>this._entries.getValue().totalCount + 1
-            });
-            this._entriesState.next({isBusy: false});
-            /* ToDo saving/updating should be implemented after duplicating */
-          },
-          error => {
-            observer.error(error);
-            this._entriesState.next({isBusy: false});
-          }
-        );
-      } else {
-        observer.error(new Error('missing entryId argument'));
-      }
-      return () => {
-        if (subscription) {
-          subscription.unsubscribe();
-        }
-      }
-    });
+  public duplicateEntry(rowIndex: number) : void {
+    this.entries.splice(rowIndex, 0, this.entries[rowIndex]);
+    this._playlist.next({playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length});
+    this.updateSectionState(PlaylistSections.Content, {isDirty: true});
   }
 
   public reloadPlaylist() : void {
     if (this._getPlaylistId()) {
-      this._loadPlaylist(this._getPlaylistId());
+      this._loadPlaylist();
     }
   }
 
@@ -435,7 +361,6 @@ export class PlaylistStore implements OnDestroy {
 	ngOnDestroy() {
     this._state.complete();
     this._playlist.complete();
-    this._entries.complete();
 		this._loadPlaylistSubscription && this._loadPlaylistSubscription.unsubscribe();
 	}
 }

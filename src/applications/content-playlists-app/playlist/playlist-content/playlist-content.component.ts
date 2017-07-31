@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { PlaylistStore } from '../playlist-store.service';
-import { PlaylistEntriesTableComponent } from "../playlist-entries-table/playlist-entries-table.component";
+import { PlaylistEntriesTableComponent } from '../playlist-entries-table/playlist-entries-table.component';
+import { PlaylistSections } from '../playlist-sections';
 
 
 @Component({
@@ -16,6 +17,18 @@ export class PlaylistContentComponent implements AfterViewInit, OnInit, OnDestro
 
   ngOnInit() {
     this.dataTable.scrollToTop();
+
+    this._playlistStore.playlist$
+      .cancelOnDestroy(this)
+      .subscribe(
+        response => {
+          if(response.playlist) {
+            this._playlistStore.updateSectionState(PlaylistSections.Content, {isDirty : false});
+          } else {
+            // TODO [kmc] missing implementation
+          }
+        }
+      );
   };
 
   ngOnDestroy() {}

@@ -42,9 +42,9 @@
         </ng-template>
       </p-column>
       <p-column header="" styleClass="actionsColumn">
-        <ng-template let-col let-entry="rowData" pTemplate="body">
+        <ng-template let-col let-entry="rowData" pTemplate="body" let-i="rowIndex">
           <div class="kPlaylistEntriesTableActions">
-            <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, entry)"></button>
+            <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, i)"></button>
           </div>
         </ng-template>
       </p-column>

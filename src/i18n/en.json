@@ -556,9 +556,11 @@
         },
         "errors": {
           "retry": "Retry",
+          "ok": "Ok",
           "backToPlaylists": "Back To Playlists",
           "playlistTypeNotSupported": "playlist type not supported",
-          "validationError": "The form contains some invalid information. Please review the sections marked as invalid"
+          "validationError": "The form contains some invalid information. Please review the sections marked as invalid",
+          "contentValidationError": "Add at least one entry"
         }
       }
     }
