@@ -169,6 +169,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
                 this.isBusy = false;
 			    this._msgs = [];
 			    this._msgs.push({severity: 'success', summary: '', detail: this.appLocalization.get('applications.content.entries.deleted')});
+			    this._entriesStore.reload(true);
 		    },
 		    error => {
                 this.isBusy = false;

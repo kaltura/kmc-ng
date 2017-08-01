@@ -93,7 +93,6 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,tags,categoriesIds,downloadUrl'
     };
     private _querySource = new Subject<QueryRequestArgs>();
-	private _destoryed: boolean = false;
     private _activeFiltersMap : {[key : string] : FilterItem[]} = {};
     private _metadataProfilesLoaded = false;
     private executeQueryState  : { subscription : ISubscription, deferredRemovedFilters : any[], deferredAddedFilters : any[]} = { subscription : null, deferredAddedFilters : [], deferredRemovedFilters : []};
@@ -153,7 +152,6 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
         this._state.complete();
         this._querySource.complete();
         this._entries.complete();
-	    this._destoryed = true;
     }
 
     public get entries() : KalturaMediaEntry[]
@@ -460,9 +458,6 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
 		    if (entryId && entryId.length) {
 			    subscription = this.kalturaServerClient.request(new BaseEntryDeleteAction({entryId: entryId})).subscribe(
 				    result => {
-					    if (!this._destoryed) {
-						    this.reload(true);
-					    }
 					    observer.next();
 					    observer.complete();
 				    },
