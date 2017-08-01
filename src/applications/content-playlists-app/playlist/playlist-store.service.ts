@@ -231,6 +231,7 @@ export class PlaylistStore implements OnDestroy {
     this.entries.splice(rowIndex, 1);
     this.entries.splice(rowIndex-1, 0, currentEntry);
     this._playlist.next({playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length});
+    this.updateSectionState(PlaylistSections.Content, {isDirty: true});
   }
 
   public moveDownEntry(rowIndex: number) : void {
@@ -238,6 +239,7 @@ export class PlaylistStore implements OnDestroy {
     this.entries.splice(rowIndex, 1);
     this.entries.splice(rowIndex+1, 0, currentEntry);
     this._playlist.next({playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length});
+    this.updateSectionState(PlaylistSections.Content, {isDirty: true});
   }
 
   public duplicateEntry(rowIndex: number) : void {
