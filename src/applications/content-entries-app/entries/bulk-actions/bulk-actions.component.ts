@@ -108,7 +108,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           }
       );
     };
-    this.executeService(this._bulkDownloadService, flavorId, false, showSuccessMsg);
+    this.executeService(this._bulkDownloadService, flavorId, false, true, showSuccessMsg);
   }
 
   // bulk delete
@@ -130,7 +130,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           message: msg,
           accept: () => {
             setTimeout(()=>{
-              this.executeService(this._bulkDeleteService); // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
+              this.executeService(this._bulkDeleteService, {}, true, false); // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
             },0);
           }
         }
@@ -147,7 +147,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private executeService(service: BulkActionBaseService<any>, data: any = {}, reloadEntries: boolean = true, callback?: Function ): void{
+  private executeService(service: BulkActionBaseService<any>, data: any = {}, reloadEntries: boolean = true, confirmChunks: boolean = true, callback?: Function ): void{
     this._bulkAction = "";
 
     const execute = () => {
@@ -166,7 +166,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
       );
     };
 
-    if (this.selectedEntries.length > environment.modules.contentEntries.bulkActionsLimit){
+    if (confirmChunks && this.selectedEntries.length > environment.modules.contentEntries.bulkActionsLimit){
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),
