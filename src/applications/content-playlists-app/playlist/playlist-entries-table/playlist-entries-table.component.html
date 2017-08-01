@@ -1,11 +1,13 @@
 <k-area-blocker kFillHeight
-  [showLoader]="(_playlistStore.entriesState$ | async)?.isBusy || this.deferredLoading"
+  [showLoader]="(_playlistStore.state$ | async)?.isBusy || this.deferredLoading"
   [message]="areaBlockerMessage">
   <div class="kPlaylistEntriesTable" [class.noResults]="!_entries.length">
     <p-dataTable
       #dataTable
       [value]="_entries"
+      (selectionChange)="onSelectionChange($event)"
       (onSort)="onSortChanged($event)"
+      [(selection)]="selectedEntries"
       [sortField]="filter.sortBy"
       emptyMessage="{{areaBlockerMessage}}"
       scrollable="true"

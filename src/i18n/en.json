@@ -71,6 +71,7 @@
         "entries": "Entries",
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
+        "remove": "Remove",
         "cancel": "Cancel",
         "deletePlaylist": "Delete Playlist",
         "confirmDelete": "Are you sure you want to delete the selected playlist{{0}}?",

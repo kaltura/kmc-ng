@@ -21,7 +21,6 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
   @Input() filter: any = {};
-  @Output() sortChanged = new EventEmitter<any>();
   @Input() set entries(data: any[]) {
     if (!this.deferredLoading) {
       this._entries = [];
@@ -32,6 +31,9 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
       this._deferredEntries = data
     }
   }
+  @Input() selectedEntries: any[] = [];
+  @Output() sortChanged = new EventEmitter<any>();
+  @Output() selectedEntriesChange = new EventEmitter<any>();
 
 	constructor(
 		private _appLocalization: AppLocalization,
@@ -58,13 +60,13 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
         label: this._appLocalization.get("applications.content.bulkActions.moveUp"), command: (event) => {
           this.onActionSelected("moveUp", rowIndex);
         },
-        disabled: rowIndex === 0 ? true : false
+        disabled: rowIndex === 0
       },
       {
         label: this._appLocalization.get("applications.content.bulkActions.moveDown"), command: (event) => {
           this.onActionSelected("moveDown", rowIndex);
         },
-        disabled: rowIndex+1 === this._playlistStore.entries.length ? true : false
+        disabled: rowIndex+1 === this._playlistStore.entries.length
       },
       {
         label: this._appLocalization.get("applications.content.bulkActions.duplicate"), command: (event) => {
@@ -93,11 +95,9 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
         break;
       case "moveUp":
         this._playlistStore.moveUpEntry(rowIndex);
-        /* ToDo have to figure out why duration always === 0 and update it */
         break;
       case "moveDown":
         this._playlistStore.moveDownEntry(rowIndex);
-        /* ToDo have to figure out why duration always === 0 and update it */
         break;
       case "duplicate":
         this._playlistStore.duplicateEntry(rowIndex);
@@ -121,6 +121,10 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
       const scrollBody: HTMLDivElement = scrollBodyArr[0];
       scrollBody.scrollTop = 0;
     }
+  }
+
+  onSelectionChange(event) {
+    this.selectedEntriesChange.emit(event);
   }
 
 	ngAfterViewInit() {

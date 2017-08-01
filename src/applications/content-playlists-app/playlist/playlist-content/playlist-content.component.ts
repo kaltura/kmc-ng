@@ -2,6 +2,7 @@ import { Component, AfterViewInit, OnInit, OnDestroy, ViewChild } from '@angular
 import { PlaylistStore } from '../playlist-store.service';
 import { PlaylistEntriesTableComponent } from '../playlist-entries-table/playlist-entries-table.component';
 import { PlaylistSections } from '../playlist-sections';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 
 
 @Component({
@@ -13,7 +14,13 @@ export class PlaylistContentComponent implements AfterViewInit, OnInit, OnDestro
 
   @ViewChild(PlaylistEntriesTableComponent) private dataTable: PlaylistEntriesTableComponent;
 
+  public _selectedEntries: KalturaMediaEntry[] = [];
+
   constructor(public _playlistStore: PlaylistStore) {}
+
+  clearSelection() {
+    this._selectedEntries = [];
+  }
 
   ngOnInit() {
     this.dataTable.scrollToTop();
