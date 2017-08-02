@@ -3,7 +3,9 @@
     <div class="kBulkActions" *ngIf="_selectedEntries.length; else addEntry">
       <button pButton class="kButtonDefault kMoveBtn kMoveBtnTop"  icon="kIcondropdown_arrow_top"></button>
       <button pButton class="kButtonDefault kMoveBtn kMoveBtnBottom" icon="kIcondropdown_arrow_bottom"></button>
-      <button pButton class="kButtonDanger kBulkDeleteBtn" label="{{'applications.content.playlists.remove' | translate}}"></button>
+      <button pButton class="kButtonDanger kBulkDeleteBtn"
+              label="{{'applications.content.playlists.remove' | translate}}"
+              (click)="deleteEntries(_selectedEntries)"></button>
     </div>
     <ng-template #addEntry>
       <button

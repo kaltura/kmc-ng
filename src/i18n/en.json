@@ -61,10 +61,13 @@
         "refine": "Refine",
         "refresh": "Refresh",
         "deleteEntry": "Delete Entry",
+        "deleteEntries": "Delete Entr{{0}}",
         "confirmDelete": "Are you sure you want to delete the selected entry?",
+        "confirmDeleteEntries": "Are you sure you want to delete the selected entr{{0}}?",
         "deleted": "Entry deleted successfully",
         "entryId": "Entry ID: {{0}}",
-        "deleteNote": "Please note: the entry will be permanently deleted from your account."
+        "deleteNote": "Please note: the entry will be permanently deleted from your account.",
+        "deleteEntriesNote": "Please note: {{0}} entr{{1}} will be permanently deleted from your playlist."
       },
       "playlists": {
         "playlists": "Playlist's",

@@ -64,6 +64,12 @@
   .kIconimage {
     font-size: 24px;
   }
+
+  .kTitle {
+    color: #333333;
+    font-weight: 700;
+    cursor: pointer;
+  }
 }
 
 :host /deep/ .selectionColumn {

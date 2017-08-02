@@ -1,4 +1,5 @@
 import { Component, Input, Output,	EventEmitter,	AfterViewInit, OnInit, OnDestroy,	ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PlaylistStore } from '../playlist-store.service';
@@ -38,7 +39,8 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 	constructor(
 		private _appLocalization: AppLocalization,
     public _playlistStore: PlaylistStore,
-		private cdRef: ChangeDetectorRef
+		private cdRef: ChangeDetectorRef,
+    private _router: Router
 	) {}
 
 	ngOnInit() {
@@ -105,6 +107,10 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
       default:
         break;
     }
+  }
+
+  goToEntry(entryId: KalturaMediaEntry): void {
+    this._router.navigate(['/content/entries/entry', entryId]);
   }
 
   openActionsMenu(event: any, rowIndex: number) {
