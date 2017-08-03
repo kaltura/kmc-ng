@@ -1,18 +1,19 @@
 <div class="kPlaylistEntriesHolder">
   <div class="kPlaylistEntriesTableFilters">
-    <div class="kBulkActions" *ngIf="_selectedEntries.length; else addEntry">
+    <div class="kBulkActions" *ngIf="_selectedEntries.length; else addEntryWrap">
       <button pButton class="kButtonDefault kMoveBtn kMoveBtnTop"  icon="kIcondropdown_arrow_top"></button>
       <button pButton class="kButtonDefault kMoveBtn kMoveBtnBottom" icon="kIcondropdown_arrow_bottom"></button>
       <button pButton class="kButtonDanger kBulkDeleteBtn"
               label="{{'applications.content.playlists.remove' | translate}}"
               (click)="deleteEntries(_selectedEntries)"></button>
     </div>
-    <ng-template #addEntry>
+    <ng-template #addEntryWrap>
       <button
         pButton
         type="button"
         label="{{'applications.content.playlists.addEntry' | translate}}"
-        class="kButtonBranded kAddEntryBtn">
+        class="kButtonBranded kAddEntryBtn"
+        (click)="addNewEntry()">
       </button>
     </ng-template>
     <span
@@ -33,3 +34,9 @@
     [(selectedEntries)]="_selectedEntries">
   </kPlaylistEntriesTable>
 </div>
+
+<kPopupWidget #addEntry [popupWidth]="996" [popupHeight]="779" [modal]="true">
+  <ng-template>
+    <kAddEntry (onClosePopupWidget)="closePopupWidget($event)"></kAddEntry>
+  </ng-template>
+</kPopupWidget>

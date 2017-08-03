@@ -2,11 +2,12 @@ import { Component, AfterViewInit, OnInit, OnDestroy, ViewChild } from '@angular
 import { PlaylistStore } from '../playlist-store.service';
 import { PlaylistEntriesTableComponent } from '../playlist-entries-table/playlist-entries-table.component';
 import { PlaylistSections } from '../playlist-sections';
+import { EntriesBulkDeleteService } from '../entries-bulk-service/entries-bulk-delete.service';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { EntriesBulkDeleteService } from '../entries-bulk-service/entries-bulk-delete.service';
 import { environment } from 'app-environment';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
   selector: 'kPlaylistContent',
@@ -17,6 +18,7 @@ import { environment } from 'app-environment';
 export class PlaylistContentComponent implements AfterViewInit, OnInit, OnDestroy {
 
   @ViewChild(PlaylistEntriesTableComponent) private dataTable: PlaylistEntriesTableComponent;
+  @ViewChild('addEntry') public addEntry: PopupWidgetComponent;
 
   public _selectedEntries: KalturaMediaEntry[] = [];
 
@@ -92,6 +94,14 @@ export class PlaylistContentComponent implements AfterViewInit, OnInit, OnDestro
     } else{
       execute();
     }
+  }
+
+  addNewEntry() {
+    this.addEntry.open();
+  }
+
+  closePopupWidget() {
+    this.addEntry.close();
   }
 
   ngOnInit() {

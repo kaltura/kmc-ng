@@ -83,6 +83,7 @@
         "searchEntries": "Search Playlists",
         "addPlaylist": "Add Playlist",
         "addEntry": "Add Entry",
+        "addToPlaylist": "Add to Playlist",
         "refresh": "Refresh",
         "deleteNote": "Please note: {{0}} playlist{{1}} will be permanently deleted from your account."
       },
