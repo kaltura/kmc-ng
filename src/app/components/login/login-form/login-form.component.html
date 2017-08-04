@@ -24,7 +24,7 @@
            [class.has-error]="errorMessage">
   </div>
 
-  <p *ngIf="errorMessage" class="kErrorMessage">{{ errorMessage }}</p>
+  <p *ngIf="errorMessage" class="kErrorMessage" [innerHTML]="errorMessage"></p>
 
   <div class="kControlLinks">
     <p-checkbox [formControl]="rememberMeField"

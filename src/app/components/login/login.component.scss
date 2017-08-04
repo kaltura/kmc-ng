@@ -8,7 +8,8 @@
   display: flex;
   box-sizing: border-box;
   margin: 0;
-  background: rgba(27, 74, 151, 0.89);
+  background: rgba(27,74,151,0.89);
+  //background: $kLoginBackground;
 
   .kLoginCenter {
     box-sizing: border-box;
@@ -20,7 +21,7 @@
     align-items: center;
 
     .kLoginWindow {
-      background-color: #FFFFFF;
+      background-color: white;
       border-radius: 6px;
       margin-top: 121px;
       width: 430px;
@@ -36,7 +37,7 @@
     }
 
     .kLoginControls {
-      color: #FFFFFF;
+      color: white;
       margin-top: 42px;
       margin-bottom: 19px;
       font-size: 16px;
@@ -45,11 +46,12 @@
       .kSignUpBtn {
         border: none;
         font-weight: normal;
-        color: #FFFFFF;
+        color: white;
         height: 32px;
         width: 90px;
         border-radius: 4px;
-        background-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(255,255,255,0.2);
+        //background-color: $kLoginSignUpBtn;
       }
     }
   }

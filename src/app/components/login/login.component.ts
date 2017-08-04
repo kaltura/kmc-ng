@@ -3,6 +3,7 @@ import { environment } from 'app-environment';
 
 import { AppAuthentication, AppNavigator } from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { TranslateService } from 'ng2-translate';
 
 @Component({
   selector: 'kKMCLogin',
@@ -15,7 +16,10 @@ export class LoginComponent implements OnInit {
   inProgress = false;
   showLogin = false;
 
-  constructor(private appAuthentication: AppAuthentication, private appNavigator: AppNavigator, private browserService: BrowserService) {
+  constructor(private appAuthentication: AppAuthentication,
+              private appNavigator: AppNavigator,
+              private translate: TranslateService,
+              private browserService: BrowserService) {
 
   }
 
@@ -36,9 +40,26 @@ export class LoginComponent implements OnInit {
       privileges: environment.core.kaltura.privileges,
       expiry: environment.core.kaltura.expiry
     }).subscribe(
-      (result) => {
-        this.appNavigator.navigateToDefault();
+      ({ success, error }) => {
         this.inProgress = false;
+
+        if (success) {
+          this.appNavigator.navigateToDefault();
+          return;
+        }
+
+        if (error.passwordExpired) {
+          // TBD
+          return;
+        }
+
+        if (!error.custom) {
+          this.translate.get(error.message).subscribe(message => {
+            this.errorMessage = message;
+          });
+        } else {
+          this.errorMessage = error.message;
+        }
       },
       (err) => {
         this.errorMessage = err.message;

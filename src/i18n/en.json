@@ -47,6 +47,10 @@
         "username": "Username",
         "password": "Password"
       },
+      "error": {
+        "badCredentials": "The username or password you have entered is incorrect.",
+        "retriesExceeded": "Your account has been locked, and will not be available for 24 hours. You can contact Kaltura support at <a href=\"mailto:support@kaltura.com\">support@kaltura.com</a> to unblock your account"
+      },
       "forgotPassword": "Forgot password?",
       "rememberMe": "Remember me",
       "login": "Login",

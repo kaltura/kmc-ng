@@ -18,7 +18,7 @@
   .kErrorMessage {
     margin-top: -16px;
     margin-bottom: 40px;
-    color: #DB1F26;
+    color: $kDandger;
     text-align: center;
   }
 
@@ -32,20 +32,21 @@
       height: 48px;
       padding: 14px 16px;
       margin-bottom: 40px;
-      color: #999999;
+      color: $kGrayscale3;
       font-size: 16px;
       border-radius: 4px;
 
       &:placeholder-shown {
-        background-color: #EBEBEB;
+        background-color: $kGrayscale6;
       }
 
       &.has-error {
-        border: 2px solid #DB1F26;
+        border: 2px solid $kDandger;
       }
 
       &.has-success:focus {
         border: 2px solid #00A784;
+        //border: 2px solid $kLoginInputSuccess;
       }
     }
   }
@@ -57,7 +58,7 @@
 
     a {
       font-size: 16px;
-      color: #666666;
+      color: $kGrayscale2;
       text-decoration: none;
     }
   }
@@ -66,7 +67,7 @@
     width: 160px;
     height: 48px;
     background-color: $kPrimary;
-    color: #FFFFFF;
+    color: white;
     font-weight: normal;
     font-size: 16px;
   }
@@ -78,7 +79,7 @@
     font-size: 16px;
     font-weight: normal;
     line-height: 19px;
-    color: #666666;
+    color: $kGrayscale2;
     margin-left: 16px;
   }
 
