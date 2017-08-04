@@ -1,0 +1,95 @@
+@import 'app-theme/_variables.scss';
+
+.kLoginForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 19px;
+
+  h1 {
+    margin: 40px 0;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 29px;
+    text-align: center;
+  }
+
+  .kErrorMessage {
+    margin-top: -16px;
+    margin-bottom: 40px;
+    color: #DB1F26;
+    text-align: center;
+  }
+
+  div {
+    width: 100%;
+    align-self: center;
+    text-align: center;
+
+    input {
+      width: 100%;
+      height: 48px;
+      padding: 14px 16px;
+      margin-bottom: 40px;
+      color: #999999;
+      font-size: 16px;
+      border-radius: 4px;
+
+      &:placeholder-shown {
+        background-color: #EBEBEB;
+      }
+
+      &.has-error {
+        border: 2px solid #DB1F26;
+      }
+
+      &.has-success:focus {
+        border: 2px solid #00A784;
+      }
+    }
+  }
+
+  .kLogo {
+    width: 386px;
+    height: 30px;
+    background-color: #cd0a0a;
+  }
+
+  .kControlLinks {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+
+    a {
+      font-size: 16px;
+      color: #666666;
+      text-decoration: none;
+    }
+  }
+
+  .kButtonDefault {
+    width: 160px;
+    height: 48px;
+    background-color: $kPrimary;
+    color: #FFFFFF;
+    font-weight: normal;
+    font-size: 16px;
+  }
+
+}
+
+:host /deep/ p-checkbox {
+  .ui-chkbox-label {
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 19px;
+    color: #666666;
+    margin-left: 16px;
+  }
+
+  .ui-chkbox .ui-chkbox-box {
+    width: 18px;
+    height: 18px;
+  }
+}

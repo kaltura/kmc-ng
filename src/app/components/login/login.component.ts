@@ -10,43 +10,38 @@ import { BrowserService } from 'app-shared/kmc-shell';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  errorMessage : string;
+  errorMessage: string;
   inProgress = false;
   showLogin = false;
 
-  constructor(private appAuthentication : AppAuthentication, private appNavigator: AppNavigator, private browserService: BrowserService) {
+  constructor(private appAuthentication: AppAuthentication, private appNavigator: AppNavigator, private browserService: BrowserService) {
 
   }
 
   ngOnInit() {
-    if (this.appAuthentication.isLogged()){
+    if (this.appAuthentication.isLogged()) {
       this.appNavigator.navigateToDefault();
-    }else{
+    } else {
       this.showLogin = true;
     }
   }
 
-  login(username, password ,event) {
-
-    event.preventDefault();
-
+  login({ username, password }) {
     this.errorMessage = '';
     this.inProgress = true;
 
-
     this.appAuthentication.login(username, password, {
-      privileges : environment.core.kaltura.privileges,
-      expiry  : environment.core.kaltura.expiry
+      privileges: environment.core.kaltura.privileges,
+      expiry: environment.core.kaltura.expiry
     }).subscribe(
-        (result) =>
-        {
-          this.appNavigator.navigateToDefault();
-          this.inProgress = false;
-        },
-        (err) =>{
-            this.errorMessage = err.message;
-          this.inProgress = false;
-        }
+      (result) => {
+        this.appNavigator.navigateToDefault();
+        this.inProgress = false;
+      },
+      (err) => {
+        this.errorMessage = err.message;
+        this.inProgress = false;
+      }
     );
   }
 

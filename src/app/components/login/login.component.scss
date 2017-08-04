@@ -1,117 +1,49 @@
 @import 'app-theme/_variables.scss';
-@import '../../styles/scss/kmc-logo';
 
-.k-logo-animated-500-400 {
-	background-image: url('../../styles/assets/Kaltura-LogoAnimation-500-400.gif');
-	background-repeat: no-repeat;
-	background-size: contain;
-	background-position: center center;
-	width: 200px;
-	margin: auto;
-	height: 250px;
+.kLoginContainer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  flex-flow: column;
+  display: flex;
+  box-sizing: border-box;
+  margin: 0;
+  background: rgba(27, 74, 151, 0.89);
 }
 
-.loginContainer {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	flex-flow: column;
-	display: flex;
-	box-sizing: border-box;
-	display: flex;
-	margin: 0;
-
-	background: rgba(226, 226, 226, 1);
-	background: -moz-linear-gradient(top, rgba(226, 226, 226, 1) 0%, rgba(219, 219, 219, 1) 50%, rgba(209, 209, 209, 1) 51%, rgba(254, 254, 254, 1) 100%);
-	background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(226, 226, 226, 1)), color-stop(50%, rgba(219, 219, 219, 1)), color-stop(51%, rgba(209, 209, 209, 1)), color-stop(100%, rgba(254, 254, 254, 1)));
-	background: -webkit-linear-gradient(top, rgba(226, 226, 226, 1) 0%, rgba(219, 219, 219, 1) 50%, rgba(209, 209, 209, 1) 51%, rgba(254, 254, 254, 1) 100%);
-	background: -o-linear-gradient(top, rgba(226, 226, 226, 1) 0%, rgba(219, 219, 219, 1) 50%, rgba(209, 209, 209, 1) 51%, rgba(254, 254, 254, 1) 100%);
-	background: -ms-linear-gradient(top, rgba(226, 226, 226, 1) 0%, rgba(219, 219, 219, 1) 50%, rgba(209, 209, 209, 1) 51%, rgba(254, 254, 254, 1) 100%);
-	background: linear-gradient(to bottom, rgba(226, 226, 226, 1) 0%, rgba(219, 219, 219, 1) 50%, rgba(209, 209, 209, 1) 51%, rgba(254, 254, 254, 1) 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e2e2e2', endColorstr='#fefefe', GradientType=0);
-
-	.header {
-		background-color: $menuBkgColor;
-		height: 50px;
-		display: flex;
-		box-sizing: border-box;
-		flex: 0 0 auto;
-		a {
-			color: #59A3B5;
-			&:hover {
-				color: #A1E5F5;
-			}
-		}
-
-		.langMenu {
-			margin-right: 26px;
-			float: right;
-		}
-
-		.pullRight {
-			display: flex;
-			flex: 1 1 auto;
-			justify-content: flex-end;
-			padding-top: 15px
-		}
-		.separator {
-			color: #C5C5C5;
-			margin-left: 15px;
-			margin-right: 15px;
-		}
-		.kLogo{
-			padding-left: 14px;
-		}
-		.kHeaderRight{
-			display: flex;
-			flex: 1 1 auto;
-		}
-	}
+.kLoginCenter {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0 -14px;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
-.panel-heading {
-	background-color: #FCFCFF;
-	text-align: center;
-	img {
-		width: 200px;
-	}
-}
-.login-center{
-	box-sizing: border-box;
-	display: flex;
-	flex-flow: row wrap;
-	margin: 0 -14px;
-	justify-content: center;
-}
-.loginWindow {
-	background-color: white;
-	border: 1px solid white;
-	border-radius: 10px;
-	margin-top: 100px;
-	width: 35%;
+.kLoginWindow {
+  background-color: #FFFFFF;
+  border-radius: 6px;
+  margin-top: 121px;
+  width: 430px;
+  min-height: 396px;
+  padding: 75px 60px;
 }
 
-.loginForm {
-	padding: 20px;
-	input {
-		float: left;
-		width: 100%;
-	}
-	button {
-		margin-top: 10px;
-	}
-	label, input {
-		margin-bottom: 5px;
-		display: block;
-	}
-}
+.kLoginControls {
+  color: #FFFFFF;
+  margin-top: 42px;
+  margin-bottom: 19px;
+  font-size: 16px;
+  text-align: center;
 
-.loginAlert {
-	height: 30px;
-	line-height: 30px;
-	padding-left: 5px;
-	border: 1px solid lightcoral;
-	margin-bottom: 5px;
-	border-radius: 5px;
-	background-color: lightcoral;
+  .kSignUpBtn {
+    border: none;
+    font-weight: normal;
+    color: #FFFFFF;
+    height: 32px;
+    width: 90px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+  }
 }

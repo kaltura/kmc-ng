@@ -1,0 +1,45 @@
+<form class="kLoginForm"
+      [formGroup]="loginForm"
+      (submit)="login($event)">
+  <div class="kLogo">
+    <!-- LOGO TBD -->
+  </div>
+
+  <h1>Login</h1>
+
+  <div>
+    <input pInputText
+           placeholder="Username"
+           [formControl]="usernameField"
+           [ngClass]="{
+             'has-error': errorMessage || showError(usernameField),
+             'has-success': showSuccess(usernameField)
+           }"
+           [pTooltip]="loginValidationMessage"
+           tooltipEvent="focus"
+           tooltipPosition="right">
+  </div>
+
+  <div>
+    <input type="password"
+           pInputText
+           placeholder="Password"
+           [formControl]="passwordField"
+           [class.has-error]="errorMessage">
+  </div>
+
+  <p *ngIf="errorMessage" class="kErrorMessage">{{ errorMessage }}</p>
+
+  <div class="kControlLinks">
+    <p-checkbox id="forgotPassword" name="forgotPassword" label="Remember me"></p-checkbox>
+    <a>Forgot password?</a>
+  </div>
+
+  <div>
+    <button class="kButtonDefault"
+            pButton
+            [label]="inProgress ? 'Wait...' : 'Login'"
+            [disabled]="inProgress"></button>
+  </div>
+</form>
+

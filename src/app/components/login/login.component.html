@@ -1,39 +1,14 @@
-<div class="loginContainer" *ngIf="showLogin">
+<div class="kLoginContainer" *ngIf="showLogin">
+  <div class="kLoginCenter">
+    <div class="kLoginWindow">
+      <kKMCLoginForm [errorMessage]="errorMessage"
+                     [inProgress]="inProgress"
+                     (onLogin)="login($event)"></kKMCLoginForm>
+    </div>
+    <div class="kLoginControls">
+      <p>Don't have an account?</p>
 
-        <div class="header">
-            <div>
-              <div class="k-logo"></div>
-            </div>
-
-            <div class="kHeaderRight">
-              <div class="pullRight">
-                <span><a (click)="openUserManual()">{{'app.helpMenu.userManual' | translate}}</a></span>
-                <span class="separator">|</span>
-                <kKMCLanguageMenu class="langMenu"></kKMCLanguageMenu>
-              </div>
-            </div>
-        </div>
-
-        <div class="login-center">
-            <div class="loginWindow">
-                <div class="k-logo-animated-500-400"></div>
-                  <div class="loginForm">
-                      <div class="loginAlert" *ngIf="errorMessage">{{ errorMessage }}</div>
-                      <form role="form" (submit)="login(username.value, password.value, $event)">
-                          <div>
-                              <label for="username">Username</label>
-                              <input type="text" pInputText #username id="username" placeholder="Username">
-                          </div>
-                          <div>
-                              <label for="password">Password</label>
-                              <input type="password" pInputText #password id="password" placeholder="Password">
-                          </div>
-                          <button class="kButtonDefault" pButton type="text" type="submit" label="{{ inProgress ? 'Wait...' : 'Submit'}}" [disabled]="inProgress"></button>
-                      </form>
-                  </div>
-              </div>
-        </div>
+      <button class="kSignUpBtn" pButton label="Sign Up"></button>
+    </div>
+  </div>
 </div>
-
-
-

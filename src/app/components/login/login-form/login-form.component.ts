@@ -1,12 +1,59 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'kKMCLoginForm',
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.scss']
 })
-export class LoginComponent implements OnInit {
-  ngOnInit() {
+export class LoginFormComponent {
+  @Input() inProgress = false;
+  @Input() errorMessage: string;
+  @Output() onLogin = new EventEmitter<{ username: string, password: string }>();
 
+  loginForm: FormGroup;
+  usernameField: AbstractControl;
+  passwordField: AbstractControl;
+
+  constructor(private fb: FormBuilder) {
+    this.buildForm();
+  }
+
+  showError(control: AbstractControl) {
+    return control.invalid && control.touched;
+  }
+
+  showSuccess(control: AbstractControl) {
+    return control.valid && control.dirty;
+  }
+
+  get loginValidationMessage(): string {
+    return this.showError(this.usernameField) ? 'Wrong email format' : '';
+  }
+
+  buildForm() {
+    this.loginForm = this.fb.group({
+      username: ['', Validators.compose([Validators.required, Validators.email])],
+      password: ['', Validators.compose([
+        Validators.required,
+        Validators.minLength(1),
+        Validators.maxLength(200)
+      ])]
+    });
+
+    this.usernameField = this.loginForm.controls['username'];
+    this.passwordField = this.loginForm.controls['password'];
+  }
+
+  login(event: Event) {
+    event.preventDefault();
+
+    if (this.loginForm.valid) {
+      const payload = {
+        username: this.usernameField.value,
+        password: this.passwordField.value
+      };
+      this.onLogin.emit(payload);
+    }
   }
 }
