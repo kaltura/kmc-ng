@@ -1,14 +1,18 @@
 <div class="kLoginContainer" *ngIf="showLogin">
   <div class="kLoginCenter">
     <div class="kLoginWindow">
+      <div class="kLogo">
+        <!-- LOGO TBD -->
+      </div>
+
       <kKMCLoginForm [errorMessage]="errorMessage"
                      [inProgress]="inProgress"
                      (onLogin)="login($event)"></kKMCLoginForm>
     </div>
     <div class="kLoginControls">
-      <p>Don't have an account?</p>
+      <p>{{ 'app.login.dontHaveAccount' | translate }}</p>
 
-      <button class="kSignUpBtn" pButton label="Sign Up"></button>
+      <button class="kSignUpBtn" pButton [label]="'app.login.signUp' | translate"></button>
     </div>
   </div>
 </div>

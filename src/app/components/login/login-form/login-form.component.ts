@@ -31,7 +31,11 @@ export class LoginFormComponent {
     return this.showError(this.usernameField) ? 'Wrong email format' : '';
   }
 
-  buildForm() {
+  get loginBtnText(): string {
+    return this.inProgress ? 'app.login.wait' : 'app.login.login';
+  }
+
+  buildForm(): void {
     this.loginForm = this.fb.group({
       username: ['', Validators.compose([Validators.required, Validators.email])],
       password: ['', Validators.compose([
@@ -45,7 +49,7 @@ export class LoginFormComponent {
     this.passwordField = this.loginForm.controls['password'];
   }
 
-  login(event: Event) {
+  login(event: Event): void {
     event.preventDefault();
 
     if (this.loginForm.valid) {

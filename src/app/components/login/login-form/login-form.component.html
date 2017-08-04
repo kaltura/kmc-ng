@@ -1,15 +1,11 @@
 <form class="kLoginForm"
       [formGroup]="loginForm"
       (submit)="login($event)">
-  <div class="kLogo">
-    <!-- LOGO TBD -->
-  </div>
-
-  <h1>Login</h1>
+  <h1>{{ 'app.login.login' | translate}}</h1>
 
   <div>
     <input pInputText
-           placeholder="Username"
+           [placeholder]="'app.login.placeholder.username' | translate"
            [formControl]="usernameField"
            [ngClass]="{
              'has-error': errorMessage || showError(usernameField),
@@ -23,7 +19,7 @@
   <div>
     <input type="password"
            pInputText
-           placeholder="Password"
+           [placeholder]="'app.login.placeholder.password' | translate"
            [formControl]="passwordField"
            [class.has-error]="errorMessage">
   </div>
@@ -31,14 +27,14 @@
   <p *ngIf="errorMessage" class="kErrorMessage">{{ errorMessage }}</p>
 
   <div class="kControlLinks">
-    <p-checkbox id="forgotPassword" name="forgotPassword" label="Remember me"></p-checkbox>
-    <a>Forgot password?</a>
+    <p-checkbox [label]="'app.login.rememberMe' | translate"></p-checkbox>
+    <a>{{ 'app.login.forgotPassword' | translate }}</a>
   </div>
 
   <div>
     <button class="kButtonDefault"
             pButton
-            [label]="inProgress ? 'Wait...' : 'Login'"
+            [label]="loginBtnText | translate"
             [disabled]="inProgress"></button>
   </div>
 </form>

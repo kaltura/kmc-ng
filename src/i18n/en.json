@@ -41,6 +41,18 @@
       "confirm": "Confirm",
       "close": "Close",
       "note": "Note:"
+    },
+    "login": {
+      "placeholder": {
+        "username": "Username",
+        "password": "Password"
+      },
+      "forgotPassword": "Forgot password?",
+      "rememberMe": "Remember me",
+      "login": "Login",
+      "wait": "Wait…",
+      "dontHaveAccount": "Don't have an account?",
+      "signUp": "Sign Up"
     }
   },
   "applications": {

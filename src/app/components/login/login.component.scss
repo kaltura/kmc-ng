@@ -9,41 +9,48 @@
   box-sizing: border-box;
   margin: 0;
   background: rgba(27, 74, 151, 0.89);
-}
 
-.kLoginCenter {
-  box-sizing: border-box;
-  display: flex;
-  flex-flow: row wrap;
-  margin: 0 -14px;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-}
+  .kLoginCenter {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row wrap;
+    margin: 0 -14px;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 
-.kLoginWindow {
-  background-color: #FFFFFF;
-  border-radius: 6px;
-  margin-top: 121px;
-  width: 430px;
-  min-height: 396px;
-  padding: 75px 60px;
-}
+    .kLoginWindow {
+      background-color: #FFFFFF;
+      border-radius: 6px;
+      margin-top: 121px;
+      width: 430px;
+      min-height: 396px;
+      padding: 75px 60px;
 
-.kLoginControls {
-  color: #FFFFFF;
-  margin-top: 42px;
-  margin-bottom: 19px;
-  font-size: 16px;
-  text-align: center;
+      .kLogo {
+        margin: 0 auto;
+        width: 386px;
+        height: 30px;
+        background-color: #cd0a0a;
+      }
+    }
 
-  .kSignUpBtn {
-    border: none;
-    font-weight: normal;
-    color: #FFFFFF;
-    height: 32px;
-    width: 90px;
-    border-radius: 4px;
-    background-color: rgba(255, 255, 255, 0.2);
+    .kLoginControls {
+      color: #FFFFFF;
+      margin-top: 42px;
+      margin-bottom: 19px;
+      font-size: 16px;
+      text-align: center;
+
+      .kSignUpBtn {
+        border: none;
+        font-weight: normal;
+        color: #FFFFFF;
+        height: 32px;
+        width: 90px;
+        border-radius: 4px;
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+    }
   }
 }
