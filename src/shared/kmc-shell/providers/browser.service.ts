@@ -73,6 +73,7 @@ export class BrowserService implements IAppStorage {
 
 	public confirm(confirmation : Confirmation) {
 		confirmation.key = "confirm";
+		confirmation.message = confirmation.message.replace(/(?:\r\n|\r|\n)/g, '<br />');
 		this._onConfirmationFn(confirmation);
 	}
 
