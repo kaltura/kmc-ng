@@ -27,7 +27,9 @@
   <p *ngIf="errorMessage" class="kErrorMessage">{{ errorMessage }}</p>
 
   <div class="kControlLinks">
-    <p-checkbox [label]="'app.login.rememberMe' | translate"></p-checkbox>
+    <p-checkbox [formControl]="rememberMeField"
+                [binary]="true"
+                [label]="'app.login.rememberMe' | translate"></p-checkbox>
     <a>{{ 'app.login.forgotPassword' | translate }}</a>
   </div>
 

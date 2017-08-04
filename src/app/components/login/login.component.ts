@@ -10,6 +10,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  username: string;
   errorMessage: string;
   inProgress = false;
   showLogin = false;
@@ -23,6 +24,7 @@ export class LoginComponent implements OnInit {
       this.appNavigator.navigateToDefault();
     } else {
       this.showLogin = true;
+      this.username = this.browserService.getFromLocalStorage('login.username');
     }
   }
 
@@ -43,6 +45,14 @@ export class LoginComponent implements OnInit {
         this.inProgress = false;
       }
     );
+  }
+
+  rememberMe(username: string) {
+    if (username) {
+      this.browserService.setInLocalStorage('login.username', username);
+    } else {
+      this.browserService.removeFromLocalStorage('login.username');
+    }
   }
 
   openUserManual() {

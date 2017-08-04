@@ -10,10 +10,18 @@ export class LoginFormComponent {
   @Input() inProgress = false;
   @Input() errorMessage: string;
   @Output() onLogin = new EventEmitter<{ username: string, password: string }>();
+  @Output() onRememberMe = new EventEmitter<string>();
+
+  @Input()
+  set username(value: string) {
+    this.usernameField.setValue(value || '');
+    this.rememberMeField.setValue(!!value);
+  };
 
   loginForm: FormGroup;
   usernameField: AbstractControl;
   passwordField: AbstractControl;
+  rememberMeField: AbstractControl;
 
   constructor(private fb: FormBuilder) {
     this.buildForm();
@@ -42,22 +50,27 @@ export class LoginFormComponent {
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(200)
-      ])]
+      ])],
+      rememberMe: false
     });
 
     this.usernameField = this.loginForm.controls['username'];
     this.passwordField = this.loginForm.controls['password'];
+    this.rememberMeField = this.loginForm.controls['rememberMe']
   }
 
   login(event: Event): void {
     event.preventDefault();
 
     if (this.loginForm.valid) {
-      const payload = {
+      const rememberMePayload = this.rememberMeField.value ? this.usernameField.value : '';
+      const loginPayload = {
         username: this.usernameField.value,
         password: this.passwordField.value
       };
-      this.onLogin.emit(payload);
+
+      this.onLogin.emit(loginPayload);
+      this.onRememberMe.emit(rememberMePayload);
     }
   }
 }

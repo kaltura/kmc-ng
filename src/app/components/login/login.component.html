@@ -5,8 +5,10 @@
         <!-- LOGO TBD -->
       </div>
 
-      <kKMCLoginForm [errorMessage]="errorMessage"
+      <kKMCLoginForm [username]="username"
+                     [errorMessage]="errorMessage"
                      [inProgress]="inProgress"
+                     (onRememberMe)="rememberMe($event)"
                      (onLogin)="login($event)"></kKMCLoginForm>
     </div>
     <div class="kLoginControls">
