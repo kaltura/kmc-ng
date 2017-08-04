@@ -135,9 +135,9 @@ export class AppAuthentication {
     const { message, code } = responseError.error;
     const custom = true;
     const errors = {
-      'USER_NOT_FOUND': 'app.login.error.badCredentials',
-      'USER_WRONG_PASSWORD': 'app.login.error.badCredentials',
-      'LOGIN_RETRIES_EXCEEDED': 'app.login.error.retriesExceeded'
+      'USER_NOT_FOUND': 'app.login.login.error.badCredentials',
+      'USER_WRONG_PASSWORD': 'app.login.login.error.badCredentials',
+      'LOGIN_RETRIES_EXCEEDED': 'app.login.login.error.retriesExceeded'
     };
 
     if (code === 'PASSWORD_EXPIRED') {

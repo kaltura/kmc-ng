@@ -5,11 +5,14 @@
         <!-- LOGO TBD -->
       </div>
 
-      <kKMCLoginForm [username]="username"
-                     [errorMessage]="errorMessage"
-                     [inProgress]="inProgress"
-                     (onRememberMe)="rememberMe($event)"
-                     (onLogin)="login($event)"></kKMCLoginForm>
+      <!--<kKMCLoginForm [username]="username"-->
+      <!--[errorMessage]="errorMessage"-->
+      <!--[inProgress]="inProgress"-->
+      <!--(onRememberMe)="rememberMe($event)"-->
+      <!--(onLogin)="login($event)"></kKMCLoginForm>-->
+
+      <kKMCForgotPasswordForm [errorMessage]="errorMessage"
+                              [inProgress]="inProgress"></kKMCForgotPasswordForm>
     </div>
     <div class="kLoginControls">
       <p>{{ 'app.login.dontHaveAccount' | translate }}</p>

@@ -43,20 +43,38 @@
       "note": "Note:"
     },
     "login": {
-      "placeholder": {
-        "username": "Username",
-        "password": "Password"
+      "login":{
+        "title": "Login",
+        "forgotPassword": "Forgot password?",
+        "placeholder": {
+          "username": "Username",
+          "password": "Password"
+        },
+        "error": {
+          "badCredentials": "The username or password you have entered is incorrect.",
+          "retriesExceeded": "Your account has been locked, and will not be available for 24 hours. You can contact Kaltura support at <a href=\"mailto:support@kaltura.com\">support@kaltura.com</a> to unblock your account"
+        }
+      },
+      "forgotPassword": {
+        "title": "Forgot password",
+        "placeholder": "Your Email",
+        "instructions": "Instructions to reset your password will be sent to your email. if you forgot which email you used, please <a href=\"mailto:support@kaltura.com\">contact</a> us.",
+        "send": "Send",
+        "sent": {
+          "title": "An email has been sent to your inbox!",
+          "instructions": "If you don’t see the message in your inbox, check to see if the message is in your spam or junk folders.",
+          "redirectTo": "Redirect to",
+          "login": "login"
+        }
       },
       "error": {
-        "badCredentials": "The username or password you have entered is incorrect.",
-        "retriesExceeded": "Your account has been locked, and will not be available for 24 hours. You can contact Kaltura support at <a href=\"mailto:support@kaltura.com\">support@kaltura.com</a> to unblock your account"
+        "email": "Wrong email format"
       },
-      "forgotPassword": "Forgot password?",
-      "rememberMe": "Remember me",
-      "login": "Login",
       "wait": "Wait…",
-      "dontHaveAccount": "Don't have an account?",
-      "signUp": "Sign Up"
+      "signUp": "Sign Up",
+      "rememberMe": "Remember me",
+      "dontHaveAccount": "Don't have an account?"
+
     }
   },
   "applications": {

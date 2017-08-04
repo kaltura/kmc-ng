@@ -1,17 +1,17 @@
 <form class="kLoginForm"
       [formGroup]="loginForm"
       (submit)="login($event)">
-  <h1>{{ 'app.login.login' | translate}}</h1>
+  <h1>{{ 'app.login.login.title' | translate}}</h1>
 
   <div>
     <input pInputText
-           [placeholder]="'app.login.placeholder.username' | translate"
+           [placeholder]="'app.login.login.placeholder.username' | translate"
            [formControl]="usernameField"
            [ngClass]="{
              'has-error': errorMessage || showError(usernameField),
              'has-success': showSuccess(usernameField)
            }"
-           [pTooltip]="loginValidationMessage"
+           [pTooltip]="loginValidationMessage | translate"
            tooltipEvent="focus"
            tooltipPosition="right">
   </div>
@@ -19,7 +19,7 @@
   <div>
     <input type="password"
            pInputText
-           [placeholder]="'app.login.placeholder.password' | translate"
+           [placeholder]="'app.login.login.placeholder.password' | translate"
            [formControl]="passwordField"
            [class.has-error]="errorMessage">
   </div>
@@ -30,7 +30,7 @@
     <p-checkbox [formControl]="rememberMeField"
                 [binary]="true"
                 [label]="'app.login.rememberMe' | translate"></p-checkbox>
-    <a>{{ 'app.login.forgotPassword' | translate }}</a>
+    <a>{{ 'app.login.login.forgotPassword' | translate }}</a>
   </div>
 
   <div>

@@ -36,11 +36,11 @@ export class LoginFormComponent {
   }
 
   get loginValidationMessage(): string {
-    return this.showError(this.usernameField) ? 'Wrong email format' : '';
+    return this.showError(this.usernameField) ? 'app.login.error.email' : '';
   }
 
   get loginBtnText(): string {
-    return this.inProgress ? 'app.login.wait' : 'app.login.login';
+    return this.inProgress ? 'app.login.wait' : 'app.login.login.title';
   }
 
   buildForm(): void {
