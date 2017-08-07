@@ -2,7 +2,10 @@
   <div class="kLoginCenter">
     <div class="kLoginWindow">
       <div class="kLogo">
-        <!-- LOGO TBD -->
+        <i class="k-logo"></i>
+        <span>
+          <strong>KALTURA</strong> MANAGEMENT CONSOLE
+        </span>
       </div>
 
       <ng-container [ngSwitch]="currentScreen">
@@ -31,14 +34,15 @@
       <ng-container *ngIf="currentScreen === loginScreen.Login">
         <p>{{ 'app.login.dontHaveAccount' | translate }}</p>
 
-        <button class="kSignUpBtn" pButton [label]="'app.login.signUp' | translate"></button>
+        <a [href]="signUpLink" class="kSignUpBtn" pButton [label]="'app.login.signUp' | translate"></a>
       </ng-container>
 
       <ng-container *ngIf="currentScreen !== loginScreen.Login">
-        <button class="kSignUpBtn"
-                pButton
-                [label]="'app.login.login.title' | translate"
-                (click)="setScreen(loginScreen.Login)"></button>
+        <a [href]="signUpLink"
+           class="kSignUpBtn"
+           pButton
+           [label]="'app.login.login.title' | translate"
+           (click)="setScreen(loginScreen.Login)"></a>
         <button class="kSignUpBtn" pButton [label]="'app.login.signUp' | translate"></button>
       </ng-container>
     </div>

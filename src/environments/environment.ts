@@ -73,7 +73,8 @@ export const environment = {
     },
     "externalLinks": {
       "USER_MANUAL": "https://kmc.kaltura.com/content/docs/pdf/KMC_User_Manual.pdf",
-      "SUPPORT": "http://kmc.kaltura.com/index.php/kmc/support"
+      "SUPPORT": "http://kmc.kaltura.com/index.php/kmc/support",
+      "SIGNUP": "https://corp.kaltura.com/free-trial"
     },
     "locales": [
       {

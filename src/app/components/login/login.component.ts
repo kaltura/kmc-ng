@@ -23,8 +23,9 @@ export class LoginComponent implements OnInit {
   inProgress = false;
   showLogin = false;
   loginScreen = LoginScreen;
-  currentScreen = LoginScreen.PasswordExpired;
+  currentScreen = LoginScreen.Login;
   passwordReset = false;
+  signUpLink = environment.core.externalLinks.SIGNUP;
 
   constructor(private appAuthentication: AppAuthentication,
               private appNavigator: AppNavigator,
