@@ -58,11 +58,10 @@
       "forgotPassword": {
         "title": "Forgot password",
         "placeholder": "Your Email",
-        "instructions": "Instructions to reset your password will be sent to your email. if you forgot which email you used, please <a href=\"mailto:support@kaltura.com\">contact</a> us.",
+        "instructions": "Instructions to reset your password will be sent to your email. If you forgot which email you used, please contact us.",
         "send": "Send",
         "sent": {
-          "title": "An email has been sent to your inbox!",
-          "instructions": "If you don’t see the message in your inbox, check to see if the message is in your spam or junk folders.",
+          "instructions": "An email has been sent to {{value}} with a link to reset your password. If you don't see the message in your inbox, check to see if the message is in your spam or junk folders.",
           "redirectTo": "Redirect to",
           "login": "login"
         }

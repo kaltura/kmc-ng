@@ -6,7 +6,7 @@
       </div>
 
       <ng-container [ngSwitch]="currentScreen">
-        <kKMCLoginForm *ngSwitchCase="loginScreens.Login"
+        <kKMCLoginForm *ngSwitchCase="loginScreen.Login"
                        [username]="username"
                        [errorMessage]="errorMessage"
                        [inProgress]="inProgress"
@@ -14,24 +14,26 @@
                        (onRememberMe)="rememberMe($event)"
                        (onLogin)="login($event)"></kKMCLoginForm>
 
-        <kKMCForgotPasswordForm *ngSwitchCase="loginScreens.ForgotPassword"
+        <kKMCForgotPasswordForm *ngSwitchCase="loginScreen.ForgotPassword"
                                 [errorMessage]="errorMessage"
                                 [inProgress]="inProgress"
+                                [passwordReset]="passwordReset"
+                                (onResetPassword)="resetPassword($event)"
                                 (onSetScreen)="setScreen($event)"></kKMCForgotPasswordForm>
       </ng-container>
     </div>
     <div class="kLoginControls">
-      <ng-container *ngIf="currentScreen === loginScreens.Login">
+      <ng-container *ngIf="currentScreen === loginScreen.Login">
         <p>{{ 'app.login.dontHaveAccount' | translate }}</p>
 
         <button class="kSignUpBtn" pButton [label]="'app.login.signUp' | translate"></button>
       </ng-container>
 
-      <ng-container *ngIf="currentScreen !== loginScreens.Login">
+      <ng-container *ngIf="currentScreen !== loginScreen.Login">
         <button class="kSignUpBtn"
                 pButton
                 [label]="'app.login.login.title' | translate"
-                (click)="setScreen(loginScreens.Login)"></button>
+                (click)="setScreen(loginScreen.Login)"></button>
         <button class="kSignUpBtn" pButton [label]="'app.login.signUp' | translate"></button>
       </ng-container>
     </div>

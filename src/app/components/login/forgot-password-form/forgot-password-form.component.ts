@@ -10,10 +10,17 @@ import { LoginScreen } from '../login.component';
 export class ForgotPasswordFormComponent {
   @Input() inProgress: boolean;
   @Input() errorMessage: string;
+  @Input() set passwordReset(value: boolean) {
+    if (value) {
+      this.displayEmailField = this.inProgress = false;
+    }
+  }
   @Output() onSetScreen = new EventEmitter<LoginScreen>();
+  @Output() onResetPassword = new EventEmitter<string>();
 
   forgotPasswordForm: FormGroup;
   emailField: AbstractControl;
+  displayEmailField = true;
 
   constructor(private fb: FormBuilder) {
     this.buildForm();
@@ -37,9 +44,19 @@ export class ForgotPasswordFormComponent {
 
   resetPassword(event: Event) {
     event.preventDefault();
+
+    if (this.forgotPasswordForm.valid) {
+      this.inProgress = true;
+      this.onResetPassword.emit(this.emailField.value);
+    }
   }
 
   openLogin() {
     this.onSetScreen.emit(LoginScreen.Login);
+  }
+
+  get translateParam() {
+    const value = this.emailField ? this.emailField.value : '';
+    return { value };
   }
 }

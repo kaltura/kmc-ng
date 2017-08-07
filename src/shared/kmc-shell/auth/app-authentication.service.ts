@@ -6,7 +6,7 @@ import 'rxjs/add/operator/map';
 import * as R from 'ramda';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 
-import { KalturaMultiRequest, KalturaResponse } from 'kaltura-typescript-client';
+import { KalturaMultiRequest, KalturaRequest, KalturaResponse } from 'kaltura-typescript-client';
 import { KalturaPermissionFilter } from 'kaltura-typescript-client/types/KalturaPermissionFilter';
 import { UserLoginByLoginIdAction } from 'kaltura-typescript-client/types/UserLoginByLoginIdAction';
 import { UserGetByLoginIdAction } from 'kaltura-typescript-client/types/UserGetByLoginIdAction';
@@ -18,6 +18,7 @@ import { PermissionGetCurrentPermissionsAction } from 'kaltura-typescript-client
 import { AppUser } from './app-user';
 import { AppStorage } from '@kaltura-ng/kaltura-common';
 import { PartnerInfo } from './partner-info';
+import { UserResetPasswordAction } from 'kaltura-typescript-client/types/UserResetPasswordAction';
 
 
 export enum AppAuthStatusTypes {
@@ -50,6 +51,10 @@ export class AppAuthentication {
 
   get appUser(): AppUser {
     return this._appUser;
+  }
+
+  resetPassword(email: string) {
+    return this.kalturaServerClient.request(new UserResetPasswordAction({ email }));
   }
 
   login(loginId: string, password: string, optional: { privileges?, expiry? } = {

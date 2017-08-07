@@ -21,8 +21,9 @@ export class LoginComponent implements OnInit {
   errorMessage: string;
   inProgress = false;
   showLogin = false;
-  loginScreens = LoginScreen;
+  loginScreen = LoginScreen;
   currentScreen = LoginScreen.Login;
+  passwordReset = false;
 
   constructor(private appAuthentication: AppAuthentication,
               private appNavigator: AppNavigator,
@@ -90,5 +91,20 @@ export class LoginComponent implements OnInit {
 
   setScreen(screen: LoginScreen) {
     this.currentScreen = screen;
+
+    if (screen === LoginScreen.Login) {
+      this.passwordReset = false;
+    }
+  }
+
+  resetPassword(email: string) {
+    this.appAuthentication.resetPassword(email)
+      .subscribe(
+        () => {
+          this.passwordReset = true;
+        },
+        err => {
+          console.warn(err)
+        });
   }
 }
