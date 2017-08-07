@@ -30,7 +30,7 @@
     <p-checkbox [formControl]="rememberMeField"
                 [binary]="true"
                 [label]="'app.login.rememberMe' | translate"></p-checkbox>
-    <a>{{ 'app.login.login.forgotPassword' | translate }}</a>
+    <a (click)="forgotPassword()">{{ 'app.login.login.forgotPassword' | translate }}</a>
   </div>
 
   <div>

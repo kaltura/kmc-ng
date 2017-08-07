@@ -5,19 +5,35 @@
         <!-- LOGO TBD -->
       </div>
 
-      <!--<kKMCLoginForm [username]="username"-->
-      <!--[errorMessage]="errorMessage"-->
-      <!--[inProgress]="inProgress"-->
-      <!--(onRememberMe)="rememberMe($event)"-->
-      <!--(onLogin)="login($event)"></kKMCLoginForm>-->
+      <ng-container [ngSwitch]="currentScreen">
+        <kKMCLoginForm *ngSwitchCase="loginScreens.Login"
+                       [username]="username"
+                       [errorMessage]="errorMessage"
+                       [inProgress]="inProgress"
+                       (onSetScreen)="setScreen($event)"
+                       (onRememberMe)="rememberMe($event)"
+                       (onLogin)="login($event)"></kKMCLoginForm>
 
-      <kKMCForgotPasswordForm [errorMessage]="errorMessage"
-                              [inProgress]="inProgress"></kKMCForgotPasswordForm>
+        <kKMCForgotPasswordForm *ngSwitchCase="loginScreens.ForgotPassword"
+                                [errorMessage]="errorMessage"
+                                [inProgress]="inProgress"
+                                (onSetScreen)="setScreen($event)"></kKMCForgotPasswordForm>
+      </ng-container>
     </div>
     <div class="kLoginControls">
-      <p>{{ 'app.login.dontHaveAccount' | translate }}</p>
+      <ng-container *ngIf="currentScreen === loginScreens.Login">
+        <p>{{ 'app.login.dontHaveAccount' | translate }}</p>
 
-      <button class="kSignUpBtn" pButton [label]="'app.login.signUp' | translate"></button>
+        <button class="kSignUpBtn" pButton [label]="'app.login.signUp' | translate"></button>
+      </ng-container>
+
+      <ng-container *ngIf="currentScreen !== loginScreens.Login">
+        <button class="kSignUpBtn"
+                pButton
+                [label]="'app.login.login.title' | translate"
+                (click)="setScreen(loginScreens.Login)"></button>
+        <button class="kSignUpBtn" pButton [label]="'app.login.signUp' | translate"></button>
+      </ng-container>
     </div>
   </div>
 </div>

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LoginScreen } from '../login.component';
 
 @Component({
   selector: 'kKMCLoginForm',
@@ -11,6 +12,7 @@ export class LoginFormComponent {
   @Input() errorMessage: string;
   @Output() onLogin = new EventEmitter<{ username: string, password: string }>();
   @Output() onRememberMe = new EventEmitter<string>();
+  @Output() onSetScreen = new EventEmitter<LoginScreen>();
 
   @Input()
   set username(value: string) {
@@ -72,5 +74,9 @@ export class LoginFormComponent {
       this.onLogin.emit(loginPayload);
       this.onRememberMe.emit(rememberMePayload);
     }
+  }
+
+  forgotPassword() {
+    this.onSetScreen.emit(LoginScreen.ForgotPassword);
   }
 }

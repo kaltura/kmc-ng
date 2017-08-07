@@ -5,6 +5,12 @@ import { AppAuthentication, AppNavigator } from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { TranslateService } from 'ng2-translate';
 
+export enum LoginScreen {
+  Login,
+  ForgotPassword,
+  PasswordExpired
+}
+
 @Component({
   selector: 'kKMCLogin',
   templateUrl: './login.component.html',
@@ -15,6 +21,8 @@ export class LoginComponent implements OnInit {
   errorMessage: string;
   inProgress = false;
   showLogin = false;
+  loginScreens = LoginScreen;
+  currentScreen = LoginScreen.Login;
 
   constructor(private appAuthentication: AppAuthentication,
               private appNavigator: AppNavigator,
@@ -78,5 +86,9 @@ export class LoginComponent implements OnInit {
 
   openUserManual() {
     this.browserService.openLink(environment.core.externalLinks.USER_MANUAL, {}, '_blank');
+  }
+
+  setScreen(screen: LoginScreen) {
+    this.currentScreen = screen;
   }
 }

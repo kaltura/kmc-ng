@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LoginScreen } from '../login.component';
 
 @Component({
   selector: 'kKMCForgotPasswordForm',
@@ -9,6 +10,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 export class ForgotPasswordFormComponent {
   @Input() inProgress: boolean;
   @Input() errorMessage: string;
+  @Output() onSetScreen = new EventEmitter<LoginScreen>();
 
   forgotPasswordForm: FormGroup;
   emailField: AbstractControl;
@@ -35,5 +37,9 @@ export class ForgotPasswordFormComponent {
 
   resetPassword(event: Event) {
     event.preventDefault();
+  }
+
+  openLogin() {
+    this.onSetScreen.emit(LoginScreen.Login);
   }
 }
