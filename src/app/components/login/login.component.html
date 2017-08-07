@@ -28,6 +28,13 @@
                                  [errorMessage]="errorMessage"
                                  [inProgress]="inProgress"
                                  (onResetPassword)="resetPassword($event)"></kKMCPasswordExpiredForm>
+
+        <kKMCInvalidLoginHash *ngSwitchCase="loginScreen.InvalidLoginHash"
+                              [errorMessage]="errorMessage"
+                              [inProgress]="inProgress"
+                              [passwordReset]="passwordReset"
+                              (onResendLink)="forgotPassword($event)"
+                              (onSetScreen)="setScreen($event)"></kKMCInvalidLoginHash>
       </ng-container>
     </div>
     <div class="kLoginControls">
@@ -38,12 +45,15 @@
       </ng-container>
 
       <ng-container *ngIf="currentScreen !== loginScreen.Login">
+        <button class="kSignUpBtn"
+                pButton
+                [label]="'app.login.login.title' | translate"
+                (click)="setScreen(loginScreen.Login)"></button>
         <a [href]="signUpLink"
            class="kSignUpBtn"
            pButton
-           [label]="'app.login.login.title' | translate"
-           (click)="setScreen(loginScreen.Login)"></a>
-        <button class="kSignUpBtn" pButton [label]="'app.login.signUp' | translate"></button>
+           [label]="'app.login.signUp' | translate"></a>
+
       </ng-container>
     </div>
   </div>

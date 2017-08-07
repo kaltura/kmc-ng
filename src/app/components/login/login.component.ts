@@ -8,7 +8,8 @@ import { TranslateService } from 'ng2-translate';
 export enum LoginScreen {
   Login,
   ForgotPassword,
-  PasswordExpired
+  PasswordExpired,
+  InvalidLoginHash
 }
 
 @Component({
@@ -23,7 +24,7 @@ export class LoginComponent implements OnInit {
   inProgress = false;
   showLogin = false;
   loginScreen = LoginScreen;
-  currentScreen = LoginScreen.Login;
+  currentScreen = LoginScreen.InvalidLoginHash;
   passwordReset = false;
   signUpLink = environment.core.externalLinks.SIGNUP;
 

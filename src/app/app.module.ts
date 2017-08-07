@@ -34,7 +34,8 @@ import {
   LoginComponent,
   LoginFormComponent,
   ForgotPasswordFormComponent,
-  PasswordExpiredFormComponent
+  PasswordExpiredFormComponent,
+  InvalidLoginHashFormComponent
 } from './components/login';
 import { ErrorComponent } from './components/error/error.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
@@ -110,7 +111,8 @@ export function clientConfigurationFactory() {
     UserSettingsComponent,
     LoginFormComponent,
     PasswordExpiredFormComponent,
-    ForgotPasswordFormComponent
+    ForgotPasswordFormComponent,
+    InvalidLoginHashFormComponent
   ],
   bootstrap: <any>[
     AppComponent

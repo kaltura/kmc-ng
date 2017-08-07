@@ -1,0 +1,35 @@
+<form class="kLoginForm"
+      [formGroup]="resendLinkForm"
+      (submit)="resetPassword($event)">
+  <h1>{{ 'app.login.invalidLoginHash.title' | translate }}</h1>
+
+  <ng-container *ngIf="displayEmailField">
+    <p [innerHTML]="'app.login.invalidLoginHash.instructions' | translate"></p>
+
+    <div>
+      <input pInputText
+             [placeholder]="'app.login.invalidLoginHash.placeholder' | translate"
+             [formControl]="emailField"
+             [ngClass]="{
+             'has-error': errorMessage || emailValidationMessage,
+             'has-success': emailField.valid && emailField.touched
+           }"
+             [pTooltip]="emailValidationMessage | translate"
+             tooltipEvent="focus"
+             tooltipPosition="right">
+    </div>
+
+    <p *ngIf="errorMessage" class="kErrorMessage" [innerHTML]="errorMessage"></p>
+
+    <div>
+      <button class="kButtonDefault"
+              pButton
+              [label]="resendBtnText | translate"
+              [disabled]="inProgress"></button>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!displayEmailField">
+    <p>{{ 'app.login.invalidLoginHash.sent.instructions' | translate:translateParam }}</p>
+  </ng-container>
+
+</form>

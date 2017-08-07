@@ -51,6 +51,14 @@
           "password": "Password"
         }
       },
+      "invalidLoginHash": {
+        "title": "Invalid login link",
+        "placeholder": "Enter Email",
+        "instructions": "This link is invalid or has expired. Please enter your email address to receive a new link",
+        "sent": {
+          "instructions": "An email has been sent to {{value}} with a link to reset your password. If you don't see the message in your inbox, check to see if the message is in your spam or junk folders."
+        }
+      },
       "forgotPassword": {
         "title": "Forgot password",
         "placeholder": "Your Email",
