@@ -49,10 +49,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset()
-    {
-      this._browserService.showGrowlMessage(null);
-    }
+    protected _onReset() {}
 
     protected _onActivate(firstTimeActivating: boolean) {
 	    this._setEntryStatus();
@@ -240,8 +237,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 						    response =>
 						    {
 							    super._hideLoader();
-                  this._browserService.showGrowlMessage(null);
-                  this._browserService.showGrowlMessage({severity: 'success', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteSuccess')});
+                  this._browserService.showGrowlMessage({severity: 'success', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteSuccess')});
 							    this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 							    {
 								    // do nothing
@@ -250,8 +246,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 						    error =>
 						    {
 							    super._hideLoader();
-                  this._browserService.showGrowlMessage(null);
-                  this._browserService.showGrowlMessage({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteFailure')});
+                  this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteFailure')});
 						    }
 					    );
 			    }
@@ -298,8 +293,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 				},
 				error =>
 				{
-          this._browserService.showGrowlMessage(null);
-          this._browserService.showGrowlMessage({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure')});
+          this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure')});
 					this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 					{
 						// reload flavors as we need to get the flavor status from the server
@@ -322,8 +316,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 				}
 			},
 			(error) => {
-        this._browserService.showGrowlMessage(null);
-        this._browserService.showGrowlMessage({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
+        this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
 				this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 				{
 					// reload flavors as we need to get the flavor status from the server
@@ -348,8 +341,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 			},
 			error =>
 			{
-        this._browserService.showGrowlMessage(null);
-        this._browserService.showGrowlMessage({severity: 'error',	summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
+        this._browserService.showGrowlMessage({severity: 'error',	detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
 				this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 				{
 					// do nothing
@@ -374,8 +366,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 			},
 			error =>
 			{
-        this._browserService.showGrowlMessage(null);
-        this._browserService.showGrowlMessage({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
+        this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
 				this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 				{
 					// reload flavors as we need to get the flavor status from the server

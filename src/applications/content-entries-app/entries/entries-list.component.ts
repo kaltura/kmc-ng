@@ -157,8 +157,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 	    this._entriesStore.deleteEntry(entryId).subscribe(
         () => {
           this.isBusy = false;
-          this._browserService.showGrowlMessage(null);
-          this._browserService.showGrowlMessage({severity: 'success', summary: '', detail: this.appLocalization.get('applications.content.entries.deleted')});
+          this._browserService.showGrowlMessage({severity: 'success', detail: this.appLocalization.get('applications.content.entries.deleted')});
 			    this._entriesStore.reload(true);
 		    },
 		    error => {
