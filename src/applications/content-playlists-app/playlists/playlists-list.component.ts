@@ -161,6 +161,8 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
       .subscribe(
       () => {
         this._loading = false;
+        this._browserService.showGrowlMessage(null);
+        this._browserService.showGrowlMessage({severity: 'success', summary: '', detail: this.appLocalization.get('applications.content.playlists.deleted')});
         this._playlistsStore.reload(true);
       },
       error => {

@@ -16,6 +16,13 @@ export interface Confirmation {
 	rejectEvent?: EventEmitter<any>;
 }
 
+export interface GrowlMessage {
+  severity?: string;
+  summary?: string;
+  detail?: string;
+  id?: any;
+}
+
 export type OnShowConfirmationFn = (confirmation : Confirmation) => void;
 
 export type AppStatus = {
@@ -27,7 +34,9 @@ export type AppStatus = {
 export class BrowserService implements IAppStorage {
 
   private _appStatus = new BehaviorSubject<{isBusy : boolean, errorMessage : string}>({ isBusy : false, errorMessage : null});
+  private _growlMessages = new BehaviorSubject<GrowlMessage>({severity: null, summary: null, detail: null, id: null});
   public appStatus$ = this._appStatus.asObservable();
+  public growlMessages$ = this._growlMessages.asObservable();
 
 	private _onConfirmationFn : OnShowConfirmationFn = (confirmation : Confirmation) => {
 		// this is the default confirmation dialog provided by the browser.
@@ -191,4 +200,7 @@ export class BrowserService implements IAppStorage {
 		window.onbeforeunload = (e) => {};
 	}
 
+	public showGrowlMessage(message: GrowlMessage): void {
+    this._growlMessages.next(message);
+  }
 }

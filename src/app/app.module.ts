@@ -30,7 +30,7 @@ import { ErrorComponent } from './components/error/error.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 import { KalturaHttpConfigurationAdapter } from "./services/kaltura-http-configuration-adapter.service";
 
-import { ButtonModule, InputTextModule, TieredMenuModule } from 'primeng/primeng';
+import { ButtonModule, InputTextModule, TieredMenuModule, GrowlModule } from 'primeng/primeng';
 
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { MetadataProfileModule, PartnerProfileStore, AccessControlProfileStore, FlavoursStore } from '@kaltura-ng/kaltura-server-utils';
@@ -72,7 +72,8 @@ export function clientConfigurationFactory()
     TieredMenuModule,
     UploadManagementModule,
     KalturaServerModule,
-    AreaBlockerModule
+    AreaBlockerModule,
+    GrowlModule
   ],
   declarations: <any>[
       AppComponent,
