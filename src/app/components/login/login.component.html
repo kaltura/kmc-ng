@@ -18,8 +18,13 @@
                                 [errorMessage]="errorMessage"
                                 [inProgress]="inProgress"
                                 [passwordReset]="passwordReset"
-                                (onResetPassword)="resetPassword($event)"
+                                (onResetPassword)="forgotPassword($event)"
                                 (onSetScreen)="setScreen($event)"></kKMCForgotPasswordForm>
+
+        <kKMCPasswordExpiredForm *ngSwitchCase="loginScreen.PasswordExpired"
+                                 [errorMessage]="errorMessage"
+                                 [inProgress]="inProgress"
+                                 (onResetPassword)="resetPassword($event)"></kKMCPasswordExpiredForm>
       </ng-container>
     </div>
     <div class="kLoginControls">

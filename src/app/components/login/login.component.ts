@@ -19,10 +19,11 @@ export enum LoginScreen {
 export class LoginComponent implements OnInit {
   username: string;
   errorMessage: string;
+  errorCode: string;
   inProgress = false;
   showLogin = false;
   loginScreen = LoginScreen;
-  currentScreen = LoginScreen.Login;
+  currentScreen = LoginScreen.PasswordExpired;
   passwordReset = false;
 
   constructor(private appAuthentication: AppAuthentication,
@@ -45,36 +46,43 @@ export class LoginComponent implements OnInit {
     this.errorMessage = '';
     this.inProgress = true;
 
-    this.appAuthentication.login(username, password, {
-      privileges: environment.core.kaltura.privileges,
-      expiry: environment.core.kaltura.expiry
-    }).subscribe(
+    this.makeLoginRequest(username, password).subscribe(
       ({ success, error }) => {
         this.inProgress = false;
-
-        if (success) {
-          this.appNavigator.navigateToDefault();
-          return;
-        }
-
-        if (error.passwordExpired) {
-          // TBD
-          return;
-        }
-
-        if (!error.custom) {
-          this.translate.get(error.message).subscribe(message => {
-            this.errorMessage = message;
-          });
-        } else {
-          this.errorMessage = error.message;
-        }
+        this.handleLoginResponse(success, error, username);
       },
       (err) => {
         this.errorMessage = err.message;
         this.inProgress = false;
       }
     );
+  }
+
+  makeLoginRequest(username: string, password: string) {
+    return this.appAuthentication.login(username, password, {
+      privileges: environment.core.kaltura.privileges,
+      expiry: environment.core.kaltura.expiry
+    });
+  }
+
+  handleLoginResponse(success, error, username) {
+    if (success) {
+      this.appNavigator.navigateToDefault();
+      return;
+    }
+
+    if (error.passwordExpired) {
+      this.username = username;
+      return this.setScreen(LoginScreen.PasswordExpired);
+    }
+
+    if (!error.custom) {
+      this.translate.get(error.message).subscribe(message => {
+        this.errorMessage = message;
+      });
+    } else {
+      this.errorMessage = error.message;
+    }
   }
 
   rememberMe(username: string) {
@@ -92,19 +100,54 @@ export class LoginComponent implements OnInit {
   setScreen(screen: LoginScreen) {
     this.currentScreen = screen;
 
-    if (screen === LoginScreen.Login) {
+    if (screen !== LoginScreen.ForgotPassword) {
       this.passwordReset = false;
     }
   }
 
-  resetPassword(email: string) {
+  forgotPassword(email: string) {
+    this.inProgress = true;
+
     this.appAuthentication.resetPassword(email)
       .subscribe(
         () => {
           this.passwordReset = true;
+          this.inProgress = false;
         },
         err => {
-          console.warn(err)
-        });
+          this.errorMessage = err;
+          this.inProgress = false;
+        }
+      );
+  }
+
+  resetPassword({ password, newPassword }) {
+    const payload = {
+      password,
+      newPassword,
+      email: this.username,
+      newEmail: ''
+    };
+
+    this.inProgress = true;
+
+    this.appAuthentication.updatePassword(payload)
+      .switchMap(({ email, password: userPassword }) => this.makeLoginRequest(email, userPassword))
+      .subscribe(
+        ({ success, error }) => {
+          this.inProgress = false;
+          this.handleLoginResponse(success, error, this.username)
+        },
+        error => {
+          this.inProgress = false;
+          if (!error.custom) {
+            this.translate.get(error.message).subscribe(message => {
+              this.errorMessage = message;
+            });
+          } else {
+            this.errorMessage = error.message;
+          }
+        }
+      );
   }
 }

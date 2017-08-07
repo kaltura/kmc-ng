@@ -31,7 +31,7 @@ export class ForgotPasswordFormComponent {
   }
 
   get resetBtnText(): string {
-    return this.inProgress ? 'app.login.wait' : 'app.login.forgotPassword.send';
+    return this.inProgress ? 'app.login.wait' : 'app.login.send';
   }
 
   buildForm() {
@@ -46,7 +46,6 @@ export class ForgotPasswordFormComponent {
     event.preventDefault();
 
     if (this.forgotPasswordForm.valid) {
-      this.inProgress = true;
       this.onResetPassword.emit(this.emailField.value);
     }
   }

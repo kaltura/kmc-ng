@@ -6,7 +6,7 @@ import 'rxjs/add/operator/map';
 import * as R from 'ramda';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 
-import { KalturaMultiRequest, KalturaRequest, KalturaResponse } from 'kaltura-typescript-client';
+import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { KalturaPermissionFilter } from 'kaltura-typescript-client/types/KalturaPermissionFilter';
 import { UserLoginByLoginIdAction } from 'kaltura-typescript-client/types/UserLoginByLoginIdAction';
 import { UserGetByLoginIdAction } from 'kaltura-typescript-client/types/UserGetByLoginIdAction';
@@ -19,6 +19,7 @@ import { AppUser } from './app-user';
 import { AppStorage } from '@kaltura-ng/kaltura-common';
 import { PartnerInfo } from './partner-info';
 import { UserResetPasswordAction } from 'kaltura-typescript-client/types/UserResetPasswordAction';
+import { AdminUserUpdatePasswordAction } from 'kaltura-typescript-client/types/AdminUserUpdatePasswordAction';
 
 
 export enum AppAuthStatusTypes {
@@ -38,7 +39,7 @@ export class AppAuthentication {
     loginRoute: '',
     defaultRoute: '',
     errorRoute: ''
-  }
+  };
 
   constructor(private kalturaServerClient: KalturaClient,
               private appStorage: AppStorage) {
@@ -57,10 +58,15 @@ export class AppAuthentication {
     return this.kalturaServerClient.request(new UserResetPasswordAction({ email }));
   }
 
+  updatePassword(payload: { email: string, password: string, newEmail: string, newPassword: string }) {
+    return this.kalturaServerClient.request(new AdminUserUpdatePasswordAction(payload))
+      .catch(error => Observable.throw(this.getLoginErrorMessage({ error })));
+  }
+
   login(loginId: string, password: string, optional: { privileges?, expiry? } = {
     privileges: '',
     expiry: 86400
-  }): Observable<{ success: boolean, error: { message: string, custom: boolean, passwordExpired?: boolean } }> {
+  }): Observable<{ success: boolean, error: { message: string, custom: boolean, passwordExpired?: boolean, code?: string } }> {
 
     const expiry = (optional ? optional.expiry : null) || 86400;
     const privileges = optional ? optional.privileges : '';
@@ -136,13 +142,22 @@ export class AppAuthentication {
     ));
   }
 
-  getLoginErrorMessage(responseError: KalturaResponse<any>): { message: string, custom: boolean, passwordExpired?: boolean } {
-    const { message, code } = responseError.error;
+  getLoginErrorMessage({ error }): { message: string, custom: boolean, passwordExpired?: boolean, code?: string } {
+    const { message, code } = error;
     const custom = true;
     const errors = {
-      'USER_NOT_FOUND': 'app.login.login.error.badCredentials',
-      'USER_WRONG_PASSWORD': 'app.login.login.error.badCredentials',
-      'LOGIN_RETRIES_EXCEEDED': 'app.login.login.error.retriesExceeded'
+      'USER_NOT_FOUND': 'app.login.error.badCredentials',
+      'USER_WRONG_PASSWORD': 'app.login.error.badCredentials',
+      'LOGIN_RETRIES_EXCEEDED': 'app.login.error.retriesExceeded',
+      'ADMIN_KUSER_NOT_FOUND': 'app.login.error.userNotFound',
+      'PASSWORD_STRUCTURE_INVALID': 'app.login.error.invalidStructure',
+      'PASSWORD_ALREADY_USED': 'app.login.error.alreadyUsed',
+      'LOGIN_BLOCKED': 'app.login.error.loginBlocked',
+      'NEW_PASSWORD_HASH_KEY_INVALID': 'app.login.error.newPasswordHashKeyInvalid',
+      'NEW_PASSWORD_HASH_KEY_EXPIRED': 'app.login.error.newPasswordHashKeyExpired',
+      'ADMIN_KUSER_WRONG_OLD_PASSWORD': 'app.login.error.wrongOldPassword',
+      'WRONG_OLD_PASSWORD': 'app.login.error.wrongOldPassword',
+      'INVALID_FIELD_VALUE': 'app.login.error.invalidField'
     };
 
     if (code === 'PASSWORD_EXPIRED') {
@@ -156,11 +171,12 @@ export class AppAuthentication {
     if (code in errors) {
       return {
         message: errors[code],
-        custom: false
+        custom: false,
+        code
       };
     }
 
-    return { message, custom };
+    return { message, custom, code };
   }
 
   isLogged() {
