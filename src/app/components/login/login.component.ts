@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
   inProgress = false;
   showLogin = false;
   loginScreen = LoginScreen;
-  currentScreen = LoginScreen.InvalidLoginHash;
+  currentScreen = LoginScreen.Login;
   passwordReset = false;
   signUpLink = environment.core.externalLinks.SIGNUP;
 
