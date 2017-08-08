@@ -14,7 +14,7 @@ export class ForgotPasswordFormComponent {
   @Input()
   set passwordReset(value: boolean) {
     if (value) {
-      this._displayEmailField = this.inProgress = false;
+      this._displayEmailField = false;
     }
   }
 

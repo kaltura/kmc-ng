@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   public _inProgress = false;
   public _showLogin = false;
   public _loginScreens = LoginScreens;
-  public _currentScreen = LoginScreens.PasswordExpired;
+  public _currentScreen = LoginScreens.Login;
   public _passwordReset = false;
   public _signUpLink = environment.core.externalLinks.SIGNUP;
 
@@ -105,6 +105,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   public _setScreen(screen: LoginScreens): void {
+    this._inProgress = false;
     this._currentScreen = screen;
 
     if (screen !== LoginScreens.ForgotPassword) {
