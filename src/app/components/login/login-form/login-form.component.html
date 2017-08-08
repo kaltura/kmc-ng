@@ -8,7 +8,7 @@
            [placeholder]="'app.login.login.placeholder.username' | translate"
            [formControl]="_usernameField"
            [ngClass]="{
-             'has-error': _errorMessage || _showError(_usernameField),
+             'has-error': errorMessage || _showError(_usernameField),
              'has-success': _showSuccess(_usernameField)
            }"
            [pTooltip]="_loginValidationMessage | translate"
@@ -21,10 +21,10 @@
            pInputText
            [placeholder]="'app.login.login.placeholder.password' | translate"
            [formControl]="_passwordField"
-           [class.has-error]="_errorMessage">
+           [class.has-error]="errorMessage">
   </div>
 
-  <p *ngIf="_errorMessage" class="kErrorMessage" [innerHTML]="_errorMessage"></p>
+  <p *ngIf="errorMessage" class="kErrorMessage" [innerHTML]="errorMessage"></p>
 
   <div class="kControlLinks">
     <p-checkbox [formControl]="_rememberMeField"
@@ -37,7 +37,7 @@
     <button class="kButtonDefault"
             pButton
             [label]="_loginBtnText | translate"
-            [disabled]="_inProgress"></button>
+            [disabled]="inProgress"></button>
   </div>
 </form>
 

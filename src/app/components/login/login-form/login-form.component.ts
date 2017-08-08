@@ -8,8 +8,8 @@ import { LoginScreens } from '../login.component';
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent {
-  @Input() _inProgress = false;
-  @Input() _errorMessage: string;
+  @Input() inProgress = false;
+  @Input() errorMessage: string;
 
   @Input()
   set username(value: string) {
@@ -31,7 +31,7 @@ export class LoginFormComponent {
   }
 
   public get _loginBtnText(): string {
-    return this._inProgress ? 'app.login.wait' : 'app.login.login.title';
+    return this.inProgress ? 'app.login.wait' : 'app.login.login.title';
   }
 
   constructor(private _fb: FormBuilder) {

@@ -110,7 +110,7 @@ export class AppAuthentication {
     return this._appUser;
   }
 
-  resetPassword(email: string): Observable<any> {
+  resetPassword(email: string): Observable<void> {
     return this.kalturaServerClient.request(new UserResetPasswordAction({ email }));
   }
 

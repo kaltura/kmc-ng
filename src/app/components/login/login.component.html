@@ -11,8 +11,8 @@
       <ng-container [ngSwitch]="_currentScreen">
         <kKMCLoginForm *ngSwitchCase="_loginScreens.Login"
                        [username]="_username"
-                       [_errorMessage]="_errorMessage"
-                       [_inProgress]="_inProgress"
+                       [errorMessage]="_errorMessage"
+                       [inProgress]="_inProgress"
                        (onSetScreen)="_setScreen($event)"
                        (onRememberMe)="_rememberMe($event)"
                        (onLogin)="_login($event)"></kKMCLoginForm>
