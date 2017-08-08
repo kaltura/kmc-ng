@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { environment } from 'app-environment';
 import { LoginScreens } from '../login.component';
 
 @Component({
@@ -21,6 +22,7 @@ export class ForgotPasswordFormComponent {
   @Output() onSetScreen = new EventEmitter<LoginScreens>();
   @Output() onResetPassword = new EventEmitter<string>();
 
+  public _instructionsTranslateParam = { value: environment.core.externalLinks.CONTACT_US };
   public _forgotPasswordForm: FormGroup;
   public _emailField: AbstractControl;
   public _displayEmailField = true;
@@ -33,7 +35,7 @@ export class ForgotPasswordFormComponent {
     return this.inProgress ? 'app.login.wait' : 'app.login.send';
   }
 
-  public get _translateParam(): { value: string } {
+  public get _sentInstructionsTranslateParam(): { value: string } {
     const value = this._emailField ? this._emailField.value : '';
     return { value };
   }
