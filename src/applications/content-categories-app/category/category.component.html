@@ -1,3 +1,26 @@
-<div>
-  Hello Id
-</div>
+	<div class="kCategoryDetails kOverrideFAIcons" >
+		<div class="kContent kCategoryDetailsWrapper">
+			<div class="kCategoryDetailsHeader">
+				<button pButton class="kButtonDefault kBackToCategoriesBtn small" icon="kIconarrow_backward"></button>
+				<div class="kCategoryTitle">Activism</div>
+				<button pButton class="kButtonBranded kSaveBtn" label="Save" (click)="_save()"></button>
+				<button pButton class="kButtonDefault kNavigationBtn" icon="kIconarrow_backward"></button>
+				<button pButton class="kButtonDefault kNavigationBtn" icon="kIconarrow_forward"></button>
+			</div>
+
+				<div class="kCategoryDetailsPreview">
+					<kCategoryPreview></kCategoryPreview>
+				</div>
+
+			<div class="kCategoryDetailsMain">
+				<div class="kCategoryDetailsSections">
+					<kCategorySectionsList></kCategorySectionsList>
+				</div>
+				<div class="kCategoryDetailsContent">
+					<router-outlet></router-outlet>
+				</div>
+			</div>
+			<div class="kSpacer"></div>
+		</div>
+
+	</div>

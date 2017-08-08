@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
 	selector: 'kCategory',
@@ -14,4 +15,10 @@ export class CategoryComponent implements OnInit, OnDestroy {
 	ngOnDestroy() { }
 
 	ngOnInit() { }
+
+	public canLeave(): Observable<{ allowed : boolean}>{
+		// TODO: implement this!
+		return null;
+		
+	}
 }

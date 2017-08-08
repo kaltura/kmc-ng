@@ -1,3 +1,7 @@
+import { CategoryEntitlementsComponent } from './category/category-entitlements/category-entitlements.component';
+import { CategoryMetadataComponent } from './category/category-metadata/category-metadata.component';
+import { CategoryWidgetKeys } from './category/category-widget-keys';
+import { CategorySubcategoriesComponent } from './category/category-subcategories/category-subcategories.component';
 import { Route } from '@angular/router';
 
 import { ContentCategoriesComponent } from './content-categories.component';
@@ -14,7 +18,13 @@ export const routing: Route[] = [
 				path: 'category/:id', component: CategoryComponent,
 				data: {
 					entryRoute: true
-				}
+				},
+				children: [
+					{ path: '', redirectTo: 'metadata', pathMatch: 'full' },
+					{ path: 'metadata', component: CategoryMetadataComponent, data: { sectionKey: CategoryWidgetKeys.Metadata } },
+					{ path: 'entitlements', component: CategoryEntitlementsComponent, data: { sectionKey: CategoryWidgetKeys.Entitlements } },
+					{ path: 'subcategories', component: CategorySubcategoriesComponent, data: { CategoryWidgetKeys: CategoryWidgetKeys.SubCategories } },
+				]
 			}
 		]
 	},
