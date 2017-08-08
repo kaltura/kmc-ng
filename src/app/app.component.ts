@@ -25,7 +25,12 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._browserService.registerOnShowConfirmation(this._confirmationService.confirm.bind(this._confirmationService));
+    this._browserService.registerOnShowConfirmation((message) =>
+    {
+      let htmlMessageContent = message.message.replace(/\n/g,'<br/>');
+      const newMessage = Object.assign({}, message, { message : htmlMessageContent });
+      this._confirmationService.confirm(newMessage);
+    });
 
     // handle app status: busy and error messages. Allow closing error window using the 'OK' button
     this._browserService.appStatus$.subscribe(

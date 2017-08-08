@@ -99,10 +99,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
         this._browserService.confirm(
           {
             header: this.appLocalization.get('applications.content.playlists.deletePlaylist'),
-            message: `
-              ${this.appLocalization.get('applications.content.playlists.confirmDelete', {0:''})}<br/>
-              ${this.appLocalization.get('applications.content.playlists.playlistId', { 0: event.playlistID })}<br/>
-              ${this.appLocalization.get('applications.content.playlists.deleteNote', {0:'this', 1:''})}`,
+            message: this.appLocalization.get('applications.content.playlists.confirmDeleteSingle', {0: event.playlistID}),
             accept: () => {
               this.deleteCurrentPlaylist(event.playlistID);
             }
@@ -310,14 +307,14 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
   deletePlaylists(selectedPlaylists: KalturaPlaylist[]) {
 	  let playlistsToDelete = selectedPlaylists.map((playlist, index) => `${index + 1}: ${playlist.name}`),
-        playlists: string = selectedPlaylists.length <= 10 ? playlistsToDelete.join(',').replace(/,/gi, '<br />') + '<br />' : '';
+        playlists: string = selectedPlaylists.length <= 10 ? playlistsToDelete.join(',').replace(/,/gi, '\n') : '',
+        message = selectedPlaylists.length > 1 ?
+                  this.appLocalization.get('applications.content.playlists.confirmDeleteMultiple', {0: playlists}) :
+                  this.appLocalization.get('applications.content.playlists.confirmDeleteSingle', {0: playlists});
     this._browserService.confirm(
       {
         header: this.appLocalization.get('applications.content.playlists.deletePlaylist'),
-        message: `
-              ${this.appLocalization.get('applications.content.playlists.confirmDelete', {0: selectedPlaylists.length > 1 ? 's': ''})}<br/>
-              ${playlists}
-              ${this.appLocalization.get('applications.content.playlists.deleteNote', {0: selectedPlaylists.length > 1 ? 'these' : 'this', 1: selectedPlaylists.length > 1 ? 's': ''})}`,
+        message: message,
         accept: () => {
           setTimeout(()=> {
             this.deletePlaylist(selectedPlaylists.map(playlist => playlist.id));

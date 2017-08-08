@@ -139,7 +139,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 			    this._browserService.confirm(
 				    {
 					    header: this.appLocalization.get('applications.content.entries.deleteEntry'),
-					    message: `${this.appLocalization.get('applications.content.entries.confirmDelete')}<br/>${this.appLocalization.get('applications.content.entries.entryId', { 0: event.entryID })}<br/>${this.appLocalization.get('applications.content.entries.deleteNote')}`,
+					    message: this.appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: event.entryID }),
 					    accept: () => {
 						    this.deleteEntry(event.entryID);
 					    }
