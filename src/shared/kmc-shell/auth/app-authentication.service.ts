@@ -27,6 +27,25 @@ export enum AppAuthStatusTypes {
   UserLoggedOut
 }
 
+export interface IUpdatePasswordPayload {
+  email: string;
+  password: string;
+  newEmail: string;
+  newPassword: string;
+}
+
+export interface ILoginError {
+  message: string;
+  custom: boolean;
+  passwordExpired?: boolean;
+  code?: string;
+}
+
+export interface ILoginResponse {
+  success: boolean;
+  error: ILoginError
+}
+
 @Injectable()
 export class AppAuthentication {
 
@@ -46,6 +65,43 @@ export class AppAuthentication {
     this._appUser = new AppUser();
   }
 
+  private _getLoginErrorMessage({ error }): ILoginError {
+    const { message, code } = error;
+    const custom = true;
+    const errors = {
+      'USER_NOT_FOUND': 'app.login.error.badCredentials',
+      'USER_WRONG_PASSWORD': 'app.login.error.badCredentials',
+      'LOGIN_RETRIES_EXCEEDED': 'app.login.error.retriesExceeded',
+      'ADMIN_KUSER_NOT_FOUND': 'app.login.error.userNotFound',
+      'PASSWORD_STRUCTURE_INVALID': 'app.login.error.invalidStructure',
+      'PASSWORD_ALREADY_USED': 'app.login.error.alreadyUsed',
+      'LOGIN_BLOCKED': 'app.login.error.loginBlocked',
+      'NEW_PASSWORD_HASH_KEY_INVALID': 'app.login.error.newPasswordHashKeyInvalid',
+      'NEW_PASSWORD_HASH_KEY_EXPIRED': 'app.login.error.newPasswordHashKeyExpired',
+      'ADMIN_KUSER_WRONG_OLD_PASSWORD': 'app.login.error.wrongOldPassword',
+      'WRONG_OLD_PASSWORD': 'app.login.error.wrongOldPassword',
+      'INVALID_FIELD_VALUE': 'app.login.error.invalidField'
+    };
+
+    if (code === 'PASSWORD_EXPIRED') {
+      return {
+        message: '',
+        custom: false,
+        passwordExpired: true
+      }
+    }
+
+    if (code in errors) {
+      return {
+        message: errors[code],
+        custom: false,
+        code
+      };
+    }
+
+    return { message, custom, code };
+  }
+
   get currentAppEvent(): AppAuthStatusTypes {
     return this._appAuthStatus.getValue();
   }
@@ -54,19 +110,19 @@ export class AppAuthentication {
     return this._appUser;
   }
 
-  resetPassword(email: string) {
+  resetPassword(email: string): Observable<any> {
     return this.kalturaServerClient.request(new UserResetPasswordAction({ email }));
   }
 
-  updatePassword(payload: { email: string, password: string, newEmail: string, newPassword: string }) {
+  updatePassword(payload: IUpdatePasswordPayload): Observable<{ email: string, password: string }> {
     return this.kalturaServerClient.request(new AdminUserUpdatePasswordAction(payload))
-      .catch(error => Observable.throw(this.getLoginErrorMessage({ error })));
+      .catch(error => Observable.throw(this._getLoginErrorMessage({ error })));
   }
 
   login(loginId: string, password: string, optional: { privileges?, expiry? } = {
     privileges: '',
     expiry: 86400
-  }): Observable<{ success: boolean, error: { message: string, custom: boolean, passwordExpired?: boolean, code?: string } }> {
+  }): Observable<ILoginResponse> {
 
     const expiry = (optional ? optional.expiry : null) || 86400;
     const privileges = optional ? optional.privileges : '';
@@ -136,47 +192,9 @@ export class AppAuthentication {
         }
 
         const [loginResponse] = response;
-        return { success: false, error: this.getLoginErrorMessage(loginResponse) };
-
+        return { success: false, error: this._getLoginErrorMessage(loginResponse) };
       }
     ));
-  }
-
-  getLoginErrorMessage({ error }): { message: string, custom: boolean, passwordExpired?: boolean, code?: string } {
-    const { message, code } = error;
-    const custom = true;
-    const errors = {
-      'USER_NOT_FOUND': 'app.login.error.badCredentials',
-      'USER_WRONG_PASSWORD': 'app.login.error.badCredentials',
-      'LOGIN_RETRIES_EXCEEDED': 'app.login.error.retriesExceeded',
-      'ADMIN_KUSER_NOT_FOUND': 'app.login.error.userNotFound',
-      'PASSWORD_STRUCTURE_INVALID': 'app.login.error.invalidStructure',
-      'PASSWORD_ALREADY_USED': 'app.login.error.alreadyUsed',
-      'LOGIN_BLOCKED': 'app.login.error.loginBlocked',
-      'NEW_PASSWORD_HASH_KEY_INVALID': 'app.login.error.newPasswordHashKeyInvalid',
-      'NEW_PASSWORD_HASH_KEY_EXPIRED': 'app.login.error.newPasswordHashKeyExpired',
-      'ADMIN_KUSER_WRONG_OLD_PASSWORD': 'app.login.error.wrongOldPassword',
-      'WRONG_OLD_PASSWORD': 'app.login.error.wrongOldPassword',
-      'INVALID_FIELD_VALUE': 'app.login.error.invalidField'
-    };
-
-    if (code === 'PASSWORD_EXPIRED') {
-      return {
-        message: '',
-        custom: false,
-        passwordExpired: true
-      }
-    }
-
-    if (code in errors) {
-      return {
-        message: errors[code],
-        custom: false,
-        code
-      };
-    }
-
-    return { message, custom, code };
   }
 
   isLogged() {
@@ -191,7 +209,6 @@ export class AppAuthentication {
 
     this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedOut);
   }
-
 
   public loginAutomatically(): Observable<boolean> {
     return Observable.create((observer: any) => {

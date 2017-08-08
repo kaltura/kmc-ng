@@ -1,4 +1,4 @@
-<div class="kLoginContainer" *ngIf="showLogin">
+<div class="kLoginContainer" *ngIf="_showLogin">
   <div class="kLoginCenter">
     <div class="kLoginWindow">
       <div class="kLogo">
@@ -8,48 +8,48 @@
         </span>
       </div>
 
-      <ng-container [ngSwitch]="currentScreen">
-        <kKMCLoginForm *ngSwitchCase="loginScreen.Login"
-                       [username]="username"
-                       [errorMessage]="errorMessage"
-                       [inProgress]="inProgress"
-                       (onSetScreen)="setScreen($event)"
-                       (onRememberMe)="rememberMe($event)"
-                       (onLogin)="login($event)"></kKMCLoginForm>
+      <ng-container [ngSwitch]="_currentScreen">
+        <kKMCLoginForm *ngSwitchCase="_loginScreens.Login"
+                       [username]="_username"
+                       [_errorMessage]="_errorMessage"
+                       [_inProgress]="_inProgress"
+                       (onSetScreen)="_setScreen($event)"
+                       (onRememberMe)="_rememberMe($event)"
+                       (onLogin)="_login($event)"></kKMCLoginForm>
 
-        <kKMCForgotPasswordForm *ngSwitchCase="loginScreen.ForgotPassword"
-                                [errorMessage]="errorMessage"
-                                [inProgress]="inProgress"
-                                [passwordReset]="passwordReset"
-                                (onResetPassword)="forgotPassword($event)"
-                                (onSetScreen)="setScreen($event)"></kKMCForgotPasswordForm>
+        <kKMCForgotPasswordForm *ngSwitchCase="_loginScreens.ForgotPassword"
+                                [errorMessage]="_errorMessage"
+                                [inProgress]="_inProgress"
+                                [passwordReset]="_passwordReset"
+                                (onResetPassword)="_forgotPassword($event)"
+                                (onSetScreen)="_setScreen($event)"></kKMCForgotPasswordForm>
 
-        <kKMCPasswordExpiredForm *ngSwitchCase="loginScreen.PasswordExpired"
-                                 [errorMessage]="errorMessage"
-                                 [inProgress]="inProgress"
-                                 (onResetPassword)="resetPassword($event)"></kKMCPasswordExpiredForm>
+        <kKMCPasswordExpiredForm *ngSwitchCase="_loginScreens.PasswordExpired"
+                                 [errorMessage]="_errorMessage"
+                                 [inProgress]="_inProgress"
+                                 (onResetPassword)="_resetPassword($event)"></kKMCPasswordExpiredForm>
 
-        <kKMCInvalidLoginHash *ngSwitchCase="loginScreen.InvalidLoginHash"
-                              [errorMessage]="errorMessage"
-                              [inProgress]="inProgress"
-                              [passwordReset]="passwordReset"
-                              (onResendLink)="forgotPassword($event)"
-                              (onSetScreen)="setScreen($event)"></kKMCInvalidLoginHash>
+        <kKMCInvalidLoginHash *ngSwitchCase="_loginScreens.InvalidLoginHash"
+                              [errorMessage]="_errorMessage"
+                              [inProgress]="_inProgress"
+                              [passwordReset]="_passwordReset"
+                              (onResendLink)="_forgotPassword($event)"
+                              (onSetScreen)="_setScreen($event)"></kKMCInvalidLoginHash>
       </ng-container>
     </div>
     <div class="kLoginControls">
-      <ng-container *ngIf="currentScreen === loginScreen.Login">
+      <ng-container *ngIf="_currentScreen === _loginScreens.Login">
         <p>{{ 'app.login.dontHaveAccount' | translate }}</p>
 
-        <a [href]="signUpLink" class="kSignUpBtn" pButton [label]="'app.login.signUp' | translate"></a>
+        <a [href]="_signUpLink" class="kSignUpBtn" pButton [label]="'app.login.signUp' | translate"></a>
       </ng-container>
 
-      <ng-container *ngIf="currentScreen !== loginScreen.Login">
+      <ng-container *ngIf="_currentScreen !== _loginScreens.Login">
         <button class="kSignUpBtn"
                 pButton
                 [label]="'app.login.login.title' | translate"
-                (click)="setScreen(loginScreen.Login)"></button>
-        <a [href]="signUpLink"
+                (click)="_setScreen(_loginScreens.Login)"></button>
+        <a [href]="_signUpLink"
            class="kSignUpBtn"
            pButton
            [label]="'app.login.signUp' | translate"></a>

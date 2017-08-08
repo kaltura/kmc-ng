@@ -30,13 +30,6 @@ import { AppMenuService } from './services/app-menu.service';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AppMenuComponent } from './components/app-menu/app-menu.component';
 import { LanguageMenuComponent } from './components/language-menu/language-menu.component';
-import {
-  LoginComponent,
-  LoginFormComponent,
-  ForgotPasswordFormComponent,
-  PasswordExpiredFormComponent,
-  InvalidLoginHashFormComponent
-} from './components/login';
 import { ErrorComponent } from './components/error/error.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 import { KalturaHttpConfigurationAdapter } from "./services/kaltura-http-configuration-adapter.service";
@@ -63,6 +56,11 @@ import { UploadManagementModule } from '@kaltura-ng/kaltura-common/upload-manage
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
 import { environment } from 'app-environment';
 import { AuthModule } from 'app-shared/kmc-shell';
+import { LoginComponent } from './components/login/login.component';
+import { ForgotPasswordFormComponent } from './components/login/forgot-password-form/forgot-password-form.component';
+import { LoginFormComponent } from './components/login/login-form/login-form.component';
+import { PasswordExpiredFormComponent } from './components/login/password-expired-form/password-expired-form.component';
+import { InvalidLoginHashFormComponent } from './components/login/invalid-login-hash-form/invalid-login-hash-form.component';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 

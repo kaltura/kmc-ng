@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoginScreen } from '../login.component';
+import { LoginScreens } from '../login.component';
 
 @Component({
   selector: 'kKMCForgotPasswordForm',
@@ -10,52 +10,55 @@ import { LoginScreen } from '../login.component';
 export class ForgotPasswordFormComponent {
   @Input() inProgress: boolean;
   @Input() errorMessage: string;
-  @Input() set passwordReset(value: boolean) {
+
+  @Input()
+  set passwordReset(value: boolean) {
     if (value) {
-      this.displayEmailField = this.inProgress = false;
+      this._displayEmailField = this.inProgress = false;
     }
   }
-  @Output() onSetScreen = new EventEmitter<LoginScreen>();
+
+  @Output() onSetScreen = new EventEmitter<LoginScreens>();
   @Output() onResetPassword = new EventEmitter<string>();
 
-  forgotPasswordForm: FormGroup;
-  emailField: AbstractControl;
-  displayEmailField = true;
+  public _forgotPasswordForm: FormGroup;
+  public _emailField: AbstractControl;
+  public _displayEmailField = true;
 
-  constructor(private fb: FormBuilder) {
-    this.buildForm();
+  public get _emailValidationMessage(): string {
+    return this._emailField.invalid && this._emailField.touched ? 'app.login.error.email' : '';
   }
 
-  get emailValidationMessage() {
-    return this.emailField.invalid && this.emailField.touched ? 'app.login.error.email' : '';
-  }
-
-  get resetBtnText(): string {
+  public get _resetBtnText(): string {
     return this.inProgress ? 'app.login.wait' : 'app.login.send';
   }
 
-  buildForm() {
-    this.forgotPasswordForm = this.fb.group({
+  public get _translateParam(): { value: string } {
+    const value = this._emailField ? this._emailField.value : '';
+    return { value };
+  }
+
+  constructor(private _fb: FormBuilder) {
+    this._buildForm();
+  }
+
+  private _buildForm(): void {
+    this._forgotPasswordForm = this._fb.group({
       email: ['', Validators.compose([Validators.required, Validators.email])]
     });
 
-    this.emailField = this.forgotPasswordForm.controls['email'];
+    this._emailField = this._forgotPasswordForm.controls['email'];
   }
 
-  resetPassword(event: Event) {
+  public _resetPassword(event: Event): void {
     event.preventDefault();
 
-    if (this.forgotPasswordForm.valid) {
-      this.onResetPassword.emit(this.emailField.value);
+    if (this._forgotPasswordForm.valid) {
+      this.onResetPassword.emit(this._emailField.value);
     }
   }
 
-  openLogin() {
-    this.onSetScreen.emit(LoginScreen.Login);
-  }
-
-  get translateParam() {
-    const value = this.emailField ? this.emailField.value : '';
-    return { value };
+  public _openLogin(): void {
+    this.onSetScreen.emit(LoginScreens.Login);
   }
 }

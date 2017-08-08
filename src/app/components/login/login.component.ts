@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { environment } from 'app-environment';
 
-import { AppAuthentication, AppNavigator } from 'app-shared/kmc-shell';
+import { AppAuthentication, AppNavigator, ILoginError, ILoginResponse } from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { TranslateService } from 'ng2-translate';
+import { Observable } from 'rxjs/Observable';
 
-export enum LoginScreen {
+export enum LoginScreens {
   Login,
   ForgotPassword,
   PasswordExpired,
@@ -17,137 +18,142 @@ export enum LoginScreen {
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
-  username: string;
-  errorMessage: string;
-  errorCode: string;
-  inProgress = false;
-  showLogin = false;
-  loginScreen = LoginScreen;
-  currentScreen = LoginScreen.Login;
-  passwordReset = false;
-  signUpLink = environment.core.externalLinks.SIGNUP;
+export class LoginComponent implements OnInit, OnDestroy {
+  public _username: string;
+  public _errorMessage: string;
+  public _errorCode: string;
+  public _inProgress = false;
+  public _showLogin = false;
+  public _loginScreens = LoginScreens;
+  public _currentScreen = LoginScreens.PasswordExpired;
+  public _passwordReset = false;
+  public _signUpLink = environment.core.externalLinks.SIGNUP;
 
-  constructor(private appAuthentication: AppAuthentication,
-              private appNavigator: AppNavigator,
-              private translate: TranslateService,
-              private browserService: BrowserService) {
+  constructor(private _appAuthentication: AppAuthentication,
+              private _appNavigator: AppNavigator,
+              private _translate: TranslateService,
+              private _browserService: BrowserService) {
 
   }
 
-  ngOnInit() {
-    if (this.appAuthentication.isLogged()) {
-      this.appNavigator.navigateToDefault();
-    } else {
-      this.showLogin = true;
-      this.username = this.browserService.getFromLocalStorage('login.username');
-    }
-  }
-
-  login({ username, password }) {
-    this.errorMessage = '';
-    this.inProgress = true;
-
-    this.makeLoginRequest(username, password).subscribe(
-      ({ success, error }) => {
-        this.inProgress = false;
-        this.handleLoginResponse(success, error, username);
-      },
-      (err) => {
-        this.errorMessage = err.message;
-        this.inProgress = false;
-      }
-    );
-  }
-
-  makeLoginRequest(username: string, password: string) {
-    return this.appAuthentication.login(username, password, {
+  private _makeLoginRequest(username: string, password: string): Observable<ILoginResponse> {
+    return this._appAuthentication.login(username, password, {
       privileges: environment.core.kaltura.privileges,
       expiry: environment.core.kaltura.expiry
-    });
+    }).cancelOnDestroy(this);
   }
 
-  handleLoginResponse(success, error, username) {
+  private _handleLoginResponse(success: boolean, error: ILoginError, username: string): void {
     if (success) {
-      this.appNavigator.navigateToDefault();
+      this._appNavigator.navigateToDefault();
       return;
     }
 
     if (error.passwordExpired) {
-      this.username = username;
-      return this.setScreen(LoginScreen.PasswordExpired);
+      this._username = username;
+      return this._setScreen(LoginScreens.PasswordExpired);
     }
 
     if (!error.custom) {
-      this.translate.get(error.message).subscribe(message => {
-        this.errorMessage = message;
+      this._translate.get(error.message).subscribe(message => {
+        this._errorMessage = message;
       });
     } else {
-      this.errorMessage = error.message;
+      this._errorMessage = error.message;
     }
   }
 
-  rememberMe(username: string) {
-    if (username) {
-      this.browserService.setInLocalStorage('login.username', username);
+  ngOnInit() {
+    if (this._appAuthentication.isLogged()) {
+      this._appNavigator.navigateToDefault();
     } else {
-      this.browserService.removeFromLocalStorage('login.username');
+      this._showLogin = true;
+      this._username = this._browserService.getFromLocalStorage('login.username');
     }
   }
 
-  openUserManual() {
-    this.browserService.openLink(environment.core.externalLinks.USER_MANUAL, {}, '_blank');
+  ngOnDestroy() {
+    // for cancelOnDestroy
   }
 
-  setScreen(screen: LoginScreen) {
-    this.currentScreen = screen;
+  public _login({ username, password }: { username: string, password: string }): void {
+    this._errorMessage = '';
+    this._inProgress = true;
 
-    if (screen !== LoginScreen.ForgotPassword) {
-      this.passwordReset = false;
+    this._makeLoginRequest(username, password).subscribe(
+      ({ success, error }) => {
+        this._inProgress = false;
+        this._handleLoginResponse(success, error, username);
+      },
+      (err) => {
+        this._errorMessage = err.message;
+        this._inProgress = false;
+      }
+    );
+  }
+
+  public _rememberMe(username: string): void {
+    if (username) {
+      this._browserService.setInLocalStorage('login.username', username);
+    } else {
+      this._browserService.removeFromLocalStorage('login.username');
     }
   }
 
-  forgotPassword(email: string) {
-    this.inProgress = true;
+  public _openUserManual(): void {
+    this._browserService.openLink(environment.core.externalLinks.USER_MANUAL, {}, '_blank');
+  }
 
-    this.appAuthentication.resetPassword(email)
+  public _setScreen(screen: LoginScreens): void {
+    this._currentScreen = screen;
+
+    if (screen !== LoginScreens.ForgotPassword) {
+      this._passwordReset = false;
+    }
+  }
+
+  public _forgotPassword(email: string): void {
+    this._inProgress = true;
+
+    this._appAuthentication.resetPassword(email)
+      .cancelOnDestroy(this)
       .subscribe(
         () => {
-          this.passwordReset = true;
-          this.inProgress = false;
+          this._passwordReset = true;
+          this._inProgress = false;
         },
         err => {
-          this.errorMessage = err;
-          this.inProgress = false;
+          this._errorMessage = err;
+          this._inProgress = false;
         }
       );
   }
 
-  resetPassword({ password, newPassword }) {
+  public _resetPassword({ password, newPassword }: { password: string, newPassword: string }): void {
     const payload = {
       password,
       newPassword,
-      email: this.username,
+      email: this._username,
       newEmail: ''
     };
 
-    this.inProgress = true;
+    this._inProgress = true;
 
-    this.appAuthentication.updatePassword(payload)
-      .switchMap(({ email, password: userPassword }) => this.makeLoginRequest(email, userPassword))
+    this._appAuthentication.updatePassword(payload)
+      .switchMap(({ email, password: userPassword }) => this._makeLoginRequest(email, userPassword))
       .subscribe(
         ({ success, error }) => {
-          this.inProgress = false;
-          this.handleLoginResponse(success, error, this.username)
+          this._inProgress = false;
+          this._handleLoginResponse(success, error, this._username)
         },
         error => {
-          this.inProgress = false;
+          this._inProgress = false;
           if (!error.custom) {
-            this.translate.get(error.message).subscribe(message => {
-              this.errorMessage = message;
+            this._translate.get(error.message).subscribe(message => {
+              this._errorMessage = message;
             });
           } else {
-            this.errorMessage = error.message;
+            this._errorMessage = error.message;
           }
         }
       );

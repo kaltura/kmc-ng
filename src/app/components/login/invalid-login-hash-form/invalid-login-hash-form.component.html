@@ -1,20 +1,20 @@
 <form class="kLoginForm"
-      [formGroup]="resendLinkForm"
-      (submit)="resetPassword($event)">
+      [formGroup]="_resendLinkForm"
+      (submit)="_resetPassword($event)">
   <h1>{{ 'app.login.invalidLoginHash.title' | translate }}</h1>
 
-  <ng-container *ngIf="displayEmailField">
+  <ng-container *ngIf="_displayEmailField">
     <p [innerHTML]="'app.login.invalidLoginHash.instructions' | translate"></p>
 
     <div>
       <input pInputText
              [placeholder]="'app.login.invalidLoginHash.placeholder' | translate"
-             [formControl]="emailField"
+             [formControl]="_emailField"
              [ngClass]="{
-             'has-error': errorMessage || emailValidationMessage,
-             'has-success': emailField.valid && emailField.touched
+             'has-error': errorMessage || _emailValidationMessage,
+             'has-success': _emailField.valid && _emailField.touched
            }"
-             [pTooltip]="emailValidationMessage | translate"
+             [pTooltip]="_emailValidationMessage | translate"
              tooltipEvent="focus"
              tooltipPosition="right">
     </div>
@@ -24,12 +24,12 @@
     <div>
       <button class="kButtonDefault"
               pButton
-              [label]="resendBtnText | translate"
+              [label]="_resendBtnText | translate"
               [disabled]="inProgress"></button>
     </div>
   </ng-container>
-  <ng-container *ngIf="!displayEmailField">
-    <p>{{ 'app.login.invalidLoginHash.sent.instructions' | translate:translateParam }}</p>
+  <ng-container *ngIf="!_displayEmailField">
+    <p>{{ 'app.login.invalidLoginHash.sent.instructions' | translate:_translateParam }}</p>
   </ng-container>
 
 </form>

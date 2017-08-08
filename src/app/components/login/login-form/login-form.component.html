@@ -1,17 +1,17 @@
 <form class="kLoginForm"
-      [formGroup]="loginForm"
-      (submit)="login($event)">
+      [formGroup]="_loginForm"
+      (submit)="_login($event)">
   <h1>{{ 'app.login.login.title' | translate}}</h1>
 
   <div>
     <input pInputText
            [placeholder]="'app.login.login.placeholder.username' | translate"
-           [formControl]="usernameField"
+           [formControl]="_usernameField"
            [ngClass]="{
-             'has-error': errorMessage || showError(usernameField),
-             'has-success': showSuccess(usernameField)
+             'has-error': _errorMessage || _showError(_usernameField),
+             'has-success': _showSuccess(_usernameField)
            }"
-           [pTooltip]="loginValidationMessage | translate"
+           [pTooltip]="_loginValidationMessage | translate"
            tooltipEvent="focus"
            tooltipPosition="right">
   </div>
@@ -20,24 +20,24 @@
     <input type="password"
            pInputText
            [placeholder]="'app.login.login.placeholder.password' | translate"
-           [formControl]="passwordField"
-           [class.has-error]="errorMessage">
+           [formControl]="_passwordField"
+           [class.has-error]="_errorMessage">
   </div>
 
-  <p *ngIf="errorMessage" class="kErrorMessage" [innerHTML]="errorMessage"></p>
+  <p *ngIf="_errorMessage" class="kErrorMessage" [innerHTML]="_errorMessage"></p>
 
   <div class="kControlLinks">
-    <p-checkbox [formControl]="rememberMeField"
+    <p-checkbox [formControl]="_rememberMeField"
                 [binary]="true"
                 [label]="'app.login.rememberMe' | translate"></p-checkbox>
-    <a (click)="forgotPassword()">{{ 'app.login.login.forgotPassword' | translate }}</a>
+    <a (click)="_forgotPassword()">{{ 'app.login.login.forgotPassword' | translate }}</a>
   </div>
 
   <div>
     <button class="kButtonDefault"
             pButton
-            [label]="loginBtnText | translate"
-            [disabled]="inProgress"></button>
+            [label]="_loginBtnText | translate"
+            [disabled]="_inProgress"></button>
   </div>
 </form>
 

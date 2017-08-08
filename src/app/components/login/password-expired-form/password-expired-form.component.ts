@@ -10,29 +10,49 @@ import { EqualFieldsValidator } from 'app-shared/kmc-shell/validators/equalField
 export class PasswordExpiredFormComponent {
   @Input() errorMessage: string;
   @Input() inProgress = false;
+
   @Output() onResetPassword = new EventEmitter<{ password: string, newPassword: string }>();
 
-  resetPasswordForm: FormGroup;
-  passwords: FormGroup;
-  oldPasswordField: AbstractControl;
-  newPasswordField: AbstractControl;
-  repeatPasswordField: AbstractControl;
-  formSent = false;
+  public _formSent = false;
+  public _resetPasswordForm: FormGroup;
+  public _passwords: FormGroup;
+  public _oldPasswordField: AbstractControl;
+  public _newPasswordField: AbstractControl;
+  public _repeatPasswordField: AbstractControl;
 
-  get sendBtnText() {
+  public get _sendBtnText(): string {
     return this.inProgress ? 'app.login.wait' : 'app.login.send';
   }
 
-  constructor(private fb: FormBuilder) {
-    this.buildForm();
+  public get _passwordsDontMatch(): boolean {
+    return (this._repeatPasswordField.touched || this._formSent) && this._showError(this._passwords);
   }
 
-  showError(control: AbstractControl) {
-    return control.invalid && (control.touched || this.formSent);
+  constructor(private _fb: FormBuilder) {
+    this._buildForm();
   }
 
-  getClientValidationMessage(control: AbstractControl) {
-    const invalid = this.showError(control);
+  private _buildForm(): void {
+    this._resetPasswordForm = this._fb.group({
+      oldPassword: ['', Validators.required],
+      passwords: this._fb.group({
+        newPassword: ['', Validators.required],
+        repeatPassword: ['', Validators.required],
+      }, { validator: EqualFieldsValidator.validate('newPassword', 'repeatPassword') })
+    });
+
+    this._oldPasswordField = this._resetPasswordForm.controls['oldPassword'];
+    this._passwords = <FormGroup>this._resetPasswordForm.controls['passwords'];
+    this._newPasswordField = this._passwords.controls['newPassword'];
+    this._repeatPasswordField = this._passwords.controls['repeatPassword'];
+  }
+
+  public _showError(control: AbstractControl): boolean {
+    return control.invalid && (control.dirty || this._formSent);
+  }
+
+  public _getClientValidationMessage(control: AbstractControl): string {
+    const invalid = this._showError(control);
     const message = control.hasError('fieldsEqual')
       ? 'app.login.passwordExpired.error.equal'
       : 'app.login.passwordExpired.error.required';
@@ -40,30 +60,16 @@ export class PasswordExpiredFormComponent {
     return invalid ? message : '';
   }
 
-  buildForm() {
-    this.resetPasswordForm = this.fb.group({
-      oldPassword: ['', Validators.required],
-      passwords: this.fb.group({
-        newPassword: ['', Validators.required],
-        repeatPassword: ['', Validators.required],
-      }, { validator: EqualFieldsValidator.validate('newPassword', 'repeatPassword') })
-    });
-
-    this.oldPasswordField = this.resetPasswordForm.controls['oldPassword'];
-    this.passwords = <FormGroup>this.resetPasswordForm.controls['passwords'];
-    this.newPasswordField = this.passwords.controls['newPassword'];
-    this.repeatPasswordField = this.passwords.controls['repeatPassword'];
-  }
-
-  resetPassword(event: Event) {
+  public _resetPassword(event: Event): void {
     event.preventDefault();
 
-    this.formSent = true;
+    this._formSent = true;
 
-    if (this.resetPasswordForm.valid) {
+    if (this._resetPasswordForm.valid) {
+      this._formSent = false;
       this.onResetPassword.emit({
-        password: this.oldPasswordField.value,
-        newPassword: this.newPasswordField.value
+        password: this._oldPasswordField.value,
+        newPassword: this._newPasswordField.value
       });
     }
   }

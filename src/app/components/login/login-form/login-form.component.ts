@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoginScreen } from '../login.component';
+import { LoginScreens } from '../login.component';
 
 @Component({
   selector: 'kKMCLoginForm',
@@ -8,45 +8,38 @@ import { LoginScreen } from '../login.component';
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent {
-  @Input() inProgress = false;
-  @Input() errorMessage: string;
-  @Output() onLogin = new EventEmitter<{ username: string, password: string }>();
-  @Output() onRememberMe = new EventEmitter<string>();
-  @Output() onSetScreen = new EventEmitter<LoginScreen>();
+  @Input() _inProgress = false;
+  @Input() _errorMessage: string;
 
   @Input()
   set username(value: string) {
-    this.usernameField.setValue(value || '');
-    this.rememberMeField.setValue(!!value);
+    this._usernameField.setValue(value || '');
+    this._rememberMeField.setValue(!!value);
   };
 
-  loginForm: FormGroup;
-  usernameField: AbstractControl;
-  passwordField: AbstractControl;
-  rememberMeField: AbstractControl;
+  @Output() onLogin = new EventEmitter<{ username: string, password: string }>();
+  @Output() onRememberMe = new EventEmitter<string>();
+  @Output() onSetScreen = new EventEmitter<LoginScreens>();
 
-  constructor(private fb: FormBuilder) {
+  _loginForm: FormGroup;
+  _usernameField: AbstractControl;
+  _passwordField: AbstractControl;
+  _rememberMeField: AbstractControl;
+
+  public get _loginValidationMessage(): string {
+    return this._showError(this._usernameField) ? 'app.login.error.email' : '';
+  }
+
+  public get _loginBtnText(): string {
+    return this._inProgress ? 'app.login.wait' : 'app.login.login.title';
+  }
+
+  constructor(private _fb: FormBuilder) {
     this.buildForm();
   }
 
-  showError(control: AbstractControl) {
-    return control.invalid && control.touched;
-  }
-
-  showSuccess(control: AbstractControl) {
-    return control.valid && control.dirty;
-  }
-
-  get loginValidationMessage(): string {
-    return this.showError(this.usernameField) ? 'app.login.error.email' : '';
-  }
-
-  get loginBtnText(): string {
-    return this.inProgress ? 'app.login.wait' : 'app.login.login.title';
-  }
-
-  buildForm(): void {
-    this.loginForm = this.fb.group({
+  private buildForm(): void {
+    this._loginForm = this._fb.group({
       username: ['', Validators.compose([Validators.required, Validators.email])],
       password: ['', Validators.compose([
         Validators.required,
@@ -56,19 +49,27 @@ export class LoginFormComponent {
       rememberMe: false
     });
 
-    this.usernameField = this.loginForm.controls['username'];
-    this.passwordField = this.loginForm.controls['password'];
-    this.rememberMeField = this.loginForm.controls['rememberMe']
+    this._usernameField = this._loginForm.controls['username'];
+    this._passwordField = this._loginForm.controls['password'];
+    this._rememberMeField = this._loginForm.controls['rememberMe']
   }
 
-  login(event: Event): void {
+  _showError(control: AbstractControl): boolean {
+    return control.invalid && control.touched;
+  }
+
+  _showSuccess(control: AbstractControl): boolean {
+    return control.valid && control.dirty;
+  }
+
+  _login(event: Event): void {
     event.preventDefault();
 
-    if (this.loginForm.valid) {
-      const rememberMePayload = this.rememberMeField.value ? this.usernameField.value : '';
+    if (this._loginForm.valid) {
+      const rememberMePayload = this._rememberMeField.value ? this._usernameField.value : '';
       const loginPayload = {
-        username: this.usernameField.value,
-        password: this.passwordField.value
+        username: this._usernameField.value,
+        password: this._passwordField.value
       };
 
       this.onLogin.emit(loginPayload);
@@ -76,7 +77,7 @@ export class LoginFormComponent {
     }
   }
 
-  forgotPassword() {
-    this.onSetScreen.emit(LoginScreen.ForgotPassword);
+  _forgotPassword(): void {
+    this.onSetScreen.emit(LoginScreens.ForgotPassword);
   }
 }
