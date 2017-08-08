@@ -86,7 +86,7 @@
         "badCredentials": "The username or password you have entered is incorrect.",
         "retriesExceeded": "Your account has been locked, and will not be available for 24 hours. You can contact Kaltura support at <a href=\"mailto:support@kaltura.com\">support@kaltura.com</a> to unblock your account",
         "userNotFound": "The username or password you have entered is incorrect.",
-        "invalidStructure": "The password you entered has an invalid structure. <br/> Passwords must obey the following rules: <br/> - Must be of length between 8 and 14. <br/> - Must not contain your name <br/> - Must contain at least one lowercase letter (a-z). <br/> - Must contain at least one digit (0-9). <br/> - Must contain at least one of the following symbols: %~!@#\\$^*=+?[]{}. <br/> - Must not contain the following characters: < or >",
+        "invalidStructure": "The password you entered has an invalid structure.\nPasswords must obey the following rules:\n- Must be of length between 8 and 14.\n- Must not contain your name\n- Must contain at least one lowercase letter (a-z).\n- Must contain at least one digit (0-9).\n- Must contain at least one of the following symbols: %~!@#\\$^*=+?[]{}.\n- Must not contain the following characters: < or >",
         "alreadyUsed": "Invalid Password. <br> This password has been used in the past. Please select a new password.",
         "loginBlocked": "Login denied. You have exceeded the number of invalid login attempts. You can contact Kaltura support at <a href=\"mailto:support@kaltura.com\">support@kaltura.com</a> to unblock your account.",
         "newPasswordHashKeyInvalid": "This link is not valid.",

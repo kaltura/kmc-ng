@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   public _inProgress = false;
   public _showLogin = false;
   public _loginScreens = LoginScreens;
-  public _currentScreen = LoginScreens.Login;
+  public _currentScreen = LoginScreens.PasswordExpired;
   public _passwordReset = false;
   public _signUpLink = environment.core.externalLinks.SIGNUP;
 
@@ -48,6 +48,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       this._appNavigator.navigateToDefault();
       return;
     }
+
+    this._errorCode = error.code;
 
     if (error.passwordExpired) {
       this._username = username;
@@ -100,10 +102,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
 
-  public _openUserManual(): void {
-    this._browserService.openLink(environment.core.externalLinks.USER_MANUAL, {}, '_blank');
-  }
-
   public _setScreen(screen: LoginScreens): void {
     this._inProgress = false;
     this._currentScreen = screen;
@@ -147,8 +145,9 @@ export class LoginComponent implements OnInit, OnDestroy {
           this._inProgress = false;
           this._handleLoginResponse(success, error, this._username)
         },
-        error => {
+        (error: ILoginError) => {
           this._inProgress = false;
+          this._errorCode = error.code;
           if (!error.custom) {
             this._translate.get(error.message).subscribe(message => {
               this._errorMessage = message;

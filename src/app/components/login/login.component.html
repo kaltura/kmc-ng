@@ -26,6 +26,7 @@
 
         <kKMCPasswordExpiredForm *ngSwitchCase="_loginScreens.PasswordExpired"
                                  [errorMessage]="_errorMessage"
+                                 [errorCode]="_errorCode"
                                  [inProgress]="_inProgress"
                                  (onResetPassword)="_resetPassword($event)"></kKMCPasswordExpiredForm>
 

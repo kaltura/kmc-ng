@@ -87,7 +87,8 @@ export class AppAuthentication {
       return {
         message: '',
         custom: false,
-        passwordExpired: true
+        passwordExpired: true,
+        code
       }
     }
 

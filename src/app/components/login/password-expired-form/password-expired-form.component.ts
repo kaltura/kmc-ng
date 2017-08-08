@@ -9,6 +9,7 @@ import { EqualFieldsValidator } from 'app-shared/kmc-shell/validators/equalField
 })
 export class PasswordExpiredFormComponent {
   @Input() errorMessage: string;
+  @Input() errorCode: string;
   @Input() inProgress = false;
 
   @Output() onResetPassword = new EventEmitter<{ password: string, newPassword: string }>();
@@ -26,6 +27,18 @@ export class PasswordExpiredFormComponent {
 
   public get _passwordsDontMatch(): boolean {
     return (this._repeatPasswordField.touched || this._formSent) && this._showError(this._passwords);
+  }
+
+  public get _oldPasswordWrong(): boolean {
+    return 'WRONG_OLD_PASSWORD' === this.errorCode;
+  }
+
+  public get _passwordStructureInvalid(): boolean {
+    return 'PASSWORD_STRUCTURE_INVALID' === this.errorCode;
+  }
+
+  public get _passwordStructureInvalidMessage(): string {
+    return this._passwordStructureInvalid ? 'app.login.error.invalidStructure' : '';
   }
 
   constructor(private _fb: FormBuilder) {
@@ -56,7 +69,6 @@ export class PasswordExpiredFormComponent {
     const message = control.hasError('fieldsEqual')
       ? 'app.login.passwordExpired.error.equal'
       : 'app.login.passwordExpired.error.required';
-
     return invalid ? message : '';
   }
 
