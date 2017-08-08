@@ -97,7 +97,6 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 	}
 
 	ngOnDestroy() {
-		this.actionsMenu.hide();
 		this.entriesStoreStatusSubscription.unsubscribe();
 		this.entriesStoreStatusSubscription = null;
 	}
