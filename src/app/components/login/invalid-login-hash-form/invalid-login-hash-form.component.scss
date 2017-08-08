@@ -59,8 +59,7 @@
       }
 
       &.has-success:focus {
-        border: 2px solid #00A784;
-        //border: 2px solid $kLoginInputSuccess;
+        border: 2px solid $kPrimary;
       }
     }
   }
