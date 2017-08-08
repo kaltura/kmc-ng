@@ -32,7 +32,6 @@ export interface bitrate {
 @Injectable()
 export class EntryLiveHandler extends EntryFormWidget {
 
-	public _msgs: Message[] = [];
 	private _liveType: string = "";
 	private dirty: boolean;
 
@@ -57,7 +56,6 @@ export class EntryLiveHandler extends EntryFormWidget {
 
 	protected _onReset() {
 		this.dirty = false;
-		this._msgs = [];
 	}
 
 	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
@@ -158,11 +156,11 @@ export class EntryLiveHandler extends EntryFormWidget {
 	 .subscribe(
 	 response => {
 	 this._regeneratingToken = false;
-	 this._msgs.push({severity: 'success', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.live.regenerateSuccess')});
+   this._browserService.showGrowlMessage({severity: 'success', detail: this._appLocalization.get('applications.content.entryDetails.live.regenerateSuccess')});
 	 },
 	 error => {
 	 this._regeneratingToken = false;
-	 this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.live.regenerateFailure')});
+   this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.live.regenerateFailure')});
 	 }
 	 );
 	 }

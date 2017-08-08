@@ -1,8 +1,6 @@
 import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
-import { MenuItem, Message } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
@@ -11,12 +9,6 @@ import { EntriesStore, SortDirection } from './entries-store/entries-store.servi
 import { EntriesTableComponent } from "./entries-table.component";
 
 import { FreetextFilter } from "./entries-store/filters/freetext-filter";
-import { EntriesRefineFiltersProvider } from "./entries-refine-filters/entries-refine-filters-provider.service";
-
-export type UpdateStatus = {
-	busy : boolean;
-	errorMessage : string;
-};
 
 @Component({
     selector: 'kEntriesList',
@@ -32,7 +24,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
     private querySubscription : ISubscription;
     public _selectedEntries: any[] = [];
-	public _msgs: Message[] = [];
 
     public _filter = {
         pageIndex : 0,
@@ -42,7 +33,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         sortDirection : SortDirection.Desc
     };
 
-    constructor(private _entriesStore : EntriesStore, private additionalFilters : EntriesRefineFiltersProvider, private appLocalization: AppLocalization, private router: Router, private _browserService : BrowserService) {
+    constructor(private _entriesStore : EntriesStore, private appLocalization: AppLocalization, private router: Router, private _browserService : BrowserService) {
 
     }
 
@@ -91,7 +82,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-
         const query = this._entriesStore.queryData;
 
         if (query) {
@@ -165,10 +155,9 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 	    this.isBusy = true;
 	    this._blockerMessage = null;
 	    this._entriesStore.deleteEntry(entryId).subscribe(
-		    result => {
-                this.isBusy = false;
-			    this._msgs = [];
-			    this._msgs.push({severity: 'success', summary: '', detail: this.appLocalization.get('applications.content.entries.deleted')});
+        () => {
+          this.isBusy = false;
+          this._browserService.showGrowlMessage({severity: 'success', detail: this.appLocalization.get('applications.content.entries.deleted')});
 			    this._entriesStore.reload(true);
 		    },
 		    error => {
@@ -208,10 +197,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   onBulkChange(event): void{
     if (event.reload === true){
       this._reload();
-    }else{
-      // this.clearSelection();
-      // this._msgs = [];
-      // this._msgs.push({severity: 'success', summary: '', detail: this.appLocalization.get('applications.content.bulkActions.updated')});
     }
   }
 

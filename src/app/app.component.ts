@@ -1,6 +1,6 @@
 import { OnInit, Component } from '@angular/core';
-import { ConfirmationService, Confirmation } from 'primeng/primeng';
-import { BrowserService, AppStatus } from 'app-shared/kmc-shell/providers/browser.service';
+import { ConfirmationService } from 'primeng/primeng';
+import { BrowserService, AppStatus, GrowlMessage } from 'app-shared/kmc-shell/providers/browser.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
@@ -18,13 +18,13 @@ export class AppComponent implements OnInit {
 
   public _isBusy: boolean = false;
   public _blockerMessage: AreaBlockerMessage = null;
+  public _growlMessages: GrowlMessage[] = [];
 
   constructor(private _confirmationService : ConfirmationService, private _browserService : BrowserService, private _appLocalization: AppLocalization ) {
 
   }
 
-  ngOnInit()
-  {
+  ngOnInit() {
     this._browserService.registerOnShowConfirmation((message) =>
     {
       let htmlMessageContent = message.message.replace(/\n/g,'<br/>');
@@ -48,6 +48,13 @@ export class AppComponent implements OnInit {
             }]
           });
         }
+      }
+    );
+
+    // handle app growlMessages
+    this._browserService.growlMessage$.subscribe(
+      (message: GrowlMessage) => {
+        this._growlMessages = [ ...this._growlMessages, message ];
       }
     );
   }
