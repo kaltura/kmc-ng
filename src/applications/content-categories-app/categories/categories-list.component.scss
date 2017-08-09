@@ -1,6 +1,6 @@
 @import 'app-theme/_variables.scss';
 
-.kEntries {
+.kCategories {
   font-size: 15px;
   background-color: $appBkgColor;
   height: $contentArea;
@@ -11,7 +11,7 @@
   display: flex;
   flex-flow: row wrap;
   margin: 0px;
-  .kEntriesHolder {
+  .kCategoriesHolder {
     height: 100%;
     border: none;
     position: relative;
@@ -35,7 +35,7 @@
       color: $kPrimary;
     }
   }
-  .kEntriesTableFilters {
+  .kCategoriesTableFilters {
     color: $kGrayscale1;
     width: 100%;
     height: 66px;
@@ -51,14 +51,14 @@
       padding-left: 16px;
     }
   }
-  .kEntriesTableTags {
+  .kCategoriesTableTags {
     width: 100%;
     height: 50px;
     background-color: #f3f3f3;
     border: 1px solid grey;
     flex: 0 0 50px;
   }
-  .kEntriesTableFooter {
+  .kCategoriesTableFooter {
     width: 100%;
     height: 34px;
     background-color: white;
@@ -69,7 +69,7 @@
     padding: 0 14px 28px;
     display: block;
   }
-  .kEntriesTable {
+  .kCategoriesTable {
     border: none;
     position: relative;
     background-color: white;

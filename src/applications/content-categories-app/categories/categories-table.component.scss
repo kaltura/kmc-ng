@@ -1,6 +1,6 @@
 @import 'app-theme/_variables.scss';
 
-.kEntriesTable {
+.kCategoriesTable {
     background-color: white;
     overflow-y: hidden;
     position: absolute;
@@ -42,7 +42,7 @@
             cursor: auto;
         }
     }
-    .kEntriesTableActions {
+    .kCategoriesTableActions {
         width: 100%;
         text-align: center;
         button {
