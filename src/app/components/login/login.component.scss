@@ -27,7 +27,7 @@
       margin-top: 121px;
       width: 430px;
       min-height: 327px;
-      padding: 75px 60px;
+      padding: 68px 60px 60px 60px;
 
       .kLogo {
         margin: 0 auto;
@@ -61,6 +61,10 @@
       margin-bottom: 19px;
       font-size: 16px;
       text-align: center;
+
+      p {
+        margin-top: 0;
+      }
 
       .kSignUpBtn {
         border: none;
