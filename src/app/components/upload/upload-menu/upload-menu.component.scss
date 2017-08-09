@@ -1,0 +1,74 @@
+@import 'app-theme/_variables.scss';
+
+.kUploadMenu {
+  color: #FFFFFF;
+
+  a {
+    color: #FFFFFF;
+    text-decoration: none;
+  }
+
+  .item {
+    height: 48px;
+    margin-bottom: 33px;
+    display: flex;
+    align-items: center;
+    &.last {
+      margin-bottom: 48px;
+    }
+
+    i {
+      width: 48px;
+      height: 48px;
+      background-color: $kPrimary;
+      border-radius: 50%;
+      display: inline-block;
+
+      &.red {
+        background-color: $kDandger;
+      }
+
+      &.orange {
+        background-color: $kOrange;
+      }
+
+      &.blue {
+        background-color: $kSecondary;
+      }
+    }
+
+    span {
+      display: inline-block;
+      margin-left: 35px;
+
+      a {
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .samples {
+        margin-top: 5px;
+        opacity: 0.6;
+        font-size: 14px;
+        font-weight: normal;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .list {
+    margin-left: 83px;
+
+    .list-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
+
+    .list-item {
+      font-size: 16px;
+      font-weight: bold;
+      line-height: 19px;
+    }
+  }
+}

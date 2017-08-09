@@ -28,6 +28,7 @@ import { LanguageMenuComponent } from './components/language-menu/language-menu.
 import { LoginComponent } from './components/login/login.component';
 import { ErrorComponent } from './components/error/error.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
+import { UploadMenuComponent } from './components/upload/upload-menu/upload-menu.component';
 import { KalturaHttpConfigurationAdapter } from "./services/kaltura-http-configuration-adapter.service";
 
 import { ButtonModule, InputTextModule, TieredMenuModule, GrowlModule } from 'primeng/primeng';
@@ -82,7 +83,8 @@ export function clientConfigurationFactory()
     LanguageMenuComponent,
     LoginComponent,
     ErrorComponent,
-    UserSettingsComponent
+    UserSettingsComponent,
+    UploadMenuComponent
   ],
   bootstrap: <any>[
       AppComponent
