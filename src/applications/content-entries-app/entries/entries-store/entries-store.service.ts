@@ -1,3 +1,4 @@
+import { Message } from 'primeng/primeng';
 import { Injectable, OnDestroy } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -336,7 +337,8 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             },
             error => {
                 this.executeQueryState.subscription = null;
-                this._state.next({loading: false, errorMessage: (<Error>error).message || <string>error});
+                const errorMessage = error & error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+                this._state.next({loading: false, errorMessage});
             });
 
     }

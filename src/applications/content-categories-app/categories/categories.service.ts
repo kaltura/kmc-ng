@@ -57,11 +57,6 @@ export class CategoriesService implements OnDestroy {
             this._categoriesExecuteSubscription = null;
         }
 
-        this._categories.next({
-            items: [],
-            totalCount: 0
-        });
-
         this._state.next({ loading: true, errorMessage: null });
 
         // execute the request
@@ -78,7 +73,8 @@ export class CategoriesService implements OnDestroy {
             },
             error => {
                 this._categoriesExecuteSubscription = null;
-                this._state.next({ loading: false, errorMessage: (<Error>error).message || <string>error });
+                const errorMessage = error & error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+                this._state.next({loading: false, errorMessage});                
             });
     }
 

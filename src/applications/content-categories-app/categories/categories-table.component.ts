@@ -4,6 +4,7 @@ import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { CategoriesService } from "./categories.service";
+import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
 
 @Component({
 	selector: 'kCategoriesTable',
@@ -14,7 +15,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 
 	public _blockerMessage: AreaBlockerMessage = null;
 
-	public _categories: any[] = [];
+	public _categories: KalturaCategory[] = [];
 	private _deferredCategories : any[];
 	@Input() set categories(data: any[]) {
 		if (!this._deferredLoading) {
@@ -30,14 +31,14 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 	}
 
 	@Input() filter: any = {};
-	@Input() selectedEntries: any[] = [];
+	@Input() selectedCategories: KalturaCategory[] = [];
 
 	@Output()
 	sortChanged = new EventEmitter<any>();
 	@Output()
 	actionSelected = new EventEmitter<any>();
 	@Output()
-	selectedEntriesChange = new EventEmitter<any>();
+	selectedCategoriesChange = new EventEmitter<any>();
 
 	@ViewChild('dataTable') private dataTable: DataTable;
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
