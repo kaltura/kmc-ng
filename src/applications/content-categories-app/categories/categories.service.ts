@@ -8,12 +8,12 @@ import 'rxjs/add/operator/map';
 
 import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
 import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
 import { CategoryListAction } from 'kaltura-typescript-client/types/CategoryListAction';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaCategoryListResponse } from "kaltura-typescript-client/types/KalturaCategoryListResponse";
+import { KalturaCategory } from "kaltura-typescript-client/types/KalturaCategory";
 
 export type UpdateStatus = {
     loading: boolean;
@@ -21,14 +21,14 @@ export type UpdateStatus = {
 };
 
 export interface Categories {
-    items: KalturaMediaEntry[],
+    items: KalturaCategory[],
     totalCount: number
 }
 
 @Injectable()
 export class CategoriesService implements OnDestroy {
 
-    private _categories = new BehaviorSubject({ items: [], totalCount: 0 });
+    private _categories = new BehaviorSubject<Categories>({ items: [], totalCount: 0 });
     private _state = new BehaviorSubject<UpdateStatus>({ loading: false, errorMessage: null });
     private _categoriesExecuteSubscription: ISubscription;
     public state$ = this._state.asObservable();
@@ -72,7 +72,7 @@ export class CategoriesService implements OnDestroy {
                 this._state.next({ loading: false, errorMessage: null });
 
                 this._categories.next({
-                    items: <any[]>response.objects,
+                    items: response.objects,
                     totalCount: <number>response.totalCount
                 });
             },
@@ -90,7 +90,7 @@ export class CategoriesService implements OnDestroy {
                 type: KalturaResponseProfileType.includeFields,
                 fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount'
             });
-            let pager: KalturaFilterPager = new KalturaFilterPager( {pageSize: 50, pageIndex: 1});
+            let pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 50, pageIndex: 1 });
 
             // build the request
             return <any>this._kalturaClient.request(

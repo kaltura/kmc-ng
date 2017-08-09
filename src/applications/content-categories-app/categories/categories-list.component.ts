@@ -15,7 +15,7 @@ import { CategoriesService } from './categories.service';
 
 export class CategoriesListComponent implements OnInit, OnDestroy {
 
-    public isBusy = false
+    public _isBusy = false
     public _blockerMessage: AreaBlockerMessage = null;
     public _msgs: Message[] = [];
     public _selectedCategories: any[] = [];

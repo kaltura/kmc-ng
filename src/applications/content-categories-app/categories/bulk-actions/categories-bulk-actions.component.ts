@@ -1,7 +1,5 @@
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { PopupWidgetComponent } from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 @Component({
   selector: 'kCategoriesBulkActions',
   templateUrl: './categories-bulk-actions.component.html',
@@ -13,8 +11,6 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   @Output() onBulkChange = new EventEmitter<{reload: boolean}>();
 
-  @ViewChild('bulkActionsPopup') public bulkActionsPopup: PopupWidgetComponent;
-
   constructor(private _appLocalization: AppLocalization, ) {
   }
 
@@ -23,6 +19,5 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(){
 
-  }
- 
+  } 
 }

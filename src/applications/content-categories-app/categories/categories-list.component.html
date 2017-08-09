@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="isBusy" [message]="_blockerMessage">
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
   <div class="kEntries kOverrideFAIcons">
     <div #categoriesTableHolder class="kEntriesHolder kContent">
       <div class="kEntriesTableFilters">
@@ -33,8 +33,7 @@
           [totalRecords]="(_categoriesService.categories$ | async)?.totalCount | kMaxCategories" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
       </div>
-    </div>
-    <p-growl [value]="_msgs"></p-growl>
+    </div>    
   </div>
 
 </k-area-blocker>
