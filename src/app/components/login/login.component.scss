@@ -73,7 +73,7 @@
         height: 32px;
         width: 90px;
         border-radius: 4px;
-        background-color: $kLoginSignUpBtn;
+        background-color: rgba(255, 255, 255, 0.2);
 
         &:not(:last-child) {
           margin-right: 36px;
