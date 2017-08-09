@@ -3,8 +3,8 @@
     <div #categoriesTableHolder class="kEntriesHolder kContent">
       <div class="kEntriesTableFilters">
         <button pButton type="button" label="{{'applications.content.categories.addCategory' | translate}}" class="kButtonBranded kAddCategoryBtn"></button>
-        <span class="kSelectedEntriesNum" *ngIf="(_categoriesService.categories$ | async)?.totalCount">
-          {{(_categoriesService.categories$ | async)?.totalCount}} {{'applications.content.categories.categories' | translate}}
+        <span class="kSelectedEntriesNum" *ngIf="_categories?.totalCount">
+          {{_categories?.totalCount}} {{'applications.content.categories.categories' | translate}}
         </span>
 
          <div [class.kHidden]="!_selectedCategories.length" class="kBulkOperations">
@@ -26,11 +26,11 @@
         </div>
         <button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" [kTooltip]="'applications.content.categories.refresh' | translate"></button>
       </div>
-      <kCategoriesTable class="kEntriesTable" [categories]="(_categoriesService.categories$ | async)?.items"></kCategoriesTable>
+      <kCategoriesTable class="kEntriesTable" [categories]="_categories?.items"></kCategoriesTable>
 
-      <div class="kEntriesTableFooter" #footer *ngIf="(_categoriesService.categories$ | async)?.totalCount">
+      <div class="kEntriesTableFooter" #footer *ngIf="_categories?.totalCount">
         <p-paginator 
-          [totalRecords]="(_categoriesService.categories$ | async)?.totalCount | kMaxCategories" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
+          [totalRecords]="_categories?.totalCount | kMaxCategories" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
       </div>
     </div>    

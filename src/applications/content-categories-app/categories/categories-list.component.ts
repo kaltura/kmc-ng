@@ -1,9 +1,10 @@
+import { ISubscription } from 'rxjs/Subscription';
 import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
 import { CategoriesTableComponent } from "./categories-table.component";
-import { CategoriesService } from './categories.service';
+import { CategoriesService, Categories } from './categories.service';
 
 @Component({
     selector: 'kCategoriesList',
@@ -17,13 +18,21 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     public _isBusy = false
     public _blockerMessage: AreaBlockerMessage = null;
     public _selectedCategories: KalturaCategory[] = [];
+    public _categories: Categories;
+    private categoriesSubscription: ISubscription;
 
     constructor(private _categoriesService: CategoriesService, private router: Router) {
     }
 
     ngOnInit() {
+        this.categoriesSubscription = this._categoriesService.categories$.subscribe(
+            (x) => {
+                this._categories = x;
+            }
+        );
     }
 
     ngOnDestroy() {
+        this.categoriesSubscription.unsubscribe();
     }
 }
