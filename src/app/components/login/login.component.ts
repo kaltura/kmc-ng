@@ -158,7 +158,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       );
   }
 
-  public _signUp() {
+  public _signUp(): void {
     this._browserService.openLink(environment.core.externalLinks.SIGNUP);
   }
 }
