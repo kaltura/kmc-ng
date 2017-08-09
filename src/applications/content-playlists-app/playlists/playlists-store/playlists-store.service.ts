@@ -138,7 +138,8 @@ export class PlaylistsStore implements OnDestroy {
 				},
 				error => {
 					this.requestSubscription = null;
-					this._stateSource.next({loading: false, errorMessage: (<Error>error).message || <string>error});
+					const errorMessage = error & error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+                	this._stateSource.next({loading: false, errorMessage});
 				});
 
 	}
