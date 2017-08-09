@@ -42,7 +42,7 @@
       <ng-container *ngIf="_currentScreen === _loginScreens.Login">
         <p>{{ 'app.login.dontHaveAccount' | translate }}</p>
 
-        <a [href]="_signUpLink" class="kSignUpBtn" pButton [label]="'app.login.signUp' | translate"></a>
+        <button class="kSignUpBtn" pButton [label]="'app.login.signUp' | translate" (click)="_signUp()"></button>
       </ng-container>
 
       <ng-container *ngIf="_currentScreen !== _loginScreens.Login">
@@ -51,9 +51,9 @@
                 [label]="'app.login.login.title' | translate"
                 (click)="_setScreen(_loginScreens.Login)"></button>
         <button class="kSignUpBtn"
-           pButton
-           [label]="'app.login.signUp' | translate"></button>
-
+                pButton
+                [label]="'app.login.signUp' | translate"
+                (click)="_signUp()"></button>
       </ng-container>
     </div>
   </div>

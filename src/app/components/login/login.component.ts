@@ -27,7 +27,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   public _loginScreens = LoginScreens;
   public _currentScreen = LoginScreens.Login;
   public _passwordReset = false;
-  public _signUpLink = environment.core.externalLinks.SIGNUP;
 
   constructor(private _appAuthentication: AppAuthentication,
               private _appNavigator: AppNavigator,
@@ -157,5 +156,9 @@ export class LoginComponent implements OnInit, OnDestroy {
           }
         }
       );
+  }
+
+  public _signUp() {
+    this._browserService.openLink(environment.core.externalLinks.SIGNUP);
   }
 }
