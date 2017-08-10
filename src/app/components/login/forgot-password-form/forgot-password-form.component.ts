@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'app-environment';
 import { LoginScreens } from '../login.component';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kKMCForgotPasswordForm',
@@ -22,7 +23,6 @@ export class ForgotPasswordFormComponent {
   @Output() onSetScreen = new EventEmitter<LoginScreens>();
   @Output() onResetPassword = new EventEmitter<string>();
 
-  public _instructionsTranslateParam = { value: environment.core.externalLinks.CONTACT_US };
   public _forgotPasswordForm: FormGroup;
   public _emailField: AbstractControl;
   public _displayEmailField = true;
@@ -40,7 +40,7 @@ export class ForgotPasswordFormComponent {
     return { value };
   }
 
-  constructor(private _fb: FormBuilder) {
+  constructor(private _fb: FormBuilder, private _browserService: BrowserService) {
     this._buildForm();
   }
 
@@ -62,5 +62,9 @@ export class ForgotPasswordFormComponent {
 
   public _openLogin(): void {
     this.onSetScreen.emit(LoginScreens.Login);
+  }
+
+  public _openContactUs(): void {
+    this._browserService.openLink(environment.core.externalLinks.CONTACT_US);
   }
 }

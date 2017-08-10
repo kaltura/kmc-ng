@@ -102,8 +102,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   public _setScreen(screen: LoginScreens): void {
-    this._inProgress = false;
     this._currentScreen = screen;
+
+    this._inProgress = false;
+    this._errorCode = '';
+    this._errorMessage = '';
 
     if (screen !== LoginScreens.ForgotPassword) {
       this._passwordReset = false;

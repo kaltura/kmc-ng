@@ -13,7 +13,7 @@ import {
   AppBootstrapConfig  as AppBootstrapConfigType
 } from 'app-shared/kmc-shell';
 import { KalturaCommonModule, AppStorage } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { KalturaClient, KalturaClientConfiguration } from '@kaltura-ng/kaltura-client';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { KalturaServerModule } from '@kaltura-ng/kaltura-server-utils';
@@ -39,7 +39,6 @@ import {
   InputTextModule,
   TieredMenuModule,
   CheckboxModule,
-  TooltipModule,
   ConfirmDialogModule,
   ConfirmationService,
   DropdownModule
@@ -96,8 +95,8 @@ export function clientConfigurationFactory() {
     KalturaServerModule,
     AreaBlockerModule,
     CheckboxModule,
-    TooltipModule,
     ReactiveFormsModule,
+    TooltipModule
   ],
   declarations: <any>[
     AppComponent,

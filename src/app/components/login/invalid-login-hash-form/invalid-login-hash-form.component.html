@@ -14,9 +14,8 @@
              'has-error': errorMessage || _emailValidationMessage,
              'has-success': _emailField.valid && _emailField.touched
            }"
-             [pTooltip]="_emailValidationMessage | translate"
-             tooltipEvent="focus"
-             tooltipPosition="right">
+             [kTooltip]="_emailValidationMessage | translate"
+             placement="right">
     </div>
 
     <p *ngIf="errorMessage" class="kErrorMessage" [innerHTML]="errorMessage"></p>

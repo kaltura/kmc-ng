@@ -11,9 +11,8 @@
              'has-error': errorMessage || _showError(_usernameField),
              'has-success': _showSuccess(_usernameField)
            }"
-           [pTooltip]="_loginValidationMessage | translate"
-           tooltipEvent="focus"
-           tooltipPosition="right">
+           [kTooltip]="_loginValidationMessage | translate"
+           placement="right">
   </div>
 
   <div>

@@ -62,7 +62,8 @@
       "forgotPassword": {
         "title": "Forgot password",
         "placeholder": "Your Email",
-        "instructions": "Instructions to reset your password will be sent to your email. If you forgot which email you used, please <a href=\"{{value}}\">contact us</a>.",
+        "instructions": "Instructions to reset your password will be sent to your email. If you forgot which email you used, please ",
+        "contactUs": "contact us.",
         "sent": {
           "instructions": "An email has been sent to {{value}} with a link to reset your password. If you don't see the message in your inbox, check to see if the message is in your spam or junk folders.",
           "redirectTo": "Redirect to",
