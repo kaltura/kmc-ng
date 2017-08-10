@@ -128,5 +128,7 @@
 
 .kNewPlaylistPopup {
   transition: min-height .3s ease-in-out;
+  -moz-transition: min-height .3s ease-in-out;
+  -webkit-transition: min-height .3s ease-in-out;
   min-height: 452px;
 }
