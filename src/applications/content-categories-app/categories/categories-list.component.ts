@@ -17,17 +17,20 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
 
     public _isBusy = false
     public _blockerMessage: AreaBlockerMessage = null;
-    public _selectedCategories: KalturaCategory[] = [];
-    public _categories: Categories;
+    public _selectedCategories: KalturaCategory[] = [];    
+    public _categories : KalturaCategory[] = [];
+    public _categoriesTotalCount : number = null;
     private categoriesSubscription: ISubscription;
+    
 
     constructor(private _categoriesService: CategoriesService, private router: Router) {
     }
 
     ngOnInit() {
         this.categoriesSubscription = this._categoriesService.categories$.subscribe(
-            (x) => {
-                this._categories = x;
+            (data) => {
+                this._categories = data.items;
+                this._categoriesTotalCount = data.totalCount;
             }
         );
     }
