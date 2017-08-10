@@ -18,11 +18,13 @@
     }
 
     i {
+      font-size: 24px;
+      text-align: center;
+      line-height: 48px;
       width: 48px;
       height: 48px;
       background-color: $kPrimary;
       border-radius: 50%;
-      display: inline-block;
 
       &.red {
         background-color: $kDandger;
@@ -38,7 +40,6 @@
     }
 
     span {
-      display: inline-block;
       margin-left: 35px;
 
       a {
