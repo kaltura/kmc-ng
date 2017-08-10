@@ -67,6 +67,16 @@
       }
     },
     "content": {
+       "categories": {
+        "categories": "Categories",       
+        "search": "Search",         
+        "refresh": "Refresh",
+        "addCategory":"Add Category",
+        "selected": "Selected",
+        "bulkActions": "Bulk Actions",
+        "refine": "Refine",
+        "filterCategories": "Filter Categories"  
+      },
       "entries": {
         "entries": "Entries",
         "selected": "Selected",
