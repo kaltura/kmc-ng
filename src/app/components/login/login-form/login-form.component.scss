@@ -38,7 +38,7 @@
       font-size: 16px;
       border-radius: 4px;
 
-      &:placeholder-shown {
+      &:placeholder-shown, &:-webkit-autofill:placeholder-shown {
         background-color: $kGrayscale6;
       }
 
@@ -48,6 +48,21 @@
 
       &.has-success:focus {
         border: 2px solid $kPrimary;
+      }
+
+      /* Override chrome's autofill styles */
+      -webkit-text-fill-color: $kGrayscale3;
+
+      &:-webkit-autofill {
+        -webkit-box-shadow:0 0 0 48px $kGrayscale6 inset;
+      }
+
+      &:-webkit-autofill:focus {
+        -webkit-box-shadow:0 0 0 48px #FFFFFF inset;
+      }
+
+      &:-webkit-autofill:placeholder-shown {
+        background-color: $kGrayscale6;
       }
     }
   }
