@@ -1,0 +1,42 @@
+<form class="kLoginForm"
+      [formGroup]="_loginForm"
+      (submit)="_login($event)">
+  <h1>{{ 'app.login.login.title' | translate}}</h1>
+
+  <div>
+    <input pInputText
+           [placeholder]="'app.login.login.placeholder.username' | translate"
+           [formControl]="_usernameField"
+           [ngClass]="{
+             'has-error': errorMessage || _showError(_usernameField),
+             'has-success': _showSuccess(_usernameField)
+           }"
+           [kTooltip]="_loginValidationMessage | translate"
+           placement="right">
+  </div>
+
+  <div>
+    <input type="password"
+           pInputText
+           [placeholder]="'app.login.login.placeholder.password' | translate"
+           [formControl]="_passwordField"
+           [class.has-error]="errorMessage">
+  </div>
+
+  <p *ngIf="errorMessage" class="kErrorMessage" [innerHTML]="errorMessage"></p>
+
+  <div class="kControlLinks">
+    <p-checkbox [formControl]="_rememberMeField"
+                [binary]="true"
+                [label]="'app.login.rememberMe' | translate"></p-checkbox>
+    <a (click)="_forgotPassword()">{{ 'app.login.login.forgotPassword' | translate }}</a>
+  </div>
+
+  <div>
+    <button class="kButtonDefault"
+            pButton
+            [label]="_loginBtnText | translate"
+            [disabled]="inProgress"></button>
+  </div>
+</form>
+
