@@ -1,0 +1,83 @@
+@import 'app-theme/_variables.scss';
+
+.kUploadSettings {
+  color: $kGrayscale1;
+  height: 607px;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+
+  .kHeader, .kFooter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .kHeader {
+    text-align: center;
+    height: 77px;
+    border-bottom: 1px $kGrayscale4 solid;
+
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+  }
+
+  .kContent {
+    flex: 1 1 auto;
+    padding: 20px 28px 40px 28px;
+    display: flex;
+    flex-direction: column;
+    width: 734px;
+
+    .kProfile {
+      padding-bottom: 20px;
+      border-bottom: 1px $kGrayscale6 solid;
+      font-size: 15px;
+
+      .kTranscodingProfile {
+        margin-left: 7px;
+      }
+    }
+
+    .kAddFile {
+      padding: 20px 0;
+
+      .kAddFileButton {
+        width: 95px;
+        height: 34px;
+        font-size: 14px;
+        color: $kGrayscale1;
+      }
+    }
+
+    .kTable {
+
+    }
+  }
+
+  .kFooter {
+    height: 66px;
+    border-top: 1px $kGrayscale4 solid;
+    text-align: center;
+
+    .kUploadButton {
+      width: 100px;
+      height: 34px;
+      background-color: $kPrimary;
+      color: white;
+      font-weight: normal;
+      font-size: 14px;
+    }
+  }
+}
+
+:host /deep/ .ui-dropdown.ui-widget {
+  width: 127px;
+}
+
+:host /deep/ .ui-datatable-scrollable-table-wrapper table {
+  height: 286px;
+}

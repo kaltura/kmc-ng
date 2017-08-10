@@ -2,7 +2,7 @@
   <div class="kUploadMenuListItem">
     <i class="kIconUpload kUploadMenuUploadIcon"></i>
     <span>
-      <a>{{ 'app.upload.uploadMenu.uploadFromDesktop' | translate }}</a>
+      <a (click)="onTriggerUpload.emit()">{{ 'app.upload.uploadMenu.uploadFromDesktop' | translate }}</a>
     </span>
   </div>
 

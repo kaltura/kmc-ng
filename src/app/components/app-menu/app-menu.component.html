@@ -53,5 +53,13 @@
 
 
 <kPopupWidget #uploadmenu [popupWidth]="315" [popupHeight]="385" [closeBtn]="true" [modal]="true" [transparent]="true">
-  <kKMCUploadMenu></kKMCUploadMenu>
+  <ng-template>
+    <kKMCUploadMenu (onTriggerUpload)="uploadmenu.close(); uploadsettings.open()"></kKMCUploadMenu>
+  </ng-template>
+</kPopupWidget>
+
+<kPopupWidget #uploadsettings [popupWidth]="791" [popupHeight]="607" [closeBtn]="true" [modal]="true">
+  <ng-template>
+    <kKMCUploadSettings></kKMCUploadSettings>
+  </ng-template>
 </kPopupWidget>
