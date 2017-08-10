@@ -42,6 +42,65 @@
       "close": "Close",
       "note": "Note:"
     },
+    "login": {
+      "login": {
+        "title": "Login",
+        "forgotPassword": "Forgot password?",
+        "placeholder": {
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "invalidLoginHash": {
+        "title": "Invalid login link",
+        "placeholder": "Enter Email",
+        "instructions": "This link is invalid or has expired. Please enter your email address to receive a new link",
+        "sent": {
+          "instructions": "An email has been sent to {{value}} with a link to reset your password. If you don't see the message in your inbox, check to see if the message is in your spam or junk folders."
+        }
+      },
+      "forgotPassword": {
+        "title": "Forgot password",
+        "placeholder": "Your Email",
+        "instructions": "Instructions to reset your password will be sent to your email. If you forgot which email you used, please ",
+        "contactUs": "contact us.",
+        "sent": {
+          "instructions": "An email has been sent to {{value}} with a link to reset your password. If you don't see the message in your inbox, check to see if the message is in your spam or junk folders.",
+          "redirectTo": "Redirect to",
+          "login": "login"
+        }
+      },
+      "passwordExpired": {
+        "title": "Your password is older than 90 days. To continue using the system you need to change your password now",
+        "error": {
+          "equal": "Passwords do not match",
+          "required": "Field is required"
+        },
+        "placeholder": {
+          "current": "Enter your password",
+          "new": "Enter new password",
+          "confirm": "Confirm new password"
+        }
+      },
+      "error": {
+        "email": "Wrong email format",
+        "badCredentials": "The username or password you have entered is incorrect.",
+        "retriesExceeded": "Your account has been locked, and will not be available for 24 hours. You can contact Kaltura support at <a href=\"mailto:support@kaltura.com\">support@kaltura.com</a> to unblock your account",
+        "userNotFound": "The username or password you have entered is incorrect.",
+        "invalidStructure": "The password you entered has an invalid structure.\nPasswords must obey the following rules:\n- Must be of length between 8 and 14.\n- Must not contain your name\n- Must contain at least one lowercase letter (a-z).\n- Must contain at least one digit (0-9).\n- Must contain at least one of the following symbols: %~!@#\\$^*=+?[]{}.\n- Must not contain the following characters: < or >",
+        "alreadyUsed": "Invalid Password. <br> This password has been used in the past. Please select a new password.",
+        "loginBlocked": "Login denied. You have exceeded the number of invalid login attempts. You can contact Kaltura support at <a href=\"mailto:support@kaltura.com\">support@kaltura.com</a> to unblock your account.",
+        "newPasswordHashKeyInvalid": "This link is not valid.",
+        "newPasswordHashKeyExpired": "This link is older then 24 hours and is no longer valid.",
+        "wrongOldPassword": "Old password is wrong",
+        "invalidField": "Value in field {{value}} is not valid"
+      },
+      "send": "Send",
+      "wait": "Wait…",
+      "signUp": "Sign Up",
+      "rememberMe": "Remember me",
+      "dontHaveAccount": "Don't have an account?"
+    },
     "upload": {
       "uploadMenu": {
         "uploadFromDesktop": "Upload from desktop",
