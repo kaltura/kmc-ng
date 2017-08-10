@@ -110,6 +110,16 @@
       }
     },
     "content": {
+       "categories": {
+        "categories": "Categories",       
+        "search": "Search",         
+        "refresh": "Refresh",
+        "addCategory":"Add Category",
+        "selected": "Selected",
+        "bulkActions": "Bulk Actions",
+        "refine": "Refine",
+        "filterCategories": "Filter Categories"  
+      },
       "entries": {
         "entries": "Entries",
         "selected": "Selected",
@@ -121,9 +131,10 @@
         "refresh": "Refresh",
         "deleteEntry": "Delete Entry",
         "confirmDelete": "Are you sure you want to delete the selected entry?",
+        "confirmDeleteSingle": "Are you sure you want to delete the selected entry? \n {{0}} \n Please note: the entry will be permanently deleted from your account.",
+        "confirmDeleteMultiple": "Are you sure you want to delete the selected entries? \n {{0}} \n Please note: these entries will be permanently deleted from your account.",
         "deleted": "Entry deleted successfully",
-        "entryId": "Entry ID: {{0}}",
-        "deleteNote": "Please note: the entry will be permanently deleted from your account."
+        "entryId": "Entry ID: {{0}}"
       },
       "playlists": {
         "playlists": "Playlist's",
@@ -131,14 +142,14 @@
         "bulkActions": "Bulk Actions",
         "cancel": "Cancel",
         "deletePlaylist": "Delete Playlist",
-        "confirmDelete": "Are you sure you want to delete the selected playlist{{0}}?",
+        "confirmDeleteMultiple": "Are you sure you want to delete the selected playlists? \n {{0}} \n Please note: these playlists will be permanently deleted from your account.",
+        "confirmDeleteSingle": "Are you sure you want to delete the selected playlist? \n {{0}} \n Please note: this playlist will be permanently deleted from your account.",
         "playlistId": "Playlist ID: {{0}}",
         "deleted": "Playlist deleted successfully",
         "searchEntries": "Search Playlists",
         "addPlaylist": "Add Playlist",
         "addEntry": "Add Entry",
-        "refresh": "Refresh",
-        "deleteNote": "Please note: {{0}} playlist{{1}} will be permanently deleted from your account."
+        "refresh": "Refresh"
       },
       "filters": {
         "activeFilters": "Active Filters:",

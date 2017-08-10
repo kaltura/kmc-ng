@@ -112,7 +112,8 @@ export class EntriesRefineFiltersProvider {
                 this.executeQuerySubscription = null;
 
                 this._filters.next({ groups : []});
-                this._status.next({loading: false, errorMessage: (<Error>error).message || <string>error});
+                const errorMessage = error & error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+                this._status.next({loading: false, errorMessage});                
             }
         );
     }

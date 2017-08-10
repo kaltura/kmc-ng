@@ -41,7 +41,8 @@ import {
   CheckboxModule,
   ConfirmDialogModule,
   ConfirmationService,
-  DropdownModule
+  DropdownModule,
+  GrowlModule
 } from 'primeng/primeng';
 
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -96,7 +97,8 @@ export function clientConfigurationFactory() {
     AreaBlockerModule,
     CheckboxModule,
     ReactiveFormsModule,
-    TooltipModule
+    TooltipModule,
+    GrowlModule
   ],
   declarations: <any>[
     AppComponent,

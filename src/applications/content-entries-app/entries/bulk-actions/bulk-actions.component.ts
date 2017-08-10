@@ -112,22 +112,16 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   // bulk delete
-  public deleteEntries(): void{
-    let msg = '';
-    // display entries marked for deletion in the confirmation box if there are up to 10 selected entries. Otherwise, just confirm deletion
-    if (this.selectedEntries.length > 10){
-      msg = `${this._appLocalization.get('applications.content.bulkActions.deleteConfirm')}<br/><br/>${this._appLocalization.get('applications.content.bulkActions.deleteNote')}`;
-    }else{
-      msg = `${this._appLocalization.get('applications.content.bulkActions.deleteConfirm')}<br/><br/>`;
-      this.selectedEntries.forEach(entry => {
-        msg += `${this._appLocalization.get('applications.content.entries.entryId', { 0: entry.id })}<br/>`;
-      });
-      msg += `<br/>${this._appLocalization.get('applications.content.bulkActions.deleteNote')}`
-    }
+  public deleteEntries(): void {
+    let entriesToDelete = this.selectedEntries.map(entry => this._appLocalization.get('applications.content.entries.entryId', { 0: entry.id })),
+        entries: string = this.selectedEntries.length <= 10 ? entriesToDelete.join(',').replace(/,/gi, '\n') : '',
+        message: string = this.selectedEntries.length > 1 ?
+          this._appLocalization.get('applications.content.entries.confirmDeleteMultiple', {0: entries}) :
+          this._appLocalization.get('applications.content.entries.confirmDeleteSingle', {0: entries});
     this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.deleteEntries'),
-          message: msg,
+          message: message,
           accept: () => {
             setTimeout(()=>{
               this.executeService(this._bulkDeleteService, {}, true, false); // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
