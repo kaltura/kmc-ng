@@ -1,6 +1,10 @@
 @import 'app-theme/_variables.scss';
 
 .kAddNewPlaylist {
+  height: 411px;
+  min-height: 411px;
+  overflow: hidden;
+
   .kHeader {
     height: 78px;
     width: 100%;
@@ -120,4 +124,9 @@
 :host /deep/ .ui-chkbox-label {
   font-size: 15px;
   font-weight: normal;
+}
+
+.kNewPlaylistPopup {
+  transition: min-height .3s ease-in-out;
+  min-height: 452px;
 }

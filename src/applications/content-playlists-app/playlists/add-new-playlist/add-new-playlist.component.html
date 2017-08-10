@@ -1,4 +1,4 @@
-<div class="kAddNewPlaylist">
+<div [class.kNewPlaylistPopup]="addNewPlaylistForm.controls['playlistType'].value === 'ruleBased'" class="kAddNewPlaylist">
   <form [formGroup]="addNewPlaylistForm" novalidate>
     <div class="kHeader">
       <span class="kTitle">{{('applications.content.addNewPlaylist.addNewPlaylist') | translate}}</span>
