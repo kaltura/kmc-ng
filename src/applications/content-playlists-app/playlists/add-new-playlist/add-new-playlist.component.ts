@@ -13,9 +13,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 export class AddNewPlaylist implements  OnInit, AfterViewInit, OnDestroy{
 
   @Input() parentPopupWidget: PopupWidgetComponent;
-  addNewPlaylistFrom: FormGroup;
-  selectedValue: string = 'manual';
-  selectedCheckboxValue: string;
+  addNewPlaylistForm: FormGroup;
   newPlaylist: KalturaPlaylist;
 
   constructor(
@@ -23,10 +21,10 @@ export class AddNewPlaylist implements  OnInit, AfterViewInit, OnDestroy{
     public router: Router
   ) {
     // build FormControl group
-    this.addNewPlaylistFrom = _formBuilder.group({
+    this.addNewPlaylistForm = _formBuilder.group({
       name        : ['', Validators.required],
       description : '',
-      playlistType: '',
+      playlistType: ['manual'],
       ruleBasedSub: false
     });
   }
@@ -36,7 +34,7 @@ export class AddNewPlaylist implements  OnInit, AfterViewInit, OnDestroy{
   }
 
   ngOnInit(){
-    this.addNewPlaylistFrom.valueChanges
+    this.addNewPlaylistForm.valueChanges
       .cancelOnDestroy(this)
       .subscribe(
         form => {

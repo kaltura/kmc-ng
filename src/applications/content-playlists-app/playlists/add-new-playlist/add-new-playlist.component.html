@@ -1,5 +1,5 @@
 <div class="kAddNewPlaylist">
-  <form [formGroup]="addNewPlaylistFrom" novalidate>
+  <form [formGroup]="addNewPlaylistForm" novalidate>
     <div class="kHeader">
       <span class="kTitle">{{('applications.content.addNewPlaylist.addNewPlaylist') | translate}}</span>
     </div>
@@ -9,11 +9,11 @@
         {{('applications.content.addNewPlaylist.selectPlaylistType') | translate}}
       </div>
       <div class="selectPlaylistType">
-        <p-radioButton class="kRadioLeft" name="playlistType" value="manual" formControlName="playlistType" [(ngModel)]="selectedValue" label="{{'applications.content.addNewPlaylist.manualPlaylist' | translate}}"></p-radioButton>
-        <p-radioButton class="kRadioRight " name="playlistType" value="ruleBased" formControlName="playlistType" [(ngModel)]="selectedValue" label="{{'applications.content.addNewPlaylist.ruleBasedPlaylist' | translate}}"></p-radioButton>
+        <p-radioButton class="kRadioLeft" name="playlistType" value="manual" formControlName="playlistType" label="{{'applications.content.addNewPlaylist.manualPlaylist' | translate}}"></p-radioButton>
+        <p-radioButton class="kRadioRight " name="playlistType" value="ruleBased" formControlName="playlistType" label="{{'applications.content.addNewPlaylist.ruleBasedPlaylist' | translate}}"></p-radioButton>
       </div>
-      <div [class.kHidden]="selectedValue === 'manual'" class="ruleBasedSub">
-        <p-checkbox name="ruleBasedSub" value="ruleBasedSub" class="ruleBasedSubCheckbox" formControlName="ruleBasedSub" [(ngModel)]="selectedCheckboxValue" label="{{'applications.content.addNewPlaylist.addRuleBasedSubPlaylist' | translate}}"></p-checkbox>
+      <div [class.kHidden]="addNewPlaylistForm.controls['playlistType'].value === 'manual'" class="ruleBasedSub">
+        <p-checkbox name="ruleBasedSub" value="ruleBasedSub" class="ruleBasedSubCheckbox" formControlName="ruleBasedSub" label="{{'applications.content.addNewPlaylist.addRuleBasedSubPlaylist' | translate}}"></p-checkbox>
       </div>
       <div class="kRow">
         <div class="kControl">
@@ -28,7 +28,7 @@
     </div>
 
     <div class="kFooter">
-      <button type="button" class="kButtonBranded kNextBtn" [disabled]="addNewPlaylistFrom.invalid" (click)="goNext()" pButton label="{{'applications.content.addNewPlaylist.next' | translate}}"></button>
+      <button type="button" class="kButtonBranded kNextBtn" [disabled]="addNewPlaylistForm.invalid" (click)="goNext()" pButton label="{{'applications.content.addNewPlaylist.next' | translate}}"></button>
     </div>
   </form>
 </div>

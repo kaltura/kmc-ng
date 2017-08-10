@@ -327,6 +327,6 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   addPlaylist() {
-    setTimeout( () => {this.addNewPlaylist.open(); }, 0); // use a timeout to allow data binding of the new caption to update before opening the popup widget
+    this.addNewPlaylist.open();
   }
 }
