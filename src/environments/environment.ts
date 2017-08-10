@@ -51,7 +51,7 @@ export const environment = {
           {
             "routePath": "content/categories",
             "titleToken": "Categories",
-            "enabled": false
+            "enabled": true
           }
         ]
       },
@@ -118,6 +118,12 @@ export const environment = {
   },
   "entriesShared": {
     "MAX_ENTRIES": 10000,
+    "categoriesFilters": {
+      "maxChildrenToShow": 500
+    }
+  },
+  "categoriesShared": {
+    "MAX_CATEGORIES": 10000,
     "categoriesFilters": {
       "maxChildrenToShow": 500
     }
