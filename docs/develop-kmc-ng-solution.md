@@ -52,6 +52,12 @@ To be able to make changes across repositories we will use a tool (named **kaltu
    }
  ```
  
+ 5.1 run the following command (this is a workaround to an issue we have with our tool):
+ ```
+ $ cd kaltura-ng
+ $ yarn install
+ ```
+ 
  6. run setup command to build & symlink your repositories (**Note** It might take a few minutes)
  ```bash
  $ yarn run setup 
