@@ -1,9 +1,11 @@
 import { Component, Input, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { ISubscription } from 'rxjs/Subscription';
 import { Router } from '@angular/router';
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
-import { KalturaPlaylistType } from 'kaltura-typescript-client/types/KalturaPlaylistType';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { BrowserService } from 'app-shared/kmc-shell';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kAddNewPlaylist',
@@ -14,11 +16,14 @@ export class AddNewPlaylist implements  OnInit, AfterViewInit, OnDestroy{
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   addNewPlaylistForm: FormGroup;
-  newPlaylist: KalturaPlaylist;
+  private _parentPopupStateChangeSubscribe: ISubscription;
+  private _confirmClose: boolean = true;
 
   constructor(
     private _formBuilder : FormBuilder,
-    public router: Router
+    public router: Router,
+    private _browserService: BrowserService,
+    private _appLocalization: AppLocalization
   ) {
     // build FormControl group
     this.addNewPlaylistForm = _formBuilder.group({
@@ -30,27 +35,41 @@ export class AddNewPlaylist implements  OnInit, AfterViewInit, OnDestroy{
   }
 
   goNext() {
-    this.router.navigate(['/content/playlists/playlist/new/content'], this.newPlaylist);
+    this.router.navigate(['/content/playlists/playlist/new/content']);
   }
 
-  ngOnInit(){
-    this.addNewPlaylistForm.valueChanges
-      .cancelOnDestroy(this)
-      .subscribe(
-        form => {
-          let playlistType = form.playlistType === 'manual' ? KalturaPlaylistType.staticList : KalturaPlaylistType.dynamic;
-          this.newPlaylist = new KalturaPlaylist({
-            name: form.name,
-            description: form.description,
-            playlistType: playlistType
-          });
-          /* ToDo have to figure out how to send the "ruleBasedSub" value */
-        }
-      );
+  ngOnInit(){}
+
+  ngAfterViewInit() {
+    if (this.parentPopupWidget) {
+      this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$
+        .subscribe(event => {
+          if (event.state === PopupWidgetStates.Open) {
+            this._confirmClose = true;
+          }
+          if (event.state === PopupWidgetStates.BeforeClose) {
+            if (event.context && event.context.allowClose) {
+              if (this.addNewPlaylistForm.dirty && this._confirmClose) {
+                event.context.allowClose = false;
+                this._browserService.confirm(
+                  {
+                    header: this._appLocalization.get('applications.content.addNewPlaylist.cancelEdit'),
+                    message: this._appLocalization.get('applications.content.addNewPlaylist.discard'),
+                    accept: () => {
+                      this._confirmClose = false;
+                      this.parentPopupWidget.close();
+                    }
+                  }
+                );
+              }
+            }
+          }
+        });
+    }
   }
 
-  ngAfterViewInit(){}
-
-  ngOnDestroy(){}
+  ngOnDestroy(){
+    this._parentPopupStateChangeSubscribe.unsubscribe();
+  }
 }
 

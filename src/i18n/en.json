@@ -183,7 +183,9 @@
         "nameIsMandatory": "You must enter a playlist name",
         "next": "Next",
         "playlistName": "Playlist Name",
-        "description": "Description"
+        "description": "Description",
+        "cancelEdit": "Cancel Edit",
+        "discard": "Discard all changes?"
       },
       "bulkActions": {
         "setScheduling": "Set Scheduling",
