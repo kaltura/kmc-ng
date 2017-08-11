@@ -1,0 +1,33 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+  <div class="kEntries kOverrideFAIcons">
+    <div #entriesTableHolder class="kEntriesHolder kContent">
+      <div class="kEntriesTableFilters">
+        <span class="kSelectedEntriesNum" *ngIf="0">
+          0 Files
+        </span>
+
+        <div [class.kHidden]="!_selectedUploads.length" class="kBulkOperations">
+          <span class="kSelectedEntriesLabel">• {{_selectedUploads.length}} {{'applications.content.entries.selected' | translate}}</span>
+          <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
+        </div>
+      </div>
+
+      <kUploadListTable class="kEntriesTable"
+                        [uploads]="[]"
+                        [filter]="_filter"
+                        (sortChanged)="_onSortChanged($event)"
+                        (actionSelected)="_onActionSelected($event)"
+                        [(selectedUploads)]="_selectedUploads"
+      ></kUploadListTable>
+
+      <div class="kEntriesTableFooter" #footer *ngIf="0">
+        <p-paginator
+          [rows]="1" (onPageChange)="_onPaginationChanged($event)"
+          [first]="1"
+          [totalRecords]="0"
+          [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
+        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+      </div>
+    </div>
+  </div>
+</k-area-blocker>

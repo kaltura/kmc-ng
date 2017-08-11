@@ -1,0 +1,25 @@
+<k-area-blocker kFillHeight [showLoader]="false" [message]="_blockerMessage">
+	<div class="kEntriesTable" [class.noResults]="!_uploads.length">
+		<p-dataTable #dataTable [value]="_uploads" scrollable="true" scrollHeight="100%" dataKey="id"
+                 [sortField]="filter.sortBy"
+                 [sortOrder]="filter.sortDirection"
+                 [emptyMessage]="_emptyMessage"
+                 [rowTrackBy]="_rowTrackBy"
+                 (selectionChange)="_onSelectionChange($event)"
+                 (onSort)="_onSortChanged($event)"
+                 [(selection)]="selectedUploads">
+			<p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
+			<p-column field="type" header="Type"></p-column>
+			<p-column field="name" header="File name" [sortable]="'custom'"></p-column>
+			<p-column field="id" header="Entry ID" [sortable]="false"></p-column>
+			<p-column field="fileSize" header="File size" [sortable]="'custom'"></p-column>
+			<p-column field="uploadedOn" header="Uploaded On" [sortable]="true"></p-column>
+      <p-column field="status" header="Status" [sortable]="'custom'"></p-column>
+			<p-column field="progress" header="Progress" [sortable]="false">
+				<ng-template let-col let-entry="progress" pTemplate="body">
+					<!-- Progressbar -->
+				</ng-template>
+			</p-column>
+		</p-dataTable>
+	</div>
+</k-area-blocker>
