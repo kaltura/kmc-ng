@@ -1,25 +1,36 @@
 <div class="kUploadSettings">
   <div class="kHeader">
-    <h1>Upload Settings</h1>
+    <h1>{{ 'app.upload.uploadSettings.title' | translate }}</h1>
   </div>
   <div class="kContent">
     <div class="kProfile">
-      <span>Transconding profile</span>
-      <p-dropdown class="kTranscodingProfile" kDropdownCloseOnScroll [options]="[]" [appendTo]="'body'" [autoWidth]="false" placeholder="Default">
+      <span>{{ 'app.upload.uploadSettings.profile' | translate }}</span>
+      <p-dropdown class="kTranscodingProfile"
+                  kDropdownCloseOnScroll
+                  [options]="[]"
+                  [appendTo]="'body'"
+                  [autoWidth]="false"
+                  placeholder="Default">
       </p-dropdown>
     </div>
 
     <div class="kAddFile">
-      <button type="button" class="kButtonDefault kAddFileButton" pButton label="Add file"></button>
+      <button type="button"
+              class="kButtonDefault kAddFileButton"
+              pButton
+              [label]="'app.upload.uploadSettings.addFileBtn' | translate"></button>
     </div>
 
     <div class="kTable">
-      <p-dataTable [value]="[]" scrollable="true" scrollHeight="100%">
-        <p-column field="filename" header="File name">
+      <p-dataTable [value]="[]"
+                   [emptyMessage]="'app.upload.uploadSettings.table.emptyMessage.title' | translate"
+                   scrollable="true"
+                   scrollHeight="287px">
+        <p-column field="filename" [header]="'app.upload.uploadSettings.table.header.fileName' | translate">
         </p-column>
-        <p-column field="mediatype" header="Media Type">
+        <p-column field="mediatype" [header]="'app.upload.uploadSettings.table.header.mediaType' | translate">
         </p-column>
-        <p-column field="size" header="Size">
+        <p-column field="size" [header]="'app.upload.uploadSettings.table.header.size' | translate">
         </p-column>
       </p-dataTable>
     </div>
@@ -27,6 +38,6 @@
   <div class="kFooter">
     <button class="kButtonDefault kUploadButton"
             pButton
-            label="Upload"></button>
+            [label]="'app.upload.uploadSettings.uploadBtn' | translate"></button>
   </div>
 </div>

@@ -114,6 +114,24 @@
           "video": "Video entry",
           "audio": "Audio entry"
         }
+      },
+      "uploadSettings": {
+        "title": "Upload Settings",
+        "profile": "Transcoding profile",
+        "addFileBtn": "Add file",
+        "table": {
+          "header": {
+            "fileName": "File name",
+            "mediaType": "Media type",
+            "size": "Size"
+          },
+          "emptyMessage": {
+            "title": "No files to upload",
+            "getStarted": "Add some files to get started, ",
+            "browse": "browse"
+          }
+        },
+        "uploadBtn": "Upload"
       }
     }
   },
@@ -125,11 +143,11 @@
       }
     },
     "content": {
-       "categories": {
+      "categories": {
         "categories": "Categories",
         "search": "Search",
         "refresh": "Refresh",
-        "addCategory":"Add Category",
+        "addCategory": "Add Category",
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
         "refine": "Refine",

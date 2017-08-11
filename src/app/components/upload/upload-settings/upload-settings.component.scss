@@ -37,6 +37,10 @@
       border-bottom: 1px $kGrayscale6 solid;
       font-size: 15px;
 
+      span {
+        font-weight: bold;
+      }
+
       .kTranscodingProfile {
         margin-left: 7px;
       }
@@ -80,4 +84,9 @@
 
 :host /deep/ .ui-datatable-scrollable-table-wrapper table {
   height: 286px;
+}
+
+:host /deep/ .ui-datatable-scrollable-header,
+:host /deep/ .ui-datatable-scrollable-body {
+  border-top: 1px $kGrayscale6 solid;
 }
