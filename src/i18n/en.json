@@ -9,7 +9,10 @@
       "Syndication": "Syndication",
       "Categories": "Categories",
       "Studio": "Studio",
-      "Analytics": "Analytics"
+      "Analytics": "Analytics",
+      "UploadControl": "Upload Control",
+      "BulkUpload": "Bulk Upload",
+      "DropFolders": "Drop Folders"
     },
     "userSettings": {
       "changeAccount": "Change Acoount",

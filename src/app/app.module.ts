@@ -61,6 +61,7 @@ import { ForgotPasswordFormComponent } from './components/login/forgot-password-
 import { LoginFormComponent } from './components/login/login-form/login-form.component';
 import { PasswordExpiredFormComponent } from './components/login/password-expired-form/password-expired-form.component';
 import { InvalidLoginHashFormComponent } from './components/login/invalid-login-hash-form/invalid-login-hash-form.component';
+import { AppMenuContentComponent } from './components/app-menu/app-menu-content.component';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -104,6 +105,7 @@ export function clientConfigurationFactory() {
     AppComponent,
     DashboardComponent,
     AppMenuComponent,
+    AppMenuContentComponent,
     LanguageMenuComponent,
     LoginComponent,
     ErrorComponent,
