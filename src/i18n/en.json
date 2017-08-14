@@ -110,15 +110,15 @@
       }
     },
     "content": {
-       "categories": {
-        "categories": "Categories",       
-        "search": "Search",         
+      "categories": {
+        "categories": "Categories",
+        "search": "Search",
         "refresh": "Refresh",
-        "addCategory":"Add Category",
+        "addCategory": "Add Category",
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
         "refine": "Refine",
-        "filterCategories": "Filter Categories"  
+        "filterCategories": "Filter Categories"
       },
       "entries": {
         "entries": "Entries",
@@ -595,6 +595,23 @@
           "clipsLoadError": "Error loading clips"
         }
       },
+      "categoryDetails": {
+        "errors": {
+          "reload": "Reload",
+          "dismiss": "Dismiss",
+          "retry": "Retry",
+          "loadError": "An error occurred while loading data",
+          "saveError": "An error occurred while saving.",
+          "validationError": "The form contains some invalid information. Please review the sections marked as invalid",
+          "busyError": "An operation is still in progress. Please try again in a while.",
+          "savePrepareError": "An error occurred while preparing to save. Please try again.",
+          "thumbnailsError": "Error reloading thumbnails",
+          "entriesLoadError": "Error loading entries",
+          "categoriesLoadError": "Error loading categories",
+          "flavorsLoadError": "Error loading flavors",
+          "clipsLoadError": "Error loading clips"
+        }
+      },
       "playlistDetails": {
         "sections": {
           "metadata": "Metadata",
@@ -1026,4 +1043,3 @@
     "ZU": "Zulu"
   }
 }
-
