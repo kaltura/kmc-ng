@@ -17,7 +17,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 	public _blockerMessage: AreaBlockerMessage = null;
 
 	public _categories: KalturaCategory[] = [];
-	private _deferredCategories : any[];
+	private _deferredCategories: any[];
 	@Input() set categories(data: any[]) {
 		if (!this._deferredLoading) {
 			// the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
@@ -26,7 +26,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 			this.cdRef.detectChanges();
 			this._categories = data;
 			this.cdRef.detectChanges();
-		}else {
+		} else {
 			this._deferredCategories = data
 		}
 	}
@@ -43,7 +43,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 
 	@ViewChild('dataTable') private dataTable: DataTable;
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
-	private actionsMenuEntryId: string = "";
+	private actionsMenuCategoryId: number = 0;
 	private entriesStoreStatusSubscription: ISubscription;
 
 	public _deferredLoading = true;
@@ -51,9 +51,9 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 
 	public _items: MenuItem[];
 
-	public rowTrackBy: Function = (index: number, item: any) => {return item.id};
+	public rowTrackBy: Function = (index: number, item: any) => { return item.id };
 
-	constructor(private appLocalization: AppLocalization, public categoriesService: CategoriesService, private cdRef:ChangeDetectorRef) {
+	constructor(private appLocalization: AppLocalization, public categoriesService: CategoriesService, private cdRef: ChangeDetectorRef) {
 	}
 
 	_convertSortValue(value: boolean): number {
@@ -74,15 +74,16 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 							label: 'Retry',
 							action: () => {
 								this.categoriesService.reload();
-							}}
+							}
+						}
 						]
 					})
 				} else {
 					this._blockerMessage = null;
-					if (result.loading){
+					if (result.loading) {
 						this._emptyMessage = "";
 						loadedOnce = true;
-					}else {
+					} else {
 						if (loadedOnce) {
 							this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
 						}
@@ -111,7 +112,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 		}
 		if (this._deferredLoading) {
 			// use timeout to allow the DOM to render before setting the data to the datagrid. This prevents the screen from hanging during datagrid rendering of the data.
-			setTimeout(()=> {
+			setTimeout(() => {
 				this._deferredLoading = false;
 				this._categories = this._deferredCategories;
 				this._deferredCategories = null;
@@ -119,20 +120,58 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 		}
 	}
 
-	onActionSelected(action: string, categoryID: string, status: string = null) {
-		if (this.allowDrillDown( status)) {
-			this.actionSelected.emit({"action": action, "categoryID": categoryID});
+	onActionSelected(action: string, categoryID: number, status: string = null) {
+		if (this.allowDrillDown(status)) {
+			this.actionSelected.emit({ "action": action, "categoryID": categoryID });
 		}
 	}
 
-	allowDrillDown( status: string) {
+	allowDrillDown(status: string) {
 		let allowed = true;
-		if ( status && status != KalturaCategoryStatus.active.toString()) {
+		if (status && status != KalturaCategoryStatus.active.toString()) {
 			allowed = false;
 		}
 		return allowed;
 	}
 
+	openActionsMenu(event: any, category: KalturaCategory) {
+		if (this.actionsMenu) {
+			this.actionsMenu.toggle(event);
+			if (this.actionsMenuCategoryId !== category.id) {
+				this.buildMenu( category.status);
+				this.actionsMenuCategoryId = category.id;
+				this.actionsMenu.show(event);
+			}
+		}
+	}
 
+	buildMenu(status: KalturaCategoryStatus = null): void {
+		this._items = [
+			{
+				label: this.appLocalization.get("applications.content.categories.edit"), command: (event) => {
+					this.onActionSelected("Edit", this.actionsMenuCategoryId);
+				}
+			},
+			{
+				label: this.appLocalization.get("applications.content.categories.delete"), command: (event) => {
+					this.onActionSelected("delete", this.actionsMenuCategoryId);
+				}
+			},
+			{
+				label: this.appLocalization.get("applications.content.categories.viewEntries"), command: (event) => {
+					this.onActionSelected("View Entries", this.actionsMenuCategoryId);
+				}
+			},
+			{
+				label: this.appLocalization.get("applications.content.categories.moveCategory"), command: (event) => {
+					this.onActionSelected("Move Category", this.actionsMenuCategoryId);
+				}
+			}
+		];
+		if ( status.toString() != KalturaCategoryStatus.active.toString()) {
+			this._items.shift();
+			this._items.pop();
+		}
+	}
 }
 
