@@ -1,3 +1,4 @@
+import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 import { KalturaCategoryFilter } from 'kaltura-typescript-client/types/KalturaCategoryFilter';
 import { Injectable, OnDestroy } from '@angular/core';
 
@@ -25,6 +26,24 @@ export interface Categories {
     totalCount: number
 }
 
+export enum SortDirection {
+    Desc,
+    Asc
+}
+
+export interface QueryData {
+    pageIndex?: number,
+    pageSize?: number,
+    sortBy?: string,
+    sortDirection?: SortDirection,
+    fields?: string
+}
+
+export interface QueryRequestArgs {
+    data: QueryData;
+}
+
+
 @Injectable()
 export class CategoriesService implements OnDestroy {
 
@@ -34,8 +53,25 @@ export class CategoriesService implements OnDestroy {
     public state$ = this._state.asObservable();
     public categories$ = this._categories.asObservable();
 
-    constructor(private _kalturaClient: KalturaClient) {
-        this.reload();
+    private _queryData: QueryData = {
+        pageIndex: 1,
+        pageSize: 50,
+        sortBy: 'createdAt',
+        sortDirection: SortDirection.Desc,
+        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, fullName'
+    };
+
+    constructor(private _kalturaClient: KalturaClient,
+        private browserService: BrowserService) {
+        const defaultPageSize = this.browserService.getFromLocalStorage("categories.list.pageSize");
+        if (defaultPageSize !== null) {
+            this._queryData.pageSize = defaultPageSize;
+        }
+        this.reload(true);
+    }
+
+    public get queryData() : QueryData{
+        return Object.assign({}, this._queryData);
     }
 
     ngOnDestroy() {
@@ -46,8 +82,17 @@ export class CategoriesService implements OnDestroy {
         }
     }
 
-    public reload(): void {
-        this._executeQuery();
+    public reload(force: boolean): void;
+    public reload(query: QueryData): void;
+    public reload(query: boolean | QueryData): void {
+        const forceReload = (typeof query === 'object' || (typeof query === 'boolean' && query));
+
+        if (forceReload || this._categories.getValue().totalCount === 0) {
+            if (typeof query === 'object') {
+                Object.assign(this._queryData, query);
+            }
+            this._executeQuery();
+        }
     }
 
     private _executeQuery(): void {
@@ -59,8 +104,15 @@ export class CategoriesService implements OnDestroy {
 
         this._state.next({ loading: true, errorMessage: null });
 
+        const queryArgs: QueryRequestArgs = Object.assign({},
+            {
+                data: this._queryData
+            });
+
+        this.browserService.setInLocalStorage("categories.list.pageSize", this._queryData.pageSize);
+
         // execute the request
-        this._categoriesExecuteSubscription = this.buildQueryRequest().subscribe(
+        this._categoriesExecuteSubscription = this.buildQueryRequest(queryArgs).subscribe(
             response => {
                 this._categoriesExecuteSubscription = null;
 
@@ -74,25 +126,38 @@ export class CategoriesService implements OnDestroy {
             error => {
                 this._categoriesExecuteSubscription = null;
                 const errorMessage = error & error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
-                this._state.next({loading: false, errorMessage});                
+                this._state.next({ loading: false, errorMessage });
             });
     }
-
-    private buildQueryRequest(): Observable<KalturaCategoryListResponse> {
-
+    private buildQueryRequest({ data: queryData }: { data: QueryData }): Observable<KalturaCategoryListResponse> {
         try {
             let filter: KalturaCategoryFilter = new KalturaCategoryFilter({});
+            let pagination: KalturaFilterPager = null;
             let responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
                 type: KalturaResponseProfileType.includeFields,
-                fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, fullName'
+                fields: queryData.fields
             });
-            let pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 50, pageIndex: 1 });
+
+            // update pagination args
+            if (queryData.pageIndex || queryData.pageSize) {
+                pagination = new KalturaFilterPager(
+                    {
+                        pageSize: queryData.pageSize,
+                        pageIndex: queryData.pageIndex
+                    }
+                );
+            }
+
+            // update the sort by args
+            if (queryData.sortBy) {
+                filter.orderBy = `${queryData.sortDirection === SortDirection.Desc ? '-' : '+'}${queryData.sortBy}`;
+            }
 
             // build the request
             return <any>this._kalturaClient.request(
                 new CategoryListAction({
                     filter,
-                    pager,
+                    pager: pagination,
                     responseProfile
                 })
             )

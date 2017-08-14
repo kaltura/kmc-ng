@@ -73,7 +73,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 						buttons: [{
 							label: 'Retry',
 							action: () => {
-								this.categoriesService.reload();
+								this.categoriesService.reload(true);
 							}
 						}
 						]

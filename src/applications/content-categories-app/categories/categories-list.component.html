@@ -9,7 +9,7 @@
         <div [class.kHidden]="!_selectedCategories.length" class="kBulkOperations">
           <span class="kSelectedCategoriesLabel">• {{_selectedCategories.length}} {{'applications.content.categories.selected' | translate}}</span>
           <kCategoriesBulkActions [selectedCategories]="_selectedCategories"></kCategoriesBulkActions>
-           <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.categories.cancel' | translate}}</a> 
+          <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.categories.cancel' | translate}}</a>
         </div>
         <div [class.kHidden]="_selectedCategories.length" class="kFilters">
           <input type="text" pInputText class="kSearchInput" placeholder="{{'applications.content.categories.search' | translate}}">
@@ -26,12 +26,11 @@
         <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh" [kTooltip]="'applications.content.categories.refresh' | translate"></button>
       </div>
       <kCategoriesTable class="kCategoriesTable" [categories]="_categories"></kCategoriesTable>
-
       <div class="kCategoriesTableFooter" #footer *ngIf="_categoriesTotalCount">
-        <p-paginator [totalRecords]="_categoriesTotalCount | kMaxCategories" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
+        <p-paginator [rows]="_filter.pageSize" (onPageChange)="onPaginationChanged($event)" [first]="_filter.pageIndex * _filter.pageSize"
+          [totalRecords]="_categoriesTotalCount | kMaxCategories" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
       </div>
     </div>
   </div>
-
 </k-area-blocker>
