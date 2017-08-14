@@ -271,8 +271,8 @@ export class EntryRelatedHandler extends EntryFormWidget
 		if (selectedFiles && selectedFiles.length) {
 
 			const fileData: File = selectedFiles[0];
-
-			const newFile = this._addFile(fileData.name, KalturaAttachmentType.document);
+			const extension = fileData.name.substr(fileData.name.lastIndexOf(".")+1);
+			const newFile = this._addFile(fileData.name, this._getFormatByExtension(extension));
             (<any>newFile).uploading = true;
 			(<any>newFile).size = fileData.size;
 
@@ -312,10 +312,14 @@ export class EntryRelatedHandler extends EntryFormWidget
 			case "jpg":
 			case "jpeg":
 			case "mp3":
+			case "mp4":
 				format = KalturaAttachmentType.media;
 				break;
 			case "txt":
 				format = KalturaAttachmentType.text;
+				break;
+			default:
+				format = KalturaAttachmentType.document;
 				break;
 		}
 		return format;

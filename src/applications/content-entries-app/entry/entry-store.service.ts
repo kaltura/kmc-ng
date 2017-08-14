@@ -378,6 +378,7 @@ export class EntryStore implements  OnDestroy {
 						header: this._appLocalization.get('applications.content.entryDetails.captions.cancelEdit'),
 						message: this._appLocalization.get('applications.content.entryDetails.captions.discard'),
 						accept: () => {
+							this._entryIsDirty = false;
 							observer.next({allowed: true});
 							observer.complete();
 						},
