@@ -150,6 +150,7 @@ export class EntrySchedulingHandler extends EntryFormWidget
 
 
 	public _clearDates(){
+		this.schedulingForm.markAsDirty();
 		this.schedulingForm.patchValue({
 			startDate: '',
 			endDate: ''
