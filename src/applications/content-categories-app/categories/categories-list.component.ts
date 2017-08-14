@@ -38,4 +38,13 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.categoriesSubscription.unsubscribe();
     }
+
+      public _reload()
+    {
+    	this.clearSelection();
+        this._categoriesService.reload();
+    }
+    clearSelection(){
+        this._selectedCategories = [];
+    }
 }

@@ -35,7 +35,7 @@ export class CategoriesService implements OnDestroy {
     public categories$ = this._categories.asObservable();
 
     constructor(private _kalturaClient: KalturaClient) {
-        this.reload(true);
+        this.reload();
     }
 
     ngOnDestroy() {
@@ -46,7 +46,7 @@ export class CategoriesService implements OnDestroy {
         }
     }
 
-    public reload(force: boolean): void {
+    public reload(): void {
         this._executeQuery();
     }
 
