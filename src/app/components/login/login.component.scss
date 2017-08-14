@@ -4,7 +4,7 @@
 .kLoginContainer {
   position: absolute;
   width: 100%;
-  min-height: 100%;
+  height: 100%;
   flex-flow: column;
   display: flex;
   box-sizing: border-box;
@@ -20,11 +20,11 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    height: 100%;
 
     .kLoginWindow {
       background-color: white;
       border-radius: 6px;
-      margin-top: 121px;
       width: 430px;
       min-height: 327px;
       padding: 68px 60px 60px 60px;
@@ -58,7 +58,6 @@
     .kLoginControls {
       color: white;
       margin-top: 42px;
-      margin-bottom: 19px;
       font-size: 16px;
       text-align: center;
 
