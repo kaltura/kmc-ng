@@ -2,6 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { LocalStorageService, SessionStorageService } from 'ng2-webstorage';
 import { IAppStorage } from '@kaltura-ng/kaltura-common';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 
 export interface Confirmation {
 	message: string;
@@ -16,6 +17,12 @@ export interface Confirmation {
 	rejectEvent?: EventEmitter<any>;
 }
 
+export interface GrowlMessage {
+  severity : 'success' | 'info' | 'error' | 'warn';
+  summary?: string;
+  detail?: string;
+}
+
 export type OnShowConfirmationFn = (confirmation : Confirmation) => void;
 
 export type AppStatus = {
@@ -27,7 +34,9 @@ export type AppStatus = {
 export class BrowserService implements IAppStorage {
 
   private _appStatus = new BehaviorSubject<{isBusy : boolean, errorMessage : string}>({ isBusy : false, errorMessage : null});
+  private _growlMessage = new Subject<GrowlMessage>();
   public appStatus$ = this._appStatus.asObservable();
+  public growlMessage$ = this._growlMessage.asObservable();
 
 	private _onConfirmationFn : OnShowConfirmationFn = (confirmation : Confirmation) => {
 		// this is the default confirmation dialog provided by the browser.
@@ -191,4 +200,9 @@ export class BrowserService implements IAppStorage {
 		window.onbeforeunload = (e) => {};
 	}
 
+	public showGrowlMessage(message: GrowlMessage): void {
+	  if(message.detail || message.summary) {
+      this._growlMessage.next(message);
+    }
+  }
 }

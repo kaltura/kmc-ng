@@ -196,29 +196,29 @@
     standard-version "^4.2.0"
     write-json-file "^2.2.0"
 
-"@kaltura-ng/kaltura-client@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-client/-/kaltura-client-0.1.1.tgz#c02c9c83b421c40733a76f4c68f4a5c5df9d7683"
+"@kaltura-ng/kaltura-client@0.x":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-client/-/kaltura-client-0.1.2.tgz#47cb28214915bd92e1abf1db864aeb48545c0973"
 
-"@kaltura-ng/kaltura-common@^1.0.0":
+"@kaltura-ng/kaltura-common@1.x":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-common/-/kaltura-common-1.0.0.tgz#ec3bd61702869e75873aced1fd4e7f9a9ab911a1"
 
-"@kaltura-ng/kaltura-primeng-ui@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-primeng-ui/-/kaltura-primeng-ui-0.2.1.tgz#82334fffab725caad0d5afe81b0fc3bfa7e3fc0f"
+"@kaltura-ng/kaltura-primeng-ui@0.x":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-primeng-ui/-/kaltura-primeng-ui-0.3.0.tgz#13aedbeec0f6d53149c46e5fe021a3e53418098a"
 
-"@kaltura-ng/kaltura-server-utils@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-server-utils/-/kaltura-server-utils-1.0.0.tgz#2b356f4337996d2721903d201e4ad16c5252abb8"
+"@kaltura-ng/kaltura-server-utils@1.x":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-server-utils/-/kaltura-server-utils-1.0.1.tgz#4e2c5279202142198b542ad08c74b718414b28d8"
 
-"@kaltura-ng/kaltura-ui@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-ui/-/kaltura-ui-1.0.0.tgz#f5cf943c3971bfb866d2941605299bf6e6ab89b5"
+"@kaltura-ng/kaltura-ui@1.x":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-ui/-/kaltura-ui-1.0.1.tgz#5d1caf3bc6d9d5948744d26eb67aa47255ebb131"
 
-"@kaltura-ng/mc-theme@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/mc-theme/-/mc-theme-0.1.0.tgz#736c804dd0234eb99fcd2c85453503a4be0b4c84"
+"@kaltura-ng/mc-theme@0.x":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/mc-theme/-/mc-theme-0.2.0.tgz#331eff3795055f3e143395a5f10b9d6d518df71e"
 
 "@ngtools/json-schema@1.1.0":
   version "1.1.0"
@@ -4870,9 +4870,9 @@ pretty-error@^2.0.2:
     renderkid "^2.0.1"
     utila "~0.4"
 
-primeng@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/primeng/-/primeng-4.1.0.tgz#0868e68fa057b382ddd720cae02b4f5707f668fb"
+primeng@^4.1.3:
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/primeng/-/primeng-4.1.3.tgz#7d165a3e0cf5925df1af0b1f9e2d02d1eda22850"
 
 process-nextick-args@~1.0.6:
   version "1.0.7"

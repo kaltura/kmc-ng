@@ -51,7 +51,7 @@ export const environment = {
           {
             "routePath": "content/categories",
             "titleToken": "Categories",
-            "enabled": false
+            "enabled": true
           }
         ]
       },
@@ -73,7 +73,9 @@ export const environment = {
     },
     "externalLinks": {
       "USER_MANUAL": "https://kmc.kaltura.com/content/docs/pdf/KMC_User_Manual.pdf",
-      "SUPPORT": "http://kmc.kaltura.com/index.php/kmc/support"
+      "SUPPORT": "http://kmc.kaltura.com/index.php/kmc/support",
+      "SIGNUP": "https://corp.kaltura.com/free-trial",
+      "CONTACT_US": "https://corp.kaltura.com/company/contact-us"
     },
     "locales": [
       {
@@ -118,6 +120,12 @@ export const environment = {
   },
   "entriesShared": {
     "MAX_ENTRIES": 10000,
+    "categoriesFilters": {
+      "maxChildrenToShow": 500
+    }
+  },
+  "categoriesShared": {
+    "MAX_CATEGORIES": 10000,
     "categoriesFilters": {
       "maxChildrenToShow": 500
     }

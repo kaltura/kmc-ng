@@ -1,0 +1,62 @@
+@import 'app-theme/_variables.scss';
+
+.kCategoriesTable {
+    background-color: white;
+    overflow-y: hidden;
+    position: absolute;
+	padding: 0px;
+    .kThumbnailHolder {
+		overflow: hidden;
+		position: relative;
+        width: 80px;
+        height: 46px;
+        background-color: $kGrayscale6;
+        white-space: nowrap;
+        text-align: center;
+        border-radius: 3px;
+		cursor: pointer;
+		&.disable{
+			cursor: auto;
+		}
+		img {
+			position:absolute;
+			left: -100%;
+			right: -100%;
+			top: -100%;
+			bottom: -100%;
+			margin: auto;
+			width: 80px;
+			height: auto;
+			border-radius: 3px;
+		}
+    }
+    .kTitle{
+        color: $kGrayscale1;
+        font-weight: 700;
+        cursor: pointer;
+        &:hover{
+            color: #000000;
+        }
+        &.disable{
+            color: $kGrayscale4;
+            cursor: auto;
+        }
+    }
+    .kCategoriesTableActions {
+        width: 100%;
+        text-align: center;
+        button {
+            color: grey !important;
+            background-color: rgba(0, 0, 0, 0) !important;
+            border: none !important;
+            font-size: 16px !important;
+            outline: 0;
+        }
+    }
+}
+:host{
+	display: flex;
+	flex-flow: row wrap;
+	margin: 0px;
+	flex-direction: column;
+}
