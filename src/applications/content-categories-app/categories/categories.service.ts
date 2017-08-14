@@ -46,6 +46,10 @@ export class CategoriesService implements OnDestroy {
         }
     }
 
+    public get categories(): KalturaCategory[] {
+        return this._categories.getValue().items;
+    }
+
     public reload(force: boolean): void {
         this._executeQuery();
     }
@@ -74,7 +78,7 @@ export class CategoriesService implements OnDestroy {
             error => {
                 this._categoriesExecuteSubscription = null;
                 const errorMessage = error & error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
-                this._state.next({loading: false, errorMessage});                
+                this._state.next({ loading: false, errorMessage });
             });
     }
 
