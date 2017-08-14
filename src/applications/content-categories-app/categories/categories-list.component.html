@@ -25,7 +25,9 @@
         </div>
         <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh" [kTooltip]="'applications.content.categories.refresh' | translate"></button>
       </div>
-      <kCategoriesTable class="kCategoriesTable" [categories]="_categories"></kCategoriesTable>
+      <kCategoriesTable class="kCategoriesTable" [categories]="_categories" [filter]="_filter" (sortChanged)="onSortChanged($event)"
+        (actionSelected)="onActionSelected($event)" [(selectedCategories)]="_selectedCategories">
+      </kCategoriesTable>
       <div class="kCategoriesTableFooter" #footer *ngIf="_categoriesTotalCount">
         <p-paginator [rows]="_filter.pageSize" (onPageChange)="onPaginationChanged($event)" [first]="_filter.pageIndex * _filter.pageSize"
           [totalRecords]="_categoriesTotalCount | kMaxCategories" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>

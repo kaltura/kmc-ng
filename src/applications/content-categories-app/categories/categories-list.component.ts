@@ -91,4 +91,14 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
             });
         }
     }
+
+    onActionSelected(event){
+	    switch (event.action){
+		    case "view":
+			    this.router.navigate(['/content/categories/category', event.categoryID]);
+			    break;		   
+		    default:
+			    break;
+	    }
+    }
 }
