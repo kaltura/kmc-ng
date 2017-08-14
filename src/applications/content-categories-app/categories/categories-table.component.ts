@@ -5,6 +5,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { CategoriesService } from "./categories.service";
 import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
+import { KalturaCategoryStatus } from "kaltura-typescript-client/types/KalturaCategoryStatus";
 
 @Component({
 	selector: 'kCategoriesTable',
@@ -116,6 +117,20 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 				this._deferredCategories = null;
 			}, 0);
 		}
+	}
+
+	onActionSelected(action: string, categoryID: string, status: string = null) {
+		if (this.allowDrillDown( status)) {
+			this.actionSelected.emit({"action": action, "categoryID": categoryID});
+		}
+	}
+
+	allowDrillDown( status: string) {
+		let allowed = true;
+		if ( status && status != KalturaCategoryStatus.active.toString()) {
+			allowed = false;
+		}
+		return allowed;
 	}
 
 

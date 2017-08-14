@@ -84,7 +84,7 @@ export class CategoriesService implements OnDestroy {
             let filter: KalturaCategoryFilter = new KalturaCategoryFilter({});
             let responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
                 type: KalturaResponseProfileType.includeFields,
-                fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount'
+                fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, fullName'
             });
             let pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 50, pageIndex: 1 });
 

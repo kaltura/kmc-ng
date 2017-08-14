@@ -1,14 +1,19 @@
 <k-area-blocker kFillHeight [showLoader]="(categoriesService.state$ | async)?.loading || this._deferredLoading" [message]="_blockerMessage">
   <div class="kCategoriesTable" [class.noResults]="!_categories.length">
-    <p-dataTable #dataTable [value]="_categories" scrollable="true" scrollHeight="100%" dataKey="id">      
+    <p-dataTable #dataTable [value]="_categories" scrollable="true" scrollHeight="100%" dataKey="id">
       <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
-      <p-column field="name" header="Name" [sortable]="true" [style]="{'width':'100px'}"></p-column>
-      <p-column field="id" header="ID" [sortable]="false" [style]="{'width':'100px'}"></p-column>      
+      <p-column field="name" header="Name" [sortable]="true" [style]="{'width':'100px'}">
+        <ng-template let-col let-category="rowData" pTemplate="body">
+          <span [kTooltip]="category.fullName" class="kTitle" [class.disable]="!allowDrillDown(category.status)" (click)="onActionSelected('view',category.id,category.status)">
+            {{category[col.field]}}</span>     
+        </ng-template>
+      </p-column>
+      <p-column field="id" header="ID" [sortable]="false" [style]="{'width':'100px'}"></p-column>
       <p-column field="createdAt" header="Created On" [sortable]="true" [style]="{'width':'140px'}">
-				<ng-template let-col let-entry="rowData" pTemplate="body">
-					<span>{{entry[col.field] | kDate}}</span>
-				</ng-template>
-			</p-column>
+        <ng-template let-col let-entry="rowData" pTemplate="body">
+          <span>{{entry[col.field] | kDate}}</span>
+        </ng-template>
+      </p-column>
       <p-column field="directSubCategoriesCount" header="Sub - Categories" [sortable]="true" [style]="{'width':'100px'}"></p-column>
       <p-column field="entriesCount" header="Entries" [sortable]="true" [style]="{'width':'100px'}"></p-column>
     </p-dataTable>
