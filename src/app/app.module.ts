@@ -65,6 +65,7 @@ import { LoginFormComponent } from './components/login/login-form/login-form.com
 import { PasswordExpiredFormComponent } from './components/login/password-expired-form/password-expired-form.component';
 import { InvalidLoginHashFormComponent } from './components/login/invalid-login-hash-form/invalid-login-hash-form.component';
 import { UploadSettingsComponent } from './components/upload/upload-settings/upload-settings.component';
+import { UploadSettingsHandler } from './components/upload/upload-settings/upload-settings-handler';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -145,7 +146,8 @@ export function clientConfigurationFactory() {
       provide: KalturaClientConfiguration,
       useFactory: clientConfigurationFactory
     },
-    ConfirmationService
+    ConfirmationService,
+    UploadSettingsHandler
   ]
 })
 export class AppModule {

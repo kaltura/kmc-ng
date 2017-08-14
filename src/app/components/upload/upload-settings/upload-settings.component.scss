@@ -44,6 +44,11 @@
       .kTranscodingProfile {
         margin-left: 7px;
       }
+
+      .kTranscodingProfileError {
+        margin-left: 7px;
+        color: $kDandger;
+      }
     }
 
     .kAddFile {
@@ -79,7 +84,7 @@
 }
 
 :host /deep/ .ui-dropdown.ui-widget {
-  width: 127px;
+  min-width: 127px;
 }
 
 :host /deep/ .ui-datatable-scrollable-table-wrapper table {

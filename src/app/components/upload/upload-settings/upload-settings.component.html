@@ -3,16 +3,18 @@
     <h1>{{ 'app.upload.uploadSettings.title' | translate }}</h1>
   </div>
   <div class="kContent">
-    <div class="kProfile">
+    <form [formGroup]="_profileForm" class="kProfile" >
       <span>{{ 'app.upload.uploadSettings.profile' | translate }}</span>
       <p-dropdown class="kTranscodingProfile"
                   kDropdownCloseOnScroll
-                  [options]="[]"
+                  [options]="_transcodingProfiles"
                   [appendTo]="'body'"
                   [autoWidth]="false"
-                  placeholder="Default">
+                  [placeholder]="'app.upload.uploadSettings.profilePlaceholder' | translate"
+                  [formControl]="_transcodingProfileField">
       </p-dropdown>
-    </div>
+      <span *ngIf="_transcodingProfileError" class="kTranscodingProfileError">{{ _transcodingProfileError }}</span>
+    </form>
 
     <div class="kAddFile">
       <button type="button"

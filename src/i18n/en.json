@@ -119,6 +119,7 @@
         "title": "Upload Settings",
         "profile": "Transcoding profile",
         "addFileBtn": "Add file",
+        "profilePlaceholder": "Default",
         "table": {
           "header": {
             "fileName": "File name",
