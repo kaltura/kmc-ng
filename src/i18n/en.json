@@ -123,7 +123,12 @@
         "delete": "Delete",
         "viewEntries": "View Entries",
         "moveCategory": "Move Category",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "bActions": {
+          "addRemoveTags": "Add / Remove Tags",
+          "addTags": "Add Tags",
+          "removeTags": "Remove Tags"
+        }
       },
       "entries": {
         "entries": "Entries",
