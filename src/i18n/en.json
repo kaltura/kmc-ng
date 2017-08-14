@@ -185,7 +185,9 @@
         "playlistName": "Playlist Name",
         "description": "Description",
         "cancelEdit": "Cancel Edit",
-        "discard": "Discard all changes?"
+        "discard": "Discard all changes?",
+        "notSupportedMsg": "Adding a new rule based playlist is currently not supported",
+        "dismiss": "Dismiss"
       },
       "bulkActions": {
         "setScheduling": "Set Scheduling",

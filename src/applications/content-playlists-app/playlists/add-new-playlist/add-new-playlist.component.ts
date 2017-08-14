@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ISubscription } from 'rxjs/Subscription';
 import { Router } from '@angular/router';
@@ -15,6 +15,7 @@ import { PlaylistsStore } from '../playlists-store/playlists-store.service';
 export class AddNewPlaylist implements  OnInit, AfterViewInit, OnDestroy{
 
   @Input() parentPopupWidget: PopupWidgetComponent;
+  @Output() showNotSupportedMsg = new EventEmitter<boolean>();
   addNewPlaylistForm: FormGroup;
   private _parentPopupStateChangeSubscribe: ISubscription;
   private _showConfirmationOnClose: boolean = true;
@@ -37,11 +38,18 @@ export class AddNewPlaylist implements  OnInit, AfterViewInit, OnDestroy{
   }
 
   goNext() {
-    this._playlistsStore.newPlaylistData = ({
+    this._playlistsStore.setNewPlaylistData({
       name: this.addNewPlaylistForm.controls['name'].value,
-      description: this.addNewPlaylistForm.controls['description'].value
-    });
-    this.router.navigate(['/content/playlists/playlist/new/content']);
+      description: this.addNewPlaylistForm.controls['description'].value,
+      playlistType: 3
+    })
+    if(this.addNewPlaylistForm.controls['playlistType'].value === 'ruleBased') {
+      this._showConfirmationOnClose = false;
+      this.parentPopupWidget.close();
+      this.showNotSupportedMsg.emit();
+    } else {
+      this.router.navigate(['/content/playlists/playlist/new/content']);
+    }
   }
 
   ngOnInit(){}

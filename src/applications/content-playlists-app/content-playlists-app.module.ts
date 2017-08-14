@@ -32,8 +32,6 @@ import { ContentPlaylistsComponent } from './content-playlists.component';
 import { PlaylistsComponentsList } from './playlists/playlists-components-list';
 import { PlaylistComponentsList } from './playlist/playlist-components-list';
 import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.service';
-import { NewPlaylistDataResolver } from './playlists/new-playlist-data-resolver/new-playlist-data-resolver';
-import { PlaylistsStore } from './playlists/playlists-store/playlists-store.service';
 
 @NgModule({
     imports: [
@@ -68,9 +66,7 @@ import { PlaylistsStore } from './playlists/playlists-store/playlists-store.serv
     exports: [
     ],
     providers : [
-      PlaylistCanDeactivate,
-      NewPlaylistDataResolver,
-      PlaylistsStore
+      PlaylistCanDeactivate
     ]
 })
 export class ContentPlaylistsAppModule {

@@ -83,6 +83,8 @@
 
 <kPopupWidget #addNewPlaylist [popupWidth]="586" [popupHeight]="411" [modal]="true">
   <ng-template>
-    <kAddNewPlaylist [parentPopupWidget]="addNewPlaylist"></kAddNewPlaylist>
+    <kAddNewPlaylist
+      [parentPopupWidget]="addNewPlaylist"
+      (showNotSupportedMsg)="onShowNotSupportedMsg()"></kAddNewPlaylist>
   </ng-template>
 </kPopupWidget>
