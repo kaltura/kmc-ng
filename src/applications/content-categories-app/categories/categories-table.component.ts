@@ -138,7 +138,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 		if (this.actionsMenu) {
 			this.actionsMenu.toggle(event);
 			if (this.actionsMenuCategoryId !== category.id) {
-				this.buildMenu( category.status);
+				this.buildMenu(category.status);
 				this.actionsMenuCategoryId = category.id;
 				this.actionsMenu.show(event);
 			}
@@ -168,10 +168,14 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 				}
 			}
 		];
-		if ( status.toString() != KalturaCategoryStatus.active.toString()) {
+		if (status.toString() != KalturaCategoryStatus.active.toString()) {
 			this._items.shift();
 			this._items.pop();
 		}
+	}
+
+	onSelectionChange(event) {
+		this.selectedCategoriesChange.emit(event);
 	}
 }
 

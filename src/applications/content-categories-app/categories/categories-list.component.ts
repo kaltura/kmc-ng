@@ -47,4 +47,8 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     clearSelection(){
         this._selectedCategories = [];
     }
+
+    onSelectedCategoriesChange(event):void{
+		this._selectedCategories = event;
+	}
 }

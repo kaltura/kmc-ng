@@ -119,10 +119,11 @@
         "bulkActions": "Bulk Actions",
         "refine": "Refine",
         "filterCategories": "Filter Categories",
-        "edit": "Edit",        
-        "delete": "Delete",        
-        "viewEntries": "View Entries",        
-        "moveCategory": "Move Category"        
+        "edit": "Edit",
+        "delete": "Delete",
+        "viewEntries": "View Entries",
+        "moveCategory": "Move Category",
+        "cancel": "Cancel"
       },
       "entries": {
         "entries": "Entries",
