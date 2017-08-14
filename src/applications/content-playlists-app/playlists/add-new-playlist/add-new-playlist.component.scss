@@ -4,6 +4,8 @@
   height: 411px;
   min-height: 411px;
   overflow: hidden;
+  background: #fff;
+  border-radius: 3px;
 
   .kHeader {
     height: 78px;
@@ -126,9 +128,10 @@
   font-weight: normal;
 }
 
-.kNewPlaylistPopup {
-  transition: min-height .3s ease-in-out;
-  -moz-transition: min-height .3s ease-in-out;
-  -webkit-transition: min-height .3s ease-in-out;
-  min-height: 452px;
+.kRuleBasedPlaylist {
+  transition: all .3s ease-in-out;
+  -moz-transition: all .3s ease-in-out;
+  -webkit-transition: all .3s ease-in-out;
+  min-height: 453px;
+  margin-top: -21px;
 }
