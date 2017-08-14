@@ -54,7 +54,7 @@
 
 <kPopupWidget #uploadmenu [popupWidth]="315" [popupHeight]="385" [closeBtn]="true" [modal]="true" [transparent]="true">
   <ng-template>
-    <kKMCUploadMenu (onTriggerUpload)="uploadmenu.close(); uploadsettings.open()"></kKMCUploadMenu>
+    <kKMCUploadMenu (onFileSelected)="_handleFileSelected($event)"></kKMCUploadMenu>
   </ng-template>
 </kPopupWidget>
 

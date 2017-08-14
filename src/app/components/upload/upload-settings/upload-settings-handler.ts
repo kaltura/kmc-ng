@@ -10,8 +10,14 @@ import { KalturaConversionProfile } from 'kaltura-typescript-client/types/Kaltur
 
 @Injectable()
 export class UploadSettingsHandler {
+  public selectedFiles;
+
   constructor(private _kalturaServerClient: KalturaClient) {
 
+  }
+
+  setSelectedFiles(files: FileList): void {
+    this.selectedFiles = files;
   }
 
   getTranscodingProfiles(): Observable<Array<KalturaConversionProfile>> {

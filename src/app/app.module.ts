@@ -13,7 +13,7 @@ import {
   AppBootstrapConfig  as AppBootstrapConfigType
 } from 'app-shared/kmc-shell';
 import { KalturaCommonModule, AppStorage } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { KalturaClient, KalturaClientConfiguration } from '@kaltura-ng/kaltura-client';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { KalturaServerModule } from '@kaltura-ng/kaltura-server-utils';
@@ -105,7 +105,8 @@ export function clientConfigurationFactory() {
     TooltipModule,
     GrowlModule,
     DataTableModule,
-    MenuModule
+    MenuModule,
+    KalturaUIModule
   ],
   declarations: <any>[
     AppComponent,

@@ -2,7 +2,7 @@
   <div class="kUploadMenuListItem">
     <i class="kIconUpload kUploadMenuUploadIcon"></i>
     <span>
-      <a (click)="onTriggerUpload.emit()">{{ 'app.upload.uploadMenu.uploadFromDesktop' | translate }}</a>
+      <a (click)="fileDialog.open()">{{ 'app.upload.uploadMenu.uploadFromDesktop' | translate }}</a>
     </span>
   </div>
 
@@ -28,3 +28,4 @@
     <p class="kPrepareEntryListItem"><a>{{ 'app.upload.uploadMenu.entryList.audio' | translate }}</a></p>
   </div>
 </div>
+<kFileDialog #fileDialog (onFileSelected)="onFileSelected.emit($event)"></kFileDialog>
