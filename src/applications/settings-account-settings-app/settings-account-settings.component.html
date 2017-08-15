@@ -1,0 +1,38 @@
+<h2>Account Info</h2>
+<p>Partner ID: {{partner.id}} | Email of Account Owner: {{partner.adminEmail}}</p>
+<form [formGroup]="accountSettingsForm" novalidate>
+  <div class="form-group">
+    <label class="center-block">Name:
+      <input class="form-control" formControlName="name">
+    </label>
+  </div>
+  <div class="form-group">
+    <label class="center-block">accountOwnerName:
+      <select [formControl]="accountSettingsForm.controls.accountOwnerName">
+        <option *ngFor="let option of nameOfAccountOwnerOptions" value="{{option}}">{{option}}</option>
+      </select>
+    </label>
+  </div>
+  <div class="form-group">
+    <label class="center-block">phone:
+      <input class="form-control" formControlName="phone">
+    </label>
+  </div>
+  <div class="form-group">
+    <label class="center-block">website:
+      <input class="form-control" formControlName="website">
+    </label>
+  </div>
+  <div class="form-group">
+    <label class="center-block">describeYourself:
+      <select [formControl]="accountSettingsForm.controls.describeYourself">
+        <option *ngFor="let option of describeYourselfOptions" value="{{option}}">{{option}}</option>
+      </select>
+    </label>
+  </div>
+  <div class="form-group">
+    <label class="center-block">accountReferenceID:
+      <input class="form-control" formControlName="accountReferenceID">
+    </label>
+  </div>
+</form>

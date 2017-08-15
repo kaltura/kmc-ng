@@ -23,8 +23,12 @@ const routes: Routes = <Routes>[
               { path: 'entries', loadChildren: '../applications/content-entries-app/content-entries-app.module#ContentEntriesAppModule' },
               { path: 'playlists', loadChildren: '../applications/content-playlists-app/content-playlists-app.module#ContentPlaylistsAppModule' },
               { path: 'categories', loadChildren: '../applications/content-categories-app/content-categories-app.module#ContentCategoriesAppModule' }
-            ]
-          }
+            ]},
+          {
+            path: 'settings', children: [
+            { path: '', redirectTo: 'accountSettings', pathMatch: 'full' },
+              { path: 'accountSettings', loadChildren: '../applications/settings-account-settings-app/settings-account-settings-app.module#SettingsAccountSettingsAppModule'  },
+            ]}
         ]
       },
       {
