@@ -56,11 +56,6 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 	constructor(private appLocalization: AppLocalization, public categoriesService: CategoriesService, private cdRef: ChangeDetectorRef) {
 	}
 
-	_convertSortValue(value: boolean): number {
-		return value ? 1 : -1;
-
-	}
-
 	ngOnInit() {
 		this._blockerMessage = null;
 		this._emptyMessage = "";
@@ -160,8 +155,12 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 		];
 	}
 
-	onSelectionChange(event) {
+	_onSelectionChange(event) {
 		this.selectedCategoriesChange.emit(event);
+	}
+
+	_onSortChanged(event) {
+		this.sortChanged.emit(event);
 	}
 }
 
