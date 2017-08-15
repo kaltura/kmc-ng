@@ -8,11 +8,11 @@
         class="kButtonBranded kAddPlaylistBtn"></button>
       <span
         class="kSelectedPlaylistsNum"
-        *ngIf="(_playlistStore.playlist$ | async)?.entriesTotalCount">
-				{{(_playlistStore.playlist$ | async)?.entriesTotalCount}} {{'applications.content.playlists.entries' | translate}}</span>
+        *ngIf="(_playlistStore.entries$ | async)?.totalCount">
+				{{(_playlistStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
     </div>
     <kPlaylistEntriesTable
       class="kPlaylistEntriesTable"
-      [entries]="(_playlistStore.playlist$ | async)?.entries"></kPlaylistEntriesTable>
+      [entries]="(_playlistStore.entries$ | async)?.items"></kPlaylistEntriesTable>
   </div>
 </k-area-blocker>
