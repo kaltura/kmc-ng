@@ -103,14 +103,16 @@ export class PlaylistStore implements OnDestroy {
         event => {
           if (event instanceof NavigationEnd) {
             const currentPlaylistId = this._playlistRoute.snapshot.params.id;
-            if(currentPlaylistId === 'new' && this._playlistsStore.getNewPlaylistData().name) {
-              this._playlist.next({
-                playlist: new KalturaPlaylist(this._playlistsStore.getNewPlaylistData()),
-                entries: [],
-                entriesTotalCount: 0
-              });
-            } else {
-              this._router.navigate(['content/playlists']);
+            if(currentPlaylistId === 'new') {
+              if(this._playlistsStore.getNewPlaylistData().name) {
+                this._playlist.next({
+                  playlist: new KalturaPlaylist(this._playlistsStore.getNewPlaylistData()),
+                  entries: [],
+                  entriesTotalCount: 0
+                });
+              } else {
+                this._router.navigate(['content/playlists']);
+              }
             }
             const playlist = this._playlist.getValue();
             if(!playlist.playlist || (playlist.playlist && playlist.playlist.id !== currentPlaylistId && currentPlaylistId !== 'new')) {
