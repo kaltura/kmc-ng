@@ -9,8 +9,7 @@ import { CategoriesService, Categories } from './categories.service';
 @Component({
     selector: 'kCategoriesList',
     templateUrl: './categories-list.component.html',
-    styleUrls: ['./categories-list.component.scss'],
-    providers: [CategoriesService]
+    styleUrls: ['./categories-list.component.scss']
 })
 
 export class CategoriesListComponent implements OnInit, OnDestroy {

@@ -1,12 +1,12 @@
 import { Categories } from './../categories/categories.service';
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { CategoryStoreService, ActionTypes } from './category-store.service';
-import { CategorySectionsListHandler } from './category-sections-list/category-sections-list-handler';
-import { CategoriesService } from '../Categories/categories.service';
-import { CategoryFormManager } from './category-form-manager';
+import { CategoryService, ActionTypes } from './category.service';
+//import { CategorySectionsListHandler } from './category-sections-list/category-sections-list-handler';
+import { CategoriesService } from '../categories/categories.service';
+//import { CategoryFormManager } from './category-form-manager';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { CategoryFormWidget } from './category-form-widget';
+//import { CategoryFormWidget } from './category-form-widget';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Observable } from 'rxjs/Observable';
 
@@ -15,13 +15,13 @@ import { Observable } from 'rxjs/Observable';
 	templateUrl: './category.component.html',
 	styleUrls: ['./category.component.scss'],
 	providers: [
-		CategoryStoreService,
-		CategoryFormManager,
-		{
-			provide: CategoryFormWidget,
-			useClass: CategorySectionsListHandler,
-			multi: true
-		}
+		CategoryService,
+		//CategoryFormManager,
+		// {
+		// 	provide: CategoryFormWidget,
+		// 	useClass: CategorySectionsListHandler,
+		// 	multi: true
+		// }
 	]
 })
 export class CategoryComponent implements OnInit, OnDestroy {
@@ -37,11 +37,11 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
 	public isSafari: boolean = false; // used for Safari specific styling
 
-	constructor(public _categoryStore: CategoryStoreService,
+	constructor(public _categoryStore: CategoryService,
 		private _categoriesStore: CategoriesService,
-		private _categoryFormManager: CategoryFormManager,
+	//	private _categoryFormManager: CategoryFormManager,
 		private _browserService: BrowserService,
-		@Inject(CategoryFormWidget) private _widgets: CategoryFormWidget[],
+	//	@Inject(CategoryFormWidget) private _widgets: CategoryFormWidget[],
 		private _appLocalization: AppLocalization) {
 
 	}
@@ -65,7 +65,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 
-		this._categoryFormManager.registerWidgets(this._widgets);
+		//this._categoryFormManager.registerWidgets(this._widgets);
 
 		this.isSafari = this._browserService.isSafari();
 
