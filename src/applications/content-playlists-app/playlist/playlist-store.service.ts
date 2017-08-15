@@ -217,23 +217,29 @@ export class PlaylistStore implements OnDestroy {
           description: this._playlist.getValue().playlist.description,
           tags: this._playlist.getValue().playlist.tags
         });
-
-      this._state.next({isBusy: true});
-      this._kalturaServerClient.request(
-        new PlaylistUpdateAction({id, playlist})
-      )
-        .cancelOnDestroy(this)
-        .subscribe(
-          () => {
-            this.reloadPlaylist();
-          },
-          error => {
-            this._state.next({
-              isBusy: true,
-              error: {message: error.message, origin: 'save'}
-            });
-          }
+      if(this._playlist.getValue().entriesTotalCount >= 1) {
+        this._state.next({isBusy: true});
+        this._kalturaServerClient.request(
+          new PlaylistUpdateAction({id, playlist})
         )
+          .cancelOnDestroy(this)
+          .subscribe(
+            () => {
+              this.reloadPlaylist();
+            },
+            error => {
+              this._state.next({
+                isBusy: true,
+                error: {message: error.message, origin: 'save'}
+              });
+            }
+          )
+      } else {
+        this._state.next({
+          isBusy: false,
+          error: {message: 'Add at least one media', origin: 'save'}
+        });
+      }
     }
   }
 
