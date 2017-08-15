@@ -3,11 +3,7 @@
   <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton label="{{'applications.content.categories.bulkActions' | translate}}" ></button>
 </div>
 
-<p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"></p-tieredMenu>
 
-<kPopupWidget #bulkActionsPopup [popupWidth]="_bulkWindowWidth" [popupHeight]="_bulkWindowHeight" [modal]="true">
-  <ng-template>
-    <div [ngSwitch]="_bulkAction">      
-    </div>
-  </ng-template>
-</kPopupWidget>
+
+
+

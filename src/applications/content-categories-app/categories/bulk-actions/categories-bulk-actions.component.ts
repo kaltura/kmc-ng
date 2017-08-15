@@ -1,12 +1,5 @@
-import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { KalturaCategory } from "kaltura-typescript-client/types/KalturaCategory";
-import { PopupWidgetComponent } from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
-import { BulkActionBaseService } from "applications/content-categories-app/categories/bulk-actions/bulk-action-base.service";
-import { BrowserService } from "app-shared/kmc-shell";
-import { environment } from 'app-environment';
-
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 @Component({
   selector: 'kCategoriesBulkActions',
   templateUrl: './categories-bulk-actions.component.html',
@@ -14,85 +7,17 @@ import { environment } from 'app-environment';
 })
 export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
-  public _bulkActionsMenu: MenuItem[] = [];
-  public _bulkWindowWidth = 500;
-  public _bulkWindowHeight = 500;
-  public _bulkAction: string = "";
+  @Input() selectedCategories: any[];
 
-  @Input() selectedCategories: KalturaCategory[];
+  @Output() onBulkChange = new EventEmitter<{reload: boolean}>();
 
-  @Output() onBulkChange = new EventEmitter<{ reload: boolean }>();
-
-  @ViewChild('bulkActionsPopup') public bulkActionsPopup: PopupWidgetComponent;
-
-
-  constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+  constructor(private _appLocalization: AppLocalization, ) {
   }
 
-  ngOnInit() {
-    this._bulkActionsMenu = this.getBulkActionItems();
+  ngOnInit(){
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(){
 
-  }
-
-  getBulkActionItems(): MenuItem[] {
-    return [
-      {
-        label: this._appLocalization.get('applications.content.categories.bActions.addRemoveTags'), items: [
-          { label: this._appLocalization.get('applications.content.categories.bActions.addTags'), command: (event) => { this.openBulkActionWindow("addTags", 500, 500) } },
-          { label: this._appLocalization.get('applications.content.categories.bActions.removeTags'), command: (event) => { this.openBulkActionWindow("removeTags", 500, 500) } }]
-      }];
-  }
-
-  openBulkActionWindow(action: string, popupWidth: number, popupHeight: number) {
-    this._bulkAction = action;
-    this._bulkWindowWidth = popupWidth;
-    this._bulkWindowHeight = popupHeight;
-    // use timeout to allow data binding of popup dimensions to update before opening the popup
-    setTimeout(() => {
-      this.bulkActionsPopup.open();
-    }, 0);
-  }
-
-  // add tags changed
-  onAddTagsChanged(tags: string[]): void {
-    //this.executeService(this._categoriesBulkAddTagsService, tags)    ;
-  }
-
-  private executeService(service: BulkActionBaseService<any>, data: any = {}, reloadEntries: boolean = true, confirmChunks: boolean = true, callback?: Function): void {
-    this._bulkAction = "";
-
-    const execute = () => {
-      this._browserService.setAppStatus({ isBusy: true, errorMessage: null });
-      service.execute(this.selectedCategories, data).subscribe(
-        result => {
-          this._browserService.setAppStatus({ isBusy: false, errorMessage: null });
-          if (callback) {
-            callback(result);
-          }
-          this.onBulkChange.emit({ reload: reloadEntries });
-        },
-        error => {
-          this._browserService.setAppStatus({ isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error') });
-        }
-      );
-    }; 
-
-    if (confirmChunks && this.selectedCategories.length > environment.modules.contentEntries.bulkActionsLimit) {
-      this._browserService.confirm(
-        {
-          header: this._appLocalization.get('applications.content.bulkActions.note'),
-          message: this._appLocalization.get('applications.content.bulkActions.confirm', { "0": this.selectedCategories.length }),
-          accept: () => {
-            execute();
-          }
-        }
-      );
-    } else {
-      execute();
-    }
-  }
-
+  } 
 }
