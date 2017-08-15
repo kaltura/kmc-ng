@@ -57,19 +57,15 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     }
 
     public _reload() {
-        this.clearSelection();
+        this._clearSelection();
         this._categoriesService.reload(true);
     }
-    clearSelection() {
+    _clearSelection() {
         this._selectedCategories = [];
     }
 
-    onSelectedCategoriesChange(event): void {
-        this._selectedCategories = event;
-    }
-
-    onSortChanged(event) {
-        this.clearSelection();
+    _onSortChanged(event) {
+        this._clearSelection();
         this._filter.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
         this._filter.sortBy = event.field;
 
@@ -79,12 +75,12 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         });
     }
 
-    onPaginationChanged(state: any): void {
+    _onPaginationChanged(state: any): void {
         if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
             this._filter.pageIndex = state.page;
             this._filter.pageSize = state.rows;
 
-            this.clearSelection();
+            this._clearSelection();
             this._categoriesService.reload({
                 pageIndex: this._filter.pageIndex + 1,
                 pageSize: this._filter.pageSize
@@ -92,13 +88,13 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         }
     }
 
-    onActionSelected(event){
-	    switch (event.action){
-		    case "view":
-			    this.router.navigate(['/content/categories/category', event.categoryID]);
-			    break;		   
-		    default:
-			    break;
-	    }
+    _onActionSelected(event: { action: string, categoryID: number }) {
+        switch (event.action) {
+            case "edit":
+                this.router.navigate(['/content/categories/category', event.categoryID]);
+                break;
+            default:
+                break;
+        }
     }
 }

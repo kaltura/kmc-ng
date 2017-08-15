@@ -41,10 +41,10 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 	@Output()
 	selectedCategoriesChange = new EventEmitter<any>();
 
-	@ViewChild('dataTable') private dataTable: DataTable;
-	@ViewChild('actionsmenu') private actionsMenu: Menu;
-	private actionsMenuCategoryId: number = 0;
-	private entriesStoreStatusSubscription: ISubscription;
+	@ViewChild('dataTable') private _dataTable: DataTable;
+	@ViewChild('actionsmenu') private _actionsMenu: Menu;
+	private _actionsMenuCategoryId: number = 0;
+	private _categoriesServiceStatusSubscription: ISubscription;
 
 	public _deferredLoading = true;
 	public _emptyMessage: string = "";
@@ -65,7 +65,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 		this._blockerMessage = null;
 		this._emptyMessage = "";
 		let loadedOnce = false; // used to set the empty message to "no results" only after search
-		this.entriesStoreStatusSubscription = this.categoriesService.state$.subscribe(
+		this._categoriesServiceStatusSubscription = this.categoriesService.state$.subscribe(
 			result => {
 				if (result.errorMessage) {
 					this._blockerMessage = new AreaBlockerMessage({
@@ -97,16 +97,16 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 	}
 
 	ngOnDestroy() {
-		this.entriesStoreStatusSubscription.unsubscribe();
-		this.entriesStoreStatusSubscription = null;
+		this._categoriesServiceStatusSubscription.unsubscribe();
+		this._categoriesServiceStatusSubscription = null;
 	}
 
 	ngAfterViewInit() {
-		const scrollBody = this.dataTable.el.nativeElement.getElementsByClassName("ui-datatable-scrollable-body");
+		const scrollBody = this._dataTable.el.nativeElement.getElementsByClassName("ui-datatable-scrollable-body");
 		if (scrollBody && scrollBody.length > 0) {
 			scrollBody[0].onscroll = () => {
-				if (this.actionsMenu) {
-					this.actionsMenu.hide();
+				if (this._actionsMenu) {
+					this._actionsMenu.hide();
 				}
 			}
 		}
@@ -120,27 +120,27 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 		}
 	}
 
-	onActionSelected(action: string, categoryID: number, status: string = null) {
-		if (this.allowDrillDown(status)) {
+	onActionSelected(action: string, categoryID: number) {
+		if (this.allowDrillDown()) {
 			this.actionSelected.emit({ "action": action, "categoryID": categoryID });
 		}
 	}
 
-	allowDrillDown(status: string) {
+	allowDrillDown() {
 		let allowed = true;
-		if (status != KalturaCategoryStatus.active.toString()) {
-			allowed = false;
-		}
+		// if (status != KalturaCategoryStatus.active.toString()) {
+		// 	allowed = false;
+		// }
 		return allowed;
 	}
 
 	openActionsMenu(event: any, category: KalturaCategory) {
-		if (this.actionsMenu) {
-			this.actionsMenu.toggle(event);
-			if (this.actionsMenuCategoryId !== category.id) {
+		if (this._actionsMenu) {
+			this._actionsMenu.toggle(event);
+			if (this._actionsMenuCategoryId !== category.id) {
 				this.buildMenu();
-				this.actionsMenuCategoryId = category.id;
-				this.actionsMenu.show(event);
+				this._actionsMenuCategoryId = category.id;
+				this._actionsMenu.show(event);
 			}
 		}
 	}
@@ -149,22 +149,22 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 		this._items = [
 			{
 				label: this.appLocalization.get("applications.content.categories.edit"), command: (event) => {
-					this.onActionSelected("Edit", this.actionsMenuCategoryId);
+					this.onActionSelected("edit", this._actionsMenuCategoryId);
 				}
 			},
 			{
 				label: this.appLocalization.get("applications.content.categories.delete"), command: (event) => {
-					this.onActionSelected("delete", this.actionsMenuCategoryId);
+					this.onActionSelected("delete", this._actionsMenuCategoryId);
 				}
 			},
 			{
 				label: this.appLocalization.get("applications.content.categories.viewEntries"), command: (event) => {
-					this.onActionSelected("View Entries", this.actionsMenuCategoryId);
+					this.onActionSelected("viewEntries", this._actionsMenuCategoryId);
 				}
 			},
 			{
 				label: this.appLocalization.get("applications.content.categories.moveCategory"), command: (event) => {
-					this.onActionSelected("Move Category", this.actionsMenuCategoryId);
+					this.onActionSelected("moveCategory", this._actionsMenuCategoryId);
 				}
 			}
 		];		
