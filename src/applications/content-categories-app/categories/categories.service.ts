@@ -32,17 +32,12 @@ export enum SortDirection {
 }
 
 export interface QueryData {
-    pageIndex?: number,
-    pageSize?: number,
-    sortBy?: string,
-    sortDirection?: SortDirection,
-    fields?: string
+    pageIndex: number,
+    pageSize: number,
+    sortBy: string,
+    sortDirection: SortDirection,
+    fields: string
 }
-
-export interface QueryRequestArgs {
-    data: QueryData;
-}
-
 
 @Injectable()
 export class CategoriesService implements OnDestroy {
@@ -50,32 +45,33 @@ export class CategoriesService implements OnDestroy {
     private _categories = new BehaviorSubject<Categories>({ items: [], totalCount: 0 });
     private _state = new BehaviorSubject<UpdateStatus>({ loading: false, errorMessage: null });
     private _categoriesExecuteSubscription: ISubscription;
-    public state$ = this._state.asObservable();
-    public categories$ = this._categories.asObservable();
-
-    private _queryData: QueryData = {
+    private _queryData = new BehaviorSubject<QueryData>({
         pageIndex: 1,
         pageSize: 50,
         sortBy: 'createdAt',
         sortDirection: SortDirection.Desc,
         fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, fullName'
-    };
+    });
+
+    public state$ = this._state.asObservable();
+    public categories$ = this._categories.asObservable();
+    public queryData$ = this._queryData.asObservable(); //TODO: check if monitor needed
 
     constructor(private _kalturaClient: KalturaClient,
         private browserService: BrowserService) {
         const defaultPageSize = this.browserService.getFromLocalStorage("categories.list.pageSize");
         if (defaultPageSize !== null) {
-            this._queryData.pageSize = defaultPageSize;
+            this._updateQueryData({
+                pageSize: defaultPageSize
+            });
         }
-        this.reload(true);
-    }
 
-    public get queryData() : QueryData{
-        return Object.assign({}, this._queryData);
+        this.reload(true);
     }
 
     ngOnDestroy() {
         this._state.complete();
+        this._queryData.complete();
         this._categories.complete();
         if (this._categoriesExecuteSubscription) {
             this._categoriesExecuteSubscription.unsubscribe();
@@ -83,15 +79,24 @@ export class CategoriesService implements OnDestroy {
     }
 
     public reload(force: boolean): void;
-    public reload(query: QueryData): void;
-    public reload(query: boolean | QueryData): void {
+    public reload(query: Partial<QueryData>): void;
+    public reload(query: boolean | Partial<QueryData>): void {
         const forceReload = (typeof query === 'object' || (typeof query === 'boolean' && query));
 
         if (forceReload || this._categories.getValue().totalCount === 0) {
             if (typeof query === 'object') {
-                Object.assign(this._queryData, query);
+                this._updateQueryData(query);
             }
             this._executeQuery();
+        }
+    }
+
+    private _updateQueryData(partialData: Partial<QueryData>): void {
+        const newQueryData = Object.assign({}, this._queryData.getValue(), partialData);
+        this._queryData.next(newQueryData);
+
+        if (partialData.pageSize) {
+            this.browserService.setInLocalStorage("categories.list.pageSize", partialData.pageSize);
         }
     }
 
@@ -104,15 +109,10 @@ export class CategoriesService implements OnDestroy {
 
         this._state.next({ loading: true, errorMessage: null });
 
-        const queryArgs: QueryRequestArgs = Object.assign({},
-            {
-                data: this._queryData
-            });
-
-        this.browserService.setInLocalStorage("categories.list.pageSize", this._queryData.pageSize);
+        this.browserService.setInLocalStorage("categories.list.pageSize", this._queryData.getValue().pageSize);
 
         // execute the request
-        this._categoriesExecuteSubscription = this.buildQueryRequest(queryArgs).subscribe(
+        this._categoriesExecuteSubscription = this.buildQueryRequest(this._queryData.getValue()).subscribe(
             response => {
                 this._categoriesExecuteSubscription = null;
 
@@ -129,7 +129,8 @@ export class CategoriesService implements OnDestroy {
                 this._state.next({ loading: false, errorMessage });
             });
     }
-    private buildQueryRequest( queryData: QueryData): Observable<KalturaCategoryListResponse> {
+
+    private buildQueryRequest(queryData: QueryData): Observable<KalturaCategoryListResponse> {
         try {
             let filter: KalturaCategoryFilter = new KalturaCategoryFilter({});
             let pagination: KalturaFilterPager = null;

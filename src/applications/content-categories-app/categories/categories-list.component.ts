@@ -21,6 +21,8 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     public _categories: KalturaCategory[] = [];
     public _categoriesTotalCount: number = null;
     private categoriesSubscription: ISubscription;
+    private querySubscription: ISubscription;
+
 
     public _filter = {
         pageIndex: 0,
@@ -35,14 +37,13 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
 
-        const query = this._categoriesService.queryData;
-
-        if (query) {
-            this._filter.pageSize = query.pageSize;
-            this._filter.pageIndex = query.pageIndex - 1;
-            this._filter.sortBy = query.sortBy;
-            this._filter.sortDirection = query.sortDirection;
-        }
+        this.querySubscription = this._categoriesService.queryData$.subscribe(
+            query => {
+                this._filter.pageSize = query.pageSize;
+                this._filter.pageIndex = query.pageIndex - 1;
+                this._filter.sortBy = query.sortBy;
+                this._filter.sortDirection = query.sortDirection;
+            });
 
         this.categoriesSubscription = this._categoriesService.categories$.subscribe(
             (data) => {
@@ -54,6 +55,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.categoriesSubscription.unsubscribe();
+        this.querySubscription.unsubscribe();
     }
 
     public _reload() {
@@ -64,17 +66,13 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         this._selectedCategories = [];
     }
 
-    _onSortChanged(event) {
-        this._clearSelection();
-        this._filter.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
-        this._filter.sortBy = event.field;
-
+    _onSortChanged(event): void {
         this._categoriesService.reload({
-            sortBy: this._filter.sortBy,
-            sortDirection: this._filter.sortDirection
+            sortBy: event.field,
+            sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
         });
     }
-
+    
     _onPaginationChanged(state: any): void {
         if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
             this._filter.pageIndex = state.page;
