@@ -43,14 +43,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
         label: this._appLocalization.get('applications.content.categories.bActions.addRemoveTags'), items: [
           { label: this._appLocalization.get('applications.content.categories.bActions.addTags'), command: (event) => { this.openBulkActionWindow("addTags", 500, 500) } },
           { label: this._appLocalization.get('applications.content.categories.bActions.removeTags'), command: (event) => { this.openBulkActionWindow("removeTags", 500, 500) } }]
-      },
-      { label: this._appLocalization.get('applications.content.categories.bActions.moveCategories'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryOwner'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.delete'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } }
-    ];
+      }];
   }
 
   openBulkActionWindow(action: string, popupWidth: number, popupHeight: number) {
@@ -85,7 +78,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
           this._browserService.setAppStatus({ isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error') });
         }
       );
-    };
+    }; 
 
     if (confirmChunks && this.selectedCategories.length > environment.modules.contentEntries.bulkActionsLimit) {
       this._browserService.confirm(
