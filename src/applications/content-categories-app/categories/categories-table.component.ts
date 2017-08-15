@@ -128,7 +128,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 
 	allowDrillDown(status: string) {
 		let allowed = true;
-		if (status && status != KalturaCategoryStatus.active.toString()) {
+		if (status != KalturaCategoryStatus.active.toString()) {
 			allowed = false;
 		}
 		return allowed;
@@ -138,14 +138,14 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 		if (this.actionsMenu) {
 			this.actionsMenu.toggle(event);
 			if (this.actionsMenuCategoryId !== category.id) {
-				this.buildMenu(category.status);
+				this.buildMenu();
 				this.actionsMenuCategoryId = category.id;
 				this.actionsMenu.show(event);
 			}
 		}
 	}
 
-	buildMenu(status: KalturaCategoryStatus = null): void {
+	buildMenu(): void {
 		this._items = [
 			{
 				label: this.appLocalization.get("applications.content.categories.edit"), command: (event) => {
@@ -167,11 +167,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 					this.onActionSelected("Move Category", this.actionsMenuCategoryId);
 				}
 			}
-		];
-		if (status.toString() != KalturaCategoryStatus.active.toString()) {
-			this._items.shift();
-			this._items.pop();
-		}
+		];		
 	}
 
 	onSelectionChange(event) {
