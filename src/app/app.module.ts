@@ -32,6 +32,7 @@ import { AppMenuComponent } from './components/app-menu/app-menu.component';
 import { LanguageMenuComponent } from './components/language-menu/language-menu.component';
 import { ErrorComponent } from './components/error/error.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
+import { UploadMenuComponent } from './components/upload/upload-menu/upload-menu.component';
 import { KalturaHttpConfigurationAdapter } from "./services/kaltura-http-configuration-adapter.service";
 
 import {
@@ -111,7 +112,8 @@ export function clientConfigurationFactory() {
     LoginFormComponent,
     PasswordExpiredFormComponent,
     ForgotPasswordFormComponent,
-    InvalidLoginHashFormComponent
+    InvalidLoginHashFormComponent,
+    UploadMenuComponent
   ],
   bootstrap: <any>[
     AppComponent
