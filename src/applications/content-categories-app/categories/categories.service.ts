@@ -129,7 +129,7 @@ export class CategoriesService implements OnDestroy {
                 this._state.next({ loading: false, errorMessage });
             });
     }
-    private buildQueryRequest({ data: queryData }: { data: QueryData }): Observable<KalturaCategoryListResponse> {
+    private buildQueryRequest( queryData: QueryData): Observable<KalturaCategoryListResponse> {
         try {
             let filter: KalturaCategoryFilter = new KalturaCategoryFilter({});
             let pagination: KalturaFilterPager = null;
