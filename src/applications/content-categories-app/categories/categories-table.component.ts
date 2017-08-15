@@ -121,17 +121,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 	}
 
 	onActionSelected(action: string, categoryID: number) {
-		if (this.allowDrillDown()) {
-			this.actionSelected.emit({ "action": action, "categoryID": categoryID });
-		}
-	}
-
-	allowDrillDown() {
-		let allowed = true;
-		// if (status != KalturaCategoryStatus.active.toString()) {
-		// 	allowed = false;
-		// }
-		return allowed;
+		this.actionSelected.emit({ "action": action, "categoryID": categoryID });
 	}
 
 	openActionsMenu(event: any, category: KalturaCategory) {
@@ -167,7 +157,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 					this.onActionSelected("moveCategory", this._actionsMenuCategoryId);
 				}
 			}
-		];		
+		];
 	}
 
 	onSelectionChange(event) {
