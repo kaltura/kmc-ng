@@ -29,9 +29,13 @@
                    [emptyMessage]="'app.upload.uploadSettings.table.emptyMessage.title' | translate"
                    scrollable="true"
                    scrollHeight="287px">
-        <p-column field="name" [sortable]="false" [header]="'app.upload.uploadSettings.table.header.fileName' | translate">
+        <p-column field="name" [sortable]="false"
+                  [header]="'app.upload.uploadSettings.table.header.fileName' | translate">
         </p-column>
-        <p-column field="type" [sortable]="false" [header]="'app.upload.uploadSettings.table.header.mediaType' | translate">
+        <p-column field="type"
+                  [sortable]="false"
+                  [style]="{ 'width': '150px' }"
+                  [header]="'app.upload.uploadSettings.table.header.mediaType' | translate">
           <ng-template let-col let-file="rowData" pTemplate="body">
             <p-dropdown kDropdownCloseOnScroll
                         [options]="_fileTypes"
@@ -41,17 +45,25 @@
                         placeholder="{{'applications.content.entryDetails.related.select' | translate}}"></p-dropdown>
           </ng-template>
         </p-column>
-        <p-column field="size" [sortable]="false" [header]="'app.upload.uploadSettings.table.header.size' | translate">
+        <p-column field="size"
+                  [sortable]="false"
+                  [style]="{ 'width': '310px' }"
+                  [header]="'app.upload.uploadSettings.table.header.size' | translate">
           <ng-template let-col let-file="rowData" pTemplate="body">
             <span>{{ file.size | kFileSize }}</span>
+          </ng-template>
+        </p-column>
+        <p-column [style]="{ 'width': '45px', 'text-align': 'right' }">
+          <ng-template let-col let-file="rowData" pTemplate="body">
+            <i class="kIcontrash kIconRemoveFile" (click)="_removeFile(file)"></i>
           </ng-template>
         </p-column>
       </p-dataTable>
       <div *ngIf="_files.length === 0" class="kEmptyMessage">
         <h1>{{ 'app.upload.uploadSettings.table.emptyMessage.title' | translate }}</h1>
         <p>
-          {{ 'app.upload.uploadSettings.table.emptyMessage.getStarted' | translate  }}
-          <a (click)="fileDialog.open()">{{ 'app.upload.uploadSettings.table.emptyMessage.browse' | translate  }}</a>
+          {{ 'app.upload.uploadSettings.table.emptyMessage.getStarted' | translate }}
+          <a (click)="fileDialog.open()">{{ 'app.upload.uploadSettings.table.emptyMessage.browse' | translate }}</a>
         </p>
 
       </div>

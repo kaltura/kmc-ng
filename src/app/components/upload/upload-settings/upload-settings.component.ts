@@ -64,4 +64,8 @@ export class UploadSettingsComponent implements OnInit {
           this._transcodingProfileError = error.message;
         });
   }
+
+  public _removeFile(file: IUploadSettingsFile) {
+    this._handler.removeFile(file);
+  }
 }

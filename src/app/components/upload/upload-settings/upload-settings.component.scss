@@ -63,7 +63,11 @@
     }
 
     .kTable {
-
+      .kIconRemoveFile {
+        font-size: 24px;
+        display: none;
+        cursor: pointer;
+      }
     }
 
     .kEmptyMessage {
@@ -114,4 +118,8 @@
 :host /deep/ .ui-datatable-scrollable-header,
 :host /deep/ .ui-datatable-scrollable-body {
   border-top: 1px $kGrayscale6 solid;
+}
+
+:host /deep/ .kTable tr:hover .kIconRemoveFile {
+  display: block !important;
 }
