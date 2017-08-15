@@ -28,4 +28,6 @@
     <p class="kPrepareEntryListItem"><a>{{ 'app.upload.uploadMenu.entryList.audio' | translate }}</a></p>
   </div>
 </div>
-<kFileDialog #fileDialog (onFileSelected)="onFileSelected.emit($event)"></kFileDialog>
+<kFileDialog #fileDialog
+             [allowMultiple]="true"
+             (onFileSelected)="onFileSelected.emit($event)"></kFileDialog>

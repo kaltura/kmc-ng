@@ -3,7 +3,7 @@
     <h1>{{ 'app.upload.uploadSettings.title' | translate }}</h1>
   </div>
   <div class="kContent">
-    <form [formGroup]="_profileForm" class="kProfile" >
+    <form [formGroup]="_profileForm" class="kProfile">
       <span>{{ 'app.upload.uploadSettings.profile' | translate }}</span>
       <p-dropdown class="kTranscodingProfile"
                   kDropdownCloseOnScroll
@@ -20,21 +20,41 @@
       <button type="button"
               class="kButtonDefault kAddFileButton"
               pButton
-              [label]="'app.upload.uploadSettings.addFileBtn' | translate"></button>
+              [label]="'app.upload.uploadSettings.addFileBtn' | translate"
+              (click)="_addFiles()"></button>
     </div>
 
-    <div class="kTable">
-      <p-dataTable [value]="[]"
+    <div class="kTable" [class.empty]="_files.length === 0">
+      <p-dataTable [value]="_files"
                    [emptyMessage]="'app.upload.uploadSettings.table.emptyMessage.title' | translate"
                    scrollable="true"
                    scrollHeight="287px">
-        <p-column field="filename" [header]="'app.upload.uploadSettings.table.header.fileName' | translate">
+        <p-column field="name" [sortable]="false" [header]="'app.upload.uploadSettings.table.header.fileName' | translate">
         </p-column>
-        <p-column field="mediatype" [header]="'app.upload.uploadSettings.table.header.mediaType' | translate">
+        <p-column field="type" [sortable]="false" [header]="'app.upload.uploadSettings.table.header.mediaType' | translate">
+          <ng-template let-col let-file="rowData" pTemplate="body">
+            <p-dropdown kDropdownCloseOnScroll
+                        [options]="_fileTypes"
+                        [appendTo]="'body'"
+                        [autoWidth]="false"
+                        [(ngModel)]="file.format"
+                        placeholder="{{'applications.content.entryDetails.related.select' | translate}}"></p-dropdown>
+          </ng-template>
         </p-column>
-        <p-column field="size" [header]="'app.upload.uploadSettings.table.header.size' | translate">
+        <p-column field="size" [sortable]="false" [header]="'app.upload.uploadSettings.table.header.size' | translate">
+          <ng-template let-col let-file="rowData" pTemplate="body">
+            <span>{{ file.size | kFileSize }}</span>
+          </ng-template>
         </p-column>
       </p-dataTable>
+      <div *ngIf="_files.length === 0" class="kEmptyMessage">
+        <h1>{{ 'app.upload.uploadSettings.table.emptyMessage.title' | translate }}</h1>
+        <p>
+          {{ 'app.upload.uploadSettings.table.emptyMessage.getStarted' | translate  }}
+          <a (click)="_addFiles()">{{ 'app.upload.uploadSettings.table.emptyMessage.browse' | translate  }}</a>
+        </p>
+
+      </div>
     </div>
   </div>
   <div class="kFooter">

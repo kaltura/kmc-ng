@@ -120,6 +120,11 @@
         "profile": "Transcoding profile",
         "addFileBtn": "Add file",
         "profilePlaceholder": "Default",
+        "mediaTypes": {
+          "video": "Video",
+          "audio": "Audio",
+          "image": "Image"
+        },
         "table": {
           "header": {
             "fileName": "File name",

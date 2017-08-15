@@ -65,6 +65,26 @@
     .kTable {
 
     }
+
+    .kEmptyMessage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 280px;
+      color: $kGrayscale3;
+
+      h1 {
+        font-size: 28px;
+        margin-bottom: 14px;
+        font-weight: normal;
+      }
+
+      p {
+        font-size: 14px;
+        margin-top: 0;
+      }
+    }
   }
 
   .kFooter {
@@ -87,8 +107,8 @@
   min-width: 127px;
 }
 
-:host /deep/ .ui-datatable-scrollable-table-wrapper table {
-  height: 286px;
+:host /deep/ .kTable.empty .ui-widget-content {
+  display: none;
 }
 
 :host /deep/ .ui-datatable-scrollable-header,

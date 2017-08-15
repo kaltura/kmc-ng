@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UploadSettingsHandler } from './upload-settings-handler';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { SelectItem } from 'primeng/primeng';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 
 @Component({
   selector: 'kKMCUploadSettings',
@@ -12,8 +15,25 @@ export class UploadSettingsComponent implements OnInit {
   public _profileForm: FormGroup;
   public _transcodingProfileField: AbstractControl;
   public _transcodingProfileError = '';
+  public _files: Array<File>;
+  public _fileTypes: Array<SelectItem> = [
+    {
+      'label': this._appLocalization.get('app.upload.uploadSettings.mediaTypes.video'),
+      'value': KalturaMediaType.video
+    },
+    {
+      'label': this._appLocalization.get('app.upload.uploadSettings.mediaTypes.audio'),
+      'value': KalturaMediaType.audio
+    },
+    {
+      'label': this._appLocalization.get('app.upload.uploadSettings.mediaTypes.image'),
+      'value': KalturaMediaType.image
+    },
+  ];
 
-  constructor(private _handler: UploadSettingsHandler, private _formBuilder: FormBuilder) {
+  constructor(private _handler: UploadSettingsHandler,
+              private _formBuilder: FormBuilder,
+              private _appLocalization: AppLocalization) {
     this._buildForm();
   }
 
@@ -24,6 +44,8 @@ export class UploadSettingsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this._files = this._handler.selectedFiles;
+
     this._handler.getTranscodingProfiles()
       .subscribe(
         profiles => {
@@ -38,5 +60,9 @@ export class UploadSettingsComponent implements OnInit {
         (error) => {
           this._transcodingProfileError = error.message;
         });
+  }
+
+  public _addFiles(): void {
+
   }
 }
