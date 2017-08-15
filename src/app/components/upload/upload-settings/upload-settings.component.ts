@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { UploadSettingsHandler } from './upload-settings-handler';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { IUploadSettingsFile, UploadSettingsHandler } from './upload-settings-handler';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -11,11 +11,12 @@ import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaTy
   styleUrls: ['./upload-settings.component.scss']
 })
 export class UploadSettingsComponent implements OnInit {
+  @Output() onFileSelected = new EventEmitter<FileList>();
   public _transcodingProfiles: Array<{ value: number, label: string }>;
   public _profileForm: FormGroup;
   public _transcodingProfileField: AbstractControl;
   public _transcodingProfileError = '';
-  public _files: Array<File>;
+  private _files: Array<IUploadSettingsFile> = [];
   public _fileTypes: Array<SelectItem> = [
     {
       'label': this._appLocalization.get('app.upload.uploadSettings.mediaTypes.video'),
@@ -44,7 +45,9 @@ export class UploadSettingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._files = this._handler.selectedFiles;
+    this._handler.selectedFiles$.subscribe(({ items }) => {
+      this._files = items;
+    });
 
     this._handler.getTranscodingProfiles()
       .subscribe(
@@ -60,9 +63,5 @@ export class UploadSettingsComponent implements OnInit {
         (error) => {
           this._transcodingProfileError = error.message;
         });
-  }
-
-  public _addFiles(): void {
-
   }
 }

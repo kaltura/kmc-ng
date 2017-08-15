@@ -60,6 +60,6 @@
 
 <kPopupWidget #uploadsettings [popupWidth]="791" [popupHeight]="607" [closeBtn]="true" [modal]="true">
   <ng-template>
-    <kKMCUploadSettings></kKMCUploadSettings>
+    <kKMCUploadSettings (onFileSelected)="_handleFileSelected($event)"></kKMCUploadSettings>
   </ng-template>
 </kPopupWidget>

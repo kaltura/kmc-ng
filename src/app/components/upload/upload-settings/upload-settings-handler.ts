@@ -8,11 +8,21 @@ import { Observable } from 'rxjs/Observable';
 import { KalturaConversionProfileListResponse } from 'kaltura-typescript-client/types/KalturaConversionProfileListResponse';
 import { KalturaConversionProfile } from 'kaltura-typescript-client/types/KalturaConversionProfile';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
+export interface IUploadSettingsFile {
+  file: File;
+  mediaType: KalturaMediaType;
+  name: string;
+  size: number;
+  conversionProfile?: number;
+}
 
 @Injectable()
 export class UploadSettingsHandler {
-  public selectedFiles;
+  private _selectedFiles = new BehaviorSubject<{ items: Array<IUploadSettingsFile> }>({ items: [] });
+
+  public selectedFiles$ = this._selectedFiles.asObservable();
 
   constructor(private _kalturaServerClient: KalturaClient) {
 
@@ -49,14 +59,25 @@ export class UploadSettingsHandler {
     }
   }
 
-  public setSelectedFiles(files: FileList): void {
-    this.selectedFiles = <Array<File>>Array.from(files);
-    this.selectedFiles.map(file => {
+  public addFiles(files: FileList): void {
+    const existingItems = this._selectedFiles.getValue().items;
+    const convertedFiles = Array.from(files).map(file => {
       const ext = this._getFileExtension(file.name);
-      const type = this._getMediaTypeFromExtension(ext);
+      const mediaType = this._getMediaTypeFromExtension(ext);
+      const { name, size } = file;
 
-      return Object.assign({}, file, { type });
+      return { file, mediaType, name, size };
     });
+
+    this._selectedFiles.next({ items: [...existingItems, ...convertedFiles] });
+  }
+
+  public removeFile(file: IUploadSettingsFile): void {
+    const files = this._selectedFiles.getValue().items;
+    const fileIndex = files.indexOf(file);
+
+    const updatedFiles = [...files.slice(0, fileIndex), ...files.slice(fileIndex + 1)];
+    this._selectedFiles.next({ items: updatedFiles });
   }
 
   public getTranscodingProfiles(): Observable<Array<KalturaConversionProfile>> {

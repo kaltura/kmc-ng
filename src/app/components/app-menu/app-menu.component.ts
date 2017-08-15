@@ -65,7 +65,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     }
 
   _handleFileSelected(files: FileList) {
-    this._uploadSettingsHandler.setSelectedFiles(files);
+    this._uploadSettingsHandler.addFiles(files);
 
     this.uploadMenuPopup.close();
     this.uploadSettingsPopup.open();

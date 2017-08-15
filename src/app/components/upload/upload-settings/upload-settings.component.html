@@ -21,7 +21,7 @@
               class="kButtonDefault kAddFileButton"
               pButton
               [label]="'app.upload.uploadSettings.addFileBtn' | translate"
-              (click)="_addFiles()"></button>
+              (click)="fileDialog.open()"></button>
     </div>
 
     <div class="kTable" [class.empty]="_files.length === 0">
@@ -37,7 +37,7 @@
                         [options]="_fileTypes"
                         [appendTo]="'body'"
                         [autoWidth]="false"
-                        [(ngModel)]="file.format"
+                        [(ngModel)]="file.mediaType"
                         placeholder="{{'applications.content.entryDetails.related.select' | translate}}"></p-dropdown>
           </ng-template>
         </p-column>
@@ -51,7 +51,7 @@
         <h1>{{ 'app.upload.uploadSettings.table.emptyMessage.title' | translate }}</h1>
         <p>
           {{ 'app.upload.uploadSettings.table.emptyMessage.getStarted' | translate  }}
-          <a (click)="_addFiles()">{{ 'app.upload.uploadSettings.table.emptyMessage.browse' | translate  }}</a>
+          <a (click)="fileDialog.open()">{{ 'app.upload.uploadSettings.table.emptyMessage.browse' | translate  }}</a>
         </p>
 
       </div>
@@ -63,3 +63,6 @@
             [label]="'app.upload.uploadSettings.uploadBtn' | translate"></button>
   </div>
 </div>
+<kFileDialog #fileDialog
+             [allowMultiple]="true"
+             (onFileSelected)="onFileSelected.emit($event)"></kFileDialog>

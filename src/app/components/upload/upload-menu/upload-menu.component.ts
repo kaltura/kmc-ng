@@ -6,5 +6,5 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./upload-menu.component.scss']
 })
 export class UploadMenuComponent {
-  @Output() onFileSelected = new EventEmitter<any>();
+  @Output() onFileSelected = new EventEmitter<FileList>();
 }
