@@ -27,8 +27,7 @@
     <div class="kTable" [class.empty]="_files.length === 0">
       <p-dataTable [value]="_files"
                    [emptyMessage]="'app.upload.uploadSettings.table.emptyMessage.title' | translate"
-                   scrollable="true"
-                   scrollHeight="287px">
+                   scrollable="true">
         <p-column field="name" [sortable]="false"
                   [header]="'app.upload.uploadSettings.table.header.fileName' | translate">
         </p-column>

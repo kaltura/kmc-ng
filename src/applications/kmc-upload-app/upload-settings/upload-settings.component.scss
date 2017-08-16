@@ -27,7 +27,7 @@
 
   .kContent {
     flex: 1 1 auto;
-    padding: 20px 28px 40px 28px;
+    padding: 20px 28px 24px 28px;
     display: flex;
     flex-direction: column;
     width: 734px;
@@ -71,11 +71,13 @@
     }
 
     .kEmptyMessage {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 280px;
+      margin-top: -280px;
       color: $kGrayscale3;
 
       h1 {
@@ -92,6 +94,7 @@
   }
 
   .kFooter {
+    z-index: 1;
     height: 66px;
     border-top: 1px $kGrayscale4 solid;
     text-align: center;
@@ -115,11 +118,19 @@
   display: none;
 }
 
-:host /deep/ .ui-datatable-scrollable-header,
-:host /deep/ .ui-datatable-scrollable-body {
+:host /deep/ .kTable .ui-datatable-scrollable-header,
+:host /deep/ .kTable .ui-datatable-scrollable-body {
   border-top: 1px $kGrayscale6 solid;
+}
+
+:host /deep/ .kTable .ui-datatable-scrollable-body {
+  margin-bottom: -1px;
 }
 
 :host /deep/ .kTable tr:hover .kIconRemoveFile {
   display: block !important;
+}
+
+:host /deep/ .kTable .ui-datatable-scrollable-table-wrapper {
+  height: 280px;
 }
