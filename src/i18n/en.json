@@ -110,6 +110,10 @@
       }
     },
     "upload": {
+      "inDevelopment": {
+        "title": "Sorry",
+        "message": "Feature in development"
+      },
       "validation": {
         "error": "Error",
         "wrongType": "Select media type",
