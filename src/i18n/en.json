@@ -126,6 +126,7 @@
           "image": "Image"
         },
         "table": {
+          "remove": "Remove",
           "header": {
             "fileName": "File name",
             "mediaType": "Media type",

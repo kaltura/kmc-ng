@@ -47,15 +47,18 @@
         </p-column>
         <p-column field="size"
                   [sortable]="false"
-                  [style]="{ 'width': '310px' }"
+                  [style]="{ 'width': '80px' }"
                   [header]="'app.upload.uploadSettings.table.header.size' | translate">
           <ng-template let-col let-file="rowData" pTemplate="body">
             <span>{{ file.size | kFileSize }}</span>
           </ng-template>
         </p-column>
-        <p-column [style]="{ 'width': '45px', 'text-align': 'right' }">
+        <p-column [style]="{ 'width': '45px', 'text-align': 'center' }">
           <ng-template let-col let-file="rowData" pTemplate="body">
-            <i class="kIcontrash kIconRemoveFile" (click)="_removeFile(file)"></i>
+            <i class="kIcontrash kIconRemoveFile"
+               [kTooltip]="'app.upload.uploadSettings.table.remove' | translate"
+               placement="top"
+               (click)="_removeFile(file)"></i>
           </ng-template>
         </p-column>
       </p-dataTable>
