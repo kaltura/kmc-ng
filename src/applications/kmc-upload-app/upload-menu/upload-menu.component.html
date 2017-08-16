@@ -29,5 +29,6 @@
   </div>
 </div>
 <kFileDialog #fileDialog
+             [filter]="_allowedExtensions"
              [allowMultiple]="true"
              (onFileSelected)="onFileSelected.emit($event)"></kFileDialog>

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { UploadSettingsHandler } from '../upload-settings/upload-settings-handler';
 
 @Component({
   selector: 'kKMCUploadMenu',
@@ -7,4 +8,11 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class UploadMenuComponent {
   @Output() onFileSelected = new EventEmitter<FileList>();
+
+  public get _allowedExtensions() {
+    return this._handler.allowedExtensions;
+  }
+
+  constructor(private _handler: UploadSettingsHandler) {
+  }
 }

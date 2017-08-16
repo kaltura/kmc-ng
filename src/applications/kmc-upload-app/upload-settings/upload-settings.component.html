@@ -46,7 +46,7 @@
         </p-column>
         <p-column field="size"
                   [sortable]="false"
-                  [style]="{ 'width': '80px' }"
+                  [style]="{ 'width': '100px' }"
                   [header]="'app.upload.uploadSettings.table.header.size' | translate">
           <ng-template let-col let-file="rowData" pTemplate="body">
             <span>{{ file.size | kFileSize }}</span>
@@ -78,5 +78,6 @@
   </div>
 </div>
 <kFileDialog #fileDialog
+             [filter]="_allowedExtensions"
              [allowMultiple]="true"
              (onFileSelected)="onFileSelected.emit($event)"></kFileDialog>

@@ -32,6 +32,10 @@ export class UploadSettingsComponent implements OnInit {
     },
   ];
 
+  public get _allowedExtensions() {
+    return this._handler.allowedExtensions;
+  }
+
   constructor(private _handler: UploadSettingsHandler,
               private _formBuilder: FormBuilder,
               private _appLocalization: AppLocalization) {

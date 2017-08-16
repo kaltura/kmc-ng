@@ -20,12 +20,20 @@ export interface IUploadSettingsFile {
 
 @Injectable()
 export class UploadSettingsHandler {
+  private _allowedExtensions = `
+    .flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v,.mpeg,.mxf,.rm,.rv,.rmvb,.ts,.ogg,.ogv,.vob,.webm,.mts,.arf,.mkv,
+    .flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp3,.wav,.ra,.rm,.wma,.aif,.m4a,
+    .jpg,.jpeg,.gif,.png
+  `;
   private _selectedFiles = new BehaviorSubject<{ items: Array<IUploadSettingsFile> }>({ items: [] });
 
   public selectedFiles$ = this._selectedFiles.asObservable();
 
-  constructor(private _kalturaServerClient: KalturaClient) {
+  public get allowedExtensions(): string {
+    return this._allowedExtensions;
+  }
 
+  constructor(private _kalturaServerClient: KalturaClient) {
   }
 
   private _getFileExtension(filename: string): string {
