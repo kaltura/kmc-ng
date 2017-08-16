@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { ISubscription } from 'rxjs/Subscription';
 import { Router } from '@angular/router';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BrowserService } from 'app-shared/kmc-shell';
@@ -17,9 +16,7 @@ export class AddNewPlaylist implements  OnInit, AfterViewInit, OnDestroy{
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Output() showNotSupportedMsg = new EventEmitter<boolean>();
   addNewPlaylistForm: FormGroup;
-  private _parentPopupStateChangeSubscribe: ISubscription;
   private _showConfirmationOnClose: boolean = true;
-  isRuleBasedPlaylist: boolean = false;
 
   constructor(
     private _formBuilder : FormBuilder,
@@ -38,17 +35,16 @@ export class AddNewPlaylist implements  OnInit, AfterViewInit, OnDestroy{
   }
 
   goNext() {
-    this._playlistsStore.setNewPlaylistData({
-      name: this.addNewPlaylistForm.controls['name'].value,
-      description: this.addNewPlaylistForm.controls['description'].value,
-      playlistType: 3
-    })
-    if(this.addNewPlaylistForm.controls['playlistType'].value === 'ruleBased') {
-      this._showConfirmationOnClose = false;
-      this.parentPopupWidget.close();
-      this.showNotSupportedMsg.emit();
-    } else {
-      this.router.navigate(['/content/playlists/playlist/new/content']);
+    if(this.addNewPlaylistForm.valid) {
+      if (this.addNewPlaylistForm.controls['playlistType'].value === 'ruleBased') {
+        this.showNotSupportedMsg.emit();
+      } else {
+        this._playlistsStore.setNewPlaylistData({
+          name: this.addNewPlaylistForm.controls['name'].value,
+          description: this.addNewPlaylistForm.controls['description'].value
+        });
+        this.router.navigate(['/content/playlists/playlist/new/content']);
+      }
     }
   }
 
@@ -81,11 +77,6 @@ export class AddNewPlaylist implements  OnInit, AfterViewInit, OnDestroy{
           }
         });
     }
-
-    this.addNewPlaylistForm.valueChanges
-      .subscribe(value => {
-        this.isRuleBasedPlaylist = value.playlistType === 'ruleBased';
-      })
   }
 
   ngOnDestroy(){}

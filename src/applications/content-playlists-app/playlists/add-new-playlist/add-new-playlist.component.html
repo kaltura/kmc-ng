@@ -1,4 +1,4 @@
-<div [class.kRuleBasedPlaylist]="isRuleBasedPlaylist" class="kAddNewPlaylist">
+<div class="kAddNewPlaylist">
   <form [formGroup]="addNewPlaylistForm" novalidate>
     <div class="kHeader">
       <span class="kTitle">{{('applications.content.addNewPlaylist.addNewPlaylist') | translate}}</span>
@@ -12,8 +12,8 @@
         <p-radioButton class="kRadioLeft" name="playlistType" value="manual" formControlName="playlistType" label="{{'applications.content.addNewPlaylist.manualPlaylist' | translate}}"></p-radioButton>
         <p-radioButton class="kRadioRight " name="playlistType" value="ruleBased" formControlName="playlistType" label="{{'applications.content.addNewPlaylist.ruleBasedPlaylist' | translate}}"></p-radioButton>
       </div>
-      <div [class.kHidden]="addNewPlaylistForm.controls['playlistType'].value === 'manual'" class="ruleBasedSub">
-        <p-checkbox name="ruleBasedSub" value="ruleBasedSub" class="ruleBasedSubCheckbox" formControlName="ruleBasedSub" label="{{'applications.content.addNewPlaylist.addRuleBasedSubPlaylist' | translate}}"></p-checkbox>
+      <div class="ruleBasedSub">
+        <p-checkbox *ngIf="addNewPlaylistForm.controls['playlistType'].value !== 'manual'" name="ruleBasedSub" value="ruleBasedSub" formControlName="ruleBasedSub" label="{{'applications.content.addNewPlaylist.addRuleBasedSubPlaylist' | translate}}"></p-checkbox>
       </div>
       <div class="kRow">
         <div class="kControl">

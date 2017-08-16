@@ -41,7 +41,6 @@ export interface QueryData
 export interface PlaylistData {
   name: string;
   description?: string;
-  playlistType: number;
 }
 
 
@@ -63,11 +62,7 @@ export class PlaylistsStore implements OnDestroy {
 	public playlists$ = this._playlistsSource.asObservable();
 	public state$ = this._stateSource.asObservable();
 	public query$ = this._querySource.monitor('queryData update');
-	private _newPlaylistData: PlaylistData = {
-	  name: null,
-    description: null,
-    playlistType: 3
-	};
+	private _newPlaylistData: PlaylistData = null;
 
   constructor(
 		private kalturaServerClient: KalturaClient,
@@ -107,7 +102,7 @@ export class PlaylistsStore implements OnDestroy {
   }
 
   public clearNewPlaylistData():void {
-    this._newPlaylistData = { name: null, description: null, playlistType: 3 }
+    this._newPlaylistData = null
   }
 
 	ngOnDestroy() {

@@ -18,6 +18,7 @@ import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { PlaylistExecuteAction } from 'kaltura-typescript-client/types/PlaylistExecuteAction';
 import { KalturaBaseEntry } from 'kaltura-typescript-client/types/KalturaBaseEntry';
 import { PlaylistsStore } from 'applications/content-playlists-app/playlists/playlists-store/playlists-store.service';
+import { KalturaPlaylistType } from 'kaltura-typescript-client/types/KalturaPlaylistType';
 
 @Injectable()
 export class PlaylistStore implements OnDestroy {
@@ -98,20 +99,18 @@ export class PlaylistStore implements OnDestroy {
           if (event instanceof NavigationEnd) {
             const currentPlaylistId = this._playlistRoute.snapshot.params.id;
             if(currentPlaylistId === 'new') {
-              if(this._playlistsStore.getNewPlaylistData().name) {
-                this._playlist.next({
-                  playlist: new KalturaPlaylist(this._playlistsStore.getNewPlaylistData())
-                });
-                /*this._entries.next({
-                  items: [],
-                  totalCount: 0
-                })*/
-              } else {
+              this._playlist.next({
+                playlist: this._playlistsStore.getNewPlaylistData() ? new KalturaPlaylist({name: this._playlistsStore.getNewPlaylistData().name, description: this._playlistsStore.getNewPlaylistData().description, playlistType: KalturaPlaylistType.staticList}) : null
+              });
+              if(this._activeSection.getValue().section === this._playlistRoute.snapshot.firstChild.data.sectionKey && !this._playlist.getValue().playlist) {
+                this._playlistsStore.clearNewPlaylistData();
                 this._router.navigate(['content/playlists']);
               }
+            } else {
+              // TODO [kmc] missing implementation
             }
             const playlist = this._playlist.getValue();
-            if(!playlist.playlist || (playlist.playlist && playlist.playlist.id !== currentPlaylistId && currentPlaylistId !== 'new')) {
+            if(currentPlaylistId !== 'new' && (!playlist.playlist || (playlist.playlist && playlist.playlist.id !== currentPlaylistId))) {
               this._loadPlaylist(currentPlaylistId);
             } else {
               this._activeSection.next({section: this._playlistRoute.snapshot.firstChild.data.sectionKey});

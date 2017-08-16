@@ -1,12 +1,6 @@
 @import 'app-theme/_variables.scss';
 
 .kAddNewPlaylist {
-  height: 411px;
-  min-height: 411px;
-  overflow: hidden;
-  background: #fff;
-  border-radius: 3px;
-
   .kHeader {
     height: 78px;
     width: 100%;
@@ -32,13 +26,12 @@
       text-align: center;
     }
 
-    .selectPlaylistTypeCaption {
-      padding: 31px 0 26px;
+    .ruleBasedSub {
+      min-height: 41px;
     }
 
-    .ruleBasedSubCheckbox {
-      display: block;
-      margin-bottom: 22px;
+    .selectPlaylistTypeCaption {
+      padding: 31px 0 26px;
     }
 
     .selectPlaylistType {
@@ -109,12 +102,6 @@
       }
     }
   }
-
-  .kHidden {
-    visibility: hidden;
-    width: 0px;
-    height: 0px;
-  }
 }
 
 :host /deep/ .ui-radiobutton,
@@ -126,12 +113,4 @@
 :host /deep/ .ui-chkbox-label {
   font-size: 15px;
   font-weight: normal;
-}
-
-.kRuleBasedPlaylist {
-  transition: all .3s ease-in-out;
-  -moz-transition: all .3s ease-in-out;
-  -webkit-transition: all .3s ease-in-out;
-  min-height: 453px;
-  margin-top: -21px;
 }
