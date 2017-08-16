@@ -65,10 +65,10 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     }
 
   _handleFileSelected(files: FileList) {
-    this._uploadSettingsHandler.addFiles(files);
-
     this.uploadMenuPopup.close();
     this.uploadSettingsPopup.open();
+
+    setTimeout(() => this._uploadSettingsHandler.addFiles(files), 0); // wait next tick to add files
   }
 
 }

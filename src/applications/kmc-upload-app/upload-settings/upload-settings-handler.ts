@@ -108,6 +108,10 @@ export class UploadSettingsHandler {
     this._selectedFiles.next({ items });
   }
 
+  public resetFiles(): void {
+    this._selectedFiles.next({ items: [] });
+  }
+
   public addFiles(files: FileList): void {
     const isEditing = false;
     const existingItems = this._selectedFiles.getValue().items;
