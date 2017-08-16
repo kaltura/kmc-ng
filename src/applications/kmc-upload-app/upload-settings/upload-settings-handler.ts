@@ -16,6 +16,7 @@ export interface IUploadSettingsFile {
   name: string;
   size: number;
   conversionProfile?: number;
+  isEditing?: boolean;
 }
 
 @Injectable()
@@ -68,13 +69,15 @@ export class UploadSettingsHandler {
   }
 
   public addFiles(files: FileList): void {
+    const isEditing = false;
     const existingItems = this._selectedFiles.getValue().items;
+
     const convertedFiles = Array.from(files).map(file => {
       const ext = this._getFileExtension(file.name);
       const mediaType = this._getMediaTypeFromExtension(ext);
       const { name, size } = file;
 
-      return { file, mediaType, name, size };
+      return { file, mediaType, name, size, isEditing };
     });
 
     this._selectedFiles.next({ items: [...existingItems, ...convertedFiles] });

@@ -33,11 +33,20 @@
                   [sortable]="false"
                   [header]="'app.upload.uploadSettings.table.header.fileName' | translate">
           <ng-template let-col let-file="rowData" pTemplate="body">
-            <div class="kFileNameCell">
+            <div *ngIf="!file.isEditing" class="kFileNameCell">
               <span class="kFileName">{{ file.name }}</span>
               <i class="kIconpen kIconEditFileName"
                  [kTooltip]="'app.upload.uploadSettings.table.edit' | translate"
-                 placement="top"></i>
+                 placement="top"
+                 (click)="file.isEditing = true"></i>
+            </div>
+            <div *ngIf="file.isEditing">
+              <input pInputText
+                     [inputAutofocus]="true"
+                     class="kFileNameInput"
+                     (blur)="file.isEditing = false"
+                     (keyup.enter)="file.isEditing = false"
+                     [(ngModel)]="file.name">
             </div>
           </ng-template>
         </p-column>
