@@ -8,7 +8,7 @@ import { AppMenuItem } from "../../services/app-menu-config";
 
 import * as R from 'ramda';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { UploadSettingsHandler } from '../upload/upload-settings/upload-settings-handler';
+import { UploadSettingsHandler } from '../../../applications/kmc-upload-app/upload-settings/upload-settings-handler';
 
 @Component({
     selector: 'kKMCAppMenu',

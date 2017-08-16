@@ -13,7 +13,7 @@ import {
   AppBootstrapConfig  as AppBootstrapConfigType
 } from 'app-shared/kmc-shell';
 import { KalturaCommonModule, AppStorage } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { KalturaClient, KalturaClientConfiguration } from '@kaltura-ng/kaltura-client';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { KalturaServerModule } from '@kaltura-ng/kaltura-server-utils';
@@ -32,7 +32,6 @@ import { AppMenuComponent } from './components/app-menu/app-menu.component';
 import { LanguageMenuComponent } from './components/language-menu/language-menu.component';
 import { ErrorComponent } from './components/error/error.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
-import { UploadMenuComponent } from './components/upload/upload-menu/upload-menu.component';
 import { KalturaHttpConfigurationAdapter } from "./services/kaltura-http-configuration-adapter.service";
 
 import {
@@ -44,8 +43,6 @@ import {
   ConfirmationService,
   DropdownModule,
   GrowlModule,
-  DataTableModule,
-  MenuModule
 } from 'primeng/primeng';
 
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -64,8 +61,7 @@ import { ForgotPasswordFormComponent } from './components/login/forgot-password-
 import { LoginFormComponent } from './components/login/login-form/login-form.component';
 import { PasswordExpiredFormComponent } from './components/login/password-expired-form/password-expired-form.component';
 import { InvalidLoginHashFormComponent } from './components/login/invalid-login-hash-form/invalid-login-hash-form.component';
-import { UploadSettingsComponent } from './components/upload/upload-settings/upload-settings.component';
-import { UploadSettingsHandler } from './components/upload/upload-settings/upload-settings-handler';
+import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-app.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -104,9 +100,7 @@ export function clientConfigurationFactory() {
     ReactiveFormsModule,
     TooltipModule,
     GrowlModule,
-    DataTableModule,
-    MenuModule,
-    KalturaUIModule
+    KmcUploadAppModule
   ],
   declarations: <any>[
     AppComponent,
@@ -119,9 +113,7 @@ export function clientConfigurationFactory() {
     LoginFormComponent,
     PasswordExpiredFormComponent,
     ForgotPasswordFormComponent,
-    InvalidLoginHashFormComponent,
-    UploadMenuComponent,
-    UploadSettingsComponent
+    InvalidLoginHashFormComponent
   ],
   bootstrap: <any>[
     AppComponent
@@ -147,8 +139,7 @@ export function clientConfigurationFactory() {
       provide: KalturaClientConfiguration,
       useFactory: clientConfigurationFactory
     },
-    ConfirmationService,
-    UploadSettingsHandler
+    ConfirmationService
   ]
 })
 export class AppModule {
