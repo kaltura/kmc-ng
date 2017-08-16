@@ -1,6 +1,6 @@
 <h2>Account Info</h2>
-<p>Partner ID: {{partner.id}} | Email of Account Owner: {{partner.adminEmail}}</p>
 <form [formGroup]="accountSettingsForm" novalidate>
+<p>Partner ID: {{accountSettingsForm.get('id').value}} | Email of Account Owner: {{accountSettingsForm.get('accountOwnerEmail').value}}</p>
   <div class="form-group">
     <label class="center-block">Name:
       <input class="form-control" formControlName="name">
@@ -8,9 +8,7 @@
   </div>
   <div class="form-group">
     <label class="center-block">accountOwnerName:
-      <select [formControl]="accountSettingsForm.controls.accountOwnerName">
-        <option *ngFor="let option of nameOfAccountOwnerOptions" value="{{option}}">{{option}}</option>
-      </select>
+        <p-dropdown [options]="nameOfAccountOwnerOptions" formControlName="accountOwnerName"></p-dropdown>
     </label>
   </div>
   <div class="form-group">
@@ -25,9 +23,8 @@
   </div>
   <div class="form-group">
     <label class="center-block">describeYourself:
-      <select [formControl]="accountSettingsForm.controls.describeYourself">
-        <option *ngFor="let option of describeYourselfOptions" value="{{option}}">{{option}}</option>
-      </select>
+      <!--TODO: if the option not exists needs to set the default value "Other"-->
+      <p-dropdown [options]="describeYourselfOptions" formControlName="describeYourself"></p-dropdown>
     </label>
   </div>
   <div class="form-group">

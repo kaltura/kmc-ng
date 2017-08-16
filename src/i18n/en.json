@@ -111,14 +111,14 @@
     },
     "content": {
        "categories": {
-        "categories": "Categories",       
-        "search": "Search",         
+        "categories": "Categories",
+        "search": "Search",
         "refresh": "Refresh",
         "addCategory":"Add Category",
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
         "refine": "Refine",
-        "filterCategories": "Filter Categories"  
+        "filterCategories": "Filter Categories"
       },
       "entries": {
         "entries": "Entries",
@@ -625,6 +625,10 @@
           "validationError": "The form contains some invalid information. Please review the sections marked as invalid"
         }
       }
+    },
+    "settings": {
+      "describeYourselfOptions": "Enterprise / Small Business / Government Agency,Education Organization,Media Company / Agency,CDN / ISP / Integrator / Hosting Provider,Other"
+
     }
   },
   "entriesShared": {

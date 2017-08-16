@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {KalturaPartner} from "kaltura-typescript-client/types/KalturaPartner";
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {KalturaPartner} from 'kaltura-typescript-client/types/KalturaPartner';
+import {SettingsAccountSettingsService} from './settings-account-settings.service';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {SelectItem} from "primeng/primeng";
 
 @Component({
   selector: 'kmc-settings-account-settings',
@@ -10,55 +13,75 @@ import {KalturaPartner} from "kaltura-typescript-client/types/KalturaPartner";
 export class SettingsAccountSettingsComponent implements OnInit {
 
   accountSettingsForm: FormGroup;
-  partner: KalturaPartner; // TODO: Check why need to pass object if we don't reset the form (?) (we reset only with returned data upon success)
-  nameOfAccountOwnerOptions: Array<string>;
-  describeYourselfOptions: Array<string>;
+  nameOfAccountOwnerOptions: SelectItem[] = [];
+  describeYourselfOptions: SelectItem[] = [];
 
-  constructor() {
+  constructor(private _accountSettingsService: SettingsAccountSettingsService,
+              private _appLocalization: AppLocalization,
+              private _fb: FormBuilder) {
   }
 
   ngOnInit() {
+    this._createForm();
 
-    //const accountSettings = this.accountSettingsService.getAccountSettings();
-    //const partner = accountSettings.partner;
-    this.partner = new KalturaPartner({
-      name: "Fundbox",
-      adminName: "Ella Guzman",
-      phone: "05228753900",
-      website: null,
-      describeYourself: "Other",
-      referenceId: null
+    this._fillDescribeYourselfOptions();
+
+    this._accountSettingsService.getPartnerAccountSettings()
+      .subscribe(response => {
+        this._fillAccountOwnersOptions(response.accountOwners);
+        this._fillForm(response.partnerData);
+      });
+  }
+
+
+  private _fillAccountOwnersOptions(accountOwners: string[]): void {
+    accountOwners.forEach((ownerName) => {
+      this.nameOfAccountOwnerOptions.push({label: ownerName, value: ownerName});
     });
-    this.nameOfAccountOwnerOptions = ["Avi", "Ben","Ella Guzman"];
+  }
 
-    this.describeYourselfOptions = "Enterprise / Small Business / Government Agency,Education Organization,Media Company / Agency,CDN / ISP / Integrator / Hosting Provider,Other"
+  private _fillDescribeYourselfOptions(): void {
+
+    this._appLocalization.get('applications.settings.describeYourselfOptions')
       .split(',')
-      .map(option => option.trim());
-    this.initForm(["Avi", "Ben"], ["Other","Other2"]);
+      .map(option => option.trim())
+      .forEach((option) => {
+        this.describeYourselfOptions.push({label: option, value: option});
+      });
   }
 
-  private initForm(nameOfAccountOwnerOptions: Array<string>, describeYourselfOptions: Array<string>) {
+  private _createForm(): void {
+    this.accountSettingsForm = this._fb.group({
+      id: '',
+      accountOwnerEmail: '',
+      name: ['', Validators.required],
+      accountOwnerName: ['', Validators.required],
+      phone: ['', Validators.required],
+      website: ['', Validators.required],
+      describeYourself: ['', Validators.required],
+      accountReferenceID: ['', Validators.required]
+    });
 
-    // Pass to the form data a copy of partner (for resetting after saving)
-    const tempPartner = new KalturaPartner();
-    Object.assign(tempPartner, this.partner);
+    // TODO: Disable button when form is invalid
+    this.accountSettingsForm.valueChanges
+      .subscribe(
+        () => {
+          if (this.accountSettingsForm.status === 'INVALID' && this.accountSettingsForm.dirty) {
+          }
+        }
+      );
+  }
 
-    const partnerName = tempPartner.name;
-    const partnerAccountOwnerName = tempPartner.adminName;
-    const partnerPhone = tempPartner.phone;
-    const partnerWebsite = tempPartner.website;
-    const partnerDescribedBy = tempPartner.describeYourself;
-    const partnerAccountReferenceID = tempPartner.referenceId;
-
-
-    this.accountSettingsForm = new FormGroup({
-      'name': new FormControl(partnerName, Validators.required),
-      'accountOwnerName': new FormControl(partnerAccountOwnerName, Validators.required),
-      'phone': new FormControl(partnerPhone, Validators.required),
-      'website': new FormControl(partnerWebsite, Validators.required),
-      'describeYourself': new FormControl(partnerDescribedBy, Validators.required),
-      'accountReferenceID': new FormControl(partnerAccountReferenceID, Validators.required),
+  private _fillForm(partner: KalturaPartner): void {
+    this.accountSettingsForm.reset({
+      id: partner.id,
+      accountOwnerEmail: partner.adminEmail,
+      name: partner.name,
+      accountOwnerName: partner.adminName,
+      phone: partner.phone,
+      website: partner.website,
+      describeYourself: partner.describeYourself,
+      accountReferenceID: partner.referenceId
     });
   }
-
 }
