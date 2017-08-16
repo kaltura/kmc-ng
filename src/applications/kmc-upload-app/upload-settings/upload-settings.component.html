@@ -27,6 +27,7 @@
     <div class="kTable" [class.empty]="_files.length === 0">
       <p-dataTable [value]="_files"
                    [emptyMessage]="'applications.upload.uploadSettings.table.emptyMessage.title' | translate"
+                   [rowStyleClass]="_relatedTableRowStyle"
                    scrollable="true">
         <p-column field="name"
                   class="kFileNameCol"
@@ -94,7 +95,8 @@
     <button class="kButtonDefault kUploadButton"
             pButton
             [disabled]="_files.length === 0 || _transcodingProfileLoading"
-            [label]="'applications.upload.uploadSettings.uploadBtn' | translate"></button>
+            [label]="'applications.upload.uploadSettings.uploadBtn' | translate"
+            (click)="_upload(_files)"></button>
   </div>
 </div>
 <kFileDialog #fileDialog

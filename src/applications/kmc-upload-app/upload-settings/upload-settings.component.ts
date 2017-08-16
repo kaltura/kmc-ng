@@ -4,6 +4,7 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kKMCUploadSettings',
@@ -39,7 +40,8 @@ export class UploadSettingsComponent implements OnInit {
 
   constructor(private _handler: UploadSettingsHandler,
               private _formBuilder: FormBuilder,
-              private _appLocalization: AppLocalization) {
+              private _appLocalization: AppLocalization,
+              private _browserService: BrowserService) {
     this._buildForm();
   }
 
@@ -72,7 +74,24 @@ export class UploadSettingsComponent implements OnInit {
         });
   }
 
-  public _removeFile(file: IUploadSettingsFile) {
+  public _removeFile(file: IUploadSettingsFile): void {
     this._handler.removeFile(file);
+  }
+
+  public _upload(files: Array<IUploadSettingsFile>): void {
+    const errorMessage = this._handler.upload(files, this._transcodingProfileField.value);
+
+    if (errorMessage) {
+      this._browserService.alert(
+        {
+          header: this._appLocalization.get('applications.upload.validation.error'),
+          message: this._appLocalization.get(errorMessage)
+        }
+      );
+    }
+  }
+
+  public _relatedTableRowStyle(rowData): string {
+    return rowData.hasError ? 'has-error' : '';
   }
 }

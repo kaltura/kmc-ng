@@ -9,6 +9,7 @@ import { KalturaConversionProfileListResponse } from 'kaltura-typescript-client/
 import { KalturaConversionProfile } from 'kaltura-typescript-client/types/KalturaConversionProfile';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { environment } from 'app-environment';
 
 export interface IUploadSettingsFile {
   file: File;
@@ -17,6 +18,7 @@ export interface IUploadSettingsFile {
   size: number;
   conversionProfile?: number;
   isEditing?: boolean;
+  hasError?: boolean
 }
 
 @Injectable()
@@ -68,6 +70,44 @@ export class UploadSettingsHandler {
     }
   }
 
+  private _validateFiles(files: Array<IUploadSettingsFile>): { updatedFiles: Array<IUploadSettingsFile>, errorMessage: string } {
+    const updateFilesWithError = (validationFn) => files.map(file => {
+      const hasError = validationFn(file);
+      return Object.assign({}, file, { hasError });
+    });
+
+    const mediaTypeError = files.some(this._validateFileMediaType);
+    if (mediaTypeError) {
+      const updatedFiles = updateFilesWithError(this._validateFileMediaType);
+      return { updatedFiles, errorMessage: 'applications.upload.validation.wrongType' };
+    }
+
+    const fileSizeError = files.some(this._validateFileSize);
+    if (fileSizeError) {
+      const updatedFiles = updateFilesWithError(this._validateFileSize);
+      return { updatedFiles, errorMessage: 'applications.upload.validation.fileSizeExceeded' };
+    }
+
+    const updatedFiles = updateFilesWithError(file => file.hasError = false);
+    return { updatedFiles, errorMessage: '' };
+  }
+
+  private _validateFileSize(file: IUploadSettingsFile): boolean {
+    const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
+    const fileSize = file.file.size / 1024 / 1024; // convert to Mb
+
+    return fileSize > maxFileSize;
+  }
+
+  private _validateFileMediaType(file: IUploadSettingsFile): boolean {
+    const allowedTypes = [KalturaMediaType.audio, KalturaMediaType.video, KalturaMediaType.image];
+    return !allowedTypes.includes(file.mediaType);
+  }
+
+  private _updateFiles(items: Array<IUploadSettingsFile>): void {
+    this._selectedFiles.next({ items });
+  }
+
   public addFiles(files: FileList): void {
     const isEditing = false;
     const existingItems = this._selectedFiles.getValue().items;
@@ -89,6 +129,19 @@ export class UploadSettingsHandler {
 
     const updatedFiles = [...files.slice(0, fileIndex), ...files.slice(fileIndex + 1)];
     this._selectedFiles.next({ items: updatedFiles });
+  }
+
+  public upload(files: Array<IUploadSettingsFile>, transcodingProfile: number): string {
+    const { updatedFiles, errorMessage } = this._validateFiles(files);
+    this._updateFiles(updatedFiles);
+
+    if (errorMessage) {
+      return errorMessage;
+    }
+
+    // proceed upload TBD
+
+    return '';
   }
 
   public getTranscodingProfiles(): Observable<Array<KalturaConversionProfile>> {

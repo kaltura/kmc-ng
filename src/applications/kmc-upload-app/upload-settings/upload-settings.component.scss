@@ -160,3 +160,11 @@
 :host /deep/ .kTable .ui-datatable-scrollable-table-wrapper {
   height: 280px;
 }
+
+:host /deep/ .kTable tr.has-error {
+  background-color: lighten($kDandger, 45%);
+}
+
+:host /deep/ .kTable tr.has-error:first-child {
+  border-top: 0;
+}

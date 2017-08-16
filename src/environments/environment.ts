@@ -129,5 +129,8 @@ export const environment = {
     "categoriesFilters": {
       "maxChildrenToShow": 500
     }
-  }
-}
+  },
+  "uploadsShared": {
+    "MAX_FILE_SIZE": 2047 // Mb
+  },
+};

@@ -110,6 +110,11 @@
       }
     },
     "upload": {
+      "validation": {
+        "error": "Error",
+        "wrongType": "Select media type",
+        "fileSizeExceeded": "File size exceeded TBD"
+      },
       "uploadMenu": {
         "uploadFromDesktop": "Upload from desktop",
         "bulkUpload": {
