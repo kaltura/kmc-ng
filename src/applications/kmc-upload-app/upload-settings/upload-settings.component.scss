@@ -63,6 +63,27 @@
     }
 
     .kTable {
+      .kFileNameCell {
+        display: flex;
+        align-items: center;
+
+        .kFileName {
+          color: $kGrayscale1;
+          font-weight: bold;
+          word-break: break-all;
+          max-width: 380px;
+        }
+
+        .kIconEditFileName {
+          font-size: 16px;
+          margin-left: 10px;
+          cursor: pointer;
+          color: $kGrayscale3;
+          font-weight: normal;
+          display: none;
+        }
+      }
+
       .kIconRemoveFile {
         font-size: 24px;
         display: none;
@@ -127,7 +148,8 @@
   margin-bottom: -1px;
 }
 
-:host /deep/ .kTable tr:hover .kIconRemoveFile {
+:host /deep/ .kTable tr:hover .kIconRemoveFile,                // show remove icon when hovering a row
+:host /deep/ .kTable td:first-child:hover .kIconEditFileName { // show edit icon when hovering filename column
   display: block !important;
 }
 

@@ -28,8 +28,18 @@
       <p-dataTable [value]="_files"
                    [emptyMessage]="'app.upload.uploadSettings.table.emptyMessage.title' | translate"
                    scrollable="true">
-        <p-column field="name" [sortable]="false"
+        <p-column field="name"
+                  class="kFileNameCol"
+                  [sortable]="false"
                   [header]="'app.upload.uploadSettings.table.header.fileName' | translate">
+          <ng-template let-col let-file="rowData" pTemplate="body">
+            <div class="kFileNameCell">
+              <span class="kFileName">{{ file.name }}</span>
+              <i class="kIconpen kIconEditFileName"
+                 [kTooltip]="'app.upload.uploadSettings.table.edit' | translate"
+                 placement="top"></i>
+            </div>
+          </ng-template>
         </p-column>
         <p-column field="type"
                   [sortable]="false"

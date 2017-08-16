@@ -127,6 +127,7 @@
         },
         "table": {
           "remove": "Remove",
+          "edit": "Edit",
           "header": {
             "fileName": "File name",
             "mediaType": "Media type",
