@@ -16,7 +16,8 @@ export class UploadSettingsComponent implements OnInit {
   public _profileForm: FormGroup;
   public _transcodingProfileField: AbstractControl;
   public _transcodingProfileError = '';
-  private _files: Array<IUploadSettingsFile> = [];
+  public _transcodingProfileLoading = false;
+  public _files: Array<IUploadSettingsFile> = [];
   public _fileTypes: Array<SelectItem> = [
     {
       'label': this._appLocalization.get('app.upload.uploadSettings.mediaTypes.video'),
@@ -53,10 +54,12 @@ export class UploadSettingsComponent implements OnInit {
       this._files = items;
     });
 
+    this._transcodingProfileLoading = true;
     this._handler.getTranscodingProfiles()
       .subscribe(
         profiles => {
           this._transcodingProfileField.enable();
+          this._transcodingProfileLoading = false;
           this._transcodingProfiles = profiles.map(({ name: label, id: value }) => ({ label, value }));
 
           const defaultValue = profiles.find(({ isDefault }) => !!isDefault);
