@@ -100,6 +100,14 @@
       "signUp": "Sign Up",
       "rememberMe": "Remember me",
       "dontHaveAccount": "Don't have an account?"
+    }
+  },
+  "applications": {
+    "entries": {
+      "entryMetadata": {
+        "searchTagsPH": "Search Tags",
+        "searchCategoriesPH": "Search Categories"
+      }
     },
     "upload": {
       "uploadMenu": {
@@ -140,14 +148,6 @@
           }
         },
         "uploadBtn": "Upload"
-      }
-    }
-  },
-  "applications": {
-    "entries": {
-      "entryMetadata": {
-        "searchTagsPH": "Search Tags",
-        "searchCategoriesPH": "Search Categories"
       }
     },
     "content": {

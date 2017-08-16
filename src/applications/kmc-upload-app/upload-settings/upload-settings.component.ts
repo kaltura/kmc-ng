@@ -20,15 +20,15 @@ export class UploadSettingsComponent implements OnInit {
   public _files: Array<IUploadSettingsFile> = [];
   public _fileTypes: Array<SelectItem> = [
     {
-      'label': this._appLocalization.get('app.upload.uploadSettings.mediaTypes.video'),
+      'label': this._appLocalization.get('applications.upload.uploadSettings.mediaTypes.video'),
       'value': KalturaMediaType.video
     },
     {
-      'label': this._appLocalization.get('app.upload.uploadSettings.mediaTypes.audio'),
+      'label': this._appLocalization.get('applications.upload.uploadSettings.mediaTypes.audio'),
       'value': KalturaMediaType.audio
     },
     {
-      'label': this._appLocalization.get('app.upload.uploadSettings.mediaTypes.image'),
+      'label': this._appLocalization.get('applications.upload.uploadSettings.mediaTypes.image'),
       'value': KalturaMediaType.image
     },
   ];
