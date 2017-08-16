@@ -19,6 +19,7 @@ import { PlaylistExecuteAction } from 'kaltura-typescript-client/types/PlaylistE
 import { KalturaBaseEntry } from 'kaltura-typescript-client/types/KalturaBaseEntry';
 import { PlaylistsStore } from 'applications/content-playlists-app/playlists/playlists-store/playlists-store.service';
 import { KalturaPlaylistType } from 'kaltura-typescript-client/types/KalturaPlaylistType';
+import { PlaylistAddAction } from 'kaltura-typescript-client/types/PlaylistAddAction';
 
 @Injectable()
 export class PlaylistStore implements OnDestroy {
@@ -41,6 +42,7 @@ export class PlaylistStore implements OnDestroy {
   public activeSection$ = this._activeSection.asObservable();
   public sectionsState$ = this._sectionsState.asObservable();
   public state$ = this._state.asObservable();
+  private _savePlaylistInvoked = false;
 
   private _getPlaylistId() : string
   {
@@ -216,21 +218,43 @@ export class PlaylistStore implements OnDestroy {
         });
       if(this._entries.getValue().totalCount >= 1) {
         this._state.next({isBusy: true});
-        this._kalturaServerClient.request(
-          new PlaylistUpdateAction({id, playlist})
-        )
-          .cancelOnDestroy(this)
-          .subscribe(
-            () => {
-              this.reloadPlaylist();
-            },
-            error => {
-              this._state.next({
-                isBusy: true,
-                error: {message: error.message, origin: 'save'}
-              });
-            }
+        if(id) {
+          this._kalturaServerClient.request(
+            new PlaylistUpdateAction({id, playlist})
           )
+            .cancelOnDestroy(this)
+            .subscribe(
+              () => {
+                this._savePlaylistInvoked = true;
+                this.reloadPlaylist();
+              },
+              error => {
+                this._state.next({
+                  isBusy: true,
+                  error: {message: error.message, origin: 'reload'}
+                });
+              }
+            )
+        } else {
+          playlist = this._playlist.getValue().playlist;
+          this._kalturaServerClient.request(
+            new PlaylistAddAction({playlist})
+          )
+            .cancelOnDestroy(this)
+            .subscribe(
+              response => {
+                this._savePlaylistInvoked = true;
+                this.openPlaylist(response.id);
+                this._state.next({isBusy: false});
+              },
+              error => {
+                this._state.next({
+                  isBusy: true,
+                  error: {message: error.message, origin: 'reload'}
+                });
+              }
+            )
+        }
       } else {
         this._state.next({
           isBusy: false,
@@ -244,6 +268,8 @@ export class PlaylistStore implements OnDestroy {
   {
     if (this._getPlaylistId()) {
       this._loadPlaylist(this._getPlaylistId());
+    } else {
+      this.savePlaylist();
     }
   }
 
@@ -357,6 +383,11 @@ export class PlaylistStore implements OnDestroy {
     this._loadPlaylistSubscription && this._loadPlaylistSubscription.unsubscribe();
     this._state.complete();
     this._playlist.complete();
+
+    if (this._savePlaylistInvoked)
+    {
+      this._playlistsStore.reload(true);
+    }
   }
 }
 

@@ -48,6 +48,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
               buttons.push({
                   label: this._appLocalization.get('applications.content.playlistDetails.errors.retry'),
                   action: () => {
+                    this._areaBlockerMessage = null;
                     this._playlistStore.reloadPlaylist();
                   }
                 });
