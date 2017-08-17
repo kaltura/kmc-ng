@@ -11,7 +11,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 export class UploadMenuComponent {
   @Output() onFileSelected = new EventEmitter<FileList>();
 
-  public get _allowedExtensions() {
+  public get _allowedExtensions(): string {
     return this._handler.allowedExtensions;
   }
 
@@ -21,11 +21,9 @@ export class UploadMenuComponent {
   }
 
   public _inDevelopment(): void {
-    this._browserService.alert(
-      {
-        header: this._appLocalization.get('applications.upload.inDevelopment.title'),
-        message: this._appLocalization.get('applications.upload.inDevelopment.message')
-      }
-    );
+    this._browserService.alert({
+      header: this._appLocalization.get('applications.upload.inDevelopment.title'),
+      message: this._appLocalization.get('applications.upload.inDevelopment.message')
+    });
   }
 }

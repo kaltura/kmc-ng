@@ -34,7 +34,7 @@ export class UploadSettingsComponent implements OnInit {
     },
   ];
 
-  public get _allowedExtensions() {
+  public get _allowedExtensions(): string {
     return this._handler.allowedExtensions;
   }
 
@@ -83,12 +83,10 @@ export class UploadSettingsComponent implements OnInit {
     const errorMessage = this._handler.upload(files, this._transcodingProfileField.value);
 
     if (errorMessage) {
-      this._browserService.alert(
-        {
-          header: this._appLocalization.get('applications.upload.validation.error'),
-          message: this._appLocalization.get(errorMessage)
-        }
-      );
+      this._browserService.alert({
+        header: this._appLocalization.get('applications.upload.validation.error'),
+        message: this._appLocalization.get(errorMessage)
+      });
     }
   }
 
