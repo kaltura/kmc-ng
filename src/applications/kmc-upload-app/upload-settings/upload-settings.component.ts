@@ -67,7 +67,7 @@ export class UploadSettingsComponent implements OnInit {
 
           const defaultValue = profiles.find(({ isDefault }) => !!isDefault);
           if (defaultValue) {
-            this._transcodingProfileField.setValue({ label: defaultValue.name, value: defaultValue.id })
+            this._transcodingProfileField.setValue(defaultValue.id);
           }
         },
         (error) => {
