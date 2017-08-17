@@ -52,7 +52,7 @@ export class CategoriesService implements OnDestroy {
 
     public state$ = this._state.asObservable();
     public categories$ = this._categories.asObservable();
-    public queryData$ = this._queryData.asObservable(); 
+    public queryData$ = this._queryData.asObservable();
 
     constructor(private _kalturaClient: KalturaClient,
         private browserService: BrowserService) {
@@ -62,6 +62,7 @@ export class CategoriesService implements OnDestroy {
                 pageSize: defaultPageSize
             });
         }
+        this.reload(false);
     }
 
     ngOnDestroy() {
@@ -70,6 +71,7 @@ export class CategoriesService implements OnDestroy {
         this._categories.complete();
         if (this._categoriesExecuteSubscription) {
             this._categoriesExecuteSubscription.unsubscribe();
+            this._categoriesExecuteSubscription = null;
         }
     }
 
@@ -98,12 +100,10 @@ export class CategoriesService implements OnDestroy {
     private _executeQuery(): void {
         // cancel previous requests
         if (this._categoriesExecuteSubscription) {
-            this._categoriesExecuteSubscription.unsubscribe();            
+            this._categoriesExecuteSubscription.unsubscribe();
         }
 
         this._state.next({ loading: true, errorMessage: null });
-
-        this.browserService.setInLocalStorage("categories.list.pageSize", this._queryData.getValue().pageSize);
 
         // execute the request
         this._categoriesExecuteSubscription = this.buildQueryRequest(this._queryData.getValue()).subscribe(

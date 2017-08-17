@@ -53,8 +53,6 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
                 this._categoriesTotalCount = data.totalCount;
             }
         );
-
-        this._categoriesService.reload(false);
     }
 
     ngOnDestroy() {
