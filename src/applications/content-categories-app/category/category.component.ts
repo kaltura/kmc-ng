@@ -2,11 +2,11 @@ import { Categories } from './../categories/categories.service';
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { CategoryService, ActionTypes } from './category.service';
-//import { CategorySectionsListHandler } from './category-sections-list/category-sections-list-handler';
+import { CategorySectionsListHandler } from './category-sections-list/category-sections-list-handler';
 import { CategoriesService } from '../categories/categories.service';
-//import { CategoryFormManager } from './category-form-manager';
+import { CategoryFormManager } from './category-form-manager';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-//import { CategoryFormWidget } from './category-form-widget';
+import { CategoryFormWidget } from './category-form-widget';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Observable } from 'rxjs/Observable';
 
@@ -16,18 +16,17 @@ import { Observable } from 'rxjs/Observable';
 	styleUrls: ['./category.component.scss'],
 	providers: [
 		CategoryService,
-		//CategoryFormManager,
-		// {
-		// 	provide: CategoryFormWidget,
-		// 	useClass: CategorySectionsListHandler,
-		// 	multi: true
-		// }
+		CategoryFormManager,
+		{
+			provide: CategoryFormWidget,
+			useClass: CategorySectionsListHandler,
+			multi: true
+		}
 	]
 })
 export class CategoryComponent implements OnInit, OnDestroy {
 
-	_categoryName: string;
-
+	public _categoryHeader: string;
 	public _showLoader = false;
 	public _areaBlockerMessage: AreaBlockerMessage;
 	public _currentCategoryId: string;
@@ -39,9 +38,9 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
 	constructor(public _categoryStore: CategoryService,
 		private _categoriesStore: CategoriesService,
-	//	private _categoryFormManager: CategoryFormManager,
+		private _categoryFormManager: CategoryFormManager,
 		private _browserService: BrowserService,
-	//	@Inject(CategoryFormWidget) private _widgets: CategoryFormWidget[],
+		@Inject(CategoryFormWidget) private _widgets: CategoryFormWidget[],
 		private _appLocalization: AppLocalization) {
 
 	}
@@ -50,14 +49,11 @@ export class CategoryComponent implements OnInit, OnDestroy {
 	}
 
 	private _updateNavigationState() {
-		const categories = this._categoriesStore.categories;
-		if (categories && this._currentCategoryId) {
-			const currentCategory = categories.find(category => category.id.toString() === this._currentCategoryId);
-			const currentCategoryIndex = currentCategory ? categories.indexOf(currentCategory) : -1;
-			this._enableNextButton = currentCategoryIndex >= 0 && (currentCategoryIndex < categories.length - 1);
-			this._enablePrevButton = currentCategoryIndex > 0;
-
-		} else {
+		if (this._currentCategoryId) {
+			this._enableNextButton = this._categoriesStore.getNextCategoryId(this._currentCategoryId) != null ? true : false;
+			this._enablePrevButton = this._categoriesStore.getPrevCategoryId(this._currentCategoryId) != null ? true : false;
+		}
+		else {
 			this._enableNextButton = false;
 			this._enablePrevButton = false;
 		}
@@ -90,7 +86,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
 							this._categoryHasChanges = false;
 							break;
 						case ActionTypes.CategoryLoaded:
-							this._categoryName = this._categoryStore.category.name;
+							this._categoryHeader = this._appLocalization.get('applications.content.categoryDetails.header', { 0: this._categoryStore.category.name });;
 							break;
 						case ActionTypes.CategoryLoadingFailed:
 							let message = status.error ? status.error.message : '';
@@ -196,27 +192,19 @@ export class CategoryComponent implements OnInit, OnDestroy {
 	}
 
 	public _navigateToPrevious(): void {
-		const categories = this._categoriesStore.categories;
-
-		if (categories && this._currentCategoryId) {
-			const currentCategory = categories.find(category => category.id.toString() === this._currentCategoryId);
-			const currentCategoryIndex = currentCategory ? categories.indexOf(currentCategory) : -1;
-			if (currentCategoryIndex > 0) {
-				const prevCategory = categories[currentCategoryIndex - 1];
-				this._categoryStore.openCategory(prevCategory.id);
+		if (this._currentCategoryId) {
+			const prevCategoryId = this._categoriesStore.getPrevCategoryId(this._currentCategoryId);
+			if (prevCategoryId) {
+				this._categoryStore.openCategory(parseInt(prevCategoryId));
 			}
 		}
 	}
 
 	public _navigateToNext(): void {
-		const categories = this._categoriesStore.categories;
-
-		if (categories && this._currentCategoryId) {
-			const currentCategory = categories.find(category => category.id.toString() === this._currentCategoryId);
-			const currentCategoryIndex = currentCategory ? categories.indexOf(currentCategory) : -1;
-			if (currentCategoryIndex >= 0 && (currentCategoryIndex < categories.length - 1)) {
-				const nextCategory = categories[currentCategoryIndex + 1];
-				this._categoryStore.openCategory(nextCategory.id);
+		if (this._currentCategoryId) {
+			const nextCategoryId = this._categoriesStore.getNextCategoryId(this._currentCategoryId);
+			if (nextCategoryId) {
+				this._categoryStore.openCategory(parseInt(nextCategoryId));
 			}
 		}
 	}

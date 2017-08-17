@@ -55,7 +55,7 @@ export class CategoryService implements OnDestroy {
 
 
 
-	private _saveCategoryInvoked = false;
+	private _reloadCategoriesOnLeave = false;
 	private _category: BehaviorSubject<KalturaCategory> = new BehaviorSubject<KalturaCategory>(null);
 	public category$ = this._category.asObservable();
 	private _categoryId: string;
@@ -119,7 +119,7 @@ export class CategoryService implements OnDestroy {
 
 		this._browserService.disablePageExitVerification();
 
-		if (this._saveCategoryInvoked) {
+		if (this._reloadCategoriesOnLeave) {
 			this._categoriesStore.reload(true);
 		}
 	}

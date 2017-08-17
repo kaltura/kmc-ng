@@ -163,7 +163,7 @@ export class EntryMetadataHandler extends EntryFormWidget
             {
                 name: this.data.name,
                 description: this.data.description || null,
-                tags: (this.data.tags ? this.data.tags.split(', ') : null), // for backward compatibility we split values by ',{space}'
+                tags: (this.data.tags ? this.data.tags.split(',').map(item => item.trim()) : null), // for backward compatibility we handle values separated with ',{space}'
                 categories: this._entryCategories,
                 offlineMessage: this.data instanceof KalturaLiveStreamEntry ? (this.data.offlineMessage || null) : '',
                 referenceId: this.data.referenceId || null,

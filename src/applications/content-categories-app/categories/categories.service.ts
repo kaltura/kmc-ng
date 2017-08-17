@@ -46,8 +46,44 @@ export class CategoriesService implements OnDestroy {
         }
     }
 
-    public get categories(): KalturaCategory[] {
-        return this._categories.getValue().items;
+    public getNextCategoryId(categoryId: string): string | null {
+        const categories = this._categories.getValue().items;
+
+        // validate category exists
+        const currentCategory = categories.find(category => category.id.toString() === categoryId);
+        if (!currentCategory) {
+            console.log("[kaltura] could not find the category ID");
+            return null;
+        }
+
+        // get next category ID
+        const currentCategoryIndex = categories.indexOf(currentCategory);
+        if (currentCategoryIndex < categories.length - 1) {
+            return (categories[currentCategoryIndex + 1].id).toString();
+        }
+        else {
+            return null;
+        }
+    }
+
+    public getPrevCategoryId(categoryId: string): string | null {
+        const categories = this._categories.getValue().items;
+
+        // validate category exists
+        const currentCategory = categories.find(category => category.id.toString() === categoryId);
+        if (!currentCategory) {
+            console.log("[kaltura] could not find the category ID");
+            return null;
+        }
+
+        // get previous category ID
+        const currentCategoryIndex = categories.indexOf(currentCategory);
+        if (currentCategoryIndex != 0) {
+            return (categories[currentCategoryIndex - 1].id).toString();
+        }
+        else {
+            return null;
+        }
     }
 
     public reload(force: boolean): void {

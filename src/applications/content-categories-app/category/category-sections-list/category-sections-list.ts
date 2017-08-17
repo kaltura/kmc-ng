@@ -6,11 +6,11 @@ export const CategorySectionsList = [
         key: CategoryWidgetKeys.Metadata
     },
     {
-        label: 'applications.content.categoryDetails.sections.thumbnails',
+        label: 'applications.content.categoryDetails.sections.entitlements',
         key: CategoryWidgetKeys.Entitlements
     },
     {
-        label: 'applications.content.categoryDetails.sections.accessControl',
+        label: 'applications.content.categoryDetails.sections.subcategories',
         key: CategoryWidgetKeys.SubCategories
     }
 ];

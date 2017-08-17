@@ -29,7 +29,7 @@ export class EntrySectionsListHandler extends EntryFormWidget
     }
 
     protected _onDataLoading(dataId : any) : void {
-        this._clearWidgets();
+        this._clearSectionsList();
     }
 
     protected _onActivate(firstTimeActivating: boolean)
@@ -75,7 +75,7 @@ export class EntrySectionsListHandler extends EntryFormWidget
 
     }
 
-    private _clearWidgets() : void
+    private _clearSectionsList() : void
     {
         this._sections.next([]);
 

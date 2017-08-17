@@ -596,6 +596,12 @@
         }
       },
       "categoryDetails": {
+        "header": "Category - {{0}}",
+        "sections": {
+          "metadata": "Metadata",
+          "entitlements": "Entitlements",
+          "subcategories": "Sub Categories"
+        },
         "errors": {
           "reload": "Reload",
           "dismiss": "Dismiss",
