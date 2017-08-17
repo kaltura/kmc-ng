@@ -1,6 +1,6 @@
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
 import { CategoriesTableComponent } from "./categories-table.component";
@@ -15,6 +15,8 @@ import { CategoriesService, Categories, SortDirection } from './categories.servi
 
 export class CategoriesListComponent implements OnInit, OnDestroy {
 
+    @ViewChild(CategoriesTableComponent) private dataTable: CategoriesTableComponent;
+
     public _isBusy = false
     public _blockerMessage: AreaBlockerMessage = null;
     public _selectedCategories: KalturaCategory[] = [];
@@ -22,7 +24,6 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     public _categoriesTotalCount: number = null;
     private categoriesSubscription: ISubscription;
     private querySubscription: ISubscription;
-
 
     public _filter = {
         pageIndex: 0,
@@ -43,6 +44,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
                 this._filter.pageIndex = query.pageIndex - 1;
                 this._filter.sortBy = query.sortBy;
                 this._filter.sortDirection = query.sortDirection;
+                this.dataTable.scrollToTop();
             });
 
         this.categoriesSubscription = this._categoriesService.categories$.subscribe(
@@ -51,6 +53,8 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
                 this._categoriesTotalCount = data.totalCount;
             }
         );
+
+        this._categoriesService.reload(false);
     }
 
     ngOnDestroy() {
@@ -72,7 +76,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
             sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
         });
     }
-    
+
     _onPaginationChanged(state: any): void {
         if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
             this._filter.pageIndex = state.page;

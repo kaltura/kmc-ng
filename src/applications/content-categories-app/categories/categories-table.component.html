@@ -1,6 +1,6 @@
 <k-area-blocker kFillHeight [showLoader]="(categoriesService.state$ | async)?.loading || this._deferredLoading" [message]="_blockerMessage">
   <div class="kCategoriesTable" [class.noResults]="!_categories.length">
-    <p-dataTable #dataTable [value]="_categories" scrollable="true" scrollHeight="100%" dataKey="id" [rowTrackBy]="rowTrackBy"
+    <p-dataTable #dataTable [value]="_categories" [sortField]="filter.sortBy" scrollable="true" scrollHeight="100%" dataKey="id" [rowTrackBy]="rowTrackBy"
       (selectionChange)="_onSelectionChange($event)" (onSort)="_onSortChanged($event)" [(selection)]="selectedCategories" emptyMessage="{{_emptyMessage}}">
       <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
       <p-column field="name" header="Name" [sortable]="true" [style]="{'width':'100px'}">

@@ -162,5 +162,13 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 	_onSortChanged(event) {
 		this.sortChanged.emit(event);
 	}
+
+	scrollToTop() {
+		const scrollBodyArr = this._dataTable.el.nativeElement.getElementsByClassName("ui-datatable-scrollable-body");
+		if (scrollBodyArr && scrollBodyArr.length > 0) {
+			const scrollBody: HTMLDivElement = scrollBodyArr[0];
+			scrollBody.scrollTop = 0;
+		}
+	}
 }
 

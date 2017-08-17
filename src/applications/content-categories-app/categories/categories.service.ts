@@ -1,17 +1,14 @@
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 import { KalturaCategoryFilter } from 'kaltura-typescript-client/types/KalturaCategoryFilter';
 import { Injectable, OnDestroy } from '@angular/core';
-
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
-
 import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
 import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
 import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
 import { CategoryListAction } from 'kaltura-typescript-client/types/CategoryListAction';
-
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaCategoryListResponse } from "kaltura-typescript-client/types/KalturaCategoryListResponse";
 import { KalturaCategory } from "kaltura-typescript-client/types/KalturaCategory";
@@ -55,7 +52,7 @@ export class CategoriesService implements OnDestroy {
 
     public state$ = this._state.asObservable();
     public categories$ = this._categories.asObservable();
-    public queryData$ = this._queryData.asObservable(); //TODO: check if monitor needed
+    public queryData$ = this._queryData.asObservable(); 
 
     constructor(private _kalturaClient: KalturaClient,
         private browserService: BrowserService) {
@@ -65,8 +62,6 @@ export class CategoriesService implements OnDestroy {
                 pageSize: defaultPageSize
             });
         }
-
-        this.reload(true);
     }
 
     ngOnDestroy() {
@@ -103,8 +98,7 @@ export class CategoriesService implements OnDestroy {
     private _executeQuery(): void {
         // cancel previous requests
         if (this._categoriesExecuteSubscription) {
-            this._categoriesExecuteSubscription.unsubscribe();
-            this._categoriesExecuteSubscription = null;
+            this._categoriesExecuteSubscription.unsubscribe();            
         }
 
         this._state.next({ loading: true, errorMessage: null });
