@@ -27,7 +27,8 @@
             [limitToSuggestions]="false"
             [minLength]="3"
             [suggestionsProvider]="_tagsProvider"
-            (completeMethod)="_searchTags($event)">
+            (completeMethod)="_searchTags($event)"
+            (onSelect)="_getSelectedValue($event)">
           </kAutoComplete>
         </div>
       </div>

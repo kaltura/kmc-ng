@@ -97,6 +97,17 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
       });
   }
 
+  _getSelectedValue(value): void {
+    let tags = this.metadataForm.value.tags;
+    if(tags.length > 1) {
+      let newTags = [...tags];
+      newTags.pop();
+      if(newTags.findIndex(tag => tag.toLowerCase() === value.toLowerCase()) !== -1) {
+        tags.splice(tags.length-1,1);
+      }
+    }
+  }
+
   ngOnDestroy() {
     this._tagsProvider.complete();
     this._searchTagsSubscription && this._searchTagsSubscription.unsubscribe();
