@@ -22,7 +22,7 @@ export class CategorySectionsListHandler extends CategoryFormWidget {
     public sections$: Observable<SectionWidgetItem[]> = this._sections.asObservable();
 
     constructor(private _appLocalization: AppLocalization) {
-        super('sectionsList');
+        super('categorySectionsList');
     }
 
     protected _onDataLoading(dataId: any): void {
@@ -66,7 +66,10 @@ export class CategorySectionsListHandler extends CategoryFormWidget {
      * Do some cleanups if needed once the section is removed
      */
     protected _onReset() {
-
+        // TODO: remove this line!!!
+         super._updateWidgetState({
+		    isDirty: true
+	    });
     }
 
     private _clearWidgets(): void {

@@ -61,7 +61,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 
-		//this._categoryFormManager.registerWidgets(this._widgets);
+		this._categoryFormManager.registerWidgets(this._widgets);
 
 		this.isSafari = this._browserService.isSafari();
 
@@ -87,6 +87,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
 							break;
 						case ActionTypes.CategoryLoaded:
 							this._categoryHeader = this._appLocalization.get('applications.content.categoryDetails.header', { 0: this._categoryStore.category.name });;
+							this._updateNavigationState();
+							this._categoryHasChanges = false;
 							break;
 						case ActionTypes.CategoryLoadingFailed:
 							let message = status.error ? status.error.message : '';

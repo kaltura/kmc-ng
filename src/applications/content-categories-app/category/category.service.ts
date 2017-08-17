@@ -16,7 +16,7 @@ import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { CategoryGetAction } from 'kaltura-typescript-client/types/CategoryGetAction';
 import { CategoryUpdateAction } from 'kaltura-typescript-client/types/CategoryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-//import { CategoryFormManager } from './category-form-manager';
+import { CategoryFormManager } from './category-form-manager';
 import { KalturaTypesFactory } from 'kaltura-typescript-client';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
@@ -36,7 +36,6 @@ declare type StatusArgs =
 	{
 		action: ActionTypes;
 		error?: Error;
-
 	}
 
 @Injectable()
@@ -52,8 +51,6 @@ export class CategoryService implements OnDestroy {
 	public get categoryIsDirty(): boolean {
 		return this._categoryIsDirty;
 	}
-
-
 
 	private _reloadCategoriesOnLeave = false;
 	private _category: BehaviorSubject<KalturaCategory> = new BehaviorSubject<KalturaCategory>(null);
@@ -71,11 +68,11 @@ export class CategoryService implements OnDestroy {
 		private _router: Router,
 		private _browserService: BrowserService,
 		private _categoriesStore: CategoriesService,
-		//@Host() private _sectionsManager: CategoryFormManager,
+		@Host() private _sectionsManager: CategoryFormManager,
 		private _categoryRoute: ActivatedRoute,
 		private _appLocalization: AppLocalization) {
 
-		//this._sectionsManager.categoryStore = this;
+		this._sectionsManager.categoryStore = this;
 
 		this._mapSections();
 
@@ -84,23 +81,20 @@ export class CategoryService implements OnDestroy {
 	}
 
 	private _onSectionsStateChanges() {
-		// this._sectionsManager.widgetsState$
-		// 	.cancelOnDestroy(this)
-		// 	.debounce(() => Observable.timer(500))
-		// 	.subscribe( 
-		// 	sectionsState => {
-		// 		const newDirtyState = Object.keys(sectionsState).reduce((result, sectionName) => result || sectionsState[sectionName].isDirty, false);
+		this._sectionsManager.widgetsState$
+			.cancelOnDestroy(this)
+			.debounce(() => Observable.timer(500))
+			.subscribe(
+			sectionsState => {
+				const newDirtyState = Object.keys(sectionsState).reduce((result, sectionName) => result || sectionsState[sectionName].isDirty, false);
 
-		// 		if (this._categoryIsDirty !== newDirtyState) {
-		// 			console.log(`category store: update category is dirty state to ${newDirtyState}`);
-		// 			this._categoryIsDirty = newDirtyState;
-
-		// 			this._updatePageExitVerification();
-
-		// 		}
-		// 	}
-		// 	);
-
+				if (this._categoryIsDirty !== newDirtyState) {
+					console.log(`category store: update category is dirty state to ${newDirtyState}`);
+					this._categoryIsDirty = newDirtyState;
+					this._updatePageExitVerification();
+				}
+			}
+			);
 	}
 
 	private _updatePageExitVerification() {
@@ -125,17 +119,17 @@ export class CategoryService implements OnDestroy {
 	}
 
 	private _mapSections(): void {
-		// if (!this._categoryRoute || !this._categoryRoute.snapshot.data.categoryRoute) {
-		// 	throw new Error("this service can be injected from component that is associated to the category route");
-		// }
+		if (!this._categoryRoute || !this._categoryRoute.snapshot.data.categoryRoute) {
+			throw new Error("this service can be injected from component that is associated to the category route");
+		}
 
-		// this._categoryRoute.snapshot.routeConfig.children.forEach(childRoute => {
-		// 	const routeSectionType = childRoute.data ? childRoute.data.sectionKey : null;
+		this._categoryRoute.snapshot.routeConfig.children.forEach(childRoute => {
+			const routeSectionType = childRoute.data ? childRoute.data.sectionKey : null;
 
-		// 	if (routeSectionType !== null) {
-		// 		this._sectionToRouteMapping[routeSectionType] = childRoute.path;
-		// 	}
-		// });
+			if (routeSectionType !== null) {
+				this._sectionToRouteMapping[routeSectionType] = childRoute.path;
+			}
+		});
 	}
 
 	private _onRouterEvents(): void {
@@ -248,7 +242,7 @@ export class CategoryService implements OnDestroy {
 		this._updatePageExitVerification();
 
 		this._state.next({ action: ActionTypes.CategoryLoading });
-		//	this._sectionsManager.onDataLoading(categoryId);
+		this._sectionsManager.onDataLoading(categoryId);
 
 		this._loadCategorySubscription = this._getCategory(parseInt(categoryId))
 			.cancelOnDestroy(this)
@@ -259,16 +253,16 @@ export class CategoryService implements OnDestroy {
 					this._category.next(response);
 					this._categoryId = response.id.toString();
 
-					//	const dataLoadedResult = this._sectionsManager.onDataLoaded(response);
+					const dataLoadedResult = this._sectionsManager.onDataLoaded(response);
 
-					// if (dataLoadedResult.errors.length) {
-					// 	this._state.next({
-					// 		action: ActionTypes.CategoryLoadingFailed,
-					// 		error: new Error(`one of the widgets failed while handling data loaded event`)
-					// 	});
-					// } else {
-					this._state.next({ action: ActionTypes.CategoryLoaded });
-					// }
+					if (dataLoadedResult.errors.length) {
+						this._state.next({
+							action: ActionTypes.CategoryLoadingFailed,
+							error: new Error(`one of the widgets failed while handling data loaded event`)
+						});
+					} else {
+						this._state.next({ action: ActionTypes.CategoryLoaded });
+					}
 
 				} else {
 					this._state.next({
@@ -351,8 +345,8 @@ export class CategoryService implements OnDestroy {
 			if (this._categoryIsDirty) {
 				this._browserService.confirm(
 					{
-						header: this._appLocalization.get('applications.content.categoryDetails.captions.cancelEdit'),
-						message: this._appLocalization.get('applications.content.categoryDetails.captions.discard'),
+						header: this._appLocalization.get('applications.content.categoryDetails.cancelEdit'),
+						message: this._appLocalization.get('applications.content.categoryDetails.discard'),
 						accept: () => {
 							observer.next({ allowed: true });
 							observer.complete();

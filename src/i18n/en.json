@@ -597,6 +597,8 @@
       },
       "categoryDetails": {
         "header": "Category - {{0}}",
+        "cancelEdit": "Cancel Edit",
+        "discard": "Discard all changes?",
         "sections": {
           "metadata": "Metadata",
           "entitlements": "Entitlements",

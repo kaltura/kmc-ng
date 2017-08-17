@@ -1,3 +1,4 @@
+import { CategoryCanDeactivate } from 'applications/content-categories-app/category/category-can-deactivate.service';
 import { CategoryEntitlementsComponent } from './category/category-entitlements/category-entitlements.component';
 import { CategoryMetadataComponent } from './category/category-metadata/category-metadata.component';
 import { CategoryWidgetKeys } from './category/category-widget-keys';
@@ -15,9 +16,9 @@ export const routing: Route[] = [
 			{ path: '', redirectTo: 'list', pathMatch: 'full' },
 			{ path: 'list', component: CategoriesListComponent },
 			{
-				path: 'category/:id', component: CategoryComponent,
+				path: 'category/:id', canDeactivate: [CategoryCanDeactivate], component: CategoryComponent,
 				data: {
-					entryRoute: true
+					categoryRoute: true
 				},
 				children: [
 					{ path: '', redirectTo: 'metadata', pathMatch: 'full' },
