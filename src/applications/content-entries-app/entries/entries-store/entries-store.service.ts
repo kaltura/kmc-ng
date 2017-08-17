@@ -30,6 +30,7 @@ import { FilterItem } from "./filter-item";
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 import { KalturaLiveStreamAdminEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamAdminEntry';
 import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamEntry';
+import { KalturaExternalMediaEntry } from 'kaltura-typescript-client/types/KalturaExternalMediaEntry';
 
 export type UpdateStatus = {
     loading : boolean;
@@ -329,10 +330,11 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
                 this.executeQueryState.subscription = null;
 
                 this._state.next({loading: false, errorMessage: null});
-
+                // filter out external media TODO - keep external media and handle its display and driil-down
+                const entries = response.objects.filter(entry => !(entry instanceof KalturaExternalMediaEntry));
                 this._entries.next({
-                    items: <any[]>response.objects,
-                    totalCount: <number>response.totalCount
+                    items: <any[]>entries,
+                    totalCount: <number>entries.length
                 });
             },
             error => {
@@ -443,7 +445,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
                     filter: requestContext.filter,
                     pager: pagination,
                     responseProfile: responseProfile,
-                    acceptedTypes : [KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry]
+                    acceptedTypes : [KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry, KalturaExternalMediaEntry]
                 })
             )
         }catch(err)
