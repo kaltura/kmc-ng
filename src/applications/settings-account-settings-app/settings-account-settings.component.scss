@@ -1,0 +1,115 @@
+@import 'app-theme/_variables.scss';
+
+.kAccountSettingsWrapper {
+  height: 100%;
+  border: none;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+
+  .kHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 1em 0 0 0;
+
+    .kTitle {
+      color: $kGrayscale1;
+      font-weight: 700;
+      height: 29px;
+      font-size: 24px;
+      font-weight: bold;
+      line-height: 29px;
+    }
+  }
+  .kSaveBtn {
+    margin-left: auto;
+    width: 100px;
+    height: 34px;
+    font-weight: 400;
+  }
+}
+
+.kReadonlyData {
+  color: $kGrayscale3;
+  margin: 1em 0;
+  display: inline-block;
+  height: 16px;
+  font-size: 13px;
+  line-height: 16px;
+}
+
+.kFormContainer {
+  background: white;
+
+  hr {
+    display: block;
+    height: 0px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    padding: 0;
+    margin: 0;
+  }
+
+  .form-section {
+    font-size: 15px;
+    padding: 27px 29px;
+
+    .kRow {
+      &:first-child {
+        padding-top: 0;
+      }
+
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      padding-top: 24px;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+
+      .kLabel {
+        width: 272px;
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 auto;
+        flex: 0 0 auto;
+        height: 18px;
+        color: $kGrayscale1;
+        font-size: 15px;
+        line-height: 18px;
+      }
+      .kControl {
+        width: 100%;
+        height: 34px;
+        color: $kGrayscale2;
+        height: 34px;
+        width: 400px;
+        border-radius: 3px;
+        background-color: $kGrayscale6;
+      }
+
+    }
+  }
+}
+
+/*********************/
+/* PrimeNG overrides */
+/*********************/
+
+:host /deep/ {
+  .ui-dropdown.ui-widget {
+    width: 100% !important;
+  }
+  .ui-dropdown label.ui-dropdown-label {
+    font-size: 16px;
+  }
+  .ui-inputtext {
+    padding-left: 10px;
+
+  }
+}

@@ -66,6 +66,18 @@ export const environment = {
         "titleToken": "Analytics",
         "showSubMenu": false,
         "enabled": false
+      }, {
+        "routePath": "settings",
+        "titleToken": "Settings",
+        "showSubMenu": true,
+        "enabled": true,
+        "children": [
+          {
+            "routePath": "settings/accountSettings",
+            "titleToken": "Account Settings",
+            "enabled": true
+          }
+        ]
       }
     ],
     "diagnostic" : {

@@ -9,7 +9,9 @@
       "Syndication": "Syndication",
       "Categories": "Categories",
       "Studio": "Studio",
-      "Analytics": "Analytics"
+      "Analytics": "Analytics",
+      "Settings": "Settings",
+      "Account Settings": "Account Settings"
     },
     "userSettings": {
       "changeAccount": "Change Acoount",
@@ -642,6 +644,16 @@
       }
     },
     "settings": {
+      "accountInfo": "Account Info",
+      "partnerID": "Partner ID",
+      "accountOwnerEmail": "Email of Account Owner",
+      "accountOwnerName": "Name of Account Owner",
+      "informationMessage": "Please make sure that the information below is up to date.",
+      "name":"Name of Publisher/Company",
+      "phone": "Phone",
+      "website": "Website",
+      "describeYourself": "Describe Yourself",
+      "accountReferenceID": "Account Reference ID",
       "describeYourselfOptions": "Enterprise / Small Business / Government Agency,Education Organization,Media Company / Agency,CDN / ISP / Integrator / Hosting Provider,Other"
 
     }

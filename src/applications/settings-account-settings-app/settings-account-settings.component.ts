@@ -1,38 +1,89 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {KalturaPartner} from 'kaltura-typescript-client/types/KalturaPartner';
 import {SettingsAccountSettingsService} from './settings-account-settings.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {SelectItem} from "primeng/primeng";
+import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
 
 @Component({
   selector: 'kmc-settings-account-settings',
   templateUrl: './settings-account-settings.component.html',
   styleUrls: ['./settings-account-settings.component.scss']
 })
-export class SettingsAccountSettingsComponent implements OnInit {
+export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
 
-  accountSettingsForm: FormGroup;
-  nameOfAccountOwnerOptions: SelectItem[] = [];
-  describeYourselfOptions: SelectItem[] = [];
+
+  public accountSettingsForm: FormGroup;
+  public nameOfAccountOwnerOptions: SelectItem[] = [];
+  public describeYourselfOptions: SelectItem[] = [];
+  private _blockerMessage: AreaBlockerMessage = null;
+  private _isBusy = false;
 
   constructor(private _accountSettingsService: SettingsAccountSettingsService,
               private _appLocalization: AppLocalization,
               private _fb: FormBuilder) {
   }
 
+  ngOnDestroy(): void {
+    // TODO: Unsubscribe all subscriptions
+  }
+
   ngOnInit() {
+    this.isBusy = true;
     this._createForm();
 
     this._fillDescribeYourselfOptions();
 
     this._accountSettingsService.getPartnerAccountSettings()
       .subscribe(response => {
-        this._fillAccountOwnersOptions(response.accountOwners);
-        this._fillForm(response.partnerData);
-      });
+          this._fillAccountOwnersOptions(response.accountOwners);
+          this._fillForm(response.partnerData);
+          this.isBusy = false;
+        },
+        error => {
+          this.blockerMessage = new AreaBlockerMessage(
+            {
+              message: error.message,
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    // TODO: Fill with the submitForm action
+                    //   this.deleteEntry(entryId);
+                  }
+                },
+                {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this._blockerMessage = null;
+                  }
+                }
+              ]
+            }
+          )
+        });
   }
 
+  get blockerMessage(): AreaBlockerMessage {
+    return this._blockerMessage;
+  }
+
+  set blockerMessage(message: AreaBlockerMessage) {
+    this._blockerMessage = message;
+    this._isBusy = false;
+  }
+
+  get isBusy(): boolean {
+    return this._isBusy;
+  }
+
+  set isBusy(show: boolean) {
+    this._isBusy = show;
+    if (show) {
+      this._blockerMessage = null;
+    }
+  }
 
   private _fillAccountOwnersOptions(accountOwners: string[]): void {
     accountOwners.forEach((ownerName) => {
