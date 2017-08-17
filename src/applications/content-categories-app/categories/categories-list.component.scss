@@ -1,5 +1,4 @@
 @import 'app-theme/_variables.scss';
-
 .kCategories {
   font-size: 15px;
   background-color: $appBkgColor;
@@ -100,11 +99,17 @@
     top: 7px;
     right: 80px;
   }
-	.kAddCategoryBtn {
-		margin-left: 14px;
-		height: 36px;
-	}
-
+  .kAddCategoryBtn {
+    margin-left: 14px;
+    height: 36px;
+  }
+  .kAddCategoryBtnDisabled {
+    margin-left: 14px;
+    height: 36px;
+    opacity: 0.3;
+    cursor: default;
+    pointer-events: none;
+  }
   .kBulkCancel {
     margin-left: 10px;
   }
