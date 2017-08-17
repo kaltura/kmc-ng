@@ -10,13 +10,25 @@ import { KalturaConversionProfile } from 'kaltura-typescript-client/types/Kaltur
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { environment } from 'app-environment';
+import { UploadManagement } from '@kaltura-ng/kaltura-common';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { MediaAddAction } from 'kaltura-typescript-client/types/MediaAddAction';
+import { KalturaMultiRequest } from 'kaltura-typescript-client';
+import { KalturaServerFile } from '@kaltura-ng/kaltura-server-utils';
+import { KalturaAssetsParamsResourceContainers } from 'kaltura-typescript-client/types/KalturaAssetsParamsResourceContainers';
+import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
+import { KalturaAssetParamsResourceContainer } from 'kaltura-typescript-client/types/KalturaAssetParamsResourceContainer';
+import { MediaUpdateContentAction } from 'kaltura-typescript-client/types/MediaUpdateContentAction';
 
 export interface IUploadSettingsFile {
   file: File;
   mediaType: KalturaMediaType;
   name: string;
   size: number;
-  conversionProfile?: number;
+  entryId?: string;
+  uploadToken?: string;
+  uploadedOn?: Date;
+  conversionProfileId?: number;
   isEditing?: boolean;
   hasError?: boolean
 }
@@ -36,7 +48,7 @@ export class UploadSettingsHandler {
     return this._allowedExtensions;
   }
 
-  constructor(private _kalturaServerClient: KalturaClient) {
+  constructor(private _kalturaServerClient: KalturaClient, private _uploadManagement: UploadManagement) {
   }
 
   private _getFileExtension(filename: string): string {
@@ -94,7 +106,7 @@ export class UploadSettingsHandler {
 
   private _validateFileSize(file: IUploadSettingsFile): boolean {
     const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
-    const fileSize = file.file.size / 1024 / 1024; // convert to Mb
+    const fileSize = file.size / 1024 / 1024; // convert to Mb
 
     return fileSize > maxFileSize;
   }
@@ -102,6 +114,53 @@ export class UploadSettingsHandler {
   private _validateFileMediaType(file: IUploadSettingsFile): boolean {
     const allowedTypes = [KalturaMediaType.audio, KalturaMediaType.video, KalturaMediaType.image];
     return !allowedTypes.includes(file.mediaType);
+  }
+
+  private _proceedUpload(files: Array<IUploadSettingsFile>, conversionProfileId: number): void {
+    const payload = files
+      .map(({ mediaType, name }) => new KalturaMediaEntry({ mediaType, name, conversionProfileId }))
+      .map(entry => new MediaAddAction({ entry }));
+    const request = new KalturaMultiRequest(...payload);
+
+    this._kalturaServerClient.multiRequest(request)
+      .switchMap(res => Observable.from(res))
+      .map(res => res.error ? Observable.throw(res.error) : res.result)
+      .zip(files, (entry, file) =>
+        Object.assign({}, file, {
+          entryId: (<any>entry).id,
+          conversionProfileId: (<any>entry).conversionProfileId,
+          uploadedOn: new Date()
+        }))
+      .flatMap(
+        file => this._uploadManagement.newUpload(new KalturaServerFile(file.file)),
+        (file, { uploadToken }) => Object.assign({}, file, { uploadToken })
+      )
+      .map(({ uploadToken: token, mediaType, entryId }) => {
+        const subSubResource = new KalturaUploadedFileTokenResource({ token });
+        if (mediaType === KalturaMediaType.image) {
+          return {
+            entryId,
+            conversionProfileId,
+            resource: subSubResource
+          };
+        }
+
+        const subResource = new KalturaAssetParamsResourceContainer({ resource: subSubResource, assetParamsId: 0 });
+        const resource = new KalturaAssetsParamsResourceContainers({ resources: [subResource] });
+
+        return { entryId, resource, conversionProfileId };
+      })
+      .map(resource => new MediaUpdateContentAction(resource))
+      .toArray()
+      .switchMap(resourcePayload => this._kalturaServerClient.multiRequest(new KalturaMultiRequest(...resourcePayload)))
+      .subscribe(
+        (res) => {
+          console.warn(res); // TODO handle response (if needed)
+        },
+        (err) => {
+          console.error(err); // TODO handle error
+        }
+      );
   }
 
   private _updateFiles(items: Array<IUploadSettingsFile>): void {
@@ -143,7 +202,7 @@ export class UploadSettingsHandler {
       return errorMessage;
     }
 
-    // proceed upload TBD
+    this._proceedUpload(updatedFiles, transcodingProfile);
 
     return '';
   }

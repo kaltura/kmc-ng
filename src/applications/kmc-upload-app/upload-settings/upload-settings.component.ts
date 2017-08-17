@@ -13,6 +13,8 @@ import { BrowserService } from 'app-shared/kmc-shell';
 })
 export class UploadSettingsComponent implements OnInit {
   @Output() onFileSelected = new EventEmitter<FileList>();
+  @Output() onUploadStarted = new EventEmitter<void>();
+
   public _transcodingProfiles: Array<{ value: number, label: string }>;
   public _profileForm: FormGroup;
   public _transcodingProfileField: AbstractControl;
@@ -83,11 +85,13 @@ export class UploadSettingsComponent implements OnInit {
     const errorMessage = this._handler.upload(files, this._transcodingProfileField.value);
 
     if (errorMessage) {
-      this._browserService.alert({
+      return this._browserService.alert({
         header: this._appLocalization.get('applications.upload.validation.error'),
         message: this._appLocalization.get(errorMessage)
       });
     }
+
+    this.onUploadStarted.emit();
   }
 
   public _relatedTableRowStyle(rowData): string {

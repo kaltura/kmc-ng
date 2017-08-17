@@ -110,6 +110,13 @@
       }
     },
     "upload": {
+      "fileStatus": {
+        "preProcess": "Pre process",
+        "queued": "Queued",
+        "uploading": "Uploading",
+        "complete": "Complete",
+        "failed": "Failed"
+      },
       "inDevelopment": {
         "title": "Sorry",
         "message": "Feature in development"
