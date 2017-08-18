@@ -19,6 +19,7 @@ import { KalturaAssetsParamsResourceContainers } from 'kaltura-typescript-client
 import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
 import { KalturaAssetParamsResourceContainer } from 'kaltura-typescript-client/types/KalturaAssetParamsResourceContainer';
 import { MediaUpdateContentAction } from 'kaltura-typescript-client/types/MediaUpdateContentAction';
+import * as R from 'ramda';
 
 export interface IUploadSettingsFile {
   file: File;
@@ -185,9 +186,16 @@ export class UploadSettingsHandler {
 
   public removeFile(file: IUploadSettingsFile): void {
     const files = this._selectedFiles.getValue().items;
-    const fileIndex = files.indexOf(file);
+    const updatedFiles = R.without([file], files);
 
-    const updatedFiles = [...files.slice(0, fileIndex), ...files.slice(fileIndex + 1)];
+    this._selectedFiles.next({ items: updatedFiles });
+  }
+
+  public updateFile(file: IUploadSettingsFile, updatedFile: IUploadSettingsFile): void {
+    const files = this._selectedFiles.getValue().items;
+    const index = R.indexOf(file, files);
+    const updatedFiles = R.update(index, updatedFile, files);
+
     this._selectedFiles.next({ items: updatedFiles });
   }
 

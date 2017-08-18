@@ -43,11 +43,12 @@
             </div>
             <div *ngIf="file.isEditing">
               <input pInputText
-                     [inputAutofocus]="true"
                      class="kFileNameInput"
-                     (blur)="file.isEditing = false"
-                     (keyup.enter)="file.isEditing = false"
-                     [(ngModel)]="file.name">
+                     [inputAutofocus]="true"
+                     [value]="file.name"
+                     (blur)="_cancelEdit(file)"
+                     (keyup.enter)="_cancelEdit(file)"
+                     (input)="_updateName($event.target.value)">
             </div>
           </ng-template>
         </p-column>

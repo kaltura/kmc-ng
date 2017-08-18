@@ -15,6 +15,8 @@ export class UploadSettingsComponent implements OnInit {
   @Output() onFileSelected = new EventEmitter<FileList>();
   @Output() onUploadStarted = new EventEmitter<void>();
 
+  private _tempName: string;
+
   public _transcodingProfiles: Array<{ value: number, label: string }>;
   public _profileForm: FormGroup;
   public _transcodingProfileField: AbstractControl;
@@ -96,5 +98,26 @@ export class UploadSettingsComponent implements OnInit {
 
   public _relatedTableRowStyle(rowData): string {
     return rowData.hasError ? 'has-error' : '';
+  }
+
+  public _updateName(name: string = ''): void {
+    this._tempName = name.trim() || '';
+  }
+
+  public _cancelEdit(file: IUploadSettingsFile): void {
+    const name = this._tempName;
+
+    if (file.name === name) {
+      file.isEditing = false;
+      return;
+    }
+
+    if (name && file.name !== name) {
+      file.isEditing = file.hasError = false;
+      this._handler.updateFile(file, Object.assign({}, file, { name }));
+      this._tempName = '';
+    } else {
+      file.hasError = true;
+    }
   }
 }
