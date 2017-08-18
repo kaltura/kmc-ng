@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, KeyValueChangeRecord, IterableChangeRecord } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { TrackedFile } from '@kaltura-ng/kaltura-common';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
@@ -24,12 +25,15 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 import { EntryFormWidget } from '../entry-form-widget';
 import { EntryWidgetKeys } from '../entry-widget-keys';
-import { KalturaServerFile } from '@kaltura-ng/kaltura-server-utils';
-import { UploadManagement, FileChanges } from '@kaltura-ng/kaltura-common';
+import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
+import { UploadManagement } from '@kaltura-ng/kaltura-common';
+1
 
 export interface CaptionRow {
 	uploading: boolean,
 	uploadToken: string,
+    uploadFailure? : boolean,
+    progress? : string;
 	uploadUrl: string,
 	id: string,
 	isDefault: number,
@@ -61,44 +65,34 @@ export class EntryCaptionsHandler extends EntryFormWidget
 
 	private _trackUploadFiles() : void
 	{
-		console.warn("[kmcng] - should track files only when uploading new files");
-		this._uploadManagement.trackedFiles
+		this._uploadManagement.onTrackFileChange$
 			.cancelOnDestroy(this)
 			.subscribe(
-				((filesStatus : FileChanges) =>
+				((trackedFile : TrackedFile) =>
 				{
-					let uploading = false;
-					this._captions.getValue().items.forEach(file =>
+					const captions = this._captions.getValue().items;
+                    const relevantCaption = captions ? captions.find(file => file.uploadToken === trackedFile.uploadToken) : null;
+
+					if (relevantCaption)
 					{
-						const uploadToken = (<any>file).uploadToken;
-						if (uploadToken)
-						{
-							const uploadStatus = filesStatus[uploadToken];
-							switch(uploadStatus ? uploadStatus.status : '')
-							{
-								case 'uploaded':
-									(<any>file).uploading = false;
-									(<any>file).uploadFailure = false;
-									break;
-								case 'uploadFailure':
-									(<any>file).uploading = false;
-									(<any>file).uploadFailure = true;
-									break;
-								case 'uploading':
-									(<any>file).progress = (filesStatus[uploadToken].progress * 100).toFixed(0);
-									if (filesStatus[uploadToken].progress<1) {
-										(<any>file).uploading = true;
-										(<any>file).uploadFailure = false;
-										uploading = true;
-									}
-								default:
-									break;
-							}
-						}
-					});
-					//if (this.isBusy !== uploading) {
-						super._updateWidgetState({isBusy: uploading});
-					//}
+                        switch(trackedFile.status)
+                        {
+                            case 'uploaded':
+                                relevantCaption.uploading = false;
+                                relevantCaption.uploadFailure = false;
+                                break;
+                            case 'uploadFailure':
+                                relevantCaption.uploading = false;
+                                relevantCaption.uploadFailure = true;
+                                break;
+                            case 'uploading':
+                                relevantCaption.progress = (trackedFile.progress * 100).toFixed(0);
+                                relevantCaption.uploading = true;
+                                relevantCaption.uploadFailure = false;
+                            default:
+                                break;
+                        }
+					}
 				})
 			);
 	}
@@ -222,7 +216,7 @@ export class EntryCaptionsHandler extends EntryFormWidget
 
 	public upload(captionFile: File):void{
 		this.currentCaption.uploading = true;
-		this._uploadManagement.newUpload(new KalturaServerFile(captionFile))
+		this._uploadManagement.newUpload(new KalturaUploadFile(captionFile))
 			.subscribe((response) => {
 					// update file with actual upload token
 					this.currentCaption.uploadToken = response.uploadToken;
