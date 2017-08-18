@@ -57,7 +57,7 @@ export class UploadSettingsComponent implements OnInit {
 
   ngOnInit() {
     this._handler.resetFiles();
-    this._handler.selectedFiles$.subscribe(({ items }) => {
+    this._handler.selectedFiles$.subscribe(items => {
       this._files = items;
     });
 

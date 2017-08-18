@@ -20,6 +20,7 @@ import { UploadSettingsComponent } from './upload-settings/upload-settings.compo
 import { UploadSettingsHandler } from './upload-settings/upload-settings-handler';
 import { KMCShellModule } from 'app-shared/kmc-shell';
 import { AutofocusDirective } from './directives/input-autofocus';
+import { UploadControlService } from './upload-control.service';
 
 @NgModule({
   imports: [
@@ -49,7 +50,8 @@ import { AutofocusDirective } from './directives/input-autofocus';
     UploadSettingsComponent
   ],
   providers: [
-    UploadSettingsHandler
+    UploadSettingsHandler,
+    UploadControlService
   ]
 })
 export class KmcUploadAppModule {
