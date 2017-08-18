@@ -15,7 +15,8 @@ import {
   InputTextModule,
   CalendarModule,
   MenuModule,
-  SharedModule
+  SharedModule,
+  ProgressBarModule,
 } from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
@@ -30,6 +31,7 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { ContentUploadControlComponent } from './content-upload-control.component';
 import { UploadListComponent } from './upload-list/upload-list.component';
 import { UploadListTableComponent } from './upload-list/upload-list-table.component';
+import { EntryTypePipe } from './pipes/entry-type.pipe';
 
 
 @NgModule({
@@ -54,12 +56,14 @@ import { UploadListTableComponent } from './upload-list/upload-list-table.compon
     KalturaPrimeNgUIModule,
     AutoCompleteModule,
     SharedModule,
+    ProgressBarModule,
     RouterModule.forChild(routing)
   ],
   declarations: [
     ContentUploadControlComponent,
     UploadListComponent,
-    UploadListTableComponent
+    UploadListTableComponent,
+    EntryTypePipe
   ],
   exports: [],
   providers: []

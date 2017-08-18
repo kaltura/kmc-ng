@@ -28,10 +28,23 @@ export interface INewUploadFile {
   uploadFailure: boolean;
 }
 
+const temp: INewUploadFile = {
+  uploadToken: 'djgnkdjgnksfdg',
+  entryId: 'akjsngjshgk',
+  uploadedOn: new Date(),
+  fileName: 'Example_file.mov',
+  fileSize: 1024,
+  status: 'uploading',
+  progress: 55,
+  mediaType: KalturaMediaType.video,
+  uploading: true,
+  uploadFailure: false
+};
+
 @Injectable()
 export class UploadControlService {
 
-  private _newUploadFiles = new BehaviorSubject<Array<INewUploadFile>>([]);
+  private _newUploadFiles = new BehaviorSubject<Array<INewUploadFile>>([temp]);
 
   public newUploadFiles$ = this._newUploadFiles.asObservable();
 

@@ -170,6 +170,24 @@
       }
     },
     "content": {
+      "uploadControl": {
+        "files": "Files",
+        "table": {
+          "fileName": "File Name",
+          "entryId": "ID",
+          "fileSize": "File size",
+          "uploadedOn": "Uploaded On",
+          "progress": "Progress",
+          "remove": "Remove",
+          "status": {
+            "header": "Status",
+            "uploaded": "Complete",
+            "uploading": "Uploading",
+            "pending": "Processing",
+            "uploadFailure": "Failed"
+          }
+        }
+      },
       "categories": {
         "categories": "Categories",
         "search": "Search",

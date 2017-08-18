@@ -1,17 +1,18 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { INewUploadFile } from '../../kmc-upload-app/upload-control.service';
 
 @Component({
   selector: 'kUploadListTable',
   templateUrl: './upload-list-table.component.html',
   styleUrls: ['./upload-list-table.component.scss']
 })
-export class UploadListTableComponent {
+export class UploadListTableComponent implements AfterViewInit {
   @Input()
-  set uploads(data: any[]) {
+  set uploads(data: Array<INewUploadFile>) {
     if (!this._deferredLoading) {
       // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
       // (ie when returning from entry page) - we should force detect changes on an empty list
@@ -26,7 +27,7 @@ export class UploadListTableComponent {
 
   @Input() filter: any = {};
 
-  @Input() selectedUploads: any[] = [];
+  @Input() selectedUploads: Array<INewUploadFile> = [];
 
   @Output()
   sortChanged = new EventEmitter<any>();
@@ -40,14 +41,9 @@ export class UploadListTableComponent {
   @ViewChild('dataTable') private dataTable: DataTable;
 
   private _deferredUploads: any[];
-  private _actionsMenuEntryId = '';
-  private _entriesStoreStatusSubscription: ISubscription;
-
-  public _blockerMessage: AreaBlockerMessage = null;
-  public _uploads: any[] = [];
+  public _uploads: Array<INewUploadFile> = [];
   public _deferredLoading = true;
   public _emptyMessage = '';
-  public _items: MenuItem[];
 
   public _rowTrackBy: Function = (index: number, item: any) => item.id;
 
@@ -63,11 +59,15 @@ export class UploadListTableComponent {
     this.selectedEntriesChange.emit(event);
   }
 
-  public scrollToTop() {
-    const scrollBodyArr = this.dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
-    if (scrollBodyArr && scrollBodyArr.length > 0) {
-      const scrollBody: HTMLDivElement = scrollBodyArr[0];
-      scrollBody.scrollTop = 0;
+  ngAfterViewInit() {
+    if (this._deferredLoading) {
+      // use timeout to allow the DOM to render before setting the data to the datagrid.
+      // This prevents the screen from hanging during datagrid rendering of the data.
+      setTimeout(() => {
+        this._deferredLoading = false;
+        this._uploads = this._deferredUploads;
+        this._deferredUploads = null;
+      }, 0);
     }
   }
 }
