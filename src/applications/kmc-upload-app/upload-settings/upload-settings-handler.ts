@@ -83,24 +83,19 @@ export class UploadSettingsHandler {
   }
 
   private _validateFiles(files: Array<IUploadSettingsFile>): { updatedFiles: Array<IUploadSettingsFile>, errorMessage: string } {
-    const updateFilesWithError = (validationFn) => files.map(file => {
-      const hasError = validationFn(file);
-      return Object.assign({}, file, { hasError });
-    });
-
     const mediaTypeError = files.some(this._validateFileMediaType);
     if (mediaTypeError) {
-      const updatedFiles = updateFilesWithError(this._validateFileMediaType);
+      const updatedFiles = this._updateFilesWithError(this._validateFileMediaType)(files);
       return { updatedFiles, errorMessage: 'applications.upload.validation.wrongType' };
     }
 
     const fileSizeError = files.some(this._validateFileSize);
     if (fileSizeError) {
-      const updatedFiles = updateFilesWithError(this._validateFileSize);
+      const updatedFiles = this._updateFilesWithError(this._validateFileSize)(files);
       return { updatedFiles, errorMessage: 'applications.upload.validation.fileSizeExceeded' };
     }
 
-    const updatedFiles = updateFilesWithError(file => file.hasError = false);
+    const updatedFiles = this._updateFilesWithError(file => file.hasError = false)(files);
     return { updatedFiles, errorMessage: '' };
   }
 
@@ -114,6 +109,10 @@ export class UploadSettingsHandler {
   private _validateFileMediaType(file: IUploadSettingsFile): boolean {
     const allowedTypes = [KalturaMediaType.audio, KalturaMediaType.video, KalturaMediaType.image];
     return !allowedTypes.includes(file.mediaType);
+  }
+
+  private _updateFilesWithError(validationFn: (file: IUploadSettingsFile) => boolean): <T>(files: T) => T {
+    return (files) => files.map(file => Object.assign({}, file, { hasError: validationFn(file) }));
   }
 
   private _proceedUpload(files: Array<IUploadSettingsFile>, conversionProfileId: number): void {
@@ -135,12 +134,12 @@ export class UploadSettingsHandler {
         file => this._uploadManagement.newUpload(new KalturaServerFile(file.file)),
         (file, { uploadToken }) => Object.assign({}, file, { uploadToken })
       )
-      .map(({ uploadToken: token, mediaType, entryId }) => {
+      .map(({ uploadToken: token, mediaType, entryId, conversionProfileId: profileId }) => {
         const subSubResource = new KalturaUploadedFileTokenResource({ token });
         if (mediaType === KalturaMediaType.image) {
           return {
             entryId,
-            conversionProfileId,
+            conversionProfileId: profileId,
             resource: subSubResource
           };
         }
@@ -154,9 +153,7 @@ export class UploadSettingsHandler {
       .toArray()
       .switchMap(resourcePayload => this._kalturaServerClient.multiRequest(new KalturaMultiRequest(...resourcePayload)))
       .subscribe(
-        (res) => {
-          console.warn(res); // TODO handle response (if needed)
-        },
+        () => {},
         (err) => {
           console.error(err); // TODO handle error
         }
