@@ -31,27 +31,50 @@ export const environment = {
           {
             "routePath": "content/entries",
             "titleToken": "Entries",
-            "enabled": true
+            "enabled": true,
+            "position": "left"
           },
           {
             "routePath": "content/moderation",
             "titleToken": "Moderation",
-            "enabled": false
+            "enabled": false,
+            "position": "left"
           },
           {
             "routePath": "content/playlists",
             "titleToken": "Playlists",
-            "enabled": true
+            "enabled": true,
+            "position": "left"
           },
           {
             "routePath": "content/syndication",
             "titleToken": "Syndication",
-            "enabled": false
+            "enabled": false,
+            "position": "left"
           },
           {
             "routePath": "content/categories",
             "titleToken": "Categories",
-            "enabled": true
+            "enabled": true,
+            "position": "left"
+          },
+          {
+            "routePath": "content/upload-control",
+            "titleToken": "UploadControl",
+            "enabled": true,
+            "position": "right"
+          },
+          {
+            "routePath": "content/bulk-upload",
+            "titleToken": "BulkUpload",
+            "enabled": false,
+            "position": "right"
+          },
+          {
+            "routePath": "content/drop-folders",
+            "titleToken": "DropFolders",
+            "enabled": false,
+            "position": "right"
           }
         ]
       },
