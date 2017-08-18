@@ -14,7 +14,7 @@ import { UploadManagement } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { MediaAddAction } from 'kaltura-typescript-client/types/MediaAddAction';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { KalturaServerFile } from '@kaltura-ng/kaltura-server-utils';
+import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
 import { KalturaAssetsParamsResourceContainers } from 'kaltura-typescript-client/types/KalturaAssetsParamsResourceContainers';
 import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
 import { KalturaAssetParamsResourceContainer } from 'kaltura-typescript-client/types/KalturaAssetParamsResourceContainer';
@@ -132,7 +132,7 @@ export class UploadSettingsHandler {
           uploadedOn: new Date()
         }))
       .flatMap(
-        file => this._uploadManagement.newUpload(new KalturaServerFile(file.file)),
+        file => this._uploadManagement.newUpload(new KalturaUploadFile(file.file)),
         (file, { uploadToken }) => Object.assign({}, file, { uploadToken })
       )
       .map(({ uploadToken: token, mediaType, entryId }) => {

@@ -24,7 +24,7 @@ import { FlavorAssetAddAction } from 'kaltura-typescript-client/types/FlavorAsse
 import { KalturaUrlResource } from 'kaltura-typescript-client/types/KalturaUrlResource';
 import { KalturaContentResource } from 'kaltura-typescript-client/types/KalturaContentResource';
 import { UploadManagement } from '@kaltura-ng/kaltura-common/upload-management';
-import { KalturaServerFile } from '@kaltura-ng/kaltura-server-utils';
+import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
 import { environment } from 'app-environment';
 import { Flavor } from './flavor';
 
@@ -305,7 +305,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 	public uploadFlavor(flavor: Flavor, fileData: File): void{
 		flavor.status = KalturaFlavorAssetStatus.importing.toString();
 		flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.uploading');
-		this._uploadManagement.newUpload(new KalturaServerFile(fileData))
+		this._uploadManagement.newUpload(new KalturaUploadFile(fileData))
 			.subscribe((response) => {
 				let resource = new KalturaUploadedFileTokenResource();
 				resource.token = response.uploadToken;
