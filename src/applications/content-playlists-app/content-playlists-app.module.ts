@@ -7,18 +7,21 @@ import { routing } from './content-playlists-app.routes';
 
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
 import {
-	DataTableModule,
-	PaginatorModule,
-	ButtonModule,
-	TieredMenuModule,
-	CheckboxModule,
-	InputTextModule,
-	CalendarModule,
-	MenuModule,
-	SharedModule
+  DataTableModule,
+  PaginatorModule,
+  ButtonModule,
+  TieredMenuModule,
+  CheckboxModule,
+  InputTextModule,
+  CalendarModule,
+  MenuModule,
+  TreeModule,
+  RadioButtonModule,
+  DropdownModule,
+  SharedModule
 } from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
-import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
+import {KalturaPrimeNgUIModule, PrimeTreeModule} from '@kaltura-ng/kaltura-primeng-ui';
 import {
 	KalturaUIModule,
 	TooltipModule
@@ -31,6 +34,18 @@ import { ContentPlaylistsComponent } from './content-playlists.component';
 import { PlaylistsComponentsList } from './playlists/playlists-components-list';
 import { PlaylistComponentsList } from './playlist/playlist-components-list';
 import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.service';
+import { SharedComponentsList } from './shared/shared-components-list';
+import {
+  BulkSchedulingService,
+  BulkAccessControlService,
+  BulkAddTagsService,
+  BulkRemoveTagsService,
+  BulkAddCategoriesService,
+  BulkChangeOwnerService,
+  BulkRemoveCategoriesService,
+  BulkDeleteService,
+  BulkDownloadService
+} from './playlist/bulk-actions/services';
 
 @NgModule({
     imports: [
@@ -53,18 +68,32 @@ import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.servic
       TagsModule,
       KalturaPrimeNgUIModule,
       AutoCompleteModule,
+      PrimeTreeModule,
+      TreeModule,
+      RadioButtonModule,
+      DropdownModule,
       SharedModule,
       RouterModule.forChild(routing)
     ],
     declarations: [
       ContentPlaylistsComponent,
       PlaylistsComponentsList,
-      PlaylistComponentsList
+      PlaylistComponentsList,
+      SharedComponentsList
     ],
     exports: [
     ],
     providers : [
-        PlaylistCanDeactivate
+      PlaylistCanDeactivate,
+      BulkSchedulingService,
+      BulkAccessControlService,
+      BulkAddTagsService,
+      BulkRemoveTagsService,
+      BulkAddCategoriesService,
+      BulkChangeOwnerService,
+      BulkRemoveCategoriesService,
+      BulkDeleteService,
+      BulkDownloadService
     ]
 })
 export class ContentPlaylistsAppModule {

@@ -1,0 +1,8 @@
+<k-area-blocker [showLoader]="_loading" [message]="_sectionBlockerMessage">
+  <div class="kContent kOverrideFAIcons">
+    <kScheduling [schedulingForm]="schedulingForm" (clearDates)="_clearDates()"></kScheduling>
+    <div class="kFooter">
+      <button type="button" [disabled]="!_enableSave" class="kButtonBranded" pButton label="{{'applications.content.bulkActions.apply' | translate}}" (click)="_apply()"></button>
+    </div>
+  </div>
+</k-area-blocker>

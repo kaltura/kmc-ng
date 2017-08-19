@@ -1,0 +1,39 @@
+<k-area-blocker [showLoader]="isBusy" [message]="_blockerMessage">
+  <div class="kAddEntryWrap kEntries kOverrideFAIcons">
+    <div #entriesTableHolder class="kEntriesHolder">
+      <div class="kFloater">
+        <div class="kHeader">
+          <span class="kTitle">{{'applications.content.playlists.addEntry' | translate}}</span>
+          <div class="kButtons">
+            <a class="kCancel" (click)="closePopupWidget()">Cancel</a>
+            <button type="button" class="kButtonDefault" disabled pButton label="{{'applications.content.playlists.addToPlaylist' | translate}}"></button>
+          </div>
+        </div>
+        <div class="kContainer">
+          <div class="kEntriesTableFilters" *ngIf="(_entriesStore.entries$ | async)?.totalCount">
+            <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries$ | async)?.totalCount">{{(_entriesStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
+            <div [class.kHidden]="!_selectedEntries.length" class="kBulkOperations">
+              <span class="kSelectedEntriesLabel">• {{_selectedEntries.length}} {{'applications.content.entries.selected' | translate}}</span>
+              <kBulkActions [selectedEntries]="_selectedEntries" (onBulkChange)="onBulkChange($event)"></kBulkActions>
+              <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
+            </div>
+          </div>
+          <kEntriesTable
+            [entries]="(_entriesStore.entries$ | async)?.items"
+            [filter]="_filter"
+            (sortChanged)="onSortChanged($event)"
+            (actionSelected)="onActionSelected($event)"
+            [(selectedEntries)]="_selectedEntries"></kEntriesTable>
+          <div class="kEntriesTableFooter" #footer *ngIf="(_entriesStore.entries$ | async)?.totalCount">
+            <p-paginator
+              [rows]="_filter.pageSize" (onPageChange)="onPaginationChanged($event)"
+              [first]="_filter.pageIndex * _filter.pageSize"
+              [totalRecords]="(_entriesStore.entries$ | async)?.totalCount | kMaxEntries"
+              [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
+            <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</k-area-blocker>

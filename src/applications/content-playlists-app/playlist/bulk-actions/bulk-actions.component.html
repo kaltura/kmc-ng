@@ -1,0 +1,23 @@
+<div class="kBulkActions">
+  <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="deleteEntries()"></button>
+  <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton label="{{'applications.content.entries.bulkActions' | translate}}" (click)="menu.toggle($event)"></button>
+</div>
+
+<p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"></p-tieredMenu>
+
+
+<kPopupWidget #bulkActionsPopup [popupWidth]="_bulkWindowWidth" [popupHeight]="_bulkWindowHeight" [modal]="true">
+  <ng-template>
+    <div [ngSwitch]="_bulkAction">
+      <kBulkScheduling *ngSwitchCase="'setScheduling'" [parentPopupWidget]="bulkActionsPopup" (schedulingChanged)="onSchedulingChanged($event)"></kBulkScheduling>
+      <kBulkAccessControl *ngSwitchCase="'setAccessControl'" [parentPopupWidget]="bulkActionsPopup" (accessControlChangedChanged)="onAccessControlChanged($event)"></kBulkAccessControl>
+      <kBulkAddTags *ngSwitchCase="'addTags'" [parentPopupWidget]="bulkActionsPopup" (addTagsChanged)="onAddTagsChanged($event)"></kBulkAddTags>
+      <kBulkRemoveTags *ngSwitchCase="'removeTags'" [selectedEntries]="selectedEntries" [parentPopupWidget]="bulkActionsPopup" (removeTagsChanged)="onRemoveTagsChanged($event)"></kBulkRemoveTags>
+      <kCategoriesSelector *ngSwitchCase="'addToCategories'" [parentPopupWidget]="bulkActionsPopup" (valueChange)="onAddToCategoriesChanged($event)" [buttonLabel]="'applications.content.bulkActions.apply' | translate"></kCategoriesSelector>
+      <kBulkRemoveCategories *ngSwitchCase="'removeFromCategories'" [selectedEntries]="selectedEntries" [parentPopupWidget]="bulkActionsPopup" (removeCategoriesChanged)="onRemoveCategoriesChanged($event)"></kBulkRemoveCategories>
+      <kBulkChangeOwner *ngSwitchCase="'changeOwner'" [parentPopupWidget]="bulkActionsPopup" (ownerChanged)="onOwnerChanged($event)"></kBulkChangeOwner>
+      <kBulkDownload *ngSwitchCase="'download'" [selectedEntries]="selectedEntries" [parentPopupWidget]="bulkActionsPopup" (downloadChanged)="onDownloadChanged($event)"></kBulkDownload>
+    </div>
+  </ng-template>
+</kPopupWidget>
+

@@ -337,7 +337,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
             },
             error => {
                 this.executeQueryState.subscription = null;
-                const errorMessage = error & error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+                const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
                 this._state.next({loading: false, errorMessage});
             });
 

@@ -5,7 +5,8 @@
         pButton
         type="button"
         label="{{'applications.content.playlists.addEntry' | translate}}"
-        class="kButtonBranded kAddPlaylistBtn"></button>
+        class="kButtonBranded kAddPlaylistBtn"
+        (click)="addNewEntry()"></button>
       <span
         class="kSelectedPlaylistsNum"
         *ngIf="(_playlistStore.entries$ | async)?.totalCount">
@@ -16,3 +17,9 @@
       [entries]="(_playlistStore.entries$ | async)?.items"></kPlaylistEntriesTable>
   </div>
 </k-area-blocker>
+
+<kPopupWidget #addEntry [popupWidth]="996" [modal]="true">
+  <ng-template>
+    <kAddEntry (onClosePopupWidget)="closePopupWidget($event)"></kAddEntry>
+  </ng-template>
+</kPopupWidget>

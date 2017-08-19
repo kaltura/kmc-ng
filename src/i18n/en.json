@@ -164,6 +164,7 @@
         "searchEntries": "Search Playlists",
         "addPlaylist": "Add Playlist",
         "addEntry": "Add Entry",
+        "addToPlaylist": "Add to Playlist",
         "refresh": "Refresh"
       },
       "filters": {

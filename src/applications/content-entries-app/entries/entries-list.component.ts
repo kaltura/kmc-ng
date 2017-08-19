@@ -19,7 +19,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
   @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
 
-	public isBusy = false
+	public isBusy = false;
 	public _blockerMessage: AreaBlockerMessage = null;
 
     private querySubscription : ISubscription;

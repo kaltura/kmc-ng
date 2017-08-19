@@ -1,0 +1,44 @@
+<div class="kTreeContainer kOverrideFAIcons">
+	<div class="kHeader">
+		<span class="kTitle">{{'applications.content.entryDetails.metadata.selectCategories' | translate}}</span>
+	</div>
+
+	<div class="kTagsContainer">
+		<span *ngIf="!_selectedCategories.length">{{'applications.content.entryDetails.metadata.catSelect' | translate}}</span>
+		<kTags *ngIf="_selectedCategories?.length" [data]="_selectedCategories" [labelField]="'name'" [tooltipField]="'fullNamePath'" (onTagRemove)="_removeTag($event)" (onRemoveAll)="_removeAllTag()">
+			<ng-template let-item="item">
+				<div class="kTagContent" [kTooltip]="item.tooltip | kCategoryTooltip">
+					<span class="kTagLabel">{{item.label}}</span>
+					<i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="_removeTag(item.data)"></i>
+				</div>
+			</ng-template>
+		</kTags>
+	</div>
+	<div class="kMain">
+		<kAutoComplete #autoComplete
+					   [disabled]="!_categoriesLoaded"
+					   [multiple]="false"
+					   field="name"
+					   suggestionItemField="item"
+					   suggestionLabelField="name"
+					   suggestionSelectableField="isSelectable"
+					   placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"
+					   [minLength]="3"
+					   (onSelect)="_onAutoCompleteSelected($event)"
+					   [suggestionsProvider]="_categoriesProvider"
+					   (completeMethod)="_onAutoCompleteSearch($event)">
+		</kAutoComplete>
+
+
+		<k-categories-tree #categoriesTree
+						   [(selection)]="_treeSelection"
+						   (onCategoriesLoad)="_onTreeCategoriesLoad($event)"
+						   (onNodeSelect)="_onTreeNodeSelected($event)"
+						   (onNodeUnselect)="_onTreeNodeUnselected($event)"
+						   (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)"></k-categories-tree>
+	</div>
+
+    <div class="kFooter">
+        <button class="kButtonBranded" pButton label="{{buttonLabel}}" (click)="_apply()"></button>
+    </div>
+</div>
