@@ -42,8 +42,6 @@ export class UploadListTableComponent implements AfterViewInit {
   public _deferredLoading = true;
   public _emptyMessage = '';
 
-  public _rowTrackBy: Function = (index: number, item: any) => item.id;
-
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef) {
   }
