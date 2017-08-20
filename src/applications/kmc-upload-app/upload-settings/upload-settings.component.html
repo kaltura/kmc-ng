@@ -39,7 +39,7 @@
               <i class="kIconpen kIconEditFileName"
                  [kTooltip]="'applications.upload.uploadSettings.table.edit' | translate"
                  placement="top"
-                 (click)="file.isEditing = true"></i>
+                 (click)="_editName(file)"></i>
             </div>
             <div *ngIf="file.isEditing">
               <input pInputText

@@ -142,14 +142,6 @@ export class UploadSettingsHandler {
     this._updateFiles(updatedFiles);
   }
 
-  public updateFile(file: IUploadSettingsFile, updatedFile: IUploadSettingsFile): void {
-    const files = this._getFiles();
-    const index = R.indexOf(file, files);
-    const updatedFiles = R.update(index, updatedFile, files);
-
-    this._updateFiles(updatedFiles);
-  }
-
   public upload(files: Array<IUploadSettingsFile>, transcodingProfile: number): string {
     const { updatedFiles, errorMessage } = this._validateFiles(files);
     this._updateFiles(updatedFiles);

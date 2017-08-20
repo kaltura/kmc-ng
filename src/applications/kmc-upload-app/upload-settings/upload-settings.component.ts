@@ -100,6 +100,11 @@ export class UploadSettingsComponent implements OnInit {
     return rowData.hasError ? 'has-error' : '';
   }
 
+  public _editName(file: IUploadSettingsFile): void {
+    this._tempName = file.name;
+    file.isEditing = true;
+  }
+
   public _updateName(name: string = ''): void {
     this._tempName = name.trim() || '';
   }
@@ -114,7 +119,7 @@ export class UploadSettingsComponent implements OnInit {
 
     if (name && file.name !== name) {
       file.isEditing = file.hasError = false;
-      this._handler.updateFile(file, Object.assign({}, file, { name }));
+      file.name = name;
       this._tempName = '';
     } else {
       file.hasError = true;
