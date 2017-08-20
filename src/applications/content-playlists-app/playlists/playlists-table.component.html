@@ -16,7 +16,7 @@
       [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
 			[rowTrackBy]="rowTrackBy">
 			<p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
-			<p-column field="name" [sortable]="true" header="{{'applications.content.table.name' | translate}}">
+			<p-column field="name" [sortable]="'custom'" header="{{'applications.content.table.name' | translate}}">
 				<ng-template let-col let-playlist="rowData" pTemplate="body">
           <div class="kPlaylistsNameWrap">
             <div [ngClass]="playlist.playlistType | playlistType: true" class="kMediaTypeIcon"></div>
@@ -30,7 +30,7 @@
 					<span>{{playlist[col.field] | playlistType}}</span>
 				</ng-template>
 			</p-column>
-			<p-column field="createdAt" [sortable]="true" header="{{'applications.content.table.createdOn' | translate}}"
+			<p-column field="createdAt" [sortable]="'custom'" header="{{'applications.content.table.createdOn' | translate}}"
         [style]="{'width':'140px'}">
 				<ng-template let-col let-playlist="rowData" pTemplate="body">
 					<span>{{playlist[col.field] | kDate}}</span>
