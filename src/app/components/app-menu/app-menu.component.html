@@ -8,10 +8,7 @@
   </div>
 
   <div class="kMenu-right">
-    <button pButton
-            label="{{'app.menu.upload' | translate | uppercase}}"
-            class="kButtonDefault kUploadBtn"
-            (click)="uploadmenu.open()"></button>
+    <kUploadApp></kUploadApp>
     <i class="kIconfolder_large"></i>
     <i class="kIconuser"></i>
     <i class="kIcongear"></i>
@@ -57,19 +54,4 @@
     <p class="kHelpLink">Contextual link 1</p>
     <p class="kHelpLink">Contextual link 2</p>
   </div>
-</kPopupWidget>
-
-
-<kPopupWidget #uploadmenu [popupWidth]="315" [popupHeight]="385" [closeBtn]="true" [modal]="true" [transparent]="true">
-  <ng-template>
-    <kKMCUploadMenu (onFileSelected)="_handleFileSelected($event)"></kKMCUploadMenu>
-  </ng-template>
-</kPopupWidget>
-
-<kPopupWidget #uploadsettings [popupWidth]="791" [popupHeight]="607" [closeBtn]="true" [modal]="true">
-  <ng-template>
-    <kKMCUploadSettings
-      (onUploadStarted)="uploadsettings.close()"
-      (onFileSelected)="_handleFileSelected($event)"></kKMCUploadSettings>
-  </ng-template>
 </kPopupWidget>

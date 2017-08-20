@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 import { AppAuthentication, AppUser, AppNavigator } from 'app-shared/kmc-shell';
@@ -7,8 +7,6 @@ import { AppMenuService } from '../../services/app-menu.service';
 import { AppMenuItem } from "../../services/app-menu-config";
 
 import * as R from 'ramda';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KmcUploadAppService } from '../../../applications/kmc-upload-app/kmc-upload-app.service';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -16,9 +14,6 @@ import { KmcUploadAppService } from '../../../applications/kmc-upload-app/kmc-up
     styleUrls: ['./app-menu.component.scss']
 })
 export class AppMenuComponent implements OnInit, OnDestroy{
-  @ViewChild('uploadmenu') uploadMenuPopup: PopupWidgetComponent;
-  @ViewChild('uploadsettings') uploadSettingsPopup: PopupWidgetComponent;
-
     private sub: any;
     public _userContext: AppUser;
     public _userSettingsOpen = false;
@@ -27,8 +22,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     constructor(private userAuthentication: AppAuthentication,
                 private appMenuService: AppMenuService,
                 private appNavigator: AppNavigator,
-                private router: Router,
-                private _uploadService: KmcUploadAppService) {
+                private router: Router) {
         this.sub = router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 this.setSelectedRoute(event.url);
@@ -63,12 +57,4 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     ngOnDestroy() {
         this.sub.unsubscribe();
     }
-
-  _handleFileSelected(files: FileList) {
-    this.uploadMenuPopup.close();
-    this.uploadSettingsPopup.open();
-
-    setTimeout(() => this._uploadService.selectFiles(files), 0); // wait next tick to add files
-  }
-
 }

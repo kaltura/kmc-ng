@@ -19,6 +19,7 @@ import { UploadMenuComponent } from './upload-menu/upload-menu.component';
 import { UploadSettingsComponent } from './upload-settings/upload-settings.component';
 import { AutofocusDirective } from './directives/input-autofocus';
 import { KmcUploadAppService } from './kmc-upload-app.service';
+import { KmcUploadAppComponent } from './kmc-upload-app.component';
 
 @NgModule({
   imports: [
@@ -41,11 +42,11 @@ import { KmcUploadAppService } from './kmc-upload-app.service';
   declarations: [
     UploadMenuComponent,
     UploadSettingsComponent,
-    AutofocusDirective
+    AutofocusDirective,
+    KmcUploadAppComponent
   ],
   exports: [
-    UploadMenuComponent,
-    UploadSettingsComponent
+    KmcUploadAppComponent
   ],
   providers: [
     KmcUploadAppService
