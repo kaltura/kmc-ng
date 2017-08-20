@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { UploadSettingsHandler } from '../upload-settings/upload-settings-handler';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { KmcUploadAppService } from '../kmc-upload-app.service';
 
 @Component({
   selector: 'kKMCUploadMenu',
@@ -12,10 +12,10 @@ export class UploadMenuComponent {
   @Output() onFileSelected = new EventEmitter<FileList>();
 
   public get _allowedExtensions(): string {
-    return this._handler.allowedExtensions;
+    return this._uploadService.allowedExtensions;
   }
 
-  constructor(private _handler: UploadSettingsHandler,
+  constructor(private _uploadService: KmcUploadAppService,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization) {
   }

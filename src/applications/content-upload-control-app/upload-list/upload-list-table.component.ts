@@ -3,7 +3,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { INewUploadFile } from '../../kmc-upload-app/upload-control.service';
+import { INewUploadFile } from '../../kmc-upload-app/kmc-upload-app.service';
 
 @Component({
   selector: 'kUploadListTable',

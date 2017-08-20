@@ -4,7 +4,7 @@ import { UploadListTableComponent } from './upload-list-table.component';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { Router } from '@angular/router';
-import { INewUploadFile, UploadControlService } from '../../kmc-upload-app/upload-control.service';
+import { INewUploadFile, KmcUploadAppService } from '../../kmc-upload-app/kmc-upload-app.service';
 
 @Component({
   selector: 'kUploadControlList',
@@ -27,11 +27,11 @@ export class UploadListComponent implements OnInit {
   constructor(private _appLocalization: AppLocalization,
               private _router: Router,
               private _browserService: BrowserService,
-              private _uploadControlService: UploadControlService) {
+              private _uploadService: KmcUploadAppService) {
   }
 
   ngOnInit() {
-    this._uploadControlService.newUploadFiles$
+    this._uploadService.newUploadFiles$
       .subscribe(
         files => {
           this._uploads = files;

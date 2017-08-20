@@ -1,15 +1,17 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { IUploadSettingsFile, UploadSettingsHandler } from './upload-settings-handler';
+import { IUploadSettingsFile, UploadSettingsService } from './upload-settings.service';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { KmcUploadAppService } from '../kmc-upload-app.service';
 
 @Component({
   selector: 'kKMCUploadSettings',
   templateUrl: './upload-settings.component.html',
-  styleUrls: ['./upload-settings.component.scss']
+  styleUrls: ['./upload-settings.component.scss'],
+  providers: [UploadSettingsService]
 })
 export class UploadSettingsComponent implements OnInit {
   @Output() onFileSelected = new EventEmitter<FileList>();
@@ -39,10 +41,11 @@ export class UploadSettingsComponent implements OnInit {
   ];
 
   public get _allowedExtensions(): string {
-    return this._handler.allowedExtensions;
+    return this._uploadService.allowedExtensions;
   }
 
-  constructor(private _handler: UploadSettingsHandler,
+  constructor(private _uploadSettingsService: UploadSettingsService,
+              private _uploadService: KmcUploadAppService,
               private _formBuilder: FormBuilder,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
@@ -56,13 +59,13 @@ export class UploadSettingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._handler.resetFiles();
-    this._handler.selectedFiles$.subscribe(items => {
+    // this._handler.resetFiles();
+    this._uploadSettingsService.selectedFiles$.subscribe(items => {
       this._files = items;
     });
 
     this._transcodingProfileLoading = true;
-    this._handler.getTranscodingProfiles()
+    this._uploadService.getTranscodingProfiles()
       .subscribe(
         profiles => {
           this._transcodingProfileField.enable();
@@ -80,11 +83,11 @@ export class UploadSettingsComponent implements OnInit {
   }
 
   public _removeFile(file: IUploadSettingsFile): void {
-    this._handler.removeFile(file);
+    this._uploadSettingsService.removeFile(file);
   }
 
   public _upload(files: Array<IUploadSettingsFile>): void {
-    const errorMessage = this._handler.upload(files, this._transcodingProfileField.value);
+    const errorMessage = this._uploadSettingsService.upload(files, this._transcodingProfileField.value);
 
     if (errorMessage) {
       return this._browserService.alert({

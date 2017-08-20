@@ -17,10 +17,8 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 
 import { UploadMenuComponent } from './upload-menu/upload-menu.component';
 import { UploadSettingsComponent } from './upload-settings/upload-settings.component';
-import { UploadSettingsHandler } from './upload-settings/upload-settings-handler';
-import { KMCShellModule } from 'app-shared/kmc-shell';
 import { AutofocusDirective } from './directives/input-autofocus';
-import { UploadControlService } from './upload-control.service';
+import { KmcUploadAppService } from './kmc-upload-app.service';
 
 @NgModule({
   imports: [
@@ -50,8 +48,7 @@ import { UploadControlService } from './upload-control.service';
     UploadSettingsComponent
   ],
   providers: [
-    UploadSettingsHandler,
-    UploadControlService
+    KmcUploadAppService
   ]
 })
 export class KmcUploadAppModule {

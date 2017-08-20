@@ -12,8 +12,13 @@ import { KalturaAssetsParamsResourceContainers } from 'kaltura-typescript-client
 import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
 import { KalturaAssetParamsResourceContainer } from 'kaltura-typescript-client/types/KalturaAssetParamsResourceContainer';
 import { MediaUpdateContentAction } from 'kaltura-typescript-client/types/MediaUpdateContentAction';
-import { IUploadSettingsFile } from './upload-settings/upload-settings-handler';
-import * as R from 'ramda';
+import { IUploadSettingsFile } from './upload-settings/upload-settings.service';
+import { KalturaConversionProfile } from 'kaltura-typescript-client/types/KalturaConversionProfile';
+import { KalturaConversionProfileType } from 'kaltura-typescript-client/types/KalturaConversionProfileType';
+import { KalturaConversionProfileListResponse } from 'kaltura-typescript-client/types/KalturaConversionProfileListResponse';
+import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
+import { KalturaConversionProfileFilter } from 'kaltura-typescript-client/types/KalturaConversionProfileFilter';
+import { ConversionProfileListAction } from 'kaltura-typescript-client/types/ConversionProfileListAction';
 
 export interface INewUploadFile {
   uploadToken: string;
@@ -28,25 +33,62 @@ export interface INewUploadFile {
   uploadFailure: boolean;
 }
 
-const temp: INewUploadFile = {
-  uploadToken: 'djgnkdjgnksfdg',
-  entryId: 'akjsngjshgk',
-  uploadedOn: new Date(),
-  fileName: 'Example_file.mov',
-  fileSize: 1024,
-  status: 'uploading',
-  progress: 55,
-  mediaType: KalturaMediaType.video,
-  uploading: true,
-  uploadFailure: false
-};
+const temp: Array<INewUploadFile> = [
+  {
+    uploadToken: 'asgegsdgdsfg',
+    entryId: 'klnlknln',
+    uploadedOn: new Date(),
+    fileName: 'Example_file.mov',
+    fileSize: 1024,
+    status: 'uploading',
+    progress: 55,
+    mediaType: KalturaMediaType.video,
+    uploading: true,
+    uploadFailure: false
+  },
+  {
+    uploadToken: 'aszxvewf',
+    entryId: 'asdasdrgvc',
+    uploadedOn: new Date(),
+    fileName: 'Example_file.mov',
+    fileSize: 1024,
+    status: 'uploading',
+    progress: 15,
+    mediaType: KalturaMediaType.video,
+    uploading: true,
+    uploadFailure: false
+  },
+  {
+    uploadToken: 'qgtdgsdg',
+    entryId: 'gsfgsg',
+    uploadedOn: new Date(),
+    fileName: 'Example_file.mp3',
+    fileSize: 1024,
+    status: 'uploading',
+    progress: 30,
+    mediaType: KalturaMediaType.audio,
+    uploading: true,
+    uploadFailure: false
+  }
+];
 
 @Injectable()
-export class UploadControlService {
+export class KmcUploadAppService {
+  private _allowedExtensions = `
+    .flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v,.mpeg,.mxf,.rm,.rv,.rmvb,.ts,.ogg,.ogv,.vob,.webm,.mts,.arf,.mkv,
+    .flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp3,.wav,.ra,.rm,.wma,.aif,.m4a,
+    .jpg,.jpeg,.gif,.png
+  `;
 
-  private _newUploadFiles = new BehaviorSubject<Array<INewUploadFile>>([temp]);
+  private _selectedFiles = new BehaviorSubject<FileList>(null);
+  private _newUploadFiles = new BehaviorSubject<Array<INewUploadFile>>(temp);
 
+  public selectedFiles$ = this._selectedFiles.asObservable();
   public newUploadFiles$ = this._newUploadFiles.asObservable();
+
+  public get allowedExtensions(): string {
+    return this._allowedExtensions;
+  }
 
   constructor(private _kalturaServerClient: KalturaClient, private _uploadManagement: UploadManagement) {
     this._trackUploadFiles();
@@ -160,5 +202,25 @@ export class UploadControlService {
           console.error(err); // TODO handle error
         }
       );
+  }
+
+  public getTranscodingProfiles(): Observable<Array<KalturaConversionProfile>> {
+    const payload = new ConversionProfileListAction({
+      filter: new KalturaConversionProfileFilter({ typeEqual: KalturaConversionProfileType.media }),
+      pager: new KalturaFilterPager({ pageSize: 500 })
+    });
+
+    return this._kalturaServerClient
+      .request(new ConversionProfileListAction(payload))
+      .map((res: KalturaConversionProfileListResponse) => res.objects)
+      .map(profiles => profiles.filter(profile => profile.getTypeName() === 'KalturaConversionProfile'));
+  }
+
+  public selectFiles(files) {
+    this._selectedFiles.next(files);
+  }
+
+  public resetSelected() {
+    this._selectedFiles.next(null);
   }
 }

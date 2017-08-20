@@ -1,16 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { ConversionProfileListAction } from 'kaltura-typescript-client/types/ConversionProfileListAction';
-import { KalturaConversionProfileType } from 'kaltura-typescript-client/types/KalturaConversionProfileType';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { KalturaConversionProfileFilter } from 'kaltura-typescript-client/types/KalturaConversionProfileFilter';
-import { Observable } from 'rxjs/Observable';
-import { KalturaConversionProfileListResponse } from 'kaltura-typescript-client/types/KalturaConversionProfileListResponse';
-import { KalturaConversionProfile } from 'kaltura-typescript-client/types/KalturaConversionProfile';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { environment } from 'app-environment';
-import { UploadControlService } from '../upload-control.service';
+import { KmcUploadAppService } from '../kmc-upload-app.service';
 import * as R from 'ramda';
 
 export interface IUploadSettingsFile {
@@ -27,21 +20,20 @@ export interface IUploadSettingsFile {
 }
 
 @Injectable()
-export class UploadSettingsHandler {
-  private _allowedExtensions = `
-    .flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v,.mpeg,.mxf,.rm,.rv,.rmvb,.ts,.ogg,.ogv,.vob,.webm,.mts,.arf,.mkv,
-    .flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp3,.wav,.ra,.rm,.wma,.aif,.m4a,
-    .jpg,.jpeg,.gif,.png
-  `;
+export class UploadSettingsService implements OnDestroy {
   private _selectedFiles = new BehaviorSubject<Array<IUploadSettingsFile>>([]);
 
   public selectedFiles$ = this._selectedFiles.asObservable();
 
-  public get allowedExtensions(): string {
-    return this._allowedExtensions;
+  constructor(private _uploadService: KmcUploadAppService) {
+    this._uploadService.selectedFiles$
+      .cancelOnDestroy(this)
+      .filter(files => !!files)
+      .subscribe((files: FileList) => this.addFiles(files));
   }
 
-  constructor(private _kalturaServerClient: KalturaClient, private _uploadControl: UploadControlService) {
+  ngOnDestroy() {
+    this._uploadService.resetSelected();
   }
 
   private _getFileExtension(filename: string): string {
@@ -150,20 +142,8 @@ export class UploadSettingsHandler {
       return errorMessage;
     }
 
-    this._uploadControl.proceedUpload(updatedFiles, transcodingProfile);
+    this._uploadService.proceedUpload(updatedFiles, transcodingProfile);
 
     return '';
-  }
-
-  public getTranscodingProfiles(): Observable<Array<KalturaConversionProfile>> {
-    const payload = new ConversionProfileListAction({
-      filter: new KalturaConversionProfileFilter({ typeEqual: KalturaConversionProfileType.media }),
-      pager: new KalturaFilterPager({ pageSize: 500 })
-    });
-
-    return this._kalturaServerClient
-      .request(new ConversionProfileListAction(payload))
-      .map((res: KalturaConversionProfileListResponse) => res.objects)
-      .map(profiles => profiles.filter(profile => profile.getTypeName() === 'KalturaConversionProfile'));
   }
 }

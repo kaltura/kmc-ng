@@ -8,7 +8,7 @@ import { AppMenuItem } from "../../services/app-menu-config";
 
 import * as R from 'ramda';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { UploadSettingsHandler } from '../../../applications/kmc-upload-app/upload-settings/upload-settings-handler';
+import { KmcUploadAppService } from '../../../applications/kmc-upload-app/kmc-upload-app.service';
 
 @Component({
     selector: 'kKMCAppMenu',
@@ -28,7 +28,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
                 private appMenuService: AppMenuService,
                 private appNavigator: AppNavigator,
                 private router: Router,
-                private _uploadSettingsHandler: UploadSettingsHandler) {
+                private _uploadService: KmcUploadAppService) {
         this.sub = router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 this.setSelectedRoute(event.url);
@@ -68,7 +68,7 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     this.uploadMenuPopup.close();
     this.uploadSettingsPopup.open();
 
-    setTimeout(() => this._uploadSettingsHandler.addFiles(files), 0); // wait next tick to add files
+    setTimeout(() => this._uploadService.selectFiles(files), 0); // wait next tick to add files
   }
 
 }
