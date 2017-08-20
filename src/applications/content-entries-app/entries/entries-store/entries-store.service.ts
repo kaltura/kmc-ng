@@ -30,6 +30,7 @@ import { FilterItem } from "./filter-item";
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 import { KalturaLiveStreamAdminEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamAdminEntry';
 import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamEntry';
+import { KalturaExternalMediaEntry } from 'kaltura-typescript-client/types/KalturaExternalMediaEntry';
 
 export type UpdateStatus = {
     loading : boolean;
@@ -443,7 +444,7 @@ export type FilterTypeConstructor<T extends FilterItem> = {new(...args : any[]) 
                     filter: requestContext.filter,
                     pager: pagination,
                     responseProfile: responseProfile,
-                    acceptedTypes : [KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry]
+                    acceptedTypes : [KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry, KalturaExternalMediaEntry]
                 })
             )
         }catch(err)
