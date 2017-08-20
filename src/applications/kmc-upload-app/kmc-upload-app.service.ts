@@ -19,6 +19,11 @@ import { KalturaConversionProfileListResponse } from 'kaltura-typescript-client/
 import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
 import { KalturaConversionProfileFilter } from 'kaltura-typescript-client/types/KalturaConversionProfileFilter';
 import { ConversionProfileListAction } from 'kaltura-typescript-client/types/ConversionProfileListAction';
+import { environment } from 'app-environment'
+import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
+import * as R from 'ramda';
+
+export type UploadStatus = 'uploading' | 'uploaded' | 'uploadFailure' | 'pending';
 
 export interface INewUploadFile {
   uploadToken: string;
@@ -26,51 +31,14 @@ export interface INewUploadFile {
   uploadedOn: Date;
   fileName: string;
   fileSize: number;
-  status: 'uploading' | 'uploaded' | 'uploadFailure' | 'pending';
+  status: UploadStatus;
   progress: number;
   mediaType: KalturaMediaType;
   uploading: boolean;
   uploadFailure: boolean;
+  tempId?: string;
+  statusWeight?: number;
 }
-
-const temp: Array<INewUploadFile> = [
-  {
-    uploadToken: 'asgegsdgdsfg',
-    entryId: 'klnlknln',
-    uploadedOn: new Date(),
-    fileName: 'Example_file.mov',
-    fileSize: 1024,
-    status: 'uploading',
-    progress: 55,
-    mediaType: KalturaMediaType.video,
-    uploading: true,
-    uploadFailure: false
-  },
-  {
-    uploadToken: 'aszxvewf',
-    entryId: 'asdasdrgvc',
-    uploadedOn: new Date(),
-    fileName: 'Example_file.mov',
-    fileSize: 1024,
-    status: 'uploading',
-    progress: 15,
-    mediaType: KalturaMediaType.video,
-    uploading: true,
-    uploadFailure: false
-  },
-  {
-    uploadToken: 'qgtdgsdg',
-    entryId: 'gsfgsg',
-    uploadedOn: new Date(),
-    fileName: 'Example_file.mp3',
-    fileSize: 1024,
-    status: 'uploading',
-    progress: 30,
-    mediaType: KalturaMediaType.audio,
-    uploading: true,
-    uploadFailure: false
-  }
-];
 
 @Injectable()
 export class KmcUploadAppService {
@@ -82,7 +50,7 @@ export class KmcUploadAppService {
 
   private _trancodingProfileCache$: Observable<Array<KalturaConversionProfile>>;
   private _selectedFiles = new BehaviorSubject<FileList>(null);
-  private _newUploadFiles = new BehaviorSubject<Array<INewUploadFile>>(temp);
+  private _newUploadFiles = new BehaviorSubject<Array<INewUploadFile>>([]);
 
   public selectedFiles$ = this._selectedFiles.asObservable();
   public newUploadFiles$ = this._newUploadFiles.asObservable();
@@ -99,6 +67,12 @@ export class KmcUploadAppService {
     return this._newUploadFiles.getValue();
   }
 
+  private _removeUploadedFile(file: INewUploadFile) {
+    setTimeout(() => {
+      this._updateFiles(R.without([file], this._getFiles()));
+    }, 3000);
+  }
+
   private _updateFiles(items: Array<INewUploadFile>): void {
     this._newUploadFiles.next(items);
   }
@@ -107,21 +81,51 @@ export class KmcUploadAppService {
     this._updateFiles([...this._getFiles(), file]);
   }
 
+  private _updateUploadFile(file: IUploadSettingsFile): void {
+    const files = this._getFiles();
+    const relevantFile = files.find(({ tempId }) => file.tempId === tempId);
+
+    if (relevantFile) {
+      relevantFile.entryId = file.entryId;
+      relevantFile.uploadToken = file.uploadToken;
+    }
+  }
+
   private _convertFile(file: IUploadSettingsFile): INewUploadFile {
-    const { entryId, name: fileName, size: fileSize, mediaType, uploadedOn, uploadToken } = file;
+    const { entryId, name: fileName, size: fileSize, mediaType, uploadedOn, uploadToken, tempId } = file;
 
     return {
-      entryId,
       fileName,
       fileSize,
       mediaType,
-      uploadedOn,
-      uploadToken,
+      tempId,
+      entryId: entryId || '',
+      uploadedOn: uploadedOn || new Date(),
+      uploadToken: uploadToken || '',
       status: 'pending',
       progress: 0,
       uploading: false,
-      uploadFailure: false
+      uploadFailure: false,
+      statusWeight: this._getStatusWeight('pending')
     };
+  }
+
+  private _reorderFiles() {
+    this._updateFiles(R.sortBy(R.prop('statusWeight'))(this._getFiles()));
+  }
+
+  private _getStatusWeight(status: UploadStatus): number {
+    switch (status) {
+      case 'uploadFailure':
+      case 'uploaded':
+        return 0;
+      case 'uploading':
+        return 1;
+      case 'pending':
+        return 2;
+      default:
+        return 3;
+    }
   }
 
   private _trackUploadFiles(): void {
@@ -133,17 +137,24 @@ export class KmcUploadAppService {
 
           if (relevantNewFile) {
             relevantNewFile.status = trackedFile.status;
+            relevantNewFile.statusWeight = this._getStatusWeight(trackedFile.status);
 
             switch (trackedFile.status) {
               case 'uploaded':
                 relevantNewFile.uploading = false;
                 relevantNewFile.uploadFailure = false;
+                this._removeUploadedFile(relevantNewFile);
+                this._reorderFiles();
                 break;
               case 'uploadFailure':
                 relevantNewFile.uploading = false;
                 relevantNewFile.uploadFailure = true;
+                this._reorderFiles();
                 break;
               case 'uploading':
+                if (!relevantNewFile.uploading) {
+                  this._reorderFiles();
+                }
                 relevantNewFile.progress = Number((trackedFile.progress * 100).toFixed(0));
                 relevantNewFile.uploading = true;
                 relevantNewFile.uploadFailure = false;
@@ -162,21 +173,35 @@ export class KmcUploadAppService {
       .map(entry => new MediaAddAction({ entry }));
     const request = new KalturaMultiRequest(...payload);
 
+    const updatedFile = files.map(file => {
+      const tempId = FriendlyHashId.defaultInstance.generateUnique(
+        this._getFiles().map(item => item.entryId || (item).tempId)
+      );
+      return Object.assign(file, { tempId });
+    });
+
+    updatedFile.forEach(file => {
+      this._addFile(this._convertFile(file));
+    });
+
     this._kalturaServerClient.multiRequest(request)
       .switchMap(res => Observable.from(res))
       .map(res => res.error ? Observable.throw(res.error) : res.result)
-      .zip(files, (entry, file) =>
+      .zip(updatedFile, (entry, file) =>
         Object.assign({}, file, {
           entryId: (<any>entry).id,
-          conversionProfileId: (<any>entry).conversionProfileId,
-          uploadedOn: new Date()
+          conversionProfileId: (<any>entry).conversionProfileId
         }))
       .flatMap(
         file => this._uploadManagement.newUpload(new KalturaUploadFile(file.file)),
-        (file, { uploadToken }) => Object.assign({}, file, { uploadToken })
+        (file, { uploadToken }) => Object.assign({}, file, { uploadToken }),
+        environment.uploadsShared.MAX_CONCURENT_UPLOADS
       )
       // -------- SIDE EFFECT ----------
-      .do((file: IUploadSettingsFile) => this._addFile(this._convertFile(file)))
+      .do(file => {
+        this._updateUploadFile(file);
+        this._reorderFiles();
+      })
       // -------------------------------
       .map(({ uploadToken: token, mediaType, entryId, conversionProfileId: profileId }) => {
         const subSubResource = new KalturaUploadedFileTokenResource({ token });

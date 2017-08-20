@@ -16,7 +16,8 @@ export interface IUploadSettingsFile {
   uploadedOn?: Date;
   conversionProfileId?: number;
   isEditing?: boolean;
-  hasError?: boolean
+  hasError?: boolean;
+  tempId?: string;
 }
 
 @Injectable()

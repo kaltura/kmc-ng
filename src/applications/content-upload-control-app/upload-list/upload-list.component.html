@@ -20,15 +20,6 @@
                         (onSelectedEntriesChange)="_selectedEntriesChange($event)"
                         [selectedUploads]="_selectedUploads"
       ></kUploadListTable>
-
-      <div class="kUploadTableFooter" #footer *ngIf="0">
-        <p-paginator
-          [rows]="1" (onPageChange)="_onPaginationChanged($event)"
-          [first]="1"
-          [totalRecords]="0"
-          [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
-        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
-      </div>
     </div>
   </div>
 </k-area-blocker>
