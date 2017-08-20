@@ -1,10 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {KalturaPartner} from 'kaltura-typescript-client/types/KalturaPartner';
-import {SettingsAccountSettingsService} from './settings-account-settings.service';
+import {AccountSettings, SettingsAccountSettingsService} from './settings-account-settings.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {SelectItem} from "primeng/primeng";
-import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
+import {SelectItem} from 'primeng/primeng';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {ISubscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'kmc-settings-account-settings',
@@ -17,7 +18,11 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   public accountSettingsForm: FormGroup;
   public nameOfAccountOwnerOptions: SelectItem[] = [];
   public describeYourselfOptions: SelectItem[] = [];
+  public enableSave = false;
+  public partnerId: number;
+  public partnerAdminEmail: string;
   private _blockerMessage: AreaBlockerMessage = null;
+  private _subscriptions: ISubscription[] = [];
   private _isBusy = false;
 
   constructor(private _accountSettingsService: SettingsAccountSettingsService,
@@ -25,44 +30,20 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
               private _fb: FormBuilder) {
   }
 
-  ngOnDestroy(): void {
-    // TODO: Unsubscribe all subscriptions
-  }
-
   ngOnInit() {
     this.isBusy = true;
     this._createForm();
-
     this._fillDescribeYourselfOptions();
+    this._fillPartnerAccountSettings();
+  }
 
-    this._accountSettingsService.getPartnerAccountSettings()
-      .subscribe(response => {
-          this._fillAccountOwnersOptions(response.accountOwners);
-          this._fillForm(response.partnerData);
-          this.isBusy = false;
-        },
-        error => {
-          this.blockerMessage = new AreaBlockerMessage(
-            {
-              message: error.message,
-              buttons: [
-                {
-                  label: this._appLocalization.get('app.common.retry'),
-                  action: () => {
-                    // TODO: Fill with the submitForm action
-                    //   this.deleteEntry(entryId);
-                  }
-                },
-                {
-                  label: this._appLocalization.get('app.common.cancel'),
-                  action: () => {
-                    this._blockerMessage = null;
-                  }
-                }
-              ]
-            }
-          )
-        });
+  ngOnDestroy(): void {
+    // Un subscribe all subscriptions
+    this._subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  onSubmit(): void {
+    this._updatePartnerAccountSettings();
   }
 
   get blockerMessage(): AreaBlockerMessage {
@@ -85,6 +66,37 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
     }
   }
 
+  private _updatePartnerAccountSettings() {
+    const subscription: ISubscription = this._accountSettingsService.updatePartnerData(this.accountSettingsForm.value)
+      .subscribe(updatedPartner => {
+          this._fillForm(updatedPartner);
+          this.isBusy = false;
+        },
+        error => {
+          this.blockerMessage = new AreaBlockerMessage(
+            {
+              message: error.message,
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this._updatePartnerAccountSettings();
+                  }
+                },
+                {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this._blockerMessage = null;
+                  }
+                }
+              ]
+            }
+          )
+        });
+
+    this._subscriptions.push(subscription);
+  }
+
   private _fillAccountOwnersOptions(accountOwners: string[]): void {
     accountOwners.forEach((ownerName) => {
       this.nameOfAccountOwnerOptions.push({label: ownerName, value: ownerName});
@@ -101,38 +113,71 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
       });
   }
 
+  // Get PartnerAccountSettings data and fill the form
+  private _fillPartnerAccountSettings() {
+    const subscription: ISubscription = this._accountSettingsService.getPartnerAccountSettings()
+      .subscribe(response => {
+          this._fillAccountOwnersOptions(response.accountOwners);
+          this.partnerId = response.partnerData.id;
+          this.partnerAdminEmail = response.partnerData.adminEmail;
+          this._fillForm(response.partnerData);
+          this.isBusy = false;
+        },
+        error => {
+          this.blockerMessage = new AreaBlockerMessage(
+            {
+              message: error.message,
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this._fillPartnerAccountSettings();
+                  }
+                },
+                {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this._blockerMessage = null;
+                  }
+                }
+              ]
+            }
+          )
+        });
+
+    this._subscriptions.push(subscription);
+  }
+
+  // Create empty structured form on loading
   private _createForm(): void {
     this.accountSettingsForm = this._fb.group({
-      id: '',
-      accountOwnerEmail: '',
       name: ['', Validators.required],
-      accountOwnerName: ['', Validators.required],
+      adminName: ['', Validators.required],
       phone: ['', Validators.required],
       website: ['', Validators.required],
       describeYourself: ['', Validators.required],
-      accountReferenceID: ['', Validators.required]
+      referenceId: ['', Validators.required]
     });
-
-    // TODO: Disable button when form is invalid
-    this.accountSettingsForm.valueChanges
+    const subscription: ISubscription = this.accountSettingsForm.valueChanges
       .subscribe(
         () => {
-          if (this.accountSettingsForm.status === 'INVALID' && this.accountSettingsForm.dirty) {
-          }
+          this.enableSave = this.accountSettingsForm.status === 'VALID';
         }
       );
+    this._subscriptions.push(subscription);
   }
 
+  // Fill the form with data
   private _fillForm(partner: KalturaPartner): void {
     this.accountSettingsForm.reset({
-      id: partner.id,
-      accountOwnerEmail: partner.adminEmail,
       name: partner.name,
-      accountOwnerName: partner.adminName,
+      adminName: partner.adminName,
       phone: partner.phone,
       website: partner.website,
-      describeYourself: partner.describeYourself,
-      accountReferenceID: partner.referenceId
+      describeYourself: this.describeYourselfOptions.filter(option => option.label === partner.describeYourself).length ?
+        partner.describeYourself :
+        this.describeYourselfOptions[this.describeYourselfOptions.length - 1].label,
+      referenceId: partner.referenceId
     });
   }
 }

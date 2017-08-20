@@ -646,16 +646,15 @@
     "settings": {
       "accountInfo": "Account Info",
       "partnerID": "Partner ID",
-      "accountOwnerEmail": "Email of Account Owner",
-      "accountOwnerName": "Name of Account Owner",
+      "adminEmail": "Email of Account Owner",
+      "adminName": "Name of Account Owner",
       "informationMessage": "Please make sure that the information below is up to date.",
       "name":"Name of Publisher/Company",
       "phone": "Phone",
       "website": "Website",
       "describeYourself": "Describe Yourself",
-      "accountReferenceID": "Account Reference ID",
+      "referenceId": "Account Reference ID",
       "describeYourselfOptions": "Enterprise / Small Business / Government Agency,Education Organization,Media Company / Agency,CDN / ISP / Integrator / Hosting Provider,Other"
-
     }
   },
   "entriesShared": {

@@ -12,6 +12,17 @@ import {Observable} from 'rxjs/Observable';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {KalturaPartner} from 'kaltura-typescript-client/types/KalturaPartner';
 import {PartnerGetInfoAction} from 'kaltura-typescript-client/types/PartnerGetInfoAction';
+import {PartnerUpdateAction} from "kaltura-typescript-client/types/PartnerUpdateAction";
+
+
+export interface AccountSettings {
+  website: string;
+  name: string;
+  adminName: string;
+  phone: string;
+  describeYourself: string;
+  referenceId: string;
+}
 
 @Injectable()
 export class SettingsAccountSettingsService {
@@ -32,6 +43,23 @@ export class SettingsAccountSettingsService {
       .catch((error) => {
         return Observable.throw('Error has occurred while trying to return accountOwners / partnerData');
       });
+  }
+
+  /** update the data for current partner */
+  public updatePartnerData(data: AccountSettings): Observable<KalturaPartner> {
+    const partner = new KalturaPartner({
+      website: data.website,
+      name: data.name,
+      adminName: data.adminName,
+      phone: data.phone,
+      describeYourself: data.describeYourself,
+      referenceId: data.referenceId
+    });
+    return this._kalturaServerClient.request(new PartnerUpdateAction({
+      partner,
+      allowEmpty: false
+    }))
+      .monitor('update partner info');
   }
 
   /** Get the data for current partner */
@@ -80,5 +108,6 @@ export class SettingsAccountSettingsService {
           }
         });
   }
+
 
 }
