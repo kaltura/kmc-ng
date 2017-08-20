@@ -57,7 +57,7 @@ export class UploadControlService {
   }
 
   private _updateFiles(items: Array<INewUploadFile>): void {
-    this._newUploadFiles.next([...items]);
+    this._newUploadFiles.next(items);
   }
 
   private _addFile(file: INewUploadFile): void {
@@ -70,7 +70,8 @@ export class UploadControlService {
     return {
       entryId,
       fileName,
-      fileSize, mediaType,
+      fileSize,
+      mediaType,
       uploadedOn,
       uploadToken,
       status: 'pending',
@@ -86,38 +87,27 @@ export class UploadControlService {
         (trackedFile: TrackedFile) => {
           const newUploadFiles = this._getFiles();
           const relevantNewFile = newUploadFiles.find(({ uploadToken }) => uploadToken === trackedFile.uploadToken);
-          let changed = true;
 
-          if (!relevantNewFile) {
-            return;
-          }
+          if (relevantNewFile) {
+            relevantNewFile.status = trackedFile.status;
 
-          const updatedFile = Object.assign({}, relevantNewFile, { status: trackedFile.status });
-
-          switch (trackedFile.status) {
-            case 'uploaded':
-              updatedFile.uploading = false;
-              updatedFile.uploadFailure = false;
-              break;
-            case 'uploadFailure':
-              updatedFile.uploading = false;
-              updatedFile.uploadFailure = true;
-              break;
-            case 'uploading':
-              updatedFile.progress = Number((trackedFile.progress * 100).toFixed(0));
-              updatedFile.uploading = true;
-              updatedFile.uploadFailure = false;
-              break;
-            default:
-              changed = false;
-              break;
-          }
-
-          if (changed) {
-            const index = R.indexOf(relevantNewFile, newUploadFiles);
-            const updatedFiles = R.update(index, updatedFile, newUploadFiles);
-
-            this._updateFiles(updatedFiles);
+            switch (trackedFile.status) {
+              case 'uploaded':
+                relevantNewFile.uploading = false;
+                relevantNewFile.uploadFailure = false;
+                break;
+              case 'uploadFailure':
+                relevantNewFile.uploading = false;
+                relevantNewFile.uploadFailure = true;
+                break;
+              case 'uploading':
+                relevantNewFile.progress = Number((trackedFile.progress * 100).toFixed(0));
+                relevantNewFile.uploading = true;
+                relevantNewFile.uploadFailure = false;
+                break;
+              default:
+                break;
+            }
           }
         }
       );
