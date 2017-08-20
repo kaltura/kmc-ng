@@ -172,6 +172,8 @@
     "content": {
       "uploadControl": {
         "files": "Files",
+        "selected": "Selected",
+        "cancel": "Cancel",
         "table": {
           "fileName": "File Name",
           "entryId": "ID",

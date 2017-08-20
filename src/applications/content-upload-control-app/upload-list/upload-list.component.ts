@@ -50,12 +50,12 @@ export class UploadListComponent implements OnInit {
     console.log(event);
   }
 
-  _onActionSelected(event): void {
-    console.log(event);
+  _clearSelection(): void {
+    this._selectedUploads = [];
   }
 
-  _clearSelection(): void {
-
+  _selectedEntriesChange(event): void {
+    this._selectedUploads = event;
   }
 }
 

@@ -1,10 +1,14 @@
 <div class="kUploadsTable" [class.noResults]="!_uploads.length">
-  <p-dataTable #dataTable [value]="_uploads" scrollable="true" scrollHeight="100%" dataKey="id"
+  <p-dataTable #dataTable
+               scrollable="true"
+               scrollHeight="100%"
+               dataKey="entryId"
+               [value]="_uploads"
                [sortField]="filter.sortBy"
                [sortOrder]="filter.sortDirection"
                [emptyMessage]="_emptyMessage"
                [rowTrackBy]="_rowTrackBy"
-               (selectionChange)="_onSelectionChange($event)"
+               (selectionChange)="onSelectedEntriesChange.emit($event)"
                (onSort)="_onSortChanged($event)"
                [(selection)]="selectedUploads">
     <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>

@@ -1,26 +1,27 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
-  <div class="kEntries kOverrideFAIcons">
-    <div #entriesTableHolder class="kEntriesHolder kContent">
-      <div class="kEntriesTableFilters">
-        <span class="kSelectedEntriesNum" *ngIf="_uploads.length">
+  <div class="kUploads kOverrideFAIcons">
+    <div #entriesTableHolder class="kUploadsHolder kContent">
+      <div class="kUploadsTableFilters">
+        <span class="kSelectedUploadsNum" *ngIf="_uploads.length">
           {{ _uploads.length }} {{ 'applications.content.uploadControl.files' | translate }}
         </span>
 
         <div [class.kHidden]="!_selectedUploads.length" class="kBulkOperations">
-          <span class="kSelectedEntriesLabel">• {{_selectedUploads.length}} {{'applications.content.entries.selected' | translate}}</span>
-          <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
+          <span class="kSelectedUploadsLabel">• {{_selectedUploads.length}} {{'applications.content.uploadControl.selected' | translate}}</span>
+          <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"></button>
+          <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.uploadControl.cancel' | translate}}</a>
         </div>
       </div>
 
-      <kUploadListTable class="kEntriesTable"
+      <kUploadListTable class="kUploadTable"
                         [uploads]="_uploads"
                         [filter]="_filter"
                         (sortChanged)="_onSortChanged($event)"
-                        (actionSelected)="_onActionSelected($event)"
-                        [(selectedUploads)]="_selectedUploads"
+                        (onSelectedEntriesChange)="_selectedEntriesChange($event)"
+                        [selectedUploads]="_selectedUploads"
       ></kUploadListTable>
 
-      <div class="kEntriesTableFooter" #footer *ngIf="0">
+      <div class="kUploadTableFooter" #footer *ngIf="0">
         <p-paginator
           [rows]="1" (onPageChange)="_onPaginationChanged($event)"
           [first]="1"

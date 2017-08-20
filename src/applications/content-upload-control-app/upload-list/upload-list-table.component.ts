@@ -33,10 +33,7 @@ export class UploadListTableComponent implements AfterViewInit {
   sortChanged = new EventEmitter<any>();
 
   @Output()
-  actionSelected = new EventEmitter<any>();
-
-  @Output()
-  selectedEntriesChange = new EventEmitter<any>();
+  onSelectedEntriesChange = new EventEmitter<any>();
 
   @ViewChild('dataTable') private dataTable: DataTable;
 
@@ -53,10 +50,6 @@ export class UploadListTableComponent implements AfterViewInit {
 
   _onSortChanged(event) {
     this.sortChanged.emit(event);
-  }
-
-  _onSelectionChange(event) {
-    this.selectedEntriesChange.emit(event);
   }
 
   ngAfterViewInit() {
