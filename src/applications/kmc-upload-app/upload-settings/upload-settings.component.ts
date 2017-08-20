@@ -6,6 +6,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KmcUploadAppService } from '../kmc-upload-app.service';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
 @Component({
   selector: 'kKMCUploadSettings',
@@ -22,7 +23,7 @@ export class UploadSettingsComponent implements OnInit {
   public _transcodingProfiles: Array<{ value: number, label: string }>;
   public _profileForm: FormGroup;
   public _transcodingProfileField: AbstractControl;
-  public _transcodingProfileError = '';
+  public _transcodingProfileError: AreaBlockerMessage;
   public _transcodingProfileLoading = false;
   public _files: Array<IUploadSettingsFile> = [];
   public _fileTypes: Array<SelectItem> = [
@@ -78,7 +79,8 @@ export class UploadSettingsComponent implements OnInit {
           }
         },
         (error) => {
-          this._transcodingProfileError = error.message;
+          this._transcodingProfileError = new AreaBlockerMessage({ message: error.message, buttons: [] });
+          this._uploadService.resetTranscodingProfiles();
         });
   }
 

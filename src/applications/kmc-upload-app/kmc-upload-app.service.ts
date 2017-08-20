@@ -80,6 +80,7 @@ export class KmcUploadAppService {
     .jpg,.jpeg,.gif,.png
   `;
 
+  private _trancodingProfileCache$: Observable<Array<KalturaConversionProfile>>;
   private _selectedFiles = new BehaviorSubject<FileList>(null);
   private _newUploadFiles = new BehaviorSubject<Array<INewUploadFile>>(temp);
 
@@ -205,15 +206,25 @@ export class KmcUploadAppService {
   }
 
   public getTranscodingProfiles(): Observable<Array<KalturaConversionProfile>> {
-    const payload = new ConversionProfileListAction({
-      filter: new KalturaConversionProfileFilter({ typeEqual: KalturaConversionProfileType.media }),
-      pager: new KalturaFilterPager({ pageSize: 500 })
-    });
+    if (!this._trancodingProfileCache$) {
+      const payload = new ConversionProfileListAction({
+        filter: new KalturaConversionProfileFilter({ typeEqual: KalturaConversionProfileType.media }),
+        pager: new KalturaFilterPager({ pageSize: 500 })
+      });
 
-    return this._kalturaServerClient
-      .request(new ConversionProfileListAction(payload))
-      .map((res: KalturaConversionProfileListResponse) => res.objects)
-      .map(profiles => profiles.filter(profile => profile.getTypeName() === 'KalturaConversionProfile'));
+      this._trancodingProfileCache$ = this._kalturaServerClient
+        .request(new ConversionProfileListAction(payload))
+        .map((res: KalturaConversionProfileListResponse) => res.objects)
+        .map(profiles => profiles.filter(profile => profile.getTypeName() === 'KalturaConversionProfile'))
+        .publishReplay(1)
+        .refCount();
+    }
+
+    return this._trancodingProfileCache$;
+  }
+
+  public resetTranscodingProfiles(): void {
+    this._trancodingProfileCache$ = null;
   }
 
   public selectFiles(files) {
