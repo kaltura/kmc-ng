@@ -70,7 +70,7 @@ export class KmcUploadAppService {
   private _removeUploadedFile(file: INewUploadFile) {
     setTimeout(() => {
       this._updateFiles(R.without([file], this._getFiles()));
-    }, 3000);
+    }, 5000);
   }
 
   private _updateFiles(items: Array<INewUploadFile>): void {

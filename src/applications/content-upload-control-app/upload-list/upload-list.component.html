@@ -1,6 +1,6 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
   <div class="kUploads kOverrideFAIcons">
-    <div #entriesTableHolder class="kUploadsHolder kContent">
+    <div class="kUploadsHolder kContent">
       <div class="kUploadsTableFilters">
         <span class="kSelectedUploadsNum" *ngIf="_uploads.length">
           {{ _uploads.length }} {{ 'applications.content.uploadControl.files' | translate }}
@@ -13,7 +13,7 @@
         </div>
       </div>
 
-      <kUploadListTable class="kUploadTable"
+      <kUploadListTable class="kUploadsTable"
                         [uploads]="_uploads"
                         [filter]="_filter"
                         (sortChanged)="_onSortChanged($event)"
