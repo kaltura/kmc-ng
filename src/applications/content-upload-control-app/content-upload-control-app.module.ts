@@ -32,6 +32,7 @@ import { ContentUploadControlComponent } from './content-upload-control.componen
 import { UploadListComponent } from './upload-list/upload-list.component';
 import { UploadListTableComponent } from './upload-list/upload-list-table.component';
 import { EntryTypePipe } from './pipes/entry-type.pipe';
+import { UploadProgressComponent } from './upload-list/upload-progress/upload-progress.component';
 
 
 @NgModule({
@@ -63,7 +64,8 @@ import { EntryTypePipe } from './pipes/entry-type.pipe';
     ContentUploadControlComponent,
     UploadListComponent,
     UploadListTableComponent,
-    EntryTypePipe
+    EntryTypePipe,
+    UploadProgressComponent
   ],
   exports: [],
   providers: []

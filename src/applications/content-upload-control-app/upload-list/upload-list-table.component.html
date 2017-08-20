@@ -59,7 +59,7 @@
               [style]="{ 'width': '140px' }"
               [sortable]="false">
       <ng-template let-col let-file="rowData" pTemplate="body">
-        <p-progressBar [value]="file[col.field]"></p-progressBar>
+        <kUploadProgress [progress]="file[col.field]" [status]="file.status"></kUploadProgress>
       </ng-template>
     </p-column>
     <p-column [style]="{ 'width': '65px', 'text-align': 'center' }">

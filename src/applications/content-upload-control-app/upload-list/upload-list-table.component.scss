@@ -15,15 +15,21 @@
   .kIconRemoveFile {
     font-size: 20px;
     cursor: pointer;
+    display: none;
   }
 
   .kIconMediaType {
     font-size: 24px;
   }
 }
-:host{
+
+:host {
   display: flex;
   flex-flow: row wrap;
   margin: 0;
   flex-direction: column;
+}
+
+:host /deep/ .kUploadsTable tr:hover .kIconRemoveFile { // show remove icon when hovering a row
+  display: block !important;
 }
