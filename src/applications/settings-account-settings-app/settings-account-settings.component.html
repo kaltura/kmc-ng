@@ -2,7 +2,7 @@
   <form [formGroup]="accountSettingsForm" novalidate (ngSubmit)="onSubmit()" class="kAccountSettingsWrapper kContent">
     <section class="kHeader">
       <div class="kTitle">{{'applications.settings.accountInfo' | translate}}</div>
-      <button pButton class="kButtonBranded kSaveBtn" label="Save" [disabled]="!enableSave"></button>
+      <button pButton class="kButtonBranded kSaveBtn" label="{{'applications.settings.apply' | translate}}" [disabled]="!enableSave"></button>
     </section>
     <span class="kReadonlyData">{{'applications.settings.partnerID' | translate}}: {{partnerId}} | {{'applications.settings.adminEmail' | translate}}:
         {{partnerAdminEmail}} <i class="kIconhelp"></i></span>

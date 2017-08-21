@@ -16,7 +16,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin: 1em 0 0 0;
+    margin: 24px 0 0 0;
 
     .kTitle {
       color: $kGrayscale1;
@@ -68,7 +68,7 @@
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
-      padding-top: 24px;
+      padding-top: 20px;
       -webkit-box-align: center;
       -ms-flex-align: center;
       align-items: center;

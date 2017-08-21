@@ -20,7 +20,6 @@ import {TranslateModule} from "ng2-translate";
     AreaBlockerModule,
     TranslateModule
   ],
-  providers: [SettingsAccountSettingsService],
   declarations: [SettingsAccountSettingsComponent]
 })
 export class SettingsAccountSettingsAppModule {

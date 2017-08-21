@@ -10,7 +10,8 @@ import {ISubscription} from 'rxjs/Subscription';
 @Component({
   selector: 'kmc-settings-account-settings',
   templateUrl: './settings-account-settings.component.html',
-  styleUrls: ['./settings-account-settings.component.scss']
+  styleUrls: ['./settings-account-settings.component.scss'],
+  providers: [SettingsAccountSettingsService],
 })
 export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
 
