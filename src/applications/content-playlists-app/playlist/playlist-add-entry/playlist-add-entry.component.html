@@ -14,12 +14,20 @@
             <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries$ | async)?.totalCount">{{(_entriesStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
             <div [class.kHidden]="!_selectedEntries.length" class="kBulkOperations">
               <span class="kSelectedEntriesLabel">• {{_selectedEntries.length}} {{'applications.content.entries.selected' | translate}}</span>
-              <kBulkActions [selectedEntries]="_selectedEntries" (onBulkChange)="onBulkChange($event)"></kBulkActions>
-              <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
+              <p-checkbox label="{{'applications.content.filters.showSelectedOnly' | translate}}" (onChange)="showSelectedOnly($event)"></p-checkbox>
+              <a class="kBulkClear" (click)="clearSelection()">{{'applications.content.filters.clear' | translate}}</a>
+            </div>
+            <div [class.kHidden]="_selectedEntries.length" class="kFilters">
+              <input type="text" pInputText class="kSearchInput"
+                     [(ngModel)]="_filter.freetextSearch"
+                     (keyup.enter)="onFreetextChanged()"
+                     placeholder="{{'applications.content.entries.searchEntries' | translate}}">
+              <div #categoriesFilterBtn class="kCategoriesFilter" (click)="openCategories()"><i class="kIconfolder"></i><span>{{'applications.content.entries.filterCategories' | translate}}</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
+              <div #refineBtn class="kRefine"><i class="kIconfilter"></i><span>{{'applications.content.entries.refine' | translate}}</span><i class="kIcondropdown_arrow_bottom dropdown"></i></div>
             </div>
           </div>
           <kEntriesTable
-            [entries]="(_entriesStore.entries$ | async)?.items"
+            [entries]="entries"
             [filter]="_filter"
             (sortChanged)="onSortChanged($event)"
             (actionSelected)="onActionSelected($event)"
@@ -37,3 +45,14 @@
     </div>
   </div>
 </k-area-blocker>
+
+<!-- popup widgets section -->
+<kPopupWidget #categoriesFilterPopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="categoriesFilterBtn" [targetOffset]="{'x':110, 'y': 121}">
+  <kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup"></kCategoriesFilter>
+</kPopupWidget>
+
+<!--<kPopupWidget #refinePopup [appendTo]="entriesTableHolder" [popupWidth]="400" [popupHeight]="500" [closeBtn]="false" [targetRef]="refineBtn" [targetOffset]="{'x':-200, 'y': -20}">
+  <ng-template>
+    <k-entries-refine-filters [parentPopupWidget]="refinePopup" ></k-entries-refine-filters>
+  </ng-template>
+</kPopupWidget>-->

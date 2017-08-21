@@ -10,12 +10,14 @@ import { Observable } from 'rxjs/Observable';
 import { PlaylistStore } from './playlist-store.service';
 import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 import { EntriesStore } from '../../content-entries-app/entries/entries-store/entries-store.service';
+import { CategoriesPrimeService } from '../shared/categories-prime.service';
+import { CategoriesStore } from 'applications/content-playlists-app/shared/categories-store.service';
 
 @Component({
   selector: 'kPlaylist',
   templateUrl: './playlist.component.html',
   styleUrls: ['./playlist.component.scss'],
-  providers : [PlaylistStore, EntriesStore]
+  providers : [PlaylistStore, EntriesStore, CategoriesPrimeService, CategoriesStore]
 })
 export class PlaylistComponent implements OnInit, OnDestroy {
   public playlistName: string;

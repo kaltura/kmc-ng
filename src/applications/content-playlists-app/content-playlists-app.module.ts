@@ -35,17 +35,6 @@ import { PlaylistsComponentsList } from './playlists/playlists-components-list';
 import { PlaylistComponentsList } from './playlist/playlist-components-list';
 import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.service';
 import { SharedComponentsList } from './shared/shared-components-list';
-import {
-  BulkSchedulingService,
-  BulkAccessControlService,
-  BulkAddTagsService,
-  BulkRemoveTagsService,
-  BulkAddCategoriesService,
-  BulkChangeOwnerService,
-  BulkRemoveCategoriesService,
-  BulkDeleteService,
-  BulkDownloadService
-} from './playlist/bulk-actions/services';
 
 @NgModule({
     imports: [
@@ -84,16 +73,7 @@ import {
     exports: [
     ],
     providers : [
-      PlaylistCanDeactivate,
-      BulkSchedulingService,
-      BulkAccessControlService,
-      BulkAddTagsService,
-      BulkRemoveTagsService,
-      BulkAddCategoriesService,
-      BulkChangeOwnerService,
-      BulkRemoveCategoriesService,
-      BulkDeleteService,
-      BulkDownloadService
+      PlaylistCanDeactivate
     ]
 })
 export class ContentPlaylistsAppModule {

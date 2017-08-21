@@ -7,6 +7,7 @@ import { EntriesTableComponent } from './entries-table.component';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
   selector: 'kAddEntry',
@@ -16,6 +17,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 export class PlaylistAddEntryComponent implements  OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
+  @ViewChild('categoriesFilterPopup') public categoriesFilterPopup: PopupWidgetComponent;
   @Output() onClosePopupWidget = new EventEmitter<any>();
 
   public isBusy = false;
@@ -31,6 +33,7 @@ export class PlaylistAddEntryComponent implements  OnInit, AfterViewInit, OnDest
 
   private querySubscription : ISubscription;
   public _selectedEntries: any[] = [];
+  public entries: any[] = [];
 
   constructor(
     public _entriesStore : EntriesStore,
@@ -140,7 +143,31 @@ export class PlaylistAddEntryComponent implements  OnInit, AfterViewInit, OnDest
     }
   }
 
+  onFreetextChanged() : void{
+    this._entriesStore.removeFiltersByType(FreetextFilter);
+    if (this._filter.freetextSearch) {
+      this._entriesStore.addFilters(new FreetextFilter(this._filter.freetextSearch));
+    }
+  }
+
+  openCategories() {
+    // this.categoriesFilterPopup.open();
+  }
+
+  showSelectedOnly(checked: boolean) {
+    if(checked) {
+      this.entries = this._selectedEntries;
+    }
+  }
+
   ngOnInit(){
+    this._entriesStore.entries$
+      .subscribe(
+        response => {
+          this.entries = response.items;
+        }
+      );
+
     const query = this._entriesStore.queryData;
 
     if (query) {

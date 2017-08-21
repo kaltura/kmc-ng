@@ -1,0 +1,110 @@
+@import "app-theme/_variables.scss";
+.kContainer{
+  margin: 12px;
+}
+.kClose{
+    float: right;
+}
+.kAllCategories{
+    color: $kGrayscale3;
+    line-height: 40px;
+    letter-spacing: 0.1em;
+    font-size: 13px;
+    border-top: 1px solid $kGrayscale6;
+    border-bottom: 1px solid $kGrayscale6;
+    margin-left: -20px;
+    padding-left: 20px;
+    margin-right: -20px;
+    margin-top: 18px;
+}
+.kFilterPrefs{
+    color: $kGrayscale3;
+    line-height: 40px;
+    letter-spacing: 0.1em;
+    font-size: 13px;
+}
+.kTreeContainer{
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 340px;
+    border-bottom: 1px solid $kGrayscale6;
+    margin-left: -20px;
+    padding-left: 20px;
+    margin-right: -20px;
+    width: 387px;
+}
+a.disabled{
+    pointer-events: none;
+    cursor: not-allowed;
+    color: $kGrayscale5;
+    border: none;
+}
+.kTreeConfig{
+    font-size: 24px;
+    position: absolute;
+	right: 18px;
+	top: 26px;
+    color: $kGrayscale3;
+    cursor: pointer;
+    &:hover{
+        color: $kPrimary;
+    }
+}
+.kHeader{
+    padding-top: 8px;
+}
+
+.kLoadingMessage{
+    cursor: auto;
+    color: $kPrimary;
+    padding-left: 6px;
+}
+.kLoadingErrorMessage{
+    cursor: auto;
+    white-space: pre-line;
+    margin-top: -16px;
+    color: $kGrayscale3;
+    padding-left: 6px;
+}
+/* Make sure toggler and checkbox remain aligned even if the node height changes */
+:host /deep/ .ui-treenode .ui-tree-toggler{
+    vertical-align: top;
+    margin-top: 13px;
+}
+
+:host /deep/ .ui-tree .ui-chkbox{
+    vertical-align: top;
+    margin-top: 14px;
+}
+:host /deep/ .ui-tree .ui-tree-toggler{
+    margin-top: 15px;
+}
+
+:host /deep/ .kSearchCategory{
+    width: 338px;
+    height: 34px;
+}
+
+:host /deep/ .kHighlightedText
+{
+    font-weight: 700;
+    text-decoration: underline;
+}
+:host /deep/ kautocomplete ul.ui-autocomplete-multiple-container.ui-inputtext{
+	padding: 0px;
+	.ui-autocomplete-input-token{
+		padding: 0px;
+		input{
+			height: 34px;
+			padding-left: 4px;
+			width: 328px;
+			&:active{
+				background-color: white;
+			}
+			&:focus{
+				background-color: white;
+			}
+		}
+	}
+}
+
