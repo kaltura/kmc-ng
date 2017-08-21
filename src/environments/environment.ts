@@ -52,6 +52,11 @@ export const environment = {
             "routePath": "content/categories",
             "titleToken": "Categories",
             "enabled": true
+          },
+          {
+            "routePath": "content/administration",
+            "titleToken": "Administration",
+            "enabled": true
           }
         ]
       },

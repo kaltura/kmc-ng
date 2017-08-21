@@ -22,7 +22,8 @@ const routes: Routes = <Routes>[
               { path: '', redirectTo: 'entries', pathMatch: 'full' },
               { path: 'entries', loadChildren: '../applications/content-entries-app/content-entries-app.module#ContentEntriesAppModule' },
               { path: 'playlists', loadChildren: '../applications/content-playlists-app/content-playlists-app.module#ContentPlaylistsAppModule' },
-              { path: 'categories', loadChildren: '../applications/content-categories-app/content-categories-app.module#ContentCategoriesAppModule' }
+              { path: 'categories', loadChildren: '../applications/content-categories-app/content-categories-app.module#ContentCategoriesAppModule' },
+              { path: 'administration', loadChildren: '../applications/administration-users-app/administration-users-app.module#AdministrationUsersAppModule' }
             ]
           }
         ]
