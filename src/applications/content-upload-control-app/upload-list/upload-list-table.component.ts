@@ -1,8 +1,5 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
-import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { NewUploadFile } from '../../kmc-upload-app/kmc-upload-app.service';
 
 @Component({
@@ -20,6 +17,7 @@ export class UploadListTableComponent implements AfterViewInit {
       this._cdRef.detectChanges();
       this._uploads = data;
       this._cdRef.detectChanges();
+      this._setEmptyMessage();
     } else {
       this._deferredUploads = data
     }
@@ -33,14 +31,12 @@ export class UploadListTableComponent implements AfterViewInit {
   @Output()
   onSelectedEntriesChange = new EventEmitter<any>();
 
-  @ViewChild('dataTable') private dataTable: DataTable;
-
   private _deferredUploads: any[];
   public _uploads: Array<NewUploadFile> = [];
   public _deferredLoading = true;
   public _emptyMessage = '';
 
-  constructor(private _cdRef: ChangeDetectorRef) {
+  constructor(private _cdRef: ChangeDetectorRef, private _appTranslation: AppLocalization) {
   }
 
   ngAfterViewInit() {
@@ -51,7 +47,14 @@ export class UploadListTableComponent implements AfterViewInit {
         this._deferredLoading = false;
         this._uploads = this._deferredUploads;
         this._deferredUploads = null;
+        this._setEmptyMessage();
       }, 0);
+    }
+  }
+
+  private _setEmptyMessage() {
+    if (!this._uploads.length) {
+      this._emptyMessage = this._appTranslation.get('applications.content.table.noResults');
     }
   }
 }

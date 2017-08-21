@@ -1,80 +1,81 @@
-<div class="kUploadsTable" [class.noResults]="!_uploads.length">
-  <p-dataTable #dataTable
-               [scrollable]="true"
-               scrollHeight="100%"
-               dataKey="entryId"
-               [value]="_uploads"
-               [emptyMessage]="_emptyMessage"
-               (selectionChange)="onSelectedEntriesChange.emit($event)"
-               [(selection)]="selectedUploads">
-    <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
+<div class="kUploadsTableWrapper" kFillHeight>
+  <div class="kUploadsTable" [class.noResults]="!_uploads.length">
+    <p-dataTable #dataTable
+                 [scrollable]="true"
+                 scrollHeight="100%"
+                 dataKey="entryId"
+                 [value]="_uploads"
+                 [emptyMessage]="_emptyMessage"
+                 (selectionChange)="onSelectedEntriesChange.emit($event)"
+                 [(selection)]="selectedUploads">
+      <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
 
-    <p-column field="mediaType"
-              [sortable]="false"
-              [style]="{'width':'80px', 'text-align': 'center'}">
-      <ng-template let-col let-file="rowData" pTemplate="body">
-        <div class="kIconMediaType"
-             [kTooltip]="file[col.field] | entryType: true"
-             [ngClass]="file[col.field] | entryType: false"></div>
-      </ng-template>
-    </p-column>
+      <p-column field="mediaType"
+                [sortable]="false"
+                [style]="{'width':'80px', 'text-align': 'center'}">
+        <ng-template let-col let-file="rowData" pTemplate="body">
+          <div class="kIconMediaType"
+               [kTooltip]="file[col.field] | entryType: true"
+               [ngClass]="file[col.field] | entryType: false"></div>
+        </ng-template>
+      </p-column>
 
-    <p-column field="fileName"
-              [header]="'applications.content.uploadControl.table.fileName' | translate"
-              [sortable]="false">
-      <ng-template let-col let-file="rowData" pTemplate="body">
-        <span class="kUploadName">{{ file[col.field] }}</span>
-      </ng-template>
-    </p-column>
+      <p-column field="fileName"
+                [header]="'applications.content.uploadControl.table.fileName' | translate"
+                [sortable]="false">
+        <ng-template let-col let-file="rowData" pTemplate="body">
+          <span class="kUploadName">{{ file[col.field] }}</span>
+        </ng-template>
+      </p-column>
 
-    <p-column field="entryId"
-              [header]="'applications.content.uploadControl.table.entryId' | translate"
-              [style]="{ 'width': '100px' }"
-              [sortable]="false"></p-column>
+      <p-column field="entryId"
+                [header]="'applications.content.uploadControl.table.entryId' | translate"
+                [style]="{ 'width': '100px' }"
+                [sortable]="false"></p-column>
 
-    <p-column field="fileSize"
-              [sortable]="false"
-              [style]="{ 'width': '100px' }"
-              [header]="'applications.content.uploadControl.table.fileSize' | translate">
-      <ng-template let-col let-file="rowData" pTemplate="body">
-        <span>{{ file.fileSize | kFileSize }}</span>
-      </ng-template>
-    </p-column>
+      <p-column field="fileSize"
+                [sortable]="false"
+                [style]="{ 'width': '100px' }"
+                [header]="'applications.content.uploadControl.table.fileSize' | translate">
+        <ng-template let-col let-file="rowData" pTemplate="body">
+          <span>{{ file.fileSize | kFileSize }}</span>
+        </ng-template>
+      </p-column>
 
-    <p-column field="uploadedOn"
-              [header]="'applications.content.uploadControl.table.uploadedOn' | translate"
-              [sortable]="false"
-              [style]="{'width':'120px'}">
-      <ng-template let-col let-file="rowData" pTemplate="body">
-        <span>{{ file[col.field] | kDate }}</span>
-      </ng-template>
-    </p-column>
+      <p-column field="uploadedOn"
+                [header]="'applications.content.uploadControl.table.uploadedOn' | translate"
+                [sortable]="false"
+                [style]="{'width':'120px'}">
+        <ng-template let-col let-file="rowData" pTemplate="body">
+          <span>{{ file[col.field] | kDate }}</span>
+        </ng-template>
+      </p-column>
 
-    <p-column field="status"
-              [header]="'applications.content.uploadControl.table.status.header' | translate"
-              [style]="{ 'width': '100px' }"
-              [sortable]="false">
-      <ng-template let-col let-file="rowData" pTemplate="body">
-        <span>{{ 'applications.content.uploadControl.table.status.' + file[col.field] | translate }}</span>
-      </ng-template>
-    </p-column>
+      <p-column field="status"
+                [header]="'applications.content.uploadControl.table.status.header' | translate"
+                [style]="{ 'width': '100px' }"
+                [sortable]="false">
+        <ng-template let-col let-file="rowData" pTemplate="body">
+          <span>{{ 'applications.content.uploadControl.table.status.' + file[col.field] | translate }}</span>
+        </ng-template>
+      </p-column>
 
-    <p-column field="progress"
-              [header]="'applications.content.uploadControl.table.progress' | translate"
-              [style]="{ 'width': '140px' }"
-              [sortable]="false">
-      <ng-template let-col let-file="rowData" pTemplate="body">
-        <kUploadProgress [progress]="file[col.field]" [status]="file.status"></kUploadProgress>
-      </ng-template>
-    </p-column>
+      <p-column field="progress"
+                [header]="'applications.content.uploadControl.table.progress' | translate"
+                [style]="{ 'width': '140px' }"
+                [sortable]="false">
+        <ng-template let-col let-file="rowData" pTemplate="body">
+          <kUploadProgress [progress]="file[col.field]" [status]="file.status"></kUploadProgress>
+        </ng-template>
+      </p-column>
 
-    <p-column [style]="{ 'width': '65px', 'text-align': 'center' }" [sortable]="false">
-      <ng-template let-col let-file="rowData" pTemplate="body">
-        <i class="kIcontrash kIconRemoveFile"
-           [kTooltip]="'applications.content.uploadControl.table.remove' | translate"
-           placement="top"></i>
-      </ng-template>
-    </p-column>
-  </p-dataTable>
+      <p-column [style]="{ 'width': '65px', 'text-align': 'center' }" [sortable]="false">
+        <ng-template let-col let-file="rowData" pTemplate="body">
+          <i class="kIcontrash kIconRemoveFile"
+             [kTooltip]="'applications.content.uploadControl.table.remove' | translate"
+             placement="top"></i>
+        </ng-template>
+      </p-column>
+    </p-dataTable>
+  </div>
 </div>
-
