@@ -2,7 +2,7 @@
   <div class="kCategories kOverrideFAIcons">
     <div #categoriesTableHolder class="kCategoriesHolder kContent">
       <div class="kCategoriesTableFilters">
-        <button pButton type="button" label="{{'applications.content.categories.addCategory' | translate}}" class="kButtonBranded kAddCategoryBtn"
+        <button  pButton type="button" label="{{'applications.content.categories.addCategory' | translate}}" class="kButtonBranded kAddCategoryBtn"
           [disabled]="_selectedCategories?.length"></button>
         <span class="kSelectedCategoriesNum" *ngIf="_categoriesTotalCount">
           {{_categoriesTotalCount}} {{'applications.content.categories.categories' | translate}}
