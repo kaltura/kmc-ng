@@ -125,15 +125,20 @@
       }
     },
     "content": {
-       "categories": {
+      "categories": {
         "categories": "Categories",
         "search": "Search",
         "refresh": "Refresh",
-        "addCategory":"Add Category",
+        "addCategory": "Add Category",
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
         "refine": "Refine",
-        "filterCategories": "Filter Categories"
+        "filterCategories": "Filter Categories"  ,
+        "edit": "Edit",
+        "delete": "Delete",
+        "viewEntries": "View Entries",
+        "moveCategory": "Move Category",
+        "cancel": "Cancel"
       },
       "entries": {
         "entries": "Entries",
@@ -1041,4 +1046,3 @@
     "ZU": "Zulu"
   }
 }
-
