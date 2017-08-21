@@ -41,3 +41,11 @@
 :host /deep/ .kUploadsTable tr:hover .kIconRemoveFile { // show remove icon when hovering a row
   display: block !important;
 }
+
+:host /deep/ .kUploadsTable tr.has-error {
+  background-color: lighten($kDandger, 45%);
+}
+
+:host /deep/ .kUploadsTable tr.removing {
+  background-color: $kGrayscale6;
+}

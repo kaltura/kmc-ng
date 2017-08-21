@@ -31,6 +31,9 @@ export class UploadListTableComponent implements AfterViewInit {
   @Output()
   onSelectedEntriesChange = new EventEmitter<any>();
 
+  @Output()
+  onCancelUpload = new EventEmitter<NewUploadFile>();
+
   private _deferredUploads: any[];
   public _uploads: Array<NewUploadFile> = [];
   public _deferredLoading = true;
@@ -56,6 +59,18 @@ export class UploadListTableComponent implements AfterViewInit {
     if (!this._uploads.length) {
       this._emptyMessage = this._appTranslation.get('applications.content.table.noResults');
     }
+  }
+
+  public _relatedTableRowStyle(rowData): string {
+    if (rowData.uploadFailure) {
+      return 'has-error';
+    }
+
+    if (rowData.removing) {
+      return 'removing';
+    }
+
+    return '';
   }
 }
 

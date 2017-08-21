@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { TrackedFile, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { MediaAddAction } from 'kaltura-typescript-client/types/MediaAddAction';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
+import { KalturaMultiRequest, KalturaRequest } from 'kaltura-typescript-client';
 import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
 import { KalturaAssetsParamsResourceContainers } from 'kaltura-typescript-client/types/KalturaAssetsParamsResourceContainers';
 import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
@@ -22,6 +22,8 @@ import { ConversionProfileListAction } from 'kaltura-typescript-client/types/Con
 import { environment } from 'app-environment'
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 import * as R from 'ramda';
+import { MediaDeleteAction } from 'kaltura-typescript-client/types/MediaDeleteAction';
+import { UploadTokenDeleteAction } from 'kaltura-typescript-client/types/UploadTokenDeleteAction';
 
 export type UploadStatus = 'uploading' | 'uploaded' | 'uploadFailure' | 'pending';
 
@@ -38,6 +40,7 @@ export interface NewUploadFile {
   uploadFailure: boolean;
   tempId?: string;
   statusWeight?: number;
+  removing?: boolean;
 }
 
 @Injectable()
@@ -68,9 +71,7 @@ export class KmcUploadAppService {
   }
 
   private _removeUploadedFile(file: NewUploadFile) {
-    setTimeout(() => {
-      this._updateFiles(R.without([file], this._getFiles()));
-    }, 5000);
+    setTimeout(() => this._removeFile(file), 5000);
   }
 
   private _updateFiles(items: Array<NewUploadFile>): void {
@@ -81,9 +82,12 @@ export class KmcUploadAppService {
     this._updateFiles([...this._getFiles(), file]);
   }
 
+  private _removeFile(file: NewUploadFile): void {
+    this._updateFiles(R.without([file], this._getFiles()));
+  }
+
   private _updateUploadFile(file: UploadSettingsFile): void {
-    const files = this._getFiles();
-    const relevantFile = files.find(({ tempId }) => file.tempId === tempId);
+    const relevantFile = R.find(R.propEq('tempId', file.tempId))(this._getFiles());
 
     if (relevantFile) {
       relevantFile.entryId = file.entryId;
@@ -132,8 +136,7 @@ export class KmcUploadAppService {
     this._uploadManagement.onTrackFileChange$
       .subscribe(
         (trackedFile: TrackedFile) => {
-          const newUploadFiles = this._getFiles();
-          const relevantNewFile = newUploadFiles.find(({ uploadToken }) => uploadToken === trackedFile.uploadToken);
+          const relevantNewFile = R.find(R.propEq('uploadToken', trackedFile.uploadToken))(this._getFiles());
 
           if (relevantNewFile) {
             relevantNewFile.status = trackedFile.status;
@@ -167,6 +170,10 @@ export class KmcUploadAppService {
       );
   }
 
+  private _removeMediaEntry(entryId: string): Observable<void> {
+    return this._kalturaServerClient.request(new MediaDeleteAction({ entryId }))
+  }
+
   public proceedUpload(files: Array<UploadSettingsFile>, conversionProfileId: number): void {
     const payload = files
       .map(({ mediaType, name }) => new KalturaMediaEntry({ mediaType, name, conversionProfileId }))
@@ -174,9 +181,7 @@ export class KmcUploadAppService {
     const request = new KalturaMultiRequest(...payload);
 
     const updatedFile = files.map(file => {
-      const tempId = FriendlyHashId.defaultInstance.generateUnique(
-        this._getFiles().map(item => item.entryId || (item).tempId)
-      );
+      const tempId = FriendlyHashId.defaultInstance.generateUnique(this._getFiles().map(item => item.tempId));
       return Object.assign(file, { tempId });
     });
 
@@ -192,6 +197,20 @@ export class KmcUploadAppService {
           entryId: (<any>entry).id,
           conversionProfileId: (<any>entry).conversionProfileId
         }))
+      .map(file => {
+        const relevantFile = R.find(R.propEq('tempId', file.tempId))(this._getFiles());
+        const removing = !relevantFile || relevantFile.removing;
+
+        return Object.assign({}, file, { removing });
+      })
+      // -------- SIDE EFFECT ----------
+      .do(file => {
+        if (file.removing) {
+          this._removeMediaEntry(file.entryId).subscribe();
+        }
+      })
+      // -------------------------------
+      .filter(file => !file.removing)
       .flatMap(
         file => this._uploadManagement.newUpload(new KalturaUploadFile(file.file)),
         (file, { uploadToken }) => Object.assign({}, file, { uploadToken }),
@@ -228,6 +247,41 @@ export class KmcUploadAppService {
           console.error(err); // TODO handle error
         }
       );
+  }
+
+  public cancelUpload(tempId: string): void {
+    const relevantFile = R.find(R.propEq('tempId', tempId))(this._getFiles());
+    const removeOperations$ = [];
+
+    if (relevantFile) {
+      const { entryId, uploadToken } = relevantFile;
+
+      relevantFile.removing = true;
+
+      if (entryId) {
+        removeOperations$.push(this._removeMediaEntry(relevantFile.entryId));
+      }
+
+      if (uploadToken) {
+        removeOperations$.push(
+          this._uploadManagement.cancelUpload(uploadToken)
+            .filter(status => status)
+            .switchMap(() => this._kalturaServerClient.request(new UploadTokenDeleteAction({ uploadTokenId: uploadToken })))
+        );
+      }
+
+      Observable.forkJoin(removeOperations$)
+        .subscribe(
+          () => {
+          },
+          () => {
+            relevantFile.removing = false;
+            relevantFile.uploadFailure = true;
+          },
+          () => {
+            this._removeFile(relevantFile);
+          });
+    }
   }
 
   public getTranscodingProfiles(): Observable<Array<KalturaConversionProfile>> {

@@ -6,6 +6,7 @@
                  dataKey="entryId"
                  [value]="_uploads"
                  [emptyMessage]="_emptyMessage"
+                 [rowStyleClass]="_relatedTableRowStyle"
                  (selectionChange)="onSelectedEntriesChange.emit($event)"
                  [(selection)]="selectedUploads">
       <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
@@ -73,7 +74,8 @@
         <ng-template let-col let-file="rowData" pTemplate="body">
           <i class="kIcontrash kIconRemoveFile"
              [kTooltip]="'applications.content.uploadControl.table.remove' | translate"
-             placement="top"></i>
+             placement="top"
+             (click)="onCancelUpload.emit(file)"></i>
         </ng-template>
       </p-column>
     </p-dataTable>

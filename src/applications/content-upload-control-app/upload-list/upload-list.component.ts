@@ -34,5 +34,9 @@ export class UploadListComponent implements OnInit, OnDestroy {
   _selectedEntriesChange(event): void {
     this._selectedUploads = event;
   }
+
+  _cancelUpload(file: NewUploadFile): void {
+    this._uploadService.cancelUpload(file.tempId);
+  }
 }
 
