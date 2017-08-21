@@ -18,7 +18,7 @@ export class UploadButtonComponent {
     this.uploadMenuPopup.close();
     this.uploadSettingsPopup.open();
 
-    setTimeout(() => this._uploadService.selectFiles(files), 0); // wait next tick to add files
+    this._uploadService.selectFiles(files);
   }
 }
 
