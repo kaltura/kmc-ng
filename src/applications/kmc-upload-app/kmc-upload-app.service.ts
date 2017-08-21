@@ -12,7 +12,7 @@ import { KalturaAssetsParamsResourceContainers } from 'kaltura-typescript-client
 import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
 import { KalturaAssetParamsResourceContainer } from 'kaltura-typescript-client/types/KalturaAssetParamsResourceContainer';
 import { MediaUpdateContentAction } from 'kaltura-typescript-client/types/MediaUpdateContentAction';
-import { IUploadSettingsFile } from './upload-settings/upload-settings.service';
+import { UploadSettingsFile } from './upload-settings/upload-settings.service';
 import { KalturaConversionProfile } from 'kaltura-typescript-client/types/KalturaConversionProfile';
 import { KalturaConversionProfileType } from 'kaltura-typescript-client/types/KalturaConversionProfileType';
 import { KalturaConversionProfileListResponse } from 'kaltura-typescript-client/types/KalturaConversionProfileListResponse';
@@ -25,7 +25,7 @@ import * as R from 'ramda';
 
 export type UploadStatus = 'uploading' | 'uploaded' | 'uploadFailure' | 'pending';
 
-export interface INewUploadFile {
+export interface NewUploadFile {
   uploadToken: string;
   entryId: string;
   uploadedOn: Date;
@@ -50,7 +50,7 @@ export class KmcUploadAppService {
 
   private _trancodingProfileCache$: Observable<Array<KalturaConversionProfile>>;
   private _selectedFiles = new BehaviorSubject<FileList>(null);
-  private _newUploadFiles = new BehaviorSubject<Array<INewUploadFile>>([]);
+  private _newUploadFiles = new BehaviorSubject<Array<NewUploadFile>>([]);
 
   public selectedFiles$ = this._selectedFiles.asObservable();
   public newUploadFiles$ = this._newUploadFiles.asObservable();
@@ -63,25 +63,25 @@ export class KmcUploadAppService {
     this._trackUploadFiles();
   }
 
-  private _getFiles(): Array<INewUploadFile> {
+  private _getFiles(): Array<NewUploadFile> {
     return this._newUploadFiles.getValue();
   }
 
-  private _removeUploadedFile(file: INewUploadFile) {
+  private _removeUploadedFile(file: NewUploadFile) {
     setTimeout(() => {
       this._updateFiles(R.without([file], this._getFiles()));
     }, 5000);
   }
 
-  private _updateFiles(items: Array<INewUploadFile>): void {
+  private _updateFiles(items: Array<NewUploadFile>): void {
     this._newUploadFiles.next(items);
   }
 
-  private _addFile(file: INewUploadFile): void {
+  private _addFile(file: NewUploadFile): void {
     this._updateFiles([...this._getFiles(), file]);
   }
 
-  private _updateUploadFile(file: IUploadSettingsFile): void {
+  private _updateUploadFile(file: UploadSettingsFile): void {
     const files = this._getFiles();
     const relevantFile = files.find(({ tempId }) => file.tempId === tempId);
 
@@ -91,7 +91,7 @@ export class KmcUploadAppService {
     }
   }
 
-  private _convertFile(file: IUploadSettingsFile): INewUploadFile {
+  private _convertFile(file: UploadSettingsFile): NewUploadFile {
     const { entryId, name: fileName, size: fileSize, mediaType, uploadedOn, uploadToken, tempId } = file;
 
     return {
@@ -167,7 +167,7 @@ export class KmcUploadAppService {
       );
   }
 
-  public proceedUpload(files: Array<IUploadSettingsFile>, conversionProfileId: number): void {
+  public proceedUpload(files: Array<UploadSettingsFile>, conversionProfileId: number): void {
     const payload = files
       .map(({ mediaType, name }) => new KalturaMediaEntry({ mediaType, name, conversionProfileId }))
       .map(entry => new MediaAddAction({ entry }));

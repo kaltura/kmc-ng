@@ -3,7 +3,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { MenuItem, DataTable, Menu } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { INewUploadFile } from '../../kmc-upload-app/kmc-upload-app.service';
+import { NewUploadFile } from '../../kmc-upload-app/kmc-upload-app.service';
 
 @Component({
   selector: 'kUploadListTable',
@@ -12,7 +12,7 @@ import { INewUploadFile } from '../../kmc-upload-app/kmc-upload-app.service';
 })
 export class UploadListTableComponent implements AfterViewInit {
   @Input()
-  set uploads(data: Array<INewUploadFile>) {
+  set uploads(data: Array<NewUploadFile>) {
     if (!this._deferredLoading) {
       // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
       // (ie when returning from entry page) - we should force detect changes on an empty list
@@ -25,9 +25,7 @@ export class UploadListTableComponent implements AfterViewInit {
     }
   }
 
-  @Input() filter: any = {};
-
-  @Input() selectedUploads: Array<INewUploadFile> = [];
+  @Input() selectedUploads: Array<NewUploadFile> = [];
 
   @Output()
   sortChanged = new EventEmitter<any>();
@@ -38,16 +36,11 @@ export class UploadListTableComponent implements AfterViewInit {
   @ViewChild('dataTable') private dataTable: DataTable;
 
   private _deferredUploads: any[];
-  public _uploads: Array<INewUploadFile> = [];
+  public _uploads: Array<NewUploadFile> = [];
   public _deferredLoading = true;
   public _emptyMessage = '';
 
-  constructor(private _appLocalization: AppLocalization,
-              private _cdRef: ChangeDetectorRef) {
-  }
-
-  _onSortChanged(event) {
-    this.sortChanged.emit(event);
+  constructor(private _cdRef: ChangeDetectorRef) {
   }
 
   ngAfterViewInit() {

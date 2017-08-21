@@ -20,6 +20,7 @@ export class UploadMenuComponent {
               private _appLocalization: AppLocalization) {
   }
 
+  // TODO remove when all menu items will be implemented
   public _inDevelopment(): void {
     this._browserService.alert({
       header: this._appLocalization.get('applications.upload.inDevelopment.title'),

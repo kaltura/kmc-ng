@@ -31,9 +31,8 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { ContentUploadControlComponent } from './content-upload-control.component';
 import { UploadListComponent } from './upload-list/upload-list.component';
 import { UploadListTableComponent } from './upload-list/upload-list-table.component';
-import { EntryTypePipe } from './pipes/entry-type.pipe';
 import { UploadProgressComponent } from './upload-list/upload-progress/upload-progress.component';
-
+import { KMCShellModule } from 'app-shared/kmc-shell';
 
 @NgModule({
   imports: [
@@ -58,13 +57,13 @@ import { UploadProgressComponent } from './upload-list/upload-progress/upload-pr
     AutoCompleteModule,
     SharedModule,
     ProgressBarModule,
+    KMCShellModule,
     RouterModule.forChild(routing)
   ],
   declarations: [
     ContentUploadControlComponent,
     UploadListComponent,
     UploadListTableComponent,
-    EntryTypePipe,
     UploadProgressComponent
   ],
   exports: [],

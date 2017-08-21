@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { IUploadSettingsFile, UploadSettingsService } from './upload-settings.service';
+import { UploadSettingsFile, UploadSettingsService } from './upload-settings.service';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -25,7 +25,7 @@ export class UploadSettingsComponent implements OnInit {
   public _transcodingProfileField: AbstractControl;
   public _transcodingProfileError: AreaBlockerMessage;
   public _transcodingProfileLoading = false;
-  public _files: Array<IUploadSettingsFile> = [];
+  public _files: Array<UploadSettingsFile> = [];
   public _fileTypes: Array<SelectItem> = [
     {
       'label': this._appLocalization.get('applications.upload.uploadSettings.mediaTypes.video'),
@@ -84,11 +84,11 @@ export class UploadSettingsComponent implements OnInit {
         });
   }
 
-  public _removeFile(file: IUploadSettingsFile): void {
+  public _removeFile(file: UploadSettingsFile): void {
     this._uploadSettingsService.removeFile(file);
   }
 
-  public _upload(files: Array<IUploadSettingsFile>): void {
+  public _upload(files: Array<UploadSettingsFile>): void {
     const errorMessage = this._uploadSettingsService.upload(files, this._transcodingProfileField.value);
 
     if (errorMessage) {
@@ -105,7 +105,7 @@ export class UploadSettingsComponent implements OnInit {
     return rowData.hasError ? 'has-error' : '';
   }
 
-  public _editName(file: IUploadSettingsFile): void {
+  public _editName(file: UploadSettingsFile): void {
     this._tempName = file.name;
     file.isEditing = true;
   }
@@ -114,7 +114,7 @@ export class UploadSettingsComponent implements OnInit {
     this._tempName = name.trim() || '';
   }
 
-  public _cancelEdit(file: IUploadSettingsFile): void {
+  public _cancelEdit(file: UploadSettingsFile): void {
     const name = this._tempName;
 
     if (file.name === name) {

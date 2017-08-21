@@ -6,7 +6,7 @@ import { environment } from 'app-environment';
 import { KmcUploadAppService } from '../kmc-upload-app.service';
 import * as R from 'ramda';
 
-export interface IUploadSettingsFile {
+export interface UploadSettingsFile {
   file: File;
   mediaType: KalturaMediaType;
   name: string;
@@ -22,7 +22,7 @@ export interface IUploadSettingsFile {
 
 @Injectable()
 export class UploadSettingsService implements OnDestroy {
-  private _selectedFiles = new BehaviorSubject<Array<IUploadSettingsFile>>([]);
+  private _selectedFiles = new BehaviorSubject<Array<UploadSettingsFile>>([]);
 
   public selectedFiles$ = this._selectedFiles.asObservable();
 
@@ -68,7 +68,7 @@ export class UploadSettingsService implements OnDestroy {
     }
   }
 
-  private _validateFiles(files: Array<IUploadSettingsFile>): { updatedFiles: Array<IUploadSettingsFile>, errorMessage: string } {
+  private _validateFiles(files: Array<UploadSettingsFile>): { updatedFiles: Array<UploadSettingsFile>, errorMessage: string } {
     const mediaTypeError = files.some(this._validateFileMediaType);
     if (mediaTypeError) {
       const updatedFiles = this._updateFilesWithError(this._validateFileMediaType)(files);
@@ -85,27 +85,27 @@ export class UploadSettingsService implements OnDestroy {
     return { updatedFiles, errorMessage: '' };
   }
 
-  private _validateFileSize(file: IUploadSettingsFile): boolean {
+  private _validateFileSize(file: UploadSettingsFile): boolean {
     const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
     const fileSize = file.size / 1024 / 1024; // convert to Mb
 
     return fileSize > maxFileSize;
   }
 
-  private _validateFileMediaType(file: IUploadSettingsFile): boolean {
+  private _validateFileMediaType(file: UploadSettingsFile): boolean {
     const allowedTypes = [KalturaMediaType.audio, KalturaMediaType.video, KalturaMediaType.image];
     return !allowedTypes.includes(file.mediaType);
   }
 
-  private _updateFilesWithError(validationFn: (file: IUploadSettingsFile) => boolean): <T>(files: T) => T {
+  private _updateFilesWithError(validationFn: (file: UploadSettingsFile) => boolean): <T>(files: T) => T {
     return (files) => files.map(file => Object.assign({}, file, { hasError: validationFn(file) }));
   }
 
-  private _getFiles(): Array<IUploadSettingsFile> {
+  private _getFiles(): Array<UploadSettingsFile> {
     return this._selectedFiles.getValue();
   }
 
-  private _updateFiles(items: Array<IUploadSettingsFile>): void {
+  private _updateFiles(items: Array<UploadSettingsFile>): void {
     this._selectedFiles.next([...items]);
   }
 
@@ -128,14 +128,14 @@ export class UploadSettingsService implements OnDestroy {
     this._updateFiles([...existingItems, ...convertedFiles]);
   }
 
-  public removeFile(file: IUploadSettingsFile): void {
+  public removeFile(file: UploadSettingsFile): void {
     const files = this._getFiles();
     const updatedFiles = R.without([file], files);
 
     this._updateFiles(updatedFiles);
   }
 
-  public upload(files: Array<IUploadSettingsFile>, transcodingProfile: number): string {
+  public upload(files: Array<UploadSettingsFile>, transcodingProfile: number): string {
     const { updatedFiles, errorMessage } = this._validateFiles(files);
     this._updateFiles(updatedFiles);
 
