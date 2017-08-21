@@ -21,6 +21,10 @@ export class UploadListComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(files => {
         this._uploads = files;
+
+        if (!this._uploads.length) {
+          this._clearSelection();
+        }
       });
   }
 
@@ -37,6 +41,12 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
   _cancelUpload(file: NewUploadFile): void {
     this._uploadService.cancelUpload(file.tempId);
+  }
+
+  _bulkCancel(): void {
+    if (this._selectedUploads.length) {
+      this._uploadService.bulkCancel(this._selectedUploads);
+    }
   }
 }
 

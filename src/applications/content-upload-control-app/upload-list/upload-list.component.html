@@ -8,7 +8,7 @@
 
         <div [class.kHidden]="!_selectedUploads.length" class="kBulkOperations">
           <span class="kSelectedUploadsLabel">• {{_selectedUploads.length}} {{'applications.content.uploadControl.selected' | translate}}</span>
-          <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"></button>
+          <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_bulkCancel()"></button>
           <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.uploadControl.cancel' | translate}}</a>
         </div>
       </div>

@@ -71,7 +71,7 @@ export class KmcUploadAppService {
   }
 
   private _removeUploadedFile(file: NewUploadFile) {
-    setTimeout(() => this._removeFile(file), 5000);
+    setTimeout(() => this._removeFiles(file), 5000);
   }
 
   private _updateFiles(items: Array<NewUploadFile>): void {
@@ -82,8 +82,9 @@ export class KmcUploadAppService {
     this._updateFiles([...this._getFiles(), file]);
   }
 
-  private _removeFile(file: NewUploadFile): void {
-    this._updateFiles(R.without([file], this._getFiles()));
+  private _removeFiles(payload: NewUploadFile | Array<NewUploadFile>): void {
+    payload = Array.isArray(payload) ? payload : [payload];
+    this._updateFiles(R.without(payload, this._getFiles()));
   }
 
   private _updateUploadFile(file: UploadSettingsFile): void {
@@ -279,9 +280,30 @@ export class KmcUploadAppService {
             relevantFile.uploadFailure = true;
           },
           () => {
-            this._removeFile(relevantFile);
+            this._removeFiles(relevantFile);
           });
     }
+  }
+
+  public bulkCancel(files: Array<NewUploadFile>): void {
+    files.forEach(file => file.removing = true);
+
+    const removeEntryPayload = files
+      .map(({ entryId }) => entryId)
+      .filter(Boolean)
+      .map(entryId => new MediaDeleteAction({ entryId }));
+    const removeUploadTokenPayload = files
+      .map(({ uploadToken }) => uploadToken)
+      .filter(Boolean)
+      .map(uploadTokenId => new UploadTokenDeleteAction({ uploadTokenId }));
+
+    this._kalturaServerClient.multiRequest(removeEntryPayload)
+      .switchMap(() => this._kalturaServerClient.multiRequest(removeUploadTokenPayload))
+      .switchMap(() => Observable.from(files))
+      .filter(({ uploadToken }) => !!uploadToken)
+      .switchMap(file => this._uploadManagement.cancelUpload(file.uploadToken))
+      .toArray()
+      .subscribe(() => this._removeFiles(files));
   }
 
   public getTranscodingProfiles(): Observable<Array<KalturaConversionProfile>> {
