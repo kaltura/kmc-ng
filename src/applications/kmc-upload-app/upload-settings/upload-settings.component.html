@@ -44,7 +44,7 @@
               <div *ngIf="file.isEditing">
                 <input pInputText
                        class="kFileNameInput"
-                       [inputAutofocus]="true"
+                       kAutofocus
                        [value]="file.name"
                        (blur)="_cancelEdit(file)"
                        (keyup.enter)="_cancelEdit(file)"

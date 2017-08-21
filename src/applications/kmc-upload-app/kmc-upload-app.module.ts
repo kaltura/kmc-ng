@@ -17,7 +17,6 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 
 import { UploadMenuComponent } from './upload-menu/upload-menu.component';
 import { UploadSettingsComponent } from './upload-settings/upload-settings.component';
-import { AutofocusDirective } from './directives/input-autofocus';
 import { KmcUploadAppService } from './kmc-upload-app.service';
 import { UploadButtonComponent } from './upload-button/upload-button.component';
 
@@ -42,7 +41,6 @@ import { UploadButtonComponent } from './upload-button/upload-button.component';
   declarations: [
     UploadMenuComponent,
     UploadSettingsComponent,
-    AutofocusDirective,
     UploadButtonComponent
   ],
   exports: [
