@@ -5,7 +5,7 @@ import {AccountSettings, SettingsAccountSettingsService} from './settings-accoun
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {SelectItem} from 'primeng/primeng';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {ISubscription} from 'rxjs/Subscription';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 @Component({
   selector: 'kmc-settings-account-settings',
@@ -22,9 +22,8 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   public enableSave = false;
   public partnerId: number;
   public partnerAdminEmail: string;
-  private _blockerMessage: AreaBlockerMessage = null;
-  private _subscriptions: ISubscription[] = [];
-  private _isBusy = false;
+  public _blockerMessage: AreaBlockerMessage = null;
+  public _isBusy = false;
 
   constructor(private _accountSettingsService: SettingsAccountSettingsService,
               private _appLocalization: AppLocalization,
@@ -32,49 +31,28 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.isBusy = true;
     this._createForm();
     this._fillDescribeYourselfOptions();
-    this._fillPartnerAccountSettings();
+    this._loadPartnerAccountSettings();
   }
 
-  ngOnDestroy(): void {
-    // Un subscribe all subscriptions
-    this._subscriptions.forEach(subscription => subscription.unsubscribe());
-  }
+  ngOnDestroy(): void {}
 
   onSubmit(): void {
     this._updatePartnerAccountSettings();
   }
 
-  get blockerMessage(): AreaBlockerMessage {
-    return this._blockerMessage;
-  }
-
-  set blockerMessage(message: AreaBlockerMessage) {
-    this._blockerMessage = message;
-    this._isBusy = false;
-  }
-
-  get isBusy(): boolean {
-    return this._isBusy;
-  }
-
-  set isBusy(show: boolean) {
-    this._isBusy = show;
-    if (show) {
-      this._blockerMessage = null;
-    }
-  }
-
   private _updatePartnerAccountSettings() {
-    const subscription: ISubscription = this._accountSettingsService.updatePartnerData(this.accountSettingsForm.value)
+    this._updateAreaBlockerState(true, null);
+    this._accountSettingsService
+      .updatePartnerData(this.accountSettingsForm.value)
+      .cancelOnDestroy(this)
       .subscribe(updatedPartner => {
           this._fillForm(updatedPartner);
-          this.isBusy = false;
+          this._updateAreaBlockerState(false, null);
         },
         error => {
-          this.blockerMessage = new AreaBlockerMessage(
+          const blockerMessage = new AreaBlockerMessage(
             {
               message: error.message,
               buttons: [
@@ -87,15 +65,19 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
                 {
                   label: this._appLocalization.get('app.common.cancel'),
                   action: () => {
-                    this._blockerMessage = null;
+                    this._updateAreaBlockerState(false, null);
                   }
                 }
               ]
             }
-          )
+          );
+          this._updateAreaBlockerState(false, blockerMessage);
         });
+  }
 
-    this._subscriptions.push(subscription);
+  private _updateAreaBlockerState(isBusy: boolean, message: AreaBlockerMessage): void {
+    this._isBusy = isBusy;
+    this._blockerMessage = message;
   }
 
   private _fillAccountOwnersOptions(accountOwners: string[]): void {
@@ -115,38 +97,36 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   // Get PartnerAccountSettings data and fill the form
-  private _fillPartnerAccountSettings() {
-    const subscription: ISubscription = this._accountSettingsService.getPartnerAccountSettings()
+  private _loadPartnerAccountSettings() {
+    this._updateAreaBlockerState(true, null);
+
+    this._accountSettingsService
+      .getPartnerAccountSettings()
+      .cancelOnDestroy(this)
       .subscribe(response => {
           this._fillAccountOwnersOptions(response.accountOwners);
           this.partnerId = response.partnerData.id;
           this.partnerAdminEmail = response.partnerData.adminEmail;
           this._fillForm(response.partnerData);
-          this.isBusy = false;
+          this._updateAreaBlockerState(false, null);
         },
         error => {
-          this.blockerMessage = new AreaBlockerMessage(
+          const blockerMessage = new AreaBlockerMessage(
             {
               message: error.message,
               buttons: [
                 {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
-                    this._fillPartnerAccountSettings();
-                  }
-                },
-                {
-                  label: this._appLocalization.get('app.common.cancel'),
-                  action: () => {
-                    this._blockerMessage = null;
+                    this._loadPartnerAccountSettings();
                   }
                 }
               ]
             }
-          )
+          );
+          this._updateAreaBlockerState(false, blockerMessage);
         });
 
-    this._subscriptions.push(subscription);
   }
 
   // Create empty structured form on loading
@@ -159,13 +139,12 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
       describeYourself: [''],
       referenceId: ['']
     });
-    const subscription: ISubscription = this.accountSettingsForm.valueChanges
+    this.accountSettingsForm.valueChanges
       .subscribe(
         () => {
-          this.enableSave = this.accountSettingsForm.status === 'VALID';
+          this.enableSave = this.accountSettingsForm.status === 'VALID' && this.accountSettingsForm.dirty;
         }
       );
-    this._subscriptions.push(subscription);
   }
 
   // Fill the form with data
@@ -175,7 +154,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
       adminName: partner.adminName,
       phone: partner.phone,
       website: partner.website,
-      describeYourself: this.describeYourselfOptions.filter(option => option.label === partner.describeYourself).length ?
+      describeYourself: this.describeYourselfOptions.find(option => option.label === partner.describeYourself) ?
         partner.describeYourself :
         this.describeYourselfOptions[this.describeYourselfOptions.length - 1].label,
       referenceId: partner.referenceId

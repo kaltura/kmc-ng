@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="isBusy" [message]="blockerMessage" xmlns="http://www.w3.org/1999/html">
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
   <form [formGroup]="accountSettingsForm" novalidate (ngSubmit)="onSubmit()" class="kAccountSettingsWrapper kContent">
     <section class="kHeader">
       <div class="kTitle">{{'applications.settings.accountInfo' | translate}}</div>
@@ -13,16 +13,16 @@
       <hr>
       <div class="form-section">
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.name' | translate}} &nbsp;*</span>
+          <span class="kLabel">{{'applications.settings.name' | translate}} *</span>
           <input class="kControl" formControlName="name" pInputText>
         </div>
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.adminName' | translate}} &nbsp;*</span>
+          <span class="kLabel">{{'applications.settings.adminName' | translate}} *</span>
           <p-dropdown class="kControl" [options]="nameOfAccountOwnerOptions"
                       formControlName="adminName"></p-dropdown>
         </div>
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.phone' | translate}} &nbsp;*</span>
+          <span class="kLabel">{{'applications.settings.phone' | translate}} *</span>
           <input class="kControl" formControlName="phone" pInputText>
         </div>
         <div class="kRow">

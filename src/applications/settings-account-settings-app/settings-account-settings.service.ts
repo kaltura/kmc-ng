@@ -56,8 +56,7 @@ export class SettingsAccountSettingsService {
       referenceId: data.referenceId
     });
     return this._kalturaServerClient.request(new PartnerUpdateAction({
-      partner,
-      allowEmpty: false
+      partner
     }))
       .monitor('update partner info');
   }

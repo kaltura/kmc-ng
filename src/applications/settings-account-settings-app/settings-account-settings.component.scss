@@ -43,9 +43,10 @@
   font-size: 13px;
   line-height: 16px;
 
-.kIconhelp_full{
-  font-size: 15px;
-}
+  .kIconhelp_full {
+    font-size: 15px;
+    padding-left: 6px;
+  }
 }
 
 .kFormContainer {
@@ -64,9 +65,9 @@
     font-size: 15px;
     padding: 27px 29px;
 
-    .kIconwarning{
+    .kIconwarning {
       font-size: 18px;
-      padding-right:10px;
+      padding-right: 10px;
       color: $kGrayscale3;
       vertical-align: text-bottom;
     }
@@ -101,9 +102,7 @@
         height: 34px;
         width: 400px;
         border-radius: 3px;
-        background-color: $kGrayscale6;
       }
-
     }
   }
 }
