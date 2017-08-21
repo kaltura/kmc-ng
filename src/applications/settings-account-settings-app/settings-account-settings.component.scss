@@ -64,6 +64,13 @@
     font-size: 15px;
     padding: 27px 29px;
 
+    .kIconwarning{
+      font-size: 18px;
+      padding-right:10px;
+      color: $kGrayscale3;
+      vertical-align: text-bottom;
+    }
+
     .kRow {
       &:first-child {
         padding-top: 0;
