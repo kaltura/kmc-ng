@@ -3,16 +3,16 @@
     <div #categoriesTableHolder class="kCategoriesHolder kContent">
       <div class="kCategoriesTableFilters">
         <button pButton type="button" label="{{'applications.content.categories.addCategory' | translate}}" class="kButtonBranded kAddCategoryBtn"
-          [disabled]="_selectedCategories.length"></button>
+          [disabled]="_selectedCategories?.length"></button>
         <span class="kSelectedCategoriesNum" *ngIf="_categoriesTotalCount">
           {{_categoriesTotalCount}} {{'applications.content.categories.categories' | translate}}
         </span>
-        <div [class.kHidden]="!_selectedCategories.length" class="kBulkOperations">
-          <span class="kSelectedCategoriesLabel">• {{_selectedCategories.length}} {{'applications.content.categories.selected' | translate}}</span>
+        <div [class.kHidden]="!_selectedCategories?.length" class="kBulkOperations">
+          <span class="kSelectedCategoriesLabel">• {{_selectedCategories?.length}} {{'applications.content.categories.selected' | translate}}</span>
           <kCategoriesBulkActions [selectedCategories]="_selectedCategories"></kCategoriesBulkActions>
           <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.categories.cancel' | translate}}</a>
         </div>
-        <div [class.kHidden]="_selectedCategories.length" class="kFilters">
+        <div [class.kHidden]="_selectedCategories?.length" class="kFilters">
           <input type="text" pInputText class="kSearchInput" placeholder="{{'applications.content.categories.search' | translate}}">
           <div #categoriesFilterBtn class="kCategoriesFilter">
             <i class="kIconfolder"></i>

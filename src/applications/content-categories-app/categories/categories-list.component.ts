@@ -77,13 +77,11 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
 
     _onPaginationChanged(state: any): void {
         if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
-            this._filter.pageIndex = state.page;
-            this._filter.pageSize = state.rows;
 
             this._clearSelection();
             this._categoriesService.reload({
-                pageIndex: this._filter.pageIndex + 1,
-                pageSize: this._filter.pageSize
+                pageIndex: state.page + 1,
+                pageSize: state.rows
             });
         }
     }
