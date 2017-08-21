@@ -30,20 +30,20 @@ export class SettingsAccountSettingsService {
   constructor(private _kalturaServerClient: KalturaClient) {
   }
 
-  public getPartnerAccountSettings(): Observable<{ accountOwners: string[], partnerData: KalturaPartner }> {
-    const actions = [
-      this._fetchAccountOwners(),
-      this._fetchPartnerData()
-    ];
-
-    return Observable.forkJoin(actions)
-      .map((response) => {
-        return {accountOwners: response[0], partnerData: response[1]}
-      })
-      .catch((error) => {
-        return Observable.throw('Error has occurred while trying to return accountOwners / partnerData');
-      });
-  }
+  // public getPartnerAccountSettings(): Observable<{ accountOwners: string[], partnerData: KalturaPartner }> {
+  //   const actions = [
+  //     this._fetchAccountOwners(),
+  //     this._fetchPartnerData()
+  //   ];
+  //
+  //   return Observable.forkJoin(actions)
+  //     .map((response) => {
+  //       return {accountOwners: response[0], partnerData: response[1]}
+  //     })
+  //     .catch((error) => {
+  //       return Observable.throw('Error has occurred while trying to return accountOwners / partnerData');
+  //     });
+  // }
 
   /** update the data for current partner */
   public updatePartnerData(data: AccountSettings): Observable<KalturaPartner> {
@@ -69,7 +69,7 @@ export class SettingsAccountSettingsService {
   }
 
   /** Get the account owners list for current partner */
-  private _fetchAccountOwners(): Observable<string[]> {
+  public getPartnerAccountSettings(): Observable<any> {
 
     const userRoleFilter: KalturaUserRoleFilter = new KalturaUserRoleFilter({
       tagsMultiLikeOr: 'partner_admin',
@@ -84,9 +84,11 @@ export class SettingsAccountSettingsService {
     })
       .setDependency(['roleIdsEqual', 0, 'objects:0:id']);
 
+
     const multiRequest = new KalturaMultiRequest(
       new UserRoleListAction({filter: userRoleFilter}),
-      new UserListAction({filter: userFilter})
+      new UserListAction({filter: userFilter}),
+      new PartnerGetInfoAction()
     );
 
     return this._kalturaServerClient.multiRequest(multiRequest)
@@ -98,12 +100,12 @@ export class SettingsAccountSettingsService {
             accountOwnersNames = response[1].result.objects.map(user => user.fullName).filter(name => name && name !== '');
             if (!accountOwnersNames.length) {
               return Observable.throw(
-                'error occurred in action \'_fetchAccountOwners\': all user ids got from server are either null or empty');
+                'error occurred in action \'getPartnerAccountSettings\'');
             }
-            return accountOwnersNames;
+            return { accountOwners: accountOwnersNames, partnerData: response[2].result};
           } else {
             const [loginResponse] = response;
-            Observable.throw('error occurred in action \'_fetchAccountOwners\':' + loginResponse.error)
+            Observable.throw('error occurred in action \'getPartnerAccountSettings\':' + loginResponse.error)
           }
         });
   }
