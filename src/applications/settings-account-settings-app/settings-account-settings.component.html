@@ -13,16 +13,16 @@
       <hr>
       <div class="form-section">
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.name' | translate}}</span>
+          <span class="kLabel">{{'applications.settings.name' | translate}} &nbsp;*</span>
           <input class="kControl" formControlName="name" pInputText>
         </div>
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.adminName' | translate}}</span>
+          <span class="kLabel">{{'applications.settings.adminName' | translate}} &nbsp;*</span>
           <p-dropdown class="kControl" [options]="nameOfAccountOwnerOptions"
                       formControlName="adminName"></p-dropdown>
         </div>
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.phone' | translate}}</span>
+          <span class="kLabel">{{'applications.settings.phone' | translate}} &nbsp;*</span>
           <input class="kControl" formControlName="phone" pInputText>
         </div>
         <div class="kRow">
@@ -37,6 +37,9 @@
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.referenceId' | translate}}</span>
           <input class="kControl" formControlName="referenceId" pInputText>
+        </div>
+        <div class="kRow">
+          <span class="kLabel">{{'applications.settings.requiredFields' | translate}}</span>
         </div>
       </div>
     </section>

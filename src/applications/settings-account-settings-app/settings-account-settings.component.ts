@@ -154,9 +154,9 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       adminName: ['', Validators.required],
       phone: ['', Validators.required],
-      website: ['', Validators.required],
-      describeYourself: ['', Validators.required],
-      referenceId: ['', Validators.required]
+      website: [''],
+      describeYourself: [''],
+      referenceId: ['']
     });
     const subscription: ISubscription = this.accountSettingsForm.valueChanges
       .subscribe(

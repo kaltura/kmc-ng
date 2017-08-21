@@ -654,7 +654,8 @@
       "website": "Website",
       "describeYourself": "Describe Yourself",
       "referenceId": "Account Reference ID",
-      "describeYourselfOptions": "Enterprise / Small Business / Government Agency,Education Organization,Media Company / Agency,CDN / ISP / Integrator / Hosting Provider,Other"
+      "describeYourselfOptions": "Enterprise / Small Business / Government Agency,Education Organization,Media Company / Agency,CDN / ISP / Integrator / Hosting Provider,Other",
+      "requiredFields": "* Required Fields."
     }
   },
   "entriesShared": {
