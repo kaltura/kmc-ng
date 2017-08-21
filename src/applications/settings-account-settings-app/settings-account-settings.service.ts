@@ -30,21 +30,6 @@ export class SettingsAccountSettingsService {
   constructor(private _kalturaServerClient: KalturaClient) {
   }
 
-  // public getPartnerAccountSettings(): Observable<{ accountOwners: string[], partnerData: KalturaPartner }> {
-  //   const actions = [
-  //     this._fetchAccountOwners(),
-  //     this._fetchPartnerData()
-  //   ];
-  //
-  //   return Observable.forkJoin(actions)
-  //     .map((response) => {
-  //       return {accountOwners: response[0], partnerData: response[1]}
-  //     })
-  //     .catch((error) => {
-  //       return Observable.throw('Error has occurred while trying to return accountOwners / partnerData');
-  //     });
-  // }
-
   /** update the data for current partner */
   public updatePartnerData(data: AccountSettings): Observable<KalturaPartner> {
     const partner = new KalturaPartner({
