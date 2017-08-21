@@ -100,6 +100,21 @@
       "signUp": "Sign Up",
       "rememberMe": "Remember me",
       "dontHaveAccount": "Don't have an account?"
+    },
+    "upload": {
+      "uploadMenu": {
+        "uploadFromDesktop": "Upload from desktop",
+        "bulkUpload": {
+          "title": "Bulk upload",
+          "samplesLink": "Download CSV/XML Samples"
+        },
+        "liveStream": "Live stream entry",
+        "entryList": {
+          "title": "Prepare entry",
+          "video": "Video entry",
+          "audio": "Audio entry"
+        }
+      }
     }
   },
   "applications": {
@@ -118,7 +133,7 @@
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
         "refine": "Refine",
-        "filterCategories": "Filter Categories",
+        "filterCategories": "Filter Categories"  ,
         "edit": "Edit",
         "delete": "Delete",
         "viewEntries": "View Entries",

@@ -46,7 +46,7 @@ export class SchedulingComponent implements OnInit, OnDestroy {
   private getTimeZone() {
     const now: any = new Date();
     const zoneTimeOffset: number = (now.getTimezoneOffset() / 60) * (-1);
-    const ztStr: string = (zoneTimeOffset == 0) ? '' : (zoneTimeOffset > 0) ? ('+' + zoneTimeOffset) : ('-' + zoneTimeOffset);
+    const ztStr: string = (zoneTimeOffset == 0) ? '' : (zoneTimeOffset > 0) ? ('+' + zoneTimeOffset) : (zoneTimeOffset.toString());
     this._timeZone = {0: ztStr};
   }
 
