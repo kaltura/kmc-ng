@@ -171,6 +171,10 @@
     },
     "content": {
       "uploadControl": {
+        "bulkCancel": {
+          "header": "Cancel uploads",
+          "message": "Are you sure you want to cancel those uploads?"
+        },
         "files": "Files",
         "selected": "Selected",
         "cancel": "Cancel",

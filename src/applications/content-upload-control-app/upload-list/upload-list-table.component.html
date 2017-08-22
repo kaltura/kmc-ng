@@ -73,6 +73,7 @@
       <p-column [style]="{ 'width': '65px', 'text-align': 'center' }" [sortable]="false">
         <ng-template let-col let-file="rowData" pTemplate="body">
           <i class="kIcontrash kIconRemoveFile"
+             *ngIf="!file.removing"
              [kTooltip]="'applications.content.uploadControl.table.remove' | translate"
              placement="top"
              (click)="onCancelUpload.emit(file)"></i>

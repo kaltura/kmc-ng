@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { NewUploadFile, KmcUploadAppService } from '../../kmc-upload-app/kmc-upload-app.service';
+import { BrowserService } from 'app-shared/kmc-shell';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kUploadControlList',
@@ -13,7 +15,9 @@ export class UploadListComponent implements OnInit, OnDestroy {
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
 
-  constructor(private _uploadService: KmcUploadAppService) {
+  constructor(private _uploadService: KmcUploadAppService,
+              private _browserService: BrowserService,
+              private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
@@ -45,7 +49,13 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
   _bulkCancel(): void {
     if (this._selectedUploads.length) {
-      this._uploadService.bulkCancel(this._selectedUploads);
+      this._browserService.confirm(
+        {
+          header: this._appLocalization.get('applications.content.uploadControl.bulkCancel.header'),
+          message: this._appLocalization.get('applications.content.uploadControl.bulkCancel.message'),
+          accept: () => this._uploadService.bulkCancel(this._selectedUploads)
+        }
+      );
     }
   }
 }

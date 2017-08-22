@@ -61,7 +61,7 @@ export class UploadListTableComponent implements AfterViewInit {
     }
   }
 
-  public _relatedTableRowStyle(rowData): string {
+  public _relatedTableRowStyle(rowData: NewUploadFile): string {
     if (rowData.uploadFailure) {
       return 'has-error';
     }
