@@ -74,6 +74,9 @@
     border: 1px solid white;
     resize: none;
     box-sizing: border-box;
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1em;
+    padding: .25em;
 
     &:hover {
       border-color: #d9d9d9;

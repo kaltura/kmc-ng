@@ -13,7 +13,7 @@
       <div class="kRow">
         <span class="kLabel">{{'applications.content.playlistDetails.metadata.description' | translate}}</span>
         <div class="kControl">
-          <textarea formControlName="description" class="threeRows ui-widget ui-inputtext" pInputTextarea></textarea>
+          <textarea formControlName="description" class="threeRows" pInputTextarea></textarea>
         </div>
       </div>
       <div class="kRow kValign">
@@ -27,8 +27,7 @@
             [limitToSuggestions]="false"
             [minLength]="3"
             [suggestionsProvider]="_tagsProvider"
-            (completeMethod)="_searchTags($event)"
-            (onSelect)="_getSelectedValue($event)">
+            (completeMethod)="_searchTags($event)">
           </kAutoComplete>
         </div>
       </div>
