@@ -2,16 +2,17 @@
   <div class="kCategories kOverrideFAIcons">
     <div #categoriesTableHolder class="kCategoriesHolder kContent">
       <div class="kCategoriesTableFilters">
-        <button pButton type="button" label="{{'applications.content.categories.addCategory' | translate}}" class="kButtonBranded kAddCategoryBtn"></button>
-        <span class="kSelectedEntriesNum" *ngIf="_categoriesTotalCount">
+        <button pButton type="button" label="{{'applications.content.categories.addCategory' | translate}}" class="kButtonBranded kAddCategoryBtn"
+          [disabled]="_selectedCategories?.length"></button>
+        <span class="kSelectedCategoriesNum" *ngIf="_categoriesTotalCount">
           {{_categoriesTotalCount}} {{'applications.content.categories.categories' | translate}}
         </span>
-        <div [class.kHidden]="!_selectedCategories.length" class="kBulkOperations">
-          <span class="kSelectedEntriesLabel">• {{_selectedCategories.length}} {{'applications.content.categories.selected' | translate}}</span>
+        <div [class.kHidden]="!_selectedCategories?.length" class="kBulkOperations">
+          <span class="kSelectedCategoriesLabel">• {{_selectedCategories?.length}} {{'applications.content.categories.selected' | translate}}</span>
           <kCategoriesBulkActions [selectedCategories]="_selectedCategories"></kCategoriesBulkActions>
-          <!-- <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a> -->
+          <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.categories.cancel' | translate}}</a>
         </div>
-        <div [class.kHidden]="_selectedCategories.length" class="kFilters">
+        <div [class.kHidden]="_selectedCategories?.length" class="kFilters">
           <input type="text" pInputText class="kSearchInput" placeholder="{{'applications.content.categories.search' | translate}}">
           <div #categoriesFilterBtn class="kCategoriesFilter">
             <i class="kIconfolder"></i>
@@ -23,15 +24,16 @@
             <i class="kIcondropdown_arrow_bottom dropdown"></i>
           </div>
         </div>
-        <button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" [kTooltip]="'applications.content.categories.refresh' | translate"></button>
+        <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh" [kTooltip]="'applications.content.categories.refresh' | translate"></button>
       </div>
-      <kCategoriesTable class="kCategoriesTable" [categories]="_categories"></kCategoriesTable>
-
+      <kCategoriesTable class="kCategoriesTable" [categories]="_categories" [filter]="_filter" (sortChanged)="_onSortChanged($event)"
+        (actionSelected)="_onActionSelected($event)" [(selectedCategories)]="_selectedCategories">
+      </kCategoriesTable>
       <div class="kCategoriesTableFooter" #footer *ngIf="_categoriesTotalCount">
-        <p-paginator [totalRecords]="_categoriesTotalCount | kMaxCategories" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
+        <p-paginator [rows]="_filter.pageSize" (onPageChange)="_onPaginationChanged($event)" [first]="_filter.pageIndex * _filter.pageSize"
+          [totalRecords]="_categoriesTotalCount | kMaxCategories" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
       </div>
     </div>
   </div>
-
 </k-area-blocker>

@@ -1,5 +1,4 @@
 @import 'app-theme/_variables.scss';
-
 .kCategories {
   font-size: 15px;
   background-color: $appBkgColor;
@@ -47,7 +46,7 @@
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     display: flex;
-    .kSelectedEntriesNum {
+    .kSelectedCategoriesNum {
       padding-left: 16px;
     }
   }
@@ -75,7 +74,7 @@
     background-color: white;
     flex: 1 1 auto;
   }
-  .kSelectedEntriesLabel {
+  .kSelectedCategoriesLabel {
     font-weight: bold;
     margin-right: 36px;
     margin-left: 5px;
@@ -100,11 +99,10 @@
     top: 7px;
     right: 80px;
   }
-	.kAddCategoryBtn {
-		margin-left: 14px;
-		height: 36px;
-	}
-
+  .kAddCategoryBtn {
+    margin-left: 14px;
+    height: 36px;
+  } 
   .kBulkCancel {
     margin-left: 10px;
   }
