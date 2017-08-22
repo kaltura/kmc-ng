@@ -68,7 +68,7 @@ export const environment = {
         "enabled": false
       }, {
         "routePath": "settings",
-        "titleToken": "Settings",
+        "titleToken": "",
         "showSubMenu": true,
         "enabled": true,
         "children": [
