@@ -189,8 +189,9 @@
             "header": "Status",
             "uploaded": "Complete",
             "uploading": "Uploading",
-            "pending": "Processing",
-            "uploadFailure": "Failed"
+            "pending": "Queued",
+            "uploadFailure": "Failed",
+            "removing": "Removing"
           }
         }
       },

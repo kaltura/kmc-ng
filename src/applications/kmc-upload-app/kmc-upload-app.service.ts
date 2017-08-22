@@ -24,7 +24,7 @@ import { MediaDeleteAction } from 'kaltura-typescript-client/types/MediaDeleteAc
 import { UploadTokenDeleteAction } from 'kaltura-typescript-client/types/UploadTokenDeleteAction';
 import * as R from 'ramda';
 
-export type UploadStatus = 'uploading' | 'uploaded' | 'uploadFailure' | 'pending';
+export type UploadStatus = 'uploading' | 'uploaded' | 'uploadFailure' | 'pending' | 'removing';
 
 export interface NewUploadFile {
   uploadToken: string;
@@ -139,7 +139,7 @@ export class KmcUploadAppService {
         (trackedFile: TrackedFile) => {
           const relevantNewFile = R.find(R.propEq('uploadToken', trackedFile.uploadToken))(this._getFiles());
 
-          if (relevantNewFile) {
+          if (relevantNewFile && relevantNewFile.status !== 'removing') {
             relevantNewFile.status = trackedFile.status;
             relevantNewFile.statusWeight = this._getStatusWeight(trackedFile.status);
 
@@ -258,6 +258,7 @@ export class KmcUploadAppService {
       const { entryId, uploadToken } = relevantFile;
 
       relevantFile.removing = true;
+      relevantFile.status = 'removing';
 
       if (entryId) {
         removeOperations$.push(this._removeMediaEntry(relevantFile.entryId));
@@ -306,7 +307,10 @@ export class KmcUploadAppService {
       ? <Observable<any>>this._kalturaServerClient.multiRequest(removeUploadTokenPayload)
       : <Observable<any>>Observable.of(false);
 
-    files.forEach(file => file.removing = true);
+    files.forEach(file => {
+      file.removing = true;
+      file.status = 'removing';
+    });
 
     removeEntryRequest
       .switchMap(() => removeUploadTokenRequest)
