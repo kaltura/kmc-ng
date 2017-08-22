@@ -46,12 +46,6 @@ export class SettingsAccountSettingsService {
       .monitor('update partner info');
   }
 
-  /** Get the data for current partner */
-  private _fetchPartnerData(): Observable<KalturaPartner> {
-
-    return this._kalturaServerClient.request(new PartnerGetInfoAction())
-      .monitor('get partner info');
-  }
 
   /** Get the account owners list for current partner */
   public getPartnerAccountSettings(): Observable<any> {
@@ -87,13 +81,11 @@ export class SettingsAccountSettingsService {
               return Observable.throw(
                 'error occurred in action \'getPartnerAccountSettings\'');
             }
-            return { accountOwners: accountOwnersNames, partnerData: response[2].result};
+            return {accountOwners: accountOwnersNames, partnerData: response[2].result};
           } else {
             const [loginResponse] = response;
-            Observable.throw('error occurred in action \'getPartnerAccountSettings\':' + loginResponse.error)
+            Observable.throw('error occurred in action \'getPartnerAccountSettings\':' + loginResponse.error);
           }
         });
   }
-
-
 }

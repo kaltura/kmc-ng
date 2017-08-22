@@ -1,45 +1,45 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
   <form [formGroup]="accountSettingsForm" novalidate (ngSubmit)="onSubmit()" class="kAccountSettingsWrapper kContent">
     <section class="kHeader">
-      <div class="kTitle">{{'applications.settings.accountInfo' | translate}}</div>
-      <button pButton class="kButtonBranded kSaveBtn" label="{{'applications.settings.apply' | translate}}" [disabled]="!enableSave"></button>
+      <div class="kTitle">{{'applications.settings.accountSettings.accountInfo' | translate}}</div>
+      <button pButton class="kButtonBranded kSaveBtn" label="{{'applications.settings.accountSettings.apply' | translate}}" [disabled]="!enableSave"></button>
     </section>
-    <span class="kReadonlyData">{{'applications.settings.partnerID' | translate}}: {{partnerId}} | {{'applications.settings.adminEmail' | translate}}:
+    <span class="kReadonlyData">{{'applications.settings.accountSettings.partnerID' | translate}}: {{partnerId}} | {{'applications.settings.accountSettings.adminEmail' | translate}}:
         {{partnerAdminEmail}} <i class="kIconhelp_full"></i></span>
     <section class="kFormContainer">
       <div class="form-section">
-        <i class="kIconwarning"></i> <span>{{'applications.settings.informationMessage' | translate}}</span>
+        <i class="kIconwarning"></i> <span>{{'applications.settings.accountSettings.informationMessage' | translate}}</span>
       </div>
       <hr>
       <div class="form-section">
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.name' | translate}} *</span>
+          <span class="kLabel">{{'applications.settings.accountSettings.name' | translate}} *</span>
           <input class="kControl" formControlName="name" pInputText>
         </div>
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.adminName' | translate}} *</span>
+          <span class="kLabel">{{'applications.settings.accountSettings.adminName' | translate}} *</span>
           <p-dropdown class="kControl" [options]="nameOfAccountOwnerOptions"
                       formControlName="adminName"></p-dropdown>
         </div>
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.phone' | translate}} *</span>
+          <span class="kLabel">{{'applications.settings.accountSettings.phone' | translate}} *</span>
           <input class="kControl" formControlName="phone" pInputText>
         </div>
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.website' | translate}}</span>
+          <span class="kLabel">{{'applications.settings.accountSettings.website' | translate}}</span>
           <input class="kControl" formControlName="website" pInputText>
         </div>
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.describeYourself' | translate}}</span>
+          <span class="kLabel">{{'applications.settings.accountSettings.describeYourself' | translate}}</span>
           <p-dropdown class="kControl" [options]="describeYourselfOptions"
                       formControlName="describeYourself"></p-dropdown>
         </div>
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.referenceId' | translate}}</span>
+          <span class="kLabel">{{'applications.settings.accountSettings.referenceId' | translate}}</span>
           <input class="kControl" formControlName="referenceId" pInputText>
         </div>
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.requiredFields' | translate}}</span>
+          <span class="kLabel">{{'applications.settings.accountSettings.requiredFields' | translate}}</span>
         </div>
       </div>
     </section>

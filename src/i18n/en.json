@@ -135,7 +135,7 @@
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
         "refine": "Refine",
-        "filterCategories": "Filter Categories"  ,
+        "filterCategories": "Filter Categories",
         "edit": "Edit",
         "delete": "Delete",
         "viewEntries": "View Entries",
@@ -649,19 +649,25 @@
       }
     },
     "settings": {
-      "accountInfo": "Account Info",
-      "partnerID": "Partner ID",
-      "adminEmail": "Email of Account Owner",
-      "adminName": "Name of Account Owner",
-      "informationMessage": "Please make sure that the information below is up to date.",
-      "name":"Name of Publisher/Company",
-      "phone": "Phone",
-      "website": "Website",
-      "describeYourself": "Describe Yourself",
-      "referenceId": "Account Reference ID",
-      "describeYourselfOptions": "Enterprise / Small Business / Government Agency,Education Organization,Media Company / Agency,CDN / ISP / Integrator / Hosting Provider,Other",
-      "requiredFields": "* Required Fields.",
-      "apply": "Apply"
+      "accountSettings": {
+        "accountInfo": "Account Info",
+        "partnerID": "Partner ID",
+        "adminEmail": "Email of Account Owner",
+        "adminName": "Name of Account Owner",
+        "informationMessage": "Please make sure that the information below is up to date.",
+        "name": "Name of Publisher/Company",
+        "phone": "Phone",
+        "website": "Website",
+        "describeYourself": "Describe Yourself",
+        "referenceId": "Account Reference ID",
+        "describeYourselfOptions": "Enterprise / Small Business / Government Agency,Education Organization,Media Company / Agency,CDN / ISP / Integrator / Hosting Provider,Other",
+        "requiredFields": "* Required Fields.",
+        "apply": "Apply",
+        "errors": {
+          "updateFailed": "An error occurred during account info update.",
+          "loadFailed": "An error occurred during account info loading."
+        }
+      }
     }
   },
   "entriesShared": {

@@ -36,12 +36,14 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
     this._loadPartnerAccountSettings();
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+  }
 
   onSubmit(): void {
     this._updatePartnerAccountSettings();
   }
 
+  // Update Partner Account Settings
   private _updatePartnerAccountSettings() {
     this._updateAreaBlockerState(true, null);
     this._accountSettingsService
@@ -54,18 +56,12 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
         error => {
           const blockerMessage = new AreaBlockerMessage(
             {
-              message: error.message,
+              message: this._appLocalization.get('applications.settings.accountSettings.errors.updateFailed'),
               buttons: [
                 {
-                  label: this._appLocalization.get('app.common.retry'),
+                  label: this._appLocalization.get('app.common.ok'),
                   action: () => {
-                    this._updatePartnerAccountSettings();
-                  }
-                },
-                {
-                  label: this._appLocalization.get('app.common.cancel'),
-                  action: () => {
-                    this._updateAreaBlockerState(false, null);
+                    this._loadPartnerAccountSettings();
                   }
                 }
               ]
@@ -75,28 +71,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
         });
   }
 
-  private _updateAreaBlockerState(isBusy: boolean, message: AreaBlockerMessage): void {
-    this._isBusy = isBusy;
-    this._blockerMessage = message;
-  }
-
-  private _fillAccountOwnersOptions(accountOwners: string[]): void {
-    accountOwners.forEach((ownerName) => {
-      this.nameOfAccountOwnerOptions.push({label: ownerName, value: ownerName});
-    });
-  }
-
-  private _fillDescribeYourselfOptions(): void {
-
-    this._appLocalization.get('applications.settings.describeYourselfOptions')
-      .split(',')
-      .map(option => option.trim())
-      .forEach((option) => {
-        this.describeYourselfOptions.push({label: option, value: option});
-      });
-  }
-
-  // Get PartnerAccountSettings data and fill the form
+  // Get Partner Account Settings data and fill the form
   private _loadPartnerAccountSettings() {
     this._updateAreaBlockerState(true, null);
 
@@ -113,7 +88,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
         error => {
           const blockerMessage = new AreaBlockerMessage(
             {
-              message: error.message,
+              message: this._appLocalization.get('applications.settings.accountSettings.errors.loadFailed'),
               buttons: [
                 {
                   label: this._appLocalization.get('app.common.retry'),
@@ -127,6 +102,27 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
           this._updateAreaBlockerState(false, blockerMessage);
         });
 
+  }
+
+  private _updateAreaBlockerState(isBusy: boolean, message: AreaBlockerMessage): void {
+    this._isBusy = isBusy;
+    this._blockerMessage = message;
+  }
+
+  private _fillAccountOwnersOptions(accountOwners: string[]): void {
+    accountOwners.forEach((ownerName) => {
+      this.nameOfAccountOwnerOptions.push({label: ownerName, value: ownerName});
+    });
+  }
+
+  private _fillDescribeYourselfOptions(): void {
+
+    this._appLocalization.get('applications.settings.accountSettings.describeYourselfOptions')
+      .split(',')
+      .map(option => option.trim())
+      .forEach((option) => {
+        this.describeYourselfOptions.push({label: option, value: option});
+      });
   }
 
   // Create empty structured form on loading
