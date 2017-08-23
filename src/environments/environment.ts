@@ -19,7 +19,8 @@ export const environment = {
       "expiry": "86400",
       "privileges": "disableentitlement",
       "previewUIConf": "38524931",
-      "liveAnalyticsVersion": "v2.6"
+      "liveAnalyticsVersion": "v2.6",
+      "contactsalesforce": "https://www.kaltura.com/index.php/partnerservices2/contactsalesforce"
     },
     "menuConfig": [
       {
@@ -75,6 +76,11 @@ export const environment = {
           {
             "routePath": "settings/accountSettings",
             "titleToken": "Account Settings",
+            "enabled": true
+          },
+          {
+            "routePath": "settings/accountUpgrade",
+            "titleToken": "Account Upgrade",
             "enabled": true
           }
         ]

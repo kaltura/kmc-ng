@@ -16,7 +16,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin: 24px 0 0 0;
+    margin: 24px 0;
 
     .kTitle {
       color: $kGrayscale1;
@@ -94,20 +94,21 @@
         line-height: 18px;
       }
       .kControl {
-        width: 100%;
-        height: 34px;
         color: $kGrayscale2;
         height: 34px;
         width: 400px;
         border-radius: 3px;
         &.kHasError{
           border: 1px solid $kDandger;
-          background: initial;
         }
+      }
+      textarea.kControl{
+        height: 76px;
       }
       .error{
         padding-top: 8px;
       }
+
     }
   }
 }

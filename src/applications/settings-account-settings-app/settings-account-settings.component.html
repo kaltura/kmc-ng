@@ -2,28 +2,56 @@
   <form [formGroup]="accountSettingsForm" novalidate (ngSubmit)="onSubmit()" class="kAccountSettingsWrapper kContent">
     <section class="kHeader">
       <div class="kTitle">{{'applications.settings.accountSettings.accountInfo' | translate}}</div>
-      <button pButton class="kButtonBranded kSaveBtn" label="{{'applications.settings.accountSettings.apply' | translate}}" [disabled]="!enableSave"></button>
+      <button pButton class="kButtonBranded kSaveBtn"
+              label="{{'applications.settings.accountSettings.apply' | translate}}"></button>
     </section>
     <span class="kReadonlyData">{{'applications.settings.accountSettings.partnerID' | translate}}: {{partnerId}} | {{'applications.settings.accountSettings.adminEmail' | translate}}:
         {{partnerAdminEmail}} <i class="kIconhelp_full"></i></span>
     <section class="kFormContainer">
       <div class="form-section">
-        <i class="kIconwarning"></i> <span>{{'applications.settings.accountSettings.informationMessage' | translate}}</span>
+        <i class="kIconwarning"></i>
+        <span>{{'applications.settings.accountSettings.informationMessage' | translate}}</span>
       </div>
       <hr>
       <div class="form-section">
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.accountSettings.name' | translate}} *</span>
-          <input class="kControl" formControlName="name" pInputText>
+          <div>
+            <input class="kControl" formControlName="name" pInputText
+                   [ngClass]="{'kHasError':!accountSettingsForm.controls['name'].valid &&
+                   accountSettingsForm.controls['name'].touched}">
+            <div class="error"
+                 *ngIf="accountSettingsForm.controls['name'].touched &&
+                 accountSettingsForm.controls['name'].hasError('required')">
+              {{'applications.settings.accountUpgrade.errors.required' | translate}}
+            </div>
+          </div>
         </div>
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.accountSettings.adminName' | translate}} *</span>
-          <p-dropdown class="kControl" [options]="nameOfAccountOwnerOptions"
-                      formControlName="adminName"></p-dropdown>
+          <span class="kLabel">{{'applications.settings.accountSettings.adminUserId' | translate}} *</span>
+          <div>
+            <p-dropdown class="kControl" [options]="nameOfAccountOwnerOptions"
+                        formControlName="adminUserId"
+                        [ngClass]="{'kHasError':!accountSettingsForm.controls['adminUserId'].valid &&
+                        accountSettingsForm.controls['adminUserId'].touched}">></p-dropdown>
+            <div class="error"
+                 *ngIf="accountSettingsForm.controls['adminUserId'].touched && accountSettingsForm.controls['adminUserId'].hasError('required')">
+              {{'applications.settings.accountUpgrade.errors.required' | translate}}
+            </div>
+          </div>
         </div>
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.accountSettings.phone' | translate}} *</span>
-          <input class="kControl" formControlName="phone" pInputText>
+          <div>
+            <input class="kControl" formControlName="phone" pInputText
+                   [ngClass]="{'kHasError':!accountSettingsForm.controls['phone'].valid &&
+                   accountSettingsForm.controls['phone'].touched}">
+            <div class="error"
+                 *ngIf="accountSettingsForm.controls['phone'].touched &&
+                 accountSettingsForm.controls['phone'].hasError('required')">
+              {{'applications.settings.accountUpgrade.errors.required' | translate}}
+            </div>
+          </div>
         </div>
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.accountSettings.website' | translate}}</span>

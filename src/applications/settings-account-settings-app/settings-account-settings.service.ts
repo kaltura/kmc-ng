@@ -18,7 +18,7 @@ import {PartnerUpdateAction} from "kaltura-typescript-client/types/PartnerUpdate
 export interface AccountSettings {
   website: string;
   name: string;
-  adminName: string;
+  adminUserId: string;
   phone: string;
   describeYourself: string;
   referenceId: string;
@@ -35,7 +35,7 @@ export class SettingsAccountSettingsService {
     const partner = new KalturaPartner({
       website: data.website,
       name: data.name,
-      adminName: data.adminName,
+      adminUserId: data.adminUserId,
       phone: data.phone,
       describeYourself: data.describeYourself,
       referenceId: data.referenceId

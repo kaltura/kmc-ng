@@ -11,7 +11,8 @@
       "Studio": "Studio",
       "Analytics": "Analytics",
       "Settings": "Settings",
-      "Account Settings": "Account Settings"
+      "Account Settings": "Account Settings",
+      "Account Upgrade": "Account Upgrade"
     },
     "userSettings": {
       "changeAccount": "Change Acoount",
@@ -653,7 +654,7 @@
         "accountInfo": "Account Info",
         "partnerID": "Partner ID",
         "adminEmail": "Email of Account Owner",
-        "adminName": "Name of Account Owner",
+        "adminUserId": "Name of Account Owner",
         "informationMessage": "Please make sure that the information below is up to date.",
         "name": "Name of Publisher/Company",
         "phone": "Phone",
@@ -664,8 +665,22 @@
         "requiredFields": "* Required Fields.",
         "apply": "Apply",
         "errors": {
+          "required": "This field is required.",
           "updateFailed": "An error occurred during account info update.",
           "loadFailed": "An error occurred during account info loading."
+        }
+      },
+      "accountUpgrade": {
+        "contactUs": "Contact Us",
+        "name": "Name",
+        "phone": "Telephone",
+        "comments": "Comments",
+        "send": "Send",
+        "sendSuccess":"Thank You! Someone from our team will get back to you.",
+        "errors": {
+          "required": "This field is required.",
+          "phoneInvalid": "Your telephone number contains invalid characters.",
+          "sendFailed" : "An error occurred during account upgrade"
         }
       }
     }

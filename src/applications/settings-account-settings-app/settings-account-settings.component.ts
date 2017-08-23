@@ -19,7 +19,6 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   public accountSettingsForm: FormGroup;
   public nameOfAccountOwnerOptions: SelectItem[] = [];
   public describeYourselfOptions: SelectItem[] = [];
-  public enableSave = false;
   public partnerId: number;
   public partnerAdminEmail: string;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -40,10 +39,21 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    this._updatePartnerAccountSettings();
+    if (this.accountSettingsForm.valid) {
+      this._updatePartnerAccountSettings();
+    } else {
+      this.markFormFieldsAsTouched();
+    }
   }
 
-  // Update Partner Account Settings
+  private markFormFieldsAsTouched() {
+    for (let inner in this.accountSettingsForm.controls) {
+      this.accountSettingsForm.get(inner).markAsTouched();
+      this.accountSettingsForm.get(inner).updateValueAndValidity();
+    }
+  }
+
+// Update Partner Account Settings
   private _updatePartnerAccountSettings() {
     this._updateAreaBlockerState(true, null);
     this._accountSettingsService
@@ -129,25 +139,19 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   private _createForm(): void {
     this.accountSettingsForm = this._fb.group({
       name: ['', Validators.required],
-      adminName: ['', Validators.required],
+      adminUserId: ['', Validators.required],
       phone: ['', Validators.required],
       website: [''],
       describeYourself: [''],
       referenceId: ['']
     });
-    this.accountSettingsForm.valueChanges
-      .subscribe(
-        () => {
-          this.enableSave = this.accountSettingsForm.status === 'VALID' && this.accountSettingsForm.dirty;
-        }
-      );
   }
 
   // Fill the form with data
   private _fillForm(partner: KalturaPartner): void {
     this.accountSettingsForm.reset({
       name: partner.name,
-      adminName: partner.adminName,
+      adminUserId: partner.adminUserId,
       phone: partner.phone,
       website: partner.website,
       describeYourself: this.describeYourselfOptions.find(option => option.label === partner.describeYourself) ?
