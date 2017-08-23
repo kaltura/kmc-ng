@@ -1,0 +1,26 @@
+<div class="kAddNewPlaylist">
+  <form [formGroup]="_addNewCategoryForm" novalidate>
+    <div class="kHeader">
+      <span class="kTitle">{{('applications.content.addNewCategory.newCategory') | translate}}</span>
+    </div>
+    <div class="kContainer">
+      <span>{{('applications.content.addNewCategory.selectCategoryParent') | translate}}</span>
+      <span><p-radioButton label="{{'applications.content.addNewCategory.noParent' | translate}}"></p-radioButton>
+      </span>
+    </div>
+    <div class="kMain">
+      <kAutoComplete #autoComplete [multiple]="false" placeholder="{{'applications.content.addNewCategory.searchCategories' | translate}}"
+        [minLength]="3">
+      </kAutoComplete>
+
+
+      <!-- <k-categories-tree #categoriesTree [(selection)]="_treeSelection" (onCategoriesLoad)="_onTreeCategoriesLoad($event)" (onNodeSelect)="_onTreeNodeSelected($event)"
+          (onNodeUnselect)="_onTreeNodeUnselected($event)" (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)"></k-categories-tree> -->
+    </div>
+
+    <div class="kFooter">
+      <button type="button" class="kButtonBranded" pButton label="{{'applications.content.addNewCategory.apply' | translate}}"></button>
+      <a class="kCancel">{{'applications.content.addNewCategory.cancel' | translate}}</a>
+    </div>
+  </form>
+</div>

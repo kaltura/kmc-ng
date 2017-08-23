@@ -1,0 +1,78 @@
+@import 'app-theme/_variables.scss';
+.kAddNewPlaylist {
+  width: 100%;
+  height: 534px;
+  position: relative;
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid $kGrayscale4;
+    padding-top: 24px;
+    box-sizing: border-box;
+    .kTitle {
+      color: $kGrayscale1;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+  .kCancel {
+    margin-left: 10px;
+  }
+  .kMain {
+    margin-left: 20px;
+    border: 1px solid $kGrayscale4;
+    border-radius: 4px;
+    width: 520px;
+    height: 330px;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+   .kContainer {
+    height: 80px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    padding-left: 40px;
+    //align-items: center;
+    justify-content: center;
+  }
+  .kFooter {
+    width: 560px;
+    margin-top: 32px;
+    border-top: 1px solid $kGrayscale4;
+    padding-top: 16px;
+    box-sizing: border-box;
+    text-align: center;
+    height: 66px;
+    button {
+      height: 34px;
+    }
+  }
+}
+
+:host /deep/ .ui-radiobutton,
+:host /deep/.ui-chkbox {
+  margin-right: 14px;
+  margin-top: 14px;
+}
+
+:host /deep/ .ui-radiobutton-label,
+:host /deep/ .ui-chkbox-label {
+  font-size: 15px;
+  font-weight: normal;
+  margin-top: 14px;
+  
+}
+
+:host /deep/ kautocomplete ul.ui-autocomplete-multiple-container.ui-inputtext {
+  padding: 0px;
+  .ui-autocomplete-input-token {
+    padding: 0px;
+    input {
+      height: 34px;
+      padding-left: 4px;
+      width: 500px;
+    }
+  }
+}

@@ -3,6 +3,7 @@ import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory
 import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
+import { PopupWidgetComponent } from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
 import { CategoriesTableComponent } from "./categories-table.component";
 import { CategoriesService, Categories, SortDirection } from './categories.service';
 
@@ -16,6 +17,7 @@ import { CategoriesService, Categories, SortDirection } from './categories.servi
 export class CategoriesListComponent implements OnInit, OnDestroy {
 
     @ViewChild(CategoriesTableComponent) private dataTable: CategoriesTableComponent;
+    @ViewChild('addNewCategory') public addNewCategory: PopupWidgetComponent;
 
     public _isBusy = false
     public _blockerMessage: AreaBlockerMessage = null;
@@ -94,5 +96,9 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
             default:
                 break;
         }
+    }
+
+    _addCategory() {
+        this.addNewCategory.open();
     }
 }
