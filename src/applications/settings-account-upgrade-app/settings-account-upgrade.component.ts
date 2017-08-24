@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {AccountUpgrade, SettingsAccountUpgradeService} from './settings-account-upgrade.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
-
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import {PhoneValidator} from './phone.validator';
 
 
 @Component({
@@ -43,7 +43,7 @@ export class SettingsAccountUpgradeComponent implements OnInit, OnDestroy {
   }
 
   private markFormFieldsAsTouched() {
-    for (let control in this.contactUsForm.controls) {
+    for (const control in this.contactUsForm.controls) {
       this.contactUsForm.get(control).markAsTouched();
       this.contactUsForm.get(control).updateValueAndValidity();
     }
@@ -93,7 +93,7 @@ export class SettingsAccountUpgradeComponent implements OnInit, OnDestroy {
   private _createForm(): void {
     this.contactUsForm = this._fb.group({
       name: [''],
-      phone: ['', Validators.required],
+      phone: ['', [Validators.required, PhoneValidator]],
       comments: [''],
     });
   }

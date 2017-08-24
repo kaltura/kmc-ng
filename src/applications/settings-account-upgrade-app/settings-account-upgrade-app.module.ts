@@ -5,7 +5,7 @@ import {routing} from './settings-account-upgrade-app.routes';
 import {RouterModule} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ButtonModule, InputTextareaModule, InputTextModule} from 'primeng/primeng';
-import {AreaBlockerModule} from '@kaltura-ng/kaltura-ui';
+import {AreaBlockerModule, KalturaUIModule} from '@kaltura-ng/kaltura-ui';
 import {TranslateModule} from 'ng2-translate';
 
 @NgModule({
@@ -18,6 +18,7 @@ import {TranslateModule} from 'ng2-translate';
     AreaBlockerModule,
     TranslateModule,
     InputTextareaModule,
+    KalturaUIModule
   ],
   declarations: [SettingsAccountUpgradeComponent]
 })

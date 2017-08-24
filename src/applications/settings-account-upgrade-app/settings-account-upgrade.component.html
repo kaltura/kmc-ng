@@ -1,5 +1,5 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
-  <form [formGroup]="contactUsForm" novalidate (ngSubmit)="onSubmit()" class="kAccountSettingsWrapper kContent">
+  <form [formGroup]="contactUsForm" novalidate (ngSubmit)="onSubmit()" class="kAccountUpgradeWrapper kContent">
     <section class="kHeader">
       <div class="kTitle">{{'applications.settings.accountUpgrade.contactUs' | translate}}</div>
       <button pButton class="kButtonBranded kSaveBtn"
@@ -15,7 +15,9 @@
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.accountUpgrade.phone' | translate}}</span>
           <div>
-            <input class="kControl" formControlName="phone" pInputText>
+            <input class="kControl" formControlName="phone" pInputText
+                   [ngClass]="{'kHasError':!contactUsForm.controls['phone'].valid &&
+                   contactUsForm.controls['phone'].touched}">
             <div class="error" *ngIf="contactUsForm.controls['phone'].touched">
               <span *ngIf="contactUsForm.controls['phone'].hasError('required')">
               {{'applications.settings.accountUpgrade.errors.required' | translate}}

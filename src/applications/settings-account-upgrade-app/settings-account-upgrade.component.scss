@@ -1,6 +1,6 @@
 @import 'app-theme/_variables.scss';
 
-.kAccountSettingsWrapper {
+.kAccountUpgradeWrapper {
   height: 100%;
   border: none;
   position: relative;
@@ -35,42 +35,13 @@
   }
 }
 
-.kReadonlyData {
-  color: $kGrayscale3;
-  margin: 1em 0;
-  display: inline-block;
-  height: 16px;
-  font-size: 13px;
-  line-height: 16px;
-
-  .kIconhelp_full {
-    font-size: 15px;
-    padding-left: 6px;
-  }
-}
 
 .kFormContainer {
   background: white;
 
-  hr {
-    display: block;
-    height: 0px;
-    border: 0;
-    border-top: 1px solid #ccc;
-    padding: 0;
-    margin: 0;
-  }
-
   .form-section {
     font-size: 15px;
     padding: 27px 29px;
-
-    .kIconwarning {
-      font-size: 18px;
-      padding-right: 10px;
-      color: $kGrayscale3;
-      vertical-align: text-bottom;
-    }
 
     .kRow {
 
@@ -100,6 +71,7 @@
         border-radius: 3px;
         &.kHasError{
           border: 1px solid $kDandger;
+          background: initial;
         }
       }
       textarea.kControl{
@@ -118,12 +90,6 @@
 /*********************/
 
 :host /deep/ {
-  .ui-dropdown.ui-widget {
-    width: 100% !important;
-  }
-  .ui-dropdown label.ui-dropdown-label {
-    font-size: 16px;
-  }
   .ui-inputtext {
     padding-left: 10px;
 
