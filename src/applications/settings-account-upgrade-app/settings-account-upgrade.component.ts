@@ -59,8 +59,8 @@ export class SettingsAccountUpgradeComponent implements OnInit, OnDestroy {
           this._updateAreaBlockerState(false, null);
           this._browserService.alert(
             {
-              header: ' ',
-              message: this._appLocalization.get('applications.settings.accountUpgrade.sendSuccess')
+              header: this._appLocalization.get('applications.settings.accountUpgrade.sendSuccessHeader'),
+              message: this._appLocalization.get('applications.settings.accountUpgrade.sendSuccessBody')
             }
           );
         },

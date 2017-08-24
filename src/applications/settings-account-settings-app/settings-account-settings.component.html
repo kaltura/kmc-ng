@@ -42,7 +42,7 @@
         </div>
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.accountSettings.phone' | translate}} *</span>
-          <div>
+          <div class="kControlWithValidationContainer">
             <input class="kControl" formControlName="phone" pInputText
                    [ngClass]="{'kHasError':!accountSettingsForm.controls['phone'].valid &&
                    accountSettingsForm.controls['phone'].touched}">

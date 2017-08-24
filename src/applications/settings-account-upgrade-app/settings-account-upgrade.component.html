@@ -13,7 +13,7 @@
 
         </div>
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.accountUpgrade.phone' | translate}}</span>
+          <span class="kLabel">{{'applications.settings.accountUpgrade.phone' | translate}}*</span>
           <div>
             <input class="kControl" formControlName="phone" pInputText
                    [ngClass]="{'kHasError':!contactUsForm.controls['phone'].valid &&
@@ -31,6 +31,9 @@
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.accountUpgrade.comments' | translate}}</span>
           <textarea class="kControl" formControlName="comments" pInputTextarea></textarea>
+        </div>
+        <div class="kRow">
+          <span class="kLabel">{{'applications.settings.accountSettings.requiredFields' | translate}}</span>
         </div>
       </div>
     </section>

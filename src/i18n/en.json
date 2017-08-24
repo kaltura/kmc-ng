@@ -676,7 +676,8 @@
         "phone": "Telephone",
         "comments": "Comments",
         "send": "Send",
-        "sendSuccess":"Thank You! Someone from our team will get back to you.",
+        "sendSuccessHeader":"Thank You!",
+        "sendSuccessBody":"Someone from our team will get back to you.",
         "errors": {
           "required": "This field is required.",
           "phoneInvalid": "Your telephone number contains invalid characters.",
