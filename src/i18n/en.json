@@ -359,6 +359,7 @@
         "thumbnails": {
           "thumbnails": "Thumbnails",
           "upload": "Upload",
+          "capture": "Choose frame",
           "thumbnail": "Thumbnail",
           "dimensions": "Dimensions",
           "size": "Size",
