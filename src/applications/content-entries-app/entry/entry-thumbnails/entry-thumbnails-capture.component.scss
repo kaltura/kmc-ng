@@ -16,7 +16,22 @@
   }
   .kContainer{
     margin: 12px;
-    height: 278px;
+    height: 276px;
+    padding-left: 112px;
+    padding-right: 112px;
+    padding-top: 30px;
+    .kPlayerTarget{
+      width: 340px;
+      height: 190px;
+      background-color: black;
+      margin-bottom: 34px;
+    }
+    .kLabel{
+      margin-top: 34px;
+      font-size: 15px;
+      text-align: center;
+      color: $kGrayscale1;
+    }
   }
   .kFooter{
     height: 66px;

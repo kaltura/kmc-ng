@@ -1,9 +1,10 @@
 import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
-
+import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 import { EntryThumbnailsHandler, ThumbnailRow } from './entry-thumbnails-handler';
 import { Menu, MenuItem } from 'primeng/primeng';
@@ -17,11 +18,12 @@ import { EntryFormManager } from '../entry-form-manager';
 export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 
     public _loadingError = null;
-
+	@ViewChild('capturePopup') public capturePopup: PopupWidgetComponent;
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
 	public _actions: MenuItem[] = [];
 	public _handler : EntryThumbnailsHandler;
 	private currentThumb: ThumbnailRow;
+	private _popupStateChangeSubscribe: ISubscription;
 
 	constructor(private _entryFormManager : EntryFormManager, private _appLocalization: AppLocalization, private _browserService: BrowserService,
                 private _appAuthentication: AppAuthentication) {
@@ -77,13 +79,24 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 		}
 		x.send();
 	}
+
     ngOnDestroy() {
 	    this.actionsMenu.hide();
-
+	    this._popupStateChangeSubscribe.unsubscribe();
 		this._entryFormManager.detachWidget(this._handler);
 	}
 
     ngAfterViewInit() {
-
+	    if (this.capturePopup) {
+		    this._popupStateChangeSubscribe = this.capturePopup.state$
+			    .subscribe(event => {
+				    if (event.state === PopupWidgetStates.Close) {
+					    if (event.context && event.context.currentPosition !== null){
+						    this._handler.captureThumbnail(event.context.currentPosition);
+					    }
+				    }
+			    });
+	    }
     }
+
 }

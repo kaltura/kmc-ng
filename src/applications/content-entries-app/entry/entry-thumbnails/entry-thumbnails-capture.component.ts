@@ -1,19 +1,44 @@
-import { Component,AfterViewInit } from '@angular/core';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { Component, AfterContentInit, Input } from '@angular/core';
+import { AppAuthentication } from 'app-shared/kmc-shell';
+import { environment } from 'app-environment';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
     selector: 'kThumbnailCapture',
-    templateUrl: './entry-thumbnail-capture.component.html',
-    styleUrls: ['./entry-thumbnail-capture.component.scss']
+    templateUrl: './entry-thumbnails-capture.component.html',
+    styleUrls: ['./entry-thumbnails-capture.component.scss']
 })
-export class EntryThumbnailCapture implements AfterViewInit{
+export class EntryThumbnailCapture implements AfterContentInit{
 
-    constructor() {
+	@Input() entryId: string;
+	@Input() parentPopupWidget: PopupWidgetComponent;
+
+	playerConfig: any;
+	kdp: any;
+
+    constructor(private _appAuthentication: AppAuthentication) {
     }
 
-
-	ngAfterViewInit(){
+	ngAfterContentInit(){
+		this.playerConfig = {
+			uiconfid: parseInt(environment.core.kaltura.previewUIConf),
+			pid: this._appAuthentication.appUser.partnerId,
+			entryid: this.entryId
+		};
 
 	}
+
+	onPlayerReady(kdp){
+		this.kdp = kdp;
+	}
+
+	_capture(){
+		// pass current position
+		const context = {
+			currentPosition: this.kdp.evaluate('{video.player.currentTime}')
+		};
+		this.parentPopupWidget.close(context);
+	}
+
 }
 

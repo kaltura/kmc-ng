@@ -1,5 +1,6 @@
 import { EntryMetadata } from './entry-metadata/entry-metadata.component';
 import { EntryThumbnails } from './entry-thumbnails/entry-thumbnails.component';
+import { EntryThumbnailCapture } from './entry-thumbnails/entry-thumbnails-capture.component';
 import { EntryAccessControl } from './entry-access-control/entry-access-control.component';
 import { EntryScheduling } from './entry-scheduling/entry-scheduling.component';
 import { EntryFlavours } from "./entry-flavours/entry-flavours.component";
@@ -42,6 +43,7 @@ export const EntryComponentsList = [
     EntryScheduling,
     EntrySectionsList,
     EntryThumbnails,
+    EntryThumbnailCapture,
     EntryUsers,
     FlavorImport,
     FlavorPreview,

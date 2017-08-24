@@ -24,6 +24,8 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { environment } from 'app-environment';
+import { KalturaThumbParams } from 'kaltura-typescript-client/types/KalturaThumbParams';
+import { ThumbAssetGenerateAction } from 'kaltura-typescript-client/types/ThumbAssetGenerateAction';
 
 export interface ThumbnailRow {
 	id: string,
@@ -285,6 +287,43 @@ export class EntryThumbnailsHandler extends EntryFormWidget
 					}
 				);
 		}
+	}
+
+
+	public captureThumbnail(position: number):void{
+		super._showLoader();
+		let params: KalturaThumbParams = new KalturaThumbParams();
+		params.videoOffset = position;
+		params.quality = 75;
+		params.stripProfiles = false;
+
+		this._kalturaServerClient.request(new ThumbAssetGenerateAction({entryId: this.data.id, thumbParams: params}))
+			.cancelOnDestroy(this,this.widgetReset$)
+			.monitor('capture thumb from video')
+			.subscribe(
+				() =>
+				{
+					super._hideLoader();
+					this.reloadThumbnails();
+				},
+				error =>
+				{
+					super._hideLoader();
+					this._showBlockerMessage(new AreaBlockerMessage(
+						{
+							message: 'Error capturing thumb',
+							buttons: [
+								{
+									label: 'Retry',
+									action: () => {
+										this.captureThumbnail(position);
+									}
+								}
+							]
+						}
+					), true);
+				}
+			);
 	}
 
 }
