@@ -84,14 +84,3 @@
     }
   }
 }
-
-/*********************/
-/* PrimeNG overrides */
-/*********************/
-
-:host /deep/ {
-  .ui-inputtext {
-    padding-left: 10px;
-
-  }
-}

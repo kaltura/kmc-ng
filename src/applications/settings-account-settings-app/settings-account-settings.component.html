@@ -29,8 +29,8 @@
         </div>
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.accountSettings.adminUserId' | translate}} *</span>
-          <div>
-            <p-dropdown class="kControl" [options]="nameOfAccountOwnerOptions"
+          <div class="kControl">
+            <p-dropdown [options]="nameOfAccountOwnerOptions"
                         formControlName="adminUserId"
                         [ngClass]="{'kHasError':!accountSettingsForm.controls['adminUserId'].valid &&
                         accountSettingsForm.controls['adminUserId'].touched}">></p-dropdown>
@@ -42,7 +42,7 @@
         </div>
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.accountSettings.phone' | translate}} *</span>
-          <div class="kControlWithValidationContainer">
+          <div>
             <input class="kControl" formControlName="phone" pInputText
                    [ngClass]="{'kHasError':!accountSettingsForm.controls['phone'].valid &&
                    accountSettingsForm.controls['phone'].touched}">
