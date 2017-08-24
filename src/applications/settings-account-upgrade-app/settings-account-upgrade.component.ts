@@ -49,7 +49,6 @@ export class SettingsAccountUpgradeComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Update Partner Account Settings
   private _sendContactSalesForceInformation() {
     this._updateAreaBlockerState(true, null);
     this._accountUpgradeService
