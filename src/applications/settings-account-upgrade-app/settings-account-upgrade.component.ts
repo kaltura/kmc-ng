@@ -1,10 +1,23 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, Validators, ValidatorFn} from '@angular/forms';
 import {AccountUpgrade, SettingsAccountUpgradeService} from './settings-account-upgrade.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+
+
+function phoneValidator(): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: boolean} | null => {
+    if (control.value) {
+      // validate that value contains only hyphens and at least 7 digits
+      if (!(/(^[0-9]+[-]*[0-9]+$)/.test(control.value)) || !(control.value.replace(/[^0-9]/g, '').length >= 7)) {
+        return {'phonePattern': true};
+      }
+    }
+    return null;
+  }
+}
 
 @Component({
   selector: 'kmc-settings-account-upgrade',
@@ -90,18 +103,9 @@ export class SettingsAccountUpgradeComponent implements OnInit, OnDestroy {
   private _createForm(): void {
     this.contactUsForm = this._fb.group({
       name: [''],
-      phone: ['', [Validators.required, this._phoneValidator]],
+      phone: ['', [Validators.required, phoneValidator()]],
       comments: [''],
     });
   }
 
-  private _phoneValidator(control: AbstractControl): { [key: string]: boolean } {
-    if (control.value) {
-      // validate that value contains only hyphens and at least 7 digits
-      if (!(/(^[0-9]+[-]*[0-9]+$)/.test(control.value)) || !(control.value.replace(/[^0-9]/g, '').length >= 7)) {
-        return {phonePattern: true};
-      }
-    }
-    return null;
-  }
 }
