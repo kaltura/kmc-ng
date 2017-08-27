@@ -112,6 +112,14 @@ export class EntryCaptionsEdit implements  OnInit, AfterViewInit, OnDestroy{
 	public _saveAndClose(): void{
 		if (this.captionsEditForm.get("label").dirty) {
 			this.currentCaption.label = this.captionsEditForm.get("label").value;
+			if (this.captionsEditForm.get("label").value === ""){
+				this._browserService.alert(
+					{
+						header: this._appLocalization.get('app.common.attention'),
+						message: this._appLocalization.get('applications.content.entryDetails.captions.noLabel')
+					}
+				);
+			}
 		}
 		if (this.captionsEditForm.get("language").dirty) {
 			let langCode = this.captionsEditForm.get("language").value.toString().toLowerCase();
