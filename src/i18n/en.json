@@ -41,7 +41,8 @@
       "retry": "Retry",
       "confirm": "Confirm",
       "close": "Close",
-      "note": "Note:"
+      "note": "Note:",
+      "attention": "Attention"
     },
     "login": {
       "login": {
@@ -512,7 +513,8 @@
           "cancelEdit": "Cancel Edit",
           "discard": "Discard all changes?",
           "uploadError": "Upload Error",
-          "remove": "Remove"
+          "remove": "Remove",
+          "noLabel": "Since no label was provided, the caption language will be used in the player captions menu"
         },
         "live": {
           "live": "Live Stream",
