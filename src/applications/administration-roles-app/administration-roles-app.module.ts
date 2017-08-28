@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { routing } from './administration-users-app.routes';
-import { AdministrationUsersComponent } from './administration-users.component';
-
+import { routing } from './administration-roles-app.routes';
+import { AdministrationRolesComponent } from './administration-roles.component';
 
 @NgModule({
     imports: [
@@ -11,9 +10,9 @@ import { AdministrationUsersComponent } from './administration-users.component';
         RouterModule.forChild(routing)
     ],
     declarations: [
-        AdministrationUsersComponent
+        AdministrationRolesComponent
     ],
     exports: [],
     providers: []
 })
-export class AdministrationUsersAppModule {}
+export class AdministrationRolesAppModule {}

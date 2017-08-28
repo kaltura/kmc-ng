@@ -10,7 +10,12 @@
       "Categories": "Categories",
       "Studio": "Studio",
       "Analytics": "Analytics",
-      "Administration": "Administration"
+      "Settings": "Settings",
+      "Account Settings": "Account Settings",
+      "Account Upgrade": "Account Upgrade",
+      "Administration": "Administration",
+      "Users": "Users",
+      "Roles": "Roles"
     },
     "userSettings": {
       "changeAccount": "Change Acoount",
@@ -135,7 +140,7 @@
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
         "refine": "Refine",
-        "filterCategories": "Filter Categories"  ,
+        "filterCategories": "Filter Categories",
         "edit": "Edit",
         "delete": "Delete",
         "viewEntries": "View Entries",
@@ -646,6 +651,43 @@
           "backToPlaylists": "Back To Playlists",
           "playlistTypeNotSupported": "playlist type not supported",
           "validationError": "The form contains some invalid information. Please review the sections marked as invalid"
+        }
+      }
+    },
+    "settings": {
+      "accountSettings": {
+        "accountInfo": "Account Info",
+        "partnerID": "Partner ID",
+        "adminEmail": "Email of Account Owner",
+        "adminUserId": "Name of Account Owner",
+        "informationMessage": "Please make sure that the information below is up to date.",
+        "name": "Name of Publisher/Company",
+        "phone": "Phone",
+        "website": "Website",
+        "describeYourself": "Describe Yourself",
+        "referenceId": "Account Reference ID",
+        "describeYourselfOptions": "Enterprise / Small Business / Government Agency,Education Organization,Media Company / Agency,CDN / ISP / Integrator / Hosting Provider,Other",
+        "requiredFields": "* Required Fields.",
+        "apply": "Apply",
+        "errors": {
+          "required": "This field is required.",
+          "updateFailed": "An error occurred during account info update.",
+          "loadFailed": "An error occurred during account info loading."
+        }
+      },
+      "accountUpgrade": {
+        "contactUs": "Contact Us",
+        "name": "Name",
+        "phone": "Telephone",
+        "comments": "Comments",
+        "send": "Send",
+        "sendSuccessHeader":"Thank You!",
+        "sendSuccessBody":"Someone from our team will get back to you.",
+        "callUs": "To learn more about our different packages and added-value services, fill in the form below or call us at 1-800-871-5224.",
+        "errors": {
+          "required": "This field is required.",
+          "phoneInvalid": "Your telephone number contains invalid characters.",
+          "sendFailed" : "An error occurred during account upgrade"
         }
       }
     }

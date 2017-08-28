@@ -1,0 +1,86 @@
+@import 'app-theme/_variables.scss';
+
+.kAccountUpgradeWrapper {
+  height: 100%;
+  border: none;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+
+  .kHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 24px 0;
+
+    .kTitle {
+      color: $kGrayscale1;
+      font-weight: 700;
+      height: 29px;
+      font-size: 24px;
+      font-weight: bold;
+      line-height: 29px;
+    }
+  }
+  .kSaveBtn {
+    margin-left: auto;
+    width: 100px;
+    height: 34px;
+    font-weight: 400;
+  }
+}
+
+
+.kFormContainer {
+  background: white;
+
+  .form-section {
+    font-size: 15px;
+    padding: 27px 29px;
+
+    .kRow {
+
+      &:first-child {
+        padding-top: 0;
+      }
+
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      padding-top: 20px;
+
+      .kLabel {
+        width: 200px;
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 auto;
+        flex: 0 0 auto;
+        height: 18px;
+        color: $kGrayscale1;
+        font-size: 15px;
+        line-height: 18px;
+      }
+      .kControl {
+        color: $kGrayscale2;
+        height: 34px;
+        width: 400px;
+        border-radius: 3px;
+        &.kHasError{
+          border: 1px solid $kDandger;
+          background: initial;
+        }
+      }
+      textarea.kControl{
+        height: 76px;
+      }
+      .error{
+        padding-top: 8px;
+      }
+
+    }
+  }
+}

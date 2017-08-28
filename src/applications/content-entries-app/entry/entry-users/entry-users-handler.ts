@@ -107,13 +107,13 @@ export class EntryUsersHandler extends EntryFormWidget
 			    new UserGetAction({userId: this.data.userId})
 		    ))
 		    .cancelOnDestroy(this,this.widgetReset$)
-		    .monitor('get users details')
+		    .monitor('get roles details')
 		    .map(
 		    	responses =>
 			    {
 				    if (responses.hasErrors())
 				    {
-					    throw new Error('failed to fetch users data');
+					    throw new Error('failed to fetch roles data');
 				    }else
 				    {
 					    if (responses.length && responses.length ===2 && responses[0].result){

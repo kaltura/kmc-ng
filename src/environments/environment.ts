@@ -19,7 +19,8 @@ export const environment = {
       "expiry": "86400",
       "privileges": "disableentitlement",
       "previewUIConf": "38524931",
-      "liveAnalyticsVersion": "v2.6"
+      "liveAnalyticsVersion": "v2.6",
+      "contactsalesforce": "https://www.kaltura.com/index.php/partnerservices2/contactsalesforce"
     },
     "menuConfig": [
       {
@@ -52,11 +53,6 @@ export const environment = {
             "routePath": "content/categories",
             "titleToken": "Categories",
             "enabled": true
-          },
-          {
-            "routePath": "content/administration",
-            "titleToken": "Administration",
-            "enabled": true
           }
         ]
       },
@@ -71,6 +67,42 @@ export const environment = {
         "titleToken": "Analytics",
         "showSubMenu": false,
         "enabled": false
+      },
+      {
+        "routePath": "settings",
+        "titleToken": "",
+        "showSubMenu": true,
+        "enabled": true,
+        "children": [
+          {
+            "routePath": "settings/accountSettings",
+            "titleToken": "Account Settings",
+            "enabled": true
+          },
+          {
+            "routePath": "settings/accountUpgrade",
+            "titleToken": "Account Upgrade",
+            "enabled": true
+          }
+        ]
+      },
+      {
+        "routePath": "administration",
+        "titleToken": "",
+        "showSubMenu": true,
+        "enabled": true,
+        "children": [
+          {
+            "routePath": "administration/users",
+            "titleToken": "Users",
+            "enabled": true
+          },
+          {
+            "routePath": "administration/roles",
+            "titleToken": "Roles",
+            "enabled": true
+          }
+        ]
       }
     ],
     "diagnostic" : {
