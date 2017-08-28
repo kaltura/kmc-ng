@@ -9,7 +9,10 @@
       "Syndication": "Syndication",
       "Categories": "Categories",
       "Studio": "Studio",
-      "Analytics": "Analytics"
+      "Analytics": "Analytics",
+      "Administration": "Administration",
+      "Users": "Users",
+      "Roles": "Roles"
     },
     "userSettings": {
       "changeAccount": "Change Acoount",

@@ -66,6 +66,24 @@ export const environment = {
         "titleToken": "Analytics",
         "showSubMenu": false,
         "enabled": false
+      },
+      {
+        "routePath": "administration",
+        "titleToken": "",
+        "showSubMenu": true,
+        "enabled": true,
+        "children": [
+          {
+            "routePath": "administration/users",
+            "titleToken": "Users",
+            "enabled": true
+          },
+          {
+            "routePath": "administration/roles",
+            "titleToken": "Roles",
+            "enabled": true
+          }
+        ]
       }
     ],
     "diagnostic" : {

@@ -3,7 +3,7 @@
       <div class="k-logo"></div>
 
       <div *ngFor="let item of menuConfig">
-        <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]" [class.disabled]="!item.enabled">{{'app.menu.'+item.titleToken | translate | uppercase}}</a>
+        <a *ngIf="item.titleToken.length" [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]" [class.disabled]="!item.enabled">{{'app.menu.'+item.titleToken | translate | uppercase}}</a>
       </div>
 
     <div class="kMenu-right">
@@ -11,7 +11,7 @@
                 class="kButtonDefault kUploadBtn"
                 (click)="uploadmenu.open()"></button>
         <i class="kIconfolder_large"></i>
-        <i class="kIconuser"></i>
+        <i class="kIconuser" (click)="navigate('/administration')" [class.open]="selectedMenuItem.routePath==='administration'" [kTooltip]="'app.menu.Administration' | translate" [placement]="'bottom'"></i>
         <i class="kIcongear"></i>
         <i #help class="kIconhelp"  [class.open]="_helpOpen"></i>
         <div #username class="kUserName" [class.open]="_userSettingsOpen">

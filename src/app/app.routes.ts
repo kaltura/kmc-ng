@@ -24,6 +24,13 @@ const routes: Routes = <Routes>[
               { path: 'playlists', loadChildren: '../applications/content-playlists-app/content-playlists-app.module#ContentPlaylistsAppModule' },
               { path: 'categories', loadChildren: '../applications/content-categories-app/content-categories-app.module#ContentCategoriesAppModule' }
             ]
+          },
+          {
+            path: 'administration', children: [
+              { path: '', redirectTo: 'users', pathMatch: 'full' },
+              { path: 'users', loadChildren: '../applications/administration-users-app/administration-users-app.module#AdministrationUsersAppModule'  },
+              { path: 'roles', loadChildren: '../applications/administration-roles-app/administration-roles-app.module#AdministrationRolesAppModule'  }
+            ]
           }
         ]
       },
