@@ -67,7 +67,8 @@ export const environment = {
         "titleToken": "Analytics",
         "showSubMenu": false,
         "enabled": false
-      }, {
+      },
+      {
         "routePath": "settings",
         "titleToken": "",
         "showSubMenu": true,
@@ -81,6 +82,24 @@ export const environment = {
           {
             "routePath": "settings/accountUpgrade",
             "titleToken": "Account Upgrade",
+            "enabled": true
+          }
+        ]
+      },
+      {
+        "routePath": "administration",
+        "titleToken": "",
+        "showSubMenu": true,
+        "enabled": true,
+        "children": [
+          {
+            "routePath": "administration/users",
+            "titleToken": "Users",
+            "enabled": true
+          },
+          {
+            "routePath": "administration/roles",
+            "titleToken": "Roles",
             "enabled": true
           }
         ]

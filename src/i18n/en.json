@@ -12,7 +12,10 @@
       "Analytics": "Analytics",
       "Settings": "Settings",
       "Account Settings": "Account Settings",
-      "Account Upgrade": "Account Upgrade"
+      "Account Upgrade": "Account Upgrade",
+      "Administration": "Administration",
+      "Users": "Users",
+      "Roles": "Roles"
     },
     "userSettings": {
       "changeAccount": "Change Acoount",
