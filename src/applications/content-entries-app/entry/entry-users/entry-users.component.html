@@ -35,7 +35,7 @@
 								   suggestionLabelField="name"
 								   field="screenName"
 								   [multiple]="true"
-								   [onItemAdding]="_convertUserInputToValidValue"
+								   [onItemAdding]="_convertUserInputToValidValue.bind(this)"
 								   [limitToSuggestions]="false"
 								   [minLength]="3"
 								   suggestionSelectableField="isSelectable"
@@ -46,7 +46,7 @@
 			</div>
 		</div>
 
-		<kPopupWidget #ownerPopup [popupWidth]="500" [popupHeight]="240" [modal]="true">
+		<kPopupWidget #ownerPopup [popupWidth]="500" [popupHeight]="260" [modal]="true">
         <div class="kFloater kOverrideFAIcons">
           <div class="kHeader">
             <span class="kTitle">{{'applications.content.entryDetails.users.changeOwner' | translate}}</span>
@@ -58,7 +58,7 @@
                            suggestionItemField="item"
                            suggestionLabelField="name"
                            field="screenName"
-                           [onItemAdding]="_convertUserInputToValidValue"
+                           [onItemAdding]="_convertUserInputToValidValue.bind(this)"
                            [multiple]="false"
                            [limitToSuggestions]="false"
                            placeholder="{{'applications.content.entryDetails.users.changeOwnerPH' | translate}}"
