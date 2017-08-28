@@ -678,6 +678,7 @@
         "send": "Send",
         "sendSuccessHeader":"Thank You!",
         "sendSuccessBody":"Someone from our team will get back to you.",
+        "callUs": "To learn more about our different packages and added-value services, fill in the form below or call us at 1-800-871-5224.",
         "errors": {
           "required": "This field is required.",
           "phoneInvalid": "Your telephone number contains invalid characters.",

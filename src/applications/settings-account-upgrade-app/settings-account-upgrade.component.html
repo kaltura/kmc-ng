@@ -3,10 +3,11 @@
     <section class="kHeader">
       <div class="kTitle">{{'applications.settings.accountUpgrade.contactUs' | translate}}</div>
       <button pButton class="kButtonBranded kSaveBtn"
-              label="{{'applications.settings.accountUpgrade.send' | translate}}"></button>
+              label="{{'applications.settings.accountUpgrade.send' | translate}}"
+              [disabled]="!contactUsForm.valid"></button>
     </section>
-    <h1 style="background-color: hotpink">
-      To learn more about our different packages and added-value services, fill in the form below or call us at 1-800-871-5224.
+    <h1>
+      {{'applications.settings.accountUpgrade.callUs' | translate}}
     </h1>
     <section class="kFormContainer">
       <div class="form-section">
@@ -20,13 +21,15 @@
             <input class="kControl" formControlName="phone" pInputText
                    [ngClass]="{'kHasError':!contactUsForm.controls['phone'].valid &&
                    contactUsForm.controls['phone'].touched}">
-            <div class="error" *ngIf="contactUsForm.controls['phone'].touched">
-              <span *ngIf="contactUsForm.controls['phone'].hasError('required')">
-              {{'applications.settings.accountUpgrade.errors.required' | translate}}
-              </span>
-                <span *ngIf="contactUsForm.controls['phone'].hasError('phonePattern')">
-              {{'applications.settings.accountUpgrade.errors.phoneInvalid' | translate}}
-              </span>
+            <div *ngIf="contactUsForm.controls['phone'].touched">
+              <div *ngIf="contactUsForm.controls['phone'].hasError('required')"
+                   class="error">
+                {{'applications.settings.accountUpgrade.errors.required' | translate}}
+              </div>
+              <div *ngIf="contactUsForm.controls['phone'].hasError('phonePattern')"
+                   class="error">
+                {{'applications.settings.accountUpgrade.errors.phoneInvalid' | translate}}
+              </div>
             </div>
           </div>
         </div>

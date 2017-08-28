@@ -13,6 +13,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {KalturaPartner} from 'kaltura-typescript-client/types/KalturaPartner';
 import {PartnerGetInfoAction} from 'kaltura-typescript-client/types/PartnerGetInfoAction';
 import {PartnerUpdateAction} from "kaltura-typescript-client/types/PartnerUpdateAction";
+import {KalturaUserListResponse} from "kaltura-typescript-client/types/KalturaUserListResponse";
 
 
 export interface AccountSettings {
@@ -73,19 +74,24 @@ export class SettingsAccountSettingsService {
     return this._kalturaServerClient.multiRequest(multiRequest)
       .monitor('get account owners')
       .map(
-        response => {
-          let accountOwnersNames = [];
-          if (!response.hasErrors()) {
-            accountOwnersNames = response[1].result.objects.map(user => user.fullName).filter(name => name && name !== '');
-            if (!accountOwnersNames.length) {
-              return Observable.throw(
-                'error occurred in action \'getPartnerAccountSettings\'');
-            }
-            return {accountOwners: accountOwnersNames, partnerData: response[2].result};
-          } else {
-            const [loginResponse] = response;
-            Observable.throw('error occurred in action \'getPartnerAccountSettings\':' + loginResponse.error);
+        data => {
+          if (data.hasErrors()) {
+            throw new Error('error occurred in action \'getPartnerAccountSettings\'');
           }
-        });
+
+          let accountOwners: string[] = [];
+          let partnerData: KalturaPartner;
+          data.forEach(response => {
+            if (response.result instanceof KalturaUserListResponse) {
+              accountOwners = response.result.objects.map(user => user.fullName).filter(name => name && name !== '');
+              if (!accountOwners.length) {
+                throw new Error('error occurred in action \'getPartnerAccountSettings\'');
+              }
+            } else if (response.result instanceof KalturaPartner) {
+              partnerData = response.result;
+            }
+          });
+          return {accountOwners, partnerData};
+        })
   }
 }
