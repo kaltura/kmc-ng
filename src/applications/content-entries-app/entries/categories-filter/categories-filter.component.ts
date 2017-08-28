@@ -6,15 +6,15 @@ import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { CategoriesPrimeService } from '../../shared/categories-prime.service';
-import { CategoryData } from '../../shared/categories-store.service';
 
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 import { EntriesStore } from "../entries-store/entries-store.service";
 import { CategoriesFilter, CategoriesFilterModes } from "../entries-store/filters/categories-filter";
 import { AutoComplete } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { CategoriesTreeComponent } from '../../shared/categories-tree/categories-tree.component';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { CategoriesTreeComponent } from 'app-shared/content-shared/categories-tree/categories-tree.component';
+import { CategoryData } from 'app-shared/content-shared/categories-store.service';
+import { CategoriesPrimeService } from 'app-shared/content-shared/categories-prime.service';
 
 
 export enum TreeSelectionModes

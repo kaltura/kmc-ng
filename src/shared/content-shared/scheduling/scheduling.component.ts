@@ -1,6 +1,6 @@
-import {Component, OnInit, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {environment} from 'app-environment';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { environment } from 'app-environment';
 
 @Component({
   selector: 'kScheduling',
@@ -9,12 +9,13 @@ import {environment} from 'app-environment';
 })
 export class SchedulingComponent implements OnInit, OnDestroy {
 
-  @Input() set schedulingForm(form: FormGroup) {
+  @Input()
+  set schedulingForm(form: FormGroup) {
     this._schedulingForm = form;
     const controls = form.controls;
     const isValidForm = controls.enableEndDate && controls.endDate && controls.startDate && controls.scheduling;
-    if (!isValidForm){
-      console.error("Invalid scheduling form structure received. Verify form includes: startDate, endDate, scheduling and enableEndDate form controls.");
+    if (!isValidForm) {
+      console.error('Invalid scheduling form structure received. Verify form includes: startDate, endDate, scheduling and enableEndDate form controls.');
     }
   }
 
@@ -46,8 +47,8 @@ export class SchedulingComponent implements OnInit, OnDestroy {
   private getTimeZone() {
     const now: any = new Date();
     const zoneTimeOffset: number = (now.getTimezoneOffset() / 60) * (-1);
-    const ztStr: string = (zoneTimeOffset == 0) ? '' : (zoneTimeOffset > 0) ? ('+' + zoneTimeOffset) : (zoneTimeOffset.toString());
-    this._timeZone = {0: ztStr};
+    const ztStr: string = (zoneTimeOffset === 0) ? '' : (zoneTimeOffset > 0) ? ('+' + zoneTimeOffset) : (zoneTimeOffset.toString());
+    this._timeZone = { 0: ztStr };
   }
 
 }
