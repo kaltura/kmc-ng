@@ -69,7 +69,7 @@ export class KmcUploadAppService {
     return this._newUploadFiles.getValue();
   }
 
-  private _removeUploadedFile(file: NewUploadFile) {
+  private _removeUploadedFile(file: NewUploadFile): void {
     setTimeout(() => this._removeFiles(file), 5000);
   }
 
@@ -115,7 +115,7 @@ export class KmcUploadAppService {
     };
   }
 
-  private _reorderFiles() {
+  private _reorderFiles(): void {
     this._updateFiles(R.sortBy(R.prop('statusWeight'))(this._getFiles()));
   }
 
@@ -345,11 +345,11 @@ export class KmcUploadAppService {
     this._trancodingProfileCache$ = null;
   }
 
-  public selectFiles(files) {
+  public selectFiles(files: FileList): void {
     this._selectedFiles.next(files);
   }
 
-  public resetSelected() {
+  public resetSelected(): void {
     this._selectedFiles.next(null);
   }
 }

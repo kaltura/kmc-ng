@@ -60,7 +60,6 @@ export class UploadSettingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this._handler.resetFiles();
     this._uploadSettingsService.selectedFiles$.subscribe(items => {
       this._files = items;
     });
@@ -89,6 +88,10 @@ export class UploadSettingsComponent implements OnInit {
   }
 
   public _upload(files: Array<UploadSettingsFile>): void {
+    if (files.some(({ isEditing }) => isEditing)) {
+      return;
+    }
+
     const errorMessage = this._uploadSettingsService.upload(files, this._transcodingProfileField.value);
 
     if (errorMessage) {

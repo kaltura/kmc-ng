@@ -14,7 +14,7 @@ export class UploadButtonComponent {
   constructor(private _uploadService: KmcUploadAppService) {
   }
 
-  _handleFileSelected(files: FileList) {
+  _handleFileSelected(files: FileList): void {
     this.uploadMenuPopup.close();
     this.uploadSettingsPopup.open();
 

@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { environment } from 'app-environment';
@@ -107,10 +106,6 @@ export class UploadSettingsService implements OnDestroy {
 
   private _updateFiles(items: Array<UploadSettingsFile>): void {
     this._selectedFiles.next([...items]);
-  }
-
-  public resetFiles(): void {
-    this._updateFiles([]);
   }
 
   public addFiles(files: FileList): void {
