@@ -53,6 +53,7 @@ export class KmcUploadAppService {
   private _trancodingProfileCache$: Observable<Array<KalturaConversionProfile>>;
   private _selectedFiles = new BehaviorSubject<FileList>(null);
   private _newUploadFiles = new BehaviorSubject<Array<NewUploadFile>>([]);
+  private _tempIds: Array<string> = [];
 
   public selectedFiles$ = this._selectedFiles.asObservable();
   public newUploadFiles$ = this._newUploadFiles.asObservable();
@@ -84,6 +85,7 @@ export class KmcUploadAppService {
 
   private _removeFiles(payload: NewUploadFile | Array<NewUploadFile>): void {
     payload = Array.isArray(payload) ? payload : [payload];
+    this._tempIds = <Array<string>>R.without(R.pluck('tempId', payload), this._tempIds);
     this._updateFiles(R.without(payload, this._getFiles()));
   }
 
@@ -175,8 +177,11 @@ export class KmcUploadAppService {
     return this._kalturaServerClient.request(new MediaDeleteAction({ entryId }))
   }
 
-  private _getTempId() {
-    return FriendlyHashId.defaultInstance.generateUnique(R.pluck('tempId', this._getFiles()));
+  private _getTempId(): string {
+    const tempId = FriendlyHashId.defaultInstance.generateUnique(this._tempIds);
+    this._tempIds = R.append(tempId, this._tempIds);
+
+    return tempId;
   }
 
   public proceedUpload(files: Array<UploadSettingsFile>, conversionProfileId: number): void {
@@ -186,7 +191,7 @@ export class KmcUploadAppService {
     )(files);
     const request = new KalturaMultiRequest(...payload);
 
-    const updatedFiles = R.map(R.merge({ tempId: this._getTempId() }), files);
+    const updatedFiles = R.map(file => R.merge(file, { tempId: this._getTempId() }), files);
 
     this._addFiles(<Array<NewUploadFile>>R.map(this._convertFile.bind(this), updatedFiles));
 
