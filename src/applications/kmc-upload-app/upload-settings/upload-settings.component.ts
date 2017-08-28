@@ -45,6 +45,10 @@ export class UploadSettingsComponent implements OnInit {
     return this._uploadService.allowedExtensions;
   }
 
+  public get _uploadInProgress(): boolean {
+    return this._uploadService.uploadInProgress;
+  }
+
   constructor(private _uploadSettingsService: UploadSettingsService,
               private _uploadService: KmcUploadAppService,
               private _formBuilder: FormBuilder,

@@ -62,6 +62,10 @@ export class KmcUploadAppService {
     return this._allowedExtensions;
   }
 
+  public get uploadInProgress(): boolean {
+    return R.any(R.propEq('uploading', true))(this._getFiles());
+  }
+
   constructor(private _kalturaServerClient: KalturaClient, private _uploadManagement: UploadManagement) {
     this._trackUploadFiles();
   }
