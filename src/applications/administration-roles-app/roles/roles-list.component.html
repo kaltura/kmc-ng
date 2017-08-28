@@ -1,0 +1,39 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+  <div class="kRoles kOverrideFAIcons">
+    <div #rolesTableHolder class="kRolesHolder kContent">
+      <div class="kRolesTableFilters">
+        <button pButton type="button" label="{{'applications.content.roles.addRole' | translate}}" class="kButtonBranded kAddRoleBtn"
+          [disabled]="_selectedRoles?.length"></button>
+        <span class="kSelectedRolesNum" *ngIf="_rolesTotalCount">
+          {{_rolesTotalCount}} {{'applications.content.roles.roles' | translate}}
+        </span>
+        <div [class.kHidden]="!_selectedRoles?.length" class="kBulkOperations">
+          <span class="kSelectedRolesLabel">• {{_selectedRoles?.length}} {{'applications.content.roles.selected' | translate}}</span>
+          <kRolesBulkActions [selectedRoles]="_selectedRoles"></kRolesBulkActions>
+          <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.roles.cancel' | translate}}</a>
+        </div>
+        <div [class.kHidden]="_selectedRoles?.length" class="kFilters">
+          <input type="text" pInputText class="kSearchInput" placeholder="{{'applications.content.roles.search' | translate}}">
+          <div #rolesFilterBtn class="kRolesFilter">
+            <i class="kIconfolder"></i>
+            <span>{{'applications.content.roles.filterRoles' | translate}}</span><i class="kIcondropdown_arrow_bottom dropdown"></i>
+          </div>
+          <div #refineBtn class="kRefine">
+            <i class="kIconfilter"></i>
+            <span>{{'applications.content.roles.refine' | translate}}</span>
+            <i class="kIcondropdown_arrow_bottom dropdown"></i>
+          </div>
+        </div>
+        <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh" [kTooltip]="'applications.content.roles.refresh' | translate"></button>
+      </div>
+      <kRolesTable class="kRolesTable" [roles]="_roles" [filter]="_filter" (sortChanged)="_onSortChanged($event)"
+        (actionSelected)="_onActionSelected($event)" [(selectedRoles)]="_selectedRoles">
+      </kRolesTable>
+      <div class="kRolesTableFooter" #footer *ngIf="_rolesTotalCount">
+        <p-paginator [rows]="_filter.pageSize" (onPageChange)="_onPaginationChanged($event)" [first]="_filter.pageIndex * _filter.pageSize"
+          [totalRecords]="_rolesTotalCount | kMaxRoles" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
+        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+      </div>
+    </div>
+  </div>
+</k-area-blocker>

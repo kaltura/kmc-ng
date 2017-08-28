@@ -1,0 +1,31 @@
+<k-area-blocker kFillHeight [showLoader]="(rolesService.state$ | async)?.loading || this._deferredLoading" [message]="_blockerMessage">
+  <div class="kRolesTable" [class.noResults]="!_roles.length">
+    <p-dataTable #dataTable [value]="_roles" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
+      scrollable="true" scrollHeight="100%" dataKey="id" [rowTrackBy]="rowTrackBy" (selectionChange)="_onSelectionChange($event)"
+      (onSort)="_onSortChanged($event)" [(selection)]="selectedRoles" emptyMessage="{{_emptyMessage}}">
+      <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
+      <p-column field="name" header="Name" [sortable]="'custom'" [style]="{'width':'100px'}">
+        <ng-template let-col let-role="rowData" pTemplate="body">
+          <span [kTooltip]="role.fullName" class="kTitle" (click)="onActionSelected('edit',role.id)">
+            {{role[col.field]}}</span>
+        </ng-template>
+      </p-column>
+      <p-column field="id" header="ID" [sortable]="false" [style]="{'width':'100px'}"></p-column>
+      <p-column field="createdAt" header="Created On" [sortable]="'custom'" [style]="{'width':'140px'}">
+        <ng-template let-col let-role="rowData" pTemplate="body">
+          <span>{{role[col.field] | kDate}}</span>
+        </ng-template>
+      </p-column>
+      <p-column field="directSubRolesCount" header="Sub - Roles" [sortable]="'custom'" [style]="{'width':'100px'}"></p-column>
+      <p-column field="entriesCount" header="Entries" [sortable]="'custom'" [style]="{'width':'100px'}"></p-column>
+      <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
+        <ng-template let-col let-role="rowData" pTemplate="body">
+          <div class="kRolesTableActions">
+            <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, role)"></button>
+          </div>
+        </ng-template>
+      </p-column>
+    </p-dataTable>
+    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'"></p-menu>
+  </div>
+</k-area-blocker>
