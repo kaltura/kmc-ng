@@ -1,0 +1,42 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+  <form [formGroup]="contactUsForm" novalidate (ngSubmit)="onSubmit()" class="kAccountUpgradeWrapper kContent">
+    <section class="kHeader">
+      <div class="kTitle">{{'applications.settings.accountUpgrade.contactUs' | translate}}</div>
+      <button pButton class="kButtonBranded kSaveBtn"
+              label="{{'applications.settings.accountUpgrade.send' | translate}}"></button>
+    </section>
+    <h3>
+      {{'applications.settings.accountUpgrade.callUs' | translate}}
+    </h3>
+    <section class="kFormContainer">
+      <div class="form-section">
+        <div class="kRow">
+          <span class="kLabel">{{'applications.settings.accountUpgrade.name' | translate}}</span>
+          <input class="kControl" formControlName="name" pInputText>
+        </div>
+        <div class="kRow">
+          <span class="kLabel">{{'applications.settings.accountUpgrade.phone' | translate}} *</span>
+          <div>
+            <input class="kControl" formControlName="phone" pInputText
+                   [ngClass]="{'kHasError':!contactUsForm.controls['phone'].valid &&
+                   contactUsForm.controls['phone'].touched}">
+            <div *ngIf="contactUsForm.controls['phone'].touched">
+              <div *ngIf="contactUsForm.controls['phone'].hasError('required')"
+                   class="error">
+                {{'applications.settings.accountUpgrade.errors.required' | translate}}
+              </div>
+              <div *ngIf="contactUsForm.controls['phone'].hasError('phonePattern')"
+                   class="error">
+                {{'applications.settings.accountUpgrade.errors.phoneInvalid' | translate}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="kRow">
+          <span class="kLabel">{{'applications.settings.accountUpgrade.comments' | translate}}</span>
+          <textarea class="kControl" formControlName="comments" pInputTextarea></textarea>
+        </div>
+      </div>
+    </section>
+  </form>
+</k-area-blocker>

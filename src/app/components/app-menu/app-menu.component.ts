@@ -44,6 +44,9 @@ export class AppMenuComponent implements OnInit, OnDestroy{
         }
     }
 
+    navigate(path):void{
+        this.router.navigate([path]);
+    }
 
     logout() {
         this.userAuthentication.logout();
