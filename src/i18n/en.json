@@ -683,7 +683,7 @@
         "callUs": "We are excited that you’re looking for more info on upgrading your account! Just fill in the form below and we’ll make sure to get back to you shortly with lots of information on our latest and greatest products and services that you can start tapping into.",
         "errors": {
           "required": "This field is required.",
-          "phoneInvalid": "Your telephone number contains invalid characters.",
+          "phoneInvalid": "Telephone must include at least 7 digits and only valid characters.",
           "sendFailed" : "An error occurred during account upgrade"
         }
       }
