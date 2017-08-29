@@ -173,10 +173,12 @@
         "searchEntries": "Search Playlists",
         "addPlaylist": "Add Playlist",
         "addEntry": "Add Entry",
+        "addToPlaylist": "Add to Playlist",
         "refresh": "Refresh"
       },
       "filters": {
         "activeFilters": "Active Filters:",
+        "clear": "Clear",
         "clearAll": "Clear All",
         "close": "Close",
         "findCategory": "Find Category",
@@ -190,6 +192,7 @@
         "createdBetween": "Created Between",
         "mediaType": "Media Type: {{0}}",
         "status": "Status: {{0}}",
+        "showSelectedOnly": "Show selected only",
         "duration": "Duration: {{0}}",
         "replacementStatuses": "Replacement Statuses: {{0}}",
         "moderation": "Moderation: {{0}}",
