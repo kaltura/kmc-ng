@@ -11,7 +11,7 @@
                 class="kButtonDefault kUploadBtn"
                 (click)="uploadmenu.open()"></button>
         <i class="kIconfolder_large"></i>
-        <i class="kIconuser" (click)="navigate('/administration')" [class.open]="selectedMenuItem.routePath==='administration'" [kTooltip]="'app.menu.Administration' | translate" [placement]="'bottom'"></i>
+        <i class="kIconuser" (click)="navigate('/administration')" [class.open]="selectedMenuItem && selectedMenuItem.routePath==='administration'" [kTooltip]="'app.menu.Administration' | translate" [placement]="'bottom'"></i>
         <i class="kIcongear"></i>
         <i #help class="kIconhelp"  [class.open]="_helpOpen"></i>
         <div #username class="kUserName" [class.open]="_userSettingsOpen">

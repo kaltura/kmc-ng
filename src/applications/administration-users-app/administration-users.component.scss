@@ -1,0 +1,41 @@
+@import 'app-theme/_variables.scss';
+
+.kUsers {
+  font-size: 15px;
+  background-color: $appBkgColor;
+  height: $contentArea;
+  padding-top: 30px;
+  width: 100%;
+  min-width: $minAppWidth;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0px;
+
+  .kUsersHolder {
+    height: 100%;
+    border: 1px solid $kGrayscale6;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+  }
+
+  .kUsersHeader {
+    color: $kGrayscale1;
+    width: 100%;
+    height: 66px;
+    background-color: white;
+    border-bottom: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: 16px;
+  }
+
+  .kUsersTitle {
+    color: $kGrayscale1;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+}

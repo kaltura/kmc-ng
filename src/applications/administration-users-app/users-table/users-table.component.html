@@ -1,0 +1,12 @@
+<k-area-blocker [message]="_blockerMessage" [showLoader]="(usersStore.state$ | async)?.loading">
+  <div class="kUsersTable">
+    <p-dataTable
+      [value]="_users"
+      scrollable="true"
+      scrollHeight="100%"
+      dataKey="id"
+      [rowTrackBy]="rowTrackBy">
+      <p-column selectionMode="multiple"></p-column>
+    </p-dataTable>
+  </div>
+</k-area-blocker>

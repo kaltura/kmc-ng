@@ -175,6 +175,10 @@
         "addEntry": "Add Entry",
         "refresh": "Refresh"
       },
+      "users": {
+        "usersTitle": "Authorized KMC Users",
+        "usersExplanatory": "Here you can manage the KMC users with various levels of access to your account. You can add new users, edit permissions for existing users and more."
+      },
       "filters": {
         "activeFilters": "Active Filters:",
         "clearAll": "Clear All",
