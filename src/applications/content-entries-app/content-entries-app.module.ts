@@ -41,7 +41,6 @@ import { DynamicFormModule } from '@kaltura-ng/kaltura-ui/dynamic-form';
 import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
 import { EntryComponentsList } from './entry/entry-components-list';
 import { EntriesComponentsList } from './entries/entries-components-list';
-import { EntriesRefineFiltersProvider } from './entries/entries-refine-filters/entries-refine-filters-provider.service';
 import {
   BulkAccessControlService,
   BulkAddCategoriesService,
@@ -103,7 +102,6 @@ import { ContentSharedModule } from 'app-shared/content-shared/content-shared.mo
   exports: [],
   providers: [
     ConfirmationService,
-    EntriesRefineFiltersProvider,
     BulkSchedulingService,
     BulkAccessControlService,
     BulkAddTagsService,
