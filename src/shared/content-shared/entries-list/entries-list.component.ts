@@ -31,6 +31,21 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     sortDirection: SortDirection.Desc
   };
 
+  public _tableConfig = {
+    dataKey: 'id',
+    scrollHeight: '100%',
+    columns: {
+      thumbnailUrl: { width: '100px' },
+      name: { sortable: 'custom' },
+      id: { width: '100px' },
+      mediaType: { sortable: 'custom', width: '80px', align: 'center' },
+      plays: { sortable: 'custom', width: '76px' },
+      createdAt: { sortable: true, width: '140px' },
+      duration: { sortable: 'custom', width: '104px' },
+      status: { width: '100px' }
+    }
+  };
+
   constructor(private _entriesStore: EntriesStore,
               private appLocalization: AppLocalization,
               private router: Router,

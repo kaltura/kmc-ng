@@ -18,17 +18,35 @@ import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntry
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 
+export interface EntriesTableConfig {
+  dataKey?: string;
+  scrollHeight?: string;
+  fillHeight?: boolean;
+  columns?: EntriesTableColumns;
+}
+
+export interface EntriesTableColumns {
+  [key: string]: {
+    width?: string;
+    align?: string;
+    sortable?: boolean | 'custom'
+  }
+}
+
 @Component({
   selector: 'kEntriesTable',
   templateUrl: './entries-table.component.html',
   styleUrls: ['./entries-table.component.scss']
 })
 export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
-
-  public _blockerMessage: AreaBlockerMessage = null;
-
-  public _entries: any[] = [];
-  private _deferredEntries: any[];
+  @Input()
+  set tableConfig(value: EntriesTableConfig) {
+    this._dataKey = value.dataKey || 'id';
+    this._scrollHeight = value.scrollHeight || '100%';
+    this._scrollable = !!value.scrollHeight;
+    this._fillHeight = value.fillHeight;
+    this._columns = value.columns || this._defaultColumns;
+  }
 
   @Input()
   set entries(data: any[]) {
@@ -47,32 +65,35 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() filter: any = {};
   @Input() selectedEntries: any[] = [];
 
-  @Output()
-  sortChanged = new EventEmitter<any>();
-  @Output()
-  actionSelected = new EventEmitter<any>();
-  @Output()
-  selectedEntriesChange = new EventEmitter<any>();
+  @Output() sortChanged = new EventEmitter<any>();
+  @Output() actionSelected = new EventEmitter<any>();
+  @Output() selectedEntriesChange = new EventEmitter<any>();
 
   @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
-  private actionsMenuEntryId = '';
+
+  private _deferredEntries: any[];
   private entriesStoreStatusSubscription: ISubscription;
-
-  public _deferredLoading = true;
-  public _emptyMessage = '';
-
-  public _items: MenuItem[];
-
-  public rowTrackBy: Function = (index: number, item: any) => {
-    return item.id
+  private actionsMenuEntryId = '';
+  private _defaultColumns: EntriesTableColumns = {
+    thumbnailUrl: { width: '100px' },
+    name: { sortable: 'custom' },
+    id: { width: '100px' }
   };
 
-  constructor(private appLocalization: AppLocalization, public entriesStore: EntriesStore, private cdRef: ChangeDetectorRef) {
-  }
+  public _dataKey: string;
+  public _scrollHeight: string;
+  public _scrollable: boolean;
+  public _columns?: EntriesTableColumns;
+  public _fillHeight: boolean;
 
-  _convertSortValue(value: boolean): number {
-    return value ? 1 : -1;
+  public _blockerMessage: AreaBlockerMessage = null;
+  public _entries: any[] = [];
+  public _deferredLoading = true;
+  public _emptyMessage = '';
+  public _items: MenuItem[];
+
+  constructor(private appLocalization: AppLocalization, public entriesStore: EntriesStore, private cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -116,32 +137,6 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this.entriesStoreStatusSubscription = null;
   }
 
-  buildMenu(mediaType: KalturaMediaType = null, status: any = null): void {
-    this._items = [
-      {
-        label: this.appLocalization.get('applications.content.table.previewAndEmbed'), command: (event) => {
-        this.onActionSelected('preview', this.actionsMenuEntryId);
-      }
-      },
-      {
-        label: this.appLocalization.get('applications.content.table.delete'), command: (event) => {
-        this.onActionSelected('delete', this.actionsMenuEntryId);
-      }
-      },
-      {
-        label: this.appLocalization.get('applications.content.table.view'), command: (event) => {
-        this.onActionSelected('view', this.actionsMenuEntryId);
-      }
-      }
-    ];
-    if (status instanceof KalturaEntryStatus && status.toString() !== KalturaEntryStatus.ready.toString()) {
-      this._items.shift();
-      if (mediaType && mediaType.toString() === KalturaMediaType.liveStreamFlash.toString()) {
-        this._items.pop();
-      }
-    }
-  }
-
   ngAfterViewInit() {
     const scrollBody = this.dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
     if (scrollBody && scrollBody.length > 0) {
@@ -162,38 +157,69 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  openActionsMenu(event: any, entry: KalturaMediaEntry) {
+  private _buildMenu(mediaType: KalturaMediaType = null, status: any = null): void {
+    this._items = [
+      {
+        label: this.appLocalization.get('applications.content.table.previewAndEmbed'),
+        command: () => this._onActionSelected('preview', this.actionsMenuEntryId)
+      },
+      {
+        label: this.appLocalization.get('applications.content.table.delete'),
+        command: () => this._onActionSelected('delete', this.actionsMenuEntryId)
+      },
+      {
+        label: this.appLocalization.get('applications.content.table.view'),
+        command: () => this._onActionSelected('view', this.actionsMenuEntryId)
+      }
+    ];
+    if (status instanceof KalturaEntryStatus && status.toString() !== KalturaEntryStatus.ready.toString()) {
+      this._items.shift();
+      if (mediaType && mediaType.toString() === KalturaMediaType.liveStreamFlash.toString()) {
+        this._items.pop();
+      }
+    }
+  }
+
+  public _rowTrackBy(index: number, item: any): string {
+    return item.id;
+  }
+
+  public _openActionsMenu(event: any, entry: KalturaMediaEntry) {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
       if (this.actionsMenuEntryId !== entry.id) {
-        this.buildMenu(entry.mediaType, entry.status);
+        this._buildMenu(entry.mediaType, entry.status);
         this.actionsMenuEntryId = entry.id;
         this.actionsMenu.show(event);
       }
     }
   }
 
-  allowDrilldown(mediaType: string, status: string) {
+  public _allowDrilldown(mediaType: string, status: string) {
     const isLiveStream = mediaType && mediaType === KalturaMediaType.liveStreamFlash.toString();
     const isReady = status && status !== KalturaEntryStatus.ready.toString();
     return !(isLiveStream && isReady);
   }
 
-  onActionSelected(action: string, entryID: string, mediaType: string = null, status: string = null) {
-    if (this.allowDrilldown(mediaType, status)) {
+  public _onActionSelected(action: string, entryID: string, mediaType: string = null, status: string = null) {
+    if (this._allowDrilldown(mediaType, status)) {
       this.actionSelected.emit({ 'action': action, 'entryID': entryID });
     }
   }
 
-  onSortChanged(event) {
+  public _onSortChanged(event) {
     this.sortChanged.emit(event);
   }
 
-  onSelectionChange(event) {
+  public _onSelectionChange(event) {
     this.selectedEntriesChange.emit(event);
   }
 
-  scrollToTop() {
+  public _getColumnStyle({ width = 'auto', align = 'left' } = {}): { 'width': string, 'text-align': string } {
+    return { 'width': width, 'text-align': align };
+  }
+
+  public scrollToTop() {
     const scrollBodyArr = this.dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
     if (scrollBodyArr && scrollBodyArr.length > 0) {
       const scrollBody: HTMLDivElement = scrollBodyArr[0];
