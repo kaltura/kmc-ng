@@ -39,38 +39,49 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    this._updatePartnerAccountSettings();
+    if (this.accountSettingsForm.valid) {
+      this._updatePartnerAccountSettings();
+    } else {
+      this.markFormFieldsAsTouched();
+    }
   }
 
+  private markFormFieldsAsTouched() {
+    for (let inner in this.accountSettingsForm.controls) {
+      this.accountSettingsForm.get(inner).markAsTouched();
+      this.accountSettingsForm.get(inner).updateValueAndValidity();
+    }
+  }
 
 // Update Partner Account Settings
   private _updatePartnerAccountSettings() {
-    if (this.accountSettingsForm.valid) {
-      this._updateAreaBlockerState(true, null);
-      this._accountSettingsService
-        .updatePartnerData(this.accountSettingsForm.value)
-        .cancelOnDestroy(this)
-        .subscribe(updatedPartner => {
-            this._fillForm(updatedPartner);
-            this._updateAreaBlockerState(false, null);
-          },
-          error => {
-            const blockerMessage = new AreaBlockerMessage(
-              {
-                message: this._appLocalization.get('applications.settings.accountSettings.errors.updateFailed'),
-                buttons: [
-                  {
-                    label: this._appLocalization.get('app.common.ok'),
-                    action: () => {
-                      this._loadPartnerAccountSettings();
-                    }
-                  }
-                ]
-              }
-            );
-            this._updateAreaBlockerState(false, blockerMessage);
-          });
+    if (!this.accountSettingsForm.valid) {
+      return;
     }
+    this._updateAreaBlockerState(true, null);
+    this._accountSettingsService
+      .updatePartnerData(this.accountSettingsForm.value)
+      .cancelOnDestroy(this)
+      .subscribe(updatedPartner => {
+          this._fillForm(updatedPartner);
+          this._updateAreaBlockerState(false, null);
+        },
+        error => {
+          const blockerMessage = new AreaBlockerMessage(
+            {
+              message: this._appLocalization.get('applications.settings.accountSettings.errors.updateFailed'),
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.ok'),
+                  action: () => {
+                    this._loadPartnerAccountSettings();
+                  }
+                }
+              ]
+            }
+          );
+          this._updateAreaBlockerState(false, blockerMessage);
+        });
   }
 
   // Get Partner Account Settings data and fill the form

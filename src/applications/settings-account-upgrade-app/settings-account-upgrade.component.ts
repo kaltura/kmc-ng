@@ -46,42 +46,55 @@ export class SettingsAccountUpgradeComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    this._sendContactSalesForceInformation();
+    if (this.contactUsForm.valid) {
+      this._sendContactSalesForceInformation();
+    } else {
+      this.markFormFieldsAsTouched();
+    }
+  }
+
+  private markFormFieldsAsTouched() {
+    for (const control in this.contactUsForm.controls) {
+      this.contactUsForm.get(control).markAsTouched();
+      this.contactUsForm.get(control).updateValueAndValidity();
+    }
   }
 
   private _sendContactSalesForceInformation() {
-    if (this.contactUsForm.valid) {
-      this._updateAreaBlockerState(true, null);
-      this._accountUpgradeService
-        .sendContactSalesForceInformation(this.contactUsForm.value)
-        .cancelOnDestroy(this)
-        .subscribe(response => {
-            // this._fillForm(updatedPartner);
-            this._updateAreaBlockerState(false, null);
-            this._browserService.alert(
-              {
-                header: this._appLocalization.get('applications.settings.accountUpgrade.sendSuccessHeader'),
-                message: this._appLocalization.get('applications.settings.accountUpgrade.sendSuccessBody')
-              }
-            );
-          },
-          error => {
-            const blockerMessage = new AreaBlockerMessage(
-              {
-                message: this._appLocalization.get('applications.settings.accountUpgrade.errors.sendFailed'),
-                buttons: [
-                  {
-                    label: this._appLocalization.get('app.common.ok'),
-                    action: () => {
-                      this._updateAreaBlockerState(false, null);
-                    }
-                  }
-                ]
-              }
-            );
-            this._updateAreaBlockerState(false, blockerMessage);
-          });
+    if (!this.contactUsForm.valid) {
+      return;
     }
+
+    this._updateAreaBlockerState(true, null);
+    this._accountUpgradeService
+      .sendContactSalesForceInformation(this.contactUsForm.value)
+      .cancelOnDestroy(this)
+      .subscribe(response => {
+          // this._fillForm(updatedPartner);
+          this._updateAreaBlockerState(false, null);
+          this._browserService.alert(
+            {
+              header: this._appLocalization.get('applications.settings.accountUpgrade.sendSuccessHeader'),
+              message: this._appLocalization.get('applications.settings.accountUpgrade.sendSuccessBody')
+            }
+          );
+        },
+        error => {
+          const blockerMessage = new AreaBlockerMessage(
+            {
+              message: this._appLocalization.get('applications.settings.accountUpgrade.errors.sendFailed'),
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.ok'),
+                  action: () => {
+                    this._updateAreaBlockerState(false, null);
+                  }
+                }
+              ]
+            }
+          );
+          this._updateAreaBlockerState(false, blockerMessage);
+        });
   }
 
 

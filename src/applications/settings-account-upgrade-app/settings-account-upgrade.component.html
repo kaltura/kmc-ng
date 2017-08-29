@@ -3,8 +3,7 @@
     <section class="kHeader">
       <div class="kTitle">{{'applications.settings.accountUpgrade.contactUs' | translate}}</div>
       <button pButton class="kButtonBranded kSaveBtn"
-              label="{{'applications.settings.accountUpgrade.send' | translate}}"
-              [disabled]="!contactUsForm.valid"></button>
+              label="{{'applications.settings.accountUpgrade.send' | translate}}"></button>
     </section>
     <h3>
       {{'applications.settings.accountUpgrade.callUs' | translate}}
@@ -16,7 +15,7 @@
           <input class="kControl" formControlName="name" pInputText>
         </div>
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.accountUpgrade.phone' | translate}}*</span>
+          <span class="kLabel">{{'applications.settings.accountUpgrade.phone' | translate}} *</span>
           <div>
             <input class="kControl" formControlName="phone" pInputText
                    [ngClass]="{'kHasError':!contactUsForm.controls['phone'].valid &&
@@ -36,9 +35,6 @@
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.accountUpgrade.comments' | translate}}</span>
           <textarea class="kControl" formControlName="comments" pInputTextarea></textarea>
-        </div>
-        <div class="kRow">
-          <span class="kLabel">{{'applications.settings.accountSettings.requiredFields' | translate}}</span>
         </div>
       </div>
     </section>

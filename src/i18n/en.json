@@ -664,7 +664,6 @@
         "describeYourself": "Describe Yourself",
         "referenceId": "Account Reference ID",
         "describeYourselfOptions": "Enterprise / Small Business / Government Agency,Education Organization,Media Company / Agency,CDN / ISP / Integrator / Hosting Provider,Other",
-        "requiredFields": "* Required Fields.",
         "apply": "Apply",
         "errors": {
           "required": "This field is required.",

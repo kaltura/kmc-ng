@@ -4,7 +4,7 @@
       <div class="kTitle">{{'applications.settings.accountSettings.accountInfo' | translate}}</div>
       <button pButton class="kButtonBranded kSaveBtn"
               label="{{'applications.settings.accountSettings.apply' | translate}}"
-      [disabled]="!accountSettingsForm.valid"></button>
+              [disabled]="accountSettingsForm.pristine"></button>
     </section>
     <span class="kReadonlyData">{{'applications.settings.accountSettings.partnerID' | translate}}: {{partnerId}} | {{'applications.settings.accountSettings.adminEmail' | translate}}:
         {{partnerAdminEmail}}</span>
@@ -66,9 +66,6 @@
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.accountSettings.referenceId' | translate}}</span>
           <input class="kControl" formControlName="referenceId" pInputText>
-        </div>
-        <div class="kRow">
-          <span class="kLabel">{{'applications.settings.accountSettings.requiredFields' | translate}}</span>
         </div>
       </div>
     </section>
