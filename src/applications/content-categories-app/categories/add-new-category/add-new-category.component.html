@@ -14,13 +14,14 @@
       </kAutoComplete>
 
 
-      <!-- <k-categories-tree #categoriesTree [(selection)]="_treeSelection" (onCategoriesLoad)="_onTreeCategoriesLoad($event)" (onNodeSelect)="_onTreeNodeSelected($event)"
-          (onNodeUnselect)="_onTreeNodeUnselected($event)" (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)"></k-categories-tree> -->
+       <!-- <k-categories-tree #categoriesTree [(selection)]="_treeSelection"></k-categories-tree>  -->
     </div>
 
     <div class="kFooter">
-      <button type="button" class="kButtonBranded" pButton label="{{'applications.content.addNewCategory.apply' | translate}}"></button>
-      <a class="kCancel">{{'applications.content.addNewCategory.cancel' | translate}}</a>
+      <button type="button" class="kButtonBranded" pButton
+       label="{{'applications.content.addNewCategory.apply' | translate}}"
+       (click)="_goNext()"></button>
+      <a class="kCancel" (click)="_close()">{{'applications.content.addNewCategory.cancel' | translate}}</a>
     </div>
   </form>
 </div>

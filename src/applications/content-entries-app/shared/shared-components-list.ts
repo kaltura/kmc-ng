@@ -10,3 +10,7 @@ export const SharedComponentsList = [
     CategoriesTreeComponent,
     SchedulingComponent
 ];
+
+export const SharedExportComponentsList = [
+    CategoriesTreeComponent    
+];

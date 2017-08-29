@@ -14,7 +14,7 @@ import { MetadataProfileModule } from '@kaltura-ng/kaltura-server-utils';
 
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
+import { PrimeTreeModule, PrimeTreePropagation } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
 import { KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
@@ -29,7 +29,7 @@ import { CategoriesStore } from './shared/categories-store.service';
 import { EntriesRefineFiltersProvider } from './entries/entries-refine-filters/entries-refine-filters-provider.service';
 import { CategoriesPrimeService } from './shared/categories-prime.service';
 import { BulkSchedulingService, BulkAccessControlService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, BulkChangeOwnerService, BulkRemoveCategoriesService, BulkDeleteService, BulkDownloadService } from './entries/bulk-actions/services';
-import { SharedComponentsList } from './shared/shared-components-list';
+import { SharedComponentsList, SharedExportComponentsList } from './shared/shared-components-list';
 import { EntryCanDeactivate } from './entry/entry-can-deactivate.service';
 
 @NgModule({
@@ -76,7 +76,7 @@ import { EntryCanDeactivate } from './entry/entry-can-deactivate.service';
         EntriesComponentsList,
         SharedComponentsList
     ],
-    exports: [],
+    exports: [SharedExportComponentsList],
     providers: [
         ConfirmationService,
         CategoriesStore,
