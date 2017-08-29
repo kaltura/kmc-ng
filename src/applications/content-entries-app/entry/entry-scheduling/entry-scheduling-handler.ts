@@ -103,6 +103,7 @@ export class EntrySchedulingHandler extends EntryFormWidget
 		    endDate: {value: '', disabled: true},
 		    enableEndDate: false
 	    }, { validator: datesValidation(false) });
+
 	    this.schedulingForm.get('scheduling').valueChanges
 		    .cancelOnDestroy(this)
 		    .subscribe(
