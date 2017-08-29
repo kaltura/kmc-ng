@@ -14,12 +14,12 @@ import { EntryFlavoursHandler } from './entry-flavours/entry-flavours-handler';
 import { EntryThumbnailsHandler } from './entry-thumbnails/entry-thumbnails-handler';
 import { EntrySchedulingHandler } from './entry-scheduling/entry-scheduling-handler';
 import { EntryUsersHandler } from './entry-users/entry-users-handler';
-import { EntriesStore } from '../entries/entries-store/entries-store.service';
 import { EntryFormManager } from './entry-form-manager';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { EntryFormWidget } from './entry-form-widget';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Observable } from 'rxjs/Observable';
+import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 
 @Component({
     selector: 'kEntry',
