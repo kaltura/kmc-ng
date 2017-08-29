@@ -19,7 +19,6 @@ export class RolesListComponent implements OnInit, OnDestroy {
 
     public _isBusy = false
     public _blockerMessage: AreaBlockerMessage = null;
-    public _selectedRoles: KalturaUserRole[] = [];
     public _roles: KalturaUserRole[] = [];
     public _rolesTotalCount: number = null;
     private rolesSubscription: ISubscription;
@@ -27,10 +26,9 @@ export class RolesListComponent implements OnInit, OnDestroy {
 
     public _filter = {
         pageIndex: 0,
-        freetextSearch: '',
         pageSize: null, // pageSize is set to null by design. It will be modified after the first time loading entries
-        sortBy: 'createdAt',
-        sortDirection: SortDirection.Desc
+        // sortBy: 'updatedAt',
+        // sortDirection: SortDirection.Desc
     };
 
     constructor(private _rolesService: RolesService, private router: Router) {
@@ -42,8 +40,8 @@ export class RolesListComponent implements OnInit, OnDestroy {
             query => {
                 this._filter.pageSize = query.pageSize;
                 this._filter.pageIndex = query.pageIndex - 1;
-                this._filter.sortBy = query.sortBy;
-                this._filter.sortDirection = query.sortDirection;
+                // this._filter.sortBy = query.sortBy;
+                // this._filter.sortDirection = query.sortDirection;
                 this.dataTable.scrollToTop();
             });
 
@@ -61,17 +59,12 @@ export class RolesListComponent implements OnInit, OnDestroy {
     }
 
     public _reload() {
-        this._clearSelection();
         this._rolesService.reload(true);
-    }
-    _clearSelection() {
-        this._selectedRoles = [];
     }
 
     _onPaginationChanged(state: any): void {
         if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
 
-            this._clearSelection();
             this._rolesService.reload({
                 pageIndex: state.page + 1,
                 pageSize: state.rows

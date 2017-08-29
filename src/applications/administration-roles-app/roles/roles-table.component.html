@@ -1,24 +1,23 @@
 <k-area-blocker kFillHeight [showLoader]="(rolesService.state$ | async)?.loading || this._deferredLoading" [message]="_blockerMessage">
   <div class="kRolesTable" [class.noResults]="!_roles.length">
-    <p-dataTable #dataTable [value]="_roles" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
-      scrollable="true" scrollHeight="100%" dataKey="id" [rowTrackBy]="rowTrackBy" (selectionChange)="_onSelectionChange($event)"
-      (onSort)="_onSortChanged($event)" [(selection)]="selectedRoles" emptyMessage="{{_emptyMessage}}">
-      <!--<p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>-->
-      <p-column [style]="{'padding-left': '14px','width':'130px'}" field="name" header="Name" [sortable]="'custom'">
+    <p-dataTable #dataTable [value]="_roles"
+      scrollable="true" scrollHeight="100%" dataKey="id" [rowTrackBy]="rowTrackBy"
+      [(selection)]="selectedRoles" emptyMessage="{{_emptyMessage}}">
+      <p-column [style]="{'padding-left': '14px','width':'130px'}" field="name" header="Name" [sortable]="false">
         <ng-template let-col let-role="rowData" pTemplate="body">
           <span [kTooltip]="role.name" class="kTitle" (click)="onActionSelected('edit',role.id)">
             {{role[col.field]}}</span>
         </ng-template>
       </p-column>
       <p-column field="description" header="Description" [sortable]="false" [style]="{'width':'250px'}"></p-column>
-      <p-column field="updatedAt" header="Saved at" [sortable]="'custom'" [style]="{'width':'60px'}">
+      <p-column field="updatedAt" header="Saved at"  [sortable]="false" [style]="{'width':'60px'}">
         <ng-template let-col let-role="rowData" pTemplate="body">
           <span>{{role[col.field] | kDate}}</span>
         </ng-template>
       </p-column>
-      <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
+      <p-column  header="" [style]="{'overflow':'visible', 'width':'80px'}" [sortable]="false">
         <ng-template let-col let-role="rowData" pTemplate="body">
-          <div class="kRolesTableActions">
+          <div class="kRolesTableActions" *ngIf="role.partnerId != 0">
             <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, role)"></button>
           </div>
         </ng-template>

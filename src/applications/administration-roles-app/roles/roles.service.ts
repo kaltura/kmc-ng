@@ -47,9 +47,9 @@ export class RolesService implements OnDestroy {
   private _queryData = new BehaviorSubject<QueryData>({
     pageIndex: 1,
     pageSize: 50,
-    sortBy: 'createdAt',
-    sortDirection: SortDirection.Desc,
-    fields: 'id,name, createdAt, directSubRolesCount, entriesCount, fullName'
+    sortBy: 'id',
+    sortDirection: SortDirection.Asc,
+    fields: 'id,name, updatedAt, description'
   });
 
   public state$ = this._state.asObservable();
