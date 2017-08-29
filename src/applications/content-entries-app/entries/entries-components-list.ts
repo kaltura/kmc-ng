@@ -1,4 +1,4 @@
-import { EntriesListComponent } from './entries-list.component';
+import { EntriesListHolderComponent } from './entries-list-holder.component';
 import { BulkActionsComponent } from './bulk-actions/bulk-actions.component';
 import {
   BulkAAccessControl,
@@ -11,7 +11,7 @@ import {
 } from './bulk-actions/components';
 
 export const EntriesComponentsList = [
-  EntriesListComponent,
+  EntriesListHolderComponent,
   BulkActionsComponent,
   BulkScheduling,
   BulkAAccessControl,

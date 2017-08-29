@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
 import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import {
-  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, MenuModule, RadioButtonModule,
+  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, InputTextModule, MenuModule, PaginatorModule,
+  RadioButtonModule,
   TreeModule
 } from 'primeng/primeng';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -25,6 +26,8 @@ import { CategoriesFilterPrefsComponent } from 'app-shared/content-shared/catego
 import { CategoriesFilterComponent } from 'app-shared/content-shared/categories-filter/categories-filter.component';
 import { EntriesRefineFiltersProvider } from 'app-shared/content-shared/entries-refine-filters/entries-refine-filters-provider.service';
 import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
+import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
+import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 
 @NgModule({
   imports: [
@@ -46,7 +49,10 @@ import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/e
     CheckboxModule,
     PopupWidgetModule,
     DataTableModule,
-    MenuModule
+    MenuModule,
+    TagsModule,
+    PaginatorModule,
+    InputTextModule
   ],
   declarations: [
     EntryStatusPipe,
@@ -59,7 +65,8 @@ import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/e
     EntriesRefineFiltersComponent,
     CategoriesFilterPrefsComponent,
     CategoriesFilterComponent,
-    EntriesTableComponent
+    EntriesTableComponent,
+    EntriesListComponent
   ],
   exports: [
     EntryStatusPipe,
@@ -72,7 +79,8 @@ import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/e
     EntriesRefineFiltersComponent,
     CategoriesFilterPrefsComponent,
     CategoriesFilterComponent,
-    EntriesTableComponent
+    EntriesTableComponent,
+    EntriesListComponent
   ],
   providers: [
     CategoriesPrimeService,

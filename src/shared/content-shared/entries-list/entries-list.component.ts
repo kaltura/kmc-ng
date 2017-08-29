@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -15,14 +15,13 @@ import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/e
   styleUrls: ['./entries-list.component.scss']
 })
 export class EntriesListComponent implements OnInit, OnDestroy {
-
+  @Input() selectedEntries: Array<any> = [];
   @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
 
   public isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
 
   private querySubscription: ISubscription;
-  public _selectedEntries: any[] = [];
 
   public _filter = {
     pageIndex: 0,
@@ -186,11 +185,11 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   }
 
   clearSelection() {
-    this._selectedEntries = [];
+    this.selectedEntries = [];
   }
 
   onSelectedEntriesChange(event): void {
-    this._selectedEntries = event;
+    this.selectedEntries = event;
   }
 
   onBulkChange(event): void {
