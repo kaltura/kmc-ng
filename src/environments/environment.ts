@@ -91,7 +91,7 @@ export const environment = {
         "enabled": true,
         "children": [
           {
-            "routePath": "settings/roles",
+            "routePath": "administration/roles",
             "titleToken": "Roles",
             "enabled": true
           }
