@@ -12,11 +12,23 @@ import { Md5 } from 'ts-md5/dist/md5';
 export class UserSettingsComponent {
 	timeoutID: number = null;
 	public _userContext: AppUser;
-	public _languages = [{label: "English", value: "en"}, {label: "Deutsch", value: "de"}, {label: "Español", value: "es"}, {label: "Français", value: "fr"}, {label: "日本語", value: "lp"}];
-	public _selectedLanguage = "English";
+	public _languages = [];
+	public _selectedLanguage = "en";
 
 	constructor(private userAuthentication: AppAuthentication, private appNavigator: AppNavigator, private browserService: BrowserService) {
 		this._userContext = userAuthentication.appUser;
+
+		environment.core.locales.forEach(locale => {
+			this._languages.push({label: locale.label, value: locale.id});
+		});
+
+		const currentLang = this.browserService.getFromLocalStorage('kmc_lang');
+		if (currentLang && currentLang.length){
+			const lang = this._languages.find((lang) => {return lang.value === currentLang});
+			if (lang){
+				this._selectedLanguage = lang.value;
+			}
+		}
 	}
 
 	logout() {
@@ -42,7 +54,8 @@ export class UserSettingsComponent {
 	}
 
 	onLangSelected(event){
-		console.log("Change language to: " + event.value);
+		this.browserService.setInLocalStorage('kmc_lang', event.value);
+		location.reload();
 	}
 
 }
