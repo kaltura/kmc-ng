@@ -44,14 +44,7 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   @Input() filter: any = {};
   @Input() selectedRoles: KalturaUserRole[] = [];
-
-  @Output()
-  sortChanged = new EventEmitter<any>();
-  @Output()
-  actionSelected = new EventEmitter<any>();
-  @Output()
-  selectedRolesChange = new EventEmitter<any>();
-
+  @Output() actionSelected = new EventEmitter<any>();
   @ViewChild('dataTable') private _dataTable: DataTable;
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
   private _actionsMenuRoleId = 0;
@@ -146,13 +139,13 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._items = [
       {
         label: this.appLocalization.get('applications.administration.roles.actions.edit'), command: (event) => {
-          this.onActionSelected('edit', this._actionsMenuRoleId);
-        }
+        this.onActionSelected('edit', this._actionsMenuRoleId);
+      }
       },
       {
         label: this.appLocalization.get('applications.administration.roles.actions.duplicate'), command: (event) => {
-          this.onActionSelected('duplicate', this._actionsMenuRoleId);
-        }
+        this.onActionSelected('duplicate', this._actionsMenuRoleId);
+      }
       },
       {
         label: this.appLocalization.get('applications.administration.roles.actions.delete'), command: (event) => {
@@ -160,14 +153,6 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
       }
       }
     ];
-  }
-
-  _onSelectionChange(event) {
-    this.selectedRolesChange.emit(event);
-  }
-
-  _onSortChanged(event) {
-    this.sortChanged.emit(event);
   }
 
   scrollToTop() {

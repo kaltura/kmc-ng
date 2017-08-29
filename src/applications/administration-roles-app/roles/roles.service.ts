@@ -12,6 +12,8 @@ import {KalturaClient} from '@kaltura-ng/kaltura-client';
 import {KalturaUserRoleListResponse} from 'kaltura-typescript-client/types/KalturaUserRoleListResponse';
 import {KalturaUserRole} from 'kaltura-typescript-client/types/KalturaUserRole';
 import {UserRoleListAction} from 'kaltura-typescript-client/types/UserRoleListAction';
+import {KalturaUserRoleStatus} from "kaltura-typescript-client/types/KalturaUserRoleStatus";
+import {KalturaUserRoleOrderBy} from "kaltura-typescript-client/types/KalturaUserRoleOrderBy";
 
 export interface UpdateStatus {
   loading: boolean;
@@ -126,12 +128,16 @@ export class RolesService implements OnDestroy {
 
   private buildQueryRequest(queryData: QueryData): Observable<KalturaUserRoleListResponse> {
     try {
-      const filter: KalturaUserRoleFilter = new KalturaUserRoleFilter({});
-      let pagination: KalturaFilterPager = null;
-      const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
-        type: KalturaResponseProfileType.includeFields,
-        fields: queryData.fields
+      const filter: KalturaUserRoleFilter = new KalturaUserRoleFilter({
+        statusEqual: KalturaUserRoleStatus.active,
+        orderBy: KalturaUserRoleOrderBy.idAsc.toString(),
+        tagsMultiLikeOr: 'kmc'
       });
+      let pagination: KalturaFilterPager = null;
+      // const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
+      //   type: KalturaResponseProfileType.includeFields,
+      //   fields: queryData.fields
+      // });
 
       // update pagination args
       if (queryData.pageIndex || queryData.pageSize) {
@@ -153,7 +159,7 @@ export class RolesService implements OnDestroy {
         new UserRoleListAction({
           filter,
           pager: pagination,
-          responseProfile
+          // responseProfile
         })
       )
     } catch (err) {

@@ -1,10 +1,10 @@
 import { ISubscription } from 'rxjs/Subscription';
-import { KalturaRole } from 'kaltura-typescript-client/types/KalturaRole';
 import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
-import { RolesTableComponent } from "./roles-table.component";
-import { RolesService, Roles, SortDirection } from './roles.service';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { RolesTableComponent } from './roles-table.component';
+import { RolesService, SortDirection } from './roles.service';
+import {KalturaUserRole} from 'kaltura-typescript-client/types/KalturaUserRole';
 
 @Component({
     selector: 'kRolesList',
@@ -19,8 +19,8 @@ export class RolesListComponent implements OnInit, OnDestroy {
 
     public _isBusy = false
     public _blockerMessage: AreaBlockerMessage = null;
-    public _selectedRoles: KalturaRole[] = [];
-    public _roles: KalturaRole[] = [];
+    public _selectedRoles: KalturaUserRole[] = [];
+    public _roles: KalturaUserRole[] = [];
     public _rolesTotalCount: number = null;
     private rolesSubscription: ISubscription;
     private querySubscription: ISubscription;
@@ -68,13 +68,6 @@ export class RolesListComponent implements OnInit, OnDestroy {
         this._selectedRoles = [];
     }
 
-    _onSortChanged(event): void {
-        this._rolesService.reload({
-            sortBy: event.field,
-            sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
-        });
-    }
-
     _onPaginationChanged(state: any): void {
         if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
 
@@ -88,8 +81,8 @@ export class RolesListComponent implements OnInit, OnDestroy {
 
     _onActionSelected(event: { action: string, roleID: number }) {
         switch (event.action) {
-            case "edit":
-                this.router.navigate(['/content/roles/role', event.roleID]);
+            case 'edit':
+                this.router.navigate(['/administration/roles/role', event.roleID]);
                 break;
             default:
                 break;

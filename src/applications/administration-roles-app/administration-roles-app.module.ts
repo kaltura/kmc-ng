@@ -26,7 +26,7 @@ import {
 import {KMCShellModule} from 'app-shared/kmc-shell';
 
 import {routing} from './administration-roles-app.routes';
-import {ContentRolesComponent} from './administration-roles.component';
+import {AdministrationRolesComponent} from './administration-roles.component';
 
 import {MetadataProfileModule} from '@kaltura-ng/kaltura-server-utils';
 
@@ -82,11 +82,11 @@ import {RolesComponentsList} from './roles/roles-components-list';
     TreeModule
   ],
   declarations: [
-    ContentRolesComponent,
+    AdministrationRolesComponent,
     RolesComponentsList
   ],
   exports: [],
   providers: [],
 })
-export class ContentRolesAppModule {
+export class AdministrationRolesAppModule {
 }

@@ -1,11 +1,11 @@
 import {Route} from '@angular/router';
 
-import {ContentRolesComponent} from './administration-roles.component';
+import {AdministrationRolesComponent} from './administration-roles.component';
 import {RolesListComponent} from './roles/roles-list.component';
 
 export const routing: Route[] = [
   {
-    path: '', component: ContentRolesComponent,
+    path: '', component: AdministrationRolesComponent,
     children: [
       {path: '', redirectTo: 'list', pathMatch: 'full'},
       {path: 'list', component: RolesListComponent},
