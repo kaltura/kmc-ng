@@ -145,23 +145,18 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   buildMenu(): void {
     this._items = [
       {
-        label: this.appLocalization.get('applications.content.roles.edit'), command: (event) => {
-        this.onActionSelected('edit', this._actionsMenuRoleId);
-      }
+        label: this.appLocalization.get('applications.administration.roles.actions.edit'), command: (event) => {
+          this.onActionSelected('edit', this._actionsMenuRoleId);
+        }
       },
       {
-        label: this.appLocalization.get('applications.content.roles.delete'), command: (event) => {
+        label: this.appLocalization.get('applications.administration.roles.actions.duplicate'), command: (event) => {
+          this.onActionSelected('duplicate', this._actionsMenuRoleId);
+        }
+      },
+      {
+        label: this.appLocalization.get('applications.administration.roles.actions.delete'), command: (event) => {
         this.onActionSelected('delete', this._actionsMenuRoleId);
-      }
-      },
-      {
-        label: this.appLocalization.get('applications.content.roles.viewEntries'), command: (event) => {
-        this.onActionSelected('viewEntries', this._actionsMenuRoleId);
-      }
-      },
-      {
-        label: this.appLocalization.get('applications.content.roles.moveRole'), command: (event) => {
-        this.onActionSelected('moveRole', this._actionsMenuRoleId);
       }
       }
     ];

@@ -645,6 +645,15 @@
           "validationError": "The form contains some invalid information. Please review the sections marked as invalid"
         }
       }
+    },
+    "administration":{
+      "roles": {
+        "actions":{
+          "edit": "Edit",
+          "duplicate": "Duplicate",
+          "delete": "Delete"
+        }
+      }
     }
   },
   "entriesShared": {
