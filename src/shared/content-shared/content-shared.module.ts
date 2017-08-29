@@ -3,7 +3,13 @@ import { CommonModule } from '@angular/common';
 import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
 import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import {
-  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, InputTextModule, MenuModule, PaginatorModule,
+  ButtonModule,
+  CalendarModule,
+  CheckboxModule,
+  DataTableModule,
+  InputTextModule,
+  MenuModule,
+  PaginatorModule,
   RadioButtonModule,
   TreeModule
 } from 'primeng/primeng';
@@ -39,7 +45,6 @@ import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
     ReactiveFormsModule,
     TreeModule,
     PrimeTreeModule,
-    AreaBlockerModule,
     KalturaCommonModule,
     KalturaPrimeNgUIModule,
     KalturaUIModule,
