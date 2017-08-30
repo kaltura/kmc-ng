@@ -7,7 +7,10 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { FreetextFilter } from 'app-shared/content-shared/entries-store/filters/freetext-filter';
-import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
+import {
+  EntriesTableComponent,
+  EntriesTableConfig
+} from 'app-shared/content-shared/entries-table/entries-table.component';
 
 @Component({
   selector: 'kEntriesList',
@@ -15,6 +18,7 @@ import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/e
   styleUrls: ['./entries-list.component.scss']
 })
 export class EntriesListComponent implements OnInit, OnDestroy {
+  @Input() tableConfig: EntriesTableConfig | null; // `null` to avoid "export 'EntriesTableConfig' was not found in ..." warning
   @Input() selectedEntries: Array<any> = [];
   @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
 
@@ -29,21 +33,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     pageSize: null, // pageSize is set to null by design. It will be modified after the first time loading entries
     sortBy: 'createdAt',
     sortDirection: SortDirection.Desc
-  };
-
-  public _tableConfig = {
-    dataKey: 'id',
-    scrollHeight: '100%',
-    columns: {
-      thumbnailUrl: { width: '100px' },
-      name: { sortable: 'custom' },
-      id: { width: '100px' },
-      mediaType: { sortable: 'custom', width: '80px', align: 'center' },
-      plays: { sortable: 'custom', width: '76px' },
-      createdAt: { sortable: true, width: '140px' },
-      duration: { sortable: 'custom', width: '104px' },
-      status: { width: '100px' }
-    }
   };
 
   constructor(private _entriesStore: EntriesStore,

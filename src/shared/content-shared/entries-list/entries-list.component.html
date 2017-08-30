@@ -51,7 +51,7 @@
       <kEntriesTable class="kEntriesTable"
                      [entries]="(_entriesStore.entries$ | async)?.items"
                      [filter]="_filter"
-                     [tableConfig]="_tableConfig"
+                     [tableConfig]="tableConfig"
                      (sortChanged)="onSortChanged($event)"
                      (actionSelected)="onActionSelected($event)"
                      [(selectedEntries)]="selectedEntries"
