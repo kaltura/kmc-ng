@@ -23,6 +23,7 @@ export interface EntriesTableConfig {
   scrollHeight?: string;
   fillHeight?: boolean;
   columns?: EntriesTableColumns;
+  rowActions?: Array<CustomMenuItem>
 }
 
 export interface EntriesTableColumns {
@@ -31,6 +32,11 @@ export interface EntriesTableColumns {
     align?: string;
     sortable?: boolean | 'custom'
   }
+}
+
+export interface CustomMenuItem extends MenuItem {
+  metadata: any;
+  commandName: string
 }
 
 @Component({
@@ -47,6 +53,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
       this._scrollable = !!value.scrollHeight;
       this._fillHeight = value.fillHeight;
       this._columns = value.columns || this._defaultColumns;
+      this._rowActions = value.rowActions || [];
     }
   }
 
@@ -88,12 +95,13 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _scrollable = true;
   public _columns?: EntriesTableColumns = this._defaultColumns;
   public _fillHeight = true;
+  public _rowActions = [];
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _entries: any[] = [];
   public _deferredLoading = true;
   public _emptyMessage = '';
-  public _items: MenuItem[];
+  public _items: Array<CustomMenuItem>;
 
   constructor(private appLocalization: AppLocalization, public entriesStore: EntriesStore, private cdRef: ChangeDetectorRef) {
   }
@@ -160,26 +168,22 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private _buildMenu(mediaType: KalturaMediaType = null, status: any = null): void {
-    this._items = [
-      {
-        label: this.appLocalization.get('applications.content.table.previewAndEmbed'),
-        command: () => this._onActionSelected('preview', this.actionsMenuEntryId)
-      },
-      {
-        label: this.appLocalization.get('applications.content.table.delete'),
-        command: () => this._onActionSelected('delete', this.actionsMenuEntryId)
-      },
-      {
-        label: this.appLocalization.get('applications.content.table.view'),
-        command: () => this._onActionSelected('view', this.actionsMenuEntryId)
-      }
-    ];
-    if (status instanceof KalturaEntryStatus && status.toString() !== KalturaEntryStatus.ready.toString()) {
-      this._items.shift();
-      if (mediaType && mediaType.toString() === KalturaMediaType.liveStreamFlash.toString()) {
-        this._items.pop();
-      }
-    }
+    const exceptPreview = ({ commandName }) => {
+      const isNotReady = status instanceof KalturaEntryStatus && status.toString() !== KalturaEntryStatus.ready.toString();
+      return !(isNotReady && commandName === 'preview');
+    };
+
+    const exceptView = ({ commandName }) => {
+      const isLiveStreamFlash = mediaType && mediaType.toString() === KalturaMediaType.liveStreamFlash.toString();
+      return !(isLiveStreamFlash && commandName === 'view');
+    };
+
+    this._items = this._rowActions
+      .filter(exceptPreview)
+      .filter(exceptView)
+      .map(action =>
+        Object.assign({}, action, { metadata: this.actionsMenuEntryId })
+      );
   }
 
   public _rowTrackBy(index: number, item: any): string {
@@ -190,8 +194,8 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
       if (this.actionsMenuEntryId !== entry.id) {
-        this._buildMenu(entry.mediaType, entry.status);
         this.actionsMenuEntryId = entry.id;
+        this._buildMenu(entry.mediaType, entry.status);
         this.actionsMenu.show(event);
       }
     }

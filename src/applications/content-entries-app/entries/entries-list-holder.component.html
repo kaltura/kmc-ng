@@ -1,4 +1,6 @@
-<kEntriesList [tableConfig]="_tableConfig">
+<kEntriesList [tableConfig]="_tableConfig"
+              [isBusy]="_isBusy"
+              [blockerMessage]="_blockerMessage">
   <div class="bulk-actions">
     <kBulkActions [selectedEntries]="_entriesList.selectedEntries"
                   (onBulkChange)="_entriesList.onBulkChange($event)"></kBulkActions>

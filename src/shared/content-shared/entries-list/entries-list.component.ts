@@ -18,12 +18,11 @@ import {
   styleUrls: ['./entries-list.component.scss']
 })
 export class EntriesListComponent implements OnInit, OnDestroy {
+  @Input() isBusy = false;
+  @Input() blockerMessage: AreaBlockerMessage = null;
   @Input() tableConfig: EntriesTableConfig | null; // `null` to avoid "export 'EntriesTableConfig' was not found in ..." warning
   @Input() selectedEntries: Array<any> = [];
   @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
-
-  public isBusy = false;
-  public _blockerMessage: AreaBlockerMessage = null;
 
   private querySubscription: ISubscription;
 
@@ -127,65 +126,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     } else {
       this._filter.freetextSearch = null;
     }
-  }
-
-  onActionSelected(event) {
-    switch (event.action) {
-      case 'view':
-        this.router.navigate(['/content/entries/entry', event.entryID]);
-        break;
-      case 'delete':
-        this._browserService.confirm(
-          {
-            header: this.appLocalization.get('applications.content.entries.deleteEntry'),
-            message: this.appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: event.entryID }),
-            accept: () => {
-              this.deleteEntry(event.entryID);
-            }
-          }
-        );
-        break;
-      default:
-        break;
-    }
-  }
-
-  private deleteEntry(entryId: string): void {
-    this.isBusy = true;
-    this._blockerMessage = null;
-    this._entriesStore.deleteEntry(entryId).subscribe(
-      () => {
-        this.isBusy = false;
-        this._browserService.showGrowlMessage({
-          severity: 'success',
-          detail: this.appLocalization.get('applications.content.entries.deleted')
-        });
-        this._entriesStore.reload(true);
-      },
-      error => {
-        this.isBusy = false;
-
-        this._blockerMessage = new AreaBlockerMessage(
-          {
-            message: error.message,
-            buttons: [
-              {
-                label: this.appLocalization.get('app.common.retry'),
-                action: () => {
-                  this.deleteEntry(entryId);
-                }
-              },
-              {
-                label: this.appLocalization.get('app.common.cancel'),
-                action: () => {
-                  this._blockerMessage = null;
-                }
-              }
-            ]
-          }
-        )
-      }
-    );
   }
 
   clearSelection() {
