@@ -41,11 +41,13 @@ export interface EntriesTableColumns {
 export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input()
   set tableConfig(value: EntriesTableConfig) {
-    this._dataKey = value.dataKey || 'id';
-    this._scrollHeight = value.scrollHeight || '100%';
-    this._scrollable = !!value.scrollHeight;
-    this._fillHeight = value.fillHeight;
-    this._columns = value.columns || this._defaultColumns;
+    if (value) {
+      this._dataKey = value.dataKey || 'id';
+      this._scrollHeight = value.scrollHeight || '100%';
+      this._scrollable = !!value.scrollHeight;
+      this._fillHeight = value.fillHeight;
+      this._columns = value.columns || this._defaultColumns;
+    }
   }
 
   @Input()
@@ -81,11 +83,11 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     id: { width: '100px' }
   };
 
-  public _dataKey: string;
-  public _scrollHeight: string;
-  public _scrollable: boolean;
-  public _columns?: EntriesTableColumns;
-  public _fillHeight: boolean;
+  public _dataKey = 'id';
+  public _scrollHeight = '100%';
+  public _scrollable = true;
+  public _columns?: EntriesTableColumns = this._defaultColumns;
+  public _fillHeight = true;
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _entries: any[] = [];
