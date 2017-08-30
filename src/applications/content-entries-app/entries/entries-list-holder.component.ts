@@ -22,12 +22,12 @@ export class EntriesListHolderComponent {
     scrollHeight: '100%',
     columns: {
       thumbnailUrl: { width: '100px' },
-      name: { sortable: 'custom' },
+      name: { sortable: true },
       id: { width: '100px' },
-      mediaType: { sortable: 'custom', width: '80px', align: 'center' },
-      plays: { sortable: 'custom', width: '76px' },
+      mediaType: { sortable: true, width: '80px', align: 'center' },
+      plays: { sortable: true, width: '76px' },
       createdAt: { sortable: true, width: '140px' },
-      duration: { sortable: 'custom', width: '104px' },
+      duration: { sortable: true, width: '104px' },
       status: { width: '100px' },
       rowActions: []
     }

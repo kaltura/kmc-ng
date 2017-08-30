@@ -20,7 +20,7 @@
       <p-column *ngIf="_columns.thumbnailUrl"
                 field="thumbnailUrl"
                 [header]="'applications.content.table.thumbnail' | translate"
-                [sortable]="_columns.thumbnailUrl?.sortable"
+                [sortable]="_columns.thumbnailUrl?.sortable | kPrimeTableSortTransform"
                 [style]="_getColumnStyle(_columns.thumbnailUrl)">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <div class="kThumbnailHolder"
@@ -34,7 +34,7 @@
       <p-column *ngIf="_columns.name"
                 field="name"
                 [header]="'applications.content.table.name' | translate"
-                [sortable]="_columns.name?.sortable"
+                [sortable]="_columns.name?.sortable | kPrimeTableSortTransform"
                 [style]="_getColumnStyle(_columns.name)">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <span class="kTitle"
@@ -48,14 +48,14 @@
       <p-column *ngIf="_columns.id"
                 field="id"
                 [header]="'applications.content.table.id' | translate"
-                [sortable]="_columns.id?.sortable"
+                [sortable]="_columns.id?.sortable | kPrimeTableSortTransform"
                 [style]="_getColumnStyle(_columns.id)">
       </p-column>
 
       <p-column *ngIf="_columns.mediaType"
                 field="mediaType"
                 [header]="'applications.content.table.type' | translate"
-                [sortable]="_columns.mediaType?.sortable"
+                [sortable]="_columns.mediaType?.sortable | kPrimeTableSortTransform"
                 [style]="_getColumnStyle(_columns.mediaType)">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <div [kTooltip]="entry[col.field] | entryType: true" [class]="entry[col.field] | entryType: false"></div>
@@ -65,14 +65,14 @@
       <p-column *ngIf="_columns.plays"
                 field="plays"
                 [header]="'applications.content.table.plays' | translate"
-                [sortable]="_columns.plays?.sortable"
+                [sortable]="_columns.plays?.sortable | kPrimeTableSortTransform"
                 [style]="_getColumnStyle(_columns.plays)">
       </p-column>
 
       <p-column *ngIf="_columns.createdAt"
                 field="createdAt"
                 [header]="'applications.content.table.createdOn' | translate"
-                [sortable]="_columns.createdAt?.sortable"
+                [sortable]="_columns.createdAt?.sortable | kPrimeTableSortTransform"
                 [style]="_getColumnStyle(_columns.createdAt)">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <span>{{entry[col.field] | kDate}}</span>
@@ -82,7 +82,7 @@
       <p-column *ngIf="_columns.duration"
                 field="duration"
                 [header]="'applications.content.table.duration' | translate"
-                [sortable]="_columns.duration?.sortable"
+                [sortable]="_columns.duration?.sortable | kPrimeTableSortTransform"
                 [style]="_getColumnStyle(_columns.duration)">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <span>{{entry[col.field] | kTime | entryDuration:entry}}</span>
@@ -92,7 +92,7 @@
       <p-column *ngIf="_columns.status"
                 field="status"
                 [header]="'applications.content.table.status' | translate"
-                [sortable]="_columns.status?.sortable"
+                [sortable]="_columns.status?.sortable | kPrimeTableSortTransform"
                 [style]="_getColumnStyle(_columns.status)">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <span>{{entry | entryStatus}}</span>

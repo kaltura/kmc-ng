@@ -30,7 +30,7 @@ export interface EntriesTableColumns {
   [key: string]: {
     width?: string;
     align?: string;
-    sortable?: boolean | 'custom'
+    sortable?: boolean;
   }
 }
 
@@ -89,7 +89,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   private actionsMenuEntryId = '';
   private _defaultColumns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
-    name: { sortable: 'custom' },
+    name: { sortable: true },
     id: { width: '100px' }
   };
 
