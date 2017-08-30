@@ -15,6 +15,11 @@
       "changeAccount": "Change Acoount",
       "logout": "Logout"
     },
+    "changeAccount": {
+      "title": "Change account",
+      "choose": "Choose a different partner:",
+      "continue": "Continue"
+    },
     "helpMenu": {
       "gettingStarted": "Getting Started",
       "kmcOverview": "KMC Overview",
@@ -133,7 +138,7 @@
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
         "refine": "Refine",
-        "filterCategories": "Filter Categories"  ,
+        "filterCategories": "Filter Categories",
         "edit": "Edit",
         "delete": "Delete",
         "viewEntries": "View Entries",

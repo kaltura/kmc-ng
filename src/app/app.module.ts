@@ -43,7 +43,7 @@ import {
   ConfirmDialogModule,
   ConfirmationService,
   DropdownModule,
-  GrowlModule
+  GrowlModule, RadioButtonModule
 } from 'primeng/primeng';
 
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -62,6 +62,7 @@ import { ForgotPasswordFormComponent } from './components/login/forgot-password-
 import { LoginFormComponent } from './components/login/login-form/login-form.component';
 import { PasswordExpiredFormComponent } from './components/login/password-expired-form/password-expired-form.component';
 import { InvalidLoginHashFormComponent } from './components/login/invalid-login-hash-form/invalid-login-hash-form.component';
+import {ChangeAccountComponent} from "./components/changeAccount/change-account.component";
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -99,7 +100,8 @@ export function clientConfigurationFactory() {
     CheckboxModule,
     ReactiveFormsModule,
     TooltipModule,
-    GrowlModule
+    GrowlModule,
+    RadioButtonModule
   ],
   declarations: <any>[
     AppComponent,
@@ -113,7 +115,8 @@ export function clientConfigurationFactory() {
     PasswordExpiredFormComponent,
     ForgotPasswordFormComponent,
     InvalidLoginHashFormComponent,
-    UploadMenuComponent
+    UploadMenuComponent,
+    ChangeAccountComponent
   ],
   bootstrap: <any>[
     AppComponent
