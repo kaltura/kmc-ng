@@ -7,6 +7,36 @@
       dataKey="id"
       [rowTrackBy]="rowTrackBy">
       <p-column selectionMode="multiple"></p-column>
+      <p-column field="status" header="{{'applications.content.table.status' | translate}}" [sortable]="false">
+        <ng-template let-col let-user="rowData" pTemplate="body">
+          <span class="kTitle">{{user[col.field] | status}}</span>
+        </ng-template>
+      </p-column>
+      <p-column field="fullName" header="{{'applications.content.table.userName' | translate}}" [sortable]="false">
+        <ng-template let-col let-user="rowData" pTemplate="body">
+          <span class="kTitle">{{user[col.field]}} {{userFullName}}</span>
+        </ng-template>
+      </p-column>
+      <p-column field="id" header="{{'applications.content.table.userId' | translate}}" [sortable]="false">
+        <ng-template let-col let-user="rowData" pTemplate="body">
+          <span class="kTitle">{{user[col.field]}}</span>
+        </ng-template>
+      </p-column>
+      <p-column field="email" header="{{'applications.content.table.emailAddress' | translate}}" [sortable]="false">
+        <ng-template let-col let-user="rowData" pTemplate="body">
+          <span class="kTitle">{{user[col.field]}}</span>
+        </ng-template>
+      </p-column>
+      <p-column field="roleIds" header="{{'applications.content.table.role' | translate}}" [sortable]="false">
+        <ng-template let-col let-user="rowData" pTemplate="body">
+          <span class="kTitle">{{user[col.field]}}</span>
+        </ng-template>
+      </p-column>
+      <p-column field="lastLoginTime" header="{{'applications.content.table.lastLogin' | translate}}" [sortable]="false">
+        <ng-template let-col let-user="rowData" pTemplate="body">
+          <span class="kTitle">{{user[col.field] | date:'MM/dd/yy HH:mm'}}</span>
+        </ng-template>
+      </p-column>
     </p-dataTable>
   </div>
 </k-area-blocker>

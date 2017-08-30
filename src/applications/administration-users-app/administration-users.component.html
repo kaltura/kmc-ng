@@ -4,8 +4,15 @@
       <div class="kUsersHeader">
         <div class="kUsersTitle">{{'applications.content.users.usersTitle' | translate}}</div>
         <div class="kUsersExplanatory">{{'applications.content.users.usersExplanatory' | translate}}</div>
+        <div class="kUsersStatus">
+          {{usersStatus}} {{usersAvailable}} &nbsp;
+          {{'applications.content.users.moreUsers' | translate}}
+          <a (click)="upgradeAccount()">{{'applications.content.users.clickHere' | translate}}</a>
+          {{'applications.content.users.usersUpgrade' | translate}}
+        </div>
       </div>
-      <kUsersTable></kUsersTable>
+      <kUsersTable
+        [users]="(usersStore.users$ | async)?.items"></kUsersTable>
     </div>
   </div>
 </k-area-blocker>

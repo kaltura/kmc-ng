@@ -177,7 +177,16 @@
       },
       "users": {
         "usersTitle": "Authorized KMC Users",
-        "usersExplanatory": "Here you can manage the KMC users with various levels of access to your account. You can add new users, edit permissions for existing users and more."
+        "usersExplanatory": "Here you can manage the KMC users with various levels of access to your account. You can add new users, edit permissions for existing users and more.",
+        "user": "user",
+        "users": "users",
+        "usersStatus": "Current status: {{0}} KMC {{1}} in use.",
+        "usersAvailable": "{{0}} additional available.",
+        "moreUsers": "Need more KMC users?",
+        "clickHere": "Click here",
+        "usersUpgrade": "to upgrade your account.",
+        "you": "You",
+        "accountOwner": "Account Owner"
       },
       "filters": {
         "activeFilters": "Active Filters:",
@@ -230,7 +239,12 @@
         "delete": "Delete",
         "view": "View Details",
         "loading": "Loading...",
-        "noResults": "No Results"
+        "noResults": "No Results",
+        "userName": "User name",
+        "userId": "User ID",
+        "emailAddress": "Email Address",
+        "role": "Role",
+        "lastLogin": "Last Login"
       },
       "paginator": {
         "showRows": "Show rows:"
@@ -270,6 +284,11 @@
         "external": "External RSS",
         "staticList": "Manual",
         "unknown": "Unknown"
+      },
+      "userStatus": {
+        "active": "Active",
+        "blocked": "Blocked",
+        "deleted": "Deleted"
       },
       "bulkActions": {
         "setScheduling": "Set Scheduling",
