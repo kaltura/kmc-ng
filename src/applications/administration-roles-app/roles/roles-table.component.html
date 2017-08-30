@@ -5,7 +5,7 @@
       [(selection)]="selectedRoles" emptyMessage="{{_emptyMessage}}">
       <p-column [style]="{'padding-left': '14px','width':'130px'}" field="name" header="Name" [sortable]="false">
         <ng-template let-col let-role="rowData" pTemplate="body">
-          <span [kTooltip]="role.name" class="kTitle" (click)="onActionSelected('edit',role.id)">
+          <span>
             {{role[col.field]}}</span>
         </ng-template>
       </p-column>

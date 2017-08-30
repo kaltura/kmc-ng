@@ -14,6 +14,7 @@ import {KalturaUserRole} from 'kaltura-typescript-client/types/KalturaUserRole';
 import {UserRoleListAction} from 'kaltura-typescript-client/types/UserRoleListAction';
 import {KalturaUserRoleStatus} from "kaltura-typescript-client/types/KalturaUserRoleStatus";
 import {KalturaUserRoleOrderBy} from "kaltura-typescript-client/types/KalturaUserRoleOrderBy";
+import {UserRoleDeleteAction} from "kaltura-typescript-client/types/UserRoleDeleteAction";
 
 export interface UpdateStatus {
   loading: boolean;
@@ -134,10 +135,6 @@ export class RolesService implements OnDestroy {
         tagsMultiLikeOr: 'kmc'
       });
       let pagination: KalturaFilterPager = null;
-      // const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
-      //   type: KalturaResponseProfileType.includeFields,
-      //   fields: queryData.fields
-      // });
 
       // update pagination args
       if (queryData.pageIndex || queryData.pageSize) {
@@ -159,12 +156,38 @@ export class RolesService implements OnDestroy {
         new UserRoleListAction({
           filter,
           pager: pagination,
-          // responseProfile
         })
       )
     } catch (err) {
       return Observable.throw(err);
     }
+
+  }
+
+  public deleteRole(roleID: number): Observable<void> {
+    return Observable.create(observer => {
+      let subscription: ISubscription;
+      if (roleID > 0) {
+        subscription = this._kalturaClient.request(new UserRoleDeleteAction({
+          userRoleId: roleID
+        })).subscribe(
+          result => {
+            observer.next();
+            observer.complete();
+          },
+          error => {
+            observer.error(error);
+          }
+        );
+      } else {
+        observer.error(new Error('missing roleId argument'));
+      }
+      return () => {
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+      }
+    });
 
   }
 }

@@ -47,7 +47,7 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Output() actionSelected = new EventEmitter<any>();
   @ViewChild('dataTable') private _dataTable: DataTable;
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
-  private _actionsMenuRoleId = 0;
+  private _actionsMenuRole: KalturaUserRole;
   private _rolesServiceStatusSubscription: ISubscription;
 
   public _deferredLoading = true;
@@ -120,16 +120,16 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  onActionSelected(action: string, roleID: number) {
-    this.actionSelected.emit({'action': action, 'roleID': roleID});
+  onActionSelected(action: string, roleID: number, roleName: string) {
+    this.actionSelected.emit({'action': action, 'roleID': roleID, 'roleName': roleName});
   }
 
   openActionsMenu(event: any, role: KalturaUserRole) {
     if (this._actionsMenu) {
       this._actionsMenu.toggle(event);
-      if (this._actionsMenuRoleId !== role.id) {
+      if (!this._actionsMenuRole || this._actionsMenuRole.id !== role.id) {
         this.buildMenu();
-        this._actionsMenuRoleId = role.id;
+        this._actionsMenuRole = role;
         this._actionsMenu.show(event);
       }
     }
@@ -139,17 +139,17 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._items = [
       {
         label: this.appLocalization.get('applications.administration.roles.actions.edit'), command: (event) => {
-        this.onActionSelected('edit', this._actionsMenuRoleId);
+        this.onActionSelected('edit', this._actionsMenuRole.id, this._actionsMenuRole.name);
       }
       },
       {
         label: this.appLocalization.get('applications.administration.roles.actions.duplicate'), command: (event) => {
-        this.onActionSelected('duplicate', this._actionsMenuRoleId);
+        this.onActionSelected('duplicate', this._actionsMenuRole.id, this._actionsMenuRole.name);
       }
       },
       {
         label: this.appLocalization.get('applications.administration.roles.actions.delete'), command: (event) => {
-        this.onActionSelected('delete', this._actionsMenuRoleId);
+        this.onActionSelected('delete', this._actionsMenuRole.id, this._actionsMenuRole.name);
       }
       }
     ];
