@@ -5,6 +5,7 @@ import { EntriesListComponent } from 'app-shared/content-shared/entries-list/ent
 import { BrowserService } from 'app-shared/kmc-shell';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { EntriesTableConfig } from 'app-shared/content-shared/entries-table/entries-table.component';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -16,7 +17,7 @@ export class EntriesListHolderComponent {
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
 
-  public _tableConfig = {
+  public _tableConfig: EntriesTableConfig = {
     dataKey: 'id',
     scrollHeight: '100%',
     columns: {

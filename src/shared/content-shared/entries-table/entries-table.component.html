@@ -1,4 +1,4 @@
-<k-area-blocker kFillHeight
+<k-area-blocker [kFillHeight]="_fillHeight"
                 [showLoader]="(entriesStore.state$ | async)?.loading || this._deferredLoading"
                 [message]="_blockerMessage">
   <div class="kEntriesTable" [class.noResults]="!_entries.length">

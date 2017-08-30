@@ -51,9 +51,12 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
       this._dataKey = value.dataKey || 'id';
       this._scrollHeight = value.scrollHeight || '100%';
       this._scrollable = !!value.scrollHeight;
-      this._fillHeight = value.fillHeight;
       this._columns = value.columns || this._defaultColumns;
       this._rowActions = value.rowActions || [];
+
+      if (typeof value.fillHeight !== 'undefined') {
+        this._fillHeight = value.fillHeight;
+      }
     }
   }
 
