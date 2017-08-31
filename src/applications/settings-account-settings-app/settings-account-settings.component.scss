@@ -118,6 +118,7 @@
         color: $kGrayscale3;
         &.kHasError {
           color: $kDandger;
+          font-weight: bold;
         }
       }
       .kRequired, .kLabel {
