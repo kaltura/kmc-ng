@@ -666,9 +666,12 @@
         "describeYourselfOptions": "Enterprise / Small Business / Government Agency,Education Organization,Media Company / Agency,CDN / ISP / Integrator / Hosting Provider,Other",
         "apply": "Apply",
         "errors": {
-          "required": "This field is required.",
-          "updateFailed": "An error occurred during account info update.",
-          "loadFailed": "An error occurred during account info loading."
+          "requiredName": "You must enter name of publisher/company",
+          "requiredUserId": "You must enter name of account owner",
+          "requiredPhone": "You must enter phone number",
+          "updateFailed": "An error occurred during account info update",
+          "loadFailed": "An error occurred during account info loading",
+          "invalidFields": "There's some invalid fields"
         }
       },
       "accountUpgrade": {
