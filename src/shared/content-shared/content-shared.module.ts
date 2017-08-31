@@ -35,6 +35,7 @@ import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/e
 import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { PrimeTableSortTransformPipe } from 'app-shared/content-shared/pipes/prime-table-sort-transform.pipe';
+import { PopupTestComponent } from 'app-shared/content-shared/popup-test/popup-test.component';
 
 @NgModule({
   imports: [
@@ -73,7 +74,9 @@ import { PrimeTableSortTransformPipe } from 'app-shared/content-shared/pipes/pri
     CategoriesFilterPrefsComponent,
     CategoriesFilterComponent,
     EntriesTableComponent,
-    EntriesListComponent
+    EntriesListComponent,
+
+    PopupTestComponent
   ],
   exports: [
     EntryStatusPipe,
@@ -88,7 +91,9 @@ import { PrimeTableSortTransformPipe } from 'app-shared/content-shared/pipes/pri
     CategoriesFilterPrefsComponent,
     CategoriesFilterComponent,
     EntriesTableComponent,
-    EntriesListComponent
+    EntriesListComponent,
+
+    PopupTestComponent
   ],
   providers: [
     CategoriesPrimeService,

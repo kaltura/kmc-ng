@@ -9,10 +9,19 @@ import { EntriesTableConfig } from 'app-shared/content-shared/entries-table/entr
 
 @Component({
   selector: 'kEntriesListHolder',
-  templateUrl: './entries-list-holder.component.html'
+  templateUrl: './entries-list-holder.component.html',
+  styles: [`.kTestPopupTrigger {
+    color: gray;
+    text-decoration: none;
+    opacity: 0.1;
+    position: absolute;
+    top: 100px;
+    z-index: 1;
+  }`]
 })
 export class EntriesListHolderComponent {
   @ViewChild(EntriesListComponent) private _entriesList: EntriesListComponent;
+  @ViewChild('popupTest') popupTest;
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
