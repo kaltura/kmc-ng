@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AppAuthentication, AppUser, PartnerPackageTypes, AppNavigator} from 'app-shared/kmc-shell';
 import {environment} from 'app-environment';
@@ -11,6 +11,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-wi
   styleUrls: ['./user-settings.component.scss']
 })
 export class UserSettingsComponent {
+  @Output() onChangeAccount: EventEmitter<any> = new EventEmitter();
   @ViewChild('editPopup') public editPopup: PopupWidgetComponent;
   timeoutID: number = null;
   public _userContext: AppUser;
@@ -26,7 +27,7 @@ export class UserSettingsComponent {
 
   logout() {
     this.userAuthentication.logout();
-    //this.appNavigator.navigateToLogout();
+    // this.appNavigator.navigateToLogout();
     document.location.reload();
   }
 

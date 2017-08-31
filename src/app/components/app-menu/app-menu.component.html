@@ -1,57 +1,69 @@
 <div #appmenu class="appMenu">
 
-      <div class="k-logo"></div>
+  <div class="k-logo"></div>
 
-      <div *ngFor="let item of menuConfig">
-        <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]" [class.disabled]="!item.enabled">{{'app.menu.'+item.titleToken | translate | uppercase}}</a>
-      </div>
+  <div *ngFor="let item of menuConfig">
+    <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]" [class.disabled]="!item.enabled">{{'app.menu.'+item.titleToken
+      | translate | uppercase}}</a>
+  </div>
 
-    <div class="kMenu-right">
-        <button pButton label="{{'app.menu.upload' | translate | uppercase}}"
-                class="kButtonDefault kUploadBtn"
-                (click)="uploadmenu.open()"></button>
-        <i class="kIconfolder_large"></i>
-        <i class="kIconuser"></i>
-        <i class="kIcongear"></i>
-        <i #help class="kIconhelp"  [class.open]="_helpOpen"></i>
-        <div #username class="kUserName" [class.open]="_userSettingsOpen">
-            <span>{{_userContext.fullName}}</span>
-            <i class="kIcondropdown_arrow_bottom"></i>
-        </div>
+  <div class="kMenu-right">
+    <button pButton label="{{'app.menu.upload' | translate | uppercase}}"
+            class="kButtonDefault kUploadBtn"
+            (click)="uploadmenu.open()"></button>
+    <i class="kIconfolder_large"></i>
+    <i class="kIconuser"></i>
+    <i class="kIcongear"></i>
+    <i #help class="kIconhelp" [class.open]="_helpOpen"></i>
+    <div #username class="kUserName" [class.open]="_userSettingsOpen">
+      <span>{{_userContext.fullName}}</span>
+      <i class="kIcondropdown_arrow_bottom"></i>
     </div>
+  </div>
 </div>
 
 <div class="appSubMenu" *ngIf="selectedMenuItem && showSubMenu && selectedMenuItem.children">
-    <div class="kContent">
-        <div *ngFor="let subitem of selectedMenuItem.children" class="subMenuContainer" [routerLinkActive]="['active']">
-          <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+subitem.routePath]" [class.disabled]="!subitem.enabled">{{'app.menu.'+subitem.titleToken | translate | uppercase}}</a>
-          <div class="linkMarker"></div>
-        </div>
+  <div class="kContent">
+    <div *ngFor="let subitem of selectedMenuItem.children" class="subMenuContainer" [routerLinkActive]="['active']">
+      <a [routerLinkActive]="['activeLink']" [routerLink]="['/'+subitem.routePath]" [class.disabled]="!subitem.enabled">{{'app.menu.'+subitem.titleToken
+        | translate | uppercase}}</a>
+      <div class="linkMarker"></div>
     </div>
+  </div>
 </div>
 
-<kPopupWidget #usersettings [appendTo]="appmenu" [popupWidth]="240" [popupHeight]="226" [closeBtn]="false" [targetRef]="username" [targetOffset]="{'x':-50, 'y': 30}" (onOpen)="_userSettingsOpen=true" (onClose)="_userSettingsOpen=false">
-    <kKMCUserSettings></kKMCUserSettings>
+<kPopupWidget #usersettings [appendTo]="appmenu" [popupWidth]="240" [popupHeight]="226" [closeBtn]="false"
+              [targetRef]="username" [targetOffset]="{'x':-50, 'y': 30}" (onOpen)="_userSettingsOpen=true"
+              (onClose)="_userSettingsOpen=false">
+  <kKMCUserSettings (onChangeAccount)="changeAccountPopup.open()"></kKMCUserSettings>
 </kPopupWidget>
 
-<kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="_helpOpen=true" (onClose)="_helpOpen=false">
-    <p class="kHelpTitle">{{'app.helpMenu.gettingStarted' | translate | uppercase}}</p>
-    <p class="kHelpLink">{{'app.helpMenu.kmcOverview' | translate}}</p>
-    <p class="kHelpLink">{{'app.helpMenu.mediaManagement' | translate}}</p>
-    <p class="kHelpLink">{{'app.helpMenu.productTour' | translate}}</p>
+<kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false"
+              [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="_helpOpen=true"
+              (onClose)="_helpOpen=false">
+  <p class="kHelpTitle">{{'app.helpMenu.gettingStarted' | translate | uppercase}}</p>
+  <p class="kHelpLink">{{'app.helpMenu.kmcOverview' | translate}}</p>
+  <p class="kHelpLink">{{'app.helpMenu.mediaManagement' | translate}}</p>
+  <p class="kHelpLink">{{'app.helpMenu.productTour' | translate}}</p>
+  <hr>
+  <p class="kHelpTitle">{{'app.helpMenu.support' | translate | uppercase}}</p>
+  <p class="kHelpLink">{{'app.helpMenu.userManual' | translate}}</p>
+  <p class="kHelpLink">{{'app.helpMenu.contact' | translate}}</p>
+  <div class="kContexualHelp">
     <hr>
-    <p class="kHelpTitle">{{'app.helpMenu.support' | translate | uppercase}}</p>
-    <p class="kHelpLink">{{'app.helpMenu.userManual' | translate}}</p>
-    <p class="kHelpLink">{{'app.helpMenu.contact' | translate}}</p>
-    <div class="kContexualHelp">
-        <hr>
-        <p class="kHelpTitle">{{'app.helpMenu.currentPage' | translate | uppercase}}</p>
-        <p class="kHelpLink">Contextual link 1</p>
-        <p class="kHelpLink">Contextual link 2</p>
-    </div>
+    <p class="kHelpTitle">{{'app.helpMenu.currentPage' | translate | uppercase}}</p>
+    <p class="kHelpLink">Contextual link 1</p>
+    <p class="kHelpLink">Contextual link 2</p>
+  </div>
 </kPopupWidget>
 
 
 <kPopupWidget #uploadmenu [popupWidth]="315" [popupHeight]="385" [closeBtn]="true" [modal]="true" [transparent]="true">
   <kKMCUploadMenu></kKMCUploadMenu>
+</kPopupWidget>
+
+<kPopupWidget #changeAccountPopup [popupWidth]="382" [popupHeight]="307" [modal]="true">
+  <ng-template>
+    <kChangeAccount></kChangeAccount>
+  </ng-template>
 </kPopupWidget>

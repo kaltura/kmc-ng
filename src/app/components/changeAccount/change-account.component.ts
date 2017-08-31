@@ -10,40 +10,17 @@ import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/po
   templateUrl: './change-account.component.html',
   styleUrls: ['./change-account.component.scss']
 })
-export class ChangeAccountComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ChangeAccountComponent implements OnInit{
 
   @Input() parentPopupWidget: PopupWidgetComponent;
 
 
   public changeAccountForm: FormGroup;
-  private _parentPopupStateChangeSubscribe: ISubscription;
   constructor(private _fb: FormBuilder) {
   }
 
   ngOnInit() {
     this._createForm();
-  }
-
-  ngAfterViewInit() {
-    if (this.parentPopupWidget) {
-      this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$
-        .subscribe(event => {
-          if (event.state === PopupWidgetStates.Open) {
-            // this._resetForm();
-            // this._confirmClose = true;
-            // this._uploadFileName = '';
-            // this._validationErrorMsg = '';
-            // this.fileToUpload = null;
-            // this.changeAccountForm.get('label').setValue(this.currentCaption.label);
-            // this.changeAccountForm.get('language').setValue(KalturaUtils.getCodeByLanguage(this.currentCaption.language.toString()).toUpperCase());
-            // this.changeAccountForm.get('format').setValue(this.currentCaption.format);
-          }
-        });
-    }
-  }
-
-  ngOnDestroy() {
-    this._parentPopupStateChangeSubscribe.unsubscribe();
   }
 
   public _saveAndClose(): void {
