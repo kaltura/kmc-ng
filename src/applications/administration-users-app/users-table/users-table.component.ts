@@ -2,14 +2,20 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  Input,
-  ChangeDetectorRef,
-  AfterViewInit
+  AfterViewInit,
+  Output,
+  EventEmitter,
+  ViewChild
 } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { UsersStore } from '../users-store/users-store.service';
+import {
+  Menu,
+  MenuItem
+} from 'primeng/primeng';
+import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 
 @Component({
 	selector: 'kUsersTable',
@@ -17,70 +23,94 @@ import { UsersStore } from '../users-store/users-store.service';
 	styleUrls: ['./users-table.component.scss']
 })
 export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
-  public _users: any[] = [];
-  private _deferredUsers : any[];
-  public _deferredLoading = true;
   public _blockerMessage: AreaBlockerMessage = null;
   public rowTrackBy: Function = (index: number, item: any) => {return item.id};
-  public userFullName: string = '';
-  public userRole: string = '';
+  public _users: any[] = [];
+  public _items: MenuItem[];
+  private actionsMenuUserId: string = "";
 
-  @Input() set users(data: any[]) {
-    if (!this._deferredLoading) {
-      this._users = [];
-      this.cdRef.detectChanges();
-      this._users = data;
-      this.cdRef.detectChanges();
-    } else {
-      this._deferredUsers = data
-    }
-  }
+  @ViewChild('actionsmenu') private actionsMenu: Menu;
+  @Output() actionSelected = new EventEmitter<any>();
 
 	constructor(
 	  public usersStore: UsersStore,
-    private cdRef: ChangeDetectorRef,
     private _appAuthentication: AppAuthentication,
     private _appLocalization: AppLocalization
   ) {}
+
+  buildMenu(userId: string): void {
+    this._items = [{
+      label: this._appLocalization.get("applications.content.table.edit"),
+      command: () => {
+        console.log('edit', userId);
+      }
+    }];
+    if(this._appAuthentication.appUser.id !== userId) {
+      this._items.push(
+        {
+          label: this._appLocalization.get("applications.content.table.blockUnblock"),
+          command: () => {
+            console.log('block/unblock', this.actionsMenuUserId);
+          }
+        },
+        {
+          label: this._appLocalization.get("applications.content.table.delete"),
+          command: () => {
+            console.log('delete', this.actionsMenuUserId);
+          }
+        }
+      );
+    }
+  }
+
+  openActionsMenu(event: any, user: KalturaUser) {
+    if (this.actionsMenu) {
+      this.actionsMenu.toggle(event);
+      if(this.actionsMenuUserId !== user.id) {
+        this.buildMenu(user.id);
+        this.actionsMenuUserId = user.id;
+      }
+    }
+  }
 
 	ngOnInit() {
     this.usersStore.users$
       .cancelOnDestroy(this)
       .subscribe(
         response => {
-          response.items.forEach(user =>
-          {
+          this._users = response.items.map(user => {
+            let userFullName: string = '',
+                roleName: string = '';
+
             if(this._appAuthentication.appUser.id === user.id) {
-              this.userFullName = `(${this._appLocalization.get('applications.content.users.you')})`;
+              userFullName = `(${this._appLocalization.get('applications.content.users.you')})`;
             } else if (user.isAccountOwner) {
-              this.userFullName = `(${this._appLocalization.get('applications.content.users.accountOwner')})`;
+              userFullName = `(${this._appLocalization.get('applications.content.users.accountOwner')})`;
             }
             if(this._appAuthentication.appUser.id === user.id && user.isAccountOwner) {
-              this.userFullName = `(${this._appLocalization.get('applications.content.users.you')}, ${this._appLocalization.get('applications.content.users.accountOwner')})`;
+              userFullName = `(${this._appLocalization.get('applications.content.users.you')}, ${this._appLocalization.get('applications.content.users.accountOwner')})`;
+            }
+
+            this.usersStore.roles.forEach(role => {
+              if(user.roleIds === role.id.toString()) {
+                roleName = role.name;
+              }
+            });
+
+            return {
+              status: user.status,
+              fullName: `${user.fullName} ${userFullName}`,
+              id: user.id,
+              email: user.email,
+              roleIds: roleName,
+              lastLoginTime: user.lastLoginTime
             }
           });
         }
       );
-
-    this.usersStore.roles$
-      .cancelOnDestroy(this)
-      .subscribe(
-        response => {
-
-        }
-      );
   }
 
-  ngAfterViewInit() {
-    if (this._deferredLoading) {
-      // use timeout to allow the DOM to render before setting the data to the datagrid. This prevents the screen from hanging during datagrid rendering of the data.
-      setTimeout(()=> {
-        this._deferredLoading = false;
-        this._users = this._deferredUsers;
-        this._deferredUsers = null;
-      }, 0);
-    }
-  }
+  ngAfterViewInit() {}
 
 	ngOnDestroy() {}
 }

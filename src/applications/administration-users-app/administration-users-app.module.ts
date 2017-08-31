@@ -5,7 +5,13 @@ import { routing } from './administration-users-app.routes';
 import { AdministrationUsersComponent } from './administration-users.component';
 import { UsersComponentsList } from './users-table/users-components-list';
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
-import { DataTableModule } from 'primeng/primeng';
+import { KalturaPrimeNgUIModule } from "@kaltura-ng/kaltura-primeng-ui";
+import {
+  ButtonModule,
+  DataTableModule,
+  MenuModule,
+  PaginatorModule
+} from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 
 @NgModule({
@@ -14,6 +20,10 @@ import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
         AreaBlockerModule,
         DataTableModule,
         KalturaCommonModule,
+        PaginatorModule,
+        MenuModule,
+        ButtonModule,
+        KalturaPrimeNgUIModule,
         RouterModule.forChild(routing)
     ],
     declarations: [

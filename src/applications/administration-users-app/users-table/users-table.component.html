@@ -1,4 +1,6 @@
-<k-area-blocker [message]="_blockerMessage" [showLoader]="(usersStore.state$ | async)?.loading">
+<k-area-blocker kFillHeight
+  [showLoader]="(usersStore.state$ | async)?.loading"
+  [message]="_blockerMessage">
   <div class="kUsersTable">
     <p-dataTable
       [value]="_users"
@@ -6,15 +8,14 @@
       scrollHeight="100%"
       dataKey="id"
       [rowTrackBy]="rowTrackBy">
-      <p-column selectionMode="multiple"></p-column>
-      <p-column field="status" header="{{'applications.content.table.status' | translate}}" [sortable]="false">
+      <p-column field="status" styleClass="kTableStatus" header="{{'applications.content.table.status' | translate}}" [sortable]="false">
         <ng-template let-col let-user="rowData" pTemplate="body">
           <span class="kTitle">{{user[col.field] | status}}</span>
         </ng-template>
       </p-column>
-      <p-column field="fullName" header="{{'applications.content.table.userName' | translate}}" [sortable]="false">
+      <p-column field="fullName" styleClass="kTableFullName" header="{{'applications.content.table.userName' | translate}}" [sortable]="false">
         <ng-template let-col let-user="rowData" pTemplate="body">
-          <span class="kTitle">{{user[col.field]}} {{userFullName}}</span>
+          <span class="kTitle">{{user[col.field]}}</span>
         </ng-template>
       </p-column>
       <p-column field="id" header="{{'applications.content.table.userId' | translate}}" [sortable]="false">
@@ -37,6 +38,14 @@
           <span class="kTitle">{{user[col.field] | date:'MM/dd/yy HH:mm'}}</span>
         </ng-template>
       </p-column>
+      <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
+        <ng-template let-col let-user="rowData" pTemplate="body">
+          <div class="kUsersTableActions">
+            <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, user)"></button>
+          </div>
+        </ng-template>
+      </p-column>
     </p-dataTable>
+    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'"></p-menu>
   </div>
 </k-area-blocker>

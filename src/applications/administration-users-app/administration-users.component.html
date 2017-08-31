@@ -11,8 +11,16 @@
           {{'applications.content.users.usersUpgrade' | translate}}
         </div>
       </div>
-      <kUsersTable
-        [users]="(usersStore.users$ | async)?.items"></kUsersTable>
+      <kUsersTable class="kUsersTable"></kUsersTable>
+      <div class="kUsersTableFooter" #footer *ngIf="(usersStore.users$ | async)?.totalCount">
+        <p-paginator
+          [rows]="_filter.pageSize"
+          [first]="_filter.pageIndex * _filter.pageSize"
+          [rowsPerPageOptions]="[25,50,75,100]"
+          [totalRecords]="(usersStore.users$ | async)?.totalCount"
+          (onPageChange)="onPaginationChanged($event)"></p-paginator>
+        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+      </div>
     </div>
   </div>
 </k-area-blocker>

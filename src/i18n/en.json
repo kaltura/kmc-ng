@@ -244,7 +244,9 @@
         "userId": "User ID",
         "emailAddress": "Email Address",
         "role": "Role",
-        "lastLogin": "Last Login"
+        "lastLogin": "Last Login",
+        "edit": "Edit",
+        "blockUnblock": "Block / Unblock"
       },
       "paginator": {
         "showRows": "Show rows:"

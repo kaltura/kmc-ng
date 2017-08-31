@@ -24,6 +24,13 @@ import { KalturaUserListResponse } from 'kaltura-typescript-client/types/Kaltura
 import { KalturaUserRoleListResponse } from 'kaltura-typescript-client/types/KalturaUserRoleListResponse';
 import { KalturaPermissionListResponse } from 'kaltura-typescript-client/types/KalturaPermissionListResponse';
 import { KalturaPartner } from 'kaltura-typescript-client/types/KalturaPartner';
+import { BrowserService } from 'app-shared/kmc-shell';
+
+export interface QueryData
+{
+  pageIndex : number,
+  pageSize : number
+}
 
 @Injectable()
 export class UsersStore implements OnDestroy {
@@ -32,20 +39,50 @@ export class UsersStore implements OnDestroy {
   private _partnerPermissions  = new BehaviorSubject<{items: KalturaPermission[]}>({items: []});
   private _partnerInfo  = new BehaviorSubject<{adminLoginUsersQuota: number, adminUserId: string}>({adminLoginUsersQuota: 0, adminUserId: null});
 	private _state = new BehaviorSubject<{loading : boolean}>({ loading : false});
+  private _querySource = new BehaviorSubject<QueryData>({
+    pageIndex: 1,
+    pageSize: 25
+  });
 
 	public users$ = this._users.asObservable();
   public roles$ = this._roles.asObservable();
   public partnerPermissions$ = this._partnerPermissions.asObservable();
   public partnerInfo$ = this._partnerInfo.asObservable();
 	public state$ = this._state.asObservable();
+  public query$ = this._querySource.monitor('queryData update');
 
 	constructor(
-    private _kalturaServerClient: KalturaClient
+    private _kalturaServerClient: KalturaClient,
+    private _browserService: BrowserService,
   ) {
+    const defaultPageSize = this._browserService.getFromLocalStorage("users.list.pageSize");
+    if (defaultPageSize !== null) {
+      this._updateQueryData({
+        pageSize: defaultPageSize
+      });
+    }
 	  this._loadData();
   }
 
-	ngOnDestroy() {}
+  public get roles() : KalturaUserRole[] {
+    return this._roles.getValue().items;
+  }
+
+  private _updateQueryData(partialData : Partial<QueryData>) : void
+  {
+    const newQueryData =Object.assign({}, this._querySource.getValue(), partialData);
+    this._querySource.next(newQueryData);
+
+    if (partialData.pageSize)
+    {
+      this._browserService.setInLocalStorage("users.list.pageSize", partialData.pageSize);
+    }
+  }
+
+  public reload(query: Partial<QueryData>): void {
+	  this._updateQueryData(query);
+	  this._loadData();
+  }
 
   private _loadData(): void {
     this._state.next({loading: true});
@@ -58,10 +95,6 @@ export class UsersStore implements OnDestroy {
               statusEqual: KalturaUserRoleStatus.active,
               orderBy: KalturaUserRoleOrderBy.idAsc.toString(),
               tagsMultiLikeOr: 'kmc'
-            }),
-            pager: new KalturaFilterPager({
-              pageSize: 25,
-              pageIndex: 1
             })
           }
         ),
@@ -72,6 +105,10 @@ export class UsersStore implements OnDestroy {
               loginEnabledEqual: KalturaNullableBoolean.trueValue,
               statusIn: KalturaUserStatus.active + "," + KalturaUserStatus.blocked,
               orderBy: KalturaUserOrderBy.createdAtAsc.toString()
+            }),
+            pager: new KalturaFilterPager({
+              pageSize: this._querySource.getValue().pageSize,
+              pageIndex: this._querySource.getValue().pageIndex
             })
           }
         ),
@@ -124,6 +161,10 @@ export class UsersStore implements OnDestroy {
           });
         }
       );
+  }
+
+  ngOnDestroy() {
+    this._querySource.complete();
   }
 }
 

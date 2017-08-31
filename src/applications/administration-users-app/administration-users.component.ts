@@ -14,6 +14,11 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
   usersStatus: string = '';
   usersAvailable: string = '';
 
+  _filter = {
+    pageIndex : 0,
+    pageSize : null, // pageSize is set to null by design. It will be modified after the first time loading playlists
+  };
+
   constructor(
     public usersStore: UsersStore,
     private _appLocalization: AppLocalization,
@@ -24,7 +29,25 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
     this._browserService.openLink(environment.core.externalLinks.UPGRADE_ACCOUNT, {}, '_blank');
   }
 
+  onPaginationChanged(state : any) : void {
+    if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
+      this._filter.pageSize = state.page + 1;
+      this._filter.pageIndex = state.rows;
+      this.usersStore.reload({
+        pageIndex: state.page + 1,
+        pageSize: state.rows
+      });
+    }
+  }
+
   ngOnInit() {
+    this.usersStore.query$.subscribe(
+      query => {
+        this._filter.pageSize = query.pageSize;
+        this._filter.pageIndex = query.pageIndex - 1;
+      }
+    );
+
     this.usersStore.users$
       .cancelOnDestroy(this)
       .subscribe(
