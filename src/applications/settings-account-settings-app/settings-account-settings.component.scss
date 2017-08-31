@@ -78,9 +78,9 @@
     margin: 0;
   }
 
-  .form-section {
+  .kFormSection {
     font-size: 15px;
-    padding: 27px 29px;
+    padding: 29px 27px;
     width: 710px;
 
     .kIconwarning {
@@ -93,7 +93,7 @@
     .kRow {
 
       &:first-child {
-        padding-top: 0;
+        padding-top: 11px;
       }
 
       display: -webkit-box;

@@ -16,7 +16,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin: 24px 0;
+    margin: 26px 0;
   }
 }
 
@@ -72,15 +72,15 @@
   background: #FFFFFF;
   margin-top: 24px;
 
-  .form-section {
+  .kFormSection {
     font-size: 15px;
     padding: 27px 29px;
     width: 615px;
-    .kRow {
 
-      &:first-child {
-        padding-top: 0;
-      }
+    .kTitle{
+      padding-bottom: 20px;
+    }
+    .kRow {
 
       display: -webkit-box;
       display: -ms-flexbox;

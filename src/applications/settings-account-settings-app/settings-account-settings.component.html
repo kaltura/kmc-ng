@@ -1,24 +1,27 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
   <form [formGroup]="accountSettingsForm" novalidate (ngSubmit)="onSubmit()" class="kAccountSettingsWrapper kContent">
     <section class="kHeader">
-      <div class="kTitle"><i class="kIconUser-info kTitleIcon"></i>{{'applications.settings.accountSettings.accountInfo' | translate}}</div>
+      <div class="kTitle"><i class="kIconUser-info kTitleIcon"></i>{{'applications.settings.accountSettings.accountInfo'
+        | translate}}
+      </div>
     </section>
     <section class="kFormMetadata">
-        <div class="kReadonlyData">{{'applications.settings.accountSettings.partnerID' | translate}}: {{partnerId}} |
-          {{'applications.settings.accountSettings.adminEmail' | translate}}:
-          {{partnerAdminEmail}}
-        </div>
-        <div *ngIf="!accountSettingsForm.pristine && !accountSettingsForm.valid && accountSettingsForm.touched" class="kInvalidFields">
-          <span>{{'applications.settings.accountSettings.errors.invalidFields' | translate}}</span>
-        </div>
+      <div class="kReadonlyData">{{'applications.settings.accountSettings.partnerID' | translate}}: {{partnerId}} |
+        {{'applications.settings.accountSettings.adminEmail' | translate}}:
+        {{partnerAdminEmail}}
+      </div>
+      <div *ngIf="!accountSettingsForm.pristine && !accountSettingsForm.valid && accountSettingsForm.touched"
+           class="kInvalidFields">
+        <span>{{'applications.settings.accountSettings.errors.invalidFields' | translate}}</span>
+      </div>
     </section>
     <section class="kFormContainer">
-      <div class="form-section">
+      <div class="kFormSection">
         <i class="kIconwarning"></i>
         <span>{{'applications.settings.accountSettings.informationMessage' | translate}}</span>
       </div>
       <hr>
-      <div class="form-section">
+      <div class="kFormSection">
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.accountSettings.name' | translate}}</span>
           <div class="kRequired" [ngClass]="{'kHasError':!accountSettingsForm.controls['name'].valid &&
@@ -66,6 +69,11 @@
                  accountSettingsForm.controls['phone'].hasError('required')"
                  class="error">
               {{'applications.settings.accountSettings.errors.requiredPhone' | translate}}
+            </div>
+            <div *ngIf="accountSettingsForm.controls['phone'].touched &&
+                        accountSettingsForm.controls['phone'].hasError('phonePattern')"
+                 class="error">
+              {{'applications.settings.accountSettings.errors.phoneInvalid' | translate}}
             </div>
           </div>
         </div>
