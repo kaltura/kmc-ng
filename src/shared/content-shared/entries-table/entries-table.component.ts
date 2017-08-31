@@ -23,7 +23,8 @@ export interface EntriesTableConfig {
   scrollHeight?: string;
   fillHeight?: boolean;
   columns?: EntriesTableColumns;
-  rowActions?: Array<CustomMenuItem>
+  rowActions?: Array<CustomMenuItem>;
+  paginator?: EntriesTablePaginator;
 }
 
 export interface EntriesTableColumns {
@@ -37,6 +38,11 @@ export interface EntriesTableColumns {
 export interface CustomMenuItem extends MenuItem {
   metadata: any;
   commandName: string
+}
+
+export interface EntriesTablePaginator {
+  rowsPerPageOptions?: Array<number>;
+  rowsCount?: number;
 }
 
 @Component({

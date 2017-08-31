@@ -51,7 +51,7 @@
       <kEntriesTable class="kEntriesTable"
                      [entries]="(_entriesStore.entries$ | async)?.items"
                      [filter]="_filter"
-                     [tableConfig]="tableConfig"
+                     [tableConfig]="_tableConfig"
                      (sortChanged)="onSortChanged($event)"
                      [(selectedEntries)]="selectedEntries"
       ></kEntriesTable>
@@ -61,9 +61,11 @@
           [rows]="_filter.pageSize"
           [first]="_filter.pageIndex * _filter.pageSize"
           [totalRecords]="(_entriesStore.entries$ | async)?.totalCount | kMaxEntries"
-          [rowsPerPageOptions]="[25,50,75,100]"
+          [rowsPerPageOptions]="_rowsPerPageOptions"
           (onPageChange)="onPaginationChanged($event)"></p-paginator>
-        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+        <span *ngIf="_rowsPerPageOptions?.length" class="kPaginatorShowRowsLabel">
+          {{'applications.content.paginator.showRows' | translate}}
+        </span>
       </div>
     </div>
   </div>

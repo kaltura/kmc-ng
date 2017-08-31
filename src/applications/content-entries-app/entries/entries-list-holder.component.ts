@@ -30,6 +30,9 @@ export class EntriesListHolderComponent {
       duration: { sortable: true, width: '104px' },
       status: { width: '100px' },
       rowActions: []
+    },
+    paginator: {
+      rowsPerPageOptions: [25, 50, 75, 100]
     }
   };
 

@@ -34,6 +34,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaLiveStreamAdminEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamAdminEntry';
 import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamEntry';
 import { KalturaExternalMediaEntry } from 'kaltura-typescript-client/types/KalturaExternalMediaEntry';
+import { environment } from 'app-environment';
 
 export type UpdateStatus = {
   loading: boolean;
@@ -115,12 +116,20 @@ export class EntriesStore implements OnDestroy {
   constructor(private kalturaServerClient: KalturaClient,
               private browserService: BrowserService,
               private metadataProfileService: MetadataProfileStore) {
-    const defaultPageSize = this.browserService.getFromLocalStorage('entries.list.pageSize');
-    if (defaultPageSize !== null) {
-      this._queryData.pageSize = defaultPageSize;
+    this.setPageSize(this.getDefaultPageSize());
+    this._getMetadataProfiles();
+  }
+
+  public getDefaultPageSize(hasPagerOptions = false): number {
+    if (hasPagerOptions) {
+      return this.browserService.getFromLocalStorage('entries.list.pageSize') || environment.entriesShared.pageSize;
     }
 
-    this._getMetadataProfiles();
+    return environment.entriesShared.pageSize;
+  }
+
+  public setPageSize(pageSize: number): void {
+    this._queryData.pageSize = pageSize || this.getDefaultPageSize();
   }
 
   public get queryData(): QueryData {
