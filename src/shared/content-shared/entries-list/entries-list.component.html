@@ -5,10 +5,17 @@
         <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries$ | async)?.totalCount">{{(_entriesStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
 
         <div [class.kHidden]="!selectedEntries.length" class="kBulkOperations">
-          <span class="kSelectedEntriesLabel">• {{selectedEntries.length}} {{'applications.content.entries.selected' | translate}}</span>
-          <ng-content select=".bulk-actions"></ng-content>
+          <span *ngIf="bulkWrapper.children.length !== 0"
+                class="kSelectedEntriesLabel">
+            • {{selectedEntries.length}} {{'applications.content.entries.selected' | translate}}
+          </span>
+          <div #bulkWrapper>
+            <ng-content select=".bulk-actions"></ng-content>
+          </div>
 
-          <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
+          <a *ngIf="bulkWrapper.children.length !== 0"
+             class="kBulkCancel"
+             (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
         </div>
         <div [class.kHidden]="selectedEntries.length" class="kFilters">
           <input type="text"
@@ -50,6 +57,7 @@
       </kTags>
       <kEntriesTable class="kEntriesTable"
                      [entries]="(_entriesStore.entries$ | async)?.items"
+                     [showSelect]="bulkWrapper.children.length !== 0"
                      [filter]="_filter"
                      [tableConfig]="_tableConfig"
                      (sortChanged)="onSortChanged($event)"

@@ -14,7 +14,8 @@
                  (selectionChange)="_onSelectionChange($event)"
                  (onSort)="_onSortChanged($event)"
                  [(selection)]="selectedEntries">
-      <p-column [style]="{'width':'44px', 'padding-left': '14px'}"
+      <p-column *ngIf="showSelect"
+                [style]="{'width':'44px', 'padding-left': '14px'}"
                 selectionMode="multiple"></p-column>
 
       <p-column *ngIf="_columns.thumbnailUrl"
