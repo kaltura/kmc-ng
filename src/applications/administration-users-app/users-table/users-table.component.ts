@@ -38,19 +38,19 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
     private _appLocalization: AppLocalization
   ) {}
 
-  buildMenu(userId: string): void {
+  buildMenu(user: KalturaUser): void {
     this._items = [{
       label: this._appLocalization.get("applications.content.table.edit"),
       command: () => {
-        console.log('edit', userId);
+        console.log('edit', user.id);
       }
     }];
-    if(this._appAuthentication.appUser.id !== userId) {
+    if(this._appAuthentication.appUser.id !== user.id || this.usersStore.partnerInfo.adminUserId !== user.id) {
       this._items.push(
         {
           label: this._appLocalization.get("applications.content.table.blockUnblock"),
           command: () => {
-            console.log('block/unblock', this.actionsMenuUserId);
+            this.usersStore.toggleUserStatus(user);
           }
         },
         {
@@ -67,7 +67,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
       if(this.actionsMenuUserId !== user.id) {
-        this.buildMenu(user.id);
+        this.buildMenu(user);
         this.actionsMenuUserId = user.id;
       }
     }

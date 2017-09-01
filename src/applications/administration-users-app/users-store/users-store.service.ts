@@ -25,6 +25,7 @@ import { KalturaUserRoleListResponse } from 'kaltura-typescript-client/types/Kal
 import { KalturaPermissionListResponse } from 'kaltura-typescript-client/types/KalturaPermissionListResponse';
 import { KalturaPartner } from 'kaltura-typescript-client/types/KalturaPartner';
 import { BrowserService } from 'app-shared/kmc-shell';
+import {UserUpdateAction} from "kaltura-typescript-client/types/UserUpdateAction";
 
 export interface QueryData
 {
@@ -66,6 +67,10 @@ export class UsersStore implements OnDestroy {
 
   public get roles() : KalturaUserRole[] {
     return this._roles.getValue().items;
+  }
+
+  public get partnerInfo() : any {
+    return this._partnerInfo.getValue();
   }
 
   private _updateQueryData(partialData : Partial<QueryData>) : void
@@ -123,44 +128,95 @@ export class UsersStore implements OnDestroy {
         new PartnerGetInfoAction ()
       )
     )
-      .cancelOnDestroy(this)
-      .subscribe(
-        data => {
-          data.forEach(response => {
-            this._state.next({loading: false});
-            switch (response.result.constructor) {
-              case KalturaUserRoleListResponse:
-                this._roles.next({
-                  items : response.result.objects,
-                  totalCount: response.result.totalCount
-                });
-                break;
-              case KalturaUserListResponse:
-                this._users.next({
-                  items : response.result.objects,
-                  totalCount: response.result.totalCount
-                });
-                break;
-              case KalturaPermissionListResponse:
-                this._partnerPermissions.next({
-                  items : response.result.objects
-                });
-                break;
-              case KalturaPartner:
-                this._partnerInfo.next({
-                  adminLoginUsersQuota : response.result.adminLoginUsersQuota,
-                  adminUserId: response.result.adminUserId
-                });
-                break;
-            }
-          })
-        },
-        error => {
-          this._state.next({
-            loading: true
-          });
-        }
-      );
+    .cancelOnDestroy(this)
+    .subscribe(
+      data => {
+        data.forEach(response => {
+          this._state.next({loading: false});
+
+          switch (response.result.constructor) {
+            case KalturaUserRoleListResponse:
+              this._roles.next({
+                items : response.result.objects,
+                totalCount: response.result.totalCount
+              });
+              break;
+            case KalturaUserListResponse:
+              this._users.next({
+                items : response.result.objects,
+                totalCount: response.result.totalCount
+              });
+              break;
+            case KalturaPermissionListResponse:
+              this._partnerPermissions.next({
+                items : response.result.objects
+              });
+              break;
+            case KalturaPartner:
+              this._partnerInfo.next({
+                adminLoginUsersQuota : response.result.adminLoginUsersQuota,
+                adminUserId: response.result.adminUserId
+              });
+              break;
+          }
+        })
+      },
+      error => {
+        this._state.next({
+          loading: true
+        });
+      }
+    );
+  }
+
+  public toggleUserStatus(user: KalturaUser): void {
+    this._state.next({loading: true});
+    user.status = +!user.status;
+
+    this._kalturaServerClient.multiRequest(
+      new KalturaMultiRequest(
+        new UserUpdateAction (
+          {
+            userId: user.id,
+            user: new KalturaUser({status: user.status})
+          }
+        ),
+        new UserListAction(
+          {
+            filter: new KalturaUserFilter({
+              isAdminEqual: KalturaNullableBoolean.trueValue,
+              loginEnabledEqual: KalturaNullableBoolean.trueValue,
+              statusIn: KalturaUserStatus.active + "," + KalturaUserStatus.blocked,
+              orderBy: KalturaUserOrderBy.createdAtAsc.toString()
+            }),
+            pager: new KalturaFilterPager({
+              pageSize: this._querySource.getValue().pageSize,
+              pageIndex: this._querySource.getValue().pageIndex
+            })
+          }
+        )
+      )
+    )
+    .cancelOnDestroy(this)
+    .subscribe(
+      data => {
+        data.forEach(response => {
+          this._state.next({loading: false});
+
+          if(response.result instanceof KalturaUserListResponse) {
+            this._users.next({
+              items : response.result.objects,
+              totalCount: response.result.totalCount
+            });
+          }
+        })
+      },
+      error => {
+        this._state.next({
+          loading: true
+        });
+      }
+    );
   }
 
   ngOnDestroy() {
