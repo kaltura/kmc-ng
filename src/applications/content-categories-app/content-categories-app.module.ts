@@ -1,4 +1,4 @@
-import { CategoriesTreeComponent } from './../content-entries-app/shared/categories-tree/categories-tree.component';
+//import { CategoriesTreeComponent } from './../content-entries-app/shared/categories-tree/categories-tree.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';

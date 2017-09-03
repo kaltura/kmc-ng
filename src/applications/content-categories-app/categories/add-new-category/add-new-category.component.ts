@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { CategoriesTreeComponent } from '../../../content-entries-app/shared/categories-tree/categories-tree.component';
+//import { CategoriesTreeComponent } from '../../../content-entries-app/shared/categories-tree/categories-tree.component';
 import { TreeModule } from 'primeng/primeng';
 
 @Component({
@@ -20,7 +20,7 @@ export class AddNewCategory implements AfterViewInit, OnDestroy {
     @Input() value: EntryCategoryItem[] = [];
     @Output() showNotSupportedMsg = new EventEmitter<boolean>();
     @Output() valueChange = new EventEmitter<EntryCategoryItem[]>();
-    @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
+    //@ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
     _addNewCategoryForm: FormGroup;
     private _showConfirmationOnClose: boolean = true;
     public _categoriesLoaded = false;
@@ -91,20 +91,20 @@ export class AddNewCategory implements AfterViewInit, OnDestroy {
 
     private updateTreeSelections(expandNodeId = null): void {
 
-        let treeSelectedItems = [];
+        // let treeSelectedItems = [];
 
-        this._selectedCategories.forEach(category => {
-            const treeItem = this._categoriesTree.findNodeByFullIdPath(category.fullIdPath);
+        // this._selectedCategories.forEach(category => {
+        //     const treeItem = this._categoriesTree.findNodeByFullIdPath(category.fullIdPath);
 
-            if (treeItem) {
-                treeSelectedItems.push(treeItem);
-                if (expandNodeId && expandNodeId === category.id) {
-                    treeItem.expand();
-                }
-            }
-        });
+        //     if (treeItem) {
+        //         treeSelectedItems.push(treeItem);
+        //         if (expandNodeId && expandNodeId === category.id) {
+        //             treeItem.expand();
+        //         }
+        //     }
+        // });
 
-        this._treeSelection = treeSelectedItems;
+        // this._treeSelection = treeSelectedItems;
     }
 
     public _onTreeNodeSelected({ node }: { node: any }) {
