@@ -29,7 +29,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
 	public _categoryHeader: string;
 	public _showLoader = false;
 	public _areaBlockerMessage: AreaBlockerMessage;
-	public _currentCategoryId: string;
+	public _currentCategoryId: number;
 	public _enablePrevButton: boolean;
 	public _enableNextButton: boolean;
 	public _categoryHasChanges: boolean;
@@ -87,8 +87,6 @@ export class CategoryComponent implements OnInit, OnDestroy {
 							break;
 						case ActionTypes.CategoryLoaded:
 							this._categoryHeader = this._appLocalization.get('applications.content.categoryDetails.header', { 0: this._categoryStore.category.name });;
-							this._updateNavigationState();
-							this._categoryHasChanges = false;
 							break;
 						case ActionTypes.CategoryLoadingFailed:
 							let message = status.error ? status.error.message : '';
@@ -197,7 +195,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
 		if (this._currentCategoryId) {
 			const prevCategoryId = this._categoriesStore.getPrevCategoryId(this._currentCategoryId);
 			if (prevCategoryId) {
-				this._categoryStore.openCategory(parseInt(prevCategoryId));
+				this._categoryStore.openCategory(prevCategoryId);
 			}
 		}
 	}
@@ -206,7 +204,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
 		if (this._currentCategoryId) {
 			const nextCategoryId = this._categoriesStore.getNextCategoryId(this._currentCategoryId);
 			if (nextCategoryId) {
-				this._categoryStore.openCategory(parseInt(nextCategoryId));
+				this._categoryStore.openCategory(nextCategoryId);
 			}
 		}
 	}

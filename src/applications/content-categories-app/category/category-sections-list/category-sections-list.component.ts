@@ -1,3 +1,4 @@
+import { ISubscription } from 'rxjs/Subscription';
 import { Component, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
 import { CategoryService } from '../category.service';
 import { SectionWidgetItem, CategorySectionsListHandler } from './category-sections-list-handler';
@@ -15,6 +16,7 @@ export class CategorySectionsListComponent implements AfterViewInit, OnInit, OnD
   public _showList = false;
   public _sections: SectionWidgetItem[] = [];
   private _handler: CategorySectionsListHandler;
+  private _categorySectionListSubscription: ISubscription;
 
   constructor(private _categoryFormManager: CategoryFormManager, public _categoryService: CategoryService) {
   }
@@ -27,7 +29,7 @@ export class CategorySectionsListComponent implements AfterViewInit, OnInit, OnD
     this._loading = true;
     this._handler = this._categoryFormManager.attachWidget(CategorySectionsListHandler);
 
-    this._handler.sections$.subscribe(
+    this._categorySectionListSubscription = this._handler.sections$.subscribe(
       sections => {
         this._loading = false;
         this._sections = sections;
@@ -38,6 +40,7 @@ export class CategorySectionsListComponent implements AfterViewInit, OnInit, OnD
 
   ngOnDestroy() {
     this._categoryFormManager.detachWidget(this._handler);
+    this._categorySectionListSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {

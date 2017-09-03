@@ -55,9 +55,9 @@ export class CategoryService implements OnDestroy {
 	private _reloadCategoriesOnLeave = false;
 	private _category: BehaviorSubject<KalturaCategory> = new BehaviorSubject<KalturaCategory>(null);
 	public category$ = this._category.asObservable();
-	private _categoryId: string;
+	private _categoryId: number;
 
-	public get categoryId(): string {
+	public get categoryId(): number {
 		return this._categoryId;
 	}
 	public get category(): KalturaCategory {
@@ -231,7 +231,7 @@ export class CategoryService implements OnDestroy {
 		}
 	}
 
-	private _loadCategory(categoryId: string): void {
+	private _loadCategory(categoryId: number): void {
 		if (this._loadCategorySubscription) {
 			this._loadCategorySubscription.unsubscribe();
 			this._loadCategorySubscription = null;
@@ -244,14 +244,14 @@ export class CategoryService implements OnDestroy {
 		this._state.next({ action: ActionTypes.CategoryLoading });
 		this._sectionsManager.onDataLoading(categoryId);
 
-		this._loadCategorySubscription = this._getCategory(parseInt(categoryId))
+		this._loadCategorySubscription = this._getCategory(categoryId)
 			.cancelOnDestroy(this)
 			.subscribe(
 			response => {
 				if (response instanceof KalturaCategory) {
 
 					this._category.next(response);
-					this._categoryId = response.id.toString();
+					this._categoryId = response.id;
 
 					const dataLoadedResult = this._sectionsManager.onDataLoaded(response);
 

@@ -26,7 +26,7 @@ export class CategorySectionsListHandler extends CategoryFormWidget {
     }
 
     protected _onDataLoading(dataId: any): void {
-        this._clearWidgets();
+        this._clearSectionsList();
     }
 
     protected _onActivate(firstTimeActivating: boolean) {
@@ -72,7 +72,7 @@ export class CategorySectionsListHandler extends CategoryFormWidget {
 	    });
     }
 
-    private _clearWidgets(): void {
+    private _clearSectionsList(): void {
         this._sections.next([]);
 
     }

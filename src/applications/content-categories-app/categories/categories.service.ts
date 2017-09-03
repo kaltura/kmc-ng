@@ -46,40 +46,42 @@ export class CategoriesService implements OnDestroy {
         }
     }
 
-    public getNextCategoryId(categoryId: string): string | null {
+    public getNextCategoryId(categoryId: number): number | null {
         const categories = this._categories.getValue().items;
+        if (!categories)
+            return null;
 
         // validate category exists
-        const currentCategory = categories.find(category => category.id.toString() === categoryId);
-        if (!currentCategory) {
+        const currentCategoryIndex = categories.findIndex(category => category.id == categoryId);
+        if (currentCategoryIndex == -1) {
             console.log("[kaltura] could not find the category ID");
             return null;
         }
 
         // get next category ID
-        const currentCategoryIndex = categories.indexOf(currentCategory);
         if (currentCategoryIndex < categories.length - 1) {
-            return (categories[currentCategoryIndex + 1].id).toString();
+            return (categories[currentCategoryIndex + 1].id);
         }
         else {
             return null;
         }
     }
 
-    public getPrevCategoryId(categoryId: string): string | null {
+    public getPrevCategoryId(categoryId: number): number | null {
         const categories = this._categories.getValue().items;
+        if (!categories)
+            return null;
 
         // validate category exists
-        const currentCategory = categories.find(category => category.id.toString() === categoryId);
-        if (!currentCategory) {
+        const currentCategoryIndex = categories.findIndex(category => category.id == categoryId);
+        if (currentCategoryIndex == -1) {
             console.log("[kaltura] could not find the category ID");
             return null;
         }
 
         // get previous category ID
-        const currentCategoryIndex = categories.indexOf(currentCategory);
         if (currentCategoryIndex != 0) {
-            return (categories[currentCategoryIndex - 1].id).toString();
+            return (categories[currentCategoryIndex - 1].id);
         }
         else {
             return null;
