@@ -40,9 +40,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
       .subscribe(
         query => {
           this._filter.pageSize = query.pageSize;
-          this._filter.pageIndex = query.pageIndex - 1;
-          // this._filter.sortBy = query.sortBy;
-          // this._filter.sortDirection = query.sortDirection;
+          this._filter.pageIndex = query.pageIndex;
           this.dataTable.scrollToTop();
         });
 
@@ -67,7 +65,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
     if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
 
       this._rolesService.reload({
-        pageIndex: state.page + 1,
+        pageIndex: state.page,
         pageSize: state.rows
       });
     }
@@ -100,40 +98,40 @@ export class RolesListComponent implements OnInit, OnDestroy {
   private deleteRole(roleID: number, partnerId: number): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    this._rolesService.deleteRole(roleID,partnerId)
+    this._rolesService.deleteRole(roleID, partnerId)
       .cancelOnDestroy(this)
       .subscribe(
-      () => {
-        this._isBusy = false;
-        this._browserService.showGrowlMessage({
-          severity: 'success',
-          detail: this.appLocalization.get('applications.administration.roles.deleted')
-        });
-        this._rolesService.reload(true);
-      },
-      error => {
-        this._isBusy = false;
+        () => {
+          this._isBusy = false;
+          this._browserService.showGrowlMessage({
+            severity: 'success',
+            detail: this.appLocalization.get('applications.administration.roles.deleted')
+          });
+          this._rolesService.reload(true);
+        },
+        error => {
+          this._isBusy = false;
 
-        this._blockerMessage = new AreaBlockerMessage(
-          {
-            message: error.message,
-            buttons: [
-              {
-                label: this.appLocalization.get('app.common.retry'),
-                action: () => {
-                  this.deleteRole(roleID, partnerId);
+          this._blockerMessage = new AreaBlockerMessage(
+            {
+              message: error.message,
+              buttons: [
+                {
+                  label: this.appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this.deleteRole(roleID, partnerId);
+                  }
+                },
+                {
+                  label: this.appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this._blockerMessage = null;
+                  }
                 }
-              },
-              {
-                label: this.appLocalization.get('app.common.cancel'),
-                action: () => {
-                  this._blockerMessage = null;
-                }
-              }
-            ]
-          }
-        )
-      }
-    );
+              ]
+            }
+          )
+        }
+      );
   }
 }

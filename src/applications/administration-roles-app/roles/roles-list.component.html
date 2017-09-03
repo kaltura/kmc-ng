@@ -13,7 +13,7 @@
       </kRolesTable>
       <div class="kRolesTableFooter" #footer *ngIf="_rolesTotalCount">
         <p-paginator [rows]="_filter.pageSize" (onPageChange)="_onPaginationChanged($event)" [first]="_filter.pageIndex * _filter.pageSize"
-          [totalRecords]="_rolesTotalCount | kMaxRoles" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
+          [totalRecords]="_rolesTotalCount | kMaxRoles" [rowsPerPageOptions]="[1,2,5,100]"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.administration.paginator.showRows' | translate}}</span>
       </div>
     </div>

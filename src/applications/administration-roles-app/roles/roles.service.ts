@@ -46,7 +46,7 @@ export class RolesService implements OnDestroy {
   private _state = new BehaviorSubject<UpdateStatus>({loading: false, errorMessage: null});
   private _rolesExecuteSubscription: ISubscription;
   private _queryData = new BehaviorSubject<QueryData>({
-    pageIndex: 1,
+    pageIndex: 0,
     pageSize: 50,
     sortBy: 'id',
     sortDirection: SortDirection.Asc,
@@ -137,11 +137,11 @@ export class RolesService implements OnDestroy {
       let pagination: KalturaFilterPager = null;
 
       // update pagination args
-      if (queryData.pageIndex || queryData.pageSize) {
+      if (queryData.pageIndex >= 0 || queryData.pageSize) {
         pagination = new KalturaFilterPager(
           {
             pageSize: queryData.pageSize,
-            pageIndex: queryData.pageIndex
+            pageIndex: queryData.pageIndex + 1
           }
         );
       }
@@ -175,10 +175,12 @@ export class RolesService implements OnDestroy {
           userRoleId: roleId
         })).subscribe(
           result => {
+            subscription = null;
             observer.next();
             observer.complete();
           },
           error => {
+            subscription = null;
             observer.error(error);
           }
         );
