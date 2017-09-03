@@ -17,7 +17,7 @@
       </p-column>
       <p-column  header="" [style]="{'overflow':'visible', 'width':'80px'}" [sortable]="false">
         <ng-template let-col let-role="rowData" pTemplate="body">
-          <div class="kRolesTableActions" *ngIf="role.partnerId != 0">
+          <div class="kRolesTableActions">
             <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, role)"></button>
           </div>
         </ng-template>

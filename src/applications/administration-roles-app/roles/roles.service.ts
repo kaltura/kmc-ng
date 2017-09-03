@@ -164,12 +164,15 @@ export class RolesService implements OnDestroy {
 
   }
 
-  public deleteRole(roleID: number): Observable<void> {
+  public deleteRole(roleId: number, partnerId: number): Observable<void> {
+    if (partnerId === 0) {
+      return Observable.throw({message: 'Unable to delete Administrator role'});
+    }
     return Observable.create(observer => {
       let subscription: ISubscription;
-      if (roleID > 0) {
+      if (roleId > 0) {
         subscription = this._kalturaClient.request(new UserRoleDeleteAction({
-          userRoleId: roleID
+          userRoleId: roleId
         })).subscribe(
           result => {
             observer.next();
@@ -180,7 +183,7 @@ export class RolesService implements OnDestroy {
           }
         );
       } else {
-        observer.error(new Error('missing roleId argument'));
+        observer.error(new Error('Missing roleId argument'));
       }
       return () => {
         if (subscription) {

@@ -1,4 +1,3 @@
-import {ISubscription} from 'rxjs/Subscription';
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
@@ -11,8 +10,7 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 @Component({
   selector: 'kRolesList',
   templateUrl: './roles-list.component.html',
-  styleUrls: ['./roles-list.component.scss'],
-  providers: [RolesService]
+  styleUrls: ['./roles-list.component.scss']
 })
 
 export class RolesListComponent implements OnInit, OnDestroy {
@@ -23,14 +21,10 @@ export class RolesListComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _roles: KalturaUserRole[] = [];
   public _rolesTotalCount: number = null;
-  private rolesSubscription: ISubscription;
-  private querySubscription: ISubscription;
 
   public _filter = {
     pageIndex: 0,
     pageSize: null, // pageSize is set to null by design. It will be modified after the first time loading entries
-    // sortBy: 'updatedAt',
-    // sortDirection: SortDirection.Desc
   };
 
   constructor(private _rolesService: RolesService,
@@ -41,26 +35,28 @@ export class RolesListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.querySubscription = this._rolesService.queryData$.subscribe(
-      query => {
-        this._filter.pageSize = query.pageSize;
-        this._filter.pageIndex = query.pageIndex - 1;
-        // this._filter.sortBy = query.sortBy;
-        // this._filter.sortDirection = query.sortDirection;
-        this.dataTable.scrollToTop();
-      });
+    this._rolesService.queryData$
+      .cancelOnDestroy(this)
+      .subscribe(
+        query => {
+          this._filter.pageSize = query.pageSize;
+          this._filter.pageIndex = query.pageIndex - 1;
+          // this._filter.sortBy = query.sortBy;
+          // this._filter.sortDirection = query.sortDirection;
+          this.dataTable.scrollToTop();
+        });
 
-    this.rolesSubscription = this._rolesService.roles$.subscribe(
-      (data) => {
-        this._roles = data.items;
-        this._rolesTotalCount = data.totalCount;
-      }
-    );
+    this._rolesService.roles$
+      .cancelOnDestroy(this)
+      .subscribe(
+        (data) => {
+          this._roles = data.items;
+          this._rolesTotalCount = data.totalCount;
+        }
+      );
   }
 
   ngOnDestroy() {
-    this.rolesSubscription.unsubscribe();
-    this.querySubscription.unsubscribe();
   }
 
   public _reload() {
@@ -77,7 +73,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
     }
   }
 
-  _onActionSelected(event: { action: string, roleID: number, roleName: string }) {
+  _onActionSelected(event: { action: string, roleID: number, roleName: string, partnerId: number }) {
     switch (event.action) {
       case 'edit':
         // this.router.navigate(['/administration/roles/role', event.roleID]);
@@ -91,7 +87,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
             header: this.appLocalization.get('applications.administration.roles.confirmDeleteHeader'),
             message: this.appLocalization.get('applications.administration.roles.confirmDeleteBody', {0: event.roleName}),
             accept: () => {
-              this.deleteRole(event.roleID);
+              this.deleteRole(event.roleID, event.partnerId);
             }
           }
         );
@@ -101,10 +97,12 @@ export class RolesListComponent implements OnInit, OnDestroy {
     }
   }
 
-  private deleteRole(roleID: number): void {
+  private deleteRole(roleID: number, partnerId: number): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    this._rolesService.deleteRole(roleID).subscribe(
+    this._rolesService.deleteRole(roleID,partnerId)
+      .cancelOnDestroy(this)
+      .subscribe(
       () => {
         this._isBusy = false;
         this._browserService.showGrowlMessage({
@@ -123,7 +121,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
               {
                 label: this.appLocalization.get('app.common.retry'),
                 action: () => {
-                  this.deleteRole(roleID);
+                  this.deleteRole(roleID, partnerId);
                 }
               },
               {

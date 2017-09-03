@@ -25,6 +25,8 @@
     width: 40px;
     outline: 0;
     color: $kGrayscale3;
+    right: 0;
+    position: absolute;
     &:active {
       box-shadow: none;
       transform: rotate(45deg);

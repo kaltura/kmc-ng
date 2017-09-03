@@ -4,7 +4,7 @@
       <div class="kRolesTableFilters">
         <button pButton type="button" label="{{'applications.administration.roles.addRole' | translate}}" class="kButtonBranded kAddRoleBtn"></button>
         <span class="kSelectedRolesNum" *ngIf="_rolesTotalCount">
-          {{_rolesTotalCount}} {{'applications.administration.roles.roles' | translate}}
+          {{'applications.administration.roles.rolesNum' | translate:_rolesTotalCount.toString()}}
         </span>
         <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh" [kTooltip]="'applications.administration.roles.refresh' | translate"></button>
       </div>

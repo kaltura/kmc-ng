@@ -48,7 +48,6 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('dataTable') private _dataTable: DataTable;
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
   private _actionsMenuRole: KalturaUserRole;
-  private _rolesServiceStatusSubscription: ISubscription;
 
   public _deferredLoading = true;
   public _emptyMessage = '';
@@ -64,40 +63,40 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._blockerMessage = null;
     this._emptyMessage = '';
     let loadedOnce = false; // used to set the empty message to "no results" only after search
-    this._rolesServiceStatusSubscription = this.rolesService.state$.subscribe(
-      result => {
-        if (result.errorMessage) {
-          this._blockerMessage = new AreaBlockerMessage({
-            message: result.errorMessage || 'Error loading entries',
-            buttons: [{
-              label: 'Retry',
-              action: () => {
-                this.rolesService.reload(true);
+    this.rolesService.state$
+      .cancelOnDestroy(this)
+      .subscribe(
+        result => {
+          if (result.errorMessage) {
+            this._blockerMessage = new AreaBlockerMessage({
+              message: result.errorMessage || 'Error loading entries',
+              buttons: [{
+                label: 'Retry',
+                action: () => {
+                  this.rolesService.reload(true);
+                }
+              }
+              ]
+            })
+          } else {
+            this._blockerMessage = null;
+            if (result.loading) {
+              this._emptyMessage = '';
+              loadedOnce = true;
+            } else {
+              if (loadedOnce) {
+                this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
               }
             }
-            ]
-          })
-        } else {
-          this._blockerMessage = null;
-          if (result.loading) {
-            this._emptyMessage = '';
-            loadedOnce = true;
-          } else {
-            if (loadedOnce) {
-              this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
-            }
           }
-        }
-      },
-      error => {
-        console.warn('[kmcng] -> could not load user roles'); // navigate to error page
-        throw error;
-      });
+        },
+        error => {
+          console.warn('[kmcng] -> could not load user roles'); // navigate to error page
+          throw error;
+        });
   }
 
   ngOnDestroy() {
-    this._rolesServiceStatusSubscription.unsubscribe();
-    this._rolesServiceStatusSubscription = null;
   }
 
   ngAfterViewInit() {
@@ -120,8 +119,8 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  onActionSelected(action: string, roleID: number, roleName: string) {
-    this.actionSelected.emit({'action': action, 'roleID': roleID, 'roleName': roleName});
+  onActionSelected(action: string, roleID: number, roleName: string, partnerId: number) {
+    this.actionSelected.emit({'action': action, 'roleID': roleID, 'roleName': roleName, 'partnerId': partnerId});
   }
 
   openActionsMenu(event: any, role: KalturaUserRole) {
@@ -139,17 +138,17 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._items = [
       {
         label: this.appLocalization.get('applications.administration.roles.actions.edit'), command: (event) => {
-        this.onActionSelected('edit', this._actionsMenuRole.id, this._actionsMenuRole.name);
+        this.onActionSelected('edit', this._actionsMenuRole.id, this._actionsMenuRole.name, this._actionsMenuRole.partnerId);
       }
       },
       {
         label: this.appLocalization.get('applications.administration.roles.actions.duplicate'), command: (event) => {
-        this.onActionSelected('duplicate', this._actionsMenuRole.id, this._actionsMenuRole.name);
+        this.onActionSelected('duplicate', this._actionsMenuRole.id, this._actionsMenuRole.name,this._actionsMenuRole.partnerId);
       }
       },
       {
         label: this.appLocalization.get('applications.administration.roles.actions.delete'), command: (event) => {
-        this.onActionSelected('delete', this._actionsMenuRole.id, this._actionsMenuRole.name);
+        this.onActionSelected('delete', this._actionsMenuRole.id, this._actionsMenuRole.name,this._actionsMenuRole.partnerId);
       }
       }
     ];
