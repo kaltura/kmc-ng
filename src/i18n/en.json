@@ -1,7 +1,7 @@
 {
   "app": {
     "menu": {
-      "upload": "Upload",
+      "upload": "Create",
       "Content": "Content",
       "Entries": "Entries",
       "Moderation": "Moderation",
