@@ -42,6 +42,7 @@ import {DynamicFormModule} from '@kaltura-ng/kaltura-ui/dynamic-form';
 import {DynamicFormModule as PrimeDynamicFormModule} from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
 import {DynamicMetadataFormModule} from '@kaltura-ng/kaltura-server-utils';
 import {RolesComponentsList} from './roles/roles-components-list';
+import {EditRoleComponent} from './role/edit-role/edit-role.component';
 
 @NgModule({
   imports: [
@@ -83,7 +84,8 @@ import {RolesComponentsList} from './roles/roles-components-list';
   ],
   declarations: [
     AdministrationRolesComponent,
-    RolesComponentsList
+    RolesComponentsList,
+    EditRoleComponent
   ],
   exports: [],
   providers: [],

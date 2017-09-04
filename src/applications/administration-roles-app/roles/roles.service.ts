@@ -5,16 +5,16 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import {ISubscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
-import {KalturaDetachedResponseProfile} from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
 import {KalturaFilterPager} from 'kaltura-typescript-client/types/KalturaFilterPager';
-import {KalturaResponseProfileType} from 'kaltura-typescript-client/types/KalturaResponseProfileType';
 import {KalturaClient} from '@kaltura-ng/kaltura-client';
 import {KalturaUserRoleListResponse} from 'kaltura-typescript-client/types/KalturaUserRoleListResponse';
 import {KalturaUserRole} from 'kaltura-typescript-client/types/KalturaUserRole';
 import {UserRoleListAction} from 'kaltura-typescript-client/types/UserRoleListAction';
-import {KalturaUserRoleStatus} from "kaltura-typescript-client/types/KalturaUserRoleStatus";
-import {KalturaUserRoleOrderBy} from "kaltura-typescript-client/types/KalturaUserRoleOrderBy";
-import {UserRoleDeleteAction} from "kaltura-typescript-client/types/UserRoleDeleteAction";
+import {KalturaUserRoleStatus} from 'kaltura-typescript-client/types/KalturaUserRoleStatus';
+import {KalturaUserRoleOrderBy} from 'kaltura-typescript-client/types/KalturaUserRoleOrderBy';
+import {UserRoleDeleteAction} from 'kaltura-typescript-client/types/UserRoleDeleteAction';
+import {UserRoleUpdateAction} from 'kaltura-typescript-client/types/UserRoleUpdateAction';
+import {UserRoleAddAction} from 'kaltura-typescript-client/types/UserRoleAddAction';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -170,23 +170,21 @@ export class RolesService implements OnDestroy {
     }
     return Observable.create(observer => {
       let subscription: ISubscription;
-      if (roleId > 0) {
-        subscription = this._kalturaClient.request(new UserRoleDeleteAction({
-          userRoleId: roleId
-        })).subscribe(
-          result => {
-            subscription = null;
-            observer.next();
-            observer.complete();
-          },
-          error => {
-            subscription = null;
-            observer.error(error);
-          }
-        );
-      } else {
-        observer.error(new Error('Missing roleId argument'));
-      }
+
+      subscription = this._kalturaClient.request(new UserRoleDeleteAction({
+        userRoleId: roleId
+      })).subscribe(
+        result => {
+          subscription = null;
+          observer.next();
+          observer.complete();
+        },
+        error => {
+          subscription = null;
+          observer.error(error);
+        }
+      );
+
       return () => {
         if (subscription) {
           subscription.unsubscribe();
@@ -194,6 +192,69 @@ export class RolesService implements OnDestroy {
       }
     });
 
+  }
+
+  public updateRole(roleId: number, role: KalturaUserRole): Observable<void> {
+    if (!role) {
+      return Observable.throw({message: 'Unable to update role'});
+    }
+    if (role.partnerId === 0) {
+      return Observable.throw({message: 'Unable to update Administrator role'});
+    }
+    return Observable.create(observer => {
+      let subscription: ISubscription;
+
+      subscription = this._kalturaClient.request(new UserRoleUpdateAction({
+        userRoleId: roleId,
+        userRole: role
+      })).subscribe(
+        result => {
+          subscription = null;
+          observer.next();
+          observer.complete();
+        },
+        error => {
+          subscription = null;
+          observer.error(error);
+        }
+      );
+
+      return () => {
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+      }
+    });
+  }
+
+  public addRole(role: KalturaUserRole): Observable<void> {
+    if (!role) {
+      return Observable.throw({message: 'Unable to update role'});
+    }
+    role.tags = 'kmc';
+    return Observable.create(observer => {
+      let subscription: ISubscription;
+
+      subscription = this._kalturaClient.request(new UserRoleAddAction({
+        userRole: role
+      })).subscribe(
+        result => {
+          subscription = null;
+          observer.next();
+          observer.complete();
+        },
+        error => {
+          subscription = null;
+          observer.error(error);
+        }
+      );
+
+      return () => {
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+      }
+    });
   }
 }
 

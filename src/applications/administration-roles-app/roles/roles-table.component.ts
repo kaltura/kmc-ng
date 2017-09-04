@@ -9,7 +9,6 @@ import {
   ChangeDetectorRef,
   OnDestroy
 } from '@angular/core';
-import {ISubscription} from 'rxjs/Subscription';
 import {MenuItem, DataTable, Menu} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
@@ -119,8 +118,8 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  onActionSelected(action: string, roleID: number, roleName: string, partnerId: number) {
-    this.actionSelected.emit({'action': action, 'roleID': roleID, 'roleName': roleName, 'partnerId': partnerId});
+  onActionSelected(action: string, role: KalturaUserRole) {
+    this.actionSelected.emit({'action': action, 'role': role});
   }
 
   openActionsMenu(event: any, role: KalturaUserRole) {
@@ -138,17 +137,17 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._items = [
       {
         label: this.appLocalization.get('applications.administration.roles.actions.edit'), command: (event) => {
-        this.onActionSelected('edit', this._actionsMenuRole.id, this._actionsMenuRole.name, this._actionsMenuRole.partnerId);
+        this.onActionSelected('edit', this._actionsMenuRole);
       }
       },
       {
         label: this.appLocalization.get('applications.administration.roles.actions.duplicate'), command: (event) => {
-        this.onActionSelected('duplicate', this._actionsMenuRole.id, this._actionsMenuRole.name,this._actionsMenuRole.partnerId);
+        this.onActionSelected('duplicate', this._actionsMenuRole);
       }
       },
       {
         label: this.appLocalization.get('applications.administration.roles.actions.delete'), command: (event) => {
-        this.onActionSelected('delete', this._actionsMenuRole.id, this._actionsMenuRole.name,this._actionsMenuRole.partnerId);
+        this.onActionSelected('delete', this._actionsMenuRole);
       }
       }
     ];

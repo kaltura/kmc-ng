@@ -667,6 +667,16 @@
           "delete": "Delete"
         }
       },
+      "role": {
+        "titleEdit": "Edit Role",
+        "titleAdd": "Add Role",
+        "name": "Role Name",
+        "description": "Description",
+        "save": "Save",
+        "errors": {
+          "required": "This field is required"
+        }
+      },
       "paginator": {
         "showRows": "Show rows"
       }

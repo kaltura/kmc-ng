@@ -6,6 +6,7 @@ import {RolesService} from './roles.service';
 import {KalturaUserRole} from 'kaltura-typescript-client/types/KalturaUserRole';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
   selector: 'kRolesList',
@@ -16,11 +17,13 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 export class RolesListComponent implements OnInit, OnDestroy {
 
   @ViewChild(RolesTableComponent) private dataTable: RolesTableComponent;
+  @ViewChild('editPopup') public editPopup: PopupWidgetComponent;
 
   public _isBusy = false
   public _blockerMessage: AreaBlockerMessage = null;
   public _roles: KalturaUserRole[] = [];
   public _rolesTotalCount: number = null;
+  public _currentEditRole: any = null;
 
   public _filter = {
     pageIndex: 0,
@@ -28,7 +31,6 @@ export class RolesListComponent implements OnInit, OnDestroy {
   };
 
   constructor(private _rolesService: RolesService,
-              private router: Router,
               private _browserService: BrowserService,
               private appLocalization: AppLocalization) {
   }
@@ -71,9 +73,14 @@ export class RolesListComponent implements OnInit, OnDestroy {
     }
   }
 
-  _onActionSelected(event: { action: string, roleID: number, roleName: string, partnerId: number }) {
-    switch (event.action) {
+  _onActionSelected(event: { action: string, role: KalturaUserRole }) {
+    // event: { action: string, roleID: number, roleName: string, partnerId: number }) {
+    const action = event.action;
+    const role = event.role;
+    switch (action) {
       case 'edit':
+        this._currentEditRole = role;
+        this.editPopup.open();
         // this.router.navigate(['/administration/roles/role', event.roleID]);
         break;
       case 'duplicate':
@@ -83,9 +90,9 @@ export class RolesListComponent implements OnInit, OnDestroy {
         this._browserService.confirm(
           {
             header: this.appLocalization.get('applications.administration.roles.confirmDeleteHeader'),
-            message: this.appLocalization.get('applications.administration.roles.confirmDeleteBody', {0: event.roleName}),
+            message: this.appLocalization.get('applications.administration.roles.confirmDeleteBody', {0: role.name}),
             accept: () => {
-              this.deleteRole(event.roleID, event.partnerId);
+              this.deleteRole(role.id, role.partnerId);
             }
           }
         );
@@ -93,6 +100,11 @@ export class RolesListComponent implements OnInit, OnDestroy {
       default:
         break;
     }
+  }
+
+  public addRole(): void {
+    this._currentEditRole = null;
+    this.editPopup.open();
   }
 
   private deleteRole(roleID: number, partnerId: number): void {
@@ -130,7 +142,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
                 }
               ]
             }
-          )
+          );
         }
       );
   }

@@ -1,0 +1,75 @@
+@import 'app-theme/_variables.scss';
+
+.kEditWin {
+  width: 100%;
+
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+    .kTitle {
+      color: #333333;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+
+  .kContainer {
+    margin: 12px;
+    height: 278px;
+  }
+
+  .kFooter {
+    height: 66px;
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button {
+      height: 34px;
+    }
+  }
+
+  .kRow {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 24px;
+    font-size: 15px;
+    .kLabel {
+      width: 120px;
+      flex: 0 0 auto;
+    }
+    input {
+      width: 100%;
+    }
+  }
+
+  .kUpload {
+    padding-left: 120px;
+    margin-top: 18px;
+    overflow-x: hidden;
+  }
+
+  .kUploadButton {
+    font-weight: 400;
+    height: 32px;
+    margin-bottom: 8px;
+  }
+
+  .kCaptionUrl {
+    margin-top: 18px;
+    margin-left: 120px;
+    width: 234px;
+  }
+
+  .kInvalid {
+    color: red;
+    font-size: 12px;
+    margin-left: 122px;
+    font-weight: 700;
+  }
+}

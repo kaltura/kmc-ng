@@ -2,7 +2,8 @@
   <div class="kRoles kOverrideFAIcons">
     <div #rolesTableHolder class="kRolesHolder kContent">
       <div class="kRolesTableFilters">
-        <button pButton type="button" label="{{'applications.administration.roles.addRole' | translate}}" class="kButtonBranded kAddRoleBtn"></button>
+        <button pButton type="button" label="{{'applications.administration.roles.addRole' | translate}}" class="kButtonBranded kAddRoleBtn"
+        (click)="addRole()"></button>
         <span class="kSelectedRolesNum" *ngIf="_rolesTotalCount">
           {{'applications.administration.roles.rolesNum' | translate:_rolesTotalCount.toString()}}
         </span>
@@ -18,4 +19,9 @@
       </div>
     </div>
   </div>
+  <kPopupWidget #editPopup [popupWidth]="380" [popupHeight]="460" [modal]="true">
+    <ng-template>
+      <kEditRole [role]="_currentEditRole"  [parentPopupWidget]="editPopup"></kEditRole>
+    </ng-template>
+  </kPopupWidget>
 </k-area-blocker>
