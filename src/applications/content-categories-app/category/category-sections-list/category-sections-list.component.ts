@@ -16,7 +16,6 @@ export class CategorySectionsListComponent implements AfterViewInit, OnInit, OnD
   public _showList = false;
   public _sections: SectionWidgetItem[] = [];
   private _handler: CategorySectionsListHandler;
-  private _categorySectionListSubscription: ISubscription;
 
   constructor(private _categoryFormManager: CategoryFormManager, public _categoryService: CategoryService) {
   }
@@ -29,18 +28,19 @@ export class CategorySectionsListComponent implements AfterViewInit, OnInit, OnD
     this._loading = true;
     this._handler = this._categoryFormManager.attachWidget(CategorySectionsListHandler);
 
-    this._categorySectionListSubscription = this._handler.sections$.subscribe(
+    this._handler.sections$
+      .cancelOnDestroy(this)
+      .subscribe(
       sections => {
         this._loading = false;
         this._sections = sections;
         this._showList = sections && sections.length > 0;
       }
-    );
+      );
   }
 
   ngOnDestroy() {
     this._categoryFormManager.detachWidget(this._handler);
-    this._categorySectionListSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {

@@ -54,7 +54,6 @@ export class CategoriesService implements OnDestroy {
         // validate category exists
         const currentCategoryIndex = categories.findIndex(category => category.id == categoryId);
         if (currentCategoryIndex == -1) {
-            console.log("[kaltura] could not find the category ID");
             return null;
         }
 
@@ -75,7 +74,6 @@ export class CategoriesService implements OnDestroy {
         // validate category exists
         const currentCategoryIndex = categories.findIndex(category => category.id == categoryId);
         if (currentCategoryIndex == -1) {
-            console.log("[kaltura] could not find the category ID");
             return null;
         }
 

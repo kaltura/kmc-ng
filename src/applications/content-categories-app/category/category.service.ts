@@ -248,27 +248,19 @@ export class CategoryService implements OnDestroy {
 			.cancelOnDestroy(this)
 			.subscribe(
 			response => {
-				if (response instanceof KalturaCategory) {
 
-					this._category.next(response);
-					this._categoryId = response.id;
+				this._category.next(response);
+				this._categoryId = response.id;
 
-					const dataLoadedResult = this._sectionsManager.onDataLoaded(response);
+				const dataLoadedResult = this._sectionsManager.onDataLoaded(response);
 
-					if (dataLoadedResult.errors.length) {
-						this._state.next({
-							action: ActionTypes.CategoryLoadingFailed,
-							error: new Error(`one of the widgets failed while handling data loaded event`)
-						});
-					} else {
-						this._state.next({ action: ActionTypes.CategoryLoaded });
-					}
-
-				} else {
+				if (dataLoadedResult.errors.length) {
 					this._state.next({
 						action: ActionTypes.CategoryLoadingFailed,
-						error: new Error(`category type not supported ${response.name}`)
+						error: new Error(`one of the widgets failed while handling data loaded event`)
 					});
+				} else {
+					this._state.next({ action: ActionTypes.CategoryLoaded });
 				}
 			},
 			error => {
@@ -286,45 +278,19 @@ export class CategoryService implements OnDestroy {
 		}
 	}
 
-	private _getCategory(id: number): Observable<KalturaCategory | Error> {
+	private _getCategory(id: number): Observable<KalturaCategory> {
 		if (id) {
-			return Observable.create(observer => {
-
-				try {
-					const request = new KalturaMultiRequest(
-						new CategoryGetAction({ id })
-							.setCompletion(
-							response => {
-								if (response.result) {
-									if (response.result instanceof KalturaCategory) {
-										observer.next(response.result);
-										observer.complete();
-									} else {
-										observer.next(new Error("invalid category type, expected KalturaCategory"));
-										observer.complete();
-									}
-								} else {
-									observer.next(response.error);
-								}
-							}
-							)
-					);
-
-					const requestSubscription = this._kalturaServerClient.multiRequest(request).subscribe(() => {
-						// should not do anything here
-					});
-
-					return () => {
-						if (requestSubscription) {
-							requestSubscription.unsubscribe();
-						}
-					}
-				} catch (ex) {
-					observer.next(ex);
+			return this._kalturaServerClient.request(
+				new CategoryGetAction({ id })
+			).map(response => {
+				if (response instanceof KalturaCategory) {
+					return response;
+				} else {
+					throw new Error(`invalid type provided, expected KalturaCategory, got ${typeof response}`);
 				}
 			});
 		} else {
-			return Observable.of(new Error('missing category id'));
+			return Observable.throw(new Error('missing category ID'));
 		}
 	}
 

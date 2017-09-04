@@ -46,16 +46,18 @@ export class CategorySectionsListHandler extends CategoryFormWidget {
             sectionsState => {
                 this._sections.getValue().forEach((section: SectionWidgetItem) => {
                     const sectionState = sectionsState[section.key];
-                    const isValid = (!sectionState || sectionState.isBusy || sectionState.isValid || !sectionState.isActive);
-                    const isAttached = (!!sectionState && sectionState.isAttached);
+                    if (sectionState) {
+                        const isValid = (!sectionState || sectionState.isBusy || sectionState.isValid || !sectionState.isActive);
+                        const isAttached = (!!sectionState && sectionState.isAttached);
 
-                    if (section.attached !== isAttached || section.isValid !== isValid) {
-                        console.log(`category sections list: updated section '${section.key}' state`, {
-                            isAttached,
-                            isValid
-                        });
-                        section.attached = isAttached;
-                        section.isValid = isValid;
+                        if (section.attached !== isAttached || section.isValid !== isValid) {
+                            console.log(`category sections list: updated section '${section.key}' state`, {
+                                isAttached,
+                                isValid
+                            });
+                            section.attached = isAttached;
+                            section.isValid = isValid;
+                        }
                     }
                 });
             }
@@ -67,9 +69,9 @@ export class CategorySectionsListHandler extends CategoryFormWidget {
      */
     protected _onReset() {
         // TODO: remove this line!!!
-         super._updateWidgetState({
-		    isDirty: true
-	    });
+        super._updateWidgetState({
+            isDirty: true
+        });
     }
 
     private _clearSectionsList(): void {
