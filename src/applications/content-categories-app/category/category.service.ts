@@ -1,12 +1,11 @@
 import { CategoriesService } from './../categories/categories.service';
-import { CategoriesStore } from './../../content-entries-app/shared/categories-store.service';
 import { Injectable, OnDestroy, Host } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/do'; 
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
