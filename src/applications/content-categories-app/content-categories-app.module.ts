@@ -1,4 +1,4 @@
-//import { CategoriesTreeComponent } from './../content-entries-app/shared/categories-tree/categories-tree.component';
+import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -63,7 +63,8 @@ import { CategoriesComponentsList } from './categories/categories-components-lis
         TagsModule,
         TieredMenuModule,
         TooltipModule,
-        TreeModule        
+        TreeModule,
+        ContentSharedModule        
     ],
     declarations: [
         ContentCategoriesComponent,

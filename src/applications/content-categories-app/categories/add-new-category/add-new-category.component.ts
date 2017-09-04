@@ -1,35 +1,48 @@
-import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
+import { PrimeTreeNode, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
 import { EntryCategoryItem } from './../../../content-entries-app/entry/entry-metadata/entry-metadata-handler';
-import { Component, Input, AfterViewInit, Output, OnDestroy, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, AfterViewInit, Output, OnDestroy, EventEmitter, ViewChild, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-//import { CategoriesTreeComponent } from '../../../content-entries-app/shared/categories-tree/categories-tree.component';
+import { CategoriesTreeComponent } from 'app-shared/content-shared/categories-tree/categories-tree.component';
 import { TreeModule } from 'primeng/primeng';
+import { AutoComplete } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
+import { Subject } from "rxjs/Subject";
+import { ISubscription } from "rxjs/Subscription";
+import { CategoriesPrimeService } from "app-shared/content-shared/categories-prime.service";
+
 
 @Component({
     selector: 'kAddNewCategory',
     templateUrl: './add-new-category.component.html',
     styleUrls: ['./add-new-category.component.scss']
 })
-export class AddNewCategory implements AfterViewInit, OnDestroy {
+export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecked {
 
     @Input() parentPopupWidget: PopupWidgetComponent;
     @Input() value: EntryCategoryItem[] = [];
     @Output() showNotSupportedMsg = new EventEmitter<boolean>();
     @Output() valueChange = new EventEmitter<EntryCategoryItem[]>();
-    //@ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
+    @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
+    @ViewChild('autoComplete')
+    private _autoComplete: AutoComplete = null;
     _addNewCategoryForm: FormGroup;
     private _showConfirmationOnClose: boolean = true;
     public _categoriesLoaded = false;
     public _treeSelection: PrimeTreeNode[] = [];
     public _selectedCategories: EntryCategoryItem[] = [];
 
+    private _searchCategoriesSubscription: ISubscription;
+    public _categoriesProvider = new Subject<SuggestionsProviderData>();
+    private _ngAfterViewCheckedContext: { updateTreeSelections: boolean, expendTreeSelectionNodeId: number } = {
+        updateTreeSelections: false,
+        expendTreeSelectionNodeId: null
+    };
 
     constructor(private _formBuilder: FormBuilder, private _appLocalization: AppLocalization, public router: Router,
-        private _browserService: BrowserService) {
+        private _browserService: BrowserService, private cdRef: ChangeDetectorRef, private _categoriesPrimeService: CategoriesPrimeService) {
         // build FormControl group
         this._addNewCategoryForm = _formBuilder.group({
             name: ['', Validators.required],
@@ -91,20 +104,20 @@ export class AddNewCategory implements AfterViewInit, OnDestroy {
 
     private updateTreeSelections(expandNodeId = null): void {
 
-        // let treeSelectedItems = [];
+        let treeSelectedItems = [];
 
-        // this._selectedCategories.forEach(category => {
-        //     const treeItem = this._categoriesTree.findNodeByFullIdPath(category.fullIdPath);
+        this._selectedCategories.forEach(category => {
+            const treeItem = this._categoriesTree.findNodeByFullIdPath(category.fullIdPath);
 
-        //     if (treeItem) {
-        //         treeSelectedItems.push(treeItem);
-        //         if (expandNodeId && expandNodeId === category.id) {
-        //             treeItem.expand();
-        //         }
-        //     }
-        // });
+            if (treeItem) {
+                treeSelectedItems.push(treeItem);
+                if (expandNodeId && expandNodeId === category.id) {
+                    treeItem.expand();
+                }
+            }
+        });
 
-        // this._treeSelection = treeSelectedItems;
+        this._treeSelection = treeSelectedItems;
     }
 
     public _onTreeNodeSelected({ node }: { node: any }) {
@@ -155,7 +168,73 @@ export class AddNewCategory implements AfterViewInit, OnDestroy {
             this.router.navigate(['/content/categories/category/new/metadata']);
         }
     }
-    _close(){
+    _close() {
         this.parentPopupWidget.close();
+    }
+
+    public _onAutoCompleteSelected() {
+
+        const selectedItem = this._autoComplete.getValue();
+
+        if (selectedItem && selectedItem.id && selectedItem.fullIdPath && selectedItem.name) {
+            const selectedCategoryIndex = this._selectedCategories.findIndex(item => item.id + '' === selectedItem.id + '');
+
+            if (selectedCategoryIndex === -1) {
+                this._selectedCategories.push({
+                    id: selectedItem.id,
+                    fullIdPath: selectedItem.fullIdPath,
+                    fullNamePath: selectedItem.fullNamePath,
+                    name: selectedItem.name
+                });
+
+                this._ngAfterViewCheckedContext.updateTreeSelections = true;
+                this._ngAfterViewCheckedContext.expendTreeSelectionNodeId = selectedItem.id;
+            }
+        }
+
+        // clear user text from component
+        this._autoComplete.clearValue();
+
+    }
+
+    ngAfterViewChecked() {
+        if (this._ngAfterViewCheckedContext.updateTreeSelections) {
+            this.updateTreeSelections(this._ngAfterViewCheckedContext.expendTreeSelectionNodeId);
+
+            this._ngAfterViewCheckedContext.expendTreeSelectionNodeId = null;
+            this._ngAfterViewCheckedContext.updateTreeSelections = false;
+            this.cdRef.detectChanges();
+        }
+    }
+
+    public _onAutoCompleteSearch(event): void {
+        this._categoriesProvider.next({ suggestions: [], isLoading: true });
+
+        if (this._searchCategoriesSubscription) {
+            // abort previous request
+            this._searchCategoriesSubscription.unsubscribe();
+            this._searchCategoriesSubscription = null;
+        }
+
+        this._searchCategoriesSubscription = this._categoriesPrimeService.searchCategories(event.query).subscribe(data => {
+            const suggestions = [];
+            const entryCategories = this._selectedCategories || [];
+
+
+            (data || []).forEach(suggestedCategory => {
+                const label = suggestedCategory.fullNamePath.join(' > ') + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
+
+                const isSelectable = !entryCategories.find(category => {
+                    return category.id === suggestedCategory.id;
+                });
+
+
+                suggestions.push({ name: label, isSelectable: isSelectable, item: suggestedCategory });
+            });
+            this._categoriesProvider.next({ suggestions: suggestions, isLoading: false });
+        },
+            (err) => {
+                this._categoriesProvider.next({ suggestions: [], isLoading: false, errorMessage: <any>(err.message || err) });
+            });
     }
 }
