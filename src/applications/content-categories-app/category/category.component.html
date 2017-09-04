@@ -1,3 +1,27 @@
-<div>
-  Hello Id
-</div>
+<k-area-blocker [showLoader]="_showLoader" [message]="_areaBlockerMessage">
+  <div class="kCategoryDetails kOverrideFAIcons" [class.isSafari]="isSafari">
+    <div class="kContent kCategoryDetailsWrapper">
+      <div class="kCategoryDetailsHeader">
+        <button pButton class="kButtonDefault kBackToCategoriesBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
+        <div class="kCategoryTitle">{{ _categoryHeader }}</div>
+        <button pButton class="kButtonBranded kSaveBtn" [disabled]="!_categoryStore.categoryIsDirty" label="Save" (click)="_save()"></button>
+        <button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
+        <button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
+      </div>
+
+      <div class="kCategoryDetailsPreview">
+        <kCategoryPreview></kCategoryPreview>
+      </div>
+
+      <div class="kCategoryDetailsMain">
+        <div class="kCategoryDetailsSections">
+          <kCategorySectionsList></kCategorySectionsList>
+        </div>
+        <div class="kCategoryDetailsContent">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+      <div class="kSpacer"></div>
+    </div>
+  </div>
+</k-area-blocker>

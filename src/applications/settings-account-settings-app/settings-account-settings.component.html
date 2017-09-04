@@ -1,22 +1,32 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
   <form [formGroup]="accountSettingsForm" novalidate (ngSubmit)="onSubmit()" class="kAccountSettingsWrapper kContent">
     <section class="kHeader">
-      <div class="kTitle">{{'applications.settings.accountSettings.accountInfo' | translate}}</div>
-      <button pButton class="kButtonBranded kSaveBtn"
-              label="{{'applications.settings.accountSettings.apply' | translate}}"
-              [disabled]="accountSettingsForm.pristine"></button>
+      <div class="kTitle"><i class="kIconUser-info kTitleIcon"></i>{{'applications.settings.accountSettings.accountInfo'
+        | translate}}
+      </div>
     </section>
-    <span class="kReadonlyData">{{'applications.settings.accountSettings.partnerID' | translate}}: {{partnerId}} | {{'applications.settings.accountSettings.adminEmail' | translate}}:
-        {{partnerAdminEmail}}</span>
+    <section class="kFormMetadata">
+      <div class="kReadonlyData">{{'applications.settings.accountSettings.partnerID' | translate}}: {{partnerId}} |
+        {{'applications.settings.accountSettings.adminEmail' | translate}}:
+        {{partnerAdminEmail}}
+      </div>
+      <div *ngIf="!accountSettingsForm.pristine && !accountSettingsForm.valid && accountSettingsForm.touched"
+           class="kInvalidFields">
+        <span>{{'applications.settings.accountSettings.errors.invalidFields' | translate}}</span>
+      </div>
+    </section>
     <section class="kFormContainer">
-      <div class="form-section">
+      <div class="kFormSection">
         <i class="kIconwarning"></i>
         <span>{{'applications.settings.accountSettings.informationMessage' | translate}}</span>
       </div>
       <hr>
-      <div class="form-section">
+      <div class="kFormSection">
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.accountSettings.name' | translate}} *</span>
+          <span class="kLabel">{{'applications.settings.accountSettings.name' | translate}}</span>
+          <div class="kRequired" [ngClass]="{'kHasError':!accountSettingsForm.controls['name'].valid &&
+                   accountSettingsForm.controls['name'].touched}">*
+          </div>
           <div>
             <input class="kControl" formControlName="name" pInputText
                    [ngClass]="{'kHasError':!accountSettingsForm.controls['name'].valid &&
@@ -24,25 +34,33 @@
             <div *ngIf="accountSettingsForm.controls['name'].touched &&
                  accountSettingsForm.controls['name'].hasError('required')"
                  class="error">
-              {{'applications.settings.accountUpgrade.errors.required' | translate}}
+              {{'applications.settings.accountSettings.errors.requiredName' | translate}}
             </div>
           </div>
         </div>
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.accountSettings.adminUserId' | translate}} *</span>
+          <span class="kLabel">{{'applications.settings.accountSettings.adminUserId' | translate}}</span>
+          <div class="kRequired" [ngClass]="{'kHasError':!accountSettingsForm.controls['adminUserId'].valid &&
+                        accountSettingsForm.controls['adminUserId'].touched}">*
+          </div>
           <div class="kControl">
             <p-dropdown [options]="nameOfAccountOwnerOptions"
                         formControlName="adminUserId"
                         [ngClass]="{'kHasError':!accountSettingsForm.controls['adminUserId'].valid &&
-                        accountSettingsForm.controls['adminUserId'].touched}">></p-dropdown>
-            <div *ngIf="accountSettingsForm.controls['adminUserId'].touched && accountSettingsForm.controls['adminUserId'].hasError('required')"
-                 class="error">
-              {{'applications.settings.accountUpgrade.errors.required' | translate}}
+                        accountSettingsForm.controls['adminUserId'].touched}">>
+            </p-dropdown>
+            <div
+              *ngIf="accountSettingsForm.controls['adminUserId'].touched && accountSettingsForm.controls['adminUserId'].hasError('required')"
+              class="error">
+              {{'applications.settings.accountSettings.errors.requiredUserId' | translate}}
             </div>
           </div>
         </div>
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.accountSettings.phone' | translate}} *</span>
+          <span class="kLabel">{{'applications.settings.accountSettings.phone' | translate}}</span>
+          <div class="kRequired" [ngClass]="{'kHasError':!accountSettingsForm.controls['phone'].valid &&
+                   accountSettingsForm.controls['phone'].touched}">*
+          </div>
           <div>
             <input class="kControl" formControlName="phone" pInputText
                    [ngClass]="{'kHasError':!accountSettingsForm.controls['phone'].valid &&
@@ -50,24 +68,41 @@
             <div *ngIf="accountSettingsForm.controls['phone'].touched &&
                  accountSettingsForm.controls['phone'].hasError('required')"
                  class="error">
-              {{'applications.settings.accountUpgrade.errors.required' | translate}}
+              {{'applications.settings.accountSettings.errors.requiredPhone' | translate}}
+            </div>
+            <div *ngIf="accountSettingsForm.controls['phone'].touched &&
+                        accountSettingsForm.controls['phone'].hasError('phonePattern')"
+                 class="error">
+              {{'applications.settings.accountSettings.errors.phoneInvalid' | translate}}
             </div>
           </div>
         </div>
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.accountSettings.website' | translate}}</span>
+          <div class="kRequired"></div>
           <input class="kControl" formControlName="website" pInputText>
         </div>
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.accountSettings.describeYourself' | translate}}</span>
-         <div class="kControl"> <p-dropdown [options]="describeYourselfOptions"
-                      formControlName="describeYourself"></p-dropdown></div>
+          <div class="kRequired"></div>
+          <div class="kControl">
+            <p-dropdown [options]="describeYourselfOptions"
+                        formControlName="describeYourself"></p-dropdown>
+          </div>
         </div>
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.accountSettings.referenceId' | translate}}</span>
+          <div class="kRequired"></div>
           <input class="kControl" formControlName="referenceId" pInputText>
         </div>
+        <div class="kSaveBtnContainer kRow">
+          <button pButton class="kButtonBranded kSaveBtn"
+                  label="{{'applications.settings.accountSettings.apply' | translate}}"
+                  [disabled]="accountSettingsForm.pristine"></button>
+        </div>
       </div>
+
+
     </section>
   </form>
 </k-area-blocker>

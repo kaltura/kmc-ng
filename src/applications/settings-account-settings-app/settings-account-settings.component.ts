@@ -1,11 +1,25 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {KalturaPartner} from 'kaltura-typescript-client/types/KalturaPartner';
 import {AccountSettings, SettingsAccountSettingsService} from './settings-account-settings.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {SelectItem} from 'primeng/primeng';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+
+
+function phoneValidator(): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: boolean} | null => {
+    if (control.value) {
+      // validate that value contains only hyphens and at least 7 digits
+      if (!(/(^[\d\-)(+ ]+$)/.test(control.value)) || !(control.value.replace(/[^0-9]/g, '').length >= 7)) {
+        return {'phonePattern': true};
+      }
+    }
+    return null;
+  }
+}
+
 
 @Component({
   selector: 'kmc-settings-account-settings',
@@ -143,7 +157,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
     this.accountSettingsForm = this._fb.group({
       name: ['', Validators.required],
       adminUserId: ['', Validators.required],
-      phone: ['', Validators.required],
+      phone: ['', [Validators.required, phoneValidator()]],
       website: [''],
       describeYourself: [''],
       referenceId: ['']
