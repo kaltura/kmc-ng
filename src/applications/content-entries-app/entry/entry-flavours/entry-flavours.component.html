@@ -35,6 +35,9 @@
 					</ng-template>
 				</p-column>
 				<p-column field="tags" header="{{'applications.content.entryDetails.flavours.tags' | translate}}">
+					<ng-template let-col let-flavor="rowData" pTemplate="body">
+						<span>{{flavor.tags | tags}}</span>
+					</ng-template>
 				</p-column>
 				<p-column [style]="{'width':'80px'}">
 					<ng-template let-col let-flavor="rowData" pTemplate="body">
