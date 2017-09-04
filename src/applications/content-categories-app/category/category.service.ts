@@ -5,7 +5,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/do'; 
+import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
@@ -279,15 +279,7 @@ export class CategoryService implements OnDestroy {
 
 	private _getCategory(id: number): Observable<KalturaCategory> {
 		if (id) {
-			return this._kalturaServerClient.request(
-				new CategoryGetAction({ id })
-			).map(response => {
-				if (response instanceof KalturaCategory) {
-					return response;
-				} else {
-					throw new Error(`invalid type provided, expected KalturaCategory, got ${typeof response}`);
-				}
-			});
+			return this._kalturaServerClient.request(new CategoryGetAction({ id }));
 		} else {
 			return Observable.throw(new Error('missing category ID'));
 		}
