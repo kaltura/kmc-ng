@@ -303,7 +303,7 @@ export class EntryStore implements  OnDestroy {
                 new BaseEntryGetAction({entryId})
 			).map(response =>
 			{
-				if (!(response instanceof KalturaMediaEntry))
+				if (response instanceof KalturaMediaEntry)
 				{
 					return response;
 				}else {
