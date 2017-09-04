@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, AfterContentInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 
 import { ISubscription } from 'rxjs/Subscription';
@@ -21,7 +21,7 @@ function urlValidator(control: AbstractControl): {[key: string]: boolean} | null
     templateUrl: './entry-captions-edit.component.html',
     styleUrls: ['./entry-captions-edit.component.scss']
 })
-export class EntryCaptionsEdit implements  OnInit, AfterViewInit, OnDestroy{
+export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 
 	@Input() currentCaption: KalturaCaptionAsset;
 	@Input() parentPopupWidget: PopupWidgetComponent;
@@ -70,7 +70,7 @@ export class EntryCaptionsEdit implements  OnInit, AfterViewInit, OnDestroy{
 	    this._createForm();
     }
 
-	ngAfterViewInit(){
+	ngAfterContentInit(){
 		if (this.parentPopupWidget) {
 			this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$
 				.subscribe(event => {
@@ -112,6 +112,14 @@ export class EntryCaptionsEdit implements  OnInit, AfterViewInit, OnDestroy{
 	public _saveAndClose(): void{
 		if (this.captionsEditForm.get("label").dirty) {
 			this.currentCaption.label = this.captionsEditForm.get("label").value;
+			if (this.captionsEditForm.get("label").value === ""){
+				this._browserService.alert(
+					{
+						header: this._appLocalization.get('app.common.attention'),
+						message: this._appLocalization.get('applications.content.entryDetails.captions.noLabel')
+					}
+				);
+			}
 		}
 		if (this.captionsEditForm.get("language").dirty) {
 			let langCode = this.captionsEditForm.get("language").value.toString().toLowerCase();

@@ -20,13 +20,13 @@ import { KalturaMetadataObjectType } from 'kaltura-typescript-client/types/Kaltu
 import { CategoryEntryAddAction } from 'kaltura-typescript-client/types/CategoryEntryAddAction';
 import { CategoryEntryDeleteAction } from 'kaltura-typescript-client/types/CategoryEntryDeleteAction';
 import { KalturaCategoryEntry } from 'kaltura-typescript-client/types/KalturaCategoryEntry';
-import { CategoriesStore } from '../../shared/categories-store.service';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng/kaltura-server-utils';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { DynamicMetadataForm, DynamicMetadataFormFactory } from '@kaltura-ng/kaltura-server-utils';
+import { CategoriesStore } from 'app-shared/content-shared/categories-store.service';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import 'rxjs/add/observable/forkJoin';

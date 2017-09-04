@@ -5,6 +5,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { CategoriesService } from "./categories.service";
 import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
+import { KalturaCategoryStatus } from "kaltura-typescript-client/types/KalturaCategoryStatus";
 
 @Component({
 	selector: 'kCategoriesTable',
@@ -16,7 +17,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 	public _blockerMessage: AreaBlockerMessage = null;
 
 	public _categories: KalturaCategory[] = [];
-	private _deferredCategories : any[];
+	private _deferredCategories: any[];
 	@Input() set categories(data: any[]) {
 		if (!this._deferredLoading) {
 			// the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
@@ -25,7 +26,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 			this.cdRef.detectChanges();
 			this._categories = data;
 			this.cdRef.detectChanges();
-		}else {
+		} else {
 			this._deferredCategories = data
 		}
 	}
@@ -40,31 +41,26 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 	@Output()
 	selectedCategoriesChange = new EventEmitter<any>();
 
-	@ViewChild('dataTable') private dataTable: DataTable;
-	@ViewChild('actionsmenu') private actionsMenu: Menu;
-	private actionsMenuEntryId: string = "";
-	private entriesStoreStatusSubscription: ISubscription;
+	@ViewChild('dataTable') private _dataTable: DataTable;
+	@ViewChild('actionsmenu') private _actionsMenu: Menu;
+	private _actionsMenuCategoryId: number = 0;
+	private _categoriesServiceStatusSubscription: ISubscription;
 
 	public _deferredLoading = true;
 	public _emptyMessage: string = "";
 
 	public _items: MenuItem[];
 
-	public rowTrackBy: Function = (index: number, item: any) => {return item.id};
+	public rowTrackBy: Function = (index: number, item: any) => { return item.id };
 
-	constructor(private appLocalization: AppLocalization, public categoriesService: CategoriesService, private cdRef:ChangeDetectorRef) {
-	}
-
-	_convertSortValue(value: boolean): number {
-		return value ? 1 : -1;
-
+	constructor(private appLocalization: AppLocalization, public categoriesService: CategoriesService, private cdRef: ChangeDetectorRef) {
 	}
 
 	ngOnInit() {
 		this._blockerMessage = null;
 		this._emptyMessage = "";
 		let loadedOnce = false; // used to set the empty message to "no results" only after search
-		this.entriesStoreStatusSubscription = this.categoriesService.state$.subscribe(
+		this._categoriesServiceStatusSubscription = this.categoriesService.state$.subscribe(
 			result => {
 				if (result.errorMessage) {
 					this._blockerMessage = new AreaBlockerMessage({
@@ -73,15 +69,16 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 							label: 'Retry',
 							action: () => {
 								this.categoriesService.reload(true);
-							}}
+							}
+						}
 						]
 					})
 				} else {
 					this._blockerMessage = null;
-					if (result.loading){
+					if (result.loading) {
 						this._emptyMessage = "";
 						loadedOnce = true;
-					}else {
+					} else {
 						if (loadedOnce) {
 							this._emptyMessage = this.appLocalization.get('applications.content.table.noResults');
 						}
@@ -95,22 +92,22 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 	}
 
 	ngOnDestroy() {
-		this.entriesStoreStatusSubscription.unsubscribe();
-		this.entriesStoreStatusSubscription = null;
+		this._categoriesServiceStatusSubscription.unsubscribe();
+		this._categoriesServiceStatusSubscription = null;
 	}
 
 	ngAfterViewInit() {
-		const scrollBody = this.dataTable.el.nativeElement.getElementsByClassName("ui-datatable-scrollable-body");
+		const scrollBody = this._dataTable.el.nativeElement.getElementsByClassName("ui-datatable-scrollable-body");
 		if (scrollBody && scrollBody.length > 0) {
 			scrollBody[0].onscroll = () => {
-				if (this.actionsMenu) {
-					this.actionsMenu.hide();
+				if (this._actionsMenu) {
+					this._actionsMenu.hide();
 				}
 			}
 		}
 		if (this._deferredLoading) {
 			// use timeout to allow the DOM to render before setting the data to the datagrid. This prevents the screen from hanging during datagrid rendering of the data.
-			setTimeout(()=> {
+			setTimeout(() => {
 				this._deferredLoading = false;
 				this._categories = this._deferredCategories;
 				this._deferredCategories = null;
@@ -118,6 +115,60 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 		}
 	}
 
+	onActionSelected(action: string, categoryID: number) {
+		this.actionSelected.emit({ "action": action, "categoryID": categoryID });
+	}
 
+	openActionsMenu(event: any, category: KalturaCategory) {
+		if (this._actionsMenu) {
+			this._actionsMenu.toggle(event);
+			if (this._actionsMenuCategoryId !== category.id) {
+				this.buildMenu();
+				this._actionsMenuCategoryId = category.id;
+				this._actionsMenu.show(event);
+			}
+		}
+	}
+
+	buildMenu(): void {
+		this._items = [
+			{
+				label: this.appLocalization.get("applications.content.categories.edit"), command: (event) => {
+					this.onActionSelected("edit", this._actionsMenuCategoryId);
+				}
+			},
+			{
+				label: this.appLocalization.get("applications.content.categories.delete"), command: (event) => {
+					this.onActionSelected("delete", this._actionsMenuCategoryId);
+				}
+			},
+			{
+				label: this.appLocalization.get("applications.content.categories.viewEntries"), command: (event) => {
+					this.onActionSelected("viewEntries", this._actionsMenuCategoryId);
+				}
+			},
+			{
+				label: this.appLocalization.get("applications.content.categories.moveCategory"), command: (event) => {
+					this.onActionSelected("moveCategory", this._actionsMenuCategoryId);
+				}
+			}
+		];
+	}
+
+	_onSelectionChange(event) {
+		this.selectedCategoriesChange.emit(event);
+	}
+
+	_onSortChanged(event) {
+		this.sortChanged.emit(event);
+	}
+
+	scrollToTop() {
+		const scrollBodyArr = this._dataTable.el.nativeElement.getElementsByClassName("ui-datatable-scrollable-body");
+		if (scrollBodyArr && scrollBodyArr.length > 0) {
+			const scrollBody: HTMLDivElement = scrollBodyArr[0];
+			scrollBody.scrollTop = 0;
+		}
+	}
 }
 

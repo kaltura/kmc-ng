@@ -8,6 +8,7 @@ import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaTy
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryFormWidget } from '../entry-form-widget';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaExternalMediaEntry } from 'kaltura-typescript-client/types/KalturaExternalMediaEntry';
 
 export interface SectionWidgetItem
 {
@@ -110,17 +111,18 @@ export class EntrySectionsListHandler extends EntryFormWidget
 
     private _isSectionEnabled(sectionKey : string, entry : KalturaMediaEntry) : boolean {
         const mediaType = this.data.mediaType;
+        const externalMedia = this.data instanceof KalturaExternalMediaEntry;
         switch (sectionKey) {
             case EntryWidgetKeys.Thumbnails:
                 return mediaType !== KalturaMediaType.image;
             case EntryWidgetKeys.Flavours:
-                return mediaType !== KalturaMediaType.image && !this._isLive(entry);
+                return mediaType !== KalturaMediaType.image && !this._isLive(entry) && !externalMedia;
             case EntryWidgetKeys.Captions:
-                return mediaType !== KalturaMediaType.image && !this._isLive(entry);
+                return mediaType !== KalturaMediaType.image && !this._isLive(entry) && !externalMedia;
             case EntryWidgetKeys.Live:
                 return this._isLive(entry);
             case EntryWidgetKeys.Clips:
-	            return mediaType !== KalturaMediaType.image;
+	            return mediaType !== KalturaMediaType.image && !externalMedia;
             default:
                 return true;
         }
