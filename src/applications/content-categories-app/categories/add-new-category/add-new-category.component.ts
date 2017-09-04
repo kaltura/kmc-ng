@@ -52,20 +52,6 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
         });
     }
 
-    _goNext() {
-        if (this._addNewCategoryForm.valid) {
-            if (this._addNewCategoryForm.controls['playlistType'].value === 'ruleBased') {
-                this.showNotSupportedMsg.emit();
-            } else {
-                // this._playlistsStore.setNewPlaylistData({
-                //     name: this._addNewCategoryForm.controls['name'].value,
-                //     description: this._addNewCategoryForm.controls['description'].value
-                // });
-                this.router.navigate(['/content/categories/category/new/metadata']);
-            }
-        }
-    }
-
     ngAfterViewInit() {
         if (this.parentPopupWidget) {
             this.parentPopupWidget.state$
@@ -163,11 +149,10 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
         }
     }
 
-    goNext() {
-        if (this._addNewCategoryForm.valid) {
-            this.router.navigate(['/content/categories/category/new/metadata']);
-        }
+    _goNext() {
+        this.router.navigate(['/content/categories/category', 123]);
     }
+    
     _close() {
         this.parentPopupWidget.close();
     }
