@@ -5,10 +5,11 @@ import {
   AfterViewInit,
   Output,
   EventEmitter,
-  ViewChild
+  ViewChild,
+  ChangeDetectorRef
 } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AppAuthentication } from 'app-shared/kmc-shell';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { UsersStore } from '../users-store/users-store.service';
 import {
@@ -35,7 +36,9 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
 	constructor(
 	  public usersStore: UsersStore,
     private _appAuthentication: AppAuthentication,
-    private _appLocalization: AppLocalization
+    private _appLocalization: AppLocalization,
+    private _browserService : BrowserService,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   buildMenu(user: KalturaUser): void {
@@ -50,13 +53,21 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
         {
           label: this._appLocalization.get("applications.content.table.blockUnblock"),
           command: () => {
-            this.usersStore.toggleUserStatus(user);
+            this.toggleUserStatus(user);
           }
         },
         {
           label: this._appLocalization.get("applications.content.table.delete"),
           command: () => {
-            console.log('delete', this.actionsMenuUserId);
+            this._browserService.confirm(
+              {
+                header: this._appLocalization.get('applications.content.users.deleteUser'),
+                message: this._appLocalization.get('applications.content.users.confirmDelete', {0: user.fullName}),
+                accept: () => {
+                  this.deleteUser(user.id);
+                }
+              }
+            );
           }
         }
       );
@@ -73,11 +84,77 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  toggleUserStatus(user: KalturaUser): void {
+    this.usersStore.toggleUserStatus(user)
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {
+          this.usersStore.reload(true);
+        },
+        error => {
+          this._blockerMessage = new AreaBlockerMessage(
+            {
+              message: error.message,
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this.toggleUserStatus(user);
+                    this._blockerMessage = null;
+                  }
+                },
+                {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this._blockerMessage = null;
+                  }
+                }
+              ]
+            }
+          )
+        }
+      );
+  }
+
+  deleteUser(userId: string): void {
+    this.usersStore.deleteUser(userId)
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {
+          this.usersStore.reload(true);
+        },
+        error => {
+          this._blockerMessage = new AreaBlockerMessage(
+            {
+              message: error.message,
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this.deleteUser(userId);
+                    this._blockerMessage = null;
+                  }
+                },
+                {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this._blockerMessage = null;
+                  }
+                }
+              ]
+            }
+          )
+        }
+      );
+  }
+
 	ngOnInit() {
     this.usersStore.users$
       .cancelOnDestroy(this)
       .subscribe(
         response => {
+         this._users = [];
+          this.cdRef.detectChanges();
           this._users = response.items.map(user => {
             let userFullName: string = '',
                 roleName: string = '';
@@ -106,6 +183,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
               lastLoginTime: user.lastLoginTime
             }
           });
+          this.cdRef.detectChanges();
         }
       );
   }

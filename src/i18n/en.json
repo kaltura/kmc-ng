@@ -186,7 +186,9 @@
         "clickHere": "Click here",
         "usersUpgrade": "to upgrade your account.",
         "you": "You",
-        "accountOwner": "Account Owner"
+        "accountOwner": "Account Owner",
+        "deleteUser": "Delete User",
+        "confirmDelete": "Are you sure you want to delete the selected user? \n ({{0}})"
       },
       "filters": {
         "activeFilters": "Active Filters:",

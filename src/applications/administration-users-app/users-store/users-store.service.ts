@@ -25,7 +25,9 @@ import { KalturaUserRoleListResponse } from 'kaltura-typescript-client/types/Kal
 import { KalturaPermissionListResponse } from 'kaltura-typescript-client/types/KalturaPermissionListResponse';
 import { KalturaPartner } from 'kaltura-typescript-client/types/KalturaPartner';
 import { BrowserService } from 'app-shared/kmc-shell';
-import {UserUpdateAction} from "kaltura-typescript-client/types/UserUpdateAction";
+import { UserUpdateAction } from 'kaltura-typescript-client/types/UserUpdateAction';
+import { UserDeleteAction } from 'kaltura-typescript-client/types/UserDeleteAction';
+import { Observable } from 'rxjs/Observable';
 
 export interface QueryData
 {
@@ -84,9 +86,17 @@ export class UsersStore implements OnDestroy {
     }
   }
 
-  public reload(query: Partial<QueryData>): void {
-	  this._updateQueryData(query);
-	  this._loadData();
+  public reload(force : boolean) : void;
+  public reload(query : Partial<QueryData>) : void;
+  public reload(query : boolean | Partial<QueryData>): void {
+    const forceReload = (typeof query === 'object' || (typeof query === 'boolean' && query));
+
+    if (forceReload || this._users.getValue().totalCount === 0) {
+      if (typeof query === 'object') {
+        this._updateQueryData(query);
+      }
+      this._loadData();
+    }
   }
 
   private _loadData(): void {
@@ -169,54 +179,82 @@ export class UsersStore implements OnDestroy {
     );
   }
 
-  public toggleUserStatus(user: KalturaUser): void {
+  public toggleUserStatus(user: KalturaUser) {
     this._state.next({loading: true});
-    user.status = +!user.status;
 
-    this._kalturaServerClient.multiRequest(
-      new KalturaMultiRequest(
-        new UserUpdateAction (
-          {
-            userId: user.id,
-            user: new KalturaUser({status: user.status})
-          }
-        ),
-        new UserListAction(
-          {
-            filter: new KalturaUserFilter({
-              isAdminEqual: KalturaNullableBoolean.trueValue,
-              loginEnabledEqual: KalturaNullableBoolean.trueValue,
-              statusIn: KalturaUserStatus.active + "," + KalturaUserStatus.blocked,
-              orderBy: KalturaUserOrderBy.createdAtAsc.toString()
-            }),
-            pager: new KalturaFilterPager({
-              pageSize: this._querySource.getValue().pageSize,
-              pageIndex: this._querySource.getValue().pageIndex
+    return Observable.create(observer => {
+      this._kalturaServerClient.multiRequest(
+        new KalturaMultiRequest(
+          new UserUpdateAction (
+            {
+              userId: user.id,
+              user: new KalturaUser({status: +!user.status})
+            }
+          ),
+          new UserListAction(
+            {
+              filter: new KalturaUserFilter({
+                isAdminEqual: KalturaNullableBoolean.trueValue,
+                loginEnabledEqual: KalturaNullableBoolean.trueValue,
+                statusIn: KalturaUserStatus.active + "," + KalturaUserStatus.blocked,
+                orderBy: KalturaUserOrderBy.createdAtAsc.toString()
+              }),
+              pager: new KalturaFilterPager({
+                pageSize: this._querySource.getValue().pageSize,
+                pageIndex: this._querySource.getValue().pageIndex
+              })
+            }
+          )
+        )
+      )
+        .cancelOnDestroy(this)
+        .subscribe(
+          data => {
+            data.forEach(response => {
+              this._state.next({loading: false});
+
+              if(response.result instanceof KalturaUserListResponse) {
+                this._users.next({
+                  items : response.result.objects,
+                  totalCount: response.result.totalCount
+                });
+              }
+              observer.next();
+              observer.complete();
             })
+          },
+          error => {
+            this._state.next({loading: false});
+            observer.error(error);
+          }
+        );
+    });
+  }
+
+  public deleteUser(userId: string) {
+    this._state.next({loading: true});
+
+    return Observable.create(observer => {
+      this._kalturaServerClient.request(
+        new UserDeleteAction (
+          {
+            userId: userId
           }
         )
       )
-    )
-    .cancelOnDestroy(this)
-    .subscribe(
-      data => {
-        data.forEach(response => {
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {
           this._state.next({loading: false});
-
-          if(response.result instanceof KalturaUserListResponse) {
-            this._users.next({
-              items : response.result.objects,
-              totalCount: response.result.totalCount
-            });
-          }
-        })
-      },
-      error => {
-        this._state.next({
-          loading: true
-        });
-      }
-    );
+          observer.next();
+          observer.complete();
+        },
+        error => {
+          this._state.next({loading: false});
+          observer.error(error);
+        }
+      );
+    });
   }
 
   ngOnDestroy() {

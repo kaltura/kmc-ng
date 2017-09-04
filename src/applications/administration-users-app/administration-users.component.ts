@@ -61,14 +61,6 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
         }
       );
 
-    this.usersStore.partnerPermissions$
-      .cancelOnDestroy(this)
-      .subscribe(
-        response => {
-
-        }
-      );
-
     this.usersStore.partnerInfo$
       .cancelOnDestroy(this)
       .subscribe(
