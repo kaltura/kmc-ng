@@ -266,7 +266,6 @@ export class EntryStore implements  OnDestroy {
             .cancelOnDestroy(this)
             .subscribe(
 				response => {
-					if (response instanceof KalturaMediaEntry) {
 
 						this._entry.next(response);
 						this._entryId = response.id;
@@ -280,13 +279,6 @@ export class EntryStore implements  OnDestroy {
 						}else {
 							this._state.next({action: ActionTypes.EntryLoaded});
 						}
-
-					} else {
-						this._state.next({
-							action: ActionTypes.EntryLoadingFailed,
-							error: new Error(`entry type not supported ${response.name}`)
-						});
-					}
 				},
 				error => {
 					this._state.next({action: ActionTypes.EntryLoadingFailed, error});
@@ -303,53 +295,24 @@ export class EntryStore implements  OnDestroy {
 		}
 	}
 
-	private _getEntry(entryId:string) : Observable<KalturaMediaEntry | Error>
+	private _getEntry(entryId:string) : Observable<KalturaMediaEntry>
 	{
-		if (entryId) {
-			return Observable.create(observer => {
-
-				try {
-					const request = new KalturaMultiRequest(
-						new BaseEntryGetAction({entryId})
-                            .setCompletion(
-								response =>
-								{
-									if (response.result) {
-										if (response.result instanceof KalturaMediaEntry) {
-											observer.next(response.result);
-											observer.complete();
-										}else
-										{
-											observer.next(new Error("invalid entry type, expected KalturaMediaEntry"));
-											observer.complete();
-										}
-									}else {
-										observer.next(response.error);
-									}
-								}
-							)
-					);
-
-					const requestSubscription = this._kalturaServerClient.multiRequest(request).subscribe(() =>
-					{
-						// should not do anything here
-					});
-
-					return () =>
-					{
-						if (requestSubscription)
-						{
-							requestSubscription.unsubscribe();
-						}
-					}
-				}catch(ex)
+		if (entryId)
+		{
+			return this._kalturaServerClient.request(
+                new BaseEntryGetAction({entryId})
+			).map(response =>
+			{
+				if (!(response instanceof KalturaMediaEntry))
 				{
-					observer.next(ex);
+					return response;
+				}else {
+					throw new Error(`invalid type provided, expected KalturaMediaEntry, got ${typeof response}`);
 				}
 			});
 		}else
 		{
-			return Observable.of(new Error('missing entry id'));
+			return Observable.throw(new Error('missing entryId'));
 		}
 	}
 
