@@ -2,8 +2,7 @@ import { Component, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
 import { EntryStore } from '../entry-store.service';
 import { SectionWidgetItem, EntrySectionsListHandler } from './entry-sections-list-handler';
 
-
-
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryFormManager } from '../entry-form-manager';
 
 
@@ -34,7 +33,9 @@ export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
 		this._loading = true;
 		this._handler = this._entryFormManager.attachWidget(EntrySectionsListHandler);
 
-		this._handler.sections$.subscribe(
+        this._handler.sections$
+        .cancelOnDestroy(this)
+        .subscribe(
 			sections =>
 			{
 				this._loading = false;
@@ -45,8 +46,7 @@ export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
 	}
 
     ngOnDestroy() {
-        this._entryFormManager.detachWidget(this._handler);
-
+        this._entryFormManager.detachWidget(this._handler);        
     }
 
 

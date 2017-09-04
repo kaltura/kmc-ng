@@ -1,0 +1,7 @@
+<k-area-blocker [showLoader]="_loading">
+  <ul *ngIf="_showList">
+    <li *ngFor="let section of _sections" [class.active]="section.attached">
+      <div [class.kSectionHasErrors]="!section.isValid" (click)="navigateToSection(section)">{{section.label}}</div>
+    </li>
+  </ul>
+</k-area-blocker>
