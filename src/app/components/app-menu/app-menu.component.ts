@@ -17,8 +17,6 @@ export class AppMenuComponent implements OnInit, OnDestroy{
 
     private sub: any;
     public _userContext: AppUser;
-    public _userSettingsOpen = false;
-    public _helpOpen = false;
 
     constructor(private userAuthentication: AppAuthentication, private appMenuService: AppMenuService, private appNavigator : AppNavigator, private router: Router) {
         this.sub = router.events.subscribe((event) => {

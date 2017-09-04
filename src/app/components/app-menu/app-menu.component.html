@@ -13,8 +13,8 @@
         <i class="kIconfolder_large"></i>
         <i class="kIconuser" (click)="navigate('/administration')" [class.open]="selectedMenuItem.routePath==='administration'" [kTooltip]="'app.menu.Administration' | translate" [placement]="'bottom'"></i>
         <i class="kIcongear" (click)="navigate('/settings')" [class.open]="selectedMenuItem.routePath==='settings'" [kTooltip]="'app.menu.Settings' | translate" [placement]="'bottom'"></i>
-        <i #help class="kIconhelp"  [class.open]="_helpOpen"></i>
-        <div #username class="kUserName" [class.open]="_userSettingsOpen">
+        <i #help class="kIconhelp"></i>
+        <div #username class="kUserName">
             <span>{{_userContext.fullName}}</span>
             <i class="kIcondropdown_arrow_bottom"></i>
         </div>
@@ -30,24 +30,26 @@
     </div>
 </div>
 
-<kPopupWidget #usersettings [appendTo]="appmenu" [popupWidth]="240" [popupHeight]="226" [closeBtn]="false" [targetRef]="username" [targetOffset]="{'x':-50, 'y': 30}" (onOpen)="_userSettingsOpen=true" (onClose)="_userSettingsOpen=false">
+<kPopupWidget #usersettings [appendTo]="appmenu" [popupWidth]="240" [popupHeight]="226" [closeBtn]="false" [targetRef]="username" [targetOffset]="{'x':-50, 'y': 30}" (onOpen)="username.className='kUserName open'" (onClose)="username.className='kUserName'">
     <kKMCUserSettings></kKMCUserSettings>
 </kPopupWidget>
 
-<kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="_helpOpen=true" (onClose)="_helpOpen=false">
-    <p class="kHelpTitle">{{'app.helpMenu.gettingStarted' | translate | uppercase}}</p>
-    <p class="kHelpLink">{{'app.helpMenu.kmcOverview' | translate}}</p>
-    <p class="kHelpLink">{{'app.helpMenu.mediaManagement' | translate}}</p>
-    <p class="kHelpLink">{{'app.helpMenu.productTour' | translate}}</p>
-    <hr>
-    <p class="kHelpTitle">{{'app.helpMenu.support' | translate | uppercase}}</p>
-    <p class="kHelpLink">{{'app.helpMenu.userManual' | translate}}</p>
-    <p class="kHelpLink">{{'app.helpMenu.contact' | translate}}</p>
-    <div class="kContexualHelp">
+<kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="help.className='kIconhelp open'" (onClose)="help.className='kIconhelp'">
+    <div class="kHelpMenu">
+        <p class="kHelpTitle">{{'app.helpMenu.gettingStarted' | translate | uppercase}}</p>
+        <p class="kHelpLink">{{'app.helpMenu.kmcOverview' | translate}}</p>
+        <p class="kHelpLink">{{'app.helpMenu.mediaManagement' | translate}}</p>
+        <p class="kHelpLink">{{'app.helpMenu.productTour' | translate}}</p>
         <hr>
-        <p class="kHelpTitle">{{'app.helpMenu.currentPage' | translate | uppercase}}</p>
-        <p class="kHelpLink">Contextual link 1</p>
-        <p class="kHelpLink">Contextual link 2</p>
+        <p class="kHelpTitle">{{'app.helpMenu.support' | translate | uppercase}}</p>
+        <p class="kHelpLink">{{'app.helpMenu.userManual' | translate}}</p>
+        <p class="kHelpLink">{{'app.helpMenu.contact' | translate}}</p>
+        <div class="kContexualHelp">
+            <hr>
+            <p class="kHelpTitle">{{'app.helpMenu.currentPage' | translate | uppercase}}</p>
+            <p class="kHelpLink">Contextual link 1</p>
+            <p class="kHelpLink">Contextual link 2</p>
+        </div>
     </div>
 </kPopupWidget>
 
