@@ -22,9 +22,6 @@ import { CategoriesPrimeService } from "app-shared/content-shared/categories-pri
 export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecked {
 
     @Input() parentPopupWidget: PopupWidgetComponent;
-    @Input() value: EntryCategoryItem[] = [];
-    @Output() showNotSupportedMsg = new EventEmitter<boolean>();
-    @Output() valueChange = new EventEmitter<EntryCategoryItem[]>();
     @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
     @ViewChild('autoComplete')
     private _autoComplete: AutoComplete = null;
@@ -45,10 +42,7 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
         private _browserService: BrowserService, private cdRef: ChangeDetectorRef, private _categoriesPrimeService: CategoriesPrimeService) {
         // build FormControl group
         this._addNewCategoryForm = _formBuilder.group({
-            name: ['', Validators.required],
-            description: '',
-            playlistType: ['manual'],
-            ruleBasedSub: false
+            noParent: 'noParent'
         });
     }
 
@@ -119,6 +113,9 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
                     name: node.origin.name
                 });
             }
+
+            // unselect "no parent "
+            this._addNewCategoryForm.get('noParent').setValue(false);
         }
     }
 
@@ -129,7 +126,8 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
             if (autoCompleteItemIndex > -1) {
                 this._selectedCategories.splice(autoCompleteItemIndex, 1);
             }
-
+            // select "no parent "
+            this._addNewCategoryForm.get('noParent').setValue('noParent');
         }
     }
 
@@ -152,7 +150,7 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
     _goNext() {
         this.router.navigate(['/content/categories/category', 123]);
     }
-    
+
     _close() {
         this.parentPopupWidget.close();
     }
@@ -175,6 +173,9 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
                 this._ngAfterViewCheckedContext.updateTreeSelections = true;
                 this._ngAfterViewCheckedContext.expendTreeSelectionNodeId = selectedItem.id;
             }
+
+            // unselect "no parent "
+            this._addNewCategoryForm.get('noParent').setValue(false);
         }
 
         // clear user text from component
@@ -221,5 +222,10 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
             (err) => {
                 this._categoriesProvider.next({ suggestions: [], isLoading: false, errorMessage: <any>(err.message || err) });
             });
+    }
+
+    public _onParentRadioButtonSelected(): void {
+        this._treeSelection = [];
+        this._selectedCategories = [];
     }
 }

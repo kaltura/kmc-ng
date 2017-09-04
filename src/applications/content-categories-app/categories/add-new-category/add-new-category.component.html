@@ -5,7 +5,11 @@
     </div>
     <div class="kContainer">
       <span>{{('applications.content.addNewCategory.selectCategoryParent') | translate}}</span>
-      <span><p-radioButton label="{{'applications.content.addNewCategory.noParent' | translate}}"></p-radioButton>
+      <span><p-radioButton label="{{'applications.content.addNewCategory.noParent' | translate}}"
+        name="noParent"
+        value="noParent"
+        formControlName="noParent"
+        (click)="_onParentRadioButtonSelected()"></p-radioButton>
       </span>
     </div>
     <div class="kMain">     
