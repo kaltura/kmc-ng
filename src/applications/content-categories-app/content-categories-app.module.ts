@@ -1,3 +1,4 @@
+import { CategoriesBulkActionsComponent } from './categories/bulk-actions/categories-bulk-actions.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -68,7 +69,8 @@ import { CategoryCanDeactivate } from "applications/content-categories-app/categ
     declarations: [
         ContentCategoriesComponent,
         CategoryComponentsList,
-        CategoriesComponentsList
+        CategoriesComponentsList,
+        CategoriesBulkActionsComponent             
     ],
     exports: [],
     providers: [CategoryCanDeactivate],
