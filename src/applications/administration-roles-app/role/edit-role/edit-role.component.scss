@@ -19,7 +19,7 @@
 
   .kContainer {
     margin: 12px;
-    height: 278px;
+    height: 150px;
   }
 
   .kFooter {
@@ -34,42 +34,49 @@
   }
 
   .kRow {
+
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    flex-direction: row;
-    margin-top: 24px;
-    font-size: 15px;
+    padding-top: 20px;
+
     .kLabel {
-      width: 120px;
+      width: 179px;
+      -webkit-box-flex: 0;
+      -ms-flex: 0 0 auto;
       flex: 0 0 auto;
+      height: 18px;
+      color: $kGrayscale1;
+      font-size: 15px;
+      line-height: 18px;
     }
-    input {
-      width: 100%;
+
+    .kRequired {
+      width: 20px;
+      font-size: 24px;
+      color: $kGrayscale3;
+      &.kHasError {
+        color: $kDandger;
+        font-weight: bold;
+      }
     }
-  }
+    .kRequired, .kLabel {
+      padding: 8px 4px;
+      height: 18px;
+    }
+    .kControl {
+      color: $kGrayscale2;
+      height: 34px;
+      width: 300px;
+      border-radius: 3px;
+      &.kHasError {
+        border: 1px solid $kDandger;
+        background: initial;
+      }
+    }
 
-  .kUpload {
-    padding-left: 120px;
-    margin-top: 18px;
-    overflow-x: hidden;
-  }
-
-  .kUploadButton {
-    font-weight: 400;
-    height: 32px;
-    margin-bottom: 8px;
-  }
-
-  .kCaptionUrl {
-    margin-top: 18px;
-    margin-left: 120px;
-    width: 234px;
-  }
-
-  .kInvalid {
-    color: red;
-    font-size: 12px;
-    margin-left: 122px;
-    font-weight: 700;
+    .error {
+      padding-top: 8px;
+    }
   }
 }

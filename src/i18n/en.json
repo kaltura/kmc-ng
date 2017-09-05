@@ -686,6 +686,7 @@
         "confirmDeleteHeader": "Confirm Delete",
         "confirmDeleteBody": "Are you sure you want to delete the selected role? \n ({{0}})",
         "deleted": "Role deleted successfully",
+        "copyOf":"Copy of",
         "actions": {
           "edit": "Edit",
           "duplicate": "Duplicate",

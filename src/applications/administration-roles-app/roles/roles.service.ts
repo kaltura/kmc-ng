@@ -15,6 +15,8 @@ import {KalturaUserRoleOrderBy} from 'kaltura-typescript-client/types/KalturaUse
 import {UserRoleDeleteAction} from 'kaltura-typescript-client/types/UserRoleDeleteAction';
 import {UserRoleUpdateAction} from 'kaltura-typescript-client/types/UserRoleUpdateAction';
 import {UserRoleAddAction} from 'kaltura-typescript-client/types/UserRoleAddAction';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {UserRoleCloneAction} from 'kaltura-typescript-client/types/UserRoleCloneAction';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -58,8 +60,9 @@ export class RolesService implements OnDestroy {
   public queryData$ = this._queryData.asObservable();
 
   constructor(private _kalturaClient: KalturaClient,
-              private browserService: BrowserService) {
-    const defaultPageSize = this.browserService.getFromLocalStorage('roles.list.pageSize');
+              private _browserService: BrowserService,
+              private _appLocalization: AppLocalization) {
+    const defaultPageSize = this._browserService.getFromLocalStorage('roles.list.pageSize');
     if (defaultPageSize !== null) {
       this._updateQueryData({
         pageSize: defaultPageSize
@@ -96,7 +99,7 @@ export class RolesService implements OnDestroy {
     this._queryData.next(newQueryData);
 
     if (partialData.pageSize) {
-      this.browserService.setInLocalStorage('roles.list.pageSize', partialData.pageSize);
+      this._browserService.setInLocalStorage('roles.list.pageSize', partialData.pageSize);
     }
   }
 
@@ -229,7 +232,7 @@ export class RolesService implements OnDestroy {
 
   public addRole(role: KalturaUserRole): Observable<void> {
     if (!role) {
-      return Observable.throw({message: 'Unable to update role'});
+      return Observable.throw({message: 'Unable to add role'});
     }
     role.tags = 'kmc';
     return Observable.create(observer => {
@@ -241,6 +244,37 @@ export class RolesService implements OnDestroy {
         result => {
           subscription = null;
           observer.next();
+          observer.complete();
+        },
+        error => {
+          subscription = null;
+          observer.error(error);
+        }
+      );
+
+      return () => {
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+      }
+    });
+  }
+
+  public duplicateRole(role: KalturaUserRole): Observable<KalturaUserRole> {
+    if (!role) {
+      return Observable.throw({message: 'Unable to duplicate role'});
+    }
+    role.tags = 'kmc';
+
+    return Observable.create(observer => {
+      let subscription: ISubscription;
+
+      subscription = this._kalturaClient.request(new UserRoleCloneAction({
+        userRoleId: role.id
+      })).subscribe(
+        result => {
+          subscription = null;
+          observer.next(result);
           observer.complete();
         },
         error => {

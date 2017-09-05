@@ -1,5 +1,4 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {RolesTableComponent} from './roles-table.component';
 import {RolesService} from './roles.service';
@@ -79,12 +78,10 @@ export class RolesListComponent implements OnInit, OnDestroy {
     const role = event.role;
     switch (action) {
       case 'edit':
-        this._currentEditRole = role;
-        this.editPopup.open();
-        // this.router.navigate(['/administration/roles/role', event.roleID]);
+        this.editRole(role);
         break;
       case 'duplicate':
-        // this.router.navigate(['/administration/roles/role', event.roleID]);
+        this.duplicateRole(role);
         break;
       case 'delete':
         this._browserService.confirm(
@@ -104,6 +101,11 @@ export class RolesListComponent implements OnInit, OnDestroy {
 
   public addRole(): void {
     this._currentEditRole = null;
+    this.editPopup.open();
+  }
+
+  public editRole(role: KalturaUserRole): void {
+    this._currentEditRole = role;
     this.editPopup.open();
   }
 
@@ -132,6 +134,44 @@ export class RolesListComponent implements OnInit, OnDestroy {
                   label: this.appLocalization.get('app.common.retry'),
                   action: () => {
                     this.deleteRole(roleID, partnerId);
+                  }
+                },
+                {
+                  label: this.appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this._blockerMessage = null;
+                  }
+                }
+              ]
+            }
+          );
+        }
+      );
+  }
+
+
+  private duplicateRole(role: KalturaUserRole): void {
+    this._isBusy = true;
+    this._blockerMessage = null;
+    this._rolesService.duplicateRole(role)
+      .cancelOnDestroy(this)
+      .subscribe(
+        (duplicatedRole) => {
+          this._isBusy = false;
+          this._rolesService.reload(true);
+          this.editRole(duplicatedRole);
+        },
+        error => {
+          this._isBusy = false;
+
+          this._blockerMessage = new AreaBlockerMessage(
+            {
+              message: error.message,
+              buttons: [
+                {
+                  label: this.appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this.duplicateRole(role);
                   }
                 },
                 {
