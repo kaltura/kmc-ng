@@ -94,8 +94,11 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.usersStore.toggleUserStatus(user)
       .cancelOnDestroy(this)
       .subscribe(
-        () => {
-          this.usersStore.reload(true);
+        response => {
+          this.usersStore.updateUserStatus({
+            items : response[1].result.objects,
+            totalCount: response[1].result.totalCount
+          });
         },
         error => {
           this._blockerMessage = new AreaBlockerMessage(
