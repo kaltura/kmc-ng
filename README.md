@@ -21,15 +21,17 @@ KMCng application uses the following technologies and conventions:
 - [x] Ensure you have [git installed](https://git-for-windows.github.io/) 
 - [x] Ensure you have [yarn installed](https://yarnpkg.com/lang/en/docs/install/) (we use it for node package management) 
 
-### Get the sources
+### Project build options
 > KKC-ng solution is comprised of many packages; The KMC-ng application is developed along-side the [kaltura-ng](https://github.com/kaltura/kaltura-ng) packages and [mc-theme](https://github.com/kaltura/kaltura-ng-mc-theme) package. To simplify local development we created a tool that automagically bind them together as-if they where part of the same repository.
 
 You have two development options as described below.
 
-#### Option I (the blue pill) - Develop kmc-ng application
-Use this option if you want to get this app running fast and you don't care working with a code few days older.
+#### Option I (the blue pill) - Build this repo (kmc-ng) only to get a running application
+This option builds the kmc-ng repo against the Kaltura libraries published on NPM. 
+Note that the build script runs an earlier version of the application which compiles against the published NPM libraries. This version does not include latest features and fixes.
   
-  > If you want to later create a pull request you should use the second option.
+  > Please do not open issues when using this version as it is not up to date.
+  > If you want to create a pull request or open an issue, use the second option.
 
 ```bash
 # clone our repo
@@ -51,6 +53,8 @@ $ yarn install --check-files
 $ yarn start
 ```
 
+> Note - if you need to [edit the application configuration](#config), change the environment.ts file only after running all of the commands above 
+
 #### Option II (the red pill)- Develop kmc-ng complete solution (multiple repos)
 > In this option you will clone all the relevant repos to your machine and bind them together. Use this option to develop and create pull requests.
 
@@ -63,6 +67,10 @@ Run the following command
 $ yarn start
 ```
 navigate to [http://localhost:4200](http://localhost:4200) in your browser.
+
+## <a name="config"></a>Configuring the application endpoints
+The Github version configures server endpoints against the Kaltura production server.
+If you need to configure these enpoint, edit the [environment.ts](https://github.com/kaltura/kmc-ng/blob/33c3f177bf4437092b4ba46d3f9e9a470463a481/src/environments/environment.ts#L15-L24) file.
 
 ## KMC-ng solution
 KMC-ng is built on-top of several kaltura instrastructure packages. 
