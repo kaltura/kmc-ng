@@ -26,6 +26,7 @@ import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura
 import { DynamicMetadataFormModule } from '@kaltura-ng/kaltura-server-utils';
 import { CategoryComponentsList } from './category/category-components-list';
 import { CategoriesComponentsList } from './categories/categories-components-list';
+import { CategoryCanDeactivate } from "applications/content-categories-app/category/category-can-deactivate.service";
 
 @NgModule({
     imports: [
@@ -72,7 +73,7 @@ import { CategoriesComponentsList } from './categories/categories-components-lis
         CategoriesComponentsList
     ],
     exports: [],
-    providers: [],
+    providers: [CategoryCanDeactivate],
 })
 export class ContentCategoriesAppModule {
 }

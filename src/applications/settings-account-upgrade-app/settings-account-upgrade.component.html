@@ -1,21 +1,34 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
   <form [formGroup]="contactUsForm" novalidate (ngSubmit)="onSubmit()" class="kAccountUpgradeWrapper kContent">
     <section class="kHeader">
-      <div class="kTitle">{{'applications.settings.accountUpgrade.contactUs' | translate}}</div>
-      <button pButton class="kButtonBranded kSaveBtn"
-              label="{{'applications.settings.accountUpgrade.send' | translate}}"></button>
+      <div class="kTitle"><i class="kIconContact-us kTitleIcon"></i>{{'applications.settings.accountUpgrade.contactUs' |
+        translate}}
+      </div>
+
     </section>
-    <h3>
-      {{'applications.settings.accountUpgrade.callUs' | translate}}
-    </h3>
+    <section class="kCallUs">
+      <div class="kCallUsHeader">
+        {{'applications.settings.accountUpgrade.callUsHeader' | translate}}
+
+      </div>
+      <div class="kCallUsBody">
+        {{'applications.settings.accountUpgrade.callUsBody' | translate}}
+
+      </div>
+    </section>
     <section class="kFormContainer">
-      <div class="form-section">
+      <div class="kFormSection">
+        <div class="kTitle">{{'applications.settings.accountUpgrade.sendUsMessage' | translate}}</div>
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.accountUpgrade.name' | translate}}</span>
+          <div class="kRequired"></div>
           <input class="kControl" formControlName="name" pInputText>
         </div>
         <div class="kRow">
-          <span class="kLabel">{{'applications.settings.accountUpgrade.phone' | translate}} *</span>
+          <span class="kLabel">{{'applications.settings.accountUpgrade.phone' | translate}}</span>
+          <div class="kRequired" [ngClass]="{'kHasError':!contactUsForm.controls['phone'].valid &&
+                   contactUsForm.controls['phone'].touched}">*
+          </div>
           <div>
             <input class="kControl" formControlName="phone" pInputText
                    [ngClass]="{'kHasError':!contactUsForm.controls['phone'].valid &&
@@ -34,7 +47,12 @@
         </div>
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.accountUpgrade.comments' | translate}}</span>
+          <div class="kRequired"></div>
           <textarea class="kControl" formControlName="comments" pInputTextarea></textarea>
+        </div>
+        <div class="kSaveBtnContainer kRow">
+          <button pButton class="kButtonBranded kSaveBtn"
+                  label="{{'applications.settings.accountUpgrade.send' | translate}}"></button>
         </div>
       </div>
     </section>

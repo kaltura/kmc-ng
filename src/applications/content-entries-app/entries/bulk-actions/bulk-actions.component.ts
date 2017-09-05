@@ -26,32 +26,32 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   @Input() selectedEntries: KalturaMediaEntry[];
 
-  @Output() onBulkChange = new EventEmitter<{reload: boolean}>();
+  @Output() onBulkChange = new EventEmitter<{ reload: boolean }>();
 
   @ViewChild('bulkActionsPopup') public bulkActionsPopup: PopupWidgetComponent;
 
-  constructor(private _appLocalization: AppLocalization, private _browserService : BrowserService,
-              private _bulkSchedulingService: BulkSchedulingService,
-              private _bulkAccessControlService: BulkAccessControlService,
-              private _bulkAddTagsService: BulkAddTagsService,
-              private _bulkRemoveTagsService: BulkRemoveTagsService,
-              private _bulkAddCategoriesService: BulkAddCategoriesService,
-              private _bulkChangeOwnerService: BulkChangeOwnerService,
-              private _bulkRemoveCategoriesService: BulkRemoveCategoriesService,
-              private _bulkDownloadService: BulkDownloadService,
-              private _bulkDeleteService: BulkDeleteService) {
+  constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService,
+    private _bulkSchedulingService: BulkSchedulingService,
+    private _bulkAccessControlService: BulkAccessControlService,
+    private _bulkAddTagsService: BulkAddTagsService,
+    private _bulkRemoveTagsService: BulkRemoveTagsService,
+    private _bulkAddCategoriesService: BulkAddCategoriesService,
+    private _bulkChangeOwnerService: BulkChangeOwnerService,
+    private _bulkRemoveCategoriesService: BulkRemoveCategoriesService,
+    private _bulkDownloadService: BulkDownloadService,
+    private _bulkDeleteService: BulkDeleteService) {
 
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this._bulkActionsMenu = this.getBulkActionItems();
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
 
   }
 
-  openBulkActionWindow(action: string, popupWidth: number, popupHeight: number){
+  openBulkActionWindow(action: string, popupWidth: number, popupHeight: number) {
     this._bulkAction = action;
     this._bulkWindowWidth = popupWidth;
     this._bulkWindowHeight = popupHeight;
@@ -62,17 +62,17 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   // set scheduling changes
-  onSchedulingChanged(schedulingParams: SchedulingParams): void{
+  onSchedulingChanged(schedulingParams: SchedulingParams): void {
     this.executeService(this._bulkSchedulingService, schedulingParams);
   }
 
   // set access control changes
-  onAccessControlChanged(profile: KalturaAccessControl): void{
+  onAccessControlChanged(profile: KalturaAccessControl): void {
     this.executeService(this._bulkAccessControlService, profile);
   }
 
   // add tags changed
-  onAddTagsChanged(tags: string[]): void{
+  onAddTagsChanged(tags: string[]): void {
     this.executeService(this._bulkAddTagsService, tags);
   }
 
@@ -82,30 +82,30 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   // add to categories changed
-  onAddToCategoriesChanged(categories: EntryCategoryItem[]): void{
+  onAddToCategoriesChanged(categories: EntryCategoryItem[]): void {
     this.executeService(this._bulkAddCategoriesService, categories);
   }
 
   // remove categories changed
-  onRemoveCategoriesChanged(categories: number[]): void{
+  onRemoveCategoriesChanged(categories: number[]): void {
     this.executeService(this._bulkRemoveCategoriesService, categories);
   }
 
   // owner changed
-  onOwnerChanged(owners: KalturaUser[]): void{
-    if (owners && owners.length){
+  onOwnerChanged(owners: KalturaUser[]): void {
+    if (owners && owners.length) {
       this.executeService(this._bulkChangeOwnerService, owners[0]);
     }
   }
 
   // download changed
-  onDownloadChanged(flavorId: number): void{
+  onDownloadChanged(flavorId: number): void {
     const showSuccessMsg = (result) => {
       this._browserService.alert(
-          {
-            header: this._appLocalization.get('applications.content.bulkActions.download'),
-            message: this._appLocalization.get('applications.content.bulkActions.downloadMsg',{0: result && result.email ? result.email : ''})
-          }
+        {
+          header: this._appLocalization.get('applications.content.bulkActions.download'),
+          message: this._appLocalization.get('applications.content.bulkActions.downloadMsg', { 0: result && result.email ? result.email : '' })
+        }
       );
     };
     this.executeService(this._bulkDownloadService, flavorId, false, true, showSuccessMsg);
@@ -114,82 +114,85 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   // bulk delete
   public deleteEntries(): void {
     let entriesToDelete = this.selectedEntries.map(entry => this._appLocalization.get('applications.content.entries.entryId', { 0: entry.id })),
-        entries: string = this.selectedEntries.length <= 10 ? entriesToDelete.join(',').replace(/,/gi, '\n') : '',
-        message: string = this.selectedEntries.length > 1 ?
-          this._appLocalization.get('applications.content.entries.confirmDeleteMultiple', {0: entries}) :
-          this._appLocalization.get('applications.content.entries.confirmDeleteSingle', {0: entries});
+      entries: string = this.selectedEntries.length <= 10 ? entriesToDelete.join(',').replace(/,/gi, '\n') : '',
+      message: string = this.selectedEntries.length > 1 ?
+        this._appLocalization.get('applications.content.entries.confirmDeleteMultiple', { 0: entries }) :
+        this._appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: entries });
     this._browserService.confirm(
-        {
-          header: this._appLocalization.get('applications.content.bulkActions.deleteEntries'),
-          message: message,
-          accept: () => {
-            setTimeout(()=>{
-              this.executeService(this._bulkDeleteService, {}, true, false); // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
-            },0);
-          }
+      {
+        header: this._appLocalization.get('applications.content.bulkActions.deleteEntries'),
+        message: message,
+        accept: () => {
+          setTimeout(() => {
+            this.executeService(this._bulkDeleteService, {}, true, false); // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
+          }, 0);
         }
+      }
     );
   }
 
   // bulk download initial check
-  private downloadEntries():void{
+  private downloadEntries(): void {
     // check for single image selection - immediate download
-    if (this.selectedEntries.length === 1 && this.selectedEntries[0].mediaType === KalturaMediaType.image){
+    if (this.selectedEntries.length === 1 && this.selectedEntries[0].mediaType === KalturaMediaType.image) {
       this._browserService.openLink(this.selectedEntries[0].downloadUrl + "/file_name/name");
-    }else{
+    } else {
       this.openBulkActionWindow("download", 570, 500)
     }
   }
 
-  private executeService(service: BulkActionBaseService<any>, data: any = {}, reloadEntries: boolean = true, confirmChunks: boolean = true, callback?: Function ): void{
+  private executeService(service: BulkActionBaseService<any>, data: any = {}, reloadEntries: boolean = true, confirmChunks: boolean = true, callback?: Function): void {
     this._bulkAction = "";
 
     const execute = () => {
-      this._browserService.setAppStatus({isBusy: true, errorMessage: null});
+      this._browserService.setAppStatus({ isBusy: true, errorMessage: null });
       service.execute(this.selectedEntries, data).subscribe(
-          result => {
-            this._browserService.setAppStatus({isBusy: false, errorMessage: null});
-            if (callback){
-              callback(result);
-            }
-            this.onBulkChange.emit({reload: reloadEntries});
-          },
-          error => {
-            this._browserService.setAppStatus({isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error')});
+        result => {
+          this._browserService.setAppStatus({ isBusy: false, errorMessage: null });
+          if (callback) {
+            callback(result);
           }
+          this.onBulkChange.emit({ reload: reloadEntries });
+        },
+        error => {
+          this._browserService.setAppStatus({ isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error') });
+        }
       );
     };
 
-    if (confirmChunks && this.selectedEntries.length > environment.modules.contentEntries.bulkActionsLimit){
+    if (confirmChunks && this.selectedEntries.length > environment.modules.contentEntries.bulkActionsLimit) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),
-          message: this._appLocalization.get('applications.content.bulkActions.confirm', {"0": this.selectedEntries.length}),
+          message: this._appLocalization.get('applications.content.bulkActions.confirm', { "0": this.selectedEntries.length }),
           accept: () => {
             execute();
           }
         }
       );
-    }else{
+    } else {
       execute();
     }
   }
 
-  getBulkActionItems(): MenuItem[]{
-    return  [
+  getBulkActionItems(): MenuItem[] {
+    return [
       { label: this._appLocalization.get('applications.content.bulkActions.setScheduling'), command: (event) => { this.openBulkActionWindow("setScheduling", 500, 500) } },
       { label: this._appLocalization.get('applications.content.bulkActions.setAccessControl'), command: (event) => { this.openBulkActionWindow("setAccessControl", 500, 550) } },
-      { label: this._appLocalization.get('applications.content.bulkActions.addRemoveTags'), items: [
-        { label: this._appLocalization.get('applications.content.bulkActions.addTags'), command: (event) => { this.openBulkActionWindow("addTags", 500, 500) } },
-        { label: this._appLocalization.get('applications.content.bulkActions.removeTags'), command: (event) => { this.openBulkActionWindow("removeTags", 500, 500) } }]
+      {
+        label: this._appLocalization.get('applications.content.bulkActions.addRemoveTags'), items: [
+          { label: this._appLocalization.get('applications.content.bulkActions.addTags'), command: (event) => { this.openBulkActionWindow("addTags", 500, 500) } },
+          { label: this._appLocalization.get('applications.content.bulkActions.removeTags'), command: (event) => { this.openBulkActionWindow("removeTags", 500, 500) } }]
       },
-      { label: this._appLocalization.get('applications.content.bulkActions.addRemoveCategories'), items: [
-        { label: this._appLocalization.get('applications.content.bulkActions.addToCategories'), command: (event) => { this.openBulkActionWindow("addToCategories", 560, 586) } },
-        { label: this._appLocalization.get('applications.content.bulkActions.removeFromCategories'), command: (event) => { this.openBulkActionWindow("removeFromCategories", 500, 500) } }]
+      {
+        label: this._appLocalization.get('applications.content.bulkActions.addRemoveCategories'), items: [
+          { label: this._appLocalization.get('applications.content.bulkActions.addToCategories'), command: (event) => { this.openBulkActionWindow("addToCategories", 560, 586) } },
+          { label: this._appLocalization.get('applications.content.bulkActions.removeFromCategories'), command: (event) => { this.openBulkActionWindow("removeFromCategories", 500, 500) } }]
       },
-      { label: this._appLocalization.get('applications.content.bulkActions.addToNewCategoryPlaylist'), items: [
-        { label: this._appLocalization.get('applications.content.bulkActions.addToNewCategory'), command: (event) => { this.openBulkActionWindow("addToNewCategory", 500, 500) } },
-        { label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'), command: (event) => { this.openBulkActionWindow("addToNewPlaylist", 500, 500) } }]
+      {
+        label: this._appLocalization.get('applications.content.bulkActions.addToNewCategoryPlaylist'), items: [
+          { label: this._appLocalization.get('applications.content.bulkActions.addToNewCategory'), command: (event) => { this.openBulkActionWindow("addToNewCategory", 500, 500) } },
+          { label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'), command: (event) => { this.openBulkActionWindow("addToNewPlaylist", 500, 500) } }]
       },
       { label: this._appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => { this.openBulkActionWindow("changeOwner", 500, 280) } },
       { label: this._appLocalization.get('applications.content.bulkActions.download'), command: (event) => { this.downloadEntries() } },

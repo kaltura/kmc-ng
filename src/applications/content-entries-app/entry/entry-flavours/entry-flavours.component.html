@@ -13,6 +13,9 @@
 		<div class="kTable">
 			<p-dataTable [value]="(_handler._flavors$ | async)?.items" scrollable="true" scrollHeight="100%">
 				<p-column field="name" header="{{'applications.content.entryDetails.flavours.flavour' | translate}}" [style]="{'width':'120px'}">
+					<ng-template let-col let-flavor="rowData" pTemplate="body">
+						<span class="kFlavorName" [class.kConvertedFlavor]="flavor.status === '2'">{{flavor.name}}</span>
+					</ng-template>
 				</p-column>
 				<p-column field="id" header="{{'applications.content.entryDetails.flavours.assetId' | translate}}" [style]="{'width':'100px'}">
 				</p-column>
@@ -32,6 +35,9 @@
 					</ng-template>
 				</p-column>
 				<p-column field="tags" header="{{'applications.content.entryDetails.flavours.tags' | translate}}">
+					<ng-template let-col let-flavor="rowData" pTemplate="body">
+						<span>{{flavor.tags | tags}}</span>
+					</ng-template>
 				</p-column>
 				<p-column [style]="{'width':'80px'}">
 					<ng-template let-col let-flavor="rowData" pTemplate="body">

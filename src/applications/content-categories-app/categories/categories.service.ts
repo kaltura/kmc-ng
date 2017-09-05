@@ -101,6 +101,46 @@ export class CategoriesService implements OnDestroy {
         }
     }
 
+    public getNextCategoryId(categoryId: number): number | null {
+        const categories = this._categories.getValue().items;
+        if (!categories)
+            return null;
+
+        // validate category exists
+        const currentCategoryIndex = categories.findIndex(category => category.id == categoryId);
+        if (currentCategoryIndex == -1) {
+            return null;
+        }
+
+        // get next category ID
+        if (currentCategoryIndex < categories.length - 1) {
+            return (categories[currentCategoryIndex + 1].id);
+        }
+        else {
+            return null;
+        }
+    }
+
+    public getPrevCategoryId(categoryId: number): number | null {
+        const categories = this._categories.getValue().items;
+        if (!categories)
+            return null;
+
+        // validate category exists
+        const currentCategoryIndex = categories.findIndex(category => category.id == categoryId);
+        if (currentCategoryIndex == -1) {
+            return null;
+        }
+
+        // get previous category ID
+        if (currentCategoryIndex != 0) {
+            return (categories[currentCategoryIndex - 1].id);
+        }
+        else {
+            return null;
+        }
+    }
+
     private _executeQuery(): void {
         // cancel previous requests
         if (this._categoriesExecuteSubscription) {

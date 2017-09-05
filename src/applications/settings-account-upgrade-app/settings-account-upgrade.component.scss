@@ -16,38 +16,71 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin: 24px 0;
-
-    .kTitle {
-      color: $kGrayscale1;
-      font-weight: 700;
-      height: 29px;
-      font-size: 24px;
-      font-weight: bold;
-      line-height: 29px;
-    }
-  }
-  .kSaveBtn {
-    margin-left: auto;
-    width: 100px;
-    height: 34px;
-    font-weight: 400;
+    margin: 26px 0;
   }
 }
 
+.kTitle {
+  color: $kGrayscale1;
+  font-weight: 700;
+  height: 29px;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 29px;
+  .kTitleIcon:before {
+    font-size: 32px;
+    vertical-align: middle;
+    padding-right: 9px;
+    color: $kGrayscale3;
+  }
+}
+
+.kCallUs {
+  height: 131px;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  border-radius: 3px;
+  background-color: $kSecondary;
+  padding-top:24px;
+  padding-left: 32px;
+
+  .kCallUsHeader {
+    height: 24px;
+    width: 680px;
+    color: #FFFFFF;
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .kCallUsBody {
+    padding-top:15px;
+    height: 44px;
+    width: 767px;
+    color: #FFFFFF;
+    font-size: 15px;
+    line-height: 18px;
+  }
+}
 
 .kFormContainer {
-  background: white;
+  background: #FFFFFF;
+  margin-top: 24px;
 
-  .form-section {
+  .kFormSection {
     font-size: 15px;
     padding: 27px 29px;
+    width: 615px;
 
+    .kTitle{
+      padding-bottom: 20px;
+    }
     .kRow {
-
-      &:first-child {
-        padding-top: 0;
-      }
 
       display: -webkit-box;
       display: -ms-flexbox;
@@ -55,7 +88,7 @@
       padding-top: 20px;
 
       .kLabel {
-        width: 200px;
+        width: 179px;
         -webkit-box-flex: 0;
         -ms-flex: 0 0 auto;
         flex: 0 0 auto;
@@ -64,21 +97,45 @@
         font-size: 15px;
         line-height: 18px;
       }
+
+      .kRequired {
+        width: 20px;
+        font-size: 24px;
+        color: $kGrayscale3;
+        &.kHasError {
+          color: $kDandger;
+          font-weight: bold;
+        }
+      }
+      .kRequired, .kLabel {
+        padding: 8px 4px;
+        height: 18px;
+      }
       .kControl {
         color: $kGrayscale2;
         height: 34px;
         width: 400px;
         border-radius: 3px;
-        &.kHasError{
+        &.kHasError {
           border: 1px solid $kDandger;
           background: initial;
         }
       }
-      textarea.kControl{
+      textarea.kControl {
         height: 76px;
       }
-      .error{
+      .error {
         padding-top: 8px;
+      }
+
+      &.kSaveBtnContainer {
+        padding-top: 60px;
+        .kSaveBtn {
+          margin-left: auto;
+          width: 125px;
+          height: 34px;
+          font-weight: 400;
+        }
       }
 
     }
