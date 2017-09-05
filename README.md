@@ -72,6 +72,20 @@ navigate to [http://localhost:4200](http://localhost:4200) in your browser.
 The Github version configures server endpoints against the Kaltura production server.
 If you need to configure these enpoint, edit the [environment.ts](https://github.com/kaltura/kmc-ng/blob/33c3f177bf4437092b4ba46d3f9e9a470463a481/src/environments/environment.ts#L15-L24) file.
 
+## Deploy standalone application
+
+To create a standalone application you will need to build the application:
+```
+$ ng build --prod
+```
+
+A distrubted standalone application will be created in the `dist/` folder.
+
+Update the base url to match your production environment.
+- Open the `index.html` file in the dist folder.
+- update the following `<base href="/">` to match the relative path this application will be hosted at. Make sure you use `/` as a suffix of the href value.
+
+
 ## KMC-ng solution
 KMC-ng is built on-top of several kaltura instrastructure packages. 
 Below is a summary of the core packages being used:
