@@ -150,9 +150,12 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
     }
 
     _goNext() {
+        var parentCategoryId = 0;
+        if (this._selectedCategories.length > 0)
+        { parentCategoryId = this._selectedCategories[0].id }
         this._categoriesService.setNewCategoryData({
-            name: "hi"            
-          });
+            parentCategoryId: parentCategoryId
+        });
         this.router.navigate(['/content/categories/category', 123]);
     }
 

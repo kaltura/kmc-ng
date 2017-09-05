@@ -37,7 +37,7 @@ export interface QueryData {
 }
 
 export interface CategoryData {
-    name: string;    
+    parentCategoryId: number;    
 }
 
 @Injectable()
