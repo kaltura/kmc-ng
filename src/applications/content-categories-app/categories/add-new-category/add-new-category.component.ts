@@ -106,14 +106,9 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
         if (node instanceof PrimeTreeNode) {
             const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id + '' === node.data + '');
 
-
             if (autoCompleteItemIndex === -1) {
-                this._selectedCategories.push({
-                    id: node.origin.id,
-                    fullIdPath: node.origin.fullIdPath,
-                    fullNamePath: node.origin.fullNamePath,
-                    name: node.origin.name
-                });
+
+                this._addSelectedCategory(node);
             }
 
             // unselect "no parent "
@@ -156,7 +151,7 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
         this._categoriesService.setNewCategoryData({
             parentCategoryId: parentCategoryId
         });
-        this.router.navigate(['/content/categories/category', 123]);
+        this.router.navigate(['/content/categories/category/new/metadata']);
     }
 
     _close() {
@@ -171,12 +166,10 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
             const selectedCategoryIndex = this._selectedCategories.findIndex(item => item.id + '' === selectedItem.id + '');
 
             if (selectedCategoryIndex === -1) {
-                this._selectedCategories.push({
-                    id: selectedItem.id,
-                    fullIdPath: selectedItem.fullIdPath,
-                    fullNamePath: selectedItem.fullNamePath,
-                    name: selectedItem.name
-                });
+
+                const node = this._categoriesTree.findNodeByFullIdPath(selectedItem.fullIdPath);
+
+                this._addSelectedCategory(node);
 
                 this._ngAfterViewCheckedContext.updateTreeSelections = true;
                 this._ngAfterViewCheckedContext.expendTreeSelectionNodeId = selectedItem.id;
@@ -235,5 +228,24 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
     public _onParentRadioButtonSelected(): void {
         this._treeSelection = [];
         this._selectedCategories = [];
+    }
+
+    private _addSelectedCategory(node: PrimeTreeNode): void {
+        //clear selectedCategories and treeSelection
+        this._selectedCategories = [];
+        if (this._treeSelection.length > 0) {
+            this._treeSelection = [];
+            // add selected node to tree
+            this._treeSelection.push(node);
+        }
+
+        //// add selected node to selectedCategories
+        this._selectedCategories.push({
+            id: node.origin.id,
+            fullIdPath: node.origin.fullIdPath,
+            fullNamePath: node.origin.fullNamePath,
+            name: node.origin.name
+        });
+
     }
 }
