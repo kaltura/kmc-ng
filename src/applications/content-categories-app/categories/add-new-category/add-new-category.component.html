@@ -1,4 +1,4 @@
-<div class="kAddNewPlaylist">
+<div class="kAddNewCategory">
   <form [formGroup]="_addNewCategoryForm" novalidate>
     <div class="kHeader">
       <span class="kTitle">{{('applications.content.addNewCategory.newCategory') | translate}}</span>
@@ -12,36 +12,21 @@
         (click)="_onParentRadioButtonSelected()"></p-radioButton>
       </span>
     </div>
-    <div class="kMain">     
-      <kAutoComplete #autoComplete 
-      [disabled]="!_categoriesLoaded" 
-      [multiple]="false" 
-      field="name" 
-      suggestionItemField="item" 
-      suggestionLabelField="name"
-      suggestionSelectableField="isSelectable" 
-      placeholder="{{'applications.content.addNewCategory.searchCategories' | translate}}"
-      [minLength]="3" 
-      (onSelect)="_onAutoCompleteSelected($event)" 
-      [suggestionsProvider]="_categoriesProvider" 
-      (completeMethod)="_onAutoCompleteSearch($event)">
-    </kAutoComplete>
+    <div class="kMain">
+      <kAutoComplete #autoComplete [disabled]="!_categoriesLoaded" [multiple]="false" field="name" suggestionItemField="item" suggestionLabelField="name"
+        suggestionSelectableField="isSelectable" placeholder="{{'applications.content.addNewCategory.searchCategories' | translate}}"
+        [minLength]="3" (onSelect)="_onAutoCompleteSelected($event)" [suggestionsProvider]="_categoriesProvider" (completeMethod)="_onAutoCompleteSearch($event)">
+      </kAutoComplete>
 
-
-
-      <k-categories-tree #categoriesTree [(selection)]="_treeSelection" 
-          (onCategoriesLoad)="_onTreeCategoriesLoad($event)" 
-          (onNodeSelect)="_onTreeNodeSelected($event)"
-          (onNodeUnselect)="_onTreeNodeUnselected($event)" 
-          (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)">
-        </k-categories-tree>  
-      </div>
+      <k-categories-tree #categoriesTree [(selection)]="_treeSelection" (onCategoriesLoad)="_onTreeCategoriesLoad($event)" (onNodeSelect)="_onTreeNodeSelected($event)"
+        (onNodeUnselect)="_onTreeNodeUnselected($event)" (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)">
+      </k-categories-tree>
+    </div>
 
     <div class="kFooter">
-      <button type="button" class="kButtonBranded" pButton
-       label="{{'applications.content.addNewCategory.apply' | translate}}"
-       (click)="_goNext()"></button>
-      <a class="kCancel" (click)="_close()">{{'applications.content.addNewCategory.cancel' | translate}}</a>
+      <button type="button" class="kButtonBranded" pButton label="{{'applications.content.addNewCategory.apply' | translate}}"
+        (click)="_goNext()"></button>
+      <a class="kLink" (click)="_close()">{{'applications.content.addNewCategory.cancel' | translate}}</a>
     </div>
   </form>
 </div>

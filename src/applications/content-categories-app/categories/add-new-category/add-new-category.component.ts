@@ -246,6 +246,5 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
             fullNamePath: node.origin.fullNamePath,
             name: node.origin.name
         });
-
     }
 }
