@@ -182,13 +182,14 @@ export class UsersStore implements OnDestroy {
   public toggleUserStatus(user: KalturaUser) {
     this._state.next({loading: true});
 
+    user.status = +!user.status;
     return Observable.create(observer => {
       this._kalturaServerClient.multiRequest(
         new KalturaMultiRequest(
           new UserUpdateAction (
             {
               userId: user.id,
-              user: new KalturaUser({status: +!user.status})
+              user: new KalturaUser({status: user.status})
             }
           ),
           new UserListAction(
@@ -224,6 +225,7 @@ export class UsersStore implements OnDestroy {
             })
           },
           error => {
+            user.status = +!user.status;
             this._state.next({loading: false});
             observer.error(error);
           }

@@ -153,8 +153,6 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
       .cancelOnDestroy(this)
       .subscribe(
         response => {
-         this._users = [];
-          this.cdRef.detectChanges();
           this._users = response.items.map(user => {
             let userFullName: string = '',
                 roleName: string = '';
@@ -183,7 +181,6 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
               lastLoginTime: user.lastLoginTime
             }
           });
-          this.cdRef.detectChanges();
         }
       );
   }
