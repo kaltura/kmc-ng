@@ -20,6 +20,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   public _isBusy = false
   public _blockerMessage: AreaBlockerMessage = null;
   @Input() parentPopupWidget: PopupWidgetComponent;
+  @Input() duplicatedRole: boolean;
 
   constructor(private _fb: FormBuilder,
               private _rolesService: RolesService,
@@ -125,7 +126,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
         },
         error => {
           this._isBusy = false;
-
+          this.role = null;
           this._blockerMessage = new AreaBlockerMessage(
             {
               message: error.message,
@@ -133,7 +134,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
                 {
                   label: this.appLocalization.get('app.common.retry'),
                   action: () => {
-                    this.updateRole();
+                    this.addRole();
                   }
                 },
                 {

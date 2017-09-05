@@ -5,7 +5,7 @@
         <button pButton type="button" label="{{'applications.administration.roles.addRole' | translate}}" class="kButtonBranded kAddRoleBtn"
         (click)="addRole()"></button>
         <span class="kSelectedRolesNum" *ngIf="_rolesTotalCount">
-          {{'applications.administration.roles.rolesNum' | translate:_rolesTotalCount.toString()}}
+          {{_rolesTotalCount}} {{'applications.administration.roles.rolesNum' | translate}}
         </span>
         <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh" [kTooltip]="'applications.administration.roles.refresh' | translate"></button>
       </div>
@@ -19,9 +19,9 @@
       </div>
     </div>
   </div>
-  <kPopupWidget #editPopup [popupWidth]="600" [popupHeight]="320" [modal]="true">
+  <kPopupWidget #editPopup [popupWidth]="600" [popupHeight]="400" [modal]="true">
     <ng-template>
-      <kEditRole [role]="_currentEditRole"  [parentPopupWidget]="editPopup"></kEditRole>
+      <kEditRole [role]="_currentEditRole"  [parentPopupWidget]="editPopup" [duplicatedRole]="_currentEditRoleIsDuplicated"></kEditRole>
     </ng-template>
   </kPopupWidget>
 </k-area-blocker>

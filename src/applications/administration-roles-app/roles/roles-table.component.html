@@ -4,14 +4,14 @@
     <p-dataTable #dataTable [value]="_roles"
                  scrollable="true" scrollHeight="100%" dataKey="id" [rowTrackBy]="rowTrackBy"
                  [(selection)]="selectedRoles" emptyMessage="{{_emptyMessage}}">
-      <p-column [style]="{'padding-left': '14px','width':'130px'}" field="name" header="Name" [sortable]="false">
+      <p-column [style]="{'padding-left': '14px','width':'130px'}" field="name" header="{{'applications.administration.roles.tableColumns.role' | translate}}" [sortable]="false">
         <ng-template let-col let-role="rowData" pTemplate="body">
           <span>
             {{role[col.field]}}</span>
         </ng-template>
       </p-column>
-      <p-column field="description" header="Description" [sortable]="false" [style]="{'width':'250px'}"></p-column>
-      <p-column field="updatedAt" header="Saved at" [sortable]="false" [style]="{'width':'60px'}">
+      <p-column field="description" header="{{'applications.administration.roles.tableColumns.description' | translate}}" [sortable]="false" [style]="{'width':'250px'}"></p-column>
+      <p-column field="updatedAt" header="{{'applications.administration.roles.tableColumns.saveDate' | translate}}"  [sortable]="false" [style]="{'width':'60px'}">
         <ng-template let-col let-role="rowData" pTemplate="body">
           <span>{{role[col.field] | kDate}}</span>
         </ng-template>

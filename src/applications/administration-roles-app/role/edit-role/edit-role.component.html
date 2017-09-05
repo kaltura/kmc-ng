@@ -48,7 +48,7 @@
                 pButton class="kButtonBranded kSaveBtn"
                 label="{{'applications.administration.role.save' | translate}}"
                 (click)="updateRole()"
-                [disabled]="editRoleForm.pristine"></button>
+                [disabled]="editRoleForm.pristine && !duplicatedRole"></button>
 
         <button *ngIf="!role"
                 pButton class="kButtonBranded kSaveBtn"

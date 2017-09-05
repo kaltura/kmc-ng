@@ -681,16 +681,24 @@
     "administration": {
       "roles": {
         "addRole": "Add Role",
-        "rolesNum": "{{0}} Roles",
+        "rolesNum": "Roles",
         "refresh": "Refresh",
         "confirmDeleteHeader": "Confirm Delete",
         "confirmDeleteBody": "Are you sure you want to delete the selected role? \n ({{0}})",
         "deleted": "Role deleted successfully",
         "copyOf":"Copy of",
+        "tableColumns":{
+          "role": "Role",
+          "description": "Description",
+          "saveDate": "Save Date"
+        },
         "actions": {
           "edit": "Edit",
           "duplicate": "Duplicate",
           "delete": "Delete"
+        },
+        "errors": {
+          "roleInUse": "The role you selected cannot be deleted since it is currently assigned to existing users."
         }
       },
       "role": {

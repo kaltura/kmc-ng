@@ -17,6 +17,7 @@ import {UserRoleUpdateAction} from 'kaltura-typescript-client/types/UserRoleUpda
 import {UserRoleAddAction} from 'kaltura-typescript-client/types/UserRoleAddAction';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {UserRoleCloneAction} from 'kaltura-typescript-client/types/UserRoleCloneAction';
+import {KalturaMultiRequest} from 'kaltura-typescript-client';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -184,6 +185,9 @@ export class RolesService implements OnDestroy {
         },
         error => {
           subscription = null;
+          if (error.code === 'ROLE_IS_BEING_USED') {
+            error.message = this._appLocalization.get('applications.administration.roles.errors.roleInUse');
+          }
           observer.error(error);
         }
       );
@@ -260,28 +264,44 @@ export class RolesService implements OnDestroy {
     });
   }
 
+
+
   public duplicateRole(role: KalturaUserRole): Observable<KalturaUserRole> {
     if (!role) {
       return Observable.throw({message: 'Unable to duplicate role'});
     }
-    role.tags = 'kmc';
+
+    const multiRequest = new KalturaMultiRequest(
+      new UserRoleCloneAction({userRoleId: role.id}),
+      new UserRoleUpdateAction({
+        userRoleId: 0,
+        userRole: this._getDuplicatedRole(role),
+      }).setDependency(['userRoleId', 0, 'id'])
+    );
 
     return Observable.create(observer => {
       let subscription: ISubscription;
 
-      subscription = this._kalturaClient.request(new UserRoleCloneAction({
-        userRoleId: role.id
-      })).subscribe(
-        result => {
-          subscription = null;
-          observer.next(result);
-          observer.complete();
-        },
-        error => {
-          subscription = null;
-          observer.error(error);
-        }
-      );
+      subscription = this._kalturaClient.multiRequest(multiRequest)
+        .monitor('duplicateRole')
+        .map(
+          data => {
+            if (data.hasErrors()) {
+              throw new Error('error occurred in action \'duplicateRole\'');
+            }
+            return data[1].result;
+          })
+        .subscribe(
+          result => {
+            subscription = null;
+            observer.next(result);
+            observer.complete();
+          },
+          error => {
+            subscription = null;
+            observer.error(error);
+          }
+        );
 
       return () => {
         if (subscription) {
@@ -289,6 +309,27 @@ export class RolesService implements OnDestroy {
         }
       }
     });
+  }
+
+  private _getDuplicatedRole(role: KalturaUserRole) {
+    const duplicateName = this._appLocalization.get('applications.administration.roles.copyOf') + ' ' + role.name;
+    role.tags = 'kmc';
+
+    const duplicatedRole = new KalturaUserRole();
+    duplicatedRole.name = this._isNameExist(duplicateName) ? undefined : duplicateName;
+    return duplicatedRole;
+  }
+
+  private _isNameExist(name: string): boolean {
+    let nameAlreadyExists = false;
+    const rolesSubscription = this.roles$
+      .subscribe(
+        (data) => {
+          nameAlreadyExists = data.items.find(item => item['name'] === name) !== undefined;
+        }
+      );
+    rolesSubscription.unsubscribe();
+    return nameAlreadyExists;
   }
 }
 

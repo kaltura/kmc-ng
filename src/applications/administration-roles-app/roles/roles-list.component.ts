@@ -5,7 +5,7 @@ import {RolesService} from './roles.service';
 import {KalturaUserRole} from 'kaltura-typescript-client/types/KalturaUserRole';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
   selector: 'kRolesList',
@@ -23,6 +23,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
   public _roles: KalturaUserRole[] = [];
   public _rolesTotalCount: number = null;
   public _currentEditRole: any = null;
+  public _currentEditRoleIsDuplicated = false;
 
   public _filter = {
     pageIndex: 0,
@@ -53,6 +54,16 @@ export class RolesListComponent implements OnInit, OnDestroy {
           this._rolesTotalCount = data.totalCount;
         }
       );
+
+    if (this.editPopup) {
+      this.editPopup.state$
+        .cancelOnDestroy(this)
+        .subscribe(event => {
+          if (event.state === PopupWidgetStates.Close) {
+           this._currentEditRoleIsDuplicated = false;
+          }
+        });
+    }
   }
 
   ngOnDestroy() {
@@ -73,7 +84,6 @@ export class RolesListComponent implements OnInit, OnDestroy {
   }
 
   _onActionSelected(event: { action: string, role: KalturaUserRole }) {
-    // event: { action: string, roleID: number, roleName: string, partnerId: number }) {
     const action = event.action;
     const role = event.role;
     switch (action) {
@@ -159,6 +169,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
         (duplicatedRole) => {
           this._isBusy = false;
           this._rolesService.reload(true);
+          this._currentEditRoleIsDuplicated = true;
           this.editRole(duplicatedRole);
         },
         error => {
