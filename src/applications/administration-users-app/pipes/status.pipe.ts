@@ -10,16 +10,18 @@ export class StatusPipe implements PipeTransform {
 	transform(value: string): string {
 		let userStatus: string = "";
 
-    switch (value.toString()) {
-      case KalturaUserStatus.active.toString():
-        userStatus = this.appLocalization.get("applications.content.userStatus.active");
-        break;
-      case KalturaUserStatus.blocked.toString():
-        userStatus = this.appLocalization.get("applications.content.userStatus.blocked");
-        break;
-      case KalturaUserStatus.deleted.toString():
-        userStatus = this.appLocalization.get("applications.content.userStatus.deleted");
-        break;
+    if (value!== null) {
+      switch (value.toString()) {
+        case KalturaUserStatus.active.toString():
+          userStatus = this.appLocalization.get("applications.content.userStatus.active");
+          break;
+        case KalturaUserStatus.blocked.toString():
+          userStatus = this.appLocalization.get("applications.content.userStatus.blocked");
+          break;
+        case KalturaUserStatus.deleted.toString():
+          userStatus = this.appLocalization.get("applications.content.userStatus.deleted");
+          break;
+      }
     }
 		return userStatus;
 	}

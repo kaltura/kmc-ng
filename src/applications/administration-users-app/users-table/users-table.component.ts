@@ -5,8 +5,7 @@ import {
   AfterViewInit,
   Output,
   EventEmitter,
-  ViewChild,
-  ChangeDetectorRef
+  ViewChild
 } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
@@ -17,6 +16,12 @@ import {
   MenuItem
 } from 'primeng/primeng';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
+import { KalturaUserRole } from 'kaltura-typescript-client/types/KalturaUserRole';
+
+export interface PartnerInfo {
+  adminLoginUsersQuota: number,
+  adminUserId: string
+}
 
 @Component({
 	selector: 'kUsersTable',
@@ -29,6 +34,8 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   public _users: any[] = [];
   public _items: MenuItem[];
   private actionsMenuUserId: string = "";
+  private _roles: KalturaUserRole[];
+  private _partnerInfo: PartnerInfo;
 
   @ViewChild('actionsmenu') private actionsMenu: Menu;
   @Output() actionSelected = new EventEmitter<any>();
@@ -37,8 +44,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
 	  public usersStore: UsersStore,
     private _appAuthentication: AppAuthentication,
     private _appLocalization: AppLocalization,
-    private _browserService : BrowserService,
-    private cdRef: ChangeDetectorRef
+    private _browserService : BrowserService
   ) {}
 
   buildMenu(user: KalturaUser): void {
@@ -48,7 +54,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log('edit', user.id);
       }
     }];
-    if(this._appAuthentication.appUser.id !== user.id || this.usersStore.partnerInfo.adminUserId !== user.id) {
+    if(this._appAuthentication.appUser.id !== user.id || this._partnerInfo.adminUserId !== user.id) {
       this._items.push(
         {
           label: this._appLocalization.get("applications.content.table.blockUnblock"),
@@ -149,6 +155,22 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 	ngOnInit() {
+    this.usersStore.roles$
+      .cancelOnDestroy(this)
+      .subscribe(
+        response => {
+          this._roles = response.items;
+        }
+      );
+
+    this.usersStore.partnerInfo$
+      .cancelOnDestroy(this)
+      .subscribe(
+        response => {
+          this._partnerInfo = response;
+        }
+      );
+
     this.usersStore.users$
       .cancelOnDestroy(this)
       .subscribe(
@@ -166,7 +188,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
               userFullName = `(${this._appLocalization.get('applications.content.users.you')}, ${this._appLocalization.get('applications.content.users.accountOwner')})`;
             }
 
-            this.usersStore.roles.forEach(role => {
+            this._roles.forEach(role => {
               if(user.roleIds === role.id.toString()) {
                 roleName = role.name;
               }

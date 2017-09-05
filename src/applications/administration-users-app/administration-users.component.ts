@@ -41,12 +41,14 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.usersStore.query$.subscribe(
-      query => {
-        this._filter.pageSize = query.pageSize;
-        this._filter.pageIndex = query.pageIndex - 1;
-      }
-    );
+    this.usersStore.query$
+      .cancelOnDestroy(this)
+      .subscribe(
+        query => {
+          this._filter.pageSize = query.pageSize;
+          this._filter.pageIndex = query.pageIndex - 1;
+        }
+      );
 
     this.usersStore.users$
       .cancelOnDestroy(this)

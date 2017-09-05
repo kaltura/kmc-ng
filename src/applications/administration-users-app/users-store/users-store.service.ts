@@ -67,14 +67,6 @@ export class UsersStore implements OnDestroy {
 	  this._loadData();
   }
 
-  public get roles() : KalturaUserRole[] {
-    return this._roles.getValue().items;
-  }
-
-  public get partnerInfo() : any {
-    return this._partnerInfo.getValue();
-  }
-
   private _updateQueryData(partialData : Partial<QueryData>) : void
   {
     const newQueryData =Object.assign({}, this._querySource.getValue(), partialData);
@@ -172,9 +164,7 @@ export class UsersStore implements OnDestroy {
         })
       },
       error => {
-        this._state.next({
-          loading: true
-        });
+        this._state.next({ loading: false });
       }
     );
   }

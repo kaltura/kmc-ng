@@ -16,7 +16,7 @@
         <p-paginator
           [rows]="_filter.pageSize"
           [first]="_filter.pageIndex * _filter.pageSize"
-          [rowsPerPageOptions]="[25,50,75,100]"
+          [rowsPerPageOptions]="[25,50,100,250,500]"
           [totalRecords]="(usersStore.users$ | async)?.totalCount"
           (onPageChange)="onPaginationChanged($event)"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
