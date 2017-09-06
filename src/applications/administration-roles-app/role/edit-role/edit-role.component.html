@@ -31,14 +31,14 @@
                    editRoleForm.controls['description'].touched}">*
           </div>
           <div>
-            <input class="kControl" formControlName="description" pInputText
-                   [ngClass]="{'kHasError':!editRoleForm.controls['description'].valid &&
-                   editRoleForm.controls['description'].touched}">
-            <div *ngIf="editRoleForm.controls['description'].touched &&
-                 editRoleForm.controls['description'].hasError('required')"
-                 class="error">
-              {{'applications.administration.role.errors.required' | translate}}
-            </div>
+              <textarea class="kControl threeRows" formControlName="description" pInputTextarea
+                        [ngClass]="{'kHasError':!editRoleForm.controls['description'].valid && editRoleForm.controls['description'].touched}">
+             </textArea>
+              <div *ngIf="editRoleForm.controls['description'].touched &&
+                   editRoleForm.controls['description'].hasError('required')"
+                   class="error">
+                {{'applications.administration.role.errors.required' | translate}}
+              </div>
           </div>
         </div>
       </div>

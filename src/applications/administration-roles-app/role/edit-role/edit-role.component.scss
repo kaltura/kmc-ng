@@ -73,6 +73,10 @@
         border: 1px solid $kDandger;
         background: initial;
       }
+
+      &.threeRows {
+        height: 76px;
+      }
     }
 
     .error {

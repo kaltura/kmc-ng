@@ -16,7 +16,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   public editRoleForm: FormGroup;
   @Input() role: KalturaUserRole;
   // private roleUnderEdit: KalturaUserRole;
-  public _editMode = 'edit';
+  public _editMode: 'edit' | 'new' = 'edit';
   public _isBusy = false
   public _blockerMessage: AreaBlockerMessage = null;
   @Input() parentPopupWidget: PopupWidgetComponent;
@@ -31,13 +31,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     if (!this.role) {
       this._editMode = 'new';
     }
-    // this.roleUnderEdit = Object.assign({}, this.role);
-    // }
     this._createForm();
-  }
-
-  onSubmit(): void {
-
   }
 
   ngOnDestroy() {
@@ -48,11 +42,12 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   private _createForm(): void {
 
     this.editRoleForm = this._fb.group({
-      name: [(this.role && this.role.name) || '', Validators.required],
-      description: [(this.role && this.role.description) || '', Validators.required],
+      name: [this.role ? this.role.name : '', Validators.required],
+      description: [this.role ? this.role.description : '', Validators.required],
     });
 
   }
+
   private markFormFieldsAsTouched() {
     for (let inner in this.editRoleForm.controls) {
       this.editRoleForm.get(inner).markAsTouched();
@@ -67,15 +62,14 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     }
     this._isBusy = true;
     this._blockerMessage = null;
-    // const roleUnderEdit = Object.assign({}, this.role);
-    this.role.name = this.editRoleForm.get('name').value;
-    this.role.description = this.editRoleForm.get('description').value;
-    this._rolesService.updateRole(this.role.id, this.role)
+    const roleCopy = Object.assign(new KalturaUserRole(), this.role);
+    roleCopy.name = this.editRoleForm.get('name').value;
+    roleCopy.description = this.editRoleForm.get('description').value;
+    this._rolesService.updateRole(roleCopy)
       .cancelOnDestroy(this)
       .subscribe(
         () => {
           this._isBusy = false;
-          this._rolesService.reload(true);
           this.parentPopupWidget.close();
         },
         error => {
@@ -112,7 +106,6 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     }
     this._isBusy = true;
     this._blockerMessage = null;
-    // const roleUnderEdit = Object.assign({}, this.role);
     this.role = new KalturaUserRole();
     this.role.name = this.editRoleForm.get('name').value;
     this.role.description = this.editRoleForm.get('description').value;
@@ -121,7 +114,6 @@ export class EditRoleComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this._isBusy = false;
-          this._rolesService.reload(true);
           this.parentPopupWidget.close();
         },
         error => {

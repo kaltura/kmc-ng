@@ -5,7 +5,7 @@
         <button pButton type="button" label="{{'applications.administration.roles.addRole' | translate}}" class="kButtonBranded kAddRoleBtn"
         (click)="addRole()"></button>
         <span class="kSelectedRolesNum" *ngIf="_rolesTotalCount">
-          {{_rolesTotalCount}} {{'applications.administration.roles.rolesNum' | translate}}
+          {{_rolesTotalCount}}
         </span>
         <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh" [kTooltip]="'applications.administration.roles.refresh' | translate"></button>
       </div>

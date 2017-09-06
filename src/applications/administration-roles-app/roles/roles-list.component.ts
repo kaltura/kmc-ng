@@ -21,7 +21,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
   public _isBusy = false
   public _blockerMessage: AreaBlockerMessage = null;
   public _roles: KalturaUserRole[] = [];
-  public _rolesTotalCount: number = null;
+  public _rolesTotalCount: string = null;
   public _currentEditRole: any = null;
   public _currentEditRoleIsDuplicated = false;
 
@@ -51,7 +51,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
       .subscribe(
         (data) => {
           this._roles = data.items;
-          this._rolesTotalCount = data.totalCount;
+          this._rolesTotalCount = this.appLocalization.get('applications.administration.roles.rolesNum', {0: data.totalCount});
         }
       );
 
@@ -99,7 +99,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
             header: this.appLocalization.get('applications.administration.roles.confirmDeleteHeader'),
             message: this.appLocalization.get('applications.administration.roles.confirmDeleteBody', {0: role.name}),
             accept: () => {
-              this.deleteRole(role.id, role.partnerId);
+              this.deleteRole(role);
             }
           }
         );
@@ -119,10 +119,10 @@ export class RolesListComponent implements OnInit, OnDestroy {
     this.editPopup.open();
   }
 
-  private deleteRole(roleID: number, partnerId: number): void {
+  private deleteRole(role: KalturaUserRole): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    this._rolesService.deleteRole(roleID, partnerId)
+    this._rolesService.deleteRole(role)
       .cancelOnDestroy(this)
       .subscribe(
         () => {
@@ -131,7 +131,6 @@ export class RolesListComponent implements OnInit, OnDestroy {
             severity: 'success',
             detail: this.appLocalization.get('applications.administration.roles.deleted')
           });
-          this._rolesService.reload(true);
         },
         error => {
           this._isBusy = false;
@@ -143,7 +142,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
                 {
                   label: this.appLocalization.get('app.common.retry'),
                   action: () => {
-                    this.deleteRole(roleID, partnerId);
+                    this.deleteRole(role);
                   }
                 },
                 {
