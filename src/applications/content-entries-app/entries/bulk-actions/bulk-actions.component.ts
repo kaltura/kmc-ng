@@ -12,10 +12,22 @@ import { environment } from 'app-environment';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { KalturaAccessControl } from 'kaltura-typescript-client/types/KalturaAccessControl';
+
 @Component({
   selector: 'kBulkActions',
   templateUrl: './bulk-actions.component.html',
-  styleUrls: ['./bulk-actions.component.scss']
+  styleUrls: ['./bulk-actions.component.scss'],
+    providers: [
+        BulkSchedulingService,
+        BulkAccessControlService,
+        BulkAddTagsService,
+        BulkRemoveTagsService,
+        BulkAddCategoriesService,
+        BulkChangeOwnerService,
+        BulkRemoveCategoriesService,
+        BulkDeleteService,
+        BulkDownloadService,
+    ]
 })
 export class BulkActionsComponent implements OnInit, OnDestroy {
 

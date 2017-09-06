@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Host, Injectable, OnDestroy } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
@@ -34,6 +34,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaLiveStreamAdminEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamAdminEntry';
 import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamEntry';
 import { KalturaExternalMediaEntry } from 'kaltura-typescript-client/types/KalturaExternalMediaEntry';
+import { EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
 
 export type UpdateStatus = {
   loading: boolean;
@@ -53,6 +54,7 @@ export interface QueryData {
   fields?: string,
   metadataProfiles?: number[]
 }
+
 
 export interface FilterArgs {
   filter: KalturaMediaEntryFilter,
@@ -114,6 +116,7 @@ export class EntriesStore implements OnDestroy {
 
   constructor(private kalturaServerClient: KalturaClient,
               private browserService: BrowserService,
+              @Host() private _entriesFilters : EntriesFiltersService,
               private metadataProfileService: MetadataProfileStore) {
     const defaultPageSize = this.browserService.getFromLocalStorage('entries.list.pageSize');
     if (defaultPageSize !== null) {
@@ -121,6 +124,13 @@ export class EntriesStore implements OnDestroy {
     }
 
     this._getMetadataProfiles();
+
+    this._entriesFilters.filters$
+        .cancelOnDestroy(this)
+        .subscribe(filters =>
+        {
+          this._executeQuery();
+        });
   }
 
   public get queryData(): QueryData {
@@ -367,6 +377,12 @@ export class EntriesStore implements OnDestroy {
           }
         });
       }
+
+      this._entriesFilters.assignFiltersToRequest({
+          filter: filter,
+          advancedSearch: advancedSearch
+      });
+
 
       // handle default args of metadata profiles (we must send all metadata profiles that should take part of the freetext searching
       if (queryData.metadataProfiles && queryData.metadataProfiles.length > 0) {

@@ -6,8 +6,9 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
-import { FreetextFilter } from 'app-shared/content-shared/entries-store/filters/freetext-filter';
+
 import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
+import { EntriesFilters, EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
 
 @Component({
   selector: 'kEntriesList',
@@ -20,6 +21,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
   public isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
+  public _filters : { type : string, id : string, label : string, tooltip : string}[] = [];
 
   private querySubscription: ISubscription;
 
@@ -32,6 +34,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   };
 
   constructor(private _entriesStore: EntriesStore,
+              private _entriesFilters : EntriesFiltersService,
               private appLocalization: AppLocalization,
               private router: Router,
               private _browserService: BrowserService) {
@@ -48,12 +51,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   }
 
   onFreetextChanged(): void {
-
-    this._entriesStore.removeFiltersByType(FreetextFilter);
-
-    if (this._filter.freetextSearch) {
-      this._entriesStore.addFilters(new FreetextFilter(this._filter.freetextSearch));
-    }
+    this._entriesFilters.setFreeText(this._filter.freetextSearch);
   }
 
   onSortChanged(event) {
@@ -81,20 +79,28 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+
     const queryData = this._entriesStore.queryData;
 
     if (queryData) {
-      this.syncFreetextComponents();
       this._filter.pageSize = queryData.pageSize;
       this._filter.pageIndex = queryData.pageIndex - 1;
       this._filter.sortBy = queryData.sortBy;
       this._filter.sortDirection = queryData.sortDirection;
     }
 
+    this._entriesFilters.filters$
+        .cancelOnDestroy(this)
+        .subscribe(filters =>
+        {
+          this._filter.freetextSearch = filters.freetext;
+
+          this._syncFiltersList(filters);
+        });
 
     this.querySubscription = this._entriesStore.query$.subscribe(
       query => {
-        this.syncFreetextComponents();
 
         this._filter.pageSize = query.data.pageSize;
         this._filter.pageIndex = query.data.pageIndex - 1;
@@ -105,6 +111,16 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     this._entriesStore.reload(false);
   }
 
+  private _syncFiltersList(filters : EntriesFilters) : void{
+
+      const newFilters = [];
+      if (filters.freetext)
+      {
+        newFilters.push({ type : 'freetext', id : filters.freetext, label : filters.freetext, tooltip : `applications.content.filters.freeText`});
+      }
+      this._filters = newFilters;
+  }
+
   ngOnDestroy() {
     this.querySubscription.unsubscribe();
     this.querySubscription = null;
@@ -113,16 +129,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   public _reload() {
     this.clearSelection();
     this._entriesStore.reload(true);
-  }
-
-  private syncFreetextComponents() {
-    const freetextFilter = this._entriesStore.getFirstFilterByType(FreetextFilter);
-
-    if (freetextFilter) {
-      this._filter.freetextSearch = freetextFilter.value;
-    } else {
-      this._filter.freetextSearch = null;
-    }
   }
 
   onActionSelected(event) {
