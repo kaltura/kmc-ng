@@ -19,7 +19,8 @@ export const environment = {
       "expiry": "86400",
       "privileges": "disableentitlement",
       "previewUIConf": "38524931",
-      "liveAnalyticsVersion": "v2.6"
+      "liveAnalyticsVersion": "v2.6",
+      "contactsalesforce": "https://www.kaltura.com/index.php/partnerservices2/contactsalesforce"
     },
     "menuConfig": [
       {
@@ -66,6 +67,23 @@ export const environment = {
         "titleToken": "Analytics",
         "showSubMenu": false,
         "enabled": false
+      }, {
+        "routePath": "settings",
+        "titleToken": "",
+        "showSubMenu": true,
+        "enabled": true,
+        "children": [
+          {
+            "routePath": "settings/accountSettings",
+            "titleToken": "Account Settings",
+            "enabled": true
+          },
+          {
+            "routePath": "settings/accountUpgrade",
+            "titleToken": "Account Upgrade",
+            "enabled": true
+          }
+        ]
       }
     ],
     "diagnostic" : {
@@ -75,7 +93,9 @@ export const environment = {
       "USER_MANUAL": "https://kmc.kaltura.com/content/docs/pdf/KMC_User_Manual.pdf",
       "SUPPORT": "http://kmc.kaltura.com/index.php/kmc/support",
       "SIGNUP": "https://corp.kaltura.com/free-trial",
-      "CONTACT_US": "https://corp.kaltura.com/company/contact-us"
+      "CONTACT_US": "https://corp.kaltura.com/company/contact-us",
+      "HIGH_SPEED_UPLOAD": "http://site.kaltura.com/Upgrade_Request_High_Speed_Upload.html",
+      "BULK_UPLOAD_SAMPLES": "http://kmc.kaltura.com/content/docs/kaltura_batch_upload_falcon.zip"
     },
     "locales": [
       {

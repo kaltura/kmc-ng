@@ -1,14 +1,14 @@
 import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, ViewChild, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
-import { CategoriesPrimeService } from '../../../shared/categories-prime.service';
 import { ISubscription } from 'rxjs/Subscription';
 
 import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
 import { Subject } from 'rxjs/Subject';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { CategoriesTreeComponent } from '../../../shared/categories-tree/categories-tree.component';
 import { EntryCategoryItem } from '../entry-metadata-handler';
 import { AutoComplete } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
+import { CategoriesTreeComponent } from 'app-shared/content-shared/categories-tree/categories-tree.component';
+import { CategoriesPrimeService } from 'app-shared/content-shared/categories-prime.service';
 
 
 @Component({

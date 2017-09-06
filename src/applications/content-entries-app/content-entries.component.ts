@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-
-import { EntriesStore } from './entries/entries-store/entries-store.service';
+import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 
 @Component({
     selector: 'kEntries',
