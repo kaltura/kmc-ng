@@ -47,7 +47,7 @@ export class CategoriesService implements OnDestroy {
         pageSize: 50,
         sortBy: 'createdAt',
         sortDirection: SortDirection.Desc,
-        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, fullName'
+        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, fullName,tags'
     });
 
     public state$ = this._state.asObservable();

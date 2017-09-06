@@ -10,6 +10,8 @@
   <ng-template>
     <div [ngSwitch]="_bulkAction">
       <kCategoriesBulkAddTags *ngSwitchCase="'addTags'" [parentPopupWidget]="bulkActionsPopup" (addTagsChanged)="onAddTagsChanged($event)"></kCategoriesBulkAddTags>
+      <kCategoriesBulkRemoveTags *ngSwitchCase="'removeTags'" [selectedCategories]="selectedCategories" [parentPopupWidget]="bulkActionsPopup"
+        (removeTagsChanged)="onRemoveTagsChanged($event)"></kCategoriesBulkRemoveTags>
     </div>
   </ng-template>
 </kPopupWidget>

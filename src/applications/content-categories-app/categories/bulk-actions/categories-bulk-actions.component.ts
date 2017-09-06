@@ -1,4 +1,4 @@
-import { CategoriesBulkAddTagsService } from './services/categories-bulk-add-tag.service';
+import { CategoriesBulkAddTagsService, CategoriesBulkRemoveTagsService  } from './services';
 import { CategoriesBulkActionBaseService } from './services/categories-bulk-action-base.service';
 import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -28,7 +28,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
 
   constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService,
-    private _bulkAddTagsService: CategoriesBulkAddTagsService) {
+    private _bulkAddTagsService: CategoriesBulkAddTagsService,
+    private _bulkRemoveTagsService: CategoriesBulkRemoveTagsService) {
   }
 
   ngOnInit() {
@@ -69,8 +70,13 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   onAddTagsChanged(tags: string[]): void {
     this.executeService(this._bulkAddTagsService, tags);
   }
+  
+  // remove tags changed
+  onRemoveTagsChanged(tags: string[]): void {
+    this.executeService(this._bulkRemoveTagsService, tags);
+  }
 
-  private executeService(service: CategoriesBulkActionBaseService<any>, data: any = {}, reloadEntries: boolean = true, confirmChunks: boolean = true, callback?: Function): void {
+  private executeService(service: CategoriesBulkActionBaseService<any>, data: any = {}, reloadCategories: boolean = true, confirmChunks: boolean = true, callback?: Function): void {
     this._bulkAction = "";
 
     const execute = () => {
@@ -81,7 +87,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
           if (callback) {
             callback(result);
           }
-          this.onBulkChange.emit({ reload: reloadEntries });
+          this.onBulkChange.emit({ reload: reloadCategories });
         },
         error => {
           this._browserService.setAppStatus({ isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error') });
@@ -89,7 +95,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       );
     };
 
-    if (confirmChunks && this.selectedCategories.length > environment.modules.contentEntries.bulkActionsLimit) {
+    if (confirmChunks && this.selectedCategories.length > environment.modules.contentCategories.bulkActionsLimit) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),

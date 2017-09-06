@@ -13,7 +13,7 @@ export const environment = {
   },
   "core": {
     "kaltura": {
-      "apiUrl" : "https://www.kaltura.com/api_v3/index.php",
+      "apiUrl": "https://www.kaltura.com/api_v3/index.php",
       "cdnUrl": "http://cdnapi.kaltura.com",
       "kmcUrl": "kmc.kaltura.com",
       "expiry": "86400",
@@ -86,7 +86,7 @@ export const environment = {
         ]
       }
     ],
-    "diagnostic" : {
+    "diagnostic": {
       "debugging": true
     },
     "externalLinks": {
@@ -127,13 +127,17 @@ export const environment = {
     "studio_universal": {
       "apiUrl": "http://www.kaltura.com"
     },
-    "contentEntries" : {
-      "createdAtDateRange" : "2005:2030",
+    "contentEntries": {
+      "createdAtDateRange": "2005:2030",
       "bulkActionsLimit": 50
     },
-    "contentPlaylists" : {
-      "createdAtDateRange" : "2005:2030",
+    "contentPlaylists": {
+      "createdAtDateRange": "2005:2030",
       "bulkActionsLimit": 2
+    },
+    "contentCategories": {
+      "createdAtDateRange": "2005:2030",
+      "bulkActionsLimit": 50
     }
   },
   "entriesShared": {

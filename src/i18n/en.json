@@ -146,13 +146,16 @@
         "bActions": {
           "addRemoveTags": "Add / Remove Tags",
           "addTags": "Add Tags",
+          "addTagsLabel": "Enter tags to be appended to all selected categories",
           "removeTags": "Remove Tags",
+          "removeTagsLabel": "Select the tags you wish to remove from the selected categories",
           "moveCategories": "Move Categories",
           "changeContentPrivacy": "Change Content Privacy",
           "changeCategoryListing": "Change Category Listing",
           "changeContributionPolicy": "Change Contribution Policy",
           "changeCategoryOwner": "Change Category Owner",
-          "delete": "Delete"
+          "delete": "Delete",
+          "save": "Save changes"        
         }
       },
       "entries": {
