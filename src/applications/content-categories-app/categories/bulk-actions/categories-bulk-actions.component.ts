@@ -93,34 +93,38 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   // bulk delete
   public deleteCategories(): void {
+    let message: string = "";
+    let deleteMessage: string = "";
     let isEditWarning: boolean = false;
     this.selectedCategories.forEach(obj => {
       if (obj.tags && obj.tags.indexOf("__EditWarning") > -1) { isEditWarning = true; }
     });
 
-    let deleteMessage: string = "";
-    isEditWarning = true;
     if (isEditWarning) {
       deleteMessage = this._appLocalization.get('applications.content.categories.editWarning');
     }
+
+    // get string of categories to delete
+    let categoriesToDelete = this.selectedCategories.map(category =>
+      this._appLocalization.get('applications.content.categories.categoryId', { 0: category.id }));
+
+    let categories: string = this.selectedCategories.length <= 10 ? categoriesToDelete.join(',').replace(/,/gi, '\n') : '';
+
 
     let isSubCategoriesExist: boolean = false;
     this.selectedCategories.forEach(obj => {
       if (obj.directSubCategoriesCount && obj.directSubCategoriesCount > 0) { isSubCategoriesExist = true; }
     });
-    isSubCategoriesExist = true;
     if (isSubCategoriesExist) {
-      deleteMessage.concat(this.selectedCategories.length > 1 ?
-        this._appLocalization.get('applications.content.categories.confirmDeleteMultipleSub') :
-        this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories'));
-    }
-
-    let categoriesToDelete = this.selectedCategories.map(category => this._appLocalization.get('applications.content.categories.categoryId', { 0: category.id })),
-      categories: string = this.selectedCategories.length <= 10 ? categoriesToDelete.join(',').replace(/,/gi, '\n') : '',
-      //editWarning: string
-      message: string = deleteMessage.length > 0 ? deleteMessage : deleteMessage.concat(this.selectedCategories.length > 1 ?
+      message = deleteMessage.concat(this.selectedCategories.length > 1 ?
+        this._appLocalization.get('applications.content.categories.confirmDeleteMultipleWithSubCategories', { 0: categories }) :
+        this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories', { 0: categories }));
+    } else {
+      message = deleteMessage.concat(this.selectedCategories.length > 1 ?
         this._appLocalization.get('applications.content.categories.confirmDeleteMultiple', { 0: categories }) :
         this._appLocalization.get('applications.content.categories.confirmDeleteSingle', { 0: categories }));
+
+    }
 
     this._browserService.confirm(
       {

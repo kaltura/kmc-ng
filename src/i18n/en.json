@@ -159,9 +159,9 @@
         },
         "deleteCategories": "Delete Categories",
         "editWarning":"Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
-        "confirmDeleteWithSubCategories": "The category will be deleted with its sub-categories. Do you want to continue?\n",
+        "confirmDeleteWithSubCategories": "The category will be deleted with its sub-categories. Do you want to continue?\n {{0}}",
         "confirmDeleteSingle": "Are you sure you want to delete this category?\n {{0}}",
-        "confirmDeleteMultipleWithSubCategories": "Categories will be deleted with their sub-categories. Do you want to continue?\n",
+        "confirmDeleteMultipleWithSubCategories": "Categories will be deleted with their sub-categories. Do you want to continue?\n {{0}}",
         "confirmDeleteMultiple": "Are you sure you want to delete these categories?\n {{0}}",
         "deleted": "Category deleted successfully",        
         "categoryId": "Category ID: {{0}}"
