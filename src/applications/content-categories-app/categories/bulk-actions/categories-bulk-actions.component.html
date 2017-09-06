@@ -9,6 +9,7 @@
 <kPopupWidget #bulkActionsPopup [popupWidth]="_bulkWindowWidth" [popupHeight]="_bulkWindowHeight" [modal]="true">
   <ng-template>
     <div [ngSwitch]="_bulkAction">
+      <kCategoriesBulkAddTags *ngSwitchCase="'addTags'" [parentPopupWidget]="bulkActionsPopup" (addTagsChanged)="onAddTagsChanged($event)"></kCategoriesBulkAddTags>
     </div>
   </ng-template>
 </kPopupWidget>

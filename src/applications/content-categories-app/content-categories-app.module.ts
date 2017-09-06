@@ -1,3 +1,4 @@
+import { CategoriesBulkAddTagsService } from './categories/bulk-actions/services/categories-bulk-add-tag.service';
 import { CategoriesBulkActionsComponent } from './categories/bulk-actions/categories-bulk-actions.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -70,10 +71,11 @@ import { CategoryCanDeactivate } from "applications/content-categories-app/categ
         ContentCategoriesComponent,
         CategoryComponentsList,
         CategoriesComponentsList,
-        CategoriesBulkActionsComponent             
+        CategoriesBulkActionsComponent
     ],
     exports: [],
-    providers: [CategoryCanDeactivate],
+    providers: [CategoryCanDeactivate,
+        CategoriesBulkAddTagsService],
 })
 export class ContentCategoriesAppModule {
 }

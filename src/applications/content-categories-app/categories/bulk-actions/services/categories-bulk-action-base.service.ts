@@ -11,7 +11,7 @@ export abstract class CategoriesBulkActionBaseService<T> {
   constructor(public _kalturaServerClient: KalturaClient) {
   }
 
-  public abstract execute(selectedEntries: KalturaCategory[] , params : T) : Observable<any>;
+  public abstract execute(selectedCategories: KalturaCategory[] , params : T) : Observable<any>;
 
   transmit(requests : KalturaRequest<any>[], chunk : boolean) : Observable<{}>
   {

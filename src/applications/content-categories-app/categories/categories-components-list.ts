@@ -1,3 +1,4 @@
+import { CategoriesBulkAddTags } from './bulk-actions/components/bulk-add-tags/bulk-add-tags.component';
 import { CategoriesTableComponent } from './categories-table.component';
 import { CategoriesListComponent } from "./categories-list.component";
 import { MaxCategoriesPipe } from './pipes/max-categories.pipe';
@@ -10,5 +11,6 @@ export const CategoriesComponentsList = [
     CategoriesTableComponent,
     MaxCategoriesPipe,
     CategoriesBulkActionsComponent,
-    PrimeTableSortDirectionPipe
+    PrimeTableSortDirectionPipe,
+    CategoriesBulkAddTags
 ];

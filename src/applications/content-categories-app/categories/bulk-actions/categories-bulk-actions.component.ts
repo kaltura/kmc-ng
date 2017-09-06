@@ -1,3 +1,4 @@
+import { CategoriesBulkAddTagsService } from './services/categories-bulk-add-tag.service';
 import { CategoriesBulkActionBaseService } from './services/categories-bulk-action-base.service';
 import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -26,7 +27,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   @ViewChild('bulkActionsPopup') public bulkActionsPopup: PopupWidgetComponent;
 
 
-  constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+  constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService,
+    private _bulkAddTagsService: CategoriesBulkAddTagsService) {
   }
 
   ngOnInit() {
@@ -65,7 +67,41 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   // add tags changed
   onAddTagsChanged(tags: string[]): void {
-    //this.executeService(this._categoriesBulkAddTagsService, tags)    ;
+    this.executeService(this._bulkAddTagsService, tags);
+  }
+
+  private executeService(service: CategoriesBulkActionBaseService<any>, data: any = {}, reloadEntries: boolean = true, confirmChunks: boolean = true, callback?: Function): void {
+    this._bulkAction = "";
+
+    const execute = () => {
+      this._browserService.setAppStatus({ isBusy: true, errorMessage: null });
+      service.execute(this.selectedCategories, data).subscribe(
+        result => {
+          this._browserService.setAppStatus({ isBusy: false, errorMessage: null });
+          if (callback) {
+            callback(result);
+          }
+          this.onBulkChange.emit({ reload: reloadEntries });
+        },
+        error => {
+          this._browserService.setAppStatus({ isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error') });
+        }
+      );
+    };
+
+    if (confirmChunks && this.selectedCategories.length > environment.modules.contentEntries.bulkActionsLimit) {
+      this._browserService.confirm(
+        {
+          header: this._appLocalization.get('applications.content.bulkActions.note'),
+          message: this._appLocalization.get('applications.content.bulkActions.confirm', { "0": this.selectedCategories.length }),
+          accept: () => {
+            execute();
+          }
+        }
+      );
+    } else {
+      execute();
+    }
   }
 
 }

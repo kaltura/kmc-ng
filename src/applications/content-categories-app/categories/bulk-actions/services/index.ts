@@ -1,1 +1,1 @@
-// export { CategoriesBulkAddTagsService } from './categories-bulk-add-tag.service';
+ export { CategoriesBulkAddTagsService } from './categories-bulk-add-tag.service';
