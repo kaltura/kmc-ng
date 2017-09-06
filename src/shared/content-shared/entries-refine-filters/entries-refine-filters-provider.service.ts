@@ -32,31 +32,38 @@ import { DefaultFiltersList } from './default-filters-list';
 
 import * as R from 'ramda';
 
-import { ValueFilter } from 'app-shared/content-shared/entries-store/value-filter';
-import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item';
 import { MetadataProfileFilter } from 'app-shared/content-shared/entries-store/filters/metadata-profile-filter';
 import { AccessControlProfilesFilter } from 'app-shared/content-shared/entries-store/filters/access-control-profiles-filter';
 import { FlavorsFilter } from 'app-shared/content-shared/entries-store/filters/flavors-filter';
 import { DistributionsFilter } from 'app-shared/content-shared/entries-store/filters/distributions-filter';
+import { EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
 
-export type EntriesFilterResolver = (node: PrimeTreeNode) => ValueFilter<any>;
-export type EntriesFilterType = { new(...args): FilterItem };
-export type IsEntryFilterOfRefineFilter = (filter: FilterItem) => boolean;
 
+// TODO
+// export type EntriesFilterResolver = (node: PrimeTreeNode) => ValueFilter<any>;
+// export type EntriesFilterType = { new(...args): FilterItem };
+// export type IsEntryFilterOfRefineFilter = (filter: FilterItem) => boolean;
+//
+// public entriesFilterType: EntriesFilterType,
+//     public isEntryFilterOfRefineFilter: IsEntryFilterOfRefineFilter,
+//     public entriesFilterResolver: EntriesFilterResolver
 
 export type UpdateStatus = {
   loading: boolean;
   errorMessage: string;
 };
 
+export interface RefineFilterItem
+{ value: string, label: string }
+
 export class RefineFilter {
-  public items: { id: string, name: string }[] = [];
+  public items: RefineFilterItem[] = [];
 
   constructor(public name: string,
               public label: string,
-              public entriesFilterType: EntriesFilterType,
-              public isEntryFilterOfRefineFilter: IsEntryFilterOfRefineFilter,
-              public entriesFilterResolver: EntriesFilterResolver) {
+              public addFilter : (item : RefineFilterItem) => void,
+              public removeFilter : (value : string) => void
+              ) {
   }
 }
 
@@ -79,6 +86,7 @@ export class EntriesRefineFiltersProvider {
 
 
   constructor(private kalturaServerClient: KalturaClient,
+              private _entriesFilters : EntriesFiltersService,
               private _metadataProfileStore: MetadataProfileStore, private _flavoursStore: FlavoursStore) {
     this.load();
   }
@@ -145,37 +153,42 @@ export class EntriesRefineFiltersProvider {
           const metadataProfileId = metadataProfile.id;
           const fieldPath = ['metadata', list.name];
 
-          const refineFilter = new RefineFilter(
-            list.id,
-            list.label,
-            MetadataProfileFilter,
-            filter => {
-              return filter instanceof MetadataProfileFilter && filter.name === list.id;
-            },
-            (node: PrimeTreeNode) => {
-              if (node.payload && node.payload.filterName) {
-                return new MetadataProfileFilter(list.id, <any>node.data, metadataProfileId, fieldPath, list.label);
-              } else {
-                return null;
-              }
-            });
+          // TODO
+          // const refineFilter = new RefineFilter(
+          //   list.id,
+          //   list.label,
+          //   MetadataProfileFilter,
+          //   filter => {
+          //     return filter instanceof MetadataProfileFilter && filter.name === list.id;
+          //   },
+          //   (node: PrimeTreeNode) => {
+          //     if (node.payload && node.payload.filterName) {
+          //       return new MetadataProfileFilter(list.id, <any>node.data, metadataProfileId, fieldPath, list.label);
+          //     } else {
+          //       return null;
+          //     }
+          //   });
+          //
+          // filterGroup.filters.push(refineFilter);
 
-          filterGroup.filters.push(refineFilter);
+          // list.optionalValues.forEach(item => {
+          //   refineFilter.items.push({
+          //     id: item.value,
+          //     name: item.text
+          //   })
 
-          list.optionalValues.forEach(item => {
-            refineFilter.items.push({
-              id: item.value,
-              name: item.text
-            })
-
-          });
+          //});
         });
       }
     });
 
     return result;
   }
-
+  // TODO
+    //
+    // defaultFilterList.entriesFilterType,
+    // defaultFilterList.isEntryFilterOfRefineFilter,
+    // defaultFilterList.entriesFilterResolver
   private _buildDefaultFiltersGroup(responses: KalturaMultiResponse, flavours: KalturaFlavorParams[]): RefineFilterGroup {
     const result: RefineFilterGroup = { label: '', filters: [] };
 
@@ -184,73 +197,81 @@ export class EntriesRefineFiltersProvider {
       const newRefineFilter = new RefineFilter(
         defaultFilterList.name,
         defaultFilterList.label,
-        defaultFilterList.entriesFilterType,
-        defaultFilterList.isEntryFilterOfRefineFilter,
-        defaultFilterList.entriesFilterResolver
+          (item) =>
+          {
+            this._entriesFilters.addMediaTypes({value : item.value, label : item.label});
+          },
+          (value) =>
+        {
+          this._entriesFilters.removeMediaTypes(value);
+        }
       );
       result.filters.push(newRefineFilter);
       defaultFilterList.items.forEach((item: any) => {
-        newRefineFilter.items.push({ id: item.id, name: item.name });
+        newRefineFilter.items.push({ value: item.value, label: item.label });
       });
 
     });
 
     // build access control profile filters
-    if (responses[1].result.objects.length > 0) {
-      const newRefineFilter = new RefineFilter(
-        'accessControlProfiles',
-        'Access Control Profiles',
-        AccessControlProfilesFilter,
-        filter => {
-          return filter instanceof AccessControlProfilesFilter;
-        },
-        (node: PrimeTreeNode) => {
-          return new AccessControlProfilesFilter(<string>node.data, node.label);
-        });
-      result.filters.push(newRefineFilter);
-      responses[1].result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
-        newRefineFilter.items.push({
-          id: accessControlProfile.id + '',
-          name: accessControlProfile.name
-        });
-      });
-    }
+      // TODO
+    // if (responses[1].result.objects.length > 0) {
+    //   const newRefineFilter = new RefineFilter(
+    //     'accessControlProfiles',
+    //     'Access Control Profiles',
+    //     AccessControlProfilesFilter,
+    //     filter => {
+    //       return filter instanceof AccessControlProfilesFilter;
+    //     },
+    //     (node: PrimeTreeNode) => {
+    //       return new AccessControlProfilesFilter(<string>node.data, node.label);
+    //     });
+    //   result.filters.push(newRefineFilter);
+    //   responses[1].result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
+    //     newRefineFilter.items.push({
+    //       id: accessControlProfile.id + '',
+    //       name: accessControlProfile.name
+    //     });
+    //   });
+    // }
 
     // build flavors filters
-    if (flavours.length > 0) {
-      const newRefineFilter = new RefineFilter(
-        'flavors',
-        'Flavors',
-        FlavorsFilter,
-        filter => {
-          return filter instanceof FlavorsFilter;
-        },
-        (node: PrimeTreeNode) => {
-          return new FlavorsFilter(<string>node.data, node.label);
-        });
-      result.filters.push(newRefineFilter);
-      flavours.forEach((flavor: KalturaFlavorParams) => {
-        newRefineFilter.items.push({ id: flavor.id + '', name: flavor.name });
-      });
-    }
+      // TODO
+    // if (flavours.length > 0) {
+    //   const newRefineFilter = new RefineFilter(
+    //     'flavors',
+    //     'Flavors',
+    //     FlavorsFilter,
+    //     filter => {
+    //       return filter instanceof FlavorsFilter;
+    //     },
+    //     (node: PrimeTreeNode) => {
+    //       return new FlavorsFilter(<string>node.data, node.label);
+    //     });
+    //   result.filters.push(newRefineFilter);
+    //   flavours.forEach((flavor: KalturaFlavorParams) => {
+    //     newRefineFilter.items.push({ id: flavor.id + '', name: flavor.name });
+    //   });
+    // }
 
     // build distributions filters
-    if (responses[0].result.objects.length > 0) {
-      const newRefineFilter = new RefineFilter(
-        'distributions',
-        'Destinations',
-        DistributionsFilter,
-        filter => {
-          return filter instanceof DistributionsFilter;
-        },
-        (node: PrimeTreeNode) => {
-          return new DistributionsFilter(<number>node.data, node.label);
-        });
-      result.filters.push(newRefineFilter);
-      responses[0].result.objects.forEach((distributionProfile: KalturaDistributionProfile) => {
-        newRefineFilter.items.push({ id: distributionProfile.id + '', name: distributionProfile.name });
-      });
-    }
+      // TODO
+    // if (responses[0].result.objects.length > 0) {
+    //   const newRefineFilter = new RefineFilter(
+    //     'distributions',
+    //     'Destinations',
+    //     DistributionsFilter,
+    //     filter => {
+    //       return filter instanceof DistributionsFilter;
+    //     },
+    //     (node: PrimeTreeNode) => {
+    //       return new DistributionsFilter(<number>node.data, node.label);
+    //     });
+    //   result.filters.push(newRefineFilter);
+    //   responses[0].result.objects.forEach((distributionProfile: KalturaDistributionProfile) => {
+    //     newRefineFilter.items.push({ id: distributionProfile.id + '', name: distributionProfile.name });
+    //   });
+    // }
 
     return result;
   }

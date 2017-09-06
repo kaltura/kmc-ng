@@ -10,14 +10,18 @@ export interface EntriesFilters
     createdAt? : {
         createdAtBefore: Date,
         createdAtAfter: Date
-    }
+    },
+    mediaTypes : { [value: string] : string }
 }
+
+
 
 @Injectable()
 export class EntriesFiltersService {
     private _filters = new BehaviorSubject<EntriesFilters>({
         freetext: null,
-        createdAt: null
+        createdAt: null,
+        mediaTypes : {}
     });
     public filters$ = this._filters.asObservable();
 
@@ -42,8 +46,52 @@ export class EntriesFiltersService {
                 createdAtBefore : currentCreatedAtValue ? currentCreatedAtValue.createdAtBefore : null,
                 createdAtAfter
             }
-        })
+        });
+    }
 
+    public addMediaTypes(...mediaTypes : { label : string, value : string }[]) : void{
+        const filters = this._filters.getValue();
+        let newMediaTypes = null;
+
+        mediaTypes.forEach(({label, value}) =>
+        {
+            if (typeof value !== 'undefined' && value !== null) {
+                const valueAsKey = value + '';
+
+                if (!filters.mediaTypes[valueAsKey]) {
+                    newMediaTypes = newMediaTypes || Object.assign({}, filters.mediaTypes);
+                    newMediaTypes[valueAsKey] = label;
+                }
+            }
+        });
+
+        if (newMediaTypes)
+        {
+            filters.mediaTypes = newMediaTypes;
+            this._filters.next(filters);
+        }
+    }
+
+    public removeMediaTypes(...mediaTypeValues : string[]) : void {
+        const filters = this._filters.getValue();
+        let newMediaTypes = null;
+
+        mediaTypeValues.forEach(mediaTypeValue =>
+        {
+            if (typeof mediaTypeValue !== 'undefined' && mediaTypeValue !== null) {
+
+                if (filters.mediaTypes[mediaTypeValue]) {
+                    newMediaTypes = newMediaTypes || Object.assign({}, filters.mediaTypes);
+                    delete newMediaTypes[mediaTypeValue];
+                }
+            }
+        });
+
+        if (newMediaTypes)
+        {
+            filters.mediaTypes = newMediaTypes;
+            this._filters.next(filters);
+        }
     }
 
     public setCreatedAtBefore(createdAtBefore : Date | null) : void{
@@ -74,6 +122,11 @@ export class EntriesFiltersService {
             if (filters.createdAt.createdAtBefore) {
                 request.filter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(filters.createdAt.createdAtBefore);
             }
+        }
+
+        const mediaTypeFilters = Object.keys(filters.mediaTypes).join(',');
+        if (mediaTypeFilters) {
+            request.filter.mediaTypeIn = mediaTypeFilters;
         }
     }
 }

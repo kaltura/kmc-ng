@@ -83,7 +83,6 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
       result => {
         if (result.errorMessage) {
           this._blockerMessage = new AreaBlockerMessage({
-              title: 'eran sakal',
             message: result.errorMessage || 'Error loading entries',
             buttons: [{
               label: 'Retry',

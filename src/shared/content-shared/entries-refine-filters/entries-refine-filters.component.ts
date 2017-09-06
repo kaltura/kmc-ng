@@ -200,9 +200,9 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
                 this.primeTreeDataProvider.create(
                   {
                     items: refineFilter.items,
-                    idProperty: 'id',
+                    idProperty: 'value',
                     rootParent: listRootNode,
-                    nameProperty: 'name',
+                    nameProperty: 'label',
                     payload: { filterName: refineFilter.name },
                     preventSort: true
                   }
@@ -350,10 +350,11 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
     Object.keys(this._filterNameToTreeData).forEach(filterName => {
       const treeData = this._filterNameToTreeData[filterName];
 
-      if (handledFilterTypeList.indexOf(treeData.refineFilter.entriesFilterType) === -1) {
-        handledFilterTypeList.push(treeData.refineFilter.entriesFilterType);
-        this.entriesStore.removeFiltersByType(treeData.refineFilter.entriesFilterType);
-      }
+      // TODO sakal
+      // if (handledFilterTypeList.indexOf(treeData.refineFilter.entriesFilterType) === -1) {
+      //   handledFilterTypeList.push(treeData.refineFilter.entriesFilterType);
+      //   this.entriesStore.removeFiltersByType(treeData.refineFilter.entriesFilterType);
+      // }
     });
 
     this._clearCreatedComponents();
@@ -406,9 +407,10 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
     for (let i = 0, length = listOfFilterNames.length; i < length && !treeData; i++) {
       const treeDataOfFilterName = this._filterNameToTreeData[listOfFilterNames[i]];
 
-      if (treeDataOfFilterName && treeDataOfFilterName.refineFilter.isEntryFilterOfRefineFilter(filterItem)) {
-        treeData = treeDataOfFilterName;
-      }
+        // TODO sakal
+      // if (treeDataOfFilterName && treeDataOfFilterName.refineFilter.isEntryFilterOfRefineFilter(filterItem)) {
+      //   treeData = treeDataOfFilterName;
+      // }
     }
 
     if (treeData) {
@@ -458,6 +460,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
     }
   }
 
+
   private _createFiltersByNode(node: PrimeTreeNode): FilterItem[] {
     const result: FilterItem[] = [];
 
@@ -469,11 +472,8 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
         const isDataNode = typeof node.data !== 'undefined' && node.data !== null;
 
         if (isDataNode) {
-          const filter = treeData.refineFilter.entriesFilterResolver(node);
+          treeData.refineFilter.addFilter( { value: node.data + '', label : node.label });
 
-          if (filter) {
-            result.push(filter);
-          }
         } else if (node.children.length) {
           node.children.forEach(childNode => {
             const childFilter = this._createFiltersByNode(childNode);
@@ -491,43 +491,37 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
 
   /**
-   * Get filter from entries store of the provided node.
+   *
    *
    * @param {PrimeTreeNode} node  The node that will be used to to find a matching filter.
    */
-  private _getFiltersByNode(node: PrimeTreeNode): FilterItem[] {
-    const result: FilterItem[] = [];
+  private _removeFiltersByNode(node: PrimeTreeNode): FilterItem[] {
+      const result: FilterItem[] = [];
 
-    if (node instanceof PrimeTreeNode && node.payload.filterName) {
-      const treeData = this._filterNameToTreeData[node.payload.filterName];
+      if (node instanceof PrimeTreeNode && node.payload.filterName) {
+          const treeData = this._filterNameToTreeData[node.payload.filterName];
 
-      if (treeData) {
-        const existingFilters = this.entriesStore.getFiltersByType(treeData.refineFilter.entriesFilterType);
-        // ignore undefined/null filters data (the virtual roots has undefined/null data)
-        const isDataNode = typeof node.data !== 'undefined' && node.data !== null;
+          if (treeData) {
 
-        if (isDataNode) {
-          const filter = existingFilters.find(existingFilter =>
-            existingFilter instanceof ValueFilter && existingFilter.value + '' === node.data + ''
-          );
+              if (node.data === 'scheduled') {
+                  this._scheduledFilterError = null;
+              }
 
-          if (filter) {
-            result.push(filter);
+              // ignore undefined/null filters data (the virtual roots has undefined/null data)
+              const isDataNode = typeof node.data !== 'undefined' && node.data !== null;
+
+              if (isDataNode) {
+                  treeData.refineFilter.removeFilter(node.data + '');
+              } else if (node.children.length) {
+                  node.children.forEach(childNode => {
+                      const childFilter = this._removeFiltersByNode(childNode);
+                  });
+              }
           }
-        } else if (node.children.length) {
-          node.children.forEach(childNode => {
-            const childFilter = this._getFiltersByNode(childNode);
 
-            if (childFilter) {
-              result.push(...childFilter);
-            }
-          });
-        }
       }
 
-    }
-
-    return result;
+      return result;
   }
 
 
@@ -536,33 +530,14 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
       const treeData = this._filterNameToTreeData[node.payload.filterName];
 
       if (treeData) {
-        const newFilters = this._createFiltersByNode(node);
-        const existingFilters = this.entriesStore.getFiltersByType(treeData.refineFilter.entriesFilterType);
-
-        existingFilters.forEach(existingFilter => {
-          const duplicatedFilterIndex = newFilters.findIndex(newFilter => newFilter.isEqual(existingFilter));
-          if (duplicatedFilterIndex > -1) {
-            newFilters.splice(duplicatedFilterIndex, 1);
-          }
-        });
-
-        if (newFilters && newFilters.length) {
-          this.entriesStore.addFilters(...newFilters);
-        }
+        this._createFiltersByNode(node);
       }
     }
   }
 
   public _onTreeNodeUnselect({ node }: { node: PrimeTreeNode }, treeSection: TreeFilterData) {
     if (node instanceof PrimeTreeNode) {
-      const filters = this._getFiltersByNode(node);
-      if (filters && filters.length) {
-        this.entriesStore.removeFilters(...filters);
-      }
-
-      if (node.data === 'scheduled') {
-        this._scheduledFilterError = null;
-      }
+      this._removeFiltersByNode(node);
     }
   }
 

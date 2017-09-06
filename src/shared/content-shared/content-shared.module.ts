@@ -89,8 +89,7 @@ import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
   ],
   providers: [
     CategoriesPrimeService,
-    CategoriesStore,
-    EntriesRefineFiltersProvider
+    CategoriesStore
   ]
 })
 export class ContentSharedModule {

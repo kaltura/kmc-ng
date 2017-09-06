@@ -22,8 +22,10 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   public isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _filters : { type : string, id : string, label : string, tooltip : string}[] = [];
+  private _handledFiltersInTags : EntriesFilters = null;
 
-  private querySubscription: ISubscription;
+
+    private querySubscription: ISubscription;
 
   public _filter = {
     pageIndex: 0,
@@ -90,6 +92,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
       this._filter.sortDirection = queryData.sortDirection;
     }
 
+    // TODO sakal subscribe async
     this._entriesFilters.filters$
         .cancelOnDestroy(this)
         .subscribe(filters =>
@@ -113,11 +116,29 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
   private _syncFiltersList(filters : EntriesFilters) : void{
 
+      const handledFilters = this._handledFiltersInTags;
       const newFilters = [];
-      if (filters.freetext)
+
+      if ((!handledFilters || handledFilters.freetext !== filters.freetext))
       {
+        if (filters.freetext)
+        {
+
+        }else
+        {
+
+        }
         newFilters.push({ type : 'freetext', id : filters.freetext, label : filters.freetext, tooltip : `applications.content.filters.freeText`});
       }
+
+      if (!handledFilters || handledFilters.mediaTypes !== filters.mediaTypes) {
+          const existingMediaTypes = this._filters.filter(filter => filter.type === 'mediaType');
+
+          Object.values(filters.mediaTypes).forEach(mediaType => {
+
+          });
+      }
+
       this._filters = newFilters;
   }
 
