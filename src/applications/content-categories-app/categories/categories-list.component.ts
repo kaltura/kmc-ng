@@ -94,4 +94,10 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
                 break;
         }
     }
+
+    onBulkChange(event): void {
+        if (event.reload === true) {
+          this._reload();
+        }
+      }
 }
