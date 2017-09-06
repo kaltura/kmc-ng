@@ -1,3 +1,4 @@
+import { CategoriesBulkChangeOwner } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-owner/bulk-change-owner.component";
 import { CategoriesBulkRemoveTags } from './bulk-actions/components/bulk-remove-tags/bulk-remove-tags.component';
 import { CategoriesBulkAddTags } from './bulk-actions/components/bulk-add-tags/bulk-add-tags.component';
 import { CategoriesTableComponent } from './categories-table.component';
@@ -13,5 +14,6 @@ export const CategoriesComponentsList = [
     CategoriesBulkActionsComponent,
     PrimeTableSortDirectionPipe,
     CategoriesBulkAddTags,
-    CategoriesBulkRemoveTags
+    CategoriesBulkRemoveTags,
+    CategoriesBulkChangeOwner    
 ];

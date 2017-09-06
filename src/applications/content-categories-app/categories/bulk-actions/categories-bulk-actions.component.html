@@ -12,6 +12,7 @@
       <kCategoriesBulkAddTags *ngSwitchCase="'addTags'" [parentPopupWidget]="bulkActionsPopup" (addTagsChanged)="onAddTagsChanged($event)"></kCategoriesBulkAddTags>
       <kCategoriesBulkRemoveTags *ngSwitchCase="'removeTags'" [selectedCategories]="selectedCategories" [parentPopupWidget]="bulkActionsPopup"
         (removeTagsChanged)="onRemoveTagsChanged($event)"></kCategoriesBulkRemoveTags>
+      <kCategoriesBulkChangeOwner *ngSwitchCase="'changeOwner'" [parentPopupWidget]="bulkActionsPopup" (ownerChanged)="onOwnerChanged($event)"></kCategoriesBulkChangeOwner>
     </div>
   </ng-template>
 </kPopupWidget>

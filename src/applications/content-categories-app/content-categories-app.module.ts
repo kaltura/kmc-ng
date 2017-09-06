@@ -1,4 +1,4 @@
-import { CategoriesBulkAddTagsService, CategoriesBulkRemoveTagsService } from './categories/bulk-actions/services';
+import { CategoriesBulkAddTagsService, CategoriesBulkRemoveTagsService, CategoriesBulkChangeOwnerService } from './categories/bulk-actions/services';
 import { CategoriesBulkActionsComponent } from './categories/bulk-actions/categories-bulk-actions.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -76,7 +76,8 @@ import { CategoryCanDeactivate } from "applications/content-categories-app/categ
     exports: [],
     providers: [CategoryCanDeactivate,
         CategoriesBulkAddTagsService,
-        CategoriesBulkRemoveTagsService],
+        CategoriesBulkRemoveTagsService,
+        CategoriesBulkChangeOwnerService],
 })
 export class ContentCategoriesAppModule {
 }

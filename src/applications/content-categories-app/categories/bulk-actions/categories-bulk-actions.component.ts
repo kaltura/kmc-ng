@@ -1,4 +1,4 @@
-import { CategoriesBulkAddTagsService, CategoriesBulkRemoveTagsService  } from './services';
+import { CategoriesBulkAddTagsService, CategoriesBulkRemoveTagsService, CategoriesBulkChangeOwnerService } from './services';
 import { CategoriesBulkActionBaseService } from './services/categories-bulk-action-base.service';
 import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -7,6 +7,7 @@ import { KalturaCategory } from "kaltura-typescript-client/types/KalturaCategory
 import { PopupWidgetComponent } from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
 import { BrowserService } from "app-shared/kmc-shell";
 import { environment } from 'app-environment';
+import { KalturaUser } from "kaltura-typescript-client/types/KalturaUser";
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -29,7 +30,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService,
     private _bulkAddTagsService: CategoriesBulkAddTagsService,
-    private _bulkRemoveTagsService: CategoriesBulkRemoveTagsService) {
+    private _bulkRemoveTagsService: CategoriesBulkRemoveTagsService,
+    private _bulkChangeOwnerService: CategoriesBulkChangeOwnerService) {
   }
 
   ngOnInit() {
@@ -51,7 +53,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       { label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } },
       { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } },
       { label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryOwner'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryOwner'), command: (event) => { this.openBulkActionWindow("changeOwner", 500, 280) } },
       { label: this._appLocalization.get('applications.content.categories.bActions.delete'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } }
     ];
   }
@@ -70,10 +72,17 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   onAddTagsChanged(tags: string[]): void {
     this.executeService(this._bulkAddTagsService, tags);
   }
-  
+
   // remove tags changed
   onRemoveTagsChanged(tags: string[]): void {
     this.executeService(this._bulkRemoveTagsService, tags);
+  }
+
+  // owner changed
+  onOwnerChanged(owners: KalturaUser[]): void {
+    if (owners && owners.length) {
+      this.executeService(this._bulkChangeOwnerService, owners[0]);
+    }
   }
 
   private executeService(service: CategoriesBulkActionBaseService<any>, data: any = {}, reloadCategories: boolean = true, confirmChunks: boolean = true, callback?: Function): void {
