@@ -119,11 +119,11 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       message = deleteMessage.concat(this.selectedCategories.length > 1 ?
         this._appLocalization.get('applications.content.categories.confirmDeleteMultipleWithSubCategories', { 0: categories }) :
         this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories', { 0: categories }));
-    } else {
+    }
+    else {
       message = deleteMessage.concat(this.selectedCategories.length > 1 ?
         this._appLocalization.get('applications.content.categories.confirmDeleteMultiple', { 0: categories }) :
         this._appLocalization.get('applications.content.categories.confirmDeleteSingle', { 0: categories }));
-
     }
 
     this._browserService.confirm(
