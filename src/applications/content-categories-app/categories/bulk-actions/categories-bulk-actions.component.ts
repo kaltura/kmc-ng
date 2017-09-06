@@ -1,4 +1,9 @@
-import { CategoriesBulkAddTagsService, CategoriesBulkRemoveTagsService, CategoriesBulkChangeOwnerService } from './services';
+import {
+  CategoriesBulkAddTagsService,
+  CategoriesBulkRemoveTagsService,
+  CategoriesBulkChangeOwnerService,
+  CategoriesBulkDeleteService
+} from './services';
 import { CategoriesBulkActionBaseService } from './services/categories-bulk-action-base.service';
 import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -31,7 +36,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService,
     private _bulkAddTagsService: CategoriesBulkAddTagsService,
     private _bulkRemoveTagsService: CategoriesBulkRemoveTagsService,
-    private _bulkChangeOwnerService: CategoriesBulkChangeOwnerService) {
+    private _bulkChangeOwnerService: CategoriesBulkChangeOwnerService,
+    private _bulkDeleteService: CategoriesBulkDeleteService) {
   }
 
   ngOnInit() {
@@ -54,7 +60,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } },
       { label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } },
       { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryOwner'), command: (event) => { this.openBulkActionWindow("changeOwner", 500, 280) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.delete'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } }
+      { label: this._appLocalization.get('applications.content.categories.bActions.delete'), command: (event) => { this.deleteCategories() } }
     ];
   }
 
@@ -83,6 +89,50 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     if (owners && owners.length) {
       this.executeService(this._bulkChangeOwnerService, owners[0]);
     }
+  }
+
+  // bulk delete
+  public deleteCategories(): void {
+    let isEditWarning: boolean = false;
+    this.selectedCategories.forEach(obj => {
+      if (obj.tags && obj.tags.indexOf("__EditWarning") > -1) { isEditWarning = true; }
+    });
+
+    let deleteMessage: string = "";
+    isEditWarning = true;
+    if (isEditWarning) {
+      deleteMessage = this._appLocalization.get('applications.content.categories.editWarning');
+    }
+
+    let isSubCategoriesExist: boolean = false;
+    this.selectedCategories.forEach(obj => {
+      if (obj.directSubCategoriesCount && obj.directSubCategoriesCount > 0) { isSubCategoriesExist = true; }
+    });
+    isSubCategoriesExist = true;
+    if (isSubCategoriesExist) {
+      deleteMessage.concat(this.selectedCategories.length > 1 ?
+        this._appLocalization.get('applications.content.categories.confirmDeleteMultipleSub') :
+        this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories'));
+    }
+
+    let categoriesToDelete = this.selectedCategories.map(category => this._appLocalization.get('applications.content.categories.categoryId', { 0: category.id })),
+      categories: string = this.selectedCategories.length <= 10 ? categoriesToDelete.join(',').replace(/,/gi, '\n') : '',
+      //editWarning: string
+      message: string = deleteMessage.length > 0 ? deleteMessage : deleteMessage.concat(this.selectedCategories.length > 1 ?
+        this._appLocalization.get('applications.content.categories.confirmDeleteMultiple', { 0: categories }) :
+        this._appLocalization.get('applications.content.categories.confirmDeleteSingle', { 0: categories }));
+
+    this._browserService.confirm(
+      {
+        header: this._appLocalization.get('applications.content.categories.deleteCategories'),
+        message: message,
+        accept: () => {
+          setTimeout(() => {
+            this.executeService(this._bulkDeleteService, {}, true, false); // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
+          }, 0);
+        }
+      }
+    );
   }
 
   private executeService(service: CategoriesBulkActionBaseService<any>, data: any = {}, reloadCategories: boolean = true, confirmChunks: boolean = true, callback?: Function): void {
