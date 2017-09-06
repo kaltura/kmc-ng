@@ -21,7 +21,10 @@
     "changeAccount": {
       "title": "Change account",
       "choose": "Choose a different partner:",
-      "continue": "Continue"
+      "continue": "Continue",
+      "errors":{
+        "loadPartners": "An error occurred while loading accounts."
+      }
     },
     "helpMenu": {
       "gettingStarted": "Getting Started",

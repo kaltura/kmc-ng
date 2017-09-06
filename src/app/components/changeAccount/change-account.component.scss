@@ -1,6 +1,13 @@
 @import 'app-theme/_variables.scss';
 
 .kChangeAccountWin {
+  width: 100%;
+  height: 100%;
+
+  >form{
+    width: 100%;
+    height: 100%;
+  }
   .kHeader {
     height: 78px;
     width: 100%;
@@ -16,6 +23,16 @@
   }
   .kContainer {
     margin: 28px;
+    min-height: 169px;
+    .kPartnersList{
+      max-height: 128px;
+      overflow: auto;
+      margin-top:24px;
+
+      .kRow:first-child{
+        margin-top: 0;
+      }
+    }
   }
   .kFooter {
     height: 66px;
