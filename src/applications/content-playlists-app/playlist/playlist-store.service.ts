@@ -34,7 +34,7 @@ export class PlaylistStore implements OnDestroy {
   private _sectionToRouteMapping : { [key : number] : string} = {};
   private _activeSection = new BehaviorSubject<{ section: PlaylistSections}>({section: null});
   private _playlist = new BehaviorSubject<{ playlist: KalturaPlaylist}>({playlist: null});
-  private _state = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin?: 'reload' | 'save'}}>({isBusy: false});
+  private _state = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin?: 'reload' | 'save' | 'pre-save'}}>({isBusy: false});
   private _entries  = new BehaviorSubject({items: [], totalCount: 0});
 
   public entries$ = this._entries.asObservable();
@@ -99,23 +99,40 @@ export class PlaylistStore implements OnDestroy {
       .subscribe(
         event => {
           if (event instanceof NavigationEnd) {
-            const currentPlaylistId = this._playlistRoute.snapshot.params.id;
-            if(currentPlaylistId === 'new') {
-              this._playlist.next({
-                playlist: this._playlistsStore.getNewPlaylistData() ? new KalturaPlaylist({name: this._playlistsStore.getNewPlaylistData().name, description: this._playlistsStore.getNewPlaylistData().description, playlistType: KalturaPlaylistType.staticList}) : null
-              });
-              if(this._activeSection.getValue().section === this._playlistRoute.snapshot.firstChild.data.sectionKey && !this._playlist.getValue().playlist) {
-                this._playlistsStore.clearNewPlaylistData();
-                this._router.navigate(['content/playlists']);
+            const currentPlaylist = this._playlist.getValue();
+            const requestedPlaylistId = this._playlistRoute.snapshot.params.id;
+            const requestedSectionKey = this._playlistRoute.snapshot.firstChild.data.sectionKey;
+
+            if (requestedPlaylistId === 'new') {
+
+              const shouldCreatePlaylist = !currentPlaylist || !currentPlaylist.playlist;
+
+              if (shouldCreatePlaylist) {
+                const newData = this._playlistsStore.getNewPlaylistData();
+
+                if (newData) {
+                  this._playlistsStore.clearNewPlaylistData();
+                  this._playlist.next({
+                    playlist: new KalturaPlaylist({
+                      name: newData.name,
+                      description: newData.description,
+                      playlistType: KalturaPlaylistType.staticList
+                    })
+                  });
+                } else {
+                  this._router.navigate(['content/playlists']);
+                }
+              }else {
+                this._activeSection.next({section: requestedSectionKey});
               }
             } else {
-              // TODO [kmc] missing implementation
-            }
-            const playlist = this._playlist.getValue();
-            if(currentPlaylistId !== 'new' && (!playlist.playlist || (playlist.playlist && playlist.playlist.id !== currentPlaylistId))) {
-              this._loadPlaylist(currentPlaylistId);
-            } else {
-              this._activeSection.next({section: this._playlistRoute.snapshot.firstChild.data.sectionKey});
+
+              const shouldLoadPlaylist = !currentPlaylist || !currentPlaylist.playlist || currentPlaylist.playlist.id !== requestedPlaylistId;
+              if (shouldLoadPlaylist) {
+                this._loadPlaylist(requestedPlaylistId);
+              } else {
+                this._activeSection.next({section: requestedSectionKey});
+              }
             }
           }
         }
@@ -226,7 +243,7 @@ export class PlaylistStore implements OnDestroy {
             .subscribe(
               () => {
                 this._savePlaylistInvoked = true;
-                this.reloadPlaylist();
+                this._loadPlaylist(id);
               },
               error => {
                 this._state.next({
@@ -243,14 +260,14 @@ export class PlaylistStore implements OnDestroy {
             .cancelOnDestroy(this)
             .subscribe(
               response => {
+                this._state.next({isBusy: false});
                 this._savePlaylistInvoked = true;
                 this.openPlaylist(response.id);
-                this._state.next({isBusy: false});
               },
               error => {
                 this._state.next({
                   isBusy: true,
-                  error: {message: error.message, origin: 'reload'}
+                  error: {message: error.message, origin: 'pre-save'}
                 });
               }
             )
@@ -268,8 +285,6 @@ export class PlaylistStore implements OnDestroy {
   {
     if (this._getPlaylistId()) {
       this._loadPlaylist(this._getPlaylistId());
-    } else {
-      this.savePlaylist();
     }
   }
 
