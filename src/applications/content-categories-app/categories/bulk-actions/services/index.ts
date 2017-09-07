@@ -3,4 +3,6 @@
  export { CategoriesBulkChangeOwnerService } from './categories-bulk-change-owner.service'; 
  export { CategoriesBulkDeleteService } from './categories-bulk-delete.service'; 
  export { CategoriesBulkChangeContentPrivacyService } from './categories-bulk-change-content-privacy.service'; 
+ export { CategoriesBulkChangeCategoryListingService } from './categories-bulk-change-category-listing.service'; 
+ export { CategoriesBulkChangeCategoriesContributionService } from './categories-bulk-change-categories-contribution.service'; 
  
