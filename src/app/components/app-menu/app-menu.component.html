@@ -30,7 +30,7 @@
 </div>
 
 <kPopupWidget #usersettings [appendTo]="appmenu" [popupWidth]="240" [popupHeight]="226" [closeBtn]="false" [targetRef]="username" [targetOffset]="{'x':-50, 'y': 30}" (onOpen)="username.className='kUserName open'" (onClose)="username.className='kUserName'">
-  <kKMCUserSettings (onChangeAccount)="changeAccountPopup.open()"></kKMCUserSettings>
+  <kKMCUserSettings></kKMCUserSettings>
 </kPopupWidget>
 
 <kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="help.className='kIconhelp open'" (onClose)="help.className='kIconhelp'">
@@ -57,8 +57,3 @@
   <kKMCUploadMenu></kKMCUploadMenu>
 </kPopupWidget>
 
-<kPopupWidget #changeAccountPopup [popupWidth]="500" [popupHeight]="370" [modal]="true">
-  <ng-template>
-    <kChangeAccount></kChangeAccount>
-  </ng-template>
-</kPopupWidget>

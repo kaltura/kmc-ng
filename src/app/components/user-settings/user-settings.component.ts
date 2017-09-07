@@ -11,8 +11,6 @@ import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-wi
 	styleUrls: ['./user-settings.component.scss']
 })
 export class UserSettingsComponent {
-  @Output() onChangeAccount: EventEmitter<any> = new EventEmitter();
-  @ViewChild('editPopup') public editPopup: PopupWidgetComponent;
 	timeoutID: number = null;
 	public _userContext: AppUser;
 	public _languages = [];
