@@ -156,7 +156,8 @@
           "changeContributionPolicy": "Change Contribution Policy",
           "changeCategoryOwner": "Change Category Owner",
           "delete": "Delete",
-          "save": "Save changes"        
+          "save": "Save changes",
+          "changeOwnerLabel": "Set a new owner for the selected entries"        
         },
         "deleteCategories": "Delete Categories",
         "editWarning":"Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
