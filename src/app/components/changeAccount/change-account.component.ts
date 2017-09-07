@@ -43,7 +43,6 @@ export class ChangeAccountComponent implements OnInit {
     this.getAvailablePartners()
       .subscribe(partners => {
           this.partners = partners;
-          console.log(partners);
           this._isBusy = false;
           this._blockerMessage = null;
         },
