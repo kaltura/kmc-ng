@@ -9,9 +9,13 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
-import { KalturaUserFilter } from 'kaltura-typescript-client/types/KalturaUserFilter';
 import { UserListAction } from 'kaltura-typescript-client/types/UserListAction';
+
+export enum PrivacyMode {
+  NoRestriction = 0,
+  RequiresAuthentication = 1,
+  Private = 2
+}
 
 @Component({
   selector: 'kCategoriesBulkChangeContentPrivacy',
@@ -22,17 +26,16 @@ import { UserListAction } from 'kaltura-typescript-client/types/UserListAction';
 export class CategoriesBulkChangeContentPrivacy implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @Output() ownerChanged = new EventEmitter<KalturaUser>();
+  @Output() changeContentPrivacyChanged = new EventEmitter<PrivacyMode>();
 
   public _loading = false;
   public _sectionBlockerMessage: AreaBlockerMessage;
 
-  public _usersProvider = new Subject<SuggestionsProviderData>();
-  public _owner: KalturaUser = null;
-
-  private _searchUsersSubscription : ISubscription;
-  private _parentPopupStateChangeSubscribe : ISubscription;
+  private _parentPopupStateChangeSubscribe: ISubscription;
   private _confirmClose: boolean = true;
+
+  // expose enum to the template
+  public _privacyMode = PrivacyMode.NoRestriction;
 
   constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
   }
@@ -41,7 +44,7 @@ export class CategoriesBulkChangeContentPrivacy implements OnInit, OnDestroy, Af
 
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     if (this.parentPopupWidget) {
       this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$
         .subscribe(event => {
@@ -49,8 +52,8 @@ export class CategoriesBulkChangeContentPrivacy implements OnInit, OnDestroy, Af
             this._confirmClose = true;
           }
           if (event.state === PopupWidgetStates.BeforeClose) {
-            if (event.context && event.context.allowClose){
-              if (this._owner && this._confirmClose){
+            if (event.context && event.context.allowClose) {
+              if (this._privacyMode && this._confirmClose) {
                 event.context.allowClose = false;
                 this._browserService.confirm(
                   {
@@ -69,72 +72,13 @@ export class CategoriesBulkChangeContentPrivacy implements OnInit, OnDestroy, Af
     }
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this._parentPopupStateChangeSubscribe.unsubscribe();
   }
 
-  public _searchUsers(event) : void {
-    this._usersProvider.next({ suggestions : [], isLoading : true});
 
-    if (this._searchUsersSubscription)
-    {
-      // abort previous request
-      this._searchUsersSubscription.unsubscribe();
-      this._searchUsersSubscription = null;
-    }
-
-    this._searchUsersSubscription = this._kalturaServerClient.request(
-      new UserListAction(
-        {
-          filter: new KalturaUserFilter({
-            idOrScreenNameStartsWith : event.query
-          }),
-          pager: new KalturaFilterPager({
-            pageIndex : 0,
-            pageSize : 30
-          })
-        }
-      )
-    )
-      .cancelOnDestroy(this)
-      .monitor('search owners')
-      .subscribe(
-        data =>
-        {
-          const suggestions = [];
-          (data.objects || []).forEach((suggestedUser: KalturaUser) => {
-            let isSelectable = true;
-            suggestions.push({
-              name: suggestedUser.screenName + "(" + suggestedUser.id + ")",
-              item: suggestedUser,
-              isSelectable: isSelectable
-            });
-          });
-          this._usersProvider.next({suggestions: suggestions, isLoading: false});
-        },
-        err =>
-        {
-          this._usersProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
-        }
-      );
-  }
-
-  public _convertUserInputToValidValue(value : string) : KalturaUser {
-    let result = null;
-
-    if (value) {
-      result = new KalturaUser(
-        {
-          id : value,
-          screenName: value
-        }
-      );
-    }
-    return result;
-  }
-
-  public _apply(){
-    this.ownerChanged.emit(this._owner);
+  public _apply() {
+    this.changeContentPrivacyChanged.emit(this._privacyMode);
     this._confirmClose = false;
     this.parentPopupWidget.close();
   }

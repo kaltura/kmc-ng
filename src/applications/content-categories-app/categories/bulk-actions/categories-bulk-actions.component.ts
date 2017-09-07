@@ -16,6 +16,8 @@ import { PopupWidgetComponent } from "@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { BrowserService } from "app-shared/kmc-shell";
 import { environment } from 'app-environment';
 import { KalturaUser } from "kaltura-typescript-client/types/KalturaUser";
+import { PrivacyMode } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-content-privacy/bulk-change-content-privacy.component";
+import { KalturaPrivacyType } from "kaltura-typescript-client/types/KalturaPrivacyType";
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -98,17 +100,25 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   }
 
   // change content privacy
-  onChangeContentPrivacyChanged(owners: KalturaUser[]): void {
-    this.executeService(this._bulkChangeContentPrivacyService, owners[0]);
+  onChangeContentPrivacyChanged(privacyMode: PrivacyMode): void {
+    let privacyType: KalturaPrivacyType;
+    if (privacyMode === PrivacyMode.NoRestriction)
+      privacyType = KalturaPrivacyType.all;
+    if (privacyMode === PrivacyMode.Private)
+      privacyType = KalturaPrivacyType.membersOnly;
+    if (privacyMode === PrivacyMode.RequiresAuthentication)
+      privacyType = KalturaPrivacyType.authenticatedUsers;
+
+    this.executeService(this._bulkChangeContentPrivacyService, privacyType);
   }
 
-   // change category listing
-   onChangeCategoryListingChanged(owners: KalturaUser[]): void {
+  // change category listing
+  onChangeCategoryListingChanged(owners: KalturaUser[]): void {
     this.executeService(this._bulkChangeCategoryListingService, owners[0]);
   }
 
-   // change contribution policy
-   onChangeContributionPolicyChanged(owners: KalturaUser[]): void {
+  // change contribution policy
+  onChangeContributionPolicyChanged(owners: KalturaUser[]): void {
     this.executeService(this._bulkChangeContributionPolicyService, owners[0]);
   }
 

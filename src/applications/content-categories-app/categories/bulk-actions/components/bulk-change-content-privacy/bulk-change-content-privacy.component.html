@@ -4,13 +4,16 @@
     <div class="kContainer">
       <span class="kLabel">{{'applications.content.categories.bActions.changeContentPrivacyLabel' | translate}}</span>
       <div class="kBlock">
-        <p-radioButton label="{{'applications.content.categories.noRestriction' | translate}}"></p-radioButton>
+        <p-radioButton name="privacy" [value]="_privacyMode.NoRestriction"
+        label="{{'applications.content.categories.noRestriction' | translate}}"></p-radioButton>
       </div>
       <div class="kBlock">
-        <p-radioButton label="{{'applications.content.categories.requiresAuthentication' | translate}}"></p-radioButton>
+        <p-radioButton name="privacy" [value]="_privacyMode.RequiresAuthentication"
+        label="{{'applications.content.categories.requiresAuthentication' | translate}}"></p-radioButton>
       </div>
       <div class="kBlock">
-        <p-radioButton label="{{'applications.content.categories.private' | translate}}"></p-radioButton>
+        <p-radioButton name="privacy" [value]="_privacyMode.Private"
+        label="{{'applications.content.categories.private' | translate}}"></p-radioButton>
       </div>
     </div>
     <div class="kFooter">
