@@ -62,10 +62,13 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     }
     this._isBusy = true;
     this._blockerMessage = null;
-    const roleCopy = Object.assign(new KalturaUserRole(), this.role);
-    roleCopy.name = this.editRoleForm.get('name').value;
-    roleCopy.description = this.editRoleForm.get('description').value;
-    this._rolesService.updateRole(roleCopy)
+
+    const editedRole = new KalturaUserRole({
+      name : this.editRoleForm.get('name').value,
+      description: this.editRoleForm.get('description').value
+    });
+
+    this._rolesService.updateRole(this.role.id, editedRole)
       .cancelOnDestroy(this)
       .subscribe(
         () => {

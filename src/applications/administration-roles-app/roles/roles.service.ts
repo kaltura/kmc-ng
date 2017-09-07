@@ -181,7 +181,7 @@ export class RolesService implements OnDestroy {
     }))
       .do(() => this.reload(true))
       .map(() => {
-        return;
+        return undefined;
       })
       .catch(error => {
         if (error.code === 'ROLE_IS_BEING_USED') {
@@ -191,7 +191,7 @@ export class RolesService implements OnDestroy {
       });
   }
 
-  public updateRole(role: KalturaUserRole): Observable<void> {
+  public updateRole(id: number, role: KalturaUserRole): Observable<void> {
     if (!role) {
       return Observable.throw(new Error('Unable to update role'));
     }
@@ -200,7 +200,7 @@ export class RolesService implements OnDestroy {
     }
 
     return this._kalturaClient.request(new UserRoleUpdateAction({
-      userRoleId: role.id,
+      userRoleId: id,
       userRole: role
     }))
       .do(
