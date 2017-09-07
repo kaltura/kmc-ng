@@ -10,6 +10,40 @@ import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-s
 import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { EntriesFilters, EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
 
+function mapFromArray(array, prop) {
+    var map = {};
+    for (var i=0; i < array.length; i++) {
+        map[ array[i][prop] ] = array[i];
+    }
+    return map;
+}
+
+function getDelta<T>(source : T[], compareTo : T[], keyPropertyName : string, comparator : (a : T, b : T) => boolean) : { added : T[], deleted : T[], changed : T[]} {
+    var delta = {
+        added: [],
+        deleted: [],
+        changed: []
+    };
+
+    var mapSource = mapFromArray(source, keyPropertyName);
+    var mapCompareTo = mapFromArray(compareTo, keyPropertyName);
+    for (var id in mapSource) {
+        if (!mapCompareTo.hasOwnProperty(id)) {
+            delta.deleted.push(mapSource[id]);
+        } else if (!comparator(mapCompareTo[id], mapSource[id])){
+            delta.changed.push(mapCompareTo[id]);
+        }
+    }
+
+    for (var id in mapCompareTo) {
+        if (!mapSource.hasOwnProperty(id)) {
+            delta.added.push( mapCompareTo[id] )
+        }
+    }
+    return delta;
+}
+
+
 @Component({
   selector: 'kEntriesList',
   templateUrl: './entries-list.component.html',
@@ -21,7 +55,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
   public isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _filters : { type : string, id : string, label : string, tooltip : string}[] = [];
+  public _filterTags : { type : string, value : string, label : string, tooltip : {token : string, args?: any[]}}[] = [];
   private _handledFiltersInTags : EntriesFilters = null;
 
 
@@ -44,7 +78,16 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
   removeTag(tag: any) {
     this.clearSelection();
-    this._entriesStore.removeFilters(tag);
+
+    switch (tag.type)
+    {
+        case "mediaType":
+          this._entriesFilters.removeMediaTypes(tag.value);
+          break;
+        case "freetext":
+          this._entriesFilters.setFreeText(null);
+          break;
+    }
   }
 
   removeAllTags() {
@@ -116,30 +159,46 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
   private _syncFiltersList(filters : EntriesFilters) : void{
 
-      const handledFilters = this._handledFiltersInTags;
-      const newFilters = [];
+      const previousFilters = this._handledFiltersInTags;
+      const existingFilterTags = [...this._filterTags];
 
-      if ((!handledFilters || handledFilters.freetext !== filters.freetext))
+      if ((!previousFilters || previousFilters.freetext !== filters.freetext))
       {
+          existingFilterTags.splice(
+              existingFilterTags.findIndex(item => item.value === filters.freetext),
+              1);
+
         if (filters.freetext)
         {
-
-        }else
-        {
-
+            existingFilterTags.push({ type : 'freetext', value : filters.freetext, label : filters.freetext, tooltip : {token: `applications.content.filters.freeText`}});
         }
-        newFilters.push({ type : 'freetext', id : filters.freetext, label : filters.freetext, tooltip : `applications.content.filters.freeText`});
       }
 
-      if (!handledFilters || handledFilters.mediaTypes !== filters.mediaTypes) {
-          const existingMediaTypes = this._filters.filter(filter => filter.type === 'mediaType');
+      if (!previousFilters || previousFilters.mediaTypes !== filters.mediaTypes) {
+          const existingMediaTypes = existingFilterTags.filter(filter => filter.type === 'mediaType');
+          const newMediaTypes = Object.entries(filters.mediaTypes).map(([value, label]) =>
+              ({
+              type: 'mediaType',
+              value: value,
+              label,
+              tooltip : { token: 'tooltip' }
 
-          Object.values(filters.mediaTypes).forEach(mediaType => {
+          }));
+
+          const delta = getDelta(existingMediaTypes,newMediaTypes, 'value', (a,b) => a.value === b.value);
+
+          existingFilterTags.push(...delta.added);
+
+          delta.deleted.forEach(removedMediaType =>
+          {
+              existingFilterTags.splice(
+                  existingFilterTags.findIndex(item => item.value === removedMediaType.value),
+                  1);
 
           });
       }
 
-      this._filters = newFilters;
+      this._filterTags = existingFilterTags;
   }
 
   ngOnDestroy() {
