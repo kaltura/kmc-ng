@@ -7,7 +7,7 @@ import { CategoryUpdateAction } from "kaltura-typescript-client/types/CategoryUp
 import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
 
 @Injectable()
-export class CategoriesBulkChangeCategoriesContributionService extends CategoriesBulkActionBaseService<KalturaUser> {
+export class CategoriesBulkChangeContributionPolicyService extends CategoriesBulkActionBaseService<KalturaUser> {
 
   constructor(_kalturaServerClient: KalturaClient) {
     super(_kalturaServerClient);

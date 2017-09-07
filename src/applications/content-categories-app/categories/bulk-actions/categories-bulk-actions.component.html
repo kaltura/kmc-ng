@@ -15,7 +15,7 @@
       <kCategoriesBulkChangeOwner *ngSwitchCase="'changeOwner'" [parentPopupWidget]="bulkActionsPopup" (ownerChanged)="onOwnerChanged($event)"></kCategoriesBulkChangeOwner>
       <kCategoriesBulkChangeContentPrivacy *ngSwitchCase="'changeContentPrivacy'" [parentPopupWidget]="bulkActionsPopup" (changeContentPrivacyChanged)="onChangeContentPrivacyChanged($event)"></kCategoriesBulkChangeContentPrivacy>
       <kCategoriesBulkChangeCategoryListing *ngSwitchCase="'changeCategoryListing'" [parentPopupWidget]="bulkActionsPopup" (changeCategoryListingChanged)="onChangeCategoryListingChanged($event)"></kCategoriesBulkChangeCategoryListing>
-      <kCategoriesBulkChangeCategoriesContribution *ngSwitchCase="'changeContributionPolicy'" [parentPopupWidget]="bulkActionsPopup" (changeContributionPolicyChanged)="onChangeContributionPolicyChanged($event)"></kCategoriesBulkChangeCategoriesContribution>
+      <kCategoriesBulkChangeContributionPolicy *ngSwitchCase="'changeContributionPolicy'" [parentPopupWidget]="bulkActionsPopup" (changeContributionPolicyChanged)="onChangeContributionPolicyChanged($event)"></kCategoriesBulkChangeContributionPolicy>
     </div>
   </ng-template>
 </kPopupWidget>

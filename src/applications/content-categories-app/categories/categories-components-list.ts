@@ -8,7 +8,7 @@ import { CategoriesBulkActionsComponent } from './bulk-actions/categories-bulk-a
 import { PrimeTableSortDirectionPipe } from './pipes/prime-table-sort-direction.pipe';
 import { CategoriesBulkChangeContentPrivacy } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-content-privacy/bulk-change-content-privacy.component";
 import { CategoriesBulkChangeCategoryListing } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-category-listing/bulk-change-category-listing.component";
-import { CategoriesBulkChangeCategoriesContribution } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-categories-contribution/bulk-change-categories-contribution.component";
+import { CategoriesBulkChangeContributionPolicy } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-contribution-policy/bulk-change-contribution-policy.component";
 
 export const CategoriesComponentsList = [
     CategoriesListComponent,
@@ -21,5 +21,5 @@ export const CategoriesComponentsList = [
     CategoriesBulkChangeOwner,
     CategoriesBulkChangeContentPrivacy ,
     CategoriesBulkChangeCategoryListing,
-    CategoriesBulkChangeCategoriesContribution
+    CategoriesBulkChangeContributionPolicy
 ];

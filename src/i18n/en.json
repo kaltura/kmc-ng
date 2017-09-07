@@ -152,13 +152,15 @@
           "removeTagsLabel": "Select the tags you wish to remove from the selected categories",
           "moveCategories": "Move Categories",
           "changeContentPrivacy": "Change Content Privacy",
+          "changeContentPrivacyLabel": "Change the Content Privacy settings for all selected categories",
           "changeCategoryListing": "Change Category Listing",
+          "changeCategoryListingLabel": " Change the Category Listing settings for all selected categories",
           "changeContributionPolicy": "Change Contribution Policy",
+          "changeContributionPolicyLabel": "Change the Category Contribution Policy settings for all selected categories",
           "changeCategoryOwner": "Change Category Owner",
           "delete": "Delete",
           "save": "Save changes",
-          "changeOwnerLabel": "Set a new owner for the selected categories",
-          "changeContentPrivacyLabel": "Change the Content Privacy settings for all selected categories"
+          "changeOwnerLabel": "Set a new owner for the selected categories"
         },
         "deleteCategories": "Delete Categories",
         "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",

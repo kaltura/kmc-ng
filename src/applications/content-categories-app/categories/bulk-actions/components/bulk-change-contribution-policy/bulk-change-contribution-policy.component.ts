@@ -14,12 +14,12 @@ import { KalturaUserFilter } from 'kaltura-typescript-client/types/KalturaUserFi
 import { UserListAction } from 'kaltura-typescript-client/types/UserListAction';
 
 @Component({
-  selector: 'kCategoriesBulkChangeCategoriesContribution',
-  templateUrl: './bulk-change-categories-contribution.component.html',
-  styleUrls: ['./bulk-change-categories-contribution.component.scss']
+  selector: 'kCategoriesBulkChangeContributionPolicy',
+  templateUrl: './bulk-change-contribution-policy.component.html',
+  styleUrls: ['./bulk-change-contribution-policy.component.scss']
 })
 
-export class CategoriesBulkChangeCategoriesContribution implements OnInit, OnDestroy, AfterViewInit {
+export class CategoriesBulkChangeContributionPolicy implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Output() ownerChanged = new EventEmitter<KalturaUser>();

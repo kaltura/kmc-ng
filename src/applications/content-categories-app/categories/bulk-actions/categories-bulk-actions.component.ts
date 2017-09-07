@@ -5,7 +5,7 @@ import {
   CategoriesBulkDeleteService,
   CategoriesBulkChangeContentPrivacyService,
   CategoriesBulkChangeCategoryListingService,
-  CategoriesBulkChangeCategoriesContributionService
+  CategoriesBulkChangeContributionPolicyService
 } from './services';
 import { CategoriesBulkActionBaseService } from './services/categories-bulk-action-base.service';
 import { MenuItem } from 'primeng/primeng';
@@ -43,7 +43,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     private _bulkDeleteService: CategoriesBulkDeleteService,
     private _bulkChangeContentPrivacyService: CategoriesBulkChangeContentPrivacyService,
     private _bulkChangeCategoryListingService: CategoriesBulkChangeCategoryListingService,
-    private _bulkChangeCategoriesContributionService: CategoriesBulkChangeCategoriesContributionService) {
+    private _bulkChangeContributionPolicyService: CategoriesBulkChangeContributionPolicyService) {
   }
 
   ngOnInit() {
@@ -109,7 +109,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
    // change contribution policy
    onChangeContributionPolicyChanged(owners: KalturaUser[]): void {
-    this.executeService(this._bulkChangeCategoriesContributionService, owners[0]);
+    this.executeService(this._bulkChangeContributionPolicyService, owners[0]);
   }
 
   // bulk delete
