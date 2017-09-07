@@ -14,7 +14,6 @@ import {KalturaUserRoleStatus} from 'kaltura-typescript-client/types/KalturaUser
 import {KalturaUserRoleOrderBy} from 'kaltura-typescript-client/types/KalturaUserRoleOrderBy';
 import {UserRoleDeleteAction} from 'kaltura-typescript-client/types/UserRoleDeleteAction';
 import {UserRoleUpdateAction} from 'kaltura-typescript-client/types/UserRoleUpdateAction';
-import {UserRoleAddAction} from 'kaltura-typescript-client/types/UserRoleAddAction';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {UserRoleCloneAction} from 'kaltura-typescript-client/types/UserRoleCloneAction';
 import {KalturaMultiRequest} from 'kaltura-typescript-client';
@@ -181,7 +180,7 @@ export class RolesService implements OnDestroy {
     }))
       .do(() => this.reload(true))
       .map(() => {
-        return undefined;
+        return;
       })
       .catch(error => {
         if (error.code === 'ROLE_IS_BEING_USED') {
@@ -191,50 +190,8 @@ export class RolesService implements OnDestroy {
       });
   }
 
-  public updateRole(id: number, role: KalturaUserRole): Observable<void> {
-    if (!role) {
-      return Observable.throw(new Error('Unable to update role'));
-    }
-    if (role.partnerId === 0) {
-      return Observable.throw(new Error('Unable to update Administrator role'));
-    }
-
-    return this._kalturaClient.request(new UserRoleUpdateAction({
-      userRoleId: id,
-      userRole: role
-    }))
-      .do(
-        () => {
-          this.reload(true)
-        })
-      .map(() => {
-        return
-      });
-
-  }
-
-  public addRole(role: KalturaUserRole): Observable<void> {
-    if (!role) {
-      return Observable.throw(new Error('Unable to add role'));
-    }
-    role.tags = 'kmc';
-
-    return this._kalturaClient.request(new UserRoleAddAction({
-      userRole: role
-    }))
-      .do(
-        () => {
-          this.reload(true)
-        })
-      .map(() => {
-        return
-      });
-  }
-
-
   public duplicateRole(role: KalturaUserRole): Observable<KalturaUserRole> {
-    if (!role
-    ) {
+    if (!role) {
       return Observable.throw(new Error('Unable to duplicate role'));
     }
 
@@ -246,36 +203,14 @@ export class RolesService implements OnDestroy {
       }).setDependency(['userRoleId', 0, 'id'])
     );
 
-    return Observable.create(observer => {
-      let subscription: ISubscription;
-
-      subscription = this._kalturaClient.multiRequest(multiRequest)
-        .monitor('duplicateRole')
-        .map(
-          data => {
-            if (data.hasErrors()) {
-              throw new Error('error occurred in action \'duplicateRole\'');
-            }
-            return data[1].result;
-          })
-        .subscribe(
-          result => {
-            subscription = null;
-            observer.next(result);
-            observer.complete();
-          },
-          error => {
-            subscription = null;
-            observer.error(error);
+    return this._kalturaClient.multiRequest(multiRequest)
+      .map(
+        data => {
+          if (data.hasErrors()) {
+            throw new Error('error occurred in action \'duplicateRole\'');
           }
-        );
-
-      return () => {
-        if (subscription) {
-          subscription.unsubscribe();
-        }
-      }
-    });
+          return data[1].result;
+        });
   }
 
   private _getDuplicatedRole(role: KalturaUserRole) {

@@ -1,15 +1,16 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {KalturaUserRole} from "kaltura-typescript-client/types/KalturaUserRole";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {RolesService} from "../../roles/roles.service";
 import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
 import {AppLocalization} from "@kaltura-ng/kaltura-common";
 import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
+import {RoleService} from "./role.service";
 
 @Component({
   selector: 'kEditRole',
   templateUrl: './edit-role.component.html',
-  styleUrls: ['./edit-role.component.scss']
+  styleUrls: ['./edit-role.component.scss'],
+  providers: [RoleService]
 })
 export class EditRoleComponent implements OnInit, OnDestroy {
 
@@ -21,9 +22,10 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() duplicatedRole: boolean;
+  @Output() onRoleSaved = new EventEmitter<void>();
 
   constructor(private _fb: FormBuilder,
-              private _rolesService: RolesService,
+              private _roleService: RoleService,
               private appLocalization: AppLocalization) {
   }
 
@@ -60,20 +62,28 @@ export class EditRoleComponent implements OnInit, OnDestroy {
       this.markFormFieldsAsTouched();
       return;
     }
+
+    // no need to reload the table since the duplicated role remained intact
+    if (this.duplicatedRole && this.editRoleForm.pristine) {
+      this.parentPopupWidget.close();
+      return;
+    }
+
     this._isBusy = true;
     this._blockerMessage = null;
 
     const editedRole = new KalturaUserRole({
-      name : this.editRoleForm.get('name').value,
+      name: this.editRoleForm.get('name').value,
       description: this.editRoleForm.get('description').value
     });
 
-    this._rolesService.updateRole(this.role.id, editedRole)
+    this._roleService.updateRole(this.role.id, editedRole)
       .cancelOnDestroy(this)
       .subscribe(
-        () => {
+        (role) => {
           this._isBusy = false;
           this.parentPopupWidget.close();
+          this.onRoleSaved.emit();
         },
         error => {
           this._isBusy = false;
@@ -112,12 +122,13 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     this.role = new KalturaUserRole();
     this.role.name = this.editRoleForm.get('name').value;
     this.role.description = this.editRoleForm.get('description').value;
-    this._rolesService.addRole(this.role)
+    this._roleService.addRole(this.role)
       .cancelOnDestroy(this)
       .subscribe(
         () => {
           this._isBusy = false;
           this.parentPopupWidget.close();
+          this.onRoleSaved.emit();
         },
         error => {
           this._isBusy = false;

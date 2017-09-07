@@ -21,7 +21,7 @@
   </div>
   <kPopupWidget #editPopup [popupWidth]="600" [popupHeight]="400" [modal]="true">
     <ng-template>
-      <kEditRole [role]="_currentEditRole"  [parentPopupWidget]="editPopup" [duplicatedRole]="_currentEditRoleIsDuplicated"></kEditRole>
+      <kEditRole (onRoleSaved)="_reload(true)" [role]="_currentEditRole"  [parentPopupWidget]="editPopup" [duplicatedRole]="_currentEditRoleIsDuplicated"></kEditRole>
     </ng-template>
   </kPopupWidget>
 </k-area-blocker>
