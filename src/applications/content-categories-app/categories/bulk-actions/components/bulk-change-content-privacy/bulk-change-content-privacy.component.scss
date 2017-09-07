@@ -1,6 +1,5 @@
 @import "app-theme/_variables.scss";
-
-.kTitle{
+.kTitle {
   color: $kGrayscale1;
   font-size: 24px;
   font-weight: 700;
@@ -9,25 +8,29 @@
   height: 78px;
   line-height: 78px;
 }
-.kContent{
+
+.kContent {
   display: flex;
   flex-direction: column;
-  height: 280px;
-  width: 500px;
-  .kLabel{
+  height: 340px;
+  .kLabel {
+    text-align: center;
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
   }
-  .kContainer{
+  .kContainer {
+    height: 190px;
     margin: 20px;
   }
   .kBlock {
     display: block;
     width: 100%;
-    margin-bottom: 24px;
+    margin-top: 20px;
+    margin-bottom: 10px;
   }
 }
-.kFooter{
+
+.kFooter {  
   position: absolute;
   bottom: 0px;
   display: flex;
@@ -38,10 +41,13 @@
   justify-content: center;
 }
 
-
-/deep/ .ui-autocomplete.ui-widget{
+/deep/ .ui-autocomplete.ui-widget {
   width: 100%;
-  input{
+  input {
     width: 100%;
   }
+}
+
+:host /deep/ label {
+  font-weight: 400;
 }

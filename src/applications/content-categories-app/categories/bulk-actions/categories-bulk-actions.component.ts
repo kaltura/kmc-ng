@@ -94,8 +94,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   }
 
   // change content privacy
-  onChangeContentPrivacyChanged(owners: KalturaUser[]): void {    
-      this.executeService(this._bulkChangeContentPrivacyService, owners[0]);    
+  onChangeContentPrivacyChanged(owners: KalturaUser[]): void {
+    this.executeService(this._bulkChangeContentPrivacyService, owners[0]);
   }
 
   // bulk delete
