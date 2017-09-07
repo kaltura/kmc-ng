@@ -6,6 +6,7 @@ import { CategoriesListComponent } from "./categories-list.component";
 import { MaxCategoriesPipe } from './pipes/max-categories.pipe';
 import { CategoriesBulkActionsComponent } from './bulk-actions/categories-bulk-actions.component';
 import { PrimeTableSortDirectionPipe } from './pipes/prime-table-sort-direction.pipe';
+import { CategoriesBulkChangeContentPrivacy } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-content-privacy/bulk-change-content-privacy.component";
 
 export const CategoriesComponentsList = [
     CategoriesListComponent,
@@ -15,5 +16,6 @@ export const CategoriesComponentsList = [
     PrimeTableSortDirectionPipe,
     CategoriesBulkAddTags,
     CategoriesBulkRemoveTags,
-    CategoriesBulkChangeOwner    
+    CategoriesBulkChangeOwner,
+    CategoriesBulkChangeContentPrivacy    
 ];

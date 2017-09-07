@@ -2,7 +2,8 @@ import {
   CategoriesBulkAddTagsService,
   CategoriesBulkRemoveTagsService,
   CategoriesBulkChangeOwnerService,
-  CategoriesBulkDeleteService
+  CategoriesBulkDeleteService,
+  CategoriesBulkChangeContentPrivacyService
 } from './services';
 import { CategoriesBulkActionBaseService } from './services/categories-bulk-action-base.service';
 import { MenuItem } from 'primeng/primeng';
@@ -37,7 +38,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     private _bulkAddTagsService: CategoriesBulkAddTagsService,
     private _bulkRemoveTagsService: CategoriesBulkRemoveTagsService,
     private _bulkChangeOwnerService: CategoriesBulkChangeOwnerService,
-    private _bulkDeleteService: CategoriesBulkDeleteService) {
+    private _bulkDeleteService: CategoriesBulkDeleteService,
+    private _bulkChangeContentPrivacyService: CategoriesBulkChangeContentPrivacyService) {
   }
 
   ngOnInit() {
@@ -56,9 +58,9 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
           { label: this._appLocalization.get('applications.content.categories.bActions.removeTags'), command: (event) => { this.openBulkActionWindow("removeTags", 500, 500) } }]
       },
       { label: this._appLocalization.get('applications.content.categories.bActions.moveCategories'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'), command: (event) => { this.openBulkActionWindow("changeContentPrivacy", 586, 352) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'), command: (event) => { this.openBulkActionWindow("changeCategoryListing", 500, 500) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'), command: (event) => { this.openBulkActionWindow("changeContributionPolicy", 500, 500) } },
       { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryOwner'), command: (event) => { this.openBulkActionWindow("changeOwner", 500, 280) } },
       { label: this._appLocalization.get('applications.content.categories.bActions.delete'), command: (event) => { this.deleteCategories() } }
     ];
@@ -89,6 +91,11 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     if (owners && owners.length) {
       this.executeService(this._bulkChangeOwnerService, owners[0]);
     }
+  }
+
+  // change content privacy
+  onChangeContentPrivacyChanged(owners: KalturaUser[]): void {    
+      this.executeService(this._bulkChangeContentPrivacyService, owners[0]);    
   }
 
   // bulk delete
