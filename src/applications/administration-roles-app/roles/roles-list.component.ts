@@ -21,7 +21,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
   public _isBusy = false
   public _blockerMessage: AreaBlockerMessage = null;
   public _roles: KalturaUserRole[] = [];
-  public _rolesTotalCount: string = null;
+  public _rolesTotalCount = '';
   public _currentEditRole: any = null;
   public _currentEditRoleIsDuplicated = false;
 
@@ -51,7 +51,9 @@ export class RolesListComponent implements OnInit, OnDestroy {
       .subscribe(
         (data) => {
           this._roles = data.items;
-          this._rolesTotalCount = this.appLocalization.get('applications.administration.roles.rolesNum', {0: data.totalCount});
+          if (data.totalCount > 0) {
+            this._rolesTotalCount = this.appLocalization.get('applications.administration.roles.rolesNum', {0: data.totalCount});
+          }
         }
       );
 
