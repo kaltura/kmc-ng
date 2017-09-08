@@ -17,6 +17,12 @@ import {
 } from 'primeng/primeng';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import { KalturaUserRole } from 'kaltura-typescript-client/types/KalturaUserRole';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators
+} from '@angular/forms';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -34,24 +40,37 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   public _users: any[] = [];
   public _items: MenuItem[];
   private actionsMenuUserId: string = "";
-  private _roles: KalturaUserRole[];
+  public _roles: KalturaUserRole[];
   private _partnerInfo: PartnerInfo;
+  userForm : FormGroup;
 
   @ViewChild('actionsmenu') private actionsMenu: Menu;
-  @Output() actionSelected = new EventEmitter<any>();
+  @ViewChild('editUserPopup') editUserPopup: PopupWidgetComponent;
+  @Output() toggleUserStatus = new EventEmitter<KalturaUser>();
+  @Output() deleteUser = new EventEmitter<string>();
 
 	constructor(
 	  public usersStore: UsersStore,
     private _appAuthentication: AppAuthentication,
     private _appLocalization: AppLocalization,
-    private _browserService : BrowserService
-  ) {}
+    private _browserService : BrowserService,
+    private _formBuilder : FormBuilder
+  ) {
+    // build FormControl group
+    this.userForm = _formBuilder.group({
+      email     : ['', Validators.required],
+      firstName : '',
+      lastName  : '',
+      id        : '',
+      rolesId   : ''
+    });
+  }
 
   buildMenu(user: KalturaUser): void {
     this._items = [{
       label: this._appLocalization.get("applications.content.table.edit"),
       command: () => {
-        console.log('edit', user.id);
+        this.editUser(user);
       }
     }];
     if(this._appAuthentication.appUser.id !== user.id || this._partnerInfo.adminUserId !== user.id) {
@@ -59,7 +78,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
         {
           label: this._appLocalization.get("applications.content.table.blockUnblock"),
           command: () => {
-            this.toggleUserStatus(user);
+            this.toggleUserStatus.emit(user);
           }
         },
         {
@@ -70,7 +89,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
                 header: this._appLocalization.get('applications.content.users.deleteUser'),
                 message: this._appLocalization.get('applications.content.users.confirmDelete', {0: user.fullName}),
                 accept: () => {
-                  this.deleteUser(user.id);
+                  this.deleteUser.emit(user.id);
                 }
               }
             );
@@ -90,122 +109,22 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  toggleUserStatus(user: KalturaUser): void {
-    this.usersStore.toggleUserStatus(user)
-      .cancelOnDestroy(this)
-      .subscribe(
-        response => {
-          this.usersStore.updateUserStatus({
-            items : response[1].result.objects,
-            totalCount: response[1].result.totalCount
-          });
-        },
-        error => {
-          this._blockerMessage = new AreaBlockerMessage(
-            {
-              message: error.message,
-              buttons: [
-                {
-                  label: this._appLocalization.get('app.common.retry'),
-                  action: () => {
-                    this.toggleUserStatus(user);
-                    this._blockerMessage = null;
-                  }
-                },
-                {
-                  label: this._appLocalization.get('app.common.cancel'),
-                  action: () => {
-                    this._blockerMessage = null;
-                  }
-                }
-              ]
-            }
-          )
-        }
-      );
+  editUser(user: KalturaUser): void {
+    this.editUserPopup.open();
   }
 
-  deleteUser(userId: string): void {
-    this.usersStore.deleteUser(userId)
-      .cancelOnDestroy(this)
-      .subscribe(
-        () => {
-          this.usersStore.reload(true);
-        },
-        error => {
-          this._blockerMessage = new AreaBlockerMessage(
-            {
-              message: error.message,
-              buttons: [
-                {
-                  label: this._appLocalization.get('app.common.retry'),
-                  action: () => {
-                    this.deleteUser(userId);
-                    this._blockerMessage = null;
-                  }
-                },
-                {
-                  label: this._appLocalization.get('app.common.cancel'),
-                  action: () => {
-                    this._blockerMessage = null;
-                  }
-                }
-              ]
-            }
-          )
-        }
-      );
+  saveUser() {
+    this.usersStore.saveUser();
   }
 
 	ngOnInit() {
-    this.usersStore.roles$
+    this.usersStore.usersData$
       .cancelOnDestroy(this)
       .subscribe(
         response => {
-          this._roles = response.items;
-        }
-      );
-
-    this.usersStore.partnerInfo$
-      .cancelOnDestroy(this)
-      .subscribe(
-        response => {
-          this._partnerInfo = response;
-        }
-      );
-
-    this.usersStore.users$
-      .cancelOnDestroy(this)
-      .subscribe(
-        response => {
-          this._users = response.items.map(user => {
-            let userFullName: string = '',
-                roleName: string = '';
-
-            if(this._appAuthentication.appUser.id === user.id) {
-              userFullName = `(${this._appLocalization.get('applications.content.users.you')})`;
-            } else if (user.isAccountOwner) {
-              userFullName = `(${this._appLocalization.get('applications.content.users.accountOwner')})`;
-            }
-            if(this._appAuthentication.appUser.id === user.id && user.isAccountOwner) {
-              userFullName = `(${this._appLocalization.get('applications.content.users.you')}, ${this._appLocalization.get('applications.content.users.accountOwner')})`;
-            }
-
-            this._roles.forEach(role => {
-              if(user.roleIds === role.id.toString()) {
-                roleName = role.name;
-              }
-            });
-
-            return {
-              status: user.status,
-              fullName: `${user.fullName} ${userFullName}`,
-              id: user.id,
-              email: user.email,
-              roleIds: roleName,
-              lastLoginTime: user.lastLoginTime
-            }
-          });
+          this._users = response.users.items;
+          this._roles = response.roles.items;
+          this._partnerInfo = response. partnerInfo;
         }
       );
   }

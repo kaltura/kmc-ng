@@ -1,25 +1,42 @@
-<k-area-blocker>
+<k-area-blocker kFillHeight [showLoader]="(usersStore.state$ | async)?.loading || loading" [message]="blockerMessage">
   <div class="kUsers kOverrideFAIcons">
-    <div #usersTableHolder class="kUsersHolder kContent">
+    <div class="kContent kUsersWrapper">
       <div class="kUsersHeader">
         <div class="kUsersTitle">{{'applications.content.users.usersTitle' | translate}}</div>
         <div class="kUsersExplanatory">{{'applications.content.users.usersExplanatory' | translate}}</div>
         <div class="kUsersStatus">
-          {{usersStatus}} {{usersAvailable}} &nbsp;
+          {{usersInfo}}
+        </div>
+        <div class="kUsersNeedMore">
           {{'applications.content.users.moreUsers' | translate}}
-          <a (click)="upgradeAccount()">{{'applications.content.users.clickHere' | translate}}</a>
+          <a class="kClickHere" (click)="upgradeAccount()">{{'applications.content.users.clickHere' | translate}}</a>
           {{'applications.content.users.usersUpgrade' | translate}}
         </div>
       </div>
-      <kUsersTable class="kUsersTable"></kUsersTable>
-      <div class="kUsersTableFooter" #footer *ngIf="(usersStore.users$ | async)?.totalCount">
-        <p-paginator
-          [rows]="_filter.pageSize"
-          [first]="_filter.pageIndex * _filter.pageSize"
-          [rowsPerPageOptions]="[25,50,100,250,500]"
-          [totalRecords]="(usersStore.users$ | async)?.totalCount"
-          (onPageChange)="onPaginationChanged($event)"></p-paginator>
-        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+      <div #usersTableHolder class="kUsersHolder kContent">
+        <div class="kUsersHead">
+          <button
+            pButton
+            type="button"
+            label="{{'applications.content.users.addUser' | translate}}"
+            class="kButtonBranded kAddUserBtn"></button>
+          <span class="kUserAmount" *ngIf="usersAmount">
+            {{usersAmount}}
+          </span>
+        </div>
+        <kUsersTable
+          class="kUsersTable"
+          (toggleUserStatus)="onToggleUserStatus($event)"
+          (deleteUser)="onDeleteUser($event)"></kUsersTable>
+        <div class="kUsersTableFooter" #footer *ngIf="(usersStore.users$ | async)?.totalCount">
+          <p-paginator
+            [rows]="_filter.pageSize"
+            [first]="_filter.pageIndex * _filter.pageSize"
+            [rowsPerPageOptions]="[25,50,100,250,500]"
+            [totalRecords]="(usersStore.users$ | async)?.totalCount"
+            (onPageChange)="onPaginationChanged($event)"></p-paginator>
+          <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+        </div>
       </div>
     </div>
   </div>

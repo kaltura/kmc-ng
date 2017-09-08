@@ -1,51 +1,102 @@
-<k-area-blocker kFillHeight
-  [showLoader]="(usersStore.state$ | async)?.loading"
-  [message]="_blockerMessage">
-  <div class="kUsersTable">
-    <p-dataTable
-      [value]="_users"
-      scrollable="true"
-      scrollHeight="100%"
-      dataKey="id"
-      [rowTrackBy]="rowTrackBy">
-      <p-column field="status" styleClass="kTableStatus" header="{{'applications.content.table.status' | translate}}" [sortable]="false">
-        <ng-template let-col let-user="rowData" pTemplate="body">
-          <span class="kTitle">{{user[col.field] | status}}</span>
-        </ng-template>
-      </p-column>
-      <p-column field="fullName" styleClass="kTableFullName" header="{{'applications.content.table.userName' | translate}}" [sortable]="false">
-        <ng-template let-col let-user="rowData" pTemplate="body">
-          <span class="kTitle">{{user[col.field]}}</span>
-        </ng-template>
-      </p-column>
-      <p-column field="id" header="{{'applications.content.table.userId' | translate}}" [sortable]="false">
-        <ng-template let-col let-user="rowData" pTemplate="body">
-          <span class="kTitle">{{user[col.field]}}</span>
-        </ng-template>
-      </p-column>
-      <p-column field="email" header="{{'applications.content.table.emailAddress' | translate}}" [sortable]="false">
-        <ng-template let-col let-user="rowData" pTemplate="body">
-          <span class="kTitle">{{user[col.field]}}</span>
-        </ng-template>
-      </p-column>
-      <p-column field="roleIds" header="{{'applications.content.table.role' | translate}}" [sortable]="false">
-        <ng-template let-col let-user="rowData" pTemplate="body">
-          <span class="kTitle">{{user[col.field]}}</span>
-        </ng-template>
-      </p-column>
-      <p-column field="lastLoginTime" header="{{'applications.content.table.lastLogin' | translate}}" [sortable]="false">
-        <ng-template let-col let-user="rowData" pTemplate="body">
-          <span class="kTitle">{{user[col.field] | date:'MM/dd/yy HH:mm'}}</span>
-        </ng-template>
-      </p-column>
-      <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
-        <ng-template let-col let-user="rowData" pTemplate="body">
-          <div class="kUsersTableActions">
-            <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, user)"></button>
+<div class="kUsersTable">
+  <p-dataTable
+    [value]="_users"
+    scrollable="true"
+    scrollHeight="100%"
+    dataKey="id"
+    [rowTrackBy]="rowTrackBy">
+    <p-column field="status" styleClass="kTableStatus" header="{{'applications.content.table.status' | translate}}" [sortable]="false">
+      <ng-template let-col let-user="rowData" pTemplate="body">
+        <span class="kTitle">{{user[col.field] | status}}</span>
+      </ng-template>
+    </p-column>
+    <p-column field="fullName" styleClass="kTableFullName" header="{{'applications.content.table.userName' | translate}}" [sortable]="false">
+      <ng-template let-col let-user="rowData" pTemplate="body">
+        <span class="kTitle">{{user[col.field] | fullName:user}}</span>
+      </ng-template>
+    </p-column>
+    <p-column field="id" header="{{'applications.content.table.userId' | translate}}" [sortable]="false">
+      <ng-template let-col let-user="rowData" pTemplate="body">
+        <span class="kTitle">{{user[col.field]}}</span>
+      </ng-template>
+    </p-column>
+    <p-column field="email" header="{{'applications.content.table.emailAddress' | translate}}" [sortable]="false">
+      <ng-template let-col let-user="rowData" pTemplate="body">
+        <span class="kTitle">{{user[col.field]}}</span>
+      </ng-template>
+    </p-column>
+    <p-column field="roleIds" header="{{'applications.content.table.role' | translate}}" [sortable]="false">
+      <ng-template let-col let-user="rowData" pTemplate="body">
+        <span class="kTitle">{{user[col.field] | roleName:_roles}}</span>
+      </ng-template>
+    </p-column>
+    <p-column field="lastLoginTime" header="{{'applications.content.table.lastLogin' | translate}}" [sortable]="false">
+      <ng-template let-col let-user="rowData" pTemplate="body">
+        <span class="kTitle">{{user[col.field] | date:'MM/dd/yy HH:mm'}}</span>
+      </ng-template>
+    </p-column>
+    <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
+      <ng-template let-col let-user="rowData" pTemplate="body">
+        <div class="kUsersTableActions">
+          <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, user)"></button>
+        </div>
+      </ng-template>
+    </p-column>
+  </p-dataTable>
+  <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'"></p-menu>
+</div>
+
+<kPopupWidget #editUserPopup [popupWidth]="500" [popupHeight]="478" [modal]="true">
+  <div class="kFloater kOverrideFAIcons">
+    <div class="kHeader">
+      <div class="kTitle">{{'applications.content.users.editUser' | translate}}</div>
+    </div>
+
+    <div class="kContainer">
+      <form [formGroup]="userForm" novalidate>
+        <div class="kSchemaTitle"></div>
+        <div class="kRow kValign">
+          <span class="kLabel">{{'applications.content.users.loginEmailAddress' | translate}}</span>
+          <div class="kControl">
+            <input formControlName="email" type="text" pInputText />
           </div>
-        </ng-template>
-      </p-column>
-    </p-dataTable>
-    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'"></p-menu>
+        </div>
+        <div class="kRow kValign">
+          <span class="kLabel">{{'applications.content.users.firstName' | translate}}</span>
+          <div class="kControl">
+            <input formControlName="firstName" type="text" pInputText />
+          </div>
+        </div>
+        <div class="kRow kValign">
+          <span class="kLabel">{{'applications.content.users.lastName' | translate}}</span>
+          <div class="kControl">
+            <input formControlName="lastName" type="text" pInputText />
+          </div>
+        </div>
+        <div class="kRow kValign">
+          <span class="kLabel">{{'applications.content.users.publisherUserId' | translate}}</span>
+          <div class="kControl">
+            <input formControlName="id" type="text" pInputText />
+          </div>
+        </div>
+        <div class="kRow kValign">
+          <span class="kLabel">{{'applications.content.users.userRole' | translate}}</span>
+          <div class="kControl">
+            <input formControlName="rolesId" type="text" pInputText />
+          </div>
+        </div>
+        <div class="kRow kValign">
+          <span class="kLabel">{{'applications.content.users.userRoleDescription' | translate}}</span>
+        </div>
+      </form>
+    </div>
+
+    <div class="kFooter">
+      <button type="button" class="kButtonBranded"
+              [disabled]="!userForm.dirty" pButton
+              label="{{'applications.content.users.save' | translate}}"
+              (click)="saveUser()"></button>
+    </div>
   </div>
-</k-area-blocker>
+
+</kPopupWidget>

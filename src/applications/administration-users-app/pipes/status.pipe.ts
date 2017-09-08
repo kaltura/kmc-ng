@@ -10,7 +10,7 @@ export class StatusPipe implements PipeTransform {
 	transform(value: string): string {
 		let userStatus: string = "";
 
-    if (value!== null) {
+    if (typeof value !== 'undefined' && value !== null) {
       switch (value.toString()) {
         case KalturaUserStatus.active.toString():
           userStatus = this.appLocalization.get("applications.content.userStatus.active");

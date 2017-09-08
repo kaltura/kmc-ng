@@ -4,6 +4,10 @@ import { RouterModule } from '@angular/router';
 import { routing } from './administration-users-app.routes';
 import { AdministrationUsersComponent } from './administration-users.component';
 import { UsersComponentsList } from './users-table/users-components-list';
+import {
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
 import { KalturaPrimeNgUIModule } from "@kaltura-ng/kaltura-primeng-ui";
 import {
@@ -13,22 +17,26 @@ import {
   PaginatorModule
 } from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
+import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 
 @NgModule({
     imports: [
-        CommonModule,
-        AreaBlockerModule,
-        DataTableModule,
-        KalturaCommonModule,
-        PaginatorModule,
-        MenuModule,
-        ButtonModule,
-        KalturaPrimeNgUIModule,
-        RouterModule.forChild(routing)
+      CommonModule,
+      AreaBlockerModule,
+      DataTableModule,
+      KalturaCommonModule,
+      PaginatorModule,
+      MenuModule,
+      ButtonModule,
+      PopupWidgetModule,
+      FormsModule,
+      ReactiveFormsModule,
+      KalturaPrimeNgUIModule,
+      RouterModule.forChild(routing)
     ],
     declarations: [
-        AdministrationUsersComponent,
-        UsersComponentsList
+      AdministrationUsersComponent,
+      UsersComponentsList
     ],
     exports: [],
     providers: []

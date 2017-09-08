@@ -12,6 +12,12 @@
   flex-flow: row wrap;
   margin: 0px;
 
+  .kUsersWrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
   .kUsersHolder {
     height: 100%;
     border: 1px solid $kGrayscale6;
@@ -19,26 +25,50 @@
     display: flex;
     flex-direction: column;
     background-color: #fff;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+
+  .kAddUserBtn {
+    width: 100px;
+    height: 36px;
+    border: none;
   }
 
   .kUsersHeader {
     color: $kGrayscale1;
+  }
+
+  .kUsersHead {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
     background-color: white;
     border-bottom: none;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    padding: 16px 16px 25px;
+    padding: 18px 15px 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 
   .kUsersTitle {
     color: $kGrayscale1;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
+  }
+
+  .kUsersExplanatory,
+  .kUsersStatus {
+    font-size: 13px;
+    color: #999;
   }
 
   .kUsersExplanatory {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+  }
+
+  .kUsersStatus {
+    margin-bottom: 25px;
   }
 
   .kUsersTable {
@@ -46,6 +76,30 @@
     position: relative;
     background-color: white;
     flex: 1 1 auto;
+  }
+
+  .kDivider {
+    margin: 0 5px;
+  }
+
+  .kUsersNeedMore {
+    background-color: #01ACCD;
+    height: 24px;
+    padding: 18px 28px;
+    font-size: 20px;
+    color: #fff;
+    border-radius: 4px;
+    margin-bottom: 20px;
+
+    .kClickHere {
+      font-weight: bold;
+      color: #fff;
+      font-size: 19px;
+    }
+  }
+
+  .kUserAmount {
+    margin-left: 25px;
   }
 
   .kUsersTableFooter {

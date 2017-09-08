@@ -3,6 +3,8 @@ import { UsersStore } from './users-store/users-store.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { environment } from 'app-environment';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import {KalturaUser} from "kaltura-typescript-client/types/KalturaUser";
 
 @Component({
     selector: 'kAdministrationUsers',
@@ -11,12 +13,15 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
     providers : [UsersStore]
 })
 export class AdministrationUsersComponent implements OnInit, OnDestroy {
-  usersStatus: string = '';
-  usersAvailable: string = '';
+  usersAmount: string;
+  usersInfo: string = '';
+  isDirty: boolean = true;
+  loading: boolean = false;
+  blockerMessage: AreaBlockerMessage = null;
 
   _filter = {
     pageIndex : 0,
-    pageSize : null, // pageSize is set to null by design. It will be modified after the first time loading playlists
+    pageSize : null, // pageSize is set to null by design. It will be modified after the first time loading users
   };
 
   constructor(
@@ -40,6 +45,76 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
     }
   }
 
+  onToggleUserStatus(user: KalturaUser): void {
+    this.loading = true;
+    this.usersStore.toggleUserStatus(user)
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {
+          this.loading = false;
+          this.usersStore.reload(true);
+        },
+        error => {
+          this.loading = false;
+          this.blockerMessage = new AreaBlockerMessage(
+              {
+                message: error.message,
+                buttons: [
+                  {
+                    label: this._appLocalization.get('app.common.retry'),
+                    action: () => {
+                      this.onToggleUserStatus(user);
+                      this.blockerMessage = null;
+                    }
+                  },
+                  {
+                    label: this._appLocalization.get('app.common.cancel'),
+                    action: () => {
+                      this.blockerMessage = null;
+                    }
+                  }
+                ]
+              }
+            )
+        }
+      );
+  }
+
+  onDeleteUser(userId: string): void {
+    this.loading = true;
+    this.usersStore.deleteUser(userId)
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {
+          this.loading = false;
+          this.usersStore.reload(true);
+        },
+        error => {
+          this.loading = false;
+          this.blockerMessage = new AreaBlockerMessage(
+            {
+              message: error.message,
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this.onDeleteUser(userId);
+                    this.blockerMessage = null;
+                  }
+                },
+                {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this.blockerMessage = null;
+                  }
+                }
+              ]
+            }
+          )
+        }
+      );
+  }
+
   ngOnInit() {
     this.usersStore.query$
       .cancelOnDestroy(this)
@@ -50,24 +125,18 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
         }
       );
 
-    this.usersStore.users$
+    this.usersStore.usersData$
       .cancelOnDestroy(this)
       .subscribe(
         response => {
-          this.usersStatus = this._appLocalization.get('applications.content.users.usersStatus',
+          this.usersInfo = this._appLocalization.get('applications.content.users.usersInfo',
             {
-              0: response.totalCount,
-              1: response.totalCount > 1 ? this._appLocalization.get('applications.content.users.users') : this._appLocalization.get('applications.content.users.user')
+              0: response.users.totalCount,
+              1: response.users.totalCount > 1 ? this._appLocalization.get('applications.content.users.users') : this._appLocalization.get('applications.content.users.user'),
+              2: response.partnerInfo.adminLoginUsersQuota - response.users.totalCount
             }
           );
-        }
-      );
-
-    this.usersStore.partnerInfo$
-      .cancelOnDestroy(this)
-      .subscribe(
-        response => {
-          this.usersAvailable = this._appLocalization.get('applications.content.users.usersAvailable', { 0: response.adminLoginUsersQuota } );
+          this.usersAmount = `${response.users.totalCount} ${response.users.totalCount > 1 ? this._appLocalization.get('applications.content.users.users') : this._appLocalization.get('applications.content.users.user')}`;
         }
       );
   }
