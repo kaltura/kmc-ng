@@ -24,7 +24,7 @@
       border: 1px solid $kGrayscale4;
       border-radius: 4px;
       width: 520px;
-      height: 330px;
+      height: 300px;
       padding: 12px;
       box-sizing: border-box;
     }
@@ -36,7 +36,15 @@
       padding-left: 40px; //align-items: center;
       justify-content: center;
     }
-    .kFooter {
+    .kResult {
+      height: 30px;      
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      padding-left: 40px; //align-items: center;
+      justify-content: center;
+    }
+    .kFooter {      
       width: 100%;
       margin-top: 32px;
       border-top: 1px solid $kGrayscale4;
@@ -69,11 +77,11 @@
     width: 100%;
     margin-top: 4px;
     border-bottom: 0px solid white;
-    min-height: 260px;
+    min-height: 220px;
   }
 
    :host /deep/ k-area-blocker {
-    height: 265px;
+    height: 225px;
     overflow-y: hidden;
   }
 

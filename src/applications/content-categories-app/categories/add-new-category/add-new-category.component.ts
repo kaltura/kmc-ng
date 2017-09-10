@@ -14,12 +14,11 @@ import { ISubscription } from "rxjs/Subscription";
 import { CategoriesPrimeService } from "app-shared/content-shared/categories-prime.service";
 
 
-export interface categoryItem
-{
-    id : number,
-    fullIdPath : number[],
-    name : string,
-    fullNamePath : string[],
+export interface categoryItem {
+    id: number,
+    fullIdPath: number[],
+    name: string,
+    fullNamePath: string[],
 }
 
 @Component({
@@ -48,7 +47,7 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
 
     constructor(private _formBuilder: FormBuilder, private _appLocalization: AppLocalization, public router: Router,
         private _browserService: BrowserService, private cdRef: ChangeDetectorRef, private _categoriesPrimeService: CategoriesPrimeService,
-        private _categoriesService: CategoriesService) {       
+        private _categoriesService: CategoriesService) {
     }
 
     ngAfterViewInit() {
@@ -80,9 +79,9 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
         }
     }
 
-    ngOnInit(){
-         // build FormControl group
-         this._addNewCategoryForm = this._formBuilder.group({
+    ngOnInit() {
+        // build FormControl group
+        this._addNewCategoryForm = this._formBuilder.group({
             noParent: 'noParent'
         });
     }
@@ -152,6 +151,11 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
                 this._treeSelection = [...this._treeSelection || [], ...selectedNodes];
             }
         }
+    }
+
+    public get _parentCategoryName(): { value: string } {
+        const value = this._selectedCategories.length > 0 ? this._selectedCategories[0].fullNamePath.join(' > ') : "No Parent";
+        return { value };
     }
 
     _goNext() {
@@ -256,5 +260,8 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
             fullNamePath: node.origin.fullNamePath,
             name: node.origin.name
         });
+
+        this._appLocalization.get('applications.content.addNewCategory.newCategory', { 0: node.origin.fullNamePath });
+
     }
 }

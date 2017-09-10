@@ -22,7 +22,9 @@
         (onNodeUnselect)="_onTreeNodeUnselected($event)" (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)">
       </k-categories-tree>
     </div>
-
+    <div class="kResult">
+      <span>{{'applications.content.addNewCategory.selectedParentCategory' | translate:_parentCategoryName}}</span>
+    </div>
     <div class="kFooter">
       <button type="button" class="kButtonBranded" pButton label="{{'applications.content.addNewCategory.apply' | translate}}"
         (click)="_goNext()"></button>

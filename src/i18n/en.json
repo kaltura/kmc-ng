@@ -152,7 +152,9 @@
         "apply": "Apply",
         "cancel": "Cancel",
         "noParent":"No Parent",
-        "searchCategories": "Search Categories"
+        "searchCategories": "Search Categories",
+        "selectedParentCategory":"Parent Category Id: {{value}}"
+        
       },
       "entries": {
         "entries": "Entries",
