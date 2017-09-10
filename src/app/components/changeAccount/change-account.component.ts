@@ -29,11 +29,11 @@ export class ChangeAccountComponent implements OnInit {
   constructor(private _fb: FormBuilder,
               private _appLocalization: AppLocalization,
               private _kalturaServerClient: KalturaClient,
-              userAuthentication: AppAuthentication) {
-   this._currentPartnerId = userAuthentication.appUser.partnerId
+              private _userAuthentication: AppAuthentication) {
   }
 
   ngOnInit() {
+    this._currentPartnerId = this._userAuthentication.appUser.partnerId;
     this._createForm();
     this.loadAvailablePartners();
   }
@@ -64,14 +64,32 @@ export class ChangeAccountComponent implements OnInit {
   }
 
   public _saveAndClose(): void {
-    const context = this.changeAccountForm.get('account').value; // pass selected account
-    this.parentPopupWidget.close(context);
+    const account = this.changeAccountForm.get('account').value; // pass selected account
+    // this.parentPopupWidget.close(account);
+    this._isBusy = true;
+    this._userAuthentication.loginByKs(account)
+      .subscribe(() => {
+          this._isBusy = false;
+          this._blockerMessage = null;
+        },
+        error => {
+          this._blockerMessage = new AreaBlockerMessage({
+            message: error.message,
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._isBusy = false;
+                this._blockerMessage = null;
+              }
+            }]
+          });
+        });
   }
 
 
   private _createForm(): void {
     this.changeAccountForm = this._fb.group({
-      account: this._currentPartnerId,
+      account: this._userAuthentication.appUser.partnerId,
     });
   }
 
