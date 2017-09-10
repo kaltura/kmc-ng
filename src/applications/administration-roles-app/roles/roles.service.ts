@@ -207,10 +207,13 @@ export class RolesService implements OnDestroy {
       .map(
         data => {
           if (data.hasErrors()) {
-            throw new Error('error occurred in action \'duplicateRole\'');
+            throw new Error('error occurred while trying to duplicate role');
           }
           return data[1].result;
-        });
+        })
+      .catch(error => {
+        throw new Error('error occurred while trying to duplicate role');
+      });
   }
 
   private _getDuplicatedRole(role: KalturaUserRole) {

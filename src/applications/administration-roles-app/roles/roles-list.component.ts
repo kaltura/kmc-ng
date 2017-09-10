@@ -52,7 +52,9 @@ export class RolesListComponent implements OnInit, OnDestroy {
         (data) => {
           this._roles = data.items;
           if (data.totalCount > 0) {
-            this._rolesTotalCount = this.appLocalization.get('applications.administration.roles.rolesNum', {0: data.totalCount});
+            this._rolesTotalCount =  this.appLocalization.get('applications.administration.roles.rolesNum', {0: data.totalCount});
+          } else {
+            this._rolesTotalCount = '';
           }
         }
       );
