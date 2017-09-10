@@ -110,11 +110,12 @@
     "upload": {
       "uploadMenu": {
         "uploadFromDesktop": "Upload from desktop",
+        "highSpeed": "Need high-speed upload?",
         "bulkUpload": {
           "title": "Bulk upload",
           "samplesLink": "Download CSV/XML Samples"
         },
-        "liveStream": "Live stream entry",
+        "liveStream": "Create live stream entry",
         "entryList": {
           "title": "Prepare entry",
           "video": "Video entry",

@@ -105,7 +105,9 @@ export const environment = {
       "USER_MANUAL": "https://kmc.kaltura.com/content/docs/pdf/KMC_User_Manual.pdf",
       "SUPPORT": "http://kmc.kaltura.com/index.php/kmc/support",
       "SIGNUP": "https://corp.kaltura.com/free-trial",
-      "CONTACT_US": "https://corp.kaltura.com/company/contact-us"
+      "CONTACT_US": "https://corp.kaltura.com/company/contact-us",
+      "HIGH_SPEED_UPLOAD": "http://site.kaltura.com/Upgrade_Request_High_Speed_Upload.html",
+      "BULK_UPLOAD_SAMPLES": "http://kmc.kaltura.com/content/docs/kaltura_batch_upload_falcon.zip"
     },
     "locales": [
       {
