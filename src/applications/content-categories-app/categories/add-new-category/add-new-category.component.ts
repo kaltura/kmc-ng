@@ -1,7 +1,6 @@
 import { CategoriesService } from './../categories.service';
 import { PrimeTreeNode, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
-import { EntryCategoryItem } from './../../../content-entries-app/entry/entry-metadata/entry-metadata-handler';
-import { Component, Input, AfterViewInit, Output, OnDestroy, EventEmitter, ViewChild, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, AfterViewInit, Output, OnInit, OnDestroy, EventEmitter, ViewChild, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -14,6 +13,14 @@ import { Subject } from "rxjs/Subject";
 import { ISubscription } from "rxjs/Subscription";
 import { CategoriesPrimeService } from "app-shared/content-shared/categories-prime.service";
 
+
+export interface categoryItem
+{
+    id : number,
+    fullIdPath : number[],
+    name : string,
+    fullNamePath : string[],
+}
 
 @Component({
     selector: 'kAddNewCategory',
@@ -30,7 +37,7 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
     private _showConfirmationOnClose: boolean = true;
     public _categoriesLoaded = false;
     public _treeSelection: PrimeTreeNode[] = [];
-    public _selectedCategories: EntryCategoryItem[] = [];
+    public _selectedCategories: categoryItem[] = [];
 
     private _searchCategoriesSubscription: ISubscription;
     public _categoriesProvider = new Subject<SuggestionsProviderData>();
@@ -41,11 +48,7 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
 
     constructor(private _formBuilder: FormBuilder, private _appLocalization: AppLocalization, public router: Router,
         private _browserService: BrowserService, private cdRef: ChangeDetectorRef, private _categoriesPrimeService: CategoriesPrimeService,
-        private _categoriesService: CategoriesService) {
-        // build FormControl group
-        this._addNewCategoryForm = _formBuilder.group({
-            noParent: 'noParent'
-        });
+        private _categoriesService: CategoriesService) {       
     }
 
     ngAfterViewInit() {
@@ -75,6 +78,13 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
                     }
                 });
         }
+    }
+
+    ngOnInit(){
+         // build FormControl group
+         this._addNewCategoryForm = this._formBuilder.group({
+            noParent: 'noParent'
+        });
     }
 
     ngOnDestroy() { }
