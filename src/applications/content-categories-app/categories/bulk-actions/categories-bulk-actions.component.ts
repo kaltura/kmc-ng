@@ -18,6 +18,8 @@ import { environment } from 'app-environment';
 import { KalturaUser } from "kaltura-typescript-client/types/KalturaUser";
 import { PrivacyMode } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-content-privacy/bulk-change-content-privacy.component";
 import { KalturaPrivacyType } from "kaltura-typescript-client/types/KalturaPrivacyType";
+import { KalturaAppearInListType } from "kaltura-typescript-client/types/KalturaAppearInListType";
+import { AppearInListType } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-category-listing/bulk-change-category-listing.component";
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -65,7 +67,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       },
       { label: this._appLocalization.get('applications.content.categories.bActions.moveCategories'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } },
       { label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'), command: (event) => { this.openBulkActionWindow("changeContentPrivacy", 586, 352) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'), command: (event) => { this.openBulkActionWindow("changeCategoryListing", 500, 500) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'), command: (event) => { this.openBulkActionWindow("changeCategoryListing", 586, 314) } },
       { label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'), command: (event) => { this.openBulkActionWindow("changeContributionPolicy", 500, 500) } },
       { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryOwner'), command: (event) => { this.openBulkActionWindow("changeOwner", 500, 280) } },
       { label: this._appLocalization.get('applications.content.categories.bActions.delete'), command: (event) => { this.deleteCategories() } }
@@ -113,8 +115,14 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   }
 
   // change category listing
-  onChangeCategoryListingChanged(owners: KalturaUser[]): void {
-    this.executeService(this._bulkChangeCategoryListingService, owners[0]);
+  onChangeCategoryListingChanged(appearInList: AppearInListType): void {
+    let appearInListType: KalturaAppearInListType;
+    if (appearInList === AppearInListType.NoRestriction)
+      appearInListType = KalturaAppearInListType.partnerOnly;
+    if (appearInList === AppearInListType.Private)
+      appearInListType = KalturaAppearInListType.categoryMembersOnly;
+
+    this.executeService(this._bulkChangeCategoryListingService, appearInListType);
   }
 
   // change contribution policy

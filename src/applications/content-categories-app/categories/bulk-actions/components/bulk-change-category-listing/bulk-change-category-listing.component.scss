@@ -12,25 +12,29 @@
 .kContent {
   display: flex;
   flex-direction: column;
-  height: 340px;
+  height: 312px;
   .kLabel {
     text-align: center;
     display: block;
     margin-bottom: 12px;
   }
   .kContainer {
-    height: 190px;
+    height: 168px;
     margin: 20px;
   }
   .kBlock {
-    display: block;
-    width: 100%;
-    margin-top: 20px;
-    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;        
+    margin-top: 30px;
+    margin-bottom: 10px;    
+    .kRadio {
+      margin-right: 40px;
+    }
   }
 }
 
-.kFooter {  
+.kFooter {
   position: absolute;
   bottom: 0px;
   display: flex;
@@ -38,7 +42,7 @@
   height: 66px;
   border-top: 1px solid $kGrayscale4;
   align-items: center;
-  justify-content: center;
+  justify-content: center;  
 }
 
 /deep/ .ui-autocomplete.ui-widget {

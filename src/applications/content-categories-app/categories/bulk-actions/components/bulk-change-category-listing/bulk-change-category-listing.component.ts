@@ -13,6 +13,11 @@ import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import { KalturaUserFilter } from 'kaltura-typescript-client/types/KalturaUserFilter';
 import { UserListAction } from 'kaltura-typescript-client/types/UserListAction';
 
+export enum AppearInListType {
+  NoRestriction = 0,
+  Private = 1
+}
+
 @Component({
   selector: 'kCategoriesBulkChangeCategoryListing',
   templateUrl: './bulk-change-category-listing.component.html',
@@ -22,7 +27,7 @@ import { UserListAction } from 'kaltura-typescript-client/types/UserListAction';
 export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @Output() ownerChanged = new EventEmitter<KalturaUser>();
+  @Output() changeCategoryListingChanged = new EventEmitter<AppearInListType>();
 
   public _loading = false;
   public _sectionBlockerMessage: AreaBlockerMessage;
@@ -30,9 +35,12 @@ export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, A
   public _usersProvider = new Subject<SuggestionsProviderData>();
   public _owner: KalturaUser = null;
 
-  private _searchUsersSubscription : ISubscription;
-  private _parentPopupStateChangeSubscribe : ISubscription;
+  private _searchUsersSubscription: ISubscription;
+  private _parentPopupStateChangeSubscribe: ISubscription;
   private _confirmClose: boolean = true;
+
+  // expose enum to the template
+  public _appearInListType = AppearInListType.NoRestriction;
 
   constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
   }
@@ -41,7 +49,7 @@ export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, A
 
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     if (this.parentPopupWidget) {
       this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$
         .subscribe(event => {
@@ -49,8 +57,8 @@ export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, A
             this._confirmClose = true;
           }
           if (event.state === PopupWidgetStates.BeforeClose) {
-            if (event.context && event.context.allowClose){
-              if (this._owner && this._confirmClose){
+            if (event.context && event.context.allowClose) {
+              if (this._appearInListType && this._confirmClose) {
                 event.context.allowClose = false;
                 this._browserService.confirm(
                   {
@@ -69,15 +77,14 @@ export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, A
     }
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this._parentPopupStateChangeSubscribe.unsubscribe();
   }
 
-  public _searchUsers(event) : void {
-    this._usersProvider.next({ suggestions : [], isLoading : true});
+  public _searchUsers(event): void {
+    this._usersProvider.next({ suggestions: [], isLoading: true });
 
-    if (this._searchUsersSubscription)
-    {
+    if (this._searchUsersSubscription) {
       // abort previous request
       this._searchUsersSubscription.unsubscribe();
       this._searchUsersSubscription = null;
@@ -87,11 +94,11 @@ export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, A
       new UserListAction(
         {
           filter: new KalturaUserFilter({
-            idOrScreenNameStartsWith : event.query
+            idOrScreenNameStartsWith: event.query
           }),
           pager: new KalturaFilterPager({
-            pageIndex : 0,
-            pageSize : 30
+            pageIndex: 0,
+            pageSize: 30
           })
         }
       )
@@ -99,33 +106,31 @@ export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, A
       .cancelOnDestroy(this)
       .monitor('search owners')
       .subscribe(
-        data =>
-        {
-          const suggestions = [];
-          (data.objects || []).forEach((suggestedUser: KalturaUser) => {
-            let isSelectable = true;
-            suggestions.push({
-              name: suggestedUser.screenName + "(" + suggestedUser.id + ")",
-              item: suggestedUser,
-              isSelectable: isSelectable
-            });
+      data => {
+        const suggestions = [];
+        (data.objects || []).forEach((suggestedUser: KalturaUser) => {
+          let isSelectable = true;
+          suggestions.push({
+            name: suggestedUser.screenName + "(" + suggestedUser.id + ")",
+            item: suggestedUser,
+            isSelectable: isSelectable
           });
-          this._usersProvider.next({suggestions: suggestions, isLoading: false});
-        },
-        err =>
-        {
-          this._usersProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
-        }
+        });
+        this._usersProvider.next({ suggestions: suggestions, isLoading: false });
+      },
+      err => {
+        this._usersProvider.next({ suggestions: [], isLoading: false, errorMessage: <any>(err.message || err) });
+      }
       );
   }
 
-  public _convertUserInputToValidValue(value : string) : KalturaUser {
+  public _convertUserInputToValidValue(value: string): KalturaUser {
     let result = null;
 
     if (value) {
       result = new KalturaUser(
         {
-          id : value,
+          id: value,
           screenName: value
         }
       );
@@ -133,8 +138,8 @@ export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, A
     return result;
   }
 
-  public _apply(){
-    this.ownerChanged.emit(this._owner);
+  public _apply() {
+    this.changeCategoryListingChanged.emit(this._appearInListType);
     this._confirmClose = false;
     this.parentPopupWidget.close();
   }

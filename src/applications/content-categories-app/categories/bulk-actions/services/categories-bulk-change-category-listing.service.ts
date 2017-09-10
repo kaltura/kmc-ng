@@ -1,26 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import { CategoriesBulkActionBaseService } from "./categories-bulk-action-base.service";
 import { CategoryUpdateAction } from "kaltura-typescript-client/types/CategoryUpdateAction";
 import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
+import { KalturaAppearInListType } from "kaltura-typescript-client/types/KalturaAppearInListType";
 
 @Injectable()
-export class CategoriesBulkChangeCategoryListingService extends CategoriesBulkActionBaseService<KalturaUser> {
+export class CategoriesBulkChangeCategoryListingService extends CategoriesBulkActionBaseService<KalturaAppearInListType> {
 
   constructor(_kalturaServerClient: KalturaClient) {
     super(_kalturaServerClient);
   }
 
-  public execute(selectedCategories: KalturaCategory[], owner : KalturaUser) : Observable<{}>{
+  public execute(selectedCategories: KalturaCategory[], appearInListType : KalturaAppearInListType) : Observable<{}>{
     return Observable.create(observer =>{
 
       let requests: CategoryUpdateAction[] = [];
 
       selectedCategories.forEach(category => {
         let updatedCategory: KalturaCategory = new KalturaCategory();
-        updatedCategory.owner = owner.id;
+        updatedCategory.appearInList  = appearInListType;
         requests.push(new CategoryUpdateAction({
           id: category.id,
           category: updatedCategory
