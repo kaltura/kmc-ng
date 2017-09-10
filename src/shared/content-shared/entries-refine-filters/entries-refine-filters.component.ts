@@ -11,13 +11,14 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 
 import * as R from 'ramda';
 
-import { EntriesRefineFiltersProvider, RefineFilter } from './entries-refine-filters-provider.service';
+import { EntriesRefineFiltersProvider, RefineFilter } from '../entries-store/entries-refine-filters-provider.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { ValueFilter } from 'app-shared/content-shared/entries-store/value-filter';
 import { TimeSchedulingFilter } from 'app-shared/content-shared/entries-store/filters/time-scheduling-filter';
 import { CreatedAtFilter } from 'app-shared/content-shared/entries-store/filters/created-at-filter';
 import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item';
+import { EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
 
 export interface TreeFilterData {
   items: PrimeTreeNode[];
@@ -61,6 +62,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   constructor(public additionalFiltersStore: EntriesRefineFiltersProvider,
               private primeTreeDataProvider: PrimeTreeDataProvider,
               private entriesStore: EntriesStore,
+              private _entriesFilters : EntriesFiltersService,
               private elementRef: ElementRef,
               private appLocalization: AppLocalization) {
   }
@@ -86,6 +88,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
     this._filterUpdateSubscription.unsubscribe();
     this._parentPopupStateChangeSubscribe.unsubscribe();
   }
+    private _handledFiltersInTags : EntriesFilters = null;
 
   /**
    * Register to 'entriesStore' filters changes and update content component accordingly
@@ -94,6 +97,40 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    **/
   private _registerToFilterUpdates(): void {
 
+      this._entriesFilters.filters$
+          .cancelOnDestroy(this)
+          .subscribe(
+              (filters) => {
+                  const previousFilters = this._handledFiltersInTags;
+                  
+                  if (!previousFilters || previousFilters.mediaTypes !== filters.mediaTypes) {
+                      const existingMediaTypes = existingFilterTags.filter(filter => filter.type === 'mediaType');
+                      const newMediaTypes = Object.entries(filters.mediaTypes).map(([value, label]) =>
+                          ({
+                              type: 'mediaType',
+                              value: value,
+                              label,
+                              tooltip : { token: 'tooltip' }
+
+                          }));
+
+                      const delta = getDelta(existingMediaTypes,newMediaTypes, 'value', (a,b) => a.value === b.value);
+
+                      existingFilterTags.push(...delta.added);
+
+                      delta.deleted.forEach(removedMediaType =>
+                      {
+                          existingFilterTags.splice(
+                              existingFilterTags.findIndex(item => item.value === removedMediaType.value),
+                              1);
+
+                      });
+                  }
+
+                  this._handledFiltersInTags = filters;
+              }
+  );
+    // TODO sakal remove
     this.entriesStore.activeFilters$
       .cancelOnDestroy(this)
       .first()
@@ -175,6 +212,9 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
           console.warn('[kmcng] -> could not load entries'); // navigate to error page
           throw error;
         });
+
+
+
 
     this.additionalFiltersStore.filters$
       .cancelOnDestroy(this)

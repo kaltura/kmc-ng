@@ -28,7 +28,7 @@ import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilte
 import { KalturaFlavorParams } from 'kaltura-typescript-client/types/KalturaFlavorParams';
 import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
 
-import { DefaultFiltersList } from './default-filters-list';
+import { DefaultFiltersList } from '../entries-refine-filters/default-filters-list';
 
 import * as R from 'ramda';
 

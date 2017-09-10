@@ -14,14 +14,52 @@ export interface EntriesFilters
     mediaTypes : { [value: string] : string }
 }
 
+function mapFromArray(array, prop) {
+    var map = {};
+    for (var i=0; i < array.length; i++) {
+        map[ array[i][prop] ] = array[i];
+    }
+    return map;
+}
+
+function getDelta<T>(source : T[], compareTo : T[], keyPropertyName : string, comparator : (a : T, b : T) => boolean) : { added : T[], deleted : T[], changed : T[]} {
+    var delta = {
+        added: [],
+        deleted: [],
+        changed: []
+    };
+
+    var mapSource = mapFromArray(source, keyPropertyName);
+    var mapCompareTo = mapFromArray(compareTo, keyPropertyName);
+    for (var id in mapSource) {
+        if (!mapCompareTo.hasOwnProperty(id)) {
+            delta.deleted.push(mapSource[id]);
+        } else if (!comparator(mapCompareTo[id], mapSource[id])){
+            delta.changed.push(mapCompareTo[id]);
+        }
+    }
+
+    for (var id in mapCompareTo) {
+        if (!mapSource.hasOwnProperty(id)) {
+            delta.added.push( mapCompareTo[id] )
+        }
+    }
+    return delta;
+}
 
 
 @Injectable()
 export class EntriesFiltersService {
-    private _filters = new BehaviorSubject<EntriesFilters>({
+    // TODO sakal add active property
+    private _filters = new BehaviorSubject<EntriesFilters>( {
         freetext: null,
         createdAt: null,
-        mediaTypes : {}
+        mediaTypes : {},
+        changes : {
+            freetext: null,
+            createdAt: null,
+            mediaTypes : {},
+        }
     });
     public filters$ = this._filters.asObservable();
 

@@ -30,7 +30,7 @@ import { PrimeTableSortDirectionPipe } from 'app-shared/content-shared/pipes/pri
 import { EntriesRefineFiltersComponent } from 'app-shared/content-shared/entries-refine-filters/entries-refine-filters.component';
 import { CategoriesFilterPrefsComponent } from 'app-shared/content-shared/categories-filter-preferences/categories-filter-preferences.component';
 import { CategoriesFilterComponent } from 'app-shared/content-shared/categories-filter/categories-filter.component';
-import { EntriesRefineFiltersProvider } from 'app-shared/content-shared/entries-refine-filters/entries-refine-filters-provider.service';
+import { EntriesRefineFiltersProvider } from 'app-shared/content-shared/entries-store/entries-refine-filters-provider.service';
 import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';

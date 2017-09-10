@@ -10,6 +10,8 @@ import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-s
 import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { EntriesFilters, EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
 
+
+// TODO sakal remove
 function mapFromArray(array, prop) {
     var map = {};
     for (var i=0; i < array.length; i++) {
@@ -198,6 +200,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
           });
       }
 
+      this._handledFiltersInTags = filters;
       this._filterTags = existingFilterTags;
   }
 
