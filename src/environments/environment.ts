@@ -84,6 +84,18 @@ export const environment = {
             "enabled": true
           }
         ]
+      }, {
+        "routePath": "administration",
+        "titleToken": "",
+        "showSubMenu": true,
+        "enabled": true,
+        "children": [
+          {
+            "routePath": "administration/roles",
+            "titleToken": "Roles",
+            "enabled": true
+          }
+        ]
       }
     ],
     "diagnostic" : {
@@ -147,6 +159,12 @@ export const environment = {
   "categoriesShared": {
     "MAX_CATEGORIES": 10000,
     "categoriesFilters": {
+      "maxChildrenToShow": 500
+    }
+  },
+  "rolesShared": {
+    "MAX_ROLES": 10000,
+    "rolesFilters": {
       "maxChildrenToShow": 500
     }
   }
