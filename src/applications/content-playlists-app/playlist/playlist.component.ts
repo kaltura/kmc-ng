@@ -109,7 +109,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     this._playlistStore.savePlaylist();
   }
 
-  private _navigateToPlaylist(direction: 'next' | 'prev') : void {
+  public _navigateToPlaylist(direction: 'next' | 'prev') : void {
     // TODO [kmcng] find a better way that doesn't need access to the playlist directly
     const playlists = this._playlistsStore.playlists;
     if (playlists && this._currentPlaylistId) {
