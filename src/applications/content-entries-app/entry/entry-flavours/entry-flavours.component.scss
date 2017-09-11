@@ -56,6 +56,12 @@
 	}
 	.kTable{
 		margin-top: 14px;
+		.kFlavorName{
+			font-weight: bold;
+		}
+		.kConvertedFlavor{
+			color: $kGrayscale1;
+		}
 	}
 	.kTooltipHolder{
 		position: relative;

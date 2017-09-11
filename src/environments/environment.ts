@@ -84,6 +84,18 @@ export const environment = {
             "enabled": true
           }
         ]
+      }, {
+        "routePath": "administration",
+        "titleToken": "",
+        "showSubMenu": true,
+        "enabled": true,
+        "children": [
+          {
+            "routePath": "administration/roles",
+            "titleToken": "Roles",
+            "enabled": true
+          }
+        ]
       }
     ],
     "diagnostic" : {
@@ -93,7 +105,9 @@ export const environment = {
       "USER_MANUAL": "https://kmc.kaltura.com/content/docs/pdf/KMC_User_Manual.pdf",
       "SUPPORT": "http://kmc.kaltura.com/index.php/kmc/support",
       "SIGNUP": "https://corp.kaltura.com/free-trial",
-      "CONTACT_US": "https://corp.kaltura.com/company/contact-us"
+      "CONTACT_US": "https://corp.kaltura.com/company/contact-us",
+      "HIGH_SPEED_UPLOAD": "http://site.kaltura.com/Upgrade_Request_High_Speed_Upload.html",
+      "BULK_UPLOAD_SAMPLES": "http://kmc.kaltura.com/content/docs/kaltura_batch_upload_falcon.zip"
     },
     "locales": [
       {
@@ -146,6 +160,12 @@ export const environment = {
   "categoriesShared": {
     "MAX_CATEGORIES": 10000,
     "categoriesFilters": {
+      "maxChildrenToShow": 500
+    }
+  },
+  "rolesShared": {
+    "MAX_ROLES": 10000,
+    "rolesFilters": {
       "maxChildrenToShow": 500
     }
   }
