@@ -60,6 +60,7 @@
                      [showSelect]="bulkWrapper.children.length !== 0"
                      [filter]="_filter"
                      [tableConfig]="_tableConfig"
+                     (actionSelected)="onActionsSelected.emit($event)"
                      (sortChanged)="onSortChanged($event)"
                      [(selectedEntries)]="selectedEntries"
       ></kEntriesTable>

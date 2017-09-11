@@ -85,7 +85,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() selectedEntries: any[] = [];
 
   @Output() sortChanged = new EventEmitter<any>();
-  @Output() actionSelected = new EventEmitter<any>();
+  @Output() actionSelected = new EventEmitter<{ action: string, entryId: string }>();
   @Output() selectedEntriesChange = new EventEmitter<any>();
 
   @ViewChild('dataTable') private dataTable: DataTable;
@@ -177,22 +177,26 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
+  private _exceptPreview(status, { commandName }) {
+    const isNotReady = status instanceof KalturaEntryStatus && status.toString() !== KalturaEntryStatus.ready.toString();
+    return !(isNotReady && commandName === 'preview');
+  }
+
+  private _exceptView(mediaType, { commandName }) {
+    const isLiveStreamFlash = mediaType && mediaType.toString() === KalturaMediaType.liveStreamFlash.toString();
+    return !(isLiveStreamFlash && commandName === 'view');
+  }
+
   private _buildMenu(mediaType: KalturaMediaType = null, status: any = null): void {
-    const exceptPreview = ({ commandName }) => {
-      const isNotReady = status instanceof KalturaEntryStatus && status.toString() !== KalturaEntryStatus.ready.toString();
-      return !(isNotReady && commandName === 'preview');
-    };
-
-    const exceptView = ({ commandName }) => {
-      const isLiveStreamFlash = mediaType && mediaType.toString() === KalturaMediaType.liveStreamFlash.toString();
-      return !(isLiveStreamFlash && commandName === 'view');
-    };
-
     this._items = this._rowActions
-      .filter(exceptPreview)
-      .filter(exceptView)
+      .filter(item => this._exceptPreview(status, item))
+      .filter(item => this._exceptView(mediaType, item))
       .map(action =>
-        Object.assign({}, action, { metadata: this.actionsMenuEntryId })
+        Object.assign({}, action, {
+          command: ({ item }) => {
+            this._onActionSelected(item.commandName, this.actionsMenuEntryId);
+          }
+        })
       );
   }
 
@@ -217,10 +221,8 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     return !(isLiveStream && isReady);
   }
 
-  public _onActionSelected(action: string, entryID: string, mediaType: string = null, status: string = null) {
-    if (this._allowDrilldown(mediaType, status)) {
-      this.actionSelected.emit({ 'action': action, 'entryID': entryID });
-    }
+  public _onActionSelected(action: string, entryId: string) {
+    this.actionSelected.emit({ action, entryId });
   }
 
   public _onSortChanged(event) {

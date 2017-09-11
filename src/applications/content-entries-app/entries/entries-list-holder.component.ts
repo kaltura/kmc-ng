@@ -49,38 +49,25 @@ export class EntriesListHolderComponent {
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
               private _entriesStore: EntriesStore) {
-    const onActionSelected = this._onActionSelected.bind(this);
     const rowActions = [
       {
         label: this._appLocalization.get('applications.content.table.previewAndEmbed'),
-        metadata: null,
-        commandName: 'preview',
-        command() {
-          onActionSelected(this.commandName, this.metadata)
-        }
+        commandName: 'preview'
       },
       {
         label: this._appLocalization.get('applications.content.table.delete'),
-        metadata: null,
-        commandName: 'delete',
-        command() {
-          onActionSelected(this.commandName, this.metadata)
-        }
+        commandName: 'delete'
       },
       {
         label: this._appLocalization.get('applications.content.table.view'),
-        metadata: null,
-        commandName: 'view',
-        command() {
-          onActionSelected(this.commandName, this.metadata)
-        }
+        commandName: 'view'
       }
     ];
 
     this._tableConfig = Object.assign({}, this._tableConfig, { rowActions });
   }
 
-  private _onActionSelected(action, entryId) {
+  public _onActionSelected({ action, entryId }) {
     switch (action) {
       case 'view':
         this._viewEntry(entryId);

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
@@ -34,6 +34,8 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   }
 
   @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
+
+  @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
 
   private querySubscription: ISubscription;
 
