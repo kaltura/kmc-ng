@@ -5,7 +5,10 @@ import { EntriesListComponent } from 'app-shared/content-shared/entries-list/ent
 import { BrowserService } from 'app-shared/kmc-shell';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { EntriesTableConfig } from 'app-shared/content-shared/entries-table/entries-table.component';
+import {
+  EntriesTableColumns,
+  EntriesTableConfig
+} from 'app-shared/content-shared/entries-table/entries-table.component';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -26,45 +29,42 @@ export class EntriesListHolderComponent {
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
 
-  public _tableConfig: EntriesTableConfig = {
-    dataKey: 'id',
-    scrollHeight: '100%',
-    columns: {
-      thumbnailUrl: { width: '100px' },
-      name: { sortable: true },
-      id: { width: '100px' },
-      mediaType: { sortable: true, width: '80px', align: 'center' },
-      plays: { sortable: true, width: '76px' },
-      createdAt: { sortable: true, width: '140px' },
-      duration: { sortable: true, width: '104px' },
-      status: { width: '100px' },
-      rowActions: []
+  public _columns: EntriesTableColumns = {
+    thumbnailUrl: { width: '100px' },
+    name: { sortable: true },
+    id: { width: '100px' },
+    mediaType: { sortable: true, width: '80px', align: 'center' },
+    plays: { sortable: true, width: '76px' },
+    createdAt: { sortable: true, width: '140px' },
+    duration: { sortable: true, width: '104px' },
+    status: { width: '100px' },
+    rowActions: []
+  };
+
+  public _scrollHeight = '100%';
+  public _rowActions = [
+    {
+      label: this._appLocalization.get('applications.content.table.previewAndEmbed'),
+      commandName: 'preview'
     },
-    paginator: {
-      rowsPerPageOptions: [25, 50, 75, 100]
+    {
+      label: this._appLocalization.get('applications.content.table.delete'),
+      commandName: 'delete'
+    },
+    {
+      label: this._appLocalization.get('applications.content.table.view'),
+      commandName: 'view'
     }
+  ];
+
+  public _paginator = {
+    rowsPerPageOptions: [25, 50, 75, 100]
   };
 
   constructor(private _router: Router,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
               private _entriesStore: EntriesStore) {
-    const rowActions = [
-      {
-        label: this._appLocalization.get('applications.content.table.previewAndEmbed'),
-        commandName: 'preview'
-      },
-      {
-        label: this._appLocalization.get('applications.content.table.delete'),
-        commandName: 'delete'
-      },
-      {
-        label: this._appLocalization.get('applications.content.table.view'),
-        commandName: 'view'
-      }
-    ];
-
-    this._tableConfig = Object.assign({}, this._tableConfig, { rowActions });
   }
 
   public _onActionSelected({ action, entryId }) {

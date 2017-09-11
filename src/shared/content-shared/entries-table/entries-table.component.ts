@@ -51,20 +51,18 @@ export interface EntriesTablePaginator {
   styleUrls: ['./entries-table.component.scss']
 })
 export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
-  @Input()
-  set tableConfig(value: EntriesTableConfig) {
-    if (value) {
-      this._dataKey = value.dataKey || 'id';
-      this._scrollHeight = value.scrollHeight || '100%';
-      this._scrollable = !!value.scrollHeight;
-      this._columns = value.columns || this._defaultColumns;
-      this._rowActions = value.rowActions || [];
+  @Input() fillHeight = true;
 
-      if (typeof value.fillHeight !== 'undefined') {
-        this._fillHeight = value.fillHeight;
-      }
-    }
+  @Input() set columns(value: EntriesTableColumns) {
+    this._columns = value || this._defaultColumns;
   }
+
+  @Input() set scrollHeight(value: string) {
+    this._scrollHeight = value || '100%';
+    this._scrollable = !!value;
+  }
+
+  @Input() rowActions: Array<{ label: string, commandName: string }> = [];
 
   @Input()
   set entries(data: any[]) {
@@ -100,12 +98,9 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     id: { width: '100px' }
   };
 
-  public _dataKey = 'id';
   public _scrollHeight = '100%';
   public _scrollable = true;
   public _columns?: EntriesTableColumns = this._defaultColumns;
-  public _fillHeight = true;
-  public _rowActions = [];
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _entries: any[] = [];
@@ -188,7 +183,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private _buildMenu(mediaType: KalturaMediaType = null, status: any = null): void {
-    this._items = this._rowActions
+    this._items = this.rowActions
       .filter(item => this._exceptPreview(status, item))
       .filter(item => this._exceptView(mediaType, item))
       .map(action =>

@@ -1,9 +1,9 @@
-<k-area-blocker [kFillHeight]="_fillHeight"
+<k-area-blocker [kFillHeight]="fillHeight"
                 [showLoader]="(entriesStore.state$ | async)?.loading || this._deferredLoading"
                 [message]="_blockerMessage">
   <div class="kEntriesTable" [class.noResults]="!_entries.length">
     <p-dataTable #dataTable
-                 [dataKey]="_dataKey"
+                 dataKey="id"
                  [scrollable]="_scrollable"
                  [scrollHeight]="_scrollHeight"
                  [value]="_entries"
@@ -100,7 +100,7 @@
         </ng-template>
       </p-column>
 
-      <p-column *ngIf="_rowActions.length"
+      <p-column *ngIf="rowActions?.length"
                 header=""
                 [style]="{'overflow':'visible', 'width':'80px'}">
         <ng-template let-col let-entry="rowData" pTemplate="body">
@@ -112,7 +112,7 @@
     </p-dataTable>
 
     <p-menu #actionsmenu
-            *ngIf="_rowActions.length"
+            *ngIf="rowActions?.length"
             popup="popup"
             [model]="_items"
             [appendTo]="'body'"></p-menu>

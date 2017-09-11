@@ -5,8 +5,9 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { FreetextFilter } from 'app-shared/content-shared/entries-store/filters/freetext-filter';
 import {
+  EntriesTableColumns,
   EntriesTableComponent,
-  EntriesTableConfig
+  EntriesTablePaginator
 } from 'app-shared/content-shared/entries-table/entries-table.component';
 
 @Component({
@@ -18,13 +19,13 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   @Input() isBusy = false;
   @Input() blockerMessage: AreaBlockerMessage = null;
   @Input() selectedEntries: Array<any> = [];
+  @Input() columns: EntriesTableColumns | null;
+  @Input() scrollHeight: string;
+  @Input() rowActions: Array<{ label: string, commandName: string }>;
 
-  @Input()
-  set tableConfig(value: EntriesTableConfig | null) {
-    this._tableConfig = value;
-
-    if (value.paginator) {
-      const { rowsPerPageOptions, rowsCount = null } = value.paginator;
+  @Input() set paginator(value: EntriesTablePaginator | null) {
+    if (value) {
+      const { rowsPerPageOptions, rowsCount = null } = value;
       const hasPagerOptions = Array.isArray(rowsPerPageOptions) && !!rowsPerPageOptions.length;
       this._rowsPerPageOptions = hasPagerOptions ? rowsPerPageOptions : null;
       this._rowsCount = hasPagerOptions ? this._entriesStore.getDefaultPageSize(hasPagerOptions) : rowsCount;
@@ -46,8 +47,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     sortBy: 'createdAt',
     sortDirection: SortDirection.Desc
   };
-
-  public _tableConfig: EntriesTableConfig | null;
 
   public _rowsCount: number | null;
   public _rowsPerPageOptions: Array<number>;

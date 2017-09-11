@@ -10,17 +10,13 @@ export class PopupTestComponent {
   @ViewChild(EntriesListComponent) private _entriesList: EntriesListComponent;
   @ViewChild('testPopup') _testPopup;
 
-  public _tableConfig: EntriesTableConfig = {
-    dataKey: 'id',
-    scrollHeight: '100%',
-    columns: {
-      name: { sortable: true },
-      plays: { sortable: true, width: '76px' },
-      duration: { sortable: true, width: '104px' },
-    },
-    paginator: {
-      rowsPerPageOptions: [25, 50, 100, 250, 500]
-    }
+  public _columns = {
+    name: { sortable: true },
+    plays: { sortable: true, width: '76px' },
+    duration: { sortable: true, width: '104px' },
+  };
+  public _paginator = {
+    rowsPerPageOptions: [25, 50, 100, 250, 500]
   };
 
   constructor() {
