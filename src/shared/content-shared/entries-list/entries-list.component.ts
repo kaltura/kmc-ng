@@ -117,7 +117,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
       }
     );
 
-    // this._entriesStore.reload({ pageSize: this._filter.pageSize });
     this._entriesStore.reload(false);
   }
 
