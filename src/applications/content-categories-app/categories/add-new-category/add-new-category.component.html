@@ -1,14 +1,12 @@
-<div class="kAddNewCategory">
-  <form [formGroup]="_addNewCategoryForm" novalidate>
+<div class="kAddNewCategory">  
     <div class="kHeader">
       <span class="kTitle">{{('applications.content.addNewCategory.newCategory') | translate}}</span>
     </div>
     <div class="kContainer">
       <span>{{('applications.content.addNewCategory.selectCategoryParent') | translate}}</span>
       <span><p-radioButton label="{{'applications.content.addNewCategory.noParent' | translate}}"
-        name="noParent"
-        value="noParent"
-        formControlName="noParent"
+        value=""
+        [(ngModel)]="_selectedCategory"        
         (click)="_onParentRadioButtonSelected()"></p-radioButton>
       </span>
     </div>
@@ -18,8 +16,7 @@
         [minLength]="3" (onSelect)="_onAutoCompleteSelected($event)" [suggestionsProvider]="_categoriesProvider" (completeMethod)="_onAutoCompleteSearch($event)">
       </kAutoComplete>
 
-      <k-categories-tree #categoriesTree [(selection)]="_treeSelection" (onCategoriesLoad)="_onTreeCategoriesLoad($event)" (onNodeSelect)="_onTreeNodeSelected($event)"
-        (onNodeUnselect)="_onTreeNodeUnselected($event)" (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)">
+      <k-categories-tree #categoriesTree [(selection)]="_treeSelection" (onNodeSelect)="_onTreeNodeSelected($event)" (onNodeUnselect)="_onTreeNodeUnselected($event)">
       </k-categories-tree>
     </div>
     <div class="kResult">
@@ -29,6 +26,5 @@
       <button type="button" class="kButtonBranded" pButton label="{{'applications.content.addNewCategory.apply' | translate}}"
         (click)="_goNext()"></button>
       <a class="kLink" (click)="_close()">{{'applications.content.addNewCategory.cancel' | translate}}</a>
-    </div>
-  </form>
+    </div>  
 </div>
