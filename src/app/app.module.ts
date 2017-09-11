@@ -62,6 +62,7 @@ import { ForgotPasswordFormComponent } from './components/login/forgot-password-
 import { LoginFormComponent } from './components/login/login-form/login-form.component';
 import { PasswordExpiredFormComponent } from './components/login/password-expired-form/password-expired-form.component';
 import { InvalidLoginHashFormComponent } from './components/login/invalid-login-hash-form/invalid-login-hash-form.component';
+import { KmcBulkUploadAppModule } from '../applications/kmc-bulk-upload-app/kmc-bulk-upload-app.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -99,7 +100,8 @@ export function clientConfigurationFactory() {
     CheckboxModule,
     ReactiveFormsModule,
     TooltipModule,
-    GrowlModule
+    GrowlModule,
+    KmcBulkUploadAppModule
   ],
   declarations: <any>[
     AppComponent,

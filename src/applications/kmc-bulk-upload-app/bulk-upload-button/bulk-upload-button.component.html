@@ -1,0 +1,8 @@
+<a class="kBulkUploadButton" (click)="bulkUploadMenu.open()">
+  {{ 'app.upload.uploadMenu.bulkUpload.title' | translate }}
+</a>
+
+<kPopupWidget #bulkUploadMenu [popupWidth]="415" [popupHeight]="385" [closeBtn]="true" [modal]="true" [transparent]="true">
+  <kKMCBulkUploadMenu></kKMCBulkUploadMenu>
+</kPopupWidget>
+
