@@ -1,10 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { UsersStore } from './users-store/users-store.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { environment } from 'app-environment';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {KalturaUser} from "kaltura-typescript-client/types/KalturaUser";
+import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators
+} from '@angular/forms';
+import { SelectItem } from 'primeng/primeng';
+import { KalturaUserRole } from 'kaltura-typescript-client/types/KalturaUserRole';
 
 @Component({
     selector: 'kAdministrationUsers',
@@ -18,17 +26,35 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
   isDirty: boolean = true;
   loading: boolean = false;
   blockerMessage: AreaBlockerMessage = null;
+  userForm : FormGroup;
+  isNewUser: boolean = true;
+  rolesList: SelectItem[];
+  _roles: KalturaUserRole[];
+  popupTitle: string = '';
+  selectedRole: string = '';
 
   _filter = {
     pageIndex : 0,
     pageSize : null, // pageSize is set to null by design. It will be modified after the first time loading users
   };
 
+  @ViewChild('editUserPopup') editUserPopup: PopupWidgetComponent;
+
   constructor(
     public usersStore: UsersStore,
     private _appLocalization: AppLocalization,
-    private _browserService : BrowserService
-  ) {}
+    private _browserService : BrowserService,
+    private _formBuilder : FormBuilder
+  ) {
+    // build FormControl group
+    this.userForm = _formBuilder.group({
+      email     : ['', Validators.required],
+      firstName : '',
+      lastName  : '',
+      id        : '',
+      rolesId   : ''
+    });
+  }
 
   upgradeAccount() {
     this._browserService.openLink(environment.core.externalLinks.UPGRADE_ACCOUNT, {}, '_blank');
@@ -43,6 +69,28 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
         pageSize: state.rows
       });
     }
+  }
+
+  onEditUser(user: KalturaUser): void {
+    this.isNewUser = false;
+    this.popupTitle = this._appLocalization.get('applications.content.users.editUser');
+    this.rolesList = [];
+    this._roles.forEach(role => {
+      this.rolesList.push({label: role.name, value: role.id});
+    });
+    this.userForm.reset({
+      email: user.email,
+      firstName: user.fullName,
+      lastName: user.lastName,
+      id: user.id,
+      rolesId: user.roleIds
+    });
+    this.userForm.get('email').disable();
+    this.userForm.get('firstName').disable();
+    this.userForm.get('lastName').disable();
+    this.userForm.get('rolesId').disable();
+    this.getRoleDescription(user.roleIds);
+    this.editUserPopup.open();
   }
 
   onToggleUserStatus(user: KalturaUser): void {
@@ -63,8 +111,8 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
                   {
                     label: this._appLocalization.get('app.common.retry'),
                     action: () => {
-                      this.onToggleUserStatus(user);
                       this.blockerMessage = null;
+                      this.onToggleUserStatus(user);
                     }
                   },
                   {
@@ -115,6 +163,38 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
       );
   }
 
+  addUser(): void {
+    this.isNewUser = true;
+    this.popupTitle = this._appLocalization.get('applications.content.users.addUser');
+    this.rolesList = [];
+    this._roles.forEach(role => {
+      this.rolesList.push({label: role.name, value: role.id});
+    });
+    this.userForm.reset({
+      email: '',
+      firstName: '',
+      lastName: '',
+      id: '',
+      rolesId: null
+    });
+    this.userForm.get('email').enable();
+    this.userForm.get('firstName').enable();
+    this.userForm.get('lastName').enable();
+    this.userForm.get('rolesId').enable();
+    this.getRoleDescription();
+    this.editUserPopup.open();
+  }
+
+  getRoleDescription(event?: any): void {
+    this._roles.forEach(role => {
+      if(event && (event === role.id.toString() || event.value === role.id)) {
+        this.selectedRole = role.description;
+      } else {
+        this.selectedRole = this._roles[0].description;
+      }
+    })
+  }
+
   ngOnInit() {
     this.usersStore.query$
       .cancelOnDestroy(this)
@@ -137,6 +217,7 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
             }
           );
           this.usersAmount = `${response.users.totalCount} ${response.users.totalCount > 1 ? this._appLocalization.get('applications.content.users.users') : this._appLocalization.get('applications.content.users.user')}`;
+          this._roles = response.roles.items;
         }
       );
   }

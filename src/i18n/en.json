@@ -198,7 +198,8 @@
         "userRoleDescription": "User role description",
         "addUser": "Add User",
         "usersInfo": "Current status: {{0}} KMC {{1}} in use. | {{2}} additional available",
-        "failedLoading": "Failed to load users data"
+        "failedLoading": "Failed to load users data",
+        "cantPerform": "You don't have access to perform this action"
       },
       "filters": {
         "activeFilters": "Active Filters:",

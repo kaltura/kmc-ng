@@ -13,19 +13,23 @@
           {{'applications.content.users.usersUpgrade' | translate}}
         </div>
       </div>
-      <div #usersTableHolder class="kUsersHolder kContent">
+      <div class="kUsersHolder kContent">
         <div class="kUsersHead">
           <button
             pButton
             type="button"
             label="{{'applications.content.users.addUser' | translate}}"
-            class="kButtonBranded kAddUserBtn"></button>
+            class="kButtonBranded kAddUserBtn"
+            (click)="addUser()"></button>
           <span class="kUserAmount" *ngIf="usersAmount">
             {{usersAmount}}
           </span>
         </div>
         <kUsersTable
           class="kUsersTable"
+          [users]="(usersStore.usersData$ | async)?.users.items"
+          [partnerInfo]="(usersStore.usersData$ | async)?.partnerInfo"
+          (editUser)="onEditUser($event)"
           (toggleUserStatus)="onToggleUserStatus($event)"
           (deleteUser)="onDeleteUser($event)"></kUsersTable>
         <div class="kUsersTableFooter" #footer *ngIf="(usersStore.users$ | async)?.totalCount">
@@ -40,4 +44,61 @@
       </div>
     </div>
   </div>
+
+  <kPopupWidget #editUserPopup [popupWidth]="500" [popupHeight]="495" [modal]="true">
+    <div class="kFloater kOverrideFAIcons">
+      <div class="kHeader">
+        <div class="kTitle">{{popupTitle}}</div>
+      </div>
+
+      <div class="kContainer">
+        <form [formGroup]="userForm" novalidate>
+          <div class="kSchemaTitle"></div>
+          <div class="kRow kValign">
+            <span class="kLabel">{{'applications.content.users.loginEmailAddress' | translate}}</span>
+            <div class="kControl">
+              <input formControlName="email" type="text" pInputText />
+            </div>
+          </div>
+          <div class="kRow kValign">
+            <span class="kLabel">{{'applications.content.users.firstName' | translate}}</span>
+            <div class="kControl">
+              <input formControlName="firstName" type="text" pInputText />
+            </div>
+          </div>
+          <div class="kRow kValign">
+            <span class="kLabel">{{'applications.content.users.lastName' | translate}}</span>
+            <div class="kControl">
+              <input formControlName="lastName" type="text" pInputText />
+            </div>
+          </div>
+          <div class="kRow kValign">
+            <span class="kLabel">{{'applications.content.users.publisherUserId' | translate}}</span>
+            <div class="kControl">
+              <input formControlName="id" type="text" pInputText />
+            </div>
+          </div>
+          <div class="kRow kValign">
+            <span class="kLabel">{{'applications.content.users.userRole' | translate}}</span>
+            <div class="kControl">
+              <p-dropdown [options]="rolesList" (onChange)="getRoleDescription($event)" formControlName="rolesId" styleClass="rolesList" [autoWidth]="false"></p-dropdown>
+            </div>
+          </div>
+          <div class="kRow kValign">
+            <span class="kLabel">{{'applications.content.users.userRoleDescription' | translate}}</span>
+            <div class="kControl extraMargin">
+              {{selectedRole}}
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="kFooter">
+        <button type="button" class="kButtonBranded"
+                [disabled]="!userForm.dirty" pButton
+                label="{{'applications.content.users.save' | translate}}"
+                (click)="saveUser()"></button>
+      </div>
+    </div>
+  </kPopupWidget>
 </k-area-blocker>

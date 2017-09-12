@@ -13,6 +13,7 @@ import { KalturaPrimeNgUIModule } from "@kaltura-ng/kaltura-primeng-ui";
 import {
   ButtonModule,
   DataTableModule,
+  DropdownModule,
   MenuModule,
   PaginatorModule
 } from 'primeng/primeng';
@@ -32,6 +33,7 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
       FormsModule,
       ReactiveFormsModule,
       KalturaPrimeNgUIModule,
+      DropdownModule,
       RouterModule.forChild(routing)
     ],
     declarations: [

@@ -19,7 +19,7 @@ import { KalturaPermissionType } from 'kaltura-typescript-client/types/KalturaPe
 import { KalturaPermissionStatus } from 'kaltura-typescript-client/types/KalturaPermissionStatus';
 import { KalturaPermission } from 'kaltura-typescript-client/types/KalturaPermission';
 import { PartnerGetInfoAction } from 'kaltura-typescript-client/types/PartnerGetInfoAction';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { UserUpdateAction } from 'kaltura-typescript-client/types/UserUpdateAction';
 import { UserDeleteAction } from 'kaltura-typescript-client/types/UserDeleteAction';
 import { Observable } from 'rxjs/Observable';
@@ -57,7 +57,8 @@ export class UsersStore implements OnDestroy {
 	constructor(
     private _kalturaServerClient: KalturaClient,
     private _browserService: BrowserService,
-    private _appLocalization: AppLocalization
+    private _appLocalization: AppLocalization,
+    private _appAuthentication: AppAuthentication
   ) {
     const defaultPageSize = this._browserService.getFromLocalStorage("users.list.pageSize");
     if (defaultPageSize !== null) {
@@ -164,26 +165,30 @@ export class UsersStore implements OnDestroy {
   }
 
   public toggleUserStatus(user: KalturaUser): Observable<void> {
-    return Observable.create(observer => {
-      this._kalturaServerClient.request(
-        new UserUpdateAction (
-          {
-            userId: user.id,
-            user: new KalturaUser({status: +!user.status})
-          }
+    if(this._appAuthentication.appUser.id !== user.id || this._usersData.getValue().partnerInfo.adminUserId !== user.id) {
+      return Observable.create(observer => {
+        this._kalturaServerClient.request(
+          new UserUpdateAction(
+            {
+              userId: user.id,
+              user: new KalturaUser({status: +!user.status})
+            }
+          )
         )
-      )
-        .cancelOnDestroy(this)
-        .subscribe(
-          () => {
-            observer.next();
-            observer.complete();
-          },
-          error => {
-            observer.error(error);
-          }
-        );
-    });
+          .cancelOnDestroy(this)
+          .subscribe(
+            () => {
+              observer.next();
+              observer.complete();
+            },
+            error => {
+              observer.error(error);
+            }
+          );
+      });
+    } else {
+      return Observable.throw({message: this._appLocalization.get('applications.content.users.cantPerform')});
+    }
   }
 
   public deleteUser(userId: string) : Observable<void> {

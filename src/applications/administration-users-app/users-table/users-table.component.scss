@@ -20,128 +20,6 @@
   }
 }
 
-.kFloater{
-  display: flex;
-  flex-direction: column;
-
-  .kHeader {
-    height: 78px;
-    width: 100%;
-    text-align: center;
-    padding-top: 24px;
-    box-sizing: border-box;
-    border-bottom: 1px solid $kGrayscale4;
-    flex: 0 0 auto;
-
-    .kTitle {
-      color: #333333;
-      font-size: 24px;
-      font-weight: 700;
-    }
-  }
-
-  .kContainer{
-    flex: 0 0 auto;
-    margin: 20px;
-
-    .kLabel{
-      display: block;
-      margin-bottom: 8px;
-    }
-  }
-
-  /deep/ {
-
-    .kRow {
-      display: flex;
-      padding-top: 16px;
-
-      .kLabel {
-        width: 150px;
-        flex: 0 0 auto;
-        word-wrap: break-word;
-        padding-right: 12px;
-      }
-
-      input {
-        width: 100%;
-        height: 34px;
-        background-color: #ebebeb;
-        border: 1px solid white;
-        color: #333333;
-        box-sizing: border-box;
-        border-radius: 3px;
-        margin: 0;
-        outline: medium none;
-        padding: .25em;
-        font-weight: normal;
-
-        &:hover {
-          border-color: #d9d9d9;
-        }
-
-        &:focus {
-          background-color: white;
-          border: 1px solid #cccccc;
-          outline: 0 none;
-          box-shadow: 0 0 5px #d9d9d9;
-        }
-      }
-
-      .ng-invalid {
-        border-bottom-color: #cd0a0a;
-      }
-
-      textarea {
-        width: 100%;
-        height: 76px;
-      }
-
-      .kControl, k-prime-control {
-        width: 100%;
-      }
-    }
-  }
-
-  .kValign {
-    align-items: center;
-  }
-
-  .hidden {
-    visibility: hidden;
-    width: 0px;
-    height: 0px;
-  }
-
-  .invalid {
-    color: $kDandger;
-    visibility: visible;
-    padding-top: 5px;
-  }
-
-  /*********************/
-  /* PrimeNG overrides */
-  /*********************/
-
-  .ui-inputtext.ng-invalid {
-    border-bottom-color: #cd0a0a;
-  }
-
-  .kFooter{
-    flex: 0 0 auto;
-    height: 66px;
-    border-top: 1px solid $kGrayscale4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    button{
-      height: 34px;
-      margin-left: 8px;
-    }
-  }
-}
-
 :host /deep/ .ui-datatable .kTableStatus {
   padding-left: 14px;
   width: 100px;
@@ -149,6 +27,11 @@
 
 :host /deep/ .ui-datatable .kTableFullName {
   width: 350px;
+}
+
+:host /deep/ .ui-datatable .kTableActions {
+  overflow: hidden;
+  width: 80px;
 }
 
 :host {

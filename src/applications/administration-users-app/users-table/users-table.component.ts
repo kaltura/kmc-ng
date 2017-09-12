@@ -5,7 +5,9 @@ import {
   AfterViewInit,
   Output,
   EventEmitter,
-  ViewChild
+  ViewChild,
+  ChangeDetectorRef,
+  Input
 } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
@@ -16,13 +18,7 @@ import {
   MenuItem
 } from 'primeng/primeng';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
-import { KalturaUserRole } from 'kaltura-typescript-client/types/KalturaUserRole';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators
-} from '@angular/forms';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -35,17 +31,47 @@ export interface PartnerInfo {
 	styleUrls: ['./users-table.component.scss']
 })
 export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
-  public _blockerMessage: AreaBlockerMessage = null;
-  public rowTrackBy: Function = (index: number, item: any) => {return item.id};
-  public _users: any[] = [];
-  public _items: MenuItem[];
-  private actionsMenuUserId: string = "";
-  public _roles: KalturaUserRole[];
-  private _partnerInfo: PartnerInfo;
-  userForm : FormGroup;
+  _blockerMessage: AreaBlockerMessage = null;
+  rowTrackBy: Function = (index: number, item: any) => {return item.id};
+  _users: KalturaUser[] = [];
+  _deferredUsers : any[];
+  _deferredPartnerInfo : any;
+  _items: MenuItem[];
+  _partnerInfo: PartnerInfo;
+  _deferredLoading = true;
+  private _actionsMenuUserId: string = "";
+
+  @Input() set users(data: any[]) {
+    if (!this._deferredLoading) {
+      this._users = [];
+      this.cdRef.detectChanges();
+      this._users = data;
+      this.cdRef.detectChanges();
+    } else {
+      this._deferredUsers = data;
+    }
+  }
+
+  @Input() set partnerInfo(data: any[]) {
+    if (!this._deferredLoading) {
+      this._partnerInfo = null;
+      this.cdRef.detectChanges();
+      this._partnerInfo = {
+        adminLoginUsersQuota: data['adminLoginUsersQuota'],
+        adminUserId: data['adminUserId']
+      };
+      this.cdRef.detectChanges();
+    } else {
+      this._deferredPartnerInfo = {
+        adminLoginUsersQuota: null,
+        adminUserId: null
+      };
+    }
+  }
 
   @ViewChild('actionsmenu') private actionsMenu: Menu;
   @ViewChild('editUserPopup') editUserPopup: PopupWidgetComponent;
+  @Output() editUser = new EventEmitter<KalturaUser>();
   @Output() toggleUserStatus = new EventEmitter<KalturaUser>();
   @Output() deleteUser = new EventEmitter<string>();
 
@@ -54,23 +80,14 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
     private _appAuthentication: AppAuthentication,
     private _appLocalization: AppLocalization,
     private _browserService : BrowserService,
-    private _formBuilder : FormBuilder
-  ) {
-    // build FormControl group
-    this.userForm = _formBuilder.group({
-      email     : ['', Validators.required],
-      firstName : '',
-      lastName  : '',
-      id        : '',
-      rolesId   : ''
-    });
-  }
+    private cdRef: ChangeDetectorRef
+  ) {}
 
   buildMenu(user: KalturaUser): void {
     this._items = [{
       label: this._appLocalization.get("applications.content.table.edit"),
       command: () => {
-        this.editUser(user);
+        this.editUser.emit(user);
       }
     }];
     if(this._appAuthentication.appUser.id !== user.id || this._partnerInfo.adminUserId !== user.id) {
@@ -102,34 +119,32 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   openActionsMenu(event: any, user: KalturaUser) {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
-      if(this.actionsMenuUserId !== user.id) {
+      if(this._actionsMenuUserId !== user.id) {
         this.buildMenu(user);
-        this.actionsMenuUserId = user.id;
+        this._actionsMenuUserId = user.id;
       }
     }
-  }
-
-  editUser(user: KalturaUser): void {
-    this.editUserPopup.open();
   }
 
   saveUser() {
     this.usersStore.saveUser();
   }
 
-	ngOnInit() {
-    this.usersStore.usersData$
-      .cancelOnDestroy(this)
-      .subscribe(
-        response => {
-          this._users = response.users.items;
-          this._roles = response.roles.items;
-          this._partnerInfo = response. partnerInfo;
-        }
-      );
-  }
 
-  ngAfterViewInit() {}
+	ngOnInit() {}
+
+  ngAfterViewInit() {
+    if (this._deferredLoading) {
+      // use timeout to allow the DOM to render before setting the data to the datagrid. This prevents the screen from hanging during datagrid rendering of the data.
+      setTimeout(()=> {
+        this._deferredLoading = false;
+        this._users = this._deferredUsers;
+        this._partnerInfo = this._deferredPartnerInfo;
+        this._deferredUsers = null;
+        this._deferredPartnerInfo = null;
+      }, 0);
+    }
+  }
 
 	ngOnDestroy() {}
 }
