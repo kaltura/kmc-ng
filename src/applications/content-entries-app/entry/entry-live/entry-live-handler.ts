@@ -32,7 +32,7 @@ export interface bitrate {
 @Injectable()
 export class EntryLiveHandler extends EntryFormWidget {
 
-	private _liveType: string = "";
+	public _liveType: string = "";
 	private dirty: boolean;
 
 	private _conversionProfiles: BehaviorSubject<{ items: any[], loading: boolean, error?: any}> =

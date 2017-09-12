@@ -65,7 +65,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 	}
 
 
-	public _searchUsers(event, formControl) : void {
+	public _searchUsers(event, formControl?) : void {
 		this._usersProvider.next({ suggestions : [], isLoading : true});
 
 		if (this._searchUsersSubscription)

@@ -38,7 +38,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 	@ViewChild(PlaylistsTableComponent) private dataTable: PlaylistsTableComponent;
 
   public _blockerMessage: AreaBlockerMessage = null;
-  private _loading: boolean = false;
+  public _loading: boolean = false;
 
 	_filter = {
 		pageIndex : 0,
