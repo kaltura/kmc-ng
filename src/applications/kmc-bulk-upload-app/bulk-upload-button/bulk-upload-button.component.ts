@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
     selector: 'kKMCBulkUploadButton',
@@ -6,4 +6,5 @@ import { Component } from '@angular/core';
     styleUrls: ['./bulk-upload-button.component.scss']
 })
 export class BulkUploadButtonComponent {
+  @Output() onOpen = new EventEmitter<void>();
 }

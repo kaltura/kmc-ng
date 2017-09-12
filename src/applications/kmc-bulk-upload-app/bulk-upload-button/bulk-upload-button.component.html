@@ -1,4 +1,4 @@
-<a class="kBulkUploadButton" (click)="bulkUploadMenu.open()">
+<a class="kBulkUploadButton" (click)="bulkUploadMenu.open(); onOpen.emit()">
   {{ 'app.upload.uploadMenu.bulkUpload.title' | translate }}
 </a>
 

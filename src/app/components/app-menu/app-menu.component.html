@@ -55,5 +55,5 @@
 
 
 <kPopupWidget #uploadmenu [popupWidth]="415" [popupHeight]="385" [closeBtn]="true" [modal]="true" [transparent]="true">
-  <kKMCUploadMenu></kKMCUploadMenu>
+  <kKMCUploadMenu (onClose)="uploadmenu.close()"></kKMCUploadMenu>
 </kPopupWidget>

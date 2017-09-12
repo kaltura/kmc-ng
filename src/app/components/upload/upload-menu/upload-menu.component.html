@@ -10,7 +10,7 @@
   <div class="kUploadMenuListItem">
     <i class="kIconbulk kUploadMenuBulkUploadIcon"></i>
     <span>
-      <kKMCBulkUploadButton></kKMCBulkUploadButton><br>
+      <kKMCBulkUploadButton (onOpen)="onClose.emit()"></kKMCBulkUploadButton><br>
       <a class="kBulkUploadSamplesLink" (click)="onDownloadSamplesClicked()">{{ 'app.upload.uploadMenu.bulkUpload.samplesLink' | translate }}</a>
     </span>
 
