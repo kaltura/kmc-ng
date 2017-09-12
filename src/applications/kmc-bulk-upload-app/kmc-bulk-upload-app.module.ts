@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaServerModule } from '@kaltura-ng/kaltura-server-utils';
+import { ButtonModule } from 'primeng/primeng';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { KalturaServerModule } from '@kaltura-ng/kaltura-server-utils';
     RouterModule.forChild(routing),
     PopupWidgetModule,
     KalturaCommonModule,
-    KalturaServerModule
+    KalturaServerModule,
+    ButtonModule
   ],
   declarations: [
     BulkUploadMenuComponent,

@@ -234,6 +234,18 @@
       "paginator": {
         "showRows": "Show rows:"
       },
+      "bulkUpload": {
+        "menu": {
+          "header": "Bulk Upload",
+          "selectType": "Select CSV/XML type",
+          "types": {
+            "entries": "Entries",
+            "categories": "Categories",
+            "endUsers": "End users",
+            "endUsersEntitlement": "End users entitlement"
+          }
+        }
+      },
       "entryStatus": {
         "errorImporting": "Error Uploading",
         "errorConverting": "Error",

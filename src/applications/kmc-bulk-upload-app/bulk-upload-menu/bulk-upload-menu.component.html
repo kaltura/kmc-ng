@@ -1,1 +1,21 @@
-HERE
+<div class="kBulkUploadMenu">
+  <div class="kBulkUploadMenuHeader">
+    <h1>{{ 'applications.content.bulkUpload.menu.header' | translate }}</h1>
+  </div>
+  <div class="kBulkUploadMenuBody">
+    <p class="kBulkUploadMenuTypesTitle">{{ 'applications.content.bulkUpload.menu.selectType' | translate }}</p>
+    <div class="kBulkUploadMenuTypes">
+      <button pButton class="kButtonDefault"
+              [label]="'applications.content.bulkUpload.menu.types.entries' | translate"></button>
+      <button pButton class="kButtonDefault"
+              [label]="'applications.content.bulkUpload.menu.types.categories' | translate">
+      </button>
+      <button pButton class="kButtonDefault"
+              [label]="'applications.content.bulkUpload.menu.types.endUsers' | translate">
+      </button>
+      <button pButton class="kButtonDefault"
+              [label]="'applications.content.bulkUpload.menu.types.endUsersEntitlement' | translate">
+      </button>
+    </div>
+  </div>
+</div>
