@@ -478,7 +478,7 @@
             "dimensions": "Dimensions:",
             "format": "Format:",
             "size": "Size (KB):",
-            "status": "Satatus:",
+            "status": "Status:",
             "loading": "Loading...",
             "loadingError": "Error loading flavor:"
           },
