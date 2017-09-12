@@ -10,6 +10,7 @@ import { KalturaBulkUploadCategoryUserData } from 'kaltura-typescript-client/typ
 import { UserAddFromBulkUploadAction } from 'kaltura-typescript-client/types/UserAddFromBulkUploadAction';
 import { CategoryUserAddFromBulkUploadAction } from 'kaltura-typescript-client/types/CategoryUserAddFromBulkUploadAction';
 import { Observable } from 'rxjs/Observable';
+import { KalturaBulkUpload } from 'kaltura-typescript-client/types/KalturaBulkUpload';
 
 export enum BulkUploadTypes {
   entries,
@@ -82,16 +83,6 @@ export class BulkUploadMenuService {
       .filter(Boolean);
   }
 
-  private _handleUploadSuccess(res: any): void {
-    if (res.error) {
-      return this._handleUploadError(res.error);
-    }
-  }
-
-  private _handleUploadError(error: any): void {
-    console.log(error);
-  }
-
   public getAllowedExtension(type: BulkUploadTypes): string {
     if (type in this._extensions) {
       return this._extensions[type];
@@ -100,14 +91,10 @@ export class BulkUploadMenuService {
     throw Error('Bulk upload type is not supported');
   }
 
-  public upload(files: FileList, type: BulkUploadTypes): void {
+  public upload(files: FileList, type: BulkUploadTypes): Observable<KalturaBulkUpload> {
     const actions = this._getAction(Array.from(files), type);
 
-    Observable.from(actions)
-      .concatMap(action => this._kalturaServerClient.request(action))
-      .subscribe(
-        (res) => this._handleUploadSuccess(res),
-        error => this._handleUploadError(error)
-      );
+    return Observable.from(actions)
+      .concatMap(action => this._kalturaServerClient.request(action));
   }
 }

@@ -3,6 +3,6 @@
 </a>
 
 <kPopupWidget #bulkUploadMenu [popupWidth]="382" [popupHeight]="436" [closeBtn]="true" [modal]="true">
-  <kKMCBulkUploadMenu></kKMCBulkUploadMenu>
+  <kKMCBulkUploadMenu (onClose)="bulkUploadMenu.close()"></kKMCBulkUploadMenu>
 </kPopupWidget>
 

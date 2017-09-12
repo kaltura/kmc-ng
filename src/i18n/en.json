@@ -243,6 +243,17 @@
             "categories": "Categories",
             "endUsers": "End users",
             "endUsersEntitlement": "End users entitlement"
+          },
+          "messages": {
+            "uploadError": {
+              "header": "Error",
+              "message": "An unexpected permission error has occurred. Browser page refresh is recommended. When error is persistent, please contact Kaltura Support for additional information.\n{{value}}"
+            },
+            "uploadSuccess": {
+              "message": "Your request has been submitted. Track the progress of your bulk job in the Bulk Upload Log page",
+              "body": "Your request has been submitted. Track the progress of your bulk job in the ",
+              "link": "Bulk Upload Log page"
+            }
           }
         }
       },
