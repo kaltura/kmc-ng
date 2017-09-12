@@ -31,7 +31,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     sortDirection: SortDirection.Desc
   };
 
-  constructor(private _entriesStore: EntriesStore,
+  constructor(public _entriesStore: EntriesStore,
               private appLocalization: AppLocalization,
               private router: Router,
               private _browserService: BrowserService) {

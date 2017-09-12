@@ -6,7 +6,10 @@ import { FilterItem } from '../filter-item';
 
 export class CreatedAtFilter extends FilterItem {
 
-  private _createdBefore: Date;
+    static filterType = "CreatedAt"; // IMPORTANT: you must have a static filterType property that is used at runtime
+
+
+    private _createdBefore: Date;
   private _createdAfter: Date;
 
   public get createdAfter(): Date {

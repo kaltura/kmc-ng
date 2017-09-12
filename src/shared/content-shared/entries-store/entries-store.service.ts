@@ -107,9 +107,26 @@ export class EntriesStore implements OnDestroy {
   public state$ = this._state.asObservable();
   public query$ = this._querySource.asObservable();
 
+    public getFilterType(filter : any) : string
+    {
+      return EntriesStore.getFilterType(filter);
+    }
+  public static getFilterType(filter : any) : string
+  {
+    const result = filter['filterType'] || filter.constructor['filterType'];
+
+    if (!result)
+    {
+      throw new Error('Failed to extract filter type value (do you have a static property named filterType?)');
+    }
+
+    return result;
+  }
+
+
   public static registerFilterType<T extends FilterItem>(filterType: FilterTypeConstructor<T>,
                                                          handler: (items: T[], request: FilterArgs) => void): void {
-    EntriesStore.filterTypeMapping[filterType.name] = handler;
+    EntriesStore.filterTypeMapping[this.getFilterType(filterType)] = handler;
   }
 
   constructor(private kalturaServerClient: KalturaClient,
@@ -181,13 +198,11 @@ export class EntriesStore implements OnDestroy {
 
 
   public removeFiltersByType(filterType: FilterTypeConstructor<FilterItem>): void {
-    if (filterType && filterType.name) {
-      const filtersOfType = this._activeFiltersMap[filterType.name];
+      const filtersOfType = this._activeFiltersMap[this.getFilterType(filterType)];
 
       if (filtersOfType) {
         this.removeFilters(...filtersOfType);
       }
-    }
   }
 
   public getFirstFilterByType<T extends FilterItem>(filterType: FilterTypeConstructor<T>): T {
@@ -199,11 +214,11 @@ export class EntriesStore implements OnDestroy {
   public getFiltersByType<T extends FilterItem>(filterType: FilterTypeConstructor<T>): T[];
   public getFiltersByType<T extends FilterItem>(filterType: FilterItem | FilterTypeConstructor<T>): T[] {
     if (filterType instanceof FilterItem) {
-      const filtersOfType = <T[]>this._activeFiltersMap[filterType.constructor.name];
+      const filtersOfType = <T[]>this._activeFiltersMap[this.getFilterType(filterType)];
       return filtersOfType ? [...filtersOfType] : [];
     }
     if (filterType instanceof Function) {
-      const filtersOfType = <T[]>this._activeFiltersMap[filterType.name];
+      const filtersOfType = <T[]>this._activeFiltersMap[this.getFilterType(filterType)];
       return filtersOfType ? [...filtersOfType] : [];
     } else {
       return [];
@@ -228,8 +243,8 @@ export class EntriesStore implements OnDestroy {
 
         if (index === -1) {
           addedFilters.push(filter);
-          this._activeFiltersMap[filter.constructor.name] = this._activeFiltersMap[filter.constructor.name] || [];
-          this._activeFiltersMap[filter.constructor.name].push(filter);
+          this._activeFiltersMap[this.getFilterType(filter)] = this._activeFiltersMap[this.getFilterType(filter)] || [];
+          this._activeFiltersMap[this.getFilterType(filter)].push(filter);
         }
       });
 
@@ -254,7 +269,7 @@ export class EntriesStore implements OnDestroy {
           removedFilters.push(filter);
           modifiedActiveFilters.splice(index, 1);
 
-          const filterByType = this._activeFiltersMap[filter.constructor.name];
+          const filterByType = this._activeFiltersMap[this.getFilterType(filter)];
           filterByType.splice(filterByType.indexOf(filter), 1);
         }
       });

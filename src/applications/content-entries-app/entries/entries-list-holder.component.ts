@@ -6,6 +6,6 @@ import { EntriesListComponent } from 'app-shared/content-shared/entries-list/ent
   templateUrl: './entries-list-holder.component.html'
 })
 export class EntriesListHolderComponent {
-  @ViewChild(EntriesListComponent) private _entriesList: EntriesListComponent;
+  @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
 }
 
