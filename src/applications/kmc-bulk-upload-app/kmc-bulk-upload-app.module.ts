@@ -8,6 +8,7 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaServerModule } from '@kaltura-ng/kaltura-server-utils';
 import { ButtonModule } from 'primeng/primeng';
+import { KalturaUIModule } from '@kaltura-ng/kaltura-ui';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { ButtonModule } from 'primeng/primeng';
     PopupWidgetModule,
     KalturaCommonModule,
     KalturaServerModule,
+    KalturaUIModule,
     ButtonModule
   ],
   declarations: [
