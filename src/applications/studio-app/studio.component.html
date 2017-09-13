@@ -1,0 +1,5 @@
+<div class="kStudio">
+  <span *ngIf="!isProduction" class="kDevMsg">Studio loads on production builds only</span>
+  <iframe *ngIf="isProduction" frameborder="0px" [src]="studioUrl | safe"></iframe>
+</div>
+

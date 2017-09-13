@@ -54,7 +54,7 @@ export const environment = {
                 "routePath": "studio",
                 "titleToken": "Studio",
                 "showSubMenu": false,
-                "enabled": false
+                "enabled": true
             },
             {
                 "routePath": "analytics",
@@ -129,8 +129,13 @@ export const environment = {
         ]
     },
     "modules": {
-        "studio_universal": {
-            "apiUrl": "http://www.kaltura.com"
+        "studio": {
+            "api_url": "http://www.kaltura.com",
+            "path": "./studio/index.html",
+            "uiConfId": "39700052",
+            "version": "v2.0.9",
+            "html5_version":"v2.57.2",
+            "html5lib":"http://cdnapi.kaltura.com/html5/html5lib/v2.57.2/mwEmbedLoader.php"
         },
         "contentEntries" : {
             "createdAtDateRange" : "2005:2030",
