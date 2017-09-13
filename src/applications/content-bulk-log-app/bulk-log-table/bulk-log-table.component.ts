@@ -30,7 +30,7 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   set list(data: any[]) {
     if (!this._deferredLoading) {
       // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
-      // (ie when returning from entry page) - we should force detect changes on an empty list
+      // (ie when returning from bulk log page) - we should force detect changes on an empty list
       this._bulkLog = [];
       this.cdRef.detectChanges();
       this._bulkLog = data;
@@ -46,13 +46,13 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Output()
   sortChanged = new EventEmitter<any>();
   @Output()
-  actionSelected = new EventEmitter<{ action: string, bulkLogItemId: string }>();
+  actionSelected = new EventEmitter<{ action: string, bulkLogItem: KalturaBulkUpload }>();
   @Output()
   selectedBulkLogChange = new EventEmitter<any>();
 
   @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
-  private bulkLogItemId = null;
+  private bulkLogItem: KalturaBulkUpload;
 
   public _deferredLoading = true;
   public _emptyMessage = '';
@@ -82,16 +82,16 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   buildMenu(): void {
     this._items = [
       {
-        label: this.appLocalization.get('applications.content.table.previewAndEmbed'),
-        command: (event) => this.onActionSelected('preview', this.bulkLogItemId)
+        label: this.appLocalization.get('applications.content.bulkUpload.table.actions.delete'),
+        command: (event) => this.onActionSelected('delete', this.bulkLogItem)
       },
       {
-        label: this.appLocalization.get('applications.content.table.delete'),
-        command: (event) => this.onActionSelected('delete', this.bulkLogItemId)
+        label: this.appLocalization.get('applications.content.bulkUpload.table.actions.downloadLog'),
+        command: (event) => this.onActionSelected('downloadLog', this.bulkLogItem)
       },
       {
-        label: this.appLocalization.get('applications.content.table.view'),
-        command: (event) => this.onActionSelected('view', this.bulkLogItemId)
+        label: this.appLocalization.get('applications.content.bulkUpload.table.actions.downloadFile'),
+        command: (event) => this.onActionSelected('downloadFile', this.bulkLogItem)
       }
     ];
   }
@@ -119,19 +119,16 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   openActionsMenu(event: any, bulkLogItem: KalturaBulkUpload) {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
-      if (this.bulkLogItemId !== bulkLogItem.id) {
-        this.bulkLogItemId = bulkLogItem.id;
+      if (!this.bulkLogItem || this.bulkLogItem.id !== bulkLogItem.id) {
+        this.bulkLogItem = bulkLogItem;
         this.buildMenu();
         this.actionsMenu.show(event);
       }
     }
   }
 
-   onActionSelected(action: string, bulkLogItemId: string): void {
-     this.actionSelected.emit({ action, bulkLogItemId });
-   }
-  onSortChanged(event) {
-    this.sortChanged.emit(event);
+  onActionSelected(action: string, bulkLogItem: KalturaBulkUpload): void {
+    this.actionSelected.emit({ action, bulkLogItem });
   }
 
   onSelectionChange(event) {

@@ -15,6 +15,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaBulkUploadFilter } from 'kaltura-typescript-client/types/KalturaBulkUploadFilter';
 import { BulkUploadListAction } from 'kaltura-typescript-client/types/BulkUploadListAction';
 import { KalturaBulkUpload } from 'kaltura-typescript-client/types/KalturaBulkUpload';
+import { BulkUploadAbortAction } from 'kaltura-typescript-client/types/BulkUploadAbortAction';
 
 export enum SortDirection {
   Desc,
@@ -167,24 +168,8 @@ export class BulkLogStoreService implements OnDestroy {
     }
   }
 
-  public deletePlaylist(id: string) {
-    return Observable.create(observer => {
-      let subscription: ISubscription;
-      subscription = this._kalturaServerClient.request(new PlaylistDeleteAction({ id })).subscribe(
-        () => {
-          observer.next();
-          observer.complete();
-        },
-        error => {
-          observer.error(error);
-        }
-      );
-      return () => {
-        if (subscription) {
-          subscription.unsubscribe();
-        }
-      }
-    });
+  public deleteBulkLog(id: number): Observable<KalturaBulkUpload>  {
+    return this._kalturaServerClient.request(new BulkUploadAbortAction({ id }));
   }
 
   public reload(query: boolean | Partial<QueryData>): void {

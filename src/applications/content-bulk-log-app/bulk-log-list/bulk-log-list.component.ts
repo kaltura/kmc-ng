@@ -8,6 +8,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
+import { KalturaBulkUpload } from 'kaltura-typescript-client/types/KalturaBulkUpload';
 
 @Component({
   selector: 'kBulkLogList',
@@ -51,12 +52,6 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSortChanged(event) {
-    this.clearSelection();
-    this._filter.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
-    this._filter.sortBy = event.field;
-  }
-
   onPaginationChanged(state: any): void {
     if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
       this._filter.pageIndex = state.page;
@@ -84,21 +79,15 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     this.clearSelection();
   }
 
-  private syncFreetextComponents() {
-  }
-
-  onActionSelected(event) {
+  onActionSelected(event: { action: string, bulkLogItem: KalturaBulkUpload }): void {
     switch (event.action) {
-      case 'view':
-        this._router.navigate(['/content/entries/entry', event.entryID]);
-        break;
       case 'delete':
         this._browserService.confirm(
           {
-            header: this._appLocalization.get('applications.content.entries.deleteEntry'),
-            message: this._appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: event.entryID }),
+            header: this._appLocalization.get('applications.content.bulkUpload.deleteLog.header'),
+            message: this._appLocalization.get('applications.content.bulkUpload.deleteLog.message'),
             accept: () => {
-              this.deleteEntry(event.entryID);
+              this.deleteBulkLog(event.bulkLogItem.id);
             }
           }
         );
@@ -108,9 +97,29 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     }
   }
 
-  private deleteEntry(entryId: string): void {
+  private deleteBulkLog(id: number): void {
     this.isBusy = true;
     this._blockerMessage = null;
+
+    this._store.deleteBulkLog(id)
+      .subscribe(
+        () => {
+          this.isBusy = false;
+          this._store.reload(true)
+        },
+        () => {
+          this._blockerMessage = new AreaBlockerMessage({
+            message: this._appLocalization.get('applications.content.bulkUpload.deleteLog.error'),
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._blockerMessage = null;
+                this.isBusy = false;
+              }
+            }]
+          });
+        }
+      );
   }
 
   clearSelection() {
@@ -122,7 +131,8 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   }
 
   onBulkChange(event): void {
-    if (event.reload === true) {
+    if (event.reload === true
+    ) {
       this._reload();
     }
   }

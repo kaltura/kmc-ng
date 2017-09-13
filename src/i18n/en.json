@@ -262,7 +262,17 @@
           "uploadedOn": "Uploaded on",
           "numOfObjects": "Number of items",
           "status": "Status",
-          "notification": "Notification"
+          "notification": "Notification",
+          "actions": {
+            "delete": "Delete",
+            "downloadLog": "Download Log File",
+            "downloadFile": "Download Original File"
+          }
+        },
+        "deleteLog": {
+          "header": "Delete Bulk Log",
+          "message": "Are you sure you want to delete the selected bulk log?",
+          "error": "Could not delete this upload"
         },
         "objectType": {
           "category": "Categories",

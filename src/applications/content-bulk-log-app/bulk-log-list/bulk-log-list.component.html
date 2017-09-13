@@ -40,7 +40,6 @@
       <kBulkLogTable class="kBulkLogTable"
                      [list]="(_store.bulkLog$ | async)?.items"
                      [filter]="_filter"
-                     (sortChanged)="onSortChanged($event)"
                      (actionSelected)="onActionSelected($event)"
                      [(selectedBulkLogItems)]="selectedBulkLogItems"
       ></kBulkLogTable>
@@ -57,17 +56,6 @@
     </div>
   </div>
 </k-area-blocker>
-
-<!-- popup widgets section -->
-<kPopupWidget #categoriesFilterPopup
-              [appendTo]="entriesTableHolder"
-              [popupWidth]="400"
-              [popupHeight]="500"
-              [closeBtn]="false"
-              [targetRef]="categoriesFilterBtn"
-              [targetOffset]="{'x':-10, 'y': -21}">
-  <!--<kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup"></kCategoriesFilter>-->
-</kPopupWidget>
 
 <kPopupWidget #refinePopup
               [appendTo]="entriesTableHolder"
