@@ -8,13 +8,13 @@ import { PlaylistStore } from '../playlist-store.service';
 })
 export class PlaylistContentComponent implements AfterViewInit, OnInit, OnDestroy {
 
-    constructor(public _playlistStore: PlaylistStore) {}
+  constructor(public _playlistStore: PlaylistStore) {}
 
-    ngOnInit() {}
+  ngOnInit() {}
 
-    ngOnDestroy() {}
+  ngOnDestroy() {}
 
-    ngAfterViewInit() {}
+  ngAfterViewInit() {}
 
 }
 

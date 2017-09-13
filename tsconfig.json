@@ -24,7 +24,7 @@
         "shared/*"
       ],
       "app-environment": [
-        "environments/environment"
+        "app-config"
       ],
       "app-theme/*": [
         "styles/app-theme/*"

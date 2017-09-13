@@ -43,11 +43,12 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 					this._showLoader = response.isBusy;
 					if(response.error) {
             const buttons = [];
-            if(response.error.origin === 'reload') {
+            if(response.error.origin === 'reload' || response.error.origin === 'pre-save') {
               buttons.push(this._createBackToPlaylistsButton());
               buttons.push({
                   label: this._appLocalization.get('applications.content.playlistDetails.errors.retry'),
                   action: () => {
+                    this._areaBlockerMessage = null;
                     this._playlistStore.reloadPlaylist();
                   }
                 });
@@ -109,7 +110,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     this._playlistStore.savePlaylist();
   }
 
-  private _navigateToPlaylist(direction: 'next' | 'prev') : void {
+  public _navigateToPlaylist(direction: 'next' | 'prev') : void {
     // TODO [kmcng] find a better way that doesn't need access to the playlist directly
     const playlists = this._playlistsStore.playlists;
     if (playlists && this._currentPlaylistId) {

@@ -5,11 +5,11 @@
         pButton
         type="button"
         label="{{'applications.content.playlists.addEntry' | translate}}"
-        class="kButtonBranded kAddPlaylistBtn"></button>
+        class="kButtonBranded kAddEntryBtn"></button>
       <span
         class="kSelectedPlaylistsNum"
         *ngIf="(_playlistStore.entries$ | async)?.totalCount">
-				{{(_playlistStore.entries$ | async)?.totalCount}} {{'applications.content.playlists.playlists' | translate}}</span>
+				{{(_playlistStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
     </div>
     <kPlaylistEntriesTable
       class="kPlaylistEntriesTable"

@@ -97,25 +97,32 @@
         }
     }
 }
-.kHelpTitle{
-    font-size: 14px;
-    color: $kGrayscale3;
-}
-.kHelpLink{
-    font-size: 14px;
-    cursor: pointer;
-    color: $kGrayscale1;
-    &:hover{
-        color: #000000;
+
+.kHelpMenu{
+    background-color: white;
+    padding-left: 12px;
+    overflow: hidden;
+    .kHelpTitle{
+        font-size: 14px;
+        color: $kGrayscale3;
+    }
+    .kHelpLink{
+        font-size: 14px;
+        cursor: pointer;
+        color: $kGrayscale1;
+        &:hover{
+            color: #000000;
+        }
+    }
+    .kContexualHelp{
+        background-color: $kGrayscale7;
+        margin: -15px;
+        padding: 15px;
+        padding-top: 0px;
+        margin-top: 0px;
     }
 }
-.kContexualHelp{
-    background-color: $kGrayscale7;
-    margin: -15px;
-    padding: 15px;
-    padding-top: 0px;
-    margin-top: 0px;
-}
+
 .appSubMenu {
     background-color: white;
     border-bottom: 2px solid $kGrayscale5;

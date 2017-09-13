@@ -1,0 +1,27 @@
+@import 'app-theme/_variables.scss';
+
+ul {
+	list-style-type: none;
+	padding-left: 0px;
+	width: 100%;
+	li{
+		line-height: 44px;
+		cursor: pointer;
+		color: $kGrayscale3;
+		font-weight: 700;
+		padding-left: 12px;
+		&:hover{
+			background-color: $kGrayscale6;
+		}
+		&.active{
+			color: $kGrayscale1;
+			background-color: $kGrayscale6;
+			cursor: default;
+		}
+	}
+}
+
+.kSectionHasErrors
+{
+  color:red;
+}

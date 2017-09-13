@@ -20,13 +20,13 @@ import { KalturaMetadataObjectType } from 'kaltura-typescript-client/types/Kaltu
 import { CategoryEntryAddAction } from 'kaltura-typescript-client/types/CategoryEntryAddAction';
 import { CategoryEntryDeleteAction } from 'kaltura-typescript-client/types/CategoryEntryDeleteAction';
 import { KalturaCategoryEntry } from 'kaltura-typescript-client/types/KalturaCategoryEntry';
-import { CategoriesStore } from '../../shared/categories-store.service';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng/kaltura-server-utils';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { DynamicMetadataForm, DynamicMetadataFormFactory } from '@kaltura-ng/kaltura-server-utils';
+import { CategoriesStore } from 'app-shared/content-shared/categories-store.service';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import 'rxjs/add/observable/forkJoin';
@@ -163,7 +163,7 @@ export class EntryMetadataHandler extends EntryFormWidget
             {
                 name: this.data.name,
                 description: this.data.description || null,
-                tags: (this.data.tags ? this.data.tags.split(', ') : null), // for backward compatibility we split values by ',{space}'
+                tags: (this.data.tags ? this.data.tags.split(',').map(item => item.trim()) : null), // for backward compatibility we handle values separated with ',{space}'
                 categories: this._entryCategories,
                 offlineMessage: this.data instanceof KalturaLiveStreamEntry ? (this.data.offlineMessage || null) : '',
                 referenceId: this.data.referenceId || null,
