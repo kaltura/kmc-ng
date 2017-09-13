@@ -73,7 +73,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('editUserPopup') editUserPopup: PopupWidgetComponent;
   @Output() editUser = new EventEmitter<KalturaUser>();
   @Output() toggleUserStatus = new EventEmitter<KalturaUser>();
-  @Output() deleteUser = new EventEmitter<string>();
+  @Output() deleteUser = new EventEmitter<KalturaUser>();
 
 	constructor(
 	  public usersStore: UsersStore,
@@ -84,6 +84,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {}
 
   buildMenu(user: KalturaUser): void {
+    // TODO [kmcng] add support for permission manager
     this._items = [{
       label: this._appLocalization.get("applications.content.table.edit"),
       command: () => {
@@ -106,7 +107,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
                 header: this._appLocalization.get('applications.content.users.deleteUser'),
                 message: this._appLocalization.get('applications.content.users.confirmDelete', {0: user.fullName}),
                 accept: () => {
-                  this.deleteUser.emit(user.id);
+                  this.deleteUser.emit(user);
                 }
               }
             );
@@ -126,16 +127,13 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  saveUser() {
-    this.usersStore.saveUser();
-  }
-
 
 	ngOnInit() {}
 
   ngAfterViewInit() {
     if (this._deferredLoading) {
-      // use timeout to allow the DOM to render before setting the data to the datagrid. This prevents the screen from hanging during datagrid rendering of the data.
+      // use timeout to allow the DOM to render before setting the data to the datagrid.
+      // This prevents the screen from hanging during datagrid rendering of the data.
       setTimeout(()=> {
         this._deferredLoading = false;
         this._users = this._deferredUsers;

@@ -13,17 +13,13 @@ import { KalturaUserStatus } from 'kaltura-typescript-client/types/KalturaUserSt
 import { KalturaUserOrderBy } from 'kaltura-typescript-client/types/KalturaUserOrderBy';
 import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
-import { PermissionListAction } from 'kaltura-typescript-client/types/PermissionListAction';
-import { KalturaPermissionFilter } from 'kaltura-typescript-client/types/KalturaPermissionFilter';
-import { KalturaPermissionType } from 'kaltura-typescript-client/types/KalturaPermissionType';
-import { KalturaPermissionStatus } from 'kaltura-typescript-client/types/KalturaPermissionStatus';
-import { KalturaPermission } from 'kaltura-typescript-client/types/KalturaPermission';
 import { PartnerGetInfoAction } from 'kaltura-typescript-client/types/PartnerGetInfoAction';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { UserUpdateAction } from 'kaltura-typescript-client/types/UserUpdateAction';
 import { UserDeleteAction } from 'kaltura-typescript-client/types/UserDeleteAction';
 import { Observable } from 'rxjs/Observable';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { FormGroup } from '@angular/forms';
 
 export interface QueryData
 {
@@ -36,12 +32,10 @@ export class UsersStore implements OnDestroy {
   private _usersData = new BehaviorSubject<{
     users: {items: KalturaUser[], totalCount: number},
     roles: {items: KalturaUserRole[], totalCount: number},
-    partnerPermissions: {items: KalturaPermission[]},
     partnerInfo : {adminLoginUsersQuota: number, adminUserId: string}
   }>({
     users: {items: [], totalCount: 0},
     roles: {items: [], totalCount: 0},
-    partnerPermissions: {items: []},
     partnerInfo: {adminLoginUsersQuota: 0, adminUserId: null}
   });
 	private _state = new BehaviorSubject<{loading : boolean, errorMessage?: string}>({ loading : false});
@@ -120,14 +114,6 @@ export class UsersStore implements OnDestroy {
             })
           }
         ),
-        new PermissionListAction (
-          {
-            filter: new KalturaPermissionFilter({
-              typeIn: KalturaPermissionType.specialFeature + ',' + KalturaPermissionType.plugin,
-              statusEqual: KalturaPermissionStatus.active
-            })
-          }
-        ),
         new PartnerGetInfoAction ()
       ])
     .cancelOnDestroy(this)
@@ -145,12 +131,9 @@ export class UsersStore implements OnDestroy {
               items : response[0].result.objects,
               totalCount: response[0].result.totalCount
             },
-            partnerPermissions: {
-              items : response[2].result.objects
-            },
             partnerInfo: {
-              adminLoginUsersQuota : response[3].result.adminLoginUsersQuota,
-              adminUserId: response[3].result.adminUserId
+              adminLoginUsersQuota : response[2].result.adminLoginUsersQuota,
+              adminUserId: response[2].result.adminUserId
             }
           });
         } else {
@@ -165,13 +148,39 @@ export class UsersStore implements OnDestroy {
   }
 
   public toggleUserStatus(user: KalturaUser): Observable<void> {
-    if(this._appAuthentication.appUser.id !== user.id || this._usersData.getValue().partnerInfo.adminUserId !== user.id) {
       return Observable.create(observer => {
+        if(this._appAuthentication.appUser.id !== user.id || this._usersData.getValue() && this._usersData.getValue().partnerInfo.adminUserId !== user.id) {
+          this._kalturaServerClient.request(
+            new UserUpdateAction(
+              {
+                userId: user.id,
+                user: new KalturaUser({status: +!user.status})
+              }
+            )
+          )
+            .cancelOnDestroy(this)
+            .subscribe(
+              () => {
+                observer.next();
+                observer.complete();
+              },
+              error => {
+                observer.error(error);
+              }
+            );
+        } else {
+          observer.error(new Error(this._appLocalization.get('applications.content.users.cantPerform')));
+        }
+      });
+  }
+
+  public deleteUser(user: KalturaUser) : Observable<void> {
+    return Observable.create(observer => {
+      if(this._appAuthentication.appUser.id !== user.id || this._usersData.getValue() && this._usersData.getValue().partnerInfo.adminUserId !== user.id) {
         this._kalturaServerClient.request(
-          new UserUpdateAction(
+          new UserDeleteAction(
             {
-              userId: user.id,
-              user: new KalturaUser({status: +!user.status})
+              userId: user.id
             }
           )
         )
@@ -185,35 +194,41 @@ export class UsersStore implements OnDestroy {
               observer.error(error);
             }
           );
-      });
-    } else {
-      return Observable.throw({message: this._appLocalization.get('applications.content.users.cantPerform')});
-    }
-  }
-
-  public deleteUser(userId: string) : Observable<void> {
-    return Observable.create(observer => {
-      this._kalturaServerClient.request(
-        new UserDeleteAction (
-          {
-            userId: userId
-          }
-        )
-      )
-      .cancelOnDestroy(this)
-      .subscribe(
-        () => {
-          observer.next();
-          observer.complete();
-        },
-        error => {
-          observer.error(error);
-        }
-      );
+      } else {
+        observer.error(new Error(this._appLocalization.get('applications.content.users.cantPerform')));
+      }
     });
   }
 
-  public saveUser() : void {}
+  public saveUser(userForm: FormGroup) : Observable<void> {
+    return Observable.create(observer => {
+      let userId = userForm.controls['id'].value !== '' ? userForm.controls['id'].value : userForm.controls['email'].value;
+      this._kalturaServerClient.request(
+        new UserUpdateAction(
+          {
+            userId: userForm.controls['email'].value,
+            user: new KalturaUser({
+              email:      userForm.controls['email'].value,
+              firstName:  userForm.controls['firstName'].value,
+              lastName:   userForm.controls['lastName'].value,
+              roleIds:    userForm.controls['roleIds'].value,
+              id:         userId
+            })
+          }
+        )
+      )
+        .cancelOnDestroy(this)
+        .subscribe(
+          () => {
+            observer.next();
+            observer.complete();
+          },
+          error => {
+            observer.error(error);
+          }
+        );
+    });
+  }
 
   ngOnDestroy() {
     this._querySource.complete();

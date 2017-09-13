@@ -192,14 +192,17 @@
         "loginEmailAddress": "Login Email address",
         "firstName": "First Name",
         "lastName": "Last Name",
-        "publisherUserId": "Publisher user ID",
+        "publisherUserId": "Publisher user ID \n (optional)",
         "userRole": "User role",
         "addRole": "Add role",
         "userRoleDescription": "User role description",
         "addUser": "Add User",
         "usersInfo": "Current status: {{0}} KMC {{1}} in use. | {{2}} additional available",
         "failedLoading": "Failed to load users data",
-        "cantPerform": "You don't have access to perform this action"
+        "cantPerform": "You don't have access to perform this action",
+        "successSavingUser": "Changes will take effect immediately. \nPlease instruct the user to refresh their browser.",
+        "personalDetails": "Personal Details",
+        "accountSpecificDetails": "Account Specific Details"
       },
       "filters": {
         "activeFilters": "Active Filters:",

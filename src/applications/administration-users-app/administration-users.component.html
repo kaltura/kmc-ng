@@ -32,12 +32,12 @@
           (editUser)="onEditUser($event)"
           (toggleUserStatus)="onToggleUserStatus($event)"
           (deleteUser)="onDeleteUser($event)"></kUsersTable>
-        <div class="kUsersTableFooter" #footer *ngIf="(usersStore.users$ | async)?.totalCount">
+        <div class="kUsersTableFooter" #footer *ngIf="(usersStore.usersData$ | async)?.users.totalCount">
           <p-paginator
             [rows]="_filter.pageSize"
             [first]="_filter.pageIndex * _filter.pageSize"
             [rowsPerPageOptions]="[25,50,100,250,500]"
-            [totalRecords]="(usersStore.users$ | async)?.totalCount"
+            [totalRecords]="(usersStore.usersData$ | async)?.users.totalCount"
             (onPageChange)="onPaginationChanged($event)"></p-paginator>
           <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
         </div>
@@ -45,7 +45,7 @@
     </div>
   </div>
 
-  <kPopupWidget #editUserPopup [popupWidth]="500" [popupHeight]="495" [modal]="true">
+  <kPopupWidget #editUserPopup [popupWidth]="500" [popupHeight]="585" [modal]="true">
     <div class="kFloater kOverrideFAIcons">
       <div class="kHeader">
         <div class="kTitle">{{popupTitle}}</div>
@@ -53,7 +53,7 @@
 
       <div class="kContainer">
         <form [formGroup]="userForm" novalidate>
-          <div class="kSchemaTitle"></div>
+          <div class="kCaption">{{'applications.content.users.personalDetails' | translate}}</div>
           <div class="kRow kValign">
             <span class="kLabel">{{'applications.content.users.loginEmailAddress' | translate}}</span>
             <div class="kControl">
@@ -72,6 +72,7 @@
               <input formControlName="lastName" type="text" pInputText />
             </div>
           </div>
+          <div class="kCaption">{{'applications.content.users.accountSpecificDetails' | translate}}</div>
           <div class="kRow kValign">
             <span class="kLabel">{{'applications.content.users.publisherUserId' | translate}}</span>
             <div class="kControl">
@@ -81,7 +82,7 @@
           <div class="kRow kValign">
             <span class="kLabel">{{'applications.content.users.userRole' | translate}}</span>
             <div class="kControl">
-              <p-dropdown [options]="rolesList" (onChange)="getRoleDescription($event)" formControlName="rolesId" styleClass="rolesList" [autoWidth]="false"></p-dropdown>
+              <p-dropdown [options]="rolesList" (onChange)="getRoleDescription($event)" formControlName="roleIds" styleClass="rolesList" [autoWidth]="false"></p-dropdown>
             </div>
           </div>
           <div class="kRow kValign">
@@ -97,7 +98,7 @@
         <button type="button" class="kButtonBranded"
                 [disabled]="!userForm.dirty" pButton
                 label="{{'applications.content.users.save' | translate}}"
-                (click)="saveUser()"></button>
+                (click)="saveUser(userForm)"></button>
       </div>
     </div>
   </kPopupWidget>

@@ -14,6 +14,11 @@ import {
 import { SelectItem } from 'primeng/primeng';
 import { KalturaUserRole } from 'kaltura-typescript-client/types/KalturaUserRole';
 
+export interface PartnerInfo {
+  adminLoginUsersQuota: number,
+  adminUserId: string
+}
+
 @Component({
     selector: 'kAdministrationUsers',
     templateUrl: './administration-users.component.html',
@@ -30,6 +35,7 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
   isNewUser: boolean = true;
   rolesList: SelectItem[];
   _roles: KalturaUserRole[];
+  _partnerInfo: PartnerInfo = {adminLoginUsersQuota: 0, adminUserId: null};
   popupTitle: string = '';
   selectedRole: string = '';
 
@@ -52,7 +58,7 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
       firstName : '',
       lastName  : '',
       id        : '',
-      rolesId   : ''
+      roleIds   : ''
     });
   }
 
@@ -83,12 +89,12 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
       firstName: user.fullName,
       lastName: user.lastName,
       id: user.id,
-      rolesId: user.roleIds
+      roleIds: user.roleIds
     });
     this.userForm.get('email').disable();
     this.userForm.get('firstName').disable();
     this.userForm.get('lastName').disable();
-    this.userForm.get('rolesId').disable();
+    user.id === this._partnerInfo.adminUserId ? this.userForm.get('roleIds').disable() : this.userForm.get('roleIds').enable();
     this.getRoleDescription(user.roleIds);
     this.editUserPopup.open();
   }
@@ -128,9 +134,9 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
       );
   }
 
-  onDeleteUser(userId: string): void {
+  onDeleteUser(user: KalturaUser): void {
     this.loading = true;
-    this.usersStore.deleteUser(userId)
+    this.usersStore.deleteUser(user)
       .cancelOnDestroy(this)
       .subscribe(
         () => {
@@ -146,8 +152,45 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
                 {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
-                    this.onDeleteUser(userId);
                     this.blockerMessage = null;
+                    this.onDeleteUser(user);
+                  }
+                },
+                {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this.blockerMessage = null;
+                  }
+                }
+              ]
+            }
+          )
+        }
+      );
+  }
+
+  saveUser(userForm: FormGroup): void {
+    this.loading = true;
+    this.usersStore.saveUser(userForm)
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {
+          alert(this._appLocalization.get('applications.content.users.successSavingUser'));
+          this.editUserPopup.close();
+          this.usersStore.reload(true);
+          this.loading = false;
+        },
+        error => {
+          this.loading = false;
+          this.blockerMessage = new AreaBlockerMessage(
+            {
+              message: error.message,
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this.blockerMessage = null;
+                    this.saveUser(userForm);
                   }
                 },
                 {
@@ -175,20 +218,22 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
       firstName: '',
       lastName: '',
       id: '',
-      rolesId: null
+      roleIds: null
     });
     this.userForm.get('email').enable();
     this.userForm.get('firstName').enable();
     this.userForm.get('lastName').enable();
-    this.userForm.get('rolesId').enable();
+    this.userForm.get('roleIds').enable();
     this.getRoleDescription();
     this.editUserPopup.open();
   }
 
   getRoleDescription(event?: any): void {
     this._roles.forEach(role => {
-      if(event && (event === role.id.toString() || event.value === role.id)) {
-        this.selectedRole = role.description;
+      if(event) {
+        if(event === role.id.toString() || event.value === role.id) {
+          this.selectedRole = role.description;
+        }
       } else {
         this.selectedRole = this._roles[0].description;
       }
@@ -218,6 +263,10 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
           );
           this.usersAmount = `${response.users.totalCount} ${response.users.totalCount > 1 ? this._appLocalization.get('applications.content.users.users') : this._appLocalization.get('applications.content.users.user')}`;
           this._roles = response.roles.items;
+          this._partnerInfo = {
+            adminLoginUsersQuota: response.partnerInfo.adminLoginUsersQuota,
+            adminUserId: response.partnerInfo.adminUserId
+          };
         }
       );
   }
