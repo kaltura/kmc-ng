@@ -29,3 +29,25 @@
              [filter]="_allowedExtensions"
              [allowMultiple]="true"
              (onFileSelected)="_selectFiles($event)"></kFileDialog>
+
+<kPopupWidget #uploadSucceed [popupWidth]="440" [popupHeight]="233" [closeBtn]="false" [modal]="true">
+  <div class="kSuccessBulkUpload">
+    <div class="kSuccessBulkUploadMessage kCenterContent">
+      <p>
+        {{ 'applications.content.bulkUpload.menu.messages.uploadSuccess.body' | translate}}
+        <a (click)="_goToBulkUploadLog()">
+          {{ 'applications.content.bulkUpload.menu.messages.uploadSuccess.link' | translate}}
+        </a>
+      </p>
+    </div>
+
+    <div class="kSuccessBulkUploadFooter kCenterContent">
+      <button pButton
+              class="kButtonDefault kSuccessBulkUploadButton"
+              [label]="'app.common.ok' | translate"
+              (click)="uploadSucceed.close()"></button>
+    </div>
+
+  </div>
+</kPopupWidget>
+

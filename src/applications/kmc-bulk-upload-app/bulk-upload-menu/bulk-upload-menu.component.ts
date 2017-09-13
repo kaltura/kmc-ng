@@ -1,8 +1,11 @@
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { BulkUploadMenuService, BulkUploadTypes } from './bulk-upload-menu.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { AppAuthentication, AppNavigator, BrowserService } from 'app-shared/kmc-shell';
+import { KalturaAPIException } from 'kaltura-typescript-client';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
   selector: 'kKMCBulkUploadMenu',
@@ -13,6 +16,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 export class BulkUploadMenuComponent {
   @Output() onClose = new EventEmitter<void>();
   @ViewChild('fileDialog') fileDialog: FileDialogComponent;
+  @ViewChild('uploadSucceed') uploadSucceed: PopupWidgetComponent;
 
   private _selectedType: BulkUploadTypes;
 
@@ -22,7 +26,10 @@ export class BulkUploadMenuComponent {
 
   constructor(private _menuService: BulkUploadMenuService,
               private _appLocalization: AppLocalization,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _userAuthentication: AppAuthentication,
+              private _appNavigator: AppNavigator,
+              private _router: Router) {
   }
 
   // force reload fileDialog component to apply dynamically added filter
@@ -32,32 +39,25 @@ export class BulkUploadMenuComponent {
     setTimeout(() => this.fileDialog.open(), 0);
   }
 
-  // TODO Stas - set correct type
-  private _handleUploadSuccess(res: any): void {
-    if (res.error) {
-      return this._handleUploadError(res.error);
-    }
-
-    this._browserService.alert({
-      message: this._appLocalization.get('applications.content.bulkUpload.menu.messages.uploadSuccess.message')
-    });
-
+  private _handleUploadSuccess(): void {
+    this.uploadSucceed.open();
     this.onClose.emit();
   }
 
-  // TODO Stas - set correct type
-  private _handleUploadError(error: any): void {
-    if (error.errorCode === 'APIErrorCode.SERVICE_FORBIDDEN') {
+  // TODO NEED TO TEST INVALID_KS ERROR CODE
+  private _handleUploadError(error: KalturaAPIException): void {
+    if (error.code === 'SERVICE_FORBIDDEN') {
       this._browserService.alert({
         header: this._appLocalization.get('applications.content.bulkUpload.menu.messages.uploadError.header'),
-        message: this._appLocalization.get('applications.content.bulkUpload.menu.messages.uploadError.message', { value: error.errorMsg })
+        message: this._appLocalization.get('applications.content.bulkUpload.menu.messages.uploadError.message', { value: error.message })
       });
-    } else if (error.errorCode === 'APIErrorCode.INVALID_KS') {
-      // TODO LOGOUT
+    } else if (error.code === 'INVALID_KS') {
+      this._userAuthentication.logout();
+      this._appNavigator.navigateToLogout();
     } else {
       this._browserService.alert({
         header: this._appLocalization.get('applications.content.bulkUpload.menu.messages.uploadError.header'),
-        message: error.errorMsg
+        message: error.message
       })
     }
   }
@@ -65,8 +65,8 @@ export class BulkUploadMenuComponent {
   public _selectFiles(files): void {
     this._menuService.upload(files, this._selectedType)
       .subscribe(
-        res => this._handleUploadSuccess(res),
-        error => this._handleUploadError(error)
+        () => this._handleUploadSuccess(),
+        (error) => this._handleUploadError(error)
       );
   }
 
@@ -74,5 +74,10 @@ export class BulkUploadMenuComponent {
     this._selectedType = type;
     this._allowedExtensions = this._menuService.getAllowedExtension(type);
     this._openFileDialog();
+  }
+
+  public _goToBulkUploadLog() {
+    this._router.navigate(['/content/bulk/list']);
+    this.uploadSucceed.close();
   }
 }
