@@ -270,6 +270,21 @@
         "staticList": "Manual",
         "unknown": "Unknown"
       },
+      "addNewPlaylist": {
+        "addNewPlaylist": "Add New Playlist",
+        "selectPlaylistType": "Select playlist type",
+        "manualPlaylist": "Manual playlist",
+        "ruleBasedPlaylist": "Rule based playlist",
+        "addRuleBasedSubPlaylist": "Add rule based sub playlist",
+        "nameIsMandatory": "You must enter a playlist name",
+        "next": "Next",
+        "playlistName": "Playlist Name",
+        "description": "Description",
+        "cancelEdit": "Cancel Edit",
+        "discard": "Discard all changes?",
+        "notSupportedMsg": "Adding a new rule based playlist is currently not supported",
+        "dismiss": "Dismiss"
+      },
       "bulkActions": {
         "setScheduling": "Set Scheduling",
         "setAccessControl": "Set Access Control",

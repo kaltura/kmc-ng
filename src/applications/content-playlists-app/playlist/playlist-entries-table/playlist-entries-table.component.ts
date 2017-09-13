@@ -30,17 +30,8 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
     }
   }
 
-	constructor(
-		private appLocalization: AppLocalization,
-		public playlistStore: PlaylistStore,
-		private cdRef: ChangeDetectorRef
-	) {}
-	ngOnInit() {
-    /*this.playlistStore.entries$
-      .subscribe(response => {
-
-      });*/
-	}
+	constructor(private cdRef: ChangeDetectorRef) {}
+	ngOnInit() {}
 
 	ngAfterViewInit() {
     if (this._deferredLoading) {

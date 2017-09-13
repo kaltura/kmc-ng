@@ -43,11 +43,12 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 					this._showLoader = response.isBusy;
 					if(response.error) {
             const buttons = [];
-            if(response.error.origin === 'reload') {
+            if(response.error.origin === 'reload' || response.error.origin === 'pre-save') {
               buttons.push(this._createBackToPlaylistsButton());
               buttons.push({
                   label: this._appLocalization.get('applications.content.playlistDetails.errors.retry'),
                   action: () => {
+                    this._areaBlockerMessage = null;
                     this._playlistStore.reloadPlaylist();
                   }
                 });
