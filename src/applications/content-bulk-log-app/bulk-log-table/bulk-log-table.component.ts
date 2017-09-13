@@ -12,9 +12,7 @@ import {
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaBulkUpload } from 'kaltura-typescript-client/types/KalturaBulkUpload';
 
 @Component({
   selector: 'kBulkLogTable',
@@ -25,7 +23,7 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   public _blockerMessage: AreaBlockerMessage = null;
 
-  public _entries: any[] = [];
+  public _bulkLog: any[] = [];
   private _deferredEntries: any[];
 
   @Input()
@@ -33,9 +31,9 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
     if (!this._deferredLoading) {
       // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
       // (ie when returning from entry page) - we should force detect changes on an empty list
-      this._entries = [];
+      this._bulkLog = [];
       this.cdRef.detectChanges();
-      this._entries = data;
+      this._bulkLog = data;
       this.cdRef.detectChanges();
     } else {
       this._deferredEntries = data
@@ -43,18 +41,18 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   @Input() filter: any = {};
-  @Input() selectedEntries: any[] = [];
+  @Input() selectedBulkLogItems: any[] = [];
 
   @Output()
   sortChanged = new EventEmitter<any>();
   @Output()
-  actionSelected = new EventEmitter<any>();
+  actionSelected = new EventEmitter<{ action: string, bulkLogItemId: string }>();
   @Output()
-  selectedEntriesChange = new EventEmitter<any>();
+  selectedBulkLogChange = new EventEmitter<any>();
 
   @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
-  private actionsMenuEntryId = '';
+  private bulkLogItemId = null;
 
   public _deferredLoading = true;
   public _emptyMessage = '';
@@ -81,30 +79,21 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this.actionsMenu.hide();
   }
 
-  buildMenu(mediaType: KalturaMediaType = null, status: any = null): void {
+  buildMenu(): void {
     this._items = [
       {
-        label: this.appLocalization.get('applications.content.table.previewAndEmbed'), command: (event) => {
-        this.onActionSelected('preview', this.actionsMenuEntryId);
-      }
+        label: this.appLocalization.get('applications.content.table.previewAndEmbed'),
+        command: (event) => this.onActionSelected('preview', this.bulkLogItemId)
       },
       {
-        label: this.appLocalization.get('applications.content.table.delete'), command: (event) => {
-        this.onActionSelected('delete', this.actionsMenuEntryId);
-      }
+        label: this.appLocalization.get('applications.content.table.delete'),
+        command: (event) => this.onActionSelected('delete', this.bulkLogItemId)
       },
       {
-        label: this.appLocalization.get('applications.content.table.view'), command: (event) => {
-        this.onActionSelected('view', this.actionsMenuEntryId);
-      }
+        label: this.appLocalization.get('applications.content.table.view'),
+        command: (event) => this.onActionSelected('view', this.bulkLogItemId)
       }
     ];
-    if (status instanceof KalturaEntryStatus && status.toString() !== KalturaEntryStatus.ready.toString()) {
-      this._items.shift();
-      if (mediaType && mediaType.toString() === KalturaMediaType.liveStreamFlash.toString()) {
-        this._items.pop();
-      }
-    }
   }
 
   ngAfterViewInit() {
@@ -121,41 +110,32 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
       // This prevents the screen from hanging during datagrid rendering of the data.
       setTimeout(() => {
         this._deferredLoading = false;
-        this._entries = this._deferredEntries;
+        this._bulkLog = this._deferredEntries;
         this._deferredEntries = null;
       }, 0);
     }
   }
 
-  openActionsMenu(event: any, entry: KalturaMediaEntry) {
+  openActionsMenu(event: any, bulkLogItem: KalturaBulkUpload) {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
-      if (this.actionsMenuEntryId !== entry.id) {
-        this.buildMenu(entry.mediaType, entry.status);
-        this.actionsMenuEntryId = entry.id;
+      if (this.bulkLogItemId !== bulkLogItem.id) {
+        this.bulkLogItemId = bulkLogItem.id;
+        this.buildMenu();
         this.actionsMenu.show(event);
       }
     }
   }
 
-  allowDrilldown(mediaType: string, status: string) {
-    const isLiveStream = mediaType && mediaType === KalturaMediaType.liveStreamFlash.toString();
-    const isReady = status && status !== KalturaEntryStatus.ready.toString();
-    return !(isLiveStream && isReady);
-  }
-
-  onActionSelected(action: string, entryID: string, mediaType: string = null, status: string = null) {
-    if (this.allowDrilldown(mediaType, status)) {
-      this.actionSelected.emit({ 'action': action, 'entryID': entryID });
-    }
-  }
-
+   onActionSelected(action: string, bulkLogItemId: string): void {
+     this.actionSelected.emit({ action, bulkLogItemId });
+   }
   onSortChanged(event) {
     this.sortChanged.emit(event);
   }
 
   onSelectionChange(event) {
-    this.selectedEntriesChange.emit(event);
+    this.selectedBulkLogChange.emit(event);
   }
 
   scrollToTop() {

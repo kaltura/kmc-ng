@@ -255,6 +255,15 @@
             }
           }
         },
+        "table": {
+          "fileName": "File name",
+          "uploadedItem": "Uploaded item",
+          "uploadedBy": "Uploaded by",
+          "uploadedOn": "Uploaded on",
+          "numOfObjects": "Number of items",
+          "status": "Status",
+          "notification": "Notification"
+        },
         "objectType": {
           "category": "Categories",
           "categoryUser": "End-User Entitlements",

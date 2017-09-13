@@ -4,13 +4,13 @@
       <div class="kBulkLogTableFilters">
         <span class="kSelectedEntriesNum" *ngIf="false">{{0}} {{'applications.content.entries.entries' | translate}}</span>
 
-        <div [class.kHidden]="!selectedEntries.length" class="kBulkOperations">
-          <span class="kSelectedEntriesLabel">• {{selectedEntries.length}} {{'applications.content.entries.selected' | translate}}</span>
+        <div [class.kHidden]="!selectedBulkLogItems.length" class="kBulkOperations">
+          <span class="kSelectedEntriesLabel">• {{selectedBulkLogItems.length}} {{'applications.content.entries.selected' | translate}}</span>
           <ng-content select=".bulk-actions"></ng-content>
 
           <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
         </div>
-        <div [class.kHidden]="selectedEntries.length" class="kFilters">
+        <div [class.kHidden]="selectedBulkLogItems.length" class="kFilters">
           <div #refineBtn class="kRefine">
             <i class="kIconfilter"></i>
             <span>{{'applications.content.entries.refine' | translate}}</span>
@@ -42,7 +42,7 @@
                      [filter]="_filter"
                      (sortChanged)="onSortChanged($event)"
                      (actionSelected)="onActionSelected($event)"
-                     [(selectedEntries)]="selectedEntries"
+                     [(selectedBulkLogItems)]="selectedBulkLogItems"
       ></kBulkLogTable>
 
       <div class="kBulkLogTableFooter" #footer *ngIf="0">

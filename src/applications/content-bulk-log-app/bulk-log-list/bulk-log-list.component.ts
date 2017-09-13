@@ -15,7 +15,7 @@ import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
   styleUrls: ['./bulk-log-list.component.scss']
 })
 export class BulkLogListComponent implements OnInit, OnDestroy {
-  @Input() selectedEntries: Array<any> = [];
+  @Input() selectedBulkLogItems: Array<any> = [];
   @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
 
   public isBusy = false;
@@ -114,11 +114,11 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   }
 
   clearSelection() {
-    this.selectedEntries = [];
+    this.selectedBulkLogItems = [];
   }
 
   onSelectedEntriesChange(event): void {
-    this.selectedEntries = event;
+    this.selectedBulkLogItems = event;
   }
 
   onBulkChange(event): void {

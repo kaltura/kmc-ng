@@ -1,19 +1,19 @@
 <k-area-blocker kFillHeight
                 [showLoader]="this._deferredLoading"
                 [message]="_blockerMessage">
-  <div class="kBulkLogTable" [class.noResults]="!_entries.length">
+  <div class="kBulkLogTable" [class.noResults]="!_bulkLog.length">
     <p-dataTable #dataTable
                  dataKey="id"
                  scrollable="true"
                  scrollHeight="100%"
-                 [value]="_entries"
+                 [value]="_bulkLog"
                  [sortField]="filter.sortBy"
                  [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
                  [emptyMessage]="_emptyMessage"
                  [rowTrackBy]="rowTrackBy"
                  (selectionChange)="onSelectionChange($event)"
                  (onSort)="onSortChanged($event)"
-                 [(selection)]="selectedEntries">
+                 [(selection)]="selectedBulkLogItems">
       <p-column [style]="{'width':'44px', 'padding-left': '14px'}"
                 selectionMode="multiple"></p-column>
 
@@ -26,11 +26,11 @@
       </p-column>
 
       <p-column field="fileName"
-                header="File name">
+                [header]="'applications.content.bulkUpload.table.fileName' | translate">
       </p-column>
 
       <p-column field="bulkUploadObjectType"
-                header="Uploaded item"
+                [header]="'applications.content.bulkUpload.table.uploadedItem' | translate"
                 [style]="{'width':'110px'}">
         <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
           <span>{{ bulkLogItem[col.field] | kBulkLogTableObjectType }}</span>
@@ -38,7 +38,7 @@
       </p-column>
 
       <p-column field="uploadedBy"
-                header="Uploaded by"
+                [header]="'applications.content.bulkUpload.table.uploadedBy' | translate"
                 [style]="{'width':'180px'}">
         <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
           <span>{{ bulkLogItem['uploadedBy'] || bulkLogItem['uploadedByUserId'] }}</span>
@@ -46,7 +46,7 @@
       </p-column>
 
       <p-column field="uploadedOn"
-                header="Uploaded on"
+                [header]="'applications.content.bulkUpload.table.uploadedOn' | translate"
                 [style]="{'width':'110px'}">
         <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
           <span>{{ bulkLogItem[col.field] | kDate }}</span>
@@ -54,7 +54,7 @@
       </p-column>
 
       <p-column field="numOfObjects"
-                header="Number of items"
+                [header]="'applications.content.bulkUpload.table.numOfObjects' | translate"
                 [style]="{'width':'110px', 'text-align': 'center'}">
         <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
           <span>{{ !bulkLogItem[col.field] || bulkLogItem[col.field] < 0 ? 0 : bulkLogItem[col.field] }}</span>
@@ -62,7 +62,7 @@
       </p-column>
 
       <p-column field="status"
-                header="Status"
+                [header]="'applications.content.bulkUpload.table.status' | translate"
                 [style]="{'width':'200px'}">
         <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
           <span>{{ bulkLogItem[col.field] | kBulkLogTableStatus }}</span>
@@ -70,7 +70,7 @@
       </p-column>
 
       <p-column field="error"
-                header="Notification"
+                [header]="'applications.content.bulkUpload.table.notification' | translate"
                 [style]="{'width':'110px'}">
         <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
           <span>{{ bulkLogItem[col.field] | kBulkLogTableNotification }}</span>
@@ -78,9 +78,9 @@
       </p-column>
 
       <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
-        <ng-template let-col let-entry="rowData" pTemplate="body">
+        <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
           <div class="kBulkLogTableActions">
-            <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, entry)"></button>
+            <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, bulkLogItem)"></button>
           </div>
         </ng-template>
       </p-column>
