@@ -7,6 +7,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 import { SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
+import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 
 @Component({
   selector: 'kBulkLogList',
@@ -30,9 +31,10 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     sortDirection: SortDirection.Desc
   };
 
-  constructor(private appLocalization: AppLocalization,
-              private router: Router,
-              private _browserService: BrowserService) {
+  constructor(private _appLocalization: AppLocalization,
+              private _router: Router,
+              private _browserService: BrowserService,
+              public _store: BulkLogStoreService) {
   }
 
   removeTag(tag: any) {
@@ -65,12 +67,17 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
+    this._store.reload(true);
+    this._store.bulkLog$.subscribe(res => {
+      console.log(res);
+    })
   }
 
   ngOnDestroy() {
-    this.querySubscription.unsubscribe();
-    this.querySubscription = null;
+    if (this.querySubscription) {
+      this.querySubscription.unsubscribe();
+      this.querySubscription = null;
+    }
   }
 
   public _reload() {
@@ -83,13 +90,13 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   onActionSelected(event) {
     switch (event.action) {
       case 'view':
-        this.router.navigate(['/content/entries/entry', event.entryID]);
+        this._router.navigate(['/content/entries/entry', event.entryID]);
         break;
       case 'delete':
         this._browserService.confirm(
           {
-            header: this.appLocalization.get('applications.content.entries.deleteEntry'),
-            message: this.appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: event.entryID }),
+            header: this._appLocalization.get('applications.content.entries.deleteEntry'),
+            message: this._appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: event.entryID }),
             accept: () => {
               this.deleteEntry(event.entryID);
             }

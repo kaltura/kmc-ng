@@ -254,6 +254,26 @@
               "link": "Bulk Upload Log page"
             }
           }
+        },
+        "objectType": {
+          "category": "Categories",
+          "categoryUser": "End-User Entitlements",
+          "entry": "Entries",
+          "user": "End-users",
+          "other": "Other"
+        },
+        "bulkStatus": {
+          "pending": "Verifying file",
+          "queued": "Verified, Queued for import",
+          "processing": "Processing",
+          "finished": "Finished successfully",
+          "aborted": "Aborted",
+          "failed": "Failed",
+          "almostDone": "Almost done",
+          "fatal": "Fatal",
+          "retry": "Retry",
+          "dontProcess": "Pending",
+          "finishedPartially": "Finished with errors"
         }
       },
       "entryStatus": {

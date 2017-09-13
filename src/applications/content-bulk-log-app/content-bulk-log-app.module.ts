@@ -26,6 +26,11 @@ import { ContentBulkLogAppComponent } from './content-bulk-log-app.component';
 import { BulkLogTableComponent } from './bulk-log-table/bulk-log-table.component';
 import { BulkLogListComponent } from './bulk-log-list/bulk-log-list.component';
 import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
+import { BulkLogStoreService } from './bulk-log-store/bulk-log-store.service';
+import { BulkLogObjectTypePipe } from './pipes/bulk-log-object-type.pipe';
+import { BulkLogStatusPipe } from './pipes/bulk-log-status.pipe';
+import { BulkLogTypeIconPipe } from './pipes/bulk-log-type-icon.pipe';
+import { BulkLogNotificationPipe } from './pipes/bulk-log-notification.pipe';
 
 @NgModule({
   imports: [
@@ -55,10 +60,14 @@ import { ContentSharedModule } from 'app-shared/content-shared/content-shared.mo
   declarations: [
     ContentBulkLogAppComponent,
     BulkLogTableComponent,
-    BulkLogListComponent
+    BulkLogListComponent,
+    BulkLogObjectTypePipe,
+    BulkLogStatusPipe,
+    BulkLogTypeIconPipe,
+    BulkLogNotificationPipe
   ],
   exports: [],
-  providers: []
+  providers: [BulkLogStoreService]
 })
 export class ContentBulkLogAppModule {
 }

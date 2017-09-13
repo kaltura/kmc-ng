@@ -29,7 +29,7 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   private _deferredEntries: any[];
 
   @Input()
-  set entries(data: any[]) {
+  set list(data: any[]) {
     if (!this._deferredLoading) {
       // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
       // (ie when returning from entry page) - we should force detect changes on an empty list

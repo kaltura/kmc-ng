@@ -1,7 +1,7 @@
 <k-area-blocker [showLoader]="isBusy" [message]="_blockerMessage">
-  <div class="kEntries kOverrideFAIcons">
-    <div #entriesTableHolder class="kEntriesHolder kContent">
-      <div class="kEntriesTableFilters">
+  <div class="kBulkLog kOverrideFAIcons">
+    <div #entriesTableHolder class="kBulkLogHolder kContent">
+      <div class="kBulkLogTableFilters">
         <span class="kSelectedEntriesNum" *ngIf="false">{{0}} {{'applications.content.entries.entries' | translate}}</span>
 
         <div [class.kHidden]="!selectedEntries.length" class="kBulkOperations">
@@ -11,17 +11,6 @@
           <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
         </div>
         <div [class.kHidden]="selectedEntries.length" class="kFilters">
-          <input type="text"
-                 pInputText
-                 class="kSearchInput"
-                 [(ngModel)]="_filter.freetextSearch"
-                 (keyup.enter)="onFreetextChanged()"
-                 placeholder="{{'applications.content.entries.searchEntries' | translate}}">
-          <div #categoriesFilterBtn class="kCategoriesFilter">
-            <i class="kIconfolder"></i>
-            <span>{{'applications.content.entries.filterCategories' | translate}}</span>
-            <i class="kIcondropdown_arrow_bottom dropdown"></i>
-          </div>
           <div #refineBtn class="kRefine">
             <i class="kIconfilter"></i>
             <span>{{'applications.content.entries.refine' | translate}}</span>
@@ -48,15 +37,15 @@
           </div>
         </ng-template>
       </kTags>
-      <kBulkLogTable class="kEntriesTable"
-                     [entries]="[]"
+      <kBulkLogTable class="kBulkLogTable"
+                     [list]="(_store.bulkLog$ | async)?.items"
                      [filter]="_filter"
                      (sortChanged)="onSortChanged($event)"
                      (actionSelected)="onActionSelected($event)"
                      [(selectedEntries)]="selectedEntries"
       ></kBulkLogTable>
 
-      <div class="kEntriesTableFooter" #footer *ngIf="0">
+      <div class="kBulkLogTableFooter" #footer *ngIf="0">
         <p-paginator
           [rows]="_filter.pageSize"
           [first]="_filter.pageIndex * _filter.pageSize"
