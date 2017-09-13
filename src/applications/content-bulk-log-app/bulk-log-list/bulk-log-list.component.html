@@ -8,7 +8,7 @@
           <span class="kSelectedEntriesLabel">• {{selectedBulkLogItems.length}} {{'applications.content.entries.selected' | translate}}</span>
           <ng-content select=".bulk-actions"></ng-content>
 
-          <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
+          <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
         </div>
         <div [class.kHidden]="selectedBulkLogItems.length" class="kFilters">
           <div #refineBtn class="kRefine">
@@ -28,19 +28,19 @@
              [data]="[]"
              [labelField]="'label'"
              [tooltipField]="'tooltip'"
-             (onTagRemove)="removeTag($event)"
-             (onRemoveAll)="removeAllTags()">
+             (onTagRemove)="_removeTag($event)"
+             (onRemoveAll)="_removeAllTags()">
         <ng-template let-item="item">
           <div class="kTagContent" [kTooltip]="item.tooltip?.token | translate : item.tooltip?.args">
             <span class="kTagLabel">{{item.label}}</span>
-            <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
+            <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="_removeTag(item.data)"></i>
           </div>
         </ng-template>
       </kTags>
       <kBulkLogTable class="kBulkLogTable"
                      [list]="(_store.bulkLog$ | async)?.items"
                      [filter]="_filter"
-                     (actionSelected)="onActionSelected($event)"
+                     (actionSelected)="_onActionSelected($event)"
                      [(selectedBulkLogItems)]="selectedBulkLogItems"
       ></kBulkLogTable>
 
@@ -50,7 +50,7 @@
           [first]="_filter.pageIndex * _filter.pageSize"
           [totalRecords]="0 | kMaxEntries"
           [rowsPerPageOptions]="[25,50,75,100]"
-          (onPageChange)="onPaginationChanged($event)"></p-paginator>
+          (onPageChange)="_onPaginationChanged($event)"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
       </div>
     </div>

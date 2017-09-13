@@ -38,29 +38,6 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
               public _store: BulkLogStoreService) {
   }
 
-  removeTag(tag: any) {
-    this.clearSelection();
-  }
-
-  removeAllTags() {
-    this.clearSelection();
-  }
-
-  onFreetextChanged(): void {
-
-    if (this._filter.freetextSearch) {
-    }
-  }
-
-  onPaginationChanged(state: any): void {
-    if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
-      this._filter.pageIndex = state.page;
-      this._filter.pageSize = state.rows;
-
-      this.clearSelection();
-    }
-  }
-
   ngOnInit() {
     this._store.reload(true);
     this._store.bulkLog$.subscribe(res => {
@@ -75,29 +52,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     }
   }
 
-  public _reload() {
-    this.clearSelection();
-  }
-
-  onActionSelected(event: { action: string, bulkLogItem: KalturaBulkUpload }): void {
-    switch (event.action) {
-      case 'delete':
-        this._browserService.confirm(
-          {
-            header: this._appLocalization.get('applications.content.bulkUpload.deleteLog.header'),
-            message: this._appLocalization.get('applications.content.bulkUpload.deleteLog.message'),
-            accept: () => {
-              this.deleteBulkLog(event.bulkLogItem.id);
-            }
-          }
-        );
-        break;
-      default:
-        break;
-    }
-  }
-
-  private deleteBulkLog(id: number): void {
+  private _deleteBulkLog(id: number): void {
     this.isBusy = true;
     this._blockerMessage = null;
 
@@ -122,20 +77,47 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
       );
   }
 
-  clearSelection() {
-    this.selectedBulkLogItems = [];
+  public _removeTag(tag: any) {
+    this._clearSelection();
   }
 
-  onSelectedEntriesChange(event): void {
-    this.selectedBulkLogItems = event;
+  public _removeAllTags() {
+    this._clearSelection();
   }
 
-  onBulkChange(event): void {
-    if (event.reload === true
-    ) {
-      this._reload();
+  public _onPaginationChanged(state: any): void {
+    if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
+      this._filter.pageIndex = state.page;
+      this._filter.pageSize = state.rows;
+
+      this._clearSelection();
     }
   }
 
+  public _reload() {
+    this._clearSelection();
+  }
+
+  public _onActionSelected(event: { action: string, bulkLogItem: KalturaBulkUpload }): void {
+    switch (event.action) {
+      case 'delete':
+        this._browserService.confirm(
+          {
+            header: this._appLocalization.get('applications.content.bulkUpload.deleteLog.header'),
+            message: this._appLocalization.get('applications.content.bulkUpload.deleteLog.message'),
+            accept: () => {
+              this._deleteBulkLog(event.bulkLogItem.id);
+            }
+          }
+        );
+        break;
+      default:
+        break;
+    }
+  }
+
+  public _clearSelection() {
+    this.selectedBulkLogItems = [];
+  }
 }
 
