@@ -6,7 +6,8 @@
           pButton
           type="button"
           label="{{'applications.content.playlists.addPlaylist' | translate}}"
-          class="kButtonBranded kAddPlaylistBtn"></button>
+          class="kButtonBranded kAddPlaylistBtn"
+          (click)="addPlaylist()"></button>
         <span
           class="kSelectedPlaylistsNum"
           *ngIf="(_playlistsStore.playlists$ | async)?.totalCount">
@@ -78,4 +79,12 @@
 		(createdChanged)="onCreatedChanged($event)"
 		[_createdAfter]="_filter.createdAfter"
 		[_createdBefore]="_filter.createdBefore"></kPlaylistsAdditionalFilter>
+</kPopupWidget>
+
+<kPopupWidget #addNewPlaylist [popupWidth]="586" [popupHeight]="453" [modal]="true">
+  <ng-template>
+    <kAddNewPlaylist
+      [parentPopupWidget]="addNewPlaylist"
+      (showNotSupportedMsg)="onShowNotSupportedMsg()"></kAddNewPlaylist>
+  </ng-template>
 </kPopupWidget>

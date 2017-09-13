@@ -18,6 +18,7 @@ import {
 import { BulkDeleteService } from './bulk-service/bulk-delete.service';
 import { PlaylistsTableComponent } from "./playlists-table.component";
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 import * as moment from 'moment';
 
@@ -36,6 +37,7 @@ export interface Filter {
 export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 	@ViewChild(PlaylistsTableComponent) private dataTable: PlaylistsTableComponent;
+  @ViewChild('addNewPlaylist') public addNewPlaylist: PopupWidgetComponent;
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _loading: boolean = false;
@@ -322,5 +324,22 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+  addPlaylist() {
+    this.addNewPlaylist.open();
+  }
+
+  onShowNotSupportedMsg() {
+    this._blockerMessage = new AreaBlockerMessage({
+      message: this.appLocalization.get('applications.content.addNewPlaylist.notSupportedMsg'),
+      buttons: [{
+        label: this.appLocalization.get('applications.content.addNewPlaylist.dismiss'),
+        action: () => {
+          this._blockerMessage = null;
+          this._loading = false;
+        }
+      }]
+    });
   }
 }
