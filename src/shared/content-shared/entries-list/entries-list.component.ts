@@ -1,7 +1,4 @@
-import {
-  Component, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, Self, SkipSelf,
-  ViewChild
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
@@ -16,8 +13,7 @@ import {
 @Component({
   selector: 'kEntriesList',
   templateUrl: './entries-list.component.html',
-  styleUrls: ['./entries-list.component.scss'],
-  providers: [EntriesStore]
+  styleUrls: ['./entries-list.component.scss']
 })
 export class EntriesListComponent implements OnInit, OnDestroy {
   @Input() isBusy = false;
@@ -43,7 +39,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
 
   private querySubscription: ISubscription;
-  private _entriesStore: EntriesStore;
 
   public _filter = {
     pageIndex: 0,
@@ -56,8 +51,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   public _rowsCount: number | null;
   public _rowsPerPageOptions: Array<number>;
 
-  constructor(@Optional() @SkipSelf() storeOnParent: EntriesStore, @Self() fallbackStore: EntriesStore) {
-    this._entriesStore = storeOnParent || fallbackStore;
+  constructor(private _entriesStore: EntriesStore) {
   }
 
   removeTag(tag: any) {
