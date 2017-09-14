@@ -186,7 +186,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 		return fullNamePath ? fullNamePath.join(' > ') : null;
 	}
 
-	public _onAutoCompleteSelected(){
+	public _onAutoCompleteSelected(event : any){
 
 		const selectedItem = this._autoComplete.getValue();
 

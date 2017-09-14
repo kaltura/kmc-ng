@@ -7,6 +7,8 @@ type AcceptedValues = '0' | '1';
 
 export class OriginalClippedFilter extends ValueFilter<AcceptedValues> {
 
+    static filterType = "OriginalClipped"; // IMPORTANT: you must have a static filterType property that is used at runtime
+
   constructor(value: AcceptedValues, label: string) {
     super(label, value, { token: 'applications.content.filters.originalClipped', args: { '0': label } });
   }

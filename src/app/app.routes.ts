@@ -34,7 +34,8 @@ const routes: Routes = <Routes>[
             path: 'administration', children: [
             { path: '', redirectTo: 'roles', pathMatch: 'full' },
             { path: 'roles', loadChildren: '../applications/administration-roles-app/administration-roles-app.module#AdministrationRolesAppModule'  },
-          ]}
+          ]},
+          { path: 'studio', loadChildren: '../applications/studio-app/studio-app.module#StudioAppModule' },
         ]
       },
       {

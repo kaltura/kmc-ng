@@ -49,7 +49,7 @@ export class BulkAAccessControl implements OnInit, OnDestroy, AfterViewInit {
 	private _accessControlProfiles = new BehaviorSubject<{ items: SelectItem[]}>({items: []});
 	public _accessControlProfiles$ = this._accessControlProfiles.asObservable();
 
-	private _selectedProfile: KalturaAccessControl = null;
+	public _selectedProfile: KalturaAccessControl = null;
 	public set selectedProfile(profile: KalturaAccessControl) {
 		this._selectedProfile = profile;
 		this._setRestrictions();
