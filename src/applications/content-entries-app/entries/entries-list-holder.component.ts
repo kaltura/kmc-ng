@@ -65,6 +65,7 @@ export class EntriesListHolderComponent {
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
               private _entriesStore: EntriesStore) {
+    this._entriesStore.paginationCacheToken = 'entries-list';
   }
 
   public _onActionSelected({ action, entryId }) {

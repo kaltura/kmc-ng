@@ -81,7 +81,7 @@ export class EntriesStore implements OnDestroy {
   private _activeFilters = new BehaviorSubject<{ filters: FilterItem[] }>({ filters: [] });
   private _entries = new BehaviorSubject({ items: [], totalCount: 0 });
   private _state = new BehaviorSubject<UpdateStatus>({ loading: false, errorMessage: null });
-
+  private _paginationCacheToken = 'default';
 
   private _queryData: QueryData = {
     pageIndex: 1,
@@ -107,6 +107,12 @@ export class EntriesStore implements OnDestroy {
   public entries$ = this._entries.asObservable();
   public state$ = this._state.asObservable();
   public query$ = this._querySource.asObservable();
+
+  public set paginationCacheToken(token: string) {
+    if (typeof token === 'string' && token !== '') {
+      this._paginationCacheToken = token;
+    }
+  }
 
     public getFilterType(filter : any) : string
     {
@@ -139,7 +145,7 @@ export class EntriesStore implements OnDestroy {
 
   public getDefaultPageSize(hasPagerOptions = false): number {
     if (hasPagerOptions) {
-      return this.browserService.getFromLocalStorage('entries.list.pageSize') || environment.entriesShared.pageSize;
+      return this.browserService.getFromLocalStorage(`entries.${this._paginationCacheToken}.list.pageSize`) || environment.entriesShared.pageSize;
     }
 
     return environment.entriesShared.pageSize;
@@ -305,7 +311,7 @@ export class EntriesStore implements OnDestroy {
     this.executeQueryState.deferredAddedFilters.push(...addedFilters);
     this.executeQueryState.deferredRemovedFilters.push(...removedFilters);
 
-    this.browserService.setInLocalStorage('entries.list.pageSize', this._queryData.pageSize);
+    this.browserService.setInLocalStorage(`entries.${this._paginationCacheToken}.list.pageSize`, this._queryData.pageSize);
 
     // execute the request
     this.executeQueryState.subscription = Observable.create(observer => {
