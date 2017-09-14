@@ -219,7 +219,7 @@ export class PlaylistStore implements OnDestroy {
     }
   }
 
-  public reloadPlaylist() : void
+  public reloadPlaylist(): void
   {
     if (this._getPlaylistId()) {
       this._loadPlaylist(this._getPlaylistId());

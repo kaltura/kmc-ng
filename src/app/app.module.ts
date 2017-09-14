@@ -12,7 +12,7 @@ import {
   AppBootstrap,
   AppBootstrapConfig  as AppBootstrapConfigType
 } from 'app-shared/kmc-shell';
-import { KalturaCommonModule, AppStorage } from '@kaltura-ng/kaltura-common';
+import { KalturaCommonModule, AppStorage, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { KalturaClient, KalturaClientConfiguration } from '@kaltura-ng/kaltura-client';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
@@ -145,10 +145,13 @@ export function clientConfigurationFactory() {
   ]
 })
 export class AppModule {
-  constructor(appBootstrap: AppBootstrap, appLocalization: AppLocalization, config: AppDefaultConfig) {
+  constructor(appBootstrap: AppBootstrap, appLocalization: AppLocalization, config: AppDefaultConfig, uploadManagement: UploadManagement) {
 
 
+    // TODO [kmcng] move to a relevant location
+    // TODO [kmcng] get max upload request
     appLocalization.supportedLocales = environment.core.locales;
+    uploadManagement.setMaxUploadRequests(environment.uploadsShared.MAX_CONCURENT_UPLOADS);
 
     appBootstrap.initApp(<AppBootstrapConfigType>config);
   }

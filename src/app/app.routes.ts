@@ -13,7 +13,6 @@ const routes: Routes = <Routes>[
   {
     path: '', canActivate: [AppBootstrap],
     children: [
-
       { path: 'login', component: LoginComponent },
       {
         path: '', component: DashboardComponent, canActivate: [AuthCanActivate], children: [

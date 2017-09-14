@@ -125,7 +125,7 @@ export class KmcUploadAppService {
     this._updateFiles(R.sortBy(R.prop('statusWeight'))(this._getFiles()));
   }
 
-  private _getStatusWeight(status: UploadStatus): number {
+  private _getStatusWeight(status: string): number {
     switch (status) {
       case 'uploadFailure':
       case 'uploaded':
@@ -222,9 +222,9 @@ export class KmcUploadAppService {
       // -------------------------------
       .filter(file => !(<any>file).removing)
       .flatMap(
-        (file: any) => this._uploadManagement.newUpload(new KalturaUploadFile(file.file)),
+          (file: any) => this._uploadManagement.newUpload(new KalturaUploadFile(file.file)),
         (file, { uploadToken }) => R.merge(file, { uploadToken }),
-        environment.uploadsShared.MAX_CONCURENT_UPLOADS
+          30000 // TODO [kmcng] should be removed because the max concurrent uploads is not handled in the infrastrcuture
       )
       // -------- SIDE EFFECT ----------
       .do(file => {
@@ -266,33 +266,34 @@ export class KmcUploadAppService {
     if (relevantFile) {
       const { entryId, uploadToken } = relevantFile;
 
-      relevantFile.removing = true;
-      relevantFile.status = 'removing';
-
-      if (entryId) {
-        removeOperations$.push(this._removeMediaEntry(relevantFile.entryId));
-      }
-
-      if (uploadToken) {
-        removeOperations$.push(
-          this._uploadManagement.cancelUpload(uploadToken)
-            .filter(status => status)
-            .switchMap(() => this._kalturaServerClient.request(new UploadTokenDeleteAction({ uploadTokenId: uploadToken })))
-        );
-      }
-
-      Observable.forkJoin(removeOperations$)
-        .subscribe(
-          () => {
-          },
-          () => {
-            relevantFile.removing = false;
-            relevantFile.uploadFailure = true;
-          },
-          () => {
-            this._removeFiles(relevantFile);
-          });
-    }
+      this._uploadManagement.cancelUpload(uploadToken);
+    //   relevantFile.removing = true;
+    //   relevantFile.status = 'removing';
+    //
+    //   if (entryId) {
+    //     removeOperations$.push(this._removeMediaEntry(relevantFile.entryId));
+    //   }
+    //
+    //   if (uploadToken) {
+    //     removeOperations$.push(
+    //       this._uploadManagement.cancelUpload(uploadToken)
+    //         .filter(status => status)
+    //         .switchMap(() => this._kalturaServerClient.request(new UploadTokenDeleteAction({ uploadTokenId: uploadToken })))
+    //     );
+    //   }
+    //
+    //   Observable.forkJoin(removeOperations$)
+    //     .subscribe(
+    //       () => {
+    //       },
+    //       () => {
+    //         relevantFile.removing = false;
+    //         relevantFile.uploadFailure = true;
+    //       },
+    //       () => {
+    //         this._removeFiles(relevantFile);
+    //       });
+     }
   }
 
   public bulkCancel(files: Array<NewUploadFile>): void {
@@ -321,13 +322,17 @@ export class KmcUploadAppService {
       file.status = 'removing';
     });
 
-    removeEntryRequest
-      .switchMap(() => removeUploadTokenRequest)
-      .switchMap(() => Observable.from(files))
-      .pluck('uploadToken')
-      .switchMap((uploadToken: string) => this._uploadManagement.cancelUpload(uploadToken))
-      .toArray()
-      .subscribe(() => this._removeFiles(files));
+    // TODO [kmcng] we should use optimistic approach. cancel the upload locally and then try
+      // to do server cleanup (and show console.warn if failed without showing anything else to the user
+      // TODO [kmcng] let's discuss about t
+
+    // removeEntryRequest
+    //   .switchMap(() => removeUploadTokenRequest)
+    //   .switchMap(() => Observable.from(files))
+    //   .pluck('uploadToken')
+    //   .switchMap((uploadToken: string) => this._uploadManagement.cancelUpload(uploadToken))
+    //   .toArray()
+    //   .subscribe(() => this._removeFiles(files));
   }
 
   public getTranscodingProfiles(): Observable<Array<KalturaConversionProfile>> {

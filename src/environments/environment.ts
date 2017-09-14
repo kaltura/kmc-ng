@@ -155,6 +155,6 @@ export const environment = {
   },
   "uploadsShared": {
     "MAX_FILE_SIZE": 2047, // Mb
-    "MAX_CONCURENT_UPLOADS": 4
+    "MAX_CONCURENT_UPLOADS": 2
   },
 };
