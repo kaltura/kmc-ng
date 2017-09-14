@@ -97,7 +97,7 @@
     <div class="kFooter">
       <button class="kButtonDefault kUploadButton"
               pButton
-              [disabled]="_files.length === 0 || _transcodingProfileLoading || _uploadInProgress"
+              [disabled]="_files.length === 0 || _transcodingProfileLoading"
               [label]="'applications.upload.uploadSettings.uploadBtn' | translate"
               (click)="_upload(_files)"></button>
     </div>

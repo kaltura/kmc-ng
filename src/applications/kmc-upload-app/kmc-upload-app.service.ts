@@ -18,7 +18,6 @@ import { KalturaConversionProfileType } from 'kaltura-typescript-client/types/Ka
 import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
 import { KalturaConversionProfileFilter } from 'kaltura-typescript-client/types/KalturaConversionProfileFilter';
 import { ConversionProfileListAction } from 'kaltura-typescript-client/types/ConversionProfileListAction';
-import { environment } from 'app-environment'
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 import { MediaDeleteAction } from 'kaltura-typescript-client/types/MediaDeleteAction';
 import { UploadTokenDeleteAction } from 'kaltura-typescript-client/types/UploadTokenDeleteAction';
@@ -60,10 +59,6 @@ export class KmcUploadAppService {
 
   public get allowedExtensions(): string {
     return this._allowedExtensions;
-  }
-
-  public get uploadInProgress(): boolean {
-    return R.any(R.propEq('uploading', true))(this._getFiles());
   }
 
   constructor(private _kalturaServerClient: KalturaClient, private _uploadManagement: UploadManagement) {
@@ -222,9 +217,8 @@ export class KmcUploadAppService {
       // -------------------------------
       .filter(file => !(<any>file).removing)
       .flatMap(
-          (file: any) => this._uploadManagement.newUpload(new KalturaUploadFile(file.file)),
-        (file, { uploadToken }) => R.merge(file, { uploadToken }),
-          30000 // TODO [kmcng] should be removed because the max concurrent uploads is not handled in the infrastrcuture
+        (file: any) => this._uploadManagement.newUpload(new KalturaUploadFile(file.file)),
+        (file, { uploadToken }) => R.merge(file, { uploadToken })
       )
       // -------- SIDE EFFECT ----------
       .do(file => {
@@ -267,33 +261,33 @@ export class KmcUploadAppService {
       const { entryId, uploadToken } = relevantFile;
 
       this._uploadManagement.cancelUpload(uploadToken);
-    //   relevantFile.removing = true;
-    //   relevantFile.status = 'removing';
-    //
-    //   if (entryId) {
-    //     removeOperations$.push(this._removeMediaEntry(relevantFile.entryId));
-    //   }
-    //
-    //   if (uploadToken) {
-    //     removeOperations$.push(
-    //       this._uploadManagement.cancelUpload(uploadToken)
-    //         .filter(status => status)
-    //         .switchMap(() => this._kalturaServerClient.request(new UploadTokenDeleteAction({ uploadTokenId: uploadToken })))
-    //     );
-    //   }
-    //
-    //   Observable.forkJoin(removeOperations$)
-    //     .subscribe(
-    //       () => {
-    //       },
-    //       () => {
-    //         relevantFile.removing = false;
-    //         relevantFile.uploadFailure = true;
-    //       },
-    //       () => {
-    //         this._removeFiles(relevantFile);
-    //       });
-     }
+      //   relevantFile.removing = true;
+      //   relevantFile.status = 'removing';
+      //
+      //   if (entryId) {
+      //     removeOperations$.push(this._removeMediaEntry(relevantFile.entryId));
+      //   }
+      //
+      //   if (uploadToken) {
+      //     removeOperations$.push(
+      //       this._uploadManagement.cancelUpload(uploadToken)
+      //         .filter(status => status)
+      //         .switchMap(() => this._kalturaServerClient.request(new UploadTokenDeleteAction({ uploadTokenId: uploadToken })))
+      //     );
+      //   }
+      //
+      //   Observable.forkJoin(removeOperations$)
+      //     .subscribe(
+      //       () => {
+      //       },
+      //       () => {
+      //         relevantFile.removing = false;
+      //         relevantFile.uploadFailure = true;
+      //       },
+      //       () => {
+      //         this._removeFiles(relevantFile);
+      //       });
+    }
   }
 
   public bulkCancel(files: Array<NewUploadFile>): void {
@@ -323,8 +317,8 @@ export class KmcUploadAppService {
     });
 
     // TODO [kmcng] we should use optimistic approach. cancel the upload locally and then try
-      // to do server cleanup (and show console.warn if failed without showing anything else to the user
-      // TODO [kmcng] let's discuss about t
+    // to do server cleanup (and show console.warn if failed without showing anything else to the user
+    // TODO [kmcng] let's discuss about t
 
     // removeEntryRequest
     //   .switchMap(() => removeUploadTokenRequest)
