@@ -9,6 +9,7 @@ import { SortDirection } from 'app-shared/content-shared/entries-store/entries-s
 import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 import { KalturaBulkUpload } from 'kaltura-typescript-client/types/KalturaBulkUpload';
+import { getBulkUploadType } from '../utils/get-bulk-upload-type';
 
 @Component({
   selector: 'kBulkLogList',
@@ -65,16 +66,55 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
         () => {
           this._blockerMessage = new AreaBlockerMessage({
             message: this._appLocalization.get('applications.content.bulkUpload.deleteLog.error'),
-            buttons: [{
-              label: this._appLocalization.get('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-                this.isBusy = false;
+            buttons: [
+              {
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => {
+                  this._blockerMessage = null;
+                  this.isBusy = false;
+                  this._deleteBulkLog(id);
+                }
+              },
+              {
+                label: this._appLocalization.get('app.common.cancel'),
+                action: () => {
+                  this._blockerMessage = null;
+                  this.isBusy = false;
+                }
               }
-            }]
+            ]
           });
         }
       );
+  }
+
+  private _deleteAction(bulkLogItem: KalturaBulkUpload): void {
+    this._browserService.confirm(
+      {
+        header: this._appLocalization.get('applications.content.bulkUpload.deleteLog.header'),
+        message: this._appLocalization.get('applications.content.bulkUpload.deleteLog.message'),
+        accept: () => {
+          this._deleteBulkLog(bulkLogItem.id);
+        }
+      }
+    );
+  }
+
+  private _downloadLogAction(bulkLogItem: KalturaBulkUpload): void {
+    const formatName = (name: string | number, type: string) => `${name}_log.${type}`;
+    this._downloadFile(bulkLogItem.logFileUrl, bulkLogItem, formatName);
+  }
+
+  private _downloadFileAction(bulkLogItem: KalturaBulkUpload): void {
+    const formatName = (name: string | number, type: string) => `${name}.${type}`;
+    this._downloadFile(bulkLogItem.bulkFileUrl, bulkLogItem, formatName);
+  }
+
+  private _downloadFile(url: string, bulkLogItem: KalturaBulkUpload, formatNameFn: (name: string | number, type: string) => string): void {
+    const type = getBulkUploadType(bulkLogItem.bulkUploadType);
+    const fileName = bulkLogItem.fileName ? formatNameFn(bulkLogItem.fileName, type) : formatNameFn(bulkLogItem.id, type);
+
+    this._browserService.download(url, fileName, type);
   }
 
   public _removeTag(tag: any) {
@@ -101,15 +141,13 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   public _onActionSelected(event: { action: string, bulkLogItem: KalturaBulkUpload }): void {
     switch (event.action) {
       case 'delete':
-        this._browserService.confirm(
-          {
-            header: this._appLocalization.get('applications.content.bulkUpload.deleteLog.header'),
-            message: this._appLocalization.get('applications.content.bulkUpload.deleteLog.message'),
-            accept: () => {
-              this._deleteBulkLog(event.bulkLogItem.id);
-            }
-          }
-        );
+        this._deleteAction(event.bulkLogItem);
+        break;
+      case 'downloadLog':
+        this._downloadLogAction(event.bulkLogItem);
+        break;
+      case 'downloadFile':
+        this._downloadFileAction(event.bulkLogItem);
         break;
       default:
         break;
