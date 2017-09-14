@@ -248,7 +248,17 @@ export class KmcUploadAppService {
         () => {
         },
         (err) => {
-          console.error(err); // TODO handle error
+          console.warn(err);
+
+          const failedFiles = this._getFiles()
+            .filter(({ status }) => status !== 'uploaded')
+            .map(file => R.merge(file, {
+              uploading: false,
+              uploadFailure: true,
+              status: 'uploadFailure'
+            }));
+
+          this._updateFiles(failedFiles);
         }
       );
   }
