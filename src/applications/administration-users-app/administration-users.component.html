@@ -20,6 +20,7 @@
             type="button"
             label="{{'applications.content.users.addUser' | translate}}"
             class="kButtonBranded kAddUserBtn"
+            [disabled]="usersTotalCount === _partnerInfo.adminLoginUsersQuota"
             (click)="addUser()"></button>
           <span class="kUserAmount" *ngIf="usersAmount">
             {{usersAmount}}
@@ -45,7 +46,7 @@
     </div>
   </div>
 
-  <kPopupWidget #editUserPopup [popupWidth]="500" [popupHeight]="585" [modal]="true">
+  <kPopupWidget #editUserPopup [popupWidth]="500" [popupHeight]="663" [modal]="true">
     <div class="kFloater kOverrideFAIcons">
       <div class="kHeader">
         <div class="kTitle">{{popupTitle}}</div>
@@ -57,19 +58,25 @@
           <div class="kRow kValign">
             <span class="kLabel">{{'applications.content.users.loginEmailAddress' | translate}}</span>
             <div class="kControl">
-              <input formControlName="email" type="text" pInputText />
+              <input #email formControlName="email" type="text" pInputText />
+              <div [ngClass]="{'hidden': !userForm.controls['email'].dirty}">
+                <div class="invalid" [ngClass]="{'hidden': email.value !== ''}">{{'applications.content.users.required' | translate}}</div>
+                <div class="invalid" [ngClass]="{'hidden': userForm.controls['email'].valid}">{{'applications.content.users.emailFormat' | translate}}</div>
+              </div>
             </div>
           </div>
           <div class="kRow kValign">
             <span class="kLabel">{{'applications.content.users.firstName' | translate}}</span>
             <div class="kControl">
-              <input formControlName="firstName" type="text" pInputText />
+              <input #firstName formControlName="firstName" type="text" pInputText />
+              <div class="invalid" [ngClass]="{'hidden': firstName.value !== '' || !userForm.controls['firstName'].dirty}">{{'applications.content.users.required' | translate}}</div>
             </div>
           </div>
           <div class="kRow kValign">
             <span class="kLabel">{{'applications.content.users.lastName' | translate}}</span>
             <div class="kControl">
-              <input formControlName="lastName" type="text" pInputText />
+              <input #lastName formControlName="lastName" type="text" pInputText />
+              <div class="invalid" [ngClass]="{'hidden': lastName.value !== '' || !userForm.controls['lastName'].dirty}">{{'applications.content.users.required' | translate}}</div>
             </div>
           </div>
           <div class="kCaption">{{'applications.content.users.accountSpecificDetails' | translate}}</div>
@@ -98,7 +105,7 @@
         <button type="button" class="kButtonBranded"
                 [disabled]="!userForm.dirty" pButton
                 label="{{'applications.content.users.save' | translate}}"
-                (click)="saveUser(userForm)"></button>
+                (click)="saveUser()"></button>
       </div>
     </div>
   </kPopupWidget>

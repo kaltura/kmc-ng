@@ -20,6 +20,9 @@ import { UserDeleteAction } from 'kaltura-typescript-client/types/UserDeleteActi
 import { Observable } from 'rxjs/Observable';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { FormGroup } from '@angular/forms';
+import {UserGetByLoginIdAction} from "kaltura-typescript-client/types/UserGetByLoginIdAction";
+import {UserGetAction} from "kaltura-typescript-client/types/UserGetAction";
+import {UserAddAction} from "kaltura-typescript-client/types/UserAddAction";
 
 export interface QueryData
 {
@@ -197,6 +200,78 @@ export class UsersStore implements OnDestroy {
       } else {
         observer.error(new Error(this._appLocalization.get('applications.content.users.cantPerform')));
       }
+    });
+  }
+
+  public isUserAlreadyExist(email: string) : Observable<void> {
+    return Observable.create(observer => {
+      this._kalturaServerClient.request(
+        new UserGetByLoginIdAction(
+          {
+            loginId: email
+          }
+        )
+      )
+        .cancelOnDestroy(this)
+        .subscribe(
+          () => {
+            observer.next();
+            observer.complete();
+          },
+          error => {
+            observer.error(error);
+          }
+        );
+    });
+  }
+
+  public isUserAssociated(email: string) : Observable<void> {
+    return Observable.create(observer => {
+      this._kalturaServerClient.request(
+        new UserGetAction(
+          {
+            userId: email
+          }
+        )
+      )
+        .cancelOnDestroy(this)
+        .subscribe(
+          () => {
+            observer.next();
+            observer.complete();
+          },
+          error => {
+            observer.error(error);
+          }
+        );
+    });
+  }
+
+  public addUser(userForm: FormGroup) : Observable<void> {
+    return Observable.create(observer => {
+      this._kalturaServerClient.request(
+        new UserAddAction(
+          {
+            user: new KalturaUser({
+              email:      userForm.controls['email'].value,
+              firstName:  userForm.controls['firstName'].value,
+              lastName:   userForm.controls['lastName'].value,
+              roleIds:    userForm.controls['roleIds'].value,
+              id:         userForm.controls['id'].value
+            })
+          }
+        )
+      )
+        .cancelOnDestroy(this)
+        .subscribe(
+          () => {
+            observer.next();
+            observer.complete();
+          },
+          error => {
+            observer.error(error);
+          }
+        );
     });
   }
 

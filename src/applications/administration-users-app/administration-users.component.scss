@@ -33,6 +33,10 @@
     width: 100px;
     height: 36px;
     border: none;
+
+    &:disabled {
+      border: 1px solid $kGrayscale4;
+    }
   }
 
   .kUsersHeader {
@@ -145,7 +149,7 @@
   .kContainer{
     flex: 0 0 auto;
     margin: 0 20px 20px;
-    min-height: 420px;
+    min-height: 500px;
 
     .kLabel{
       display: block;
@@ -231,7 +235,6 @@
 
   .invalid {
     color: $kDandger;
-    visibility: visible;
     padding-top: 5px;
   }
 
@@ -259,5 +262,5 @@
 }
 
 :host /deep/ k-area-blocker >.kAreaBlockerContainer {
-  z-index: 207;
+  z-index: 220;
 }

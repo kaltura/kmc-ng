@@ -202,7 +202,14 @@
         "cantPerform": "You don't have access to perform this action",
         "successSavingUser": "Changes will take effect immediately. \nPlease instruct the user to refresh their browser.",
         "personalDetails": "Personal Details",
-        "accountSpecificDetails": "Account Specific Details"
+        "accountSpecificDetails": "Account Specific Details",
+        "required": "This field is required",
+        "emailFormat": "This Email format is not valid",
+        "userAlreadyExist": "{{0}} is already listed in the system and is associated with another KMC account. \nDo you want to associate this user with this account as well?",
+        "alreadyExist": "User already exist",
+        "alreadyExistError": "Login e-mail {{0}} is already listed in the system as an authorized user in your account.",
+        "userAssociatedCaption": "Associated user",
+        "userAssociated": "User with Id {{0}} already exists on the account. Do you want to enable KMC access to this user?"
       },
       "filters": {
         "activeFilters": "Active Filters:",

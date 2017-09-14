@@ -27,6 +27,7 @@ export interface PartnerInfo {
 })
 export class AdministrationUsersComponent implements OnInit, OnDestroy {
   usersAmount: string;
+  usersTotalCount: number;
   usersInfo: string = '';
   isDirty: boolean = true;
   loading: boolean = false;
@@ -54,9 +55,9 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
   ) {
     // build FormControl group
     this.userForm = _formBuilder.group({
-      email     : ['', Validators.required],
-      firstName : '',
-      lastName  : '',
+      email     : ['', Validators.compose([Validators.required, Validators.email])],
+      firstName : ['', Validators.required],
+      lastName  : ['', Validators.required],
       id        : '',
       roleIds   : ''
     });
@@ -169,13 +170,95 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
       );
   }
 
-  saveUser(userForm: FormGroup): void {
-    this.loading = true;
-    this.usersStore.saveUser(userForm)
+  isUserAlreadyExist(): void {
+    let userEmail = this.userForm.controls['email'].value;
+    this.usersStore.isUserAlreadyExist(userEmail)
       .cancelOnDestroy(this)
       .subscribe(
         () => {
-          alert(this._appLocalization.get('applications.content.users.successSavingUser'));
+          this.blockerMessage = new AreaBlockerMessage({
+            message: this._appLocalization.get('applications.content.users.alreadyExistError', {0: userEmail}),
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this.blockerMessage = null;
+              }
+            }]
+          })
+        },
+        error => {
+          switch (error.code){
+            case "LOGIN_DATA_NOT_FOUND":
+              this.doSaveUser();
+              break;
+            case "USER_NOT_FOUND":
+              this._browserService.confirm(
+                {
+                  header: this._appLocalization.get('applications.content.users.alreadyExist'),
+                  message: this._appLocalization.get('applications.content.users.userAlreadyExist', {0: userEmail}),
+                  accept: () => {
+                    this.doSaveUser();
+                  }
+                }
+              );
+              break;
+            default:
+              this.blockerMessage = new AreaBlockerMessage(
+                {
+                  message: error.message,
+                  buttons: [
+                    {
+                      label: this._appLocalization.get('app.common.retry'),
+                      action: () => {
+                        this.blockerMessage = null;
+                        this.isUserAlreadyExist();
+                      }
+                    },
+                    {
+                      label: this._appLocalization.get('app.common.cancel'),
+                      action: () => {
+                        this.blockerMessage = null;
+                      }
+                    }
+                  ]
+                }
+              );
+              break;
+          }
+        }
+      );
+  }
+
+  isUserAssociated(): void {
+    let userEmail = this.userForm.controls['email'].value;
+    this.usersStore.isUserAssociated(userEmail)
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {},
+        error => {
+          if(error.code === "INVALID_USER_ID") {
+            this.addNewUser();
+          } else {
+            this._browserService.confirm(
+              {
+                header: this._appLocalization.get('applications.content.users.userAssociatedCaption'),
+                message: this._appLocalization.get('applications.content.users.userAssociated', {0: userEmail}),
+                accept: () => {
+                  // TODO [kmcng] update user permissions
+                }
+              }
+            );
+          }
+        }
+      );
+  }
+
+  addNewUser(): void {
+    this.loading = true;
+    this.usersStore.addUser(this.userForm)
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {
           this.editUserPopup.close();
           this.usersStore.reload(true);
           this.loading = false;
@@ -190,7 +273,7 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
                     this.blockerMessage = null;
-                    this.saveUser(userForm);
+                    this.addNewUser();
                   }
                 },
                 {
@@ -200,6 +283,64 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
                   }
                 }
               ]
+            }
+          )
+        }
+      );
+  }
+
+  saveUser(): void {
+    if(this.userForm.valid) {
+      if(this.isNewUser) {
+        this.isUserAlreadyExist();
+      } else {
+        this.doSaveUser();
+      }
+    }
+  }
+
+  doSaveUser(): void {
+    this.loading = true;
+    this.usersStore.saveUser(this.userForm)
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {
+          alert(this._appLocalization.get('applications.content.users.successSavingUser'));
+          this.editUserPopup.close();
+          this.usersStore.reload(true);
+          this.loading = false;
+        },
+        error => {
+          this.loading = false;
+          let buttons = [
+            {
+              label: this._appLocalization.get('app.common.retry'),
+              action: () => {
+                this.blockerMessage = null;
+                this.doSaveUser();
+              }
+            },
+            {
+              label: this._appLocalization.get('app.common.cancel'),
+              action: () => {
+                this.blockerMessage = null;
+              }
+            }
+          ];
+          if(error.message === 'Invalid user id') {
+            buttons = [
+              {
+                label: this._appLocalization.get('app.common.ok'),
+                action: () => {
+                  this.blockerMessage = null;
+                }
+              }
+            ]
+          }
+          this.blockerMessage = new AreaBlockerMessage(
+            {
+              message: error.message,
+              buttons: buttons
             }
           )
         }
@@ -262,6 +403,7 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
             }
           );
           this.usersAmount = `${response.users.totalCount} ${response.users.totalCount > 1 ? this._appLocalization.get('applications.content.users.users') : this._appLocalization.get('applications.content.users.user')}`;
+          this.usersTotalCount = response.users.totalCount;
           this._roles = response.roles.items;
           this._partnerInfo = {
             adminLoginUsersQuota: response.partnerInfo.adminLoginUsersQuota,
