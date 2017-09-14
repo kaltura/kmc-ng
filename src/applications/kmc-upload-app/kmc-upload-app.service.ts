@@ -216,10 +216,10 @@ export class KmcUploadAppService {
       })
       // -------------------------------
       .filter(file => !(<any>file).removing)
-      .flatMap(
-        (file: any) => this._uploadManagement.newUpload(new KalturaUploadFile(file.file)),
-        (file, { uploadToken }) => R.merge(file, { uploadToken })
-      )
+      .map(file => {
+        const uploadToken = this._uploadManagement.newUpload(new KalturaUploadFile(file.file));
+        return R.merge(file, uploadToken)
+      })
       // -------- SIDE EFFECT ----------
       .do(file => {
         this._updateUploadFile(file);
