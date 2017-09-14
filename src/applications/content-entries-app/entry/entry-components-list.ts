@@ -22,6 +22,7 @@ import { LinkedEntries } from './entry-metadata/entry-selector/linked-entries.co
 import { LinkedEntriesPopup } from './entry-metadata/entry-selector/linked-entries-popup.component';
 import { CategoriesSelector } from './entry-metadata/category-selector/categories-selector.component';
 import { CategoryTooltip } from './entry-metadata/category-selector/category-tooltip.pipe';
+import { TagsPipe } from './entry-flavours/tags.pipe';
 
 
 export const EntryComponentsList = [
@@ -48,5 +49,6 @@ export const EntryComponentsList = [
     JumpToSection,
     LinkedEntries,
     LinkedEntriesPopup,
-    ModerationPipe
+    ModerationPipe,
+    TagsPipe
 ];

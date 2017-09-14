@@ -68,6 +68,10 @@ export class UploadSettingsComponent implements OnInit {
       this._files = items;
     });
 
+    this._loadTranscodingProfiles();
+  }
+
+  private _loadTranscodingProfiles() {
     this._transcodingProfileLoading = true;
     this._uploadService.getTranscodingProfiles()
       .subscribe(
@@ -82,7 +86,27 @@ export class UploadSettingsComponent implements OnInit {
           }
         },
         (error) => {
-          this._transcodingProfileError = new AreaBlockerMessage({ message: error.message, buttons: [] });
+          this._transcodingProfileError = new AreaBlockerMessage({
+            message: error.message,
+            buttons: [
+              {
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => {
+                  this._transcodingProfileError = null;
+                  this._transcodingProfileLoading = false;
+                  this._loadTranscodingProfiles();
+                }
+              },
+              {
+                label: this._appLocalization.get('app.common.cancel'),
+                action: () => {
+                  this._transcodingProfileError = null;
+                  this._transcodingProfileLoading = false;
+                  this.onUploadStarted.emit();
+                }
+              }
+            ]
+          });
           this._uploadService.resetTranscodingProfiles();
         });
   }
