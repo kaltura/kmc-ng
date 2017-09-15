@@ -13,6 +13,7 @@ import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaBulkUpload } from 'kaltura-typescript-client/types/KalturaBulkUpload';
+import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 
 @Component({
   selector: 'kBulkLogTable',
@@ -32,9 +33,9 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
       // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
       // (ie when returning from bulk log page) - we should force detect changes on an empty list
       this._bulkLog = [];
-      this.cdRef.detectChanges();
+      this._cdRef.detectChanges();
       this._bulkLog = data;
-      this.cdRef.detectChanges();
+      this._cdRef.detectChanges();
     } else {
       this._deferredEntries = data
     }
@@ -63,7 +64,9 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
     return item.id
   };
 
-  constructor(private appLocalization: AppLocalization, private cdRef: ChangeDetectorRef) {
+  constructor(private _appLocalization: AppLocalization,
+              private _cdRef: ChangeDetectorRef,
+              public _store: BulkLogStoreService) {
   }
 
   _convertSortValue(value: boolean): number {
@@ -82,15 +85,15 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   buildMenu(): void {
     this._items = [
       {
-        label: this.appLocalization.get('applications.content.bulkUpload.table.actions.delete'),
+        label: this._appLocalization.get('applications.content.bulkUpload.table.actions.delete'),
         command: (event) => this.onActionSelected('delete', this.bulkLogItem)
       },
       {
-        label: this.appLocalization.get('applications.content.bulkUpload.table.actions.downloadLog'),
+        label: this._appLocalization.get('applications.content.bulkUpload.table.actions.downloadLog'),
         command: (event) => this.onActionSelected('downloadLog', this.bulkLogItem)
       },
       {
-        label: this.appLocalization.get('applications.content.bulkUpload.table.actions.downloadFile'),
+        label: this._appLocalization.get('applications.content.bulkUpload.table.actions.downloadFile'),
         command: (event) => this.onActionSelected('downloadFile', this.bulkLogItem)
       }
     ];

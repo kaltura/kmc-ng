@@ -25,7 +25,7 @@
                 (click)="_reload()"></button>
       </div>
       <kTags [title]="'applications.content.filters.activeFilters' | translate"
-             [data]="[]"
+             [data]="(_store.activeFilters$ | async)?.filters"
              [labelField]="'label'"
              [tooltipField]="'tooltip'"
              (onTagRemove)="_removeTag($event)"

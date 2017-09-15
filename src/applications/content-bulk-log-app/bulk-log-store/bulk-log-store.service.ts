@@ -204,10 +204,15 @@ export class BulkLogStoreService implements OnDestroy {
     removedFilters: []
   }): void {
     // cancel previous requests
-    if (this._requestSubscription) {
-      this._requestSubscription.unsubscribe();
-      this._requestSubscription = null;
+    if (this._executeQueryState.subscription) {
+      this._executeQueryState.subscription.unsubscribe();
+      this._executeQueryState.subscription = null;
     }
+
+    this._executeQueryState.deferredAddedFilters.push(...addedFilters);
+    this._executeQueryState.deferredRemovedFilters.push(...removedFilters);
+
+    this.browserService.setInLocalStorage('bulkupload.list.pageSize', this._queryData.pageSize);
 
     const queryArgs: QueryRequestArgs = Object.assign({},
       {

@@ -1,5 +1,5 @@
 <k-area-blocker kFillHeight
-                [showLoader]="this._deferredLoading"
+                [showLoader]="(_store.state$ | async)?.loading || this._deferredLoading"
                 [message]="_blockerMessage">
   <div class="kBulkLogTable" [class.noResults]="!_bulkLog.length">
     <p-dataTable #dataTable
@@ -29,48 +29,42 @@
       </p-column>
 
       <p-column field="bulkUploadObjectType"
-                [header]="'applications.content.bulkUpload.table.uploadedItem' | translate"
-                [style]="{'width':'110px'}">
+                [header]="'applications.content.bulkUpload.table.uploadedItem' | translate">
         <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
           <span>{{ bulkLogItem[col.field] | kBulkLogTableObjectType }}</span>
         </ng-template>
       </p-column>
 
       <p-column field="uploadedBy"
-                [header]="'applications.content.bulkUpload.table.uploadedBy' | translate"
-                [style]="{'width':'180px'}">
+                [header]="'applications.content.bulkUpload.table.uploadedBy' | translate">
         <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
           <span>{{ bulkLogItem['uploadedBy'] || bulkLogItem['uploadedByUserId'] }}</span>
         </ng-template>
       </p-column>
 
       <p-column field="uploadedOn"
-                [header]="'applications.content.bulkUpload.table.uploadedOn' | translate"
-                [style]="{'width':'110px'}">
+                [header]="'applications.content.bulkUpload.table.uploadedOn' | translate">
         <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
           <span>{{ bulkLogItem[col.field] | kDate }}</span>
         </ng-template>
       </p-column>
 
       <p-column field="numOfObjects"
-                [header]="'applications.content.bulkUpload.table.numOfObjects' | translate"
-                [style]="{'width':'110px', 'text-align': 'center'}">
+                [header]="'applications.content.bulkUpload.table.numOfObjects' | translate">
         <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
           <span>{{ !bulkLogItem[col.field] || bulkLogItem[col.field] < 0 ? 0 : bulkLogItem[col.field] }}</span>
         </ng-template>
       </p-column>
 
       <p-column field="status"
-                [header]="'applications.content.bulkUpload.table.status' | translate"
-                [style]="{'width':'200px'}">
+                [header]="'applications.content.bulkUpload.table.status' | translate">
         <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
           <span>{{ bulkLogItem[col.field] | kBulkLogTableStatus }}</span>
         </ng-template>
       </p-column>
 
       <p-column field="error"
-                [header]="'applications.content.bulkUpload.table.notification' | translate"
-                [style]="{'width':'110px'}">
+                [header]="'applications.content.bulkUpload.table.notification' | translate">
         <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
           <span>{{ bulkLogItem[col.field] | kBulkLogTableNotification }}</span>
         </ng-template>

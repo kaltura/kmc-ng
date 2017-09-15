@@ -137,6 +137,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
 
   public _reload() {
     this._clearSelection();
+    this._store.reload(true);
   }
 
   public _onActionSelected(event: { action: string, bulkLogItem: KalturaBulkUpload }): void {
