@@ -216,7 +216,8 @@ export class EntryCaptionsHandler extends EntryFormWidget
 
 	public upload(captionFile: File):void{
 		this.currentCaption.uploading = true;
-		this._uploadManagement.newUpload(new KalturaUploadFile(captionFile))
+		// FIXME wait till discussion
+		Observable.of(this._uploadManagement.newUpload(new KalturaUploadFile(captionFile)))
 			.subscribe((response) => {
 					// update file with actual upload token
 					this.currentCaption.uploadToken = response.uploadToken;

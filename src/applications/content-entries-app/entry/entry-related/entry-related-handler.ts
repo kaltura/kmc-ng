@@ -274,7 +274,8 @@ export class EntryRelatedHandler extends EntryFormWidget
 			(<any>newFile).size = fileData.size; // we set type explicitly since size is readonly because it readonly
 
 
-			this._uploadManagement.newUpload(new KalturaUploadFile(fileData))
+      // FIXME wait till discussion
+			Observable.of(this._uploadManagement.newUpload(new KalturaUploadFile(fileData)))
                 .subscribe((response) => {
 						// update file with actual upload token
 						this._updateFileUploadToken(newFile,response.uploadToken);

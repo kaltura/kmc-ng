@@ -305,7 +305,8 @@ export class EntryFlavoursHandler extends EntryFormWidget
 	public uploadFlavor(flavor: Flavor, fileData: File): void{
 		flavor.status = KalturaFlavorAssetStatus.importing.toString();
 		flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.uploading');
-		this._uploadManagement.newUpload(new KalturaUploadFile(fileData))
+    // FIXME wait till discussion
+		Observable.of(this._uploadManagement.newUpload(new KalturaUploadFile(fileData)))
 			.subscribe((response) => {
 				let resource = new KalturaUploadedFileTokenResource();
 				resource.token = response.uploadToken;
