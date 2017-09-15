@@ -7,8 +7,6 @@
                  scrollable="true"
                  scrollHeight="100%"
                  [value]="_bulkLog"
-                 [sortField]="filter.sortBy"
-                 [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
                  [emptyMessage]="_emptyMessage"
                  [rowTrackBy]="rowTrackBy"
                  (selectionChange)="onSelectionChange($event)"

@@ -45,8 +45,6 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() selectedBulkLogItems: any[] = [];
 
   @Output()
-  sortChanged = new EventEmitter<any>();
-  @Output()
   actionSelected = new EventEmitter<{ action: string, bulkLogItem: KalturaBulkUpload }>();
   @Output()
   selectedBulkLogChange = new EventEmitter<any>();
@@ -67,10 +65,6 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
               public _store: BulkLogStoreService) {
-  }
-
-  _convertSortValue(value: boolean): number {
-    return value ? 1 : -1;
   }
 
   ngOnInit() {
