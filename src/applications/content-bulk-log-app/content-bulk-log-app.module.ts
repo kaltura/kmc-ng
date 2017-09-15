@@ -15,10 +15,11 @@ import {
   MenuModule,
   PaginatorModule,
   SharedModule,
-  TieredMenuModule
+  TieredMenuModule,
+  TreeModule
 } from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
-import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { KalturaPrimeNgUIModule, PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
@@ -31,6 +32,8 @@ import { BulkLogObjectTypePipe } from './pipes/bulk-log-object-type.pipe';
 import { BulkLogStatusPipe } from './pipes/bulk-log-status.pipe';
 import { BulkLogTypeIconPipe } from './pipes/bulk-log-type-icon.pipe';
 import { BulkLogNotificationPipe } from './pipes/bulk-log-notification.pipe';
+import { BulkLogRefineFiltersComponent } from './bulk-log-refine-filters/bulk-log-refine-filters.component';
+import { BulkLogRefineFiltersProviderService } from './bulk-log-refine-filters/bulk-log-refine-filters-provider.service';
 
 @NgModule({
   imports: [
@@ -55,7 +58,9 @@ import { BulkLogNotificationPipe } from './pipes/bulk-log-notification.pipe';
     AutoCompleteModule,
     SharedModule,
     RouterModule.forChild(routing),
-    ContentSharedModule
+    ContentSharedModule,
+    TreeModule,
+    PrimeTreeModule
   ],
   declarations: [
     ContentBulkLogAppComponent,
@@ -64,10 +69,11 @@ import { BulkLogNotificationPipe } from './pipes/bulk-log-notification.pipe';
     BulkLogObjectTypePipe,
     BulkLogStatusPipe,
     BulkLogTypeIconPipe,
-    BulkLogNotificationPipe
+    BulkLogNotificationPipe,
+    BulkLogRefineFiltersComponent
   ],
   exports: [],
-  providers: [BulkLogStoreService]
+  providers: [BulkLogStoreService, BulkLogRefineFiltersProviderService]
 })
 export class ContentBulkLogAppModule {
 }

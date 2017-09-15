@@ -34,7 +34,6 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   };
 
   constructor(private _appLocalization: AppLocalization,
-              private _router: Router,
               private _browserService: BrowserService,
               public _store: BulkLogStoreService) {
   }
@@ -119,10 +118,12 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
 
   public _removeTag(tag: any) {
     this._clearSelection();
+    this._store.removeFilters(tag);
   }
 
   public _removeAllTags() {
     this._clearSelection();
+    this._store.clearAllFilters();
   }
 
   public _onPaginationChanged(state: any): void {

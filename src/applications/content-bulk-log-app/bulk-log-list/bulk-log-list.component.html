@@ -2,7 +2,7 @@
   <div class="kBulkLog kOverrideFAIcons">
     <div #entriesTableHolder class="kBulkLogHolder kContent">
       <div class="kBulkLogTableFilters">
-        <span class="kSelectedEntriesNum" *ngIf="false">{{0}} {{'applications.content.entries.entries' | translate}}</span>
+        <span class="kSelectedEntriesNum" *ngIf="(_store.bulkLog$ | async)?.totalCount">{{(_store.bulkLog$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
 
         <div [class.kHidden]="!selectedBulkLogItems.length" class="kBulkOperations">
           <span class="kSelectedEntriesLabel">• {{selectedBulkLogItems.length}} {{'applications.content.entries.selected' | translate}}</span>
@@ -48,7 +48,7 @@
         <p-paginator
           [rows]="_filter.pageSize"
           [first]="_filter.pageIndex * _filter.pageSize"
-          [totalRecords]="0 | kMaxEntries"
+          [totalRecords]="(_store.bulkLog$ | async)?.totalCount | kMaxEntries"
           [rowsPerPageOptions]="[25,50,75,100]"
           (onPageChange)="_onPaginationChanged($event)"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
@@ -65,6 +65,6 @@
               [targetRef]="refineBtn"
               [targetOffset]="{'x':-200, 'y': -20}">
   <ng-template>
-    <!--<k-entries-refine-filters [parentPopupWidget]="refinePopup"></k-entries-refine-filters>-->
+    <k-bulk-log-refine-filters [parentPopupWidget]="refinePopup"></k-bulk-log-refine-filters>
   </ng-template>
 </kPopupWidget>

@@ -13,11 +13,11 @@ import * as R from 'ramda';
 
 import { BulkLogRefineFiltersProviderService, RefineFilter } from './bulk-log-refine-filters-provider.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { ValueFilter } from 'app-shared/content-shared/entries-store/value-filter';
 import { TimeSchedulingFilter } from 'app-shared/content-shared/entries-store/filters/time-scheduling-filter';
-import { CreatedAtFilter } from 'app-shared/content-shared/entries-store/filters/created-at-filter';
 import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item';
+import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
+import { CreatedAtFilter } from '../bulk-log-store/filters/created-at-filter';
 
 export interface TreeFilterData {
   items: PrimeTreeNode[];
@@ -60,7 +60,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
   constructor(public additionalFiltersStore: BulkLogRefineFiltersProviderService,
               private primeTreeDataProvider: PrimeTreeDataProvider,
-              private entriesStore: EntriesStore,
+              private _bulkLogStore: BulkLogStoreService,
               private elementRef: ElementRef,
               private appLocalization: AppLocalization) {
   }
@@ -94,7 +94,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    **/
   private _registerToFilterUpdates(): void {
 
-    this.entriesStore.activeFilters$
+    this._bulkLogStore.activeFilters$
       .cancelOnDestroy(this)
       .first()
       .subscribe(result => {
@@ -113,7 +113,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
 
     // update content components when the filter list is being updated.
-    this._filterUpdateSubscription = this.entriesStore.query$.subscribe(
+    this._filterUpdateSubscription = this._bulkLogStore.query$.subscribe(
       filter => {
 
         // sync components
@@ -230,7 +230,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    */
   private syncCreatedComponents(): void {
 
-    const createdAtFilter = this.entriesStore.getFirstFilterByType(CreatedAtFilter);
+    const createdAtFilter = this._bulkLogStore.getFirstFilterByType(CreatedAtFilter);
 
     if (createdAtFilter instanceof CreatedAtFilter) {
       this._createdAfter = createdAtFilter.createdAfter;
@@ -277,13 +277,13 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
       }
     }
 
-    const previousFilter = <TimeSchedulingFilter>this.entriesStore.getFiltersByType(TimeSchedulingFilter)
+    const previousFilter = <TimeSchedulingFilter>this._bulkLogStore.getFiltersByType(TimeSchedulingFilter)
       .find(filter => filter.value === 'scheduled');
 
     if (previousFilter) {
       // make sure the filter is already set for 'schedule', otherwise ignore update
-      this.entriesStore.removeFilters(previousFilter);
-      this.entriesStore.addFilters(
+      this._bulkLogStore.removeFilters(previousFilter);
+      this._bulkLogStore.addFilters(
         new TimeSchedulingFilter(
           previousFilter.value,
           previousFilter.label,
@@ -313,10 +313,10 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
       }
     }
 
-    this.entriesStore.removeFiltersByType(CreatedAtFilter);
+    this._bulkLogStore.removeFiltersByType(CreatedAtFilter);
 
     if (this._createdAfter || this._createdBefore) {
-      this.entriesStore.addFilters(
+      this._bulkLogStore.addFilters(
         new CreatedAtFilter(
           KalturaUtils.getStartDateValue(this._createdAfter),
           KalturaUtils.getEndDateValue(this._createdBefore)
@@ -350,9 +350,9 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
     Object.keys(this._filterNameToTreeData).forEach(filterName => {
       const treeData = this._filterNameToTreeData[filterName];
 
-      if (handledFilterTypeList.indexOf(treeData.refineFilter.entriesFilterType) === -1) {
-        handledFilterTypeList.push(treeData.refineFilter.entriesFilterType);
-        this.entriesStore.removeFiltersByType(treeData.refineFilter.entriesFilterType);
+      if (handledFilterTypeList.indexOf(treeData.refineFilter.bulkUploadFilterType) === -1) {
+        handledFilterTypeList.push(treeData.refineFilter.bulkUploadFilterType);
+        this._bulkLogStore.removeFiltersByType(treeData.refineFilter.bulkUploadFilterType);
       }
     });
 
@@ -364,7 +364,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    */
   private _getScheduledFilter(): TimeSchedulingFilter {
     let result: TimeSchedulingFilter = null;
-    const timeFilters = this.entriesStore.getFiltersByType(TimeSchedulingFilter);
+    const timeFilters = this._bulkLogStore.getFiltersByType(TimeSchedulingFilter);
 
     if (timeFilters && timeFilters.length > 0) {
       result = R.find(R.propEq('value', 'scheduled'), timeFilters);
@@ -406,7 +406,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
     for (let i = 0, length = listOfFilterNames.length; i < length && !treeData; i++) {
       const treeDataOfFilterName = this._filterNameToTreeData[listOfFilterNames[i]];
 
-      if (treeDataOfFilterName && treeDataOfFilterName.refineFilter.isEntryFilterOfRefineFilter(filterItem)) {
+      if (treeDataOfFilterName && treeDataOfFilterName.refineFilter.isBulkUploadOfRefineFilter(filterItem)) {
         treeData = treeDataOfFilterName;
       }
     }
@@ -469,7 +469,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
         const isDataNode = typeof node.data !== 'undefined' && node.data !== null;
 
         if (isDataNode) {
-          const filter = treeData.refineFilter.entriesFilterResolver(node);
+          const filter = treeData.refineFilter.bulkUploadFilterResolver(node);
 
           if (filter) {
             result.push(filter);
@@ -502,7 +502,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
       const treeData = this._filterNameToTreeData[node.payload.filterName];
 
       if (treeData) {
-        const existingFilters = this.entriesStore.getFiltersByType(treeData.refineFilter.entriesFilterType);
+        const existingFilters = this._bulkLogStore.getFiltersByType(treeData.refineFilter.bulkUploadFilterType);
         // ignore undefined/null filters data (the virtual roots has undefined/null data)
         const isDataNode = typeof node.data !== 'undefined' && node.data !== null;
 
@@ -537,7 +537,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
       if (treeData) {
         const newFilters = this._createFiltersByNode(node);
-        const existingFilters = this.entriesStore.getFiltersByType(treeData.refineFilter.entriesFilterType);
+        const existingFilters = this._bulkLogStore.getFiltersByType(treeData.refineFilter.bulkUploadFilterType);
 
         existingFilters.forEach(existingFilter => {
           const duplicatedFilterIndex = newFilters.findIndex(newFilter => newFilter.isEqual(existingFilter));
@@ -547,7 +547,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
         });
 
         if (newFilters && newFilters.length) {
-          this.entriesStore.addFilters(...newFilters);
+          this._bulkLogStore.addFilters(...newFilters);
         }
       }
     }
@@ -557,7 +557,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
     if (node instanceof PrimeTreeNode) {
       const filters = this._getFiltersByNode(node);
       if (filters && filters.length) {
-        this.entriesStore.removeFilters(...filters);
+        this._bulkLogStore.removeFilters(...filters);
       }
 
       if (node.data === 'scheduled') {
