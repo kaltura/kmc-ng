@@ -178,6 +178,11 @@
         "addEntry": "Add Entry",
         "refresh": "Refresh"
       },
+      "moderation": {
+        "entryReports": "Entry Reports",
+        "approveEntry": "Approve Entry",
+        "rejectEntry": "Reject Entry"
+      },
       "filters": {
         "activeFilters": "Active Filters:",
         "clearAll": "Clear All",

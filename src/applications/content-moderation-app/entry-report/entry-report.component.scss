@@ -1,0 +1,51 @@
+@import 'app-theme/_variables.scss';
+
+.kEntryReport {
+  .kHeader {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    height: 78px;
+    width: 100%;
+    padding: 24px 28px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+
+    .kTitle {
+      color: #333333;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .kButtons {
+      display: flex;
+      margin-left: auto;
+      align-items: center;
+
+      .cancelLink {
+        color: #333333;
+        font-size: 15px;
+        margin-right: 28px;
+      }
+
+      .kApproveEntryBtn,
+      .kRejectEntryBtn {
+        width: 140px;
+        height: 34px;
+        font-size: 14px;
+      }
+
+      .kApproveEntryBtn {
+        margin-right: 24px;
+        border: none;
+      }
+
+      .kRejectEntryBtn {}
+    }
+  }
+
+  .kContainer {
+    padding: 24px 28px;
+    text-align: center;
+  }
+}

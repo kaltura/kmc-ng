@@ -31,7 +31,7 @@ export const environment = {
                     {
                         "routePath": "content/moderation",
                         "titleToken": "Moderation",
-                        "enabled": false
+                        "enabled": true
                     },
                     {
                         "routePath": "content/playlists",

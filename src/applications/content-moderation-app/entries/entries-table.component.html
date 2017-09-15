@@ -1,0 +1,21 @@
+<k-area-blocker kFillHeight>
+  <div #entriesTableHolder>
+    <h1>...Entries table...</h1>
+    <!--<p-dataTable
+			#dataTable
+			[value]="_entries"
+			scrollable="true"
+			scrollHeight="100%"
+			dataKey="id"
+			[rowTrackBy]="rowTrackBy">
+			<p-column selectionMode="multiple"></p-column>
+    </p-dataTable>-->
+  </div>
+</k-area-blocker>
+
+<kPopupWidget #moderationDetails [popupWidth]="792" [popupHeight]="700" [modal]="true" [closeBtn]="false">
+  <ng-template>
+    <kEntryReport
+      [parentPopupWidget]="moderationDetails"></kEntryReport>
+  </ng-template>
+</kPopupWidget>

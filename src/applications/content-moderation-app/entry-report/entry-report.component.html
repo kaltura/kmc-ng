@@ -1,0 +1,24 @@
+<div class="kEntryReport">
+  <div class="kHeader">
+    <span class="kTitle">{{('applications.content.moderation.entryReports') | translate}}</span>
+
+    <div class="kButtons">
+      <a class="cancelLink" (click)="closePopup()">Cancel</a>
+      <button
+        pButton
+        type="button"
+        label="{{'applications.content.moderation.approveEntry' | translate}}"
+        class="kButtonBranded kApproveEntryBtn"></button>
+
+      <button
+        pButton
+        type="button"
+        label="{{'applications.content.moderation.rejectEntry' | translate}}"
+        class="kButtonDefault kRejectEntryBtn"></button>
+    </div>
+  </div>
+
+  <div class="kContainer">
+    <iframe *ngIf="iframeSrc" [src]="iframeSrc | safe" width="339" height="191" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
+  </div>
+</div>
