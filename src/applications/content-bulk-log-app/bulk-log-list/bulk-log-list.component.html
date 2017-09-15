@@ -44,7 +44,7 @@
                      [(selectedBulkLogItems)]="selectedBulkLogItems"
       ></kBulkLogTable>
 
-      <div class="kBulkLogTableFooter" #footer *ngIf="0">
+      <div class="kBulkLogTableFooter" #footer *ngIf="(_store.bulkLog$ | async)?.totalCount">
         <p-paginator
           [rows]="_filter.pageSize"
           [first]="_filter.pageIndex * _filter.pageSize"

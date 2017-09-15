@@ -57,9 +57,9 @@ export class BulkLogStoreService implements OnDestroy {
     sortBy: 'createdAt',
     sortDirection: SortDirection.Desc,
     fields: `
-      id,name,thumbnailUrl,mediaType,plays,createdAt,
-      duration,status,startDate,endDate,moderationStatus,
-      tags,categoriesIds,downloadUrl
+      id,fileName,bulkUploadType,bulkUploadObjectType,
+      uploadedBy,uploadedByUserId,
+      uploadedOn,numOfObjects,status,error
     `
   };
   private _executeQueryState: { subscription: ISubscription, deferredRemovedFilters: Array<any>, deferredAddedFilters: Array<any> } = {
@@ -97,8 +97,8 @@ export class BulkLogStoreService implements OnDestroy {
     }
   }
 
-  public get bulkLog(): Array<KalturaBulkUpload> {
-    return this._bulkLogSource.getValue().items;
+  public get queryData(): QueryData {
+    return Object.assign({}, this._queryData);
   }
 
   ngOnDestroy() {
@@ -141,13 +141,12 @@ export class BulkLogStoreService implements OnDestroy {
     }
   }
 
-  public clearAllFilters() {
+  public clearAllFilters(): void {
     const previousFilters = this._activeFilters.getValue().filters;
     this._activeFilters.next({ filters: [] });
     this._activeFiltersMap = {};
     this._executeQuery({ removedFilters: previousFilters, addedFilters: [] });
   }
-
 
   public addFilters(...filters: Array<FilterItem>): void {
     if (filters) {

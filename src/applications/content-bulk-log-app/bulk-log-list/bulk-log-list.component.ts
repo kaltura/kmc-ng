@@ -1,12 +1,11 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 import { SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
-import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
+import { BulkLogTableComponent } from '../bulk-log-table/bulk-log-table.component';
 import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 import { KalturaBulkUpload } from 'kaltura-typescript-client/types/KalturaBulkUpload';
 import { getBulkUploadType } from '../utils/get-bulk-upload-type';
@@ -18,7 +17,7 @@ import { getBulkUploadType } from '../utils/get-bulk-upload-type';
 })
 export class BulkLogListComponent implements OnInit, OnDestroy {
   @Input() selectedBulkLogItems: Array<any> = [];
-  @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
+  @ViewChild(BulkLogTableComponent) private dataTable: BulkLogTableComponent;
 
   public isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -39,10 +38,25 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._store.reload(true);
-    this._store.bulkLog$.subscribe(res => {
-      console.log(res);
-    })
+    const queryData = this._store.queryData;
+
+    if (queryData) {
+      this._filter.pageSize = queryData.pageSize;
+      this._filter.pageIndex = queryData.pageIndex - 1;
+      this._filter.sortBy = queryData.sortBy;
+      this._filter.sortDirection = queryData.sortDirection;
+    }
+
+
+    this.querySubscription = this._store.query$.subscribe(
+      query => {
+        this._filter.pageSize = query.data.pageSize;
+        this._filter.pageIndex = query.data.pageIndex - 1;
+        this.dataTable.scrollToTop();
+      }
+    );
+
+    this._store.reload(false);
   }
 
   ngOnDestroy() {
@@ -132,6 +146,10 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
       this._filter.pageSize = state.rows;
 
       this._clearSelection();
+      this._store.reload({
+        pageIndex: this._filter.pageIndex + 1,
+        pageSize: this._filter.pageSize
+      });
     }
   }
 
