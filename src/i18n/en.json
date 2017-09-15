@@ -203,6 +203,7 @@
         "distribution": "Distribution: {{0}}",
         "freeText": "Free text search",
         "metaData": "{{0}}: {{1}}",
+        "uploadedItem": "Uploaded item: {{0}}",
         "preferences": {
           "preferences": "Preferences",
           "filterPreferences": "Filter Preferences",

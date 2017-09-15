@@ -10,12 +10,13 @@ import { KalturaPlaylistListResponse } from 'kaltura-typescript-client/types/Kal
 import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
 import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
-import { PlaylistDeleteAction } from 'kaltura-typescript-client/types/PlaylistDeleteAction';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaBulkUploadFilter } from 'kaltura-typescript-client/types/KalturaBulkUploadFilter';
 import { BulkUploadListAction } from 'kaltura-typescript-client/types/BulkUploadListAction';
 import { KalturaBulkUpload } from 'kaltura-typescript-client/types/KalturaBulkUpload';
 import { BulkUploadAbortAction } from 'kaltura-typescript-client/types/BulkUploadAbortAction';
+import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item';
+import { KalturaSearchOperator } from 'kaltura-typescript-client/types/KalturaSearchOperator';
 
 export enum SortDirection {
   Desc,
@@ -32,8 +33,17 @@ export interface QueryData {
   uploadedAfter: Date
 }
 
+export interface FilterArgs {
+  filter: KalturaBulkUploadFilter,
+  advancedSearch: KalturaSearchOperator
+}
+
+export type FilterTypeConstructor<T extends FilterItem> = { new(...args: any[]): T; };
+
 @Injectable()
 export class BulkLogStoreService implements OnDestroy {
+  private static filterTypeMapping = {};
+
   private _bulkLogSource = new BehaviorSubject<{ items: Array<KalturaBulkUpload>, totalCount: number }>({
     items: [],
     totalCount: 0
@@ -57,10 +67,25 @@ export class BulkLogStoreService implements OnDestroy {
   public state$ = this._stateSource.asObservable();
   public query$ = this._querySource.monitor('queryData update');
 
+  public static getFilterType(filter: any): string {
+    const result = filter['filterType'] || filter.constructor['filterType'];
+
+    if (!result) {
+      throw new Error('Failed to extract filter type value (do you have a static property named filterType?)');
+    }
+
+    return result;
+  }
+
+  public static registerFilterType<T extends FilterItem>(filterType: FilterTypeConstructor<T>,
+                                                         handler: (items: T[], request: FilterArgs) => void): void {
+    BulkLogStoreService.filterTypeMapping[this.getFilterType(filterType)] = handler;
+  }
+
   constructor(private kalturaServerClient: KalturaClient,
               private browserService: BrowserService,
               public _kalturaServerClient: KalturaClient) {
-    const defaultPageSize = this.browserService.getFromLocalStorage('playlists.list.pageSize');
+    const defaultPageSize = this.browserService.getFromLocalStorage('bulkupload.list.pageSize');
     if (defaultPageSize !== null) {
       this._updateQueryData({
         pageSize: defaultPageSize
@@ -73,7 +98,7 @@ export class BulkLogStoreService implements OnDestroy {
     this._querySource.next(newQueryData);
 
     if (partialData.pageSize) {
-      this.browserService.setInLocalStorage('playlists.list.pageSize', partialData.pageSize);
+      this.browserService.setInLocalStorage('bulkupload.list.pageSize', partialData.pageSize);
     }
   }
 
@@ -102,7 +127,7 @@ export class BulkLogStoreService implements OnDestroy {
 
     // execute the request
     this.requestSubscription = this._buildQueryRequest(this._querySource.getValue())
-      // using async scheduler go allow calling this function multiple times in the same event loop cycle before invoking the logic.
+    // using async scheduler go allow calling this function multiple times in the same event loop cycle before invoking the logic.
       .subscribeOn(Scheduler.async)
       .monitor('bulkLog store: get bulkLog()')
       .subscribe(
@@ -168,7 +193,7 @@ export class BulkLogStoreService implements OnDestroy {
     }
   }
 
-  public deleteBulkLog(id: number): Observable<KalturaBulkUpload>  {
+  public deleteBulkLog(id: number): Observable<KalturaBulkUpload> {
     return this._kalturaServerClient.request(new BulkUploadAbortAction({ id }));
   }
 
