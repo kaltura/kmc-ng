@@ -1,0 +1,43 @@
+<div [formGroup]="form" >
+    <k-area-blocker [showLoader]="_showLoader" [message]="_blockerMessage">
+
+    <!-- Entries table -->
+    <div class="kMultiple" *ngIf="_isReady">
+        <div class="kRow kTableHeader">
+            <div *ngIf="_selectedEntries?.length">
+                <span>{{_selectedEntries.length}} {{'applications.content.entryDetails.metadata.selected' | translate}}</span>
+                <button pButton icon="kIcontrash" (click)="deleteSelections()" class="kButtonDanger kBulkDeleteBtn"></button>
+                <button pButton icon="kIcondropdown_arrow_bottom" (click)="moveDownSelections()" class="kButtonDefault"></button>
+                <button pButton icon="kIcondropdown_arrow_top" (click)="moveUpSelections()" class="kButtonDefault"></button>
+                <a class="kDelete" (click)="_selectedEntries=[]">{{'applications.content.entryDetails.metadata.clear' | translate}}</a>
+            </div>
+            <!--<button *ngIf="!_selectedEntries?.length" pButton class="kButtonDefault" (click)="_addEntry()" label="{{'applications.content.entryDetails.metadata.addEntry' | translate}}"></button>-->
+        </div>
+        <div>
+            <p-dataTable [value]="_entries" [(selection)]="_selectedEntries">
+                <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
+                <p-column field="thumbnailUrl" header="{{'applications.content.entryDetails.metadata.thumbnail' | translate}}">
+                    <ng-template let-col let-entry="rowData" pTemplate="body">
+                        <div class="kThumbnailHolder"><span class="kHelper"></span><img [src]="entry[col.field]" onError="this.onerror=null;this.style.display='none'"></div>
+                    </ng-template>
+                </p-column>
+                <p-column field="name" header="{{'applications.content.entryDetails.metadata.entryName' | translate}}">
+                    <ng-template let-col let-entry="rowData" pTemplate="body">
+                        <span>{{entry[col.field]}}</span>
+                    </ng-template>
+                </p-column>
+                <p-column field="id"  header="{{'applications.content.entryDetails.metadata.entryID' | translate}}">
+                    <ng-template let-col let-entry="rowData" pTemplate="body">
+                        <span>{{entry[col.field]}}</span>
+                    </ng-template>
+                </p-column>
+                <p-column [style]="{'width':'60px'}">
+                    <ng-template let-col let-entry="rowData" pTemplate="body">
+                        <button pButton class="kButtonDefault kDeletehBtn small" type="text" icon="kIcontrash" (click)="_deleteEntry(entry);"></button>
+                    </ng-template>
+                </p-column>
+            </p-dataTable>
+        </div>
+    </div>
+    </k-area-blocker>
+</div>
