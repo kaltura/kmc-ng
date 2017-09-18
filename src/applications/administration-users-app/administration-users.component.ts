@@ -36,6 +36,7 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
   isNewUser: boolean = true;
   rolesList: SelectItem[];
   _roles: KalturaUserRole[];
+  _users: KalturaUser[];
   _partnerInfo: PartnerInfo = {adminLoginUsersQuota: 0, adminUserId: null};
   popupTitle: string = '';
   selectedRole: string = '';
@@ -79,18 +80,24 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
   }
 
   onEditUser(user: KalturaUser): void {
+    let selectedRoleIds: string;
     this.isNewUser = false;
     this.popupTitle = this._appLocalization.get('applications.content.users.editUser');
     this.rolesList = [];
     this._roles.forEach(role => {
       this.rolesList.push({label: role.name, value: role.id});
     });
+    this._users.forEach(item => {
+      if(user.id === item.id) {
+        selectedRoleIds = item.roleIds;
+      }
+    });
     this.userForm.reset({
       email: user.email,
-      firstName: user.fullName,
+      firstName: user.firstName,
       lastName: user.lastName,
       id: user.id,
-      roleIds: user.roleIds
+      roleIds: selectedRoleIds ? selectedRoleIds : user.roleIds
     });
     this.userForm.get('email').disable();
     this.userForm.get('firstName').disable();
@@ -436,6 +443,7 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
           );
           this.usersAmount = `${response.users.totalCount} ${response.users.totalCount > 1 ? this._appLocalization.get('applications.content.users.users') : this._appLocalization.get('applications.content.users.user')}`;
           this.usersTotalCount = response.users.totalCount;
+          this._users = response.users.items;
           this._roles = response.roles.items;
           this._partnerInfo = {
             adminLoginUsersQuota: response.partnerInfo.adminLoginUsersQuota,

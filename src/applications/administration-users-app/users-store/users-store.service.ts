@@ -152,13 +152,19 @@ export class UsersStore implements OnDestroy {
   }
 
   public toggleUserStatus(user: KalturaUser): Observable<void> {
+    let userStatus: number = user.status;
+    this._usersData.getValue().users.items.forEach(item => {
+      if(user.id === item.id) {
+        userStatus = item.status;
+      }
+    });
       return Observable.create(observer => {
         if(this._appAuthentication.appUser.id !== user.id || this._usersData.getValue() && this._usersData.getValue().partnerInfo.adminUserId !== user.id) {
           this._kalturaServerClient.request(
             new UserUpdateAction(
               {
                 userId: user.id,
-                user: new KalturaUser({status: +!user.status})
+                user: new KalturaUser({status: +!userStatus})
               }
             )
           )
@@ -260,7 +266,8 @@ export class UsersStore implements OnDestroy {
               firstName:  userForm.controls['firstName'].value,
               lastName:   userForm.controls['lastName'].value,
               roleIds:    roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
-              id:         publisherId ? publisherId : userForm.controls['email'].value
+              id:         publisherId ? publisherId : userForm.controls['email'].value,
+              isAdmin:    true
             })
           }
         )
@@ -285,7 +292,7 @@ export class UsersStore implements OnDestroy {
       this._kalturaServerClient.request(
         new UserUpdateAction(
           {
-            userId: userForm.controls['email'].value,
+            userId: publisherId,
             user: new KalturaUser({
               email:      userForm.controls['email'].value,
               firstName:  userForm.controls['firstName'].value,

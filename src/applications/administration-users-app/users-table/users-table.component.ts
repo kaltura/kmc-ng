@@ -45,6 +45,12 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this._deferredLoading) {
       this._users = [];
       this.cdRef.detectChanges();
+      if(!data[0].isAccountOwner) {
+        let accountOwnerIndex: number = data.findIndex(user => user.isAccountOwner),
+            accountOwner: string = data[accountOwnerIndex];
+        data.splice(accountOwnerIndex, 1);
+        data.unshift(accountOwner);
+      }
       this._users = data;
       this.cdRef.detectChanges();
     } else {
