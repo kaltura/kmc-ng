@@ -33,7 +33,7 @@ export class BulkUploadMenuComponent {
   }
 
   // force reload fileDialog component to apply dynamically added filter
-  private _openFileDialog() {
+  private _openFileDialog(): void {
     this._showFileDialog = false;
     this._showFileDialog = true;
     setTimeout(() => this.fileDialog.open(), 0);
@@ -70,13 +70,13 @@ export class BulkUploadMenuComponent {
       );
   }
 
-  public _invokeFileSelection(type: BulkUploadTypes) {
+  public _invokeFileSelection(type: BulkUploadTypes): void {
     this._selectedType = type;
     this._allowedExtensions = this._menuService.getAllowedExtension(type);
     this._openFileDialog();
   }
 
-  public _goToBulkUploadLog() {
+  public _goToBulkUploadLog(): void {
     this._router.navigate(['/content/bulk/list']);
     this.uploadSucceed.close();
   }

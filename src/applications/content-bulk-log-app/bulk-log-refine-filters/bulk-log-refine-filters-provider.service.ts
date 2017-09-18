@@ -49,7 +49,7 @@ export class BulkLogRefineFiltersProviderService {
     this.load();
   }
 
-  public load() {
+  public load(): void {
     const defaultFilterGroup = this._buildDefaultFiltersGroup();
 
     this._filters.next({ groups: [defaultFilterGroup] });

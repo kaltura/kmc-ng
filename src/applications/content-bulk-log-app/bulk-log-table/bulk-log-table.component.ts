@@ -102,27 +102,6 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy() {
-    this.actionsMenu.hide();
-  }
-
-  buildMenu(): void {
-    this._items = [
-      {
-        label: this._appLocalization.get('applications.content.bulkUpload.table.actions.delete'),
-        command: (event) => this.onActionSelected('delete', this.bulkLogItem)
-      },
-      {
-        label: this._appLocalization.get('applications.content.bulkUpload.table.actions.downloadLog'),
-        command: (event) => this.onActionSelected('downloadLog', this.bulkLogItem)
-      },
-      {
-        label: this._appLocalization.get('applications.content.bulkUpload.table.actions.downloadFile'),
-        command: (event) => this.onActionSelected('downloadFile', this.bulkLogItem)
-      }
-    ];
-  }
-
   ngAfterViewInit() {
     const scrollBody = this.dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
     if (scrollBody && scrollBody.length > 0) {
@@ -143,26 +122,47 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  openActionsMenu(event: any, bulkLogItem: KalturaBulkUpload) {
+  ngOnDestroy() {
+    this.actionsMenu.hide();
+  }
+
+  private _buildMenu(): void {
+    this._items = [
+      {
+        label: this._appLocalization.get('applications.content.bulkUpload.table.actions.delete'),
+        command: (event) => this._onActionSelected('delete', this.bulkLogItem)
+      },
+      {
+        label: this._appLocalization.get('applications.content.bulkUpload.table.actions.downloadLog'),
+        command: (event) => this._onActionSelected('downloadLog', this.bulkLogItem)
+      },
+      {
+        label: this._appLocalization.get('applications.content.bulkUpload.table.actions.downloadFile'),
+        command: (event) => this._onActionSelected('downloadFile', this.bulkLogItem)
+      }
+    ];
+  }
+
+  private _onActionSelected(action: string, bulkLogItem: KalturaBulkUpload): void {
+    this.actionSelected.emit({ action, bulkLogItem });
+  }
+
+  public _openActionsMenu(event: any, bulkLogItem: KalturaBulkUpload): void {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
       if (!this.bulkLogItem || this.bulkLogItem.id !== bulkLogItem.id) {
         this.bulkLogItem = bulkLogItem;
-        this.buildMenu();
+        this._buildMenu();
         this.actionsMenu.show(event);
       }
     }
   }
 
-  onActionSelected(action: string, bulkLogItem: KalturaBulkUpload): void {
-    this.actionSelected.emit({ action, bulkLogItem });
-  }
-
-  onSelectionChange(event) {
+  public _onSelectionChange(event): void {
     this.selectedBulkLogItemsChange.emit(event);
   }
 
-  scrollToTop() {
+  public scrollToTop(): void {
     const scrollBodyArr = this.dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
     if (scrollBodyArr && scrollBodyArr.length > 0) {
       const scrollBody: HTMLDivElement = scrollBodyArr[0];
