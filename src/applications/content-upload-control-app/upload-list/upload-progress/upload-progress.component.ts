@@ -7,6 +7,6 @@ import { Component, Input } from '@angular/core';
 })
 export class UploadProgressComponent {
   @Input() progress = 0;
-  @Input() status: 'uploading' | 'uploaded' | 'uploadFailure' | 'pending';
+  @Input() status: 'uploading' | 'uploaded' | 'uploadFailed' | 'pending';
 }
 

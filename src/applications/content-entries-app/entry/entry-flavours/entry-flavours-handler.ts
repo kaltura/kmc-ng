@@ -303,26 +303,27 @@ export class EntryFlavoursHandler extends EntryFormWidget
 	}
 
 	public uploadFlavor(flavor: Flavor, fileData: File): void{
-		flavor.status = KalturaFlavorAssetStatus.importing.toString();
-		flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.uploading');
-    // FIXME wait till discussion
-		Observable.of(this._uploadManagement.newUpload(new KalturaUploadFile(fileData)))
-			.subscribe((response) => {
-				let resource = new KalturaUploadedFileTokenResource();
-				resource.token = response.uploadToken;
-				if (flavor.id.length){
-					this.updateFlavor(flavor, flavor.id, resource);
-				}else{
-					this.addNewFlavor(flavor, resource);
-				}
-			},
-			(error) => {
-        this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
-				this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
-				{
-					// reload flavors as we need to get the flavor status from the server
-				});
-			});
+    	// TODO [kmcng] enable
+		// flavor.status = KalturaFlavorAssetStatus.importing.toString();
+		// flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.uploading');
+    // // FIXME wait till discussion
+		// Observable.of(this._uploadManagement.newUpload(new KalturaUploadFile(fileData)))
+		// 	.subscribe((response) => {
+		// 		let resource = new KalturaUploadedFileTokenResource();
+		// 		resource.token = response.uploadId;
+		// 		if (flavor.id.length){
+		// 			this.updateFlavor(flavor, flavor.id, resource);
+		// 		}else{
+		// 			this.addNewFlavor(flavor, resource);
+		// 		}
+		// 	},
+		// 	(error) => {
+    //     this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
+		// 		this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
+		// 		{
+		// 			// reload flavors as we need to get the flavor status from the server
+		// 		});
+		// 	});
 	}
 
 	private updateFlavor(flavor: Flavor, id: string, resource: KalturaContentResource): void{

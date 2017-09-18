@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { Observable } from 'rxjs/Observable';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
@@ -22,11 +22,13 @@ import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 import { MediaDeleteAction } from 'kaltura-typescript-client/types/MediaDeleteAction';
 import { UploadTokenDeleteAction } from 'kaltura-typescript-client/types/UploadTokenDeleteAction';
 import * as R from 'ramda';
+import { FileUpload } from 'primeng/primeng';
 
-export type UploadStatus = 'uploading' | 'uploaded' | 'uploadFailure' | 'pending' | 'removing';
+export type UploadStatus = 'uploading' | 'uploadCompleted' | 'uploadFailed' | 'pending' | 'removing';
 
 export interface NewUploadFile {
-  uploadToken: string;
+  uploadFileId: string;
+  serverUploadToken: string;
   entryId: string;
   uploadedOn: Date;
   fileName: string;
@@ -42,7 +44,7 @@ export interface NewUploadFile {
 }
 
 @Injectable()
-export class KmcUploadAppService {
+export class KmcUploadAppService implements OnDestroy {
   private _allowedExtensions = `
     .flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v,.mpeg,.mxf,.rm,.rv,.rmvb,.ts,.ogg,.ogv,.vob,.webm,.mts,.arf,.mkv,
     .flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp3,.wav,.ra,.rm,.wma,.aif,.m4a,
@@ -97,23 +99,30 @@ export class KmcUploadAppService {
     }
   }
 
-  private _convertFile(file: UploadSettingsFile): NewUploadFile {
-    const { entryId, name: fileName, size: fileSize, mediaType, uploadedOn, uploadToken, tempId } = file;
 
-    return {
-      fileName,
-      fileSize,
-      mediaType,
-      tempId,
-      entryId: entryId || '',
-      uploadedOn: uploadedOn || new Date(),
-      uploadToken: uploadToken || '',
-      status: 'pending',
-      progress: 0,
-      uploading: false,
-      uploadFailure: false,
-      statusWeight: this._getStatusWeight('pending')
-    };
+    ngOnDestroy() : void{
+
+    }
+
+  private _convertFile(file: UploadSettingsFile): NewUploadFile {
+    // TODO [kmcng]
+    throw new Error("todo kmcng");
+    // const { entryId, name: fileName, size: fileSize, mediaType, uploadedOn, uploadToken, tempId } = file;
+    //
+    // return {
+    //   fileName,
+    //   fileSize,
+    //   mediaType,
+    //   tempId,
+    //   entryId: entryId || '',
+    //   uploadedOn: uploadedOn || new Date(),
+    //   uploadId: uploadId || '',
+    //   status: 'pending',
+    //   progress: 0,
+    //   uploading: false,
+    //   uploadFailure: false,
+    //   statusWeight: this._getStatusWeight('pending')
+    // };
   }
 
   private _reorderFiles(): void {
@@ -122,8 +131,8 @@ export class KmcUploadAppService {
 
   private _getStatusWeight(status: string): number {
     switch (status) {
-      case 'uploadFailure':
-      case 'uploaded':
+      case 'uploadFailed':
+      case 'uploadCompleted':
         return 0;
       case 'uploading':
         return 1;
@@ -135,38 +144,45 @@ export class KmcUploadAppService {
   }
 
   private _trackUploadFiles(): void {
-    this._uploadManagement.onTrackFileChange$
+
+    this._uploadManagement.onFileStatusChanged$
+        .cancelOnDestroy(this)
       .subscribe(
-        (trackedFile: TrackedFile) => {
-          const relevantNewFile = R.find(R.propEq('uploadToken', trackedFile.uploadToken))(this._getFiles());
+          (file) => {
+              const relevantNewFile = R.find(R.propEq('id', file.id))(this._getFiles());
 
           if (relevantNewFile && relevantNewFile.status !== 'removing') {
-            relevantNewFile.status = trackedFile.status;
-            relevantNewFile.statusWeight = this._getStatusWeight(trackedFile.status);
+              relevantNewFile.status = file.status;
+              relevantNewFile.statusWeight = this._getStatusWeight(file.status);
 
-            switch (trackedFile.status) {
-              case 'uploaded':
-                relevantNewFile.uploading = false;
-                relevantNewFile.uploadFailure = false;
-                this._removeUploadedFile(relevantNewFile);
-                this._reorderFiles();
-                break;
-              case 'uploadFailure':
-                relevantNewFile.uploading = false;
-                relevantNewFile.uploadFailure = true;
-                this._reorderFiles();
-                break;
-              case 'uploading':
-                if (!relevantNewFile.uploading) {
-                  this._reorderFiles();
-                }
-                relevantNewFile.progress = Number((trackedFile.progress * 100).toFixed(0));
-                relevantNewFile.uploading = true;
-                relevantNewFile.uploadFailure = false;
-                break;
-              default:
-                break;
-            }
+              switch (file.status) {
+                  case 'waitingUpload':
+                      // TODO [kmcng]
+                      break;
+                  case 'uploadCompleted':
+                      relevantNewFile.uploading = false;
+                      relevantNewFile.uploadFailure = false;
+                      this._removeUploadedFile(relevantNewFile);
+                      this._reorderFiles();
+                      break;
+                  case 'uploadFailed':
+                      relevantNewFile.uploading = false;
+                      relevantNewFile.uploadFailure = true;
+                      this._reorderFiles();
+                      break;
+                  case 'uploading':
+                      if (!relevantNewFile.uploading) {
+                          // TODO [kmcng] this logic will happen a lot because it is executed every time the progress is being updated
+                          // TODO [kmcng] you can add status 'startUploading' in the infrastructure to tackle this expression
+                          this._reorderFiles();
+                      }
+                      relevantNewFile.progress = (file.progress * 100).toFixed(0);
+                      relevantNewFile.uploading = true;
+                      relevantNewFile.uploadFailure = false;
+                      break;
+                  default:
+                      break;
+              }
           }
         }
       );
@@ -217,7 +233,7 @@ export class KmcUploadAppService {
       // -------------------------------
       .filter(file => !(<any>file).removing)
       .map(file => {
-        const uploadToken = this._uploadManagement.newUpload(new KalturaUploadFile(file.file));
+        const uploadToken = this._uploadManagement.addFile(new KalturaUploadFile(file.file));
         return R.merge(file, uploadToken)
       })
       // -------- SIDE EFFECT ----------
@@ -251,7 +267,7 @@ export class KmcUploadAppService {
           console.warn(err);
 
           const failedFiles = this._getFiles()
-            .filter(({ status }) => status !== 'uploaded')
+            .filter(({ status }) => status !== 'uploadCompleted')
             .map(file => R.merge(file, {
               uploading: false,
               uploadFailure: true,
@@ -270,7 +286,7 @@ export class KmcUploadAppService {
     if (relevantFile) {
       const { entryId, uploadToken } = relevantFile;
 
-      this._uploadManagement.cancelUpload(uploadToken);
+      this._uploadManagement.cancelUpload(uploadToken,false);
       //   relevantFile.removing = true;
       //   relevantFile.status = 'removing';
       //
