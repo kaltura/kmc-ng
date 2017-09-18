@@ -257,6 +257,7 @@
           }
         },
         "table": {
+          "header": "Files",
           "fileName": "File name",
           "uploadedItem": "Uploaded item",
           "uploadedBy": "Uploaded by",

@@ -2,7 +2,9 @@
   <div class="kBulkLog kOverrideFAIcons">
     <div #entriesTableHolder class="kBulkLogHolder kContent">
       <div class="kBulkLogTableFilters">
-        <span class="kSelectedEntriesNum" *ngIf="(_store.bulkLog$ | async)?.totalCount">{{(_store.bulkLog$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
+        <span class="kSelectedEntriesNum" *ngIf="(_store.bulkLog$ | async)?.totalCount">
+          {{(_store.bulkLog$ | async)?.totalCount}} {{'applications.content.bulkUpload.table.header' | translate}}
+        </span>
 
         <div [class.kHidden]="!selectedBulkLogItems.length" class="kBulkOperations">
           <span class="kSelectedEntriesLabel">• {{selectedBulkLogItems.length}} {{'applications.content.entries.selected' | translate}}</span>
