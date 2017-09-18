@@ -273,7 +273,8 @@
         },
         "deleteLog": {
           "header": "Delete Bulk Log",
-          "message": "Are you sure you want to delete the selected bulk log?",
+          "message": "Are you sure you want to delete the selected file?",
+          "messageMultiple": "Are you sure you want to delete the selected files? \n Please note: these files will be permanently deleted from your account.",
           "error": "Could not delete this upload"
         },
         "objectType": {

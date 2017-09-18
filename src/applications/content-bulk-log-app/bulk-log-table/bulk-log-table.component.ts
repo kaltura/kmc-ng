@@ -47,7 +47,7 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Output()
   actionSelected = new EventEmitter<{ action: string, bulkLogItem: KalturaBulkUpload }>();
   @Output()
-  selectedBulkLogChange = new EventEmitter<any>();
+  selectedBulkLogItemsChange = new EventEmitter<any>();
 
   @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
@@ -159,7 +159,7 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   onSelectionChange(event) {
-    this.selectedBulkLogChange.emit(event);
+    this.selectedBulkLogItemsChange.emit(event);
   }
 
   scrollToTop() {

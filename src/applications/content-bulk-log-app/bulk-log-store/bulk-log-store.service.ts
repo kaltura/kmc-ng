@@ -16,6 +16,7 @@ import { Subject } from 'rxjs/Subject';
 import { QueryRequestArgs } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { BulkListAction } from 'kaltura-typescript-client/types/BulkListAction';
 import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
+import { KalturaMultiResponse } from 'kaltura-typescript-client';
 
 export enum SortDirection {
   Desc,
@@ -80,6 +81,10 @@ export class BulkLogStoreService implements OnDestroy {
     BulkLogStoreService.filterTypeMapping[this.getFilterType(filterType)] = handler;
   }
 
+  public get queryData(): QueryData {
+    return Object.assign({}, this._queryData);
+  }
+
   constructor(private kalturaServerClient: KalturaClient,
               private browserService: BrowserService,
               public _kalturaServerClient: KalturaClient) {
@@ -87,10 +92,6 @@ export class BulkLogStoreService implements OnDestroy {
     if (defaultPageSize !== null) {
       this._queryData.pageSize = defaultPageSize;
     }
-  }
-
-  public get queryData(): QueryData {
-    return Object.assign({}, this._queryData);
   }
 
   ngOnDestroy() {
@@ -190,7 +191,7 @@ export class BulkLogStoreService implements OnDestroy {
     }
   }
 
-  private _executeQuery({ addedFilters = [], removedFilters = []}: { addedFilters: Array<FilterItem>, removedFilters: Array<FilterItem> } = {
+  private _executeQuery({ addedFilters = [], removedFilters = [] }: { addedFilters: Array<FilterItem>, removedFilters: Array<FilterItem> } = {
     addedFilters: [],
     removedFilters: []
   }): void {
@@ -217,7 +218,7 @@ export class BulkLogStoreService implements OnDestroy {
     // execute the request
     this._executeQueryStateSubscription = this._buildQueryRequest(queryArgs)
       .subscribeOn(async) // using async scheduler go allow calling this function multiple times
-                          // in the same event loop cycle before invoking the logic.
+      // in the same event loop cycle before invoking the logic.
       .monitor('bulkLog store: get bulkLog()', { addedFilters, removedFilters })
       .subscribe(
         response => {
@@ -307,6 +308,10 @@ export class BulkLogStoreService implements OnDestroy {
 
   public deleteBulkLog(id: number): Observable<KalturaBulkUpload> {
     return this._kalturaServerClient.request(new BulkUploadAbortAction({ id }));
+  }
+
+  public deleteBulkLogs(files: Array<KalturaBulkUpload>): Observable<KalturaMultiResponse> {
+    return this._kalturaServerClient.multiRequest(files.map(({ id }) => new BulkUploadAbortAction({ id })));
   }
 
   public reload(query: boolean | Partial<QueryData>): void {

@@ -101,6 +101,41 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
       );
   }
 
+  private _deleteBulkLogs(files: Array<KalturaBulkUpload>): void {
+    this.isBusy = true;
+    this._blockerMessage = null;
+
+    this._store.deleteBulkLogs(files).subscribe(
+      () => {
+        this.isBusy = false;
+        this._store.reload(true);
+        this._clearSelection();
+      },
+      () => {
+        this._blockerMessage = new AreaBlockerMessage({
+          message: this._appLocalization.get('applications.content.bulkUpload.deleteLog.error'),
+          buttons: [
+            {
+              label: this._appLocalization.get('app.common.retry'),
+              action: () => {
+                this._blockerMessage = null;
+                this.isBusy = false;
+                this._deleteBulkLogs(files);
+              }
+            },
+            {
+              label: this._appLocalization.get('app.common.cancel'),
+              action: () => {
+                this._blockerMessage = null;
+                this.isBusy = false;
+              }
+            }
+          ]
+        });
+      }
+    );
+  }
+
   private _deleteAction(bulkLogItem: KalturaBulkUpload): void {
     this._browserService.confirm(
       {
@@ -130,12 +165,12 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     this._browserService.download(url, fileName, type);
   }
 
-  public _removeTag(tag: any) {
+  public _removeTag(tag: any): void {
     this._clearSelection();
     this._store.removeFilters(tag);
   }
 
-  public _removeAllTags() {
+  public _removeAllTags(): void {
     this._clearSelection();
     this._store.clearAllFilters();
   }
@@ -153,7 +188,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     }
   }
 
-  public _reload() {
+  public _reload(): void {
     this._clearSelection();
     this._store.reload(true);
   }
@@ -174,8 +209,20 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     }
   }
 
-  public _clearSelection() {
+  public _clearSelection(): void {
     this.selectedBulkLogItems = [];
+  }
+
+  public _deleteFiles(): void {
+    this._browserService.confirm(
+      {
+        header: this._appLocalization.get('applications.content.bulkUpload.deleteLog.header'),
+        message: this._appLocalization.get('applications.content.bulkUpload.deleteLog.messageMultiple'),
+        accept: () => {
+          this._deleteBulkLogs(this.selectedBulkLogItems);
+        }
+      }
+    );
   }
 }
 

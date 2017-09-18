@@ -8,7 +8,7 @@
 
         <div [class.kHidden]="!selectedBulkLogItems.length" class="kBulkOperations">
           <span class="kSelectedEntriesLabel">• {{selectedBulkLogItems.length}} {{'applications.content.entries.selected' | translate}}</span>
-          <ng-content select=".bulk-actions"></ng-content>
+          <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_deleteFiles()"></button>
 
           <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
         </div>
