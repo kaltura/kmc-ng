@@ -1,4 +1,6 @@
 <k-area-blocker [showLoader]="_transcodingProfileLoading" [message]="_transcodingProfileError">
+
+
   <div class="kUploadSettings">
     <div class="kHeader">
       <h1>{{ 'applications.upload.uploadSettings.title' | translate }}</h1>
@@ -23,9 +25,9 @@
                 [label]="'applications.upload.uploadSettings.addFileBtn' | translate"
                 (click)="fileDialog.open()"></button>
       </div>
-
       <div class="kTable" [class.empty]="_files.length === 0">
         <p-dataTable [value]="_files"
+                     [immutable]="false"
                      [emptyMessage]="'applications.upload.uploadSettings.table.emptyMessage.title' | translate"
                      [rowStyleClass]="_relatedTableRowStyle"
                      scrollable="true">
@@ -97,7 +99,7 @@
     <div class="kFooter">
       <button class="kButtonDefault kUploadButton"
               pButton
-              [disabled]="_files.length === 0 || _transcodingProfileLoading"
+              [disabled]="_files.length === 0"
               [label]="'applications.upload.uploadSettings.uploadBtn' | translate"
               (click)="_upload(_files)"></button>
     </div>
@@ -106,4 +108,4 @@
 <kFileDialog #fileDialog
              [filter]="_allowedExtensions"
              [allowMultiple]="true"
-             (onFileSelected)="onFileSelected.emit($event)"></kFileDialog>
+             (onFileSelected)="_handleSelectedFiles($event)"></kFileDialog>

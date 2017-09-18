@@ -2,7 +2,7 @@
   <div class="kUploadMenuListItem">
     <i class="kIconUpload kUploadMenuUploadIcon"></i>
     <span>
-      <a (click)="fileDialog.open()">{{ 'applications.upload.uploadMenu.uploadFromDesktop' | translate }}</a>
+      <a (click)="onItemSelected.emit('uploadFromDesktop')">{{ 'applications.upload.uploadMenu.uploadFromDesktop' | translate }}</a>
     </span>
   </div>
 
@@ -34,7 +34,3 @@
     </p>
   </div>
 </div>
-<kFileDialog #fileDialog
-             [filter]="_allowedExtensions"
-             [allowMultiple]="true"
-             (onFileSelected)="onFileSelected.emit($event)"></kFileDialog>

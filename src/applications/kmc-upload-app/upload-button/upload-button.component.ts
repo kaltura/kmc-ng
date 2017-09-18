@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KmcUploadAppService } from '../kmc-upload-app.service';
 
 @Component({
   selector: 'kUploadButton',
@@ -11,14 +10,22 @@ export class UploadButtonComponent {
   @ViewChild('uploadmenu') uploadMenuPopup: PopupWidgetComponent;
   @ViewChild('uploadsettings') uploadSettingsPopup: PopupWidgetComponent;
 
-  constructor(private _uploadService: KmcUploadAppService) {
+  constructor() {
   }
 
-  _handleFileSelected(files: FileList): void {
+    _onMenuItemSelected(item : string): void {
     this.uploadMenuPopup.close();
-    this.uploadSettingsPopup.open();
 
-    this._uploadService.selectFiles(files);
+    switch (item)
+    {
+        case "uploadFromDesktop":
+            this.uploadSettingsPopup.open();
+            break;
+        default:
+          break;
+
+    }
+
   }
 }
 

@@ -5,14 +5,12 @@
 
 <kPopupWidget #uploadmenu [popupWidth]="315" [popupHeight]="385" [closeBtn]="true" [modal]="true" [transparent]="true">
   <ng-template>
-    <kKMCUploadMenu (onFileSelected)="_handleFileSelected($event)"></kKMCUploadMenu>
+    <kKMCUploadMenu (onItemSelected)="_onMenuItemSelected($event)"></kKMCUploadMenu>
   </ng-template>
 </kPopupWidget>
 
 <kPopupWidget #uploadsettings [popupWidth]="791" [popupHeight]="607" [closeBtn]="true" [modal]="true">
   <ng-template>
-    <kKMCUploadSettings
-      (onUploadStarted)="uploadsettings.close()"
-      (onFileSelected)="_handleFileSelected($event)"></kKMCUploadSettings>
+    <kKMCUploadSettings [parentPopupWidget]="uploadsettings"></kKMCUploadSettings>
   </ng-template>
 </kPopupWidget>

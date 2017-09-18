@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { NewUploadFile, KmcUploadAppService } from '../../kmc-upload-app/kmc-upload-app.service';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService, UploadFileData, KmcUploadManagementService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 @Component({
@@ -10,13 +9,14 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
   styleUrls: ['./upload-list.component.scss'],
 })
 export class UploadListComponent implements OnInit, OnDestroy {
-  public _selectedUploads: Array<NewUploadFile> = [];
-  public _uploads: Array<NewUploadFile> = [];
+  public _selectedUploads: Array<UploadFileData> = [];
+  public _uploads: Array<UploadFileData> = [];
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
 
-  constructor(private _uploadService: KmcUploadAppService,
-              private _browserService: BrowserService,
+  constructor(
+      private _uploadService : KmcUploadManagementService,
+      private _browserService: BrowserService,
               private _appLocalization: AppLocalization) {
   }
 
@@ -43,7 +43,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
     this._selectedUploads = event;
   }
 
-  _cancelUpload(file: NewUploadFile): void {
+  _cancelUpload(file: UploadFileData): void {
     this._uploadService.cancelUpload(file.tempId);
   }
 
