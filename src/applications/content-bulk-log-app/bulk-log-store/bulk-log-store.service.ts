@@ -9,12 +9,13 @@ import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilte
 import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaBulkUploadFilter } from 'kaltura-typescript-client/types/KalturaBulkUploadFilter';
-import { BulkUploadListAction } from 'kaltura-typescript-client/types/BulkUploadListAction';
 import { KalturaBulkUpload } from 'kaltura-typescript-client/types/KalturaBulkUpload';
 import { BulkUploadAbortAction } from 'kaltura-typescript-client/types/BulkUploadAbortAction';
 import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item';
 import { Subject } from 'rxjs/Subject';
 import { QueryRequestArgs } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { BulkListAction } from 'kaltura-typescript-client/types/BulkListAction';
+import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
 
 export enum SortDirection {
   Desc,
@@ -55,17 +56,9 @@ export class BulkLogStoreService implements OnDestroy {
     pageSize: 50,
     sortBy: 'createdAt',
     sortDirection: SortDirection.Desc,
-    fields: `
-      id,fileName,bulkUploadType,bulkUploadObjectType,
-      uploadedBy,uploadedByUserId,
-      uploadedOn,numOfObjects,status,error
-    `
+    fields: 'id,fileName,bulkUploadType,bulkUploadObjectType,uploadedBy,uploadedByUserId,uploadedOn,numOfObjects,status,error'
   };
-  private _executeQueryState: { subscription: ISubscription, deferredRemovedFilters: Array<any>, deferredAddedFilters: Array<any> } = {
-    subscription: null,
-    deferredAddedFilters: [],
-    deferredRemovedFilters: []
-  };
+  private _executeQueryStateSubscription: ISubscription;
 
   public bulkLog$ = this._bulkLogSource.asObservable();
   public state$ = this._stateSource.asObservable();
@@ -105,8 +98,8 @@ export class BulkLogStoreService implements OnDestroy {
     this._querySource.complete();
     this._bulkLogSource.complete();
 
-    if (this._executeQueryState.subscription) {
-      this._executeQueryState.subscription.unsubscribe();
+    if (this._executeQueryStateSubscription) {
+      this._executeQueryStateSubscription.unsubscribe();
     }
   }
 
@@ -197,18 +190,15 @@ export class BulkLogStoreService implements OnDestroy {
     }
   }
 
-  private _executeQuery({ addedFilters, removedFilters }: { addedFilters: Array<FilterItem>, removedFilters: Array<FilterItem> } = {
+  private _executeQuery({ addedFilters = [], removedFilters = []}: { addedFilters: Array<FilterItem>, removedFilters: Array<FilterItem> } = {
     addedFilters: [],
     removedFilters: []
   }): void {
     // cancel previous requests
-    if (this._executeQueryState.subscription) {
-      this._executeQueryState.subscription.unsubscribe();
-      this._executeQueryState.subscription = null;
+    if (this._executeQueryStateSubscription) {
+      this._executeQueryStateSubscription.unsubscribe();
+      this._executeQueryStateSubscription = null;
     }
-
-    this._executeQueryState.deferredAddedFilters.push(...addedFilters);
-    this._executeQueryState.deferredRemovedFilters.push(...removedFilters);
 
     this.browserService.setInLocalStorage('bulkupload.list.pageSize', this._queryData.pageSize);
 
@@ -216,25 +206,22 @@ export class BulkLogStoreService implements OnDestroy {
 
     const queryArgs: QueryRequestArgs = Object.assign({},
       {
+        addedFilters,
+        removedFilters,
         filters: this._activeFilters.getValue().filters,
-        addedFilters: this._executeQueryState.deferredAddedFilters || [],
-        removedFilters: this._executeQueryState.deferredRemovedFilters || [],
         data: this._queryData
       });
 
     this._querySource.next(queryArgs);
 
-    this._executeQueryState.deferredAddedFilters = [];
-    this._executeQueryState.deferredRemovedFilters = [];
-
     // execute the request
-    this._executeQueryState.subscription = this._buildQueryRequest(queryArgs)
+    this._executeQueryStateSubscription = this._buildQueryRequest(queryArgs)
       .subscribeOn(async) // using async scheduler go allow calling this function multiple times
                           // in the same event loop cycle before invoking the logic.
       .monitor('bulkLog store: get bulkLog()', { addedFilters, removedFilters })
       .subscribe(
         response => {
-          this._executeQueryState.subscription = null;
+          this._executeQueryStateSubscription = null;
 
           this._stateSource.next({ loading: false, errorMessage: null });
 
@@ -244,7 +231,7 @@ export class BulkLogStoreService implements OnDestroy {
           });
         },
         error => {
-          this._executeQueryState.subscription = null;
+          this._executeQueryStateSubscription = null;
           const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
           this._stateSource.next({ loading: false, errorMessage });
         });
@@ -274,7 +261,7 @@ export class BulkLogStoreService implements OnDestroy {
 
       // handle default value for media types
       if (!filter.bulkUploadObjectTypeIn) {
-        filter.statusIn = '1,2,3,4';
+        filter.bulkUploadObjectTypeIn = '1,2,3,4';
       }
 
       // handle default value for statuses
@@ -288,13 +275,12 @@ export class BulkLogStoreService implements OnDestroy {
       }
 
       // update desired fields of entries
-      // if (queryData.fields) {
-      //   responseProfile = new KalturaDetachedResponseProfile({
-      //     type: KalturaResponseProfileType.includeFields,
-      //     fields: queryData.fields
-      //   });
-      //
-      // }
+      if (queryData.fields) {
+        responseProfile = new KalturaDetachedResponseProfile({
+          type: KalturaResponseProfileType.includeFields,
+          fields: queryData.fields
+        });
+      }
 
       // update pagination args
       if (queryData.pageIndex || queryData.pageSize) {
@@ -308,10 +294,10 @@ export class BulkLogStoreService implements OnDestroy {
 
       // build the request
       return <any>this.kalturaServerClient.request(
-        new BulkUploadListAction({
-          // filter: requestContext.filter,
+        new BulkListAction({
+          bulkUploadFilter: requestContext.filter,
           pager: pagination,
-          // responseProfile: responseProfile
+          responseProfile: responseProfile
         })
       )
     } catch (err) {
