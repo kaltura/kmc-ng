@@ -20,9 +20,10 @@ import { UserDeleteAction } from 'kaltura-typescript-client/types/UserDeleteActi
 import { Observable } from 'rxjs/Observable';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { FormGroup } from '@angular/forms';
-import {UserGetByLoginIdAction} from "kaltura-typescript-client/types/UserGetByLoginIdAction";
-import {UserGetAction} from "kaltura-typescript-client/types/UserGetAction";
-import {UserAddAction} from "kaltura-typescript-client/types/UserAddAction";
+import { UserGetByLoginIdAction } from 'kaltura-typescript-client/types/UserGetByLoginIdAction';
+import { UserGetAction } from 'kaltura-typescript-client/types/UserGetAction';
+import { UserAddAction } from 'kaltura-typescript-client/types/UserAddAction';
+import { UserEnableLoginAction } from 'kaltura-typescript-client/types/UserEnableLoginAction';
 
 export interface QueryData
 {
@@ -225,7 +226,7 @@ export class UsersStore implements OnDestroy {
     });
   }
 
-  public isUserAssociated(email: string) : Observable<void> {
+  public isUserAssociated(email: string) : Observable<KalturaUser> {
     return Observable.create(observer => {
       this._kalturaServerClient.request(
         new UserGetAction(
@@ -236,8 +237,8 @@ export class UsersStore implements OnDestroy {
       )
         .cancelOnDestroy(this)
         .subscribe(
-          () => {
-            observer.next();
+          user => {
+            observer.next(user);
             observer.complete();
           },
           error => {
@@ -248,6 +249,7 @@ export class UsersStore implements OnDestroy {
   }
 
   public addUser(userForm: FormGroup) : Observable<void> {
+    let roleIds = userForm.controls['roleIds'].value;
     return Observable.create(observer => {
       this._kalturaServerClient.request(
         new UserAddAction(
@@ -256,7 +258,7 @@ export class UsersStore implements OnDestroy {
               email:      userForm.controls['email'].value,
               firstName:  userForm.controls['firstName'].value,
               lastName:   userForm.controls['lastName'].value,
-              roleIds:    userForm.controls['roleIds'].value,
+              roleIds:    roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
               id:         userForm.controls['id'].value
             })
           }
@@ -275,7 +277,8 @@ export class UsersStore implements OnDestroy {
     });
   }
 
-  public saveUser(userForm: FormGroup) : Observable<void> {
+  public updateUser(userForm: FormGroup) : Observable<void> {
+    let roleIds = userForm.controls['roleIds'].value;
     return Observable.create(observer => {
       let userId = userForm.controls['id'].value !== '' ? userForm.controls['id'].value : userForm.controls['email'].value;
       this._kalturaServerClient.request(
@@ -286,9 +289,64 @@ export class UsersStore implements OnDestroy {
               email:      userForm.controls['email'].value,
               firstName:  userForm.controls['firstName'].value,
               lastName:   userForm.controls['lastName'].value,
-              roleIds:    userForm.controls['roleIds'].value,
+              roleIds:    roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
               id:         userId
             })
+          }
+        )
+      )
+        .cancelOnDestroy(this)
+        .subscribe(
+          () => {
+            observer.next();
+            observer.complete();
+          },
+          error => {
+            observer.error(error);
+          }
+        );
+    });
+  }
+
+  public updateUserPermissions(user: KalturaUser, userForm: FormGroup) : Observable<void> {
+    let roleIds = userForm.controls['roleIds'].value;
+    return Observable.create(observer => {
+      this._kalturaServerClient.request(
+        new UserUpdateAction(
+          {
+            userId: user.id,
+            user: new KalturaUser({
+              email:      userForm.controls['email'].value,
+              firstName:  userForm.controls['firstName'].value,
+              lastName:   userForm.controls['lastName'].value,
+              roleIds:    roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
+              id:         userForm.controls['id'].value,
+              isAdmin:    true
+            })
+          }
+        )
+      )
+        .cancelOnDestroy(this)
+        .subscribe(
+          () => {
+            observer.next();
+            observer.complete();
+          },
+          error => {
+            observer.error(error);
+          }
+        );
+    });
+  }
+
+  public enableUserLogin(user: KalturaUser) : Observable<void> {
+    return Observable.create(observer => {
+      this._kalturaServerClient.request(
+        new UserEnableLoginAction(
+          {
+            userId: user.id,
+            loginId: user.email,
+            password: user.password
           }
         )
       )

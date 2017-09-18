@@ -189,7 +189,7 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
         error => {
           switch (error.code){
             case "LOGIN_DATA_NOT_FOUND":
-              this.doSaveUser();
+              this.isUserAssociated();
               break;
             case "USER_NOT_FOUND":
               this._browserService.confirm(
@@ -197,7 +197,7 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
                   header: this._appLocalization.get('applications.content.users.alreadyExist'),
                   message: this._appLocalization.get('applications.content.users.userAlreadyExist', {0: userEmail}),
                   accept: () => {
-                    this.doSaveUser();
+                    this.isUserAssociated();
                   }
                 }
               );
@@ -206,21 +206,12 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
               this.blockerMessage = new AreaBlockerMessage(
                 {
                   message: error.message,
-                  buttons: [
-                    {
-                      label: this._appLocalization.get('app.common.retry'),
-                      action: () => {
-                        this.blockerMessage = null;
-                        this.isUserAlreadyExist();
-                      }
-                    },
-                    {
-                      label: this._appLocalization.get('app.common.cancel'),
-                      action: () => {
-                        this.blockerMessage = null;
-                      }
+                  buttons: [{
+                    label: this._appLocalization.get('app.common.ok'),
+                    action: () => {
+                      this.blockerMessage = null;
                     }
-                  ]
+                  }]
                 }
               );
               break;
@@ -234,21 +225,71 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
     this.usersStore.isUserAssociated(userEmail)
       .cancelOnDestroy(this)
       .subscribe(
-        () => {},
+        user => {
+          this._browserService.confirm(
+            {
+              header: this._appLocalization.get('applications.content.users.userAssociatedCaption'),
+              message: this._appLocalization.get('applications.content.users.userAssociated', {0: userEmail}),
+              accept: () => {
+                this.updateUserPermissions(user);
+              }
+            }
+          );
+        },
         error => {
           if(error.code === "INVALID_USER_ID") {
             this.addNewUser();
-          } else {
-            this._browserService.confirm(
-              {
-                header: this._appLocalization.get('applications.content.users.userAssociatedCaption'),
-                message: this._appLocalization.get('applications.content.users.userAssociated', {0: userEmail}),
-                accept: () => {
-                  // TODO [kmcng] update user permissions
-                }
-              }
-            );
           }
+        }
+      );
+  }
+
+  updateUserPermissions(user: KalturaUser): void {
+    this.usersStore.updateUserPermissions(user, this.userForm)
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {
+          this.enableUserLogin(user);
+        },
+        error => {
+          this.loading = false;
+          this.blockerMessage = new AreaBlockerMessage(
+            {
+              message: error.message,
+              buttons: [{
+                label: this._appLocalization.get('app.common.ok'),
+                action: () => {
+                  this.blockerMessage = null;
+                }
+              }]
+            }
+          )
+        }
+      );
+  }
+
+  enableUserLogin(user: KalturaUser): void {
+    this.usersStore.enableUserLogin(user)
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {
+          this.editUserPopup.close();
+          this.usersStore.reload(true);
+          this.loading = false;
+        },
+        error => {
+          this.loading = false;
+          this.blockerMessage = new AreaBlockerMessage(
+            {
+              message: error.message,
+              buttons: [{
+                label: this._appLocalization.get('app.common.ok'),
+                action: () => {
+                  this.blockerMessage = null;
+                }
+              }]
+            }
+          )
         }
       );
   }
@@ -268,21 +309,12 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
           this.blockerMessage = new AreaBlockerMessage(
             {
               message: error.message,
-              buttons: [
-                {
-                  label: this._appLocalization.get('app.common.retry'),
-                  action: () => {
-                    this.blockerMessage = null;
-                    this.addNewUser();
-                  }
-                },
-                {
-                  label: this._appLocalization.get('app.common.cancel'),
-                  action: () => {
-                    this.blockerMessage = null;
-                  }
+              buttons: [{
+                label: this._appLocalization.get('app.common.ok'),
+                action: () => {
+                  this.blockerMessage = null;
                 }
-              ]
+              }]
             }
           )
         }
@@ -294,14 +326,14 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
       if(this.isNewUser) {
         this.isUserAlreadyExist();
       } else {
-        this.doSaveUser();
+        this.doUpdateUser();
       }
     }
   }
 
-  doSaveUser(): void {
+  doUpdateUser(): void {
     this.loading = true;
-    this.usersStore.saveUser(this.userForm)
+    this.usersStore.updateUser(this.userForm)
       .cancelOnDestroy(this)
       .subscribe(
         () => {
@@ -317,7 +349,7 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
               label: this._appLocalization.get('app.common.retry'),
               action: () => {
                 this.blockerMessage = null;
-                this.doSaveUser();
+                this.doUpdateUser();
               }
             },
             {
