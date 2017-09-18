@@ -697,7 +697,8 @@
           "entriesLoadError": "Error loading entries",
           "categoriesLoadError": "Error loading categories",
           "flavorsLoadError": "Error loading flavors",
-          "clipsLoadError": "Error loading clips"
+          "clipsLoadError": "Error loading clips",
+          "schedulingError": "Day before can't be earlier than day after"
         }
       },
       "categoryDetails": {

@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -9,12 +8,9 @@ import { environment } from 'app-environment';
 
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
-import * as R from 'ramda';
-
 import { BulkLogRefineFiltersProviderService, RefineFilter } from './bulk-log-refine-filters-provider.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { ValueFilter } from 'app-shared/content-shared/entries-store/value-filter';
-import { TimeSchedulingFilter } from 'app-shared/content-shared/entries-store/filters/time-scheduling-filter';
 import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item';
 import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 import { CreatedAtFilter } from '../bulk-log-store/filters/created-at-filter';
@@ -38,10 +34,6 @@ export interface FiltersGroup {
 export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
 
-  // subscription that will be disposed later upon ngDestroy
-  private _filterUpdateSubscription: ISubscription;
-  private _parentPopupStateChangeSubscribe: ISubscription;
-
   private _filterNameToTreeData: { [key: string]: TreeFilterData } = {};
 
   // properties that are exposed to the template
@@ -52,17 +44,13 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   public _createdAfter: Date;
   public _createdBefore: Date;
   public _createdFilterError: string = null;
-  public _scheduledAfter: Date;
-  public _scheduledBefore: Date;
-  public _scheduledFilterError: string = null;
-  public _scheduledSelected = false;
   public _createdAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
 
   constructor(public additionalFiltersStore: BulkLogRefineFiltersProviderService,
-              private primeTreeDataProvider: PrimeTreeDataProvider,
+              private _primeTreeDataProvider: PrimeTreeDataProvider,
               private _bulkLogStore: BulkLogStoreService,
-              private elementRef: ElementRef,
-              private appLocalization: AppLocalization) {
+              private _elementRef: ElementRef,
+              private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
@@ -71,20 +59,21 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
   ngAfterViewInit() {
     if (this.parentPopupWidget) {
-      this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$.subscribe(event => {
-        if (event.state === PopupWidgetStates.Close) {
-          const nativeElement: HTMLElement = this.elementRef.nativeElement;
-          if (nativeElement && nativeElement.getElementsByClassName('kTreeContainer').length > 0) {
-            nativeElement.getElementsByClassName('kTreeContainer')[0].scrollTop = 0;
+      this.parentPopupWidget.state$
+        .cancelOnDestroy(this)
+        .subscribe(event => {
+          if (event.state === PopupWidgetStates.Close) {
+            const nativeElement: HTMLElement = this._elementRef.nativeElement;
+            if (nativeElement && nativeElement.getElementsByClassName('kTreeContainer').length > 0) {
+              nativeElement.getElementsByClassName('kTreeContainer')[0].scrollTop = 0;
+            }
           }
-        }
-      });
+        });
     }
   }
 
+  // keep for cancelOnDestroy operator
   ngOnDestroy() {
-    this._filterUpdateSubscription.unsubscribe();
-    this._parentPopupStateChangeSubscribe.unsubscribe();
   }
 
   /**
@@ -99,8 +88,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
       .first()
       .subscribe(result => {
         // sync components
-        this.syncScheduledComponents();
-        this.syncCreatedComponents();
+        this._syncCreatedComponents();
 
         if (result.filters) {
           result.filters.forEach(filter => {
@@ -113,34 +101,23 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
 
     // update content components when the filter list is being updated.
-    this._filterUpdateSubscription = this._bulkLogStore.query$.subscribe(
-      filter => {
+    this._bulkLogStore.query$
+      .cancelOnDestroy(this)
+      .subscribe(
+        filter => {
 
-        // sync components
-        this.syncScheduledComponents();
-        this.syncCreatedComponents();
+          // sync components
+          this._syncCreatedComponents();
 
-
-        if (filter.removedFilters) {
-          filter.removedFilters.forEach(removeFilter => {
-
-            if (removeFilter instanceof ValueFilter) {
-              let shouldRemoveFilter = true;
-
-              if (removeFilter instanceof TimeSchedulingFilter && removeFilter.value === 'scheduled') {
-                const scheduledFilterItem = this._getScheduledFilter();
-
-                shouldRemoveFilter = !scheduledFilterItem;
-              }
-
-              if (shouldRemoveFilter) {
+          if (filter.removedFilters) {
+            filter.removedFilters.forEach(removeFilter => {
+              if (removeFilter instanceof ValueFilter) {
                 this._onFilterRemoved(removeFilter);
               }
-            }
-          });
+            });
+          }
         }
-      }
-    );
+      );
 
   }
 
@@ -160,12 +137,9 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
             this._blockerMessage = new AreaBlockerMessage({
               message: result.errorMessage || 'Error loading filters',
               buttons: [{
-                label: 'Retry',
-                action: () => {
-                  this.additionalFiltersStore.load();
-                }
-              }
-              ]
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => this.additionalFiltersStore.load()
+              }]
             })
           } else {
             this._blockerMessage = null;
@@ -197,7 +171,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
                 const listRootNode = new PrimeTreeNode(null, refineFilter.label, [], null, { filterName: refineFilter.name });
 
-                this.primeTreeDataProvider.create(
+                this._primeTreeDataProvider.create(
                   {
                     items: refineFilter.items,
                     idProperty: 'id',
@@ -228,7 +202,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    *
    * @private
    */
-  private syncCreatedComponents(): void {
+  private _syncCreatedComponents(): void {
 
     const createdAtFilter = this._bulkLogStore.getFirstFilterByType(CreatedAtFilter);
 
@@ -242,73 +216,18 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   }
 
   /**
-   * Update content created components when filters are modified somewhere outside of this component
-   * @private
-   */
-  private syncScheduledComponents(): void {
-    const scheduledFilterItem = this._getScheduledFilter();
-
-    if (scheduledFilterItem !== null) {
-      this._scheduledSelected = true;
-      this._scheduledAfter = scheduledFilterItem.scheduledAfter;
-      this._scheduledBefore = scheduledFilterItem.scheduledBefore;
-    } else {
-      this._scheduledBefore = null;
-      this._scheduledAfter = null;
-      this._scheduledSelected = false;
-    }
-  }
-
-
-  /**
-   * Update entries store filters with changes in the content scheduling components
-   * @private
-   */
-  private syncSchedulingFilters(): boolean {
-    this._scheduledFilterError = null;
-    if (this._scheduledBefore && this._scheduledAfter) {
-      const isValid = this._scheduledAfter <= this._scheduledBefore;
-
-      if (!isValid) {
-        setTimeout(this.syncScheduledComponents.bind(this), 0);
-
-        this._scheduledFilterError = this.appLocalization.get('applications.content.entryDetails.errors.schedulingError');
-        return false;
-      }
-    }
-
-    const previousFilter = <TimeSchedulingFilter>this._bulkLogStore.getFiltersByType(TimeSchedulingFilter)
-      .find(filter => filter.value === 'scheduled');
-
-    if (previousFilter) {
-      // make sure the filter is already set for 'schedule', otherwise ignore update
-      this._bulkLogStore.removeFilters(previousFilter);
-      this._bulkLogStore.addFilters(
-        new TimeSchedulingFilter(
-          previousFilter.value,
-          previousFilter.label,
-          KalturaUtils.getEndDateValue(this._scheduledBefore),
-          KalturaUtils.getStartDateValue(this._scheduledAfter)
-        )
-      );
-    }
-
-    return true;
-  }
-
-  /**
    * Update entries store filters with changes in the content created components
    * @private
    */
-  private syncCreatedFilters() {
+  private _syncCreatedFilters(): void {
     this._createdFilterError = null;
     if (this._createdBefore && this._createdAfter) {
       const isValid = this._createdAfter <= this._createdBefore;
 
       if (!isValid) {
-        setTimeout(this.syncCreatedComponents.bind(this), 0);
+        setTimeout(this._syncCreatedComponents.bind(this), 0);
 
-        this._createdFilterError = this.appLocalization.get('applications.content.entryDetails.errors.schedulingError');
+        this._createdFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
         return;
       }
     }
@@ -335,7 +254,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
     this._createdBefore = null;
 
 
-    this.syncCreatedFilters();
+    this._syncCreatedFilters();
   }
 
   /**
@@ -344,8 +263,6 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    * Not part of the API, don't use it from outside this component
    */
   public _clearAllComponents(): void {
-    this._scheduledFilterError = null;
-
     const handledFilterTypeList = [];
     Object.keys(this._filterNameToTreeData).forEach(filterName => {
       const treeData = this._filterNameToTreeData[filterName];
@@ -360,43 +277,13 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   }
 
   /**
-   * Get current scheduled filter is found in entries store.
-   */
-  private _getScheduledFilter(): TimeSchedulingFilter {
-    let result: TimeSchedulingFilter = null;
-    const timeFilters = this._bulkLogStore.getFiltersByType(TimeSchedulingFilter);
-
-    if (timeFilters && timeFilters.length > 0) {
-      result = R.find(R.propEq('value', 'scheduled'), timeFilters);
-    }
-
-    return result || null;
-  }
-
-
-  /**
    * Create or update created components filter once the component data was changed by the user
    *
    * Not part of the API, don't use it from outside this component
    */
   public _onCreatedChanged(): void {
-    this.syncCreatedFilters();
+    this._syncCreatedFilters();
   }
-
-  /**
-   * Create or update scheduled components filter once the component data was changed by the user
-   *
-   * Not part of the API, don't use it from outside this component
-   */
-  public _onSchedulingChanged(calendarRef: any): void {
-    this.syncSchedulingFilters();
-
-    if (calendarRef && calendarRef.overlayVisible) {
-      calendarRef.overlayVisible = false;
-    }
-
-  }
-
 
   private _getNodeByFilterItem(filterItem: FilterItem): { node: PrimeTreeNode, treeData: TreeFilterData }[] {
     const result: { node: PrimeTreeNode, treeData: TreeFilterData }[] = [];
@@ -553,26 +440,13 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
     }
   }
 
-  public _onTreeNodeUnselect({ node }: { node: PrimeTreeNode }, treeSection: TreeFilterData) {
+  public _onTreeNodeUnselect({ node }: { node: PrimeTreeNode }, treeSection: TreeFilterData): void {
     if (node instanceof PrimeTreeNode) {
       const filters = this._getFiltersByNode(node);
       if (filters && filters.length) {
         this._bulkLogStore.removeFilters(...filters);
       }
-
-      if (node.data === 'scheduled') {
-        this._scheduledFilterError = null;
-      }
     }
-  }
-
-  /**
-   * Stop propagating clicks of the provided event.
-   *
-   * Not part of the API, don't use it from outside this component
-   */
-  public _blockScheduleToggle(event) {
-    event.stopPropagation();
   }
 
   /**
@@ -580,7 +454,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    *
    * Not part of the API, don't use it from outside this component
    */
-  public _close() {
+  public _close(): void {
     if (this.parentPopupWidget) {
       this.parentPopupWidget.close();
     }

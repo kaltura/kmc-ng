@@ -3,7 +3,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
-import { Scheduler } from 'rxjs';
+import { async } from 'rxjs/scheduler/async';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
 import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
@@ -48,7 +48,6 @@ export class BulkLogStoreService implements OnDestroy {
     errorMessage: null
   });
   private _querySource = new Subject<QueryRequestArgs>();
-  private _requestSubscription: ISubscription = null;
   private _activeFilters = new BehaviorSubject<{ filters: Array<FilterItem> }>({ filters: [] });
   private _activeFiltersMap: { [key: string]: Array<FilterItem> } = {};
   private _queryData: QueryData = {
@@ -106,8 +105,8 @@ export class BulkLogStoreService implements OnDestroy {
     this._querySource.complete();
     this._bulkLogSource.complete();
 
-    if (this._requestSubscription) {
-      this._requestSubscription.unsubscribe();
+    if (this._executeQueryState.subscription) {
+      this._executeQueryState.subscription.unsubscribe();
     }
   }
 
@@ -213,6 +212,8 @@ export class BulkLogStoreService implements OnDestroy {
 
     this.browserService.setInLocalStorage('bulkupload.list.pageSize', this._queryData.pageSize);
 
+    this._stateSource.next({ loading: true, errorMessage: null });
+
     const queryArgs: QueryRequestArgs = Object.assign({},
       {
         filters: this._activeFilters.getValue().filters,
@@ -226,16 +227,14 @@ export class BulkLogStoreService implements OnDestroy {
     this._executeQueryState.deferredAddedFilters = [];
     this._executeQueryState.deferredRemovedFilters = [];
 
-    this._stateSource.next({ loading: true, errorMessage: null });
-
     // execute the request
-    this._requestSubscription = this._buildQueryRequest(queryArgs)
-    // using async scheduler go allow calling this function multiple times in the same event loop cycle before invoking the logic.
-      .subscribeOn(Scheduler.async)
-      .monitor('bulkLog store: get bulkLog()')
+    this._executeQueryState.subscription = this._buildQueryRequest(queryArgs)
+      .subscribeOn(async) // using async scheduler go allow calling this function multiple times
+                          // in the same event loop cycle before invoking the logic.
+      .monitor('bulkLog store: get bulkLog()', { addedFilters, removedFilters })
       .subscribe(
         response => {
-          this._requestSubscription = null;
+          this._executeQueryState.subscription = null;
 
           this._stateSource.next({ loading: false, errorMessage: null });
 
@@ -245,7 +244,7 @@ export class BulkLogStoreService implements OnDestroy {
           });
         },
         error => {
-          this._requestSubscription = null;
+          this._executeQueryState.subscription = null;
           const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
           this._stateSource.next({ loading: false, errorMessage });
         });
