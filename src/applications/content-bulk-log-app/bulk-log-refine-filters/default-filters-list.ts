@@ -35,7 +35,7 @@ export const DefaultFiltersList: {
     ]
   },
   {
-    name: 'status', label: 'Status',
+    name: 'status', label: 'Statuses',
     bulkUploadFilterResolver: (node: PrimeTreeNode) => {
       return new StatusFilter(<string>node.data, node.label);
     },
