@@ -249,8 +249,9 @@ export class UsersStore implements OnDestroy {
   }
 
   public addUser(userForm: FormGroup) : Observable<void> {
-    let roleIds = userForm.controls['roleIds'].value;
     return Observable.create(observer => {
+      let roleIds = userForm.controls['roleIds'].value,
+          publisherId = userForm.controls['id'].value;
       this._kalturaServerClient.request(
         new UserAddAction(
           {
@@ -259,7 +260,7 @@ export class UsersStore implements OnDestroy {
               firstName:  userForm.controls['firstName'].value,
               lastName:   userForm.controls['lastName'].value,
               roleIds:    roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
-              id:         userForm.controls['id'].value
+              id:         publisherId ? publisherId : userForm.controls['email'].value
             })
           }
         )
@@ -278,9 +279,9 @@ export class UsersStore implements OnDestroy {
   }
 
   public updateUser(userForm: FormGroup) : Observable<void> {
-    let roleIds = userForm.controls['roleIds'].value;
     return Observable.create(observer => {
-      let userId = userForm.controls['id'].value !== '' ? userForm.controls['id'].value : userForm.controls['email'].value;
+      let roleIds = userForm.controls['roleIds'].value,
+          publisherId = userForm.controls['id'].value;
       this._kalturaServerClient.request(
         new UserUpdateAction(
           {
@@ -290,7 +291,7 @@ export class UsersStore implements OnDestroy {
               firstName:  userForm.controls['firstName'].value,
               lastName:   userForm.controls['lastName'].value,
               roleIds:    roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
-              id:         userId
+              id:         publisherId ? publisherId : userForm.controls['email'].value
             })
           }
         )
@@ -309,7 +310,8 @@ export class UsersStore implements OnDestroy {
   }
 
   public updateUserPermissions(user: KalturaUser, userForm: FormGroup) : Observable<void> {
-    let roleIds = userForm.controls['roleIds'].value;
+    let roleIds = userForm.controls['roleIds'].value,
+        publisherId = userForm.controls['id'].value;
     return Observable.create(observer => {
       this._kalturaServerClient.request(
         new UserUpdateAction(
@@ -320,7 +322,7 @@ export class UsersStore implements OnDestroy {
               firstName:  userForm.controls['firstName'].value,
               lastName:   userForm.controls['lastName'].value,
               roleIds:    roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
-              id:         userForm.controls['id'].value,
+              id:         publisherId ? publisherId : userForm.controls['email'].value,
               isAdmin:    true
             })
           }
