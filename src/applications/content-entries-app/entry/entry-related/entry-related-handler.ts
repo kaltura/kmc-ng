@@ -71,6 +71,7 @@ export class EntryRelatedHandler extends EntryFormWidget
                     const relatedFiles = this._relatedFiles.getValue().items;
                     const relatedFile = relatedFiles ? relatedFiles.find(file => file.uploadFileId === uploadedFile.id) : null;
 
+
                     if (relatedFile) {
                         switch (uploadedFile.status) {
 							case 'purged':

@@ -1,6 +1,7 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { NewUploadFile } from '../../kmc-upload-app/kmc-upload-app.service';
+import { UploadFileData } from './upload-list.component';
+
 
 @Component({
   selector: 'kUploadListTable',
@@ -9,21 +10,18 @@ import { NewUploadFile } from '../../kmc-upload-app/kmc-upload-app.service';
 })
 export class UploadListTableComponent implements AfterViewInit {
   @Input()
-  set uploads(data: Array<NewUploadFile>) {
+  set uploads(data: Array<UploadFileData>) {
     if (!this._deferredLoading) {
-      // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
-      // (ie when returning from entry page) - we should force detect changes on an empty list
-      this._uploads = [];
-      this._cdRef.detectChanges();
+      // Important: no need to use 'cdRef.detectChanges()' here since the table
+      // doesn't use 'rowTrackBy' property
       this._uploads = data;
-      this._cdRef.detectChanges();
       this._setEmptyMessage();
     } else {
       this._deferredUploads = data
     }
   }
 
-  @Input() selectedUploads: Array<NewUploadFile> = [];
+  @Input() selectedUploads: Array<UploadFileData> = [];
 
   @Output()
   sortChanged = new EventEmitter<any>();
@@ -32,14 +30,14 @@ export class UploadListTableComponent implements AfterViewInit {
   onSelectedEntriesChange = new EventEmitter<any>();
 
   @Output()
-  onCancelUpload = new EventEmitter<NewUploadFile>();
+  onCancelUpload = new EventEmitter<UploadFileData>();
 
   private _deferredUploads: any[];
-  public _uploads: Array<NewUploadFile> = [];
+  public _uploads: Array<UploadFileData> = [];
   public _deferredLoading = true;
   public _emptyMessage = '';
 
-  constructor(private _cdRef: ChangeDetectorRef, private _appTranslation: AppLocalization) {
+  constructor( private _appTranslation: AppLocalization) {
   }
 
   ngAfterViewInit() {
@@ -61,14 +59,37 @@ export class UploadListTableComponent implements AfterViewInit {
     }
   }
 
-  public _relatedTableRowStyle(rowData: NewUploadFile): string {
-    if (rowData.uploadFailure) {
-      return 'has-error';
+    private _reorderFiles(): void {
+    // TODO [kmcng]
+        // this._updateFiles(R.sortBy(R.prop('statusWeight'))(this._getFiles()));
     }
 
-    if (rowData.removing) {
-      return 'removing';
+    private _getStatusWeight(status: string): number {
+    // TODO [kmcng]
+    throw new Error('not implemented');
+        // switch (status) {
+        //     case 'uploadFailed':
+        //     case 'uploadCompleted':
+        //         return 0;
+        //     case 'uploading':
+        //         return 1;
+        //     case 'pending':
+        //         return 2;
+        //     default:
+        //         return 3;
+        // }
     }
+
+
+    public _relatedTableRowStyle(rowData: UploadFileData): string {
+    // TODO [kmcng] original data provided from service doesn't have those properties
+    // if (rowData.uploadFailure) {
+    //   return 'has-error';
+    // }
+    //
+    // if (rowData.removing) {
+    //   return 'removing';
+    // }
 
     return '';
   }

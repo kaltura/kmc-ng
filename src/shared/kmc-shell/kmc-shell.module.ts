@@ -28,6 +28,7 @@ import { EntryTypePipe } from 'app-shared/kmc-shell/pipes/entry-type.pipe';
         EntryTypePipe
     ],
     providers: <any[]>[
+
     ]
 })
 export class KMCShellModule {
