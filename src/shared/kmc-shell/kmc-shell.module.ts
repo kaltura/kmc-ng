@@ -9,7 +9,6 @@ import { BrowserService } from "./providers/browser.service";
 import { AppContainerComponent } from "./components/app-container/app-container.component";
 import { ReleaseNotesComponent } from "./components/release-notes/release-notes.component";
 import { EntryTypePipe } from 'app-shared/kmc-shell/pipes/entry-type.pipe';
-import { KmcUploadManagementService } from 'app-shared/kmc-shell/kmc-upload-management.service';
 
 @NgModule({
     imports: <any[]>[
@@ -45,8 +44,7 @@ export class KMCShellModule {
             ngModule: KMCShellModule,
             providers: <any[]>[
                 BrowserService,
-                AppShellService,
-                KmcUploadManagementService
+                AppShellService
             ]
         };
     }

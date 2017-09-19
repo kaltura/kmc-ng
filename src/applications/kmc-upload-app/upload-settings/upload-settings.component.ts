@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { NewEntryUploadService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { environment } from 'app-environment';
@@ -21,8 +21,10 @@ export interface UploadSettingsFile {
     isEditing?: boolean;
     hasError?: boolean;
     errorToken?: string;
-    size:number;
+    size: number;
 }
+
+
 @Component({
   selector: 'kKMCUploadSettings',
   templateUrl: './upload-settings.component.html',
@@ -65,9 +67,9 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
 
 
   constructor(private _kalturaServerClient: KalturaClient,
+              private _newEntryUploadService : NewEntryUploadService,
               private _formBuilder: FormBuilder,
-              private _appLocalization: AppLocalization,
-              private _browserService: BrowserService) {
+              private _appLocalization: AppLocalization) {
     this._buildForm();
   }
 
@@ -185,17 +187,41 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
       }
   }
 
-  public _upload(files: Array<UploadSettingsFile>): void {
-    if (files.some(({ isEditing }) => isEditing)) {
+  public _upload(): void {
+
+    if (this._files.some(({ isEditing }) => isEditing)) {
       return;
     }
 
-    if (this._validateFiles(files))
-    {
+    const trancodingProfileId = this._profileForm.value.transcodingProfile;
 
-        this.parentPopupWidget.close();
+    if (trancodingProfileId === null || typeof trancodingProfileId === 'undefined' || trancodingProfileId.length === 0)
+    {
+        this._transcodingProfileError = new AreaBlockerMessage({
+            message: this._appLocalization.get('applications.upload.validation.missingTranscodingProfile'),
+            buttons: [
+                {
+                    label: this._appLocalization.get('app.common.ok'),
+                    action: () => {
+                        this._transcodingProfileError = null;
+                    }
+                }
+            ]
+        });
+        return;
     }
 
+    if (this._validateFiles(this._files))
+    {
+        this.parentPopupWidget.close();
+        const uploadFileDataList = this._files.map(fileData => ({
+                file : fileData.file,
+                mediaType : fileData.mediaType,
+                name : fileData.name
+            }));
+
+        this._newEntryUploadService.upload(uploadFileDataList, trancodingProfileId * 1);
+    }
   }
 
     private _validateFiles(files: Array<UploadSettingsFile>): boolean {
@@ -223,11 +249,6 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
         });
 
         return result;
-    }
-
-
-    private _updateFilesWithError(validationFn: (file: UploadSettingsFile) => boolean): <T>(files: T) => T {
-        return (files) => files.map(file => Object.assign({}, file, { hasError: validationFn(file) }));
     }
 
 

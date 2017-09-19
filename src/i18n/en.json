@@ -133,6 +133,7 @@
       "validation": {
         "error": "Error",
         "wrongType": "Select media type",
+        "missingTranscodingProfile" : "Select transcoding profile",
         "fileSizeExceeded": "File size exceeded TBD"
       },
       "uploadMenu": {

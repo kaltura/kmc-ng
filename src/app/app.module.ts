@@ -63,6 +63,7 @@ import { PasswordExpiredFormComponent } from './components/login/password-expire
 import { InvalidLoginHashFormComponent } from './components/login/invalid-login-hash-form/invalid-login-hash-form.component';
 import { AppMenuContentComponent } from './components/app-menu/app-menu-content.component';
 import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-app.module';
+import { NewEntryUploadModule } from 'app-shared/kmc-shell';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -101,7 +102,8 @@ export function clientConfigurationFactory() {
     ReactiveFormsModule,
     TooltipModule,
     GrowlModule,
-    KmcUploadAppModule
+    KmcUploadAppModule,
+    NewEntryUploadModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,

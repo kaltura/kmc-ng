@@ -1,6 +1,7 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { KmcUploadManagementService, UploadFileData } from 'app-shared/kmc-shell';
+import { UploadFileData } from './upload-list.component';
+
 
 @Component({
   selector: 'kUploadListTable',
@@ -11,12 +12,9 @@ export class UploadListTableComponent implements AfterViewInit {
   @Input()
   set uploads(data: Array<UploadFileData>) {
     if (!this._deferredLoading) {
-      // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
-      // (ie when returning from entry page) - we should force detect changes on an empty list
-      this._uploads = [];
-      this._cdRef.detectChanges();
+      // Important: no need to use 'cdRef.detectChanges()' here since the table
+      // doesn't use 'rowTrackBy' property
       this._uploads = data;
-      this._cdRef.detectChanges();
       this._setEmptyMessage();
     } else {
       this._deferredUploads = data
@@ -39,7 +37,7 @@ export class UploadListTableComponent implements AfterViewInit {
   public _deferredLoading = true;
   public _emptyMessage = '';
 
-  constructor(private _cdRef: ChangeDetectorRef, private _appTranslation: AppLocalization) {
+  constructor( private _appTranslation: AppLocalization) {
   }
 
   ngAfterViewInit() {
@@ -61,7 +59,29 @@ export class UploadListTableComponent implements AfterViewInit {
     }
   }
 
-  public _relatedTableRowStyle(rowData: UploadFileData): string {
+    private _reorderFiles(): void {
+    // TODO [kmcng]
+        // this._updateFiles(R.sortBy(R.prop('statusWeight'))(this._getFiles()));
+    }
+
+    private _getStatusWeight(status: string): number {
+    // TODO [kmcng]
+    throw new Error('not implemented');
+        // switch (status) {
+        //     case 'uploadFailed':
+        //     case 'uploadCompleted':
+        //         return 0;
+        //     case 'uploading':
+        //         return 1;
+        //     case 'pending':
+        //         return 2;
+        //     default:
+        //         return 3;
+        // }
+    }
+
+
+    public _relatedTableRowStyle(rowData: UploadFileData): string {
     // TODO [kmcng] original data provided from service doesn't have those properties
     // if (rowData.uploadFailure) {
     //   return 'has-error';
