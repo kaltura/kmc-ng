@@ -1,12 +1,12 @@
 <div class="kUploadsTableWrapper" kFillHeight>
-  <div class="kUploadsTable" [class.noResults]="!_uploads.length">
+  <div class="kUploadsTable" [class.noResults]="!uploads.length">
     <p-dataTable #dataTable
                  [scrollable]="true"
                  scrollHeight="100%"
                  dataKey="entryId"
                  [immutable]="false"
-                 [value]="_uploads"
-                 [emptyMessage]="_emptyMessage"
+                 [value]="uploads"
+                 [emptyMessage]="!uploads.length ? _emptyMessage : ''"
                  [rowStyleClass]="_relatedTableRowStyle"
                  (selectionChange)="onSelectedEntriesChange.emit($event)"
                  [(selection)]="selectedUploads">
@@ -58,7 +58,7 @@
                 [style]="{ 'width': '100px' }"
                 [sortable]="false">
         <ng-template let-col let-file="rowData" pTemplate="body">
-          <span>{{ 'applications.content.uploadControl.table.status.' + file[col.field] | translate }}</span>
+          <span>{{ file[col.field] | kUploadStatus }}</span>
         </ng-template>
       </p-column>
 
