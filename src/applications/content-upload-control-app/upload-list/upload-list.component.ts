@@ -1,11 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService, NewEntryUploadFile } from 'app-shared/kmc-shell';
-import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization, TrackedFile, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 
 export interface UploadFileData {
   id: string;
   fileName: string;
+  fileSize: number;
+  uploadedOn: Date;
+  status: TrackedFileStatuses;
+  mediaType: KalturaMediaType;
+  entryId?: string;
+  progress?: number;
 }
 
 @Component({
@@ -25,73 +32,92 @@ export class UploadListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._createInitialUploadsList();
-
-    // TODO [kmcng] Remember to perform cancel/purge using the upload management service so the singleton service will also handle those scenarios
     this._uploadManagement.onFileStatusChanged$
       .cancelOnDestroy(this)
+      .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile)
       .subscribe(
-        trackedFile => {
-          // TODO [kmcng] handle all relevant statues
-          if (trackedFile.data instanceof NewEntryUploadFile) {
+        (trackedFile: TrackedFile) => {
+          // NOTE: this service does not handle 'purged' and 'waitingUpload' statuses by design.
+          switch (trackedFile.status) {
+            case TrackedFileStatuses.added:
+              this._addFile(trackedFile);
+              break;
 
-            switch (trackedFile.status) {
-              case TrackedFileStatuses.purged:
-                // remove from list
-                break;
-              case TrackedFileStatuses.waitingUpload:
-                // do nothing
-                break;
-              case TrackedFileStatuses.added:
-                // TODO [kmcng] remove duplicate with '_createInitialUploadsList'
-                this._uploads.push({
-                  id: trackedFile.id,
-                  fileName: trackedFile.data.getFileName()
-                });
-                break;
-              default:
-                break;
-            }
+            case TrackedFileStatuses.mediaCreated:
+              this._updateFile(trackedFile.id, { entryId: trackedFile.entryId });
+              break;
 
+            case TrackedFileStatuses.uploading:
+            case TrackedFileStatuses.uploadCompleted:
+              this._updateFile(trackedFile.id, {
+                progress: trackedFile.progress,
+                status: trackedFile.status
+              });
+
+              setTimeout(() => {
+                this._removeFile(trackedFile.id);
+                this._uploadManagement.purgeUpload(trackedFile.id);
+              }, 5000);
+              break;
+
+            case TrackedFileStatuses.uploadFailed:
+              this._updateFile(trackedFile.id, { status: trackedFile.status });
+              break;
+
+            case TrackedFileStatuses.purged:
+              this._removeFile(trackedFile.id);
+              break;
+
+            default:
+              break;
           }
         }
       )
   }
 
-  private _createInitialUploadsList(): void {
-    const items: UploadFileData[] = [];
-
-    this._uploadManagement.getTrackedFiles()
-      .forEach(trackedFile => {
-        if (trackedFile.data instanceof NewEntryUploadFile) {
-
-          // TODO [kmcng]complete logic if needed
-          items.push({
-            id: trackedFile.id,
-            fileName: trackedFile.data.getFileName()
-          })
-        }
-
-      });
-    this._uploads = items;
-  }
-
   ngOnDestroy() {
   }
 
-  _clearSelection(): void {
+  private _addFile(trackedFile: TrackedFile): void {
+    const fileData = <NewEntryUploadFile>trackedFile.data;
+
+    this._uploads.push({
+      id: trackedFile.id,
+      fileName: fileData.getFileName(),
+      fileSize: fileData.getFileSize(),
+      mediaType: fileData.mediaType,
+      status: trackedFile.status,
+      uploadedOn: trackedFile.uploadStartAt,
+      progress: trackedFile.progress
+    });
+  }
+
+  private _removeFile(id: string): void {
+    const relevantFileIndex = this._uploads.findIndex(file => file.id === id);
+    this._uploads.splice(relevantFileIndex, 1);
+  }
+
+  private _updateFile(id, changes: Partial<UploadFileData>): void {
+    const relevantFile = this._uploads.find(file => file.id === id);
+
+    if (relevantFile) {
+      Object.assign(relevantFile, changes);
+    }
+  }
+
+  public _clearSelection(): void {
     this._selectedUploads = [];
   }
 
-  _selectedEntriesChange(event): void {
+  public _selectedEntriesChange(event): void {
     this._selectedUploads = event;
   }
 
-  _cancelUpload(file: UploadFileData): void {
+  public _cancelUpload(file: UploadFileData): void {
     this._uploadManagement.cancelUpload(file.id, true);
   }
 
-  _bulkCancel(): void {
+  public _bulkCancel(): void {
     if (this._selectedUploads.length) {
       this._browserService.confirm(
         {
