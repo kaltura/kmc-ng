@@ -12,6 +12,7 @@ import { KalturaConversionProfileFilter } from 'kaltura-typescript-client/types/
 import { KalturaConversionProfileType } from 'kaltura-typescript-client/types/KalturaConversionProfileType';
 import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { TranscodingProfileManagement } from '@kaltura-ng/kaltura-server-utils/transcoding-profile-management';
 
 export interface UploadSettingsFile {
   file: File;
@@ -68,6 +69,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   constructor(private _kalturaServerClient: KalturaClient,
               private _newEntryUploadService: NewEntryUploadService,
               private _formBuilder: FormBuilder,
+              private _transcodingProfileManagement: TranscodingProfileManagement,
               private _appLocalization: AppLocalization) {
     this._buildForm();
   }
@@ -132,17 +134,10 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
 
   private _loadTranscodingProfiles() {
     this._transcodingProfileLoading = true;
-    this._kalturaServerClient
-      .request(new ConversionProfileListAction(
-        {
-          filter: new KalturaConversionProfileFilter(
-            { typeEqual: KalturaConversionProfileType.media }
-          ),
-          pager: new KalturaFilterPager({ pageSize: 500 })
-        }))
+
+    this._transcodingProfileManagement.get()
       .subscribe(
-        response => {
-          const profiles = response.objects;
+        profiles => {
           this._transcodingProfileLoading = false;
           this._transcodingProfiles = profiles.map(({ name: label, id: value }) => ({ label, value }));
 

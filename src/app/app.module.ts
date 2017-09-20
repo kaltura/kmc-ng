@@ -64,6 +64,7 @@ import { InvalidLoginHashFormComponent } from './components/login/invalid-login-
 import { AppMenuContentComponent } from './components/app-menu/app-menu-content.component';
 import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-app.module';
 import { NewEntryUploadModule } from 'app-shared/kmc-shell';
+import { TranscodingProfileManagementModule } from '@kaltura-ng/kaltura-server-utils/transcoding-profile-management';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -103,7 +104,8 @@ export function clientConfigurationFactory() {
     TooltipModule,
     GrowlModule,
     KmcUploadAppModule,
-    NewEntryUploadModule.forRoot()
+    NewEntryUploadModule.forRoot(),
+    TranscodingProfileManagementModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
