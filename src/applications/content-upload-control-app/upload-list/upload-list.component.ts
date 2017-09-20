@@ -1,11 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService, NewEntryUploadFile } from 'app-shared/kmc-shell';
 import { AppLocalization, UploadManagement } from '@kaltura-ng/kaltura-common';
-import { NewEntryUploadFile } from 'app-shared/kmc-shell';
 
-export interface UploadFileData
-{
+export interface UploadFileData {
   id: string;
   fileName: string;
 }
@@ -16,70 +14,66 @@ export interface UploadFileData
   styleUrls: ['./upload-list.component.scss'],
 })
 export class UploadListComponent implements OnInit, OnDestroy {
-  public _selectedUploads: Array<UploadFileData> = [];
-  public _uploads: Array<UploadFileData> = [];
+  public _selectedUploads: UploadFileData[] = [];
+  public _uploads: UploadFileData[] = [];
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
 
-  constructor(
-      private _uploadManagement: UploadManagement,
-      private _browserService: BrowserService,
+  constructor(private _uploadManagement: UploadManagement,
+              private _browserService: BrowserService,
               private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
-      this._createInitialUploadsList();
+    this._createInitialUploadsList();
 
-      // TODO [kmcng] Remember to perform cancel/purge using the upload management service so the singleton service will also handle those scenarios
-      this._uploadManagement.onFileStatusChanged$
-          .cancelOnDestroy(this)
-          .subscribe(
-              trackedFile =>
-              {
-                  // TODO [kmcng] handle all relevant statues
-                  if (trackedFile.data instanceof NewEntryUploadFile) {
+    // TODO [kmcng] Remember to perform cancel/purge using the upload management service so the singleton service will also handle those scenarios
+    this._uploadManagement.onFileStatusChanged$
+      .cancelOnDestroy(this)
+      .subscribe(
+        trackedFile => {
+          // TODO [kmcng] handle all relevant statues
+          if (trackedFile.data instanceof NewEntryUploadFile) {
 
-                      switch (trackedFile.status) {
-                          case 'purged':
-                              // remove from list
-                              break;
-                          case 'waitingUpload':
-                              // do nothing
-                              break;
-                          case 'added':
-                              // TODO [kmcng] remove duplicate with '_createInitialUploadsList'
-                              this._uploads.push({
-                                  id : trackedFile.id,
-                                  fileName : trackedFile.data.getFileName()
-                              });
-                              break;
-                          default:
-                              break;
-                      }
+            switch (trackedFile.status) {
+              case 'purged':
+                // remove from list
+                break;
+              case 'waitingUpload':
+                // do nothing
+                break;
+              case 'added':
+                // TODO [kmcng] remove duplicate with '_createInitialUploadsList'
+                this._uploads.push({
+                  id: trackedFile.id,
+                  fileName: trackedFile.data.getFileName()
+                });
+                break;
+              default:
+                break;
+            }
 
-                  }
-              }
-          )
+          }
+        }
+      )
   }
 
-  private _createInitialUploadsList(): void{
-      const items : UploadFileData[] = [];
+  private _createInitialUploadsList(): void {
+    const items: UploadFileData[] = [];
 
-      this._uploadManagement.getTrackedFiles()
-          .forEach(trackedFile =>
-          {
-              if (trackedFile.data instanceof NewEntryUploadFile)
-              {
+    this._uploadManagement.getTrackedFiles()
+      .forEach(trackedFile => {
+        if (trackedFile.data instanceof NewEntryUploadFile) {
 
-                  // TODO [kmcng]complete logic if needed
-                  items.push({
-                      id : trackedFile.id,
-                      fileName : trackedFile.data.getFileName()
-                  })
-              }
+          // TODO [kmcng]complete logic if needed
+          items.push({
+            id: trackedFile.id,
+            fileName: trackedFile.data.getFileName()
+          })
+        }
 
-          });
-      this._uploads = items;
+      });
+    this._uploads = items;
   }
 
   ngOnDestroy() {
@@ -94,7 +88,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
   }
 
   _cancelUpload(file: UploadFileData): void {
-    this._uploadManagement.cancelUpload(file.id,true);
+    this._uploadManagement.cancelUpload(file.id, true);
   }
 
   _bulkCancel(): void {
@@ -104,9 +98,8 @@ export class UploadListComponent implements OnInit, OnDestroy {
           header: this._appLocalization.get('applications.content.uploadControl.bulkCancel.header'),
           message: this._appLocalization.get('applications.content.uploadControl.bulkCancel.message'),
           accept: () => {
-            this._selectedUploads.forEach(file =>
-            {
-                this._uploadManagement.cancelUpload(file.id,true);
+            this._selectedUploads.forEach(file => {
+              this._uploadManagement.cancelUpload(file.id, true);
             });
 
             this._clearSelection();

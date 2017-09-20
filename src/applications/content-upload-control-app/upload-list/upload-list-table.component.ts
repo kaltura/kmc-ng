@@ -10,7 +10,7 @@ import { UploadFileData } from './upload-list.component';
 })
 export class UploadListTableComponent implements AfterViewInit {
   @Input()
-  set uploads(data: Array<UploadFileData>) {
+  set uploads(data: UploadFileData[]) {
     if (!this._deferredLoading) {
       // Important: no need to use 'cdRef.detectChanges()' here since the table
       // doesn't use 'rowTrackBy' property
@@ -21,7 +21,7 @@ export class UploadListTableComponent implements AfterViewInit {
     }
   }
 
-  @Input() selectedUploads: Array<UploadFileData> = [];
+  @Input() selectedUploads: UploadFileData[] = [];
 
   @Output()
   sortChanged = new EventEmitter<any>();
@@ -33,7 +33,7 @@ export class UploadListTableComponent implements AfterViewInit {
   onCancelUpload = new EventEmitter<UploadFileData>();
 
   private _deferredUploads: any[];
-  public _uploads: Array<UploadFileData> = [];
+  public _uploads: UploadFileData[] = [];
   public _deferredLoading = true;
   public _emptyMessage = '';
 

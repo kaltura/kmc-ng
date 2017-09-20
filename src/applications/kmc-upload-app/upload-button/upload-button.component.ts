@@ -13,16 +13,15 @@ export class UploadButtonComponent {
   constructor() {
   }
 
-    _onMenuItemSelected(item : string): void {
+  _onMenuItemSelected(item: string): void {
     this.uploadMenuPopup.close();
 
-    switch (item)
-    {
-        case "uploadFromDesktop":
-            this.uploadSettingsPopup.open();
-            break;
-        default:
-          break;
+    switch (item) {
+      case 'uploadFromDesktop':
+        this.uploadSettingsPopup.open();
+        break;
+      default:
+        break;
 
     }
 

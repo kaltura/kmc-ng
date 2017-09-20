@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, AfterViewInit, Output, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -11,17 +11,16 @@ import { ConversionProfileListAction } from 'kaltura-typescript-client/types/Con
 import { KalturaConversionProfileFilter } from 'kaltura-typescript-client/types/KalturaConversionProfileFilter';
 import { KalturaConversionProfileType } from 'kaltura-typescript-client/types/KalturaConversionProfileType';
 import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { Observable } from 'rxjs/Observable';
-import { KalturaClient } from "@kaltura-ng/kaltura-client";
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
 
 export interface UploadSettingsFile {
-    file: File;
-    mediaType: KalturaMediaType;
-    name: string;
-    isEditing?: boolean;
-    hasError?: boolean;
-    errorToken?: string;
-    size: number;
+  file: File;
+  mediaType: KalturaMediaType;
+  name: string;
+  isEditing?: boolean;
+  hasError?: boolean;
+  errorToken?: string;
+  size: number;
 }
 
 
@@ -33,18 +32,18 @@ export interface UploadSettingsFile {
 export class UploadSettingsComponent implements OnInit, AfterViewInit {
 
 
-    @Input() parentPopupWidget: PopupWidgetComponent;
-  @ViewChild('fileDialog')  _fileDialog: FileDialogComponent;
+  @Input() parentPopupWidget: PopupWidgetComponent;
+  @ViewChild('fileDialog') _fileDialog: FileDialogComponent;
 
   private _tempName: string;
 
-  public _transcodingProfiles: Array<{ value: number, label: string }>;
+  public _transcodingProfiles: { value: number, label: string }[];
   public _profileForm: FormGroup;
   public _transcodingProfileField: AbstractControl;
   public _transcodingProfileError: AreaBlockerMessage;
   public _transcodingProfileLoading = false;
   public _files: UploadSettingsFile[] = [];
-  public _fileTypes: Array<SelectItem> = [
+  public _fileTypes: SelectItem[] = [
     {
       'label': this._appLocalization.get('applications.upload.uploadSettings.mediaTypes.video'),
       'value': KalturaMediaType.video
@@ -59,7 +58,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     },
   ];
 
-    public _allowedExtensions = `
+  public _allowedExtensions = `
     .flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v,.mpeg,.mxf,.rm,.rv,.rmvb,.ts,.ogg,.ogv,.vob,.webm,.mts,.arf,.mkv,
     .flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp3,.wav,.ra,.rm,.wma,.aif,.m4a,
     .jpg,.jpeg,.gif,.png
@@ -67,7 +66,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
 
 
   constructor(private _kalturaServerClient: KalturaClient,
-              private _newEntryUploadService : NewEntryUploadService,
+              private _newEntryUploadService: NewEntryUploadService,
               private _formBuilder: FormBuilder,
               private _appLocalization: AppLocalization) {
     this._buildForm();
@@ -78,70 +77,69 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     this._transcodingProfileField = this._profileForm.controls['transcodingProfile'];
   }
 
-  ngAfterViewInit() : void{
-      this._fileDialog.open();
+  ngAfterViewInit(): void {
+    this._fileDialog.open();
   }
 
   ngOnInit() {
     this._loadTranscodingProfiles();
   }
 
-  private _handleSelectedFiles(files : FileList)
-    {
-        const isEditing = false;
+  private _handleSelectedFiles(files: FileList) {
+    const isEditing = false;
 
-        const newItems = Array.from(files).map(file => {
-            const ext = this._getFileExtension(file.name);
-            const mediaType = this._getMediaTypeFromExtension(ext);
-            const { name, size } = file;
-            return ({ file, mediaType, name, size, isEditing });
-        });
+    const newItems = Array.from(files).map(file => {
+      const ext = this._getFileExtension(file.name);
+      const mediaType = this._getMediaTypeFromExtension(ext);
+      const { name, size } = file;
+      return ({ file, mediaType, name, size, isEditing });
+    });
 
-        this._files = [...this._files, ...newItems];
+    this._files = [...this._files, ...newItems];
+  }
+
+  private _getFileExtension(filename: string): string {
+    return /(?:\.([^.]+))?$/.exec(filename)[1];
+  }
+
+  private _getMediaTypeFromExtension(extension: string): KalturaMediaType | null {
+    const imageFiles = ['jpg', 'jpeg', 'gif', 'png'];
+    const audioFiles = [
+      'flv', 'asf', 'qt', 'mov', 'mpg',
+      'avi', 'wmv', 'mp3', 'wav', 'ra',
+      'rm', 'wma', 'aif', 'm4a'
+    ];
+    const videoFiles = [
+      'flv', 'asf', 'qt', 'mov', 'mpg',
+      'avi', 'wmv', 'mp4', '3gp', 'f4v',
+      'm4v', 'mpeg', 'mxf', 'rm', 'rv',
+      'rmvb', 'ts', 'ogg', 'ogv', 'vob',
+      'webm', 'mts', 'arf', 'mkv'
+    ];
+
+    switch (true) {
+      case videoFiles.includes(extension):
+        return KalturaMediaType.video;
+      case audioFiles.includes(extension):
+        return KalturaMediaType.audio;
+      case imageFiles.includes(extension):
+        return KalturaMediaType.image;
+      default:
+        return null;
     }
-
-    private _getFileExtension(filename: string): string {
-        return /(?:\.([^.]+))?$/.exec(filename)[1];
-    }
-
-    private _getMediaTypeFromExtension(extension: string): KalturaMediaType | null {
-        const imageFiles = ['jpg', 'jpeg', 'gif', 'png'];
-        const audioFiles = [
-            'flv', 'asf', 'qt', 'mov', 'mpg',
-            'avi', 'wmv', 'mp3', 'wav', 'ra',
-            'rm', 'wma', 'aif', 'm4a'
-        ];
-        const videoFiles = [
-            'flv', 'asf', 'qt', 'mov', 'mpg',
-            'avi', 'wmv', 'mp4', '3gp', 'f4v',
-            'm4v', 'mpeg', 'mxf', 'rm', 'rv',
-            'rmvb', 'ts', 'ogg', 'ogv', 'vob',
-            'webm', 'mts', 'arf', 'mkv'
-        ];
-
-        switch (true) {
-            case videoFiles.includes(extension):
-                return KalturaMediaType.video;
-            case audioFiles.includes(extension):
-                return KalturaMediaType.audio;
-            case imageFiles.includes(extension):
-                return KalturaMediaType.image;
-            default:
-                return null;
-        }
-    }
+  }
 
 
-    private _loadTranscodingProfiles() {
+  private _loadTranscodingProfiles() {
     this._transcodingProfileLoading = true;
-        this._kalturaServerClient
-            .request(new ConversionProfileListAction(
-                {
-                    filter: new KalturaConversionProfileFilter(
-                        {typeEqual: KalturaConversionProfileType.media}
-                    ),
-                    pager: new KalturaFilterPager({pageSize: 500})
-                }))
+    this._kalturaServerClient
+      .request(new ConversionProfileListAction(
+        {
+          filter: new KalturaConversionProfileFilter(
+            { typeEqual: KalturaConversionProfileType.media }
+          ),
+          pager: new KalturaFilterPager({ pageSize: 500 })
+        }))
       .subscribe(
         response => {
           const profiles = response.objects;
@@ -179,12 +177,12 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   }
 
   public _removeFile(file: UploadSettingsFile): void {
-      const fileIndex = this._files.indexOf(file);
-      if (fileIndex !== -1) {
-        const newList = Array.from(this._files);
-        newList.splice(fileIndex, 1);
-        this._files = newList;
-      }
+    const fileIndex = this._files.indexOf(file);
+    if (fileIndex !== -1) {
+      const newList = Array.from(this._files);
+      newList.splice(fileIndex, 1);
+      this._files = newList;
+    }
   }
 
   public _upload(): void {
@@ -195,61 +193,58 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
 
     const trancodingProfileId = this._profileForm.value.transcodingProfile;
 
-    if (trancodingProfileId === null || typeof trancodingProfileId === 'undefined' || trancodingProfileId.length === 0)
-    {
-        this._transcodingProfileError = new AreaBlockerMessage({
-            message: this._appLocalization.get('applications.upload.validation.missingTranscodingProfile'),
-            buttons: [
-                {
-                    label: this._appLocalization.get('app.common.ok'),
-                    action: () => {
-                        this._transcodingProfileError = null;
-                    }
-                }
-            ]
-        });
-        return;
+    if (trancodingProfileId === null || typeof trancodingProfileId === 'undefined' || trancodingProfileId.length === 0) {
+      this._transcodingProfileError = new AreaBlockerMessage({
+        message: this._appLocalization.get('applications.upload.validation.missingTranscodingProfile'),
+        buttons: [
+          {
+            label: this._appLocalization.get('app.common.ok'),
+            action: () => {
+              this._transcodingProfileError = null;
+            }
+          }
+        ]
+      });
+      return;
     }
 
-    if (this._validateFiles(this._files))
-    {
-        this.parentPopupWidget.close();
-        const uploadFileDataList = this._files.map(fileData => ({
-                file : fileData.file,
-                mediaType : fileData.mediaType,
-                name : fileData.name
-            }));
+    if (this._validateFiles(this._files)) {
+      this.parentPopupWidget.close();
+      const uploadFileDataList = this._files.map(fileData => ({
+        file: fileData.file,
+        mediaType: fileData.mediaType,
+        name: fileData.name
+      }));
 
-        this._newEntryUploadService.upload(uploadFileDataList, trancodingProfileId * 1);
+      this._newEntryUploadService.upload(uploadFileDataList, trancodingProfileId * 1);
     }
   }
 
-    private _validateFiles(files: Array<UploadSettingsFile>): boolean {
+  private _validateFiles(files: UploadSettingsFile[]): boolean {
 
-        let result = true;
-        const allowedTypes = [KalturaMediaType.audio, KalturaMediaType.video, KalturaMediaType.image];
-        const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
+    let result = true;
+    const allowedTypes = [KalturaMediaType.audio, KalturaMediaType.video, KalturaMediaType.image];
+    const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
 
-        this._files.forEach(file => {
-            const fileSize = file.size / 1024 / 1024; // convert to Mb
+    this._files.forEach(file => {
+      const fileSize = file.size / 1024 / 1024; // convert to Mb
 
-            if (!allowedTypes.includes(file.mediaType)) {
-                result = false;
-                file.errorToken = 'applications.upload.validation.wrongType';
-                file.hasError = true;
-            }
-            else if (fileSize > maxFileSize) {
-                result = false;
-                file.hasError = true;
-                file.errorToken = 'applications.upload.validation.fileSizeExceeded';
-            } else {
-                file.hasError = false;
-                file.errorToken = null;
-            }
-        });
+      if (!allowedTypes.includes(file.mediaType)) {
+        result = false;
+        file.errorToken = 'applications.upload.validation.wrongType';
+        file.hasError = true;
+      } else if (fileSize > maxFileSize) {
+        result = false;
+        file.hasError = true;
+        file.errorToken = 'applications.upload.validation.fileSizeExceeded';
+      } else {
+        file.hasError = false;
+        file.errorToken = null;
+      }
+    });
 
-        return result;
-    }
+    return result;
+  }
 
 
   public _relatedTableRowStyle(rowData): string {
