@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService, NewEntryUploadFile } from 'app-shared/kmc-shell';
-import { AppLocalization, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 
 export interface UploadFileData {
   id: string;
@@ -36,13 +36,13 @@ export class UploadListComponent implements OnInit, OnDestroy {
           if (trackedFile.data instanceof NewEntryUploadFile) {
 
             switch (trackedFile.status) {
-              case 'purged':
+              case TrackedFileStatuses.purged:
                 // remove from list
                 break;
-              case 'waitingUpload':
+              case TrackedFileStatuses.waitingUpload:
                 // do nothing
                 break;
-              case 'added':
+              case TrackedFileStatuses.added:
                 // TODO [kmcng] remove duplicate with '_createInitialUploadsList'
                 this._uploads.push({
                   id: trackedFile.id,

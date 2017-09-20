@@ -26,7 +26,7 @@ import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators'
 import { environment } from 'app-environment';
-import { UploadManagement, TrackedFile } from '@kaltura-ng/kaltura-common';
+import { UploadManagement, TrackedFile, TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
 
 export interface RelatedFile extends KalturaAttachmentAsset
 {
@@ -74,24 +74,24 @@ export class EntryRelatedHandler extends EntryFormWidget
 
                     if (relatedFile) {
                         switch (uploadedFile.status) {
-							case 'purged':
+							              case TrackedFileStatuses.purged:
                                 this._removeFile(relatedFile);
-								break;
-                            case 'waitingUpload':
+								                break;
+                            case TrackedFileStatuses.waitingUpload:
                                 if (uploadedFile.data instanceof KalturaUploadFile) {
 
                                     relatedFile.serverUploadToken = uploadedFile.data.serverUploadToken;
                                 }
                                 break;
-                            case 'uploadCompleted':
+                            case TrackedFileStatuses.uploadCompleted:
                                 relatedFile.uploading = false;
                                 relatedFile.uploadFailure = false;
                                 break;
-                            case 'uploadFailed':
+                            case TrackedFileStatuses.uploadFailed:
                                 relatedFile.uploading = false;
                                 relatedFile.uploadFailure = true;
                                 break;
-                            case 'uploading':
+                            case TrackedFileStatuses.uploading:
                                 relatedFile.progress = (uploadedFile.progress * 100).toFixed(0);
                                 relatedFile.uploading = true;
                                 relatedFile.uploadFailure = false;

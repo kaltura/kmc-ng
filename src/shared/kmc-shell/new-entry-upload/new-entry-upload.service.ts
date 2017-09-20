@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { Observable } from 'rxjs/Observable';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import { UploadManagement } from '@kaltura-ng/kaltura-common';
+import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { MediaDeleteAction } from 'kaltura-typescript-client/types/MediaDeleteAction';
 import { NewEntryUploadFile } from 'app-shared/kmc-shell';
 
@@ -34,11 +34,12 @@ export class NewEntryUploadService implements OnDestroy {
 
             // NOTE: this service handles only 'purged' and 'waitingUpload' statuses by design.
             switch (trackedFile.status) {
-              case 'purged':
+              case TrackedFileStatuses.purged:
                 // try to (silently) delete entry and upload token.
                 // if error happens write them using _log without doing anything else
                 break;
-              case 'waitingUpload':
+              case TrackedFileStatuses.waitingUpload:
+
                 // 1 - try to create entry and set content using upload token
                 // 2 - if failed -> cancel upload while providing an error message to that upload using the following method
                 //this._uploadManagement.cancelUploadWithError(trackedFile.id,'failed to create entry');

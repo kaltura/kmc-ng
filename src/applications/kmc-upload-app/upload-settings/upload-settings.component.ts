@@ -211,7 +211,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
         name: fileData.name
       }));
 
-      this._newEntryUploadService.upload(uploadFileDataList, trancodingProfileId * 1);
+      this._newEntryUploadService.upload(uploadFileDataList, Number(trancodingProfileId));
     }
   }
 
@@ -221,7 +221,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     const allowedTypes = [KalturaMediaType.audio, KalturaMediaType.video, KalturaMediaType.image];
     const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
 
-    this._files.forEach(file => {
+    files.forEach(file => {
       const fileSize = file.size / 1024 / 1024; // convert to Mb
 
       if (!allowedTypes.includes(file.mediaType)) {

@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { TrackedFile } from '@kaltura-ng/kaltura-common';
+import { TrackedFile, TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
@@ -80,20 +80,20 @@ export class EntryCaptionsHandler extends EntryFormWidget {
                     const relevantCaption = captions ? captions.find(captionFile => captionFile.uploadFileId === uploadedFile.id) : null;
 
                     switch (uploadedFile.status) {
-                        case 'waitingUpload':
+                        case TrackedFileStatuses.waitingUpload:
                             if (uploadedFile.data instanceof KalturaUploadFile) {
                                 relevantCaption.serverUploadToken = uploadedFile.data.serverUploadToken;
                             }
                             break;
-                        case 'uploadCompleted':
+                        case TrackedFileStatuses.uploadCompleted:
                             relevantCaption.uploading = false;
                             relevantCaption.uploadFailure = false;
                             break;
-                        case 'uploadFailed':
+                        case TrackedFileStatuses.uploadFailed:
                             relevantCaption.uploading = false;
                             relevantCaption.uploadFailure = true;
                             break;
-                        case 'uploading':
+                        case TrackedFileStatuses.uploading:
                             relevantCaption.progress = (uploadedFile.progress * 100).toFixed(0);
                             relevantCaption.uploading = true;
                             relevantCaption.uploadFailure = false;
