@@ -24,7 +24,6 @@ import { AppComponent } from './app.component';
 import { routing } from './app.routes';
 
 import { KalturaAuthConfigAdapter } from './services/kaltura-auth-config-adapter.service';
-import { AppDefaultConfig } from './services/app-default-config.service';
 
 import { AppMenuService } from './services/app-menu.service';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -138,7 +137,6 @@ export function clientConfigurationFactory() {
       useClass: KalturaHttpConfigurationAdapter,
       multi: true
     },
-    AppDefaultConfig,
     { provide: AppStorage, useExisting: BrowserService },
     KalturaClient,
     {
@@ -149,14 +147,13 @@ export function clientConfigurationFactory() {
   ]
 })
 export class AppModule {
-  constructor(appBootstrap: AppBootstrap, appLocalization: AppLocalization, config: AppDefaultConfig, uploadManagement: UploadManagement) {
-
+  constructor(appBootstrap: AppBootstrap, appLocalization: AppLocalization, uploadManagement: UploadManagement) {
 
     // TODO [kmcng] move to a relevant location
     // TODO [kmcng] get max upload request
-    appLocalization.supportedLocales = environment.core.locales;
+    // appLocalization.supportedLocales = environment.core.locales;
     uploadManagement.setMaxUploadRequests(environment.uploadsShared.MAX_CONCURENT_UPLOADS);
 
-    appBootstrap.initApp(<AppBootstrapConfigType>config);
+    appBootstrap.initApp({errorRoute : "/error"});
   }
 }
