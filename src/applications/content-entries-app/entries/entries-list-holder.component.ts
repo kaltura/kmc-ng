@@ -6,6 +6,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
+import { ContentEntriesAppService } from '../content-entries-app.service';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -60,7 +61,8 @@ export class EntriesListHolderComponent {
   constructor(private _router: Router,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
-              private _entriesStore: EntriesStore) {
+              private _entriesStore: EntriesStore,
+              private _contentEntriesAppService: ContentEntriesAppService) {
     this._entriesStore.paginationCacheToken = 'entries-list';
   }
 
@@ -99,7 +101,7 @@ export class EntriesListHolderComponent {
 
     this._isBusy = true;
     this._blockerMessage = null;
-    this._entriesStore.deleteEntry(entryId).subscribe(
+    this._contentEntriesAppService.deleteEntry(entryId).subscribe(
       () => {
         this._isBusy = false;
         this._browserService.showGrowlMessage({
