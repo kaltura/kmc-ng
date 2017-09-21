@@ -103,7 +103,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
     if (queryData) {
       this.syncFreetextComponents();
-      this._filter.pageSize = this._rowsCount;
+      this._filter.pageSize = queryData.pageSize;
       this._filter.pageIndex = queryData.pageIndex - 1;
       this._filter.sortBy = queryData.sortBy;
       this._filter.sortDirection = queryData.sortDirection;
