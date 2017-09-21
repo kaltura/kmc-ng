@@ -28,9 +28,11 @@ export class EntriesListComponent implements OnInit, OnDestroy {
       const hasPagerOptions = Array.isArray(rowsPerPageOptions) && !!rowsPerPageOptions.length;
       this._rowsPerPageOptions = hasPagerOptions ? rowsPerPageOptions : null;
       this._rowsCount = hasPagerOptions ? this._entriesStore.getDefaultPageSize(hasPagerOptions) : rowsCount;
-
-      this._entriesStore.setPageSize(this._rowsCount);
+    } else {
+      this._rowsCount = this._entriesStore.getDefaultPageSize();
     }
+
+    this._entriesStore.setPageSize(this._rowsCount);
   }
 
   @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
