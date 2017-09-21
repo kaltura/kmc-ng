@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -49,6 +50,8 @@ export interface EntriesTablePaginator {
   selector: 'kEntriesTable',
   templateUrl: './entries-table.component.html',
   styleUrls: ['./entries-table.component.scss']
+  styleUrls: ['./entries-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() fillHeight = true;
