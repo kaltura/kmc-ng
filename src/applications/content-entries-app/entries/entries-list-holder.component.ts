@@ -5,7 +5,7 @@ import { EntriesListComponent } from 'app-shared/content-shared/entries-list/ent
 import { BrowserService } from 'app-shared/kmc-shell';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
+import { EntriesTableColumns, EntriesTablePaginator } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { ContentEntriesAppService } from '../content-entries-app.service';
 
 @Component({
@@ -54,8 +54,8 @@ export class EntriesListHolderComponent {
     }
   ];
 
-  public _paginator = {
-    rowsPerPageOptions: [25, 50, 75, 100]
+  public _paginator: EntriesTablePaginator = {
+    rowsPerPageOptions: [25, 50, 75, 100],
   };
 
   constructor(private _router: Router,

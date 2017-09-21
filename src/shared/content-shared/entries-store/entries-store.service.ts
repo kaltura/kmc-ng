@@ -5,11 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { async } from 'rxjs/scheduler/async';
-import {
-  MetadataProfileCreateModes,
-  MetadataProfileStore,
-  MetadataProfileTypes
-} from '@kaltura-ng/kaltura-server-utils';
+import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from '@kaltura-ng/kaltura-server-utils';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
@@ -108,22 +104,10 @@ export class EntriesStore implements OnDestroy {
   public state$ = this._state.asObservable();
   public query$ = this._querySource.asObservable();
 
-  public set paginationCacheToken(token: string) {
-    if (typeof token === 'string' && token !== '') {
-      this._paginationCacheToken = token;
-    }
-  }
-
-    public getFilterType(filter : any) : string
-    {
-      return EntriesStore.getFilterType(filter);
-    }
-  public static getFilterType(filter : any) : string
-  {
+  public static getFilterType(filter: any): string {
     const result = filter['filterType'] || filter.constructor['filterType'];
 
-    if (!result)
-    {
+    if (!result) {
       throw new Error('Failed to extract filter type value (do you have a static property named filterType?)');
     }
 
@@ -136,6 +120,14 @@ export class EntriesStore implements OnDestroy {
     EntriesStore.filterTypeMapping[this.getFilterType(filterType)] = handler;
   }
 
+  public set paginationCacheToken(token: string) {
+    this._paginationCacheToken = typeof token === 'string' && token !== '' ? token : 'default';
+  }
+
+  public getFilterType(filter: any): string {
+    return EntriesStore.getFilterType(filter);
+  }
+
   constructor(private kalturaServerClient: KalturaClient,
               private browserService: BrowserService,
               private metadataProfileService: MetadataProfileStore) {
@@ -143,9 +135,14 @@ export class EntriesStore implements OnDestroy {
     this._getMetadataProfiles();
   }
 
+  private _getPaginationCacheKey(): string {
+    return `entries.${this._paginationCacheToken}.list.pageSize`;
+  }
+
   public getDefaultPageSize(hasPagerOptions = false): number {
     if (hasPagerOptions) {
-      return this.browserService.getFromLocalStorage(`entries.${this._paginationCacheToken}.list.pageSize`) || environment.entriesShared.pageSize;
+      return this.browserService.getFromLocalStorage(this._getPaginationCacheKey())
+        || environment.entriesShared.pageSize;
     }
 
     return environment.entriesShared.pageSize;
@@ -213,11 +210,11 @@ export class EntriesStore implements OnDestroy {
 
 
   public removeFiltersByType(filterType: FilterTypeConstructor<FilterItem>): void {
-      const filtersOfType = this._activeFiltersMap[this.getFilterType(filterType)];
+    const filtersOfType = this._activeFiltersMap[this.getFilterType(filterType)];
 
-      if (filtersOfType) {
-        this.removeFilters(...filtersOfType);
-      }
+    if (filtersOfType) {
+      this.removeFilters(...filtersOfType);
+    }
   }
 
   public getFirstFilterByType<T extends FilterItem>(filterType: FilterTypeConstructor<T>): T {
@@ -311,7 +308,7 @@ export class EntriesStore implements OnDestroy {
     this.executeQueryState.deferredAddedFilters.push(...addedFilters);
     this.executeQueryState.deferredRemovedFilters.push(...removedFilters);
 
-    this.browserService.setInLocalStorage(`entries.${this._paginationCacheToken}.list.pageSize`, this._queryData.pageSize);
+    this.browserService.setInLocalStorage(this._getPaginationCacheKey(), this._queryData.pageSize);
 
     // execute the request
     this.executeQueryState.subscription = Observable.create(observer => {
