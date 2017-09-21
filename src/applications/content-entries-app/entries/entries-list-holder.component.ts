@@ -5,10 +5,7 @@ import { EntriesListComponent } from 'app-shared/content-shared/entries-list/ent
 import { BrowserService } from 'app-shared/kmc-shell';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {
-  EntriesTableColumns,
-  EntriesTableConfig
-} from 'app-shared/content-shared/entries-table/entries-table.component';
+import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 
 @Component({
   selector: 'kEntriesListHolder',

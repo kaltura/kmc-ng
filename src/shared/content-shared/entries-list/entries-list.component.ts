@@ -18,10 +18,10 @@ import {
 export class EntriesListComponent implements OnInit, OnDestroy {
   @Input() isBusy = false;
   @Input() blockerMessage: AreaBlockerMessage = null;
-  @Input() selectedEntries: Array<any> = [];
+  @Input() selectedEntries: any[] = [];
   @Input() columns: EntriesTableColumns | null;
   @Input() scrollHeight: string;
-  @Input() rowActions: Array<{ label: string, commandName: string }>;
+  @Input() rowActions: { label: string, commandName: string }[];
 
   @Input() set paginator(value: EntriesTablePaginator | null) {
     if (value) {
@@ -49,7 +49,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   };
 
   public _rowsCount: number | null;
-  public _rowsPerPageOptions: Array<number>;
+  public _rowsPerPageOptions: number[];
 
   constructor(private _entriesStore: EntriesStore) {
   }

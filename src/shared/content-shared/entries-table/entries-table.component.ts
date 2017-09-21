@@ -19,15 +19,6 @@ import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntry
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 
-export interface EntriesTableConfig {
-  dataKey?: string;
-  scrollHeight?: string;
-  fillHeight?: boolean;
-  columns?: EntriesTableColumns;
-  rowActions?: Array<CustomMenuItem>;
-  paginator?: EntriesTablePaginator;
-}
-
 export interface EntriesTableColumns {
   [key: string]: {
     width?: string;
@@ -42,14 +33,13 @@ export interface CustomMenuItem extends MenuItem {
 }
 
 export interface EntriesTablePaginator {
-  rowsPerPageOptions?: Array<number>;
+  rowsPerPageOptions?: number[];
   rowsCount?: number;
 }
 
 @Component({
   selector: 'kEntriesTable',
   templateUrl: './entries-table.component.html',
-  styleUrls: ['./entries-table.component.scss']
   styleUrls: ['./entries-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -65,7 +55,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._scrollable = !!value;
   }
 
-  @Input() rowActions: Array<{ label: string, commandName: string }> = [];
+  @Input() rowActions: { label: string, commandName: string }[] = [];
 
   @Input()
   set entries(data: any[]) {
@@ -109,7 +99,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _entries: any[] = [];
   public _deferredLoading = true;
   public _emptyMessage = '';
-  public _items: Array<CustomMenuItem>;
+  public _items: CustomMenuItem[];
 
   constructor(private appLocalization: AppLocalization, public entriesStore: EntriesStore, private cdRef: ChangeDetectorRef) {
   }
