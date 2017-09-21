@@ -38,7 +38,6 @@ export class EntriesListHolderComponent {
     rowActions: []
   };
 
-  public _scrollHeight = '100%';
   public _rowActions = [
     {
       label: this._appLocalization.get('applications.content.table.previewAndEmbed'),

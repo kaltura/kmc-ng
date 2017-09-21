@@ -20,7 +20,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   @Input() blockerMessage: AreaBlockerMessage = null;
   @Input() selectedEntries: any[] = [];
   @Input() columns: EntriesTableColumns | null;
-  @Input() scrollHeight: string;
   @Input() rowActions: { label: string, commandName: string }[];
 
   @Input() set paginator(value: EntriesTablePaginator | null) {

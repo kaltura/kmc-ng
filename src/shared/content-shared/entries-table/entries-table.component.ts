@@ -51,7 +51,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   @Input() set scrollHeight(value: string) {
-    this._scrollHeight = value || '100%';
+    this._scrollHeight = typeof value === 'string' && value !== '' ? value : '100%';
     this._scrollable = !!value;
   }
 
