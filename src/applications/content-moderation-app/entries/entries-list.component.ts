@@ -4,9 +4,6 @@ import {
 	OnInit
 } from '@angular/core';
 
-import { EntriesTableComponent } from "./entries-table.component";
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-
 @Component({
     selector: 'kEntriesList',
     templateUrl: './entries-list.component.html',

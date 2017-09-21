@@ -6,11 +6,13 @@ import {
   ViewChild
 } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { ModerationStore } from '../moderation-store/moderation-store.service';
 
 @Component({
 	selector: 'kEntriesTable',
 	templateUrl: './entries-table.component.html',
-	styleUrls: ['./entries-table.component.scss']
+	styleUrls: ['./entries-table.component.scss'],
+  providers : [ModerationStore]
 })
 export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('moderationDetails') public moderationDetails: PopupWidgetComponent;
@@ -22,7 +24,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 	ngOnInit() {}
 
 	ngAfterViewInit() {
-	  setTimeout(()=>this.moderationDetails.open());
+	  setTimeout(() => this.moderationDetails.open());
   }
 
 	ngOnDestroy() {}

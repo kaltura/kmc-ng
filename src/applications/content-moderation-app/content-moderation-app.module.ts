@@ -14,7 +14,8 @@ import {
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import {
-	KalturaUIModule
+	KalturaUIModule,
+  TooltipModule
 } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 
@@ -28,6 +29,7 @@ import { EntriesComponentsList } from './entries/entries-components-list';
       DataTableModule,
       KalturaCommonModule,
       KalturaUIModule,
+      TooltipModule,
       PaginatorModule,
       ButtonModule,
       PopupWidgetModule,

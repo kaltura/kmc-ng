@@ -1,6 +1,10 @@
 @import 'app-theme/_variables.scss';
 
 .kEntryReport {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+
   .kHeader {
     display: flex;
     flex: 0 0 auto;
@@ -46,6 +50,125 @@
 
   .kContainer {
     padding: 24px 28px;
-    text-align: center;
+
+    .kFrame {
+      text-align: center;
+      width: 100%;
+    }
+
+    .appSubMenu {
+      display: flex;
+      width: 100%;
+      background-color: white;
+      border-bottom: 1px solid $kGrayscale4;
+      margin: 0 -28px;
+      padding: 0 28px;
+
+      a {
+        color: $kGrayscale3;
+        line-height: $appMenuHeight;
+        font-size: 14px;
+        letter-spacing: .5px;
+        cursor: pointer;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+
+      .active {
+        .menuLink {
+          text-decoration: none;
+          color: $kPrimary;
+        }
+      }
+
+      .subMenuContainer {
+        margin-right: 30px;
+        position: relative;
+
+        &.active {
+          > .linkMarker {
+            opacity: 1;
+          }
+        }
+      }
+
+      .linkMarker {
+        width: 100%;
+        height: 4px;
+        position: absolute;
+        background-color: $kPrimary;
+        opacity: 0;
+        bottom: 0px;
+        transition: opacity .3s ease-in-out;
+        -moz-transition: opacity .3s ease-in-out;
+        -webkit-transition: opacity .3s ease-in-out;
+      }
+    }
+  }
+
+  .kEntryDetails {
+    padding-top: 24px;
+
+    .kRow {
+      color: $kGrayscale1;
+      margin-bottom: 20px;
+    }
+
+    .kLabels {
+      font-size: 15px;
+      color: $kGrayscale3;
+      min-width: 170px;
+      display: inline-block;
+    }
+
+    .kBanCreatorBtn {
+      width: 110px;
+      margin-left: 24px;
+      font-size: 14px;
+    }
+  }
+
+  .kEntryReport {
+    padding-top: 24px;
+
+    .kFlagsAmount {
+      font-size: 15px;
+      color: $kGrayscale1;
+      font-weight: bold;
+      margin-bottom: 24px;
+    }
+  }
+
+  .kFlagsComment {
+    margin-bottom: 20px;
+
+    .kFlagsCaption {
+      width: 100%;
+      display: flex;
+      color: $kGrayscale1;
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .kFlagsText {
+      font-size: 15px;
+    }
+
+    .kIconFlag {
+      font-size: 20px;
+      color: $kGrayscale3;
+      margin: -2px 5px 0 0;
+    }
+
+    .kFlagsDate,
+    .kFlagsText {
+      font-size: 15px;
+      margin-bottom: 10px;
+      color: $kGrayscale3;
+    }
   }
 }

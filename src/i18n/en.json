@@ -181,7 +181,28 @@
       "moderation": {
         "entryReports": "Entry Reports",
         "approveEntry": "Approve Entry",
-        "rejectEntry": "Reject Entry"
+        "rejectEntry": "Reject Entry",
+        "report": "Report",
+        "details": "Details",
+        "banCreator": "Ban Creator",
+        "flagSingular": "{{0}} Flag",
+        "flagPlural": "{{0}} Flags",
+        "sexualContent": "Sexual Content",
+        "harmfulOrDangerousAct": "Harmful Or Dangerous Act",
+        "spamOrCommercials": "Spam / Commercials",
+        "violentOrRepulsive": "Violent / Repulsive",
+        "errorConnecting": "Error connecting to server",
+        "errorOccured": "An error has occurred",
+        "notificationHasBeenSent": "A notification has been sent to your CMS system to flag this user."
+      },
+      "moderationDetails": {
+        "name": "Name",
+        "entryId": "Entry ID",
+        "duration": "Duration",
+        "plays": "Plays",
+        "moderationStatus": "Moderation Status",
+        "clippedFrom": "Clipped from",
+        "creator": "Creator"
       },
       "filters": {
         "activeFilters": "Active Filters:",
