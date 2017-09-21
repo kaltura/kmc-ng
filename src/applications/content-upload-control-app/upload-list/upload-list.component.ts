@@ -9,7 +9,7 @@ export interface UploadFileData {
   fileName: string;
   fileSize: number;
   uploadedOn: Date;
-  status: TrackedFileStatuses;
+  status: string;
   mediaType: KalturaMediaType;
   entryId?: string;
   progress?: number;
@@ -48,6 +48,12 @@ export class UploadListComponent implements OnInit, OnDestroy {
               break;
 
             case TrackedFileStatuses.uploading:
+              this._updateFile(trackedFile.id, {
+                progress: trackedFile.progress,
+                status: trackedFile.status
+              });
+              break;
+
             case TrackedFileStatuses.uploadCompleted:
               this._updateFile(trackedFile.id, {
                 progress: trackedFile.progress,
@@ -56,7 +62,8 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
               setTimeout(() => {
                 this._removeFile(trackedFile.id);
-                this._uploadManagement.purgeUpload(trackedFile.id);
+                // TODO [kmcng] [question] why do we need purge?
+                // this._uploadManagement.purgeUpload(trackedFile.id);
               }, 5000);
               break;
 

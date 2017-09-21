@@ -43,13 +43,16 @@ export class NewEntryUploadService implements OnDestroy {
             case TrackedFileStatuses.purged:
               // try to (silently) delete entry and upload token.
               // if error happens write them using _log without doing anything else
-              // this._cleanUpUpload(trackedFile);
+              this._cleanUpUpload(trackedFile);
               break;
             case TrackedFileStatuses.waitingUpload:
+              // 0 - check if file has already have entryId
               // 1 - try to create entry and set content using upload token
               // 2 - if failed -> cancel upload while providing an error message to that upload using the following method
               // 3 - try to (silently) clean up entry and upload token as done in purge
-              this._linkEntryWithFile(trackedFile);
+              if (!trackedFile.entryId) {
+                this._linkEntryWithFile(trackedFile);
+              }
               break;
             default:
               break;
@@ -62,6 +65,7 @@ export class NewEntryUploadService implements OnDestroy {
     const uploadToken = (<NewEntryUploadFile>trackedFile.data).serverUploadToken;
     const entryId = trackedFile.entryId;
 
+    // TODO [kmcng] [question] if we cancel creating of mediaEntry it's still created. How to handle?
     if (this._linkEntryWithFileSub instanceof Subscription) {
       this._linkEntryWithFileSub.unsubscribe();
       this._linkEntryWithFileSub = null;
