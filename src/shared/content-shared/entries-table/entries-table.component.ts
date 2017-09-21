@@ -71,7 +71,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  @Input() showSelect = true;
+  @Input() showBulkSelect = true;
   @Input() filter: any = {};
   @Input() selectedEntries: any[] = [];
 

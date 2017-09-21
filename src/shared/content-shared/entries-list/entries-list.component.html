@@ -58,7 +58,7 @@
       <kEntriesTable class="kEntriesTable"
                      scrollHeight="100%"
                      [entries]="(_entriesStore.entries$ | async)?.items"
-                     [showSelect]="bulkWrapper.children.length !== 0"
+                     [showBulkSelect]="bulkWrapper.children.length !== 0"
                      [filter]="_filter"
                      [columns]="columns"
                      [rowActions]="rowActions"
