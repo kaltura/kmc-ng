@@ -9,12 +9,14 @@
           pButton
           type="button"
           label="{{'applications.content.moderation.approveEntry' | translate}}"
+          (click)="approveEntry()"
           class="kButtonBranded kApproveEntryBtn"></button>
 
         <button
           pButton
           type="button"
           label="{{'applications.content.moderation.rejectEntry' | translate}}"
+          (click)="rejectEntry()"
           class="kButtonDefault kRejectEntryBtn"></button>
       </div>
     </div>
@@ -68,7 +70,7 @@
         </div>
       </div>
 
-      <div class="kEntryReport" *ngIf="tabs[0].isActive">
+      <div class="kEntryReport" *ngIf="entry && tabs[0].isActive && entry.moderationCount > 0">
         <div class="kFlagsAmount">{{flagsAmount}}</div>
         <div class="kFlagsComment" *ngFor="let flag of flags;">
           <div class="kFlagsCaption">

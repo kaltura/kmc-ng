@@ -132,7 +132,10 @@
   }
 
   .kEntryReport {
-    padding-top: 24px;
+    margin-top: 24px;
+    max-height: 305px;
+    overflow-y: auto;
+    width: 750px;
 
     .kFlagsAmount {
       font-size: 15px;
