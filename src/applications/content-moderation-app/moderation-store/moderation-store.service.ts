@@ -8,19 +8,60 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { KalturaModerationFlagListResponse } from 'kaltura-typescript-client/types/KalturaModerationFlagListResponse';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Observable } from 'rxjs/Observable';
-import {UserNotifyBanAction} from "kaltura-typescript-client/types/UserNotifyBanAction";
+import { UserNotifyBanAction } from 'kaltura-typescript-client/types/UserNotifyBanAction';
+import { BaseEntryListAction } from 'kaltura-typescript-client/types/BaseEntryListAction';
+import { KalturaBaseEntryFilter } from 'kaltura-typescript-client/types/KalturaBaseEntryFilter';
+import { KalturaBaseEntry } from "kaltura-typescript-client/types/KalturaBaseEntry";
 
 @Injectable()
 export class ModerationStore implements OnDestroy {
+  private _moderationEntries = new BehaviorSubject<{items: KalturaBaseEntry[], totalCount: number}>({items: [], totalCount: 0});
   private _moderationData = new BehaviorSubject<{ entry: KalturaMediaEntry, flag: KalturaModerationFlagListResponse}>({entry: null, flag: null});
   private _moderationState = new BehaviorSubject<{ isBusy: boolean, error?: { message: string }}>({isBusy: false});
+  public moderationEntries$ = this._moderationEntries.asObservable();
   public moderationData$ = this._moderationData.asObservable();
   public moderationState$ = this._moderationState.asObservable();
+  public sortAsc : boolean = false;
+  public sortBy : string = 'createdAt';
 
   constructor(
     private _kalturaServerClient: KalturaClient,
     private _appLocalization: AppLocalization
   ) {}
+
+  loadEntriesList() : void {
+    this._kalturaServerClient.request(
+      new BaseEntryListAction (
+        {
+          filter: new KalturaBaseEntryFilter(
+            {
+              orderBy : `${this.sortAsc ? '+' : '-'}${this.sortBy}`,
+              moderationStatusIn: "5,1"
+            }
+          ),
+          pager: new KalturaFilterPager({
+            pageSize: 50,
+            pageIndex: 1
+          })
+        }
+      )
+    )
+      .cancelOnDestroy(this)
+      .subscribe(
+        response => {
+          this._moderationEntries.next({
+            items: response.objects,
+            totalCount: response.totalCount
+          })
+        },
+        error => {
+          this._moderationState.next({
+            isBusy: true,
+            error: {message: this._appLocalization.get('applications.content.moderation.errorConnecting')}
+          });
+        }
+      );
+  }
 
   loadEntryModerationDetails(entryId: string) : void {
     this._kalturaServerClient.multiRequest([

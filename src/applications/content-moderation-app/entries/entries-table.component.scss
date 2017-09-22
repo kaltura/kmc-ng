@@ -1,1 +1,29 @@
 @import 'app-theme/_variables.scss';
+
+.kEntriesTable {
+  background-color: white;
+  overflow-y: hidden;
+  position: absolute;
+  padding: 0;
+
+  .kTitle {
+    color: $kGrayscale1;
+    font-weight: 700;
+    cursor: pointer;
+    &:hover {
+      color: #000000;
+    }
+  }
+}
+
+:host /deep/ .ui-datatable .kEntrySelectColumn {
+  width: 44px;
+  padding-left: 14px;
+}
+
+:host {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0;
+  flex-direction: column;
+}

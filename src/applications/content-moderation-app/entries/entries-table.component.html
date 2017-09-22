@@ -1,21 +1,26 @@
-<k-area-blocker kFillHeight>
-  <div #entriesTableHolder>
-    <h1>...Entries table...</h1>
-    <!--<p-dataTable
+<k-area-blocker kFillHeight [showLoader]="" [message]="">
+  <div class="kEntriesTable">
+    <p-dataTable
 			#dataTable
 			[value]="_entries"
 			scrollable="true"
 			scrollHeight="100%"
 			dataKey="id"
 			[rowTrackBy]="rowTrackBy">
-			<p-column selectionMode="multiple"></p-column>
-    </p-dataTable>-->
+			<p-column selectionMode="multiple" styleClass="kEntrySelectColumn"></p-column>
+      <p-column field="name" header="{{'applications.content.table.name' | translate}}">
+        <ng-template let-col let-entry="rowData" pTemplate="body">
+          <div class="kTitle" (click)="openModerationDetails(entry.id)">{{entry[col.field]}}</div>
+        </ng-template>
+      </p-column>
+    </p-dataTable>
   </div>
 </k-area-blocker>
 
 <kPopupWidget #moderationDetails [popupWidth]="792" [popupHeight]="700" [modal]="true" [closeBtn]="false">
   <ng-template>
     <kEntryReport
-      [parentPopupWidget]="moderationDetails"></kEntryReport>
+      [parentPopupWidget]="moderationDetails"
+      [entryId]="currentEntryId"></kEntryReport>
   </ng-template>
 </kPopupWidget>

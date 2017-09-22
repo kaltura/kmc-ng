@@ -38,9 +38,9 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   userId: string = '';
   isEntryPermissionApproved: boolean = false;
   isEntryPermissionRejected: boolean = false;
-  entryId: string = "1_973f8ssf";
 
   @Input() parentPopupWidget: PopupWidgetComponent;
+  @Input() entryId: string;
   iframeSrc : string = "http://cdnapi.kaltura.com/p/2288171/sp/228817100/embedIframeJs/uiconf_id/38524931/partner_id/2288171?iframeembed=true&flashvars[closedCaptions.plugin]=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[ks]=djJ8MjI4ODE3MXy7ZEOeJZ6JI-Whlij2xzVaW8D8Nn9J_ji-FECxBz9iLIeh1cclSKl85YvbTTUW2nfmVRcTjkKrpLR3VVFLajvqH2atyVu_mXzrhpvjrj049HWICvOroFnhh8NCF_7PI2hgyyAHj-tMJmYLCPglFCZq&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id=1_yskuq0ef";
 
 	constructor(
