@@ -5,7 +5,7 @@
                  scrollHeight="100%"
                  dataKey="entryId"
                  [immutable]="false"
-                 [value]="uploads | kUploadStatusSort"
+                 [value]="uploads"
                  [emptyMessage]="!uploads.length ? _emptyMessage : ''"
                  [rowStyleClass]="_relatedTableRowStyle"
                  (selectionChange)="onSelectedEntriesChange.emit($event)"

@@ -57,6 +57,11 @@ export class UploadListComponent implements OnInit, OnDestroy {
                 progress: trackedFile.progress,
                 status: trackedFile.status
               });
+
+              if (trackedFile.progress === 0) {
+                this._sortUploads();
+              }
+
               break;
 
             case TrackedFileStatuses.uploadCompleted:
@@ -65,6 +70,8 @@ export class UploadListComponent implements OnInit, OnDestroy {
                 status: trackedFile.status
               });
 
+              this._sortUploads();
+
               setTimeout(() => {
                 this._removeFile(trackedFile.id);
               }, 5000);
@@ -72,6 +79,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
             case TrackedFileStatuses.uploadFailed:
               this._updateFile(trackedFile.id, { status: trackedFile.status });
+              this._sortUploads();
               break;
 
             case TrackedFileStatuses.purged:
@@ -112,6 +120,31 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
     if (relevantFile) {
       Object.assign(relevantFile, changes);
+    }
+  }
+
+  private _sortUploads() {
+    this._uploads.sort((a, b) => {
+      return this._getStatusWeight(a.status) - this._getStatusWeight(b.status);
+    });
+  }
+
+  private _getStatusWeight(status: string): number {
+    switch (status) {
+      case TrackedFileStatuses.uploadFailed:
+      case TrackedFileStatuses.uploadCompleted:
+        return 0;
+
+      case TrackedFileStatuses.uploading:
+        return 1;
+
+      case TrackedFileStatuses.added:
+      case TrackedFileStatuses.preparing:
+      case TrackedFileStatuses.waitingUpload:
+        return 2;
+
+      default:
+        return 3;
     }
   }
 

@@ -34,7 +34,6 @@ import { UploadListTableComponent } from './upload-list/upload-list-table.compon
 import { UploadProgressComponent } from './upload-list/upload-progress/upload-progress.component';
 import { KMCShellModule } from 'app-shared/kmc-shell';
 import { UploadStatusPipe } from './upload-list/pipes/upload-status.pipe';
-import { UploadStatusSortPipe } from './upload-list/pipes/upload-status-sort.pipe';
 
 @NgModule({
   imports: [
@@ -67,8 +66,7 @@ import { UploadStatusSortPipe } from './upload-list/pipes/upload-status-sort.pip
     UploadListComponent,
     UploadListTableComponent,
     UploadProgressComponent,
-    UploadStatusPipe,
-    UploadStatusSortPipe
+    UploadStatusPipe
   ],
   exports: [],
   providers: []
