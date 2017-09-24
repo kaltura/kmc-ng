@@ -7,11 +7,6 @@ import { NewEntryUploadService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { environment } from 'app-environment';
-import { ConversionProfileListAction } from 'kaltura-typescript-client/types/ConversionProfileListAction';
-import { KalturaConversionProfileFilter } from 'kaltura-typescript-client/types/KalturaConversionProfileFilter';
-import { KalturaConversionProfileType } from 'kaltura-typescript-client/types/KalturaConversionProfileType';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { TranscodingProfileManagement } from '@kaltura-ng/kaltura-server-utils/transcoding-profile-management';
 
 export interface UploadSettingsFile {
@@ -35,8 +30,6 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild('fileDialog') _fileDialog: FileDialogComponent;
-
-  private _tempName: string;
 
   public _transcodingProfiles: { value: number, label: string }[];
   public _profileForm: FormGroup;
@@ -66,8 +59,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   `;
 
 
-  constructor(private _kalturaServerClient: KalturaClient,
-              private _newEntryUploadService: NewEntryUploadService,
+  constructor(private _newEntryUploadService: NewEntryUploadService,
               private _formBuilder: FormBuilder,
               private _transcodingProfileManagement: TranscodingProfileManagement,
               private _appLocalization: AppLocalization) {
@@ -241,11 +233,6 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     return result;
   }
 
-
-  public _relatedTableRowStyle(rowData): string {
-    return rowData.hasError ? 'has-error' : '';
-  }
-
   public _editName(file: UploadSettingsFile): void {
     file.isEditing = true;
   }
@@ -258,6 +245,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
       file.name = name;
     } else {
       file.hasError = true;
+      file.errorToken = 'applications.upload.validation.fileNameRequired';
     }
   }
 }

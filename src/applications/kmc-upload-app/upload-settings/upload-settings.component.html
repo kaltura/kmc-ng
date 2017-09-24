@@ -29,8 +29,8 @@
         <p-dataTable [value]="_files"
                      [immutable]="false"
                      [emptyMessage]="'applications.upload.uploadSettings.table.emptyMessage.title' | translate"
-                     [rowStyleClass]="_relatedTableRowStyle"
                      scrollable="true">
+          <p-column [style]="{'width': '28px'}"></p-column>
           <p-column field="name"
                     class="kFileNameCol"
                     [sortable]="false"
@@ -74,7 +74,16 @@
               <span>{{ file.size | kFileSize }}</span>
             </ng-template>
           </p-column>
-          <p-column [style]="{ 'width': '45px', 'text-align': 'center' }">
+          <p-column [style]="{ 'width': '40px', 'text-align': 'center'}">
+            <ng-template let-col let-file="rowData" pTemplate="body">
+              <i *ngIf="file.hasError"
+                 class="kIconinfo kIconError"
+                 [kTooltip]="file.errorToken | translate"
+                 placement="top"
+                 (click)="_removeFile(file)"></i>
+            </ng-template>
+          </p-column>
+          <p-column [style]="{ 'width': '45px', 'text-align': 'center'}">
             <ng-template let-col let-file="rowData" pTemplate="body">
               <i class="kIcontrash kIconRemoveFile"
                  [kTooltip]="'applications.upload.uploadSettings.table.remove' | translate"
@@ -82,6 +91,7 @@
                  (click)="_removeFile(file)"></i>
             </ng-template>
           </p-column>
+          <p-column [style]="{'width': '28px'}"></p-column>
         </p-dataTable>
         <div *ngIf="_files.length === 0" class="kEmptyMessage">
           <h1>{{ 'applications.upload.uploadSettings.table.emptyMessage.title' | translate }}</h1>
