@@ -115,10 +115,10 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	private _setUploadFilter(entry: KalturaMediaEntry): string{
 		let filter = "";
 		if (entry.mediaType.toString() === KalturaMediaType.video.toString()){
-			filter = "video/*";
+			filter = ".flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v";
 		}
 		if (entry.mediaType.toString() === KalturaMediaType.audio.toString()){
-			filter = "audio/*";
+			filter = ".flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp3,.wav";
 		}
 		return filter;
 	}
