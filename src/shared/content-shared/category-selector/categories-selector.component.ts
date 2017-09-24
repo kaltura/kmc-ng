@@ -13,6 +13,13 @@ export enum CategorySelectionMode {
   multi
 }
 
+export interface EntryCategoryItem {
+  id: number,
+  fullIdPath: number[],
+  name: string,
+  fullNamePath: string[],
+}
+
 @Component({
   selector: 'kCategoriesSelector',
   templateUrl: './categories-selector.component.html',
@@ -22,7 +29,9 @@ export class CategoriesSelectorComponent implements OnInit, OnDestroy, AfterView
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() buttonLabel = '';
   @Input() value = [];
-  @Input() set selectionMode(value: CategorySelectionMode) {
+
+  @Input()
+  set selectionMode(value: CategorySelectionMode) {
     if ([CategorySelectionMode.multi, CategorySelectionMode.single].includes(value)) {
       this._selectionModeStyle = CategorySelectionMode.multi === value ? 'kCategoriesMultiSelect' : 'kCategoriesSingleSelect';
       this._selectionMode = value;
@@ -33,7 +42,7 @@ export class CategoriesSelectorComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
-  @Output() valueChange = new EventEmitter<any[]>();
+  @Output() onSelectionUpdate = new EventEmitter<EntryCategoryItem | EntryCategoryItem[]>();
 
   @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
   @ViewChild('autoComplete') _autoComplete: AutoComplete = null;
@@ -51,17 +60,17 @@ export class CategoriesSelectorComponent implements OnInit, OnDestroy, AfterView
   public _treeSelection: PrimeTreeNode[] = [];
   public _categoriesProvider = new Subject<SuggestionsProviderData>();
   public _selectedCategories = [];
-  public noParent = 1;
 
   constructor(private _categoriesPrimeService: CategoriesPrimeService, private cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-    this._selectedCategories = this.value && Array.isArray(this.value) ? [...this.value] : [];
+    this._selectedCategories = Array.isArray(this.value) ? [...this.value] : this.value ? [this.value] : [];
   }
+
   ngAfterViewChecked() {
     if (this._ngAfterViewCheckedContext.updateTreeSelections) {
-      this.updateTreeSelections(this._ngAfterViewCheckedContext.expendTreeSelectionNodeId);
+      this._updateTreeSelections(this._ngAfterViewCheckedContext.expendTreeSelectionNodeId);
 
       this._ngAfterViewCheckedContext.expendTreeSelectionNodeId = null;
       this._ngAfterViewCheckedContext.updateTreeSelections = false;
@@ -81,17 +90,31 @@ export class CategoriesSelectorComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
-  public _apply(): void {
-    this.valueChange.emit(this._selectedCategories);
+  private _sendUpdateSelection(): void {
+    const selection = this._selectionMode === CategorySelectionMode.multi ? this._selectedCategories : this._selectedCategories[0];
+    this.onSelectionUpdate.emit(selection);
+  }
 
-    if (this.parentPopupWidget) {
-      this.parentPopupWidget.close({ isDirty: true });
-    }
+  private _updateTreeSelections(expandNodeId = null): void {
+    const treeSelectedItems = [];
+
+    this._selectedCategories.forEach(category => {
+      const treeItem = this._categoriesTree.findNodeByFullIdPath(category.fullIdPath);
+
+      if (treeItem) {
+        treeSelectedItems.push(treeItem);
+        if (expandNodeId && expandNodeId === category.id) {
+          treeItem.expand();
+        }
+      }
+    });
+
+    this._treeSelection = treeSelectedItems;
   }
 
   public _onTreeCategoriesLoad({ categories }: { categories: PrimeTreeNode[] }): void {
     this._categoriesLoaded = categories && categories.length > 0;
-    this.updateTreeSelections();
+    this._updateTreeSelections();
   }
 
   public _onTreeNodeChildrenLoaded({ node }): void {
@@ -141,23 +164,6 @@ export class CategoriesSelectorComponent implements OnInit, OnDestroy, AfterView
       });
   }
 
-  private updateTreeSelections(expandNodeId = null): void {
-    const treeSelectedItems = [];
-
-    this._selectedCategories.forEach(category => {
-      const treeItem = this._categoriesTree.findNodeByFullIdPath(category.fullIdPath);
-
-      if (treeItem) {
-        treeSelectedItems.push(treeItem);
-        if (expandNodeId && expandNodeId === category.id) {
-          treeItem.expand();
-        }
-      }
-    });
-
-    this._treeSelection = treeSelectedItems;
-  }
-
   public _onAutoCompleteSelected(): void {
     const selectedItem = this._autoComplete.getValue();
 
@@ -178,6 +184,8 @@ export class CategoriesSelectorComponent implements OnInit, OnDestroy, AfterView
 
         this._ngAfterViewCheckedContext.updateTreeSelections = true;
         this._ngAfterViewCheckedContext.expendTreeSelectionNodeId = selectedItem.id;
+
+        this._sendUpdateSelection();
       }
     }
 
@@ -191,6 +199,8 @@ export class CategoriesSelectorComponent implements OnInit, OnDestroy, AfterView
 
       if (autoCompleteItemIndex > -1) {
         this._selectedCategories.splice(autoCompleteItemIndex, 1);
+
+        this._sendUpdateSelection();
       }
     }
   }
@@ -214,6 +224,8 @@ export class CategoriesSelectorComponent implements OnInit, OnDestroy, AfterView
           fullNamePath: node.origin.fullNamePath,
           name: node.origin.name
         });
+
+        this._sendUpdateSelection();
       }
     }
   }
@@ -221,6 +233,20 @@ export class CategoriesSelectorComponent implements OnInit, OnDestroy, AfterView
   public clearSelection(): void {
     this._treeSelection = [];
     this._selectedCategories = [];
+    this._sendUpdateSelection();
+  }
+
+  public removeSelection(tag: EntryCategoryItem): void {
+    if (tag && tag.id) {
+      const tagIndex = this._selectedCategories.findIndex(item => item.id + '' === tag.id + '');
+
+      if (tagIndex > -1) {
+        this._selectedCategories.splice(tagIndex, 1);
+        this._updateTreeSelections();
+        this._sendUpdateSelection();
+      }
+
+    }
   }
 }
 
