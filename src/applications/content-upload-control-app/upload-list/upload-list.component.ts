@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService, NewEntryUploadFile } from 'app-shared/kmc-shell';
+import { BrowserService, NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
 import { AppLocalization, TrackedFile, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 
@@ -27,24 +27,29 @@ export class UploadListComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
 
   constructor(private _uploadManagement: UploadManagement,
+              private _newEntryUploadService: NewEntryUploadService,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
+    this._newEntryUploadService.onMediaCreated$
+      .cancelOnDestroy(this)
+      .subscribe(
+        file => {
+          this._updateFile(file.id, { entryId: file.entryId });
+        }
+      );
+
     this._uploadManagement.onFileStatusChanged$
       .cancelOnDestroy(this)
       .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile)
       .subscribe(
         (trackedFile: TrackedFile) => {
-          // NOTE: this service does not handle 'purged' and 'waitingUpload' statuses by design.
+          // NOTE: this service does not handle 'waitingUpload' status by design.
           switch (trackedFile.status) {
             case TrackedFileStatuses.added:
               this._addFile(trackedFile);
-              break;
-
-            case TrackedFileStatuses.mediaCreated:
-              this._updateFile(trackedFile.id, { entryId: trackedFile.entryId });
               break;
 
             case TrackedFileStatuses.uploading:
@@ -62,8 +67,6 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
               setTimeout(() => {
                 this._removeFile(trackedFile.id);
-                // TODO [kmcng] [question] why do we need purge?
-                // this._uploadManagement.purgeUpload(trackedFile.id);
               }, 5000);
               break;
 

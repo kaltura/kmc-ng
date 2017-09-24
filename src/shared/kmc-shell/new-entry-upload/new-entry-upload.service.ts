@@ -13,6 +13,7 @@ import { KalturaAssetParamsResourceContainer } from 'kaltura-typescript-client/t
 import { KalturaAssetsParamsResourceContainers } from 'kaltura-typescript-client/types/KalturaAssetsParamsResourceContainers';
 import { MediaUpdateContentAction } from 'kaltura-typescript-client/types/MediaUpdateContentAction';
 import { UploadTokenDeleteAction } from 'kaltura-typescript-client/types/UploadTokenDeleteAction';
+import { Subject } from 'rxjs/Subject';
 
 export interface KmcNewEntryUpload {
   file: File;
@@ -22,6 +23,9 @@ export interface KmcNewEntryUpload {
 @Injectable()
 export class NewEntryUploadService implements OnDestroy {
   private _linkEntryWithFileSub: ISubscription;
+
+  public _mediaCreated = new Subject<{ id: string, entryId: string }>();
+  public onMediaCreated$ = this._mediaCreated.asObservable();
 
   constructor(private _kalturaServerClient: KalturaClient,
               private _uploadManagement: UploadManagement) {
@@ -41,18 +45,10 @@ export class NewEntryUploadService implements OnDestroy {
           // NOTE: this service handles only 'purged' and 'waitingUpload' statuses by design.
           switch (trackedFile.status) {
             case TrackedFileStatuses.purged:
-              // try to (silently) delete entry and upload token.
-              // if error happens write them using _log without doing anything else
-              this._cleanUpUpload(trackedFile);
+              this._cleanupUpload(trackedFile);
               break;
             case TrackedFileStatuses.waitingUpload:
-              // 0 - check if file has already have entryId
-              // 1 - try to create entry and set content using upload token
-              // 2 - if failed -> cancel upload while providing an error message to that upload using the following method
-              // 3 - try to (silently) clean up entry and upload token as done in purge
-              if (!trackedFile.entryId) {
-                this._linkEntryWithFile(trackedFile);
-              }
+              this._linkEntryWithFile(trackedFile);
               break;
             default:
               break;
@@ -61,9 +57,8 @@ export class NewEntryUploadService implements OnDestroy {
       );
   }
 
-  private _cleanUpUpload(trackedFile: TrackedFile): void {
-    const uploadToken = (<NewEntryUploadFile>trackedFile.data).serverUploadToken;
-    const entryId = trackedFile.entryId;
+  private _cleanupUpload(trackedFile: TrackedFile): void {
+    const trackedFileData = <NewEntryUploadFile>trackedFile.data;
 
     // TODO [kmcng] [question] if we cancel creating of mediaEntry it's still created. How to handle?
     if (this._linkEntryWithFileSub instanceof Subscription) {
@@ -71,20 +66,22 @@ export class NewEntryUploadService implements OnDestroy {
       this._linkEntryWithFileSub = null;
     }
 
-    if (uploadToken) {
-      this._removeUploadToken(uploadToken)
+    if (trackedFileData.serverUploadToken) {
+      this._removeUploadToken(trackedFileData.serverUploadToken)
         .subscribe(
-          () => {},
+          () => {
+          },
           (error) => {
             console.warn(this._formatError('Failed to remove upload token', error));
           }
         );
     }
 
-    if (entryId) {
-      this._removeMediaEntry(entryId)
+    if (trackedFileData.entryId) {
+      this._removeMediaEntry(trackedFileData.entryId)
         .subscribe(
-          () => {},
+          () => {
+          },
           (error) => {
             console.warn(this._formatError('Failed to remove media entry', error));
           }
@@ -94,7 +91,12 @@ export class NewEntryUploadService implements OnDestroy {
 
   private _linkEntryWithFile(trackedFile: TrackedFile): void {
     this._linkEntryWithFileSub = this._createMediaEntry(<NewEntryUploadFile>trackedFile.data)
-      .do(entry => this._uploadManagement.setMediaEntryId(trackedFile, entry.id))
+      .do(entry => {
+        (<NewEntryUploadFile>trackedFile.data).entryId = entry.id
+      })
+      .do(entry => {
+        this._mediaCreated.next({ id: trackedFile.id, entryId: entry.id })
+      })
       .switchMap((entry: KalturaMediaEntry) => this._updateMediaContent(entry, <NewEntryUploadFile>trackedFile.data))
       .subscribe(
         () => {

@@ -2,7 +2,10 @@ import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 
 export class NewEntryUploadFile extends KalturaUploadFile {
-  constructor(file: File, public mediaType: KalturaMediaType, public transcodingProfileId: number) {
+  constructor(file: File,
+              public mediaType: KalturaMediaType,
+              public transcodingProfileId: number,
+              public entryId?: string) {
     super(file);
   }
 }
