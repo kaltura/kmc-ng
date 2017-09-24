@@ -1,10 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { Observable } from 'rxjs/Observable';
-import { ISubscription, Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs/Subscription';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { TrackedFile, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
-import { MediaDeleteAction } from 'kaltura-typescript-client/types/MediaDeleteAction';
 import { NewEntryUploadFile } from 'app-shared/kmc-shell';
 import { MediaAddAction } from 'kaltura-typescript-client/types/MediaAddAction';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
@@ -13,7 +13,6 @@ import { KalturaAssetParamsResourceContainer } from 'kaltura-typescript-client/t
 import { KalturaAssetsParamsResourceContainers } from 'kaltura-typescript-client/types/KalturaAssetsParamsResourceContainers';
 import { MediaUpdateContentAction } from 'kaltura-typescript-client/types/MediaUpdateContentAction';
 import { UploadTokenDeleteAction } from 'kaltura-typescript-client/types/UploadTokenDeleteAction';
-import { Subject } from 'rxjs/Subject';
 
 export interface KmcNewEntryUpload {
   file: File;
@@ -22,9 +21,7 @@ export interface KmcNewEntryUpload {
 
 @Injectable()
 export class NewEntryUploadService implements OnDestroy {
-  private _linkEntryWithFileSub: ISubscription;
-
-  public _mediaCreated = new Subject<{ id: string, entryId: string }>();
+  public _mediaCreated = new BehaviorSubject<{ id?: string, entryId?: string }>({});
   public onMediaCreated$ = this._mediaCreated.asObservable();
 
   constructor(private _kalturaServerClient: KalturaClient,
@@ -60,10 +57,9 @@ export class NewEntryUploadService implements OnDestroy {
   private _cleanupUpload(trackedFile: TrackedFile): void {
     const trackedFileData = <NewEntryUploadFile>trackedFile.data;
 
-    // TODO [kmcng] [question] if we cancel creating of mediaEntry it's still created. How to handle?
-    if (this._linkEntryWithFileSub instanceof Subscription) {
-      this._linkEntryWithFileSub.unsubscribe();
-      this._linkEntryWithFileSub = null;
+    if (trackedFileData.createMediaEntrySubscription instanceof Subscription) {
+      trackedFileData.createMediaEntrySubscription.unsubscribe();
+      trackedFileData.createMediaEntrySubscription = null;
     }
 
     if (trackedFileData.serverUploadToken) {
@@ -76,26 +72,13 @@ export class NewEntryUploadService implements OnDestroy {
           }
         );
     }
-
-    if (trackedFileData.entryId) {
-      this._removeMediaEntry(trackedFileData.entryId)
-        .subscribe(
-          () => {
-          },
-          (error) => {
-            console.warn(this._formatError('Failed to remove media entry', error));
-          }
-        );
-    }
   }
 
   private _linkEntryWithFile(trackedFile: TrackedFile): void {
-    this._linkEntryWithFileSub = this._createMediaEntry(<NewEntryUploadFile>trackedFile.data)
+    (<NewEntryUploadFile>trackedFile.data).createMediaEntrySubscription = this._createMediaEntry(<NewEntryUploadFile>trackedFile.data)
       .do(entry => {
-        (<NewEntryUploadFile>trackedFile.data).entryId = entry.id
-      })
-      .do(entry => {
-        this._mediaCreated.next({ id: trackedFile.id, entryId: entry.id })
+        (<NewEntryUploadFile>trackedFile.data).entryId = entry.id;
+        this._mediaCreated.next({ id: trackedFile.id, entryId: entry.id });
       })
       .switchMap((entry: KalturaMediaEntry) => this._updateMediaContent(entry, <NewEntryUploadFile>trackedFile.data))
       .subscribe(
@@ -131,10 +114,6 @@ export class NewEntryUploadService implements OnDestroy {
         conversionProfileId: file.transcodingProfileId
       })
     }));
-  }
-
-  private _removeMediaEntry(entryId: string): Observable<void> {
-    return this._kalturaServerClient.request(new MediaDeleteAction({ entryId }));
   }
 
   private _removeUploadToken(uploadTokenId: string): Observable<void> {
