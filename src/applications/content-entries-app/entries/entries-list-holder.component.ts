@@ -5,24 +5,15 @@ import { EntriesListComponent } from 'app-shared/content-shared/entries-list/ent
 import { BrowserService } from 'app-shared/kmc-shell';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { EntriesTableColumns, EntriesTablePaginator } from 'app-shared/content-shared/entries-table/entries-table.component';
+import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { ContentEntriesAppService } from '../content-entries-app.service';
 
 @Component({
   selector: 'kEntriesListHolder',
-  templateUrl: './entries-list-holder.component.html',
-  styles: [`.kTestPopupTrigger {
-    color: gray;
-    text-decoration: none;
-    opacity: 0.1;
-    position: absolute;
-    top: 100px;
-    z-index: 1;
-  }`]
+  templateUrl: './entries-list-holder.component.html'
 })
 export class EntriesListHolderComponent {
   @ViewChild(EntriesListComponent) private _entriesList: EntriesListComponent;
-  @ViewChild('popupTest') popupTest;
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
@@ -53,10 +44,6 @@ export class EntriesListHolderComponent {
       commandName: 'view'
     }
   ];
-
-  public _paginator: EntriesTablePaginator = {
-    rowsPerPageOptions: [25, 50, 75, 100],
-  };
 
   constructor(private _router: Router,
               private _browserService: BrowserService,

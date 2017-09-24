@@ -131,25 +131,16 @@ export class EntriesStore implements OnDestroy {
   constructor(private kalturaServerClient: KalturaClient,
               private browserService: BrowserService,
               private metadataProfileService: MetadataProfileStore) {
-    this.setPageSize(this.getDefaultPageSize());
+    const defaultPageSize = this.browserService.getFromLocalStorage(this._getPaginationCacheKey());
+    if (defaultPageSize !== null) {
+      this._queryData.pageSize = defaultPageSize;
+    }
+
     this._getMetadataProfiles();
   }
 
   private _getPaginationCacheKey(): string {
     return `entries.${this._paginationCacheToken}.list.pageSize`;
-  }
-
-  public getDefaultPageSize(hasPagerOptions = false): number {
-    if (hasPagerOptions) {
-      return this.browserService.getFromLocalStorage(this._getPaginationCacheKey())
-        || environment.entriesShared.pageSize;
-    }
-
-    return environment.entriesShared.pageSize;
-  }
-
-  public setPageSize(pageSize: number): void {
-    this._queryData.pageSize = pageSize || this.getDefaultPageSize();
   }
 
   public get queryData(): QueryData {

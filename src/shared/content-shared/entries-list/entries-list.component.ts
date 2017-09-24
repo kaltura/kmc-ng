@@ -4,11 +4,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
 import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { FreetextFilter } from 'app-shared/content-shared/entries-store/filters/freetext-filter';
-import {
-  EntriesTableColumns,
-  EntriesTableComponent,
-  EntriesTablePaginator
-} from 'app-shared/content-shared/entries-table/entries-table.component';
+import { EntriesTableColumns, EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
 
 @Component({
   selector: 'kEntriesList',
@@ -21,19 +17,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   @Input() selectedEntries: any[] = [];
   @Input() columns: EntriesTableColumns | null;
   @Input() rowActions: { label: string, commandName: string }[];
-
-  @Input() set paginator(value: EntriesTablePaginator | null) {
-    if (value) {
-      const { rowsPerPageOptions, rowsCount = null } = value;
-      const hasPagerOptions = Array.isArray(rowsPerPageOptions) && !!rowsPerPageOptions.length;
-      this._rowsPerPageOptions = hasPagerOptions ? rowsPerPageOptions : null;
-      this._rowsCount = hasPagerOptions ? this._entriesStore.getDefaultPageSize(hasPagerOptions) : rowsCount;
-    } else {
-      this._rowsCount = this._entriesStore.getDefaultPageSize();
-    }
-
-    this._entriesStore.setPageSize(this._rowsCount);
-  }
 
   @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
 
@@ -48,9 +31,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     sortBy: 'createdAt',
     sortDirection: SortDirection.Desc
   };
-
-  public _rowsCount: number | null;
-  public _rowsPerPageOptions: number[];
 
   constructor(private _entriesStore: EntriesStore) {
   }

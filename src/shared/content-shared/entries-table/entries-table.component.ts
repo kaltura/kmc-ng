@@ -32,11 +32,6 @@ export interface CustomMenuItem extends MenuItem {
   commandName: string
 }
 
-export interface EntriesTablePaginator {
-  rowsPerPageOptions?: number[];
-  rowsCount?: number;
-}
-
 @Component({
   selector: 'kEntriesTable',
   templateUrl: './entries-table.component.html',

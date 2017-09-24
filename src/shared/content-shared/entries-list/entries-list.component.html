@@ -72,11 +72,9 @@
           [rows]="_filter.pageSize"
           [first]="_filter.pageIndex * _filter.pageSize"
           [totalRecords]="(_entriesStore.entries$ | async)?.totalCount | kMaxEntries"
-          [rowsPerPageOptions]="_rowsPerPageOptions"
+          [rowsPerPageOptions]="[25,50,75,100]"
           (onPageChange)="onPaginationChanged($event)"></p-paginator>
-        <span *ngIf="_rowsPerPageOptions?.length" class="kPaginatorShowRowsLabel">
-          {{'applications.content.paginator.showRows' | translate}}
-        </span>
+        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
       </div>
     </div>
   </div>

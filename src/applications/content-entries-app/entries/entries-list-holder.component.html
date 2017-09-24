@@ -1,8 +1,5 @@
-<a class="kTestPopupTrigger" (click)="popupTest.open()">Open test popup</a>
-
 <kEntriesList [columns]="_columns"
               [rowActions]="_rowActions"
-              [paginator]="_paginator"
               [isBusy]="_isBusy"
               [blockerMessage]="_blockerMessage"
               (onActionsSelected)="_onActionSelected($event)">
@@ -11,5 +8,3 @@
                   (onBulkChange)="_entriesList.onBulkChange($event)"></kBulkActions>
   </div>
 </kEntriesList>
-
-<kPopupTest #popupTest></kPopupTest>
