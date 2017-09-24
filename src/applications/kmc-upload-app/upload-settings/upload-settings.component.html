@@ -47,10 +47,9 @@
                 <input pInputText
                        class="kFileNameInput"
                        kAutofocus
-                       [value]="file.name"
+                       [(ngModel)]="file.name"
                        (blur)="_cancelEdit(file)"
-                       (keyup.enter)="_cancelEdit(file)"
-                       (input)="_updateName($event.target.value)">
+                       (keyup.enter)="_cancelEdit(file)">
               </div>
             </ng-template>
           </p-column>

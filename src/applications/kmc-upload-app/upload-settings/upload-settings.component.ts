@@ -247,26 +247,15 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   }
 
   public _editName(file: UploadSettingsFile): void {
-    this._tempName = file.name;
     file.isEditing = true;
   }
 
-  public _updateName(name: string = ''): void {
-    this._tempName = name.trim() || '';
-  }
-
   public _cancelEdit(file: UploadSettingsFile): void {
-    const name = this._tempName;
+    const name = file.name.trim() || '';
 
-    if (file.name === name) {
-      file.isEditing = false;
-      return;
-    }
-
-    if (name && file.name !== name) {
+    if (name) {
       file.isEditing = file.hasError = false;
       file.name = name;
-      this._tempName = '';
     } else {
       file.hasError = true;
     }
