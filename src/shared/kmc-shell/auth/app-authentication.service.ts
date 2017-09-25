@@ -292,10 +292,10 @@ export class AppAuthentication {
           result => {
             const ks = result.ks;
             this.appUser.ks = ks;
-            this.appStorage.setInSessionStorage('auth.login.ks', ks.toString());
+            this.appStorage.setInSessionStorage('auth.login.ks', ks);
             this.forceReload();
-            observer.next();
-            observer.complete();
+
+            // observer next/complete not implemented by design (since we are breaking the stream by reloading the page)
           },
           error => {
             observer.error(error);
