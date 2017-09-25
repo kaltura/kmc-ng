@@ -26,8 +26,7 @@ export class EntriesListHolderComponent {
     plays: { sortable: true, width: '76px' },
     createdAt: { sortable: true, width: '140px' },
     duration: { sortable: true, width: '104px' },
-    status: { width: '100px' },
-    rowActions: []
+    status: { width: '100px' }
   };
 
   public _rowActions = [
