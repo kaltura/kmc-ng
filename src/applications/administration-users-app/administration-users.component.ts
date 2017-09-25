@@ -344,7 +344,11 @@ export class AdministrationUsersComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         () => {
-          alert(this._appLocalization.get('applications.content.users.successSavingUser'));
+          this._browserService.alert(
+            {
+              message: this._appLocalization.get('applications.content.users.successSavingUser')
+            }
+          );
           this.editUserPopup.close();
           this.usersStore.reload(true);
           this.loading = false;
