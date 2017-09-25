@@ -5,6 +5,9 @@ import { ValueFilter } from '../value-filter';
 
 export class ReplacementStatusesFilter extends ValueFilter<string> {
 
+    static filterType = "ReplacementStatuses"; // IMPORTANT: you must have a static filterType property that is used at runtime
+
+
   constructor(value: string, label: string) {
     super(label, value, { token: 'applications.content.filters.replacementStatuses', args: { '0': label } });
   }

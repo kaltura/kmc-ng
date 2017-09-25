@@ -55,7 +55,7 @@
                 [sortable]="'custom'"
                 [style]="{'width':'76px'}"></p-column>
       <p-column field="createdAt"
-                header="Created On"
+                header="{{'applications.content.table.createdOn' | translate}}"
                 [sortable]="true"
                 [style]="{'width':'140px'}">
         <ng-template let-col let-entry="rowData" pTemplate="body">

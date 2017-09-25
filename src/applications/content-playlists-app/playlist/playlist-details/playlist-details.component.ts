@@ -27,7 +27,10 @@ export class PlaylistDetailsComponent implements OnInit, OnDestroy {
 	}
 
 	getNumberOfEntries(playlistContent: string) {
-		this.numberOfEntries = playlistContent.indexOf(',') != -1 ? playlistContent.split(',').length : 1;
+    this.numberOfEntries = 0;
+	  if(playlistContent) {
+      this.numberOfEntries = playlistContent.indexOf(',') != -1 ? playlistContent.split(',').length : 1;
+    }
 	}
 
 	ngOnDestroy() {}
