@@ -134,7 +134,7 @@
         "error": "Error",
         "wrongType": "Select media type",
         "missingTranscodingProfile" : "Select transcoding profile",
-        "fileSizeExceeded": "File size exceeded TBD",
+        "fileSizeExceeded": "File size exceeded",
         "fileNameRequired": "File name is required"
       },
       "uploadMenu": {
