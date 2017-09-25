@@ -34,6 +34,8 @@ import { EntriesRefineFiltersProvider } from 'app-shared/content-shared/entries-
 import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
+import { CategoryRadioButtonPocComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc';
+import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc-popup';
 
 @NgModule({
   imports: [
@@ -71,7 +73,10 @@ import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
     CategoriesFilterPrefsComponent,
     CategoriesFilterComponent,
     EntriesTableComponent,
-    EntriesListComponent
+    EntriesListComponent,
+
+    CategoryRadioButtonPocPopupComponent,
+    CategoryRadioButtonPocComponent
   ],
   exports: [
     EntryStatusPipe,
@@ -85,7 +90,10 @@ import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
     CategoriesFilterPrefsComponent,
     CategoriesFilterComponent,
     EntriesTableComponent,
-    EntriesListComponent
+    EntriesListComponent,
+
+    CategoryRadioButtonPocPopupComponent,
+    CategoryRadioButtonPocComponent
   ],
   providers: [
     CategoriesPrimeService,
