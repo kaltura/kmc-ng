@@ -16,9 +16,20 @@
   }
 }
 
+.kPopupWidgetWrap {
+  margin-bottom: 0;
+  bottom: 0;
+  top: inherit;
+}
+
 :host /deep/ .ui-datatable .kEntrySelectColumn {
   width: 44px;
   padding-left: 14px;
+}
+
+/deep/ kPopupWidget .kPopupWidget {
+  border-bottom-left-radius: 0!important;
+  border-bottom-right-radius: 0!important;
 }
 
 :host {

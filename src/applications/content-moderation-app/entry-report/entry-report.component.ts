@@ -9,8 +9,9 @@ import { KalturaSourceType } from 'kaltura-typescript-client/types/KalturaSource
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { Router } from '@angular/router';
 import { KalturaModerationFlag } from 'kaltura-typescript-client/types/KalturaModerationFlag';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { BulkService } from '../bulk-service/bulk.service';
+import { environment } from 'app-environment';
 
 export interface Tabs {
   name: string;
@@ -30,7 +31,6 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   flags: KalturaModerationFlag[] = null;
   entry: KalturaMediaEntry = null;
   hasDuration: boolean = false;
-  isLive: boolean = false;
   isEntryReady: boolean = false;
   isRecordedLive: boolean = false;
   isClip: boolean = false;
@@ -41,14 +41,19 @@ export class EntryReportComponent implements OnInit, OnDestroy {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() entryId: string;
-  iframeSrc : string = "http://cdnapi.kaltura.com/p/2288171/sp/228817100/embedIframeJs/uiconf_id/38524931/partner_id/2288171?iframeembed=true&flashvars[closedCaptions.plugin]=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[ks]=djJ8MjI4ODE3MXy7ZEOeJZ6JI-Whlij2xzVaW8D8Nn9J_ji-FECxBz9iLIeh1cclSKl85YvbTTUW2nfmVRcTjkKrpLR3VVFLajvqH2atyVu_mXzrhpvjrj049HWICvOroFnhh8NCF_7PI2hgyyAHj-tMJmYLCPglFCZq&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id=1_yskuq0ef";
+  ks = this.appAuthentication.appUser.ks || "";
+  partnerID = this.appAuthentication.appUser.partnerId;
+  flashVars = `flashvars[closedCaptions.plugin]=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[ks]=${this.ks}&flashvars[EmbedPlayer.EnableMobileSkin]=true`;
+  UIConfID = environment.core.kaltura.previewUIConf;
+  iframeSrc: string = '';
 
 	constructor(
 	  private _moderationStore: ModerationStore,
     private _appLocalization: AppLocalization,
     private _router: Router,
     private _browserService: BrowserService,
-    private _bulkService: BulkService
+    private _bulkService: BulkService,
+    private appAuthentication: AppAuthentication
   ) {}
 
   closePopup(): void {
@@ -73,7 +78,11 @@ export class EntryReportComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.showLoader = false;
-          alert(this._appLocalization.get('applications.content.moderation.notificationHasBeenSent'));
+          this._browserService.alert(
+            {
+              message: this._appLocalization.get('applications.content.moderation.notificationHasBeenSent')
+            }
+          );
         },
         error => {
           this.showLoader = false;
@@ -223,18 +232,25 @@ export class EntryReportComponent implements OnInit, OnDestroy {
           if(response.entry && response.flag) {
             this.entry = response.entry;
             this.flags = response.flag.objects;
-            const sourceType = response.entry.sourceType.toString();
-            this.isLive = (sourceType === KalturaSourceType.liveStream.toString() ||
-                           sourceType === KalturaSourceType.akamaiLive.toString() ||
-                           sourceType === KalturaSourceType.akamaiUniversalLive.toString() ||
-                           sourceType === KalturaSourceType.manualLiveStream.toString());
-            this.hasDuration = (response.entry.status !== KalturaEntryStatus.noContent && !this.isLive && response.entry.mediaType.toString() !== KalturaMediaType.image.toString());
-            this.isEntryReady = response.entry.status.toString() === KalturaEntryStatus.ready.toString();
-            this.isRecordedLive = (sourceType === KalturaSourceType.recordedLive.toString());
             this.isClip = !this.isRecordedLive && (response.entry.id !== response.entry.rootEntryId);
             let moderationCount = response.entry.moderationCount;
             this.flagsAmount = moderationCount === 1 ? this._appLocalization.get('applications.content.moderation.flagSingular', {0: moderationCount}) : this._appLocalization.get('applications.content.moderation.flagPlural', {0: moderationCount});
             this.userId = response.entry.userId;
+
+            if(response.entry.sourceType) {
+              const sourceType = response.entry.sourceType.toString();
+              const isLive = (sourceType === KalturaSourceType.liveStream.toString() ||
+              sourceType === KalturaSourceType.akamaiLive.toString() ||
+              sourceType === KalturaSourceType.akamaiUniversalLive.toString() ||
+              sourceType === KalturaSourceType.manualLiveStream.toString());
+              this.hasDuration = (response.entry.status !== KalturaEntryStatus.noContent && !isLive && response.entry.mediaType.toString() !== KalturaMediaType.image.toString());
+              this.isEntryReady = response.entry.status.toString() === KalturaEntryStatus.ready.toString();
+              if (isLive){
+                this.flashVars += '&flashvars[disableEntryRedirect]=true';
+              }
+              this.isRecordedLive = (sourceType === KalturaSourceType.recordedLive.toString());
+            }
+            this.iframeSrc = `${environment.core.kaltura.cdnUrl}/p/${this.partnerID}/sp/${this.partnerID}00/embedIframeJs/uiconf_id/${this.UIConfID}/partner_id/${this.partnerID}?iframeembed=true&${this.flashVars}&entry_id=${this.entryId}`;
           }
         }
       );
