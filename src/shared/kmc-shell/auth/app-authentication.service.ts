@@ -20,7 +20,8 @@ import {AppStorage} from '@kaltura-ng/kaltura-common';
 import {PartnerInfo} from './partner-info';
 import {UserResetPasswordAction} from 'kaltura-typescript-client/types/UserResetPasswordAction';
 import {AdminUserUpdatePasswordAction} from 'kaltura-typescript-client/types/AdminUserUpdatePasswordAction';
-import {UserLoginByKsAction} from "app-shared/kmc-shell/auth/temp-user-logic-by-ks";
+import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
+import {BrowserService} from 'app-shared/kmc-shell';
 
 
 export enum AppAuthStatusTypes {
@@ -62,7 +63,8 @@ export class AppAuthentication {
   };
 
   constructor(private kalturaServerClient: KalturaClient,
-              private appStorage: AppStorage) {
+              private appStorage: AppStorage,
+              private browserService: BrowserService) {
     this._appUser = new AppUser();
   }
 
@@ -210,6 +212,7 @@ export class AppAuthentication {
     this.appStorage.removeFromSessionStorage('auth.login.ks');
 
     this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedOut);
+    this.forceReload();
   }
 
   public loginAutomatically(): Observable<boolean> {
@@ -290,7 +293,7 @@ export class AppAuthentication {
             const ks = result.ks;
             this.appUser.ks = ks;
             this.appStorage.setInSessionStorage('auth.login.ks', ks.toString());
-            location.reload();
+            this.forceReload();
             observer.next();
             observer.complete();
           },
@@ -299,5 +302,16 @@ export class AppAuthentication {
           }
         );
     });
+  }
+
+  // reload page
+  public reload() {
+    document.location.reload();
+  }
+
+  // Prevents the browser to verify page exit before reload
+  private forceReload() {
+    this.browserService.disablePageExitVerification();
+    this.reload();
   }
 }
