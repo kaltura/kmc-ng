@@ -78,9 +78,10 @@ import { PrimeTableSortTransformPipe } from 'app-shared/content-shared/pipes/pri
   exports: [
     EntryStatusPipe,
     EntryTypePipe,
+    MaxEntriesPipe,
     CategoriesTreeComponent,
     SchedulingComponent,
-    EntriesListComponent,
+    EntriesListComponent
   ],
   providers: [
     CategoriesPrimeService,

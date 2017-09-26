@@ -63,9 +63,9 @@ export const environment = {
                     "position": "right"
                   },
                   {
-                    "routePath": "content/bulk-upload",
+                    "routePath": "content/bulk",
                     "titleToken": "BulkUpload",
-                    "enabled": false,
+                    "enabled": true,
                     "position": "right"
                   },
                   {

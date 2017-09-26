@@ -6,18 +6,25 @@ import { HttpModule } from '@angular/http';
 import { CommonModule } from '@angular/common';
 import { Ng2Webstorage } from 'ng2-webstorage';
 
-
 import {
-  BootstrapAdapterToken,
-	AuthModule, BrowserService, KMCShellModule,
   AppBootstrap,
-  AppBootstrapConfig  as AppBootstrapConfigType
+  AuthModule,
+  BootstrapAdapterToken,
+  BrowserService,
+  KMCShellModule,
+  NewEntryUploadModule
 } from 'app-shared/kmc-shell';
-import { KalturaCommonModule, AppStorage, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization, AppStorage, KalturaCommonModule, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { KalturaClient, KalturaClientConfiguration } from '@kaltura-ng/kaltura-client';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
-import { KalturaServerModule } from '@kaltura-ng/kaltura-server-utils';
+import {
+  AccessControlProfileStore,
+  FlavoursStore,
+  KalturaServerModule,
+  MetadataProfileModule,
+  PartnerProfileStore
+} from '@kaltura-ng/kaltura-server-utils';
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
@@ -33,23 +40,15 @@ import { KalturaHttpConfigurationAdapter } from "./services/kaltura-http-configu
 
 import {
   ButtonModule,
-  InputTextModule,
-  TieredMenuModule,
   CheckboxModule,
-  ConfirmDialogModule,
   ConfirmationService,
+  ConfirmDialogModule,
   DropdownModule,
   GrowlModule,
-  RadioButtonModule
+  InputTextModule,
+  RadioButtonModule,
+  TieredMenuModule
 } from 'primeng/primeng';
-
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import {
-  MetadataProfileModule,
-  PartnerProfileStore,
-  AccessControlProfileStore,
-  FlavoursStore
-} from '@kaltura-ng/kaltura-server-utils';
 import { UploadManagementModule } from '@kaltura-ng/kaltura-common/upload-management';
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
 import { environment } from 'app-environment';
@@ -60,10 +59,8 @@ import { PasswordExpiredFormComponent } from './components/login/password-expire
 import { InvalidLoginHashFormComponent } from './components/login/invalid-login-hash-form/invalid-login-hash-form.component';
 import { AppMenuContentComponent } from './components/app-menu/app-menu-content.component';
 import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-app.module';
-import { NewEntryUploadModule } from 'app-shared/kmc-shell';
 import { TranscodingProfileManagementModule } from '@kaltura-ng/kaltura-server-utils/transcoding-profile-management';
 import { ChangeAccountComponent } from './components/changeAccount/change-account.component';
-import { KmcBulkUploadAppModule } from '../applications/kmc-bulk-upload-app/kmc-bulk-upload-app.module';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -105,8 +102,7 @@ export function clientConfigurationFactory() {
     KmcUploadAppModule,
     NewEntryUploadModule.forRoot(),
     TranscodingProfileManagementModule.forRoot(),
-    RadioButtonModule,
-    KmcBulkUploadAppModule
+    RadioButtonModule
   ],
   declarations: <any>[
     AppComponent,
@@ -156,6 +152,6 @@ export class AppModule {
     // appLocalization.supportedLocales = environment.core.locales;
     uploadManagement.setMaxUploadRequests(environment.uploadsShared.MAX_CONCURENT_UPLOADS);
 
-    appBootstrap.initApp({errorRoute : '/error'});
+    appBootstrap.initApp({ errorRoute: '/error' });
   }
 }
