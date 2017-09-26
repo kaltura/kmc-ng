@@ -1,10 +1,5 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
   <form [formGroup]="accountSettingsForm" novalidate (ngSubmit)="onSubmit()" class="kAccountSettingsWrapper kContent">
-    <section class="kHeader">
-      <div class="kTitle"><i class="kIconUser-info kTitleIcon"></i>{{'applications.settings.accountSettings.accountInfo'
-        | translate}}
-      </div>
-    </section>
     <section class="kFormMetadata">
       <div class="kReadonlyData">{{'applications.settings.accountSettings.partnerID' | translate}}: {{partnerId}} |
         {{'applications.settings.accountSettings.adminEmail' | translate}}:

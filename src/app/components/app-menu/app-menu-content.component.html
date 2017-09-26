@@ -1,0 +1,6 @@
+<div *ngFor="let item of _items" class="subMenuContainer"
+     [routerLinkActive]="['active']">
+  <a [routerLinkActive]="['activeLink']" [routerLink]="['/' + item.routePath]"
+     [class.disabled]="!item.enabled">{{'app.menu.' + item.titleToken | translate | uppercase}}</a>
+  <div class="linkMarker"></div>
+</div>

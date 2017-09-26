@@ -26,31 +26,54 @@ export const environment = {
                 "showSubMenu": true,
                 "enabled": true,
                 "children": [
-                    {
-                        "routePath": "content/entries",
-                        "titleToken": "Entries",
-                        "enabled": true
-                    },
-                    {
-                        "routePath": "content/moderation",
-                        "titleToken": "Moderation",
-                        "enabled": false
-                    },
-                    {
-                        "routePath": "content/playlists",
-                        "titleToken": "Playlists",
-                        "enabled": true
-                    },
-                    {
-                        "routePath": "content/syndication",
-                        "titleToken": "Syndication",
-                        "enabled": false
-                    },
-                    {
-                        "routePath": "content/categories",
-                        "titleToken": "Categories",
-                        "enabled": true
-                    }
+                  {
+                    "routePath": "content/entries",
+                    "titleToken": "Entries",
+                    "enabled": true,
+                    "position": "left"
+                  },
+                  {
+                    "routePath": "content/moderation",
+                    "titleToken": "Moderation",
+                    "enabled": false,
+                    "position": "left"
+                  },
+                  {
+                    "routePath": "content/playlists",
+                    "titleToken": "Playlists",
+                    "enabled": true,
+                    "position": "left"
+                  },
+                  {
+                    "routePath": "content/syndication",
+                    "titleToken": "Syndication",
+                    "enabled": false,
+                    "position": "left"
+                  },
+                  {
+                    "routePath": "content/categories",
+                    "titleToken": "Categories",
+                    "enabled": true,
+                    "position": "left"
+                  },
+                  {
+                    "routePath": "content/upload-control",
+                    "titleToken": "UploadControl",
+                    "enabled": true,
+                    "position": "right"
+                  },
+                  {
+                    "routePath": "content/bulk-upload",
+                    "titleToken": "BulkUpload",
+                    "enabled": false,
+                    "position": "right"
+                  },
+                  {
+                    "routePath": "content/drop-folders",
+                    "titleToken": "DropFolders",
+                    "enabled": false,
+                    "position": "right"
+                  }
                 ]
             },
             {
@@ -145,6 +168,7 @@ export const environment = {
         }
     },
     "entriesShared": {
+        "pageSize": 50,
         "MAX_ENTRIES": 10000,
         "categoriesFilters": {
             "maxChildrenToShow": 500
@@ -161,5 +185,9 @@ export const environment = {
         "rolesFilters": {
             "maxChildrenToShow": 500
         }
+    },
+    "uploadsShared": {
+        "MAX_FILE_SIZE": 2047, // Mb
+        "MAX_CONCURENT_UPLOADS": 4
     }
 }

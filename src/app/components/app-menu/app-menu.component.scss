@@ -73,17 +73,6 @@
         display: flex;
         align-items: center;
     }
-    .kUploadBtn {
-        height: 28px;
-        font-size: 12px;
-        letter-spacing: 0.1em;
-        font-weight: 700;
-        border: 0px solid $menuBkgColor;
-        color: $kGrayscale1;
-        margin-right: 12px;
-        padding-left: 6px;
-        padding-right: 6px;
-    }
     .kUserName {
         display: flex;
         align-items: center;
@@ -137,46 +126,12 @@
 .appSubMenu {
     background-color: white;
     border-bottom: 2px solid $kGrayscale5;
-    a {
-        color: $subLinkColor;
-        line-height: $appMenuHeight;
-        font-size: 12px;
-        letter-spacing: 0.1em;
-        letter-spacing: 0.5px;
-        cursor: pointer;
-        text-decoration: none;
-		&.disabled{
-			color: $kGrayscale4;
-			border: 0px solid white;
-			pointer-events: none;
-		}
-        &:hover {
-            text-decoration: none;
-            color: $menuBkgColor;
-        }
-        &.activeLink {
-            text-decoration: none;
-            color: $menuBkgColor;
-        }
+
+    .kSubMenuHolder {
+        justify-content: space-between;
     }
-    .subMenuContainer {
-        margin-right: 30px;
-        position: relative;
-        &.active {
-            > .linkMarker {
-                opacity: 1;
-            }
-        }
-    }
-    .linkMarker {
-        width: 100%;
-        height: 4px;
-        position: absolute;
-        background-color: $menuBkgColor;
-        opacity: 0;
-        bottom: 0px;
-        transition: opacity .3s ease-in-out;
-        -moz-transition: opacity .3s ease-in-out;
-        -webkit-transition: opacity .3s ease-in-out;
+
+    .kSubMenu {
+        display: flex;
     }
 }

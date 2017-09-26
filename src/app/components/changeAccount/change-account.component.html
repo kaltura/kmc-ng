@@ -1,0 +1,27 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+  <div class="kChangeAccountWin" #changeAccount>
+    <form [formGroup]="changeAccountForm" novalidate>
+      <div class="kHeader">
+        <span class="kTitle">{{ 'app.changeAccount.title'| translate}}</span>
+      </div>
+
+      <div class="kContainer">
+        <div class="kRow">
+          <span class="kLabel">{{'app.changeAccount.choose'| translate}}</span>
+        </div>
+        <div class="kPartnersList">
+          <div class="kRow" *ngFor="let partner of partners">
+            <p-radioButton name="account" [value]="partner.id" formControlName="account"
+                           label="{{partner.name}}"></p-radioButton>
+          </div>
+        </div>
+      </div>
+
+      <div class="kFooter">
+        <button type="button" class="kButtonBranded" (click)="_saveAndClose()" pButton
+                label="{{'app.changeAccount.continue'| translate}}" [disabled]="changeAccountForm.get('account').value === _currentPartnerId"></button>
+      </div>
+
+    </form>
+  </div>
+</k-area-blocker>

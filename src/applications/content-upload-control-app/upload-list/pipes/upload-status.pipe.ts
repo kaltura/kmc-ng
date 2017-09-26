@@ -1,0 +1,37 @@
+import { Pipe, PipeTransform } from '@angular/core';
+import { AppLocalization, TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
+
+@Pipe({ name: 'kUploadStatus' })
+export class UploadStatusPipe implements PipeTransform {
+
+  constructor(private _appLocalization: AppLocalization) {
+  }
+
+  transform(value: TrackedFileStatuses): string {
+    let translateToken = '';
+    switch (value) {
+      case TrackedFileStatuses.uploading:
+        translateToken = 'uploading';
+        break;
+
+      case TrackedFileStatuses.uploadCompleted:
+        translateToken = 'uploaded';
+        break;
+
+      case TrackedFileStatuses.added:
+      case TrackedFileStatuses.preparing:
+      case TrackedFileStatuses.waitingUpload:
+        translateToken = 'queued';
+        break;
+
+      case TrackedFileStatuses.uploadFailed:
+        translateToken = 'uploadFailure';
+        break;
+
+      default:
+        break;
+    }
+
+    return translateToken ? this._appLocalization.get(`applications.content.uploadControl.table.status.${translateToken}`) : '';
+  }
+}
