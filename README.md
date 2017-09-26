@@ -8,7 +8,6 @@
 KMCng application uses the following technologies and conventions:
 * [Angular CLI](https://cli.angular.io/) to manage the application (dev)ops.
 * [TypeScript](http://www.typescriptlang.org/) language (superset of Javascript).
-* [Yarn](https://yarnpkg.com/en/) as our dependency management.
 * Stylesheets with [SASS](http://sass-lang.com/) (not required, it supports regular css too).
 * Error reported with [TSLint](http://palantir.github.io/tslint/) and [Codelyzer](https://github.com/mgechev/codelyzer).
 * Best practices in file and application organization for [Angular 2]({https://angular.io/).
@@ -19,7 +18,7 @@ KMCng application uses the following technologies and conventions:
 
 - [x] Ensure you have [node.js installed](https://nodejs.org/en/download/current/), version 7.0.0 or above. 
 - [x] Ensure you have [git installed](https://git-for-windows.github.io/) 
-- [x] Ensure you have [yarn installed](https://yarnpkg.com/lang/en/docs/install/) (we use it for node package management) 
+- [x] Ensure you have npm installed, version 5.0.0 or above.
 
 ### Project build options
 > KKC-ng solution is comprised of many packages; The KMC-ng application is developed along-side the [kaltura-ng](https://github.com/kaltura/kaltura-ng) packages and [mc-theme](https://github.com/kaltura/kaltura-ng-mc-theme) package. To simplify local development we created a tool that automagically bind them together as-if they where part of the same repository.
@@ -41,16 +40,16 @@ $ git clone https://github.com/kaltura/kmc-ng.git
 $ cd kmc-ng
 
 # install the dependencies
-$ yarn
+$ npm install
 
 # checkout latest standalone code
-$ yarn run checkout-standalone
+$ npm run checkout-standalone
 
 # sync dependencies to the new branch
-$ yarn install --check-files
+$ npm install
 
 # run a local server
-$ yarn start
+$ npm start
 ```
 
 > Note - if you need to [edit the application configuration](#config), change the environment.ts file only after running all of the commands above 
@@ -64,7 +63,7 @@ Please read [docs/develop kmc-ng solution guide](./docs/develop-kmc-ng-solution.
 ### Run the application
 Run the following command
 ```
-$ yarn start
+$ npm start
 ```
 navigate to [http://localhost:4200](http://localhost:4200) in your browser.
 
