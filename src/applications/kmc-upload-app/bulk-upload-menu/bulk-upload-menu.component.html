@@ -1,4 +1,4 @@
-<div class="kBulkUploadMenu">
+<k-area-blocker class="kBulkUploadMenu" [showLoader]="_filesUploading" [message]="_blockerMessage">
   <div class="kBulkUploadMenuHeader">
     <h1>{{ 'applications.content.bulkUpload.menu.header' | translate }}</h1>
   </div>
@@ -22,7 +22,7 @@
       </button>
     </div>
   </div>
-</div>
+</k-area-blocker>
 
 <kFileDialog #fileDialog
              *ngIf="_showFileDialog"
@@ -45,7 +45,7 @@
       <button pButton
               class="kButtonDefault kSuccessBulkUploadButton"
               [label]="'app.common.ok' | translate"
-              (click)="uploadSucceed.close()"></button>
+              (click)="uploadSucceed.close(); onClose.emit()"></button>
     </div>
 
   </div>

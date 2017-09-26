@@ -2,6 +2,7 @@
 
 .kBulkUploadMenu {
   color: $kGrayscale1;
+  flex-direction: column;
 
   .kBulkUploadMenuHeader {
     height: 77px;

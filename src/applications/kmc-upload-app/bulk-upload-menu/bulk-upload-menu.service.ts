@@ -95,6 +95,6 @@ export class BulkUploadMenuService {
     const actions = this._getAction(Array.from(files), type);
 
     return Observable.from(actions)
-      .concatMap(action => this._kalturaServerClient.request(action));
+      .flatMap(action => this._kalturaServerClient.request(action));
   }
 }
