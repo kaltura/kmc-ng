@@ -16,5 +16,6 @@ export class KalturaHttpConfigurationAdapter implements BootstrapAdapter
         this._kalturaClient.ks = this.appAuthentication.appUser.ks;
         this._kalturaClient.partnerId = this.appAuthentication.appUser.partnerId;
 
+
     }
 }
