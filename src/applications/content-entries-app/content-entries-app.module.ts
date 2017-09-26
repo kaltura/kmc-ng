@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
+import { DetailsBarModule } from '@kaltura-ng/kaltura-ui/details-bar';
 import {
   AccordionModule,
   ButtonModule,
@@ -92,7 +93,8 @@ import { ContentSharedModule } from 'app-shared/content-shared/content-shared.mo
     TieredMenuModule,
     TooltipModule,
     TreeModule,
-    ContentSharedModule
+    ContentSharedModule,
+    DetailsBarModule
   ],
   declarations: [
     ContentEntriesComponent,

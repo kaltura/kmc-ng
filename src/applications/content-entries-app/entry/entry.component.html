@@ -8,7 +8,10 @@
 				<button pButton class="kButtonBranded kSaveBtn" [disabled]="!_entryStore.entryIsDirty" label="Save" (click)="_save()"></button>
 				<button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
 				<button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
-			</div>
+      </div>
+      <div class="kDetailsBar">
+        <k-details-bar [data]="_data" [separatorField]="'|'" [captionField]="'caption'"></k-details-bar>
+      </div>
 			<div class="kEntryDetailsMain">
 				<div class="kEntryDetailsSections">
 					<kEntrySectionsList></kEntrySectionsList>

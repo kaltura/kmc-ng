@@ -61,11 +61,16 @@
 				margin-left: 12px;
 				font-weight: 400;
 			}
-		}
+    }
+    
+    .kDetailsBar {
+      margin-bottom: 24px;
+      margin-top: 14px;
+      color: $kGrayscale2;
+    }
 		.kEntryDetailsMain{
 			display: flex;
 			flex-direction: row;
-			padding-top: 30px;
 			height: 100%;
 			min-height: 0;
 			.kEntryDetailsSections{

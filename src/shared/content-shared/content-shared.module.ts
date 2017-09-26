@@ -34,6 +34,7 @@ import { EntriesRefineFiltersProvider } from 'app-shared/content-shared/entries-
 import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
+import { DetailsBarModule } from '@kaltura-ng/kaltura-ui/details-bar';
 
 @NgModule({
   imports: [
@@ -57,7 +58,8 @@ import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
     MenuModule,
     TagsModule,
     PaginatorModule,
-    InputTextModule
+    InputTextModule,
+    DetailsBarModule
   ],
   declarations: [
     EntryStatusPipe,
