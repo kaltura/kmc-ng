@@ -69,7 +69,7 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
       let selectedNodes: PrimeTreeNode = null;
 
       node.children.forEach((attachedCategory) => {
-        if (this._selectedCategory.id === attachedCategory.data) {
+        if (this._selectedCategory && this._selectedCategory.id === attachedCategory.data) {
           selectedNodes = attachedCategory;
         }
       });
@@ -115,7 +115,7 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
     const treeItem = this._categoriesTree.findNodeByFullIdPath(this._selectedCategory ? this._selectedCategory.fullIdPath : []);
     if (treeItem) {
       treeSelectedItem = treeItem;
-      if (expandNodeId && expandNodeId === this._selectedCategory.id) {
+      if (expandNodeId && this._selectedCategory && expandNodeId === this._selectedCategory.id) {
         treeItem.expand();
       }
     }
