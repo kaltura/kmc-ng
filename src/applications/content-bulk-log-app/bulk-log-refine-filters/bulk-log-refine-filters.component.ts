@@ -87,8 +87,9 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
       .cancelOnDestroy(this)
       .first()
       .subscribe(result => {
+        // TODO [kmcng]
         // sync components
-        this._syncCreatedComponents();
+        // this._syncCreatedComponents();
 
         if (result.filters) {
           result.filters.forEach(filter => {
@@ -106,8 +107,9 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
       .subscribe(
         filter => {
 
+          // TODO [kmcng]
           // sync components
-          this._syncCreatedComponents();
+          // this._syncCreatedComponents();
 
           if (filter.removedFilters) {
             filter.removedFilters.forEach(removeFilter => {
@@ -203,7 +205,6 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    * @private
    */
   private _syncCreatedComponents(): void {
-
     const createdAtFilter = this._bulkLogStore.getFirstFilterByType(CreatedAtFilter);
 
     if (createdAtFilter instanceof CreatedAtFilter) {
