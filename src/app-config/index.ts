@@ -1,6 +1,9 @@
 export const environment = {
     "shell": {
+        "languageHash": "12", /* this value is set manually at the moment and should be replaced with the published app version  */
         "defaultRoute": "/content/entries",
+        "loginRoute" : "/login",
+        "errorRoute" : "/error",
         "browser": {
             "storageNamespace": "kmc-ng"
         }
@@ -103,28 +106,23 @@ export const environment = {
         "locales": [
             {
                 "id": "en",
-                "label": "English",
-                "source": "i18n/en.json"
+                "label": "English"
             },
             {
                 "id": "de",
-                "label": "Deutsch",
-                "source": "i18n/de.json"
+                "label": "Deutsch"
             },
             {
                 "id": "es",
-                "label": "Español",
-                "source": "i18n/es.json"
+                "label": "Español"
             },
             {
                 "id": "fr",
-                "label": "Français",
-                "source": "i18n/fr.json"
+                "label": "Français"
             },
             {
                 "id": "ja",
-                "label": "日本語",
-                "source": "i18n/ja.json"
+                "label": "日本語"
             }
         ]
     },
@@ -147,6 +145,7 @@ export const environment = {
         }
     },
     "entriesShared": {
+        "pageSize": 50,
         "MAX_ENTRIES": 10000,
         "categoriesFilters": {
             "maxChildrenToShow": 500
@@ -163,5 +162,9 @@ export const environment = {
         "rolesFilters": {
             "maxChildrenToShow": 500
         }
+    },
+    "uploadsShared": {
+        "MAX_FILE_SIZE": 2047, // Mb
+        "MAX_CONCURENT_UPLOADS": 4
     }
 }
