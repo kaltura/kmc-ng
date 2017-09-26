@@ -5,11 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { async } from 'rxjs/scheduler/async';
-import {
-  MetadataProfileCreateModes,
-  MetadataProfileStore,
-  MetadataProfileTypes
-} from '@kaltura-ng/kaltura-server-utils';
+import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from '@kaltura-ng/kaltura-server-utils';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
@@ -34,6 +30,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaLiveStreamAdminEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamAdminEntry';
 import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamEntry';
 import { KalturaExternalMediaEntry } from 'kaltura-typescript-client/types/KalturaExternalMediaEntry';
+import { environment } from 'app-environment';
 
 export type UpdateStatus = {
   loading: boolean;
@@ -80,7 +77,7 @@ export class EntriesStore implements OnDestroy {
   private _activeFilters = new BehaviorSubject<{ filters: FilterItem[] }>({ filters: [] });
   private _entries = new BehaviorSubject({ items: [], totalCount: 0 });
   private _state = new BehaviorSubject<UpdateStatus>({ loading: false, errorMessage: null });
-
+  private _paginationCacheToken = 'default';
 
   private _queryData: QueryData = {
     pageIndex: 1,
@@ -107,16 +104,10 @@ export class EntriesStore implements OnDestroy {
   public state$ = this._state.asObservable();
   public query$ = this._querySource.asObservable();
 
-    public getFilterType(filter : any) : string
-    {
-      return EntriesStore.getFilterType(filter);
-    }
-  public static getFilterType(filter : any) : string
-  {
+  public static getFilterType(filter: any): string {
     const result = filter['filterType'] || filter.constructor['filterType'];
 
-    if (!result)
-    {
+    if (!result) {
       throw new Error('Failed to extract filter type value (do you have a static property named filterType?)');
     }
 
@@ -129,15 +120,27 @@ export class EntriesStore implements OnDestroy {
     EntriesStore.filterTypeMapping[this.getFilterType(filterType)] = handler;
   }
 
+  public set paginationCacheToken(token: string) {
+    this._paginationCacheToken = typeof token === 'string' && token !== '' ? token : 'default';
+  }
+
+  public getFilterType(filter: any): string {
+    return EntriesStore.getFilterType(filter);
+  }
+
   constructor(private kalturaServerClient: KalturaClient,
               private browserService: BrowserService,
               private metadataProfileService: MetadataProfileStore) {
-    const defaultPageSize = this.browserService.getFromLocalStorage('entries.list.pageSize');
+    const defaultPageSize = this.browserService.getFromLocalStorage(this._getPaginationCacheKey());
     if (defaultPageSize !== null) {
       this._queryData.pageSize = defaultPageSize;
     }
 
     this._getMetadataProfiles();
+  }
+
+  private _getPaginationCacheKey(): string {
+    return `entries.${this._paginationCacheToken}.list.pageSize`;
   }
 
   public get queryData(): QueryData {
@@ -198,11 +201,11 @@ export class EntriesStore implements OnDestroy {
 
 
   public removeFiltersByType(filterType: FilterTypeConstructor<FilterItem>): void {
-      const filtersOfType = this._activeFiltersMap[this.getFilterType(filterType)];
+    const filtersOfType = this._activeFiltersMap[this.getFilterType(filterType)];
 
-      if (filtersOfType) {
-        this.removeFilters(...filtersOfType);
-      }
+    if (filtersOfType) {
+      this.removeFilters(...filtersOfType);
+    }
   }
 
   public getFirstFilterByType<T extends FilterItem>(filterType: FilterTypeConstructor<T>): T {
@@ -296,7 +299,7 @@ export class EntriesStore implements OnDestroy {
     this.executeQueryState.deferredAddedFilters.push(...addedFilters);
     this.executeQueryState.deferredRemovedFilters.push(...removedFilters);
 
-    this.browserService.setInLocalStorage('entries.list.pageSize', this._queryData.pageSize);
+    this.browserService.setInLocalStorage(this._getPaginationCacheKey(), this._queryData.pageSize);
 
     // execute the request
     this.executeQueryState.subscription = Observable.create(observer => {

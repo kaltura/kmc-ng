@@ -14,11 +14,22 @@
       "Account Settings": "Account Settings",
       "Account Upgrade": "Account Upgrade",
       "Administration": "Administration",
-      "Roles": "Roles"
+      "Roles": "Roles",
+      "UploadControl": "Upload Control",
+      "BulkUpload": "Bulk Upload",
+      "DropFolders": "Drop Folders"
     },
     "userSettings": {
       "changeAccount": "Change Acoount",
       "logout": "Logout"
+    },
+    "changeAccount": {
+      "title": "Change account",
+      "choose": "Choose a different partner:",
+      "continue": "Continue",
+      "errors":{
+        "loadPartners": "An error occurred while loading accounts."
+      }
     },
     "helpMenu": {
       "gettingStarted": "Getting Started",
@@ -106,8 +117,34 @@
       "signUp": "Sign Up",
       "rememberMe": "Remember me",
       "dontHaveAccount": "Don't have an account?"
+    }
+  },
+  "applications": {
+    "entries": {
+      "entryMetadata": {
+        "searchTagsPH": "Search Tags",
+        "searchCategoriesPH": "Search Categories"
+      }
     },
     "upload": {
+      "fileStatus": {
+        "preProcess": "Pre process",
+        "queued": "Queued",
+        "uploading": "Uploading",
+        "complete": "Complete",
+        "failed": "Failed"
+      },
+      "inDevelopment": {
+        "title": "Sorry",
+        "message": "Feature in development"
+      },
+      "validation": {
+        "error": "Error",
+        "wrongType": "Select media type",
+        "missingTranscodingProfile" : "Select transcoding profile",
+        "fileSizeExceeded": "File size exceeded",
+        "fileNameRequired": "File name is required"
+      },
       "uploadMenu": {
         "uploadFromDesktop": "Upload from desktop",
         "highSpeed": "Need high-speed upload?",
@@ -121,17 +158,59 @@
           "video": "Video entry",
           "audio": "Audio entry"
         }
-      }
-    }
-  },
-  "applications": {
-    "entries": {
-      "entryMetadata": {
-        "searchTagsPH": "Search Tags",
-        "searchCategoriesPH": "Search Categories"
+      },
+      "uploadSettings": {
+        "title": "Upload Settings",
+        "profile": "Transcoding profile",
+        "addFileBtn": "Add file",
+        "profilePlaceholder": "Default",
+        "mediaTypes": {
+          "video": "Video",
+          "audio": "Audio",
+          "image": "Image"
+        },
+        "table": {
+          "remove": "Remove",
+          "edit": "Edit",
+          "header": {
+            "fileName": "File name",
+            "mediaType": "Media type",
+            "size": "Size"
+          },
+          "emptyMessage": {
+            "title": "No files to upload",
+            "getStarted": "Add some files to get started, ",
+            "browse": "browse"
+          }
+        },
+        "uploadBtn": "Upload"
       }
     },
     "content": {
+      "uploadControl": {
+        "bulkCancel": {
+          "header": "Cancel uploads",
+          "message": "Are you sure you want to cancel those uploads?"
+        },
+        "files": "Files",
+        "selected": "Selected",
+        "cancel": "Cancel",
+        "table": {
+          "fileName": "File Name",
+          "entryId": "ID",
+          "fileSize": "File size",
+          "uploadedOn": "Uploaded On",
+          "progress": "Progress",
+          "remove": "Remove",
+          "status": {
+            "header": "Status",
+            "uploaded": "Complete",
+            "uploading": "Uploading",
+            "queued": "Queued",
+            "uploadFailure": "Failed"
+          }
+        }
+      },
       "categories": {
         "categories": "Categories",
         "search": "Search",

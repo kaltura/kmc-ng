@@ -1,13 +1,10 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { FreetextFilter } from 'app-shared/content-shared/entries-store/filters/freetext-filter';
-import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
+import { EntriesTableColumns, EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
 
 @Component({
   selector: 'kEntriesList',
@@ -15,11 +12,15 @@ import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/e
   styleUrls: ['./entries-list.component.scss']
 })
 export class EntriesListComponent implements OnInit, OnDestroy {
-  @Input() selectedEntries: Array<any> = [];
+  @Input() isBusy = false;
+  @Input() blockerMessage: AreaBlockerMessage = null;
+  @Input() selectedEntries: any[] = [];
+  @Input() columns: EntriesTableColumns | null;
+  @Input() rowActions: { label: string, commandName: string }[];
+
   @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
 
-  public isBusy = false;
-  public _blockerMessage: AreaBlockerMessage = null;
+  @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
 
   private querySubscription: ISubscription;
 
@@ -31,10 +32,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     sortDirection: SortDirection.Desc
   };
 
-  constructor(public _entriesStore: EntriesStore,
-              private appLocalization: AppLocalization,
-              private router: Router,
-              private _browserService: BrowserService) {
+  constructor(private _entriesStore: EntriesStore) {
   }
 
   removeTag(tag: any) {
@@ -91,7 +89,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
       this._filter.sortDirection = queryData.sortDirection;
     }
 
-
     this.querySubscription = this._entriesStore.query$.subscribe(
       query => {
         this.syncFreetextComponents();
@@ -123,65 +120,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     } else {
       this._filter.freetextSearch = null;
     }
-  }
-
-  onActionSelected(event) {
-    switch (event.action) {
-      case 'view':
-        this.router.navigate(['/content/entries/entry', event.entryID]);
-        break;
-      case 'delete':
-        this._browserService.confirm(
-          {
-            header: this.appLocalization.get('applications.content.entries.deleteEntry'),
-            message: this.appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: event.entryID }),
-            accept: () => {
-              this.deleteEntry(event.entryID);
-            }
-          }
-        );
-        break;
-      default:
-        break;
-    }
-  }
-
-  private deleteEntry(entryId: string): void {
-    this.isBusy = true;
-    this._blockerMessage = null;
-    this._entriesStore.deleteEntry(entryId).subscribe(
-      () => {
-        this.isBusy = false;
-        this._browserService.showGrowlMessage({
-          severity: 'success',
-          detail: this.appLocalization.get('applications.content.entries.deleted')
-        });
-        this._entriesStore.reload(true);
-      },
-      error => {
-        this.isBusy = false;
-
-        this._blockerMessage = new AreaBlockerMessage(
-          {
-            message: error.message,
-            buttons: [
-              {
-                label: this.appLocalization.get('app.common.retry'),
-                action: () => {
-                  this.deleteEntry(entryId);
-                }
-              },
-              {
-                label: this.appLocalization.get('app.common.cancel'),
-                action: () => {
-                  this._blockerMessage = null;
-                }
-              }
-            ]
-          }
-        )
-      }
-    );
   }
 
   clearSelection() {
