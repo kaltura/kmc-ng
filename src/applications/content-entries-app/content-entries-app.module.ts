@@ -54,6 +54,7 @@ import {
 } from './entries/bulk-actions/services';
 import { EntryCanDeactivate } from './entry/entry-can-deactivate.service';
 import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
+import { ContentEntriesAppService } from './content-entries-app.service';
 
 @NgModule({
   imports: [
@@ -111,7 +112,8 @@ import { ContentSharedModule } from 'app-shared/content-shared/content-shared.mo
     BulkRemoveCategoriesService,
     BulkDeleteService,
     BulkDownloadService,
-    EntryCanDeactivate
+    EntryCanDeactivate,
+    ContentEntriesAppService
   ],
 })
 export class ContentEntriesAppModule {

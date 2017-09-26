@@ -1,14 +1,21 @@
-<k-area-blocker [showLoader]="isBusy" [message]="_blockerMessage">
+<k-area-blocker [showLoader]="isBusy" [message]="blockerMessage">
   <div class="kEntries kOverrideFAIcons">
     <div #entriesTableHolder class="kEntriesHolder kContent">
       <div class="kEntriesTableFilters">
         <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries$ | async)?.totalCount">{{(_entriesStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
 
         <div [class.kHidden]="!selectedEntries.length" class="kBulkOperations">
-          <span class="kSelectedEntriesLabel">• {{selectedEntries.length}} {{'applications.content.entries.selected' | translate}}</span>
-          <ng-content select=".bulk-actions"></ng-content>
+          <span *ngIf="bulkWrapper.children.length !== 0"
+                class="kSelectedEntriesLabel">
+            • {{selectedEntries.length}} {{'applications.content.entries.selected' | translate}}
+          </span>
+          <div #bulkWrapper>
+            <ng-content select=".bulk-actions"></ng-content>
+          </div>
 
-          <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
+          <a *ngIf="bulkWrapper.children.length !== 0"
+             class="kBulkCancel"
+             (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
         </div>
         <div [class.kHidden]="selectedEntries.length" class="kFilters">
           <input type="text"
@@ -49,10 +56,14 @@
         </ng-template>
       </kTags>
       <kEntriesTable class="kEntriesTable"
+                     scrollHeight="100%"
                      [entries]="(_entriesStore.entries$ | async)?.items"
+                     [showBulkSelect]="bulkWrapper.children.length !== 0"
                      [filter]="_filter"
+                     [columns]="columns"
+                     [rowActions]="rowActions"
+                     (actionSelected)="onActionsSelected.emit($event)"
                      (sortChanged)="onSortChanged($event)"
-                     (actionSelected)="onActionSelected($event)"
                      [(selectedEntries)]="selectedEntries"
       ></kEntriesTable>
 

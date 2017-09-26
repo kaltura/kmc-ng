@@ -168,6 +168,7 @@ export const environment = {
         }
     },
     "entriesShared": {
+        "pageSize": 50,
         "MAX_ENTRIES": 10000,
         "categoriesFilters": {
             "maxChildrenToShow": 500

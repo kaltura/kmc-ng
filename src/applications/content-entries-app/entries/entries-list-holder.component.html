@@ -1,7 +1,10 @@
-<kEntriesList>
+<kEntriesList [columns]="_columns"
+              [rowActions]="_rowActions"
+              [isBusy]="_isBusy"
+              [blockerMessage]="_blockerMessage"
+              (onActionsSelected)="_onActionSelected($event)">
   <div class="bulk-actions">
     <kBulkActions [selectedEntries]="_entriesList.selectedEntries"
                   (onBulkChange)="_entriesList.onBulkChange($event)"></kBulkActions>
   </div>
 </kEntriesList>
-
