@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { AppMenuItem } from '../../services/app-menu-config';
 
 @Component({
@@ -6,12 +6,15 @@ import { AppMenuItem } from '../../services/app-menu-config';
   templateUrl: './app-menu-content.component.html',
   styleUrls: ['./app-menu-content.component.scss']
 })
-export class AppMenuContentComponent {
-  @Input() menuItems: Array<AppMenuItem> = [];
+export class AppMenuContentComponent implements OnChanges {
+  @Input()
+  menuItems : AppMenuItem[];
 
   @Input()
-  set position(value: 'rigth' | 'left') {
-    this._items = this.menuItems.filter(({ position }) => position === value);
+  position : 'right' | 'left';
+
+  ngOnChanges() {
+    this._items = (this.menuItems || []).filter( item  => (item.position || 'left') === this.position);
   }
 
   public _items: Array<AppMenuItem>;
