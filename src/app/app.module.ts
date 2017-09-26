@@ -61,6 +61,7 @@ import { AppMenuContentComponent } from './components/app-menu/app-menu-content.
 import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-app.module';
 import { TranscodingProfileManagementModule } from '@kaltura-ng/kaltura-server-utils/transcoding-profile-management';
 import { ChangeAccountComponent } from './components/changeAccount/change-account.component';
+import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -101,6 +102,7 @@ export function clientConfigurationFactory() {
     GrowlModule,
     KmcUploadAppModule,
     NewEntryUploadModule.forRoot(),
+    BulkUploadModule.forRoot(),
     TranscodingProfileManagementModule.forRoot(),
     RadioButtonModule
   ],

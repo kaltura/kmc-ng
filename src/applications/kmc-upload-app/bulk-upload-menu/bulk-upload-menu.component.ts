@@ -1,17 +1,16 @@
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
-import { BulkUploadMenuService, BulkUploadTypes } from './bulk-upload-menu.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication, AppNavigator } from 'app-shared/kmc-shell';
 import { KalturaAPIException } from 'kaltura-typescript-client';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { BulkUploadService, BulkUploadTypes } from 'app-shared/kmc-shell/bulk-upload';
 
 @Component({
   selector: 'kKMCBulkUploadMenu',
   templateUrl: './bulk-upload-menu.component.html',
   styleUrls: ['./bulk-upload-menu.component.scss'],
-  providers: [BulkUploadMenuService]
 })
 export class BulkUploadMenuComponent {
   @Output() onClose = new EventEmitter<void>();
@@ -19,6 +18,12 @@ export class BulkUploadMenuComponent {
   @ViewChild('uploadSucceed') uploadSucceed: PopupWidgetComponent;
 
   private _selectedType: BulkUploadTypes;
+  private _extensions = {
+    [BulkUploadTypes.entries]: '.xml,.csv',
+    [BulkUploadTypes.categories]: '.csv',
+    [BulkUploadTypes.endUsers]: '.csv',
+    [BulkUploadTypes.endUsersEntitlement]: '.csv'
+  };
 
   public _selectedFiles: FileList;
   public _bulkUploadTypes = BulkUploadTypes;
@@ -27,7 +32,7 @@ export class BulkUploadMenuComponent {
   public _filesUploading = false;
   public _blockerMessage: AreaBlockerMessage;
 
-  constructor(private _menuService: BulkUploadMenuService,
+  constructor(private _bulkUploadService: BulkUploadService,
               private _appLocalization: AppLocalization,
               private _userAuthentication: AppAuthentication,
               private _appNavigator: AppNavigator,
@@ -90,7 +95,7 @@ export class BulkUploadMenuComponent {
     if (this._selectedFiles) {
       this._filesUploading = true;
 
-      this._menuService.upload(this._selectedFiles, this._selectedType)
+      this._bulkUploadService.upload(this._selectedFiles, this._selectedType)
         .subscribe(
           () => this._handleUploadSuccess(),
           (error) => this._handleUploadError(error)
@@ -100,6 +105,14 @@ export class BulkUploadMenuComponent {
     }
   }
 
+  private _getAllowedExtension(type: BulkUploadTypes): string {
+    if (type in this._extensions) {
+      return this._extensions[type];
+    }
+
+    throw Error('Bulk upload type is not supported');
+  }
+
   public _selectFiles(files: FileList): void {
     this._selectedFiles = files;
     this._invokeUpload();
@@ -107,7 +120,7 @@ export class BulkUploadMenuComponent {
 
   public _invokeFileSelection(type: BulkUploadTypes): void {
     this._selectedType = type;
-    this._allowedExtensions = this._menuService.getAllowedExtension(type);
+    this._allowedExtensions = this._getAllowedExtension(type);
     this._openFileDialog();
   }
 

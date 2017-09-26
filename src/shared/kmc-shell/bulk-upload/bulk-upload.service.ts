@@ -20,14 +20,7 @@ export enum BulkUploadTypes {
 }
 
 @Injectable()
-export class BulkUploadMenuService {
-  private _extensions = {
-    [BulkUploadTypes.entries]: '.xml,.csv',
-    [BulkUploadTypes.categories]: '.csv',
-    [BulkUploadTypes.endUsers]: '.csv',
-    [BulkUploadTypes.endUsersEntitlement]: '.csv'
-  };
-
+export class BulkUploadService {
   constructor(private _kalturaServerClient: KalturaClient) {
   }
 
@@ -74,21 +67,13 @@ export class BulkUploadMenuService {
     }
   }
 
-  private _getAction(files: Array<File>, type: BulkUploadTypes): Array<BulkUploadAddAction
+  private _getAction(files: File[], type: BulkUploadTypes): (BulkUploadAddAction
     | CategoryAddFromBulkUploadAction
     | UserAddFromBulkUploadAction
-    | CategoryUserAddFromBulkUploadAction> {
+    | CategoryUserAddFromBulkUploadAction)[] {
     return files
       .map(file => this._getKalturaActionByType(file, type))
       .filter(Boolean);
-  }
-
-  public getAllowedExtension(type: BulkUploadTypes): string {
-    if (type in this._extensions) {
-      return this._extensions[type];
-    }
-
-    throw Error('Bulk upload type is not supported');
   }
 
   public upload(files: FileList, type: BulkUploadTypes): Observable<KalturaBulkUpload> {
