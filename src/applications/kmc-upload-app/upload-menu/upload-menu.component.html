@@ -2,7 +2,8 @@
   <div class="kUploadMenuListItem">
     <i class="kIconUpload kUploadMenuUploadIcon"></i>
     <span>
-      <a (click)="onItemSelected.emit('uploadFromDesktop')">{{ 'applications.upload.uploadMenu.uploadFromDesktop' | translate }}</a>
+      <a (click)="onItemSelected.emit('uploadFromDesktop')">{{ 'applications.upload.uploadMenu.uploadFromDesktop' | translate }}</a><br>
+      <a class="kBulkUploadSamplesLink" (click)="onHighSpeedLinkClicked()">{{ 'applications.upload.uploadMenu.highSpeed' | translate }}</a>
     </span>
   </div>
 
@@ -10,7 +11,7 @@
     <i class="kIconbulk kUploadMenuBulkUploadIcon"></i>
     <span>
       <a (click)="_inDevelopment()">{{ 'applications.upload.uploadMenu.bulkUpload.title' | translate }}</a><br>
-      <a class="kBulkUploadSamplesLink" (click)="_inDevelopment()">
+      <a class="kBulkUploadSamplesLink" (click)="onDownloadSamplesClicked()">
         {{ 'applications.upload.uploadMenu.bulkUpload.samplesLink' | translate }}
       </a>
     </span>
