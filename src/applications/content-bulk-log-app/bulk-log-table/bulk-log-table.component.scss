@@ -4,7 +4,11 @@
   background-color: white;
   overflow-y: hidden;
   position: absolute;
-  padding: 0px;
+  padding: 0;
+  .kBulkLogFileName {
+    font-weight: bold;
+    color: $kGrayscale1;
+  }
   .kThumbnailHolder {
     overflow: hidden;
     position: relative;

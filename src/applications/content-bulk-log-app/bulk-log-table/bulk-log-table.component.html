@@ -23,11 +23,16 @@
       </p-column>
 
       <p-column field="fileName"
-                [header]="'applications.content.bulkUpload.table.fileName' | translate">
+                [header]="'applications.content.bulkUpload.table.fileName' | translate"
+                [style]="{'width':'350px'}">
+        <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
+          <span class="kBulkLogFileName">{{ bulkLogItem[col.field] }}</span>
+        </ng-template>
       </p-column>
 
       <p-column field="bulkUploadObjectType"
-                [header]="'applications.content.bulkUpload.table.uploadedItem' | translate">
+                [header]="'applications.content.bulkUpload.table.uploadedItem' | translate"
+                [style]="{'width':'90px'}">
         <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
           <span>{{ bulkLogItem[col.field] | kBulkLogTableObjectType }}</span>
         </ng-template>
@@ -48,7 +53,8 @@
       </p-column>
 
       <p-column field="numOfObjects"
-                [header]="'applications.content.bulkUpload.table.numOfObjects' | translate">
+                [header]="'applications.content.bulkUpload.table.numOfObjects' | translate"
+                [style]="{'width':'80px'}">
         <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
           <span>{{ !bulkLogItem[col.field] || bulkLogItem[col.field] < 0 ? 0 : bulkLogItem[col.field] }}</span>
         </ng-template>
