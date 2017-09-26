@@ -9,7 +9,7 @@
     <li class="kMenuItemLabel"><span class="kIcon kIconhouse"></span>
       <div class="kMenuItem">
         <span>{{_userContext.partnerInfo.name}}</span>
-        <a>{{'app.userSettings.changeAccount' | translate}}</a>
+        <a (click)="changeAccountPopup.open()">{{'app.userSettings.changeAccount' | translate}}</a>
       </div>
     </li>
   </ul>
@@ -19,6 +19,12 @@
   </div>
 
   <ul class="kLanguages kOverrideFAIcons">
-    <p-dropdown [options]="_languages" [(ngModel)]="_selectedLanguage" [appendTo]="'body'" (onChange)="onLangSelected($event)"></p-dropdown>
+    <p-dropdown [options]="_languages" [(ngModel)]="_selectedLanguage" [appendTo]="'body'"
+                (onChange)="onLangSelected($event)"></p-dropdown>
   </ul>
 </div>
+<kPopupWidget #changeAccountPopup [popupWidth]="500" [popupHeight]="370" [modal]="true">
+  <ng-template>
+    <kChangeAccount></kChangeAccount>
+  </ng-template>
+</kPopupWidget>

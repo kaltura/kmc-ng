@@ -31,7 +31,7 @@
 </div>
 
 <kPopupWidget #usersettings [appendTo]="appmenu" [popupWidth]="240" [popupHeight]="226" [closeBtn]="false" [targetRef]="username" [targetOffset]="{'x':-50, 'y': 30}" (onOpen)="username.className='kUserName open'" (onClose)="username.className='kUserName'">
-    <kKMCUserSettings></kKMCUserSettings>
+  <kKMCUserSettings></kKMCUserSettings>
 </kPopupWidget>
 
 <kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="help.className='kIconhelp open'" (onClose)="help.className='kIconhelp'">
@@ -57,3 +57,4 @@
 <kPopupWidget #uploadmenu [popupWidth]="415" [popupHeight]="385" [closeBtn]="true" [modal]="true" [transparent]="true">
   <kKMCUploadMenu></kKMCUploadMenu>
 </kPopupWidget>
+
