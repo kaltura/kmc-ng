@@ -7,11 +7,12 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 
 import { MenuItem } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
-import { EntryMetadataHandler, EntryCategoryItem } from './entry-metadata-handler';
+import { EntryMetadataHandler } from './entry-metadata-handler';
 import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
 import { JumpToSection } from './jump-to-section.component';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryFormManager } from '../entry-form-manager';
+import { EntryCategoryItem } from 'app-shared/content-shared/category-selector/categories-selector.component';
 
 @Component({
     selector: 'kEntryMetadata',

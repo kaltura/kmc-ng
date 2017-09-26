@@ -20,13 +20,13 @@ import { JumpToSection } from './entry-metadata/jump-to-section.component';
 import { ModerationPipe } from './pipes/moderation.pipe';
 import { LinkedEntries } from './entry-metadata/entry-selector/linked-entries.component';
 import { LinkedEntriesPopup } from './entry-metadata/entry-selector/linked-entries-popup.component';
-import { CategoriesSelector } from './entry-metadata/category-selector/categories-selector.component';
-import { CategoryTooltip } from './entry-metadata/category-selector/category-tooltip.pipe';
 import { TagsPipe } from './entry-flavours/tags.pipe';
+import { CategoryTooltip } from './entry-metadata/category-selector-holder/category-tooltip.pipe';
+import { CategoriesSelectorHolderComponent } from './entry-metadata/category-selector-holder/categories-selector-holder.component';
 
 
 export const EntryComponentsList = [
-    CategoriesSelector,
+    CategoriesSelectorHolderComponent,
     CategoryTooltip,
     DRMDetails,
     EntryAccessControl,

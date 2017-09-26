@@ -32,14 +32,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
-
-export interface EntryCategoryItem
-{
-    id : number,
-    fullIdPath : number[],
-    name : string,
-    fullNamePath : string[],
-}
+import { EntryCategoryItem } from 'app-shared/content-shared/category-selector/categories-selector.component';
 
 @Injectable()
 export class EntryMetadataHandler extends EntryFormWidget

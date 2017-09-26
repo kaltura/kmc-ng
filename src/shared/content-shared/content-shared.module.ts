@@ -34,6 +34,7 @@ import { EntriesRefineFiltersProvider } from 'app-shared/content-shared/entries-
 import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
+import { CategoriesSelectorComponent } from 'app-shared/content-shared/category-selector/categories-selector.component';
 
 @NgModule({
   imports: [
@@ -71,7 +72,8 @@ import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
     CategoriesFilterPrefsComponent,
     CategoriesFilterComponent,
     EntriesTableComponent,
-    EntriesListComponent
+    EntriesListComponent,
+    CategoriesSelectorComponent
   ],
   exports: [
     EntryStatusPipe,
@@ -85,7 +87,8 @@ import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
     CategoriesFilterPrefsComponent,
     CategoriesFilterComponent,
     EntriesTableComponent,
-    EntriesListComponent
+    EntriesListComponent,
+    CategoriesSelectorComponent
   ],
   providers: [
     CategoriesPrimeService,
