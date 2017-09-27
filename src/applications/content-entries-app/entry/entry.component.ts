@@ -114,8 +114,10 @@ export class EntryComponent implements OnInit, OnDestroy {
 		private _appLocalization: AppLocalization) {
 		this._data = [
 			{ caption: "Id", value: "hi" },
-			{ value: "12345 sdfsd" },
-			{ caption: "Link", value: "12345 sdfsd", link:"www.ynet.co.il" }
+			{ caption: "Link", value: "12345 sdfsd", link: "www.ynet.co.il" },
+			{ iconStyle: "kIconimage", value: "12345 sdfsd", tooltip:"Holla" },
+			{ caption: "Link", link: "www.ynet.co.il" },
+			{ iconStyle: "kIconimage", link: "www.ynet.co.il" }
 		]
 	}
 
