@@ -64,6 +64,8 @@ export class ModerationStore implements OnDestroy {
   }
 
   loadEntryModerationDetails(entryId: string) : void {
+    this._moderationState.next({ isBusy: true });
+    this._moderationData.next({entry: null, flag: null});
     this._kalturaServerClient.multiRequest([
       new BaseEntryGetAction(
         {
@@ -87,11 +89,12 @@ export class ModerationStore implements OnDestroy {
           this._moderationData.next({
             entry: response[0].result,
             flag: response[1].result
-          })
+          });
+          this._moderationState.next({ isBusy: false });
         },
         error => {
           this._moderationState.next({
-            isBusy: true,
+            isBusy: false,
             error: {message: this._appLocalization.get('applications.content.moderation.errorConnecting')}
           });
         }

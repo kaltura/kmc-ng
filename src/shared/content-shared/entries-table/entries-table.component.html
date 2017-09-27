@@ -70,6 +70,12 @@
                 [style]="_getColumnStyle(_columns.plays)">
       </p-column>
 
+      <p-column *ngIf="_columns.flags"
+                field="plays"
+                [header]="'applications.content.table.flags' | translate"
+                [style]="_getColumnStyle(_columns.flags)">
+      </p-column>
+
       <p-column *ngIf="_columns.createdAt"
                 field="createdAt"
                 [header]="'applications.content.table.createdOn' | translate"
@@ -78,6 +84,12 @@
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <span>{{entry[col.field] | kDate}}</span>
         </ng-template>
+      </p-column>
+
+      <p-column *ngIf="_columns.moderationStatus"
+                field="moderationStatus"
+                [header]="'applications.content.table.moderationStatus' | translate"
+                [style]="_getColumnStyle(_columns.moderationStatus)">
       </p-column>
 
       <p-column *ngIf="_columns.duration"

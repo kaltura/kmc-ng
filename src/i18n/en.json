@@ -338,7 +338,12 @@
         "delete": "Delete",
         "view": "View Details",
         "loading": "Loading...",
-        "noResults": "No Results"
+        "noResults": "No Results",
+        "flags": "Flags",
+        "moderationStatus": "Moderation Status",
+        "reportsAndDetails": "Reports & Details",
+        "approve": "Approve",
+        "reject": "Reject"
       },
       "paginator": {
         "showRows": "Show rows:"

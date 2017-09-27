@@ -1,9 +1,10 @@
 @import 'app-theme/_variables.scss';
 
-.kEntryReport {
+.kEntryReportWrap {
   display: flex;
   width: 100%;
   flex-direction: column;
+  min-height: 700px;
 
   .kHeader {
     display: flex;
@@ -174,4 +175,14 @@
       color: $kGrayscale3;
     }
   }
+}
+
+/deep/ kPopupWidget.kPopupWidgetWrap {
+  top: inherit;
+  bottom: 0px;
+}
+
+/deep/ kPopupWidget .kPopupWidget {
+  border-bottom-left-radius: 0!important;
+  border-bottom-right-radius: 0!important;
 }

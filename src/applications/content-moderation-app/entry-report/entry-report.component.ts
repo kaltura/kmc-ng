@@ -48,7 +48,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   iframeSrc: string = '';
 
 	constructor(
-	  private _moderationStore: ModerationStore,
+	  public _moderationStore: ModerationStore,
     private _appLocalization: AppLocalization,
     private _router: Router,
     private _browserService: BrowserService,
@@ -215,7 +215,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._moderationStore.loadEntryModerationDetails(this.entryId); /* TODO temporary hardcoded for testing, should be removed */
+    this._moderationStore.loadEntryModerationDetails(this.entryId);
 
     this.tabs = [
       { name: this._appLocalization.get('applications.content.moderation.report'), isActive: true },

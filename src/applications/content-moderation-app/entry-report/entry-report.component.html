@@ -1,5 +1,5 @@
-<k-area-blocker [message]="areaBlockerMessage" [showLoader]="showLoader">
-  <div class="kEntryReport kOverrideFAIcons">
+<k-area-blocker [message]="areaBlockerMessage" [showLoader]="(_moderationStore.moderationState$ | async)?.isBusy || showLoader">
+  <div class="kEntryReportWrap kOverrideFAIcons">
     <div class="kHeader">
       <span class="kTitle">{{('applications.content.moderation.entryReports') | translate}}</span>
 
