@@ -12,6 +12,7 @@ import { KalturaModerationFlag } from 'kaltura-typescript-client/types/KalturaMo
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { BulkService } from '../bulk-service/bulk.service';
 import { environment } from 'app-environment';
+import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 
 export interface Tabs {
   name: string;
@@ -53,7 +54,8 @@ export class EntryReportComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _browserService: BrowserService,
     private _bulkService: BulkService,
-    private appAuthentication: AppAuthentication
+    private appAuthentication: AppAuthentication,
+    private _entriesStore: EntriesStore
   ) {}
 
   closePopup(): void {
@@ -134,7 +136,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
         () => {
           this.showLoader = false;
           this.closePopup();
-          // TODO [kmcng] reloading entries list
+          this._entriesStore.reload(true);
         },
         error => {
           this.showLoader = false;
@@ -186,7 +188,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
         () => {
           this.showLoader = false;
           this.closePopup();
-          // TODO [kmcng] reloading entries list
+          this._entriesStore.reload(true);
         },
         error => {
           this.showLoader = false;

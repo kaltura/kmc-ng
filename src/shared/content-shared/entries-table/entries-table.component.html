@@ -90,6 +90,9 @@
                 field="moderationStatus"
                 [header]="'applications.content.table.moderationStatus' | translate"
                 [style]="_getColumnStyle(_columns.moderationStatus)">
+        <ng-template let-col let-entry="rowData" pTemplate="body">
+           {{entry[col.field] | moderation}}
+        </ng-template>
       </p-column>
 
       <p-column *ngIf="_columns.duration"
