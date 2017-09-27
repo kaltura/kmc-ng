@@ -1,0 +1,55 @@
+@import 'app-theme/_variables.scss';
+
+.kEditWin{
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+    .kTitle {
+      color: #333333;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+  .kContainer{
+    height: 144px;
+  }
+  .kFooter{
+    height: 66px;
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button{
+      height: 34px;
+      width: 120px;
+      font-size: 14px;
+    }
+  }
+
+  .kRow{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    padding: 53px 60px;
+    font-size: 15px;
+    .kLabel{
+      width: 200px;
+      flex: 0 0 auto;
+    }
+    input{
+      width: 100%;
+    }
+  }
+}
+
+:host /deep/ .ui-dropdown.ui-widget{
+  width: 265px;
+
+  .ui-dropdown-items-wrapper{
+    max-height: 115px !important;
+  }
+}

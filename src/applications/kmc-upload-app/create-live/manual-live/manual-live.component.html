@@ -1,0 +1,17 @@
+<form [formGroup]="_form" novalidate (ngSubmit)="onSubmit()" class="kAccountUpgradeWrapper kContent">
+  manual
+  <section class="kFormContainer">
+    <div class="kFormSection">
+      <div class="kTitle">{{'applications.settings.accountUpgrade.sendUsMessage' | translate}}</div>
+      <div class="kRow">
+        <span class="kLabel">{{'applications.settings.accountUpgrade.name' | translate}}</span>
+        <div class="kRequired"></div>
+        <input class="kControl" formControlName="name" pInputText>
+      </div>
+    </div>
+    <div class="kSaveBtnContainer kRow">
+      <button pButton class="kButtonBranded kSaveBtn"
+              label="{{'applications.settings.accountUpgrade.send' | translate}}"></button>
+    </div>
+  </section>
+</form>

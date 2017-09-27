@@ -1,0 +1,99 @@
+@import 'app-theme/_variables.scss';
+
+.kEditWin {
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+    .kTitle {
+      color: #333333;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+  .kContainer {
+    height: 482px;
+  }
+  .kFooter {
+    height: 66px;
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button {
+      height: 34px;
+      width: 130px;
+      font-size: 14px;
+    }
+  }
+
+  /deep/ .kContainer {
+
+    padding-left: 28px;
+
+    >.kRow:first-child{
+      padding-top: 28px;
+    }
+
+    .kRow {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      padding-top: 20px;
+
+      .kRequired {
+        width: 20px;
+        font-size: 24px;
+        color: $kGrayscale2;
+        &.kHasError {
+          color: $kDandger;
+          font-weight: bold;
+        }
+      }
+      .kRequired, .kLabel {
+        padding: 8px 0px 8px 4px;
+        height: 18px;
+      }
+
+      .kLabel {
+        width: 173px;
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 auto;
+        flex: 0 0 auto;
+        height: 18px;
+        color: $kGrayscale1;
+        font-size: 15px;
+        line-height: 18px;
+
+        &.kInputSwitchLabel{
+          padding-top: 2px;
+        }
+      }
+
+      .kControl {
+        color: $kGrayscale2;
+        height: 34px;
+        width: 360px;
+        border-radius: 3px;
+        &.kHasError {
+          border: 1px solid $kDandger;
+          background: initial;
+        }
+        &.kInputSwitch {
+          padding-right: 12px;
+        }
+      }
+      .error {
+        padding-top: 8px;
+        font-size: 15px;
+      }
+    }
+  }
+}
+
+/deep/ .ui-dropdown.ui-widget {
+  width: 360px !important;
+}
