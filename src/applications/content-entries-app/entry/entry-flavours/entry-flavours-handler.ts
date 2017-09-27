@@ -3,11 +3,10 @@ import { EntryFormWidget } from '../entry-form-widget';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { Observable } from 'rxjs/Observable';
-import { AppAuthentication } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
+import { AppLocalization, TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaFlavorAsset } from 'kaltura-typescript-client/types/KalturaFlavorAsset';
 import { KalturaFlavorAssetWithParams } from 'kaltura-typescript-client/types/KalturaFlavorAssetWithParams';
 import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-typescript-client/types/FlavorAssetGetFlavorAssetsWithParamsAction';
@@ -18,15 +17,15 @@ import { KalturaWidevineFlavorAsset } from 'kaltura-typescript-client/types/Kalt
 import { FlavorAssetDeleteAction } from 'kaltura-typescript-client/types/FlavorAssetDeleteAction';
 import { FlavorAssetConvertAction } from 'kaltura-typescript-client/types/FlavorAssetConvertAction';
 import { FlavorAssetReconvertAction } from 'kaltura-typescript-client/types/FlavorAssetReconvertAction';
-import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
 import { FlavorAssetSetContentAction } from 'kaltura-typescript-client/types/FlavorAssetSetContentAction';
 import { FlavorAssetAddAction } from 'kaltura-typescript-client/types/FlavorAssetAddAction';
 import { KalturaUrlResource } from 'kaltura-typescript-client/types/KalturaUrlResource';
 import { KalturaContentResource } from 'kaltura-typescript-client/types/KalturaContentResource';
 import { UploadManagement } from '@kaltura-ng/kaltura-common/upload-management';
-import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
 import { environment } from 'app-environment';
 import { Flavor } from './flavor';
+import { NewEntryFlavourFile } from './new-entry-flavour-file';
+import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
 
 @Injectable()
 export class EntryFlavoursHandler extends EntryFormWidget
@@ -52,6 +51,10 @@ export class EntryFlavoursHandler extends EntryFormWidget
     protected _onReset() {}
 
     protected _onActivate(firstTimeActivating: boolean) {
+      if (firstTimeActivating) {
+        this._trackUploadFiles();
+      }
+
 	    this._setEntryStatus();
         return this._fetchFlavors('activation', true);
     }
@@ -302,29 +305,66 @@ export class EntryFlavoursHandler extends EntryFormWidget
 			);
 	}
 
-	public uploadFlavor(flavor: Flavor, fileData: File): void{
-    	// TODO [kmcng] enable
-		// flavor.status = KalturaFlavorAssetStatus.importing.toString();
-		// flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.uploading');
-    // // FIXME wait till discussion
-		// Observable.of(this._uploadManagement.newUpload(new KalturaUploadFile(fileData)))
-		// 	.subscribe((response) => {
-		// 		let resource = new KalturaUploadedFileTokenResource();
-		// 		resource.token = response.uploadId;
-		// 		if (flavor.id.length){
-		// 			this.updateFlavor(flavor, flavor.id, resource);
-		// 		}else{
-		// 			this.addNewFlavor(flavor, resource);
-		// 		}
-		// 	},
-		// 	(error) => {
-    //     this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
-		// 		this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
-		// 		{
-		// 			// reload flavors as we need to get the flavor status from the server
-		// 		});
-		// 	});
-	}
+  private _trackUploadFiles(): void {
+    this._uploadManagement.onFileStatusChanged$
+      .cancelOnDestroy(this)
+      .filter(uploadedFile => uploadedFile.data instanceof NewEntryFlavourFile)
+      .subscribe(
+        (uploadedFile) => {
+          const flavors = this._flavors.getValue().items;
+          const relevantFlavor = flavors ? flavors.find(flavorFile => flavorFile.uploadFileId === uploadedFile.id) : null;
+
+          switch (uploadedFile.status) {
+            case TrackedFileStatuses.uploadCompleted:
+              const token = (<NewEntryFlavourFile>uploadedFile.data).serverUploadToken;
+              const resource = new KalturaUploadedFileTokenResource({ token });
+              if (relevantFlavor) {
+                if (relevantFlavor.id.length) {
+                  this.updateFlavor(relevantFlavor, relevantFlavor.id, resource);
+                } else {
+                  this.addNewFlavor(relevantFlavor, resource);
+                }
+              } else {
+                this._fetchFlavors('reload', false).cancelOnDestroy(this, this.widgetReset$).subscribe();
+              }
+
+              break;
+            case TrackedFileStatuses.uploadFailed:
+              this._browserService.showGrowlMessage({
+                severity: 'error',
+                detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')
+              });
+              this._fetchFlavors('reload', false)
+                .cancelOnDestroy(this, this.widgetReset$)
+                .subscribe(() => {
+                  // reload flavors as we need to get the flavor status from the server
+                });
+              break;
+            default:
+              break;
+          }
+        });
+  }
+
+  public uploadFlavor(flavor: Flavor, fileData: File): void {
+    Observable.of(this._uploadManagement.addFile(new NewEntryFlavourFile(fileData)))
+      .subscribe((response) => {
+          flavor.uploadFileId = response.id;
+          flavor.status = KalturaFlavorAssetStatus.importing.toString();
+          flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.importing');
+        },
+        () => {
+          this._browserService.showGrowlMessage({
+            severity: 'error',
+            detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')
+          });
+          this._fetchFlavors('reload', false)
+            .cancelOnDestroy(this, this.widgetReset$)
+            .subscribe(() => {
+              // reload flavors as we need to get the flavor status from the server
+            });
+        });
+  }
 
 	private updateFlavor(flavor: Flavor, id: string, resource: KalturaContentResource): void{
 		this._kalturaServerClient.request(new FlavorAssetSetContentAction({
