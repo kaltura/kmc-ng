@@ -27,6 +27,7 @@ import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators'
 import { environment } from 'app-environment';
 import { UploadManagement, TrackedFile, TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
+import { NewEntryRelatedFile } from './new-entry-related-file';
 
 export interface RelatedFile extends KalturaAttachmentAsset
 {
@@ -66,6 +67,7 @@ export class EntryRelatedHandler extends EntryFormWidget
     private _trackUploadFiles(): void {
         this._uploadManagement.onFileStatusChanged$
             .cancelOnDestroy(this)
+            .filter(uploadedFile => uploadedFile.data instanceof NewEntryRelatedFile)
             .subscribe(
                 (uploadedFile) => {
                     const relatedFiles = this._relatedFiles.getValue().items;
@@ -269,9 +271,8 @@ export class EntryRelatedHandler extends EntryFormWidget
 
 	public _onFileSelected(selectedFiles: FileList) {
         if (selectedFiles && selectedFiles.length) {
-
-            const newFiles: RelatedFile[] = this._uploadManagement.addFiles(Array.from(selectedFiles)
-                .map(file => new KalturaUploadFile(file)))
+            const entryCaptionFiles = Array.from(selectedFiles).map(file => new NewEntryRelatedFile(file));
+            const newFiles: RelatedFile[] = this._uploadManagement.addFiles(entryCaptionFiles)
                 .map(addedFile => {
                     const originalFileName = addedFile.data.getFileName();
                     const hasExtension = originalFileName.indexOf('.') !== -1;

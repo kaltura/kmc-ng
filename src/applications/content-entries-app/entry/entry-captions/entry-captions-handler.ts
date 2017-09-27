@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { TrackedFile, TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
+import { TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
@@ -34,7 +34,7 @@ import { EntryFormWidget } from '../entry-form-widget';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
 import { UploadManagement } from '@kaltura-ng/kaltura-common';
-
+import { NewEntryCaptionFile } from './new-entry-caption-file';
 
 export interface CaptionRow {
     uploading: boolean,
@@ -74,6 +74,7 @@ export class EntryCaptionsHandler extends EntryFormWidget {
 
         this._uploadManagement.onFileStatusChanged$
             .cancelOnDestroy(this)
+            .filter(uploadedFile => uploadedFile.data instanceof NewEntryCaptionFile)
             .subscribe(
                 (uploadedFile) => {
                     const captions = this._captions.getValue().items;
@@ -221,7 +222,7 @@ export class EntryCaptionsHandler extends EntryFormWidget {
     public upload(captionFile: File): void {
         this.currentCaption.uploading = true;
 
-        Observable.of(this._uploadManagement.addFile(new KalturaUploadFile(captionFile)))
+        Observable.of(this._uploadManagement.addFile(new NewEntryCaptionFile(captionFile)))
             .subscribe((response) => {
                     this.currentCaption.uploadFileId = response.id;
                     this.currentCaption.uploading = false;
