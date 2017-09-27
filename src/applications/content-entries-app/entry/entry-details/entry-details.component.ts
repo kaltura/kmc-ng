@@ -5,15 +5,15 @@ import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntry
 import { KalturaSourceType } from 'kaltura-typescript-client/types/KalturaSourceType';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { EntryPreviewHandler } from './entry-preview-handler';
+import { EntryDetailsHandler } from './entry-details-handler';
 import { EntryFormManager } from '../entry-form-manager';
 
 @Component({
-	selector: 'kEntryPreview',
-	templateUrl: './entry-preview.component.html',
-	styleUrls: ['./entry-preview.component.scss']
+	selector: 'kEntryDetails',
+	templateUrl: './entry-details.component.html',
+	styleUrls: ['./entry-details.component.scss']
 })
-export class EntryPreview implements OnInit, OnDestroy {
+export class EntryDetails implements OnInit, OnDestroy {
 
 	public _entryHasContent: boolean = false;
 	public _entryReady: boolean = false;
@@ -27,7 +27,7 @@ export class EntryPreview implements OnInit, OnDestroy {
 	get currentEntry(): KalturaMediaEntry {
 		return this._currentEntry;
 	}
-	public _handler : EntryPreviewHandler;
+	public _handler : EntryDetailsHandler;
 
 
 	constructor(private _entryFormManager : EntryFormManager,
@@ -38,7 +38,7 @@ export class EntryPreview implements OnInit, OnDestroy {
 
 	ngOnInit() {
 
-		this._handler = this._entryFormManager.attachWidget(EntryPreviewHandler);
+		this._handler = this._entryFormManager.attachWidget(EntryDetailsHandler);
 		this._handler.data$.subscribe(
 			data => {
 				if (data) {

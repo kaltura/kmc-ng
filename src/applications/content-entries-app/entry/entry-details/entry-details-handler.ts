@@ -14,7 +14,7 @@ export interface PreviewEntryData{
 }
 
 @Injectable()
-export class EntryPreviewHandler extends EntryFormWidget
+export class EntryDetailsHandler extends EntryFormWidget
 {
     public _landingPage : string;
     public iframeSrc : string;
@@ -24,7 +24,7 @@ export class EntryPreviewHandler extends EntryFormWidget
                 private appAuthentication: AppAuthentication)
 
     {
-        super('entryPreview');
+        super('entryDetails');
     }
 
 
