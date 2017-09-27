@@ -1,30 +1,33 @@
-<k-area-blocker [showLoader]="_showLoader" [message]="_areaBlockerMessage" >
-	<div class="kEntryDetails kOverrideFAIcons" [class.isSafari]="isSafari">
-		<div class="kContent kEntryDetailsWrapper">
-			<div class="kEntryDetailsHeader">
-				<button pButton class="kButtonDefault kBackToEntriesBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
-				<div class="{{_entryType | entryType: false}} kMediaTypeIcon"></div>
-				<div class="kEntryTitle">{{ _entryName }}</div>
-				<button pButton class="kButtonBranded kSaveBtn" [disabled]="!_entryStore.entryIsDirty" label="Save" (click)="_save()"></button>
-				<button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
-				<button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
+<k-area-blocker [showLoader]="_showLoader" [message]="_areaBlockerMessage">
+  <div class="kEntryDetails kOverrideFAIcons" [class.isSafari]="isSafari">
+    <div class="kContent kEntryDetailsWrapper">
+      <div class="kEntryDetailsHeader">
+        <button pButton class="kButtonDefault kBackToEntriesBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
+        <div class="{{_entryType | entryType: false}} kMediaTypeIcon"></div>
+        <div class="kEntryTitle">{{ _entryName }}</div>
+        <button pButton class="kButtonBranded kSaveBtn" [disabled]="!_entryStore.entryIsDirty" label="Save" (click)="_save()"></button>
+        <button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
+        <button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
       </div>
       <div class="kDetailsBar">
-        <k-details-bar [data]="_data" [separatorField]="'|'" [captionField]="'caption'"></k-details-bar>
+		<k-details-bar class="kContent" [data]="_data" [separatorField]="'|'" [maxItemWidthField]="300" 
+		[captionField]="'caption'" 
+		[valueField]="'value'"
+		[linkField]="'link'"></k-details-bar>
       </div>
-			<div class="kEntryDetailsMain">
-				<div class="kEntryDetailsSections">
-					<kEntrySectionsList></kEntrySectionsList>
-				</div>
-				<div class="kEntryDetailsContent">
-					<router-outlet></router-outlet>
-				</div>
-				<div class="kEntryDetailsPreview">
-					<kEntryPreview></kEntryPreview>
-				</div>
-			</div>
-			<div class="kSpacer"></div>
-		</div>
+      <div class="kEntryDetailsMain">
+        <div class="kEntryDetailsSections">
+          <kEntrySectionsList></kEntrySectionsList>
+        </div>
+        <div class="kEntryDetailsContent">
+          <router-outlet></router-outlet>
+        </div>
+        <div class="kEntryDetailsPreview">
+          <kEntryPreview></kEntryPreview>
+        </div>
+      </div>
+      <div class="kSpacer"></div>
+    </div>
 
-	</div>
+  </div>
 </k-area-blocker>

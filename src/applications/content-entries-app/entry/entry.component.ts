@@ -15,17 +15,18 @@ import { EntryThumbnailsHandler } from './entry-thumbnails/entry-thumbnails-hand
 import { EntrySchedulingHandler } from './entry-scheduling/entry-scheduling-handler';
 import { EntryUsersHandler } from './entry-users/entry-users-handler';
 import { EntryFormManager } from './entry-form-manager';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage, AreaBlockerMessageButton, DetailsBarComponent } from '@kaltura-ng/kaltura-ui';
 import { EntryFormWidget } from './entry-form-widget';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Observable } from 'rxjs/Observable';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { DetailInfo } from "@kaltura-ng/kaltura-ui/details-bar/details-bar.component";
 
 @Component({
-    selector: 'kEntry',
-    templateUrl: './entry.component.html',
-    styleUrls: ['./entry.component.scss'],
-	providers : [
+	selector: 'kEntry',
+	templateUrl: './entry.component.html',
+	styleUrls: ['./entry.component.scss'],
+	providers: [
 		EntryStore,
 		EntryFormManager,
 		{
@@ -100,17 +101,22 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _currentEntryId: string;
 	public _enablePrevButton: boolean;
 	public _enableNextButton: boolean;
-	public _entryHasChanges : boolean;
+	public _entryHasChanges: boolean;
+	public _data: DetailInfo[];
 
 	public isSafari: boolean = false; // used for Safari specific styling
 
 	constructor(public _entryStore: EntryStore,
-				private  _entriesStore: EntriesStore,
-				private _entryFormManager : EntryFormManager,
-				private _browserService: BrowserService,
-				@Inject(EntryFormWidget)private  _widgets : EntryFormWidget[],
-				private _appLocalization: AppLocalization) {
-
+		private _entriesStore: EntriesStore,
+		private _entryFormManager: EntryFormManager,
+		private _browserService: BrowserService,
+		@Inject(EntryFormWidget) private _widgets: EntryFormWidget[],
+		private _appLocalization: AppLocalization) {
+		this._data = [
+			{ caption: "Id", value: "hi" },
+			{ value: "12345 sdfsd" },
+			{ caption: "Link", value: "12345 sdfsd", link:"www.ynet.co.il" }
+		]
 	}
 
 	ngOnDestroy() {
@@ -137,113 +143,113 @@ export class EntryComponent implements OnInit, OnDestroy {
 		this.isSafari = this._browserService.isSafari();
 
 		this._entryStore.state$
-            .cancelOnDestroy(this)
-            .subscribe(
-				status => {
+			.cancelOnDestroy(this)
+			.subscribe(
+			status => {
 
-					this._showLoader = false;
-					this._areaBlockerMessage = null;
+				this._showLoader = false;
+				this._areaBlockerMessage = null;
 
-					if (status) {
-						switch (status.action) {
-							case ActionTypes.EntryLoading:
-								this._showLoader = true;
+				if (status) {
+					switch (status.action) {
+						case ActionTypes.EntryLoading:
+							this._showLoader = true;
 
-								// when loading new entry in progress, the 'entryID' property
-								// reflect the entry that is currently being loaded
-								// while 'entry$' stream is null
-								this._currentEntryId = this._entryStore.entryId;
-								this._updateNavigationState();
-								this._entryHasChanges = false;
-								break;
-							case ActionTypes.EntryLoaded:
-								this._entryName = this._entryStore.entry.name;
-								this._entryType = this._entryStore.entry.mediaType;
-								break;
-							case ActionTypes.EntryLoadingFailed:
-								let message = status.error ? status.error.message : '';
-								message = message || this._appLocalization.get('applications.content.errors.loadError');
-								this._areaBlockerMessage = new AreaBlockerMessage({
-									message: message,
-									buttons: [
-										this._createBackToEntriesButton(),
-										{
-											label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
-											action: () => {
-												this._entryStore.reloadEntry();
-											}
+							// when loading new entry in progress, the 'entryID' property
+							// reflect the entry that is currently being loaded
+							// while 'entry$' stream is null
+							this._currentEntryId = this._entryStore.entryId;
+							this._updateNavigationState();
+							this._entryHasChanges = false;
+							break;
+						case ActionTypes.EntryLoaded:
+							this._entryName = this._entryStore.entry.name;
+							this._entryType = this._entryStore.entry.mediaType;
+							break;
+						case ActionTypes.EntryLoadingFailed:
+							let message = status.error ? status.error.message : '';
+							message = message || this._appLocalization.get('applications.content.errors.loadError');
+							this._areaBlockerMessage = new AreaBlockerMessage({
+								message: message,
+								buttons: [
+									this._createBackToEntriesButton(),
+									{
+										label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
+										action: () => {
+											this._entryStore.reloadEntry();
 										}
-									]
-								});
-								break;
-							case ActionTypes.EntrySaving:
-								this._showLoader = true;
-								break;
-							case ActionTypes.EntrySavingFailed:
+									}
+								]
+							});
+							break;
+						case ActionTypes.EntrySaving:
+							this._showLoader = true;
+							break;
+						case ActionTypes.EntrySavingFailed:
 
-								this._areaBlockerMessage = new AreaBlockerMessage({
-									message: this._appLocalization.get('applications.content.entryDetails.errors.saveError'),
-									buttons: [
-										{
-											label: this._appLocalization.get('applications.content.entryDetails.errors.reload'),
-											action: () => {
-												this._entryStore.reloadEntry();
-											}
+							this._areaBlockerMessage = new AreaBlockerMessage({
+								message: this._appLocalization.get('applications.content.entryDetails.errors.saveError'),
+								buttons: [
+									{
+										label: this._appLocalization.get('applications.content.entryDetails.errors.reload'),
+										action: () => {
+											this._entryStore.reloadEntry();
 										}
-									]
-								});
-								break;
-							case ActionTypes.EntryDataIsInvalid:
+									}
+								]
+							});
+							break;
+						case ActionTypes.EntryDataIsInvalid:
 
-								this._areaBlockerMessage = new AreaBlockerMessage({
-									message: this._appLocalization.get('applications.content.entryDetails.errors.validationError'),
-									buttons: [
-										{
-											label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
-											action: () => {
-												this._areaBlockerMessage = null;
-											}
+							this._areaBlockerMessage = new AreaBlockerMessage({
+								message: this._appLocalization.get('applications.content.entryDetails.errors.validationError'),
+								buttons: [
+									{
+										label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
+										action: () => {
+											this._areaBlockerMessage = null;
 										}
-									]
-								});
-								break;
-							case ActionTypes.ActiveSectionBusy:
+									}
+								]
+							});
+							break;
+						case ActionTypes.ActiveSectionBusy:
 
-								this._areaBlockerMessage = new AreaBlockerMessage({
-									message: this._appLocalization.get('applications.content.entryDetails.errors.busyError'),
-									buttons: [
-										{
-											label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
-											action: () => {
-												this._areaBlockerMessage = null;
-											}
+							this._areaBlockerMessage = new AreaBlockerMessage({
+								message: this._appLocalization.get('applications.content.entryDetails.errors.busyError'),
+								buttons: [
+									{
+										label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
+										action: () => {
+											this._areaBlockerMessage = null;
 										}
-									]
-								});
-								break;
-							case ActionTypes.EntryPrepareSavingFailed:
+									}
+								]
+							});
+							break;
+						case ActionTypes.EntryPrepareSavingFailed:
 
-								this._areaBlockerMessage = new AreaBlockerMessage({
-									message: this._appLocalization.get('applications.content.entryDetails.errors.savePrepareError'),
-									buttons: [
-										{
-											label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
-											action: () => {
-												this._areaBlockerMessage = null;
-											}
+							this._areaBlockerMessage = new AreaBlockerMessage({
+								message: this._appLocalization.get('applications.content.entryDetails.errors.savePrepareError'),
+								buttons: [
+									{
+										label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
+										action: () => {
+											this._areaBlockerMessage = null;
 										}
-									]
-								});
-								break;
-							default:
-								break;
-						}
+									}
+								]
+							});
+							break;
+						default:
+							break;
 					}
-				},
-				error => {
-					// TODO [kmc] navigate to error page
-					throw error;
-				});
+				}
+			},
+			error => {
+				// TODO [kmc] navigate to error page
+				throw error;
+			});
 	}
 
 	private _createBackToEntriesButton(): AreaBlockerMessageButton {
@@ -255,47 +261,42 @@ export class EntryComponent implements OnInit, OnDestroy {
 		};
 	}
 
-    public _backToList(){
-    	this._entryStore.returnToEntries();
-    }
+	public _backToList() {
+		this._entryStore.returnToEntries();
+	}
 
-    public _save()
-	{
+	public _save() {
 		this._entryStore.saveEntry();
 	}
 
-    public _navigateToPrevious() : void
-	{
+	public _navigateToPrevious(): void {
 		const entries = this._entriesStore.entries;
 
 		if (entries && this._currentEntryId) {
 			const currentEntry = entries.find(entry => entry.id === this._currentEntryId);
-			const currentEntryIndex =  currentEntry ? entries.indexOf(currentEntry) : -1;
-			if (currentEntryIndex > 0)
-			{
-				const prevEntry = entries[currentEntryIndex-1];
+			const currentEntryIndex = currentEntry ? entries.indexOf(currentEntry) : -1;
+			if (currentEntryIndex > 0) {
+				const prevEntry = entries[currentEntryIndex - 1];
 				this._entryStore.openEntry(prevEntry.id);
 			}
 		}
 	}
 
-	public _navigateToNext() : void
-	{
+	public _navigateToNext(): void {
 		const entries = this._entriesStore.entries;
 
 		if (entries && this._currentEntryId) {
 			const currentEntry = entries.find(entry => entry.id === this._currentEntryId);
-			const currentEntryIndex =  currentEntry ? entries.indexOf(currentEntry) : -1;
-			if (currentEntryIndex >= 0 && (currentEntryIndex < entries.length -1))
-			{
-				const nextEntry = entries[currentEntryIndex+1];
+			const currentEntryIndex = currentEntry ? entries.indexOf(currentEntry) : -1;
+			if (currentEntryIndex >= 0 && (currentEntryIndex < entries.length - 1)) {
+				const nextEntry = entries[currentEntryIndex + 1];
 				this._entryStore.openEntry(nextEntry.id);
 			}
 		}
 	}
 
-	public canLeave(): Observable<{ allowed : boolean}>{
-    	return this._entryStore.canLeave();
+	public canLeave(): Observable<{ allowed: boolean }> {
+		return this._entryStore.canLeave();
 	}
 
 }
