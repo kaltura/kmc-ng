@@ -55,6 +55,7 @@ import {
 import { EntryCanDeactivate } from './entry/entry-can-deactivate.service';
 import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
 import { ContentEntriesAppService } from './content-entries-app.service';
+import { CanActivateChildTest } from './can-activate-child-test.guard';
 
 @NgModule({
   imports: [
@@ -113,7 +114,9 @@ import { ContentEntriesAppService } from './content-entries-app.service';
     BulkDeleteService,
     BulkDownloadService,
     EntryCanDeactivate,
-    ContentEntriesAppService
+    ContentEntriesAppService,
+
+    CanActivateChildTest
   ],
 })
 export class ContentEntriesAppModule {
