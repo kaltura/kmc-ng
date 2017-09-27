@@ -1,19 +1,32 @@
 import { Injectable } from '@angular/core';
-import { EntryFormWidget } from '../entry-form-widget';
+import {
+    EntryFormWidget
+} from '../entry-form-widget';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { environment } from 'app-environment';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { KalturaSourceType } from 'kaltura-typescript-client/types/KalturaSourceType';
 
+export interface PreviewEntryData{
+    landingPage : string;
+    iFrameSrc : string;
+}
+
 @Injectable()
 export class EntryPreviewHandler extends EntryFormWidget
 {
+    public _landingPage : string;
     public iframeSrc : string;
 
-    constructor(kalturaServerClient: KalturaClient, private appAuthentication: AppAuthentication) {
+    constructor(
+                kalturaServerClient: KalturaClient,
+                private appAuthentication: AppAuthentication)
+
+    {
         super('entryPreview');
     }
+
 
     /**
      * Do some cleanups if needed once the section is removed
@@ -26,7 +39,14 @@ export class EntryPreviewHandler extends EntryFormWidget
     protected _onActivate(firstTimeActivating: boolean) {
         const entry: KalturaMediaEntry = this.data;
 
+	    this._landingPage = null;
 	    this.iframeSrc = null;
+
+        let landingPage = this.appAuthentication.appUser.partnerInfo.landingPage;
+        if (landingPage) {
+	        landingPage = landingPage.replace("{entryId}", entry.id);
+        }
+        this._landingPage = landingPage;
 
         // create preview embed code
         const sourceType = entry.sourceType.toString();

@@ -53,37 +53,54 @@
 				width: 100px;
 				height: 34px;
 				font-weight: 400;
+				margin-right: 24px;
 			}
 			.kNavigationBtn{
 				margin-left: auto;
 				width: 40px;
 				height: 34px;
-				margin-left: 12px;
+				margin-left: 0px;
+				margin-right: 0px;
 				font-weight: 400;
+			}
+			.kNavigationBtnLeft{
+				border-right: none;
+				border-bottom-right-radius: 0px;
+				border-top-right-radius: 0px;
+			}
+			.kNavigationBtnRight{
+				border-bottom-left-radius: 0px;
+				border-top-left-radius: 0px;
 			}
 		}
 		.kEntryDetailsMain{
 			display: flex;
 			flex-direction: row;
-			padding-top: 30px;
 			height: 100%;
 			min-height: 0;
 			.kEntryDetailsSections{
+				display: flex;
+				flex-direction: column;
 				overflow-y: auto;
-				width: 176px;
-				background-color: #ffffff;
-				border: 1px solid $kGrayscale4;
-				border-top-left-radius: 3px;
+				width: 280px;
 				flex: 0 0 auto;
+				.kPreview{
+					width: 280px;
+					height: 158px;
+					background-color: #000000;
+					margin-bottom: 12px;
+					flex: 0 0 auto;
+					border: 0px solid #000000;
+					border-radius: 3px;
+				}
 			}
 			.kEntryDetailsContent{
 				width: 100%;
 				background-color: #ffffff;
-				border: 1px solid $kGrayscale4;
-				border-left: none;
-				border-top-right-radius: 3px;
+				border: 1px solid #ffffff;
+				border-radius: 3px;
 				flex: 1 1 auto;
-				margin-right: 28px;
+				margin-left: 28px;
 				padding: 8px;
 			}
 			.kEntryDetailsPreview{

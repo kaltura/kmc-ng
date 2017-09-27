@@ -6,19 +6,24 @@
 				<div class="{{_entryType | entryType: false}} kMediaTypeIcon"></div>
 				<div class="kEntryTitle">{{ _entryName }}</div>
 				<button pButton class="kButtonBranded kSaveBtn" [disabled]="!_entryStore.entryIsDirty" label="Save" (click)="_save()"></button>
-				<button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
-				<button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
+				<button pButton class="kButtonDefault kNavigationBtn kNavigationBtnLeft" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
+				<button pButton class="kButtonDefault kNavigationBtn kNavigationBtnRight" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
 			</div>
+			<div style="width: 100%; height: 30px; background-color: red; margin-top: 20px; margin-bottom: 20px;">metadata</div>
 			<div class="kEntryDetailsMain">
 				<div class="kEntryDetailsSections">
+					<div class="kPreview">
+						<kEntryPreview></kEntryPreview>
+					</div>
+
 					<kEntrySectionsList></kEntrySectionsList>
 				</div>
 				<div class="kEntryDetailsContent">
 					<router-outlet></router-outlet>
 				</div>
-				<div class="kEntryDetailsPreview">
+				<!--div class="kEntryDetailsPreview">
 					<kEntryPreview></kEntryPreview>
-				</div>
+				</div-->
 			</div>
 			<div class="kSpacer"></div>
 		</div>
