@@ -271,8 +271,8 @@ export class EntryRelatedHandler extends EntryFormWidget
 
 	public _onFileSelected(selectedFiles: FileList) {
         if (selectedFiles && selectedFiles.length) {
-            const entryCaptionFiles = Array.from(selectedFiles).map(file => new NewEntryRelatedFile(file));
-            const newFiles: RelatedFile[] = this._uploadManagement.addFiles(entryCaptionFiles)
+            const entryRelatedFiles = Array.from(selectedFiles).map(file => new NewEntryRelatedFile(file));
+            const newFiles: RelatedFile[] = this._uploadManagement.addFiles(entryRelatedFiles)
                 .map(addedFile => {
                     const originalFileName = addedFile.data.getFileName();
                     const hasExtension = originalFileName.indexOf('.') !== -1;

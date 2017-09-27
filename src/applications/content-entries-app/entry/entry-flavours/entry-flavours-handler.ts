@@ -319,7 +319,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
               const token = (<NewEntryFlavourFile>uploadedFile.data).serverUploadToken;
               const resource = new KalturaUploadedFileTokenResource({ token });
               if (relevantFlavor) {
-                if (relevantFlavor.id.length) {
+                if (!!relevantFlavor.id) {
                   this.updateFlavor(relevantFlavor, relevantFlavor.id, resource);
                 } else {
                   this.addNewFlavor(relevantFlavor, resource);
