@@ -72,12 +72,12 @@ export class BrowserService implements IAppStorage {
   private _downloadContent(url: string): void {
     return Observable.create(observer => {
       const xhr = new XMLHttpRequest();
-      xhr.responseType = 'blob';
       xhr.onload = () => {
         observer.next(xhr.response);
         observer.complete();
       };
       xhr.open('GET', url);
+      xhr.responseType = 'blob';
       xhr.send();
     });
   }
