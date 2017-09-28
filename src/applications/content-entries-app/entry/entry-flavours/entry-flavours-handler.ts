@@ -302,37 +302,26 @@ export class EntryFlavoursHandler extends EntryFormWidget
   private _trackUploadFiles(): void {
     this._uploadManagement.onFileStatusChanged$
       .cancelOnDestroy(this)
-      .filter(uploadedFile => uploadedFile.data instanceof NewEntryFlavourFile)
-      .subscribe(
-        (uploadedFile) => {
+      .map(uploadedFile => {
+        let relevantFlavor = null;
+        if (uploadedFile.data instanceof NewEntryFlavourFile) {
           const flavors = this._flavors.getValue().items;
-          const relevantFlavor = flavors ? flavors.find(flavorFile => flavorFile.uploadFileId === uploadedFile.id) : null;
-
+          relevantFlavor = flavors ? flavors.find(flavorFile => flavorFile.uploadFileId === uploadedFile.id) : null;
+        }
+        return { relevantFlavor, uploadedFile };
+      })
+      .filter(({ relevantFlavor }) => !!relevantFlavor)
+      .subscribe(
+        ({ relevantFlavor, uploadedFile }) => {
           switch (uploadedFile.status) {
             case TrackedFileStatuses.waitingUpload:
               const token = (<NewEntryFlavourFile>uploadedFile.data).serverUploadToken;
               const resource = new KalturaUploadedFileTokenResource({ token });
-              if (relevantFlavor) {
-                if (!!relevantFlavor.id) {
-                  this.updateFlavor(relevantFlavor, relevantFlavor.id, resource);
-                } else {
-                  this.addNewFlavor(relevantFlavor, resource);
-                }
+              if (!!relevantFlavor.id) {
+                this.updateFlavor(relevantFlavor, relevantFlavor.id, resource);
               } else {
-                this._refresh();
+                this.addNewFlavor(relevantFlavor, resource);
               }
-              break;
-
-            case TrackedFileStatuses.uploadCompleted:
-              this._refresh(false, false);
-              break;
-
-            case TrackedFileStatuses.uploadFailed:
-              this._browserService.showGrowlMessage({
-                severity: 'error',
-                detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')
-              });
-              this._refresh();
               break;
 
             default:
@@ -364,9 +353,9 @@ export class EntryFlavoursHandler extends EntryFormWidget
     }))
       .cancelOnDestroy(this, this.widgetReset$)
       .monitor('set flavor resource')
-      .catch((err, caught) => {
+      .catch(error => {
         this._uploadManagement.cancelUploadWithError(flavor.uploadFileId, 'Cannot update flavor, cancel related file');
-        return caught;
+        return Observable.throw(error);
       })
       .subscribe(
         response => {
