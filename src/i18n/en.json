@@ -1,7 +1,7 @@
 {
   "app": {
     "menu": {
-      "upload": "Upload",
+      "upload": "Create",
       "Content": "Content",
       "Entries": "Entries",
       "Moderation": "Moderation",
@@ -9,11 +9,27 @@
       "Syndication": "Syndication",
       "Categories": "Categories",
       "Studio": "Studio",
-      "Analytics": "Analytics"
+      "Analytics": "Analytics",
+      "Settings": "Settings",
+      "Account Settings": "Account Settings",
+      "Account Upgrade": "Account Upgrade",
+      "Administration": "Administration",
+      "Roles": "Roles",
+      "UploadControl": "Upload Control",
+      "BulkUpload": "Bulk Upload",
+      "DropFolders": "Drop Folders"
     },
     "userSettings": {
       "changeAccount": "Change Acoount",
       "logout": "Logout"
+    },
+    "changeAccount": {
+      "title": "Change account",
+      "choose": "Choose a different partner:",
+      "continue": "Continue",
+      "errors":{
+        "loadPartners": "An error occurred while loading accounts."
+      }
     },
     "helpMenu": {
       "gettingStarted": "Getting Started",
@@ -40,7 +56,67 @@
       "retry": "Retry",
       "confirm": "Confirm",
       "close": "Close",
-      "note": "Note:"
+      "note": "Note:",
+      "attention": "Attention"
+    },
+    "login": {
+      "login": {
+        "title": "Login",
+        "forgotPassword": "Forgot password?",
+        "placeholder": {
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "invalidLoginHash": {
+        "title": "Invalid login link",
+        "placeholder": "Enter Email",
+        "instructions": "This link is invalid or has expired. Please enter your email address to receive a new link",
+        "sent": {
+          "instructions": "An email has been sent to {{value}} with a link to reset your password. If you don't see the message in your inbox, check to see if the message is in your spam or junk folders."
+        }
+      },
+      "forgotPassword": {
+        "title": "Forgot password",
+        "placeholder": "Your Email",
+        "instructions": "Instructions to reset your password will be sent to your email. If you forgot which email you used, please ",
+        "contactUs": "contact us.",
+        "sent": {
+          "instructions": "An email has been sent to {{value}} with a link to reset your password. If you don't see the message in your inbox, check to see if the message is in your spam or junk folders.",
+          "redirectTo": "Redirect to",
+          "login": "login"
+        }
+      },
+      "passwordExpired": {
+        "title": "Your password is older than 90 days. To continue using the system you need to change your password now",
+        "error": {
+          "equal": "Passwords do not match",
+          "required": "Field is required"
+        },
+        "placeholder": {
+          "current": "Enter your password",
+          "new": "Enter new password",
+          "confirm": "Confirm new password"
+        }
+      },
+      "error": {
+        "email": "Wrong email format",
+        "badCredentials": "The username or password you have entered is incorrect.",
+        "retriesExceeded": "Your account has been locked, and will not be available for 24 hours. You can contact Kaltura support at <a href=\"mailto:support@kaltura.com\">support@kaltura.com</a> to unblock your account",
+        "userNotFound": "The username or password you have entered is incorrect.",
+        "invalidStructure": "The password you entered has an invalid structure.\nPasswords must obey the following rules:\n- Must be of length between 8 and 14.\n- Must not contain your name\n- Must contain at least one lowercase letter (a-z).\n- Must contain at least one digit (0-9).\n- Must contain at least one of the following symbols: %~!@#\\$^*=+?[]{}.\n- Must not contain the following characters: < or >",
+        "alreadyUsed": "Invalid Password. <br> This password has been used in the past. Please select a new password.",
+        "loginBlocked": "Login denied. You have exceeded the number of invalid login attempts. You can contact Kaltura support at <a href=\"mailto:support@kaltura.com\">support@kaltura.com</a> to unblock your account.",
+        "newPasswordHashKeyInvalid": "This link is not valid.",
+        "newPasswordHashKeyExpired": "This link is older then 24 hours and is no longer valid.",
+        "wrongOldPassword": "Old password is wrong",
+        "invalidField": "Value in field {{value}} is not valid"
+      },
+      "send": "Send",
+      "wait": "Wait…",
+      "signUp": "Sign Up",
+      "rememberMe": "Remember me",
+      "dontHaveAccount": "Don't have an account?"
     }
   },
   "applications": {
@@ -50,7 +126,106 @@
         "searchCategoriesPH": "Search Categories"
       }
     },
+    "upload": {
+      "fileStatus": {
+        "preProcess": "Pre process",
+        "queued": "Queued",
+        "uploading": "Uploading",
+        "complete": "Complete",
+        "failed": "Failed"
+      },
+      "inDevelopment": {
+        "title": "Sorry",
+        "message": "Feature in development"
+      },
+      "validation": {
+        "error": "Error",
+        "wrongType": "Select media type",
+        "missingTranscodingProfile" : "Select transcoding profile",
+        "fileSizeExceeded": "File size exceeded",
+        "fileNameRequired": "File name is required"
+      },
+      "uploadMenu": {
+        "uploadFromDesktop": "Upload from desktop",
+        "highSpeed": "Need high-speed upload?",
+        "bulkUpload": {
+          "title": "Bulk upload",
+          "samplesLink": "Download CSV/XML Samples"
+        },
+        "liveStream": "Create live stream entry",
+        "entryList": {
+          "title": "Prepare entry",
+          "video": "Video entry",
+          "audio": "Audio entry"
+        }
+      },
+      "uploadSettings": {
+        "title": "Upload Settings",
+        "profile": "Transcoding profile",
+        "addFileBtn": "Add file",
+        "profilePlaceholder": "Default",
+        "mediaTypes": {
+          "video": "Video",
+          "audio": "Audio",
+          "image": "Image"
+        },
+        "table": {
+          "remove": "Remove",
+          "edit": "Edit",
+          "header": {
+            "fileName": "File name",
+            "mediaType": "Media type",
+            "size": "Size"
+          },
+          "emptyMessage": {
+            "title": "No files to upload",
+            "getStarted": "Add some files to get started, ",
+            "browse": "browse"
+          }
+        },
+        "uploadBtn": "Upload"
+      }
+    },
     "content": {
+      "uploadControl": {
+        "bulkCancel": {
+          "header": "Cancel uploads",
+          "message": "Are you sure you want to cancel those uploads?"
+        },
+        "files": "Files",
+        "selected": "Selected",
+        "cancel": "Cancel",
+        "table": {
+          "fileName": "File Name",
+          "entryId": "ID",
+          "fileSize": "File size",
+          "uploadedOn": "Uploaded On",
+          "progress": "Progress",
+          "remove": "Remove",
+          "status": {
+            "header": "Status",
+            "uploaded": "Complete",
+            "uploading": "Uploading",
+            "queued": "Queued",
+            "uploadFailure": "Failed"
+          }
+        }
+      },
+      "categories": {
+        "categories": "Categories",
+        "search": "Search",
+        "refresh": "Refresh",
+        "addCategory": "Add Category",
+        "selected": "Selected",
+        "bulkActions": "Bulk Actions",
+        "refine": "Refine",
+        "filterCategories": "Filter Categories",
+        "edit": "Edit",
+        "delete": "Delete",
+        "viewEntries": "View Entries",
+        "moveCategory": "Move Category",
+        "cancel": "Cancel"
+      },
       "entries": {
         "entries": "Entries",
         "selected": "Selected",
@@ -64,6 +239,8 @@
         "deleteEntries": "Delete Entr{{0}}",
         "confirmDelete": "Are you sure you want to delete the selected entry?",
         "confirmDeleteEntries": "Are you sure you want to delete the selected entr{{0}}?",
+        "confirmDeleteSingle": "Are you sure you want to delete the selected entry? \n {{0}} \n Please note: the entry will be permanently deleted from your account.",
+        "confirmDeleteMultiple": "Are you sure you want to delete the selected entries? \n {{0}} \n Please note: these entries will be permanently deleted from your account.",
         "deleted": "Entry deleted successfully",
         "entryId": "Entry ID: {{0}}",
         "deleteNote": "Please note: the entry will be permanently deleted from your account.",
@@ -77,7 +254,8 @@
         "remove": "Remove",
         "cancel": "Cancel",
         "deletePlaylist": "Delete Playlist",
-        "confirmDelete": "Are you sure you want to delete the selected playlist{{0}}?",
+        "confirmDeleteMultiple": "Are you sure you want to delete the selected playlists? \n {{0}} \n Please note: these playlists will be permanently deleted from your account.",
+        "confirmDeleteSingle": "Are you sure you want to delete the selected playlist? \n {{0}} \n Please note: this playlist will be permanently deleted from your account.",
         "playlistId": "Playlist ID: {{0}}",
         "deleted": "Playlist deleted successfully",
         "searchEntries": "Search Playlists",
@@ -178,6 +356,21 @@
         "external": "External RSS",
         "staticList": "Manual",
         "unknown": "Unknown"
+      },
+      "addNewPlaylist": {
+        "addNewPlaylist": "Add New Playlist",
+        "selectPlaylistType": "Select playlist type",
+        "manualPlaylist": "Manual playlist",
+        "ruleBasedPlaylist": "Rule based playlist",
+        "addRuleBasedSubPlaylist": "Add rule based sub playlist",
+        "nameIsMandatory": "You must enter a playlist name",
+        "next": "Next",
+        "playlistName": "Playlist Name",
+        "description": "Description",
+        "cancelEdit": "Cancel Edit",
+        "discard": "Discard all changes?",
+        "notSupportedMsg": "Adding a new rule based playlist is currently not supported",
+        "dismiss": "Dismiss"
       },
       "bulkActions": {
         "setScheduling": "Set Scheduling",
@@ -392,7 +585,7 @@
             "dimensions": "Dimensions:",
             "format": "Format:",
             "size": "Size (KB):",
-            "status": "Satatus:",
+            "status": "Status:",
             "loading": "Loading...",
             "loadingError": "Error loading flavor:"
           },
@@ -432,7 +625,8 @@
           "cancelEdit": "Cancel Edit",
           "discard": "Discard all changes?",
           "uploadError": "Upload Error",
-          "remove": "Remove"
+          "remove": "Remove",
+          "noLabel": "Since no label was provided, the caption language will be used in the player captions menu"
         },
         "live": {
           "live": "Live Stream",
@@ -536,6 +730,31 @@
           "clipsLoadError": "Error loading clips"
         }
       },
+      "categoryDetails": {
+        "header": "Category - {{0}}",
+        "cancelEdit": "Cancel Edit",
+        "discard": "Discard all changes?",
+        "sections": {
+          "metadata": "Metadata",
+          "entitlements": "Entitlements",
+          "subcategories": "Sub Categories"
+        },
+        "errors": {
+          "reload": "Reload",
+          "dismiss": "Dismiss",
+          "retry": "Retry",
+          "loadError": "An error occurred while loading data",
+          "saveError": "An error occurred while saving.",
+          "validationError": "The form contains some invalid information. Please review the sections marked as invalid",
+          "busyError": "An operation is still in progress. Please try again in a while.",
+          "savePrepareError": "An error occurred while preparing to save. Please try again.",
+          "thumbnailsError": "Error reloading thumbnails",
+          "entriesLoadError": "Error loading entries",
+          "categoriesLoadError": "Error loading categories",
+          "flavorsLoadError": "Error loading flavors",
+          "clipsLoadError": "Error loading clips"
+        }
+      },
       "playlistDetails": {
         "sections": {
           "metadata": "Metadata",
@@ -566,6 +785,86 @@
           "playlistTypeNotSupported": "playlist type not supported",
           "validationError": "The form contains some invalid information. Please review the sections marked as invalid",
           "contentValidationError": "Add at least one entry"
+        }
+      }
+    },
+    "administration": {
+      "roles": {
+        "addRole": "Add Role",
+        "rolesNum": "{{0}} Roles",
+        "refresh": "Refresh",
+        "confirmDeleteHeader": "Confirm Delete",
+        "confirmDeleteBody": "Are you sure you want to delete the selected role? \n ({{0}})",
+        "deleted": "Role deleted successfully",
+        "copyOf": "Copy of",
+        "tableColumns": {
+          "role": "Role",
+          "description": "Description",
+          "saveDate": "Save Date"
+        },
+        "actions": {
+          "edit": "Edit",
+          "duplicate": "Duplicate",
+          "delete": "Delete"
+        },
+        "errors": {
+          "roleInUse": "The role you selected cannot be deleted since it is currently assigned to existing users."
+        }
+      },
+      "role": {
+        "titleEdit": "Edit Role",
+        "titleAdd": "Add Role",
+        "name": "Role Name",
+        "description": "Description",
+        "save": "Save",
+        "add": "Add",
+        "errors": {
+          "required": "This field is required"
+        }
+      },
+      "paginator": {
+        "showRows": "Show rows"
+      }
+    },
+    "settings": {
+      "accountSettings": {
+        "accountInfo": "Account Info",
+        "partnerID": "Partner ID",
+        "adminEmail": "Email of Account Owner",
+        "adminUserId": "Name of Account Owner",
+        "informationMessage": "Please make sure that the information below is up to date.",
+        "name": "Name of Publisher/Company",
+        "phone": "Phone",
+        "website": "Website",
+        "describeYourself": "Describe Yourself",
+        "referenceId": "Account Reference ID",
+        "describeYourselfOptions": "Enterprise / Small Business / Government Agency,Education Organization,Media Company / Agency,CDN / ISP / Integrator / Hosting Provider,Other",
+        "apply": "Apply",
+        "errors": {
+          "requiredName": "You must enter name of publisher/company",
+          "requiredUserId": "You must enter name of account owner",
+          "requiredPhone": "You must enter phone number",
+          "phoneInvalid": "Phone must include at least 7 digits and only valid characters.",
+          "updateFailed": "An error occurred during account info update",
+          "loadFailed": "An error occurred during account info loading",
+          "invalidFields": "There's some invalid fields"
+        }
+      },
+      "accountUpgrade": {
+        "contactUs": "Contact Us",
+        "sendUsMessage": "Send us a message",
+        "name": "Name",
+        "phone": "Telephone",
+        "comments": "Comments",
+        "send": "Send",
+        "sendSuccessHeader": "Thank You!",
+        "sendSuccessBody": "Someone from our team will get back to you.",
+        "callUsHeader": "We are excited that you’re looking for more info on upgrading your account!",
+        "callUsBody": "Just fill in the form below and we’ll make sure to get back to you shortly with lots of information on our latest and greatest products and services that you can start tapping into.",
+        "errors": {
+          "required": "This field is required.",
+          "phoneInvalid": "Telephone must include at least 7 digits and only valid characters.",
+          "sendFailed": "An error occurred during account upgrade"
         }
       }
     }
@@ -969,4 +1268,3 @@
     "ZU": "Zulu"
   }
 }
-

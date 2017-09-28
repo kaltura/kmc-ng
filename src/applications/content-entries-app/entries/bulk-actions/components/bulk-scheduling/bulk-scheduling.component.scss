@@ -16,12 +16,6 @@
     }
   }
 }
-:host /deep/ .endDate .ui-datepicker.ui-widget.ui-widget-content{
-  top: -270px !important;
-}
-:host /deep/ .startDate .ui-datepicker.ui-widget.ui-widget-content{
-  top: -170px !important;
-}
 .kContent{
   display: flex;
   flex-direction: column;

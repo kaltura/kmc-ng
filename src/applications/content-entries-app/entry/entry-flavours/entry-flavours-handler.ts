@@ -24,8 +24,7 @@ import { FlavorAssetAddAction } from 'kaltura-typescript-client/types/FlavorAsse
 import { KalturaUrlResource } from 'kaltura-typescript-client/types/KalturaUrlResource';
 import { KalturaContentResource } from 'kaltura-typescript-client/types/KalturaContentResource';
 import { UploadManagement } from '@kaltura-ng/kaltura-common/upload-management';
-import { KalturaServerFile } from '@kaltura-ng/kaltura-server-utils';
-import { Message } from 'primeng/primeng';
+import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
 import { environment } from 'app-environment';
 import { Flavor } from './flavor';
 
@@ -40,7 +39,6 @@ export class EntryFlavoursHandler extends EntryFormWidget
 	public _entryStatus = "";
 	public _entryStatusClassName = "";
 	public sourceAvailabale: boolean = false;
-	public _msgs: Message[] = [];
 
     constructor( private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization,
 	     private _appAuthentication: AppAuthentication, private _browserService: BrowserService, private _uploadManagement : UploadManagement)
@@ -51,10 +49,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset()
-    {
-	    this._msgs = [];
-    }
+    protected _onReset() {}
 
     protected _onActivate(firstTimeActivating: boolean) {
 	    this._setEntryStatus();
@@ -242,8 +237,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 						    response =>
 						    {
 							    super._hideLoader();
-							    this._msgs = [];
-							    this._msgs.push({severity: 'success', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteSuccess')});
+                  this._browserService.showGrowlMessage({severity: 'success', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteSuccess')});
 							    this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 							    {
 								    // do nothing
@@ -252,8 +246,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 						    error =>
 						    {
 							    super._hideLoader();
-							    this._msgs = [];
-							    this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteFailure')});
+                  this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteFailure')});
 						    }
 					    );
 			    }
@@ -300,8 +293,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 				},
 				error =>
 				{
-					this._msgs = [];
-					this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure')});
+          this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure')});
 					this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 					{
 						// reload flavors as we need to get the flavor status from the server
@@ -311,26 +303,27 @@ export class EntryFlavoursHandler extends EntryFormWidget
 	}
 
 	public uploadFlavor(flavor: Flavor, fileData: File): void{
-		flavor.status = KalturaFlavorAssetStatus.importing.toString();
-		flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.uploading');
-		this._uploadManagement.newUpload(new KalturaServerFile(fileData))
-			.subscribe((response) => {
-				let resource = new KalturaUploadedFileTokenResource();
-				resource.token = response.uploadToken;
-				if (flavor.id.length){
-					this.updateFlavor(flavor, flavor.id, resource);
-				}else{
-					this.addNewFlavor(flavor, resource);
-				}
-			},
-			(error) => {
-				this._msgs = [];
-				this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
-				this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
-				{
-					// reload flavors as we need to get the flavor status from the server
-				});
-			});
+    	// TODO [kmcng] enable
+		// flavor.status = KalturaFlavorAssetStatus.importing.toString();
+		// flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.uploading');
+    // // FIXME wait till discussion
+		// Observable.of(this._uploadManagement.newUpload(new KalturaUploadFile(fileData)))
+		// 	.subscribe((response) => {
+		// 		let resource = new KalturaUploadedFileTokenResource();
+		// 		resource.token = response.uploadId;
+		// 		if (flavor.id.length){
+		// 			this.updateFlavor(flavor, flavor.id, resource);
+		// 		}else{
+		// 			this.addNewFlavor(flavor, resource);
+		// 		}
+		// 	},
+		// 	(error) => {
+    //     this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
+		// 		this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
+		// 		{
+		// 			// reload flavors as we need to get the flavor status from the server
+		// 		});
+		// 	});
 	}
 
 	private updateFlavor(flavor: Flavor, id: string, resource: KalturaContentResource): void{
@@ -350,8 +343,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 			},
 			error =>
 			{
-				this._msgs = [];
-				this._msgs.push({severity: 'error',	summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
+        this._browserService.showGrowlMessage({severity: 'error',	detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
 				this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 				{
 					// do nothing
@@ -376,8 +368,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 			},
 			error =>
 			{
-				this._msgs = [];
-				this._msgs.push({severity: 'error', summary: '', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
+        this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')});
 				this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
 				{
 					// reload flavors as we need to get the flavor status from the server

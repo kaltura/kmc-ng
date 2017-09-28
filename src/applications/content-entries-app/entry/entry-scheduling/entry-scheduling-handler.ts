@@ -44,7 +44,6 @@ export class EntrySchedulingHandler extends EntryFormWidget
     {
         super(EntryWidgetKeys.Scheduling);
 	    this.createForm();
-	    this.getTimeZone();
     }
 
 	protected _onActivate(firstTimeActivating: boolean): void {
@@ -104,6 +103,7 @@ export class EntrySchedulingHandler extends EntryFormWidget
 		    endDate: {value: '', disabled: true},
 		    enableEndDate: false
 	    }, { validator: datesValidation(false) });
+
 	    this.schedulingForm.get('scheduling').valueChanges
 		    .cancelOnDestroy(this)
 		    .subscribe(
@@ -150,18 +150,11 @@ export class EntrySchedulingHandler extends EntryFormWidget
 
 
 	public _clearDates(){
+		this.schedulingForm.markAsDirty();
 		this.schedulingForm.patchValue({
 			startDate: '',
 			endDate: ''
 		});
-	}
-
-	private getTimeZone(){
-		this._timeZone = this._appLocalization.get('applications.content.entryDetails.scheduling.note');
-		const now: any = new Date();
-		const zoneTimeOffset:number = (now.getTimezoneOffset() / 60) * (-1);
-		const ztStr: string = (zoneTimeOffset == 0) ? '' : (zoneTimeOffset > 0) ? ('+' + zoneTimeOffset) : ('-' + zoneTimeOffset);
-		this._timeZone = this._timeZone.split("(NUM)").join(ztStr);
 	}
 
 	private setValidators(checkRequired: boolean){

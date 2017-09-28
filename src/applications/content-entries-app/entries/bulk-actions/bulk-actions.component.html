@@ -17,6 +17,12 @@
       <kBulkRemoveCategories *ngSwitchCase="'removeFromCategories'" [selectedEntries]="selectedEntries" [parentPopupWidget]="bulkActionsPopup" (removeCategoriesChanged)="onRemoveCategoriesChanged($event)"></kBulkRemoveCategories>
       <kBulkChangeOwner *ngSwitchCase="'changeOwner'" [parentPopupWidget]="bulkActionsPopup" (ownerChanged)="onOwnerChanged($event)"></kBulkChangeOwner>
       <kBulkDownload *ngSwitchCase="'download'" [selectedEntries]="selectedEntries" [parentPopupWidget]="bulkActionsPopup" (downloadChanged)="onDownloadChanged($event)"></kBulkDownload>
+      <div *ngSwitchCase="'addToNewCategory'">
+        <span style="width: 100%; text-align: center; padding-top: 50px; display: block">Bulk add to a new category not implemented yet...</span>
+      </div>
+      <div *ngSwitchCase="'addToNewPlaylist'">
+        <span style="width: 100%; text-align: center; padding-top: 50px; display: block">Bulk add to a new playlist not implemented yet...</span>
+      </div>
     </div>
   </ng-template>
 </kPopupWidget>

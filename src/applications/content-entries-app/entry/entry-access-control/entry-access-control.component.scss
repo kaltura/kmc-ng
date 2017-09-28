@@ -18,6 +18,9 @@
 			padding-top: 24px;
 			align-items: center;
 		}
+		.kMultiLine{
+			white-space: pre-wrap;
+		}
 		.kLabels{
 			width: 180px;
 			flex: 0 0 auto;

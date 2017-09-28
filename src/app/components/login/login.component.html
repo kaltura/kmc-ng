@@ -1,39 +1,60 @@
-<div class="loginContainer" *ngIf="showLogin">
+<div class="kLoginContainer" *ngIf="_showLogin">
+  <div class="kLoginCenter">
+    <div class="kLoginWindow">
+      <div class="kLogo">
+        <i class="k-logo"></i>
+        <span>
+          <strong>KALTURA</strong> MANAGEMENT CONSOLE
+        </span>
+      </div>
 
-        <div class="header">
-            <div>
-              <div class="k-logo"></div>
-            </div>
+      <ng-container [ngSwitch]="_currentScreen">
+        <kKMCLoginForm *ngSwitchCase="_loginScreens.Login"
+                       [username]="_username"
+                       [errorMessage]="_errorMessage"
+                       [inProgress]="_inProgress"
+                       (onSetScreen)="_setScreen($event)"
+                       (onRememberMe)="_rememberMe($event)"
+                       (onLogin)="_login($event)"></kKMCLoginForm>
 
-            <div class="kHeaderRight">
-              <div class="pullRight">
-                <span><a (click)="openUserManual()">{{'app.helpMenu.userManual' | translate}}</a></span>
-                <span class="separator">|</span>
-                <kKMCLanguageMenu class="langMenu"></kKMCLanguageMenu>
-              </div>
-            </div>
-        </div>
+        <kKMCForgotPasswordForm *ngSwitchCase="_loginScreens.ForgotPassword"
+                                [errorMessage]="_errorMessage"
+                                [inProgress]="_inProgress"
+                                [passwordReset]="_passwordReset"
+                                (onResetPassword)="_forgotPassword($event)"
+                                (onSetScreen)="_setScreen($event)"></kKMCForgotPasswordForm>
 
-        <div class="login-center">
-            <div class="loginWindow">
-                <div class="k-logo-animated-500-400"></div>
-                  <div class="loginForm">
-                      <div class="loginAlert" *ngIf="errorMessage">{{ errorMessage }}</div>
-                      <form role="form" (submit)="login(username.value, password.value, $event)">
-                          <div>
-                              <label for="username">Username</label>
-                              <input type="text" pInputText #username id="username" placeholder="Username">
-                          </div>
-                          <div>
-                              <label for="password">Password</label>
-                              <input type="password" pInputText #password id="password" placeholder="Password">
-                          </div>
-                          <button class="kButtonDefault" pButton type="text" type="submit" label="{{ inProgress ? 'Wait...' : 'Submit'}}" [disabled]="inProgress"></button>
-                      </form>
-                  </div>
-              </div>
-        </div>
+        <kKMCPasswordExpiredForm *ngSwitchCase="_loginScreens.PasswordExpired"
+                                 [errorMessage]="_errorMessage"
+                                 [errorCode]="_errorCode"
+                                 [inProgress]="_inProgress"
+                                 (onResetPassword)="_resetPassword($event)"></kKMCPasswordExpiredForm>
+
+        <kKMCInvalidLoginHash *ngSwitchCase="_loginScreens.InvalidLoginHash"
+                              [errorMessage]="_errorMessage"
+                              [inProgress]="_inProgress"
+                              [passwordReset]="_passwordReset"
+                              (onResendLink)="_forgotPassword($event)"
+                              (onSetScreen)="_setScreen($event)"></kKMCInvalidLoginHash>
+      </ng-container>
+    </div>
+    <div class="kLoginControls">
+      <ng-container *ngIf="_currentScreen === _loginScreens.Login">
+        <p>{{ 'app.login.dontHaveAccount' | translate }}</p>
+
+        <button class="kSignUpBtn" pButton [label]="'app.login.signUp' | translate" (click)="_signUp()"></button>
+      </ng-container>
+
+      <ng-container *ngIf="_currentScreen !== _loginScreens.Login">
+        <button class="kSignUpBtn"
+                pButton
+                [label]="'app.login.login.title' | translate"
+                (click)="_setScreen(_loginScreens.Login)"></button>
+        <button class="kSignUpBtn"
+                pButton
+                [label]="'app.login.signUp' | translate"
+                (click)="_signUp()"></button>
+      </ng-container>
+    </div>
+  </div>
 </div>
-
-
-

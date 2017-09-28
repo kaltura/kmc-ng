@@ -1,0 +1,214 @@
+@import 'app-theme/_variables.scss';
+.kCategories {
+  font-size: 15px;
+  background-color: $appBkgColor;
+  height: $contentArea;
+  padding-top: 30px;
+  width: 100%;
+  min-width: $minAppWidth;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0px;
+  .kCategoriesHolder {
+    height: 100%;
+    border: none;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .kRefreshBtn {
+    font-size: 24px;
+    border: none;
+    min-width: inherit;
+    margin-right: 16px;
+    width: 40px;
+    outline: 0;
+    color: $kGrayscale3;
+    &:active {
+      box-shadow: none;
+      transform: rotate(45deg);
+    }
+    &:hover {
+      background-color: #ffffff;
+      color: $kPrimary;
+    }
+  }
+  .kCategoriesTableFilters {
+    color: $kGrayscale1;
+    width: 100%;
+    height: 66px;
+    background-color: white;
+    flex: 0 0 auto;
+    align-items: center;
+    margin-left: 0px;
+    border-bottom: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    display: flex;
+    .kSelectedCategoriesNum {
+      padding-left: 16px;
+    }
+  }
+  .kCategoriesTableTags {
+    width: 100%;
+    height: 50px;
+    background-color: #f3f3f3;
+    border: 1px solid grey;
+    flex: 0 0 50px;
+  }
+  .kCategoriesTableFooter {
+    width: 100%;
+    height: 34px;
+    background-color: white;
+    border-top: 1px solid $kGrayscale6;
+    position: relative;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    padding: 0 14px 28px;
+    display: block;
+  }
+  .kCategoriesTable {
+    border: none;
+    position: relative;
+    background-color: white;
+    flex: 1 1 auto;
+  }
+  .kSelectedCategoriesLabel {
+    font-weight: bold;
+    margin-right: 36px;
+    margin-left: 5px;
+  }
+  .kSearchInput {
+    background: $kMagnifyingGlassBkg;
+    background-color: $kGrayscale6;
+    padding-left: 30px;
+    margin-right: 8px;
+    &:focus {
+      background-color: white;
+    }
+  }
+  .kBulkOperations {
+    width: 400px;
+    display: flex;
+    align-items: center;
+  }
+  .kPaginatorShowRowsLabel {
+    color: $kGrayscale1;
+    position: absolute;
+    top: 7px;
+    right: 80px;
+  }
+  .kAddCategoryBtn {
+    margin-left: 14px;
+    height: 36px;
+  } 
+  .kBulkCancel {
+    margin-left: 10px;
+  }
+  .kBulkDeleteBtn {
+    margin-right: 10px;
+    width: 44px;
+    font-size: 18px;
+  }
+  .kBulkActionsBtn {
+    font-weight: 400;
+    font-size: 15px;
+  }
+  .kFilters {
+    display: flex;
+    margin-left: auto;
+  }
+  .kCategoriesFilter {
+    border: 1px solid $kGrayscale4;
+    border-radius: 4px;
+    display: flex;
+    background-color: #ffffff;
+    height: 32px;
+    align-items: center;
+    cursor: pointer;
+    color: $kGrayscale1;
+    width: 180px;
+    position: relative;
+    margin-right: 8px;
+    i {
+      margin-right: 12px;
+      margin-left: 8px;
+      color: $kGrayscale4;
+      &.dropdown {
+        font-size: 10px;
+      }
+    }
+    &:hover {
+      color: $kPrimary;
+      i {
+        color: $kPrimary;
+      }
+      i.kIcondropdown_arrow_bottom.dropdown {
+        color: $kGrayscale3;
+      }
+    }
+    .dropdown {
+      position: absolute;
+      right: 4px;
+      top: 12px;
+    }
+  }
+  .kRefine {
+    @extend .kCategoriesFilter;
+    width: 140px;
+  }
+  .kHidden {
+    visibility: hidden;
+    width: 0px;
+    height: 0px;
+  }
+  .kTagContent {
+    display: flex;
+    align-items: center;
+  }
+  .kTagLabel {
+    flex: 0 0 auto;
+    user-select: none;
+    cursor: default;
+  }
+  .kTagRemove {
+    flex: 0 0 auto;
+    margin-top: 2px;
+    margin-left: 8px;
+    padding: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+      border: 0px solid rgba(255, 255, 255, 0.3);
+      border-radius: 3px;
+    }
+  }
+}
+
+:host /deep/ span.ui-button-icon-left.fa.kIcontrash {
+  margin-left: -.5em;
+}
+
+:host /deep/ .ui-tree {
+  width: 380px;
+}
+
+:host /deep/ .ui-button-icon-right.kIcondropdown_arrow_bottom {
+  font-size: 10px;
+  margin-right: 2px;
+  pointer-events: none;
+}
+
+:host /deep/ .ui-tieredmenu.ui-menu {
+  width: 250px;
+  .ui-submenu-icon {
+    font-size: 10px;
+    margin-top: 3px;
+  }
+}
+
+:host /deep/ .ui-button-icon-only .fa {
+  margin-left: -.5em;
+}

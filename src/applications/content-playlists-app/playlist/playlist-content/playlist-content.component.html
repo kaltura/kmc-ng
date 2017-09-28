@@ -23,7 +23,7 @@
     </span>
     <div *ngIf="_selectedEntries.length" class="kSelected">
       <span class="kSelectedEntriesLabel">
-        â€¢ {{_selectedEntries.length}} {{'applications.content.playlists.selected' | translate}}
+        • {{_selectedEntries.length}} {{'applications.content.playlists.selected' | translate}}
       </span>
       <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.playlists.cancel' | translate}}</a>
     </div>

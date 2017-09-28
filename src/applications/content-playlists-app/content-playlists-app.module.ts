@@ -15,6 +15,7 @@ import {
 	InputTextModule,
 	CalendarModule,
 	MenuModule,
+  RadioButtonModule,
 	SharedModule
 } from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
@@ -50,6 +51,7 @@ import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.servic
       PopupWidgetModule,
       CalendarModule,
       MenuModule,
+      RadioButtonModule,
       TagsModule,
       KalturaPrimeNgUIModule,
       AutoCompleteModule,
@@ -64,7 +66,7 @@ import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.servic
     exports: [
     ],
     providers : [
-        PlaylistCanDeactivate
+      PlaylistCanDeactivate
     ]
 })
 export class ContentPlaylistsAppModule {

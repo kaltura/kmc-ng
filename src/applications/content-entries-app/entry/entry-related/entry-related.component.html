@@ -1,5 +1,5 @@
 <k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
-	<kFileDialog #fileDialog (onFileSelected)="_handler._onFileSelected($event)"></kFileDialog>
+	<kFileDialog #fileDialog [allowMultiple]="true" (onFileSelected)="_handler._onFileSelected($event)"></kFileDialog>
 	<div class="kRelated" #related>
 		<p class="kTitle">{{'applications.content.entryDetails.related.related' | translate}}</p>
 		<button type="button" class="kButtonDefault" (click)="fileDialog.open($event)" pButton label="{{'applications.content.entryDetails.related.add' | translate}}"></button>

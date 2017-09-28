@@ -18,6 +18,7 @@ import {
 import { BulkDeleteService } from './bulk-service/bulk-delete.service';
 import { PlaylistsTableComponent } from "./playlists-table.component";
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 import * as moment from 'moment';
 
@@ -36,6 +37,7 @@ export interface Filter {
 export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 	@ViewChild(PlaylistsTableComponent) private dataTable: PlaylistsTableComponent;
+  @ViewChild('addNewPlaylist') public addNewPlaylist: PopupWidgetComponent;
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _loading: boolean = false;
@@ -99,10 +101,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
         this._browserService.confirm(
           {
             header: this.appLocalization.get('applications.content.playlists.deletePlaylist'),
-            message: `
-              ${this.appLocalization.get('applications.content.playlists.confirmDelete', {0:''})}<br/>
-              ${this.appLocalization.get('applications.content.playlists.playlistId', { 0: event.playlistID })}<br/>
-              ${this.appLocalization.get('applications.content.playlists.deleteNote', {0:'this', 1:''})}`,
+            message: this.appLocalization.get('applications.content.playlists.confirmDeleteSingle', {0: event.playlistID}),
             accept: () => {
               this.deleteCurrentPlaylist(event.playlistID);
             }
@@ -161,7 +160,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
       .subscribe(
       () => {
         this._loading = false;
-        this._blockerMessage = null;
+        this._browserService.showGrowlMessage({severity: 'success', detail: this.appLocalization.get('applications.content.playlists.deleted')});
         this._playlistsStore.reload(true);
       },
       error => {
@@ -312,14 +311,14 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
   deletePlaylists(selectedPlaylists: KalturaPlaylist[]) {
 	  let playlistsToDelete = selectedPlaylists.map((playlist, index) => `${index + 1}: ${playlist.name}`),
-        playlists: string = selectedPlaylists.length <= 10 ? playlistsToDelete.join(',').replace(/,/gi, '<br />') + '<br />' : '';
+        playlists: string = selectedPlaylists.length <= 10 ? playlistsToDelete.join(',').replace(/,/gi, '\n') : '',
+        message = selectedPlaylists.length > 1 ?
+                  this.appLocalization.get('applications.content.playlists.confirmDeleteMultiple', {0: playlists}) :
+                  this.appLocalization.get('applications.content.playlists.confirmDeleteSingle', {0: playlists});
     this._browserService.confirm(
       {
         header: this.appLocalization.get('applications.content.playlists.deletePlaylist'),
-        message: `
-              ${this.appLocalization.get('applications.content.playlists.confirmDelete', {0: selectedPlaylists.length > 1 ? 's': ''})}<br/>
-              ${playlists}
-              ${this.appLocalization.get('applications.content.playlists.deleteNote', {0: selectedPlaylists.length > 1 ? 'these' : 'this', 1: selectedPlaylists.length > 1 ? 's': ''})}`,
+        message: message,
         accept: () => {
           setTimeout(()=> {
             this.deletePlaylist(selectedPlaylists.map(playlist => playlist.id));
@@ -327,5 +326,18 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+  addPlaylist() {
+    this.addNewPlaylist.open();
+  }
+
+  onShowNotSupportedMsg() {
+	  this._browserService.alert(
+		  {
+			  header: "Note",
+			  message: this.appLocalization.get('applications.content.addNewPlaylist.notSupportedMsg')
+		  }
+	  );
   }
 }

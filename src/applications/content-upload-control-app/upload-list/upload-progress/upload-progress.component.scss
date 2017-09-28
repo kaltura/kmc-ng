@@ -1,0 +1,67 @@
+@import 'app-theme/_variables.scss';
+
+@-webkit-keyframes candystripe {
+  to {
+    background-position: 20px 0;
+  }
+}
+
+@-moz-keyframes candystripe {
+  to {
+    background-position: 20px 0;
+  }
+}
+
+@keyframes candystripe {
+  to {
+    background-position: 20px 0;
+  }
+}
+
+.kProgressBar {
+  .kProgressBarBackground {
+    box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.3) inset;
+    background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.35) 25%, rgba(255, 255, 255, 0) 25%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0.35) 75%, rgba(255, 255, 255, 0) 75%, rgba(255, 255, 255, 0));
+    background-repeat: repeat-x;
+    background-size: 20px 20px;
+  }
+
+  .kProgressBarAnimation {
+    -webkit-animation: candystripe 1s linear infinite;
+    -moz-animation: candystripe 1s linear infinite;
+    animation: candystripe 1s linear infinite;
+  }
+}
+
+:host /deep/ .kProgressBar {
+  &.uploading .ui-progressbar-value {
+    background-color: $kSecondary;
+  }
+
+  &.uploaded .ui-progressbar-value {
+    background-color: $kSuccess;
+  }
+
+  &.uploadFailure .ui-progressbar-value {
+    background-color: $kDandger;
+  }
+
+  &.pending .ui-progressbar {
+    background-color: $kGrayscale6;
+  }
+
+  &:not(.pending) .ui-progressbar {
+    @extend .kProgressBarBackground;
+    background-color: $kGrayscale6;
+  }
+
+  .ui-progressbar {
+    width: 100px;
+    height: 12px;
+  }
+
+  .ui-progressbar-value {
+    @extend .kProgressBarBackground;
+    @extend .kProgressBarAnimation;
+  }
+}

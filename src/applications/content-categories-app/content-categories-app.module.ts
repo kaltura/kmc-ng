@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
-import { TreeModule, TieredMenuModule, SharedModule, AccordionModule, ButtonModule, InputTextareaModule, PaginatorModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule, MultiSelectModule, CheckboxModule, CalendarModule, SpinnerModule, ConfirmDialogModule, GrowlModule } from 'primeng/primeng';
+import { TreeModule, TieredMenuModule, SharedModule, AccordionModule, ButtonModule, InputTextareaModule, PaginatorModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule, MultiSelectModule, CheckboxModule, CalendarModule, SpinnerModule, ConfirmDialogModule } from 'primeng/primeng';
 import { KMCShellModule } from 'app-shared/kmc-shell';
 
 import { routing } from './content-categories-app.routes';
@@ -25,6 +25,7 @@ import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura
 import { DynamicMetadataFormModule } from '@kaltura-ng/kaltura-server-utils';
 import { CategoryComponentsList } from './category/category-components-list';
 import { CategoriesComponentsList } from './categories/categories-components-list';
+import { CategoryCanDeactivate } from "applications/content-categories-app/category/category-can-deactivate.service";
 
 @NgModule({
     imports: [
@@ -40,7 +41,6 @@ import { CategoriesComponentsList } from './categories/categories-components-lis
         DropdownModule,
         DynamicFormModule,
         FormsModule,
-        GrowlModule,
         InputTextareaModule,
         InputTextModule,
         KalturaCommonModule,
@@ -71,7 +71,7 @@ import { CategoriesComponentsList } from './categories/categories-components-lis
         CategoriesComponentsList
     ],
     exports: [],
-    providers: [],
+    providers: [CategoryCanDeactivate],
 })
 export class ContentCategoriesAppModule {
 }

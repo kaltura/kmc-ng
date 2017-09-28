@@ -13,12 +13,12 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaE
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { BaseEntryGetAction } from 'kaltura-typescript-client/types/BaseEntryGetAction';
 import { BaseEntryUpdateAction } from 'kaltura-typescript-client/types/BaseEntryUpdateAction';
-import { EntriesStore } from '../entries/entries-store/entries-store.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryFormManager } from './entry-form-manager';
 import { KalturaTypesFactory } from 'kaltura-typescript-client';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 
 export enum ActionTypes
 {
@@ -266,7 +266,6 @@ export class EntryStore implements  OnDestroy {
             .cancelOnDestroy(this)
             .subscribe(
 				response => {
-					if (response instanceof KalturaMediaEntry) {
 
 						this._entry.next(response);
 						this._entryId = response.id;
@@ -280,13 +279,6 @@ export class EntryStore implements  OnDestroy {
 						}else {
 							this._state.next({action: ActionTypes.EntryLoaded});
 						}
-
-					} else {
-						this._state.next({
-							action: ActionTypes.EntryLoadingFailed,
-							error: new Error(`entry type not supported ${response.name}`)
-						});
-					}
 				},
 				error => {
 					this._state.next({action: ActionTypes.EntryLoadingFailed, error});
@@ -303,53 +295,24 @@ export class EntryStore implements  OnDestroy {
 		}
 	}
 
-	private _getEntry(entryId:string) : Observable<KalturaMediaEntry | Error>
+	private _getEntry(entryId:string) : Observable<KalturaMediaEntry>
 	{
-		if (entryId) {
-			return Observable.create(observer => {
-
-				try {
-					const request = new KalturaMultiRequest(
-						new BaseEntryGetAction({entryId})
-                            .setCompletion(
-								response =>
-								{
-									if (response.result) {
-										if (response.result instanceof KalturaMediaEntry) {
-											observer.next(response.result);
-											observer.complete();
-										}else
-										{
-											observer.next(new Error("invalid entry type, expected KalturaMediaEntry"));
-											observer.complete();
-										}
-									}else {
-										observer.next(response.error);
-									}
-								}
-							)
-					);
-
-					const requestSubscription = this._kalturaServerClient.multiRequest(request).subscribe(() =>
-					{
-						// should not do anything here
-					});
-
-					return () =>
-					{
-						if (requestSubscription)
-						{
-							requestSubscription.unsubscribe();
-						}
-					}
-				}catch(ex)
+		if (entryId)
+		{
+			return this._kalturaServerClient.request(
+                new BaseEntryGetAction({entryId})
+			).map(response =>
+			{
+				if (response instanceof KalturaMediaEntry)
 				{
-					observer.next(ex);
+					return response;
+				}else {
+					throw new Error(`invalid type provided, expected KalturaMediaEntry, got ${typeof response}`);
 				}
 			});
 		}else
 		{
-			return Observable.of(new Error('missing entry id'));
+			return Observable.throw(new Error('missing entryId'));
 		}
 	}
 
@@ -378,6 +341,7 @@ export class EntryStore implements  OnDestroy {
 						header: this._appLocalization.get('applications.content.entryDetails.captions.cancelEdit'),
 						message: this._appLocalization.get('applications.content.entryDetails.captions.discard'),
 						accept: () => {
+							this._entryIsDirty = false;
 							observer.next({allowed: true});
 							observer.complete();
 						},
