@@ -101,14 +101,10 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 
 	private _downloadFile(): void {
 
-		const baseUrl = environment.core.kaltura.cdnUrl;
-		const protocol = baseUrl.split(":")[0];
-		const partnerId = this._appAuthentication.appUser.partnerId;
-		const entryId = this._handler.data.id;
+		const apiUrl = environment.core.kaltura.apiUrl;
+		let url = apiUrl + "/service/caption_captionasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/captionAssetId/" + this._handler.currentCaption.id;
 
-		let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + entryId + '/flavorId/' + this._handler.currentCaption.id + '/format/download/protocol/' + protocol;
-
-		this._browserService.openLink(url);
+		this._browserService.download(url, "caption.srt", ".srt");
 	}
 
     ngOnDestroy() {
