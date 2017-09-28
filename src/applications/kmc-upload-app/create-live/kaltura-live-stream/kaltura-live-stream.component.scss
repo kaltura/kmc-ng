@@ -1,61 +1,5 @@
 @import 'app-theme/_variables.scss';
 
-/deep/ {
-  .ui-inputswitch {
-    height: 24px;
-    width: 42px !important;
-    overflow: visible;
-    vertical-align: middle;
-    background-color: $kGrayscale4;
-    -moz-border-radius: 13px;
-    -webkit-border-radius: 13px;
-    border-radius: 13px;
-    border: none;
-
-    // * animation
-    -moz-transition: background-color 0.3s;
-    -o-transition: background-color 0.3s;
-    -webkit-transition: background-color 0.3s;
-    transition: background-color 0.3s;
-    // animation *
-
-    .ui-inputswitch-handle {
-      top: 4px;
-      left: 4px !important;
-      background-color: #ffffff;
-      -moz-border-radius: 50%;
-      -webkit-border-radius: 50%;
-      border-radius: 50%;
-      width: 16px !important;
-      height: 16px !important;
-      border: none;
-
-      // * animation
-      -moz-transition: left 0.3s;
-      -o-transition: left 0.3s;
-      -webkit-transition: left 0.3s;
-      transition: left 0.3s;
-      // animation *
-    }
-
-    .ui-inputswitch-on, .ui-inputswitch-off {
-      visibility: hidden;
-    }
-
-    &.ui-inputswitch-checked {
-      background-color: $kPrimary;
-      border: none;
-
-      .ui-inputswitch-handle {
-        left: 23px !important;
-      }
-    }
-  }
-  &+span{
-    vertical-align: middle;
-  }
-}
-
 .kLiveDVRMessage {
   padding-top: 10px;
   min-height: 32px;
@@ -65,18 +9,7 @@
   line-height: 16px;
 }
 
-
-  .kEnableRecordingOptions {
-    display: block;
-    padding-top: 28px;
-  }
-
-  .kPreviewMode {
-    /deep/ label {
-      font-weight: normal;
-      height: 18px;
-      color: $kGrayscale1;
-      font-size: 15px;
-      line-height: 18px;
-    }
-  }
+.kEnableRecordingOptions {
+  display: block;
+  padding-top: 28px;
+}

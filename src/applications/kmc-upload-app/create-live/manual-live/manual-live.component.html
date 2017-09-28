@@ -1,17 +1,80 @@
-<form [formGroup]="_form" novalidate (ngSubmit)="onSubmit()" class="kAccountUpgradeWrapper kContent">
-  manual
+<form [formGroup]="_form" novalidate class="kAccountUpgradeWrapper kContent">
   <section class="kFormContainer">
     <div class="kFormSection">
-      <div class="kTitle">{{'applications.settings.accountUpgrade.sendUsMessage' | translate}}</div>
+
       <div class="kRow">
-        <span class="kLabel">{{'applications.settings.accountUpgrade.name' | translate}}</span>
-        <div class="kRequired"></div>
-        <input class="kControl" formControlName="name" pInputText>
+        <span class="kLabel">{{'applications.upload.prepareLive.manualStreamType.name' | translate}}</span>
+        <div class="kRequired" [ngClass]="{'kHasError':!_form.controls['name'].valid &&
+                   _form.controls['name'].touched}">*
+        </div>
+        <div>
+          <input class="kControl" formControlName="name" pInputText
+                 [ngClass]="{'kHasError':!_form.controls['name'].valid &&
+                   _form.controls['name'].touched}">
+          <div *ngIf="_form.controls['name'].touched">
+            <div *ngIf="_form.controls['name'].hasError('required')"
+                 class="error">
+              {{'applications.upload.prepareLive.manualStreamType.errors.required' | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kRow">
+      <span class="kLabel">{{'applications.upload.prepareLive.manualStreamType.description' | translate}}</span>
+      <div class="kRequired"></div>
+      <div>
+        <input class="kControl" formControlName="description" pInputText
+               [ngClass]="{'kHasError':!_form.controls['description'].valid &&
+                   _form.controls['description'].touched}">
+        </div>
       </div>
     </div>
-    <div class="kSaveBtnContainer kRow">
-      <button pButton class="kButtonBranded kSaveBtn"
-              label="{{'applications.settings.accountUpgrade.send' | translate}}"></button>
+
+      <div class="kRow">
+        <span class="kLabel">{{'applications.upload.prepareLive.manualStreamType.liveHdsUrl' | translate}}</span>
+        <div class="kRequired"></div>
+        <div>
+          <input class="kControl" formControlName="liveHdsUrl" pInputText
+                 [ngClass]="{'kHasError':!_form.controls['liveHdsUrl'].valid &&
+                   _form.controls['liveHdsUrl'].touched}">
+          <div *ngIf="_form.controls['liveHdsUrl'].touched">
+            <div *ngIf="_form.controls['liveHdsUrl'].hasError('url')"
+                 class="error">
+              {{'applications.upload.prepareLive.manualStreamType.errors.invalidUrl' | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kRow">
+        <span class="kLabel">{{'applications.upload.prepareLive.manualStreamType.liveHlsUrl' | translate}}</span>
+        <div class="kRequired"></div>
+        <div>
+          <input class="kControl" formControlName="liveHlsUrl" pInputText
+                 [ngClass]="{'kHasError':!_form.controls['liveHlsUrl'].valid &&
+                   _form.controls['liveHlsUrl'].touched}">
+          <div *ngIf="_form.controls['liveHlsUrl'].touched">
+            <div *ngIf="_form.controls['liveHlsUrl'].hasError('url')"
+                 class="error">
+              {{'applications.upload.prepareLive.manualStreamType.errors.invalidUrl' | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="kRow">
+          <div *ngIf="this._form.get('liveHdsUrl').touched && !this._form.get('liveHdsUrl').value && this._form.get('liveHlsUrl').touched && !this._form.get('liveHlsUrl').value"
+               class="error">
+            {{'applications.upload.prepareLive.manualStreamType.errors.enterUrl' | translate}}
+          </div>
     </div>
+
+      <div class="kRow">
+        <span class="kPreviewMode">
+          <p-checkbox
+            label="{{'applications.upload.prepareLive.manualStreamType.useAkamaiHdProtocol' | translate}}"
+            formControlName="useAkamaiHdProtocol" binary="true"></p-checkbox></span>
+      </div>
   </section>
 </form>

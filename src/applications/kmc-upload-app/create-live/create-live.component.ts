@@ -27,7 +27,13 @@ export class CreateLiveComponent implements OnInit, OnDestroy {
     enableRecordingSelectedOption: KalturaRecordStatus.appended,
     previewMode: false
   };
-  public manualLiveData: ManualLive;
+  public manualLiveData: ManualLive = {
+    name: '',
+    description: '',
+    liveHdsUrl: '',
+    liveHlsUrl: '',
+    useAkamaiHdProtocol: false
+  };
   public universalLiveData: UniversalLive;
   public _availableStreamTypes: Array<{ value: StreamTypes, label: string }>;
   public _streamTypes = StreamTypes;
@@ -54,6 +60,8 @@ export class CreateLiveComponent implements OnInit, OnDestroy {
   submitCurrentSelectedForm() {
     if (this._selectedStreamType === StreamTypes.kaltura) {
       if (this.kalturaLiveStreamComponent.validate()) {
+        // todo  this._updateAreaBlockerState(true, error.message)
+
         this.createLiveService.createKalturaLiveStream(this.kalturaLiveStreamData)
           .cancelOnDestroy(this)
           .subscribe(response => {

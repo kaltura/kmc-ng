@@ -4,7 +4,7 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaLiveStream} from '../create-live.service';
 import {KalturaRecordStatus} from 'kaltura-typescript-client/types/KalturaRecordStatus';
 import {KalturaLiveStreamService} from './kaltura-live-stream.service';
-import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 
 @Component({
   selector: 'kKalturaLiveStream',
@@ -36,11 +36,15 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._updateAreaBlockerState(true, null);
-    // todo: update the parent areablocker state
     this._createForm();
     this._fillEnableRecordingOptions();
+    setTimeout(() => {
+      this._loadTranscodingProfiles()
+    }, 0)
+  }
 
+  private _loadTranscodingProfiles(): void {
+    this._updateAreaBlockerState(true, null);
     // todo: consider caching the _availableTranscodingProfiles in the service so when switching stream type it won't be asking for it again
     this._kalturaLiveStreamService.getKalturaConversionProfile()
       .cancelOnDestroy(this)
@@ -85,7 +89,7 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
       transcodingProfile: [''],
       liveDVR: [false],
       enableRecording: [false],
-      enableRecordingSelectedOption: [''],
+      enableRecordingSelectedOption: [{value: '', disabled: true}],
       previewMode: [false]
     });
 
@@ -105,14 +109,19 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
     return this._form.valid;
   }
 
+
+  _toggleRecordingSelectedOption(enable: boolean) {
+    enable ? this._form.get('enableRecordingSelectedOption').enable() : this._form.get('enableRecordingSelectedOption').disable();
+  }
+
   private markFormFieldsAsTouched() {
-    for (let inner in this._form.controls) {
+    for (const inner in this._form.controls) {
       this._form.get(inner).markAsTouched();
       this._form.get(inner).updateValueAndValidity();
     }
   }
 
   private _updateAreaBlockerState(isBusy: boolean, message: AreaBlockerMessage): void {
-   this.blockerStateChange.emit({ isBusy, message })
+    this.blockerStateChange.emit({isBusy, message})
   }
 }

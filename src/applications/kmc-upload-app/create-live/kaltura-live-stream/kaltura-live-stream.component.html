@@ -60,9 +60,9 @@
         <span class="kLabel kInputSwitchLabel">{{'applications.upload.prepareLive.kalturaStreamType.enableRecording' | translate}}</span>
         <div class="kRequired"></div>
         <div>
-          <p-inputSwitch class="kControl kInputSwitch" formControlName="enableRecording"></p-inputSwitch>
+          <p-inputSwitch class="kControl kInputSwitch" formControlName="enableRecording" (onChange)="_toggleRecordingSelectedOption($event.checked)"></p-inputSwitch>
           <span>{{_form.controls['enableRecording'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
-          <p-dropdown  [disabled]="!_form.controls['enableRecording'].value" class="kControl kEnableRecordingOptions" formControlName="enableRecordingSelectedOption"
+          <p-dropdown class="kControl kEnableRecordingOptions" formControlName="enableRecordingSelectedOption"
                       [options]="_enableRecordingOptions"></p-dropdown>
         </div>
       </div>

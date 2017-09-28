@@ -20,6 +20,10 @@ export interface KalturaLiveStream {
 
 export interface ManualLive {
   name: string
+  description: string,
+  liveHdsUrl: string,
+  liveHlsUrl: string,
+  useAkamaiHdProtocol: boolean
 }
 
 export interface UniversalLive {

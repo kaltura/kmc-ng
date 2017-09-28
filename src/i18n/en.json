@@ -228,7 +228,18 @@
             "required": "This field is required"
           }
         },
-        "manualStreamType": {},
+        "manualStreamType": {
+          "name": "Name",
+          "description": "Description",
+          "liveHdsUrl": "Live Flash HDS stream URL",
+          "liveHlsUrl": "Live Mobile HLS stream URL",
+          "useAkamaiHdProtocol": "Akamai HD protocol is used on this HDS URL",
+          "errors": {
+            "required": "This field is required",
+            "enterUrl": "You must enter at least one of HDS/HLS stream URL",
+            "invalidUrl": "You must enter a valid URL"
+          }
+        },
         "liveStreamType": {}
       }
     },
