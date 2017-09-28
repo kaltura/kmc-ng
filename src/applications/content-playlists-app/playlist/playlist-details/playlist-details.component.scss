@@ -1,32 +1,23 @@
 @import 'app-theme/_variables.scss';
 
-.kPlaylistPreview {
+.kPreviewDetails{
 	display: flex;
-	flex-direction: column;
-	height: 100%;
-
-	.kPreviewDetails{
-		padding-top: 20px;
-		padding-left: 12px;
-		padding-right: 8px;
-		width: 252px;
-		overflow: hidden;
-		.kTitle{
-			color: $kGrayscale1;
-			font-size: 20px;
-			font-weight: 700;
-			margin-bottom: 12px;
-			display: block;
-		}
-		.kRow{
-			display: flex;
-			padding-top: 24px;
-			align-items: center;
+	color: $kGrayscale3;
+	font-size: 13px;
+	overflow: hidden;
+	.kRow{
+		display: flex;
+		flex: 0 0 auto;
+		a{
+			font-size: 13px;
 		}
 		.kLabels{
-			width: 100px;
-			flex: 0 0 auto;
-			color: $kGrayscale3;
+			margin-right: 4px;
+		}
+		.kSeparator{
+			margin-right: 8px;
+			margin-left: 8px;
 		}
 	}
+
 }

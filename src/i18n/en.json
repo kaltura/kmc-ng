@@ -749,15 +749,15 @@
         },
         "details": {
           "details": "Details",
-          "id": "ID",
-          "creator": "Creator",
-          "creationDate": "Creation date",
-          "updatedAt": "Updated at",
-          "type": "Type",
-          "duration": "Duration",
-          "moderation": "Moderation",
-          "plays": "Plays",
-          "numberOfEntries": "Number of Entries"
+          "id": "ID:",
+          "creator": "Creator:",
+          "creationDate": "Creation date:",
+          "updatedAt": "Updated at:",
+          "type": "Type:",
+          "duration": "Duration:",
+          "moderation": "Moderation:",
+          "plays": "Plays:",
+          "numberOfEntries": "Number of Entries:"
         },
         "metadata": {
           "playlistName": "Name",

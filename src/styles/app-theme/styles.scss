@@ -64,3 +64,131 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
     }
   }
 }
+
+
+.kmcDetailsLayout {
+  font-size: 15px;
+  background-color: $appBkgColor;
+  height: $contentArea;
+  padding-top: 30px;
+  width: 100%;
+  button{
+    cursor: pointer;
+  }
+  .kDetailsWrapper{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    .kDetailsHeader{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      .kBackBtn{
+        margin-top: 4px;
+        margin-left: -56px;
+        margin-right: 23px;
+        border: none;
+        outline: none;
+        background-color: $appBkgColor;
+        color: $kGrayscale3;
+        height: 20px;
+        font-size: 16px;
+        &:active{
+          box-shadow: none;
+        }
+        &:hover{
+          color: $kPrimary;
+        }
+      }
+      .kTypeIcon{
+        width: 24px;
+        height: 24px;
+        margin-top: 2px;
+        font-size: 24px;
+        color: $kGrayscale3;
+      }
+      .kTitle{
+        color: $kGrayscale1;
+        font-size: 24px;
+        font-weight: 700;
+        margin-left: 12px;
+        margin-right: 100px;
+      }
+      .kSaveBtn{
+        margin-left: auto;
+        width: 100px;
+        height: 34px;
+        font-weight: 400;
+        margin-right: 24px;
+      }
+      .kNavigationBtn{
+        margin-left: auto;
+        width: 40px;
+        height: 34px;
+        margin-left: 0px;
+        margin-right: 0px;
+        font-weight: 400;
+      }
+      .kNavigationBtnLeft{
+        @extend .kNavigationBtn;
+        border-right: none;
+        border-bottom-right-radius: 0px;
+        border-top-right-radius: 0px;
+      }
+      .kNavigationBtnRight{
+        @extend .kNavigationBtn;
+        border-bottom-left-radius: 0px;
+        border-top-left-radius: 0px;
+      }
+    }
+    .kHeaderDetails{
+      width: 100%;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      height: 14px;
+      flex: 0 0 auto;
+    }
+    .kDetailsMain{
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      min-height: 0;
+      .kSections{
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        overflow-x: hidden;
+        width: 280px;
+        flex: 0 0 auto;
+        .kPreview{
+          width: 280px;
+          height: 158px;
+          background-color: #000000;
+          margin-bottom: 12px;
+          flex: 0 0 auto;
+          border: 0px solid #000000;
+          border-radius: 3px;
+        }
+      }
+      .kDetailsContent{
+        width: 100%;
+        background-color: #ffffff;
+        border: 1px solid #ffffff;
+        border-radius: 3px;
+        flex: 1 1 auto;
+        margin-left: 28px;
+        padding: 8px;
+      }
+    }
+  }
+  .kSpacer{
+    display: block;
+    height: 40px;
+  }
+}
+/* to be removed when switching to new scroll system */
+.kmcDetailsLayout.isSafari{
+  .kDetailsContent{
+    height: calc(100vh - 240px);
+  }
+}
