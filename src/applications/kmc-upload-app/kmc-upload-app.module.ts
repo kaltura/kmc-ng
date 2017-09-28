@@ -19,12 +19,13 @@ import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {UploadMenuComponent} from './upload-menu/upload-menu.component';
 import {UploadSettingsComponent} from './upload-settings/upload-settings.component';
 import {UploadButtonComponent} from './upload-button/upload-button.component';
-import {ManualLiveComponent} from "./create-live/manual-live/manual-live.component";
-import {UniversalLiveComponent} from "./create-live/universal-live/universal-live.component";
-import {TranscodingProfileSelectComponent} from "./transcoding-profile-select/transcoding-profile-select.component";
-import {CreateLiveComponent} from "./create-live/create-live.component";
-import {KalturaLiveStreamComponent} from "./create-live/kaltura-live-stream/kaltura-live-stream.component";
-import {UploadMenuService} from "./upload-menu/upload-menu.service";
+import {ManualLiveComponent} from './create-live/manual-live/manual-live.component';
+import {UniversalLiveComponent} from './create-live/universal-live/universal-live.component';
+import {TranscodingProfileSelectComponent} from './prepare-entry/transcoding-profile-select/transcoding-profile-select.component';
+import {CreateLiveComponent} from './create-live/create-live.component';
+import {KalturaLiveStreamComponent} from './create-live/kaltura-live-stream/kaltura-live-stream.component';
+import {PrepareEntryService} from './prepare-entry/prepare-entry.service';
+import {PrepareEntryComponent} from "./prepare-entry/prepare-entry.component";
 
 @NgModule({
   imports: [
@@ -50,6 +51,7 @@ import {UploadMenuService} from "./upload-menu/upload-menu.service";
     UploadMenuComponent,
     UploadSettingsComponent,
     UploadButtonComponent,
+    PrepareEntryComponent,
     TranscodingProfileSelectComponent,
     CreateLiveComponent,
     KalturaLiveStreamComponent,
@@ -60,7 +62,7 @@ import {UploadMenuService} from "./upload-menu/upload-menu.service";
     UploadButtonComponent
   ],
   providers: [
-    UploadMenuService
+    PrepareEntryService
   ]
 })
 export class KmcUploadAppModule {

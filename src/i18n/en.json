@@ -27,7 +27,7 @@
       "title": "Change account",
       "choose": "Choose a different partner:",
       "continue": "Continue",
-      "errors":{
+      "errors": {
         "loadPartners": "An error occurred while loading accounts."
       }
     },
@@ -143,7 +143,7 @@
       "validation": {
         "error": "Error",
         "wrongType": "Select media type",
-        "missingTranscodingProfile" : "Select transcoding profile",
+        "missingTranscodingProfile": "Select transcoding profile",
         "fileSizeExceeded": "File size exceeded",
         "fileNameRequired": "File name is required"
       },
@@ -159,6 +159,12 @@
           "title": "Prepare entry",
           "video": "Video entry",
           "audio": "Audio entry"
+        },
+        "createDraft": {
+          "draftEntry": "Draft Entry"
+        },
+        "errors": {
+          "prepareEntry": "An error occurred during prepare entry"
         }
       },
       "uploadSettings": {
@@ -187,12 +193,12 @@
         },
         "uploadBtn": "Upload"
       },
-      "transcodingProfilesSelect":{
-        "titleVideo":"Prepare Video Entry",
-        "titleAudio":"Prepare Audio Entry",
-        "selectTranscodingProfile":"Select transcoding profile",
-        "defaultOption":"Default",
-        "apply":"Apply",
+      "transcodingProfilesSelect": {
+        "titleVideo": "Prepare Video Entry",
+        "titleAudio": "Prepare Audio Entry",
+        "selectTranscodingProfile": "Select transcoding profile",
+        "defaultOption": "Default",
+        "apply": "Apply",
         "errors": {
           "loadFailed": "An error occurred during transcoding profiles loading"
         }
@@ -200,13 +206,13 @@
       "prepareLive": {
         "createLiveStreamTitle": "Create Live Stream Entry",
         "streamTypeLabel": "Stream type",
-        "streamTypes" :{
+        "streamTypes": {
           "kaltura": "Kaltura Live Streaming (HDS/HLS/DASH)",
           "universal": "Universal Streaming, Flash and Mobile (HDS/HLS)",
           "manual": "Manual Live Stream URLs"
         },
         "create": "Create",
-        "kalturaStreamType":{
+        "kalturaStreamType": {
           "name": "Name",
           "description": "Description",
           "transcodingProfile": "Live Transcoding Profiles",
@@ -218,12 +224,12 @@
             "appended": "Append recorded content to a single entry"
           },
           "previewMode": "Preview Mode",
-          "errors":{
+          "errors": {
             "required": "This field is required"
           }
         },
-        "manualStreamType":{},
-        "liveStreamType":{}
+        "manualStreamType": {},
+        "liveStreamType": {}
       }
     },
     "content": {

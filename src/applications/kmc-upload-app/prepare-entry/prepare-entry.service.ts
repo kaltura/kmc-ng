@@ -13,7 +13,7 @@ export interface DraftEntry {
 }
 
 @Injectable()
-export class UploadMenuService {
+export class PrepareEntryService {
 
   constructor(private _kalturaServerClient: KalturaClient,
               private _appLocalization: AppLocalization) {
