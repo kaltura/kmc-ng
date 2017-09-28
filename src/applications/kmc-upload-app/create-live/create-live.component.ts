@@ -42,9 +42,9 @@ export class CreateLiveComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._availableStreamTypes = [
-      {value: StreamTypes.kaltura, label: this._appLocalization.get('app.upload.prepareLive.streamTypes.kaltura')},
-      {value: StreamTypes.manual, label: this._appLocalization.get('app.upload.prepareLive.streamTypes.manual')},
-      {value: StreamTypes.universal, label: this._appLocalization.get('app.upload.prepareLive.streamTypes.universal')}
+      {value: StreamTypes.kaltura, label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.kaltura')},
+      {value: StreamTypes.manual, label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.manual')},
+      {value: StreamTypes.universal, label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.universal')}
     ];
   }
 

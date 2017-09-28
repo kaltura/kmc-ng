@@ -65,11 +65,11 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
     this._enableRecordingOptions = [
       {
         value: KalturaRecordStatus.perSession,
-        label: this._appLocalization.get('app.upload.prepareLive.kalturaStreamType.enableRecordingOptions.perSession')
+        label: this._appLocalization.get('applications.upload.prepareLive.kalturaStreamType.enableRecordingOptions.perSession')
       },
       {
         value: KalturaRecordStatus.appended,
-        label: this._appLocalization.get('app.upload.prepareLive.kalturaStreamType.enableRecordingOptions.appended')
+        label: this._appLocalization.get('applications.upload.prepareLive.kalturaStreamType.enableRecordingOptions.appended')
       },
     ];
   }

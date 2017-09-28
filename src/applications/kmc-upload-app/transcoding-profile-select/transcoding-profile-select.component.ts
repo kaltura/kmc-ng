@@ -32,8 +32,8 @@ export class TranscodingProfileSelectComponent implements OnInit {
 
   ngOnInit() {
     this._title = this.mediaType === KalturaMediaType.video ?
-      this._appLocalization.get('app.upload.transcodingProfilesSelect.titleVideo') :
-      this._appLocalization.get('app.upload.transcodingProfilesSelect.titleAudio');
+      this._appLocalization.get('applications.upload.transcodingProfilesSelect.titleVideo') :
+      this._appLocalization.get('applications.upload.transcodingProfilesSelect.titleAudio');
     this._updateAreaBlockerState(true, null);
     this._createForm();
     this._loadTranscodingProfiles();
@@ -69,7 +69,7 @@ export class TranscodingProfileSelectComponent implements OnInit {
         error => {
           const blockerMessage = new AreaBlockerMessage(
             {
-              message: this._appLocalization.get('app.upload.transcodingProfilesSelect.errors.loadFailed'),
+              message: this._appLocalization.get('applications.upload.transcodingProfilesSelect.errors.loadFailed'),
               buttons: [
                 {
                   label: this._appLocalization.get('app.common.retry'),

@@ -57,7 +57,9 @@
       "confirm": "Confirm",
       "close": "Close",
       "note": "Note:",
-      "attention": "Attention"
+      "attention": "Attention",
+      "yes": "Yes",
+      "no": "No"
     },
     "login": {
       "login": {
@@ -184,6 +186,44 @@
           }
         },
         "uploadBtn": "Upload"
+      },
+      "transcodingProfilesSelect":{
+        "titleVideo":"Prepare Video Entry",
+        "titleAudio":"Prepare Audio Entry",
+        "selectTranscodingProfile":"Select transcoding profile",
+        "defaultOption":"Default",
+        "apply":"Apply",
+        "errors": {
+          "loadFailed": "An error occurred during transcoding profiles loading"
+        }
+      },
+      "prepareLive": {
+        "createLiveStreamTitle": "Create Live Stream Entry",
+        "streamTypeLabel": "Stream type",
+        "streamTypes" :{
+          "kaltura": "Kaltura Live Streaming (HDS/HLS/DASH)",
+          "universal": "Universal Streaming, Flash and Mobile (HDS/HLS)",
+          "manual": "Manual Live Stream URLs"
+        },
+        "create": "Create",
+        "kalturaStreamType":{
+          "name": "Name",
+          "description": "Description",
+          "transcodingProfile": "Live Transcoding Profiles",
+          "liveDVR": "Live DVR",
+          "liveDVR_message": "Seeking to early parts of the live stream. DVR window is 2 hours by default",
+          "enableRecording": "Enable Recording",
+          "enableRecordingOptions": {
+            "perSession": "Create new entries for every broadcast session",
+            "appended": "Append recorded content to a single entry"
+          },
+          "previewMode": "Preview Mode",
+          "errors":{
+            "required": "This field is required"
+          }
+        },
+        "manualStreamType":{},
+        "liveStreamType":{}
       }
     },
     "content": {

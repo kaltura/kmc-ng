@@ -22,7 +22,7 @@ export class UploadMenuService {
   public createDraftEntry(mediaType: KalturaMediaType, conversionProfileId?: number): Observable<DraftEntry> {
 
     const entry: KalturaMediaEntry = new KalturaMediaEntry({
-      name: this._appLocalization.get('app.upload.uploadMenu.createDraft.draftEntry'),
+      name: this._appLocalization.get('applications.upload.uploadMenu.createDraft.draftEntry'),
       mediaType,
       conversionProfileId: conversionProfileId || -1
     });

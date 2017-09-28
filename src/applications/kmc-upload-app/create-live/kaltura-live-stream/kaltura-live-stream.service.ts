@@ -18,7 +18,7 @@ export class KalturaLiveStreamService {
   public getKalturaConversionProfile(): Observable<KalturaConversionProfile[]> {
 
     // const entry: KalturaMediaEntry = new KalturaMediaEntry({
-    //   name: this._appLocalization.get('app.upload.uploadMenu.createDraft.draftEntry'),
+    //   name: this._appLocalization.get('applications.upload.uploadMenu.createDraft.draftEntry'),
     //   mediaType,
     //   conversionProfileId: conversionProfileId || -1
     // });
