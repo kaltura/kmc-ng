@@ -324,6 +324,18 @@ export class EntryFlavoursHandler extends EntryFormWidget
               }
               break;
 
+            case TrackedFileStatuses.uploadCompleted:
+              this._refresh(false, false);
+              break;
+
+            case TrackedFileStatuses.uploadFailed:
+              this._browserService.showGrowlMessage({
+                severity: 'error',
+                detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')
+              });
+              this._refresh();
+              break;
+
             default:
               break;
           }
