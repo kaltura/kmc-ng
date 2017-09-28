@@ -32,7 +32,6 @@
 npm-debug.log
 testem.log
 /typings
-yarn*.log
 
 # e2e
 /e2e/*.js

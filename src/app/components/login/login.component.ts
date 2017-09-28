@@ -62,6 +62,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     } else {
       this._errorMessage = error.message;
     }
+    this._inProgress = false;
   }
 
   ngOnInit() {
@@ -83,7 +84,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this._makeLoginRequest(username, password).subscribe(
       ({ success, error }) => {
-        this._inProgress = false;
         this._handleLoginResponse(success, error, username);
       },
       (err) => {
