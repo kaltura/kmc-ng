@@ -18,9 +18,9 @@
 			flex-direction: row;
 			align-items: center;
 			.kBackToEntriesBtn{
-				position: absolute;
-				margin-top: 2px;
+				margin-top: 4px;
 				margin-left: -56px;
+				margin-right: 23px;
 				border: none;
 				outline: none;
 				background-color: $appBkgColor;
@@ -78,6 +78,7 @@
 			margin-top: 20px;
 			margin-bottom: 20px;
 			height: 14px;
+			flex: 0 0 auto;
 		}
 		.kEntryDetailsMain{
 			display: flex;
@@ -88,6 +89,7 @@
 				display: flex;
 				flex-direction: column;
 				overflow-y: auto;
+				overflow-x: hidden;
 				width: 280px;
 				flex: 0 0 auto;
 				.kPreview{
