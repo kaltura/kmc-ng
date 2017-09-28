@@ -1,23 +1,30 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {AreaBlockerModule, KalturaUIModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
 import {
-  DataTableModule,
   ButtonModule,
+  CheckboxModule,
+  DataTableModule,
+  DropdownModule,
+  InputSwitchModule,
   InputTextModule,
   MenuModule,
-  SharedModule,
-  DropdownModule
+  SharedModule
 } from 'primeng/primeng';
-import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
-import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
-import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
+import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
+import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
+import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 
-import { UploadMenuComponent } from './upload-menu/upload-menu.component';
-import { UploadSettingsComponent } from './upload-settings/upload-settings.component';
-import { UploadButtonComponent } from './upload-button/upload-button.component';
+import {UploadMenuComponent} from './upload-menu/upload-menu.component';
+import {UploadSettingsComponent} from './upload-settings/upload-settings.component';
+import {UploadButtonComponent} from './upload-button/upload-button.component';
+import {ManualLiveComponent} from "./create-live/manual-live/manual-live.component";
+import {UniversalLiveComponent} from "./create-live/universal-live/universal-live.component";
+import {TranscodingProfileSelectComponent} from "./transcoding-profile-select/transcoding-profile-select.component";
+import {CreateLiveComponent} from "./create-live/create-live.component";
+import {KalturaLiveStreamComponent} from "./create-live/kaltura-live-stream/kaltura-live-stream.component";
+import {UploadMenuService} from "./upload-menu/upload-menu.service";
 
 @NgModule({
   imports: [
@@ -35,15 +42,25 @@ import { UploadButtonComponent } from './upload-button/upload-button.component';
     PopupWidgetModule,
     MenuModule,
     KalturaPrimeNgUIModule,
-    SharedModule
+    SharedModule,
+    InputSwitchModule,
+    CheckboxModule
   ],
   declarations: [
     UploadMenuComponent,
     UploadSettingsComponent,
-    UploadButtonComponent
+    UploadButtonComponent,
+    TranscodingProfileSelectComponent,
+    CreateLiveComponent,
+    KalturaLiveStreamComponent,
+    UniversalLiveComponent,
+    ManualLiveComponent
   ],
   exports: [
     UploadButtonComponent
+  ],
+  providers: [
+    UploadMenuService
   ]
 })
 export class KmcUploadAppModule {
