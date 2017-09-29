@@ -11,7 +11,8 @@
         <i class="kIconfolder_large"></i>
         <i class="kIconuser" (click)="navigate('/administration')" [class.open]="selectedMenuItem?.routePath==='administration'" [kTooltip]="'app.menu.Administration' | translate" [placement]="'bottom'"></i>
         <i class="kIcongear" (click)="navigate('/settings')" [class.open]="selectedMenuItem?.routePath==='settings'" [kTooltip]="'app.menu.Settings' | translate" [placement]="'bottom'"></i>
-        <i #help class="kIconhelp"></i>
+        <!-- TODO [kmcng] replace `kIconhouse` icon with relevant one -->
+        <i #help [ngClass]="_changelogSeen ? 'kIconhelp' : 'kIconhouse'" [class.open]="_helpMenuOpened"></i>
         <div #username class="kUserName">
             <span>{{_userContext.fullName}}</span>
             <i class="kIcondropdown_arrow_bottom"></i>
@@ -35,7 +36,15 @@
     <kKMCUserSettings></kKMCUserSettings>
 </kPopupWidget>
 
-<kPopupWidget #helpmenu [showTooltip]="true" [appendTo]="appmenu" [popupWidth]="240" [closeBtn]="false" [targetRef]="help" [targetOffset]="{'x':-109, 'y': 35}" (onOpen)="help.className='kIconhelp open'" (onClose)="help.className='kIconhelp'">
+<kPopupWidget #helpmenu
+              [showTooltip]="true"
+              [appendTo]="appmenu"
+              [popupWidth]="240"
+              [closeBtn]="false"
+              [targetRef]="help"
+              [targetOffset]="{'x':-109, 'y': 35}"
+              (onOpen)="_helpMenuOpened = true"
+              (onClose)="_helpMenuOpened = false">
     <div class="kHelpMenu">
         <p class="kHelpTitle">{{'app.helpMenu.gettingStarted' | translate | uppercase}}</p>
         <p class="kHelpLink">{{'app.helpMenu.kmcOverview' | translate}}</p>
@@ -46,7 +55,7 @@
         <p class="kHelpLink">{{'app.helpMenu.userManual' | translate}}</p>
         <p class="kHelpLink">{{'app.helpMenu.contact' | translate}}</p>
         <hr>
-        <kChangelog></kChangelog>
+        <kChangelog (onChangelogSeen)="_changelogSeen = $event"></kChangelog>
         <div class="kContexualHelp">
             <hr>
             <p class="kHelpTitle">{{'app.helpMenu.currentPage' | translate | uppercase}}</p>

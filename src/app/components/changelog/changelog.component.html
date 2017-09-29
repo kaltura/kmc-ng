@@ -1,6 +1,6 @@
-<p class="kHelpLink kChangelogLink" (click)="changelog.open()">
+<p class="kHelpLink kChangelogLink" (click)="_openChangelog()">
   <span>{{'app.helpMenu.changelog' | translate}}</span>
-  <i class="kIconChangelog" [class.active]="true"></i>
+  <i class="kIconChangelog" [class.active]="!_changelogSeen"></i>
 </p>
 
 <kPopupWidget #changelog [popupWidth]="700" [popupHeight]="600" [closeBtn]="true" [modal]="true">
