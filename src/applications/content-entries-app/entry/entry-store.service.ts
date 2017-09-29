@@ -1,5 +1,5 @@
 import { Injectable,  OnDestroy, Host } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd, NavigationStart } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd, NavigationStart, UrlSegment } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
@@ -19,6 +19,8 @@ import { KalturaTypesFactory } from 'kaltura-typescript-client';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { EntryWidgetKeys } from './entry-widget-keys';
+import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 
 export enum ActionTypes
 {
@@ -29,7 +31,8 @@ export enum ActionTypes
 	EntryPrepareSavingFailed,
 	EntrySavingFailed,
 	EntryDataIsInvalid,
-	ActiveSectionBusy
+	ActiveSectionBusy,
+  PermissionDenied
 }
 
 declare type StatusArgs =
@@ -45,6 +48,7 @@ export class EntryStore implements  OnDestroy {
 	private _loadEntrySubscription : ISubscription;
 	private _sectionToRouteMapping : { [key : number] : string} = {};
 	private _state = new BehaviorSubject<StatusArgs>({ action : ActionTypes.EntryLoading, error : null});
+  private _defaultSectionKey = EntryWidgetKeys.Metadata;
 
 	public state$ = this._state.asObservable();
 	private _entryIsDirty : boolean;
@@ -249,6 +253,22 @@ export class EntryStore implements  OnDestroy {
 		}
 	}
 
+	private _canShowSection(data: KalturaMediaEntry) {
+    const [currentSegment] = (<BehaviorSubject<UrlSegment[]>>this._entryRoute.firstChild.url).value;
+    switch (data.mediaType) {
+      case KalturaMediaType.image:
+        return [
+          EntryWidgetKeys.Metadata.toLowerCase(),
+          EntryWidgetKeys.AccessControl.toLowerCase(),
+          EntryWidgetKeys.Scheduling.toLowerCase(),
+          EntryWidgetKeys.Related.toLowerCase(),
+          EntryWidgetKeys.Users.toLowerCase()
+        ].includes(currentSegment.path);
+      default:
+        return Object.values(EntryWidgetKeys).map(item => item.toLowerCase()).includes(currentSegment.path);
+    }
+  }
+
 	private _loadEntry(entryId : string) : void {
 		if (this._loadEntrySubscription) {
 			this._loadEntrySubscription.unsubscribe();
@@ -266,19 +286,23 @@ export class EntryStore implements  OnDestroy {
             .cancelOnDestroy(this)
             .subscribe(
 				response => {
+            if (this._canShowSection(response)) {
+              this._entry.next(response);
+              this._entryId = response.id;
 
-						this._entry.next(response);
-						this._entryId = response.id;
+              const dataLoadedResult = this._sectionsManager.onDataLoaded(response);
 
-						const dataLoadedResult = this._sectionsManager.onDataLoaded(response);
-
-						if (dataLoadedResult.errors.length)
-						{
-							this._state.next({action: ActionTypes.EntryLoadingFailed,
-								error: new Error(`one of the widgets failed while handling data loaded event`)});
-						}else {
-							this._state.next({action: ActionTypes.EntryLoaded});
-						}
+              if (dataLoadedResult.errors.length) {
+                this._state.next({
+                  action: ActionTypes.EntryLoadingFailed,
+                  error: new Error(`one of the widgets failed while handling data loaded event`)
+                });
+              } else {
+                this._state.next({ action: ActionTypes.EntryLoaded });
+              }
+            } else {
+              this.openSection(this._defaultSectionKey);
+            }
 				},
 				error => {
 					this._state.next({action: ActionTypes.EntryLoadingFailed, error});
