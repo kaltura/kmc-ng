@@ -38,6 +38,11 @@ export interface QueryData
 	createdAfter : Date
 }
 
+export interface PlaylistData {
+  name: string;
+  description?: string;
+}
+
 
 @Injectable()
 export class PlaylistsStore implements OnDestroy {
@@ -57,8 +62,9 @@ export class PlaylistsStore implements OnDestroy {
 	public playlists$ = this._playlistsSource.asObservable();
 	public state$ = this._stateSource.asObservable();
 	public query$ = this._querySource.monitor('queryData update');
+	private _newPlaylistData: PlaylistData = null;
 
-	constructor(
+  constructor(
 		private kalturaServerClient: KalturaClient,
 		private browserService: BrowserService,
     public _kalturaServerClient: KalturaClient
@@ -85,6 +91,18 @@ export class PlaylistsStore implements OnDestroy {
   public get playlists() : KalturaPlaylist[]
   {
     return this._playlistsSource.getValue().items;
+  }
+
+  public setNewPlaylistData(newPlaylistData: PlaylistData) {
+    this._newPlaylistData = newPlaylistData;
+  }
+
+  public getNewPlaylistData(): PlaylistData {
+    return this._newPlaylistData;
+  }
+
+  public clearNewPlaylistData():void {
+    this._newPlaylistData = null
   }
 
 	ngOnDestroy() {

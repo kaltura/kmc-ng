@@ -1,7 +1,7 @@
 {
   "app": {
     "menu": {
-      "upload": "Upload",
+      "upload": "Create",
       "Content": "Content",
       "Entries": "Entries",
       "Moderation": "Moderation",
@@ -11,12 +11,27 @@
       "Studio": "Studio",
       "Analytics": "Analytics",
       "Administration": "Administration",
+      "Settings": "Settings",
       "Users": "Users",
-      "Roles": "Roles"
+      "Account Settings": "Account Settings",
+      "Account Upgrade": "Account Upgrade",
+      "Administration": "Administration",
+      "Roles": "Roles",
+      "UploadControl": "Upload Control",
+      "BulkUpload": "Bulk Upload",
+      "DropFolders": "Drop Folders"
     },
     "userSettings": {
       "changeAccount": "Change Acoount",
       "logout": "Logout"
+    },
+    "changeAccount": {
+      "title": "Change account",
+      "choose": "Choose a different partner:",
+      "continue": "Continue",
+      "errors":{
+        "loadPartners": "An error occurred while loading accounts."
+      }
     },
     "helpMenu": {
       "gettingStarted": "Getting Started",
@@ -104,21 +119,6 @@
       "signUp": "Sign Up",
       "rememberMe": "Remember me",
       "dontHaveAccount": "Don't have an account?"
-    },
-    "upload": {
-      "uploadMenu": {
-        "uploadFromDesktop": "Upload from desktop",
-        "bulkUpload": {
-          "title": "Bulk upload",
-          "samplesLink": "Download CSV/XML Samples"
-        },
-        "liveStream": "Live stream entry",
-        "entryList": {
-          "title": "Prepare entry",
-          "video": "Video entry",
-          "audio": "Audio entry"
-        }
-      }
     }
   },
   "applications": {
@@ -128,7 +128,91 @@
         "searchCategoriesPH": "Search Categories"
       }
     },
+    "upload": {
+      "fileStatus": {
+        "preProcess": "Pre process",
+        "queued": "Queued",
+        "uploading": "Uploading",
+        "complete": "Complete",
+        "failed": "Failed"
+      },
+      "inDevelopment": {
+        "title": "Sorry",
+        "message": "Feature in development"
+      },
+      "validation": {
+        "error": "Error",
+        "wrongType": "Select media type",
+        "missingTranscodingProfile" : "Select transcoding profile",
+        "fileSizeExceeded": "File size exceeded",
+        "fileNameRequired": "File name is required"
+      },
+      "uploadMenu": {
+        "uploadFromDesktop": "Upload from desktop",
+        "highSpeed": "Need high-speed upload?",
+        "bulkUpload": {
+          "title": "Bulk upload",
+          "samplesLink": "Download CSV/XML Samples"
+        },
+        "liveStream": "Create live stream entry",
+        "entryList": {
+          "title": "Prepare entry",
+          "video": "Video entry",
+          "audio": "Audio entry"
+        }
+      },
+      "uploadSettings": {
+        "title": "Upload Settings",
+        "profile": "Transcoding profile",
+        "addFileBtn": "Add file",
+        "profilePlaceholder": "Default",
+        "mediaTypes": {
+          "video": "Video",
+          "audio": "Audio",
+          "image": "Image"
+        },
+        "table": {
+          "remove": "Remove",
+          "edit": "Edit",
+          "header": {
+            "fileName": "File name",
+            "mediaType": "Media type",
+            "size": "Size"
+          },
+          "emptyMessage": {
+            "title": "No files to upload",
+            "getStarted": "Add some files to get started, ",
+            "browse": "browse"
+          }
+        },
+        "uploadBtn": "Upload"
+      }
+    },
     "content": {
+      "uploadControl": {
+        "bulkCancel": {
+          "header": "Cancel uploads",
+          "message": "Are you sure you want to cancel those uploads?"
+        },
+        "files": "Files",
+        "selected": "Selected",
+        "cancel": "Cancel",
+        "table": {
+          "fileName": "File Name",
+          "entryId": "ID",
+          "fileSize": "File size",
+          "uploadedOn": "Uploaded On",
+          "progress": "Progress",
+          "remove": "Remove",
+          "status": {
+            "header": "Status",
+            "uploaded": "Complete",
+            "uploading": "Uploading",
+            "queued": "Queued",
+            "uploadFailure": "Failed"
+          }
+        }
+      },
       "categories": {
         "categories": "Categories",
         "search": "Search",
@@ -137,7 +221,7 @@
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
         "refine": "Refine",
-        "filterCategories": "Filter Categories"  ,
+        "filterCategories": "Filter Categories",
         "edit": "Edit",
         "delete": "Delete",
         "viewEntries": "View Entries",
@@ -314,6 +398,21 @@
         "active": "Active",
         "blocked": "Blocked",
         "deleted": "Deleted"
+      },
+      "addNewPlaylist": {
+        "addNewPlaylist": "Add New Playlist",
+        "selectPlaylistType": "Select playlist type",
+        "manualPlaylist": "Manual playlist",
+        "ruleBasedPlaylist": "Rule based playlist",
+        "addRuleBasedSubPlaylist": "Add rule based sub playlist",
+        "nameIsMandatory": "You must enter a playlist name",
+        "next": "Next",
+        "playlistName": "Playlist Name",
+        "description": "Description",
+        "cancelEdit": "Cancel Edit",
+        "discard": "Discard all changes?",
+        "notSupportedMsg": "Adding a new rule based playlist is currently not supported",
+        "dismiss": "Dismiss"
       },
       "bulkActions": {
         "setScheduling": "Set Scheduling",
@@ -523,7 +622,7 @@
             "dimensions": "Dimensions:",
             "format": "Format:",
             "size": "Size (KB):",
-            "status": "Satatus:",
+            "status": "Status:",
             "loading": "Loading...",
             "loadingError": "Error loading flavor:"
           },
@@ -668,6 +767,31 @@
           "clipsLoadError": "Error loading clips"
         }
       },
+      "categoryDetails": {
+        "header": "Category - {{0}}",
+        "cancelEdit": "Cancel Edit",
+        "discard": "Discard all changes?",
+        "sections": {
+          "metadata": "Metadata",
+          "entitlements": "Entitlements",
+          "subcategories": "Sub Categories"
+        },
+        "errors": {
+          "reload": "Reload",
+          "dismiss": "Dismiss",
+          "retry": "Retry",
+          "loadError": "An error occurred while loading data",
+          "saveError": "An error occurred while saving.",
+          "validationError": "The form contains some invalid information. Please review the sections marked as invalid",
+          "busyError": "An operation is still in progress. Please try again in a while.",
+          "savePrepareError": "An error occurred while preparing to save. Please try again.",
+          "thumbnailsError": "Error reloading thumbnails",
+          "entriesLoadError": "Error loading entries",
+          "categoriesLoadError": "Error loading categories",
+          "flavorsLoadError": "Error loading flavors",
+          "clipsLoadError": "Error loading clips"
+        }
+      },
       "playlistDetails": {
         "sections": {
           "metadata": "Metadata",
@@ -696,6 +820,86 @@
           "backToPlaylists": "Back To Playlists",
           "playlistTypeNotSupported": "playlist type not supported",
           "validationError": "The form contains some invalid information. Please review the sections marked as invalid"
+        }
+      }
+    },
+    "administration": {
+      "roles": {
+        "addRole": "Add Role",
+        "rolesNum": "{{0}} Roles",
+        "refresh": "Refresh",
+        "confirmDeleteHeader": "Confirm Delete",
+        "confirmDeleteBody": "Are you sure you want to delete the selected role? \n ({{0}})",
+        "deleted": "Role deleted successfully",
+        "copyOf": "Copy of",
+        "tableColumns": {
+          "role": "Role",
+          "description": "Description",
+          "saveDate": "Save Date"
+        },
+        "actions": {
+          "edit": "Edit",
+          "duplicate": "Duplicate",
+          "delete": "Delete"
+        },
+        "errors": {
+          "roleInUse": "The role you selected cannot be deleted since it is currently assigned to existing users."
+        }
+      },
+      "role": {
+        "titleEdit": "Edit Role",
+        "titleAdd": "Add Role",
+        "name": "Role Name",
+        "description": "Description",
+        "save": "Save",
+        "add": "Add",
+        "errors": {
+          "required": "This field is required"
+        }
+      },
+      "paginator": {
+        "showRows": "Show rows"
+      }
+    },
+    "settings": {
+      "accountSettings": {
+        "accountInfo": "Account Info",
+        "partnerID": "Partner ID",
+        "adminEmail": "Email of Account Owner",
+        "adminUserId": "Name of Account Owner",
+        "informationMessage": "Please make sure that the information below is up to date.",
+        "name": "Name of Publisher/Company",
+        "phone": "Phone",
+        "website": "Website",
+        "describeYourself": "Describe Yourself",
+        "referenceId": "Account Reference ID",
+        "describeYourselfOptions": "Enterprise / Small Business / Government Agency,Education Organization,Media Company / Agency,CDN / ISP / Integrator / Hosting Provider,Other",
+        "apply": "Apply",
+        "errors": {
+          "requiredName": "You must enter name of publisher/company",
+          "requiredUserId": "You must enter name of account owner",
+          "requiredPhone": "You must enter phone number",
+          "phoneInvalid": "Phone must include at least 7 digits and only valid characters.",
+          "updateFailed": "An error occurred during account info update",
+          "loadFailed": "An error occurred during account info loading",
+          "invalidFields": "There's some invalid fields"
+        }
+      },
+      "accountUpgrade": {
+        "contactUs": "Contact Us",
+        "sendUsMessage": "Send us a message",
+        "name": "Name",
+        "phone": "Telephone",
+        "comments": "Comments",
+        "send": "Send",
+        "sendSuccessHeader": "Thank You!",
+        "sendSuccessBody": "Someone from our team will get back to you.",
+        "callUsHeader": "We are excited that you’re looking for more info on upgrading your account!",
+        "callUsBody": "Just fill in the form below and we’ll make sure to get back to you shortly with lots of information on our latest and greatest products and services that you can start tapping into.",
+        "errors": {
+          "required": "This field is required.",
+          "phoneInvalid": "Telephone must include at least 7 digits and only valid characters.",
+          "sendFailed": "An error occurred during account upgrade"
         }
       }
     }
