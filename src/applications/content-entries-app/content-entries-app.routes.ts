@@ -15,7 +15,6 @@ import { EntryScheduling } from './entry/entry-scheduling/entry-scheduling.compo
 import { EntryAccessControl } from './entry/entry-access-control/entry-access-control.component';
 import { EntryThumbnails } from './entry/entry-thumbnails/entry-thumbnails.component';
 import { EntryCanDeactivate } from './entry/entry-can-deactivate.service';
-import { CanActivateChildTest } from './can-activate-child-test.guard';
 
 export const routing: Route[] = [
   {
@@ -24,7 +23,7 @@ export const routing: Route[] = [
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       { path: 'list', component: EntriesListHolderComponent },
       {
-        path: 'entry/:id', canActivate: [CanActivateChildTest], canDeactivate: [EntryCanDeactivate], component: EntryComponent,
+        path: 'entry/:id', canDeactivate: [EntryCanDeactivate], component: EntryComponent,
         data: {
           entryRoute: true
         },
