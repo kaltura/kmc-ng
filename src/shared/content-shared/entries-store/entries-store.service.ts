@@ -87,7 +87,7 @@ export class EntriesStore implements OnDestroy {
     fields: `
       id,name,thumbnailUrl,mediaType,plays,createdAt,
       duration,status,startDate,endDate,moderationStatus,
-      tags,categoriesIds,downloadUrl,flags
+      tags,categoriesIds,downloadUrl,moderationCount
     `
   };
   private _querySource = new Subject<QueryRequestArgs>();

@@ -30,7 +30,7 @@ export class EntriesListHolderComponent implements OnDestroy {
     id: { width: '100px' },
     mediaType: { sortable: true, width: '80px', align: 'center' },
     plays: { sortable: true, width: '76px' },
-    flags: { sortable: true, width: '76px' },
+    moderationCount: { sortable: true, width: '76px' },
     createdAt: { sortable: true, width: '140px' },
     moderationStatus: { width: '125px' }
   };
