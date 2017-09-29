@@ -39,7 +39,8 @@
       "support": "Help and Support",
       "userManual": "Download user manual",
       "contact": "Contact Support",
-      "currentPage": "Current Page"
+      "currentPage": "Current Page",
+      "changelog": "Changelog"
     },
     "languageMenu": {
       "selectLang": "Select Language"
