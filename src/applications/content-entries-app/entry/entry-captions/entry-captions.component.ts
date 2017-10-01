@@ -100,11 +100,18 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 	}
 
 	private _downloadFile(): void {
-
-		const apiUrl = environment.core.kaltura.apiUrl;
-		let url = apiUrl + "/service/caption_captionasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/captionAssetId/" + this._handler.currentCaption.id;
-
-		this._browserService.download(url, this._handler.currentCaption.id + "." + this._handler.currentCaption.fileExt, this._handler.currentCaption.fileExt);
+		if (!!window['MSInputMethodContext'] && !!document['documentMode']) { // IE11 - use download API
+			const baseUrl = environment.core.kaltura.cdnUrl;
+			const protocol = baseUrl.split(":")[0];
+			const partnerId = this._appAuthentication.appUser.partnerId;
+			const entryId = this._handler.data.id;
+			let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + entryId + '/flavorId/' + this._handler.currentCaption.id + '/format/download/protocol/' + protocol;
+			this._browserService.openLink(url);
+		}else {
+			const apiUrl = environment.core.kaltura.apiUrl;
+			let url = apiUrl + "/service/caption_captionasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/captionAssetId/" + this._handler.currentCaption.id;
+			this._browserService.download(url, this._handler.currentCaption.id + "." + this._handler.currentCaption.fileExt, this._handler.currentCaption.fileExt);
+		}
 	}
 
     ngOnDestroy() {
