@@ -104,7 +104,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 		const apiUrl = environment.core.kaltura.apiUrl;
 		let url = apiUrl + "/service/caption_captionasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/captionAssetId/" + this._handler.currentCaption.id;
 
-		this._browserService.download(url, "caption.srt", ".srt");
+		this._browserService.download(url, this._handler.currentCaption.id + "." + this._handler.currentCaption.fileExt, this._handler.currentCaption.fileExt);
 	}
 
     ngOnDestroy() {
