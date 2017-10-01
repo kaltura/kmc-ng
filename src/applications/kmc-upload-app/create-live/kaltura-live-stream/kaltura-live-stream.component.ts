@@ -97,7 +97,6 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
       .valueChanges
       .cancelOnDestroy(this)
       .subscribe(data => {
-        console.log('Form changes', data);
         this.dataChange.emit(data);
       });
   }

@@ -30,11 +30,18 @@ export class CreateLiveComponent implements OnInit, OnDestroy {
   public manualLiveData: ManualLive = {
     name: '',
     description: '',
-    liveHdsUrl: '',
-    liveHlsUrl: '',
+    flashHDSURL: '',
+    hlsStreamUrl: '',
     useAkamaiHdProtocol: false
   };
-  public universalLiveData: UniversalLive;
+  public universalLiveData: UniversalLive = {
+    name: '',
+    description: '',
+    primaryEncoderIp: '',
+    secondaryEncoderIp: '',
+    broadcastPassword: '',
+    liveDvr: false
+  };
   public _availableStreamTypes: Array<{ value: StreamTypes, label: string }>;
   public _streamTypes = StreamTypes;
   public _blockerState: { isBusy: boolean, message: AreaBlockerMessage } = {isBusy: false, message: null};
@@ -48,9 +55,18 @@ export class CreateLiveComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._availableStreamTypes = [
-      {value: StreamTypes.kaltura, label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.kaltura')},
-      {value: StreamTypes.manual, label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.manual')},
-      {value: StreamTypes.universal, label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.universal')}
+      {
+        value: StreamTypes.kaltura,
+        label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.kaltura')
+      },
+      {
+        value: StreamTypes.manual,
+        label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.manual')
+      },
+      {
+        value: StreamTypes.universal,
+        label: this._appLocalization.get('applications.upload.prepareLive.streamTypes.universal')
+      }
     ];
   }
 
@@ -58,24 +74,91 @@ export class CreateLiveComponent implements OnInit, OnDestroy {
   }
 
   submitCurrentSelectedForm() {
-    if (this._selectedStreamType === StreamTypes.kaltura) {
-      if (this.kalturaLiveStreamComponent.validate()) {
-        // todo  this._updateAreaBlockerState(true, error.message)
-
-        this.createLiveService.createKalturaLiveStream(this.kalturaLiveStreamData)
-          .cancelOnDestroy(this)
-          .subscribe(response => {
-            // todo:
-            // show  the server returns the new KalturaLiveStreamEntry object. Display a localized question to the user:
-            // title: Stream has been created successfully.
-            // message: Live Stream Entry has been created successfully.\nDo you want to view entry details?
-            // If the user selects "No" - stay in current page.
-            // If the user selects "Yes" - navigate to the new entry page by its ID.
-            // All section leaving validations should apply (verify navigation if there is unsaved data).
-          }, error => {
-            this._updateAreaBlockerState(false, error.message)
-          });
+    switch (this._selectedStreamType) {
+      case StreamTypes.kaltura: {
+        this._submitKalturaLiveStreamData();
+        break;
       }
+      case StreamTypes.universal: {
+        this._submitUniversalLiveStreamData();
+        break;
+      }
+      case StreamTypes.manual: {
+        this._submitManualLiveStreamData();
+        break;
+      }
+      default: {
+        // todo: might need to add error message for trying to submit unsupported form type
+        break;
+      }
+    }
+  }
+
+
+
+  private _submitKalturaLiveStreamData() {
+    if (this.kalturaLiveStreamComponent.validate()) {
+      this._updateAreaBlockerState(true, null);
+
+      this.createLiveService.createKalturaLiveStream(this.kalturaLiveStreamData)
+        .cancelOnDestroy(this)
+        .subscribe(response => {
+          this._updateAreaBlockerState(false, null);
+
+          // todo:
+          // show  the server returns the new KalturaLiveStreamEntry object. Display a localized question to the user:
+          // title: Stream has been created successfully.
+          // message: Live Stream Entry has been created successfully.\nDo you want to view entry details?
+          // If the user selects "No" - stay in current page.
+          // If the user selects "Yes" - navigate to the new entry page by its ID.
+          // All section leaving validations should apply (verify navigation if there is unsaved data).
+        }, error => {
+          this._updateAreaBlockerState(false, error.message)
+        });
+    }
+  }
+
+  private _submitUniversalLiveStreamData() {
+    if (this.universalLiveComponent.validate()) {
+      this._updateAreaBlockerState(true, null);
+
+      this.createLiveService.createUniversalLiveStream(this.universalLiveData)
+        .cancelOnDestroy(this)
+        .subscribe(response => {
+          this._updateAreaBlockerState(false, null);
+
+          // todo:
+          // show  the server returns the new KalturaLiveStreamEntry object. Display a localized question to the user:
+          // title: Stream has been created successfully.
+          // message: Live Stream Entry has been created successfully.\nDo you want to view entry details?
+          // If the user selects "No" - stay in current page.
+          // If the user selects "Yes" - navigate to the new entry page by its ID.
+          // All section leaving validations should apply (verify navigation if there is unsaved data).
+        }, error => {
+          this._updateAreaBlockerState(false, error.message)
+        });
+    }
+  }
+
+  private _submitManualLiveStreamData() {
+    if (this.manualLiveComponent.validate()) {
+      this._updateAreaBlockerState(true, null);
+
+      this.createLiveService.createManualLiveStream(this.manualLiveData)
+        .cancelOnDestroy(this)
+        .subscribe(response => {
+          this._updateAreaBlockerState(false, null);
+
+          // todo:
+          // show  the server returns the new KalturaLiveStreamEntry object. Display a localized question to the user:
+          // title: Stream has been created successfully.
+          // message: Live Stream Entry has been created successfully.\nDo you want to view entry details?
+          // If the user selects "No" - stay in current page.
+          // If the user selects "Yes" - navigate to the new entry page by its ID.
+          // All section leaving validations should apply (verify navigation if there is unsaved data).
+        }, error => {
+          this._updateAreaBlockerState(false, error.message)
+        });
     }
   }
 

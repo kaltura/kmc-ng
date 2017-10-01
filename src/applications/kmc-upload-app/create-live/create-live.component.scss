@@ -58,6 +58,15 @@
         height: 18px;
       }
 
+      .kFieldMessage {
+        padding-top: 10px;
+        min-height: 32px;
+        max-width: 310px;
+        color: $kGrayscale3;
+        font-size: 13px;
+        line-height: 16px;
+      }
+
       .kLabel {
         width: 173px;
         -webkit-box-flex: 0;
