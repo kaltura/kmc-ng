@@ -186,6 +186,10 @@ export class BrowserService implements IAppStorage {
 	public download(data, filename, type): void {
 		let file;
 		if (typeof data === 'string' && /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(data)) { // if data is url
+			if (!!window['MSInputMethodContext'] && !!document['documentMode']){ // IE11
+				this.openLink(data);
+				return;
+			}
 			file = this._downloadContent(data);
 		} else {
 			file = Observable.of(new Blob([data], { type: type }));
