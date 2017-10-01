@@ -146,6 +146,10 @@ export class BrowserService implements IAppStorage {
 		return Object.prototype.toString.call(window['HTMLElement']).indexOf('Constructor') > 0 || !isChrome && window['webkitAudioContext'] !== undefined;
 	}
 
+	public isIE11(): boolean{
+		return !!window['MSInputMethodContext'] && !!document['documentMode'];
+	}
+
 	public copyToClipboardEnabled(): boolean {
 		let enabled = true;
 
@@ -186,7 +190,7 @@ export class BrowserService implements IAppStorage {
 	public download(data, filename, type): void {
 		let file;
 		if (typeof data === 'string' && /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(data)) { // if data is url
-			if (!!window['MSInputMethodContext'] && !!document['documentMode']){ // IE11
+			if (this.isIE11()){
 				this.openLink(data);
 				return;
 			}

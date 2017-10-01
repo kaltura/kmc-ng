@@ -100,7 +100,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 	}
 
 	private _downloadFile(): void {
-		if (!!window['MSInputMethodContext'] && !!document['documentMode']) { // IE11 - use download API
+		if (this._browserService.isIE11()) { // IE11 - use download API
 			const baseUrl = environment.core.kaltura.cdnUrl;
 			const protocol = baseUrl.split(":")[0];
 			const partnerId = this._appAuthentication.appUser.partnerId;
