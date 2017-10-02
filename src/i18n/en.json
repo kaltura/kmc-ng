@@ -584,6 +584,7 @@
           "deleteFailure": "Flavor asset deletion failed.",
           "convertFailure": "Flavor conversion failed.",
           "uploadFailure": "Flavor upload failed.",
+          "downloadFailure": "Flavor download failed.",
           "importFailure": "Flavor import failed."
         },
         "captions": {
