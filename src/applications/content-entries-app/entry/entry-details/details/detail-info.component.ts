@@ -7,9 +7,10 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 })
 export class DetailInfoComponent implements OnInit {
 
-    @Input() label?: string;
-    @Input() value?: string;
-    @Input() link?: string;
+    @Input() label: string;
+    @Input() value: string;
+    @Input() valueField: string;
+    @Input() link: string;
     @Input() tooltip: string;
     @Input() toolTipAsHTML: boolean;
     @Input() iconStyle: string;
@@ -18,6 +19,13 @@ export class DetailInfoComponent implements OnInit {
     @Input() isLastItem: boolean = false;
 
     @Output() itemClick = new EventEmitter<any>();
+
+    public _data : any;
+
+    public _setData(data : any)
+    {
+        this._data = data;
+    }
 
     public isClickabke: boolean = false;
 

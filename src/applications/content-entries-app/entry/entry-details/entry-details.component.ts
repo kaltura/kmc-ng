@@ -7,7 +7,6 @@ import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaTy
 import { BrowserService } from 'app-shared/kmc-shell';
 import { EntryDetailsHandler } from './entry-details-handler';
 import { EntryFormManager } from '../entry-form-manager';
-import { DetailsBarComponent } from './details/details-bar.component';
 
 @Component({
 	selector: 'kEntryDetails',
@@ -15,8 +14,6 @@ import { DetailsBarComponent } from './details/details-bar.component';
 	styleUrls: ['./entry-details.component.scss']
 })
 export class EntryDetails implements OnInit, OnDestroy {
-
-	@ViewChild('detailsBar') detailsBar: DetailsBarComponent;
 
 	public _entryHasContent: boolean = false;
 	public _entryReady: boolean = false;
@@ -56,11 +53,6 @@ export class EntryDetails implements OnInit, OnDestroy {
 					this._isRecordedLive = (sourceType === KalturaSourceType.recordedLive.toString());
 					this._hasDuration = (this._currentEntry.status !== KalturaEntryStatus.noContent && !this._isLive && this._currentEntry.mediaType.toString() !== KalturaMediaType.image.toString());
 					this._isClip = !this._isRecordedLive && (this._currentEntry.id !== this._currentEntry.rootEntryId);
-
-					setTimeout(()=>{
-						this.detailsBar.updateLayout(); // update details layout after data binding finishes
-					},0);
-
 				}
 			}
 		);
@@ -75,7 +67,6 @@ export class EntryDetails implements OnInit, OnDestroy {
 	}
 
 	navigateToEntry(entryId) {
-		this.detailsBar.reset();
 		this._entryStore.openEntry(entryId);
 	}
 

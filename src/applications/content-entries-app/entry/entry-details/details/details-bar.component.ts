@@ -1,18 +1,30 @@
-import { Component, ElementRef, Input, QueryList, ContentChildren, AfterContentInit, ViewChild, HostListener } from '@angular/core';
+import {
+  Component, ElementRef, Input, QueryList, ContentChildren, AfterContentInit, ViewChild, HostListener, OnDestroy,
+  AfterContentChecked, AfterViewChecked
+} from '@angular/core';
 import { DetailInfoComponent } from './detail-info.component';
-
+import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'k-details-bar',
   templateUrl: './details-bar.component.html',
   styleUrls: ['./details-bar.component.scss']
 })
-export class DetailsBarComponent implements AfterContentInit {
+export class DetailsBarComponent implements AfterContentInit,AfterViewChecked,  OnDestroy {
 
   @ContentChildren(DetailInfoComponent) items: QueryList<DetailInfoComponent>;
 
   @Input() basicDetailsLabel: string = "Basic Details";
   @Input() moreDetailsLabel: string = "More Details";
+
+  private _shouldUpdateItems = false;
+
+  public _data: any;
+  @Input() set data(dataObj: any) {
+    this._data = dataObj;
+    this._shouldUpdateItems = true;
+    this.reset();
+  }
 
   @ViewChild('dataPanel') dataPanel: ElementRef;
   @ViewChild('dataWrapper') dataWrapper: ElementRef;
@@ -21,9 +33,29 @@ export class DetailsBarComponent implements AfterContentInit {
   private showMoreCheckIntervalID: any;
   private lineScroll = 0;
   private disableScroll: boolean = false;
+  private _itemsChangesSubscription: ISubscription;
+
+  ngAfterViewChecked(){
+    if (this._shouldUpdateItems)
+    {
+      this._shouldUpdateItems = false;
+      setTimeout(()=>{
+        this.items.forEach(item => {
+          item._setData(this._data);
+        })
+      },0);
+
+    }
+  }
 
   ngAfterContentInit() {
     this.updateLayout();
+
+    this._itemsChangesSubscription = this.items.changes.subscribe(
+        changes => {
+          this._shouldUpdateItems = true;
+        }
+    );
   }
 
   @HostListener('window:resize')
@@ -31,6 +63,12 @@ export class DetailsBarComponent implements AfterContentInit {
     this.updateLayout();
   }
 
+  private _updateItems(): void{
+
+    if (this.items) {
+      this.items.forEach(item => item._setData(this._data));
+    }
+  }
   updateLayout() {
     //we use a cancelable interval to improve performances on window resize
     if (this.showMoreCheckIntervalID) {
@@ -44,7 +82,6 @@ export class DetailsBarComponent implements AfterContentInit {
       this.items.last.isLastItem = true;
       const marginTop = parseInt(window.getComputedStyle(this.dataWrapper.nativeElement).marginTop);
       const elementHeight = this.dataWrapper.nativeElement.children.length ? this.dataWrapper.nativeElement.children[0].clientHeight : 0;
-      console.log("--> marginTop="+Math.abs(marginTop)+ ', this.dataWrapper.nativeElement.clientHeight= '+(this.dataWrapper.nativeElement.clientHeight + marginTop));
       this._showMore = this.dataWrapper.nativeElement.clientHeight > this.dataPanel.nativeElement.getBoundingClientRect().height && Math.abs(marginTop) < (this.dataWrapper.nativeElement.clientHeight + marginTop);
       this._showBasic = this.dataWrapper.nativeElement.clientHeight > this.dataPanel.nativeElement.getBoundingClientRect().height && marginTop < 0 ;
       this.showMoreCheckIntervalID = null;
@@ -70,8 +107,18 @@ export class DetailsBarComponent implements AfterContentInit {
   }
 
   reset(){
+    this.lineScroll = 0;
     this.dataWrapper.nativeElement.style.marginTop = "0px";
-    this.updateLayout();
+    setTimeout(()=>{
+      this.updateLayout(); // allow animation to finish before recalculating
+    },350);
+  }
+
+  ngOnDestroy(){
+    if (this._itemsChangesSubscription){
+      this._itemsChangesSubscription.unsubscribe();
+      this._itemsChangesSubscription = null;
+    }
   }
 }
 

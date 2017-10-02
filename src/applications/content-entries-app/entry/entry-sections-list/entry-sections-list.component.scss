@@ -20,11 +20,10 @@ ul {
 		font-weight: 700;
 		padding-left: 12px;
 		&:hover{
-			background-color: $kGrayscale6;
+			color: $kTertiary;
 		}
 		&.active{
-			color: $kGrayscale1;
-			background-color: $kGrayscale6;
+			color: $kTertiary;
 			cursor: default;
 		}
 	}

@@ -2,6 +2,6 @@
     <a class="kLink" *ngIf="_showMore" (click)="show('more')">{{moreDetailsLabel}}</a>
     <a class="kLink" *ngIf="_showBasic" (click)="show('basic')">{{basicDetailsLabel}}</a>
     <div class="kItemsWrapper" #dataWrapper>
-        <ng-content></ng-content>
+        <ng-content *ngIf="_data" ></ng-content>
     </div>
 </div>
