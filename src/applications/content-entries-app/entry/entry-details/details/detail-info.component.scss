@@ -1,9 +1,10 @@
 .kDetailInfo {
     display: flex;
     line-height: 26px;
+    height: 26px;
     .kDetails{
         display: flex;
-        overflow-x: hidden;
+        overflow: hidden;
         >div, >span, >a{
             flex: 0 0 auto;
         }
