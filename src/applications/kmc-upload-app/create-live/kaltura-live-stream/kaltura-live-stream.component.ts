@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {KalturaLiveStream} from '../create-live.service';
+import {KalturaLive} from '../create-live.service';
 import {KalturaRecordStatus} from 'kaltura-typescript-client/types/KalturaRecordStatus';
 import {KalturaLiveStreamService} from './kaltura-live-stream.service';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
@@ -19,10 +19,10 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
   public _enableRecordingOptions: Array<{ value: KalturaRecordStatus, label: string }>;
 
   @Input()
-  data: KalturaLiveStream;
+  data: KalturaLive;
 
   @Output()
-  dataChange = new EventEmitter<KalturaLiveStream>();
+  dataChange = new EventEmitter<KalturaLive>();
 
   @Input()
   blockerState: { isBusy: boolean, message: AreaBlockerMessage };
@@ -54,7 +54,7 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
           label: transcodingProfile.name
         }));
 
-        // todo: ask if need to cache the preferred transcoding profile for future creations
+        // todo: ask if need to cache the preferred transcoding profile in service for future creations (and set the service as provider on the create live component)
         this.data.transcodingProfile = transcodingProfilesList[0].id;
 
         this._form.reset(this.data);

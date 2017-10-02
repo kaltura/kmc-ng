@@ -1,8 +1,11 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {CreateLiveService, KalturaLiveStream, ManualLive, UniversalLive} from './create-live.service';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {CreateLiveService, KalturaLive, ManualLive, UniversalLive} from './create-live.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaRecordStatus} from 'kaltura-typescript-client/types/KalturaRecordStatus';
-import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {BrowserService} from 'app-shared/kmc-shell';
+import {Router} from '@angular/router';
+import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
 
 enum StreamTypes {
   kaltura,
@@ -18,7 +21,7 @@ enum StreamTypes {
 })
 export class CreateLiveComponent implements OnInit, OnDestroy {
   public _selectedStreamType: StreamTypes = StreamTypes.kaltura;
-  public kalturaLiveStreamData: KalturaLiveStream = {
+  public kalturaLiveStreamData: KalturaLive = {
     name: '',
     description: '',
     transcodingProfile: null,
@@ -48,9 +51,13 @@ export class CreateLiveComponent implements OnInit, OnDestroy {
 
   @ViewChild('kalturaLiveStreamComponent') kalturaLiveStreamComponent;
   @ViewChild('manualLiveComponent') manualLiveComponent;
-  @ViewChild('universalLiveData') universalLiveComponent;
+  @ViewChild('universalLiveComponent') universalLiveComponent;
+  @Input() parentPopupWidget: PopupWidgetComponent;
 
-  constructor(private createLiveService: CreateLiveService, private _appLocalization: AppLocalization) {
+  constructor(private createLiveService: CreateLiveService,
+              private _appLocalization: AppLocalization,
+              private _browserService: BrowserService,
+              private _router: Router) {
   }
 
   ngOnInit() {
@@ -95,6 +102,21 @@ export class CreateLiveComponent implements OnInit, OnDestroy {
   }
 
 
+  private goToEntryConfirmation(id) {
+    this._browserService.confirm(
+      {
+        header: this._appLocalization.get('applications.upload.prepareLive.goToEntryConfirmation.title'),
+        message: this._appLocalization.get('applications.upload.prepareLive.goToEntryConfirmation.message'),
+        //        accept:  this._appLocalization.get('app.common.yes'),
+        // reject:  this._appLocalization.get('app.common.no'),
+        accept: () => {
+          this._router.navigate(['/content/entries/entry', id]);
+          this.parentPopupWidget.close();
+        }
+      }
+    );
+  }
+
 
   private _submitKalturaLiveStreamData() {
     if (this.kalturaLiveStreamComponent.validate()) {
@@ -104,7 +126,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy {
         .cancelOnDestroy(this)
         .subscribe(response => {
           this._updateAreaBlockerState(false, null);
-
+          this.goToEntryConfirmation(response.id);
           // todo:
           // show  the server returns the new KalturaLiveStreamEntry object. Display a localized question to the user:
           // title: Stream has been created successfully.
@@ -126,7 +148,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy {
         .cancelOnDestroy(this)
         .subscribe(response => {
           this._updateAreaBlockerState(false, null);
-
+          this.goToEntryConfirmation(response.id);
           // todo:
           // show  the server returns the new KalturaLiveStreamEntry object. Display a localized question to the user:
           // title: Stream has been created successfully.
@@ -148,6 +170,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy {
         .cancelOnDestroy(this)
         .subscribe(response => {
           this._updateAreaBlockerState(false, null);
+          this.goToEntryConfirmation(response.id);
 
           // todo:
           // show  the server returns the new KalturaLiveStreamEntry object. Display a localized question to the user:

@@ -17,8 +17,8 @@
 
 <kPrepareEntry #prepareEntry></kPrepareEntry>
 
-<kPopupWidget #createLive [popupWidth]="791" [popupHeight]="644" [closeBtn]="true" [modal]="true">
+<kPopupWidget #createLive [popupWidth]="791" [popupHeight]="675" [closeBtn]="true" [modal]="true">
   <ng-template>
-    <kCreateLive></kCreateLive>
+    <kCreateLive [parentPopupWidget]="createLive"></kCreateLive>
   </ng-template>
 </kPopupWidget>

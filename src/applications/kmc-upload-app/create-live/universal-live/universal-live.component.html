@@ -48,6 +48,10 @@
                  class="error">
               {{'applications.upload.prepareLive.universalStreamType.errors.required' | translate}}
             </div>
+            <div *ngIf="_form.controls['primaryEncoderIp'].hasError('ip')"
+                 class="error">
+              {{'applications.upload.prepareLive.universalStreamType.errors.invalidIp' | translate}}
+            </div>
           </div>
         </div>
       </div>
@@ -67,6 +71,10 @@
             <div *ngIf="_form.controls['secondaryEncoderIp'].hasError('required')"
                  class="error">
               {{'applications.upload.prepareLive.universalStreamType.errors.required' | translate}}
+            </div>
+            <div *ngIf="_form.controls['secondaryEncoderIp'].hasError('ip')"
+                 class="error">
+              {{'applications.upload.prepareLive.universalStreamType.errors.invalidIp' | translate}}
             </div>
           </div>
           <div class="kFieldMessage">{{'applications.upload.prepareLive.universalStreamType.secondaryEncoderIp_message' | translate}}</div>

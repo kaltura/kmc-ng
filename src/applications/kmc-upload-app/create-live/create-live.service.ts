@@ -10,7 +10,7 @@ import {Observable} from 'rxjs/Observable';
 import {KalturaLiveStreamConfiguration} from "kaltura-typescript-client/types/KalturaLiveStreamConfiguration";
 import {KalturaPlaybackProtocol} from "kaltura-typescript-client/types/KalturaPlaybackProtocol";
 
-export interface KalturaLiveStream {
+interface KalturaLive {
   name: string
   description: string,
   transcodingProfile: number,
@@ -20,7 +20,7 @@ export interface KalturaLiveStream {
   previewMode: boolean
 }
 
-export interface ManualLive {
+interface ManualLive {
   name: string
   description: string,
   flashHDSURL: string,
@@ -28,7 +28,7 @@ export interface ManualLive {
   useAkamaiHdProtocol: boolean
 }
 
-export interface UniversalLive {
+interface UniversalLive {
   name: string
   description: string,
   primaryEncoderIp: string,
@@ -37,15 +37,17 @@ export interface UniversalLive {
   liveDvr: boolean
 }
 
+export {KalturaLive, ManualLive, UniversalLive}
+
 @Injectable()
 export class CreateLiveService {
 
   constructor(private _kalturaServerClient: KalturaClient) {
   }
 
-  public createKalturaLiveStream(data: KalturaLiveStream): Observable<any> {
-    if (!data) {
-      // todo: throw error
+  public createKalturaLiveStream(data: KalturaLive): Observable<any> {
+    if (!data || !data.name) {
+      throw Observable.throw(new Error('Missing required fields'));
     }
 
     const stream = new KalturaLiveStreamEntry({
@@ -63,8 +65,8 @@ export class CreateLiveService {
   }
 
   public createManualLiveStream(data: ManualLive): Observable<any> {
-    if (!data) {
-      // todo: throw error
+    if (!data || !data.name) {
+      throw Observable.throw(new Error('Missing required fields'));
     }
     const stream = new KalturaLiveStreamEntry({
       mediaType: KalturaMediaType.liveStreamFlash,
@@ -93,32 +95,23 @@ export class CreateLiveService {
   }
 
   public createUniversalLiveStream(data: UniversalLive): Observable<any> {
-    if (!data) {
-      // todo: throw error
+    if (!data || !data.name || !data.primaryEncoderIp || !data.secondaryEncoderIp) {
+      throw Observable.throw(new Error('Missing required fields'));
     }
-    // const stream = new KalturaLiveStreamEntry({
-    //   mediaType: KalturaMediaType.liveStreamFlash,
-    //   name: data.name,
-    //   description: data.description,
-    //   liveStreamConfigurations: new Array(),
-    //   hlsStreamUrl: data.hlsStreamUrl || ''
-    // });
-    //
-    // if (data.hlsStreamUrl) {
-    //   const cfg = new KalturaLiveStreamConfiguration();
-    //   cfg.protocol = KalturaPlaybackProtocol.appleHttp;
-    //   cfg.url = stream.hlsStreamUrl;
-    //   stream.liveStreamConfigurations.push(cfg);
-    // }
-    //
-    // if (data.flashHDSURL) {
-    //   const cfg = new KalturaLiveStreamConfiguration();
-    //   cfg.protocol = data.useAkamaiHdProtocol ? KalturaPlaybackProtocol.akamaiHds : KalturaPlaybackProtocol.hds;
-    //   cfg.url = data.flashHDSURL;
-    //   stream.liveStreamConfigurations.push(cfg);
-    // }
+
+    const stream = new KalturaLiveStreamEntry({
+      mediaType: KalturaMediaType.liveStreamFlash,
+      name: data.name,
+      description: data.description,
+      encodingIP1: data.primaryEncoderIp,
+      encodingIP2: data.secondaryEncoderIp,
+      streamPassword: data.broadcastPassword || '',
+      dvrStatus: data.liveDvr ? KalturaDVRStatus.enabled : KalturaDVRStatus.disabled,
+      dvrWindow: data.liveDvr ? 30 : null
+    });
+
 
     return this._kalturaServerClient
-      .request(new LiveStreamAddAction({liveStreamEntry: null, sourceType: KalturaSourceType.manualLiveStream}))
+      .request(new LiveStreamAddAction({liveStreamEntry: stream, sourceType: KalturaSourceType.akamaiUniversalLive}))
   }
 }

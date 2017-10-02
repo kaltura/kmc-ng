@@ -17,16 +17,13 @@ export class KalturaLiveStreamService {
 
   public getKalturaConversionProfile(): Observable<KalturaConversionProfile[]> {
 
-    // const entry: KalturaMediaEntry = new KalturaMediaEntry({
-    //   name: this._appLocalization.get('applications.upload.uploadMenu.createDraft.draftEntry'),
-    //   mediaType,
-    //   conversionProfileId: conversionProfileId || -1
-    // });
+    // filter
     const kalturaConversionProfileFilter = new KalturaConversionProfileFilter({
       typeEqual: KalturaConversionProfileType.liveStream
     });
 
-    const kalturaFilterPager = new KalturaFilterPager({pageSize: 500, pageIndex: 1})
+    // pager
+    const kalturaFilterPager = new KalturaFilterPager({pageSize: 500, pageIndex: 1});
 
     return this._kalturaServerClient
       .request(new ConversionProfileListAction({filter: kalturaConversionProfileFilter, pager: kalturaFilterPager}))

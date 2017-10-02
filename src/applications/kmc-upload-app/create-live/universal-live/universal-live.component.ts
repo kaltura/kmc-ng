@@ -4,17 +4,19 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {UniversalLive} from '../create-live.service';
 import {KalturaRecordStatus} from 'kaltura-typescript-client/types/KalturaRecordStatus';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {UniversalLiveService} from './universal-live.service';
 
-function urlValidator(control: AbstractControl): { [key: string]: boolean } | null {
+function ipValidator(control: AbstractControl): { [key: string]: boolean } | null {
   const v: string = control.value;
   if (!v) return null;
-  return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(v) ? null : {'url': true};
+  return /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/i.test(v) ? null : {'ip': true};
 };
 
 @Component({
   selector: 'kUniversalLive',
   templateUrl: './universal-live.component.html',
-  styleUrls: ['./universal-live.component.scss']
+  styleUrls: ['./universal-live.component.scss'],
+  providers: [UniversalLiveService]
 })
 export class UniversalLiveComponent implements OnInit, OnDestroy {
 
@@ -36,19 +38,33 @@ export class UniversalLiveComponent implements OnInit, OnDestroy {
   blockerStateChange = new EventEmitter<{ isBusy: boolean, message: AreaBlockerMessage }>();
 
   constructor(private _appLocalization: AppLocalization,
-              private _fb: FormBuilder) {
+              private _fb: FormBuilder,
+              private universalLiveService: UniversalLiveService) {
   }
 
   ngOnInit(): void {
     this._createForm();
-    this._form.reset({
-      name: this.data.name,
-      description: this.data.description,
-      primaryEncoderIp: this.data.primaryEncoderIp,
-      secondaryEncoderIp: this.data.secondaryEncoderIp,
-      broadcastPassword: this.data.broadcastPassword,
-      liveDvr: this.data.liveDvr
-    });
+    this.loadDefaultIp();
+
+  }
+
+  private loadDefaultIp() {
+    this._updateAreaBlockerState(true, null);
+// if (!this.data.primaryEncoderIp && !this.data.secondaryEncoderIp) {
+    // set the retrieved default IP in both primary and secondary IP fields.
+    this.universalLiveService
+      .loadDefaultIp()
+      .cancelOnDestroy(this)
+      .subscribe(ip => {
+          // todo: ask if need to cache the ip in the service for future creations (and set the service as provider on the create live component)
+          this.data.primaryEncoderIp = ip;
+          this.data.secondaryEncoderIp = ip;
+          this._form.reset(this.data);
+          this._updateAreaBlockerState(false, null);
+        },
+        error => {
+          this._updateAreaBlockerState(false, error.message);
+        });
   }
 
   ngOnDestroy(): void {
@@ -60,8 +76,8 @@ export class UniversalLiveComponent implements OnInit, OnDestroy {
     this._form = this._fb.group({
       name: ['', Validators.required],
       description: [''],
-      primaryEncoderIp:  ['', Validators.required],
-      secondaryEncoderIp:  ['', Validators.required],
+      primaryEncoderIp:  ['', [Validators.required, ipValidator]],
+      secondaryEncoderIp:  ['', [Validators.required, ipValidator]],
       broadcastPassword: [''],
       liveDvr: [true]
     });
@@ -72,14 +88,6 @@ export class UniversalLiveComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this.dataChange.emit(data);
       });
-  }
-
-  atLeastOneUrlValidator(formgroup: FormGroup) {
-    if (!formgroup.controls['flashHDSURL'].value && !formgroup.controls['hlsStreamUrl'].value) {
-      return {atLeastOneUrl: true};
-    } else {
-      return null;
-    }
   }
 
   public validate() {
@@ -95,5 +103,9 @@ export class UniversalLiveComponent implements OnInit, OnDestroy {
       this._form.get(inner).markAsTouched();
       this._form.get(inner).updateValueAndValidity();
     }
+  }
+
+  private _updateAreaBlockerState(isBusy: boolean, message: AreaBlockerMessage): void {
+    this.blockerStateChange.emit({isBusy, message})
   }
 }
