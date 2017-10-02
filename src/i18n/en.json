@@ -118,6 +118,9 @@
       "signUp": "Sign Up",
       "rememberMe": "Remember me",
       "dontHaveAccount": "Don't have an account?"
+    },
+    "changelog": {
+      "header": "Change Log"
     }
   },
   "applications": {

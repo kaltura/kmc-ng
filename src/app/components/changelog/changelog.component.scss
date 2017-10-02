@@ -30,9 +30,38 @@
   }
 }
 
-.kChangelogContent {
-  padding: 20px;
-  height: 560px;
-  overflow-y: scroll;
-  overflow-x: hidden;
+.kChangelogPopup {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: $kGrayscale1;
+
+  .kChangelogHeader {
+    height: 80px;
+    border-bottom: 1px solid $kGrayscale4;
+
+    h1 {
+      text-align: center;
+    }
+  }
+
+  .kChangelogFooter {
+    height: 77px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-top: 1px solid $kGrayscale4;
+    align-items: center;
+
+    button {
+      width: 100px;
+    }
+  }
+
+  .kChangelogContent {
+    padding: 20px;
+    height: 405px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
 }
