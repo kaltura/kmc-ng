@@ -18,10 +18,11 @@
     }
   }
   .kItemsWrapper{
+    position: relative;
     flex: 1 1 auto;
     height: auto;
     display: flex;
     flex-flow: wrap;
-    transition: margin-top 0.3s;
+    transition: top 0.3s;
   }
 }

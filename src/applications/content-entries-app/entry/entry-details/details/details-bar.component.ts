@@ -1,7 +1,4 @@
-import {
-  Component, ElementRef, Input, QueryList, ContentChildren, AfterContentInit, ViewChild, HostListener, OnDestroy,
-  AfterContentChecked, AfterViewChecked
-} from '@angular/core';
+import { Component, ElementRef, Input, QueryList, ContentChildren, AfterContentInit, ViewChild, HostListener, OnDestroy, AfterViewChecked } from '@angular/core';
 import { DetailInfoComponent } from './detail-info.component';
 import { ISubscription } from 'rxjs/Subscription';
 
@@ -80,10 +77,30 @@ export class DetailsBarComponent implements AfterContentInit,AfterViewChecked,  
         item.isLastItem = false;
       });
       this.items.last.isLastItem = true;
-      const marginTop = parseInt(window.getComputedStyle(this.dataWrapper.nativeElement).marginTop);
+      const marginTop = parseInt(window.getComputedStyle(this.dataWrapper.nativeElement).top);
       const elementHeight = this.dataWrapper.nativeElement.children.length ? this.dataWrapper.nativeElement.children[0].clientHeight : 0;
       this._showMore = this.dataWrapper.nativeElement.clientHeight > this.dataPanel.nativeElement.getBoundingClientRect().height && Math.abs(marginTop) < (this.dataWrapper.nativeElement.clientHeight + marginTop);
       this._showBasic = this.dataWrapper.nativeElement.clientHeight > this.dataPanel.nativeElement.getBoundingClientRect().height && marginTop < 0 ;
+
+      // code to remove last separators in each line
+      let topArr = [];
+      if (this.dataWrapper.nativeElement.children.length){
+        for (let i=0; i<this.dataWrapper.nativeElement.children.length; i++){
+          const elm: any = this.dataWrapper.nativeElement.children[i];
+          const top = elm.getBoundingClientRect().top;
+          topArr.push(top);
+        }
+        for (let i=0; i<topArr.length-1; i++){
+          if (topArr[i] < topArr[i+1] && this.items.length >= i){
+            this.items.forEach((item, index)=>{
+              if (i===index){
+                item.isLastItem = true;
+              }
+            });
+          }
+        }
+      }
+
       this.showMoreCheckIntervalID = null;
     }, 100);
   }
@@ -97,7 +114,7 @@ export class DetailsBarComponent implements AfterContentInit,AfterViewChecked,  
       else {
         this.lineScroll--;
       }
-      this.dataWrapper.nativeElement.style.marginTop = this.dataWrapper.nativeElement.children[0].clientHeight * (-1) * this.lineScroll + "px";
+      this.dataWrapper.nativeElement.style.top = this.dataWrapper.nativeElement.children[0].clientHeight * (-1) * this.lineScroll + "px";
       setTimeout(()=>{
         this.updateLayout(); // allow animation to finish before recalculating
         this.disableScroll = false;
@@ -108,7 +125,7 @@ export class DetailsBarComponent implements AfterContentInit,AfterViewChecked,  
 
   reset(){
     this.lineScroll = 0;
-    this.dataWrapper.nativeElement.style.marginTop = "0px";
+    this.dataWrapper.nativeElement.style.top = "0px";
     setTimeout(()=>{
       this.updateLayout(); // allow animation to finish before recalculating
     },350);
