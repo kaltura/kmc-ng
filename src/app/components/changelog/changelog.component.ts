@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { environment } from 'app-environment';
 
 @Component({
   selector: 'kChangelog',
@@ -8,26 +9,27 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
   styleUrls: ['./changelog.component.scss']
 })
 export class ChangelogComponent implements OnInit {
-  @Output() onChangelogSeen = new EventEmitter<boolean>();
+  @Output() onShowChangelog = new EventEmitter<boolean>();
   @ViewChild('changelog') changelogPopup: PopupWidgetComponent;
 
-  private _changelogSeen = false;
-  private _changelogCacheToken = 'kmc-changelog-seen';
+  private _appCachedVersionToken = 'kmc-cached-app-version';
+  public _showChangelog = false;
 
   constructor(private _browserService: BrowserService) {
   }
 
   ngOnInit() {
-    this._changelogSeen = !!this._browserService.getFromLocalStorage(this._changelogCacheToken);
+    const cachedVersion = this._browserService.getFromLocalStorage(this._appCachedVersionToken);
+    this._showChangelog = cachedVersion !== environment.appVersion;
     setTimeout(() => {
-      this.onChangelogSeen.emit(this._changelogSeen);
+      this.onShowChangelog.emit(this._showChangelog);
     });
   }
 
   public _openChangelog(): void {
-    this._changelogSeen = true;
-    this._browserService.setInLocalStorage(this._changelogCacheToken, this._changelogSeen);
-    this.onChangelogSeen.emit(this._changelogSeen);
+    this._showChangelog = false;
+    this._browserService.setInLocalStorage(this._appCachedVersionToken, environment.appVersion);
+    this.onShowChangelog.emit(this._showChangelog);
     this.changelogPopup.open();
   }
 }
