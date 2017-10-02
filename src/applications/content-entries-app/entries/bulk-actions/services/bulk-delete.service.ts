@@ -6,6 +6,14 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaE
 import { BaseEntryDeleteAction } from 'kaltura-typescript-client/types/BaseEntryDeleteAction';
 import { BulkActionBaseService } from './bulk-action-base.service';
 
+export class BulkDeleteError extends Error {
+  type = 'bulkDelete';
+
+  constructor(message: string) {
+    super(message);
+  }
+}
+
 @Injectable()
 export class BulkDeleteService extends BulkActionBaseService<{}> {
 
@@ -30,7 +38,7 @@ export class BulkDeleteService extends BulkActionBaseService<{}> {
           observer.complete();
         },
         error => {
-          observer.error(error);
+          observer.error(new BulkDeleteError(error.message));
         }
       );
     });
