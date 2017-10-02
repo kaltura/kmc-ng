@@ -9,6 +9,13 @@
     font-size: 14px;
     float: right;
     margin-left: 8px;
+    border: 0px none;
+    cursor: pointer;
+    margin-top: 5px;
+    &.disabled{
+      opacity: 0.4;
+      pointer-events: none;
+    }
   }
   .kItemsWrapper{
     flex: 1 1 auto;

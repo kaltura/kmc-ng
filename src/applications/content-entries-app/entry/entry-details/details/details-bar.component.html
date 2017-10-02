@@ -1,6 +1,6 @@
 <div class="kContent kDetailsBar" #dataPanel>
-    <a class="kLink" *ngIf="_showMore" (click)="show('more')">{{moreDetailsLabel}}</a>
-    <a class="kLink" *ngIf="_showBasic" (click)="show('basic')">{{basicDetailsLabel}}</a>
+    <i class="kLink kIcondropdown_arrow_bottom" [class.disabled]="!_showMore" (click)="show('more')"></i>
+    <i class="kLink kIcondropdown_arrow_top" [class.disabled]="!_showBasic" (click)="show('basic')"></i>
     <div class="kItemsWrapper" #dataWrapper>
         <ng-content *ngIf="_data" ></ng-content>
     </div>
