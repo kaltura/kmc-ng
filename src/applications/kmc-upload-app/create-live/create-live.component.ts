@@ -1,11 +1,11 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CreateLiveService, KalturaLive, ManualLive, UniversalLive} from './create-live.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaRecordStatus} from 'kaltura-typescript-client/types/KalturaRecordStatus';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {Router} from '@angular/router';
-import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
+import {PopupWidgetComponent, PopupWidgetStates} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
 
 enum StreamTypes {
   kaltura,
@@ -19,7 +19,7 @@ enum StreamTypes {
   styleUrls: ['./create-live.component.scss'],
   providers: [CreateLiveService]
 })
-export class CreateLiveComponent implements OnInit, OnDestroy {
+export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   public _selectedStreamType: StreamTypes = StreamTypes.kaltura;
   public kalturaLiveStreamData: KalturaLive = {
     name: '',
@@ -48,6 +48,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy {
   public _availableStreamTypes: Array<{ value: StreamTypes, label: string }>;
   public _streamTypes = StreamTypes;
   public _blockerState: { isBusy: boolean, message: AreaBlockerMessage } = {isBusy: false, message: null};
+  private _showConfirmationOnClose = true;
 
   @ViewChild('kalturaLiveStreamComponent') kalturaLiveStreamComponent;
   @ViewChild('manualLiveComponent') manualLiveComponent;
@@ -77,6 +78,37 @@ export class CreateLiveComponent implements OnInit, OnDestroy {
     ];
   }
 
+  ngAfterViewInit() {
+
+    // todo: check which boolean causes: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked. Previous value: 'false'. Current value: 'true'.
+    if (this.parentPopupWidget) {
+      this.parentPopupWidget.state$
+        .cancelOnDestroy(this)
+        .subscribe(event => {
+          if (event.state === PopupWidgetStates.Open) {
+            this._showConfirmationOnClose = true;
+          }
+          if (event.state === PopupWidgetStates.BeforeClose) {
+            if (event.context && event.context.allowClose) {
+              if (this._isCurrentSelectedFormDirty() && this._showConfirmationOnClose) {
+                event.context.allowClose = false;
+                this._browserService.confirm(
+                  {
+                    header: this._appLocalization.get('applications.content.addNewPlaylist.cancelEdit'),
+                    message: this._appLocalization.get('applications.content.addNewPlaylist.discard'),
+                    accept: () => {
+                      this._showConfirmationOnClose = false;
+                      this.parentPopupWidget.close();
+                    }
+                  }
+                );
+              }
+            }
+          }
+        });
+    }
+  }
+
   ngOnDestroy() {
   }
 
@@ -101,14 +133,30 @@ export class CreateLiveComponent implements OnInit, OnDestroy {
     }
   }
 
+  private _isCurrentSelectedFormDirty(): boolean {
+    switch (this._selectedStreamType) {
+      case StreamTypes.kaltura: {
+        return this.kalturaLiveStreamComponent.isFormDirty();
+      }
+      case StreamTypes.universal: {
+        return this.universalLiveComponent.isFormDirty();
+      }
+      case StreamTypes.manual: {
+        return this.manualLiveComponent.isFormDirty();
+      }
+      default: {
+        // todo: might need to add error message for trying to submit unsupported form type
+        break;
+      }
+    }
+  }
 
-  private goToEntryConfirmation(id) {
+
+  private _confirmEntryNavigation(id) {
     this._browserService.confirm(
       {
-        header: this._appLocalization.get('applications.upload.prepareLive.goToEntryConfirmation.title'),
-        message: this._appLocalization.get('applications.upload.prepareLive.goToEntryConfirmation.message'),
-        //        accept:  this._appLocalization.get('app.common.yes'),
-        // reject:  this._appLocalization.get('app.common.no'),
+        header: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.title'),
+        message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.message'),
         accept: () => {
           this._router.navigate(['/content/entries/entry', id]);
           this.parentPopupWidget.close();
@@ -126,14 +174,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy {
         .cancelOnDestroy(this)
         .subscribe(response => {
           this._updateAreaBlockerState(false, null);
-          this.goToEntryConfirmation(response.id);
-          // todo:
-          // show  the server returns the new KalturaLiveStreamEntry object. Display a localized question to the user:
-          // title: Stream has been created successfully.
-          // message: Live Stream Entry has been created successfully.\nDo you want to view entry details?
-          // If the user selects "No" - stay in current page.
-          // If the user selects "Yes" - navigate to the new entry page by its ID.
-          // All section leaving validations should apply (verify navigation if there is unsaved data).
+          this._confirmEntryNavigation(response.id);
         }, error => {
           this._updateAreaBlockerState(false, error.message)
         });
@@ -148,14 +189,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy {
         .cancelOnDestroy(this)
         .subscribe(response => {
           this._updateAreaBlockerState(false, null);
-          this.goToEntryConfirmation(response.id);
-          // todo:
-          // show  the server returns the new KalturaLiveStreamEntry object. Display a localized question to the user:
-          // title: Stream has been created successfully.
-          // message: Live Stream Entry has been created successfully.\nDo you want to view entry details?
-          // If the user selects "No" - stay in current page.
-          // If the user selects "Yes" - navigate to the new entry page by its ID.
-          // All section leaving validations should apply (verify navigation if there is unsaved data).
+          this._confirmEntryNavigation(response.id);
         }, error => {
           this._updateAreaBlockerState(false, error.message)
         });
@@ -170,15 +204,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy {
         .cancelOnDestroy(this)
         .subscribe(response => {
           this._updateAreaBlockerState(false, null);
-          this.goToEntryConfirmation(response.id);
-
-          // todo:
-          // show  the server returns the new KalturaLiveStreamEntry object. Display a localized question to the user:
-          // title: Stream has been created successfully.
-          // message: Live Stream Entry has been created successfully.\nDo you want to view entry details?
-          // If the user selects "No" - stay in current page.
-          // If the user selects "Yes" - navigate to the new entry page by its ID.
-          // All section leaving validations should apply (verify navigation if there is unsaved data).
+          this._confirmEntryNavigation(response.id);
         }, error => {
           this._updateAreaBlockerState(false, error.message)
         });

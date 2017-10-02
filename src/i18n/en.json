@@ -254,7 +254,7 @@
             "invalidIp": "You must enter a valid IP Address"
           }
         },
-        "goToEntryConfirmation": {
+        "confirmEntryNavigation": {
           "title" : "Stream has been created successfully.",
           "message": "Live Stream Entry has been created successfully. \n Do you want to view entry details?"
         }

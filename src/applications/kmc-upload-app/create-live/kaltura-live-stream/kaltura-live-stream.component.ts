@@ -108,6 +108,10 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
     return this._form.valid;
   }
 
+  public isFormDirty() {
+    return this._form.dirty;
+  }
+
 
   _toggleRecordingSelectedOption(enable: boolean) {
     enable ? this._form.get('enableRecordingSelectedOption').enable() : this._form.get('enableRecordingSelectedOption').disable();

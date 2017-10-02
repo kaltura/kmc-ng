@@ -98,6 +98,12 @@ export class UniversalLiveComponent implements OnInit, OnDestroy {
   }
 
 
+  public isFormDirty() {
+    return this._form.dirty;
+  }
+
+
+
   private markFormFieldsAsTouched() {
     for (const inner in this._form.controls) {
       this._form.get(inner).markAsTouched();
