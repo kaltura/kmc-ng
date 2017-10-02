@@ -1,0 +1,9 @@
+<div class="kDetailInfo">
+    <div class="kDetails" [style.maxWidth]="maxItemWidth+'px'">
+        <div *ngIf="iconStyle" [class]="iconStyle"></div>
+        <span class="kLabel" *ngIf="label">{{label}}</span>
+        <span *ngIf="!link" [kTooltip]="tooltip" [escape]="toolTipAsHTML" [class.link]="isClickabke" (click)="onClick($event)">{{value}}</span>
+        <a *ngIf="link" [href]="link" [target]="'_blank'" [kTooltip]="tooltip" class="link">{{link}}</a>
+    </div>
+    <div *ngIf=!isLastItem class="kSeparator">{{separator}}</div>
+</div> 
