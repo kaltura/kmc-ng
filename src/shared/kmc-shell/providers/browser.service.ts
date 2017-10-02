@@ -146,6 +146,10 @@ export class BrowserService implements IAppStorage {
 		return Object.prototype.toString.call(window['HTMLElement']).indexOf('Constructor') > 0 || !isChrome && window['webkitAudioContext'] !== undefined;
 	}
 
+	public isIE11(): boolean{
+		return !!window['MSInputMethodContext'] && !!document['documentMode'];
+	}
+
 	public copyToClipboardEnabled(): boolean {
 		let enabled = true;
 
@@ -183,31 +187,35 @@ export class BrowserService implements IAppStorage {
 		return copied;
 	}
 
-  public download(data, filename, type): void {
-    let file;
-    if (typeof data === 'string' && /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(data)) { // if data is url
-      file = this._downloadContent(data);
-    } else {
-      file = Observable.of(new Blob([data], { type: type }));
-    }
+	public download(data, filename, type): void {
+		let file;
+		if (typeof data === 'string' && /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(data)) { // if data is url
+			if (this.isIE11()){
+				this.openLink(data);
+				return;
+			}
+			file = this._downloadContent(data);
+		} else {
+			file = Observable.of(new Blob([data], { type: type }));
+		}
 
-    file.subscribe(content => {
-      if (window.navigator.msSaveOrOpenBlob) {// IE10+
-        window.navigator.msSaveOrOpenBlob(content, filename);
-      } else { // Others
-        const a = document.createElement('a');
-        const url = URL.createObjectURL(content);
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function () {
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
-        }, 0);
-      }
-    });
-  }
+		file.subscribe(content => {
+			if (window.navigator.msSaveOrOpenBlob) {// IE10+
+				window.navigator.msSaveOrOpenBlob(content, filename);
+			} else { // Others
+				const a = document.createElement('a');
+				const url = URL.createObjectURL(content);
+				a.href = url;
+				a.download = filename;
+				document.body.appendChild(a);
+				a.click();
+				setTimeout(function () {
+					document.body.removeChild(a);
+					window.URL.revokeObjectURL(url);
+				}, 0);
+			}
+		});
+	}
 
 	public enablePageExitVerification(verificationMsg: string = null): void{
 		window.onbeforeunload = (e) => {
