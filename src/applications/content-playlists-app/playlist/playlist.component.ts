@@ -47,11 +47,12 @@ export class PlaylistComponent implements OnInit, OnDestroy {
                   action: () => {
                     this._areaBlockerMessage = null;
                     this._playlistStore.reloadPlaylist();
+                    this._areaBlockerMessage = null;
                   }
                 });
             } else if(response.error.origin === 'save') {
               buttons.push ({
-                  label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
+                  label: this._appLocalization.get('applications.content.playlistDetails.errors.dismiss'),
                   action: () => {
                   this._areaBlockerMessage = null;
                 }
@@ -59,12 +60,18 @@ export class PlaylistComponent implements OnInit, OnDestroy {
             } else {
               buttons.push(this._createBackToPlaylistsButton());
             }
+            let message = response.error.message;
+                message = message || this._appLocalization.get('applications.content.playlistDetails.errors.loadError');
             this._areaBlockerMessage = new AreaBlockerMessage({
-              message: response.error.message,
+              message: message,
               buttons: buttons
             });
           }
-				}
+				},
+        error => {
+          // TODO [kmc] add error message
+          throw error;
+        }
 			);
 		this._playlistStore.playlist$
       .cancelOnDestroy(this)

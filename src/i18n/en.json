@@ -236,16 +236,22 @@
         "refine": "Refine",
         "refresh": "Refresh",
         "deleteEntry": "Delete Entry",
+        "deleteEntries": "Delete Entr{{0}}",
         "confirmDelete": "Are you sure you want to delete the selected entry?",
+        "confirmDeleteEntries": "Are you sure you want to delete the selected entr{{0}}?",
         "confirmDeleteSingle": "Are you sure you want to delete the selected entry? \n {{0}} \n Please note: the entry will be permanently deleted from your account.",
         "confirmDeleteMultiple": "Are you sure you want to delete the selected entries? \n {{0}} \n Please note: these entries will be permanently deleted from your account.",
         "deleted": "Entry deleted successfully",
-        "entryId": "Entry ID: {{0}}"
+        "entryId": "Entry ID: {{0}}",
+        "deleteNote": "Please note: the entry will be permanently deleted from your account.",
+        "deleteEntriesNote": "Please note: {{0}} entr{{1}} will be permanently deleted from your playlist."
       },
       "playlists": {
         "playlists": "Playlist's",
+        "entries": "Entries",
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
+        "remove": "Remove",
         "cancel": "Cancel",
         "deletePlaylist": "Delete Playlist",
         "confirmDeleteMultiple": "Are you sure you want to delete the selected playlists? \n {{0}} \n Please note: these playlists will be permanently deleted from your account.",
@@ -255,7 +261,9 @@
         "searchEntries": "Search Playlists",
         "addPlaylist": "Add Playlist",
         "addEntry": "Add Entry",
-        "refresh": "Refresh"
+        "addToPlaylist": "Add to Playlist",
+        "refresh": "Refresh",
+        "deleteNote": "Please note: {{0}} playlist{{1}} will be permanently deleted from your account."
       },
       "filters": {
         "activeFilters": "Active Filters:",
@@ -400,7 +408,12 @@
         "confirmPlaylsts": "Are you sure you want to update {{0}} playlists? It could take a while...",
         "deleteEntries": "Delete Entries",
         "deleteConfirm": "Are you sure you want to delete the selected entries?",
-        "deleteNote": "Please note: the selected entries will be permanently deleted from your account."
+        "deleteNote": "Please note: the selected entries will be permanently deleted from your account.",
+        "removeFromPlaylist": "Remove from playlist",
+        "moveUp": "Move Up",
+        "moveDown": "Move Down",
+        "duplicate": "Duplicate"
+
       },
       "entryDetails": {
         "sections": {
@@ -768,9 +781,13 @@
         },
         "errors": {
           "retry": "Retry",
+          "dismiss": "Dismiss",
+          "ok": "Ok",
           "backToPlaylists": "Back To Playlists",
           "playlistTypeNotSupported": "playlist type not supported",
-          "validationError": "The form contains some invalid information. Please review the sections marked as invalid"
+          "validationError": "The form contains some invalid information. Please review the sections marked as invalid",
+          "contentValidationError": "Add at least one entry",
+          "loadError": "An error occurred while loading data"
         }
       }
     },
