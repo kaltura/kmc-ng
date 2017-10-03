@@ -1,11 +1,10 @@
-import { Injectable } from '@angular/core';
-import { KeyValueDiffers, KeyValueDiffer,  IterableDiffers, IterableDiffer, IterableChangeRecord } from '@angular/core';
+import { Injectable, IterableChangeRecord, IterableDiffer, IterableDiffers, KeyValueDiffer, KeyValueDiffers } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { AppAuthentication } from 'app-shared/kmc-shell';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { KalturaAssetFilter } from 'kaltura-typescript-client/types/KalturaAssetFilter';
 import { KalturaAttachmentAsset } from 'kaltura-typescript-client/types/KalturaAttachmentAsset';
 import { KalturaAttachmentType } from 'kaltura-typescript-client/types/KalturaAttachmentType';
@@ -16,17 +15,14 @@ import { AttachmentAssetDeleteAction } from 'kaltura-typescript-client/types/Att
 import { AttachmentAssetUpdateAction } from 'kaltura-typescript-client/types/AttachmentAssetUpdateAction';
 import { AttachmentAssetAddAction } from 'kaltura-typescript-client/types/AttachmentAssetAddAction';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { BrowserService } from 'app-shared/kmc-shell';
 
 import { EntryFormWidget } from '../entry-form-widget';
 import { EntryWidgetKeys } from '../entry-widget-keys';
-import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
-
-import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators'
 import { environment } from 'app-environment';
-import { UploadManagement, TrackedFile, TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
+import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { NewEntryRelatedFile } from './new-entry-related-file';
 
 export interface RelatedFile extends KalturaAttachmentAsset
 {
@@ -63,45 +59,45 @@ export class EntryRelatedHandler extends EntryFormWidget
     }
 
 
-    private _trackUploadFiles(): void {
-        this._uploadManagement.onFileStatusChanged$
-            .cancelOnDestroy(this)
-            .subscribe(
-                (uploadedFile) => {
-                    const relatedFiles = this._relatedFiles.getValue().items;
-                    const relatedFile = relatedFiles ? relatedFiles.find(file => file.uploadFileId === uploadedFile.id) : null;
-
-
-                    if (relatedFile) {
-                        switch (uploadedFile.status) {
-							              case TrackedFileStatuses.purged:
-                                this._removeFile(relatedFile);
-								                break;
-                            case TrackedFileStatuses.waitingUpload:
-                                if (uploadedFile.data instanceof KalturaUploadFile) {
-
-                                    relatedFile.serverUploadToken = uploadedFile.data.serverUploadToken;
-                                }
-                                break;
-                            case TrackedFileStatuses.uploadCompleted:
-                                relatedFile.uploading = false;
-                                relatedFile.uploadFailure = false;
-                                break;
-                            case TrackedFileStatuses.uploadFailed:
-                                relatedFile.uploading = false;
-                                relatedFile.uploadFailure = true;
-                                break;
-                            case TrackedFileStatuses.uploading:
-                                relatedFile.progress = (uploadedFile.progress * 100).toFixed(0);
-                                relatedFile.uploading = true;
-                                relatedFile.uploadFailure = false;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                });
-    }
+  private _trackUploadFiles(): void {
+    this._uploadManagement.onFileStatusChanged$
+      .cancelOnDestroy(this)
+      .filter(uploadedFile => uploadedFile.data instanceof NewEntryRelatedFile)
+      .map(uploadedFile => {
+        let relevantRelatedFile = null;
+        if (uploadedFile.data instanceof NewEntryRelatedFile) {
+          const relatedFiles = this._relatedFiles.getValue().items;
+          relevantRelatedFile = relatedFiles ? relatedFiles.find(file => file.uploadFileId === uploadedFile.id) : null;
+        }
+        return { relevantRelatedFile, uploadedFile };
+      })
+      .subscribe(
+        ({ relevantRelatedFile, uploadedFile }) => {
+          switch (uploadedFile.status) {
+            case TrackedFileStatuses.purged:
+              this._removeFile(relevantRelatedFile);
+              break;
+            case TrackedFileStatuses.waitingUpload:
+              relevantRelatedFile.serverUploadToken = (<NewEntryRelatedFile>uploadedFile.data).serverUploadToken;
+              break;
+            case TrackedFileStatuses.uploadCompleted:
+              relevantRelatedFile.uploading = false;
+              relevantRelatedFile.uploadFailure = false;
+              break;
+            case TrackedFileStatuses.uploadFailed:
+              relevantRelatedFile.uploading = false;
+              relevantRelatedFile.uploadFailure = true;
+              break;
+            case TrackedFileStatuses.uploading:
+              relevantRelatedFile.progress = (uploadedFile.progress * 100).toFixed(0);
+              relevantRelatedFile.uploading = true;
+              relevantRelatedFile.uploadFailure = false;
+              break;
+            default:
+              break;
+          }
+        });
+  }
 
 
     /**
@@ -263,9 +259,8 @@ export class EntryRelatedHandler extends EntryFormWidget
 
 	public _onFileSelected(selectedFiles: FileList) {
         if (selectedFiles && selectedFiles.length) {
-
-            const newFiles: RelatedFile[] = this._uploadManagement.addFiles(Array.from(selectedFiles)
-                .map(file => new KalturaUploadFile(file)))
+            const entryRelatedFiles = Array.from(selectedFiles).map(file => new NewEntryRelatedFile(file));
+            const newFiles: RelatedFile[] = this._uploadManagement.addFiles(entryRelatedFiles)
                 .map(addedFile => {
                     const originalFileName = addedFile.data.getFileName();
                     const hasExtension = originalFileName.indexOf('.') !== -1;
