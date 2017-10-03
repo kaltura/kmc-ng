@@ -1,5 +1,39 @@
+@import 'app-theme/_variables.scss';
+
 .kEntryPreview {
 	iframe{
-		border-radius: 3px;
+		border-top-left-radius: 3px;
+		border-top-right-radius: 3px;
+	}
+	.kPreviewAndEmbedContainer{
+		display: flex;
+		align-items: center;
+		height: 40px;
+		flex-shrink: 0;
+		padding-left: 12px;
+		width: 268px;
+		i{
+			cursor: pointer;
+			color: $kGrayscale3;
+			margin-right: 8px;
+		}
+		a{
+			cursor: pointer;
+			color: $kGrayscale1;
+			white-space: nowrap;
+			text-decoration: none;
+			&:hover:not(.disabled){
+				color: #000000;
+			}
+			&:active:not(.disabled){
+				color: $kGrayscale2;
+			}
+		}
+		.disabled{
+			color: $kGrayscale4;
+			border: 0px solid white;
+			cursor: default;
+			pointer-events: none;
+		}
 	}
 }

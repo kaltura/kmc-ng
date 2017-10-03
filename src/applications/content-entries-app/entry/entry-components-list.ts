@@ -18,8 +18,8 @@ import { EntryComponent } from './entry.component';
 import { EntryPreview } from './entry-preview/entry-preview.component';
 import { EntryDetails } from './entry-details/entry-details.component';
 
-import { DetailsBarComponent } from './entry-details/details/details-bar.component';
-import { DetailInfoComponent } from './entry-details/details/detail-info.component';
+import { DetailsBarComponent } from '@kaltura-ng/kaltura-ui/details-bar/details-bar.component';
+import { DetailInfoComponent } from '@kaltura-ng/kaltura-ui/details-bar/detail-info.component';
 
 import { JumpToSection } from './entry-metadata/jump-to-section.component';
 import { ModerationPipe } from './pipes/moderation.pipe';

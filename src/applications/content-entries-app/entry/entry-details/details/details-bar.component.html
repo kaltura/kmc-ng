@@ -1,7 +1,0 @@
-<div class="kContent kDetailsBar" #dataPanel>
-    <i class="kLink kIcondropdown_arrow_bottom" [class.disabled]="!_showMore" [class.hidden]="!_showMore && !_showBasic" (click)="show('more')"></i>
-    <i class="kLink kIcondropdown_arrow_top" [class.disabled]="!_showBasic" [class.hidden]="!_showMore && !_showBasic" (click)="show('basic')"></i>
-    <div class="kItemsWrapper" #dataWrapper>
-        <ng-content *ngIf="_data" ></ng-content>
-    </div>
-</div>
