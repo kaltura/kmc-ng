@@ -17,10 +17,6 @@ import { EntrySectionsList } from "./entry-sections-list/entry-sections-list.com
 import { EntryComponent } from './entry.component';
 import { EntryPreview } from './entry-preview/entry-preview.component';
 import { EntryDetails } from './entry-details/entry-details.component';
-
-import { DetailsBarComponent } from '@kaltura-ng/kaltura-ui/details-bar/details-bar.component';
-import { DetailInfoComponent } from '@kaltura-ng/kaltura-ui/details-bar/detail-info.component';
-
 import { JumpToSection } from './entry-metadata/jump-to-section.component';
 import { ModerationPipe } from './pipes/moderation.pipe';
 import { LinkedEntries } from './entry-metadata/entry-selector/linked-entries.component';
@@ -44,8 +40,6 @@ export const EntryComponentsList = [
     EntryMetadata,
     EntryPreview,
     EntryDetails,
-    DetailsBarComponent,
-    DetailInfoComponent,
     EntryRelated,
     EntryRelatedEdit,
     EntryScheduling,
