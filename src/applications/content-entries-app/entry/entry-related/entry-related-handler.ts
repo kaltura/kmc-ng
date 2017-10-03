@@ -243,14 +243,8 @@ export class EntryRelatedHandler extends EntryFormWidget
 	}
 
 	private _openFile(fileId: string, operation: string): void {
-
-		const baseUrl = environment.core.kaltura.cdnUrl;
-		const protocol = baseUrl.split(":")[0];
-		const partnerId = this._appAuthentication.appUser.partnerId;
-		const entryId = this.data.id;
-
-		let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + entryId + '/flavorId/' + fileId + '/format/' + operation + '/protocol/' + protocol;
-
+		const apiUrl = environment.core.kaltura.apiUrl;
+		let url = apiUrl + "/service/attachment_attachmentasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/attachmentAssetId/" + fileId;
 		this._browserService.openLink(url);
 	}
 

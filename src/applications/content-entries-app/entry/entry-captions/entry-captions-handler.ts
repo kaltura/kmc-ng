@@ -44,7 +44,8 @@ export interface CaptionRow {
     isDefault: number,
     format: KalturaCaptionType,
     language: KalturaLanguage,
-    label: string
+    label: string,
+    fileExt: string
 }
 
 @Injectable()
@@ -210,7 +211,8 @@ export class EntryCaptionsHandler extends EntryFormWidget {
             format: KalturaCaptionType.srt,
             language: KalturaLanguage.en,
             label: "English",
-            isDefault: 0
+            isDefault: 0,
+            fileExt: ""
         };
 
         let captions = Array.from(this._captions.getValue().items); // create a copy of the captions array without a reference to the original array

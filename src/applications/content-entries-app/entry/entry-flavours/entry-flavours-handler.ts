@@ -24,6 +24,7 @@ import { KalturaContentResource } from 'kaltura-typescript-client/types/KalturaC
 import { UploadManagement } from '@kaltura-ng/kaltura-common/upload-management';
 import { environment } from 'app-environment';
 import { Flavor } from './flavor';
+import { FlavorAssetGetUrlAction } from 'kaltura-typescript-client/types/FlavorAssetGetUrlAction';
 import { NewEntryFlavourFile } from './new-entry-flavour-file';
 import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
 
@@ -251,11 +252,22 @@ export class EntryFlavoursHandler extends EntryFormWidget
     }
 
     public downloadFlavor (flavor: Flavor): void{
-	    const baseUrl = environment.core.kaltura.cdnUrl;
-	    const protocol = baseUrl.split(":")[0];
-	    const partnerId = this._appAuthentication.appUser.partnerId;
-	    let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + this.data.id + '/flavorId/' + flavor.id + '/format/download/protocol/' + protocol;
-	    this._browserService.openLink(url);
+    	const id = flavor.flavorAsset.id;
+	    this._kalturaServerClient.request(new FlavorAssetGetUrlAction({
+		    id: id
+	    }))
+	    .cancelOnDestroy(this,this.widgetReset$)
+	    .monitor('get flavor asset URL')
+	    .subscribe(
+		    dowmloadUrl =>
+		    {
+			    this._browserService.openLink(dowmloadUrl);
+		    },
+		    error =>
+		    {
+			    this._browserService.showGrowlMessage({severity: 'error',	detail: this._appLocalization.get('applications.content.entryDetails.flavours.downloadFailure')});
+		    }
+	    );
     }
 
     public convertFlavor(flavor: Flavor): void{
