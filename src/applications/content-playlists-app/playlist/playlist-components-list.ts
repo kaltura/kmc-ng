@@ -6,13 +6,12 @@ import { PlaylistDetailsComponent } from './playlist-details/playlist-details.co
 import { PlaylistEntriesTableComponent } from './playlist-entries-table/playlist-entries-table.component';
 import { ModerationPipe } from './pipes/moderation.pipe';
 
-
 export const PlaylistComponentsList = [
 	PlaylistMetadataComponent,
 	PlaylistContentComponent,
 	PlaylistSectionsList,
 	PlaylistComponent,
 	PlaylistDetailsComponent,
-  PlaylistEntriesTableComponent,
-  ModerationPipe
+    PlaylistEntriesTableComponent,
+    ModerationPipe
 ];

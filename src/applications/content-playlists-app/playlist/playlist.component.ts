@@ -1,9 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BrowserService } from 'app-shared/kmc-shell';
-import {
-  AreaBlockerMessage,
-  AreaBlockerMessageButton
-} from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
