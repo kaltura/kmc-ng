@@ -1,15 +1,8 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ManualLive} from '../create-live.service';
-import {KalturaRecordStatus} from 'kaltura-typescript-client/types/KalturaRecordStatus';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-
-function urlValidator(control: AbstractControl): { [key: string]: boolean } | null {
-  const v: string = control.value;
-  if (!v) return null;
-  return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(v) ? null : {'url': true};
-};
+import {KalturaValidators} from '@kaltura-ng/kaltura-ui/validators';
 
 @Component({
   selector: 'kManualLive',
@@ -20,8 +13,6 @@ export class ManualLiveComponent implements OnInit, OnDestroy {
 
   public _form: FormGroup;
   public _streamUrlForm: FormGroup;
-  public _availableTranscodingProfiles: Array<{ value: number, label: string }>;
-  public _enableRecordingOptions: Array<{ value: KalturaRecordStatus, label: string }>;
 
   @Input()
   data: ManualLive;
@@ -35,8 +26,7 @@ export class ManualLiveComponent implements OnInit, OnDestroy {
   @Output()
   blockerStateChange = new EventEmitter<{ isBusy: boolean, message: AreaBlockerMessage }>();
 
-  constructor(private _appLocalization: AppLocalization,
-              private _fb: FormBuilder) {
+  constructor(private _fb: FormBuilder) {
   }
 
   ngOnInit(): void {
@@ -55,15 +45,28 @@ export class ManualLiveComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 
+  public validate(): boolean {
+    if (!this._form.valid) {
+      this.markFormFieldsAsTouched();
+    }
+    return this._form.valid;
+  }
+
+
+  public isFormDirty(): boolean {
+    return this._form.dirty;
+  }
+
+
   // Create empty structured form on loading
   private _createForm(): void {
     this._streamUrlForm = this._fb.group({
-        flashHDSURL: ['', urlValidator],
-        hlsStreamUrl: ['', urlValidator]
+        flashHDSURL: ['', KalturaValidators.url],
+        hlsStreamUrl: ['', KalturaValidators.url]
       },
       {
         validator: (formGroup: FormGroup) => {
-          return this.atLeastOneUrlValidator(formGroup);
+          return this._atLeastOneUrlValidator(formGroup);
         }
       });
 
@@ -88,7 +91,7 @@ export class ManualLiveComponent implements OnInit, OnDestroy {
       });
   }
 
-  atLeastOneUrlValidator(formgroup: FormGroup) {
+  private _atLeastOneUrlValidator(formgroup: FormGroup) {
     if (!formgroup.controls['flashHDSURL'].value && !formgroup.controls['hlsStreamUrl'].value) {
       return {atLeastOneUrl: true};
     } else {
@@ -96,21 +99,8 @@ export class ManualLiveComponent implements OnInit, OnDestroy {
     }
   }
 
-  public validate() {
-    if (!this._form.valid) {
-      this.markFormFieldsAsTouched();
-    }
-    return this._form.valid;
-  }
 
-
-  public isFormDirty() {
-    return this._form.dirty;
-  }
-
-
-
-  private markFormFieldsAsTouched() {
+  private markFormFieldsAsTouched(): void {
     for (const inner in this._form.controls) {
       this._form.get(inner).markAsTouched();
       this._form.get(inner).updateValueAndValidity();

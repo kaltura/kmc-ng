@@ -5,12 +5,12 @@ import {KalturaLive} from '../create-live.service';
 import {KalturaRecordStatus} from 'kaltura-typescript-client/types/KalturaRecordStatus';
 import {KalturaLiveStreamService} from './kaltura-live-stream.service';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {BrowserService} from "app-shared/kmc-shell";
 
 @Component({
   selector: 'kKalturaLiveStream',
   templateUrl: './kaltura-live-stream.component.html',
   styleUrls: ['./kaltura-live-stream.component.scss'],
-  providers: [KalturaLiveStreamService]
 })
 export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
 
@@ -32,7 +32,8 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
 
   constructor(private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
-              private _kalturaLiveStreamService: KalturaLiveStreamService) {
+              private _kalturaLiveStreamService: KalturaLiveStreamService,
+              private _browserService: BrowserService) {
   }
 
   ngOnInit(): void {
@@ -43,10 +44,23 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
     }, 0)
   }
 
+  ngOnDestroy(): void {
+  }
+
+  public validate(): boolean {
+    if (!this._form.valid) {
+      this.markFormFieldsAsTouched();
+    }
+    return this._form.valid;
+  }
+
+  public isFormDirty(): boolean {
+    return this._form.dirty;
+  }
+
   private _loadTranscodingProfiles(): void {
     this._updateAreaBlockerState(true, null);
-    // todo: consider caching the _availableTranscodingProfiles in the service so when switching stream type it won't be asking for it again
-    this._kalturaLiveStreamService.getKalturaConversionProfile()
+    this._kalturaLiveStreamService.getKalturaConversionProfiles()
       .cancelOnDestroy(this)
       .subscribe(transcodingProfilesList => {
         this._availableTranscodingProfiles = transcodingProfilesList.map(transcodingProfile => ({
@@ -54,8 +68,7 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
           label: transcodingProfile.name
         }));
 
-        // todo: ask if need to cache the preferred transcoding profile in service for future creations (and set the service as provider on the create live component)
-        this.data.transcodingProfile = transcodingProfilesList[0].id;
+        this.data.transcodingProfile = this._getSelectedTranscodingProfile(transcodingProfilesList);
 
         this._form.reset(this.data);
         this._updateAreaBlockerState(false, null);
@@ -63,6 +76,20 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
       }, error => {
         this._updateAreaBlockerState(false, error.message);
       });
+  }
+
+  private _getSelectedTranscodingProfile(transcodingProfilesList): number {
+    const profileIdFromCache = this._browserService.getFromLocalStorage('kalturaStreamType.selectedTranscodingProfile');
+    const profileExistsInList = transcodingProfilesList
+      .findIndex((profile) => (profile.id === profileIdFromCache)) > -1;
+
+    // if selected profile id exists in the list return it ; else return first option
+    if (profileIdFromCache && profileExistsInList) {
+      return profileIdFromCache;
+    } else {
+      this._browserService.setInLocalStorage('kalturaStreamType.selectedTranscodingProfile', transcodingProfilesList[0].id);
+      return transcodingProfilesList[0].id;
+    }
   }
 
   private _fillEnableRecordingOptions() {
@@ -76,9 +103,6 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
         label: this._appLocalization.get('applications.upload.prepareLive.kalturaStreamType.enableRecordingOptions.appended')
       },
     ];
-  }
-
-  ngOnDestroy(): void {
   }
 
   // Create empty structured form on loading
@@ -101,23 +125,11 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
       });
   }
 
-  public validate() {
-    if (!this._form.valid) {
-      this.markFormFieldsAsTouched();
-    }
-    return this._form.valid;
-  }
-
-  public isFormDirty() {
-    return this._form.dirty;
-  }
-
-
-  _toggleRecordingSelectedOption(enable: boolean) {
+  private _toggleRecordingSelectedOption(enable: boolean) {
     enable ? this._form.get('enableRecordingSelectedOption').enable() : this._form.get('enableRecordingSelectedOption').disable();
   }
 
-  private markFormFieldsAsTouched() {
+  private markFormFieldsAsTouched(): void {
     for (const inner in this._form.controls) {
       this._form.get(inner).markAsTouched();
       this._form.get(inner).updateValueAndValidity();

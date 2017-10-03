@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {KalturaClient} from '@kaltura-ng/kaltura-client';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {Observable} from 'rxjs/Observable';
 import {ConversionProfileListAction} from 'kaltura-typescript-client/types/ConversionProfileListAction';
 import {KalturaConversionProfileFilter} from 'kaltura-typescript-client/types/KalturaConversionProfileFilter';
@@ -11,12 +10,34 @@ import {KalturaConversionProfile} from 'kaltura-typescript-client/types/KalturaC
 @Injectable()
 export class KalturaLiveStreamService {
 
-  constructor(private _kalturaServerClient: KalturaClient,
-              private _appLocalization: AppLocalization) {
+  private _cachedConversionProfiles: KalturaConversionProfile[] = null;
+
+  constructor(private _kalturaServerClient: KalturaClient) {
   }
 
-  public getKalturaConversionProfile(): Observable<KalturaConversionProfile[]> {
+  // return the cached conversion profiles
+  public getKalturaConversionProfiles(): Observable<KalturaConversionProfile[]> {
+    return Observable.create(observer => {
+      if (!this._cachedConversionProfiles) {
+        this._getKalturaConversionProfiles()
+          .subscribe(
+            result => {
+              this._cachedConversionProfiles = result;
+              observer.next(this._cachedConversionProfiles)
+              observer.complete();
+            },
+            error => {
+              observer.error(error);
+            }
+          );
+      } else {
+        observer.next(this._cachedConversionProfiles)
+        observer.complete();
+      }
+    });
+  }
 
+  private _getKalturaConversionProfiles(): Observable<KalturaConversionProfile[]> {
     // filter
     const kalturaConversionProfileFilter = new KalturaConversionProfileFilter({
       typeEqual: KalturaConversionProfileType.liveStream
@@ -27,6 +48,6 @@ export class KalturaLiveStreamService {
 
     return this._kalturaServerClient
       .request(new ConversionProfileListAction({filter: kalturaConversionProfileFilter, pager: kalturaFilterPager}))
-      .map(response => (<KalturaConversionProfile[]>response.objects));
+      .map(response => (<KalturaConversionProfile[]>response.objects))
   }
 }

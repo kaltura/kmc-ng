@@ -5,7 +5,7 @@ import {KalturaRecordStatus} from 'kaltura-typescript-client/types/KalturaRecord
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {Router} from '@angular/router';
-import {PopupWidgetComponent, PopupWidgetStates} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
+import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 enum StreamTypes {
   kaltura,
@@ -79,8 +79,6 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-
-    // todo: check which boolean causes: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked. Previous value: 'false'. Current value: 'true'.
     if (this.parentPopupWidget) {
       this.parentPopupWidget.state$
         .cancelOnDestroy(this)
@@ -127,7 +125,17 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       }
       default: {
-        // todo: might need to add error message for trying to submit unsupported form type
+        // add error message for trying to submit unsupported form type
+        const blockerMessage = new AreaBlockerMessage({
+          title: 'Cannot create stream',
+          message: 'Unsupported stream type, please select different stream type from the \'Stream type\' select menu',
+          buttons: [{
+            label: this._appLocalization.get('app.common.confirm'),
+            action: () => {}
+          }]
+        });
+
+        this._updateAreaBlockerState(false, blockerMessage);
         break;
       }
     }
@@ -145,8 +153,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         return this.manualLiveComponent.isFormDirty();
       }
       default: {
-        // todo: might need to add error message for trying to submit unsupported form type
-        break;
+        return false;
       }
     }
   }
@@ -159,6 +166,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.message'),
         accept: () => {
           this._router.navigate(['/content/entries/entry', id]);
+          this._showConfirmationOnClose = false;
           this.parentPopupWidget.close();
         }
       }

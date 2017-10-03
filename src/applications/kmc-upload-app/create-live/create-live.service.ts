@@ -45,7 +45,7 @@ export class CreateLiveService {
   constructor(private _kalturaServerClient: KalturaClient) {
   }
 
-  public createKalturaLiveStream(data: KalturaLive): Observable<any> {
+  public createKalturaLiveStream(data: KalturaLive): Observable<KalturaLiveStreamEntry> {
     if (!data || !data.name) {
       throw Observable.throw(new Error('Missing required fields'));
     }
@@ -64,7 +64,7 @@ export class CreateLiveService {
       .request(new LiveStreamAddAction({liveStreamEntry: stream, sourceType: KalturaSourceType.liveStream}))
   }
 
-  public createManualLiveStream(data: ManualLive): Observable<any> {
+  public createManualLiveStream(data: ManualLive): Observable<KalturaLiveStreamEntry> {
     if (!data || !data.name) {
       throw Observable.throw(new Error('Missing required fields'));
     }
@@ -94,7 +94,7 @@ export class CreateLiveService {
       .request(new LiveStreamAddAction({liveStreamEntry: stream, sourceType: KalturaSourceType.manualLiveStream}))
   }
 
-  public createUniversalLiveStream(data: UniversalLive): Observable<any> {
+  public createUniversalLiveStream(data: UniversalLive): Observable<KalturaLiveStreamEntry> {
     if (!data || !data.name || !data.primaryEncoderIp || !data.secondaryEncoderIp) {
       throw Observable.throw(new Error('Missing required fields'));
     }

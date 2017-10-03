@@ -46,8 +46,11 @@
   }
 }
 
-:host /deep/ .ui-dropdown.ui-widget{
-  width: 265px;
+/deep/ {
+  .ui-widget.ui-dropdown {
+    width: 265px !important;
+    font-size: 14px;
+  }
 
   .ui-dropdown-items-wrapper{
     max-height: 115px !important;

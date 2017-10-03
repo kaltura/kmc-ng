@@ -6,10 +6,34 @@ import {Http} from '@angular/http';
 @Injectable()
 export class UniversalLiveService {
 
+  private _cachedDefaultIp: string = null;
+
   constructor(private _http: Http) {
   }
 
-  public loadDefaultIp(): Observable<string> {
+  // return the cached default IP
+  public getDefaultIp(): Observable<string> {
+    return Observable.create(observer => {
+      if (!this._cachedDefaultIp) {
+        this._getDefaultIp()
+          .subscribe(
+            result => {
+              this._cachedDefaultIp = result;
+              observer.next(this._cachedDefaultIp)
+              observer.complete();
+            },
+            error => {
+              observer.error(error);
+            }
+          );
+      } else {
+        observer.next(this._cachedDefaultIp)
+        observer.complete();
+      }
+    });
+  }
+
+  private _getDefaultIp(): Observable<string> {
     const akamaiEdgeServerIpURL = environment.modules.createLive.akamaiEdgeServerIpURL;
     return this._http.get(window.location.protocol + '//' + akamaiEdgeServerIpURL)
       .map(res => {
