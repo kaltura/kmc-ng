@@ -16,6 +16,10 @@
       opacity: 0.4;
       pointer-events: none;
     }
+    &.hidden{
+      opacity: 0;
+      pointer-events: none;
+    }
   }
   .kItemsWrapper{
     position: relative;
