@@ -2,7 +2,7 @@
   <div class="kTreeContainer kOverrideFAIcons">
 
     <p-tree #tree
-            *ngIf="_selectionModes.Checkbox === _selectionMode"
+            *ngIf="_selectionModes.multiple === _selectionMode"
             kPrimeTreePropagation
             [propagateDownMode]="disablePropagation ? 'preventNested' : 'none'"
             [propagateUpMode]="disablePropagation ? 'visualOnly' : 'none'"
@@ -29,7 +29,7 @@
     </p-tree>
 
     <p-tree #tree
-            *ngIf="_selectionModes.Radiobutton === _selectionMode"
+            *ngIf="_selectionModes.single === _selectionMode"
             selectionMode="single"
             [value]="_categories"
             [selection]="selection"

@@ -18,7 +18,7 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
   @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
   @ViewChild('autoComplete') private _autoComplete: AutoComplete = null;
 
-  public _selectionMode = TreeSelectionMode.Radiobutton;
+  public _selectionMode: TreeSelectionMode = 'single';
   public _categoriesLoaded = false;
   public _treeSelection: PrimeTreeNode = null;
 

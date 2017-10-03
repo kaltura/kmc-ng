@@ -6,10 +6,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PrimeTreePropagation } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
 import { CategoriesPrimeService } from 'app-shared/content-shared/categories-prime.service';
 
-export enum TreeSelectionMode {
-  Checkbox,
-  Radiobutton
-}
+export type TreeSelectionMode = 'single' | 'multiple';
 
 @Component({
   selector: 'k-categories-tree',
@@ -24,7 +21,7 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
 
   @Input()
   set selectionMode(value: TreeSelectionMode) {
-    this._selectionMode = value === TreeSelectionMode.Radiobutton ? value : TreeSelectionMode.Checkbox;
+    this._selectionMode = value === 'single' ? value : 'multiple';
   }
 
   @Output() onCategoriesLoad = new EventEmitter<{ categories: PrimeTreeNode[] }>();
@@ -38,8 +35,11 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
   private inLazyMode = false;
   public _loading = false;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _selectionMode: TreeSelectionMode = TreeSelectionMode.Checkbox;
-  public _selectionModes = TreeSelectionMode;
+  public _selectionMode: TreeSelectionMode = 'multiple';
+  public _selectionModes = {
+    'multiple': 'multiple',
+    'single': 'single'
+  };
 
   public _categories: PrimeTreeNode[] = [];
 
@@ -67,13 +67,13 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.selection && this._selectionMode === TreeSelectionMode.Radiobutton) {
+    if (changes.selection && this._selectionMode === 'single') {
       const selection: PrimeTreeNode = Array.isArray(this.selection) ? this.selection[0] : this.selection;
       this._singleSelectedValue = selection ? selection.data : null;
     }
   }
   public _selectionChange(selection: PrimeTreeNode | PrimeTreeNode[]): void {
-    if (this._selectionMode === TreeSelectionMode.Radiobutton) {
+    if (this._selectionMode === 'single') {
       this._singleSelectedValue = selection ? (<PrimeTreeNode>selection).data : null;
     }
 
@@ -137,7 +137,7 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
   public clearSelection(): void {
     let resetValue = [];
 
-    if (this._selectionMode === TreeSelectionMode.Radiobutton) {
+    if (this._selectionMode === 'single') {
       resetValue = null;
     }
 
