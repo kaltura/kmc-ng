@@ -36,9 +36,13 @@ a {
 }
 
 .subMenuContainer {
-  margin-right: 30px;
   position: relative;
-
+  &.kLeft {
+    margin-right: 30px;
+  }
+  &.kRight {
+    margin-left: 30px;
+  }
   &.active {
     > .linkMarker {
       opacity: 1;

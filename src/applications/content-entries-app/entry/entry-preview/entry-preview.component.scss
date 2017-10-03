@@ -1,21 +1,17 @@
 @import 'app-theme/_variables.scss';
 
 .kEntryPreview {
-	display: flex;
-	flex-direction: column;
-	height: 100%;
 	iframe{
-		flex-shrink: 0;
+		border-top-left-radius: 3px;
+		border-top-right-radius: 3px;
 	}
 	.kPreviewAndEmbedContainer{
 		display: flex;
 		align-items: center;
 		height: 40px;
 		flex-shrink: 0;
-		height: 60px;
 		padding-left: 12px;
 		width: 268px;
-		border-bottom: 1px solid $kGrayscale4;
 		i{
 			cursor: pointer;
 			color: $kGrayscale3;
@@ -39,32 +35,5 @@
 			cursor: default;
 			pointer-events: none;
 		}
-	}
-	.kPreviewDetails{
-		padding-top: 20px;
-		padding-left: 12px;
-		padding-right: 8px;
-		overflow-y: auto;
-		width: 252px;
-		height: calc(100vh - 442px);
-		overflow-x: hidden;
-		.kTitle{
-			color: $kGrayscale1;
-			font-size: 20px;
-			font-weight: 700;
-			margin-bottom: 12px;
-			display: block;
-		}
-		.kRow{
-			display: flex;
-			padding-top: 24px;
-			align-items: center;
-		}
-		.kLabels{
-			width: 100px;
-			flex: 0 0 auto;
-			color: $kGrayscale3;
-		}
-
 	}
 }
