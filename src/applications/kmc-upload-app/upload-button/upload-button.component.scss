@@ -1,0 +1,13 @@
+@import 'app-theme/_variables.scss';
+
+.kUploadBtn {
+  height: 28px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  border: 0 solid $menuBkgColor;
+  color: $kGrayscale1;
+  margin-right: 12px;
+  padding-left: 6px;
+  padding-right: 6px;
+}

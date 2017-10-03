@@ -10,12 +10,13 @@ import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist
 export class PlaylistDetailsComponent implements OnInit, OnDestroy {
 	public playlist: KalturaPlaylist;
 	public numberOfEntries: number;
+	public _duration = 0;
 
 	constructor( public _playlistStore : PlaylistStore ) {}
 
 	ngOnInit() {
 		this._playlistStore.playlist$
-      .cancelOnDestroy(this)
+        .cancelOnDestroy(this)
 			.subscribe(
 				response => {
 					if(response.playlist) {
@@ -24,10 +25,25 @@ export class PlaylistDetailsComponent implements OnInit, OnDestroy {
 					}
 				}
 			);
+		this._playlistStore.entries$
+			.cancelOnDestroy(this)
+			.subscribe(
+				response => {
+					if (response.items && response.items.length) {
+						this._duration = 0;
+						response.items.forEach(entry =>{
+							this._duration += entry.duration;
+						});
+					}
+				}
+			);
 	}
 
 	getNumberOfEntries(playlistContent: string) {
-		this.numberOfEntries = playlistContent.indexOf(',') != -1 ? playlistContent.split(',').length : 1;
+    this.numberOfEntries = 0;
+	  if(playlistContent) {
+      this.numberOfEntries = playlistContent.indexOf(',') != -1 ? playlistContent.split(',').length : 1;
+    }
 	}
 
 	ngOnDestroy() {}

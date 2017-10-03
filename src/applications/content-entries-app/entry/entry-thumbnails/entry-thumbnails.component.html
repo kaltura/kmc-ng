@@ -7,7 +7,7 @@
 			<button pButton class="kButtonDefault" (click)="capturePopup.open()" icon="kIconpicture" label="{{'applications.content.entryDetails.thumbnails.capture.choose' | translate}}"></button>
 		</div>
 		<div class="kTable">
-			<p-dataTable [value]="(_handler._thumbnails$ | async)?.items" scrollable="true" scrollHeight="100%" [rowStyleClass]="_handler._getRowStyle">
+			<p-dataTable [value]="(_handler._thumbnails$ | async)?.items" scrollable="true" scrollHeight="100%" [rowStyleClass]="_handler._getRowStyle"  sortField="width" [sortOrder]="-1">
 				<p-column field="url" header="{{'applications.content.entryDetails.thumbnails.thumbnail' | translate}}" [style]="{'width':'100px'}">
 					<ng-template let-col let-thumb="rowData" pTemplate="body">
 						<div class="kThumbnailHolder"><img src="{{thumb[col.field]}}" onError="this.onerror=null;this.style.display='none'"></div>

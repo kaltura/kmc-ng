@@ -2,8 +2,9 @@ import { Injectable, InjectionToken, Inject, Optional, Type } from '@angular/cor
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AppAuthentication } from "./app-authentication.service";
+import { AppLocalization, AppStorage } from '@kaltura-ng/kaltura-common';
+import { AppAuthentication } from './app-authentication.service';
+import { environment } from 'app-config';
 
 export const BootstrapAdapterToken = new InjectionToken('bootstrapAdapter');
 
@@ -17,9 +18,8 @@ export interface BootstrapAdapter{
     execute() : void
 }
 
-export declare type AppBootstrapConfig =
+export interface AppBootstrapConfig
 {
-    configUri : string;
     errorRoute? : string;
 }
 
@@ -32,7 +32,7 @@ export enum BoostrappingStatus
 
 
 @Injectable()
-export class AppBootstrap implements CanActivate{
+export class AppBootstrap implements CanActivate {
 
     private _bootstrapConfig: AppBootstrapConfig;
     private _initialized = false;
@@ -42,15 +42,15 @@ export class AppBootstrap implements CanActivate{
 
     constructor(private appLocalization: AppLocalization,
                 private auth: AppAuthentication,
-                @Inject(BootstrapAdapterToken) @Optional() private bootstrapAdapters : BootstrapAdapter[]){
+                private appStorage: AppStorage,
+                @Inject(BootstrapAdapterToken) @Optional() private bootstrapAdapters: BootstrapAdapter[]) {
 
     }
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Observable<boolean> {
-        return Observable.create((observer : any) =>
-        {
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+        return Observable.create((observer: any) => {
             const statusChangeSubscription = this.bootstrapStatus$.subscribe(
-                (status : BoostrappingStatus) => {
+                (status: BoostrappingStatus) => {
 
                     if (status === BoostrappingStatus.Bootstrapped) {
                         observer.next(true);
@@ -78,67 +78,73 @@ export class AppBootstrap implements CanActivate{
         });
     }
 
-    initApp(appBootstrapConfig : AppBootstrapConfig): void{
-        if ( this._initialized ){
+    initApp(appBootstrapConfig: AppBootstrapConfig): void {
+        if (this._initialized) {
             throw "App already initialized!";
         }
         const bootstrapFailure = (error: any) => {
             console.log("Bootstrap Error::" + error); // TODO [kmc-infra] - move to log
             this._bootstrapStatusSource.next(BoostrappingStatus.Error);
         }
-        if ( !this.validateConfig(appBootstrapConfig) ){
-            bootstrapFailure("Invalid Config");
-        }else {
-            this._initialized = true;
-            // save config localy
-            this._bootstrapConfig = appBootstrapConfig;
 
-            // init localization, wait for localization to load before continuing
-            this.appLocalization.load().subscribe(
-                (localizationSupported) => {
-                    // Start authentication process
-                    if (!this.executeAdapter(BootstrapAdapterType.preAuth))
-                    {
-                        bootstrapFailure("preAuth adapter execution failure");
-                        return;
-                    }
-                    this.auth.loginAutomatically().subscribe(
-                        () => {
-                            if (!this.executeAdapter(BootstrapAdapterType.postAuth))
-                            {
-                                bootstrapFailure("postAuth adapter execution failure");
-                                return;
-                            }
-                            this._bootstrapStatusSource.next(BoostrappingStatus.Bootstrapped);
-                        },
-                        () => {
-                            bootstrapFailure("Authentication process failed");
-                        }
-                    );
-                },
-                (error) => {
-                    bootstrapFailure(error);
+
+        this._initialized = true;
+        // save config localy
+        this._bootstrapConfig = appBootstrapConfig;
+
+        // init localization, wait for localization to load before continuing
+        this.appLocalization.setFilesHash(environment.shell.languageHash);
+        const language = this.getCurrentLanguage();
+        this.appLocalization.load(language,'en').subscribe(
+            () => {
+                // Start authentication process
+                if (!this.executeAdapter(BootstrapAdapterType.preAuth)) {
+                    bootstrapFailure("preAuth adapter execution failure");
+                    return;
                 }
-            );
+                this.auth.loginAutomatically().subscribe(
+                    () => {
+                        if (!this.executeAdapter(BootstrapAdapterType.postAuth)) {
+                            bootstrapFailure("postAuth adapter execution failure");
+                            return;
+                        }
+                        this._bootstrapStatusSource.next(BoostrappingStatus.Bootstrapped);
+                    },
+                    () => {
+                        bootstrapFailure("Authentication process failed");
+                    }
+                );
+            },
+            (error) => {
+                bootstrapFailure(error);
+            }
+        );
+    }
+
+
+    private getCurrentLanguage(): string {
+        let lang: string = null;
+        // try getting last selected language from local storage
+        if (this.appStorage.getFromLocalStorage('kmc_lang') !== null) {
+            const userLanguage: string = this.appStorage.getFromLocalStorage('kmc_lang');
+            if (environment.core.locales.find(locale => locale.id === userLanguage)) {
+                lang = userLanguage;
+            }
         }
+
+        return lang === null ? "en" : lang;
     }
 
-    validateConfig(config: AppBootstrapConfig): boolean{
-        return (config && !!config.configUri);
-    }
-
-    executeAdapter(adapterType: BootstrapAdapterType):boolean{
+    executeAdapter(adapterType: BootstrapAdapterType): boolean {
         if (this.bootstrapAdapters) {
-            try
-            {
+            try {
                 this.bootstrapAdapters.forEach(function (adapter) {
-                    if ( adapter.type === adapterType ) {
+                    if (adapter.type === adapterType) {
                         return adapter.execute();
                     }
                 });
                 return true;
-            }catch (ex)
-            {
+            } catch (ex) {
                 return false;
             }
         }
