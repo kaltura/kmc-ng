@@ -38,7 +38,7 @@
             (onNodeExpand)="_onNodeExpand($event)">
       <ng-template let-node pTemplate="default">
         <div>
-          <p-radioButton [value]="node.data" [(ngModel)]="_singleSelectedValue"></p-radioButton>
+          <p-radioButton [value]="node" [ngModel]="selection"></p-radioButton>
           <span class="kTreeNodeLabel">{{node.label}}</span>
           <span class="kTreeNodeNumChildren" *ngIf="node.childrenCount">{{node.childrenCount}}</span>
         </div>

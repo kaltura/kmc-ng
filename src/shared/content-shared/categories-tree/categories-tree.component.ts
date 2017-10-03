@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -13,7 +13,7 @@ export type TreeSelectionMode = 'single' | 'multiple';
   templateUrl: './categories-tree.component.html',
   styleUrls: ['./categories-tree.component.scss']
 })
-export class CategoriesTreeComponent implements OnInit, OnChanges {
+export class CategoriesTreeComponent implements OnInit {
 
   @Input() public disablePropagation = false;
   @Input() autoLoad = true;
@@ -43,8 +43,6 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
 
   public _categories: PrimeTreeNode[] = [];
 
-  public _singleSelectedValue: string | number;
-
   public updateNodeState(node: PrimeTreeNode, addToSelection: boolean): void {
     this._primeTreeNodesState.updateNodeState(node, addToSelection);
   }
@@ -66,17 +64,7 @@ export class CategoriesTreeComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.selection && this._selectionMode === 'single') {
-      const selection: PrimeTreeNode = Array.isArray(this.selection) ? this.selection[0] : this.selection;
-      this._singleSelectedValue = selection ? selection.data : null;
-    }
-  }
   public _selectionChange(selection: PrimeTreeNode | PrimeTreeNode[]): void {
-    if (this._selectionMode === 'single') {
-      this._singleSelectedValue = selection ? (<PrimeTreeNode>selection).data : null;
-    }
-
     this.selection = selection;
     this.selectionChange.emit(selection);
   }
