@@ -43,7 +43,7 @@ export class CategoryService implements OnDestroy {
 	private _loadCategorySubscription: ISubscription;
 	private _sectionToRouteMapping: { [key: number]: string } = {};
 	private _state = new BehaviorSubject<StatusArgs>({ action: ActionTypes.CategoryLoading, error: null });
-
+	private _saveCategoryInvoked = false;
 	public state$ = this._state.asObservable();
 	private _categoryIsDirty: boolean;
 
@@ -158,59 +158,59 @@ export class CategoryService implements OnDestroy {
 
 		const request = new KalturaMultiRequest(
 			new CategoryUpdateAction({
-				id: newCategory.id,
+				id: this.categoryId,
 				category: newCategory
 			})
 		);
 
-		// this._sectionsManager.onDataSaving(newCategory, request, this.category)
-		// 	.cancelOnDestroy(this)
-		// 	.monitor('category store: prepare category for save')
-		// 	.flatMap(
-		// 	(response) => {
-		// 		if (response.ready) {
-		// 			this._saveCategoryInvoked = true;
+		this._sectionsManager.onDataSaving(newCategory, request, this.category)
+			.cancelOnDestroy(this)
+			.monitor('category store: prepare category for save')
+			.flatMap(
+			(response) => {
+				if (response.ready) {
+					this._saveCategoryInvoked = true;
 
-		// 			return this._kalturaServerClient.multiRequest(request)
-		// 				.monitor('category store: save category')
-		// 				.map(
-		// 				response => {
-		// 					if (response.hasErrors()) {
-		// 						this._state.next({ action: ActionTypes.CategorySavingFailed });
-		// 					} else {
-		// 						this._loadCategory(this.categoryId);
-		// 					}
+					return this._kalturaServerClient.multiRequest(request)
+						.monitor('category store: save category')
+						.map(
+						response => {
+							if (response.hasErrors()) {
+								this._state.next({ action: ActionTypes.CategorySavingFailed });
+							} else {
+								this._loadCategory(this.categoryId);
+							}
 
-		// 					return Observable.empty();
-		// 				}
-		// 				)
-		// 		}
-		// 		else {
-		// 			switch (response.reason) {
-		// 				case OnDataSavingReasons.validationErrors:
-		// 					this._state.next({ action: ActionTypes.CategoryDataIsInvalid });
-		// 					break;
-		// 				case OnDataSavingReasons.attachedWidgetBusy:
-		// 					this._state.next({ action: ActionTypes.ActiveSectionBusy });
-		// 					break;
-		// 				case OnDataSavingReasons.buildRequestFailure:
-		// 					this._state.next({ action: ActionTypes.CategoryPrepareSavingFailed });
-		// 					break;
-		// 			}
+							return Observable.empty();
+						}
+						)
+				}
+				else {
+					switch (response.reason) {
+						case OnDataSavingReasons.validationErrors:
+							this._state.next({ action: ActionTypes.CategoryDataIsInvalid });
+							break;
+						case OnDataSavingReasons.attachedWidgetBusy:
+							this._state.next({ action: ActionTypes.ActiveSectionBusy });
+							break;
+						case OnDataSavingReasons.buildRequestFailure:
+							this._state.next({ action: ActionTypes.CategoryPrepareSavingFailed });
+							break;
+					}
 
-		// 			return Observable.empty();
-		// 		}
-		// 	}
-		// 	)
-		// 	.subscribe(
-		// 	response => {
-		// 		// do nothing - the service state is modified inside the map functions.
-		// 	},
-		// 	error => {
-		// 		// should not reach here, this is a fallback plan.
-		// 		this._state.next({ action: ActionTypes.CategorySavingFailed });
-		// 	}
-		// 	);
+					return Observable.empty();
+				}
+			}
+			)
+			.subscribe(
+			response => {
+				// do nothing - the service state is modified inside the map functions.
+			},
+			error => {
+				// should not reach here, this is a fallback plan.
+				this._state.next({ action: ActionTypes.CategorySavingFailed });
+			}
+			);
 	}
 	public saveCategory(): void {
 
