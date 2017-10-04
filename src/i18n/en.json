@@ -266,12 +266,12 @@
         "noParent":"No Parent",
         "searchCategories": "Search Categories",
         "selectedParentCategory":"Parent Category Id: {{value}}"
-        
+
       },
       "entries": {
         "entries": "Entries",
         "selected": "Selected",
-        "bulkActions": "Bulk Actions",
+        "bulkActions": "More Actions",
         "cancel": "Cancel",
         "searchEntries": "Search Entries",
         "filterCategories": "Filter Categories",
