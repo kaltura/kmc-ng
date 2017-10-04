@@ -23,7 +23,7 @@ export class BulkRemoveTags implements OnInit, OnDestroy, AfterViewInit {
   public _sectionBlockerMessage: AreaBlockerMessage;
 
   public tags: any[] = [];
-  private tagsToRemove: string[] = [];
+  public tagsToRemove: string[] = [];
 
   private _parentPopupStateChangeSubscribe : ISubscription;
   private _confirmClose: boolean = true;

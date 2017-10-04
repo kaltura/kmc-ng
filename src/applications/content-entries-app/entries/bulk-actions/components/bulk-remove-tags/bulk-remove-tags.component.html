@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="kFooter">
-      <button type="button" class="kButtonBranded" pButton label="{{'applications.content.bulkActions.apply' | translate}}" (click)="_apply()"></button>
+      <button type="button" [disabled]="tagsToRemove.length === 0" class="kButtonBranded" pButton label="{{'applications.content.bulkActions.apply' | translate}}" (click)="_apply()"></button>
     </div>
   </div>
 </k-area-blocker>
