@@ -113,7 +113,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   // bulk delete
   public deleteEntries(): void {
-    let entriesToDelete = this.selectedEntries.map(entry => this._appLocalization.get('applications.content.entries.entryId', { 0: entry.id })),
+    let entriesToDelete = this.selectedEntries.map((entry, index) => entry.name ),
       entries: string = this.selectedEntries.length <= 10 ? entriesToDelete.join(',').replace(/,/gi, '\n') : '',
       message: string = this.selectedEntries.length > 1 ?
         this._appLocalization.get('applications.content.entries.confirmDeleteMultiple', { 0: entries }) :
@@ -177,6 +177,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   getBulkActionItems(): MenuItem[] {
     return [
+
+
       { label: this._appLocalization.get('applications.content.bulkActions.setScheduling'), command: (event) => { this.openBulkActionWindow("setScheduling", 500, 500) } },
       { label: this._appLocalization.get('applications.content.bulkActions.setAccessControl'), command: (event) => { this.openBulkActionWindow("setAccessControl", 500, 550) } },
       {
