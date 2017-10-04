@@ -1,0 +1,34 @@
+<div class="kAddNewPlaylist">
+  <form [formGroup]="addNewPlaylistForm" novalidate>
+    <div class="kHeader">
+      <span class="kTitle">{{('applications.content.addNewPlaylist.addNewPlaylist') | translate}}</span>
+    </div>
+
+    <div class="kContainer">
+      <div class="selectPlaylistTypeCaption">
+        {{('applications.content.addNewPlaylist.selectPlaylistType') | translate}}
+      </div>
+      <div class="selectPlaylistType">
+        <p-radioButton class="kRadioLeft" name="playlistType" value="manual" formControlName="playlistType" label="{{'applications.content.addNewPlaylist.manualPlaylist' | translate}}"></p-radioButton>
+        <p-radioButton class="kRadioRight " name="playlistType" value="ruleBased" formControlName="playlistType" label="{{'applications.content.addNewPlaylist.ruleBasedPlaylist' | translate}}"></p-radioButton>
+      </div>
+      <div class="ruleBasedSub">
+        <p-checkbox *ngIf="addNewPlaylistForm.controls['playlistType'].value !== 'manual'" name="ruleBasedSub" value="ruleBasedSub" formControlName="ruleBasedSub" label="{{'applications.content.addNewPlaylist.addRuleBasedSubPlaylist' | translate}}"></p-checkbox>
+      </div>
+      <div class="kRow">
+        <div class="kControl">
+          <input formControlName="name" type="text" placeholder="{{'applications.content.addNewPlaylist.playlistName' | translate}}" pInputText #metadataNameInput />
+        </div>
+      </div>
+      <div class="kRow">
+        <div class="kControl">
+          <textarea formControlName="description" pInputTextarea class="kTextArea" placeholder="{{'applications.content.addNewPlaylist.description' | translate}}"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="kFooter">
+      <button type="button" class="kButtonBranded kNextBtn" [disabled]="addNewPlaylistForm.invalid" (click)="goNext()" pButton label="{{'applications.content.addNewPlaylist.next' | translate}}"></button>
+    </div>
+  </form>
+</div>

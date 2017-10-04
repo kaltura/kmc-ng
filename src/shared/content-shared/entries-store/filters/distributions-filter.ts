@@ -7,7 +7,10 @@ import { ValueFilter } from '../value-filter';
 
 export class DistributionsFilter extends ValueFilter<number> {
 
-  constructor(value: number, label: string) {
+    static filterType = "Distributions"; // IMPORTANT: you must have a static filterType property that is used at runtime
+
+
+    constructor(value: number, label: string) {
     super(label, value, { token: 'applications.content.filters.distribution', args: { '0': label } });
   }
 }

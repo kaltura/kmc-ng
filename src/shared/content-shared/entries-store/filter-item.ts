@@ -6,6 +6,8 @@ export interface FilterItemLocalizedTooltip {
 export abstract class FilterItem {
   private _tooltip: FilterItemLocalizedTooltip;
 
+
+
   public get tooltip(): FilterItemLocalizedTooltip {
     return this._tooltip;
   }

@@ -1,23 +1,75 @@
 @import 'app-theme/_variables.scss';
 
-.kContentDetails {
-  width: 100%;
+.kPlaylistEntriesHolder {
+  height: 100%;
+  border: 1px solid $kGrayscale6;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 
-  .kPlaylistsTableFilters {
+  .kPlaylistEntriesTableFilters {
     width: 100%;
-    height: 66px;
+    height: 68px;
+    padding-top: 12px;
     background-color: white;
     flex: 0 0 auto;
     align-items: center;
     display: flex;
 
-    .kAddPlaylistBtn {
+    .kAddEntryBtn {
       margin-left: 14px;
       height: 36px;
+      border: none;
     }
 
-    .kSelectedPlaylistsNum{
-      padding-left: 16px;
+    .kSelectedEntriesNum{
+      margin: 0 5px 0 20px;
     }
   }
+
+  .kPlaylistEntriesTable {
+    border: none;
+    position: relative;
+    background-color: white;
+    flex: 1 1 auto;
+  }
+
+  .kSelectedEntriesLabel {
+    font-weight: bold;
+  }
+
+  .kBulkCancel {
+    margin-left: 20px;
+    color: #333333;
+  }
+
+  .kMoveBtn {
+    width: 40px;
+    height: 34px;
+    margin: 0px;
+  }
+
+  .kMoveBtnTop {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .kMoveBtnBottom {
+    margin: 0 20px 0 -4px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .kBulkActions {
+    margin-left: 14px;
+  }
+
+  .kBulkDeleteBtn {
+    padding: 0 8px;
+  }
+}
+
+:host /deep/ .kIcondropdown_arrow_top,
+:host /deep/ .kIcondropdown_arrow_bottom {
+  font-size: 12px;
 }

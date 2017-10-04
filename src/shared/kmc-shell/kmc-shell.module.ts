@@ -8,6 +8,7 @@ import { AppShellService } from "./providers/app-shell.service";
 import { BrowserService } from "./providers/browser.service";
 import { AppContainerComponent } from "./components/app-container/app-container.component";
 import { ReleaseNotesComponent } from "./components/release-notes/release-notes.component";
+import { EntryTypePipe } from 'app-shared/kmc-shell/pipes/entry-type.pipe';
 
 @NgModule({
     imports: <any[]>[
@@ -18,13 +19,16 @@ import { ReleaseNotesComponent } from "./components/release-notes/release-notes.
     ],
     declarations: <any[]>[
         AppContainerComponent,
-        ReleaseNotesComponent
+        ReleaseNotesComponent,
+        EntryTypePipe
     ],
     exports: <any[]>[
         AppContainerComponent,
-        ReleaseNotesComponent
+        ReleaseNotesComponent,
+        EntryTypePipe
     ],
     providers: <any[]>[
+
     ]
 })
 export class KMCShellModule {
