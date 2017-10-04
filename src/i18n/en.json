@@ -64,8 +64,8 @@
         "title": "Login",
         "forgotPassword": "Forgot password?",
         "placeholder": {
-          "username": "Username",
-          "password": "Password"
+          "username": "Enter Email",
+          "password": "Enter Password"
         }
       },
       "invalidLoginHash": {
