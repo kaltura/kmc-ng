@@ -5,7 +5,11 @@ import { ValueFilter } from '../value-filter';
 
 export class DurationsFilters extends ValueFilter<string> {
 
-  constructor(value: string, label: string) {
+    static filterType = "Durations"; // IMPORTANT: you must have a static filterType property that is used at runtime
+
+
+
+    constructor(value: string, label: string) {
     super(label, value, { token: 'applications.content.filters.duration', args: { '0': label } });
   }
 }

@@ -14,11 +14,13 @@ import * as R from 'ramda';
     styleUrls: ['./app-menu.component.scss']
 })
 export class AppMenuComponent implements OnInit, OnDestroy{
-
     private sub: any;
     public _userContext: AppUser;
 
-    constructor(private userAuthentication: AppAuthentication, private appMenuService: AppMenuService, private appNavigator : AppNavigator, private router: Router) {
+    constructor(private userAuthentication: AppAuthentication,
+                private appMenuService: AppMenuService,
+                private appNavigator: AppNavigator,
+                private router: Router) {
         this.sub = router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 this.setSelectedRoute(event.url);
@@ -56,5 +58,4 @@ export class AppMenuComponent implements OnInit, OnDestroy{
     ngOnDestroy() {
         this.sub.unsubscribe();
     }
-
 }

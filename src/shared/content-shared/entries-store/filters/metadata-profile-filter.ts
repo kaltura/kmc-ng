@@ -11,7 +11,9 @@ import { FilterItem } from '../filter-item';
 
 export class MetadataProfileFilter extends ValueFilter<string> {
 
-  private _metadataProfileId: number;
+    static filterType = "MetadataProfile"; // IMPORTANT: you must have a static filterType property that is used at runtime
+
+    private _metadataProfileId: number;
 
   public get metadataProfileId(): number {
     return this._metadataProfileId;

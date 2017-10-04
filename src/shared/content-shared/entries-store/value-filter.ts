@@ -4,6 +4,8 @@ export abstract class ValueFilter<T> extends FilterItem {
 
   private _value: T;
 
+
+
   public get value(): T {
     return this._value;
   }

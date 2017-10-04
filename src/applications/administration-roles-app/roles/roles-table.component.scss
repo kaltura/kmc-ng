@@ -1,0 +1,26 @@
+@import 'app-theme/_variables.scss';
+
+.kRolesTable {
+  background-color: white;
+  overflow-y: hidden;
+  position: absolute;
+  padding: 0px;
+  .kRolesTableActions {
+    width: 100%;
+    text-align: center;
+    button {
+      color: grey !important;
+      background-color: rgba(0, 0, 0, 0) !important;
+      border: none !important;
+      font-size: 16px !important;
+      outline: 0;
+    }
+  }
+}
+
+:host {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0px;
+  flex-direction: column;
+}

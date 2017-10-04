@@ -2,6 +2,126 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.0.1"></a>
+## [3.0.1](https://github.com/kaltura/kmc-ng/compare/v3.0.0...v3.0.1) (2017-09-26)
+
+
+
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/kaltura/kmc-ng/compare/v2.3.1...v3.0.0) (2017-09-25)
+
+
+### Bug Fixes
+
+* entry related files - detect file type upon selection ([25b9289](https://github.com/kaltura/kmc-ng/commit/25b9289))
+* **administration:** update screens accorind to new design ([49df64d](https://github.com/kaltura/kmc-ng/commit/49df64d))
+* center login screen vertically in all resolutions ([5e19ed8](https://github.com/kaltura/kmc-ng/commit/5e19ed8))
+* **content-entries:** created on header should come from localization instead of being hard-coded ([5885399](https://github.com/kaltura/kmc-ng/commit/5885399))
+* **content-entries:** don't confirm chunk operation on bulk delete ([ebceb15](https://github.com/kaltura/kmc-ng/commit/ebceb15))
+* **content-entries:** fix bulk dropdown position ([4fb75d0](https://github.com/kaltura/kmc-ng/commit/4fb75d0))
+* **content-entries:** fix bulk menu misplaced position ([68e5835](https://github.com/kaltura/kmc-ng/commit/68e5835))
+* **content-entries:** fix chunk size environment constant to be 50 ([0e30ad2](https://github.com/kaltura/kmc-ng/commit/0e30ad2))
+* **content-entries:** hook delete icon to delete operation ([418f7fc](https://github.com/kaltura/kmc-ng/commit/418f7fc))
+* **content-entries:** replace loading spinner with designed spinner ([4896d04](https://github.com/kaltura/kmc-ng/commit/4896d04))
+* **content-entries:** rpopup-widget style ([8ea88d1](https://github.com/kaltura/kmc-ng/commit/8ea88d1))
+* **content-entries:** rpopup-widget style ([ba85b50](https://github.com/kaltura/kmc-ng/commit/ba85b50))
+* **content-entries:** set preferences window close button onside the window ([8361ff6](https://github.com/kaltura/kmc-ng/commit/8361ff6))
+* **content-entry:** add caption UI alignment ([3811409](https://github.com/kaltura/kmc-ng/commit/3811409))
+* **content-entry:** default sort by thumbnail dimensions ([48d0006](https://github.com/kaltura/kmc-ng/commit/48d0006))
+* **content-entry:** disable preview & Embed link for entries with status other than "ready" ([bb913a1](https://github.com/kaltura/kmc-ng/commit/bb913a1))
+* **content-entry:** fix calendar style ([75b5231](https://github.com/kaltura/kmc-ng/commit/75b5231))
+* **content-entry:** fix calendar style ([c5f3577](https://github.com/kaltura/kmc-ng/commit/c5f3577))
+* **content-entry:** fix file types for flavour upload (video and audio) ([386dc4b](https://github.com/kaltura/kmc-ng/commit/386dc4b))
+* move search icon to theme repository ([6009faf](https://github.com/kaltura/kmc-ng/commit/6009faf))
+* **content-entry:** fix landing page link when containing {entryId} ([d7ac748](https://github.com/kaltura/kmc-ng/commit/d7ac748))
+* allow more space for caption file name on caption upload ([b8e823e](https://github.com/kaltura/kmc-ng/commit/b8e823e))
+* beter condition for entry instance checking ([d0f06bd](https://github.com/kaltura/kmc-ng/commit/d0f06bd))
+* entries table style fix ([4ffdc2f](https://github.com/kaltura/kmc-ng/commit/4ffdc2f))
+* entry captions - allow selecting DFXP files ([0752a25](https://github.com/kaltura/kmc-ng/commit/0752a25))
+* entry scheduling - allow calendar popup to overflow the entry details component so it won't get cut in low resolutions ([97cc99f](https://github.com/kaltura/kmc-ng/commit/97cc99f))
+* entry scheduling - allow editing of date and time. Allow overflow of calendar popup ([3617484](https://github.com/kaltura/kmc-ng/commit/3617484))
+* entry scheduling - clear dates marks the form as dirty ([17aa1db](https://github.com/kaltura/kmc-ng/commit/17aa1db))
+* entry scheduling - set time zone syntax fix ([28ce05e](https://github.com/kaltura/kmc-ng/commit/28ce05e))
+* fix change owner popup layout (height, margins) in entry details and bulk operation. Fix bug causing a crash when adding tooltip to the selected owner. ([4681097](https://github.com/kaltura/kmc-ng/commit/4681097))
+* fix compilation issues due to merge ([8c62d15](https://github.com/kaltura/kmc-ng/commit/8c62d15))
+* fix IE11 entry details screen width issue (panel exceeds screen width) ([a042ae1](https://github.com/kaltura/kmc-ng/commit/a042ae1))
+* fixed logic in get entry operation ([abc6099](https://github.com/kaltura/kmc-ng/commit/abc6099))
+* fixed styles for flavors table ([00f492f](https://github.com/kaltura/kmc-ng/commit/00f492f))
+* fixed styles for flavors tags using a pipe ([a047320](https://github.com/kaltura/kmc-ng/commit/a047320))
+* prevent double confirmation when navigating between entries with unsaved data ([bbf27ba](https://github.com/kaltura/kmc-ng/commit/bbf27ba))
+* prevent ExpressionChangedAfterItHasBeenCheckedError error when initializing the edit panel ([c3681c5](https://github.com/kaltura/kmc-ng/commit/c3681c5))
+* redirect to login when navigating to the root ([118e688](https://github.com/kaltura/kmc-ng/commit/118e688))
+* resolve symlink version for workspace development ([52cb29c](https://github.com/kaltura/kmc-ng/commit/52cb29c))
+* runtime issue when navigating to default route ([789989b](https://github.com/kaltura/kmc-ng/commit/789989b))
+* typescript trnaspile errors during deployment to production ([f937423](https://github.com/kaltura/kmc-ng/commit/f937423))
+* typo in label ([9424aa5](https://github.com/kaltura/kmc-ng/commit/9424aa5))
+* update label for upload button ([94d2442](https://github.com/kaltura/kmc-ng/commit/94d2442))
+* use new api provided by kaltura-ui for the form-manager module ([5be9d46](https://github.com/kaltura/kmc-ng/commit/5be9d46))
+* verify leave entry details when data is not saved ([a0bd1b1](https://github.com/kaltura/kmc-ng/commit/a0bd1b1))
+* **content-entry:** prevent VOD playback of live entries when video broadcast is offline (entry preview panel) ([8f6d08b](https://github.com/kaltura/kmc-ng/commit/8f6d08b))
+* **content-entry:** set preview panel tooltips placement to the left ([f29c15d](https://github.com/kaltura/kmc-ng/commit/f29c15d))
+* **content-entry:** set preview panel tooltips placement to the left ([ab38a16](https://github.com/kaltura/kmc-ng/commit/ab38a16))
+* **content-entry:** set the default access control profile to be the first option in the drop-down list ([abe88a2](https://github.com/kaltura/kmc-ng/commit/abe88a2))
+* **content-entry:** support line breaks in access control profile description ([c9300f7](https://github.com/kaltura/kmc-ng/commit/c9300f7))
+* **content-playlists:** display an alert when trying to create a rule-based playlist instead of using the area blocker message ([6615ea6](https://github.com/kaltura/kmc-ng/commit/6615ea6))
+* **settings-account-settings:** fix form styles ([466a222](https://github.com/kaltura/kmc-ng/commit/466a222))
+* **shell:** move sherad configuration outside of environments/environment ([48556d9](https://github.com/kaltura/kmc-ng/commit/48556d9))
+
+
+### Code Refactoring
+
+* use angular-cli during the deployment process ([a31dd05](https://github.com/kaltura/kmc-ng/commit/a31dd05))
+
+
+### Features
+
+* **administration-roles:** add roles list, role edit/add/duplicate/delete. missing roles permission modification ([bcc79e5](https://github.com/kaltura/kmc-ng/commit/bcc79e5))
+* **content:** entries bulk operations for delete, change owner, remove from category, download, access control ([c386c3d](https://github.com/kaltura/kmc-ng/commit/c386c3d))
+* **content:** support categories list actions like reload, pagination and sorting ([2a32ca2](https://github.com/kaltura/kmc-ng/commit/2a32ca2))
+* **content-categories:** add category details view (layout & basic functionality only) ([966d178](https://github.com/kaltura/kmc-ng/commit/966d178))
+* **content-categories:** show categories list with basic implementation ([c220a6a](https://github.com/kaltura/kmc-ng/commit/c220a6a))
+* **content-entries:** placeholders for missing bulk actions (add to new category, add to new playlist) ([ec8864a](https://github.com/kaltura/kmc-ng/commit/ec8864a))
+* **content-playlists:** add new playlist wizard (currently support only manual playlist) ([9cdd1a1](https://github.com/kaltura/kmc-ng/commit/9cdd1a1))
+* **content-playlists:** add section list navigation panel, show playlist details and loading notifications ([40496cb](https://github.com/kaltura/kmc-ng/commit/40496cb))
+* **content-playlists:** bulk delete of playlists ([25a877a](https://github.com/kaltura/kmc-ng/commit/25a877a))
+* add categories app (currently without content) and adjust the application routing accordingly ([fb40452](https://github.com/kaltura/kmc-ng/commit/fb40452))
+* add growl support as part of the app services ([cf7d8b5](https://github.com/kaltura/kmc-ng/commit/cf7d8b5))
+* add high speed upload link and fix upload window text labels ([0524232](https://github.com/kaltura/kmc-ng/commit/0524232))
+* add login form, forgot password form, password expired and invalid login hash views ([0b1368b](https://github.com/kaltura/kmc-ng/commit/0b1368b))
+* add npm script to easily checkout to the latest standalone commit ([0ca67e1](https://github.com/kaltura/kmc-ng/commit/0ca67e1))
+* add studio (load in production build only) ([67a0597](https://github.com/kaltura/kmc-ng/commit/67a0597))
+* add tool to extract dependency licenses ([0ca3649](https://github.com/kaltura/kmc-ng/commit/0ca3649))
+* allow app minification by removing constraints on function names ([e7051e5](https://github.com/kaltura/kmc-ng/commit/e7051e5))
+* notify the user that caption language is used when caption label is set to empty ([ca18dcc](https://github.com/kaltura/kmc-ng/commit/ca18dcc))
+* playlist navigation between sections and warn when leaving before changes were saved ([eb37e66](https://github.com/kaltura/kmc-ng/commit/eb37e66))
+* show upload menu when user clicks on the upload button in the application header ([57b4a79](https://github.com/kaltura/kmc-ng/commit/57b4a79))
+* support auto-complete color and tooltip for manually added items ([31ebf26](https://github.com/kaltura/kmc-ng/commit/31ebf26))
+* support confirmation multi lines message ([f060a6d](https://github.com/kaltura/kmc-ng/commit/f060a6d))
+* **content/playlists:** add playlist metadata section supporting data loading and saving ([79290b5](https://github.com/kaltura/kmc-ng/commit/79290b5))
+* support external media entries ([7c8e1ea](https://github.com/kaltura/kmc-ng/commit/7c8e1ea))
+* support language file hash to bypass browser cache upon application upgrade ([3b102dd](https://github.com/kaltura/kmc-ng/commit/3b102dd))
+* upgrade PrimeNG to v4.1.0 ([7ca9be2](https://github.com/kaltura/kmc-ng/commit/7ca9be2))
+
+
+### Performance Improvements
+
+* import kaltura-typescript-client object explicitly to bundle only elements being used ([#163](https://github.com/kaltura/kmc-ng/issues/163)) ([9597b5e](https://github.com/kaltura/kmc-ng/commit/9597b5e))
+* upgrade PrimeNG version to 4.1.3 to gain datagrid performances enhancements ([a459304](https://github.com/kaltura/kmc-ng/commit/a459304))
+
+
+### BREAKING CHANGES
+
+* To support the angular-cli process we performed some adjustments:
+- kaltura ng libraries were renamed from `@kaltura-ng2` to `@kaltura-ng`.
+- kaltura ng libraries build process uses ngc instead of tsc.
+- kaltura typescript client lib `types/all` imports were changed to import types explicitly.
+- kaltura theme was moved from the repo outside to a separated theme repo. previously imported theme from `~kmcng-theme/scss/variables`. use `app-styles/_variables.scss`instead.
+- the configuration data was merged into angular-cli environment infrastructure and is now accessible by importing `environment` from `app-environment`
+- kmc-shell was moved into `app-shared`
+- css class `kUseKMCngIcons` was replaced with `kOverrideFAIcons`
+
+
+
 <a name="2.3.1"></a>
 ## [2.3.1](https://github.com/kaltura/KMCng/compare/v2.3.0...v2.3.1) (2017-06-13)
 
