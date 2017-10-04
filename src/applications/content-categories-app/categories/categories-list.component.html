@@ -3,7 +3,7 @@
     <div #categoriesTableHolder class="kCategoriesHolder kContent">
       <div class="kCategoriesTableFilters">
         <button pButton type="button" label="{{'applications.content.categories.addCategory' | translate}}" class="kButtonBranded kAddCategoryBtn"
-          [disabled]="_selectedCategories?.length"></button>
+          [disabled]="_selectedCategories?.length" (click)="_addCategory()"></button>
         <span class="kSelectedCategoriesNum" *ngIf="_categoriesTotalCount">
           {{_categoriesTotalCount}} {{'applications.content.categories.categories' | translate}}
         </span>
@@ -37,3 +37,9 @@
     </div>
   </div>
 </k-area-blocker>
+
+<kPopupWidget #addNewCategory [popupWidth]="568" [popupHeight]="586" [modal]="true">
+  <ng-template>
+    <kAddNewCategory [parentPopupWidget]="addNewCategory"></kAddNewCategory>
+  </ng-template>
+</kPopupWidget>

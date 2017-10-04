@@ -226,6 +226,18 @@
         "moveCategory": "Move Category",
         "cancel": "Cancel"
       },
+      "addNewCategory": {
+        "newCategory": "New Category",
+        "selectCategoryParent": "Select the parent category under which the new category will appear",
+        "cancelEdit": "Cancel Edit",
+        "discard": "Discard all changes?",
+        "apply": "Apply",
+        "cancel": "Cancel",
+        "noParent":"No Parent",
+        "searchCategories": "Search Categories",
+        "selectedParentCategory":"Parent Category Id: {{value}}"
+        
+      },
       "entries": {
         "entries": "Entries",
         "selected": "Selected",
