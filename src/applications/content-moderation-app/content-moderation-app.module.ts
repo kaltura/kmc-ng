@@ -7,18 +7,6 @@ import { ContentModerationComponent } from './content-moderation.component';
 import { EntriesComponentsList } from './entries/entries-components-list';
 import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
 
-import {
-  BulkAccessControlService,
-  BulkAddCategoriesService,
-  BulkAddTagsService,
-  BulkChangeOwnerService,
-  BulkDeleteService,
-  BulkDownloadService,
-  BulkRemoveCategoriesService,
-  BulkRemoveTagsService,
-  BulkSchedulingService
-} from './entries/bulk-actions/services';
-
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
 import {
 	DataTableModule,
@@ -100,17 +88,7 @@ import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
     ],
     exports: [
     ],
-    providers : [
-      BulkSchedulingService,
-      BulkAccessControlService,
-      BulkAddTagsService,
-      BulkRemoveTagsService,
-      BulkAddCategoriesService,
-      BulkChangeOwnerService,
-      BulkRemoveCategoriesService,
-      BulkDeleteService,
-      BulkDownloadService
-    ]
+    providers : []
 })
 export class ContentModerationAppModule {
 }

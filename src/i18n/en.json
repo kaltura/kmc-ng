@@ -275,8 +275,11 @@
         "notificationHasBeenSent": "A notification has been sent to your CMS system to flag this user.",
         "approveMedia": "Moderation: Approve media",
         "sureToApprove": "Are you sure you want to approve the following entry? \n {{0}}",
+        "sureToApproveMultiple": "Are you sure you want to approve the following entries? \n {{0}}",
         "rejectMedia": "Moderation: Reject media",
-        "sureToReject": "Are you sure you want to reject the following entry? \n {{0}}"
+        "sureToReject": "Are you sure you want to reject the following entry? \n {{0}}",
+        "sureToRejectMultiple": "Are you sure you want to reject the following entries? \n {{0}}",
+        "selectAction": "Select Action"
       },
       "moderationDetails": {
         "name": "Name",
@@ -435,7 +438,9 @@
         "confirmPlaylsts": "Are you sure you want to update {{0}} playlists? It could take a while...",
         "deleteEntries": "Delete Entries",
         "deleteConfirm": "Are you sure you want to delete the selected entries?",
-        "deleteNote": "Please note: the selected entries will be permanently deleted from your account."
+        "deleteNote": "Please note: the selected entries will be permanently deleted from your account.",
+        "approve": "Approve",
+        "reject": "Reject"
       },
       "entryDetails": {
         "sections": {

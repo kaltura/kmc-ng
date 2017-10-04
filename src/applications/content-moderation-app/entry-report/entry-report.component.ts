@@ -130,7 +130,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
 
   doApproveEntry(): void {
     this.showLoader = true;
-    this._bulkService.approveEntry(this.entry.id)
+    this._bulkService.approveEntry([this.entry.id])
       .cancelOnDestroy(this)
       .subscribe(
         () => {
@@ -182,7 +182,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
 
   doRejectEntry(): void {
     this.showLoader = true;
-    this._bulkService.rejectEntry(this.entry.id)
+    this._bulkService.rejectEntry([this.entry.id])
       .cancelOnDestroy(this)
       .subscribe(
         () => {

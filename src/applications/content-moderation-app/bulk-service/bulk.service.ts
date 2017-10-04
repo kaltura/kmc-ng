@@ -3,7 +3,9 @@ import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BaseEntryApproveAction } from 'kaltura-typescript-client/types/BaseEntryApproveAction';
 import { Observable } from 'rxjs/Observable';
-import {BaseEntryRejectAction} from "kaltura-typescript-client/types/BaseEntryRejectAction";
+import { BaseEntryRejectAction } from 'kaltura-typescript-client/types/BaseEntryRejectAction';
+import { KalturaMultiRequest, KalturaMultiResponse, KalturaRequest } from 'kaltura-typescript-client';
+import { environment } from 'app-environment';
 
 @Injectable()
 export class BulkService implements OnDestroy {
@@ -12,47 +14,67 @@ export class BulkService implements OnDestroy {
     private _appLocalization: AppLocalization
   ) {}
 
-  approveEntry(entryId: string): Observable<void> {
+  approveEntry(entryIds: string[]): Observable<void> {
     return Observable.create(observer => {
-      this._kalturaServerClient.multiRequest([
-        new BaseEntryApproveAction(
-          {
-            entryId: entryId
-          }
-        )]
-      )
-        .cancelOnDestroy(this)
-        .subscribe(
-          () => {
-            observer.next();
-            observer.complete();
-          },
-          error => {
-            observer.error(new Error(this._appLocalization.get('applications.content.moderation.errorConnecting')));
-          }
-        );
+      let requests: BaseEntryApproveAction[] = [];
+      entryIds.forEach(entryId => requests.push(new BaseEntryApproveAction({entryId: entryId})));
+      this._transmit(requests, true).subscribe(
+        () => {
+          observer.next({});
+          observer.complete();
+        },
+        error => {
+          observer.error(new Error(this._appLocalization.get('applications.content.moderation.errorConnecting')));
+        });
     });
   }
 
-  rejectEntry(entryId: string): Observable<void> {
+  private _transmit(requests : KalturaRequest<any>[], chunk : boolean) : Observable<{}> {
+    let maxRequestsPerMultiRequest = requests.length;
+    if (chunk){
+      maxRequestsPerMultiRequest = environment.modules.contentPlaylists.bulkActionsLimit;
+    }
+
+    let multiRequests: Observable<KalturaMultiResponse>[] = [];
+    let mr :KalturaMultiRequest = new KalturaMultiRequest();
+
+    let counter = 0;
+    for (let i = 0; i < requests.length; i++){
+      if (counter === maxRequestsPerMultiRequest){
+        multiRequests.push(this._kalturaServerClient.multiRequest(mr));
+        mr = new KalturaMultiRequest();
+        counter = 0;
+      }
+      mr.requests.push(requests[i]);
+      counter++;
+    }
+
+    multiRequests.push(this._kalturaServerClient.multiRequest(mr));
+
+    return Observable.forkJoin(multiRequests)
+      .map(responses => {
+        const mergedResponses = [].concat.apply([], responses);
+        let hasFailure = mergedResponses.filter(function ( response ) {return response.error}).length > 0;
+        if (hasFailure) {
+          throw new Error("error");
+        } else {
+          return {};
+        }
+      });
+  }
+
+  rejectEntry(entryIds: string[]): Observable<void> {
     return Observable.create(observer => {
-      this._kalturaServerClient.multiRequest([
-        new BaseEntryRejectAction(
-          {
-            entryId: entryId
-          }
-        )]
-      )
-        .cancelOnDestroy(this)
-        .subscribe(
-          () => {
-            observer.next();
-            observer.complete();
-          },
-          error => {
-            observer.error(new Error(this._appLocalization.get('applications.content.moderation.errorConnecting')));
-          }
-        );
+      let requests: BaseEntryRejectAction[] = [];
+      entryIds.forEach(entryId => requests.push(new BaseEntryRejectAction({entryId: entryId})));
+      this._transmit(requests, true).subscribe(
+        () => {
+          observer.next({});
+          observer.complete();
+        },
+        error => {
+          observer.error(new Error(this._appLocalization.get('applications.content.moderation.errorConnecting')));
+        });
     });
   }
 

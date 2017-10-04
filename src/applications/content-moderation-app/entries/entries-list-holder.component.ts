@@ -1,5 +1,5 @@
-import { Component, ViewChild, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import {Component, ViewChild, OnDestroy, OnInit} from '@angular/core';
+import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
 import { BrowserService } from 'app-shared/kmc-shell';
@@ -15,7 +15,7 @@ import { BulkService } from '../bulk-service/bulk.service';
   templateUrl: './entries-list-holder.component.html',
   providers : [ ModerationStore, BulkService ]
 })
-export class EntriesListHolderComponent implements OnDestroy {
+export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent) private _entriesList: EntriesListComponent;
 
   _blockerMessage: AreaBlockerMessage = null;
@@ -23,6 +23,7 @@ export class EntriesListHolderComponent implements OnDestroy {
   currentEntryId: string = '';
   isEntryPermissionApproved: boolean = false;
   isEntryPermissionRejected: boolean = false;
+  _bulkActionsMenu: MenuItem[] = [];
 
   _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
@@ -52,11 +53,12 @@ export class EntriesListHolderComponent implements OnDestroy {
     }
   ];
 
-  constructor(private _router: Router,
-              private _browserService: BrowserService,
-              private _appLocalization: AppLocalization,
-              private _entriesStore: EntriesStore,
-              private _bulkService: BulkService) {
+  constructor(
+    private _browserService: BrowserService,
+    private _appLocalization: AppLocalization,
+    private _entriesStore: EntriesStore,
+    private _bulkService: BulkService
+  ) {
     this._entriesStore.paginationCacheToken = 'entries-list';
   }
 
@@ -81,14 +83,35 @@ export class EntriesListHolderComponent implements OnDestroy {
     }
   }
 
-  doApproveEntry(entryId: string): void {
+  approveEntries(): void {
+    let entriesToApprove = this._entriesList.selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}`),
+        entries: string = this._entriesList.selectedEntries.length <= 10 ? entriesToApprove.join(',').replace(/,/gi, '\n') : '',
+        message = this._entriesList.selectedEntries.length > 1 ?
+        this._appLocalization.get('applications.content.moderation.sureToApproveMultiple', {0: entries}) :
+        this._appLocalization.get('applications.content.moderation.sureToApprove', {0: entries});
+    if(!this.isEntryPermissionApproved) { // TODO [kmcng] need to get such permissions from somewhere
+      this._browserService.confirm(
+        {
+          header: this._appLocalization.get('applications.content.moderation.approveMedia'),
+          message: message,
+          accept: () => {
+            this.doApproveEntry(this._entriesList.selectedEntries.map(entry => entry.id));
+          }
+        }
+      );
+    } else {
+      this.doApproveEntry(this._entriesList.selectedEntries.map(entry => entry.id));
+    }
+  }
+
+  doApproveEntry(entryIds: string | string[]): void {
     this._isBusy = true;
-    this._bulkService.approveEntry(entryId)
+    this._bulkService.approveEntry(typeof entryIds === 'string' ? [entryIds] : entryIds)
       .cancelOnDestroy(this)
       .subscribe(
         () => {
           this._isBusy = false;
-          this._entriesStore.reload(true);
+          this._entriesList.onBulkChange({reload: true});
         },
         error => {
           this._isBusy = false;
@@ -100,7 +123,7 @@ export class EntriesListHolderComponent implements OnDestroy {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
                     this._blockerMessage = null;
-                    this.doApproveEntry(entryId);
+                    this.doApproveEntry(entryIds);
                   }
                 },
                 {
@@ -114,6 +137,27 @@ export class EntriesListHolderComponent implements OnDestroy {
           )
         }
       );
+  }
+
+  rejectEntries(): void {
+    let entriesToReject = this._entriesList.selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}`),
+      entries: string = this._entriesList.selectedEntries.length <= 10 ? entriesToReject.join(',').replace(/,/gi, '\n') : '',
+      message = this._entriesList.selectedEntries.length > 1 ?
+        this._appLocalization.get('applications.content.moderation.sureToRejectMultiple', {0: entries}) :
+        this._appLocalization.get('applications.content.moderation.sureToReject', {0: entries});
+    if(!this.isEntryPermissionRejected) { // TODO [kmcng] need to get such permissions from somewhere
+      this._browserService.confirm(
+        {
+          header: this._appLocalization.get('applications.content.moderation.rejectMedia'),
+          message: message,
+          accept: () => {
+            this.doRejectEntry(this._entriesList.selectedEntries.map(entry => entry.id));
+          }
+        }
+      );
+    } else {
+      this.doRejectEntry(this._entriesList.selectedEntries.map(entry => entry.id));
+    }
   }
 
   rejectEntry(entryId: string, entryName: string): void {
@@ -132,14 +176,14 @@ export class EntriesListHolderComponent implements OnDestroy {
     }
   }
 
-  doRejectEntry(entryId: string): void {
+  doRejectEntry(entryIds: string | string[]): void {
     this._isBusy = true;
-    this._bulkService.rejectEntry(entryId)
+    this._bulkService.rejectEntry(typeof entryIds === 'string' ? [entryIds] : entryIds)
       .cancelOnDestroy(this)
       .subscribe(
         () => {
           this._isBusy = false;
-          this._entriesStore.reload(true);
+          this._entriesList.onBulkChange({reload: true});
         },
         error => {
           this._isBusy = false;
@@ -151,7 +195,7 @@ export class EntriesListHolderComponent implements OnDestroy {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
                     this._blockerMessage = null;
-                    this.doRejectEntry(entryId);
+                    this.doRejectEntry(entryIds);
                   }
                 },
                 {
@@ -181,6 +225,27 @@ export class EntriesListHolderComponent implements OnDestroy {
       default:
         break;
     }
+  }
+
+  getBulkActionItems(): MenuItem[] {
+    return [
+      {
+        label: this._appLocalization.get('applications.content.bulkActions.approve'),
+        command: () => {
+          this.approveEntries();
+        }
+      },
+      {
+        label: this._appLocalization.get('applications.content.bulkActions.reject'),
+        command: () => {
+          this.rejectEntries();
+        }
+      }
+    ];
+  }
+
+  ngOnInit() {
+    this._bulkActionsMenu = this.getBulkActionItems();
   }
 
   ngOnDestroy() {}
