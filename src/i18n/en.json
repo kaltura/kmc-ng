@@ -733,12 +733,44 @@
       },
       "categoryDetails": {
         "header": "Category - {{0}}",
+        "headerProps": {
+          "id": "ID: {{0}} |",
+          "subCategories": " Sub-Categories: {{0}} |",
+          "entries": " Entries: {{0}} |",
+          "creationDate": " Creation Date {{0}} |",
+          "lastUpdate": " Last Update {{0}} |",
+          "createdBy": " Created by: {{0}} |",
+          "privacyContextLabel": " Privacy Context Label: {{0}}"
+        },
         "cancelEdit": "Cancel Edit",
         "discard": "Discard all changes?",
         "sections": {
           "metadata": "Metadata",
           "entitlements": "Entitlements",
           "subcategories": "Sub Categories"
+        },
+        "metadata": {
+          "categoryID": "ID",
+          "categoryName": "Name",
+          "description": "Description",
+          "tags": "Tags",
+          "categories": "Categories",
+          "browse": "Browse categories",
+          "selectCategories": "Select Categories",
+          "addCategories": "Add Categories",
+          "catSelect": "Select one or several categories",
+          "offlineMsg": "Offline Message",
+          "refId": "Reference ID",
+          "jumpTo": "Jump to",
+          "add": "Add",
+          "delete": "Delete",
+          "thumbnail": "Thumbnail",
+          "addEntry": "Add Entry",
+          "remove": "Remove",
+          "selected": "Selected",
+          "clear": "Clear Selection",
+          "addGroup": "Add Group",
+          "deleteGroup": "Delete Group"
         },
         "errors": {
           "reload": "Reload",
