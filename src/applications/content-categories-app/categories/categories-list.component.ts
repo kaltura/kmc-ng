@@ -6,6 +6,8 @@ import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
 import { PopupWidgetComponent } from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
 import { CategoriesTableComponent } from "./categories-table.component";
 import { CategoriesService, Categories, SortDirection } from './categories.service';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { AppLocalization } from "@kaltura-ng/kaltura-common";
 
 @Component({
     selector: 'kCategoriesList',
@@ -34,7 +36,10 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         sortDirection: SortDirection.Desc
     };
 
-    constructor(private _categoriesService: CategoriesService, private router: Router) {
+    constructor(private _categoriesService: CategoriesService,
+        private router: Router,
+        private _browserService: BrowserService,
+        private _appLocalization: AppLocalization) {
     }
 
     ngOnInit() {
@@ -92,6 +97,26 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
             case "edit":
                 this.router.navigate(['/content/categories/category', event.categoryID]);
                 break;
+
+            case 'delete':
+                const currentCategory = this._categories.find(category => category.id == event.categoryID);
+                let message: string;
+                if (currentCategory.directSubCategoriesCount > 0) {
+                    message = this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories', { 0: currentCategory.id });
+                }
+                else {
+                    message = this._appLocalization.get('applications.content.categories.confirmDeleteSingle', { 0: currentCategory.id });
+                }
+                this._browserService.confirm(
+                    {
+                        header: this._appLocalization.get('applications.content.categories.deleteCategory'),
+                        message: message,
+                        accept: () => {
+                            this._deleteCategory(event.categoryID);
+                        }
+                    }
+                );
+                break;
             default:
                 break;
         }
@@ -99,5 +124,49 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
 
     _addCategory() {
         this.addNewCategory.open();
+    }
+
+    private _deleteCategory(categoryId: number): void {
+        this._isBusy = true;
+        this._blockerMessage = null;
+        this._categoriesService.deleteCategory(categoryId).subscribe(
+          () => {
+            this._isBusy = false;
+            this._browserService.showGrowlMessage({
+              severity: 'success',
+              detail: this._appLocalization.get('applications.content.categories.deleted')
+            });
+            this._categoriesService.reload(true);
+          },
+          error => {
+            this._isBusy = false;
+
+            this._blockerMessage = new AreaBlockerMessage(
+              {
+                message: error.message,
+                buttons: [
+                  {
+                    label: this._appLocalization.get('app.common.retry'),
+                    action: () => {
+                      this._deleteCategory(categoryId);
+                    }
+                  },
+                  {
+                    label: this._appLocalization.get('app.common.cancel'),
+                    action: () => {
+                      this._blockerMessage = null;
+                    }
+                  }
+                ]
+              }
+            )
+          }
+        );
+      }
+
+    onBulkChange(event): void {
+        if (event.reload === true) {
+            this._reload();
+        }
     }
 }

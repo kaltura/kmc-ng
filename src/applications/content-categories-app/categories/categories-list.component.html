@@ -9,7 +9,8 @@
         </span>
         <div [class.kHidden]="!_selectedCategories?.length" class="kBulkOperations">
           <span class="kSelectedCategoriesLabel">• {{_selectedCategories?.length}} {{'applications.content.categories.selected' | translate}}</span>
-          <kCategoriesBulkActions [selectedCategories]="_selectedCategories"></kCategoriesBulkActions>
+          <kCategoriesBulkActions [selectedCategories]="_selectedCategories"
+          (onBulkChange)="onBulkChange($event)"></kCategoriesBulkActions>
           <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.categories.cancel' | translate}}</a>
         </div>
         <div [class.kHidden]="_selectedCategories?.length" class="kFilters">

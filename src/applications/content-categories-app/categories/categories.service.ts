@@ -12,6 +12,7 @@ import { CategoryListAction } from 'kaltura-typescript-client/types/CategoryList
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaCategoryListResponse } from "kaltura-typescript-client/types/KalturaCategoryListResponse";
 import { KalturaCategory } from "kaltura-typescript-client/types/KalturaCategory";
+import { CategoryDeleteAction } from "kaltura-typescript-client/types/CategoryDeleteAction";
 
 export type UpdateStatus = {
     loading: boolean;
@@ -37,7 +38,7 @@ export interface QueryData {
 }
 
 export interface NewCategoryData {
-    parentCategoryId: number;    
+    parentCategoryId: number;
 }
 
 @Injectable()
@@ -51,7 +52,7 @@ export class CategoriesService implements OnDestroy {
         pageSize: 50,
         sortBy: 'createdAt',
         sortDirection: SortDirection.Desc,
-        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, fullName'
+        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, fullName,tags'
     });
 
     public state$ = this._state.asObservable();
@@ -204,6 +205,31 @@ export class CategoriesService implements OnDestroy {
             return Observable.throw(err);
         }
 
+    }
+
+    public deleteCategory(categoryId: number): Observable<void> {
+
+        return Observable.create(observer => {
+            let subscription: ISubscription;
+            if (categoryId && categoryId > 0) {
+                subscription = this._kalturaClient.request(new CategoryDeleteAction({ id: categoryId })).subscribe(
+                    result => {
+                        observer.next();
+                        observer.complete();
+                    },
+                    error => {
+                        observer.error(error);
+                    }
+                );
+            } else {
+                observer.error(new Error('missing categoryId argument'));
+            }
+            return () => {
+                if (subscription) {
+                    subscription.unsubscribe();
+                }
+            }
+        });
     }
 
     public setNewCategoryData(newCategoryData: NewCategoryData) {
