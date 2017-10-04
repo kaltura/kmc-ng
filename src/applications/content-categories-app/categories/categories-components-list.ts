@@ -17,7 +17,7 @@ export const CategoriesComponentsList = [
     MaxCategoriesPipe,
     CategoriesBulkActionsComponent,
     PrimeTableSortDirectionPipe,
-    AddNewCategory
+    AddNewCategory,
     PrimeTableSortDirectionPipe,
     CategoriesBulkAddTags,
     CategoriesBulkRemoveTags,
