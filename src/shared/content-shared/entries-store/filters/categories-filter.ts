@@ -11,7 +11,10 @@ export enum CategoriesFilterModes {
 
 export class CategoriesFilter extends ValueFilter<number> {
 
-  private _mode: CategoriesFilterModes;
+    static filterType = "Categories"; // IMPORTANT: you must have a static filterType property that is used at runtime
+
+
+    private _mode: CategoriesFilterModes;
 
   public get mode(): CategoriesFilterModes {
     return this._mode;

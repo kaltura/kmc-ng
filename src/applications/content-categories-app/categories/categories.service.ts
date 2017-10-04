@@ -37,6 +37,10 @@ export interface QueryData {
     fields: string
 }
 
+export interface NewCategoryData {
+    parentCategoryId: number;
+}
+
 @Injectable()
 export class CategoriesService implements OnDestroy {
 
@@ -54,7 +58,7 @@ export class CategoriesService implements OnDestroy {
     public state$ = this._state.asObservable();
     public categories$ = this._categories.asObservable();
     public queryData$ = this._queryData.asObservable();
-
+    private _newCategoryData: NewCategoryData = null;
     constructor(private _kalturaClient: KalturaClient,
         private browserService: BrowserService) {
         const defaultPageSize = this.browserService.getFromLocalStorage("categories.list.pageSize");
@@ -226,6 +230,18 @@ export class CategoriesService implements OnDestroy {
                 }
             }
         });
+    }
+
+    public setNewCategoryData(newCategoryData: NewCategoryData) {
+        this._newCategoryData = newCategoryData;
+    }
+
+    public getNewCategoryData(): NewCategoryData {
+        return this._newCategoryData;
+    }
+
+    public clearNewCategoryData(): void {
+        this._newCategoryData = null
     }
 }
 

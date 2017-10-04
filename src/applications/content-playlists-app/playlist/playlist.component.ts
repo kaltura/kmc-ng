@@ -1,9 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BrowserService } from 'app-shared/kmc-shell';
-import {
-  AreaBlockerMessage,
-  AreaBlockerMessageButton
-} from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -43,17 +40,19 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 					this._showLoader = response.isBusy;
 					if(response.error) {
             const buttons = [];
-            if(response.error.origin === 'reload') {
+            if(response.error.origin === 'reload' || response.error.origin === 'pre-save') {
               buttons.push(this._createBackToPlaylistsButton());
               buttons.push({
                   label: this._appLocalization.get('applications.content.playlistDetails.errors.retry'),
                   action: () => {
+                    this._areaBlockerMessage = null;
                     this._playlistStore.reloadPlaylist();
+                    this._areaBlockerMessage = null;
                   }
                 });
             } else if(response.error.origin === 'save') {
               buttons.push ({
-                  label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
+                  label: this._appLocalization.get('applications.content.playlistDetails.errors.dismiss'),
                   action: () => {
                   this._areaBlockerMessage = null;
                 }
@@ -61,12 +60,18 @@ export class PlaylistComponent implements OnInit, OnDestroy {
             } else {
               buttons.push(this._createBackToPlaylistsButton());
             }
+            let message = response.error.message;
+                message = message || this._appLocalization.get('applications.content.playlistDetails.errors.loadError');
             this._areaBlockerMessage = new AreaBlockerMessage({
-              message: response.error.message,
+              message: message,
               buttons: buttons
             });
           }
-				}
+				},
+        error => {
+          // TODO [kmc] add error message
+          throw error;
+        }
 			);
 		this._playlistStore.playlist$
       .cancelOnDestroy(this)
@@ -109,7 +114,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     this._playlistStore.savePlaylist();
   }
 
-  private _navigateToPlaylist(direction: 'next' | 'prev') : void {
+  public _navigateToPlaylist(direction: 'next' | 'prev') : void {
     // TODO [kmcng] find a better way that doesn't need access to the playlist directly
     const playlists = this._playlistsStore.playlists;
     if (playlists && this._currentPlaylistId) {

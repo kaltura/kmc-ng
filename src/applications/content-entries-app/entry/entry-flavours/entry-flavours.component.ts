@@ -10,6 +10,8 @@ import { Menu, MenuItem } from 'primeng/primeng';
 import { EntryFlavoursHandler } from './entry-flavours-handler';
 import { Flavor } from './flavor';
 import { EntryFormManager } from '../entry-form-manager';
+import { environment } from 'app-environment';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kEntryFlavours',
@@ -32,7 +34,9 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 
 	private _importPopupStateChangeSubscribe: ISubscription;
 
-	constructor(private _entryFormManager : EntryFormManager, private _appLocalization: AppLocalization) {
+	constructor(private _entryFormManager: EntryFormManager,
+              private _appLocalization: AppLocalization,
+              private _browserService: BrowserService) {
     }
 
     ngOnInit() {
@@ -115,20 +119,35 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	private _setUploadFilter(entry: KalturaMediaEntry): string{
 		let filter = "";
 		if (entry.mediaType.toString() === KalturaMediaType.video.toString()){
-			filter = "video/*";
+			filter = ".flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp4,.3gp,.f4v,.m4v";
 		}
 		if (entry.mediaType.toString() === KalturaMediaType.audio.toString()){
-			filter = "audio/*";
+			filter = ".flv,.asf,.qt,.mov,.mpg,.avi,.wmv,.mp3,.wav";
 		}
 		return filter;
 	}
 
-	public _onFileSelected(selectedFiles: FileList) {
-		if (selectedFiles && selectedFiles.length) {
-			const fileData: File = selectedFiles[0];
-			this._handler.uploadFlavor(this._selectedFlavor, fileData);
-		}
-	}
+  private _validateFileSize(file: File): boolean {
+    const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
+    const fileSize = file.size / 1024 / 1024; // convert to Mb
+
+    return fileSize > maxFileSize;
+  }
+
+  public _onFileSelected(selectedFiles: FileList) {
+    if (selectedFiles && selectedFiles.length) {
+      const fileData: File = selectedFiles[0];
+
+      if (!this._validateFileSize(fileData)) {
+        this._handler.uploadFlavor(this._selectedFlavor, fileData);
+      } else {
+        this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
+          message: this._appLocalization.get('applications.upload.validation.fileSizeExceeded')
+        });
+      }
+    }
+  }
 
     ngOnDestroy() {
 	    this.actionsMenu.hide();

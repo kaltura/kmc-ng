@@ -9,12 +9,15 @@ import { PrimeTableSortDirectionPipe } from './pipes/prime-table-sort-direction.
 import { CategoriesBulkChangeContentPrivacy } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-content-privacy/bulk-change-content-privacy.component";
 import { CategoriesBulkChangeCategoryListing } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-category-listing/bulk-change-category-listing.component";
 import { CategoriesBulkChangeContributionPolicy } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-contribution-policy/bulk-change-contribution-policy.component";
+import { AddNewCategory } from "./add-new-category/add-new-category.component";
 
 export const CategoriesComponentsList = [
     CategoriesListComponent,
     CategoriesTableComponent,
     MaxCategoriesPipe,
     CategoriesBulkActionsComponent,
+    PrimeTableSortDirectionPipe,
+    AddNewCategory
     PrimeTableSortDirectionPipe,
     CategoriesBulkAddTags,
     CategoriesBulkRemoveTags,

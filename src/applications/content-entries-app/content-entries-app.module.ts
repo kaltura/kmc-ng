@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { DetailsBarModule } from '@kaltura-ng/kaltura-ui/details-bar';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import {
   AccordionModule,
@@ -54,6 +54,7 @@ import {
 } from './entries/bulk-actions/services';
 import { EntryCanDeactivate } from './entry/entry-can-deactivate.service';
 import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
+import { ContentEntriesAppService } from './content-entries-app.service';
 
 @NgModule({
   imports: [
@@ -92,6 +93,7 @@ import { ContentSharedModule } from 'app-shared/content-shared/content-shared.mo
     TieredMenuModule,
     TooltipModule,
     TreeModule,
+    DetailsBarModule,
     ContentSharedModule
   ],
   declarations: [
@@ -111,7 +113,8 @@ import { ContentSharedModule } from 'app-shared/content-shared/content-shared.mo
     BulkRemoveCategoriesService,
     BulkDeleteService,
     BulkDownloadService,
-    EntryCanDeactivate
+    EntryCanDeactivate,
+    ContentEntriesAppService
   ],
 })
 export class ContentEntriesAppModule {

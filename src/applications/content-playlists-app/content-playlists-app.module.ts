@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DetailsBarModule } from '@kaltura-ng/kaltura-ui/details-bar';
 
 import { routing } from './content-playlists-app.routes';
 
@@ -15,6 +16,7 @@ import {
 	InputTextModule,
 	CalendarModule,
 	MenuModule,
+  RadioButtonModule,
 	SharedModule
 } from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
@@ -50,10 +52,12 @@ import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.servic
       PopupWidgetModule,
       CalendarModule,
       MenuModule,
+      RadioButtonModule,
       TagsModule,
       KalturaPrimeNgUIModule,
       AutoCompleteModule,
       SharedModule,
+	  DetailsBarModule,
       RouterModule.forChild(routing)
     ],
     declarations: [
@@ -64,7 +68,7 @@ import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.servic
     exports: [
     ],
     providers : [
-        PlaylistCanDeactivate
+      PlaylistCanDeactivate
     ]
 })
 export class ContentPlaylistsAppModule {

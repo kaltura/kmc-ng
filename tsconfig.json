@@ -17,6 +17,7 @@
     ],
     "lib": [
       "es2016",
+      "ES2017",
       "dom"
     ],
     "paths": {
@@ -24,7 +25,7 @@
         "shared/*"
       ],
       "app-environment": [
-        "environments/environment"
+        "app-config"
       ],
       "app-theme/*": [
         "styles/app-theme/*"

@@ -5,11 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { async } from 'rxjs/scheduler/async';
-import {
-  MetadataProfileCreateModes,
-  MetadataProfileStore,
-  MetadataProfileTypes
-} from '@kaltura-ng/kaltura-server-utils';
+import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from '@kaltura-ng/kaltura-server-utils';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
@@ -34,6 +30,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaLiveStreamAdminEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamAdminEntry';
 import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamEntry';
 import { KalturaExternalMediaEntry } from 'kaltura-typescript-client/types/KalturaExternalMediaEntry';
+import { environment } from 'app-environment';
 
 export type UpdateStatus = {
   loading: boolean;
@@ -80,7 +77,7 @@ export class EntriesStore implements OnDestroy {
   private _activeFilters = new BehaviorSubject<{ filters: FilterItem[] }>({ filters: [] });
   private _entries = new BehaviorSubject({ items: [], totalCount: 0 });
   private _state = new BehaviorSubject<UpdateStatus>({ loading: false, errorMessage: null });
-
+  private _paginationCacheToken = 'default';
 
   private _queryData: QueryData = {
     pageIndex: 1,
@@ -107,20 +104,43 @@ export class EntriesStore implements OnDestroy {
   public state$ = this._state.asObservable();
   public query$ = this._querySource.asObservable();
 
+  public static getFilterType(filter: any): string {
+    const result = filter['filterType'] || filter.constructor['filterType'];
+
+    if (!result) {
+      throw new Error('Failed to extract filter type value (do you have a static property named filterType?)');
+    }
+
+    return result;
+  }
+
+
   public static registerFilterType<T extends FilterItem>(filterType: FilterTypeConstructor<T>,
                                                          handler: (items: T[], request: FilterArgs) => void): void {
-    EntriesStore.filterTypeMapping[filterType.name] = handler;
+    EntriesStore.filterTypeMapping[this.getFilterType(filterType)] = handler;
+  }
+
+  public set paginationCacheToken(token: string) {
+    this._paginationCacheToken = typeof token === 'string' && token !== '' ? token : 'default';
+  }
+
+  public getFilterType(filter: any): string {
+    return EntriesStore.getFilterType(filter);
   }
 
   constructor(private kalturaServerClient: KalturaClient,
               private browserService: BrowserService,
               private metadataProfileService: MetadataProfileStore) {
-    const defaultPageSize = this.browserService.getFromLocalStorage('entries.list.pageSize');
+    const defaultPageSize = this.browserService.getFromLocalStorage(this._getPaginationCacheKey());
     if (defaultPageSize !== null) {
       this._queryData.pageSize = defaultPageSize;
     }
 
     this._getMetadataProfiles();
+  }
+
+  private _getPaginationCacheKey(): string {
+    return `entries.${this._paginationCacheToken}.list.pageSize`;
   }
 
   public get queryData(): QueryData {
@@ -181,12 +201,10 @@ export class EntriesStore implements OnDestroy {
 
 
   public removeFiltersByType(filterType: FilterTypeConstructor<FilterItem>): void {
-    if (filterType && filterType.name) {
-      const filtersOfType = this._activeFiltersMap[filterType.name];
+    const filtersOfType = this._activeFiltersMap[this.getFilterType(filterType)];
 
-      if (filtersOfType) {
-        this.removeFilters(...filtersOfType);
-      }
+    if (filtersOfType) {
+      this.removeFilters(...filtersOfType);
     }
   }
 
@@ -199,11 +217,11 @@ export class EntriesStore implements OnDestroy {
   public getFiltersByType<T extends FilterItem>(filterType: FilterTypeConstructor<T>): T[];
   public getFiltersByType<T extends FilterItem>(filterType: FilterItem | FilterTypeConstructor<T>): T[] {
     if (filterType instanceof FilterItem) {
-      const filtersOfType = <T[]>this._activeFiltersMap[filterType.constructor.name];
+      const filtersOfType = <T[]>this._activeFiltersMap[this.getFilterType(filterType)];
       return filtersOfType ? [...filtersOfType] : [];
     }
     if (filterType instanceof Function) {
-      const filtersOfType = <T[]>this._activeFiltersMap[filterType.name];
+      const filtersOfType = <T[]>this._activeFiltersMap[this.getFilterType(filterType)];
       return filtersOfType ? [...filtersOfType] : [];
     } else {
       return [];
@@ -228,8 +246,8 @@ export class EntriesStore implements OnDestroy {
 
         if (index === -1) {
           addedFilters.push(filter);
-          this._activeFiltersMap[filter.constructor.name] = this._activeFiltersMap[filter.constructor.name] || [];
-          this._activeFiltersMap[filter.constructor.name].push(filter);
+          this._activeFiltersMap[this.getFilterType(filter)] = this._activeFiltersMap[this.getFilterType(filter)] || [];
+          this._activeFiltersMap[this.getFilterType(filter)].push(filter);
         }
       });
 
@@ -254,7 +272,7 @@ export class EntriesStore implements OnDestroy {
           removedFilters.push(filter);
           modifiedActiveFilters.splice(index, 1);
 
-          const filterByType = this._activeFiltersMap[filter.constructor.name];
+          const filterByType = this._activeFiltersMap[this.getFilterType(filter)];
           filterByType.splice(filterByType.indexOf(filter), 1);
         }
       });
@@ -281,7 +299,7 @@ export class EntriesStore implements OnDestroy {
     this.executeQueryState.deferredAddedFilters.push(...addedFilters);
     this.executeQueryState.deferredRemovedFilters.push(...removedFilters);
 
-    this.browserService.setInLocalStorage('entries.list.pageSize', this._queryData.pageSize);
+    this.browserService.setInLocalStorage(this._getPaginationCacheKey(), this._queryData.pageSize);
 
     // execute the request
     this.executeQueryState.subscription = Observable.create(observer => {
