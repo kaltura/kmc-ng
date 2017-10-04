@@ -143,9 +143,17 @@ export class CategoryService implements OnDestroy {
 					// to init them-selves when entering this module directly.
 					setTimeout(() => {
 						const currentCategoryId = this._categoryRoute.snapshot.params.id;
-						const category = this._category.getValue();
-						if (!category || (category && category.id !== currentCategoryId)) {
-							this._loadCategory(currentCategoryId);
+						if (currentCategoryId === "new") {
+							if (this._categoriesStore && this._categoriesStore.getNewCategoryData()) {
+								const parentId = this._categoriesStore.getNewCategoryData().parentCategoryId;
+								this._loadCategory(parentId);
+							}
+						}
+						else {
+							const category = this._category.getValue();
+							if (!category || (category && category.id !== currentCategoryId)) {
+								this._loadCategory(currentCategoryId);
+							}
 						}
 					});
 				}
