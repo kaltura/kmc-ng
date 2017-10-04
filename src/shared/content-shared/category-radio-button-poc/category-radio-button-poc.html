@@ -4,7 +4,7 @@
   </div>
 
   <div class="kTagsContainer">
-    <p-radioButton [value]="null" [(ngModel)]="_treeSelection" label="No selection"></p-radioButton>
+    <p-radioButton [value]="null" [(ngModel)]="_treeSelection" (click)="_selectedCategory = null" label="No selection"></p-radioButton>
   </div>
 
   <div class="kMain">
@@ -29,5 +29,8 @@
                        (onCategoriesLoad)="_onTreeCategoriesLoad($event)"
                        (onNodeSelect)="_onTreeNodeSelected($event)"
                        (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)"></k-categories-tree>
+    <span *ngIf="_treeSelection !== null && !_treeSelection?.data" class="kSelectedCategoryTooltip">
+      Selected: {{ _createCategoryTooltip(_selectedCategory?.fullNamePath) || 'no parent' }}
+    </span>
   </div>
 </div>

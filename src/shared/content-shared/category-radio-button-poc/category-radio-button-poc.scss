@@ -32,6 +32,17 @@
     height: 330px;
     padding: 12px;
     box-sizing: border-box;
+
+    .kSelectedCategoryTooltip {
+      display: inline-block;
+      margin-top: 20px;
+      font-size: 15px;
+      color: $kGrayscale3;
+      overflow: hidden;
+      width: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
   .kFooter {
     width: 560px;

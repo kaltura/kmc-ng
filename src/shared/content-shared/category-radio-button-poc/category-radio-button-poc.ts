@@ -20,7 +20,7 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
 
   public _selectionMode: TreeSelectionMode = 'single';
   public _categoriesLoaded = false;
-  public _treeSelection: PrimeTreeNode = null;
+  public _treeSelection: Partial<PrimeTreeNode> = null;
 
   private _searchCategoriesSubscription: ISubscription;
   public _categoriesProvider = new Subject<SuggestionsProviderData>();
@@ -51,7 +51,7 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
 
   ngAfterViewChecked() {
     if (this._ngAfterViewCheckedContext.updateTreeSelections) {
-      this.updateTreeSelections(this._ngAfterViewCheckedContext.expendTreeSelectionNodeId);
+      this._updateTreeSelections(this._ngAfterViewCheckedContext.expendTreeSelectionNodeId);
 
       this._ngAfterViewCheckedContext.expendTreeSelectionNodeId = null;
       this._ngAfterViewCheckedContext.updateTreeSelections = false;
@@ -59,27 +59,43 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
     }
   }
 
+  private _updateTreeSelections(expandNodeId = null, initial = false): void {
+    let treeSelectedItem = initial ? null : {};
+    const treeItem = this._categoriesTree.findNodeByFullIdPath(this._selectedCategory ? this._selectedCategory.fullIdPath : []);
+    if (treeItem) {
+      treeSelectedItem = treeItem;
+      if (expandNodeId && this._selectedCategory && expandNodeId === this._selectedCategory.id) {
+        treeItem.expand();
+      }
+    }
+
+    this._treeSelection = treeSelectedItem;
+  }
+
   public _onTreeCategoriesLoad({ categories }: { categories: PrimeTreeNode[] }): void {
     this._categoriesLoaded = categories && categories.length > 0;
-    this.updateTreeSelections();
+    this._updateTreeSelections(null, true);
+  }
+
+  public _createCategoryTooltip(fullNamePath: string[]): string {
+    return fullNamePath ? fullNamePath.join(' > ') : null;
   }
 
   public _onTreeNodeChildrenLoaded({ node }) {
     if (node instanceof PrimeTreeNode) {
-      let selectedNodes: PrimeTreeNode = null;
+      let selectedNode: PrimeTreeNode = null;
 
       node.children.forEach((attachedCategory) => {
         if (this._selectedCategory && this._selectedCategory.id === attachedCategory.data) {
-          selectedNodes = attachedCategory;
+          selectedNode = attachedCategory;
         }
       });
 
-      if (selectedNodes) {
-        this._treeSelection = selectedNodes;
+      if (selectedNode) {
+        this._treeSelection = selectedNode;
       }
     }
   }
-
 
   public _onAutoCompleteSearch(event): void {
     this._categoriesProvider.next({ suggestions: [], isLoading: true });
@@ -108,23 +124,6 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
       (err) => {
         this._categoriesProvider.next({ suggestions: [], isLoading: false, errorMessage: <any>(err.message || err) });
       });
-  }
-
-  private updateTreeSelections(expandNodeId = null): void {
-    let treeSelectedItem = null;
-    const treeItem = this._categoriesTree.findNodeByFullIdPath(this._selectedCategory ? this._selectedCategory.fullIdPath : []);
-    if (treeItem) {
-      treeSelectedItem = treeItem;
-      if (expandNodeId && this._selectedCategory && expandNodeId === this._selectedCategory.id) {
-        treeItem.expand();
-      }
-    }
-
-    this._treeSelection = treeSelectedItem;
-  }
-
-  private _createCategoryTooltip(fullNamePath: string[]): string {
-    return fullNamePath ? fullNamePath.join(' > ') : null;
   }
 
   public _onAutoCompleteSelected(event: any) {
