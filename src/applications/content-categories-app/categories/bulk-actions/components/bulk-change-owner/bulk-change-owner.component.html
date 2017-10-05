@@ -1,0 +1,25 @@
+<k-area-blocker [showLoader]="_loading" [message]="_sectionBlockerMessage">
+  <div class="kContent kOverrideFAIcons">
+    <span class="kTitle">{{'applications.content.bulkActions.changeOwner' | translate}}</span>
+    <div class="kContainer">
+      <span class="kLabel">{{'applications.content.categories.bActions.changeOwnerLabel' | translate}}</span>
+
+      <kAutoComplete [(ngModel)]="_owner"
+                     suggestionItemField="item"
+                     suggestionLabelField="name"
+                     field="screenName"
+                     [onItemAdding]="_convertUserInputToValidValue"
+                     [multiple]="false"
+                     [limitToSuggestions]="false"
+                     placeholder="{{'applications.content.entryDetails.users.changeOwnerPH' | translate}}"
+                     [minLength]="3"
+                     [suggestionsProvider]="_usersProvider"
+                     (completeMethod)="_searchUsers($event)">
+      </kAutoComplete>
+
+    </div> 
+    <div class="kFooter">
+      <button type="button" class="kButtonBranded" pButton label="{{'applications.content.categories.bActions.save' | translate}}" (click)="_apply()"></button>
+    </div>
+  </div>
+</k-area-blocker>

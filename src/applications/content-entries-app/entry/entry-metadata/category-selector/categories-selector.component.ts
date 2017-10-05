@@ -9,6 +9,7 @@ import { EntryCategoryItem } from '../entry-metadata-handler';
 import { AutoComplete } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories-tree/categories-tree.component';
 import { CategoriesPrimeService } from 'app-shared/content-shared/categories-prime.service';
+import { TagsComponent } from '@kaltura-ng/kaltura-ui/tags/tags.component';
 
 
 @Component({
@@ -19,7 +20,7 @@ import { CategoriesPrimeService } from 'app-shared/content-shared/categories-pri
 export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 
 	@ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
-
+	@ViewChild('tags') _tags: TagsComponent;
 	@ViewChild('autoComplete')
 	private _autoComplete : AutoComplete = null;
 
@@ -48,6 +49,10 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 
 	ngOnInit() {
 		this._selectedCategories = this.value && this.value instanceof Array ? [...this.value] : [];
+		setTimeout(()=>{
+			this._tags.checkShowMore();
+		},0);
+
 	}
 
 	ngOnDestroy(){

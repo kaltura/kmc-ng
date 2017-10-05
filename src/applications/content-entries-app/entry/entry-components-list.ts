@@ -16,6 +16,7 @@ import { EntryUsers } from "./entry-users/entry-users.component";
 import { EntrySectionsList } from "./entry-sections-list/entry-sections-list.component";
 import { EntryComponent } from './entry.component';
 import { EntryPreview } from './entry-preview/entry-preview.component';
+import { EntryDetails } from './entry-details/entry-details.component';
 import { JumpToSection } from './entry-metadata/jump-to-section.component';
 import { ModerationPipe } from './pipes/moderation.pipe';
 import { LinkedEntries } from './entry-metadata/entry-selector/linked-entries.component';
@@ -38,6 +39,7 @@ export const EntryComponentsList = [
     EntryLive,
     EntryMetadata,
     EntryPreview,
+    EntryDetails,
     EntryRelated,
     EntryRelatedEdit,
     EntryScheduling,
