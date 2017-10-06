@@ -16,12 +16,12 @@ export class FullNamePipe implements PipeTransform {
     if (typeof value !== 'undefined' && value !== null && user instanceof KalturaUser) {
 
       if(this._appAuthentication.appUser.id === user.id) {
-        userAdditionalData = `(${this._appLocalization.get('applications.content.users.you')})`;
+        userAdditionalData = `(${this._appLocalization.get('applications.administration.users.you')})`;
       } else if (user.isAccountOwner) {
-        userAdditionalData = `(${this._appLocalization.get('applications.content.users.accountOwner')})`;
+        userAdditionalData = `(${this._appLocalization.get('applications.administration.users.accountOwner')})`;
       }
       if(this._appAuthentication.appUser.id === user.id && user.isAccountOwner) {
-        userAdditionalData = `(${this._appLocalization.get('applications.content.users.you')}, ${this._appLocalization.get('applications.content.users.accountOwner')})`;
+        userAdditionalData = `(${this._appLocalization.get('applications.administration.users.you')}, ${this._appLocalization.get('applications.administration.users.accountOwner')})`;
       }
     }
 		return `${user.fullName} ${userAdditionalData}`;

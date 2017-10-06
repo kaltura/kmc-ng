@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { routing } from './administration-users-app.routes';
 import { AdministrationUsersComponent } from './administration-users.component';
-import { UsersComponentsList } from './users-table/users-components-list';
+import { UsersComponentsList } from './users/users-components-list';
 import {
   FormsModule,
   ReactiveFormsModule
 } from '@angular/forms';
-import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { KalturaPrimeNgUIModule } from "@kaltura-ng/kaltura-primeng-ui";
 import {
   ButtonModule,
@@ -34,6 +34,8 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
       ReactiveFormsModule,
       KalturaPrimeNgUIModule,
       DropdownModule,
+      KalturaUIModule,
+      TooltipModule,
       RouterModule.forChild(routing)
     ],
     declarations: [

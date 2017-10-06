@@ -1,0 +1,337 @@
+@import 'app-theme/_variables.scss';
+
+.kUsers {
+  font-size: 15px;
+  background-color: $appBkgColor;
+  height: $contentArea;
+  padding-top: 30px;
+  width: 100%;
+  min-width: $minAppWidth;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0px;
+
+  .kUsersHolder {
+    height: 100%;
+    border: none;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .kRefreshBtn {
+    font-size: 30px;
+    border: none;
+    min-width: inherit;
+    margin-right: 16px;
+    width: 40px;
+    outline: 0;
+    color: $kGrayscale3;
+    right: 0;
+    position: absolute;
+    &:active {
+      box-shadow: none;
+      transform: rotate(45deg);
+    }
+    &:hover {
+      background-color: #ffffff;
+      color: $kPrimary;
+    }
+  }
+
+  .kUsersTableFilters {
+    color: $kGrayscale1;
+    width: 100%;
+    height: 66px;
+    background-color: white;
+    flex: 0 0 auto;
+    align-items: center;
+    margin-left: 0px;
+    border-bottom: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    display: flex;
+
+    .kSelectedUsersNum {
+      padding-left: 16px;
+    }
+  }
+
+  .kUsersTableFooter {
+    width: 100%;
+    height: 34px;
+    background-color: white;
+    border-top: 1px solid $kGrayscale6;
+    position: relative;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    padding: 0 14px 28px;
+    display: block;
+  }
+
+  .kUsersTable {
+    border: none;
+    position: relative;
+    background-color: white;
+    flex: 1 1 auto;
+  }
+
+  .kPaginatorShowRowsLabel {
+    color: $kGrayscale1;
+    position: absolute;
+    top: 7px;
+    right: 80px;
+  }
+
+  .kAddUserBtn {
+    width: 100px;
+    height: 36px;
+    margin-left: 14px;
+    border: none;
+
+    &:disabled {
+      border: 1px solid $kGrayscale4;
+    }
+  }
+
+  .kUsersHeader {
+    color: $kGrayscale1;
+  }
+
+  .kUsersTitle {
+    color: $kGrayscale1;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  .kUsersExplanatory,
+  .kUsersStatus {
+    font-size: 13px;
+    color: #999;
+  }
+
+  .kUsersExplanatory {
+    margin-bottom: 10px;
+  }
+
+  .kDivider {
+    margin: 0 5px;
+  }
+
+  .kUsersNeedMore {
+    height: 66px;
+    width: 1458px;
+    border-radius: 3px;
+    background-color: #D9D9D9;
+    margin-bottom: 20px;
+    color: #222;
+    display: flex;
+    align-items: center;
+    padding: 0 21px;
+    font-size: 15px;
+
+    .kCurrentStatus,
+    .kMoreUsers {
+      font-weight: bold;
+      margin-right: 5px;
+    }
+
+    .kMoreUsers {
+      font-weight: bold;
+      margin-left: 5px;
+    }
+
+    .kClickHere {
+      color: #01accd;
+      margin: 0 5px;
+    }
+  }
+}
+
+.kFloater{
+  display: flex;
+  flex-direction: column;
+
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+    flex: 0 0 auto;
+
+    .kTitle {
+      color: #333333;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+
+  .kErrorRow {
+    margin-left: 199px;
+  }
+
+  .kContainer{
+    flex: 0 0 auto;
+    margin: 0 28px 20px;
+    min-height: 500px;
+
+    .kLabel{
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .kControl {
+      width: 360px;
+    }
+
+    .kCaption {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 20px 0 8px;
+    }
+
+    .kExtraPadding {
+      padding-top: 12px;
+    }
+  }
+
+  /deep/ {
+
+    .kRow {
+      display: flex;
+      padding-top: 16px;
+
+      .kLabel {
+        width: 166px;
+        flex: 0 0 auto;
+        word-wrap: break-word;
+        padding-right: 12px;
+      }
+
+      .kExtraWidth {
+        width: 186px;
+      }
+
+      .kRequired {
+        width: 20px;
+        font-size: 24px;
+        color: $kGrayscale2;
+        margin-top: 7px;
+        font-weight: bold;
+
+        &.kHasError {
+          color: $kDandger;
+        }
+      }
+
+      .kSelectedRole {
+        font-size: 13px;
+        color: $kGrayscale3;
+        line-height: 16px;
+        margin-top: -4px;
+      }
+
+      input {
+        width: 100%;
+        height: 34px;
+        background-color: #ebebeb;
+        border: 1px solid white;
+        color: #333333;
+        box-sizing: border-box;
+        border-radius: 3px;
+        margin: 0;
+        outline: medium none;
+        padding: .25em;
+        font-weight: normal;
+
+        &:hover {
+          border-color: #d9d9d9;
+        }
+
+        &:focus {
+          background-color: white;
+          border: 1px solid #cccccc;
+          outline: 0 none;
+          box-shadow: 0 0 5px #d9d9d9;
+        }
+      }
+
+      .ng-touched.ng-invalid {
+        border-bottom-color: #cd0a0a;
+      }
+
+      textarea {
+        width: 100%;
+        height: 76px;
+      }
+
+      .kControl, k-prime-control {
+        width: 100%;
+      }
+
+      .extraMargin {
+        margin-bottom: 8px;
+      }
+    }
+
+    .rolesList {
+      width: 100%!important;
+    }
+  }
+
+  .kValign {
+    align-items: center;
+  }
+
+  .hidden {
+    visibility: hidden;
+    width: 0px;
+    height: 0px;
+    padding: 0!important;
+  }
+
+  .invalid {
+    color: $kDandger;
+    padding-top: 5px;
+  }
+
+  /*********************/
+  /* PrimeNG overrides */
+  /*********************/
+
+  .ui-inputtext.ng-invalid {
+    border-bottom-color: #cd0a0a;
+  }
+
+  .kFooter{
+    flex: 0 0 auto;
+    height: 66px;
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button {
+      height: 34px;
+      width: 130px;
+      margin: 0;
+      border: none;
+
+      &:disabled {
+        border: 1px solid $kGrayscale4;
+      }
+    }
+  }
+}
+
+:host /deep/ k-area-blocker >.kAreaBlockerContainer {
+  z-index: 220;
+}
+
+:host /deep/ .ui-datatable-scrollable-body {
+  min-height: calc(100vh - 356px);
+}
