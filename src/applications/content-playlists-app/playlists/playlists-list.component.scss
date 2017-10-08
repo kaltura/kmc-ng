@@ -1,6 +1,6 @@
 @import 'app-theme/_variables.scss';
 .kTagsWrapper{
-    z-index: 110000;
+    z-index: 500;
 }
 .kSticky{
     border-bottom: 1px solid $kGrayscale5;
@@ -47,7 +47,7 @@
 	}
 	.kPlaylistsTableFilters {
 		color: $kGrayscale1;
-		z-index: 110000;
+		z-index: 500;
 		height: 66px;
 		background-color: white;
 		flex: 0 0 auto;

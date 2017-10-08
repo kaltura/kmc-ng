@@ -36,7 +36,7 @@
     }
   }
   .kTagsWrapper{
-      z-index: 110000;
+      z-index: 500;
   }
 
   .kSticky{
@@ -44,7 +44,7 @@
   }
   .kEntriesTableFilters {
     color: $kGrayscale1;
-    z-index: 110000;
+    z-index: 500;
     height: 66px;
     background-color: white;
     flex: 0 0 auto;
