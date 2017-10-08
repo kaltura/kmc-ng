@@ -9,7 +9,7 @@
 				</p-column>
 				<p-column header="{{'applications.content.entryDetails.related.type' | translate}}" [style]="{'width':'140px'}">
 					<ng-template let-col let-file="rowData" pTemplate="body">
-						<p-dropdown kDropdownCloseOnScroll [disabled]="file.uploading || file.uploadFailure" [scrollTarget]="related" [options]="_fileTypes" [appendTo]="'body'" [autoWidth]="false" [(ngModel)]="file.format" (onChange)="_handler._setDirty()" placeholder="{{'applications.content.entryDetails.related.select' | translate}}"></p-dropdown>
+						<p-dropdown [disabled]="file.uploading || file.uploadFailure" [options]="_fileTypes" [appendTo]="'body'" [autoWidth]="false" [(ngModel)]="file.format" (onChange)="_handler._setDirty()" placeholder="{{'applications.content.entryDetails.related.select' | translate}}"></p-dropdown>
 					</ng-template>
 				</p-column>
 				<p-column field="size" header="{{'applications.content.entryDetails.related.size' | translate}}">

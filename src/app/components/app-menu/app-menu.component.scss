@@ -1,10 +1,16 @@
 @import 'app-theme/_variables.scss';
 @import '../../styles/scss/kmc-logo';
 
+.kMainMenuWrapper{
+    min-height: 50px;
+}
+
 .appMenu {
     background-color: $menuBkgColor;
     display: flex;
-
+    position: fixed;
+    z-index: 110001;
+    width: 100%;
     a {
         color: $mainLinkColor;
         outline: 0;

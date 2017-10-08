@@ -1,7 +1,7 @@
 <k-area-blocker [showLoader]="isBusy" [message]="blockerMessage">
   <div class="kEntries kOverrideFAIcons">
     <div #entriesTableHolder class="kEntriesHolder kContent">
-      <div class="kEntriesTableFilters">
+      <div class="kEntriesTableFilters kContent" sticky stickyTop="50" stickyOffsetTop="52" stickyClass="kSticky">
         <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries$ | async)?.totalCount">{{(_entriesStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
 
         <div [class.kHidden]="!selectedEntries.length" class="kBulkOperations">
@@ -42,19 +42,21 @@
                 [kTooltip]="'applications.content.entries.refresh' | translate"
                 (click)="_reload()"></button>
       </div>
-      <kTags [title]="'applications.content.filters.activeFilters' | translate"
-             [data]="(this._entriesStore.activeFilters$ | async)?.filters"
-             [labelField]="'label'"
-             [tooltipField]="'tooltip'"
-             (onTagRemove)="removeTag($event)"
-             (onRemoveAll)="removeAllTags()">
-        <ng-template let-item="item">
-          <div class="kTagContent" [kTooltip]="item.tooltip?.token | translate : item.tooltip?.args">
-            <span class="kTagLabel">{{item.label}}</span>
-            <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
-          </div>
-        </ng-template>
-      </kTags>
+      <div sticky stickyTop="116" stickyOffsetTop="118" class="kTagsWrapper kContent" stickyClass="kSticky">
+        <kTags [title]="'applications.content.filters.activeFilters' | translate"
+               [data]="(this._entriesStore.activeFilters$ | async)?.filters"
+               [labelField]="'label'"
+               [tooltipField]="'tooltip'"
+               (onTagRemove)="removeTag($event)"
+               (onRemoveAll)="removeAllTags()">
+          <ng-template let-item="item">
+            <div class="kTagContent" [kTooltip]="item.tooltip?.token | translate : item.tooltip?.args">
+              <span class="kTagLabel">{{item.label}}</span>
+              <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
+            </div>
+          </ng-template>
+        </kTags>
+      </div>
       <kEntriesTable class="kEntriesTable"
                      scrollHeight="100%"
                      [entries]="(_entriesStore.entries$ | async)?.items"
@@ -67,7 +69,7 @@
                      [(selectedEntries)]="selectedEntries"
       ></kEntriesTable>
 
-      <div class="kEntriesTableFooter" #footer *ngIf="(_entriesStore.entries$ | async)?.totalCount">
+      <div class="kEntriesTableFooter kContent" #footer *ngIf="(_entriesStore.entries$ | async)?.totalCount">
         <p-paginator
           [rows]="_filter.pageSize"
           [first]="_filter.pageIndex * _filter.pageSize"
@@ -87,7 +89,8 @@
               [popupHeight]="500"
               [closeBtn]="false"
               [targetRef]="categoriesFilterBtn"
-              [targetOffset]="{'x':-10, 'y': -21}">
+              [targetOffset]="{'x':-10, 'y': -21}"
+              sticky [stickyOffsetTop]="45" [stickyTop]="45" [stickyClass]="'kForceFix'" [container]="entriesTableHolder">
   <kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup"></kCategoriesFilter>
 </kPopupWidget>
 
@@ -97,7 +100,8 @@
               [popupHeight]="500"
               [closeBtn]="false"
               [targetRef]="refineBtn"
-              [targetOffset]="{'x':-200, 'y': -20}">
+              [targetOffset]="{'x':-200, 'y': -15}"
+              sticky [stickyOffsetTop]="50" [stickyTop]="50" [stickyClass]="'kForceFix'" [container]="entriesTableHolder">
   <ng-template>
     <k-entries-refine-filters [parentPopupWidget]="refinePopup"></k-entries-refine-filters>
   </ng-template>

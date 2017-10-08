@@ -69,7 +69,6 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
 .kmcDetailsLayout {
   font-size: 15px;
   background-color: $appBkgColor;
-  height: $contentArea;
   padding-top: 30px;
   width: 100%;
   button{
@@ -89,7 +88,7 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
         margin-right: 23px;
         border: none;
         outline: none;
-        background-color: $appBkgColor;
+        background-color: transparent;
         color: $kGrayscale3;
         height: 20px;
         font-size: 16px;
@@ -183,11 +182,5 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
   .kSpacer{
     display: block;
     height: 40px;
-  }
-}
-/* to be removed when switching to new scroll system */
-.kmcDetailsLayout.isSafari{
-  .kDetailsContent{
-    height: calc(100vh - 240px);
   }
 }

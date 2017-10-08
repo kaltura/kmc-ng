@@ -5,6 +5,7 @@
   overflow-y: hidden;
   position: absolute;
   padding: 0px;
+  width: 100%;
   .kThumbnailHolder {
     overflow: hidden;
     position: relative;
@@ -60,4 +61,13 @@
   flex-flow: row wrap;
   margin: 0px;
   flex-direction: column;
+}
+
+:host /deep/ p-datatable .ui-datatable-scrollable-body{
+  margin-bottom: 34px;
+}
+
+:host /deep/ p-datatable .stickyHeader{
+  z-index: 10;
+  display: table;
 }

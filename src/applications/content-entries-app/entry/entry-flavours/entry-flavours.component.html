@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
+<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage" [centerOnScreen]="true">
 	<kFileDialog #fileDialog (onFileSelected)="_onFileSelected($event)" [filter]="_uploadFilter"></kFileDialog>
 	<div class="kFlavours kOverrideFAIcons" #flavors>
 		<p class="kTitle">{{'applications.content.entryDetails.flavours.flavours' | translate}}</p>

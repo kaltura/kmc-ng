@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
+<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage" [centerOnScreen]="true">
     <div class="jumpTo">
         <p-menu #menu popup="popup" [model]="_jumpToMenu" [appendTo]="'body'"></p-menu>
         <button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right"

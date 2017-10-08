@@ -1,20 +1,22 @@
-<div #appmenu class="appMenu">
+<div class="kMainMenuWrapper">
+    <div #appmenu class="appMenu">
 
-  <div class="k-logo"></div>
+      <div class="k-logo"></div>
 
-      <div *ngFor="let item of menuConfig">
-        <a *ngIf="item.titleToken.length" [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]" [class.disabled]="!item.enabled">{{'app.menu.'+item.titleToken | translate | uppercase}}</a>
-      </div>
+          <div *ngFor="let item of menuConfig">
+            <a *ngIf="item.titleToken.length" [routerLinkActive]="['activeLink']" [routerLink]="['/'+item.routePath]" [class.disabled]="!item.enabled">{{'app.menu.'+item.titleToken | translate | uppercase}}</a>
+          </div>
 
-    <div class="kMenu-right">
-        <kUploadButton></kUploadButton>
-        <i class="kIconfolder_large"></i>
-        <i class="kIconuser" (click)="navigate('/administration')" [class.open]="selectedMenuItem?.routePath==='administration'" [kTooltip]="'app.menu.Administration' | translate" [placement]="'bottom'"></i>
-        <i class="kIcongear" (click)="navigate('/settings')" [class.open]="selectedMenuItem?.routePath==='settings'" [kTooltip]="'app.menu.Settings' | translate" [placement]="'bottom'"></i>
-        <i #help class="kIconhelp"></i>
-        <div #username class="kUserName">
-            <span>{{_userContext.fullName}}</span>
-            <i class="kIcondropdown_arrow_bottom"></i>
+        <div class="kMenu-right">
+            <kUploadButton></kUploadButton>
+            <i class="kIconfolder_large"></i>
+            <i class="kIconuser" (click)="navigate('/administration')" [class.open]="selectedMenuItem?.routePath==='administration'" [kTooltip]="'app.menu.Administration' | translate" [placement]="'bottom'"></i>
+            <i class="kIcongear" (click)="navigate('/settings')" [class.open]="selectedMenuItem?.routePath==='settings'" [kTooltip]="'app.menu.Settings' | translate" [placement]="'bottom'"></i>
+            <i #help class="kIconhelp"></i>
+            <div #username class="kUserName">
+                <span>{{_userContext.fullName}}</span>
+                <i class="kIcondropdown_arrow_bottom"></i>
+            </div>
         </div>
     </div>
 </div>
