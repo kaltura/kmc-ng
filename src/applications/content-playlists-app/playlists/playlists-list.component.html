@@ -1,7 +1,7 @@
 <k-area-blocker [message]="_blockerMessage" [showLoader]="(_bulkDeleteService.stateDelete$ | async)?.loading || this._loading">
   <div class="kPlaylists kOverrideFAIcons">
     <div #playlistsTableHolder class="kPlaylistsHolder kContent">
-      <div class="kPlaylistsTableFilters">
+      <div class="kPlaylistsTableFilters kContent" sticky stickyTop="50" stickyOffsetTop="52" stickyClass="kSticky">
         <button
           pButton
           type="button"
@@ -33,19 +33,21 @@
                 icon="kIconrefresh"
                 [kTooltip]="'applications.content.playlists.refresh' | translate"></button>
       </div>
-      <kTags
-        [title]="'applications.content.filters.activeFilters' | translate"
-        [data]="activeFilters"
-        [labelField]="'label'"
-        [tooltipField]="'tooltip'"
-        (onRemoveAll)="removeAllTags()">
-        <ng-template let-item="item">
-          <div class="kTagContent" [kTooltip]="item.tooltip">
-            <span class="kTagLabel">{{item.label}}</span>
-            <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
-          </div>
-        </ng-template>
-      </kTags>
+      <div sticky stickyTop="116" stickyOffsetTop="118" class="kTagsWrapper kContent" stickyClass="kSticky">
+        <kTags
+          [title]="'applications.content.filters.activeFilters' | translate"
+          [data]="activeFilters"
+          [labelField]="'label'"
+          [tooltipField]="'tooltip'"
+          (onRemoveAll)="removeAllTags()">
+          <ng-template let-item="item">
+            <div class="kTagContent" [kTooltip]="item.tooltip">
+              <span class="kTagLabel">{{item.label}}</span>
+              <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
+            </div>
+          </ng-template>
+        </kTags>
+      </div>
       <kPlaylistsTable
         class="kPlaylistsTable"
         [playlists]="(_playlistsStore.playlists$ | async)?.items"
@@ -54,7 +56,7 @@
         (actionSelected)="onActionSelected($event)"
         [(selectedPlaylists)]="_selectedPlaylists"></kPlaylistsTable>
 
-      <div class="kPlaylistsTableFooter" #footer *ngIf="(_playlistsStore.playlists$ | async)?.totalCount">
+      <div class="kPlaylistsTableFooter kContent" #footer *ngIf="(_playlistsStore.playlists$ | async)?.totalCount">
         <p-paginator
           [rows]="_filter.pageSize"
           [first]="_filter.pageIndex * _filter.pageSize"
@@ -73,7 +75,8 @@
   [popupWidth]="350"
   [closeBtn]="false"
   [targetRef]="refineBtn"
-  [targetOffset]="{'x':-294, 'y': -20}">
+  [targetOffset]="{'x':-294, 'y': -20}"
+  sticky [stickyOffsetTop]="50" [stickyTop]="50" [stickyClass]="'kForceFix'" [container]="playlistsTableHolder">
   <kPlaylistsAdditionalFilter
     [parentPopupWidget]="refinePopup"
     (createdChanged)="onCreatedChanged($event)"
@@ -81,7 +84,7 @@
     [_createdBefore]="_filter.createdBefore"></kPlaylistsAdditionalFilter>
 </kPopupWidget>
 
-<kPopupWidget #addNewPlaylist [popupWidth]="586" [popupHeight]="453" [modal]="true">
+<kPopupWidget #addNewPlaylist [popupWidth]="586" [popupHeight]="453" [modal]="true" [preventPageScroll]="true">
   <ng-template>
     <kAddNewPlaylist
       [parentPopupWidget]="addNewPlaylist"

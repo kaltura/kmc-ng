@@ -1,5 +1,10 @@
 @import 'app-theme/_variables.scss';
-
+.kTagsWrapper{
+  z-index: 110000;
+}
+.kSticky{
+  border-bottom: 1px solid $kGrayscale5;
+}
 .kRoles {
   font-size: 15px;
   background-color: $appBkgColor;
@@ -39,7 +44,7 @@
   }
   .kRolesTableFilters {
     color: $kGrayscale1;
-    width: 100%;
+    z-index: 110000;
     height: 66px;
     background-color: white;
     flex: 0 0 auto;
@@ -54,11 +59,11 @@
     }
   }
   .kRolesTableFooter {
-    width: 100%;
+    bottom: 0px;
     height: 34px;
     background-color: white;
     border-top: 1px solid $kGrayscale6;
-    position: relative;
+    position: fixed;
     box-sizing: border-box;
     flex: 0 0 auto;
     padding: 0 14px 28px;
@@ -80,6 +85,11 @@
     margin-left: 14px;
     height: 36px;
   }
+}
+
+.kForceFix{
+  position: fixed !important;
+  margin-top: 0px !important;
 }
 
 :host /deep/ span.ui-button-icon-left.fa.kIcontrash {

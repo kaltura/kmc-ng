@@ -1,7 +1,7 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
   <div class="kRoles kOverrideFAIcons">
     <div #rolesTableHolder class="kRolesHolder kContent">
-      <div class="kRolesTableFilters">
+      <div class="kRolesTableFilters kContent" sticky stickyTop="50" stickyOffsetTop="52" stickyClass="kSticky">
         <button pButton type="button" label="{{'applications.administration.roles.addRole' | translate}}" class="kButtonBranded kAddRoleBtn"
         (click)="addRole()"></button>
         <span class="kSelectedRolesNum" *ngIf="_rolesTotalCount">
@@ -12,14 +12,14 @@
       <kRolesTable class="kRolesTable" [roles]="_roles" [filter]="_filter"
         (actionSelected)="_onActionSelected($event)" >
       </kRolesTable>
-      <div class="kRolesTableFooter" #footer *ngIf="_rolesTotalCount">
+      <div class="kRolesTableFooter kContent" #footer *ngIf="_rolesTotalCount">
         <p-paginator [rows]="_filter.pageSize" (onPageChange)="_onPaginationChanged($event)" [first]="_filter.pageIndex * _filter.pageSize"
           [totalRecords]="_rolesTotalCount | kMaxRoles" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.administration.paginator.showRows' | translate}}</span>
       </div>
     </div>
   </div>
-  <kPopupWidget #editPopup [popupWidth]="600" [popupHeight]="400" [modal]="true">
+  <kPopupWidget #editPopup [popupWidth]="600" [popupHeight]="400" [modal]="true" [preventPageScroll]="true">
     <ng-template>
       <kEditRole (onRoleSaved)="_reload(true)" [role]="_currentEditRole"  [parentPopupWidget]="editPopup" [duplicatedRole]="_currentEditRoleIsDuplicated"></kEditRole>
     </ng-template>

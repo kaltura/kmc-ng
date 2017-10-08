@@ -1,7 +1,7 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
   <div class="kCategories kOverrideFAIcons">
     <div #categoriesTableHolder class="kCategoriesHolder kContent">
-      <div class="kCategoriesTableFilters">
+      <div class="kCategoriesTableFilters kContent" sticky stickyTop="50" stickyOffsetTop="52" stickyClass="kSticky">
         <button pButton type="button" label="{{'applications.content.categories.addCategory' | translate}}" class="kButtonBranded kAddCategoryBtn"
           [disabled]="_selectedCategories?.length" (click)="_addCategory()"></button>
         <span class="kSelectedCategoriesNum" *ngIf="_categoriesTotalCount">
@@ -30,7 +30,7 @@
       <kCategoriesTable class="kCategoriesTable" [categories]="_categories" [filter]="_filter" (sortChanged)="_onSortChanged($event)"
         (actionSelected)="_onActionSelected($event)" [(selectedCategories)]="_selectedCategories">
       </kCategoriesTable>
-      <div class="kCategoriesTableFooter" #footer *ngIf="_categoriesTotalCount">
+      <div class="kCategoriesTableFooter kContent" #footer *ngIf="_categoriesTotalCount">
         <p-paginator [rows]="_filter.pageSize" (onPageChange)="_onPaginationChanged($event)" [first]="_filter.pageIndex * _filter.pageSize"
           [totalRecords]="_categoriesTotalCount | kMaxCategories" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
