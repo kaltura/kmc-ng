@@ -1,5 +1,5 @@
 <k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
-    <div class="jumpTo">
+    <div class="jumpTo" *ngIf="_jumpToMenu.length > 2">
         <p-menu #menu popup="popup" [model]="_jumpToMenu" [appendTo]="'body'"></p-menu>
         <button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right"
                 label="{{'applications.content.entryDetails.metadata.jumpTo' | translate}}"
