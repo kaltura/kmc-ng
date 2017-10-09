@@ -162,6 +162,10 @@ export class UploadListComponent implements OnInit, OnDestroy {
     this._uploadManagement.cancelUpload(file.id, true);
   }
 
+  public _retryUpload(file: UploadFileData): void {
+    this._uploadManagement.retryUpload(file.id);
+  }
+
   public _bulkCancel(): void {
     if (this._selectedUploads.length) {
       this._browserService.confirm(

@@ -78,6 +78,11 @@
              [kTooltip]="'applications.content.uploadControl.table.remove' | translate"
              placement="top"
              (click)="onCancelUpload.emit(file)"></i>
+          <i class="kIconplay kIconRemoveFile"
+             *ngIf="_hasError(file.status)"
+             [kTooltip]="'applications.content.uploadControl.table.retry' | translate"
+             placement="top"
+             (click)="onRetryUpload.emit(file)"></i>
         </ng-template>
       </p-column>
     </p-dataTable>
