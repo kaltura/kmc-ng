@@ -1,13 +1,15 @@
 <k-area-blocker [showLoader]="_showLoader" [message]="_areaBlockerMessage">
 	<div class="kmcDetailsLayout kOverrideFAIcons">
 		<div class="kContent kDetailsWrapper">
-			<div class="kDetailsHeader">
-				<button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
-				<div class="kTypeIcon kIconPlaylist_Manual"></div>
-				<div class="kTitle">{{ playlistName }}</div>
-				<button pButton class="kButtonBranded kSaveBtn" label="Save" (click)="save()" [disabled]="!isDirty"></button>
-				<button pButton class="kButtonDefault kNavigationBtnLeft"  icon="kIconarrow_backward" (click)="_navigateToPlaylist('prev')" [disabled]="!_enablePrevButton"></button>
-				<button pButton class="kButtonDefault kNavigationBtnRight" icon="kIconarrow_forward"  (click)="_navigateToPlaylist('next')" [disabled]="!_enableNextButton"></button>
+			<div class="kDetailsHeader" sticky stickyTop="50" stickyOffsetTop="52" stickyClass="stickyHeader">
+				<div class="kContent">
+					<button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
+					<div class="kTypeIcon kIconPlaylist_Manual"></div>
+					<div class="kTitle">{{ playlistName }}</div>
+					<button pButton class="kButtonBranded kSaveBtn" label="Save" (click)="save()" [disabled]="!isDirty"></button>
+					<button pButton class="kButtonDefault kNavigationBtnLeft"  icon="kIconarrow_backward" (click)="_navigateToPlaylist('prev')" [disabled]="!_enablePrevButton"></button>
+					<button pButton class="kButtonDefault kNavigationBtnRight" icon="kIconarrow_forward"  (click)="_navigateToPlaylist('next')" [disabled]="!_enableNextButton"></button>
+				</div>
 			</div>
 			<div class="kHeaderDetails">
 				<kPlaylistDetails></kPlaylistDetails>

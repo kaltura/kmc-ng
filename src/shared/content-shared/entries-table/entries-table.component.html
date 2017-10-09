@@ -14,7 +14,7 @@
                  (selectionChange)="_onSelectionChange($event)"
                  (onSort)="_onSortChanged($event)"
                  [(selection)]="selectedEntries"
-                 stickyHeader [stickyOffsetTop]="116" [stickyTop]="(entriesStore.activeFilters$ | async)?.filters.length > 0 ? 156 : 116" stickyClass="stickyHeader">
+                 stickyHeader [stickyOffsetTop]="118" [stickyTop]="(entriesStore.activeFilters$ | async)?.filters.length > 0 ? 156 : 116" stickyClass="stickyHeader">
       <p-column *ngIf="showBulkSelect"
                 [style]="{'width':'44px', 'padding-left': '14px'}"
                 selectionMode="multiple"></p-column>

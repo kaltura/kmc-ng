@@ -15,7 +15,7 @@
 			dataKey="id"
       [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
 			[rowTrackBy]="rowTrackBy"
-			stickyHeader [stickyOffsetTop]="116" [stickyTop]="(playlistsStore.activeFilters$ | async)?.filters.length > 0 ? 156 : 116" stickyClass="stickyHeader">
+			stickyHeader [stickyOffsetTop]="118" [stickyTop]="(playlistsStore.activeFilters$ | async)?.filters.length > 0 ? 156 : 116" stickyClass="stickyHeader">
 			<p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
 			<p-column field="name" [sortable]="'custom'" header="{{'applications.content.table.name' | translate}}">
 				<ng-template let-col let-playlist="rowData" pTemplate="body">

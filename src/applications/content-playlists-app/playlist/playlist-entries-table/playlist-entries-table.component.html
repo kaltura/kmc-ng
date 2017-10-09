@@ -1,4 +1,4 @@
-<k-area-blocker kFillHeight
+<k-area-blocker
   [showLoader]="(_playlistStore.state$ | async)?.isBusy || this.deferredLoading"
   [message]="areaBlockerMessage">
   <div class="kPlaylistEntriesTable" [class.noResults]="!_entries.length">
@@ -10,10 +10,9 @@
       [(selection)]="selectedEntries"
       [sortField]="filter.sortBy"
       emptyMessage="{{areaBlockerMessage}}"
-      scrollable="true"
-      scrollHeight="100%"
       dataKey="id"
-      [sortOrder]="filter.sortDirection | kPrimeTableSortDirection">
+      [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
+      stickyHeader [stickyOffsetTop]="118" [stickyTop]="116" stickyClass="stickyHeader">
       <p-column styleClass="selectionColumn" selectionMode="multiple"></p-column>
       <p-column styleClass="thumbnailColumn" field="thumbnailUrl" header="{{'applications.content.table.thumbnail' | translate}}">
         <ng-template let-col let-entry="rowData" pTemplate="body">
