@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { DetailsBarModule } from '@kaltura-ng/kaltura-ui/details-bar';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import {
   AccordionModule,
@@ -93,6 +93,7 @@ import { ContentEntriesAppService } from './content-entries-app.service';
     TieredMenuModule,
     TooltipModule,
     TreeModule,
+    DetailsBarModule,
     ContentSharedModule
   ],
   declarations: [

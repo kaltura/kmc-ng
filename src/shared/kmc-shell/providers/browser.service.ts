@@ -3,6 +3,7 @@ import { LocalStorageService, SessionStorageService } from 'ng2-webstorage';
 import { IAppStorage } from '@kaltura-ng/kaltura-common';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
 
 export interface Confirmation {
 	message: string;
@@ -68,6 +69,18 @@ export class BrowserService implements IAppStorage {
 	constructor(private localStorage: LocalStorageService, private sessionStorage: SessionStorageService) {
 	}
 
+	private _downloadContent(url: string): void {
+		return Observable.create(observer => {
+			const xhr = new XMLHttpRequest();
+			xhr.responseType = 'blob';
+			xhr.onload = () => {
+				observer.next(xhr.response);
+				observer.complete();
+			};
+			xhr.open('GET', url);
+			xhr.send();
+		});
+	}
 
 	public registerOnShowConfirmation(fn : OnShowConfirmationFn)
 	{
@@ -133,6 +146,10 @@ export class BrowserService implements IAppStorage {
 		return Object.prototype.toString.call(window['HTMLElement']).indexOf('Constructor') > 0 || !isChrome && window['webkitAudioContext'] !== undefined;
 	}
 
+	public isIE11(): boolean{
+		return !!window['MSInputMethodContext'] && !!document['documentMode'];
+	}
+
 	public copyToClipboardEnabled(): boolean {
 		let enabled = true;
 
@@ -171,21 +188,33 @@ export class BrowserService implements IAppStorage {
 	}
 
 	public download(data, filename, type): void {
-		let	file = new Blob([data], {type: type});
-		if (window.navigator.msSaveOrOpenBlob) // IE10+
-			window.navigator.msSaveOrOpenBlob(file, filename);
-		else { // Others
-			let a = document.createElement("a");
-			let url = URL.createObjectURL(file);
-			a.href = url;
-			a.download = filename;
-			document.body.appendChild(a);
-			a.click();
-			setTimeout(function() {
-				document.body.removeChild(a);
-				window.URL.revokeObjectURL(url);
-			}, 0);
+		let file;
+		if (typeof data === 'string' && /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(data)) { // if data is url
+			if (this.isIE11()){
+				this.openLink(data);
+				return;
+			}
+			file = this._downloadContent(data);
+		} else {
+			file = Observable.of(new Blob([data], { type: type }));
 		}
+
+		file.subscribe(content => {
+			if (window.navigator.msSaveOrOpenBlob) {// IE10+
+				window.navigator.msSaveOrOpenBlob(content, filename);
+			} else { // Others
+				const a = document.createElement('a');
+				const url = URL.createObjectURL(content);
+				a.href = url;
+				a.download = filename;
+				document.body.appendChild(a);
+				a.click();
+				setTimeout(function () {
+					document.body.removeChild(a);
+					window.URL.revokeObjectURL(url);
+				}, 0);
+			}
+		});
 	}
 
 	public enablePageExitVerification(verificationMsg: string = null): void{

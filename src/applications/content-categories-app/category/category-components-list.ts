@@ -1,3 +1,6 @@
+import { LinkedEntriesPopup } from './category-entry-selector/linked-entries-popup.component';
+import { LinkedEntries } from '././category-entry-selector/linked-entries.component';
+import { JumpToSection } from './category-metadata/jump-to-section.component';
 import { CategoryPreviewComponent } from './category-preview/category-preview.component';
 import { CategorySectionsListComponent } from './category-sections-list/category-sections-list.component';
 import { CategorySubcategoriesComponent } from './category-subcategories/category-subcategories.component';
@@ -11,5 +14,8 @@ export const CategoryComponentsList = [
     CategoryMetadataComponent,
     CategorySubcategoriesComponent,
     CategorySectionsListComponent,
-    CategoryPreviewComponent
+    CategoryPreviewComponent,
+    JumpToSection,
+    LinkedEntriesPopup,
+    LinkedEntries
 ];

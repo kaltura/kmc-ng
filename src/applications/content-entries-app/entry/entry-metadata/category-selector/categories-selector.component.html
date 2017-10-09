@@ -5,7 +5,7 @@
 
 	<div class="kTagsContainer">
 		<span *ngIf="!_selectedCategories.length">{{'applications.content.entryDetails.metadata.catSelect' | translate}}</span>
-		<kTags *ngIf="_selectedCategories?.length" [data]="_selectedCategories" [labelField]="'name'" [tooltipField]="'fullNamePath'" (onTagRemove)="_removeTag($event)" (onRemoveAll)="_removeAllTag()">
+		<kTags #tags *ngIf="_selectedCategories?.length" [data]="_selectedCategories" [labelField]="'name'" [tooltipField]="'fullNamePath'" (onTagRemove)="_removeTag($event)" (onRemoveAll)="_removeAllTag()">
 			<ng-template let-item="item">
 				<div class="kTagContent" [kTooltip]="item.tooltip | kCategoryTooltip">
 					<span class="kTagLabel">{{item.label}}</span>

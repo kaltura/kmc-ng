@@ -1,5 +1,5 @@
 <k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
-    <div class="jumpTo">
+    <div class="jumpTo" *ngIf="_jumpToMenu.length > 2">
         <p-menu #menu popup="popup" [model]="_jumpToMenu" [appendTo]="'body'"></p-menu>
         <button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right"
                 label="{{'applications.content.entryDetails.metadata.jumpTo' | translate}}"
@@ -13,7 +13,7 @@
             <div class="kRow kValign">
                 <span class="kLabel">{{'applications.content.entryDetails.metadata.entryName' | translate}}</span>
                 <div class="kControl">
-                    <input formControlName="name" type="text" pInputText/>
+                    <input #nameField formControlName="name" type="text" pInputText/>
                 </div>
             </div>
             <div class="kRow">
@@ -30,7 +30,7 @@
                                    suggestionSelectableField="isSelectable"
                                    [multiple]="true"
                                    [limitToSuggestions]="false"
-                                   [minLength]="3"
+                                   [minLength]="2"
                                    [suggestionsProvider]="_tagsProvider"
                                    (completeMethod)="_searchTags($event)">
                     </kAutoComplete>
