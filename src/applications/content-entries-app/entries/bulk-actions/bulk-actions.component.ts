@@ -12,6 +12,7 @@ import { environment } from 'app-environment';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { KalturaAccessControl } from 'kaltura-typescript-client/types/KalturaAccessControl';
+import { BulkDeleteError } from './services/bulk-delete.service';
 @Component({
   selector: 'kBulkActions',
   templateUrl: './bulk-actions.component.html',
@@ -155,7 +156,10 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           this.onBulkChange.emit({ reload: reloadEntries });
         },
         error => {
-          this._browserService.setAppStatus({ isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error') });
+          const message = error.type === 'bulkDelete'
+            ? error.message
+            : this._appLocalization.get('applications.content.bulkActions.error');
+          this._browserService.setAppStatus({ isBusy: false, errorMessage: message });
         }
       );
     };
