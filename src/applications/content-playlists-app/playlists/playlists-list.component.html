@@ -21,17 +21,17 @@
         </div>
         <div [class.kHidden]="_selectedPlaylists.length" class="kFilters">
           <input type="text" pInputText class="kSearchInput"
-               [(ngModel)]="_filter.freetextSearch"
-               (keyup.enter)="onFreetextChanged()"
-               placeholder="{{'applications.content.playlists.searchEntries' | translate}}">
+                 [(ngModel)]="_filter.freetextSearch"
+                 (keyup.enter)="onFreetextChanged()"
+                 placeholder="{{'applications.content.playlists.searchEntries' | translate}}">
           <div #refineBtn class="kRefine"><i class="kIconcalendar"></i></div>
         </div>
         <button pButton
-          class="kButtonDefault kRefreshBtn small"
-          type="text"
-          (click)="_reload()"
-          icon="kIconrefresh"
-          [kTooltip]="'applications.content.playlists.refresh' | translate"></button>
+                class="kButtonDefault kRefreshBtn small"
+                type="text"
+                (click)="_reload()"
+                icon="kIconrefresh"
+                [kTooltip]="'applications.content.playlists.refresh' | translate"></button>
       </div>
       <kTags
         [title]="'applications.content.filters.activeFilters' | translate"
@@ -68,17 +68,17 @@
 </k-area-blocker>
 
 <kPopupWidget
-	#refinePopup
-	[appendTo]="playlistsTableHolder"
-	[popupWidth]="350"
-	[closeBtn]="false"
-	[targetRef]="refineBtn"
-	[targetOffset]="{'x':-294, 'y': -20}">
-	<kPlaylistsAdditionalFilter
-		[parentPopupWidget]="refinePopup"
-		(createdChanged)="onCreatedChanged($event)"
-		[_createdAfter]="_filter.createdAfter"
-		[_createdBefore]="_filter.createdBefore"></kPlaylistsAdditionalFilter>
+  #refinePopup
+  [appendTo]="playlistsTableHolder"
+  [popupWidth]="350"
+  [closeBtn]="false"
+  [targetRef]="refineBtn"
+  [targetOffset]="{'x':-294, 'y': -20}">
+  <kPlaylistsAdditionalFilter
+    [parentPopupWidget]="refinePopup"
+    (createdChanged)="onCreatedChanged($event)"
+    [_createdAfter]="_filter.createdAfter"
+    [_createdBefore]="_filter.createdBefore"></kPlaylistsAdditionalFilter>
 </kPopupWidget>
 
 <kPopupWidget #addNewPlaylist [popupWidth]="586" [popupHeight]="453" [modal]="true">

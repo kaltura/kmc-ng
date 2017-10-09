@@ -34,6 +34,8 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 	public _container : ElementRef;
     public _handler : EntryMetadataHandler;
 
+    @ViewChild('nameField') private nameField: ElementRef;
+
     constructor(private _entryFormManager : EntryFormManager,
                 private _pageScrollService: PageScrollService,
                 @Inject(DOCUMENT) private document: any) {
@@ -41,7 +43,18 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
     ngOnInit() {
         this._handler = this._entryFormManager.attachWidget(EntryMetadataHandler);
+        this._handler.data$.subscribe(
+            data => {
+                if (data) {
+                    setTimeout(()=>{
+                        if (this.nameField) {
+                            this.nameField.nativeElement.focus(); // use timeout to allow data binding of ngIf to update the DOM
+                        }
+                    },0);
 
+                }
+            }
+        );
     }
 
     _searchTags(event) : void {

@@ -1,49 +1,11 @@
-<div class="kPlaylistPreview kUseKMCngIcons" *ngIf="playlist">
-	<div class="kPreviewDetails">
-		<span class="kTitle">{{'applications.content.playlistDetails.details.details' | translate}}</span>
-		<div class="kRow">
-			<span class="kLabels">{{'applications.content.playlistDetails.details.id' | translate}}</span>
-			<span>{{playlist.id}}</span>
-		</div>
-
-		<div class="kRow">
-			<span class="kLabels">{{'applications.content.playlistDetails.details.creator' | translate}}</span>
-			<span [kTooltip]="playlist.creatorId">{{playlist.creatorId}}</span>
-		</div>
-
-		<div class="kRow">
-			<span class="kLabels">{{'applications.content.playlistDetails.details.creationDate' | translate}}</span>
-			<span>{{playlist.createdAt | kDate}}</span>
-		</div>
-
-		<div class="kRow">
-			<span class="kLabels">{{'applications.content.playlistDetails.details.updatedAt' | translate}}</span>
-			<span>{{playlist.updatedAt | kDate}}</span>
-		</div>
-
-		<div class="kRow">
-			<span class="kLabels">{{'applications.content.playlistDetails.details.type' | translate}}</span>
-			<span>{{playlist.playlistType | playlistType}}</span>
-		</div>
-
-		<div class="kRow">
-			<span class="kLabels">{{'applications.content.playlistDetails.details.duration' | translate}}</span>
-			<span>{{playlist.duration}}</span>
-		</div>
-
-		<div class="kRow">
-			<span class="kLabels">{{'applications.content.playlistDetails.details.moderation' | translate}}</span>
-			<span>{{playlist.moderationStatus | moderation}}</span>
-		</div>
-
-		<div class="kRow">
-			<span class="kLabels">{{'applications.content.playlistDetails.details.plays' | translate}}</span>
-			<span>{{playlist.plays}}</span>
-		</div>
-
-		<div class="kRow">
-			<span class="kLabels">{{'applications.content.playlistDetails.details.numberOfEntries' | translate}}</span>
-			<span>{{numberOfEntries}}</span>
-		</div>
-	</div>
-</div>
+<k-details-bar #detailsBar [data]="playlist">
+	<kDetailInfo [label]="'applications.content.playlistDetails.details.id' | translate" [valueField]="'id'"></kDetailInfo>
+	<kDetailInfo [label]="'applications.content.playlistDetails.details.creator' | translate" [valueField]="'creatorId'" [tooltip]="_currentEntry?.creatorId"></kDetailInfo>
+	<kDetailInfo [label]="'applications.content.playlistDetails.details.creationDate' | translate" [value]="playlist?.createdAt | date:'MM/dd/y HH:MM'"></kDetailInfo>
+	<kDetailInfo [label]="'applications.content.playlistDetails.details.updatedAt' | translate" [value]="playlist?.updatedAt | date:'MM/dd/y HH:MM'"></kDetailInfo>
+	<kDetailInfo [label]="'applications.content.playlistDetails.details.type' | translate" [value]="playlist?.playlistType | playlistType"></kDetailInfo>
+	<kDetailInfo *ngIf="_duration > 0" [label]="'applications.content.playlistDetails.details.duration' | translate" [value]="_duration | kTime"></kDetailInfo>
+	<kDetailInfo [label]="'applications.content.playlistDetails.details.moderation' | translate" [value]="playlist?.moderationStatus | moderation"></kDetailInfo>
+	<kDetailInfo [label]="'applications.content.playlistDetails.details.plays' | translate" [valueField]="'plays'"></kDetailInfo>
+	<kDetailInfo [label]="'applications.content.playlistDetails.details.numberOfEntries' | translate" [value]="numberOfEntries"></kDetailInfo>
+</k-details-bar>
