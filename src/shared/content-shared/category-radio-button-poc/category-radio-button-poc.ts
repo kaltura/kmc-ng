@@ -21,6 +21,7 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
   public _selectionMode: TreeSelectionMode = 'single';
   public _categoriesLoaded = false;
   public _treeSelection: Partial<PrimeTreeNode> = null;
+  public _selectionTooltip = '';
 
   private _searchCategoriesSubscription: ISubscription;
   public _categoriesProvider = new Subject<SuggestionsProviderData>();
@@ -57,6 +58,11 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
       this._ngAfterViewCheckedContext.updateTreeSelections = false;
       this.cdRef.detectChanges();
     }
+
+    setTimeout(() => {
+      const selectionPath = this._selectedCategory ? this._selectedCategory.fullNamePath : '';
+      this._selectionTooltip = `Selected: ${ this._createCategoryTooltip(selectionPath) || 'no parent' }`;
+    }, 0);
   }
 
   private _updateTreeSelections(expandNodeId = null, initial = false): void {

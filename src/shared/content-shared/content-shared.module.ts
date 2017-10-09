@@ -76,6 +76,7 @@ import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/
     CategoriesFilterComponent,
     EntriesTableComponent,
     EntriesListComponent,
+
     CategoryRadioButtonPocComponent,
     CategoryRadioButtonPocPopupComponent
   ],
