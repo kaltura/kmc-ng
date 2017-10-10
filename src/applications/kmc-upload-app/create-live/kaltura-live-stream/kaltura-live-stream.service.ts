@@ -10,34 +10,10 @@ import {KalturaConversionProfile} from 'kaltura-typescript-client/types/KalturaC
 @Injectable()
 export class KalturaLiveStreamService {
 
-  private _cachedConversionProfiles: KalturaConversionProfile[] = null;
-
   constructor(private _kalturaServerClient: KalturaClient) {
   }
 
-  // return the cached conversion profiles
   public getKalturaConversionProfiles(): Observable<KalturaConversionProfile[]> {
-    return Observable.create(observer => {
-      if (!this._cachedConversionProfiles) {
-        this._getKalturaConversionProfiles()
-          .subscribe(
-            result => {
-              this._cachedConversionProfiles = result;
-              observer.next(this._cachedConversionProfiles)
-              observer.complete();
-            },
-            error => {
-              observer.error(error);
-            }
-          );
-      } else {
-        observer.next(this._cachedConversionProfiles)
-        observer.complete();
-      }
-    });
-  }
-
-  private _getKalturaConversionProfiles(): Observable<KalturaConversionProfile[]> {
     // filter
     const kalturaConversionProfileFilter = new KalturaConversionProfileFilter({
       typeEqual: KalturaConversionProfileType.liveStream

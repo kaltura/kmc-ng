@@ -34,7 +34,7 @@
 
     padding-left: 28px;
 
-    >.kRow:first-child{
+    > .kRow:first-child {
       padding-top: 28px;
     }
 
@@ -67,7 +67,7 @@
       }
 
       .kLabel {
-        width: 173px;
+        width: 190px;
         -webkit-box-flex: 0;
         -ms-flex: 0 0 auto;
         flex: 0 0 auto;
@@ -76,7 +76,7 @@
         font-size: 15px;
         line-height: 18px;
 
-        &.kInputSwitchLabel{
+        &.kInputSwitchLabel {
           padding-top: 3px;
         }
       }
@@ -93,7 +93,7 @@
         &.kInputSwitch {
           padding-right: 12px;
 
-          &+span{
+          & + span {
             vertical-align: middle;
           }
         }
@@ -106,11 +106,11 @@
   }
 }
 
-/deep/ {
+:host /deep/ {
   .ui-widget.ui-dropdown {
-      width: 360px !important;
+    width: 360px;
     font-size: 14px;
-    }
+  }
 
   .ui-chkbox-label {
     font-weight: normal;

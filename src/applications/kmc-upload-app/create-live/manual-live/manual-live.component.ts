@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ManualLive} from '../create-live.service';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {KalturaValidators} from '@kaltura-ng/kaltura-ui/validators';
+import {ManualLive} from './manual-live.interface';
 
 @Component({
   selector: 'kManualLive',

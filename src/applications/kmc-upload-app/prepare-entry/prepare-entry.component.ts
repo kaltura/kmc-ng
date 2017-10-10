@@ -8,13 +8,16 @@ import {BrowserService} from 'app-shared/kmc-shell';
 @Component({
   selector: 'kPrepareEntry',
   templateUrl: './prepare-entry.component.html',
-  styleUrls: ['./prepare-entry.component.scss']
+  styleUrls: ['./prepare-entry.component.scss'],
+  providers: [PrepareEntryService]
 })
 export class PrepareEntryComponent implements OnInit {
   public _selectedMediaType: KalturaMediaType;
   @ViewChild('transcodingProfileSelectMenu') transcodingProfileSelectMenu: PopupWidgetComponent;
 
-  constructor(private _prepareEntryService: PrepareEntryService, private _router: Router, private _browserService: BrowserService) {
+  constructor(private _prepareEntryService: PrepareEntryService,
+              private _router: Router,
+              private _browserService: BrowserService) {
   }
 
   ngOnInit() {
@@ -23,19 +26,22 @@ export class PrepareEntryComponent implements OnInit {
   public prepareEntry(kalturaMediaType: KalturaMediaType) {
     this._selectedMediaType = kalturaMediaType;
     // TODO [kmcng] If user permissions allows setting transcoding profile - show transcoding profile selector
-    this.transcodingProfileSelectMenu.open();
+    // 'transcodingProfileSettingPermission' should contain whether the user has the permission to set the transcoding profile
+    const transcodingProfileSettingPermission = true;
+    if (transcodingProfileSettingPermission) {
+      this.transcodingProfileSelectMenu.open();
+    }
   }
 
-  private _loadEntry(selectedProfile: { profileId: number }) {
+  private _loadEntry(selectedProfile: { profileId?: number }) {
     this._browserService.setAppStatus({
       isBusy: true,
       errorMessage: null
     });
 
-    this._prepareEntryService.createDraftEntry(this._selectedMediaType,
-      selectedProfile.profileId || -1)
+    this._prepareEntryService.createDraftEntry(this._selectedMediaType, selectedProfile.profileId)
       .subscribe((draftEntry: DraftEntry) => {
-          this._router.navigate(['/content/entries/entry', draftEntry.id])
+          this._router.navigate(['/content/entries/entry', draftEntry.id], {queryParams: {reloadEntries: true}})
             .then(() => {
               this._browserService.setAppStatus({
                 isBusy: false,
@@ -54,7 +60,7 @@ export class PrepareEntryComponent implements OnInit {
         error => {
           this._browserService.setAppStatus({
             isBusy: false,
-            errorMessage: error.message
+            errorMessage: 'Failed to create entry'
           });
         });
   }

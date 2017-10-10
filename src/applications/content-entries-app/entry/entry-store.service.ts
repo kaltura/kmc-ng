@@ -1,24 +1,23 @@
-import { Injectable,  OnDestroy, Host } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd, NavigationStart } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import {Host, Injectable, OnDestroy} from '@angular/core';
+import {ActivatedRoute, NavigationEnd, NavigationStart, Router} from '@angular/router';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {ISubscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { BaseEntryGetAction } from 'kaltura-typescript-client/types/BaseEntryGetAction';
-import { BaseEntryUpdateAction } from 'kaltura-typescript-client/types/BaseEntryUpdateAction';
+import {KalturaClient} from '@kaltura-ng/kaltura-client';
+import {KalturaMediaEntry} from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import {KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-typescript-client';
+import {BaseEntryGetAction} from 'kaltura-typescript-client/types/BaseEntryGetAction';
+import {BaseEntryUpdateAction} from 'kaltura-typescript-client/types/BaseEntryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { EntryFormManager } from './entry-form-manager';
-import { KalturaTypesFactory } from 'kaltura-typescript-client';
-import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import {EntryFormManager} from './entry-form-manager';
+import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import {EntriesStore} from 'app-shared/content-shared/entries-store/entries-store.service';
 
 export enum ActionTypes
 {
@@ -83,6 +82,10 @@ export class EntryStore implements  OnDestroy {
 
 		this._onSectionsStateChanges();
 		this._onRouterEvents();
+        this._entryRoute.queryParams.cancelOnDestroy(this)
+          .subscribe(queryParams => {
+            this._saveEntryInvoked = !!queryParams['reloadEntries']; // convert to boolean
+          });
     }
 
     private _onSectionsStateChanges()

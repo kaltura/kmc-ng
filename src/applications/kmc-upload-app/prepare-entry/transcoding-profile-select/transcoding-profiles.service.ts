@@ -1,12 +1,8 @@
 import {Injectable} from '@angular/core';
-import {KalturaClient} from '@kaltura-ng/kaltura-client';
 import {Observable} from 'rxjs/Observable';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {ConversionProfileListAction} from "kaltura-typescript-client/types/ConversionProfileListAction";
-import {KalturaConversionProfileFilter} from "kaltura-typescript-client/types/KalturaConversionProfileFilter";
-import {KalturaConversionProfileType} from "kaltura-typescript-client/types/KalturaConversionProfileType";
-import {KalturaFilterPager} from "kaltura-typescript-client/types/KalturaFilterPager";
-import {KalturaNullableBoolean} from "kaltura-typescript-client/types/KalturaNullableBoolean";
+import {KalturaNullableBoolean} from 'kaltura-typescript-client/types/KalturaNullableBoolean';
+import {TranscodingProfileManagement} from '@kaltura-ng/kaltura-server-utils/transcoding-profile-management';
 
 
 export interface TranscodingProfile {
@@ -17,16 +13,12 @@ export interface TranscodingProfile {
 @Injectable()
 export class TranscodingProfilesService {
 
-  constructor(private _kalturaServerClient: KalturaClient) {
+  constructor(private _transcodingProfileManagement: TranscodingProfileManagement) {
   }
 
   /** update the data for current partner */
   public getTranscodingProfiles(): Observable<TranscodingProfile[]> {
-    return this._kalturaServerClient.request(new ConversionProfileListAction({
-      filter: new KalturaConversionProfileFilter({typeEqual: KalturaConversionProfileType.media}),
-      pager: new KalturaFilterPager({pageSize: 500})
-    }))
-      .map(result => (result.objects))
+    return this._transcodingProfileManagement.get()
       .map(profiles => {
         const defaultProfileIndex = profiles.findIndex(x => (x.isDefault === KalturaNullableBoolean.trueValue));
         // Set default profile as first in array (if not already first)
@@ -37,6 +29,5 @@ export class TranscodingProfilesService {
         }
         return profiles;
       })
-      .monitor('Transcoding profiles');
   }
 }

@@ -1,13 +1,16 @@
 import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {CreateLiveService, KalturaLive, ManualLive, UniversalLive} from './create-live.service';
+import {CreateLiveService} from './create-live.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaRecordStatus} from 'kaltura-typescript-client/types/KalturaRecordStatus';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {Router} from '@angular/router';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {KalturaLive} from './kaltura-live-stream/kaltura-live-stream.interface';
+import {ManualLive} from './manual-live/manual-live.interface';
+import {UniversalLive} from './universal-live/universal-live.interface';
 
-enum StreamTypes {
+export enum StreamTypes {
   kaltura,
   universal,
   manual
@@ -131,7 +134,9 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
           message: 'Unsupported stream type, please select different stream type from the \'Stream type\' select menu',
           buttons: [{
             label: this._appLocalization.get('app.common.confirm'),
-            action: () => {}
+            action: () => {
+              this._updateAreaBlockerState(false, null);
+            }
           }]
         });
 
@@ -165,7 +170,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         header: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.title'),
         message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.message'),
         accept: () => {
-          this._router.navigate(['/content/entries/entry', id]);
+          this._router.navigate(['/content/entries/entry', id], {queryParams: {reloadEntries: true}})
           this._showConfirmationOnClose = false;
           this.parentPopupWidget.close();
         }

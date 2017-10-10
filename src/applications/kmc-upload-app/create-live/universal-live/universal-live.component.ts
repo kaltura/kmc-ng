@@ -1,13 +1,14 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {UniversalLive} from '../create-live.service';
 import {AreaBlockerMessage, KalturaValidators} from '@kaltura-ng/kaltura-ui';
 import {UniversalLiveService} from './universal-live.service';
+import {UniversalLive} from "./universal-live.interface";
 
 @Component({
   selector: 'kUniversalLive',
   templateUrl: './universal-live.component.html',
   styleUrls: ['./universal-live.component.scss'],
+  providers: [UniversalLiveService]
 })
 export class UniversalLiveComponent implements OnInit, OnDestroy {
 

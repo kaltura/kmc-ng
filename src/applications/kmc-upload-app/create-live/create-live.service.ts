@@ -7,37 +7,11 @@ import {KalturaClient} from '@kaltura-ng/kaltura-client';
 import {LiveStreamAddAction} from 'kaltura-typescript-client/types/LiveStreamAddAction';
 import {KalturaSourceType} from 'kaltura-typescript-client/types/KalturaSourceType';
 import {Observable} from 'rxjs/Observable';
-import {KalturaLiveStreamConfiguration} from "kaltura-typescript-client/types/KalturaLiveStreamConfiguration";
-import {KalturaPlaybackProtocol} from "kaltura-typescript-client/types/KalturaPlaybackProtocol";
-
-interface KalturaLive {
-  name: string
-  description: string,
-  transcodingProfile: number,
-  liveDVR: boolean,
-  enableRecording: boolean,
-  enableRecordingSelectedOption: KalturaRecordStatus,
-  previewMode: boolean
-}
-
-interface ManualLive {
-  name: string
-  description: string,
-  flashHDSURL: string,
-  hlsStreamUrl: string,
-  useAkamaiHdProtocol: boolean
-}
-
-interface UniversalLive {
-  name: string
-  description: string,
-  primaryEncoderIp: string,
-  secondaryEncoderIp: string,
-  broadcastPassword: string,
-  liveDvr: boolean
-}
-
-export {KalturaLive, ManualLive, UniversalLive}
+import {KalturaLiveStreamConfiguration} from 'kaltura-typescript-client/types/KalturaLiveStreamConfiguration';
+import {KalturaPlaybackProtocol} from 'kaltura-typescript-client/types/KalturaPlaybackProtocol';
+import {KalturaLive} from './kaltura-live-stream/kaltura-live-stream.interface';
+import {ManualLive} from './manual-live/manual-live.interface';
+import {UniversalLive} from './universal-live/universal-live.interface';
 
 @Injectable()
 export class CreateLiveService {

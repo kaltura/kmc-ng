@@ -1,3 +1,4 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
 <form [formGroup]="_form" novalidate class="kAccountUpgradeWrapper kContent">
   <section class="kFormContainer">
     <div class="kFormSection">
@@ -41,7 +42,7 @@
         <div class="kRequired"></div>
         <div>
           <p-dropdown class="kControl" formControlName="transcodingProfile"
-                      [options]="_availableTranscodingProfiles"></p-dropdown>
+                      [options]="_availableTranscodingProfiles" [autoWidth]="false"></p-dropdown>
         </div>
       </div>
 
@@ -63,7 +64,7 @@
           <p-inputSwitch class="kControl kInputSwitch" formControlName="enableRecording" (onChange)="_toggleRecordingSelectedOption($event.checked)"></p-inputSwitch>
           <span>{{_form.controls['enableRecording'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
           <p-dropdown class="kControl kEnableRecordingOptions" formControlName="enableRecordingSelectedOption"
-                      [options]="_enableRecordingOptions"></p-dropdown>
+                      [options]="_enableRecordingOptions" [autoWidth]="false"></p-dropdown>
         </div>
       </div>
 
@@ -77,3 +78,4 @@
     </div>
   </section>
 </form>
+</k-area-blocker>

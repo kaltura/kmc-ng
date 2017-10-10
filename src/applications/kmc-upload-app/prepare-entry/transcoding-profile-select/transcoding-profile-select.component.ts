@@ -14,7 +14,7 @@ import {KalturaMediaType} from 'kaltura-typescript-client/types/KalturaMediaType
   providers: [TranscodingProfilesService]
 })
 export class TranscodingProfileSelectComponent implements OnInit {
-  @Output() onTranscodingProfileSelected = new EventEmitter<{ profileId: number }>();
+  @Output() onTranscodingProfileSelected = new EventEmitter<{ profileId?: number }>();
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() mediaType: KalturaMediaType.video | KalturaMediaType.audio;
   public _title: string;
@@ -58,7 +58,7 @@ export class TranscodingProfileSelectComponent implements OnInit {
           });
 
           // get profile from local cache if exists
-          const cachedSelectedProfile = this._browserService.getFromLocalStorage('transcodingProfiles.selectedProfile');
+          const cachedSelectedProfile = this._getSelectedTranscodingProfile(profiles);
           this.transcodingProfileSelectForm
             .patchValue({
               profile: cachedSelectedProfile
@@ -82,6 +82,24 @@ export class TranscodingProfileSelectComponent implements OnInit {
           );
           this._updateAreaBlockerState(false, blockerMessage);
         });
+  }
+
+  private _getSelectedTranscodingProfile(transcodingProfilesList): number {
+    if (!transcodingProfilesList || !transcodingProfilesList.length) {
+      return null;
+    }
+
+    const profileIdFromCache = this._browserService.getFromLocalStorage('transcodingProfiles.selectedProfile');
+    const profileExistsInList = transcodingProfilesList
+      .findIndex((profile) => (profile.id === profileIdFromCache)) > -1;
+
+    // if selected profile id exists in the list return it ; else return first option
+    if (profileIdFromCache && profileExistsInList) {
+      return profileIdFromCache;
+    } else {
+      this._browserService.setInLocalStorage('transcodingProfiles.selectedProfile', transcodingProfilesList[0].id);
+      return transcodingProfilesList[0].id;
+    }
   }
 
   private _saveAndClose() {

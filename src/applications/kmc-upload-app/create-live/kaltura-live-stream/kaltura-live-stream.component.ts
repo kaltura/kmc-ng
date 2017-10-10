@@ -1,34 +1,31 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {KalturaLive} from '../create-live.service';
 import {KalturaRecordStatus} from 'kaltura-typescript-client/types/KalturaRecordStatus';
 import {KalturaLiveStreamService} from './kaltura-live-stream.service';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {BrowserService} from "app-shared/kmc-shell";
+import {BrowserService} from 'app-shared/kmc-shell';
+import {KalturaLive} from './kaltura-live-stream.interface';
 
 @Component({
   selector: 'kKalturaLiveStream',
   templateUrl: './kaltura-live-stream.component.html',
   styleUrls: ['./kaltura-live-stream.component.scss'],
+  providers: [KalturaLiveStreamService]
 })
 export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
 
   public _form: FormGroup;
   public _availableTranscodingProfiles: Array<{ value: number, label: string }>;
   public _enableRecordingOptions: Array<{ value: KalturaRecordStatus, label: string }>;
+  public _blockerMessage: AreaBlockerMessage = null;
+  public _isBusy = false;
 
   @Input()
   data: KalturaLive;
 
   @Output()
   dataChange = new EventEmitter<KalturaLive>();
-
-  @Input()
-  blockerState: { isBusy: boolean, message: AreaBlockerMessage };
-
-  @Output()
-  blockerStateChange = new EventEmitter<{ isBusy: boolean, message: AreaBlockerMessage }>();
 
   constructor(private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
@@ -39,9 +36,7 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._createForm();
     this._fillEnableRecordingOptions();
-    setTimeout(() => {
-      this._loadTranscodingProfiles()
-    }, 0)
+    this._loadTranscodingProfiles()
   }
 
   ngOnDestroy(): void {
@@ -74,11 +69,15 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
         this._updateAreaBlockerState(false, null);
 
       }, error => {
-        this._updateAreaBlockerState(false, error.message);
+        this._updateAreaBlockerState(false,  error.message);
       });
   }
 
   private _getSelectedTranscodingProfile(transcodingProfilesList): number {
+    if (!transcodingProfilesList || !transcodingProfilesList.length) {
+      return null;
+    }
+
     const profileIdFromCache = this._browserService.getFromLocalStorage('kalturaStreamType.selectedTranscodingProfile');
     const profileExistsInList = transcodingProfilesList
       .findIndex((profile) => (profile.id === profileIdFromCache)) > -1;
@@ -137,6 +136,7 @@ export class KalturaLiveStreamComponent implements OnInit, OnDestroy {
   }
 
   private _updateAreaBlockerState(isBusy: boolean, message: AreaBlockerMessage): void {
-    this.blockerStateChange.emit({isBusy, message})
+    this._isBusy = isBusy;
+    this._blockerMessage = message;
   }
 }

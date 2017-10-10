@@ -24,10 +24,7 @@ import {UniversalLiveComponent} from './create-live/universal-live/universal-liv
 import {TranscodingProfileSelectComponent} from './prepare-entry/transcoding-profile-select/transcoding-profile-select.component';
 import {CreateLiveComponent} from './create-live/create-live.component';
 import {KalturaLiveStreamComponent} from './create-live/kaltura-live-stream/kaltura-live-stream.component';
-import {PrepareEntryService} from './prepare-entry/prepare-entry.service';
 import {PrepareEntryComponent} from './prepare-entry/prepare-entry.component';
-import {KalturaLiveStreamService} from "./create-live/kaltura-live-stream/kaltura-live-stream.service";
-import {UniversalLiveService} from "./create-live/universal-live/universal-live.service";
 
 @NgModule({
   imports: [
@@ -64,9 +61,6 @@ import {UniversalLiveService} from "./create-live/universal-live/universal-live.
     UploadButtonComponent
   ],
   providers: [
-    PrepareEntryService,
-    KalturaLiveStreamService,
-    UniversalLiveService
   ]
 })
 export class KmcUploadAppModule {
