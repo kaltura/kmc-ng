@@ -27,6 +27,7 @@ export enum ActionTypes
 	EntryLoadingFailed,
 	EntrySaving,
 	EntryPrepareSavingFailed,
+  EntryInvalidCharactersSavingFailed,
 	EntrySavingFailed,
 	EntryDataIsInvalid,
 	ActiveSectionBusy
@@ -192,8 +193,14 @@ export class EntryStore implements  OnDestroy {
                             .monitor('entry store: save entry')
                             .map(
 								response => {
-									if (response.hasErrors()) {
-										this._state.next({action: ActionTypes.EntrySavingFailed});
+								  if (response.hasErrors()) {
+									  response.forEach(response => {
+									    if(response.error && (response.error.code === "UNSAFE_HTML_TAGS" || response.error.code === "INVALID_METADATA_DATA")) {
+                        this._state.next({action: ActionTypes.EntryInvalidCharactersSavingFailed});
+                      } else {
+                        this._state.next({action: ActionTypes.EntrySavingFailed});
+                      }
+                    });
 									} else {
 										this._loadEntry(this.entryId);
 									}

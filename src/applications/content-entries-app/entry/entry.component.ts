@@ -213,6 +213,19 @@ export class EntryComponent implements OnInit, OnDestroy {
 									]
 								});
 								break;
+              case ActionTypes.EntryInvalidCharactersSavingFailed:
+                this._areaBlockerMessage = new AreaBlockerMessage({
+                  message: this._appLocalization.get('applications.content.entryDetails.errors.invalidCharacters'),
+                  buttons: [
+                    {
+                      label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
+                      action: () => {
+                        this._areaBlockerMessage = null;
+                      }
+                    }
+                  ]
+                });
+                break;
 							case ActionTypes.ActiveSectionBusy:
 
 								this._areaBlockerMessage = new AreaBlockerMessage({
