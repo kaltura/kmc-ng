@@ -13,6 +13,7 @@
   display: flex;
   flex-direction: column;
   height: 500px;
+  overflow-x: hidden;
   .kLabel{
     display: block;
     margin-bottom: 12px;
@@ -38,8 +39,12 @@
   justify-content: center;
 }
 
-:host /deep/ p-checkbox .ui-chkbox-label{
-  font-size: 15px;
-  font-weight: 400;
+:host /deep/ p-checkbox {
+  display: flex;
+  .ui-chkbox-label {
+    font-size: 15px;
+    font-weight: 400;
+    overflow-x: hidden;
+    margin-left: 4px;
+  }
 }
-
