@@ -71,7 +71,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 				flavor.status === KalturaFlavorAssetStatus.ready.toString() || flavor.status === KalturaFlavorAssetStatus.notApplicable.toString())){
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.reconvert'), command: (event) => {this.actionSelected("reconvert");}});
 			}
-			if (flavor.isWidevine){
+			if (flavor.isWidevine && flavor.status === KalturaFlavorAssetStatus.ready.toString()){
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.drm'), command: (event) => {this.actionSelected("drm");}});
 			}
 			if (this._actions.length) {
