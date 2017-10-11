@@ -14,14 +14,6 @@
       <p-column [style]="{'width':'44px', 'padding-left': '14px'}"
                 selectionMode="multiple"></p-column>
 
-      <p-column field="bulkUploadType"
-                header=""
-                [style]="{'width':'40px'}">
-        <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
-          <span>{{ bulkLogItem[col.field] | kBulkLogTableTypeIcon }}</span>
-        </ng-template>
-      </p-column>
-
       <p-column field="fileName"
                 [header]="'applications.content.bulkUpload.table.fileName' | translate"
                 [style]="{'width':'350px'}">
@@ -64,13 +56,6 @@
                 [header]="'applications.content.bulkUpload.table.status' | translate">
         <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
           <span>{{ bulkLogItem[col.field] | kBulkLogTableStatus }}</span>
-        </ng-template>
-      </p-column>
-
-      <p-column field="error"
-                [header]="'applications.content.bulkUpload.table.notification' | translate">
-        <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
-          <span>{{ bulkLogItem[col.field] | kBulkLogTableNotification }}</span>
         </ng-template>
       </p-column>
 

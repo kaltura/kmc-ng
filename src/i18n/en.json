@@ -338,12 +338,11 @@
         "table": {
           "header": "Files",
           "fileName": "File name",
-          "uploadedItem": "Uploaded item",
+          "uploadedItem": "Item type",
           "uploadedBy": "Uploaded by",
-          "uploadedOn": "Uploaded on",
-          "numOfObjects": "Number of items",
+          "uploadedOn": "Upload date",
+          "numOfObjects": "Items",
           "status": "Status",
-          "notification": "Notification",
           "actions": {
             "delete": "Delete",
             "downloadLog": "Download Log File",
