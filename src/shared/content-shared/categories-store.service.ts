@@ -12,6 +12,10 @@ import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory
 import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
 import { KalturaCategoryListResponse } from 'kaltura-typescript-client/types/KalturaCategoryListResponse';
+import { KalturaPrivacyType } from 'kaltura-typescript-client/types/KalturaPrivacyType';
+import { KalturaAppearInListType } from 'kaltura-typescript-client/types/KalturaAppearInListType';
+import { KalturaContributionPolicyType } from 'kaltura-typescript-client/types/KalturaContributionPolicyType';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 export interface CategoryData {
   parentId?: number,
@@ -33,7 +37,7 @@ export interface CategoriesQuery {
 export class CategoriesStore {
   private _categoriesCache: { [key: string]: Observable<{ items: CategoryData[] }> } = {};
 
-  constructor(private kalturaServerClient: KalturaClient) {
+  constructor(private kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization) {
   }
 
   public getAllCategories(): Observable<CategoriesQuery> {
@@ -145,9 +149,87 @@ export class CategoriesStore {
           parentId: category.parentId !== 0 ? category.parentId : null,
           sortValue: category.partnerSortValue,
           fullNamePath: category.fullName ? category.fullName.split('>') : [],
-          childrenCount: category.directSubCategoriesCount
+          childrenCount: category.directSubCategoriesCount,
+          tooltip: this._buildTooltip(category)
         });
       });
+    }
+
+    return result;
+  }
+
+  private _buildTooltip(category: KalturaCategory): string {
+    if (!category.privacyContexts) {
+      return category.fullName;
+    }
+
+    let result = `${category.fullName}\n`;
+
+    if (category.privacyContext) {
+      const title = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.privacyContext');
+      result += `${title}: ${category.privacyContext}\n`;
+    }
+
+    if (category.privacy) {
+      const title = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.contentPrivacy');
+      let value = '';
+      switch (category.privacy) {
+        case KalturaPrivacyType.all:
+          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.noRestriction');
+          break;
+        case KalturaPrivacyType.authenticatedUsers:
+          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.requiresAuth');
+          break;
+        case KalturaPrivacyType.membersOnly:
+          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.noMembers');
+          break;
+        default:
+          break;
+      }
+
+      if (!!value) {
+        result += `${title}: ${value}\n`;
+      }
+    }
+
+    if (category.appearInList) {
+      let value = '';
+      let title = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.categoryListing');
+      switch (category.appearInList) {
+        case KalturaAppearInListType.categoryMembersOnly:
+          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.private');
+          break;
+        case KalturaAppearInListType.partnerOnly:
+          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.noRestriction');
+          break;
+        default:
+          break
+      }
+
+      if (!!value) {
+        result += `${title}: ${value}\n`;
+      }
+
+      value = '';
+      title = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.contributionPolicy');
+      switch (<any>category.appearInList) {
+        case KalturaContributionPolicyType.all:
+          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.noRestriction');
+          break;
+        case KalturaContributionPolicyType.membersWithContributionPermission:
+          value = this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.private');
+          break;
+        default:
+          break;
+      }
+
+      if (!!value) {
+        result += `${title}: ${value}\n`;
+      }
+
+      if (category.membersCount > 0) {
+        result += this._appLocalization.get('applications.entries.entryMetadata.categoryTooltip.specificEndUserPermissions');
+      }
     }
 
     return result;
@@ -165,7 +247,7 @@ export class CategoriesStore {
     }
 
     const responseProfile = new KalturaDetachedResponseProfile({
-      fields: 'id,name,parentId,partnerSortValue,fullName,fullIds,directSubCategoriesCount',
+      fields: 'id,name,parentId,partnerSortValue,fullName,fullIds,directSubCategoriesCount,contributionPolicy,privacyContext,privacyContexts,appearInList,privacy,membersCount',
       type: KalturaResponseProfileType.includeFields
     });
 
