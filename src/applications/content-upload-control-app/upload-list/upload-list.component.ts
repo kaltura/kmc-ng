@@ -163,7 +163,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
   }
 
   public _retryUpload(file: UploadFileData): void {
-    this._uploadManagement.retryUpload(file.id);
+    this._uploadManagement.resumeUpload(file.id);
   }
 
   public _bulkCancel(): void {

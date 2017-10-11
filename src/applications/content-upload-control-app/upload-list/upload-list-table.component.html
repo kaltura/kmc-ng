@@ -64,25 +64,25 @@
 
       <p-column field="progress"
                 [header]="'applications.content.uploadControl.table.progress' | translate"
-                [style]="{ 'width': '140px' }"
+                [style]="{ 'width': '120px' }"
                 [sortable]="false">
         <ng-template let-col let-file="rowData" pTemplate="body">
           <kUploadProgress [progress]="file[col.field]" [status]="file.status"></kUploadProgress>
         </ng-template>
       </p-column>
 
-      <p-column [style]="{ 'width': '65px', 'text-align': 'center' }" [sortable]="false">
+      <p-column [style]="{ 'width': '70px', 'text-align': 'center' }" [sortable]="false">
         <ng-template let-col let-file="rowData" pTemplate="body">
-          <i class="kIcontrash kIconRemoveFile"
-             *ngIf="!file.removing"
-             [kTooltip]="'applications.content.uploadControl.table.remove' | translate"
-             placement="top"
-             (click)="onCancelUpload.emit(file)"></i>
           <i class="kIconplay kIconRemoveFile"
              *ngIf="_hasError(file.status)"
              [kTooltip]="'applications.content.uploadControl.table.retry' | translate"
              placement="top"
              (click)="onRetryUpload.emit(file)"></i>
+          <i class="kIcontrash kIconRemoveFile"
+             *ngIf="!file.removing"
+             [kTooltip]="'applications.content.uploadControl.table.remove' | translate"
+             placement="top"
+             (click)="onCancelUpload.emit(file)"></i>
         </ng-template>
       </p-column>
     </p-dataTable>
