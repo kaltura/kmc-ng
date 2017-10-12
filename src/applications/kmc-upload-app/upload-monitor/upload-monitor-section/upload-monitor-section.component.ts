@@ -7,5 +7,18 @@ import { Component, Input } from '@angular/core';
 })
 export class UploadMonitorSectionComponent {
   @Input() title: string;
+  @Input() type: 'dropFolder' | 'other' = 'other';
+  @Input() uploading = 0;
+  @Input() queued = 0;
+  @Input() completed = 0;
+  @Input() errors = 0;
+
+  public get _isUpToDate(): boolean {
+    return this.uploading + this.queued + this.completed + this.errors === 0;
+  }
+
+  public get _uploadingTitle(): string {
+    return this.type === 'dropFolder' ? 'applications.upload.uploadMonitor.syncing' : 'applications.upload.uploadMonitor.uploading';
+  }
 }
 

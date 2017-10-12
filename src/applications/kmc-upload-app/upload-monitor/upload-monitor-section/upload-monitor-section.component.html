@@ -4,25 +4,25 @@
     <a class="kUploadMonitorSectionHeadingDetails">{{ 'applications.upload.uploadMonitor.viewDetails' | translate }}</a>
   </div>
   <div class="kUploadMonitorSectionContent">
-    <span *ngIf="true">
-      <span class="kUploadMonitorStatus">
+    <span *ngIf="!_isUpToDate">
+      <span class="kUploadMonitorStatus" *ngIf="uploading !== 0">
         <i class="kIconrefresh_small kUploadMonitorStatusIcon uploading"></i>
-        {{ '9' }} {{ 'applications.upload.uploadMonitor.uploading' | translate }}
+        {{ uploading }} {{ _uploadingTitle | translate }}
       </span>
-      <span class="kUploadMonitorStatus">
+      <span class="kUploadMonitorStatus" *ngIf="queued !== 0">
         <i class="kIconcheck_small kUploadMonitorStatusIcon queued"></i>
-        {{ '1' }} {{ 'applications.upload.uploadMonitor.queued' | translate }}
+        {{ queued }} {{ 'applications.upload.uploadMonitor.queued' | translate }}
       </span>
-      <span class="kUploadMonitorStatus">
+      <span class="kUploadMonitorStatus" *ngIf="completed !== 0">
         <i class="kIconcheck_small kUploadMonitorStatusIcon completed"></i>
-        {{ '2' }} {{ 'applications.upload.uploadMonitor.completed' | translate }}
+        {{ completed }} {{ 'applications.upload.uploadMonitor.completed' | translate }}
       </span>
-      <span class="kUploadMonitorStatus">
+      <span class="kUploadMonitorStatus" *ngIf="errors !== 0">
         <i class="kIconinfo kUploadMonitorStatusIcon error"></i>
-        {{ '2' }} {{ 'applications.upload.uploadMonitor.error' | translate }}
+        {{ errors }} {{ 'applications.upload.uploadMonitor.error' | translate }}
       </span>
     </span>
-    <span *ngIf="false">
+    <span *ngIf="_isUpToDate">
       <span class="kUploadMonitorStatus">
         <i class="kIconcheck_small kUploadMonitorStatusIcon completed"></i>
         {{ 'applications.upload.uploadMonitor.upToDate' | translate }}
