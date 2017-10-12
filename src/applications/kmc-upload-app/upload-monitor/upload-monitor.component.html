@@ -1,0 +1,16 @@
+<i #openuploadmonitor class="kIconfolder_large KUploadMonitor" [class.open]="_menuOpened"></i>
+
+<kPopupWidget #uploadmonitor
+              [showTooltip]="true"
+              [appendTo]="appmenu"
+              [popupWidth]="543"
+              [popupHeight]="285"
+              [closeBtn]="false"
+              [targetRef]="openuploadmonitor"
+              [targetOffset]="{'x':-109, 'y': 15}"
+              (onOpen)="_menuOpened = true"
+              (onClose)="_menuOpened = false">
+  <ng-template>
+    <h1>TEST</h1>
+  </ng-template>
+</kPopupWidget>

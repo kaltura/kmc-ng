@@ -1,0 +1,18 @@
+@import 'app-theme/_variables.scss';
+
+.KUploadMonitor {
+  display: flex;
+  margin-left: 12px;
+  margin-right: 12px;
+  color: $headerTextColor;
+  font-size: 24px;
+  cursor: pointer;
+  &:hover , &.open {
+    opacity: 1;
+    color: $mainLinkHoverColor;
+    i {
+      color: $mainLinkHoverColor;
+      opacity: 1;
+    }
+  }
+}
