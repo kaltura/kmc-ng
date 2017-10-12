@@ -13,8 +13,8 @@
               (onOpen)="_menuOpened = true"
               (onClose)="_menuOpened = false">
   <ng-template>
-    <kUploadMonitorSection title="Upload from desktop"></kUploadMonitorSection>
-    <kUploadMonitorSection title="Bulk upload"></kUploadMonitorSection>
-    <kUploadMonitorSection title="Drop folders"></kUploadMonitorSection>
+    <kUploadMonitorSection [title]="'applications.upload.uploadMonitor.uploadFromDesktop' | translate"></kUploadMonitorSection>
+    <kUploadMonitorSection [title]="'applications.upload.uploadMonitor.bulkUpload' | translate"></kUploadMonitorSection>
+    <kUploadMonitorSection [title]="'applications.upload.uploadMonitor.dropFolders' | translate" type="dropFolder"></kUploadMonitorSection>
   </ng-template>
 </kPopupWidget>

@@ -1,31 +1,31 @@
 <div class="kUploadMonitorSection">
   <div class="kUploadMonitorSectionHeading">
     <span class="kUploadMonitorSectionHeadingTitle">{{ title }}</span>
-    <a class="kUploadMonitorSectionHeadingDetails">View details</a>
+    <a class="kUploadMonitorSectionHeadingDetails">{{ 'applications.upload.uploadMonitor.viewDetails' | translate }}</a>
   </div>
   <div class="kUploadMonitorSectionContent">
     <span *ngIf="true">
       <span class="kUploadMonitorStatus">
         <i class="kIconrefresh_small kUploadMonitorStatusIcon uploading"></i>
-        {{ '9' }} uploading
+        {{ '9' }} {{ 'applications.upload.uploadMonitor.uploading' | translate }}
       </span>
       <span class="kUploadMonitorStatus">
         <i class="kIconcheck_small kUploadMonitorStatusIcon queued"></i>
-        {{ '1' }} queued
+        {{ '1' }} {{ 'applications.upload.uploadMonitor.queued' | translate }}
       </span>
       <span class="kUploadMonitorStatus">
         <i class="kIconcheck_small kUploadMonitorStatusIcon completed"></i>
-        {{ '2' }} completed
+        {{ '2' }} {{ 'applications.upload.uploadMonitor.completed' | translate }}
       </span>
       <span class="kUploadMonitorStatus">
         <i class="kIconinfo kUploadMonitorStatusIcon error"></i>
-        {{ '2' }} error
+        {{ '2' }} {{ 'applications.upload.uploadMonitor.error' | translate }}
       </span>
     </span>
     <span *ngIf="false">
       <span class="kUploadMonitorStatus">
         <i class="kIconcheck_small kUploadMonitorStatusIcon completed"></i>
-        Up to date
+        {{ 'applications.upload.uploadMonitor.upToDate' | translate }}
       </span>
     </span>
   </div>
