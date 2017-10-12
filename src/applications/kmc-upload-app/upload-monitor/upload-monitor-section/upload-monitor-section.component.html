@@ -1,0 +1,32 @@
+<div class="kUploadMonitorSection">
+  <div class="kUploadMonitorSectionHeading">
+    <span class="kUploadMonitorSectionHeadingTitle">{{ title }}</span>
+    <a class="kUploadMonitorSectionHeadingDetails">View details</a>
+  </div>
+  <div class="kUploadMonitorSectionContent">
+    <span *ngIf="true">
+      <span class="kUploadMonitorStatus">
+        <i class="kIconrefresh_small kUploadMonitorStatusIcon uploading"></i>
+        {{ '9' }} uploading
+      </span>
+      <span class="kUploadMonitorStatus">
+        <i class="kIconcheck_small kUploadMonitorStatusIcon queued"></i>
+        {{ '1' }} queued
+      </span>
+      <span class="kUploadMonitorStatus">
+        <i class="kIconcheck_small kUploadMonitorStatusIcon completed"></i>
+        {{ '2' }} completed
+      </span>
+      <span class="kUploadMonitorStatus">
+        <i class="kIconinfo kUploadMonitorStatusIcon error"></i>
+        {{ '2' }} error
+      </span>
+    </span>
+    <span *ngIf="false">
+      <span class="kUploadMonitorStatus">
+        <i class="kIconcheck_small kUploadMonitorStatusIcon completed"></i>
+        Up to date
+      </span>
+    </span>
+  </div>
+</div>

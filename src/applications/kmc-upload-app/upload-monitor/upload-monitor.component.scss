@@ -1,12 +1,12 @@
 @import 'app-theme/_variables.scss';
 
-.KUploadMonitor {
+.kUploadMonitor {
   display: flex;
   margin-left: 12px;
   color: $headerTextColor;
   font-size: 24px;
   cursor: pointer;
-  &:hover , &.open {
+  &:hover, &.open {
     opacity: 1;
     color: $mainLinkHoverColor;
     i {
@@ -15,10 +15,10 @@
     }
   }
   .kIconrefresh_small {
-    font-size: 14px;
-    background-color: #2ACDED;
-    color: #112D5B;
-    border: 2px #112D5B solid;
+    font-size: 12px;
+    background-color: $kAqua;
+    color: $kBlue;
+    border: 2px $kBlue solid;
     border-radius: 50%;
     width: 15px;
     height: 15px;

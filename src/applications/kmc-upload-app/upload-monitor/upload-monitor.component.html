@@ -1,18 +1,20 @@
-<i #openuploadmonitor class="kIconfolder_large KUploadMonitor" [class.open]="_menuOpened">
+<i #openuploadmonitor class="kIconfolder_large kUploadMonitor" [class.open]="_menuOpened">
   <i class="kIconrefresh_small"></i>
 </i>
 
 <kPopupWidget #uploadmonitor
               [showTooltip]="true"
               [appendTo]="appmenu"
-              [popupWidth]="550"
-              [popupHeight]="285"
+              [popupWidth]="553"
+              [popupHeight]="273"
               [closeBtn]="false"
               [targetRef]="openuploadmonitor"
-              [targetOffset]="{'x':-109, 'y': 17}"
+              [targetOffset]="{'x':-109, 'y': 37}"
               (onOpen)="_menuOpened = true"
               (onClose)="_menuOpened = false">
   <ng-template>
-    <h1>TEST</h1>
+    <kUploadMonitorSection title="Upload from desktop"></kUploadMonitorSection>
+    <kUploadMonitorSection title="Bulk upload"></kUploadMonitorSection>
+    <kUploadMonitorSection title="Drop folders"></kUploadMonitorSection>
   </ng-template>
 </kPopupWidget>
