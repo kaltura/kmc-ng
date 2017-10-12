@@ -86,6 +86,7 @@ export class EntryMetadataHandler extends EntryFormWidget
 
         Observable.merge(...formsChanges)
             .cancelOnDestroy(this, this.widgetReset$)
+            .delay(0) // must defer to the next event cycle loop to get valid form metadata
             .subscribe(
                 () => {
                     let isValid = true;
