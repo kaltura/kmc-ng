@@ -9,6 +9,7 @@ export class UploadMonitorComponent {
   @Input() appmenu;
 
   public _menuOpened = false;
+  public _upToDate = false;
 
   constructor() {
   }

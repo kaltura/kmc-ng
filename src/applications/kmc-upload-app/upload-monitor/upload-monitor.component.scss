@@ -1,11 +1,15 @@
 @import 'app-theme/_variables.scss';
 
-.kUploadMonitor {
+.kUploadMonitorToggler {
   display: flex;
   margin-left: 12px;
   color: $headerTextColor;
   font-size: 24px;
   cursor: pointer;
+  &.upToDate {
+    margin-right: 12px;
+  }
+
   &:hover, &.open {
     opacity: 1;
     color: $mainLinkHoverColor;
@@ -14,6 +18,7 @@
       opacity: 1;
     }
   }
+
   .kIconrefresh_small {
     font-size: 12px;
     background-color: $kAqua;
