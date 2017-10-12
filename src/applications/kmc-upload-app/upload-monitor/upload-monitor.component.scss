@@ -3,7 +3,6 @@
 .KUploadMonitor {
   display: flex;
   margin-left: 12px;
-  margin-right: 12px;
   color: $headerTextColor;
   font-size: 24px;
   cursor: pointer;
@@ -14,5 +13,20 @@
       color: $mainLinkHoverColor;
       opacity: 1;
     }
+  }
+  .kIconrefresh_small {
+    font-size: 14px;
+    background-color: #2ACDED;
+    color: #112D5B;
+    border: 2px #112D5B solid;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    right: 12px;
+    top: 9px;
   }
 }
