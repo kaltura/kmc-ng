@@ -39,6 +39,10 @@ const routes: Routes = <Routes>[
             loadChildren: '../applications/content-upload-control-app/content-upload-control-app.module#ContentUploadControlAppModule'
           },
           {
+            path: 'drop-folders',
+            loadChildren: '../applications/content-drop-folders-app/content-drop-folders-app.module#ContentDropFoldersAppModule'
+          },
+          {
             path: 'administration', children: [
               { path: '', redirectTo: 'users', pathMatch: 'full' },
               { path: 'users', loadChildren: '../applications/administration-users-app/administration-users-app.module#AdministrationUsersAppModule'  },
