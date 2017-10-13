@@ -1,7 +1,18 @@
 <div class="kUploadMonitorSection">
   <div class="kUploadMonitorSectionHeading">
     <span class="kUploadMonitorSectionHeadingTitle">{{ title }}</span>
-    <a class="kUploadMonitorSectionHeadingDetails">{{ 'applications.upload.uploadMonitor.viewDetails' | translate }}</a>
+
+    <!--TODO [kmcng] cleanup after implement all sections -->
+    <a *ngIf="!detailsLink" class="kUploadMonitorSectionHeadingDetails" (click)="uploadMonitorPopup.close()">
+      {{ 'applications.upload.uploadMonitor.viewDetails' | translate }}
+    </a>
+
+    <a *ngIf="detailsLink"
+       [routerLink]="detailsLink"
+       class="kUploadMonitorSectionHeadingDetails"
+       (click)="uploadMonitorPopup.close()">
+      {{ 'applications.upload.uploadMonitor.viewDetails' | translate }}
+    </a>
   </div>
   <div class="kUploadMonitorSectionContent">
     <span *ngIf="!_isUpToDate">
