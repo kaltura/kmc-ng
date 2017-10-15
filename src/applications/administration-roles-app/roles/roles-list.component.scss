@@ -31,8 +31,7 @@
     width: 40px;
     outline: 0;
     color: $kGrayscale3;
-    right: 0;
-    position: absolute;
+    margin-left: auto;
     &:active {
       box-shadow: none;
       transform: rotate(45deg);
@@ -42,15 +41,19 @@
       color: $kPrimary;
     }
   }
+  .kFiltersWrapper{
+    display: block;
+    height: 66px;
+  }
   .kRolesTableFilters {
     color: $kGrayscale1;
+    border-bottom: 1px solid $kGrayscale5;
     z-index: 500;
     height: 66px;
     background-color: white;
     flex: 0 0 auto;
     align-items: center;
     margin-left: 0px;
-    border-bottom: none;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     display: flex;

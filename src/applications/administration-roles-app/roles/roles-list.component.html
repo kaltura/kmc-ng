@@ -1,14 +1,17 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
   <div class="kRoles kOverrideFAIcons">
     <div #rolesTableHolder class="kRolesHolder kContent">
-      <div class="kRolesTableFilters kContent" sticky stickyTop="50" stickyOffsetTop="52" stickyClass="kSticky">
-        <button pButton type="button" label="{{'applications.administration.roles.addRole' | translate}}" class="kButtonBranded kAddRoleBtn"
-        (click)="addRole()"></button>
-        <span class="kSelectedRolesNum" *ngIf="_rolesTotalCount">
+      <div class="kContent kFiltersWrapper">
+        <div class="kRolesTableFilters kContent" sticky stickyTop="50" stickyOffsetTop="52" stickyClass="kSticky">
+          <button pButton type="button" label="{{'applications.administration.roles.addRole' | translate}}" class="kButtonBranded kAddRoleBtn"
+                  (click)="addRole()"></button>
+          <span class="kSelectedRolesNum" *ngIf="_rolesTotalCount">
           {{_rolesTotalCount}}
         </span>
-        <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh" [kTooltip]="'applications.administration.roles.refresh' | translate"></button>
+          <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh" [kTooltip]="'applications.administration.roles.refresh' | translate"></button>
+        </div>
       </div>
+
       <kRolesTable class="kRolesTable" [roles]="_roles" [filter]="_filter"
         (actionSelected)="_onActionSelected($event)" >
       </kRolesTable>

@@ -11,6 +11,10 @@
   display: flex;
   flex-flow: row wrap;
   margin: 0px;
+  .kFiltersWrapper{
+    display: block;
+    height: 66px;
+  }
   .kEntriesHolder {
     height: 100%;
     border: none;

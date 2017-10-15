@@ -1,37 +1,39 @@
 <k-area-blocker [message]="_blockerMessage" [showLoader]="(_bulkDeleteService.stateDelete$ | async)?.loading || this._loading">
   <div class="kPlaylists kOverrideFAIcons">
     <div #playlistsTableHolder class="kPlaylistsHolder kContent">
-      <div class="kPlaylistsTableFilters kContent" sticky stickyTop="50" stickyOffsetTop="52" stickyClass="kSticky">
-        <button
-          pButton
-          type="button"
-          label="{{'applications.content.playlists.addPlaylist' | translate}}"
-          class="kButtonBranded kAddPlaylistBtn"
-          (click)="addPlaylist()"></button>
-        <span
-          class="kSelectedPlaylistsNum"
-          *ngIf="(_playlistsStore.playlists$ | async)?.totalCount">
-          {{(_playlistsStore.playlists$ | async)?.totalCount}} {{'applications.content.playlists.playlists' | translate}}</span>
+      <div class="kContent kFiltersWrapper">
+        <div class="kPlaylistsTableFilters kContent" sticky stickyTop="50" stickyOffsetTop="52" stickyClass="kSticky">
+          <button
+            pButton
+            type="button"
+            label="{{'applications.content.playlists.addPlaylist' | translate}}"
+            class="kButtonBranded kAddPlaylistBtn"
+            (click)="addPlaylist()"></button>
+          <span
+            class="kSelectedPlaylistsNum"
+            *ngIf="(_playlistsStore.playlists$ | async)?.totalCount">
+            {{(_playlistsStore.playlists$ | async)?.totalCount}} {{'applications.content.playlists.playlists' | translate}}</span>
 
-        <div class="kBulkOperations" [class.kHidden]="!_selectedPlaylists.length">
-          <span class="kSelectedPlaylistsLabel">
-            • {{_selectedPlaylists.length}} {{'applications.content.playlists.selected' | translate}}</span>
-          <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="deletePlaylists(_selectedPlaylists)"></button>
-          <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.playlists.cancel' | translate}}</a>
+          <div class="kBulkOperations" [class.kHidden]="!_selectedPlaylists.length">
+            <span class="kSelectedPlaylistsLabel">
+              • {{_selectedPlaylists.length}} {{'applications.content.playlists.selected' | translate}}</span>
+            <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="deletePlaylists(_selectedPlaylists)"></button>
+            <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.playlists.cancel' | translate}}</a>
+          </div>
+          <div [class.kHidden]="_selectedPlaylists.length" class="kFilters">
+            <input type="text" pInputText class="kSearchInput"
+                   [(ngModel)]="_filter.freetextSearch"
+                   (keyup.enter)="onFreetextChanged()"
+                   placeholder="{{'applications.content.playlists.searchEntries' | translate}}">
+            <div #refineBtn class="kRefine"><i class="kIconcalendar"></i></div>
+          </div>
+          <button pButton
+                  class="kButtonDefault kRefreshBtn small"
+                  type="text"
+                  (click)="_reload()"
+                  icon="kIconrefresh"
+                  [kTooltip]="'applications.content.playlists.refresh' | translate"></button>
         </div>
-        <div [class.kHidden]="_selectedPlaylists.length" class="kFilters">
-          <input type="text" pInputText class="kSearchInput"
-                 [(ngModel)]="_filter.freetextSearch"
-                 (keyup.enter)="onFreetextChanged()"
-                 placeholder="{{'applications.content.playlists.searchEntries' | translate}}">
-          <div #refineBtn class="kRefine"><i class="kIconcalendar"></i></div>
-        </div>
-        <button pButton
-                class="kButtonDefault kRefreshBtn small"
-                type="text"
-                (click)="_reload()"
-                icon="kIconrefresh"
-                [kTooltip]="'applications.content.playlists.refresh' | translate"></button>
       </div>
       <div sticky stickyTop="116" stickyOffsetTop="118" class="kTagsWrapper kContent" stickyClass="kSticky">
         <kTags

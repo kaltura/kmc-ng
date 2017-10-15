@@ -39,6 +39,10 @@
       color: $kPrimary;
     }
   }
+  .kFiltersWrapper{
+    display: block;
+    height: 66px;
+  }
   .kCategoriesTableFilters {
     color: $kGrayscale1;
     z-index: 500;
