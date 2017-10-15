@@ -111,6 +111,11 @@ export class EntryRelatedHandler extends EntryFormWidget
 	    this._relatedFiles.next({ items : [] });
     }
 
+    protected _onValidate(): Observable<{ isValid: boolean }> {
+      const fileTypeValid = this._relatedFiles.getValue().items.every(file => !!file.format);
+      return Observable.of({ isValid: fileTypeValid });
+    }
+
 	protected _onActivate(firstTimeActivating: boolean) {
 		this._entryId = this.data.id;
 		super._showLoader();
@@ -279,37 +284,38 @@ export class EntryRelatedHandler extends EntryFormWidget
     	this._uploadManagement.cancelUpload(file.uploadFileId, true);
 	}
 
-	private _getFormatByExtension(ext: string): KalturaAttachmentType{
-		let format : KalturaAttachmentType = null;
-		switch (ext) {
-			case "doc":
-			case "docx":
-			case "dot":
-			case "pdf":
-			case "ppt":
-			case "pps":
-			case "xls":
-			case "xlsx":
-			case "xml":
-				format = KalturaAttachmentType.document;
-				break;
-			case "gif":
-			case "png":
-			case "jpg":
-			case "jpeg":
-			case "mp3":
-			case "mp4":
-				format = KalturaAttachmentType.media;
-				break;
-			case "txt":
-				format = KalturaAttachmentType.text;
-				break;
-			default:
-				format = KalturaAttachmentType.document;
-				break;
-		}
-		return format;
-	}
+  private _getFormatByExtension(ext: string): KalturaAttachmentType {
+    let format: KalturaAttachmentType = null;
+    ext = typeof ext === 'string' ? ext.toLowerCase() : ext;
+    switch (ext) {
+      case 'doc':
+      case 'docx':
+      case 'dot':
+      case 'pdf':
+      case 'ppt':
+      case 'pps':
+      case 'xls':
+      case 'xlsx':
+      case 'xml':
+        format = KalturaAttachmentType.document;
+        break;
+      case 'gif':
+      case 'png':
+      case 'jpg':
+      case 'jpeg':
+      case 'mp3':
+      case 'mp4':
+        format = KalturaAttachmentType.media;
+        break;
+      case 'txt':
+        format = KalturaAttachmentType.text;
+        break;
+      default:
+        break;
+    }
+
+    return format;
+  }
 
 	public _setDirty(){
 		super._updateWidgetState({isDirty: true});
