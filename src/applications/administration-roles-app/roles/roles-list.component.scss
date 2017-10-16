@@ -2,9 +2,6 @@
 .kTagsWrapper{
   z-index: 500;
 }
-.kSticky{
-  border-bottom: 1px solid $kGrayscale5;
-}
 .kRoles {
   font-size: 15px;
   background-color: $appBkgColor;
@@ -121,3 +118,4 @@
 :host /deep/ .ui-button-icon-only .fa {
   margin-left: -.5em;
 }
+

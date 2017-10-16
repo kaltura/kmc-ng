@@ -1,8 +1,8 @@
 <k-area-blocker [showLoader]="isBusy" [message]="blockerMessage">
   <div class="kEntries kOverrideFAIcons">
     <div #entriesTableHolder class="kEntriesHolder kContent">
-      <div class="kContent kFiltersWrapper">
-        <div class="kEntriesTableFilters kContent" sticky stickyTop="50" stickyOffsetTop="52" stickyClass="kSticky">
+      <kSticky [stickyTop]="50" [stickyOffsetTop]="52" [stickyClass]="'kStickyClass'">
+        <div class="kEntriesTableFilters kContent">
           <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries$ | async)?.totalCount">{{(_entriesStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
 
           <div [class.kHidden]="!selectedEntries.length" class="kBulkOperations">
@@ -43,22 +43,25 @@
                   [kTooltip]="'applications.content.entries.refresh' | translate"
                   (click)="_reload()"></button>
         </div>
-      </div>
-      <div sticky stickyTop="116" stickyOffsetTop="118" class="kTagsWrapper kContent" stickyClass="kSticky">
-        <kTags [title]="'applications.content.filters.activeFilters' | translate"
-               [data]="(this._entriesStore.activeFilters$ | async)?.filters"
-               [labelField]="'label'"
-               [tooltipField]="'tooltip'"
-               (onTagRemove)="removeTag($event)"
-               (onRemoveAll)="removeAllTags()">
-          <ng-template let-item="item">
-            <div class="kTagContent" [kTooltip]="item.tooltip?.token | translate : item.tooltip?.args">
-              <span class="kTagLabel">{{item.label}}</span>
-              <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
-            </div>
-          </ng-template>
-        </kTags>
-      </div>
+      </kSticky>
+      <kSticky #tags [stickyTop]="116" [stickyOffsetTop]="54" stickyClass="kStickyClass">
+        <div class="kContent">
+            <kTags [title]="'applications.content.filters.activeFilters' | translate"
+                   [data]="(this._entriesStore.activeFilters$ | async)?.filters"
+                   [labelField]="'label'"
+                   [tooltipField]="'tooltip'"
+                   (onTagRemove)="removeTag($event)"
+                   (onRemoveAll)="removeAllTags()"
+                   (onTagsChange)="onTagsChange($event)">
+              <ng-template let-item="item">
+                <div class="kTagContent" [kTooltip]="item.tooltip?.token | translate : item.tooltip?.args">
+                  <span class="kTagLabel">{{item.label}}</span>
+                  <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
+                </div>
+              </ng-template>
+            </kTags>
+        </div>
+      </kSticky>
       <kEntriesTable class="kEntriesTable"
                      scrollHeight="100%"
                      [entries]="(_entriesStore.entries$ | async)?.items"

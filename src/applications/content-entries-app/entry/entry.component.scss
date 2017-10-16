@@ -1,13 +1,5 @@
 @import 'app-theme/_variables.scss';
 
-.stickyHeader{
-	background-color: white;
-	height: 55px;
-	z-index: 500;
-	left: 0px;
-	right: 0px;
-	box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.2);
-}
 .kSectionsWrapper{
 	min-width: 178px;
 	border: 0px solid white;
@@ -16,4 +8,15 @@
 }
 :host /deep/ span.ui-button-icon-left.fa.kIconarrow_forward, :host /deep/ span.ui-button-icon-left.fa.kIconarrow_backward{
 	margin-left: -.5em;
+}
+
+:host /deep/ .stickyHeader{
+	background-color: white;
+	height: 55px;
+	z-index: 500;
+	left: 0px;
+	right: 0px;
+	padding-top: 11px;
+	box-sizing: border-box;
+	box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.2);
 }
