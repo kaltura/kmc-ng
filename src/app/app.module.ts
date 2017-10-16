@@ -14,7 +14,7 @@ import {
   AppBootstrapConfig  as AppBootstrapConfigType
 } from 'app-shared/kmc-shell';
 import { KalturaCommonModule, AppStorage, UploadManagement } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import { KalturaClient, KalturaClientConfiguration } from '@kaltura-ng/kaltura-client';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { KalturaServerModule } from '@kaltura-ng/kaltura-server-utils';
@@ -104,7 +104,8 @@ export function clientConfigurationFactory() {
     KmcUploadAppModule,
     NewEntryUploadModule.forRoot(),
     TranscodingProfileManagementModule.forRoot(),
-    RadioButtonModule
+    RadioButtonModule,
+    StickyModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
