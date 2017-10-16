@@ -71,7 +71,7 @@ export const environment = {
                   {
                     "routePath": "content/drop-folders",
                     "titleToken": "DropFolders",
-                    "enabled": false,
+                    "enabled": true,
                     "position": "right"
                   }
                 ]
@@ -114,6 +114,11 @@ export const environment = {
                         "routePath": "administration/roles",
                         "titleToken": "Roles",
                         "enabled": true
+                    },
+                    {
+                        "routePath": "administration/users",
+                        "titleToken": "Users",
+                        "enabled": true
                     }
                 ]
             }
@@ -124,7 +129,8 @@ export const environment = {
             "SIGNUP": "https://corp.kaltura.com/free-trial",
             "CONTACT_US": "https://corp.kaltura.com/company/contact-us",
             "HIGH_SPEED_UPLOAD": "http://site.kaltura.com/Upgrade_Request_High_Speed_Upload.html",
-            "BULK_UPLOAD_SAMPLES": "http://kmc.kaltura.com/content/docs/kaltura_batch_upload_falcon.zip"
+            "BULK_UPLOAD_SAMPLES": "http://kmc.kaltura.com/content/docs/kaltura_batch_upload_falcon.zip",
+            "UPGRADE_ACCOUNT":"https://site.kaltura.com/Request-Users.html"
         },
         "locales": [
             {
@@ -166,6 +172,10 @@ export const environment = {
             "createdAtDateRange" : "2005:2030",
             "bulkActionsLimit": 2
         },
+      "dropFolders" : {
+        "createdAtDateRange" : "2005:2030",
+        "bulkActionsLimit": 2
+      },
         "contentCategories": {
             "createdAtDateRange": "2005:2030",
             "bulkActionsLimit": 50

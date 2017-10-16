@@ -217,7 +217,7 @@ export class PlaylistsStore implements OnDestroy {
 		}
 	}
 
-  public deletePlaylist(id: string) {
+  public deletePlaylist(id: string): Observable<void> {
     return Observable.create(observer => {
       let subscription: ISubscription;
       subscription = this._kalturaServerClient.request(new PlaylistDeleteAction({id})).subscribe(
