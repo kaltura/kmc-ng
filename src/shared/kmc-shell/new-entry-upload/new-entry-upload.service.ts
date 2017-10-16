@@ -44,7 +44,7 @@ export class NewEntryUploadService implements OnDestroy {
             case TrackedFileStatuses.purged:
               this._cleanupUpload(trackedFile);
               break;
-            case TrackedFileStatuses.waitingUpload:
+            case TrackedFileStatuses.prepared:
               this._linkEntryWithFile(trackedFile);
               break;
             default:

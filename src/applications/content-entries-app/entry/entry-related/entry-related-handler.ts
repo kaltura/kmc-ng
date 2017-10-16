@@ -77,7 +77,7 @@ export class EntryRelatedHandler extends EntryFormWidget
             case TrackedFileStatuses.purged:
               this._removeFile(relevantRelatedFile);
               break;
-            case TrackedFileStatuses.waitingUpload:
+            case TrackedFileStatuses.prepared:
               relevantRelatedFile.serverUploadToken = (<NewEntryRelatedFile>uploadedFile.data).serverUploadToken;
               break;
             case TrackedFileStatuses.uploadCompleted:

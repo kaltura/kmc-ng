@@ -326,11 +326,11 @@ export class EntryFlavoursHandler extends EntryFormWidget
       .subscribe(
         ({ relevantFlavor, uploadedFile }) => {
           switch (uploadedFile.status) {
-            case TrackedFileStatuses.waitingUpload:
+            case TrackedFileStatuses.prepared:
               const token = (<NewEntryFlavourFile>uploadedFile.data).serverUploadToken;
               const resource = new KalturaUploadedFileTokenResource({ token });
               if (!!relevantFlavor.id) {
-                this.updateFlavor(relevantFlavor, relevantFlavor.id, resource);
+                this.updateFlavor(relevantFlavor, resource);
               } else {
                 this.addNewFlavor(relevantFlavor, resource);
               }
@@ -370,9 +370,9 @@ export class EntryFlavoursHandler extends EntryFormWidget
         });
   }
 
-  private updateFlavor(flavor: Flavor, id: string, resource: KalturaContentResource): void {
+  private updateFlavor(flavor: Flavor,resource: KalturaContentResource): void {
     this._kalturaServerClient.request(new FlavorAssetSetContentAction({
-      id: id,
+      id: flavor.id,
       contentResource: resource
     }))
       .cancelOnDestroy(this, this.widgetReset$)
@@ -410,7 +410,8 @@ export class EntryFlavoursHandler extends EntryFormWidget
       })
       .subscribe(
         response => {
-          this.updateFlavor(flavor, response.id, resource);
+		  flavor.id = response.id;
+          this.updateFlavor(flavor, resource);
         },
         error => {
           this._browserService.showGrowlMessage({
@@ -428,7 +429,7 @@ export class EntryFlavoursHandler extends EntryFormWidget
 			url : url
 		});
 		if (flavor.id.length){
-			this.updateFlavor(flavor, flavor.id, resource);
+			this.updateFlavor(flavor, resource);
 		}else {
 			this.addNewFlavor(flavor, resource);
 		}

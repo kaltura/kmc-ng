@@ -142,6 +142,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
       case TrackedFileStatuses.added:
       case TrackedFileStatuses.preparing:
+      case TrackedFileStatuses.prepared:
       case TrackedFileStatuses.waitingUpload:
         return 2;
 
