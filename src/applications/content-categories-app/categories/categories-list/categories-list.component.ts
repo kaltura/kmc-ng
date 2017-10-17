@@ -97,35 +97,40 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
 
     switch (event.action) {
       case 'edit':
-        this._showCategoryEditWarningIfNeeded(currentCategory)
-          .then(() => ( this.router.navigate(['/content/categories/category', event.categoryID])));
+        // show category edit warning if needed
+        if (currentCategory.tags && currentCategory.tags.indexOf('__EditWarning') > -1) {
+          this._browserService.confirm(
+            {
+              header: this._appLocalization.get('applications.content.categories.editCategory'),
+              message: this._appLocalization.get('applications.content.categories.editWithEditWarningTags'),
+              accept: () => {
+                this.router.navigate(['/content/categories/category', event.categoryID]);
+              }
+            }
+          );
+        } else {
+          this.router.navigate(['/content/categories/category', event.categoryID]);
+        }
         break;
       case 'delete':
-        this._showCategoryEditWarningIfNeeded(currentCategory)
-          .then(() => (this._confirmDeletion(currentCategory)));
+        // show category edit warning if needed
+        if (currentCategory.tags && currentCategory.tags.indexOf('__EditWarning') > -1) {
+          this._browserService.confirm(
+            {
+              header: this._appLocalization.get('applications.content.categories.deleteCategory'),
+              message: this._appLocalization.get('applications.content.categories.deleteWithEditWarningTags'),
+              accept: () => {
+                this._confirmDeletion(currentCategory);
+              }
+            }
+          );
+        } else {
+          this._confirmDeletion(currentCategory);
+        }
         break;
       default:
         break;
     }
-  }
-
-  private _showCategoryEditWarningIfNeeded(category: KalturaCategory): Promise<null> {
-    return new Promise((resolve, reject) => {
-      // Check in category.tags string for the existence of: "__EditWarning"
-      if (category.tags && category.tags.indexOf('__EditWarning') > -1) {
-        this._browserService.confirm(
-          {
-            header: this._appLocalization.get('applications.content.categories.deleteCategory'),
-            message: this._appLocalization.get('applications.content.categories.deleteWithEditWarningTags'),
-            accept: () => {
-              resolve();
-            }
-          }
-        );
-      } else {
-        resolve();
-      }
-    });
   }
 
   private _confirmDeletion(category: KalturaCategory) {
