@@ -23,7 +23,7 @@ export class UploadProgressComponent {
       case TrackedFileStatuses.uploading:
         this._statusClass = 'uploading';
         break;
-      case TrackedFileStatuses.uploadFailed:
+      case TrackedFileStatuses.failure:
         this._statusClass = 'uploadFailure';
         break;
       case TrackedFileStatuses.uploadCompleted:

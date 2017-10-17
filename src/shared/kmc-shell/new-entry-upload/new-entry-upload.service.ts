@@ -35,7 +35,7 @@ export class NewEntryUploadService implements OnDestroy {
   }
 
   private _monitorTrackedFilesChanges(): void {
-    this._uploadManagement.onFileStatusChanged$
+    this._uploadManagement..onTrackedFileChanged$
       .cancelOnDestroy(this)
       .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile)
       .subscribe(

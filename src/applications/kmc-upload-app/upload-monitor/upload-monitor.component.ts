@@ -52,7 +52,7 @@ export class UploadMonitorComponent implements OnDestroy {
   }
 
   private _monitorNewEntryUploadFilesChanges(): void {
-    this._uploadManagement.onFileStatusChanged$
+    this._uploadManagement..onTrackedFileChanged$
       .cancelOnDestroy(this)
       .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile)
       .subscribe(
@@ -80,7 +80,7 @@ export class UploadMonitorComponent implements OnDestroy {
               this._increaseParam('_uploadFromDesktop', 'completed');
               this._decreaseParam('_uploadFromDesktop', 'uploading');
               break;
-            case TrackedFileStatuses.uploadFailed:
+            case TrackedFileStatuses.failure:
               this._increaseParam('_uploadFromDesktop', 'errors');
               if (relevantFile.status === TrackedFileStatuses.uploading) {
                 this._decreaseParam('_uploadFromDesktop', 'uploading');
@@ -88,7 +88,7 @@ export class UploadMonitorComponent implements OnDestroy {
                 this._decreaseParam('_uploadFromDesktop', 'queued');
               }
 
-              relevantFile.status = TrackedFileStatuses.uploadFailed;
+              relevantFile.status = TrackedFileStatuses.failure;
               break;
             default:
               break;

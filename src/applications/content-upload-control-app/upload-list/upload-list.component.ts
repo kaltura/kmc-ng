@@ -43,7 +43,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
         }
       );
 
-    this._uploadManagement.onFileStatusChanged$
+    this._uploadManagement..onTrackedFileChanged$
       .cancelOnDestroy(this)
       .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile)
       .subscribe(
@@ -79,7 +79,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
               }, 5000);
               break;
 
-            case TrackedFileStatuses.uploadFailed:
+            case TrackedFileStatuses.failure:
               this._updateFile(trackedFile.id, { status: trackedFile.status });
               this._sortUploads();
               break;
@@ -133,7 +133,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
   private _getStatusWeight(status: string): number {
     switch (status) {
-      case TrackedFileStatuses.uploadFailed:
+      case TrackedFileStatuses.failure:
       case TrackedFileStatuses.uploadCompleted:
         return 0;
 

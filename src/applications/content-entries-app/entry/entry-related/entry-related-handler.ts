@@ -60,7 +60,7 @@ export class EntryRelatedHandler extends EntryFormWidget
 
 
   private _trackUploadFiles(): void {
-    this._uploadManagement.onFileStatusChanged$
+    this._uploadManagement..onTrackedFileChanged$
       .cancelOnDestroy(this)
       .filter(uploadedFile => uploadedFile.data instanceof NewEntryRelatedFile)
       .map(uploadedFile => {
@@ -84,7 +84,7 @@ export class EntryRelatedHandler extends EntryFormWidget
               relevantRelatedFile.uploading = false;
               relevantRelatedFile.uploadFailure = false;
               break;
-            case TrackedFileStatuses.uploadFailed:
+            case TrackedFileStatuses.failure:
               relevantRelatedFile.uploading = false;
               relevantRelatedFile.uploadFailure = true;
               break;

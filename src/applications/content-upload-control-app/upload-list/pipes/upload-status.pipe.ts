@@ -25,7 +25,7 @@ export class UploadStatusPipe implements PipeTransform {
         translateToken = 'queued';
         break;
 
-      case TrackedFileStatuses.uploadFailed:
+      case TrackedFileStatuses.failure:
         translateToken = 'uploadFailure';
         break;
 
