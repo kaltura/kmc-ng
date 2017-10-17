@@ -37,6 +37,10 @@ const routes: Routes = <Routes>[
           {
             path: 'upload-control',
             loadChildren: '../applications/content-upload-control-app/content-upload-control-app.module#ContentUploadControlAppModule'
+          },
+          {
+            path: 'drop-folders',
+            loadChildren: '../applications/content-drop-folders-app/content-drop-folders-app.module#ContentDropFoldersAppModule'
           }
         ]
         },
