@@ -70,7 +70,7 @@ export class EntryCaptionsHandler extends EntryFormWidget {
   private _trackUploadFiles(): void {
 
 
-    this._uploadManagement..onTrackedFileChanged$
+    this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
       .map(uploadedFile => {
         let relevantCaption = null;

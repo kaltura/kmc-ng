@@ -60,7 +60,7 @@ export class EntryRelatedHandler extends EntryFormWidget
 
 
   private _trackUploadFiles(): void {
-    this._uploadManagement..onTrackedFileChanged$
+    this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
       .filter(uploadedFile => uploadedFile.data instanceof NewEntryRelatedFile)
       .map(uploadedFile => {

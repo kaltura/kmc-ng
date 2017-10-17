@@ -52,7 +52,7 @@ export class UploadMonitorComponent implements OnDestroy {
   }
 
   private _monitorNewEntryUploadFilesChanges(): void {
-    this._uploadManagement..onTrackedFileChanged$
+    this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
       .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile)
       .subscribe(

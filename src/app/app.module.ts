@@ -152,7 +152,7 @@ export class AppModule {
     // TODO [kmcng] move to a relevant location
     // TODO [kmcng] get max upload request
     // appLocalization.supportedLocales = environment.core.locales;
-    uploadManagement.setMaxUploadRequests(environment.uploadsShared.MAX_CONCURENT_UPLOADS);
+    uploadManagement.setMaxUploadRequests(2/*environment.uploadsShared.MAX_CONCURENT_UPLOADS*/);
 
     appBootstrap.initApp({errorRoute : '/error'});
   }
