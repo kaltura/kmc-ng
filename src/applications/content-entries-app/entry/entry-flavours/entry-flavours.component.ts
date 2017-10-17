@@ -12,6 +12,7 @@ import { Flavor } from './flavor';
 import { EntryFormManager } from '../entry-form-manager';
 import { environment } from 'app-environment';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { StickyScrollService } from '@kaltura-ng/kaltura-ui/sticky';
 
 @Component({
     selector: 'kEntryFlavours',
@@ -31,16 +32,24 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	public _uploadFilter: string = "";
     public _loadingError = null;
 	public _handler: EntryFlavoursHandler;
+	public _documentWidth: number = 2000;
 
 	private _importPopupStateChangeSubscribe: ISubscription;
 
 	constructor(private _entryFormManager: EntryFormManager,
               private _appLocalization: AppLocalization,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _stickyScrollService: StickyScrollService) {
     }
 
     ngOnInit() {
+	    this._documentWidth = document.body.clientWidth;
 		this._handler = this._entryFormManager.attachWidget(EntryFlavoursHandler);
+		this._stickyScrollService.resizeStatus$.cancelOnDestroy(this).subscribe(
+			event => {
+				this._documentWidth = document.body.clientWidth;
+			}
+		);
     }
 
 	openActionsMenu(event: any, flavor: Flavor): void{
