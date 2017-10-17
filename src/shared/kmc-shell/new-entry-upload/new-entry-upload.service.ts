@@ -17,6 +17,7 @@ import { UploadTokenDeleteAction } from 'kaltura-typescript-client/types/UploadT
 export interface KmcNewEntryUpload {
   file: File;
   mediaType: KalturaMediaType;
+  entryName: string;
 }
 
 @Injectable()
@@ -44,7 +45,7 @@ export class NewEntryUploadService implements OnDestroy {
             case TrackedFileStatuses.purged:
               this._cleanupUpload(trackedFile);
               break;
-            case TrackedFileStatuses.waitingUpload:
+            case TrackedFileStatuses.prepared:
               this._linkEntryWithFile(trackedFile);
               break;
             default:
@@ -110,7 +111,7 @@ export class NewEntryUploadService implements OnDestroy {
     return this._kalturaServerClient.request(new MediaAddAction({
       entry: new KalturaMediaEntry({
         mediaType: file.mediaType,
-        name: file.getFileName(),
+        name: file.entryName,
         conversionProfileId: file.transcodingProfileId
       })
     }));
@@ -127,7 +128,7 @@ export class NewEntryUploadService implements OnDestroy {
 
   public upload(files: KmcNewEntryUpload[], trancodingProfileId: number): void {
     this._uploadManagement.addFiles(
-      files.map(file => new NewEntryUploadFile(file.file, file.mediaType, trancodingProfileId))
+      files.map(file => new NewEntryUploadFile(file.file, file.mediaType, trancodingProfileId, file.entryName))
     );
   }
 }

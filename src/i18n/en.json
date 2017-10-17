@@ -214,6 +214,7 @@
           "uploadedOn": "Uploaded On",
           "progress": "Progress",
           "remove": "Remove",
+          "retry": "Retry",
           "status": {
             "header": "Status",
             "uploaded": "Complete",
