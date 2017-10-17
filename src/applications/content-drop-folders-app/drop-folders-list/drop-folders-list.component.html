@@ -1,0 +1,76 @@
+<k-area-blocker [showLoader]="(_dropFoldersService.state$ | async)?.loading || _isBusy" [message]="_blockerMessage">
+  <div class="kDropFolders kOverrideFAIcons">
+    <div #dropFoldersTableHolder class="kDropFoldersHolder kContent">
+      <div class="kDropFoldersTableFilters">
+        <span class="kSelectedDropFoldersNum" *ngIf="(_dropFoldersService.dropFolders$ | async)?.totalCount">
+          {{ (_dropFoldersService.dropFolders$ | async)?.totalCount }} {{ 'applications.content.uploadControl.files' | translate }}
+        </span>
+
+        <div [class.kHidden]="!_selectedDropFolders.length" class="kBulkOperations">
+          <span class="kSelectedDropFoldersLabel">• {{_selectedDropFolders.length}} {{'applications.content.uploadControl.selected' | translate}}</span>
+          <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_bulkDelete()"></button>
+          <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.uploadControl.cancel' | translate}}</a>
+        </div>
+        <div [class.kHidden]="_selectedDropFolders.length" class="kFilters">
+          <input type="text" pInputText class="kSearchInput"
+                 [(ngModel)]="_filter.fileNameLike"
+                 (keyup.enter)="onFreetextChanged()"
+                 placeholder="{{'applications.content.dropFolders.search' | translate}}">
+          <div #refineBtn class="kRefine"><i class="kIconcalendar"></i></div>
+        </div>
+        <button pButton
+                class="kButtonDefault kRefreshBtn small"
+                type="text"
+                (click)="_reload()"
+                icon="kIconrefresh"
+                [kTooltip]="'applications.content.dropFolders.refresh' | translate"></button>
+      </div>
+
+      <kTags
+        [title]="'applications.content.filters.activeFilters' | translate"
+        [data]="activeFilters"
+        [labelField]="'label'"
+        [tooltipField]="'tooltip'"
+        (onRemoveAll)="removeAllTags()">
+        <ng-template let-item="item">
+          <div class="kTagContent" [kTooltip]="item.tooltip">
+            <span class="kTagLabel">{{item.label}}</span>
+            <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
+          </div>
+        </ng-template>
+      </kTags>
+
+      <kDropFoldersListTable class="kDropFoldersTable"
+                        [dropFolders]="(_dropFoldersService.dropFolders$ | async)?.items"
+                        (isEntryExist)="checkIfEntryExist($event)"
+                        (deleteDropFolder)="deleteDropFolder($event)"
+                        (onSelectedDropFoldersChange)="_selectedDropFoldersChange($event)"
+                        [selectedDropFolders]="_selectedDropFolders"></kDropFoldersListTable>
+
+      <div class="kDropFoldersTableFooter" #footer *ngIf="(_dropFoldersService.dropFolders$ | async)?.totalCount">
+        <p-paginator
+          [rows]="_filter.pageSize"
+          [first]="_filter.pageIndex * _filter.pageSize"
+          [rowsPerPageOptions]="[25,50,75,100]"
+          [totalRecords]="(_dropFoldersService.dropFolders$ | async)?.totalCount"
+          (onPageChange)="onPaginationChanged($event)"></p-paginator>
+        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+      </div>
+    </div>
+  </div>
+</k-area-blocker>
+
+<kPopupWidget
+  #refinePopup
+  [appendTo]="dropFoldersTableHolder"
+  [popupWidth]="350"
+  [closeBtn]="false"
+  [targetRef]="refineBtn"
+  [targetOffset]="{'x':-294, 'y': -20}">
+
+  <kAdditionalFilters
+    [parentPopupWidget]="refinePopup"
+    (createdChanged)="onCreatedChanged($event)"
+    [_createdAfter]="_filter.createdAfter"
+    [_createdBefore]="_filter.createdBefore"></kAdditionalFilters>
+</kPopupWidget>
