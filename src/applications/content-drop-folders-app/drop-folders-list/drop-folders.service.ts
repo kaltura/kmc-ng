@@ -128,15 +128,16 @@ export class DropFoldersService implements OnDestroy {
               }
             });
 
-            if(!this.ar.length) {
+            /* ToDo [kmcng] temporary commented until legacy code above will be fixed */
+            /*if(!this.ar.length) {
               this._browserService.alert({
                 message: this._appLocalization.get('applications.content.dropFolders.errors.dropFoldersAlert')
               })
             } else {
               this._loadDropFoldersFiles();
-            }
+            }*/
 
-            this._loadDropFoldersFiles(); /* ToDo [kmcng] temporary added here to play with response */
+            this._loadDropFoldersFiles(); /* ToDo [kmcng] temporary added here to show the list of media */
           }
           this._state.next({loading: false});
         },

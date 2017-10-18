@@ -16,6 +16,10 @@
                  [(ngModel)]="_filter.fileNameLike"
                  (keyup.enter)="onFreetextChanged()"
                  placeholder="{{'applications.content.dropFolders.search' | translate}}">
+          <div #statusesFilterBtn class="kStatusesFilter">
+            <span>{{'applications.content.dropFolders.allStatuses' | translate}}</span>
+            <i class="kIcondropdown_arrow_bottom dropdown"></i>
+          </div>
           <div #refineBtn class="kRefine"><i class="kIconcalendar"></i></div>
         </div>
         <button pButton
@@ -59,6 +63,17 @@
     </div>
   </div>
 </k-area-blocker>
+
+<!-- popup widgets section -->
+<kPopupWidget #statusesFilterPopup
+              [appendTo]="dropFoldersTableHolder"
+              [popupWidth]="400"
+              [popupHeight]="400"
+              [closeBtn]="false"
+              [targetRef]="statusesFilterBtn"
+              [targetOffset]="{'x':-10, 'y': -21}">
+  <kStatusesFilter [parentPopupWidget]="statusesFilterPopup"></kStatusesFilter>
+</kPopupWidget>
 
 <kPopupWidget
   #refinePopup

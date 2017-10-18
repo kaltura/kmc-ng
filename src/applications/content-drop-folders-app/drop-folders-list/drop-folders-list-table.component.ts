@@ -53,7 +53,9 @@ export class DropFoldersListTableComponent implements AfterViewInit {
   buildMenu(rowIndex: number, folder: KalturaDropFolderFile): void {
     this._items = [
       {
-        label: this._appLocalization.get("applications.content.dropFolders.table.delete"), command: (event) => {
+        label: this._appLocalization.get("applications.content.dropFolders.table.delete"),
+        styleClass: "kDeleteAction",
+        command: (event) => {
           this.onActionSelected("remove", rowIndex, folder);
         }
       }

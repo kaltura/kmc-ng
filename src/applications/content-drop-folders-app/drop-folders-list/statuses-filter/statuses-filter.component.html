@@ -1,0 +1,10 @@
+<div class="kOverrideFAIcons kContainer">
+  <div class="kHeader">
+    <div class="kAllStatuses">
+      <span>{{'applications.content.dropFolders.allStatuses' | translate | uppercase}} </span>
+    </div>
+  </div>
+  <div class="kTreeContainer">
+    <p-tree [value]="statuses" selectionMode="checkbox" [(selection)]="selectedStatuses"></p-tree>
+  </div>
+</div>

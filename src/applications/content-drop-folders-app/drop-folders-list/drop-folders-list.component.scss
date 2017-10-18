@@ -201,6 +201,40 @@
     top: 7px;
     right: 80px;
   }
+
+  .kStatusesFilter {
+    border: 1px solid $kGrayscale4;
+    border-radius: 4px;
+    display: flex;
+    background-color: #ffffff;
+    height: 32px;
+    align-items: center;
+    cursor: pointer;
+    color: $kGrayscale1;
+    width: 180px;
+    position: relative;
+    margin-right: 8px;
+    padding-left: 10px;
+
+    i {
+      margin-right: 12px;
+      margin-left: 8px;
+      color: $kGrayscale4;
+      &.dropdown {
+        font-size: 10px;
+      }
+    }
+
+    &:hover {
+      color: $kPrimary;
+    }
+
+    .dropdown {
+      position: absolute;
+      right: 4px;
+      top: 12px;
+    }
+  }
 }
 
 :host /deep/ span.ui-button-icon-left.fa.kIcontrash {
@@ -227,4 +261,8 @@
 
 :host /deep/ .ui-button-icon-only .fa {
   margin-left: -.5em;
+}
+
+/deep/ .kActionsMenu .ui-menuitem-text {
+  color: $kDandger;
 }

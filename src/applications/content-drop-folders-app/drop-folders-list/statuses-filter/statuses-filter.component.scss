@@ -1,0 +1,21 @@
+@import "app-theme/_variables.scss";
+
+.kContainer {
+  margin: 12px;
+}
+
+.kHeader {
+  padding-top: 8px;
+  margin-bottom: 15px;
+}
+
+.kAllStatuses {
+  color: $kGrayscale3;
+  line-height: 40px;
+  letter-spacing: 0.1em;
+  font-size: 13px;
+  border-top: 1px solid $kGrayscale6;
+  border-bottom: 1px solid $kGrayscale6;
+  margin: 18px -12px 0;
+  padding: 0 12px;
+}

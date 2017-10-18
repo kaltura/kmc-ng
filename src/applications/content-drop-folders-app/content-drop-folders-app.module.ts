@@ -13,6 +13,7 @@ import {
   CheckboxModule,
   InputTextModule,
   CalendarModule,
+  TreeModule,
   MenuModule,
   SharedModule
 } from 'primeng/primeng';
@@ -49,6 +50,7 @@ import { KMCShellModule } from 'app-shared/kmc-shell';
     TagsModule,
     KalturaPrimeNgUIModule,
     AutoCompleteModule,
+    TreeModule,
     SharedModule,
     KMCShellModule,
     FormsModule,
