@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
@@ -12,7 +12,6 @@ import { Flavor } from './flavor';
 import { EntryFormManager } from '../entry-form-manager';
 import { environment } from 'app-environment';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { StickyScrollService } from '@kaltura-ng/kaltura-ui/sticky';
 
 @Component({
     selector: 'kEntryFlavours',
@@ -20,6 +19,11 @@ import { StickyScrollService } from '@kaltura-ng/kaltura-ui/sticky';
     styleUrls: ['./entry-flavours.component.scss']
 })
 export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
+
+	@HostListener("window:resize", [])
+	onWindowResize() {
+		this._documentWidth = document.body.clientWidth;
+	}
 
 	@ViewChild('drmPopup') drmPopup: PopupWidgetComponent;
 	@ViewChild('previewPopup') previewPopup: PopupWidgetComponent;
@@ -38,18 +42,12 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 
 	constructor(private _entryFormManager: EntryFormManager,
               private _appLocalization: AppLocalization,
-              private _browserService: BrowserService,
-              private _stickyScrollService: StickyScrollService) {
+              private _browserService: BrowserService) {
     }
 
     ngOnInit() {
 	    this._documentWidth = document.body.clientWidth;
 		this._handler = this._entryFormManager.attachWidget(EntryFlavoursHandler);
-		this._stickyScrollService.resizeStatus$.cancelOnDestroy(this).subscribe(
-			event => {
-				this._documentWidth = document.body.clientWidth;
-			}
-		);
     }
 
 	openActionsMenu(event: any, flavor: Flavor): void{
