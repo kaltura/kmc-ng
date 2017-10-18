@@ -1,25 +1,26 @@
 import {
   CategoriesBulkAddTagsService,
-  CategoriesBulkRemoveTagsService,
+  CategoriesBulkChangeCategoryListingService,
+  CategoriesBulkChangeContentPrivacyService,
+  CategoriesBulkChangeContributionPolicyService,
   CategoriesBulkChangeOwnerService,
   CategoriesBulkDeleteService,
-  CategoriesBulkChangeContentPrivacyService,
-  CategoriesBulkChangeCategoryListingService,
-  CategoriesBulkChangeContributionPolicyService
+  CategoriesBulkRemoveTagsService
 } from './services';
-import { CategoriesBulkActionBaseService } from './services/categories-bulk-action-base.service';
-import { MenuItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { KalturaCategory } from "kaltura-typescript-client/types/KalturaCategory";
-import { PopupWidgetComponent } from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
-import { BrowserService } from "app-shared/kmc-shell";
-import { environment } from 'app-environment';
-import { KalturaUser } from "kaltura-typescript-client/types/KalturaUser";
-import { PrivacyMode } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-content-privacy/bulk-change-content-privacy.component";
-import { KalturaPrivacyType } from "kaltura-typescript-client/types/KalturaPrivacyType";
-import { KalturaAppearInListType } from "kaltura-typescript-client/types/KalturaAppearInListType";
-import { AppearInListType } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-category-listing/bulk-change-category-listing.component";
+import {CategoriesBulkActionBaseService} from './services/categories-bulk-action-base.service';
+import {MenuItem} from 'primeng/primeng';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {KalturaCategory} from "kaltura-typescript-client/types/KalturaCategory";
+import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
+import {BrowserService} from "app-shared/kmc-shell";
+import {environment} from 'app-environment';
+import {KalturaUser} from "kaltura-typescript-client/types/KalturaUser";
+import {PrivacyMode} from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-content-privacy/bulk-change-content-privacy.component";
+import {KalturaPrivacyType} from "kaltura-typescript-client/types/KalturaPrivacyType";
+import {KalturaAppearInListType} from "kaltura-typescript-client/types/KalturaAppearInListType";
+import {AppearInListType} from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-category-listing/bulk-change-category-listing.component";
+import {KalturaContributionPolicyType} from "kaltura-typescript-client/types/KalturaContributionPolicyType";
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -126,8 +127,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   }
 
   // change contribution policy
-  onChangeContributionPolicyChanged(owners: KalturaUser[]): void {
-    this.executeService(this._bulkChangeContributionPolicyService, owners[0]);
+  onChangeContributionPolicyChanged(policyType: KalturaContributionPolicyType): void {
+    this.executeService(this._bulkChangeContributionPolicyService, policyType);
   }
 
   // bulk delete

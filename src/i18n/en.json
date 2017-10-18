@@ -57,7 +57,8 @@
       "confirm": "Confirm",
       "close": "Close",
       "note": "Note:",
-      "attention": "Attention"
+      "attention": "Attention",
+      "apply": "Apply"
     },
     "login": {
       "login": {
@@ -238,7 +239,7 @@
           "changeContentPrivacyLabel": "Change the Content Privacy settings for all selected categories",
           "changeCategoryListing": "Change Category Listing",
           "changeCategoryListingLabel": " Change the Category Listing settings for all selected categories",
-          "changeContributionPolicy": "Change Contribution Policy",
+          "changeContributionPolicy": "Change Category Contribution Policy Settings",
           "changeContributionPolicyLabel": "Change the Category Contribution Policy settings for all selected categories",
           "changeCategoryOwner": "Change Category Owner",
           "delete": "Delete",

@@ -1,21 +1,19 @@
-<k-area-blocker [showLoader]="_loading" [message]="_sectionBlockerMessage">
-  <div class="kContent kOverrideFAIcons">
-    <span class="kTitle">{{'applications.content.categories.bActions.changeContributionPolicy' | translate}}</span>
-    <div class="kContainer">
-      <span class="kLabel">{{'applications.content.categories.bActions.changeContributionPolicyLabel' | translate}}</span>
-      <div class="kBlock">
-        <p-radioButton label="{{'applications.content.categories.noRestriction' | translate}}"></p-radioButton>
-      </div>
-      <div class="kBlock">
-        <p-radioButton label="{{'applications.content.categories.requiresAuthentication' | translate}}"></p-radioButton>
-      </div>
-      <div class="kBlock">
-        <p-radioButton label="{{'applications.content.categories.private' | translate}}"></p-radioButton>
-      </div>
+<div class="kContent kOverrideFAIcons">
+  <span class="kTitle">{{'applications.content.categories.bActions.changeContributionPolicy' | translate}}</span>
+  <div class="kContainer">
+      <span
+        class="kLabel">{{'applications.content.categories.bActions.changeContributionPolicyLabel' | translate}}</span>
+    <div class="kBlock">
+      <p-radioButton [(ngModel)]="_selectedPolicy" [value]="_availablePolicies.all" name="policy"
+                     label="{{'applications.content.categories.noRestriction' | translate}}"></p-radioButton>
     </div>
-    <div class="kFooter">
-      <button type="button" class="kButtonBranded" pButton label="{{'applications.content.categories.bActions.save' | translate}}"
-        (click)="_apply()"></button>
+    <div class="kBlock">
+      <p-radioButton [(ngModel)]="_selectedPolicy" [value]="_availablePolicies.membersWithContributionPermission"
+                     name="policy" label="{{'applications.content.categories.private' | translate}}"></p-radioButton>
     </div>
   </div>
-</k-area-blocker>
+  <div class="kFooter">
+    <button type="button" class="kButtonBranded" pButton label="{{'app.common.apply' | translate}}"
+            (click)="_apply()"></button>
+  </div>
+</div>
