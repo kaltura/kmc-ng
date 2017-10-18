@@ -3,7 +3,7 @@
 .kEntries {
   font-size: 15px;
   background-color: $appBkgColor;
-  height: $contentArea;
+  min-height: $contentArea;
   padding-top: 30px;
   width: 100%;
   min-width: $minAppWidth;

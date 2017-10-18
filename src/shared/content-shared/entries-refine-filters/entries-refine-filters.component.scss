@@ -112,3 +112,7 @@ a.disabled {
   vertical-align: top;
   margin-top: 14px;
 }
+
+:host /deep/ .kErrorMessage {
+  width: 320px !important;
+}
