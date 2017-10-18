@@ -12,7 +12,9 @@
 .kContent {
   display: flex;
   flex-direction: column;
-  height: 340px;
+  height: 314px;
+  width: 586px;
+  font-size: 15px;
   .kLabel {
     text-align: center;
     display: block;
@@ -23,14 +25,18 @@
     margin: 20px;
   }
   .kBlock {
-    display: block;
-    width: 100%;
-    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
     margin-bottom: 10px;
+    .kRadio {
+      margin-right: 40px;
+    }
   }
 }
 
-.kFooter {  
+.kFooter {
   position: absolute;
   bottom: 0px;
   display: flex;

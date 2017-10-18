@@ -4,11 +4,9 @@
       <span
         class="kLabel">{{'applications.content.categories.bActions.changeContributionPolicyLabel' | translate}}</span>
     <div class="kBlock">
-      <p-radioButton [(ngModel)]="_selectedPolicy" [value]="_availablePolicies.all" name="policy"
+      <p-radioButton class="kRadio" [(ngModel)]="_selectedPolicy" [value]="_availablePolicies.all" name="policy"
                      label="{{'applications.content.categories.noRestriction' | translate}}"></p-radioButton>
-    </div>
-    <div class="kBlock">
-      <p-radioButton [(ngModel)]="_selectedPolicy" [value]="_availablePolicies.membersWithContributionPermission"
+      <p-radioButton class="kRadio" [(ngModel)]="_selectedPolicy" [value]="_availablePolicies.membersWithContributionPermission"
                      name="policy" label="{{'applications.content.categories.private' | translate}}"></p-radioButton>
     </div>
   </div>
