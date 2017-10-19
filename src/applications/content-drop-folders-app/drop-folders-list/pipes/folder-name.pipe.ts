@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { KalturaDropFolderFile } from 'kaltura-typescript-client/types/KalturaDropFolderFile';
 import { DropFoldersService } from '../drop-folders.service';
 
-@Pipe({ name: 'folderName' })
+@Pipe({ name: 'kFolderName' })
 export class FolderNamePipe implements PipeTransform {
   constructor(private _dropFoldersService: DropFoldersService) {}
 

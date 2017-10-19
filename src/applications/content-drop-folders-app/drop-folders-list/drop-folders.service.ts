@@ -139,7 +139,6 @@ export class DropFoldersService implements OnDestroy {
 
             this._loadDropFoldersFiles(); /* ToDo [kmcng] temporary added here to show the list of media */
           }
-          this._state.next({loading: false});
         },
         error => {
           this._browserService.alert(
@@ -231,6 +230,10 @@ export class DropFoldersService implements OnDestroy {
     });
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    this._state.complete();
+    this._query.complete();
+    this._dropFolders.complete();
+  }
 }
 

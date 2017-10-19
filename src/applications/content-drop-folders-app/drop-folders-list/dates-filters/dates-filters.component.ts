@@ -1,14 +1,13 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
 
 @Component({
-    selector: 'kAdditionalFilters',
-    templateUrl: './additional-filters.component.html',
-    styleUrls: ['./additional-filters.component.scss']
+    selector: 'kDatesFilters',
+    templateUrl: './dates-filters.component.html',
+    styleUrls: ['./dates-filters.component.scss']
 })
-export class AdditionalFiltersComponent{
+export class DatesFiltersComponent{
   _createdAtDateRange: string = environment.modules.dropFolders.createdAtDateRange;
 	@Input() parentPopupWidget: PopupWidgetComponent;
 	@Input() _createdAfter: Date;

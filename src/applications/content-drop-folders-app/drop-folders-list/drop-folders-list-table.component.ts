@@ -3,6 +3,7 @@ import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaDropFolderFile } from 'kaltura-typescript-client/types/KalturaDropFolderFile';
 import { DatePipe } from '@angular/common';
+import { DropFoldersService } from 'applications/content-drop-folders-app/drop-folders-list/drop-folders.service';
 
 
 @Component({
@@ -34,12 +35,13 @@ export class DropFoldersListTableComponent implements AfterViewInit {
 
   @Output() onSelectedDropFoldersChange = new EventEmitter<any>();
   @Output() isEntryExist = new EventEmitter<any>();
-  @Output() deleteDropFolder = new EventEmitter<any>();
+  @Output() deleteDropFolderFiles = new EventEmitter<any>();
 
   constructor(
     private _appLocalization: AppLocalization,
     private cdRef: ChangeDetectorRef,
-    private _datePipe: DatePipe
+    private _datePipe: DatePipe,
+    public _dropFoldersService: DropFoldersService
   ) {}
 
   openActionsMenu(event: any, rowIndex: number, folder: KalturaDropFolderFile) {
@@ -80,7 +82,7 @@ export class DropFoldersListTableComponent implements AfterViewInit {
   onActionSelected(action: string, rowIndex: number, folder: KalturaDropFolderFile) {
     switch (action){
       case "remove":
-        this.deleteDropFolder.emit(folder.id);
+        this.deleteDropFolderFiles.emit(folder);
         break;
       default:
         break;

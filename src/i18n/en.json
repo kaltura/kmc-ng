@@ -216,6 +216,8 @@
         "search": "Search",
         "allStatuses": "All Statuses",
         "refresh" : "Refresh",
+        "deleteFiles": "Delete files",
+        "confirmDelete": "Are you sure you want to permanently delete all selected files? \n {{0}}",
         "table": {
           "fileName": "File name",
           "dropFolderName": "Dropfolder name",
@@ -256,7 +258,8 @@
         },
         "errors": {
           "retry": "Retry",
-          "dropFoldersAlert": "The drop folder capability allows you to easily trigger content ingestion by dropping files into a folder in your environment. To enable this capability for your account, <a href=\"http://corp.kaltura.com/about/contact\" target=\"_blank\">contact us</a>.\n<a href=\"http://knowledge.kaltura.com/kaltura-drop-folders-service-content-ingestion-0\" target=\"_blank\">Learn more about drop folders</a>"
+          "dropFoldersAlert": "The drop folder capability allows you to easily trigger content ingestion by dropping files into a folder in your environment. To enable this capability for your account, <a href=\"http://corp.kaltura.com/about/contact\" target=\"_blank\">contact us</a>.\n<a href=\"http://knowledge.kaltura.com/kaltura-drop-folders-service-content-ingestion-0\" target=\"_blank\">Learn more about drop folders</a>",
+          "errorDropFoldersFiles": "An error occurred during drop folder files update."
         }
       },
       "categories": {
@@ -496,6 +499,7 @@
         "note": "Update Note",
         "confirm": "Are you sure you want to update {{0}} entries? It could take a while...",
         "confirmPlaylsts": "Are you sure you want to update {{0}} playlists? It could take a while...",
+        "confirmDropFolders": "Are you sure you want to update {{0}} drop folders files? It could take a while...",
         "deleteEntries": "Delete Entries",
         "deleteConfirm": "Are you sure you want to delete the selected entries?",
         "deleteNote": "Please note: the selected entries will be permanently deleted from your account.",

@@ -5,7 +5,10 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { Router } from '@angular/router';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { environment } from 'app-environment';
 import { DropFoldersListTableComponent } from './drop-folders-list-table.component';
+import { BulkDeleteService } from './bulk-service/bulk-delete.service';
+import { KalturaDropFolderFile } from 'kaltura-typescript-client/types/KalturaDropFolderFile';
 import * as moment from 'moment';
 
 export interface Filter {
@@ -17,7 +20,8 @@ export interface Filter {
 @Component({
   selector: 'kDropFoldersList',
   templateUrl: './drop-folders-list.component.html',
-  styleUrls: ['./drop-folders-list.component.scss']
+  styleUrls: ['./drop-folders-list.component.scss'],
+  providers: [BulkDeleteService]
 })
 
 export class DropFoldersListComponent implements OnInit, OnDestroy {
@@ -41,11 +45,24 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
     public _dropFoldersService: DropFoldersService,
     private _appLocalization: AppLocalization,
     private _router: Router,
-    private _browserService: BrowserService
+    private _browserService: BrowserService,
+    public _bulkDeleteService : BulkDeleteService
   ) {}
 
-  _bulkDelete(): void {
-    console.log('bulk delete');
+  _bulkDelete(_selectedDropFolders: KalturaDropFolderFile[]): void {
+    let dropFolderFilesToDelete = _selectedDropFolders.map((file, index) => `${index + 1}: ${(file.fileName)}`),
+        dropFolderFiles: string = _selectedDropFolders.length <= 10 ? dropFolderFilesToDelete.join(',').replace(/,/gi, '\n') : '';
+    this._browserService.confirm(
+      {
+        header: this._appLocalization.get('applications.content.dropFolders.deleteFiles'),
+        message: this._appLocalization.get('applications.content.dropFolders.confirmDelete', {0: dropFolderFiles}),
+        accept: () => {
+          setTimeout(()=> {
+            this.deleteDropFiles(_selectedDropFolders.map(file => file.id));
+          }, 0);
+        }
+      }
+    );
   }
 
   _clearSelection(): void {
@@ -149,11 +166,60 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
       );
   }
 
-  deleteDropFolder(id): void {
-    console.log(id);
+  deleteDropFolderFiles(event): void {
+    this._browserService.confirm(
+      {
+        header: this._appLocalization.get('applications.content.dropFolders.deleteFiles'),
+        message: this._appLocalization.get('applications.content.dropFolders.confirmDelete', {0: event.name ? event.name : event.fileName}),
+        accept: () => {
+          this.deleteDropFiles([event.id]);
+        }
+      }
+    );
   }
 
-  onPaginationChanged(state : any) : void {
+  private deleteDropFiles(ids:number[]): void {
+    this._isBusy = false;
+    const execute = () => {
+      this._bulkDeleteService.deleteDropFiles(ids)
+        .cancelOnDestroy(this)
+        .subscribe(
+          () => {
+            this._isBusy = false;
+            this._dropFoldersService.reload(true);
+            this._clearSelection();
+          },
+          error => {
+            this._blockerMessage = new AreaBlockerMessage({
+              message: this._appLocalization.get('applications.content.dropFolders.errors.errorDropFoldersFiles'),
+              buttons: [{
+                label: this._appLocalization.get('app.common.ok'),
+                action: () => {
+                  this._blockerMessage = null;
+                  this._isBusy = false;
+                }
+              }]
+            });
+          }
+        );
+    };
+
+    if(ids.length > environment.modules.contentEntries.bulkActionsLimit) {
+      this._browserService.confirm(
+        {
+          header: this._appLocalization.get('applications.content.bulkActions.note'),
+          message: this._appLocalization.get('applications.content.bulkActions.confirmDropFolders', {"0": ids.length}),
+          accept: () => {
+            execute();
+          }
+        }
+      );
+    } else{
+      execute();
+    }
+  }
+
+  onPaginationChanged(state : any): void {
     if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
       this._filter.pageSize = state.page + 1;
       this._filter.pageIndex = state.rows;

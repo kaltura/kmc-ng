@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaDropFolderFileStatus } from 'kaltura-typescript-client/types/KalturaDropFolderFileStatus';
 
-@Pipe({ name: 'folderFileStatus' })
+@Pipe({ name: 'kFolderFileStatus' })
 export class FolderFileStatusPipe implements PipeTransform {
   constructor(
     private _appLocalization: AppLocalization
