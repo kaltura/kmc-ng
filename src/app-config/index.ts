@@ -111,13 +111,13 @@ export const environment = {
                 "enabled": true,
                 "children": [
                     {
-                        "routePath": "administration/roles",
-                        "titleToken": "Roles",
-                        "enabled": true
+                      "routePath": "administration/users",
+                      "titleToken": "Users",
+                      "enabled": true
                     },
                     {
-                        "routePath": "administration/users",
-                        "titleToken": "Users",
+                        "routePath": "administration/roles",
+                        "titleToken": "Roles",
                         "enabled": true
                     }
                 ]

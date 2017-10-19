@@ -62,7 +62,7 @@ const routes: Routes = <Routes>[
         },
         {
           path: 'administration', children: [
-            { path: '', redirectTo: 'roles', pathMatch: 'full' },
+            { path: '', redirectTo: 'users', pathMatch: 'full' },
             {
               path: 'roles',
               loadChildren: '../applications/administration-roles-app/administration-roles-app.module#AdministrationRolesAppModule'

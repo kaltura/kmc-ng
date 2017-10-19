@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { routing } from './administration-users-app.routes';
 import { AdministrationUsersComponent } from './administration-users.component';
 import { UsersComponentsList } from './users/users-components-list';
+import { EditUserComponent } from './users/edit-user/edit-user.component';
 import {
   FormsModule,
   ReactiveFormsModule
@@ -40,7 +41,8 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
     ],
     declarations: [
       AdministrationUsersComponent,
-      UsersComponentsList
+      UsersComponentsList,
+      EditUserComponent
     ],
     exports: [],
     providers: []

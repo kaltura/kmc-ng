@@ -145,7 +145,8 @@ export class UsersStore implements OnDestroy {
 
         },
         error => {
-          this._state.next({ loading: false, errorMessage: error.message });
+
+          this._state.next({ loading: false, errorMessage: this._appLocalization.get('applications.administration.users.failedLoading') });
         }
       );
   }
@@ -265,8 +266,7 @@ export class UsersStore implements OnDestroy {
               firstName:  userForm.controls['firstName'].value,
               lastName:   userForm.controls['lastName'].value,
               roleIds:    roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
-              id:         publisherId ? publisherId : userForm.controls['email'].value,
-              isAdmin:    true
+              id:         publisherId ? publisherId : userForm.controls['email'].value
             })
           }
         )
@@ -316,19 +316,14 @@ export class UsersStore implements OnDestroy {
   }
 
   public updateUserPermissions(user: KalturaUser, userForm: FormGroup) : Observable<void> {
-    let roleIds = userForm.controls['roleIds'].value,
-      publisherId = userForm.controls['id'].value;
+    let roleIds = userForm.controls['roleIds'].value;
     return Observable.create(observer => {
       this._kalturaServerClient.request(
         new UserUpdateAction(
           {
             userId: user.id,
             user: new KalturaUser({
-              email:      userForm.controls['email'].value,
-              firstName:  userForm.controls['firstName'].value,
-              lastName:   userForm.controls['lastName'].value,
               roleIds:    roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
-              id:         publisherId ? publisherId : userForm.controls['email'].value,
               isAdmin:    true
             })
           }

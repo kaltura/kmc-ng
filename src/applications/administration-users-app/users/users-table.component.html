@@ -1,4 +1,4 @@
-<k-area-blocker kFillHeight>
+<k-area-blocker kFillHeight [showLoader]="(usersStore.state$ | async)?.loading || this._deferredLoading" [message]="blockerMessage">
   <div class="kUsersTable" [class.noResults]="!_users.length">
     <p-dataTable
       [value]="_users"
@@ -13,7 +13,7 @@
       </p-column>
       <p-column field="fullName" styleClass="kTableFullName" header="{{'applications.content.table.userName' | translate}}" [sortable]="false">
         <ng-template let-col let-user="rowData" pTemplate="body">
-          <span class="kTitle">{{user[col.field] | fullName:user}}</span>
+          <span class="kTitle">{{user[col.field] | kFullName:user}}</span>
         </ng-template>
       </p-column>
       <p-column field="id" header="{{'applications.content.table.userId' | translate}}" [sortable]="false">
@@ -28,7 +28,7 @@
       </p-column>
       <p-column field="roleIds" header="{{'applications.content.table.role' | translate}}" [sortable]="false">
         <ng-template let-col let-user="rowData" pTemplate="body">
-          <span class="kTitle">{{user[col.field] | roleName:(usersStore.usersData$ | async)?.roles.items}}</span>
+          <span class="kTitle">{{user[col.field] | kRoleName:(usersStore.usersData$ | async)?.roles.items}}</span>
         </ng-template>
       </p-column>
       <p-column field="lastLoginTime" header="{{'applications.content.table.lastLogin' | translate}}" [sortable]="false">

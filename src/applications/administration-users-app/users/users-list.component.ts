@@ -23,12 +23,12 @@ export interface PartnerInfo {
 })
 
 export class UsersListComponent implements OnInit, OnDestroy {
-
   usersAmount: string;
   usersTotalCount: number;
   usersInfo: string = '';
   isDirty: boolean = true;
   loading: boolean = false;
+  isBusy: boolean = false;
   blockerMessage: AreaBlockerMessage = null;
   userForm : FormGroup;
   isNewUser: boolean = true;
@@ -177,23 +177,21 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   isUserAlreadyExist(): void {
-    this.loading = true;
     let userEmail = this.userForm.controls['email'].value;
+    this.isBusy = true;
     this.usersStore.isUserAlreadyExist(userEmail)
       .cancelOnDestroy(this)
       .subscribe(
         () => {
-          this.blockerMessage = new AreaBlockerMessage({
-            message: this._appLocalization.get('applications.administration.users.alreadyExistError', {0: userEmail}),
-            buttons: [{
-              label: this._appLocalization.get('app.common.ok'),
-              action: () => {
-                this.blockerMessage = null;
-              }
-            }]
-          })
+          this.isBusy = false;
+          this._browserService.alert(
+            {
+              message: this._appLocalization.get('applications.administration.users.alreadyExistError', {0: userEmail})
+            }
+          );
         },
         error => {
+          this.isBusy = false;
           switch (error.code){
             case "LOGIN_DATA_NOT_FOUND":
               this.isUserAssociated();
@@ -228,12 +226,13 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   isUserAssociated(): void {
-    this.loading = true;
     let userEmail = this.userForm.controls['email'].value;
+    this.isBusy = true;
     this.usersStore.isUserAssociated(userEmail)
       .cancelOnDestroy(this)
       .subscribe(
         user => {
+          this.isBusy = false;
           this._browserService.confirm(
             {
               header: this._appLocalization.get('applications.administration.users.userAssociatedCaption'),
@@ -245,6 +244,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
           );
         },
         error => {
+          this.isBusy = false;
           if(error.code === "INVALID_USER_ID") {
             this.addNewUser();
           }
@@ -253,15 +253,16 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   updateUserPermissions(user: KalturaUser): void {
-    this.loading = true;
+    this.isBusy = true;
     this.usersStore.updateUserPermissions(user, this.userForm)
       .cancelOnDestroy(this)
       .subscribe(
         () => {
+          this.isBusy = false;
           this.enableUserLogin(user);
         },
         error => {
-          this.loading = false;
+          this.isBusy = false;
           this.blockerMessage = new AreaBlockerMessage(
             {
               message: error.message,
@@ -278,17 +279,17 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   enableUserLogin(user: KalturaUser): void {
-    this.editUserPopup.close();
-    this.loading = true;
+    this.isBusy = true;
     this.usersStore.enableUserLogin(user)
       .cancelOnDestroy(this)
       .subscribe(
         () => {
+          this.isBusy = false;
           this.usersStore.reload(true);
-          this.loading = false;
+          this.editUserPopup.close();
         },
         error => {
-          this.loading = false;
+          this.isBusy = false;
           this.blockerMessage = new AreaBlockerMessage(
             {
               message: error.message,
@@ -311,8 +312,8 @@ export class UsersListComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         () => {
-          this.usersStore.reload(true);
           this.loading = false;
+          this.usersStore.reload(true);
         },
         error => {
           this.loading = false;
@@ -351,22 +352,22 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   doUpdateUser(): void {
-    this.editUserPopup.close();
-    this.loading = true;
+    this.isBusy = true;
     this.usersStore.updateUser(this.userForm)
       .cancelOnDestroy(this)
       .subscribe(
         () => {
+          this.isBusy = false;
+          this.usersStore.reload(true);
           this._browserService.alert(
             {
               message: this._appLocalization.get('applications.administration.users.successSavingUser')
             }
           );
-          this.usersStore.reload(true);
-          this.loading = false;
+          this.editUserPopup.close();
         },
         error => {
-          this.loading = false;
+          this.isBusy = false;
           let buttons = [
             {
               label: this._appLocalization.get('app.common.retry'),

@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="(usersStore.state$ | async)?.loading || loading" [message]="blockerMessage">
+<k-area-blocker [showLoader]="loading" [message]="blockerMessage">
   <div class="kUsers kOverrideFAIcons">
     <div #usersTableHolder class="kUsersHolder kContent">
       <div class="kUsersHeader">
@@ -44,73 +44,17 @@
   </div>
 
   <kPopupWidget #editUserPopup [popupWidth]="791" [popupHeight]="663" [modal]="true">
-    <div class="kFloater kOverrideFAIcons">
-      <div class="kHeader">
-        <div class="kTitle">{{popupTitle}}</div>
-      </div>
-
-      <div class="kContainer">
-        <form [formGroup]="userForm" novalidate>
-          <div class="kCaption">{{'applications.administration.users.personalDetails' | translate}}</div>
-          <div class="kRow kValign">
-            <span class="kLabel">{{'applications.administration.users.loginEmailAddress' | translate}}</span>
-            <div class="kRequired" [ngClass]="{'kHasError':userForm.controls['email'].invalid && userForm.controls['email'].touched}">*</div>
-            <div class="kControl">
-              <input #email formControlName="email" type="text" pInputText />
-            </div>
-          </div>
-          <div class="kErrorRow" [ngClass]="{'hidden': !userForm.controls['email'].touched}">
-            <div class="invalid" [ngClass]="{'hidden': email.value !== ''}">{{'applications.administration.users.required' | translate}}</div>
-            <div class="invalid" [ngClass]="{'hidden': userForm.controls['email'].valid}">{{'applications.administration.users.emailFormat' | translate}}</div>
-          </div>
-          <div class="kRow kValign">
-            <span class="kLabel">{{'applications.administration.users.firstName' | translate}}</span>
-            <div class="kRequired" [ngClass]="{'kHasError':userForm.controls['firstName'].invalid && userForm.controls['firstName'].touched}">*</div>
-            <div class="kControl">
-              <input #firstName formControlName="firstName" type="text" pInputText />
-            </div>
-          </div>
-          <div class="kErrorRow" [ngClass]="{'hidden': firstName.value !== '' || !userForm.controls['firstName'].touched}">
-            <div class="invalid">{{'applications.administration.users.required' | translate}}</div>
-          </div>
-          <div class="kRow kValign">
-            <span class="kLabel">{{'applications.administration.users.lastName' | translate}}</span>
-            <div class="kRequired" [ngClass]="{'kHasError':userForm.controls['lastName'].invalid && userForm.controls['lastName'].touched}">*</div>
-            <div class="kControl">
-              <input #lastName formControlName="lastName" type="text" pInputText />
-            </div>
-          </div>
-          <div class="kErrorRow" [ngClass]="{'hidden': lastName.value !== '' || !userForm.controls['lastName'].touched}">
-            <div class="invalid">{{'applications.administration.users.required' | translate}}</div>
-          </div>
-          <div class="kCaption kExtraPadding">{{'applications.administration.users.accountSpecificDetails' | translate}}</div>
-          <div class="kRow kValign">
-            <span class="kLabel kExtraWidth">{{'applications.administration.users.publisherUserId' | translate}}</span>
-            <div class="kControl">
-              <input formControlName="id" type="text" pInputText />
-            </div>
-          </div>
-          <div class="kRow kValign">
-            <span class="kLabel kExtraWidth">{{'applications.administration.users.userRole' | translate}}</span>
-            <div class="kControl">
-              <p-dropdown [options]="rolesList" (onChange)="getRoleDescription($event)" formControlName="roleIds" styleClass="rolesList" [autoWidth]="false"></p-dropdown>
-            </div>
-          </div>
-          <div class="kRow kValign">
-            <span class="kLabel kExtraWidth"></span>
-            <div class="kControl">
-              <div class="kSelectedRole">{{selectedRole}}</div>
-            </div>
-          </div>
-        </form>
-      </div>
-
-      <div class="kFooter">
-        <button type="button" class="kButtonBranded"
-                [disabled]="!userForm.dirty" pButton
-                label="{{'applications.administration.users.save' | translate}}"
-                (click)="saveUser()"></button>
-      </div>
-    </div>
+    <ng-template>
+      <kEditUser
+        [parentPopupWidget]="editPopup"
+        [isBusy]="isBusy"
+        [popupTitle]="popupTitle"
+        [userForm]="userForm"
+        [selectedRole]="selectedRole"
+        [rolesList]="rolesList"
+        (getRoleDescription)="getRoleDescription($event)"
+        (saveUser)="saveUser()">
+      </kEditUser>
+    </ng-template>
   </kPopupWidget>
 </k-area-blocker>

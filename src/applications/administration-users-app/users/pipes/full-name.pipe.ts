@@ -3,7 +3,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 
-@Pipe({name: 'fullName'})
+@Pipe({name: 'kFullName'})
 export class FullNamePipe implements PipeTransform {
 	constructor(
 	  private _appLocalization: AppLocalization,

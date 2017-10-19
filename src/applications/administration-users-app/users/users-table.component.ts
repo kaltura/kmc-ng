@@ -19,6 +19,7 @@ import {
 } from 'primeng/primeng';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -37,6 +38,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   _items: MenuItem[];
   _partnerInfo: PartnerInfo;
   _deferredLoading = true;
+  blockerMessage: AreaBlockerMessage = null;
   rowTrackBy: Function = (index: number, item: any) => {return item.id};
   private _actionsMenuUserId: string = "";
 
@@ -44,15 +46,16 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this._deferredLoading) {
       this._users = [];
       this.cdRef.detectChanges();
-      data.forEach(user => {
-        if(user.isAccountOwner && !data[0].isAccountOwner) {
-          let accountOwnerIndex: number = data.findIndex(user => user.isAccountOwner),
-              accountOwner: string = data[accountOwnerIndex];
-          data.splice(accountOwnerIndex, 1);
-          data.unshift(accountOwner);
+      const newData = [...data];
+      newData.forEach(user => {
+        if(user.isAccountOwner && !newData[0].isAccountOwner) {
+          let accountOwnerIndex: number = newData.findIndex(user => user.isAccountOwner),
+              accountOwner: string = newData[accountOwnerIndex];
+          newData.splice(accountOwnerIndex, 1);
+          newData.unshift(accountOwner);
         }
       });
-      this._users = data;
+      this._users = newData;
       this.cdRef.detectChanges();
     } else {
       this._deferredUsers = data;
@@ -145,7 +148,30 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.usersStore.state$
+      .cancelOnDestroy(this)
+      .subscribe(
+        response => {
+          if(response.errorMessage) {
+            this.blockerMessage = new AreaBlockerMessage(
+              {
+                message: response.errorMessage,
+                buttons: [
+                  {
+                    label: this._appLocalization.get('app.common.retry'),
+                    action: () => {
+                      this.blockerMessage = null;
+                      this.usersStore.reload(true);
+                    }
+                  }
+                ]
+              }
+            )
+          }
+        }
+      );
+  }
 
   ngAfterViewInit() {
     if(this._dataTable) {
