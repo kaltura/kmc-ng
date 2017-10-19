@@ -34,9 +34,8 @@ export interface PartnerInfo {
 export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
   _users: KalturaUser[] = [];
   _deferredUsers : any[];
-  _deferredPartnerInfo : any;
   _items: MenuItem[];
-  _partnerInfo: PartnerInfo;
+  _partnerInfo: PartnerInfo = { adminLoginUsersQuota: 0, adminUserId: null };
   _deferredLoading = true;
   blockerMessage: AreaBlockerMessage = null;
   rowTrackBy: Function = (index: number, item: any) => {return item.id};
@@ -59,23 +58,6 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
       this.cdRef.detectChanges();
     } else {
       this._deferredUsers = data;
-    }
-  }
-
-  @Input() set partnerInfo(data: any[]) {
-    if (!this._deferredLoading) {
-      this._partnerInfo = null;
-      this.cdRef.detectChanges();
-      this._partnerInfo = {
-        adminLoginUsersQuota: data['adminLoginUsersQuota'],
-        adminUserId: data['adminUserId']
-      };
-      this.cdRef.detectChanges();
-    } else {
-      this._deferredPartnerInfo = {
-        adminLoginUsersQuota: null,
-        adminUserId: null
-      };
     }
   }
 
@@ -171,6 +153,16 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }
       );
+
+    this.usersStore.usersData$
+      .cancelOnDestroy(this)
+      .subscribe(
+        response => {
+          if(response.partnerInfo) {
+            this._partnerInfo = response.partnerInfo;
+          }
+        }
+      );
   }
 
   ngAfterViewInit() {
@@ -190,9 +182,7 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
       setTimeout(()=> {
         this._deferredLoading = false;
         this._users = this._deferredUsers;
-        this._partnerInfo = this._deferredPartnerInfo;
         this._deferredUsers = null;
-        this._deferredPartnerInfo = null;
       }, 0);
     }
   }
