@@ -79,10 +79,26 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     this._bulkAction = action;
     this._bulkWindowWidth = popupWidth;
     this._bulkWindowHeight = popupHeight;
-    // use timeout to allow data binding of popup dimensions to update before opening the popup
-    setTimeout(() => {
-      this.bulkActionsPopup.open();
-    }, 0);
+    if (this.hasEditWarnings()) {
+      this._browserService.confirm(
+        {
+          header: this._appLocalization.get('applications.content.categories.editCategory'),
+          message: this._appLocalization.get('applications.content.categories.editWithEditWarningTags'),
+          accept: () => {
+            // use timeout to allow data binding of popup dimensions to update before opening the popup
+            setTimeout(() => {
+              this.bulkActionsPopup.open();
+            }, 0);
+          }
+        }
+      );
+    } else {
+      // use timeout to allow data binding of popup dimensions to update before opening the popup
+      setTimeout(() => {
+        this.bulkActionsPopup.open();
+      }, 0);
+    }
+
   }
 
   // add tags changed
@@ -135,12 +151,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   public deleteCategories(): void {
     let message: string = "";
     let deleteMessage: string = "";
-    let isEditWarning: boolean = false;
-    this.selectedCategories.forEach(obj => {
-      if (obj.tags && obj.tags.indexOf("__EditWarning") > -1) { isEditWarning = true; }
-    });
 
-    if (isEditWarning) {
+    if (this.hasEditWarnings()) {
       deleteMessage = this._appLocalization.get('applications.content.categories.editWarning');
     }
 
@@ -179,6 +191,18 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     );
   }
 
+  private hasEditWarnings(): boolean {
+    let isEditWarning: boolean = false;
+    this.selectedCategories.every(obj => {
+      if (obj.tags && obj.tags.indexOf('__EditWarning') > -1) {
+        isEditWarning = true;
+        return false;
+      }
+      return true;
+    });
+    return isEditWarning;
+  }
+
   private executeService(service: CategoriesBulkActionBaseService<any>, data: any = {}, reloadCategories: boolean = true, confirmChunks: boolean = true, callback?: Function): void {
     this._bulkAction = "";
 
@@ -186,6 +210,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       this._browserService.setAppStatus({ isBusy: true, errorMessage: null });
       service.execute(this.selectedCategories, data).subscribe(
         result => {
+          this._browserService.showGrowlMessage({  severity : 'success',
+            detail: this._appLocalization.get('applications.content.categories.bActions.success')});
           this._browserService.setAppStatus({ isBusy: false, errorMessage: null });
           if (callback) {
             callback(result);
@@ -193,7 +219,10 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
           this.onBulkChange.emit({ reload: reloadCategories });
         },
         error => {
-          this._browserService.setAppStatus({ isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error') });
+          this._browserService.setAppStatus({ isBusy: false, errorMessage: null});
+          this._browserService.showGrowlMessage({  severity : 'error',
+            detail: this._appLocalization.get('applications.content.categories.bActions.error')});
+          this.onBulkChange.emit({ reload: reloadCategories });
         }
       );
     };

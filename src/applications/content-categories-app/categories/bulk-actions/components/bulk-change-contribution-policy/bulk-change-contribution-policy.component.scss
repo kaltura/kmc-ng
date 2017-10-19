@@ -18,20 +18,20 @@
   .kLabel {
     text-align: center;
     display: block;
-    margin-bottom: 12px;
+    padding-bottom: 12px;
   }
   .kContainer {
     height: 190px;
-    margin: 20px;
+    padding: 20px;
   }
   .kBlock {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 30px;
-    margin-bottom: 10px;
+    padding-top: 32px;
+    padding-bottom: 10px;
     .kRadio {
-      margin-right: 40px;
+      padding-right: 40px;
     }
   }
 }

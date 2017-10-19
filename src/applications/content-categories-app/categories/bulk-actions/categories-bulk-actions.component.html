@@ -4,6 +4,7 @@
     (click)="menu.toggle($event)"></button>
 </div>
 
+<!--since we append the menu to the body, any styling modifications are currently not available-->
 <p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"></p-tieredMenu>
 
 <kPopupWidget #bulkActionsPopup [popupWidth]="_bulkWindowWidth" [popupHeight]="_bulkWindowHeight" [modal]="true">
