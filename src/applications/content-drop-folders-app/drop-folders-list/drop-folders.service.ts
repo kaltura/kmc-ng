@@ -28,7 +28,8 @@ export interface QueryData
   pageSize : number,
   freeText: string,
   createdBefore : Date,
-  createdAfter : Date
+  createdAfter : Date,
+  statuses: string[]
 }
 
 export enum DropFolderListType
@@ -43,8 +44,20 @@ export enum DropFolderListType
 export class DropFoldersService implements OnDestroy {
   private _dropFolders  = new BehaviorSubject<{items: KalturaDropFolderFile[], totalCount: number}>({items: [], totalCount: 0});
   private _state = new BehaviorSubject<{loading : boolean, errorMessage?: string}>({ loading : false});
-  private _query = new BehaviorSubject<QueryData>({ pageIndex: 1, pageSize: 50, freeText: '', createdBefore : null, createdAfter : null });
+  private _query = new BehaviorSubject<QueryData>({ pageIndex: 1, pageSize: 50, freeText: '', createdBefore : null, createdAfter : null, statuses: null });
   ar: any[] = [];
+  allStatusesList: string = KalturaDropFolderFileStatus.downloading + "," +
+                            KalturaDropFolderFileStatus.errorDeleting + "," +
+                            KalturaDropFolderFileStatus.errorDownloading + "," +
+                            KalturaDropFolderFileStatus.errorHandling + "," +
+                            KalturaDropFolderFileStatus.handled + "," +
+                            KalturaDropFolderFileStatus.noMatch + "," +
+                            KalturaDropFolderFileStatus.pending + "," +
+                            KalturaDropFolderFileStatus.processing + "," +
+                            KalturaDropFolderFileStatus.parsed + "," +
+                            KalturaDropFolderFileStatus.uploading + "," +
+                            KalturaDropFolderFileStatus.detected + "," +
+                            KalturaDropFolderFileStatus.waiting;
 
   dropFolders$ = this._dropFolders.asObservable();
   state$ = this._state.asObservable();
@@ -134,10 +147,10 @@ export class DropFoldersService implements OnDestroy {
                 message: this._appLocalization.get('applications.content.dropFolders.errors.dropFoldersAlert')
               })
             } else {
-              this._loadDropFoldersFiles();
+              this.loadDropFoldersFiles(null);
             }*/
 
-            this._loadDropFoldersFiles(); /* ToDo [kmcng] temporary added here to show the list of media */
+            this.loadDropFoldersFiles(); /* ToDo [kmcng] temporary added here to show the list of media */
           }
         },
         error => {
@@ -151,7 +164,7 @@ export class DropFoldersService implements OnDestroy {
       );
   }
 
-  private _loadDropFoldersFiles(): void {
+  loadDropFoldersFiles(): void {
     this._state.next({loading: true});
 
     let folderIds:String = '';
@@ -172,18 +185,7 @@ export class DropFoldersService implements OnDestroy {
     _fileFilter.orderBy = KalturaDropFolderFileOrderBy.createdAtDesc.toString();
     // use selected folder
     _fileFilter.dropFolderIdIn = folderIds.toString();
-    _fileFilter.statusIn = KalturaDropFolderFileStatus.downloading + "," +
-    KalturaDropFolderFileStatus.errorDeleting + "," +
-    KalturaDropFolderFileStatus.errorDownloading + "," +
-    KalturaDropFolderFileStatus.errorHandling + "," +
-    KalturaDropFolderFileStatus.handled + "," +
-    KalturaDropFolderFileStatus.noMatch + "," +
-    KalturaDropFolderFileStatus.pending + "," +
-    KalturaDropFolderFileStatus.processing + "," +
-    KalturaDropFolderFileStatus.parsed + "," +
-    KalturaDropFolderFileStatus.uploading + "," +
-    KalturaDropFolderFileStatus.detected + "," +
-    KalturaDropFolderFileStatus.waiting;
+    _fileFilter.statusIn = this._query.getValue().statuses ? this._query.getValue().statuses.join(',') : this.allStatusesList;
 
     this._kalturaServerClient.request(
       new DropFolderFileListAction(

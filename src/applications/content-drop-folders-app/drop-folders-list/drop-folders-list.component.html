@@ -69,11 +69,17 @@
 <kPopupWidget #statusesFilterPopup
               [appendTo]="dropFoldersTableHolder"
               [popupWidth]="400"
-              [popupHeight]="400"
+              [popupHeight]="465"
               [closeBtn]="false"
               [targetRef]="statusesFilterBtn"
               [targetOffset]="{'x':-10, 'y': -21}">
-  <kStatusesFilter [parentPopupWidget]="statusesFilterPopup"></kStatusesFilter>
+  <ng-template>
+    <kStatusesFilter
+      [parentPopupWidget]="statusesFilterPopup"
+      (onNodeSelect)="_onTreeNodeSelected($event)"
+      (onNodeUnselect)="_onTreeNodeUnselected($event)">
+    </kStatusesFilter>
+  </ng-template>
 </kPopupWidget>
 
 <kPopupWidget
