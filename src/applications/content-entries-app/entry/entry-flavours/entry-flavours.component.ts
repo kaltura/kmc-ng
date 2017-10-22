@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
@@ -20,6 +20,11 @@ import { BrowserService } from 'app-shared/kmc-shell';
 })
 export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 
+	@HostListener("window:resize", [])
+	onWindowResize() {
+		this._documentWidth = document.body.clientWidth;
+	}
+
 	@ViewChild('drmPopup') drmPopup: PopupWidgetComponent;
 	@ViewChild('previewPopup') previewPopup: PopupWidgetComponent;
 	@ViewChild('importPopup') importPopup: PopupWidgetComponent;
@@ -31,6 +36,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	public _uploadFilter: string = "";
     public _loadingError = null;
 	public _handler: EntryFlavoursHandler;
+	public _documentWidth: number = 2000;
 
 	private _importPopupStateChangeSubscribe: ISubscription;
 
@@ -40,6 +46,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
     }
 
     ngOnInit() {
+	    this._documentWidth = document.body.clientWidth;
 		this._handler = this._entryFormManager.attachWidget(EntryFlavoursHandler);
     }
 

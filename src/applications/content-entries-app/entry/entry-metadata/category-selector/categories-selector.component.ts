@@ -203,7 +203,8 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 					id: selectedItem.id,
 					fullIdPath: selectedItem.fullIdPath,
 					fullNamePath : selectedItem.fullNamePath,
-					name: selectedItem.name
+					name: selectedItem.name,
+          tooltip: selectedItem.tooltip
 				});
 
 				this._ngAfterViewCheckedContext.updateTreeSelections = true;
@@ -238,7 +239,8 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 					id: node.origin.id,
 					fullIdPath: node.origin.fullIdPath,
 					fullNamePath : node.origin.fullNamePath,
-					name: node.origin.name
+					name: node.origin.name,
+          tooltip: node.origin.tooltip
 				});
 			}
 		}
