@@ -5,7 +5,8 @@
   <i *ngIf="!_upToDate" class="kIconrefresh_small"></i>
 </i>
 
-<kPopupWidget #uploadmonitor
+<kPopupWidget #uploadmonitor class="uploadMonitorPopup"
+              [closeOnResize]="true"
               [showTooltip]="true"
               [appendTo]="appmenu"
               [popupWidth]="553"

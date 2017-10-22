@@ -149,3 +149,6 @@
         display: flex;
     }
 }
+:host /deep/ .uploadMonitorPopup .tooltipUp{
+    margin-left: 234px !important;
+}
