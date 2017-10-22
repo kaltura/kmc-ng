@@ -1,7 +1,7 @@
 <k-area-blocker [message]="_blockerMessage" [showLoader]="(_bulkDeleteService.stateDelete$ | async)?.loading || this._loading">
   <div class="kPlaylists kOverrideFAIcons">
     <div #playlistsTableHolder class="kPlaylistsHolder kContent">
-      <kSticky [stickyTop]="50" [stickyOffsetTop]="52" [stickyClass]="'kStickyClass'">
+      <kSticky [stickyClass]="'kStickyClass'" stickyId="playlistsFilters" [scrollOffset]="80" [sticksTo]="'header'" >
         <div class="kContent kFiltersWrapper">
           <div class="kPlaylistsTableFilters kContent">
             <button
@@ -37,23 +37,23 @@
           </div>
         </div>
       </kSticky>
-      <kSticky #tags [stickyTop]="116" [stickyOffsetTop]="54" stickyClass="kStickyClass">
-      <div class="kTagsWrapper kContent">
-        <kTags
-          [title]="'applications.content.filters.activeFilters' | translate"
-          [data]="activeFilters"
-          [labelField]="'label'"
-          [tooltipField]="'tooltip'"
-          (onRemoveAll)="removeAllTags()"
-          (onTagsChange)="onTagsChange($event)">
-          <ng-template let-item="item">
-            <div class="kTagContent" [kTooltip]="item.tooltip">
-              <span class="kTagLabel">{{item.label}}</span>
-              <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
-            </div>
-          </ng-template>
-        </kTags>
-      </div>
+      <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="playlistsTags" [sticksTo]="'playlistsFilters'">
+        <div class="kTagsWrapper kContent">
+          <kTags
+            [title]="'applications.content.filters.activeFilters' | translate"
+            [data]="activeFilters"
+            [labelField]="'label'"
+            [tooltipField]="'tooltip'"
+            (onRemoveAll)="removeAllTags()"
+            (onTagsChange)="onTagsChange($event)">
+            <ng-template let-item="item">
+              <div class="kTagContent" [kTooltip]="item.tooltip">
+                <span class="kTagLabel">{{item.label}}</span>
+                <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
+              </div>
+            </ng-template>
+          </kTags>
+        </div>
       </kSticky>
       <kPlaylistsTable
         class="kPlaylistsTable"
@@ -84,7 +84,7 @@
   [closeBtn]="false"
   [targetRef]="refineBtn"
   [targetOffset]="{'x':-294, 'y': -20}"
-  sticky [stickyOffsetTop]="50" [stickyTop]="50" [stickyClass]="'kForceFix'" [container]="playlistsTableHolder">
+  kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'PLcategoriesFilterPopup'" [scrollOffset]="80" [appendTo]="playlistsTableHolder">
   <kPlaylistsAdditionalFilter
     [parentPopupWidget]="refinePopup"
     (createdChanged)="onCreatedChanged($event)"

@@ -1,7 +1,7 @@
 <k-area-blocker [showLoader]="isBusy" [message]="blockerMessage">
   <div class="kEntries kOverrideFAIcons">
     <div #entriesTableHolder class="kEntriesHolder kContent">
-      <kSticky [stickyTop]="50" [stickyOffsetTop]="52" [stickyClass]="'kStickyClass'">
+      <kSticky [stickyClass]="'kStickyClass'" stickyId="entriesFilters" [scrollOffset]="80" [sticksTo]="'header'" >
         <div class="kEntriesTableFilters kContent">
           <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries$ | async)?.totalCount">{{(_entriesStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
 
@@ -44,7 +44,7 @@
                   (click)="_reload()"></button>
         </div>
       </kSticky>
-      <kSticky #tags [stickyTop]="116" [stickyOffsetTop]="54" stickyClass="kStickyClass">
+      <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="entriesTags" [sticksTo]="'entriesFilters'">
         <div class="kContent">
             <kTags [title]="'applications.content.filters.activeFilters' | translate"
                    [data]="(this._entriesStore.activeFilters$ | async)?.filters"
@@ -95,7 +95,7 @@
               [closeBtn]="false"
               [targetRef]="categoriesFilterBtn"
               [targetOffset]="{'x':-10, 'y': -21}"
-              sticky [stickyOffsetTop]="45" [stickyTop]="45" [stickyClass]="'kForceFix'" [container]="entriesTableHolder">
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'categoriesFilterPopup'" [scrollOffset]="80" [appendTo]="entriesTableHolder" >
   <kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup"></kCategoriesFilter>
 </kPopupWidget>
 
@@ -106,7 +106,7 @@
               [closeBtn]="false"
               [targetRef]="refineBtn"
               [targetOffset]="{'x':-200, 'y': -15}"
-              sticky [stickyOffsetTop]="50" [stickyTop]="50" [stickyClass]="'kForceFix'" [container]="entriesTableHolder">
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'refinePopup'" [scrollOffset]="80" [appendTo]="entriesTableHolder">
   <ng-template>
     <k-entries-refine-filters [parentPopupWidget]="refinePopup"></k-entries-refine-filters>
   </ng-template>

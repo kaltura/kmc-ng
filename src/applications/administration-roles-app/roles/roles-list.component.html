@@ -2,7 +2,7 @@
   <div class="kRoles kOverrideFAIcons">
     <div #rolesTableHolder class="kRolesHolder kContent">
       <div class="kContent kFiltersWrapper">
-        <kSticky [stickyTop]="50" [stickyOffsetTop]="52">
+        <kSticky stickyId="rolesFilters" [sticksTo]="'header'" [scrollOffset]="80">
           <div class="kRolesTableFilters kContent">
             <button pButton type="button" label="{{'applications.administration.roles.addRole' | translate}}" class="kButtonBranded kAddRoleBtn"
                     (click)="addRole()"></button>

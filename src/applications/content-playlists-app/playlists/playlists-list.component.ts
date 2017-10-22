@@ -66,7 +66,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 	) {}
 
 	onTagsChange(event){
-		this.tags.UpdateLayout();
+		this.tags.updateLayout();
 	}
 	removeTag(tag: Filter){
 		this.updateFilters(tag, 1);

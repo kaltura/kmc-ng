@@ -124,7 +124,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   }
 
   onTagsChange(event){
-    this.tags.UpdateLayout();
+      this.tags.updateLayout();
   }
 
   clearSelection() {

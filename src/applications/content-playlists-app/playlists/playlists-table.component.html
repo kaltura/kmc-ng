@@ -13,9 +13,9 @@
 			scrollable="true"
 			scrollHeight="100%"
 			dataKey="id"
-      [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
+      		[sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
 			[rowTrackBy]="rowTrackBy"
-			stickyHeader [stickyOffsetTop]="54" [stickyTop]="activeFilters.length > 0 ? 156 : 116" stickyClass="stickyHeader">
+			kStickyHeader [sticksTo]="'playlistsTags'" stickyClass="stickyHeader" [stickyId]="'playlistsTable'">
 			<p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
 			<p-column field="name" [sortable]="'custom'" header="{{'applications.content.table.name' | translate}}">
 				<ng-template let-col let-playlist="rowData" pTemplate="body">

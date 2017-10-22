@@ -39,10 +39,6 @@
       color: $kPrimary;
     }
   }
-  .kFiltersWrapper{
-    display: block;
-    height: 66px;
-  }
   .kCategoriesTableFilters {
     color: $kGrayscale1;
     z-index: 500;
@@ -225,4 +221,8 @@
 
 :host /deep/ .ui-button-icon-only .fa {
   margin-left: -.5em;
+}
+
+:host /deep/ .kStickyClass{
+  border-bottom: 1px solid $kGrayscale5;
 }

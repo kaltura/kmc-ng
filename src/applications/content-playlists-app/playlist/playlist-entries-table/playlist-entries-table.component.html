@@ -11,8 +11,7 @@
       [sortField]="filter.sortBy"
       emptyMessage="{{areaBlockerMessage}}"
       dataKey="id"
-      [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
-      stickyHeader [stickyOffsetTop]="118" [stickyTop]="116" stickyClass="stickyHeader">
+      [sortOrder]="filter.sortDirection | kPrimeTableSortDirection">
       <p-column styleClass="selectionColumn" selectionMode="multiple"></p-column>
       <p-column styleClass="thumbnailColumn" field="thumbnailUrl" header="{{'applications.content.table.thumbnail' | translate}}">
         <ng-template let-col let-entry="rowData" pTemplate="body">

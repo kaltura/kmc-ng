@@ -3,7 +3,8 @@
   <div class="kRolesTable" [class.noResults]="!_roles.length">
     <p-dataTable #dataTable [value]="_roles"
                  scrollable="true" scrollHeight="100%" dataKey="id" [rowTrackBy]="rowTrackBy"
-                 [(selection)]="selectedRoles" emptyMessage="{{_emptyMessage}}" stickyHeader [stickyOffsetTop]="120" [stickyTop]="116" stickyClass="stickyHeader">
+                 [(selection)]="selectedRoles" emptyMessage="{{_emptyMessage}}"
+                 kStickyHeader [sticksTo]="'rolesFilters'" stickyClass="stickyHeader" [stickyId]="'rolesTable'">>
       <p-column [style]="{'padding-left': '14px','width':'130px'}" field="name" header="{{'applications.administration.roles.tableColumns.role' | translate}}" [sortable]="false">
         <ng-template let-col let-role="rowData" pTemplate="body">
           <span>
