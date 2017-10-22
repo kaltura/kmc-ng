@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { DetailsBarModule } from '@kaltura-ng/kaltura-ui/details-bar';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import {
   AccordionModule,
@@ -34,7 +34,7 @@ import { DynamicMetadataFormModule, MetadataProfileModule } from '@kaltura-ng/ka
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
-import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { DynamicFormModule } from '@kaltura-ng/kaltura-ui/dynamic-form';
@@ -93,7 +93,9 @@ import { ContentEntriesAppService } from './content-entries-app.service';
     TieredMenuModule,
     TooltipModule,
     TreeModule,
-    ContentSharedModule
+    DetailsBarModule,
+    ContentSharedModule,
+    StickyModule
   ],
   declarations: [
     ContentEntriesComponent,

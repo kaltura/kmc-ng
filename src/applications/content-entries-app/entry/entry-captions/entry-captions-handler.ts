@@ -1,15 +1,15 @@
-import { Injectable } from '@angular/core';
 import {
-    KeyValueDiffers,
-    KeyValueDiffer,
-    IterableDiffers,
-    IterableDiffer,
-    KeyValueChangeRecord,
-    IterableChangeRecord
+  Injectable,
+  IterableChangeRecord,
+  IterableDiffer,
+  IterableDiffers,
+  KeyValueChangeRecord,
+  KeyValueDiffer,
+  KeyValueDiffers
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { TrackedFile, TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
+import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
@@ -28,13 +28,10 @@ import { KalturaCaptionAssetStatus } from 'kaltura-typescript-client/types/Kaltu
 import { KalturaLanguage } from 'kaltura-typescript-client/types/KalturaLanguage';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-
 import { EntryFormWidget } from '../entry-form-widget';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
-import { UploadManagement } from '@kaltura-ng/kaltura-common';
-
+import { NewEntryCaptionFile } from './new-entry-caption-file';
 
 export interface CaptionRow {
     uploading: boolean,
@@ -70,40 +67,44 @@ export class EntryCaptionsHandler extends EntryFormWidget {
         super(EntryWidgetKeys.Captions);
     }
 
-    private _trackUploadFiles(): void {
+  private _trackUploadFiles(): void {
 
 
-        this._uploadManagement.onFileStatusChanged$
-            .cancelOnDestroy(this)
-            .subscribe(
-                (uploadedFile) => {
-                    const captions = this._captions.getValue().items;
-                    const relevantCaption = captions ? captions.find(captionFile => captionFile.uploadFileId === uploadedFile.id) : null;
-
-                    switch (uploadedFile.status) {
-                        case TrackedFileStatuses.waitingUpload:
-                            if (uploadedFile.data instanceof KalturaUploadFile) {
-                                relevantCaption.serverUploadToken = uploadedFile.data.serverUploadToken;
-                            }
-                            break;
-                        case TrackedFileStatuses.uploadCompleted:
-                            relevantCaption.uploading = false;
-                            relevantCaption.uploadFailure = false;
-                            break;
-                        case TrackedFileStatuses.uploadFailed:
-                            relevantCaption.uploading = false;
-                            relevantCaption.uploadFailure = true;
-                            break;
-                        case TrackedFileStatuses.uploading:
-                            relevantCaption.progress = (uploadedFile.progress * 100).toFixed(0);
-                            relevantCaption.uploading = true;
-                            relevantCaption.uploadFailure = false;
-                            break;
-                        default:
-                            break;
-                    }
-                });
-    }
+    this._uploadManagement.onFileStatusChanged$
+      .cancelOnDestroy(this)
+      .map(uploadedFile => {
+        let relevantCaption = null;
+        if (uploadedFile.data instanceof NewEntryCaptionFile) {
+          const captions = this._captions.getValue().items;
+          relevantCaption = captions ? captions.find(captionFile => captionFile.uploadFileId === uploadedFile.id) : null;
+        }
+        return { relevantCaption, uploadedFile };
+      })
+      .filter(({ relevantCaption }) => !!relevantCaption)
+      .subscribe(
+        ({ relevantCaption, uploadedFile }) => {
+          switch (uploadedFile.status) {
+            case TrackedFileStatuses.prepared:
+              relevantCaption.serverUploadToken = (<NewEntryCaptionFile>uploadedFile.data).serverUploadToken;
+              break;
+            case TrackedFileStatuses.uploadCompleted:
+              relevantCaption.uploading = false;
+              relevantCaption.uploadFailure = false;
+              break;
+            case TrackedFileStatuses.uploadFailed:
+              relevantCaption.uploading = false;
+              relevantCaption.uploadFailure = true;
+              break;
+            case TrackedFileStatuses.uploading:
+              relevantCaption.progress = (uploadedFile.progress * 100).toFixed(0);
+              relevantCaption.uploading = true;
+              relevantCaption.uploadFailure = false;
+              break;
+            default:
+              break;
+          }
+        });
+  }
 
 
     /**
@@ -223,7 +224,7 @@ export class EntryCaptionsHandler extends EntryFormWidget {
     public upload(captionFile: File): void {
         this.currentCaption.uploading = true;
 
-        Observable.of(this._uploadManagement.addFile(new KalturaUploadFile(captionFile)))
+        Observable.of(this._uploadManagement.addFile(new NewEntryCaptionFile(captionFile)))
             .subscribe((response) => {
                     this.currentCaption.uploadFileId = response.id;
                     this.currentCaption.uploading = false;

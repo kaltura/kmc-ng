@@ -14,10 +14,15 @@ export class UploadListTableComponent {
 
   @Output() onSelectedEntriesChange = new EventEmitter<any>();
   @Output() onCancelUpload = new EventEmitter<UploadFileData>();
+  @Output() onRetryUpload = new EventEmitter<UploadFileData>();
 
   public _emptyMessage = this._appTranslation.get('applications.content.table.noResults');
 
   constructor(private _appTranslation: AppLocalization) {
+  }
+
+  public _hasError(status: TrackedFileStatuses): boolean {
+    return status === TrackedFileStatuses.uploadFailed;
   }
 
   public _relatedTableRowStyle(rowData: UploadFileData): string {

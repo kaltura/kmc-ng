@@ -4,8 +4,11 @@ import { PlaylistSectionsList } from "./playlist-sections-list/playlist-sections
 import { PlaylistComponent } from './playlist.component';
 import { PlaylistDetailsComponent } from './playlist-details/playlist-details.component';
 import { PlaylistEntriesTableComponent } from './playlist-entries-table/playlist-entries-table.component';
+import { PlaylistAddEntryComponent } from './playlist-add-entry/playlist-add-entry.component';
 import { ModerationPipe } from './pipes/moderation.pipe';
 
+import { EntryTypePipe } from './pipes/entry-type.pipe';
+import { EntryDurationPipe } from './pipes/entry-duration.pipe';
 
 export const PlaylistComponentsList = [
 	PlaylistMetadataComponent,
@@ -14,5 +17,7 @@ export const PlaylistComponentsList = [
 	PlaylistComponent,
 	PlaylistDetailsComponent,
   PlaylistEntriesTableComponent,
-  ModerationPipe
+  PlaylistAddEntryComponent,ModerationPipe,
+  EntryTypePipe,
+  EntryDurationPipe
 ];

@@ -1,0 +1,55 @@
+@import 'app-theme/_variables.scss';
+
+.kAddEntryWrap {
+  .kFloater{
+    display: flex;
+    flex-direction: column;
+    height: 240px;
+
+    .kHeader {
+      height: 78px;
+      width: 100%;
+      padding: 0 24px;
+      box-sizing: border-box;
+      border-bottom: 1px solid $kGrayscale4;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+
+      .kTitle {
+        color: #333333;
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .kButtons {
+        display: flex;
+        margin-left: auto;
+
+        .kCancel {
+          font-size: 15px;
+          color: #333333;
+          align-self: center;
+          margin-right: 24px;
+        }
+
+        .kButtonDefault {
+          font-weight: normal;
+        }
+      }
+    }
+
+    .kContainer{
+      flex: 0 0 auto;
+      height: 72px;
+      margin: 12px;
+    }
+
+    .kFooter{
+      flex: 0 0 auto;
+      height: 66px;
+      border-top: 1px solid $kGrayscale4;
+      display: flex;
+    }
+  }
+}

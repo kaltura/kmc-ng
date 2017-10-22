@@ -166,6 +166,10 @@ export const environment = {
         "contentPlaylists" : {
             "createdAtDateRange" : "2005:2030",
             "bulkActionsLimit": 2
+        },
+        "contentCategories": {
+            "createdAtDateRange": "2005:2030",
+            "bulkActionsLimit": 50
         }
     },
     "entriesShared": {
