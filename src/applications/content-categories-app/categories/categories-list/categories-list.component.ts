@@ -113,68 +113,74 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         }
         break;
       case 'delete':
-        // show category edit warning if needed
-        if (currentCategory.tags && currentCategory.tags.indexOf('__EditWarning') > -1) {
-          this._browserService.confirm(
-            {
-              header: this._appLocalization.get('applications.content.categories.deleteCategory'),
-              message: this._appLocalization.get('applications.content.categories.deleteWithEditWarningTags'),
-              accept: () => {
-                this._confirmDeletion(currentCategory);
-              }
-            }
-          );
-        } else {
-          this._confirmDeletion(currentCategory);
-        }
+        this._handleDelete(currentCategory);
         break;
       default:
         break;
     }
   }
 
-  private _confirmDeletion(category: KalturaCategory) {
-    let message: string;
-    if (category.directSubCategoriesCount > 0) {
-      message = this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories');
-    } else {
-      message = this._appLocalization.get('applications.content.categories.confirmDeleteSingle');
-    }
-    this._browserService.confirm(
-      {
-        header: this._appLocalization.get('applications.content.categories.deleteCategory'),
-        message: message,
-        accept: () => {
-          this._deleteCategory(category.id);
+  private _handleDelete(category: KalturaCategory): void {
+    const confirmWarningTags = () => {
+      this._browserService.confirm(
+        {
+          header: this._appLocalization.get('applications.content.categories.deleteCategory'),
+          message: this._appLocalization.get('applications.content.categories.deleteWithEditWarningTags'),
+          accept: () => {
+            setTimeout(confirmDeletion, 0);
+          }
         }
+      );
+    };
+    const confirmDeletion = () => {
+      let message: string;
+      if (category.directSubCategoriesCount > 0) {
+        message = this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories');
+      } else {
+        message = this._appLocalization.get('applications.content.categories.confirmDeleteSingle');
       }
-    );
+      this._browserService.confirm(
+        {
+          header: this._appLocalization.get('applications.content.categories.deleteCategory'),
+          message: message,
+          accept: () => {
+            deleteCategory();
+          }
+        }
+      );
+    };
+    const deleteCategory = () => {
+      this._isBusy = true;
+      this._blockerMessage = null;
+      this._categoriesService.deleteCategory(category.id).subscribe(
+        () => {
+          this._isBusy = false;
+          this._browserService.showGrowlMessage({
+            severity: 'success',
+            detail: this._appLocalization.get('applications.content.categories.deleted')
+          });
+          this._categoriesService.reload(true);
+        },
+        error => {
+          this._isBusy = false;
+          this._browserService.showGrowlMessage({
+            severity: 'error',
+            detail: this._appLocalization.get('applications.content.categories.errors.categoryCouldNotBeDeleted')
+          });
+        }
+      );
+    }
+
+    // show category edit warning if needed
+    if (category.tags && category.tags.indexOf('__EditWarning') > -1) {
+      confirmWarningTags();
+    } else {
+      confirmDeletion();
+    }
   }
 
   _addCategory() {
     this.addNewCategory.open();
-  }
-
-  private _deleteCategory(categoryId: number): void {
-    this._isBusy = true;
-    this._blockerMessage = null;
-    this._categoriesService.deleteCategory(categoryId).subscribe(
-      () => {
-        this._isBusy = false;
-        this._browserService.showGrowlMessage({
-          severity: 'success',
-          detail: this._appLocalization.get('applications.content.categories.deleted')
-        });
-        this._categoriesService.reload(true);
-      },
-      error => {
-        this._isBusy = false;
-        this._browserService.showGrowlMessage({
-          severity: 'error',
-          detail: this._appLocalization.get('applications.content.categories.errors.categoryCouldNotBeDeleted')
-        });
-      }
-    );
   }
 
     onBulkChange(event): void {
