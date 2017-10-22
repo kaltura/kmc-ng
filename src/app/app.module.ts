@@ -63,6 +63,8 @@ import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-ap
 import { NewEntryUploadModule } from 'app-shared/kmc-shell';
 import { TranscodingProfileManagementModule } from '@kaltura-ng/kaltura-server-utils/transcoding-profile-management';
 import { ChangeAccountComponent } from './components/changeAccount/change-account.component';
+import { ChangelogComponent } from './components/changelog/changelog.component';
+import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -119,7 +121,9 @@ export function clientConfigurationFactory() {
     PasswordExpiredFormComponent,
     ForgotPasswordFormComponent,
     InvalidLoginHashFormComponent,
-    ChangeAccountComponent
+    ChangeAccountComponent,
+    ChangelogComponent,
+    ChangelogContentComponent
   ],
   bootstrap: <any>[
     AppComponent

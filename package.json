@@ -40,8 +40,8 @@
     "e2e": "ng e2e",
     "checkout-standalone": "kws bookmark standalone",
     "compodoc": "./node_modules/.bin/compodoc -p tsconfig.json --disableGraph --disablePrivateOrInternalSupport --toggleMenuItems",
-    "release:prepare": "standard-version",
-    "release:publish": "git push --follow-tags"
+    "release:prepare": "kws publish --publish=false",
+    "release:publish": "kws publish --prepare=false"
   },
   "dependencies": {
     "@angular/animations": "^4.0.0",

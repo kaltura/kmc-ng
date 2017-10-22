@@ -39,7 +39,8 @@
       "support": "Help and Support",
       "userManual": "Download user manual",
       "contact": "Contact Support",
-      "currentPage": "Current Page"
+      "currentPage": "Current Page",
+      "changelog": "Changelog"
     },
     "languageMenu": {
       "selectLang": "Select Language"
@@ -117,6 +118,9 @@
       "signUp": "Sign Up",
       "rememberMe": "Remember me",
       "dontHaveAccount": "Don't have an account?"
+    },
+    "changelog": {
+      "header": "Change Log"
     }
   },
   "applications": {

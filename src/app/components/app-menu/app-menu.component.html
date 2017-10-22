@@ -13,7 +13,7 @@
                 <i class="kIconfolder_large"></i>
                 <i class="kIconuser" (click)="navigate('/administration')" [class.open]="selectedMenuItem?.routePath==='administration'" [kTooltip]="'app.menu.Administration' | translate" [placement]="'bottom'"></i>
                 <i class="kIcongear" (click)="navigate('/settings')" [class.open]="selectedMenuItem?.routePath==='settings'" [kTooltip]="'app.menu.Settings' | translate" [placement]="'bottom'"></i>
-                <i #help class="kIconhelp"></i>
+                <i #help class="kIconhelp" [class.has-notification]="_showChangelog" [class.open]="_helpMenuOpened"></i>
                 <div #username class="kUserName">
                     <span>{{_userContext.fullName}}</span>
                     <i class="kIcondropdown_arrow_bottom"></i>
@@ -49,6 +49,8 @@
         <p class="kHelpTitle">{{'app.helpMenu.support' | translate | uppercase}}</p>
         <p class="kHelpLink">{{'app.helpMenu.userManual' | translate}}</p>
         <p class="kHelpLink">{{'app.helpMenu.contact' | translate}}</p>
+        <hr>
+        <kChangelog (onShowChangelog)="_showChangelog = $event"></kChangelog>
         <div class="kContexualHelp">
             <hr>
             <p class="kHelpTitle">{{'app.helpMenu.currentPage' | translate | uppercase}}</p>

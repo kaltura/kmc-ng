@@ -78,6 +78,14 @@
         margin-left: auto;
         display: flex;
         align-items: center;
+
+        .kIconhelp.has-notification:after {
+          content: ' \25CF';
+          color: $kDandger;
+          position: absolute;
+          margin-left: 15px;
+          margin-top: 4px;
+        }
     }
     .kUserName {
         display: flex;
