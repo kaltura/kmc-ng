@@ -202,6 +202,7 @@
           "uploadedOn": "Uploaded On",
           "progress": "Progress",
           "remove": "Remove",
+          "retry": "Retry",
           "status": {
             "header": "Status",
             "uploaded": "Complete",
@@ -614,7 +615,8 @@
             "assetId": "Widevine Asset ID:",
             "mbr": "Multi-bitrate Package Source Flavors:",
             "start": "Current Distribution Window Start Time:",
-            "end": "Current Distribution Window End Time:"
+            "end": "Current Distribution Window End Time:",
+            "na": "N/A"
           },
           "preview": {
             "header": "Flavor Preview",

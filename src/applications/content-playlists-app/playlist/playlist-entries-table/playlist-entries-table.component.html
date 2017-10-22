@@ -1,4 +1,4 @@
-<k-area-blocker kFillHeight
+<k-area-blocker
   [showLoader]="(_playlistStore.state$ | async)?.isBusy || this.deferredLoading"
   [message]="areaBlockerMessage">
   <div class="kPlaylistEntriesTable" [class.noResults]="!_entries.length">
@@ -10,8 +10,6 @@
       [(selection)]="selectedEntries"
       [sortField]="filter.sortBy"
       emptyMessage="{{areaBlockerMessage}}"
-      scrollable="true"
-      scrollHeight="100%"
       dataKey="id"
       [sortOrder]="filter.sortDirection | kPrimeTableSortDirection">
       <p-column styleClass="selectionColumn" selectionMode="multiple"></p-column>

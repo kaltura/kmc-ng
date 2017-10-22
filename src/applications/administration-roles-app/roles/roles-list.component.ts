@@ -126,6 +126,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
   private deleteRole(role: KalturaUserRole): void {
     this._isBusy = true;
     this._blockerMessage = null;
+    window.scrollTo(0,0);
     this._rolesService.deleteRole(role)
       .cancelOnDestroy(this)
       .subscribe(

@@ -1,9 +1,10 @@
 @import 'app-theme/_variables.scss';
-
+.kTagsWrapper{
+  z-index: 500;
+}
 .kRoles {
   font-size: 15px;
   background-color: $appBkgColor;
-  height: $contentArea;
   padding-top: 30px;
   width: 100%;
   min-width: $minAppWidth;
@@ -26,8 +27,7 @@
     width: 40px;
     outline: 0;
     color: $kGrayscale3;
-    right: 0;
-    position: absolute;
+    margin-left: auto;
     &:active {
       box-shadow: none;
       transform: rotate(45deg);
@@ -37,15 +37,19 @@
       color: $kPrimary;
     }
   }
+  .kFiltersWrapper{
+    display: block;
+    height: 66px;
+  }
   .kRolesTableFilters {
     color: $kGrayscale1;
-    width: 100%;
+    border-bottom: 1px solid $kGrayscale5;
+    z-index: 500;
     height: 66px;
     background-color: white;
     flex: 0 0 auto;
     align-items: center;
     margin-left: 0px;
-    border-bottom: none;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     display: flex;
@@ -54,11 +58,11 @@
     }
   }
   .kRolesTableFooter {
-    width: 100%;
+    bottom: 0px;
     height: 34px;
     background-color: white;
     border-top: 1px solid $kGrayscale6;
-    position: relative;
+    position: fixed;
     box-sizing: border-box;
     flex: 0 0 auto;
     padding: 0 14px 28px;
@@ -69,6 +73,7 @@
     position: relative;
     background-color: white;
     flex: 1 1 auto;
+    width: 100%;
   }
   .kPaginatorShowRowsLabel {
     color: $kGrayscale1;
@@ -80,6 +85,11 @@
     margin-left: 14px;
     height: 36px;
   }
+}
+
+.kForceFix{
+  position: fixed !important;
+  margin-top: 0px !important;
 }
 
 :host /deep/ span.ui-button-icon-left.fa.kIcontrash {
@@ -107,3 +117,4 @@
 :host /deep/ .ui-button-icon-only .fa {
   margin-left: -.5em;
 }
+
