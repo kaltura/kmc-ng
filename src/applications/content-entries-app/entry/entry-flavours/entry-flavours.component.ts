@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
@@ -10,6 +10,8 @@ import { Menu, MenuItem } from 'primeng/primeng';
 import { EntryFlavoursHandler } from './entry-flavours-handler';
 import { Flavor } from './flavor';
 import { EntryFormManager } from '../entry-form-manager';
+import { environment } from 'app-environment';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
     selector: 'kEntryFlavours',
@@ -17,6 +19,11 @@ import { EntryFormManager } from '../entry-form-manager';
     styleUrls: ['./entry-flavours.component.scss']
 })
 export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
+
+	@HostListener("window:resize", [])
+	onWindowResize() {
+		this._documentWidth = document.body.clientWidth;
+	}
 
 	@ViewChild('drmPopup') drmPopup: PopupWidgetComponent;
 	@ViewChild('previewPopup') previewPopup: PopupWidgetComponent;
@@ -29,13 +36,17 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	public _uploadFilter: string = "";
     public _loadingError = null;
 	public _handler: EntryFlavoursHandler;
+	public _documentWidth: number = 2000;
 
 	private _importPopupStateChangeSubscribe: ISubscription;
 
-	constructor(private _entryFormManager : EntryFormManager, private _appLocalization: AppLocalization) {
+	constructor(private _entryFormManager: EntryFormManager,
+              private _appLocalization: AppLocalization,
+              private _browserService: BrowserService) {
     }
 
     ngOnInit() {
+	    this._documentWidth = document.body.clientWidth;
 		this._handler = this._entryFormManager.attachWidget(EntryFlavoursHandler);
     }
 
@@ -67,7 +78,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 				flavor.status === KalturaFlavorAssetStatus.ready.toString() || flavor.status === KalturaFlavorAssetStatus.notApplicable.toString())){
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.reconvert'), command: (event) => {this.actionSelected("reconvert");}});
 			}
-			if (flavor.isWidevine){
+			if (flavor.isWidevine && flavor.status === KalturaFlavorAssetStatus.ready.toString()){
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.drm'), command: (event) => {this.actionSelected("drm");}});
 			}
 			if (this._actions.length) {
@@ -123,12 +134,27 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 		return filter;
 	}
 
-	public _onFileSelected(selectedFiles: FileList) {
-		if (selectedFiles && selectedFiles.length) {
-			const fileData: File = selectedFiles[0];
-			this._handler.uploadFlavor(this._selectedFlavor, fileData);
-		}
-	}
+  private _validateFileSize(file: File): boolean {
+    const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
+    const fileSize = file.size / 1024 / 1024; // convert to Mb
+
+    return fileSize > maxFileSize;
+  }
+
+  public _onFileSelected(selectedFiles: FileList) {
+    if (selectedFiles && selectedFiles.length) {
+      const fileData: File = selectedFiles[0];
+
+      if (!this._validateFileSize(fileData)) {
+        this._handler.uploadFlavor(this._selectedFlavor, fileData);
+      } else {
+        this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
+          message: this._appLocalization.get('applications.upload.validation.fileSizeExceeded')
+        });
+      }
+    }
+  }
 
     ngOnDestroy() {
 	    this.actionsMenu.hide();

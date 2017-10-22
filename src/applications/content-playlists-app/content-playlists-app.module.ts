@@ -2,10 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DetailsBarModule } from '@kaltura-ng/kaltura-ui/details-bar';
 
 import { routing } from './content-playlists-app.routes';
 
-import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import {
 	DataTableModule,
 	PaginatorModule,
@@ -56,7 +57,9 @@ import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.servic
       KalturaPrimeNgUIModule,
       AutoCompleteModule,
       SharedModule,
-      RouterModule.forChild(routing)
+	  DetailsBarModule,
+      RouterModule.forChild(routing),
+	  StickyModule
     ],
     declarations: [
       ContentPlaylistsComponent,

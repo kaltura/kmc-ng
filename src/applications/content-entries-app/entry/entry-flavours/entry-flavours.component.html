@@ -1,7 +1,7 @@
-<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
+<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage" [centerOnScreen]="true">
 	<kFileDialog #fileDialog (onFileSelected)="_onFileSelected($event)" [filter]="_uploadFilter"></kFileDialog>
 	<div class="kFlavours kOverrideFAIcons" #flavors>
-		<p class="kTitle">{{'applications.content.entryDetails.flavours.flavours' | translate}}<span style="color: #ff5b00; font-size: 14px"> (UI design not final)</span></p>
+		<p class="kTitle">{{'applications.content.entryDetails.flavours.flavours' | translate}}</p>
 		<div class="kEntryStatus">
 			<i class="{{_handler._entryStatusClassName}}"></i><span>{{_handler._entryStatus}}</span>
 		</div>
@@ -17,7 +17,7 @@
 						<span class="kFlavorName" [class.kConvertedFlavor]="flavor.status === '2'">{{flavor.name}}</span>
 					</ng-template>
 				</p-column>
-				<p-column field="id" header="{{'applications.content.entryDetails.flavours.assetId' | translate}}" [style]="{'width':'100px'}">
+				<p-column field="id" [hidden]="_documentWidth < 1300" header="{{'applications.content.entryDetails.flavours.assetId' | translate}}" [style]="{'width':'100px'}">
 				</p-column>
 				<p-column field="format" header="{{'applications.content.entryDetails.flavours.format' | translate}}">
 				</p-column>
@@ -34,7 +34,7 @@
 						<span [kTooltip]="flavor.statusTooltip" [class.kFlavorStatusError]="flavor.status === '-1'">{{flavor.statusLabel}}</span>
 					</ng-template>
 				</p-column>
-				<p-column field="tags" header="{{'applications.content.entryDetails.flavours.tags' | translate}}">
+				<p-column field="tags" [hidden]="_documentWidth < 1400" header="{{'applications.content.entryDetails.flavours.tags' | translate}}">
 					<ng-template let-col let-flavor="rowData" pTemplate="body">
 						<span>{{flavor.tags | tags}}</span>
 					</ng-template>
@@ -53,7 +53,7 @@
 					</ng-template>
 				</p-column>
 			</p-dataTable>
-			<p-menu kMenuCloseOnScroll [scrollTarget]="flavors" #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'"></p-menu>
+			<p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'"></p-menu>
 		</div>
 	</div>
 

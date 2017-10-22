@@ -69,9 +69,9 @@ export class CategorySectionsListHandler extends CategoryFormWidget {
      */
     protected _onReset() {
         // TODO: remove this line!!!
-        super._updateWidgetState({
-            isDirty: true
-        });
+        // super._updateWidgetState({
+        //     isDirty: true
+        // });
     }
 
     private _clearSectionsList(): void {

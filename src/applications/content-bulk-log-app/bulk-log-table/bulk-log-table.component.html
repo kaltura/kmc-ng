@@ -10,7 +10,8 @@
                  [emptyMessage]="_emptyMessage"
                  [rowTrackBy]="rowTrackBy"
                  (selectionChange)="_onSelectionChange($event)"
-                 [(selection)]="selectedBulkLogItems">
+                 [(selection)]="selectedBulkLogItems"
+                 kStickyHeader [sticksTo]="'bulklogTags'" stickyClass="stickyHeader" [stickyId]="'bulklogTable'">
       <p-column [style]="{'width':'44px', 'padding-left': '14px'}"
                 selectionMode="multiple"></p-column>
 

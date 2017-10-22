@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
-import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
+
 import {
   ButtonModule,
   CalendarModule,
@@ -58,7 +59,8 @@ import { PrimeTableSortTransformPipe } from 'app-shared/content-shared/pipes/pri
     MenuModule,
     TagsModule,
     PaginatorModule,
-    InputTextModule
+    InputTextModule,
+    StickyModule
   ],
   declarations: [
     EntryStatusPipe,

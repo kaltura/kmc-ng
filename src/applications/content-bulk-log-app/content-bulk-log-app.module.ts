@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { routing } from './content-bulk-log-app.routes';
 
-import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import {
   ButtonModule,
   CalendarModule,
@@ -59,7 +59,8 @@ import { BulkLogRefineFiltersProviderService } from './bulk-log-refine-filters/b
     RouterModule.forChild(routing),
     ContentSharedModule,
     TreeModule,
-    PrimeTreeModule
+    PrimeTreeModule,
+    StickyModule
   ],
   declarations: [
     ContentBulkLogAppComponent,

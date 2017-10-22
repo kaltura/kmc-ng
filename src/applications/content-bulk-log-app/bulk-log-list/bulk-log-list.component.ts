@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 import { SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
@@ -18,6 +18,7 @@ import { getBulkUploadType } from '../utils/get-bulk-upload-type';
 export class BulkLogListComponent implements OnInit, OnDestroy {
   @Input() selectedBulkLogItems: Array<any> = [];
   @ViewChild(BulkLogTableComponent) private dataTable: BulkLogTableComponent;
+  @ViewChild('tags') private tags: StickyComponent;
 
   public isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -211,6 +212,10 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
 
   public _clearSelection(): void {
     this.selectedBulkLogItems = [];
+  }
+
+  public onTagsChange(event){
+    this.tags.updateLayout();
   }
 
   public _deleteFiles(): void {

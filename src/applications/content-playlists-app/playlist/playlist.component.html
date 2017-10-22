@@ -1,35 +1,31 @@
 <k-area-blocker [showLoader]="_showLoader" [message]="_areaBlockerMessage">
-	<div class="kPlaylistDetails kOverrideFAIcons" [class.isSafari]="isSafari">
-		<div class="kContent kPlaylistDetailsWrapper">
-			<div class="kPlaylistDetailsHeader">
-				<button
-          pButton
-          class="kButtonDefault kBackToPlaylistsBtn small"
-          icon="kIconarrow_backward"
-          (click)="_backToList()">
-        </button>
-				<div class="kMediaTypeIcon kIconPlaylist_Manual"></div>
-				<div class="kPlaylistTitle">{{ playlistName }}</div>
-				<button pButton class="kButtonBranded kSaveBtn" label="Save" (click)="save()" [disabled]="!isDirty"></button>
-				<button pButton class="kButtonDefault kNavigationBtn kNavigationBtnLeft"  icon="kIconarrow_backward"
-                (click)="_navigateToPlaylist('prev')"
-                [disabled]="!_enablePrevButton">
-        </button>
-				<button pButton class="kButtonDefault kNavigationBtn kNavigationBtnRight" icon="kIconarrow_forward"
-                (click)="_navigateToPlaylist('next')"
-                [disabled]="!_enableNextButton">
-        </button>
+	<div class="kmcDetailsLayout kOverrideFAIcons">
+		<div class="kContent kDetailsWrapper">
+			<kSticky stickyId="playlistHeader" [sticksTo]="'header'" stickyClass="stickyHeader">
+				<div class="kDetailsHeader">
+					<div class="kContent">
+						<button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
+						<div class="kTypeIcon kIconPlaylist_Manual"></div>
+						<div class="kTitle">{{ playlistName }}</div>
+						<button pButton class="kButtonBranded kSaveBtn" label="Save" (click)="save()" [disabled]="!isDirty"></button>
+						<button pButton class="kButtonDefault kNavigationBtnLeft"  icon="kIconarrow_backward" (click)="_navigateToPlaylist('prev')" [disabled]="!_enablePrevButton"></button>
+						<button pButton class="kButtonDefault kNavigationBtnRight" icon="kIconarrow_forward"  (click)="_navigateToPlaylist('next')" [disabled]="!_enableNextButton"></button>
+					</div>
+				</div>
+			</kSticky>
+			<div class="kHeaderDetails">
+				<kPlaylistDetails></kPlaylistDetails>
 			</div>
-			<div class="kPlaylistDetailsMain">
-				<div class="kPlaylistDetailsSections">
+			<div class="kDetailsMain">
+				<div class="kSections">
 					<kPlaylistSectionsList></kPlaylistSectionsList>
 				</div>
-				<div class="kPlaylistDetailsContent">
+				<div class="kDetailsContent">
 					<router-outlet></router-outlet>
 				</div>
-				<div class="kPlaylistDetailsPreview">
+				<!--div class="kPreview">
 					<kPlaylistDetails></kPlaylistDetails>
-				</div>
+				</div-->
 			</div>
 			<div class="kSpacer"></div>
 		</div>

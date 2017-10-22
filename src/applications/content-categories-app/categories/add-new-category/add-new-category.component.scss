@@ -1,0 +1,119 @@
+  @import 'app-theme/_variables.scss';
+  .kAddNewCategory {
+    width: 568px;
+    height: 586px;
+    position: relative;
+    .kHeader {
+      height: 78px;
+      width: 100%;
+      text-align: center;
+      border-bottom: 1px solid $kGrayscale4;
+      padding-top: 24px;
+      box-sizing: border-box;
+      .kTitle {
+        color: $kGrayscale1;
+        font-size: 24px;
+        font-weight: 700;
+      }
+    }
+    .kCancel {
+      margin-left: 10px;
+    }
+    .kMain {
+      margin-left: 20px;
+      border: 1px solid $kGrayscale4;
+      border-radius: 4px;
+      width: 520px;
+      height: 300px;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+    .kContainer {
+      height: 80px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      padding-left: 40px; //align-items: center;
+      justify-content: center;
+    }
+    .kResult {
+      height: 30px;      
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      padding-left: 40px; //align-items: center;
+      justify-content: center;
+    }
+    .kFooter {      
+      width: 100%;
+      margin-top: 32px;
+      border-top: 1px solid $kGrayscale4;
+      padding-top: 16px;
+      box-sizing: border-box;
+      text-align: center;
+      height: 66px;
+      button {
+        height: 34px;
+      }
+      .kLink {
+        color: $kBlack;
+        padding-left: 16px;
+      }
+    }
+  }
+
+   :host /deep/ kautocomplete .kKalturaPrimeUIComponent.ui-autocomplete-multiple {
+    width: 100%;
+  }
+
+   :host /deep/ kautocomplete ul.ui-autocomplete-multiple-container {
+    max-height: 60px;
+    overflow-y: auto;
+  }
+
+   :host /deep/ k-categories-tree .kTreeContainer {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    margin-top: 4px;
+    border-bottom: 0px solid white;
+    min-height: 220px;
+  }
+
+   :host /deep/ k-area-blocker {
+    height: 225px;
+    overflow-y: hidden;
+  }
+
+   :host /deep/ kautocomplete ul.ui-autocomplete-multiple-container.ui-inputtext {
+    padding: 0px;
+    .ui-autocomplete-input-token {
+      padding: 0px;
+      input {
+        height: 34px;
+        padding-left: 4px;
+        width: 500px;
+      }
+    }
+  }
+
+   :host /deep/ .ui-radiobutton {
+    vertical-align: top;
+    margin-top: 14px;
+  }
+
+   :host /deep/ .ui-radiobutton-label {
+    font-size: 15px;
+    font-weight: normal;
+    margin-top: 14px;
+  }
+
+   :host /deep/ .ui-tree .ui-chkbox .ui-chkbox-icon {
+    border-radius: 10px;
+    width: 18px;
+    height: 18px;
+    &.ui-chkbox-icon.fa.fa-check:before {
+      font-size: 10px;
+      line-height: 16px;
+    }
+  }

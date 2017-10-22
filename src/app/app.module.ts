@@ -6,16 +6,10 @@ import { HttpModule } from '@angular/http';
 import { CommonModule } from '@angular/common';
 import { Ng2Webstorage } from 'ng2-webstorage';
 
-import {
-  AppBootstrap,
-  AuthModule,
-  BootstrapAdapterToken,
-  BrowserService,
-  KMCShellModule,
-  NewEntryUploadModule
-} from 'app-shared/kmc-shell';
+
+import { AppBootstrap, AuthModule, BootstrapAdapterToken, BrowserService, KMCShellModule, NewEntryUploadModule } from 'app-shared/kmc-shell';
 import { AppLocalization, AppStorage, KalturaCommonModule, UploadManagement } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import { KalturaClient, KalturaClientConfiguration } from '@kaltura-ng/kaltura-client';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import {
@@ -40,14 +34,14 @@ import { KalturaHttpConfigurationAdapter } from "./services/kaltura-http-configu
 
 import {
   ButtonModule,
+  InputTextModule,
+  TieredMenuModule,
   CheckboxModule,
-  ConfirmationService,
   ConfirmDialogModule,
+  ConfirmationService,
   DropdownModule,
   GrowlModule,
-  InputTextModule,
-  RadioButtonModule,
-  TieredMenuModule
+  RadioButtonModule
 } from 'primeng/primeng';
 import { UploadManagementModule } from '@kaltura-ng/kaltura-common/upload-management';
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
@@ -104,7 +98,8 @@ export function clientConfigurationFactory() {
     NewEntryUploadModule.forRoot(),
     BulkUploadModule.forRoot(),
     TranscodingProfileManagementModule.forRoot(),
-    RadioButtonModule
+    RadioButtonModule,
+    StickyModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
