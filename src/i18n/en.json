@@ -127,7 +127,18 @@
     "entries": {
       "entryMetadata": {
         "searchTagsPH": "Search Tags",
-        "searchCategoriesPH": "Search Categories"
+        "searchCategoriesPH": "Search Categories",
+        "categoryTooltip": {
+          "privacyContext": "Privacy context",
+          "contentPrivacy": "Content Privacy",
+          "categoryListing": "Category Listing",
+          "contributionPolicy": "Contribution Policy",
+          "specificEndUserPermissions": "Specific end user permissions",
+          "noRestriction": "No Restriction",
+          "requiresAuth": "Requires Authentication",
+          "noMembers": "No members",
+          "private": "Private"
+        }
       }
     },
     "upload": {
