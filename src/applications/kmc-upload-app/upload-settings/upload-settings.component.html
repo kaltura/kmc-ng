@@ -9,9 +9,7 @@
       <form [formGroup]="_profileForm" class="kProfile">
         <span>{{ 'applications.upload.uploadSettings.profile' | translate }}</span>
         <p-dropdown class="kTranscodingProfile"
-                    kDropdownCloseOnScroll
                     [options]="_transcodingProfiles"
-                    [appendTo]="'body'"
                     [autoWidth]="false"
                     [placeholder]="'applications.upload.uploadSettings.profilePlaceholder' | translate"
                     [formControl]="_transcodingProfileField">
@@ -55,12 +53,10 @@
           </p-column>
           <p-column field="type"
                     [sortable]="false"
-                    [style]="{ 'width': '150px' }"
+                    [style]="{ 'width': '150px', 'overflow':'visible' }"
                     [header]="'applications.upload.uploadSettings.table.header.mediaType' | translate">
             <ng-template let-col let-file="rowData" pTemplate="body">
-              <p-dropdown kDropdownCloseOnScroll
-                          [options]="_fileTypes"
-                          [appendTo]="'body'"
+              <p-dropdown [options]="_fileTypes"
                           [autoWidth]="false"
                           [(ngModel)]="file.mediaType"
                           placeholder="{{'applications.content.entryDetails.related.select' | translate}}"></p-dropdown>
