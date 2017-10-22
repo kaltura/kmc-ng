@@ -60,7 +60,7 @@ export class EntriesListHolderComponent {
       case 'delete':
         this._browserService.confirm(
           {
-            header: this._appLocalization.get('applications.content.entries._deleteEntry'),
+            header: this._appLocalization.get('applications.content.entries.deleteEntry'),
             message: this._appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: entryId }),
             accept: () => this._deleteEntry(entryId)
           }
