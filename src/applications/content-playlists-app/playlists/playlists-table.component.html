@@ -1,6 +1,4 @@
-<k-area-blocker kFillHeight
-	[showLoader]="(playlistsStore.state$ | async)?.loading || this._deferredLoading"
-	[message]="_blockerMessage">
+<k-area-blocker [showLoader]="(playlistsStore.state$ | async)?.loading || this._deferredLoading" [message]="_blockerMessage">
 	<div class="kPlaylistsTable" [class.noResults]="!_playlists.length">
 		<p-dataTable
 			#dataTable

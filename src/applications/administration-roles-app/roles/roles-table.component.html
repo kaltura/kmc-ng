@@ -1,5 +1,4 @@
-<k-area-blocker kFillHeight [showLoader]="(rolesService.state$ | async)?.loading || this._deferredLoading"
-                [message]="_blockerMessage">
+<k-area-blocker [showLoader]="(rolesService.state$ | async)?.loading || this._deferredLoading" [message]="_blockerMessage">
   <div class="kRolesTable" [class.noResults]="!_roles.length">
     <p-dataTable #dataTable [value]="_roles"
                  scrollable="true" scrollHeight="100%" dataKey="id" [rowTrackBy]="rowTrackBy"
