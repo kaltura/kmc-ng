@@ -16,6 +16,8 @@ import * as R from 'ramda';
 export class AppMenuComponent implements OnInit, OnDestroy{
     private sub: any;
     public _userContext: AppUser;
+    public _showChangelog = false;
+    public _helpMenuOpened = false;
 
     constructor(private userAuthentication: AppAuthentication,
                 private appMenuService: AppMenuService,

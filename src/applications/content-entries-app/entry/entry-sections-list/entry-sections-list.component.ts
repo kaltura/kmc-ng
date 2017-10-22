@@ -25,6 +25,7 @@ export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
 
     public navigateToSection(widget : SectionWidgetItem) : void
     {
+	    window.scrollTo(0,0);
         this._entryStore.openSection(widget.key);
     }
 

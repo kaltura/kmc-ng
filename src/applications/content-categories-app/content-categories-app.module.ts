@@ -24,7 +24,7 @@ import { MetadataProfileModule } from '@kaltura-ng/kaltura-server-utils';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { PrimeTreeModule, PrimeTreePropagation } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
-import { KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 
@@ -73,7 +73,8 @@ import { CategoryCanDeactivate } from "applications/content-categories-app/categ
         TieredMenuModule,
         TooltipModule,
         TreeModule,
-        ContentSharedModule
+        ContentSharedModule,
+        StickyModule
     ],
     declarations: [
         ContentCategoriesComponent,
