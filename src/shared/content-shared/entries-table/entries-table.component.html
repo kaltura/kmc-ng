@@ -4,8 +4,8 @@
                   [centerOnScreen]="true">
     <p-dataTable #dataTable
                  dataKey="id"
-                 [scrollable]="_scrollable"
-                 [scrollHeight]="_scrollHeight"
+                 scrollable="true"
+                 scrollHeight="100%"
                  [value]="_entries"
                  [sortField]="filter.sortBy"
                  [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"

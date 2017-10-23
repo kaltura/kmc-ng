@@ -1,6 +1,7 @@
-import { Component, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { EntryStore } from '../entry-store.service';
 import { SectionWidgetItem, EntrySectionsListHandler } from './entry-sections-list-handler';
+import { StickyComponent } from '@kaltura-ng/kaltura-ui';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryFormManager } from '../entry-form-manager';
@@ -13,6 +14,8 @@ import { EntryFormManager } from '../entry-form-manager';
   styleUrls: ['./entry-sections-list.component.scss']
 })
 export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
+
+	@ViewChild('entrySections') private entrySections: StickyComponent;
 
     public _loading = false;
     public _showList = false;
@@ -42,6 +45,7 @@ export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
 				this._loading = false;
 			    this._sections = sections;
 			    this._showList = sections && sections.length > 0;
+			    this.entrySections.updateLayout();
 			}
 		);
 	}
