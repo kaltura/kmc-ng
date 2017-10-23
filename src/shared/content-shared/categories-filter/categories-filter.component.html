@@ -40,9 +40,11 @@
               [popupHeight]="220"
               [closeBtn]="true"
               [closeBtnInside]="true"
+              [closeOnResize]="true"
               [targetRef]="config"
               [targetOffset]="{'x':-324, 'y': -24}"
-              [parentPopup]="parentPopupWidget">
+              [parentPopup]="parentPopupWidget"
+              kSticky [stickyClass]="'kForceFix'" [stickyId]="'categoriesPref'" [sticksTo]="'header'" [scrollOffset]="80">
   <ng-template>
     <kCategoriesFilterPrefs [selectionMode]="_selectionMode"
                             (selectionModeChange)="_onSelectionModeChanged($event)"></kCategoriesFilterPrefs>

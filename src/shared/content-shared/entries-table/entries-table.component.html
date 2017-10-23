@@ -1,7 +1,7 @@
-<k-area-blocker [kFillHeight]="fillHeight"
-                [showLoader]="(entriesStore.state$ | async)?.loading || this._deferredLoading"
-                [message]="_blockerMessage">
-  <div class="kEntriesTable" [class.noResults]="!_entries.length">
+<div class="kEntriesTable" [class.noResults]="!_entries.length">
+  <k-area-blocker [showLoader]="(entriesStore.state$ | async)?.loading || this._deferredLoading"
+                  [message]="_blockerMessage"
+                  [centerOnScreen]="true">
     <p-dataTable #dataTable
                  dataKey="id"
                  [scrollable]="_scrollable"
@@ -13,7 +13,8 @@
                  [rowTrackBy]="_rowTrackBy"
                  (selectionChange)="_onSelectionChange($event)"
                  (onSort)="_onSortChanged($event)"
-                 [(selection)]="selectedEntries">
+                 [(selection)]="selectedEntries"
+                 kStickyHeader [sticksTo]="'entriesTags'" stickyClass="stickyHeader" [stickyId]="'entriesTable'">
       <p-column *ngIf="showBulkSelect"
                 [style]="{'width':'44px', 'padding-left': '14px'}"
                 selectionMode="multiple"></p-column>
@@ -135,5 +136,5 @@
             popup="popup"
             [model]="_items"
             [appendTo]="'body'"></p-menu>
-  </div>
-</k-area-blocker>
+  </k-area-blocker>
+</div>

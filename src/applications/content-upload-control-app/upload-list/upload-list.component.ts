@@ -34,7 +34,6 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._uploadManagement.getTrackedFiles().forEach(file => this._addFile(file));
-
     this._newEntryUploadService.onMediaCreated$
       .cancelOnDestroy(this)
       .subscribe(
@@ -142,6 +141,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
       case TrackedFileStatuses.added:
       case TrackedFileStatuses.preparing:
+      case TrackedFileStatuses.prepared:
       case TrackedFileStatuses.waitingUpload:
         return 2;
 
@@ -160,6 +160,10 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
   public _cancelUpload(file: UploadFileData): void {
     this._uploadManagement.cancelUpload(file.id, true);
+  }
+
+  public _retryUpload(file: UploadFileData): void {
+    this._uploadManagement.resumeUpload(file.id);
   }
 
   public _bulkCancel(): void {

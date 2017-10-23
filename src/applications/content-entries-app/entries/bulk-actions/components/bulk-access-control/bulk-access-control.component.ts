@@ -85,7 +85,7 @@ export class BulkAAccessControl implements OnInit, OnDestroy, AfterViewInit {
 				let ACProfiles = response[0].items;
 				if (ACProfiles.length) {
 					// check if any of the access control profiles is defined as default
-					const defaultIndex = R.findIndex(R.propEq('isDefault', true))(ACProfiles);
+					const defaultIndex = R.findIndex(R.propEq('isDefault', 1))(ACProfiles);
 					if (defaultIndex > -1) {
 						// put the default profile at the beginning of the profiles array
 						const defaultProfile: KalturaAccessControl[] = ACProfiles.splice(defaultIndex, 1);

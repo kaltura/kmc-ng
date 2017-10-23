@@ -1,5 +1,7 @@
+import { CategoryMetadataHandler } from 'applications/content-categories-app/category/category-metadata/category-metadata-handler';
+import { CategoryMetadataComponent } from './category-metadata/category-metadata.component';
 import { Categories } from './../categories/categories.service';
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, Pipe } from '@angular/core';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { CategoryService, ActionTypes } from './category.service';
 import { CategorySectionsListHandler } from './category-sections-list/category-sections-list-handler';
@@ -21,6 +23,11 @@ import { Observable } from 'rxjs/Observable';
 			provide: CategoryFormWidget,
 			useClass: CategorySectionsListHandler,
 			multi: true
+		},
+		{
+			provide: CategoryFormWidget,
+			useClass: CategoryMetadataHandler,
+			multi: true
 		}
 	]
 })
@@ -36,7 +43,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
 	public isSafari: boolean = false; // used for Safari specific styling
 
-	constructor(public _categoryStore: CategoryService,
+	constructor(private _categoryStore: CategoryService,
 		private _categoriesStore: CategoriesService,
 		private _categoryFormManager: CategoryFormManager,
 		private _browserService: BrowserService,
@@ -86,7 +93,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
 							this._categoryHasChanges = false;
 							break;
 						case ActionTypes.CategoryLoaded:
-							this._categoryHeader = this._appLocalization.get('applications.content.categoryDetails.header', { 0: this._categoryStore.category.name });;
+							this._categoryHeader = this._appLocalization.get('applications.content.categoryDetails.header', { 0: this._categoryStore.category.name });
 							break;
 						case ActionTypes.CategoryLoadingFailed:
 							let message = status.error ? status.error.message : '';

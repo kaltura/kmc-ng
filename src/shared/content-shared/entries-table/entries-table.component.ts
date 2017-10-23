@@ -157,6 +157,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
         this._deferredLoading = false;
         this._entries = this._deferredEntries;
         this._deferredEntries = null;
+        this.cdRef.detectChanges();
       }, 0);
     }
   }
