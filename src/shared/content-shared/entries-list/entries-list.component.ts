@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 
 import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { FreetextFilter } from 'app-shared/content-shared/entries-store/filters/freetext-filter';
@@ -19,6 +19,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   @Input() rowActions: { label: string, commandName: string }[];
 
   @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
+  @ViewChild('tags') private tags: StickyComponent;
 
   @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
 
@@ -120,6 +121,10 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     } else {
       this._filter.freetextSearch = null;
     }
+  }
+
+  onTagsChange(event){
+      this.tags.updateLayout();
   }
 
   clearSelection() {

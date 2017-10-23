@@ -37,10 +37,13 @@ export abstract class BulkActionBaseService<T> {
 
     return Observable.forkJoin(multiRequests)
       .map(responses => {
-        const mergedResponses = [].concat.apply([], responses);
-        let hasFailure = mergedResponses.filter(function ( response ) {return response.error}).length > 0;
-        if (hasFailure) {
-          throw new Error("error");
+        const errorMessage = [].concat.apply([], responses)
+          .filter(response => !!response.error)
+          .reduce((acc, { error }) => `${acc}\n${error.message}`, '')
+          .trim();
+
+        if (!!errorMessage) {
+          throw new Error(errorMessage);
         } else {
           return {};
         }

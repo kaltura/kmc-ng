@@ -5,6 +5,7 @@ import { EntryStore, ActionTypes } from './entry-store.service';
 import { EntrySectionsListHandler } from './entry-sections-list/entry-sections-list-handler';
 import { EntryMetadataHandler } from './entry-metadata/entry-metadata-handler';
 import { EntryPreviewHandler } from './entry-preview/entry-preview-handler';
+import { EntryDetailsHandler } from './entry-details/entry-details-handler';
 import { EntryCaptionsHandler } from './entry-captions/entry-captions-handler';
 import { EntryAccessControlHandler } from './entry-access-control/entry-access-control-handler';
 import { EntryClipsHandler } from './entry-clips/entry-clips-handler';
@@ -87,6 +88,11 @@ import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-st
 			provide: EntryFormWidget,
 			useClass: EntryPreviewHandler,
 			multi: true
+		},
+		{
+			provide: EntryFormWidget,
+			useClass: EntryDetailsHandler,
+			multi: true
 		}
 	]
 })
@@ -101,8 +107,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _enablePrevButton: boolean;
 	public _enableNextButton: boolean;
 	public _entryHasChanges : boolean;
-
-	public isSafari: boolean = false; // used for Safari specific styling
 
 	constructor(public _entryStore: EntryStore,
 				private  _entriesStore: EntriesStore,
@@ -133,8 +137,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 
 		this._entryFormManager.registerWidgets(this._widgets);
-
-		this.isSafari = this._browserService.isSafari();
 
 		this._entryStore.state$
             .cancelOnDestroy(this)

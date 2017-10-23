@@ -5,9 +5,8 @@ hr{
 }
 .jumpTo{
 	position: absolute;
-	right: 130px;
+	right: 0px;
 	button{
-		position: fixed;
 		font-weight: 400;
 		height: 34px;
 		width: 110px;
@@ -23,7 +22,6 @@ hr{
 	padding-left: 12px;
 	padding-right: 130px;
 	padding-top: 18px;
-	overflow-y: auto;
 	width: 100%;
 
 	.kSchemaTitle{

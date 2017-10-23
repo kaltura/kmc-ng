@@ -39,6 +39,7 @@ export interface EntryCategoryItem
     fullIdPath : number[],
     name : string,
     fullNamePath : string[],
+    tooltip?: string
 }
 
 @Injectable()

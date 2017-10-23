@@ -1,51 +1,55 @@
-<k-area-blocker kFillHeight
-	[showLoader]=""
-	[message]="">
-	<div class="kPlaylistEntriesTable" [class.noResults]="!_entries.length">
-		<p-dataTable
-			#dataTable
-			[value]="_entries"
-			scrollable="true"
-			scrollHeight="100%"
-			dataKey="id"
-			[rowTrackBy]="rowTrackBy">
-      <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
-      <p-column field="thumbnailUrl" header="{{'applications.content.table.thumbnail' | translate}}" [style]="{'width':'100px'}">
+<k-area-blocker
+  [showLoader]="(_playlistStore.state$ | async)?.isBusy || this.deferredLoading"
+  [message]="areaBlockerMessage">
+  <div class="kPlaylistEntriesTable" [class.noResults]="!_entries.length">
+    <p-dataTable
+      #dataTable
+      [value]="_entries"
+      (selectionChange)="onSelectionChange($event)"
+      (onSort)="onSortChanged($event)"
+      [(selection)]="selectedEntries"
+      [sortField]="filter.sortBy"
+      emptyMessage="{{areaBlockerMessage}}"
+      dataKey="id"
+      [sortOrder]="filter.sortDirection | kPrimeTableSortDirection">
+      <p-column styleClass="selectionColumn" selectionMode="multiple"></p-column>
+      <p-column styleClass="thumbnailColumn" field="thumbnailUrl" header="{{'applications.content.table.thumbnail' | translate}}">
         <ng-template let-col let-entry="rowData" pTemplate="body">
-          <div class="kThumbnailHolder">
+          <div class="kThumbnailHolder" (click)="goToEntry(entry.id)">
             <img src="{{entry[col.field]}}" onError="this.onerror=null;this.style.display='none'">
           </div>
         </ng-template>
       </p-column>
-      <p-column field="name" header="{{'applications.content.table.name' | translate}}" [sortable]="'custom'">
+      <p-column field="name" header="{{'applications.content.table.name' | translate}}">
         <ng-template let-col let-entry="rowData" pTemplate="body">
-          <span class="kTitle">{{entry[col.field]}}</span>
+          <span class="kTitle" (click)="goToEntry(entry.id)">{{entry[col.field]}}</span>
         </ng-template>
       </p-column>
-      <p-column field="mediaType" header="{{'applications.content.table.type' | translate}}" [sortable]="'custom'"
-                [style]="{'width':'80px', 'text-align': 'center'}">
+      <p-column field="mediaType" header="{{'applications.content.table.type' | translate}}" styleClass="mediaTypeColumn">
         <ng-template let-col let-entry="rowData" pTemplate="body">
-          <div [kTooltip]="entry[col.field]">{{entry[col.field]}}</div>
+          <div [kTooltip]="entry[col.field] | entryType: true" [class]="entry[col.field] | entryType: false"></div>
         </ng-template>
       </p-column>
-      <p-column field="createdAt" header="Created On" [sortable]="true" [style]="{'width':'140px'}">
+      <p-column field="createdAt" header="Created On" styleClass="createdAtColumn">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <span>{{entry[col.field] | kDate}}</span>
         </ng-template>
       </p-column>
 
-      <p-column field="duration" header="{{'applications.content.table.duration' | translate}}" [sortable]="'custom'" [style]="{'width':'104px'}">
+      <p-column field="duration" header="{{'applications.content.table.duration' | translate}}" styleClass="durationColumn">
         <ng-template let-col let-entry="rowData" pTemplate="body">
-          <span>{{entry[col.field]}}</span>
+          <span>{{entry[col.field] | kTime | entryDuration:entry}}</span>
         </ng-template>
       </p-column>
-      <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
-        <ng-template let-col let-entry="rowData" pTemplate="body">
-          <div class="kEntriesTableActions">
-            <button type="button" pButton icon="kIconmore"></button>
+      <p-column header="" styleClass="actionsColumn">
+        <ng-template let-col let-entry="rowData" pTemplate="body" let-i="rowIndex">
+          <div class="kPlaylistEntriesTableActions">
+            <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, i)"></button>
           </div>
         </ng-template>
       </p-column>
-		</p-dataTable>
-	</div>
+    </p-dataTable>
+    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'"></p-menu>
+  </div>
 </k-area-blocker>
+

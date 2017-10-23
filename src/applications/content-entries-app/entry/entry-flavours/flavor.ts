@@ -16,5 +16,6 @@ export interface Flavor extends KalturaFlavorAssetWithParams{
     statusLabel: string,
     statusTooltip: string,
     tags: string,
-    drm: any
+    drm: any,
+    uploadFileId: string
 }
