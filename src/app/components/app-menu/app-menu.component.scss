@@ -1,10 +1,16 @@
 @import 'app-theme/_variables.scss';
 @import '../../styles/scss/kmc-logo';
 
+.kMainMenuWrapper{
+    min-height: 50px;
+}
+
 .appMenu {
     background-color: $menuBkgColor;
     display: flex;
-
+    position: fixed;
+    z-index: 700;
+    width: 100%;
     a {
         color: $mainLinkColor;
         outline: 0;
@@ -72,6 +78,14 @@
         margin-left: auto;
         display: flex;
         align-items: center;
+
+        .kIconhelp.has-notification:after {
+          content: ' \25CF';
+          color: $kDandger;
+          position: absolute;
+          margin-left: 15px;
+          margin-top: 4px;
+        }
     }
     .kUserName {
         display: flex;

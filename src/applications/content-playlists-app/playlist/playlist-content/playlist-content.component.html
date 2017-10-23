@@ -23,7 +23,7 @@
     </span>
     <div *ngIf="_selectedEntries.length" class="kSelected">
       <span class="kSelectedEntriesLabel">
-        • {{_selectedEntries.length}} {{'applications.content.playlists.selected' | translate}}
+        ï¿½ {{_selectedEntries.length}} {{'applications.content.playlists.selected' | translate}}
       </span>
       <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.playlists.cancel' | translate}}</a>
     </div>
@@ -35,7 +35,7 @@
   </kPlaylistEntriesTable>
 </div>
 
-<kPopupWidget #addEntry [popupWidth]="996" [popupHeight]="779" [modal]="true">
+<kPopupWidget #addEntry [popupWidth]="996" [popupHeight]="779" [modal]="true" [slider]="true" [preventPageScroll]="true">
   <ng-template>
     <kAddEntry (onClosePopupWidget)="closePopupWidget($event)"></kAddEntry>
   </ng-template>
