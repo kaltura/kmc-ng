@@ -3,8 +3,6 @@ import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-
-import { SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { BulkLogTableComponent } from '../bulk-log-table/bulk-log-table.component';
 import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 import { KalturaBulkUpload } from 'kaltura-typescript-client/types/KalturaBulkUpload';
@@ -27,10 +25,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
 
   public _filter = {
     pageIndex: 0,
-    freetextSearch: '',
     pageSize: null, // pageSize is set to null by design. It will be modified after the first time loading entries
-    sortBy: 'createdAt',
-    sortDirection: SortDirection.Desc
   };
 
   constructor(private _appLocalization: AppLocalization,
@@ -44,8 +39,6 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     if (queryData) {
       this._filter.pageSize = queryData.pageSize;
       this._filter.pageIndex = queryData.pageIndex - 1;
-      this._filter.sortBy = queryData.sortBy;
-      this._filter.sortDirection = queryData.sortDirection;
     }
 
 
@@ -166,16 +159,6 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     this._browserService.download(url, fileName, type);
   }
 
-  public _removeTag(tag: any): void {
-    this._clearSelection();
-    this._store.removeFilters(tag);
-  }
-
-  public _removeAllTags(): void {
-    this._clearSelection();
-    this._store.clearAllFilters();
-  }
-
   public _onPaginationChanged(state: any): void {
     if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
       this._filter.pageIndex = state.page;
@@ -212,10 +195,6 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
 
   public _clearSelection(): void {
     this.selectedBulkLogItems = [];
-  }
-
-  public onTagsChange(event){
-    this.tags.updateLayout();
   }
 
   public _deleteFiles(): void {

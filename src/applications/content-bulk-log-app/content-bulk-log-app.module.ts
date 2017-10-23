@@ -31,8 +31,6 @@ import { BulkLogStoreService } from './bulk-log-store/bulk-log-store.service';
 import { BulkLogObjectTypePipe } from './pipes/bulk-log-object-type.pipe';
 import { BulkLogStatusPipe } from './pipes/bulk-log-status.pipe';
 import { BulkLogTypeIconPipe } from './pipes/bulk-log-type-icon.pipe';
-import { BulkLogRefineFiltersComponent } from './bulk-log-refine-filters/bulk-log-refine-filters.component';
-import { BulkLogRefineFiltersProviderService } from './bulk-log-refine-filters/bulk-log-refine-filters-provider.service';
 
 @NgModule({
   imports: [
@@ -69,10 +67,9 @@ import { BulkLogRefineFiltersProviderService } from './bulk-log-refine-filters/b
     BulkLogObjectTypePipe,
     BulkLogStatusPipe,
     BulkLogTypeIconPipe,
-    BulkLogRefineFiltersComponent
   ],
   exports: [],
-  providers: [BulkLogStoreService, BulkLogRefineFiltersProviderService]
+  providers: [BulkLogStoreService]
 })
 export class ContentBulkLogAppModule {
 }
