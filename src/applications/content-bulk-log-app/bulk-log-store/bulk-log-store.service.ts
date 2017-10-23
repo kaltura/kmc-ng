@@ -40,7 +40,7 @@ export class BulkLogStoreService implements OnDestroy {
     loading: false,
     errorMessage: null
   });
-  private _querySource = new Subject<QueryRequestArgs>();
+  private _querySource = new Subject<Partial<QueryRequestArgs>>();
   private _queryData: QueryData = {
     pageIndex: 1,
     pageSize: 50,
@@ -86,7 +86,7 @@ export class BulkLogStoreService implements OnDestroy {
 
     this._stateSource.next({ loading: true, errorMessage: null });
 
-    const queryArgs: QueryRequestArgs = Object.assign({}, { data: this._queryData });
+    const queryArgs = Object.assign({}, { data: this._queryData });
 
     this._querySource.next(queryArgs);
 

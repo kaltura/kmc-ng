@@ -57,6 +57,21 @@
       outline: 0;
     }
   }
+  .kBulkLogTableSuccess {
+    color: $kSuccess;
+  }
+
+  .kBulkLogTablePending {
+    color: $kOrange;
+  }
+
+  .kBulkLogTableProgress {
+    color: $kSecondary;
+  }
+
+  .kBulkLogTableFailed {
+    color: $kDandger;
+  }
 }
 
 :host {

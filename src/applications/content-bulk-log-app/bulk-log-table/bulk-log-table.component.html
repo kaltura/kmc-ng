@@ -54,9 +54,10 @@
       </p-column>
 
       <p-column field="status"
+                [style]="{'width':'40px', 'text-align':'center'}"
                 [header]="'applications.content.bulkUpload.table.status' | translate">
         <ng-template let-col let-bulkLogItem="rowData" pTemplate="body">
-          <span>{{ bulkLogItem[col.field] | kBulkLogTableStatus }}</span>
+          <i [class]="bulkLogItem[col.field] | kBulkLogTableStatusIcon" [kTooltip]="bulkLogItem[col.field] | kBulkLogTableStatus"></i>
         </ng-template>
       </p-column>
 

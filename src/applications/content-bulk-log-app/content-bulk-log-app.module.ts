@@ -30,7 +30,7 @@ import { ContentSharedModule } from 'app-shared/content-shared/content-shared.mo
 import { BulkLogStoreService } from './bulk-log-store/bulk-log-store.service';
 import { BulkLogObjectTypePipe } from './pipes/bulk-log-object-type.pipe';
 import { BulkLogStatusPipe } from './pipes/bulk-log-status.pipe';
-import { BulkLogTypeIconPipe } from './pipes/bulk-log-type-icon.pipe';
+import { BulkLogStatusIconPipe } from './pipes/bulk-log-status-icon.pipe';
 
 @NgModule({
   imports: [
@@ -66,7 +66,7 @@ import { BulkLogTypeIconPipe } from './pipes/bulk-log-type-icon.pipe';
     BulkLogListComponent,
     BulkLogObjectTypePipe,
     BulkLogStatusPipe,
-    BulkLogTypeIconPipe,
+    BulkLogStatusIconPipe,
   ],
   exports: [],
   providers: [BulkLogStoreService]
