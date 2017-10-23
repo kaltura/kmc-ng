@@ -45,11 +45,6 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._columns = value || this._defaultColumns;
   }
 
-  @Input() set scrollHeight(value: string) {
-    this._scrollHeight = typeof value === 'string' && value !== '' ? value : '100%';
-    this._scrollable = !!value;
-  }
-
   @Input() rowActions: { label: string, commandName: string }[] = [];
 
   @Input()
@@ -87,8 +82,6 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     id: { width: '100px' }
   };
 
-  public _scrollHeight = '100%';
-  public _scrollable = true;
   public _columns?: EntriesTableColumns = this._defaultColumns;
 
   public _blockerMessage: AreaBlockerMessage = null;
