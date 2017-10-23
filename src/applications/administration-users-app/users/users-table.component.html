@@ -5,7 +5,8 @@
       scrollable="true"
       scrollHeight="100%"
       dataKey="id"
-      [rowTrackBy]="rowTrackBy">
+      [rowTrackBy]="rowTrackBy"
+      kStickyHeader [sticksTo]="'usersFilters'" stickyClass="stickyHeader" [stickyId]="'rolesTable'">
       <p-column field="status" styleClass="kTableStatus" header="{{'applications.content.table.status' | translate}}" [sortable]="false">
         <ng-template let-col let-user="rowData" pTemplate="body">
           <span class="kTitle">{{user[col.field] | status}}</span>

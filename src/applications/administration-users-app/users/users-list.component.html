@@ -12,25 +12,27 @@
           </span>
         </div>
       </div>
-      <div class="kUsersTableFilters">
-        <button
-          pButton
-          type="button"
-          label="{{'applications.administration.users.addUser' | translate}}"
-          class="kButtonBranded kAddUserBtn"
-          (click)="addUser()"></button>
-        <span class="kSelectedUsersNum" *ngIf="usersAmount">
-          {{usersAmount}}
-        </span>
-        <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh" [kTooltip]="'applications.administration.users.refresh' | translate"></button>
-      </div>
+      <kSticky stickyId="usersFilters" [sticksTo]="'header'" [scrollOffset]="166">
+        <div class="kUsersTableFilters kContent">
+          <button
+            pButton
+            type="button"
+            label="{{'applications.administration.users.addUser' | translate}}"
+            class="kButtonBranded kAddUserBtn"
+            (click)="addUser()"></button>
+          <span class="kSelectedUsersNum" *ngIf="usersAmount">
+            {{usersAmount}}
+          </span>
+          <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh" [kTooltip]="'applications.administration.users.refresh' | translate"></button>
+        </div>
+      </kSticky>
       <kUsersTable
         class="kUsersTable"
         [users]="_users"
         (editUser)="onEditUser($event)"
         (toggleUserStatus)="onToggleUserStatus($event)"
         (deleteUser)="onDeleteUser($event)"></kUsersTable>
-      <div class="kUsersTableFooter" #footer *ngIf="(usersStore.usersData$ | async)?.users.totalCount">
+      <div class="kUsersTableFooter kContent" #footer *ngIf="(usersStore.usersData$ | async)?.users.totalCount">
         <p-paginator
           [rows]="_filter.pageSize"
           [first]="_filter.pageIndex * _filter.pageSize"

@@ -9,7 +9,7 @@ import {
   FormsModule,
   ReactiveFormsModule
 } from '@angular/forms';
-import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import { KalturaPrimeNgUIModule } from "@kaltura-ng/kaltura-primeng-ui";
 import {
   ButtonModule,
@@ -37,6 +37,7 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
       DropdownModule,
       KalturaUIModule,
       TooltipModule,
+      StickyModule,
       RouterModule.forChild(routing)
     ],
     declarations: [

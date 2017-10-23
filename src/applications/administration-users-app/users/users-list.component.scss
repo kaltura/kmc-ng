@@ -42,28 +42,27 @@
 
   .kUsersTableFilters {
     color: $kGrayscale1;
-    width: 100%;
+    border-bottom: 1px solid $kGrayscale5;
+    z-index: 500;
     height: 66px;
     background-color: white;
     flex: 0 0 auto;
     align-items: center;
     margin-left: 0px;
-    border-bottom: none;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     display: flex;
-
     .kSelectedUsersNum {
       padding-left: 16px;
     }
   }
 
   .kUsersTableFooter {
-    width: 100%;
+    bottom: 0px;
     height: 34px;
     background-color: white;
     border-top: 1px solid $kGrayscale6;
-    position: relative;
+    position: fixed;
     box-sizing: border-box;
     flex: 0 0 auto;
     padding: 0 14px 28px;
@@ -147,12 +146,4 @@
       margin: 0 5px;
     }
   }
-}
-
-:host /deep/ k-area-blocker >.kAreaBlockerContainer {
-  z-index: 220;
-}
-
-:host /deep/ .ui-datatable-scrollable-body {
-  min-height: calc(100vh - 356px);
 }
