@@ -37,12 +37,12 @@
   }
   .kUploadsTableFilters {
     color: $kGrayscale1;
-    width: 100%;
+    z-index: 500;
     height: 66px;
     background-color: white;
     flex: 0 0 auto;
     align-items: center;
-    margin-left: 0;
+    margin-left: 0px;
     border-bottom: none;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -133,4 +133,7 @@
 
 :host /deep/ .ui-button-icon-only .fa {
   margin-left: -.5em;
+}
+:host /deep/ .kStickyClass{
+  border-bottom: 1px solid $kGrayscale5;
 }
