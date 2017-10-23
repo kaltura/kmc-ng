@@ -6,6 +6,7 @@ import { Subject } from 'rxjs/Subject';
 import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { CategoriesTreeComponent, TreeSelectionMode } from 'app-shared/content-shared/categories-tree/categories-tree.component';
 import { CategoriesPrimeService } from 'app-shared/content-shared/categories-prime.service';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kCategoryRadioButtonPOC',
@@ -34,7 +35,9 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
     expendTreeSelectionNodeId: null
   };
 
-  constructor(private _categoriesPrimeService: CategoriesPrimeService, private cdRef: ChangeDetectorRef) {
+  constructor(private _categoriesPrimeService: CategoriesPrimeService,
+              private cdRef: ChangeDetectorRef,
+              private _appLocalization: AppLocalization) {
   }
 
   ngOnDestroy() {
@@ -61,7 +64,10 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
 
     setTimeout(() => {
       const selectionPath = this._selectedCategory ? this._selectedCategory.fullNamePath : '';
-      this._selectionTooltip = `Selected: ${ this._createCategoryTooltip(selectionPath) || 'no parent' }`;
+      this._selectionTooltip = this._appLocalization.get(
+        'applications.content.categories.selectedCategory',
+        { 0: this._createCategoryTooltip(selectionPath) || 'no parent' }
+      );
     }, 0);
   }
 

@@ -255,7 +255,8 @@
         "categoryId": "Category ID: {{0}}",
         "noRestriction": "No Restriction",
         "requiresAuthentication": "Requires Authentication",
-        "private": "Private"
+        "private": "Private",
+        "selectedCategory": "Selected: {{0}}"
       },
       "addNewCategory": {
         "newCategory": "New Category",
