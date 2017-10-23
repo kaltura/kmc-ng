@@ -19,9 +19,10 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
   @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
   @ViewChild('autoComplete') private _autoComplete: AutoComplete = null;
 
+  private _emptyTreeSelection = new PrimeTreeNode(null, 'empty', 0, null);
   public _selectionMode: TreeSelectionMode = 'single';
   public _categoriesLoaded = false;
-  public _treeSelection: Partial<PrimeTreeNode> = null;
+  public _treeSelection: PrimeTreeNode = null;
   public _selectionTooltip = '';
 
   private _searchCategoriesSubscription: ISubscription;
@@ -72,7 +73,7 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
   }
 
   private _updateTreeSelections(expandNodeId = null, initial = false): void {
-    let treeSelectedItem = initial ? null : {};
+    let treeSelectedItem = initial ? null : this._emptyTreeSelection;
     const treeItem = this._categoriesTree.findNodeByFullIdPath(this._selectedCategory ? this._selectedCategory.fullIdPath : []);
     if (treeItem) {
       treeSelectedItem = treeItem;
