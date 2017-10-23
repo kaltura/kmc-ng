@@ -15,6 +15,7 @@
     height: 66px;
   }
   .kEntriesHolder {
+    min-height: $minTableHeight;
     height: 100%;
     border: none;
     position: relative;
