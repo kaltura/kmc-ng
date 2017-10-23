@@ -16,7 +16,6 @@ import {
 	SortDirection
 } from './playlists-store/playlists-store.service';
 import { BulkDeleteService } from './bulk-service/bulk-delete.service';
-import { PlaylistsTableComponent } from "./playlists-table.component";
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
@@ -36,7 +35,6 @@ export interface Filter {
 })
 export class PlaylistsListComponent implements OnInit, OnDestroy {
 
-	@ViewChild(PlaylistsTableComponent) private dataTable: PlaylistsTableComponent;
     @ViewChild('addNewPlaylist') public addNewPlaylist: PopupWidgetComponent;
 	@ViewChild('tags') private tags: StickyComponent;
 
@@ -292,7 +290,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 				this.syncFilters(query);
 
-				this.dataTable.scrollToTop();
+				window.scrollTo(0, 0);
 			}
 		);
 		this._playlistsStore.reload(false);

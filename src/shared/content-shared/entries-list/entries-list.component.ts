@@ -4,7 +4,7 @@ import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 
 import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { FreetextFilter } from 'app-shared/content-shared/entries-store/filters/freetext-filter';
-import { EntriesTableColumns, EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
+import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 
 @Component({
   selector: 'kEntriesList',
@@ -18,7 +18,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   @Input() columns: EntriesTableColumns | null;
   @Input() rowActions: { label: string, commandName: string }[];
 
-  @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
   @ViewChild('tags') private tags: StickyComponent;
 
   @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
@@ -96,7 +95,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
         this._filter.pageSize = query.data.pageSize;
         this._filter.pageIndex = query.data.pageIndex - 1;
-        this.dataTable.scrollToTop();
+        window.scrollTo(0, 0);
       }
     );
 
