@@ -34,7 +34,6 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._uploadManagement.getTrackedFiles().forEach(file => this._addFile(file));
-
     this._newEntryUploadService.onMediaCreated$
       .cancelOnDestroy(this)
       .subscribe(

@@ -108,8 +108,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _enableNextButton: boolean;
 	public _entryHasChanges : boolean;
 
-	public isSafari: boolean = false; // used for Safari specific styling
-
 	constructor(public _entryStore: EntryStore,
 				private  _entriesStore: EntriesStore,
 				private _entryFormManager : EntryFormManager,
@@ -139,8 +137,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 
 		this._entryFormManager.registerWidgets(this._widgets);
-
-		this.isSafari = this._browserService.isSafari();
 
 		this._entryStore.state$
             .cancelOnDestroy(this)

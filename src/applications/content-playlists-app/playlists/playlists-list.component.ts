@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
 
 import {
@@ -37,7 +37,8 @@ export interface Filter {
 export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 	@ViewChild(PlaylistsTableComponent) private dataTable: PlaylistsTableComponent;
-  @ViewChild('addNewPlaylist') public addNewPlaylist: PopupWidgetComponent;
+    @ViewChild('addNewPlaylist') public addNewPlaylist: PopupWidgetComponent;
+	@ViewChild('tags') private tags: StickyComponent;
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _loading: boolean = false;
@@ -64,6 +65,9 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
     public _bulkDeleteService : BulkDeleteService
 	) {}
 
+	onTagsChange(event){
+		this.tags.updateLayout();
+	}
 	removeTag(tag: Filter){
 		this.updateFilters(tag, 1);
 		if(tag.type === 'freeText') {
@@ -291,7 +295,6 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 				this.dataTable.scrollToTop();
 			}
 		);
-
 		this._playlistsStore.reload(false);
 	}
 
