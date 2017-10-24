@@ -1,26 +1,13 @@
-<div class="kOverrideFAIcons kContainer">
-  <div class="kHeader">
-    <div class="kAllStatuses">
-      <span>{{'applications.content.dropFolders.allStatuses' | translate | uppercase}} </span>
+<p-tree
+  [value]="statuses"
+  selectionMode="checkbox"
+  [(selection)]="selectedStatuses"
+  (onNodeSelect)="onNodeSelect.emit($event)"
+  (onNodeUnselect)="onNodeUnselect.emit($event)">
+  <ng-template let-node pTemplate="default">
+    <div>
+      <span class="kTreeNodeLabel">{{node.label}}</span>
+      <span class="kTreeNodeNumChildren" *ngIf="node.children">{{node.children.length}}<!--{{statuses[0].children.length}}--></span>
     </div>
-  </div>
-  <div class="kTreeContainer">
-    <p-tree
-      [value]="statuses"
-      selectionMode="checkbox"
-      [(selection)]="selectedStatuses"
-      (onNodeSelect)="onNodeSelect.emit($event)"
-      (onNodeUnselect)="onNodeUnselect.emit($event)">
-      <ng-template let-node pTemplate="default">
-        <div>
-          <span class="kTreeNodeLabel">{{node.label}}</span>
-          <span class="kTreeNodeNumChildren" *ngIf="node.children">{{node.children.length}}<!--{{statuses[0].children.length}}--></span>
-        </div>
-      </ng-template>
-    </p-tree>
-  </div>
-  <p>
-    <a (click)="_clearAll()">{{'applications.content.filters.clearAll' | translate}}</a>
-    <a class="kClose" (click)="close()">{{'applications.content.filters.close' | translate}}</a>
-  </p>
-</div>
+  </ng-template>
+</p-tree>

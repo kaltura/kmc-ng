@@ -17,10 +17,10 @@
                  (keyup.enter)="onFreetextChanged()"
                  placeholder="{{'applications.content.dropFolders.search' | translate}}">
           <div #statusesFilterBtn class="kStatusesFilter">
+            <i class="kIconfilter"></i>
             <span>{{'applications.content.dropFolders.allStatuses' | translate}}</span>
             <i class="kIcondropdown_arrow_bottom dropdown"></i>
           </div>
-          <div #refineBtn class="kRefine"><i class="kIconcalendar"></i></div>
         </div>
         <button pButton
                 class="kButtonDefault kRefreshBtn small"
@@ -69,30 +69,28 @@
 <kPopupWidget #statusesFilterPopup
               [appendTo]="dropFoldersTableHolder"
               [popupWidth]="400"
-              [popupHeight]="465"
+              [popupHeight]="400"
               [closeBtn]="false"
               [targetRef]="statusesFilterBtn"
-              [targetOffset]="{'x':-10, 'y': -21}">
-  <ng-template>
-    <kStatusesFilter
-      [parentPopupWidget]="statusesFilterPopup"
-      (onNodeSelect)="_onTreeNodeSelected($event)"
-      (onNodeUnselect)="_onTreeNodeUnselected($event)">
-    </kStatusesFilter>
-  </ng-template>
-</kPopupWidget>
+              [targetOffset]="{'x':-160, 'y': -15}"
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'statusesFilterPopup'" [scrollOffset]="80">
 
-<kPopupWidget
-  #refinePopup
-  [appendTo]="dropFoldersTableHolder"
-  [popupWidth]="350"
-  [closeBtn]="false"
-  [targetRef]="refineBtn"
-  [targetOffset]="{'x':-294, 'y': -20}">
+  <div class="kOverrideFAIcons kRefineFilters">
+    <div class="kTreeContainer">
+      <kDatesFilters
+        (createdChanged)="onCreatedChanged($event)"
+        [_createdAfter]="_filter.createdAfter"
+        [_createdBefore]="_filter.createdBefore"></kDatesFilters>
 
-  <kDatesFilters
-    [parentPopupWidget]="refinePopup"
-    (createdChanged)="onCreatedChanged($event)"
-    [_createdAfter]="_filter.createdAfter"
-    [_createdBefore]="_filter.createdBefore"></kDatesFilters>
+      <kStatusesFilter
+        #statusFilter
+        (onNodeSelect)="_onTreeNodeSelected($event)"
+        (onNodeUnselect)="_onTreeNodeUnselected($event)">
+      </kStatusesFilter>
+    </div>
+    <p>
+      <a (click)="removeAllTags()">{{'applications.content.filters.clearAll' | translate}}</a>
+      <a class="kClose" (click)="close()">{{'applications.content.filters.close' | translate}}</a>
+    </p>
+  </div>
 </kPopupWidget>

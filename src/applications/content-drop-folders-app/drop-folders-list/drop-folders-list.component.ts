@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { DropFoldersService } from './drop-folders.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -10,6 +10,8 @@ import { DropFoldersListTableComponent } from './drop-folders-list-table.compone
 import { BulkDeleteService } from './bulk-service/bulk-delete.service';
 import { KalturaDropFolderFile } from 'kaltura-typescript-client/types/KalturaDropFolderFile';
 import { FolderFileStatusPipe } from './pipes/folder-file-status.pipe';
+import { StatusesFilterComponent } from './statuses-filter/statuses-filter.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import * as moment from 'moment';
 
 export interface Filter {
@@ -27,6 +29,8 @@ export interface Filter {
 
 export class DropFoldersListComponent implements OnInit, OnDestroy {
   @ViewChild(DropFoldersListTableComponent) private dataTable: DropFoldersListTableComponent;
+  @ViewChild('statusFilter') private statusFilter: StatusesFilterComponent;
+  @ViewChild('statusesFilterPopup') public statusesFilterPopup: PopupWidgetComponent;
 
   _isBusy = false;
   _blockerMessage: AreaBlockerMessage = null;
@@ -77,7 +81,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
     this._dropFoldersService.reload({ freeText: this._filter.fileNameLike });
   }
 
-  _reload() {
+  _reload(): void {
     this._clearSelection();
     this._dropFoldersService.reload(true);
   }
@@ -94,29 +98,19 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
     }
   }
 
-  _onTreeNodeSelected(node:any) {
-    if(node.node.children) {
-      node.node.children.forEach(el => {
-        this.statusFilters.push(el.data);
-      })
-    } else {
-      this.statusFilters.push(node.node.data);
-    }
-    this._dropFoldersService.reload({ statuses: this.statusFilters});
+  _onTreeNodeSelected(node:any): void {
+    let filters = this.statusFilters;
+    node.node.children ? node.node.children.filter(el => filters.push(el.data)) : filters.push(node.node.data);
+    this._dropFoldersService.reload({ statuses: filters});
   }
 
-  _onTreeNodeUnselected(node:any) {
-    if(node.node.children) {
-      node.node.children.forEach(el => {
-        this.statusFilters.splice(this.statusFilters.indexOf(el.data),1);
-      })
-    } else {
-      this.statusFilters.splice(this.statusFilters.indexOf(node.node.data),1);
-    }
-    this._dropFoldersService.reload({ statuses: this.statusFilters});
+  _onTreeNodeUnselected(node:any): void {
+    let filters = this.statusFilters;
+    node.node.children ? node.node.children.filter(el => filters.splice(filters.indexOf(el.data),1)) : filters.splice(filters.indexOf(node.node.data),1);
+    this._dropFoldersService.reload({ statuses: filters});
   }
 
-  clearDates() {
+  clearDates(): void {
     this.activeFilters.forEach((el, index, arr) => {
       if(el.type == 'Dates') {
         arr.splice(index, 1);
@@ -138,18 +132,20 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
     }
   }
 
-  removeAllTags(){
+  removeAllTags(): void {
     this._clearSelection();
     this._dropFoldersService.reload({
       freeText: '',
       createdBefore: null,
       createdAfter: null,
-      pageIndex: 1
+      pageIndex: 1,
+      statuses: null
     });
     this.activeFilters = [];
+    this.statusFilter.resetFilters();
   }
 
-  removeTag(tag: Filter){
+  removeTag(tag: Filter): void {
     this.updateFilters(tag, 1);
     if(tag.type === 'freeText') {
       this._filter.fileNameLike = null;
@@ -158,10 +154,22 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
       this._filter.createdBefore = null;
       this._filter.createdAfter = null;
     }
+    this.activeFilters.filter((filter, index, arr) => {
+      if(filter.type === tag.type) {
+        arr.splice(index, 1);
+      }
+    });
+    this.statusFilters.filter((status, index, arr) => {
+      if(status === tag.type) {
+        arr.splice(index, 1);
+      }
+    });
+    this.statusFilter.removeFilter(tag.type);
     this._dropFoldersService.reload({
       freeText: this._filter.fileNameLike,
       createdBefore: this._filter.createdBefore,
       createdAfter: this._filter.createdAfter,
+      statuses: this.statusFilters,
       pageIndex: 1
     });
   }
@@ -265,17 +273,25 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
     };
     this.updateFilters(freeTextFilter);
 
-    let statusesFilters: Filter = {
-      type: 'Statuses',
-      label: '',
-      tooltip: null
-    };
+
+    for (let i = this.activeFilters.length - 1; i >= 0; i--) {
+      if(this.activeFilters[i].type !== 'freeText' && this.activeFilters[i].type !== 'Dates') {
+        this.activeFilters.splice(i, 1);
+      }
+    }
 
     if(query.statuses) {
-      /* ToDo should be implemented here the active filters for statuses */
-      /*query.statuses.forEach(status => {
-        this.updateFilters(this._statusPipe.transform(status, false, false));
-      });*/
+      query.statuses.forEach(status => {
+        let statusName = this._statusPipe.transform(status, false, false),
+          statusTooltip = this._statusPipe.transform(status, false, true);
+        this.updateFilters({
+          type: status,
+          label: statusName,
+          tooltip: statusTooltip
+        });
+      });
+    } else {
+      this.statusFilters = [];
     }
 
     let dateFilter: Filter = {
@@ -296,6 +312,10 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
       }
       this.updateFilters(dateFilter);
     }
+  }
+
+  close(): void {
+    this.statusesFilterPopup.close();
   }
 
   ngOnInit() {

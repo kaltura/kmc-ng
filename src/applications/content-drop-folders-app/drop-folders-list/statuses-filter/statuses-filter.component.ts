@@ -1,9 +1,7 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
 import { TreeNode } from 'primeng/primeng';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { KalturaDropFolderFileStatus } from 'kaltura-typescript-client/types/KalturaDropFolderFileStatus';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { DropFoldersService } from 'applications/content-drop-folders-app/drop-folders-list/drop-folders.service';
 
 @Component({
   selector: 'kStatusesFilter',
@@ -12,28 +10,25 @@ import { DropFoldersService } from 'applications/content-drop-folders-app/drop-f
 })
 
 export class StatusesFilterComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() parentPopupWidget: PopupWidgetComponent;
+  selectedStatuses: TreeNode[];
   @Output() onNodeSelect: EventEmitter<any> = new EventEmitter();
   @Output() onNodeUnselect: EventEmitter<any> = new EventEmitter();
   statuses: TreeNode[];
-  selectedStatuses: TreeNode[];
 
   constructor(
-    private _appLocalization: AppLocalization,
-    private _dropFoldersService: DropFoldersService
+    private _appLocalization: AppLocalization
   ) {}
 
-  _clearAll(): void {
-    if (this.parentPopupWidget) {
-      this.parentPopupWidget.close();
-    }
-    this._dropFoldersService.reload({ statuses: null});
+  resetFilters(): void {
+    this.selectedStatuses = [];
   }
 
-  close(): void {
-    if (this.parentPopupWidget) {
-      this.parentPopupWidget.close();
-    }
+  removeFilter(id: string) {
+    this.selectedStatuses.forEach((status, index, arr) => {
+      if(status.data === id) {
+        arr.splice(index, 1);
+      }
+    });
   }
 
   ngOnInit() {

@@ -21,7 +21,8 @@ import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import {
   KalturaUIModule,
-  TooltipModule
+  TooltipModule,
+  StickyModule
 } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
@@ -55,6 +56,7 @@ import { KMCShellModule } from 'app-shared/kmc-shell';
     KMCShellModule,
     FormsModule,
     ReactiveFormsModule,
+    StickyModule,
     RouterModule.forChild(routing)
   ],
   declarations: [

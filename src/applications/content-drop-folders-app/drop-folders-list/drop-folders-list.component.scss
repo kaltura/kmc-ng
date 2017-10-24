@@ -25,37 +25,6 @@
     }
   }
 
-  .kRefine {
-    border: 1px solid $kGrayscale4;
-    border-radius: 4px;
-    display: flex;
-    background-color: #ffffff;
-    height: 32px;
-    align-items: center;
-    cursor: pointer;
-    color: $kGrayscale1;
-    position: relative;
-    padding: 0 15px;
-    margin-right: 8px;
-
-    i {
-      font-size: 20px;
-      color: $kGrayscale4;
-    }
-
-    &:hover {
-      color: $kPrimary;
-
-      i{
-        color: $kPrimary;
-      }
-
-      .dropdown {
-        color: $kPrimary;
-      }
-    }
-  }
-
   .kFilters {
     display: flex;
     margin-left: auto;
@@ -211,10 +180,9 @@
     align-items: center;
     cursor: pointer;
     color: $kGrayscale1;
-    width: 180px;
+    width: 178px;
     position: relative;
     margin-right: 8px;
-    padding-left: 10px;
 
     i {
       margin-right: 12px;
@@ -234,6 +202,27 @@
       right: 4px;
       top: 12px;
     }
+  }
+
+  .kRefineFilters {
+    margin: 12px;
+    background-color: white;
+  }
+
+  .kTreeContainer {
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-bottom: 1px solid $kGrayscale6;
+    margin-left: -20px;
+    padding-left: 20px;
+    margin-right: -20px;
+    width: 387px;
+    height: 350px;
+    position: relative;
+  }
+
+  .kClose {
+    float: right;
   }
 }
 
