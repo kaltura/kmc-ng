@@ -1,26 +1,26 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import { BrowserService } from 'app-shared/kmc-shell';
-import { EntryStore, ActionTypes } from './entry-store.service';
-import { EntrySectionsListHandler } from './entry-sections-list/entry-sections-list-handler';
-import { EntryMetadataHandler } from './entry-metadata/entry-metadata-handler';
-import { EntryPreviewHandler } from './entry-preview/entry-preview-handler';
-import { EntryDetailsHandler } from './entry-details/entry-details-handler';
-import { EntryCaptionsHandler } from './entry-captions/entry-captions-handler';
-import { EntryAccessControlHandler } from './entry-access-control/entry-access-control-handler';
-import { EntryClipsHandler } from './entry-clips/entry-clips-handler';
-import { EntryRelatedHandler } from './entry-related/entry-related-handler';
-import { EntryLiveHandler } from './entry-live/entry-live-handler';
-import { EntryFlavoursHandler } from './entry-flavours/entry-flavours-handler';
-import { EntryThumbnailsHandler } from './entry-thumbnails/entry-thumbnails-handler';
-import { EntrySchedulingHandler } from './entry-scheduling/entry-scheduling-handler';
-import { EntryUsersHandler } from './entry-users/entry-users-handler';
-import { EntryFormManager } from './entry-form-manager';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { EntryFormWidget } from './entry-form-widget';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { Observable } from 'rxjs/Observable';
-import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {KalturaMediaType} from 'kaltura-typescript-client/types/KalturaMediaType';
+import {BrowserService} from 'app-shared/kmc-shell';
+import {ActionTypes, EntryStore} from './entry-store.service';
+import {EntrySectionsListHandler} from './entry-sections-list/entry-sections-list-handler';
+import {EntryMetadataHandler} from './entry-metadata/entry-metadata-handler';
+import {EntryPreviewHandler} from './entry-preview/entry-preview-handler';
+import {EntryDetailsHandler} from './entry-details/entry-details-handler';
+import {EntryCaptionsHandler} from './entry-captions/entry-captions-handler';
+import {EntryAccessControlHandler} from './entry-access-control/entry-access-control-handler';
+import {EntryClipsHandler} from './entry-clips/entry-clips-handler';
+import {EntryRelatedHandler} from './entry-related/entry-related-handler';
+import {EntryLiveHandler} from './entry-live/entry-live-handler';
+import {EntryFlavoursHandler} from './entry-flavours/entry-flavours-handler';
+import {EntryThumbnailsHandler} from './entry-thumbnails/entry-thumbnails-handler';
+import {EntrySchedulingHandler} from './entry-scheduling/entry-scheduling-handler';
+import {EntryUsersHandler} from './entry-users/entry-users-handler';
+import {EntryFormManager} from './entry-form-manager';
+import {AreaBlockerMessage, AreaBlockerMessageButton} from '@kaltura-ng/kaltura-ui';
+import {EntryFormWidget} from './entry-form-widget';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {Observable} from 'rxjs/Observable';
+import {EntriesStore} from 'app-shared/content-shared/entries-store/entries-store.service';
 
 @Component({
     selector: 'kEntry',
@@ -142,9 +142,13 @@ export class EntryComponent implements OnInit, OnDestroy {
             .cancelOnDestroy(this)
             .subscribe(
 				status => {
-
+                    this._browserService.setAppStatus({
+                      isBusy: false,
+                      errorMessage: null
+                    });
 					this._showLoader = false;
 					this._areaBlockerMessage = null;
+
 
 					if (status) {
 						switch (status.action) {
@@ -179,7 +183,10 @@ export class EntryComponent implements OnInit, OnDestroy {
 								});
 								break;
 							case ActionTypes.EntrySaving:
-								this._showLoader = true;
+                                this._browserService.setAppStatus({
+                                  isBusy: true,
+                                  errorMessage: null
+                                });
 								break;
 							case ActionTypes.EntrySavingFailed:
 

@@ -1,16 +1,14 @@
-import { CategoryMetadataHandler } from 'applications/content-categories-app/category/category-metadata/category-metadata-handler';
-import { CategoryMetadataComponent } from './category-metadata/category-metadata.component';
-import { Categories } from './../categories/categories.service';
-import { Component, OnInit, Inject, OnDestroy, Pipe } from '@angular/core';
-import { BrowserService } from 'app-shared/kmc-shell';
-import { CategoryService, ActionTypes } from './category.service';
-import { CategorySectionsListHandler } from './category-sections-list/category-sections-list-handler';
-import { CategoriesService } from '../categories/categories.service';
-import { CategoryFormManager } from './category-form-manager';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { CategoryFormWidget } from './category-form-widget';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { Observable } from 'rxjs/Observable';
+import {CategoryMetadataHandler} from 'applications/content-categories-app/category/category-metadata/category-metadata-handler';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {BrowserService} from 'app-shared/kmc-shell';
+import {ActionTypes, CategoryService} from './category.service';
+import {CategorySectionsListHandler} from './category-sections-list/category-sections-list-handler';
+import {CategoriesService} from '../categories/categories.service';
+import {CategoryFormManager} from './category-form-manager';
+import {AreaBlockerMessage, AreaBlockerMessageButton} from '@kaltura-ng/kaltura-ui';
+import {CategoryFormWidget} from './category-form-widget';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
 	selector: 'kCategory',
@@ -79,8 +77,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
 				this._showLoader = false;
 				this._areaBlockerMessage = null;
-
-				if (status) {
+                this._browserService.setAppStatus({isBusy: false, errorMessage: null});
+                if (status) {
 					switch (status.action) {
 						case ActionTypes.CategoryLoading:
 							this._showLoader = true;
@@ -112,8 +110,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
 							});
 							break;
 						case ActionTypes.CategorySaving:
-							this._showLoader = true;
-							break;
+                          this._browserService.setAppStatus({isBusy: true, errorMessage: null});
+                          break;
 						case ActionTypes.CategorySavingFailed:
 
 							this._areaBlockerMessage = new AreaBlockerMessage({
