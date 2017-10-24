@@ -39,6 +39,7 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
   constructor(private _categoriesPrimeService: CategoriesPrimeService,
               private cdRef: ChangeDetectorRef,
               private _appLocalization: AppLocalization) {
+    this._updateSelectionTooltip();
   }
 
   ngOnDestroy() {
@@ -62,14 +63,14 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
       this._ngAfterViewCheckedContext.updateTreeSelections = false;
       this.cdRef.detectChanges();
     }
+  }
 
-    setTimeout(() => {
-      const selectionPath = this._selectedCategory ? this._selectedCategory.fullNamePath : '';
-      this._selectionTooltip = this._appLocalization.get(
-        'applications.content.categories.selectedCategory',
-        { 0: this._createCategoryTooltip(selectionPath) || 'no parent' }
-      );
-    }, 0);
+  private _updateSelectionTooltip(): void {
+    const selectionPath = this._selectedCategory ? this._selectedCategory.fullNamePath : '';
+    this._selectionTooltip = this._appLocalization.get(
+      'applications.content.categories.selectedCategory',
+      { 0: this._createCategoryTooltip(selectionPath) || 'no parent' }
+    );
   }
 
   private _updateTreeSelections(expandNodeId = null, initial = false): void {
@@ -156,6 +157,8 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
 
         this._ngAfterViewCheckedContext.updateTreeSelections = true;
         this._ngAfterViewCheckedContext.expendTreeSelectionNodeId = selectedItem.id;
+
+        this._updateSelectionTooltip();
       }
     }
 
@@ -175,7 +178,14 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
           fullNamePath: node.origin.fullNamePath,
           name: node.origin.name
         };
+
+        this._updateSelectionTooltip();
       }
     }
+  }
+
+  public _clearSelection(): void {
+    this._selectedCategory = null;
+    this._updateSelectionTooltip();
   }
 }
