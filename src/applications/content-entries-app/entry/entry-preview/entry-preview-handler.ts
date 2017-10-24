@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { EntryFormWidget } from '../entry-form-widget';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { AppAuthentication } from 'app-shared/kmc-shell';
@@ -9,7 +9,7 @@ import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-even
 import { AppEventsService } from 'app-shared/kmc-shared';
 
 @Injectable()
-export class EntryPreviewHandler extends EntryFormWidget implements OnDestroy
+export class EntryPreviewHandler extends EntryFormWidget
 {
     public iframeSrc : string;
     private _urlHash: number = 0;
@@ -28,12 +28,7 @@ export class EntryPreviewHandler extends EntryFormWidget implements OnDestroy
                 }
             });
     }
-
-    ngOnDestroy()
-    {
-        console.log('ngOnDestroy of entry preview component');
-    }
-
+    
     /**
      * Do some cleanups if needed once the section is removed
      */
