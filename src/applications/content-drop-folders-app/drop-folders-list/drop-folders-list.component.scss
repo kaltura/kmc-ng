@@ -224,6 +224,13 @@
   .kClose {
     float: right;
   }
+
+  .kPaginatorShowRowsLabel {
+    color: $kGrayscale1;
+    position: absolute;
+    top: 7px;
+    right: 80px;
+  }
 }
 
 :host /deep/ span.ui-button-icon-left.fa.kIcontrash {

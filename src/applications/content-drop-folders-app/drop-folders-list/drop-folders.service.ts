@@ -124,7 +124,7 @@ export class DropFoldersService implements OnDestroy {
             response.objects.forEach(object => {
               if(object instanceof KalturaDropFolder) {
                 df = object;
-                if(df.fileHandlerType === KalturaDropFolderFileHandlerType.content) {
+                if(JSON.stringify(df.fileHandlerType) == JSON.stringify(KalturaDropFolderFileHandlerType.content)) {
                   let cfg: KalturaDropFolderContentFileHandlerConfig = df.fileHandlerConfig as KalturaDropFolderContentFileHandlerConfig;
                   if (_flags && DropFolderListType.ADD_NEW && cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.addAsNew) {
                     this.ar.push(df);
@@ -147,7 +147,7 @@ export class DropFoldersService implements OnDestroy {
                 message: this._appLocalization.get('applications.content.dropFolders.errors.dropFoldersAlert')
               })
             } else {
-              this.loadDropFoldersFiles(null);
+              this.loadDropFoldersFiles();
             }*/
 
             this.loadDropFoldersFiles(); /* ToDo [kmcng] temporary added here to show the list of media */
