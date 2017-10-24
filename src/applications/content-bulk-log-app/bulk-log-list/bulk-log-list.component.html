@@ -13,12 +13,37 @@
 
             <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
           </div>
+          <div [class.kHidden]="selectedBulkLogItems.length" class="kFilters">
+            <div #refineBtn class="kRefine">
+              <i class="kIconfilter"></i>
+              <span>{{'applications.content.entries.refine' | translate}}</span>
+              <i class="kIcondropdown_arrow_bottom dropdown"></i>
+            </div>
+          </div>
           <button pButton
                   class="kButtonDefault kRefreshBtn small"
                   type="text"
                   icon="kIconrefresh"
                   [kTooltip]="'applications.content.entries.refresh' | translate"
                   (click)="_reload()"></button>
+        </div>
+      </kSticky>
+      <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="bulklogTags" [sticksTo]="'bulklogFilters'">
+        <div class="kContent">
+          <kTags [title]="'applications.content.filters.activeFilters' | translate"
+                 [data]="(_store.activeFilters$ | async)?.filters"
+                 [labelField]="'label'"
+                 [tooltipField]="'tooltip'"
+                 (onTagRemove)="_removeTag($event)"
+                 (onRemoveAll)="_removeAllTags()"
+                 (onTagsChange)="onTagsChange($event)">
+            <ng-template let-item="item">
+              <div class="kTagContent" [kTooltip]="item.tooltip?.token | translate : item.tooltip?.args">
+                <span class="kTagLabel">{{item.label}}</span>
+                <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="_removeTag(item.data)"></i>
+              </div>
+            </ng-template>
+          </kTags>
         </div>
       </kSticky>
       <kBulkLogTable class="kBulkLogTable"
@@ -40,3 +65,16 @@
     </div>
   </div>
 </k-area-blocker>
+
+<kPopupWidget #refinePopup
+              [appendTo]="entriesTableHolder"
+              [popupWidth]="400"
+              [popupHeight]="500"
+              [closeBtn]="false"
+              [targetRef]="refineBtn"
+              [targetOffset]="{'x':-200, 'y': -15}"
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'bulklogFilterPopup'" [scrollOffset]="80" [appendTo]="entriesTableHolder">
+  <ng-template>
+    <k-bulk-log-refine-filters [parentPopupWidget]="refinePopup"></k-bulk-log-refine-filters>
+  </ng-template>
+</kPopupWidget>
