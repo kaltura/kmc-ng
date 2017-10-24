@@ -8,15 +8,15 @@
           </span>
 
           <div [class.kHidden]="!selectedBulkLogItems.length" class="kBulkOperations">
-            <span class="kSelectedEntriesLabel">• {{selectedBulkLogItems.length}} {{'applications.content.entries.selected' | translate}}</span>
+            <span class="kSelectedEntriesLabel">• {{selectedBulkLogItems.length}} {{'applications.content.bulkUpload.list.selected' | translate}}</span>
             <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_deleteFiles()"></button>
 
-            <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
+            <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.bulkUpload.list.cancel' | translate}}</a>
           </div>
           <div [class.kHidden]="selectedBulkLogItems.length" class="kFilters">
             <div #refineBtn class="kRefine">
               <i class="kIconfilter"></i>
-              <span>{{'applications.content.entries.refine' | translate}}</span>
+              <span>{{'applications.content.bulkUpload.list.refine' | translate}}</span>
               <i class="kIcondropdown_arrow_bottom dropdown"></i>
             </div>
           </div>
@@ -24,13 +24,13 @@
                   class="kButtonDefault kRefreshBtn small"
                   type="text"
                   icon="kIconrefresh"
-                  [kTooltip]="'applications.content.entries.refresh' | translate"
+                  [kTooltip]="'applications.content.bulkUpload.list.refresh' | translate"
                   (click)="_reload()"></button>
         </div>
       </kSticky>
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="bulklogTags" [sticksTo]="'bulklogFilters'">
         <div class="kContent">
-          <kTags [title]="'applications.content.filters.activeFilters' | translate"
+          <kTags [title]="'applications.content.bulkUpload.filters.activeFilters' | translate"
                  [data]="(_store.activeFilters$ | async)?.filters"
                  [labelField]="'label'"
                  [tooltipField]="'tooltip'"

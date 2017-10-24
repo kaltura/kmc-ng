@@ -425,6 +425,20 @@
           "retry": "Retry",
           "dontProcess": "Pending",
           "finishedPartially": "Finished with errors"
+        },
+        "list": {
+          "selected": "Selected",
+          "cancel": "Cancel",
+          "refine": "Refine",
+          "refresh": "Refresh"
+        },
+        "filters": {
+          "activeFilters": "Active Filters:",
+          "clearAll": "Clear All",
+          "close": "Close",
+          "clearDates": "Clear Dates",
+          "createdBetween": "Created Between",
+          "additionalFilters": "Additional Filters"
         }
       },
       "entryStatus": {
