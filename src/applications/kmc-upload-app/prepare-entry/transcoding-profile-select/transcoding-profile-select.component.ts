@@ -105,8 +105,10 @@ export class TranscodingProfileSelectComponent implements OnInit {
   private _saveAndClose() {
     // set profile in local cache
     const selectedProfile = this.transcodingProfileSelectForm.get('profile').value;
-    this._browserService.setInLocalStorage('transcodingProfiles.selectedProfile', selectedProfile);
-    this.onTranscodingProfileSelected.emit({profileId: selectedProfile});
+    if (selectedProfile) {
+      this._browserService.setInLocalStorage('transcodingProfiles.selectedProfile', selectedProfile);
+      this.onTranscodingProfileSelected.emit({profileId: selectedProfile});
+    }
     this.parentPopupWidget.close();
   }
 }

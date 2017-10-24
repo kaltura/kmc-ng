@@ -29,6 +29,10 @@ export class PrepareEntryService {
 
     return this._kalturaServerClient
       .request(new MediaAddAction({entry}))
-      .map(media => ({id: media.id}));
+      .map(media => ({id: media.id}))
+      .catch(error => {
+        // re-throw the provided error
+        return Observable.throw(new Error('Unable to create draft entry'));
+      });
   }
 }

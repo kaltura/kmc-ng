@@ -27,11 +27,14 @@ export class PrepareEntryComponent implements OnInit {
     this._selectedMediaType = kalturaMediaType;
     // TODO [kmcng] If user permissions allows setting transcoding profile - show transcoding profile selector
     // 'transcodingProfileSettingPermission' should contain whether the user has the permission to set the transcoding profile
-    const transcodingProfileSettingPermission = true;
-    if (transcodingProfileSettingPermission) {
+    const transcodingProfileSettingPermission = false;
+    if (transcodingProfileSettingPermission) {  this.transcodingProfileSelectMenu.open();
       this.transcodingProfileSelectMenu.open();
+    } else {
+        this._loadEntry({profileId: null})
     }
   }
+
 
   private _loadEntry(selectedProfile: { profileId?: number }) {
     this._browserService.setAppStatus({
@@ -39,9 +42,10 @@ export class PrepareEntryComponent implements OnInit {
       errorMessage: null
     });
 
+    /// passing profileId null will cause to create with default profileId
     this._prepareEntryService.createDraftEntry(this._selectedMediaType, selectedProfile.profileId)
       .subscribe((draftEntry: DraftEntry) => {
-          this._router.navigate(['/content/entries/entry', draftEntry.id], {queryParams: {reloadEntries: true}})
+          this._router.navigate(['/content/entries/entry', draftEntry.id], {queryParams: {_reloadEntiesListOnNavigateOut: true}})
             .then(() => {
               this._browserService.setAppStatus({
                 isBusy: false,
@@ -60,7 +64,7 @@ export class PrepareEntryComponent implements OnInit {
         error => {
           this._browserService.setAppStatus({
             isBusy: false,
-            errorMessage: 'Failed to create entry'
+            errorMessage: error.message
           });
         });
   }
