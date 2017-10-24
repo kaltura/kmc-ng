@@ -91,12 +91,8 @@
 	}
 	.kSearchInput {
 		background: $kMagnifyingGlassBkg;
-		background-color: $kGrayscale6;
 		margin-right: 8px;
 		padding: 9px 4px 8px 30px;
-		&:focus{
-			background-color: white;
-		}
 	}
 	.kTagContent {
 		display: flex;
