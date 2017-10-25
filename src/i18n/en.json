@@ -39,7 +39,8 @@
       "support": "Help and Support",
       "userManual": "Download user manual",
       "contact": "Contact Support",
-      "currentPage": "Current Page"
+      "currentPage": "Current Page",
+      "changelog": "Changelog"
     },
     "languageMenu": {
       "selectLang": "Select Language"
@@ -119,13 +120,27 @@
       "signUp": "Sign Up",
       "rememberMe": "Remember me",
       "dontHaveAccount": "Don't have an account?"
+    },
+    "changelog": {
+      "header": "Change Log"
     }
   },
   "applications": {
     "entries": {
       "entryMetadata": {
         "searchTagsPH": "Search Tags",
-        "searchCategoriesPH": "Search Categories"
+        "searchCategoriesPH": "Search Categories",
+        "categoryTooltip": {
+          "privacyContext": "Privacy context",
+          "contentPrivacy": "Content Privacy",
+          "categoryListing": "Category Listing",
+          "contributionPolicy": "Contribution Policy",
+          "specificEndUserPermissions": "Specific end user permissions",
+          "noRestriction": "No Restriction",
+          "requiresAuth": "Requires Authentication",
+          "noMembers": "No members",
+          "private": "Private"
+        }
       }
     },
     "upload": {
@@ -276,6 +291,7 @@
           "uploadedOn": "Uploaded On",
           "progress": "Progress",
           "remove": "Remove",
+          "retry": "Retry",
           "status": {
             "header": "Status",
             "uploaded": "Complete",
@@ -688,7 +704,8 @@
             "assetId": "Widevine Asset ID:",
             "mbr": "Multi-bitrate Package Source Flavors:",
             "start": "Current Distribution Window Start Time:",
-            "end": "Current Distribution Window End Time:"
+            "end": "Current Distribution Window End Time:",
+            "na": "N/A"
           },
           "preview": {
             "header": "Flavor Preview",

@@ -1,0 +1,23 @@
+<p class="kHelpLink kChangelogLink" (click)="_openChangelog()">
+  <span>{{'app.helpMenu.changelog' | translate}}</span>
+  <i class="kIconChangelog" [class.active]="_showChangelog"></i>
+</p>
+
+<kPopupWidget #changelog [popupWidth]="700" [popupHeight]="600" [closeBtn]="true" [modal]="true">
+  <ng-template>
+    <div class="kChangelogPopup">
+      <div class="kChangelogHeader">
+        <h1>{{ 'app.changelog.header' | translate }}</h1>
+      </div>
+      <div class="kChangelogContent">
+        <kChangelogContent></kChangelogContent>
+      </div>
+      <div class="kChangelogFooter">
+        <button pButton
+                class="kButtonDefault"
+                [label]="'app.common.ok' | translate"
+                (click)="changelog.close()"></button>
+      </div>
+    </div>
+  </ng-template>
+</kPopupWidget>

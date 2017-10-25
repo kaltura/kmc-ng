@@ -1,24 +1,29 @@
 <k-area-blocker [showLoader]="_showLoader" [message]="_areaBlockerMessage" >
-	<div class="kmcDetailsLayout kOverrideFAIcons" [class.isSafari]="isSafari">
+	<div class="kmcDetailsLayout kOverrideFAIcons">
 		<div class="kContent kDetailsWrapper">
-			<div class="kDetailsHeader">
-				<button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
-				<div class="{{_entryType | entryType: false}} kTypeIcon"></div>
-				<div class="kTitle">{{ _entryName }}</div>
-				<button pButton class="kButtonBranded kSaveBtn" [disabled]="!_entryStore.entryIsDirty" label="Save" (click)="_save()"></button>
-				<button pButton class="kButtonDefault kNavigationBtnLeft" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
-				<button pButton class="kButtonDefault kNavigationBtnRight" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
-			</div>
+			<kSticky  stickyId="entryHeader" [sticksTo]="'header'" stickyClass="stickyHeader">
+				<div class="kDetailsHeader">
+					<div class="kContent">
+						<button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
+						<div class="{{_entryType | entryType: false}} kTypeIcon"></div>
+						<div class="kTitle">{{ _entryName }}</div>
+						<button pButton class="kButtonBranded kSaveBtn" [disabled]="!_entryStore.entryIsDirty" label="Save" (click)="_save()"></button>
+						<button pButton class="kButtonDefault kNavigationBtnLeft" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
+						<button pButton class="kButtonDefault kNavigationBtnRight" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
+					</div>
+				</div>
+			</kSticky>
 			<div class="kHeaderDetails">
 				<kEntryDetails></kEntryDetails>
 			</div>
 			<div class="kDetailsMain">
-				<div class="kSections">
-					<div class="kPreview">
-						<kEntryPreview></kEntryPreview>
+				<div class="kSectionsWrapper">
+					<div class="kSections">
+						<div class="kPreview">
+							<kEntryPreview></kEntryPreview>
+						</div>
+						<kEntrySectionsList></kEntrySectionsList>
 					</div>
-
-					<kEntrySectionsList></kEntrySectionsList>
 				</div>
 				<div class="kDetailsContent">
 					<router-outlet></router-outlet>

@@ -2,9 +2,9 @@
 
 .kEntriesTable {
   background-color: white;
-  overflow-y: hidden;
-  position: absolute;
+  height: auto;
   padding: 0px;
+  width: 100%;
   .kThumbnailHolder {
     overflow: hidden;
     position: relative;
@@ -34,6 +34,8 @@
     color: $kGrayscale1;
     font-weight: 700;
     cursor: pointer;
+    overflow: hidden;
+    max-height: 45px;
     &:hover {
       color: #000000;
     }
@@ -60,4 +62,13 @@
   flex-flow: row wrap;
   margin: 0px;
   flex-direction: column;
+}
+
+:host /deep/ p-datatable .ui-datatable-scrollable-body{
+  margin-bottom: 34px;
+}
+
+:host /deep/ p-datatable .stickyHeader{
+  z-index: 10;
+  display: table;
 }

@@ -15,9 +15,9 @@
   font-size: 13px;
   border-top: 1px solid $kGrayscale6;
   border-bottom: 1px solid $kGrayscale6;
-  margin-left: -20px;
-  padding-left: 20px;
-  margin-right: -20px;
+  margin-left: -12px;
+  padding-left: 12px;
+  margin-right: -12px;
   margin-top: 18px;
 }
 
@@ -33,9 +33,9 @@
   overflow-x: hidden;
   height: 340px;
   border-bottom: 1px solid $kGrayscale6;
-  margin-left: -20px;
-  padding-left: 20px;
-  margin-right: -20px;
+  margin-left: -12px;
+  padding-left: 12px;
+  margin-right: -12px;
   width: 387px;
 }
 
@@ -74,6 +74,12 @@ a.disabled {
   margin-top: -16px;
   color: $kGrayscale3;
   padding-left: 6px;
+}
+
+.kForceFix{
+  position: fixed !important;
+  margin-top: 50px !important;
+  top: 0px !important;
 }
 
 /* Make sure toggler and checkbox remain aligned even if the node height changes */

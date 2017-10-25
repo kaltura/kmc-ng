@@ -24,6 +24,8 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { environment } from 'app-environment';
+import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
+import { AppEventsService } from 'app-shared/kmc-shared';
 
 export interface ThumbnailRow {
 	id: string,
@@ -49,7 +51,7 @@ export class EntryThumbnailsHandler extends EntryFormWidget
 	private _distributionProfiles: KalturaDistributionProfile[]; // used to save the response profiles array as it is loaded only once
 
     constructor( private _kalturaServerClient: KalturaClient, private _appAuthentication: AppAuthentication,
-                private _appLocalization: AppLocalization)
+                private _appLocalization: AppLocalization, private _appEvents: AppEventsService)
     {
         super(EntryWidgetKeys.Thumbnails);
     }
@@ -188,6 +190,9 @@ export class EntryThumbnailsHandler extends EntryFormWidget
 	public _setAsDefault(thumb: ThumbnailRow):void{
 		const thumbs = Array.from(this._thumbnails.getValue().items);
 		super._showLoader();
+
+		const entryId = this.data ? this.data.id : null;
+
 		this._kalturaServerClient.request(new ThumbAssetSetAsDefaultAction({thumbAssetId: thumb.id}))
 			.cancelOnDestroy(this,this.widgetReset$)
 			.monitor('set thumb as default')
@@ -198,6 +203,11 @@ export class EntryThumbnailsHandler extends EntryFormWidget
 						thumb.isDefault = false;
 					});
 					thumb.isDefault = true;
+
+					if (entryId) {
+                        this._appEvents.publish(new PreviewMetadataChangedEvent(entryId));
+                    }
+
 					super._hideLoader();
 				},
 				error =>

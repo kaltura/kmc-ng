@@ -1,13 +1,14 @@
-<k-area-blocker kFillHeight [showLoader]="(categoriesService.state$ | async)?.loading || this._deferredLoading" [message]="_blockerMessage">
+<k-area-blocker [showLoader]="(categoriesService.state$ | async)?.loading || this._deferredLoading" [message]="_blockerMessage"	[centerOnScreen]="true">
   <div class="kCategoriesTable" [class.noResults]="!_categories.length">
     <p-dataTable #dataTable [value]="_categories" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
       scrollable="true" scrollHeight="100%" dataKey="id" [rowTrackBy]="rowTrackBy" (selectionChange)="_onSelectionChange($event)"
-      (onSort)="_onSortChanged($event)" [(selection)]="selectedCategories" emptyMessage="{{_emptyMessage}}">
+      (onSort)="_onSortChanged($event)" [(selection)]="selectedCategories" emptyMessage="{{_emptyMessage}}"
+      kStickyHeader [sticksTo]="'categoriesListFilters'" stickyClass="stickyHeader" [stickyId]="'categoriesTable'">
       <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
       <p-column field="name" header="Name" [sortable]="'custom'" [style]="{'width':'100px'}">
         <ng-template let-col let-category="rowData" pTemplate="body">
-          <span [kTooltip]="category.fullName" class="kTitle" (click)="onActionSelected('edit',category.id)">
-            {{category[col.field]}}</span>
+          <div [kTooltip]="category.fullName" class="kTitle" (click)="onActionSelected('edit',category.id)" [maxWidth]="300">
+            {{category[col.field]}}</div>
         </ng-template>
       </p-column>
       <p-column field="id" header="ID" [sortable]="false" [style]="{'width':'100px'}"></p-column>
