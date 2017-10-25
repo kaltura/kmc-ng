@@ -170,7 +170,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         header: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.title'),
         message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.message'),
         accept: () => {
-          this._router.navigate(['/content/entries/entry', id], {queryParams: {_reloadEntiesListOnNavigateOut: true}})
+          this._router.navigate(['/content/entries/entry', id], {queryParams: {reloadEntriesListOnNavigateOut: true}})
           this._showConfirmationOnClose = false;
           this.parentPopupWidget.close();
         }

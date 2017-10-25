@@ -28,7 +28,7 @@ export class PrepareEntryComponent implements OnInit {
     // TODO [kmcng] If user permissions allows setting transcoding profile - show transcoding profile selector
     // 'transcodingProfileSettingPermission' should contain whether the user has the permission to set the transcoding profile
     const transcodingProfileSettingPermission = false;
-    if (transcodingProfileSettingPermission) {  this.transcodingProfileSelectMenu.open();
+    if (transcodingProfileSettingPermission) {
       this.transcodingProfileSelectMenu.open();
     } else {
         this._loadEntry({profileId: null})
@@ -45,7 +45,7 @@ export class PrepareEntryComponent implements OnInit {
     /// passing profileId null will cause to create with default profileId
     this._prepareEntryService.createDraftEntry(this._selectedMediaType, selectedProfile.profileId)
       .subscribe((draftEntry: DraftEntry) => {
-          this._router.navigate(['/content/entries/entry', draftEntry.id], {queryParams: {_reloadEntiesListOnNavigateOut: true}})
+          this._router.navigate(['/content/entries/entry', draftEntry.id], {queryParams: {reloadEntriesListOnNavigateOut: true}})
             .then(() => {
               this._browserService.setAppStatus({
                 isBusy: false,
