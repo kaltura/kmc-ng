@@ -1,9 +1,9 @@
-import { Injectable, EventEmitter } from '@angular/core';
-import { LocalStorageService, SessionStorageService } from 'ng2-webstorage';
-import { IAppStorage } from '@kaltura-ng/kaltura-common';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
+import {EventEmitter, Injectable} from '@angular/core';
+import {LocalStorageService, SessionStorageService} from 'ng2-webstorage';
+import {IAppStorage} from '@kaltura-ng/kaltura-common';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Subject} from 'rxjs/Subject';
+import {Observable} from 'rxjs/Observable';
 
 export interface Confirmation {
 	message: string;
@@ -27,14 +27,13 @@ export interface GrowlMessage {
 export type OnShowConfirmationFn = (confirmation : Confirmation) => void;
 
 export type AppStatus = {
-  isBusy : boolean;
   errorMessage : string;
 };
 
 @Injectable()
 export class BrowserService implements IAppStorage {
 
-  private _appStatus = new BehaviorSubject<{isBusy : boolean, errorMessage : string}>({ isBusy : false, errorMessage : null});
+  private _appStatus = new BehaviorSubject<{errorMessage : string}>({ errorMessage : null});
   private _growlMessage = new Subject<GrowlMessage>();
   public appStatus$ = this._appStatus.asObservable();
   public growlMessage$ = this._growlMessage.asObservable();

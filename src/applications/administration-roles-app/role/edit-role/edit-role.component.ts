@@ -5,6 +5,7 @@ import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
 import {AppLocalization} from "@kaltura-ng/kaltura-common";
 import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
 import {RoleService} from "./role.service";
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 @Component({
   selector: 'kEditRole',
@@ -69,7 +70,6 @@ export class EditRoleComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this._isBusy = true;
     this._blockerMessage = null;
 
     const editedRole = new KalturaUserRole({
@@ -79,15 +79,13 @@ export class EditRoleComponent implements OnInit, OnDestroy {
 
     this._roleService.updateRole(this.role.id, editedRole)
       .cancelOnDestroy(this)
+      .tag('block-shell')
       .subscribe(
         (role) => {
-          this._isBusy = false;
           this.parentPopupWidget.close();
           this.onRoleSaved.emit();
         },
         error => {
-          this._isBusy = false;
-
           this._blockerMessage = new AreaBlockerMessage(
             {
               message: error.message,
@@ -117,21 +115,19 @@ export class EditRoleComponent implements OnInit, OnDestroy {
       this.markFormFieldsAsTouched();
       return;
     }
-    this._isBusy = true;
     this._blockerMessage = null;
     this.role = new KalturaUserRole();
     this.role.name = this.editRoleForm.get('name').value;
     this.role.description = this.editRoleForm.get('description').value;
     this._roleService.addRole(this.role)
       .cancelOnDestroy(this)
+      .tag('block-shell')
       .subscribe(
         () => {
-          this._isBusy = false;
           this.parentPopupWidget.close();
           this.onRoleSaved.emit();
         },
         error => {
-          this._isBusy = false;
           this.role = null;
           this._blockerMessage = new AreaBlockerMessage(
             {

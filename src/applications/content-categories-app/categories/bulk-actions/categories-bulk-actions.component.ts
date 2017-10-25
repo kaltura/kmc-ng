@@ -1,25 +1,26 @@
 import {
   CategoriesBulkAddTagsService,
-  CategoriesBulkRemoveTagsService,
+  CategoriesBulkChangeCategoryListingService,
+  CategoriesBulkChangeContentPrivacyService,
+  CategoriesBulkChangeContributionPolicyService,
   CategoriesBulkChangeOwnerService,
   CategoriesBulkDeleteService,
-  CategoriesBulkChangeContentPrivacyService,
-  CategoriesBulkChangeCategoryListingService,
-  CategoriesBulkChangeContributionPolicyService
+  CategoriesBulkRemoveTagsService
 } from './services';
-import { CategoriesBulkActionBaseService } from './services/categories-bulk-action-base.service';
-import { MenuItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { KalturaCategory } from "kaltura-typescript-client/types/KalturaCategory";
-import { PopupWidgetComponent } from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
-import { BrowserService } from "app-shared/kmc-shell";
-import { environment } from 'app-environment';
-import { KalturaUser } from "kaltura-typescript-client/types/KalturaUser";
-import { PrivacyMode } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-content-privacy/bulk-change-content-privacy.component";
-import { KalturaPrivacyType } from "kaltura-typescript-client/types/KalturaPrivacyType";
-import { KalturaAppearInListType } from "kaltura-typescript-client/types/KalturaAppearInListType";
-import { AppearInListType } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-category-listing/bulk-change-category-listing.component";
+import {CategoriesBulkActionBaseService} from './services/categories-bulk-action-base.service';
+import {MenuItem} from 'primeng/primeng';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {KalturaCategory} from "kaltura-typescript-client/types/KalturaCategory";
+import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
+import {BrowserService} from "app-shared/kmc-shell";
+import {environment} from 'app-environment';
+import {KalturaUser} from "kaltura-typescript-client/types/KalturaUser";
+import {PrivacyMode} from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-content-privacy/bulk-change-content-privacy.component";
+import {KalturaPrivacyType} from "kaltura-typescript-client/types/KalturaPrivacyType";
+import {KalturaAppearInListType} from "kaltura-typescript-client/types/KalturaAppearInListType";
+import {AppearInListType} from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-category-listing/bulk-change-category-listing.component";
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -182,17 +183,17 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     this._bulkAction = "";
 
     const execute = () => {
-      this._browserService.setAppStatus({ isBusy: true, errorMessage: null });
-      service.execute(this.selectedCategories, data).subscribe(
+      service.execute(this.selectedCategories, data)
+        .tag('block-shell')
+        .subscribe(
         result => {
-          this._browserService.setAppStatus({ isBusy: false, errorMessage: null });
           if (callback) {
             callback(result);
           }
           this.onBulkChange.emit({ reload: reloadCategories });
         },
         error => {
-          this._browserService.setAppStatus({ isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error') });
+          this._browserService.setAppStatus({ errorMessage: this._appLocalization.get('applications.content.bulkActions.error') });
         }
       );
     };
