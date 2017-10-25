@@ -48,7 +48,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
                 this._filter.pageIndex = query.pageIndex - 1;
                 this._filter.sortBy = query.sortBy;
                 this._filter.sortDirection = query.sortDirection;
-                window.scrollTo(0, 0);
+                this._browserService.scrollToTop();
             });
 
         this.categoriesSubscription = this._categoriesService.categories$.subscribe(

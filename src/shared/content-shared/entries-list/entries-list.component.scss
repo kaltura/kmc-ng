@@ -86,12 +86,8 @@
   }
   .kSearchInput {
     background: $kMagnifyingGlassBkg;
-    background-color: $kGrayscale6;
     padding-left: 30px;
     margin-right: 8px;
-    &:focus {
-      background-color: white;
-    }
   }
   .kBulkOperations {
     width: 400px;
