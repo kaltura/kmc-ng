@@ -13,6 +13,7 @@ import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { BulkService } from '../bulk-service/bulk.service';
 import { environment } from 'app-environment';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { EntryReportSections } from './entry-report-sections';
 
 export interface Tabs {
   name: string;
@@ -39,6 +40,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   userId: string = '';
   isEntryPermissionApproved: boolean = false;
   isEntryPermissionRejected: boolean = false;
+  EntryReportSections = EntryReportSections;
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() entryId: string;

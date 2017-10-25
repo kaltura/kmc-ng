@@ -53,8 +53,7 @@ export class BulkService implements OnDestroy {
 
     return Observable.forkJoin(multiRequests)
       .map(responses => {
-        const mergedResponses = [].concat.apply([], responses);
-        let hasFailure = mergedResponses.filter(function ( response ) {return response.error}).length > 0;
+        let hasFailure = [...responses[0]].filter(function ( response ) {return response.error}).length > 0;
         if (hasFailure) {
           throw new Error("error");
         } else {
