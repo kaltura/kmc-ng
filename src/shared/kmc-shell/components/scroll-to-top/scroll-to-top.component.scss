@@ -1,0 +1,19 @@
+.kScrollToTopBtn{
+  width: 38px;
+  height: 38px;
+  background-color: #999999;
+  color: white;
+  border: 0px solid #999999;
+  border-radius: 19px;
+  position: fixed;
+  left: 30px;
+  bottom: -40px;
+  text-align: center;
+  padding-top: 10px;
+  box-sizing: border-box;
+  transition: bottom 0.25s;
+}
+.show{
+  bottom: 30px;
+  cursor: pointer;
+}

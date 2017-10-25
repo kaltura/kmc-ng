@@ -41,7 +41,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
         query => {
           this._filter.pageSize = query.pageSize;
           this._filter.pageIndex = query.pageIndex;
-          window.scrollTo(0, 0);
+          this._browserService.scrollToTop();
         });
 
     this._rolesService.roles$
@@ -124,7 +124,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
   private deleteRole(role: KalturaUserRole): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    window.scrollTo(0,0);
+    this._browserService.scrollToTop();
     this._rolesService.deleteRole(role)
       .cancelOnDestroy(this)
       .subscribe(
