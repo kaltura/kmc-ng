@@ -34,6 +34,8 @@
     color: $kGrayscale1;
     font-weight: 700;
     cursor: pointer;
+    overflow: hidden;
+    max-height: 45px;
     &:hover {
       color: #000000;
     }
