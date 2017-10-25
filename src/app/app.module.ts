@@ -56,6 +56,9 @@ import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-ap
 import { TranscodingProfileManagementModule } from '@kaltura-ng/kaltura-server-utils/transcoding-profile-management';
 import { ChangeAccountComponent } from './components/changeAccount/change-account.component';
 import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
+import { ChangelogComponent } from './components/changelog/changelog.component';
+import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
+import { AppEventsModule } from 'app-shared/kmc-shared';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -81,6 +84,7 @@ export function clientConfigurationFactory() {
     InputTextModule,
     MetadataProfileModule,
     Ng2PageScrollModule.forRoot(),
+    AppEventsModule.forRoot(),
     KMCShellModule.forRoot(),
     KalturaCommonModule.forRoot(),
     Ng2Webstorage,
@@ -113,7 +117,9 @@ export function clientConfigurationFactory() {
     PasswordExpiredFormComponent,
     ForgotPasswordFormComponent,
     InvalidLoginHashFormComponent,
-    ChangeAccountComponent
+    ChangeAccountComponent,
+    ChangelogComponent,
+    ChangelogContentComponent
   ],
   bootstrap: <any>[
     AppComponent

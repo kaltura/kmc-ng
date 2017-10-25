@@ -65,10 +65,8 @@
       height: 18px;
     }
     .kControl {
-      color: $kGrayscale2;
       height: 34px;
       width: 300px;
-      border-radius: 3px;
       &.kHasError {
         border: 1px solid $kDandger;
         background: initial;
@@ -80,6 +78,7 @@
     }
 
     .error {
+      color: $kDandger;
       padding-top: 8px;
     }
   }

@@ -1,7 +1,7 @@
 <k-area-blocker [message]="_blockerMessage" [showLoader]="(_bulkDeleteService.stateDelete$ | async)?.loading || this._loading">
   <div class="kPlaylists kOverrideFAIcons">
     <div #playlistsTableHolder class="kPlaylistsHolder kContent">
-      <kSticky [stickyClass]="'kStickyClass'" stickyId="playlistsFilters" [scrollOffset]="80" [sticksTo]="'header'" >
+      <kSticky stickyId="playlistsFilters" [scrollOffset]="80" [sticksTo]="'header'" >
         <div class="kContent kFiltersWrapper">
           <div class="kPlaylistsTableFilters kContent">
             <button
