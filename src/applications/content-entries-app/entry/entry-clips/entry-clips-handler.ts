@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
@@ -29,7 +29,7 @@ export interface ClipsData
 }
 
 @Injectable()
-export class EntryClipsHandler extends EntryFormWidget
+export class EntryClipsHandler extends EntryFormWidget implements OnDestroy
 {
     private _clips = new BehaviorSubject<ClipsData>({ items : null, totalItems : 0});
     public entries$ = this._clips.asObservable();
@@ -189,5 +189,10 @@ export class EntryClipsHandler extends EntryFormWidget
 
     protected _onActivate(firstTimeActivating: boolean) {
 	    return this._getEntryClips('activation');
+    }
+
+    ngOnDestroy()
+    {
+
     }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { EntryFormWidget } from '../entry-form-widget';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -39,7 +39,7 @@ export interface ThumbnailRow {
 }
 
 @Injectable()
-export class EntryThumbnailsHandler extends EntryFormWidget
+export class EntryThumbnailsHandler extends EntryFormWidget implements OnDestroy
 {
 	private _thumbnails = new BehaviorSubject<{ items : ThumbnailRow[]}>(
 		{ items : []}
@@ -287,4 +287,8 @@ export class EntryThumbnailsHandler extends EntryFormWidget
 		}
 	}
 
+    ngOnDestroy()
+    {
+
+    }
 }

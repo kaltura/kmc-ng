@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Message } from 'primeng/primeng';
@@ -30,7 +30,7 @@ export interface bitrate {
 }
 
 @Injectable()
-export class EntryLiveHandler extends EntryFormWidget {
+export class EntryLiveHandler extends EntryFormWidget implements OnDestroy {
 
 	public _liveType: string = "";
 	private dirty: boolean;
@@ -51,7 +51,19 @@ export class EntryLiveHandler extends EntryFormWidget {
 
 	constructor(manager: EntryFormManager, private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
 		super(EntryWidgetKeys.Live);
+
+        this.bla = setInterval(() =>
+        {
+            console.log('---> Live')
+        },1000);
 	}
+
+    bla = null;
+    ngOnDestroy()
+    {
+        clearInterval((this.bla));
+        console.warn('Live ngOnDestroy');
+    }
 
 
 	protected _onReset() {

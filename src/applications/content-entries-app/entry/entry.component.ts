@@ -79,16 +79,8 @@ import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-st
 			useClass: EntryAccessControlHandler,
 			multi: true
 		},
-		{
-			provide: EntryFormWidget,
-			useClass: EntryMetadataHandler,
-			multi: true
-		},
-		{
-			provide: EntryFormWidget,
-			useClass: EntryPreviewHandler,
-			multi: true
-		},
+        EntryMetadataHandler,
+        EntryPreviewHandler,
 		{
 			provide: EntryFormWidget,
 			useClass: EntryDetailsHandler,
@@ -113,6 +105,8 @@ export class EntryComponent implements OnInit, OnDestroy {
 				private _entryFormManager : EntryFormManager,
 				private _browserService: BrowserService,
 				@Inject(EntryFormWidget)private  _widgets : EntryFormWidget[],
+				private _d: EntryPreviewHandler,
+				private _e: EntryMetadataHandler,
 				private _appLocalization: AppLocalization) {
 
 	}
@@ -137,6 +131,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 
 		this._entryFormManager.registerWidgets(this._widgets);
+		this._entryFormManager.registerWidgets([this._d, this._e]);
 
 		this._entryStore.state$
             .cancelOnDestroy(this)

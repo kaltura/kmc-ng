@@ -17,12 +17,12 @@ import { Observable } from 'rxjs/Observable';
 import { DynamicMetadataForm, MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, DynamicMetadataFormFactory } from '@kaltura-ng/kaltura-server-utils';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CategoryWidgetKeys } from './../category-widget-keys';
-import { Injectable } from '@angular/core';
-import { CategoryFormWidget } from "applications/content-categories-app/category/category-form-widget";
+import { Injectable, OnDestroy } from '@angular/core';
+import { CategoryFormWidget } from "../category-form-widget";
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 
 @Injectable()
-export class CategoryMetadataHandler extends CategoryFormWidget {
+export class CategoryMetadataHandler extends CategoryFormWidget implements OnDestroy {
 
     public metadataForm: FormGroup;
     public customDataForms: DynamicMetadataForm[] = [];
@@ -295,6 +295,11 @@ export class CategoryMetadataHandler extends CategoryFormWidget {
             observer.next({ isValid });
             observer.complete();
         });
+    }
+
+    ngOnDestroy()
+    {
+
     }
 }
 

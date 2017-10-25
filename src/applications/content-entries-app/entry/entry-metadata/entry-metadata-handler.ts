@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { IterableDiffers, IterableDiffer, IterableChangeRecord } from '@angular/core';
 import { EntryFormWidget } from '../entry-form-widget';
 import { Observable } from 'rxjs/Observable';
@@ -43,7 +43,7 @@ export interface EntryCategoryItem
 }
 
 @Injectable()
-export class EntryMetadataHandler extends EntryFormWidget
+export class EntryMetadataHandler extends EntryFormWidget implements OnDestroy
 {
     private _entryCategoriesDiffers : IterableDiffer<EntryCategoryItem>;
     public _entryCategories : EntryCategoryItem[]  = [];
@@ -53,6 +53,13 @@ export class EntryMetadataHandler extends EntryFormWidget
     public metadataForm : FormGroup;
     public customDataForms : DynamicMetadataForm[] = [];
 
+
+    bla = null;
+    ngOnDestroy()
+    {
+        clearInterval(this.bla);
+        console.warn('metadata ngOnDestroy');
+    }
     constructor(private _kalturaServerClient: KalturaClient,
                 private _categoriesStore : CategoriesStore,
                 private _formBuilder : FormBuilder,
@@ -63,6 +70,12 @@ export class EntryMetadataHandler extends EntryFormWidget
         super(EntryWidgetKeys.Metadata);
 
         this._buildForm();
+
+        this.bla = setInterval(() =>
+        {
+            console.log('---> metadata')
+        },1000);
+
     }
 
     private _buildForm() : void {

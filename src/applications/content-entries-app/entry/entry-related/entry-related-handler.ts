@@ -1,4 +1,7 @@
-import { Injectable, IterableChangeRecord, IterableDiffer, IterableDiffers, KeyValueDiffer, KeyValueDiffers } from '@angular/core';
+import {
+    Injectable, IterableChangeRecord, IterableDiffer, IterableDiffers, KeyValueDiffer, KeyValueDiffers,
+    OnDestroy
+} from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
@@ -34,7 +37,7 @@ export interface RelatedFile extends KalturaAttachmentAsset
 }
 
 @Injectable()
-export class EntryRelatedHandler extends EntryFormWidget
+export class EntryRelatedHandler extends EntryFormWidget implements OnDestroy
 {
 
 	relatedFilesListDiffer: IterableDiffer<RelatedFile>;
@@ -320,4 +323,9 @@ export class EntryRelatedHandler extends EntryFormWidget
 	public _setDirty(){
 		super._updateWidgetState({isDirty: true});
 	}
+
+    ngOnDestroy()
+    {
+
+    }
 }

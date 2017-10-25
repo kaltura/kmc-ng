@@ -15,6 +15,8 @@ export class EntryPreviewHandler extends EntryFormWidget
         super('entryPreview');
     }
 
+
+
     /**
      * Do some cleanups if needed once the section is removed
      */

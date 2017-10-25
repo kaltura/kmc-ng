@@ -1,11 +1,11 @@
 import {
-  Injectable,
-  IterableChangeRecord,
-  IterableDiffer,
-  IterableDiffers,
-  KeyValueChangeRecord,
-  KeyValueDiffer,
-  KeyValueDiffers
+    Injectable,
+    IterableChangeRecord,
+    IterableDiffer,
+    IterableDiffers,
+    KeyValueChangeRecord,
+    KeyValueDiffer,
+    KeyValueDiffers, OnDestroy
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -49,7 +49,7 @@ export interface CaptionRow {
 }
 
 @Injectable()
-export class EntryCaptionsHandler extends EntryFormWidget {
+export class EntryCaptionsHandler extends EntryFormWidget  implements OnDestroy {
     captionsListDiffer: IterableDiffer<CaptionRow>;
     captionDiffer: { [key: string]: KeyValueDiffer<string, any> } = {};
 
@@ -349,6 +349,11 @@ export class EntryCaptionsHandler extends EntryFormWidget {
 
     public setDirty() {
         super._updateWidgetState({isDirty: true});
+    }
+
+    ngOnDestroy()
+    {
+
     }
 
 }

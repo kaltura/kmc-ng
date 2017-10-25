@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { EntryFormWidget } from '../entry-form-widget';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntryWidgetKeys } from '../entry-widget-keys';
@@ -29,7 +29,7 @@ import { NewEntryFlavourFile } from './new-entry-flavour-file';
 import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
 
 @Injectable()
-export class EntryFlavoursHandler extends EntryFormWidget
+export class EntryFlavoursHandler extends EntryFormWidget implements OnDestroy
 {
 	private _flavors = new BehaviorSubject<{ items : Flavor[]}>(
 		{ items : []}
@@ -442,4 +442,9 @@ export class EntryFlavoursHandler extends EntryFormWidget
         // reload flavors on refresh
       });
   }
+
+    ngOnDestroy()
+    {
+
+    }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
@@ -33,7 +33,7 @@ function datesValidation(checkRequired: boolean = false): ValidatorFn {
 }
 
 @Injectable()
-export class EntrySchedulingHandler extends EntryFormWidget
+export class EntrySchedulingHandler extends EntryFormWidget implements OnDestroy
 {
 	public schedulingForm: FormGroup;
 	public _timeZone = "";
@@ -181,4 +181,9 @@ export class EntrySchedulingHandler extends EntryFormWidget
 	{
 		this.schedulingForm.reset();
 	}
+
+    ngOnDestroy()
+    {
+
+    }
 }

@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {SelectItem} from 'primeng/primeng';
@@ -27,7 +27,7 @@ import {EntryFormWidget} from '../entry-form-widget';
 
 
 @Injectable()
-export class EntryAccessControlHandler extends EntryFormWidget {
+export class EntryAccessControlHandler extends EntryFormWidget implements OnDestroy {
 
   private _accessControlProfiles = new BehaviorSubject<{ items: SelectItem[] }>({items: []});
 
@@ -212,6 +212,11 @@ export class EntryAccessControlHandler extends EntryFormWidget {
       }
     });
     return countries.join(", ");
+  }
+
+  ngOnDestroy()
+  {
+
   }
 
 }

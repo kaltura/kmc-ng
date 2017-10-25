@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { EntryFormWidget } from '../entry-form-widget';
 import { ISubscription } from 'rxjs/Subscription';
@@ -16,7 +16,7 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaE
 import 'rxjs/add/observable/forkJoin';
 
 @Injectable()
-export class EntryUsersHandler extends EntryFormWidget
+export class EntryUsersHandler extends EntryFormWidget implements OnDestroy
 {
 
     public _creator: string = "";
@@ -251,5 +251,10 @@ export class EntryUsersHandler extends EntryFormWidget
 	public saveOwner(): void{
 		this._owner = this.usersForm.value.owners[0];
 	}
+
+    ngOnDestroy()
+    {
+
+    }
 
 }

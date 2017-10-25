@@ -1,5 +1,5 @@
 import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppLocalization } from "@kaltura-ng/kaltura-common";
@@ -17,7 +17,7 @@ export interface SectionWidgetItem {
 }
 
 @Injectable()
-export class CategorySectionsListHandler extends CategoryFormWidget {
+export class CategorySectionsListHandler extends CategoryFormWidget implements OnDestroy {
     private _sections = new BehaviorSubject<SectionWidgetItem[]>([]);
     public sections$: Observable<SectionWidgetItem[]> = this._sections.asObservable();
 
@@ -124,6 +124,10 @@ export class CategorySectionsListHandler extends CategoryFormWidget {
         }
     }
 
+    ngOnDestroy()
+    {
+
+    }
     // private _isLive( entry : KalturaMediaEntry): boolean {
     //     const mediaType = entry.mediaType;
     //     return mediaType === KalturaMediaType.liveStreamFlash || mediaType === KalturaMediaType.liveStreamWindowsMedia || mediaType === KalturaMediaType.liveStreamRealMedia || mediaType === KalturaMediaType.liveStreamQuicktime;
