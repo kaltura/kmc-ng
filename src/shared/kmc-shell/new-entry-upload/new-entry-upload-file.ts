@@ -7,7 +7,8 @@ export class NewEntryUploadFile extends KalturaUploadFile {
   public createMediaEntrySubscription: ISubscription;
   constructor(file: File,
               public mediaType: KalturaMediaType,
-              public transcodingProfileId: number) {
+              public transcodingProfileId: number,
+              public entryName: string = file.name) {
     super(file);
   }
 }

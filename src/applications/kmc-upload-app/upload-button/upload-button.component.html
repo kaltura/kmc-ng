@@ -3,13 +3,13 @@
         class="kButtonDefault kUploadBtn"
         (click)="uploadmenu.open()"></button>
 
-<kPopupWidget #uploadmenu [popupWidth]="315" [popupHeight]="385" [closeBtn]="true" [modal]="true" [transparent]="true">
+<kPopupWidget #uploadmenu [popupWidth]="315" [popupHeight]="385" [closeBtn]="true" [modal]="true" [transparent]="true" [preventPageScroll]="true">
   <ng-template>
     <kKMCUploadMenu (onItemSelected)="_onMenuItemSelected($event)"></kKMCUploadMenu>
   </ng-template>
 </kPopupWidget>
 
-<kPopupWidget #uploadsettings [popupWidth]="791" [popupHeight]="607" [closeBtn]="true" [modal]="true">
+<kPopupWidget #uploadsettings [popupWidth]="791" [popupHeight]="607" [closeBtn]="true" [modal]="true" [preventPageScroll]="true">
   <ng-template>
     <kKMCUploadSettings [parentPopupWidget]="uploadsettings"></kKMCUploadSettings>
   </ng-template>

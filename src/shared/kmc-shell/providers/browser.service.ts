@@ -225,13 +225,35 @@ export class BrowserService implements IAppStorage {
 		};
 	}
 
+	private scrolling = false;
+	public scrollToTop(duration: number = 500): void {
+		if (!this.scrolling){
+			this.scrolling = true;
+			const cosParameter = window.pageYOffset / 2;
+			let scrollCount: number = 0;
+			let oldTimestamp: number = performance.now();
+			const step = newTimestamp => {
+				scrollCount += Math.PI / (duration / (newTimestamp - oldTimestamp));
+				if (scrollCount >= Math.PI) window.scrollTo(0, 0);
+				if (window.pageYOffset === 0) {
+					this.scrolling = false;
+					return;
+				}
+				window.scrollTo(0, Math.round(cosParameter + cosParameter * Math.cos(scrollCount)));
+				oldTimestamp = newTimestamp;
+				window.requestAnimationFrame(step);
+			};
+			window.requestAnimationFrame(step);
+		}
+	}
+
 	public disablePageExitVerification(): void{
 		window.onbeforeunload = (e) => {};
 	}
 
 	public showGrowlMessage(message: GrowlMessage): void {
-	  if(message.detail || message.summary) {
-      this._growlMessage.next(message);
-    }
-  }
+		if (message.detail || message.summary) {
+			this._growlMessage.next(message);
+		}
+	}
 }

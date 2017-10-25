@@ -84,7 +84,7 @@ export class EntryCaptionsHandler extends EntryFormWidget {
       .subscribe(
         ({ relevantCaption, uploadedFile }) => {
           switch (uploadedFile.status) {
-            case TrackedFileStatuses.waitingUpload:
+            case TrackedFileStatuses.prepared:
               relevantCaption.serverUploadToken = (<NewEntryCaptionFile>uploadedFile.data).serverUploadToken;
               break;
             case TrackedFileStatuses.uploadCompleted:

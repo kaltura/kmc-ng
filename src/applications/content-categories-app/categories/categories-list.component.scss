@@ -1,8 +1,13 @@
 @import 'app-theme/_variables.scss';
+.kTagsWrapper{
+  z-index: 500;
+}
+.kSticky{
+  border-bottom: 1px solid $kGrayscale5;
+}
 .kCategories {
   font-size: 15px;
   background-color: $appBkgColor;
-  height: $contentArea;
   padding-top: 30px;
   width: 100%;
   min-width: $minAppWidth;
@@ -12,6 +17,7 @@
   margin: 0px;
   .kCategoriesHolder {
     height: 100%;
+    min-height: $minTableHeight;
     border: none;
     position: relative;
     display: flex;
@@ -36,7 +42,7 @@
   }
   .kCategoriesTableFilters {
     color: $kGrayscale1;
-    width: 100%;
+    z-index: 500;
     height: 66px;
     background-color: white;
     flex: 0 0 auto;
@@ -58,11 +64,11 @@
     flex: 0 0 50px;
   }
   .kCategoriesTableFooter {
-    width: 100%;
+    bottom: 0px;
     height: 34px;
     background-color: white;
     border-top: 1px solid $kGrayscale6;
-    position: relative;
+    position: fixed;
     box-sizing: border-box;
     flex: 0 0 auto;
     padding: 0 14px 28px;
@@ -81,12 +87,8 @@
   }
   .kSearchInput {
     background: $kMagnifyingGlassBkg;
-    background-color: $kGrayscale6;
     padding-left: 30px;
     margin-right: 8px;
-    &:focus {
-      background-color: white;
-    }
   }
   .kBulkOperations {
     width: 400px;
@@ -187,6 +189,11 @@
   }
 }
 
+.kForceFix{
+  position: fixed !important;
+  margin-top: 0px !important;
+}
+
 :host /deep/ span.ui-button-icon-left.fa.kIcontrash {
   margin-left: -.5em;
 }
@@ -211,4 +218,8 @@
 
 :host /deep/ .ui-button-icon-only .fa {
   margin-left: -.5em;
+}
+
+:host /deep/ .kStickyClass{
+  border-bottom: 1px solid $kGrayscale5;
 }

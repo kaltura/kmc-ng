@@ -50,3 +50,17 @@
   background-color: $kGrayscale6;
   opacity: 0.3;
 }
+
+:host /deep/ .kUploadsTable td:last-child .ui-cell-data {
+  display: flex;
+  justify-content: center;
+
+  i:first-child {
+    margin-right: 15px;
+  }
+}
+
+:host /deep/ p-datatable .stickyHeader{
+  z-index: 10;
+  display: table;
+}
