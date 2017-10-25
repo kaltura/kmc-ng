@@ -29,7 +29,8 @@ export interface FiltersGroup {
 @Component({
   selector: 'k-bulk-log-refine-filters',
   templateUrl: './bulk-log-refine-filters.component.html',
-  styleUrls: ['./bulk-log-refine-filters.component.scss']
+  styleUrls: ['./bulk-log-refine-filters.component.scss'],
+  providers: [BulkLogRefineFiltersProviderService]
 })
 export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
