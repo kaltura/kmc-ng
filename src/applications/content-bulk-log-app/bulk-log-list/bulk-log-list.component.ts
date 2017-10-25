@@ -9,6 +9,8 @@ import { BulkLogTableComponent } from '../bulk-log-table/bulk-log-table.componen
 import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 import { KalturaBulkUpload } from 'kaltura-typescript-client/types/KalturaBulkUpload';
 import { getBulkUploadType } from '../utils/get-bulk-upload-type';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events/bulk-log-uploading-started.event';
 
 @Component({
   selector: 'kBulkLogList',
@@ -35,7 +37,12 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
 
   constructor(private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
-              public _store: BulkLogStoreService) {
+              public _store: BulkLogStoreService,
+              appEvents: AppEventsService) {
+    appEvents.event(BulkLogUploadingStartedEvent)
+      .cancelOnDestroy(this)
+      .delay(2000) // TODO [kmcng] Clean up after tests
+      .subscribe(() => this._store.reload(true));
   }
 
   ngOnInit() {

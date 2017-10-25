@@ -6,6 +6,8 @@ import { AppAuthentication, AppNavigator } from 'app-shared/kmc-shell';
 import { KalturaAPIException } from 'kaltura-typescript-client';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BulkUploadService, BulkUploadTypes } from 'app-shared/kmc-shell/bulk-upload';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events/bulk-log-uploading-started.event';
 
 @Component({
   selector: 'kKMCBulkUploadMenu',
@@ -36,7 +38,8 @@ export class BulkUploadMenuComponent {
               private _appLocalization: AppLocalization,
               private _userAuthentication: AppAuthentication,
               private _appNavigator: AppNavigator,
-              private _router: Router) {
+              private _router: Router,
+              private _appEvents: AppEventsService) {
   }
 
   // force reload fileDialog component to apply dynamically added filter
@@ -50,6 +53,7 @@ export class BulkUploadMenuComponent {
     this._filesUploading = false;
     this._selectedFiles = null;
     this.uploadSucceed.open();
+    this._appEvents.publish(new BulkLogUploadingStartedEvent());
   }
 
   // TODO NEED TO TEST INVALID_KS ERROR CODE
