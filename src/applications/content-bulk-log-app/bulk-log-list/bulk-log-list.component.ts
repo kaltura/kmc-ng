@@ -41,7 +41,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
               appEvents: AppEventsService) {
     appEvents.event(BulkLogUploadingStartedEvent)
       .cancelOnDestroy(this)
-      .delay(2000) // TODO [kmcng] Clean up after tests
+      .delay(2000) // Component specific - need to wait due to updating the list on the server side
       .subscribe(() => this._store.reload(true));
   }
 
