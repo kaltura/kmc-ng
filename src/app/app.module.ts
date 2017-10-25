@@ -65,6 +65,7 @@ import { TranscodingProfileManagementModule } from '@kaltura-ng/kaltura-server-u
 import { ChangeAccountComponent } from './components/changeAccount/change-account.component';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
+import { AppEventsModule } from 'app-shared/kmc-shared';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -90,6 +91,7 @@ export function clientConfigurationFactory() {
     InputTextModule,
     MetadataProfileModule,
     Ng2PageScrollModule.forRoot(),
+    AppEventsModule.forRoot(),
     KMCShellModule.forRoot(),
     KalturaCommonModule.forRoot(),
     Ng2Webstorage,
