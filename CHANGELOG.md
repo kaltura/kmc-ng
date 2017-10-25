@@ -1,6 +1,62 @@
-# Change Log
+<a name="3.1.0"></a>
+# [3.1.0](https://github.com/kaltura/kmc-ng/compare/v3.0.1...v3.1.0) (2017-10-25)
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### Bug Fixes
+
+* **content-entries:** disable "apply" button when no tags are selected for removal ([64ef2fe](https://github.com/kaltura/kmc-ng/commit/64ef2fe))
+* **content-entries:** fix bulk remove tags and categories layout break when handling long names ([d512e66](https://github.com/kaltura/kmc-ng/commit/d512e66))
+* **content-entries:** fix styling for scheduling bulk window title ([f5acc99](https://github.com/kaltura/kmc-ng/commit/f5acc99))
+* **content-entries:** reverse order of bulk operations ([d3e1e27](https://github.com/kaltura/kmc-ng/commit/d3e1e27))
+* **content-entries:** set default access control profile to be the first in the dropdown list in bulk access control settings ([c0c9ff8](https://github.com/kaltura/kmc-ng/commit/c0c9ff8))
+* **content-entries:** typo fix in bulk access control panel ([83a4c0b](https://github.com/kaltura/kmc-ng/commit/83a4c0b))
+* **content-entries:** updated bulk delete confirmation message to use entry names instead of entry IDs ([998f0b3](https://github.com/kaltura/kmc-ng/commit/998f0b3))
+* **content-entry:** "View DRM Details" action is optional for flavors in status Error ([1553464](https://github.com/kaltura/kmc-ng/commit/1553464))
+* **content-entry:** add "http://" to landing page URL if missing from URL prefix ([b5ebd97](https://github.com/kaltura/kmc-ng/commit/b5ebd97))
+* **content-entry:** display N/A for DRM flavors with no start or end dates ([62ac4e8](https://github.com/kaltura/kmc-ng/commit/62ac4e8))
+* **content-entry:** fix dropdown during scroll in related files and upload list ([6a3b57f](https://github.com/kaltura/kmc-ng/commit/6a3b57f))
+* **content-entry:** invoke arrows recalculation in tags component after categories data is loaded ([27861cb](https://github.com/kaltura/kmc-ng/commit/27861cb))
+* **content-entry:** set focus on the name field when entry metadata screen loads ([cee8f20](https://github.com/kaltura/kmc-ng/commit/cee8f20))
+* **login:** keep login button disabled during login process ([4763b58](https://github.com/kaltura/kmc-ng/commit/4763b58))
+* **login:** updated placeholder text for user name and password fields ([8a87d6d](https://github.com/kaltura/kmc-ng/commit/8a87d6d))
+* **shell:** submenu configuration fix ([dc53e10](https://github.com/kaltura/kmc-ng/commit/dc53e10))
+* add missing tooltip for categories ([4d72635](https://github.com/kaltura/kmc-ng/commit/4d72635))
+* add tooltip to category selector ([ee63f7c](https://github.com/kaltura/kmc-ng/commit/ee63f7c))
+* caterories-tree style ([01761be](https://github.com/kaltura/kmc-ng/commit/01761be))
+* change changelog popup layout ([d899ea1](https://github.com/kaltura/kmc-ng/commit/d899ea1))
+* layout fixes for universal live ([f9f5120](https://github.com/kaltura/kmc-ng/commit/f9f5120))
+* login screen layout fix for small resolutions ([3826366](https://github.com/kaltura/kmc-ng/commit/3826366))
+* re-enable upload for entry flavor and captions using the new upload management ([8d24703](https://github.com/kaltura/kmc-ng/commit/8d24703))
+* remove default type value, don't let save entry without file type ([26dc5bf](https://github.com/kaltura/kmc-ng/commit/26dc5bf))
+* remove fake files used for testing of new layout ([150c174](https://github.com/kaltura/kmc-ng/commit/150c174))
+* scroll page to top upon data table pagination ([7a41fb7](https://github.com/kaltura/kmc-ng/commit/7a41fb7))
+* set min height for tables ([281061a](https://github.com/kaltura/kmc-ng/commit/281061a))
+* show specific error message on bulk delete error ([90a99fc](https://github.com/kaltura/kmc-ng/commit/90a99fc))
+* updated text input style ([bb7f596](https://github.com/kaltura/kmc-ng/commit/bb7f596))
+* upload control sticky scroll layout ([2ad999e](https://github.com/kaltura/kmc-ng/commit/2ad999e))
+* validate flavor file before upload, show error if file size exceed ([#220](https://github.com/kaltura/kmc-ng/issues/220)) ([3ac96b9](https://github.com/kaltura/kmc-ng/commit/3ac96b9))
+
+
+### Features
+
+* **categories:** add categories bulk operations (partial implementation) ([3db8c16](https://github.com/kaltura/kmc-ng/commit/3db8c16))
+* **categories:** add category metadata section (partial implementation) ([3091595](https://github.com/kaltura/kmc-ng/commit/3091595))
+* **categories:** add new category popup (partial implementation) ([5f2e9e5](https://github.com/kaltura/kmc-ng/commit/5f2e9e5))
+* **shell:** add change account per partner ([82f3201](https://github.com/kaltura/kmc-ng/commit/82f3201))
+* add app events to allow communication between applications ([08cd89a](https://github.com/kaltura/kmc-ng/commit/08cd89a))
+* add changelog component ([5ad76ba](https://github.com/kaltura/kmc-ng/commit/5ad76ba))
+* add isIE11 public function to browser service and use it where needed to detect IE11 ([82429c6](https://github.com/kaltura/kmc-ng/commit/82429c6))
+* add playlist content tab (partial implementation) ([8f8edc2](https://github.com/kaltura/kmc-ng/commit/8f8edc2))
+* add release command config ([acd09b2](https://github.com/kaltura/kmc-ng/commit/acd09b2))
+* **shell:** support chunked upload file and resume upload action ([0c1e904](https://github.com/kaltura/kmc-ng/commit/0c1e904))
+* **upload:** add high speed upload link to upload menu ([ec6228c](https://github.com/kaltura/kmc-ng/commit/ec6228c))
+* **upload:** allow multiple upload from desktop and upload control view ([bba9e02](https://github.com/kaltura/kmc-ng/commit/bba9e02))
+* add scroll to top button ([cc2faf1](https://github.com/kaltura/kmc-ng/commit/cc2faf1))
+* make drill-down section sticky in entries and playlists ([9f071de](https://github.com/kaltura/kmc-ng/commit/9f071de))
+* show changelog once for user, change icons ([e905dd5](https://github.com/kaltura/kmc-ng/commit/e905dd5))
+* use kws publish command in release scripts ([f532d66](https://github.com/kaltura/kmc-ng/commit/f532d66))
+
+
 
 <a name="3.0.1"></a>
 ## [3.0.1](https://github.com/kaltura/kmc-ng/compare/v3.0.0...v3.0.1) (2017-09-26)
