@@ -90,6 +90,15 @@ export class UploadMonitorComponent implements OnDestroy {
 
               relevantFile.status = TrackedFileStatuses.failure;
               break;
+            case TrackedFileStatuses.purged:
+              if (relevantFile.status === TrackedFileStatuses.uploading) {
+                this._decreaseParam('_uploadFromDesktop', 'uploading');
+              } else if (relevantFile.status === TrackedFileStatuses.added) {
+                this._decreaseParam('_uploadFromDesktop', 'queued');
+              } else if (relevantFile.status === TrackedFileStatuses.failure) {
+                this._decreaseParam('_uploadFromDesktop', 'errors');
+              }
+              break;
             default:
               break;
           }
