@@ -146,6 +146,7 @@ export class DropFoldersService implements OnDestroy {
 							this.loadDropFoldersFiles();
 						}
 					}
+          this._state.next({loading: false});
 				},
 				error => {
 					this._browserService.alert(
