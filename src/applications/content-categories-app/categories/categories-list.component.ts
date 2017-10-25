@@ -1,10 +1,9 @@
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
-import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
 import { PopupWidgetComponent } from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
-import { CategoriesTableComponent } from "./categories-table.component";
 import { CategoriesService, Categories, SortDirection } from './categories.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AppLocalization } from "@kaltura-ng/kaltura-common";
@@ -17,7 +16,6 @@ import { AppLocalization } from "@kaltura-ng/kaltura-common";
 
 export class CategoriesListComponent implements OnInit, OnDestroy {
 
-    @ViewChild(CategoriesTableComponent) private dataTable: CategoriesTableComponent;
     @ViewChild('addNewCategory') public addNewCategory: PopupWidgetComponent;
 
     public _isBusy = false
@@ -50,7 +48,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
                 this._filter.pageIndex = query.pageIndex - 1;
                 this._filter.sortBy = query.sortBy;
                 this._filter.sortDirection = query.sortDirection;
-                this.dataTable.scrollToTop();
+                this._browserService.scrollToTop();
             });
 
         this.categoriesSubscription = this._categoriesService.categories$.subscribe(
