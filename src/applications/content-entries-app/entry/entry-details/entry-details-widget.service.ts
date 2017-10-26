@@ -31,12 +31,12 @@ export class EntryDetailsWidget extends EntryWidget
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset()
+    protected onReset()
     {
 
     }
 
-    protected _onActivate(firstTimeActivating: boolean) {
+    protected onActivate(firstTimeActivating: boolean) {
         const entry: KalturaMediaEntry = this.data;
 
 	    this._landingPage = null;

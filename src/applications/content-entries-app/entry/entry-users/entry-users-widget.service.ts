@@ -86,7 +86,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset()
+    protected onReset()
     {
 	    this._creator = "";
 	    this._owner = null;
@@ -97,7 +97,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 	    });
     }
 
-    protected _onActivate(firstTimeActivating: boolean) {
+    protected onActivate(firstTimeActivating: boolean) {
 
 	    super._showLoader();
 

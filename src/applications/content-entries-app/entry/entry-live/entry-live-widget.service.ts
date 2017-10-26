@@ -54,7 +54,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		super(EntryWidgetKeys.Live);
 	}
 
-	protected _onReset() {
+	protected onReset() {
 		this.dirty = false;
 	}
 
@@ -83,7 +83,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		});
 	}
 
-	protected _onActivate(firstTimeActivating : boolean) {
+	protected onActivate(firstTimeActivating : boolean) {
 		// set live type
 		switch (this.data.sourceType.toString()) {
 			case KalturaSourceType.liveStream.toString():

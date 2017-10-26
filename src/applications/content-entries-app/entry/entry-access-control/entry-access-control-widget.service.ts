@@ -60,10 +60,10 @@ export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
   /**
    * Do some cleanups if needed once the section is removed
    */
-  protected _onReset() {
+  protected onReset() {
   }
 
-  protected _onActivate(firstTimeActivating: boolean) {
+  protected onActivate(firstTimeActivating: boolean) {
     if (firstTimeActivating) {
       super._showLoader();
       this._accessControlProfiles.next({items: []});

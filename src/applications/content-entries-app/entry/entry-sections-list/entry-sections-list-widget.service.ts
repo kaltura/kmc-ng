@@ -34,7 +34,7 @@ export class EntrySectionsListWidget extends EntryWidget implements OnDestroy
         this._clearSectionsList();
     }
 
-    protected _onActivate(firstTimeActivating: boolean)
+    protected onActivate(firstTimeActivating: boolean)
     {
         if (firstTimeActivating)
         {
@@ -68,7 +68,7 @@ export class EntrySectionsListWidget extends EntryWidget implements OnDestroy
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset()
+    protected onReset()
     {
 
     }

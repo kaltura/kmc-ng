@@ -32,7 +32,7 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset()
+    protected onReset()
     {
         // DEVELOPER NOTICE: don't reset _urlHash to support refresh after saving
     }
@@ -68,7 +68,7 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
 
         return result;
     }
-    protected _onActivate(firstTimeActivating: boolean) {
+    protected onActivate(firstTimeActivating: boolean) {
 	    this.iframeSrc = this._createUrl();
     }
 

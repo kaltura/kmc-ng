@@ -111,14 +111,14 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset() {
+    protected onReset() {
         this.captionsListDiffer = null;
         this.captionDiffer = {};
         this._entryId = '';
         this._captions.next({items: []});
     }
 
-    protected _onActivate(firstTimeActivating: boolean) {
+    protected onActivate(firstTimeActivating: boolean) {
         this._entryId = this.data.id;
         super._showLoader();
         if (firstTimeActivating) {

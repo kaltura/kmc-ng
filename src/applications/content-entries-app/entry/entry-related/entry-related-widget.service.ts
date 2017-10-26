@@ -107,7 +107,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset()
+    protected onReset()
     {
 	    this.relatedFileDiffer = {};
 	    this.relatedFilesListDiffer = null;
@@ -120,7 +120,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
       return Observable.of({ isValid: fileTypeValid });
     }
 
-	protected _onActivate(firstTimeActivating: boolean) {
+	protected onActivate(firstTimeActivating: boolean) {
 		this._entryId = this.data.id;
 		super._showLoader();
 

@@ -29,7 +29,7 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
         this._clearSectionsList();
     }
 
-    protected _onActivate(firstTimeActivating: boolean) {
+    protected onActivate(firstTimeActivating: boolean) {
         if (firstTimeActivating) {
             this._initialize();
         }
@@ -67,7 +67,7 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset() {
+    protected onReset() {
         // TODO: remove this line!!!
         // super.updateState({
         //     isDirty: true

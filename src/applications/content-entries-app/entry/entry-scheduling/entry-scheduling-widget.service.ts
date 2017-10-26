@@ -47,7 +47,7 @@ export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
 	    this.createForm();
     }
 
-	protected _onActivate(firstTimeActivating: boolean): void {
+	protected onActivate(firstTimeActivating: boolean): void {
 		this._syncForm();
 		this.setValidators(false);
 	}
@@ -178,7 +178,7 @@ export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
     /**
      * Do some cleanups if needed once the section is removed
      */
-	protected _onReset()
+	protected onReset()
 	{
 		this.schedulingForm.reset();
 	}

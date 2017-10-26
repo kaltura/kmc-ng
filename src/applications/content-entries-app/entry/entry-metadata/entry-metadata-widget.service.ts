@@ -116,7 +116,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
 	    });
     }
 
-    protected _onActivate(firstTimeActivating : boolean) : Observable<{failed : boolean}> {
+    protected onActivate(firstTimeActivating : boolean) : Observable<{failed : boolean}> {
 
         super._showLoader();
         super._removeBlockerMessage();
@@ -423,7 +423,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset() {
+    protected onReset() {
 
         this.metadataForm.reset({});
         this._entryCategoriesDiffers = null;

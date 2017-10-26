@@ -57,7 +57,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy
     /**
      * Do some cleanups if needed once the section is removed
      */
-     protected _onReset() : void{
+     protected onReset() : void{
         this.sortBy = 'createdAt';
         this.sortAsc = false;
         this.pageIndex = 0;
@@ -188,7 +188,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy
 
     }
 
-    protected _onActivate(firstTimeActivating: boolean) {
+    protected onActivate(firstTimeActivating: boolean) {
 	    return this._getEntryClips('activation');
     }
 
