@@ -1,4 +1,4 @@
-import { Route } from '@angular/router';
+import { CanActivate, Route } from '@angular/router';
 
 import { ContentEntriesComponent } from './content-entries.component';
 import { EntriesListHolderComponent } from './entries/entries-list-holder.component';
