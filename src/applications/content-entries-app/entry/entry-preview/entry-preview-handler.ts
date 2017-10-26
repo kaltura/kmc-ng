@@ -34,7 +34,7 @@ export class EntryPreviewHandler extends EntryFormWidget
      */
     protected _onReset()
     {
-        this._urlHash = 0;
+        // DEVELOPER NOTICE: don't reset _urlHash to support refresh after saving
     }
 
     private _createUrl(): string {
