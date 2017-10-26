@@ -180,7 +180,7 @@ export class EntryStore implements  OnDestroy {
 			})
 		);
 
-		this._sectionsManager.onDataSaving(newEntry, request, this.entry)
+		this._sectionsManager.notifyDataSaving(newEntry, request, this.entry)
             .cancelOnDestroy(this)
             .monitor('entry store: prepare entry for save')
             .flatMap(
@@ -260,7 +260,7 @@ export class EntryStore implements  OnDestroy {
 		this._updatePageExitVerification();
 
 		this._state.next({action: ActionTypes.EntryLoading});
-		this._sectionsManager.onDataLoading(entryId);
+		this._sectionsManager.notifyDataLoading(entryId);
 
 		this._loadEntrySubscription = this._getEntry(entryId)
             .cancelOnDestroy(this)
@@ -270,7 +270,7 @@ export class EntryStore implements  OnDestroy {
 						this._entry.next(response);
 						this._entryId = response.id;
 
-						const dataLoadedResult = this._sectionsManager.onDataLoaded(response);
+						const dataLoadedResult = this._sectionsManager.notifyDataLoaded(response);
 
 						if (dataLoadedResult.errors.length)
 						{

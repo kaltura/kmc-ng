@@ -51,7 +51,7 @@ export class EntrySchedulingHandler extends EntryFormWidget implements OnDestroy
 		this.setValidators(false);
 	}
 
-	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
+	protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
 	{
 		const startDate = this.schedulingForm.get('startDate').value;
 		const endDate = this.schedulingForm.get('endDate').value;
@@ -163,7 +163,7 @@ export class EntrySchedulingHandler extends EntryFormWidget implements OnDestroy
 		this.schedulingForm.updateValueAndValidity();
 	}
 
-	protected _onValidate() : Observable<{ isValid : boolean}>
+	protected onValidate() : Observable<{ isValid : boolean}>
 	{
 		return Observable.create(observer =>
 		{

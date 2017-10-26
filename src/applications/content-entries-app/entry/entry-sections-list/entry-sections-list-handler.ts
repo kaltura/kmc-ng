@@ -29,7 +29,7 @@ export class EntrySectionsListHandler extends EntryFormWidget implements OnDestr
         super('sectionsList');
     }
 
-    protected _onDataLoading(dataId : any) : void {
+    protected onDataLoading(dataId : any) : void {
         this._clearSectionsList();
     }
 
@@ -41,12 +41,12 @@ export class EntrySectionsListHandler extends EntryFormWidget implements OnDestr
         }
     }
 
-    protected _onDataLoaded(data : KalturaMediaEntry) : void {
+    protected onDataLoaded(data : KalturaMediaEntry) : void {
         this._reloadSections(data);
     }
 
     private _initialize() : void {
-        this._manager.widgetsState$
+        this.form.widgetsState$
             .cancelOnDestroy(this)
             .subscribe(
                 sectionsState => {
@@ -81,7 +81,7 @@ export class EntrySectionsListHandler extends EntryFormWidget implements OnDestr
     private _reloadSections(entry : KalturaMediaEntry) : void
     {
         const sections = [];
-        const formWidgetsState = this._manager.widgetsState;
+        const formWidgetsState = this.form.widgetsState;
 
         if (entry) {
             SectionsList.forEach((section) => {

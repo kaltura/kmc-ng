@@ -25,7 +25,7 @@ export class CategorySectionsListHandler extends CategoryFormWidget implements O
         super('categorySectionsList');
     }
 
-    protected _onDataLoading(dataId: any): void {
+    protected onDataLoading(dataId: any): void {
         this._clearSectionsList();
     }
 
@@ -35,12 +35,12 @@ export class CategorySectionsListHandler extends CategoryFormWidget implements O
         }
     }
 
-    protected _onDataLoaded(data: KalturaCategory): void {
+    protected onDataLoaded(data: KalturaCategory): void {
         this._reloadSections(data);
     }
 
     private _initialize(): void {
-        this._manager.widgetsState$
+        this.form.widgetsState$
             .cancelOnDestroy(this)
             .subscribe(
             sectionsState => {
@@ -81,7 +81,7 @@ export class CategorySectionsListHandler extends CategoryFormWidget implements O
 
     private _reloadSections(category: KalturaCategory): void {
         const sections = [];
-        const formWidgetsState = this._manager.widgetsState;
+        const formWidgetsState = this.form.widgetsState;
 
         if (category) {
             CategorySectionsList.forEach((section) => {

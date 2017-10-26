@@ -49,7 +49,7 @@ export class EntryUsersHandler extends EntryFormWidget implements OnDestroy
 			);
 	}
 
-	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest){
+	protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest){
 		if (this.usersForm.dirty){
 			// save owner
 			if (this._owner && this._owner.id) {

@@ -7,7 +7,7 @@ import { CategoryFormManager } from './category-form-manager';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 
 @Injectable()
-export abstract class CategoryFormWidget extends FormWidget<KalturaCategory, KalturaMultiRequest> {
+export abstract class CategoryFormWidget extends FormWidget<CategoryFormManager, KalturaCategory, KalturaMultiRequest> {
     public sectionBlockerMessage: AreaBlockerMessage;
     public showSectionLoader: boolean;
 
@@ -38,21 +38,20 @@ export abstract class CategoryFormWidget extends FormWidget<KalturaCategory, Kal
                     ...this._createBackToCategoriesButton(),
                     ... message.buttons
                 ]
-            })
-        }
-        ;
+            });
+        };
 
         this.showSectionLoader = false;
         this.sectionBlockerMessage = messageToShow;
     }
 
     protected _createBackToCategoriesButton(): AreaBlockerMessageButton[] {
-        if (this._manager instanceof CategoryFormManager)
+        if (this.form instanceof CategoryFormManager)
         {
             return [{
                 label: 'Back To Categories',
                 action: () => {
-                    (<CategoryFormManager>this._manager).returnToCategories();
+                    (<CategoryFormManager>this.form).returnToCategories();
                 }
             }];
         }else
@@ -70,7 +69,7 @@ export abstract class CategoryFormWidget extends FormWidget<KalturaCategory, Kal
                     {
                         label: 'Retry',
                         action: () => {
-                            this.activate();
+                            this._activate();
                         }
                     }
                 ]

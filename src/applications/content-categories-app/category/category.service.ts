@@ -171,7 +171,7 @@ export class CategoryService implements OnDestroy {
 			})
 		);
 
-		this._sectionsManager.onDataSaving(newCategory, request, this.category)
+		this._sectionsManager.notifyDataSaving(newCategory, request, this.category)
 			.cancelOnDestroy(this)
 			.monitor('category store: prepare category for save')
 			.flatMap(
@@ -249,7 +249,7 @@ export class CategoryService implements OnDestroy {
 		this._updatePageExitVerification();
 
 		this._state.next({ action: ActionTypes.CategoryLoading });
-		this._sectionsManager.onDataLoading(categoryId);
+		this._sectionsManager.notifyDataLoading(categoryId);
 
 		this._loadCategorySubscription = this._getCategory(categoryId)
 			.cancelOnDestroy(this)
@@ -259,7 +259,7 @@ export class CategoryService implements OnDestroy {
 				this._category.next(response);
 				this._categoryId = response.id;
 
-				const dataLoadedResult = this._sectionsManager.onDataLoaded(response);
+				const dataLoadedResult = this._sectionsManager.notifyDataLoaded(response);
 
 				if (dataLoadedResult.errors.length) {
 					this._state.next({

@@ -267,7 +267,7 @@ export class EntryCaptionsHandler extends EntryFormWidget  implements OnDestroy 
     }
 
     // save data
-    protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
+    protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
         if (this._captions.getValue().items) {
 
             // check for added and removed captions

@@ -114,7 +114,7 @@ export class EntryRelatedHandler extends EntryFormWidget implements OnDestroy
 	    this._relatedFiles.next({ items : [] });
     }
 
-    protected _onValidate(): Observable<{ isValid: boolean }> {
+    protected onValidate(): Observable<{ isValid: boolean }> {
       const fileTypeValid = this._relatedFiles.getValue().items.every(file => !!file.format);
       return Observable.of({ isValid: fileTypeValid });
     }
@@ -168,7 +168,7 @@ export class EntryRelatedHandler extends EntryFormWidget implements OnDestroy
 			);
 	}
 
-	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
+	protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
 	{
 		if (this._relatedFiles.getValue().items) {
 			// check for added and removed assets

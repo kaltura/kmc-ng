@@ -107,7 +107,7 @@ export class EntryAccessControlHandler extends EntryFormWidget implements OnDest
     }
   }
 
-  protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
+  protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
     if (this.selectedProfile) {
       data.accessControlId = this.selectedProfile.id;
     }

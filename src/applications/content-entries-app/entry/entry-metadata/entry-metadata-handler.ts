@@ -273,7 +273,7 @@ export class EntryMetadataHandler extends EntryFormWidget implements OnDestroy
             .catch((error, caught) => Observable.of({failed: true, error}));
     }
 
-    protected _onDataSaving(newData : KalturaMediaEntry, request : KalturaMultiRequest) : void
+    protected onDataSaving(newData : KalturaMediaEntry, request : KalturaMultiRequest) : void
     {
 
 	    const metadataFormValue = this.metadataForm.value;
@@ -431,7 +431,7 @@ export class EntryMetadataHandler extends EntryFormWidget implements OnDestroy
         this.isLiveEntry = false;
     }
 
-    _onValidate() : Observable<{ isValid : boolean}>
+    onValidate() : Observable<{ isValid : boolean}>
     {
         return Observable.create(observer =>
         {

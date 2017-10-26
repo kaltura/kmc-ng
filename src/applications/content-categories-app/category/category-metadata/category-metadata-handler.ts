@@ -200,7 +200,7 @@ export class CategoryMetadataHandler extends CategoryFormWidget implements OnDes
             .catch((error, caught) => Observable.of({ failed: true, error }));
     }
 
-    protected _onDataSaving(newData: KalturaCategory, request: KalturaMultiRequest): void {
+    protected onDataSaving(newData: KalturaCategory, request: KalturaMultiRequest): void {
 
         const metadataFormValue = this.metadataForm.value;
 
@@ -288,7 +288,7 @@ export class CategoryMetadataHandler extends CategoryFormWidget implements OnDes
         this._categoryMetadata = [];
     }
 
-    _onValidate(): Observable<{ isValid: boolean }> {
+    onValidate(): Observable<{ isValid: boolean }> {
         return Observable.create(observer => {
             this.metadataForm.updateValueAndValidity();
             const isValid = this.metadataForm.valid;

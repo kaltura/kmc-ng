@@ -7,7 +7,7 @@ import { EntryFormManager } from './entry-form-manager';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 
 @Injectable()
-export abstract class EntryFormWidget extends FormWidget<KalturaMediaEntry, KalturaMultiRequest> {
+export abstract class EntryFormWidget extends FormWidget<EntryFormManager, KalturaMediaEntry, KalturaMultiRequest> {
     public sectionBlockerMessage: AreaBlockerMessage;
     public showSectionLoader: boolean;
 
@@ -47,19 +47,22 @@ export abstract class EntryFormWidget extends FormWidget<KalturaMediaEntry, Kalt
     }
 
     protected _createBackToEntriesButton(): AreaBlockerMessageButton[] {
-        if (this._manager instanceof EntryFormManager)
-        {
+        if (this.form) {
             return [{
                 label: 'Back To Entries',
                 action: () => {
-                    (<EntryFormManager>this._manager).returnToEntries();
+                    this.form.returnToEntries();
                 }
             }];
         }else
         {
-            return [];
+            return [{
+                label: 'dismiss',
+                action: () => {
+                    this._removeBlockerMessage();
+                }
+            }];
         }
-
     }
 
     protected _showActivationError() {

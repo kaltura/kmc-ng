@@ -57,7 +57,7 @@ export class EntryLiveHandler extends EntryFormWidget implements OnDestroy {
 		this.dirty = false;
 	}
 
-	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
+	protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
 		if (this._liveType === "universal") {
 			// create bitrate array for saving
 			let bitrates: KalturaLiveStreamBitrate[] = [];
@@ -74,7 +74,7 @@ export class EntryLiveHandler extends EntryFormWidget implements OnDestroy {
 		}
 	}
 
-	protected _onValidate(): Observable<{ isValid: boolean}> {
+	protected onValidate(): Observable<{ isValid: boolean}> {
 		return Observable.create(observer => {
 			const isValid = this._liveType === "universal" ? this._validateBitrates({updateDirtyMode: false}) : true;
 			observer.next({isValid});
