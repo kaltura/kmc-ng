@@ -1,36 +1,47 @@
 <div class="kTreeContainer kOverrideFAIcons kRadioButtonPOC">
   <div class="kHeader">
-    <span class="kTitle">Test popup to show single selection mode work</span>
+    <span class="kTitle">{{('applications.content.addNewCategory.newCategory') | translate}}</span>
   </div>
+  <div class="kContainer">
+    <div class="kAdditionalInformation">
+      <div>{{('applications.content.addNewCategory.selectCategoryParent') | translate}}</div>
+    </div>
+    <div class="kTagsContainer">
+      <p-radioButton [value]="null" [(ngModel)]="_treeSelection" (click)="_clearSelection()"
+                     label="No selection"></p-radioButton>
+    </div>
 
-  <div class="kTagsContainer">
-    <p-radioButton [value]="null" [(ngModel)]="_treeSelection" (click)="_clearSelection()" label="No selection"></p-radioButton>
+
+    <div class="kMain">
+      <kAutoComplete #autoComplete
+                     [disabled]="!_categoriesLoaded"
+                     [multiple]="false"
+                     field="name"
+                     suggestionItemField="item"
+                     suggestionLabelField="name"
+                     suggestionSelectableField="isSelectable"
+                     placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"
+                     [minLength]="3"
+                     (onSelect)="_onAutoCompleteSelected($event)"
+                     [suggestionsProvider]="_categoriesProvider"
+                     (completeMethod)="_onAutoCompleteSearch($event)">
+      </kAutoComplete>
+
+
+      <!--TODO: Check why the k-area-blocker gets   height: 265px; -->
+      <k-categories-tree #categoriesTree
+                         [selectionMode]="_selectionMode"
+                         [(selection)]="_treeSelection"
+                         (onCategoriesLoad)="_onTreeCategoriesLoad($event)"
+                         (onNodeSelect)="_onTreeNodeSelected($event)"
+                         (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)"></k-categories-tree>
+    </div>
+    <span class="kSelectedCategoryTooltip" [kTooltip]="_selectionTooltip">{{ _selectionTooltip }}</span>
   </div>
-
-  <div class="kMain">
-    <kAutoComplete #autoComplete
-                   [disabled]="!_categoriesLoaded"
-                   [multiple]="false"
-                   field="name"
-                   suggestionItemField="item"
-                   suggestionLabelField="name"
-                   suggestionSelectableField="isSelectable"
-                   placeholder="{{'applications.entries.entryMetadata.searchCategoriesPH' | translate}}"
-                   [minLength]="3"
-                   (onSelect)="_onAutoCompleteSelected($event)"
-                   [suggestionsProvider]="_categoriesProvider"
-                   (completeMethod)="_onAutoCompleteSearch($event)">
-    </kAutoComplete>
-
-
-    <k-categories-tree #categoriesTree
-                       [selectionMode]="_selectionMode"
-                       [(selection)]="_treeSelection"
-                       (onCategoriesLoad)="_onTreeCategoriesLoad($event)"
-                       (onNodeSelect)="_onTreeNodeSelected($event)"
-                       (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)"></k-categories-tree>
-    <span class="kSelectedCategoryTooltip" [kTooltip]="_selectionTooltip">
-      {{ _selectionTooltip }}
-    </span>
+  <div class="kFooter">
+    <button type="button" class="kButtonBranded" pButton
+            label="{{'applications.content.addNewCategory.apply' | translate}}"
+            (click)="_apply()"></button>
+    <a class="kLink" (click)="_cancel()">{{'applications.content.addNewCategory.cancel' | translate}}</a>
   </div>
 </div>

@@ -1,12 +1,15 @@
-import { AfterViewChecked, ChangeDetectorRef, Component, Input, OnDestroy, ViewChild } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
+import {AfterViewChecked, ChangeDetectorRef, Component, Input, OnDestroy, ViewChild} from '@angular/core';
+import {ISubscription} from 'rxjs/Subscription';
 
-import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
-import { Subject } from 'rxjs/Subject';
-import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { CategoriesTreeComponent, TreeSelectionMode } from 'app-shared/content-shared/categories-tree/categories-tree.component';
-import { CategoriesPrimeService } from 'app-shared/content-shared/categories-prime.service';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import {PrimeTreeNode} from '@kaltura-ng/kaltura-primeng-ui';
+import {Subject} from 'rxjs/Subject';
+import {AutoComplete, SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
+import {
+  CategoriesTreeComponent,
+  TreeSelectionMode
+} from 'app-shared/content-shared/categories-tree/categories-tree.component';
+import {CategoriesPrimeService} from 'app-shared/content-shared/categories-prime.service';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kCategoryRadioButtonPOC',
@@ -187,5 +190,13 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
   public _clearSelection(): void {
     this._selectedCategory = null;
     this._updateSelectionTooltip();
+  }
+
+  public _apply(): void {
+
+  }
+
+  public _cancel(): void {
+
   }
 }
