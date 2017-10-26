@@ -57,6 +57,7 @@ export class CategoryMetadataHandler extends CategoryFormWidget {
 
         Observable.merge(...formsChanges)
             .cancelOnDestroy(this, this.widgetReset$)
+            .delay(0)
             .subscribe(
             () => {
                 let isValid = true;
