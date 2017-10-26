@@ -81,7 +81,7 @@
 
         .kIconhelp.has-notification:after {
           content: ' \25CF';
-          color: $kDandger;
+          color: lighten($kPrimary, 10%);
           position: absolute;
           margin-left: 15px;
           margin-top: 4px;

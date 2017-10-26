@@ -180,7 +180,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         let pageScrollInstance: PageScrollInstance = PageScrollInstance.newInstance({
          document : this.document,
             scrollTarget : element,
-            scrollingViews : [this._container.nativeElement]
+            pageScrollOffset: 130
         });
         this._pageScrollService.start(pageScrollInstance);
     }

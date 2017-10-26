@@ -1,10 +1,10 @@
 import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { EntryStore } from '../entry-store.service';
-import { SectionWidgetItem, EntrySectionsListWidget } from './entry-sections-list-widget.service';
+import { SectionWidgetItem, EntrySectionsListHandler } from './entry-sections-list-handler';
 import { StickyComponent } from '@kaltura-ng/kaltura-ui';
-
+import { BrowserService } from 'app-shared/kmc-shell';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-
+import { EntryFormManager } from '../entry-form-manager';
 
 
 
@@ -20,23 +20,24 @@ export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
     public _loading = false;
     public _showList = false;
     public _sections : SectionWidgetItem[] = [];
+    private _handler : EntrySectionsListHandler;
 
-    constructor(public _widgetService: EntrySectionsListWidget, public _entryStore : EntryStore)  {
+    constructor(private _entryFormManager : EntryFormManager, public _entryStore : EntryStore, private _browserService: BrowserService)  {
     }
 
 
     public navigateToSection(widget : SectionWidgetItem) : void
     {
-	    window.scrollTo(0,0);
+	    this._browserService.scrollToTop();
         this._entryStore.openSection(widget.key);
     }
 
 
     ngOnInit() {
 		this._loading = true;
-        this._widgetService.attachForm();
+		this._handler = this._entryFormManager.attachWidget(EntrySectionsListHandler);
 
-        this._widgetService.sections$
+        this._handler.sections$
         .cancelOnDestroy(this)
         .subscribe(
 			sections =>
@@ -50,7 +51,7 @@ export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
 	}
 
     ngOnDestroy() {
-        this._widgetService.detachForm();
+        this._entryFormManager.detachWidget(this._handler);        
     }
 
 

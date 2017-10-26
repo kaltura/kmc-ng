@@ -6,6 +6,8 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PrimeTreePropagation } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
 import { CategoriesPrimeService } from 'app-shared/content-shared/categories-prime.service';
 
+export type TreeSelectionMode = 'single' | 'multiple';
+
 @Component({
   selector: 'k-categories-tree',
   templateUrl: './categories-tree.component.html',
@@ -15,10 +17,15 @@ export class CategoriesTreeComponent implements OnInit {
 
   @Input() public disablePropagation = false;
   @Input() autoLoad = true;
-  @Input() selection: PrimeTreeNode[];
+  @Input() selection: PrimeTreeNode | PrimeTreeNode[];
+
+  @Input()
+  set selectionMode(value: TreeSelectionMode) {
+    this._selectionMode = value === 'single' ? value : 'multiple';
+  }
 
   @Output() onCategoriesLoad = new EventEmitter<{ categories: PrimeTreeNode[] }>();
-  @Output() selectionChange = new EventEmitter<PrimeTreeNode[]>();
+  @Output() selectionChange = new EventEmitter<PrimeTreeNode[] | PrimeTreeNode>();
   @Output() onNodeChildrenLoaded = new EventEmitter<{ node: PrimeTreeNode }>();
   @Output() onNodeSelect: EventEmitter<any> = new EventEmitter();
   @Output() onNodeUnselect: EventEmitter<any> = new EventEmitter();
@@ -28,6 +35,11 @@ export class CategoriesTreeComponent implements OnInit {
   private inLazyMode = false;
   public _loading = false;
   public _blockerMessage: AreaBlockerMessage = null;
+  public _selectionMode: TreeSelectionMode = 'multiple';
+  public _selectionModes = {
+    'multiple': 'multiple',
+    'single': 'single'
+  };
 
   public _categories: PrimeTreeNode[] = [];
 
@@ -35,28 +47,8 @@ export class CategoriesTreeComponent implements OnInit {
     this._primeTreeNodesState.updateNodeState(node, addToSelection);
   }
 
-  get categories(): PrimeTreeNode[] {
+  public get categories(): PrimeTreeNode[] {
     return this._categories;
-  }
-
-  public _selectionChange(selection: PrimeTreeNode[]) {
-    this.selection = selection;
-    this.selectionChange.emit(selection);
-  }
-
-  public findNodeByFullIdPath(fullIdPath: (number | string)[]): PrimeTreeNode {
-    // find the item in the tree (if exists)
-    let result: PrimeTreeNode = null;
-    for (let i = 0, length = fullIdPath.length; i < length; i++) {
-      const itemIdToSearchFor = fullIdPath[i];
-      result = ((result ? result.children : this._categories) || []).find(child => child.data + '' === itemIdToSearchFor + '');
-
-      if (!result) {
-        break;
-      }
-    }
-
-    return result;
   }
 
   constructor(private _categoriesPrimeService: CategoriesPrimeService,
@@ -68,11 +60,16 @@ export class CategoriesTreeComponent implements OnInit {
     this.inLazyMode = this._appAuthentication.appUser.permissionsFlags.indexOf('DYNAMIC_FLAG_KMC_CHUNKED_CATEGORY_LOAD') !== -1;
 
     if (this.autoLoad) {
-      this.loadCategories();
+      this._loadCategories();
     }
   }
 
-  loadCategories(): void {
+  public _selectionChange(selection: PrimeTreeNode | PrimeTreeNode[]): void {
+    this.selection = selection;
+    this.selectionChange.emit(selection);
+  }
+
+  private _loadCategories(): void {
     this._loading = true;
     this._blockerMessage = null;
     this._categoriesPrimeService.getCategories()
@@ -86,7 +83,7 @@ export class CategoriesTreeComponent implements OnInit {
             message: error.message || this._appLocalization.get('applications.content.entryDetails.errors.categoriesLoadError'),
             buttons: [{
               label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
-              action: () => this.loadCategories()
+              action: () => this._loadCategories()
             }]
           });
           this._loading = false;
@@ -105,10 +102,34 @@ export class CategoriesTreeComponent implements OnInit {
     }
   }
 
-  public _blockTreeSelection(e: MouseEvent) {
+  public _blockTreeSelection(e: MouseEvent): void {
     e.preventDefault();
     e.stopPropagation();
   }
 
+  public findNodeByFullIdPath(fullIdPath: (number | string)[]): PrimeTreeNode {
+    // find the item in the tree (if exists)
+    let result: PrimeTreeNode = null;
+    for (let i = 0, length = fullIdPath.length; i < length; i++) {
+      const itemIdToSearchFor = fullIdPath[i];
+      result = ((result ? result.children : this._categories) || []).find(child => child.data + '' === itemIdToSearchFor + '');
+
+      if (!result) {
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  public clearSelection(): void {
+    let resetValue = [];
+
+    if (this._selectionMode === 'single') {
+      resetValue = null;
+    }
+
+    this._selectionChange(resetValue);
+  }
 }
 

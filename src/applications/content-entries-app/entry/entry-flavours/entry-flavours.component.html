@@ -29,7 +29,7 @@
 				</p-column>
 				<p-column field="size" header="{{'applications.content.entryDetails.flavours.size' | translate}}">
 				</p-column>
-				<p-column field="statusLabel" header="{{'applications.content.entryDetails.flavours.stat' | translate}}">
+				<p-column field="statusLabel" header="{{'applications.content.entryDetails.flavours.stat' | translate}}" [style]="{'width':'85px'}">
 					<ng-template let-col let-flavor="rowData" pTemplate="body">
 						<span [kTooltip]="flavor.statusTooltip" [class.kFlavorStatusError]="flavor.status === '-1'">{{flavor.statusLabel}}</span>
 					</ng-template>
