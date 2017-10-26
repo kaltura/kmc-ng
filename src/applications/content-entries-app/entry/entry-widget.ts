@@ -5,7 +5,8 @@ import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltur
 import { EntryWidgetsManager } from './entry-widgets-manager';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 
-export abstract class EntryWidget extends WidgetBase<EntryWidgetsManager, KalturaMediaEntry, KalturaMultiRequest> {
+export abstract class EntryWidget extends WidgetBase<EntryWidgetsManager, KalturaMediaEntry, KalturaMultiRequest>
+{
     public sectionBlockerMessage: AreaBlockerMessage;
     public showSectionLoader: boolean;
 

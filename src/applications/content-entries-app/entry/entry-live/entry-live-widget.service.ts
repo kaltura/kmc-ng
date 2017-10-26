@@ -257,4 +257,9 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 
 		return valid;
 	}
+
+    ngOnDestroy()
+    {
+
+    }
 }

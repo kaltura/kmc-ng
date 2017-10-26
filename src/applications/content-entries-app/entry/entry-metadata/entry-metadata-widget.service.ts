@@ -442,4 +442,9 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
             observer.complete();
         });
     }
+
+    ngOnDestroy()
+    {
+
+    }
 }
