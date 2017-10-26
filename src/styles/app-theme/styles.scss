@@ -65,11 +65,12 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
   }
 }
 
-
+.kModal .appMenu{
+  z-index: 501 !important;
+}
 .kmcDetailsLayout {
   font-size: 15px;
   background-color: $appBkgColor;
-  height: $contentArea;
   padding-top: 30px;
   width: 100%;
   button{
@@ -83,13 +84,14 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
       display: flex;
       flex-direction: row;
       align-items: center;
+      flex: 0 0 auto;
       .kBackBtn{
         margin-top: 4px;
         margin-left: -56px;
         margin-right: 23px;
         border: none;
         outline: none;
-        background-color: $appBkgColor;
+        background-color: transparent;
         color: $kGrayscale3;
         height: 20px;
         font-size: 16px;
@@ -163,7 +165,7 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
         .kPreview{
           width: 280px;
           background-color: #ffffff;
-          margin-bottom: 12px;
+          margin-bottom: 20px;
           flex: 0 0 auto;
           border: 0px solid #ffffff;
           border-radius: 3px;
@@ -171,6 +173,7 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
       }
       .kDetailsContent{
         width: 100%;
+        height: 100%;
         background-color: #ffffff;
         border: 1px solid #ffffff;
         border-radius: 3px;
@@ -183,11 +186,5 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
   .kSpacer{
     display: block;
     height: 40px;
-  }
-}
-/* to be removed when switching to new scroll system */
-.kmcDetailsLayout.isSafari{
-  .kDetailsContent{
-    height: calc(100vh - 240px);
   }
 }

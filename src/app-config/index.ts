@@ -1,4 +1,5 @@
 export const environment = {
+    "appVersion": "3.0.1", // will be changed by release script
     "shell": {
         "languageHash": "12", /* this value is set manually at the moment and should be replaced with the published app version  */
         "defaultRoute": "/content/entries",
@@ -165,6 +166,10 @@ export const environment = {
         "contentPlaylists" : {
             "createdAtDateRange" : "2005:2030",
             "bulkActionsLimit": 2
+        },
+        "contentCategories": {
+            "createdAtDateRange": "2005:2030",
+            "bulkActionsLimit": 50
         }
     },
     "entriesShared": {

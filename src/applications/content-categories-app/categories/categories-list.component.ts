@@ -1,10 +1,12 @@
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
-import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
-import { CategoriesTableComponent } from "./categories-table.component";
+import { PopupWidgetComponent } from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
 import { CategoriesService, Categories, SortDirection } from './categories.service';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { AppLocalization } from "@kaltura-ng/kaltura-common";
 
 @Component({
     selector: 'kCategoriesList',
@@ -14,7 +16,7 @@ import { CategoriesService, Categories, SortDirection } from './categories.servi
 
 export class CategoriesListComponent implements OnInit, OnDestroy {
 
-    @ViewChild(CategoriesTableComponent) private dataTable: CategoriesTableComponent;
+    @ViewChild('addNewCategory') public addNewCategory: PopupWidgetComponent;
 
     public _isBusy = false
     public _blockerMessage: AreaBlockerMessage = null;
@@ -32,7 +34,10 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         sortDirection: SortDirection.Desc
     };
 
-    constructor(private _categoriesService: CategoriesService, private router: Router) {
+    constructor(private _categoriesService: CategoriesService,
+        private router: Router,
+        private _browserService: BrowserService,
+        private _appLocalization: AppLocalization) {
     }
 
     ngOnInit() {
@@ -43,7 +48,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
                 this._filter.pageIndex = query.pageIndex - 1;
                 this._filter.sortBy = query.sortBy;
                 this._filter.sortDirection = query.sortDirection;
-                this.dataTable.scrollToTop();
+                this._browserService.scrollToTop();
             });
 
         this.categoriesSubscription = this._categoriesService.categories$.subscribe(
@@ -90,8 +95,76 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
             case "edit":
                 this.router.navigate(['/content/categories/category', event.categoryID]);
                 break;
+
+            case 'delete':
+                const currentCategory = this._categories.find(category => category.id == event.categoryID);
+                let message: string;
+                if (currentCategory.directSubCategoriesCount > 0) {
+                    message = this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories', { 0: currentCategory.id });
+                }
+                else {
+                    message = this._appLocalization.get('applications.content.categories.confirmDeleteSingle', { 0: currentCategory.id });
+                }
+                this._browserService.confirm(
+                    {
+                        header: this._appLocalization.get('applications.content.categories.deleteCategory'),
+                        message: message,
+                        accept: () => {
+                            this._deleteCategory(event.categoryID);
+                        }
+                    }
+                );
+                break;
             default:
                 break;
+        }
+    }
+
+    _addCategory() {
+        this.addNewCategory.open();
+    }
+
+    private _deleteCategory(categoryId: number): void {
+        this._isBusy = true;
+        this._blockerMessage = null;
+        this._categoriesService.deleteCategory(categoryId).subscribe(
+          () => {
+            this._isBusy = false;
+            this._browserService.showGrowlMessage({
+              severity: 'success',
+              detail: this._appLocalization.get('applications.content.categories.deleted')
+            });
+            this._categoriesService.reload(true);
+          },
+          error => {
+            this._isBusy = false;
+
+            this._blockerMessage = new AreaBlockerMessage(
+              {
+                message: error.message,
+                buttons: [
+                  {
+                    label: this._appLocalization.get('app.common.retry'),
+                    action: () => {
+                      this._deleteCategory(categoryId);
+                    }
+                  },
+                  {
+                    label: this._appLocalization.get('app.common.cancel'),
+                    action: () => {
+                      this._blockerMessage = null;
+                    }
+                  }
+                ]
+              }
+            )
+          }
+        );
+      }
+
+    onBulkChange(event): void {
+        if (event.reload === true) {
+            this._reload();
         }
     }
 }

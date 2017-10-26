@@ -2,8 +2,8 @@
 
 .kPlaylistEntriesTable {
   background-color: white;
-  overflow-y: hidden;
-  position: absolute;
+  overflow: hidden;
+  position: relative;
   padding: 0px;
 
   .kThumbnailHolder {
@@ -16,9 +16,8 @@
     text-align: center;
     border-radius: 3px;
     cursor: pointer;
-
     img {
-      position:absolute;
+      position: absolute;
       left: -100%;
       right: -100%;
       top: -100%;
@@ -30,7 +29,7 @@
     }
   }
 
-  .kEntriesTableActions {
+  .kPlaylistEntriesTableActions {
     width: 100%;
     text-align: center;
     button {
@@ -41,4 +40,70 @@
       outline: 0;
     }
   }
+
+  .kPlaylistEntriesTableActions {
+    width: 100%;
+    text-align: center;
+    button {
+      color: grey !important;
+      background-color: rgba(0, 0, 0, 0) !important;
+      border: none !important;
+      font-size: 16px !important;
+      outline: 0;
+    }
+  }
+
+  .kIconvideo {
+    font-size: 20px;
+  }
+
+  .kIconsound {
+    font-size: 22px;
+  }
+
+  .kIconimage {
+    font-size: 24px;
+  }
+
+  .kTitle {
+    color: #333333;
+    font-weight: 700;
+    cursor: pointer;
+  }
+}
+
+:host /deep/ .selectionColumn {
+  width: 44px;
+  padding-left: 14px!important;
+}
+
+:host /deep/ .ui-datatable .thumbnailColumn {
+  width: 100px;
+}
+
+:host /deep/ .ui-datatable .mediaTypeColumn {
+  width: 80px;
+  text-align: center;
+}
+
+:host /deep/ .ui-datatable .createdAtColumn {
+  width: 140px;
+  text-align: center;
+}
+
+:host /deep/ .ui-datatable .durationColumn {
+  width: 100px;
+  text-align: center;
+}
+
+:host /deep/ .ui-datatable .actionsColumn {
+  overflow: visible;
+  width: 80px;
+}
+
+:host {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0;
+  flex-direction: column;
 }

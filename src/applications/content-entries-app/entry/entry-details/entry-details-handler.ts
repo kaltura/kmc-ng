@@ -45,6 +45,9 @@ export class EntryDetailsHandler extends EntryFormWidget
         let landingPage = this.appAuthentication.appUser.partnerInfo.landingPage;
         if (landingPage) {
 	        landingPage = landingPage.replace("{entryId}", entry.id);
+	        if (landingPage.indexOf("http") !== 0){
+	            landingPage = "http://" + landingPage;
+            }
         }
         this._landingPage = landingPage;
 

@@ -59,3 +59,7 @@
   margin-top: 15px;
 }
 
+:host /deep/ .ui-tree.ui-widget.ui-widget-content {
+  width: 100%;
+}
+

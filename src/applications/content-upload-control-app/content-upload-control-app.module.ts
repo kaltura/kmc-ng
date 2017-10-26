@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { routing } from './content-upload-control-app.routes';
 
-import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import {
   DataTableModule,
   PaginatorModule,
@@ -59,6 +59,7 @@ import { UploadStatusPipe } from './upload-list/pipes/upload-status.pipe';
     SharedModule,
     ProgressBarModule,
     KMCShellModule,
+    StickyModule,
     RouterModule.forChild(routing)
   ],
   declarations: [

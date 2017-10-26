@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
-import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
+
 import {
   ButtonModule,
   CalendarModule,
@@ -35,6 +36,8 @@ import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/e
 import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { PrimeTableSortTransformPipe } from 'app-shared/content-shared/pipes/prime-table-sort-transform.pipe';
+import { CategoryRadioButtonPocComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc';
+import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc-popup';
 
 @NgModule({
   imports: [
@@ -58,7 +61,8 @@ import { PrimeTableSortTransformPipe } from 'app-shared/content-shared/pipes/pri
     MenuModule,
     TagsModule,
     PaginatorModule,
-    InputTextModule
+    InputTextModule,
+    StickyModule
   ],
   declarations: [
     EntryStatusPipe,
@@ -74,13 +78,26 @@ import { PrimeTableSortTransformPipe } from 'app-shared/content-shared/pipes/pri
     CategoriesFilterComponent,
     EntriesTableComponent,
     EntriesListComponent,
+
+    CategoryRadioButtonPocComponent,
+    CategoryRadioButtonPocPopupComponent
   ],
   exports: [
     EntryStatusPipe,
     EntryTypePipe,
     CategoriesTreeComponent,
     SchedulingComponent,
+    EntryDurationPipe,
+    MaxEntriesPipe,
+    PrimeTableSortDirectionPipe,
+    EntriesRefineFiltersComponent,
+    CategoriesFilterPrefsComponent,
+    CategoriesFilterComponent,
+    EntriesTableComponent,
     EntriesListComponent,
+
+    CategoryRadioButtonPocPopupComponent,
+    CategoryRadioButtonPocComponent
   ],
   providers: [
     CategoriesPrimeService,

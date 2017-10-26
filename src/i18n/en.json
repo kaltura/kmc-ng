@@ -39,7 +39,8 @@
       "support": "Help and Support",
       "userManual": "Download user manual",
       "contact": "Contact Support",
-      "currentPage": "Current Page"
+      "currentPage": "Current Page",
+      "changelog": "Changelog"
     },
     "languageMenu": {
       "selectLang": "Select Language"
@@ -64,8 +65,8 @@
         "title": "Login",
         "forgotPassword": "Forgot password?",
         "placeholder": {
-          "username": "Username",
-          "password": "Password"
+          "username": "Enter Email",
+          "password": "Enter Password"
         }
       },
       "invalidLoginHash": {
@@ -117,13 +118,27 @@
       "signUp": "Sign Up",
       "rememberMe": "Remember me",
       "dontHaveAccount": "Don't have an account?"
+    },
+    "changelog": {
+      "header": "Change Log"
     }
   },
   "applications": {
     "entries": {
       "entryMetadata": {
         "searchTagsPH": "Search Tags",
-        "searchCategoriesPH": "Search Categories"
+        "searchCategoriesPH": "Search Categories",
+        "categoryTooltip": {
+          "privacyContext": "Privacy context",
+          "contentPrivacy": "Content Privacy",
+          "categoryListing": "Category Listing",
+          "contributionPolicy": "Contribution Policy",
+          "specificEndUserPermissions": "Specific end user permissions",
+          "noRestriction": "No Restriction",
+          "requiresAuth": "Requires Authentication",
+          "noMembers": "No members",
+          "private": "Private"
+        }
       }
     },
     "upload": {
@@ -202,6 +217,7 @@
           "uploadedOn": "Uploaded On",
           "progress": "Progress",
           "remove": "Remove",
+          "retry": "Retry",
           "status": {
             "header": "Status",
             "uploaded": "Complete",
@@ -222,30 +238,79 @@
         "filterCategories": "Filter Categories",
         "edit": "Edit",
         "delete": "Delete",
+        "deleteCategory": "Delete Category",
         "viewEntries": "View Entries",
         "moveCategory": "Move Category",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "bActions": {
+          "addRemoveTags": "Add / Remove Tags",
+          "addTags": "Add Tags",
+          "addTagsLabel": "Enter tags to be appended to all selected categories",
+          "removeTags": "Remove Tags",
+          "removeTagsLabel": "Select the tags you wish to remove from the selected categories",
+          "moveCategories": "Move Categories",
+          "changeContentPrivacy": "Change Content Privacy",
+          "changeContentPrivacyLabel": "Change the Content Privacy settings for all selected categories",
+          "changeCategoryListing": "Change Category Listing",
+          "changeCategoryListingLabel": " Change the Category Listing settings for all selected categories",
+          "changeContributionPolicy": "Change Contribution Policy",
+          "changeContributionPolicyLabel": "Change the Category Contribution Policy settings for all selected categories",
+          "changeCategoryOwner": "Change Category Owner",
+          "delete": "Delete",
+          "save": "Save changes",
+          "changeOwnerLabel": "Set a new owner for the selected categories"
+        },
+        "deleteCategories": "Delete Categories",
+        "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
+        "confirmDeleteWithSubCategories": "The category will be deleted with its sub-categories. Do you want to continue?\n {{0}}",
+        "confirmDeleteSingle": "Are you sure you want to delete this category?\n {{0}}",
+        "confirmDeleteMultipleWithSubCategories": "Categories will be deleted with their sub-categories. Do you want to continue?\n {{0}}",
+        "confirmDeleteMultiple": "Are you sure you want to delete these categories?\n {{0}}",
+        "deleted": "Category deleted successfully",
+        "categoryId": "Category ID: {{0}}",
+        "noRestriction": "No Restriction",
+        "requiresAuthentication": "Requires Authentication",
+        "private": "Private",
+        "selectedCategory": "Selected: {{0}}"
+      },
+      "addNewCategory": {
+        "newCategory": "New Category",
+        "selectCategoryParent": "Select the parent category under which the new category will appear",
+        "cancelEdit": "Cancel Edit",
+        "discard": "Discard all changes?",
+        "apply": "Apply",
+        "cancel": "Cancel",
+        "noParent":"No Parent",
+        "searchCategories": "Search Categories",
+        "selectedParentCategory":"Parent Category Id: {{value}}"
+
       },
       "entries": {
         "entries": "Entries",
         "selected": "Selected",
-        "bulkActions": "Bulk Actions",
+        "bulkActions": "More Actions",
         "cancel": "Cancel",
         "searchEntries": "Search Entries",
         "filterCategories": "Filter Categories",
         "refine": "Refine",
         "refresh": "Refresh",
         "deleteEntry": "Delete Entry",
+        "deleteEntries": "Delete Entr{{0}}",
         "confirmDelete": "Are you sure you want to delete the selected entry?",
+        "confirmDeleteEntries": "Are you sure you want to delete the selected entr{{0}}?",
         "confirmDeleteSingle": "Are you sure you want to delete the selected entry? \n {{0}} \n Please note: the entry will be permanently deleted from your account.",
         "confirmDeleteMultiple": "Are you sure you want to delete the selected entries? \n {{0}} \n Please note: these entries will be permanently deleted from your account.",
         "deleted": "Entry deleted successfully",
-        "entryId": "Entry ID: {{0}}"
+        "entryId": "Entry ID: {{0}}",
+        "deleteNote": "Please note: the entry will be permanently deleted from your account.",
+        "deleteEntriesNote": "Please note: {{0}} entr{{1}} will be permanently deleted from your playlist."
       },
       "playlists": {
         "playlists": "Playlist's",
+        "entries": "Entries",
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
+        "remove": "Remove",
         "cancel": "Cancel",
         "deletePlaylist": "Delete Playlist",
         "confirmDeleteMultiple": "Are you sure you want to delete the selected playlists? \n {{0}} \n Please note: these playlists will be permanently deleted from your account.",
@@ -255,7 +320,9 @@
         "searchEntries": "Search Playlists",
         "addPlaylist": "Add Playlist",
         "addEntry": "Add Entry",
-        "refresh": "Refresh"
+        "addToPlaylist": "Add to Playlist",
+        "refresh": "Refresh",
+        "deleteNote": "Please note: {{0}} playlist{{1}} will be permanently deleted from your account."
       },
       "filters": {
         "activeFilters": "Active Filters:",
@@ -400,7 +467,12 @@
         "confirmPlaylsts": "Are you sure you want to update {{0}} playlists? It could take a while...",
         "deleteEntries": "Delete Entries",
         "deleteConfirm": "Are you sure you want to delete the selected entries?",
-        "deleteNote": "Please note: the selected entries will be permanently deleted from your account."
+        "deleteNote": "Please note: the selected entries will be permanently deleted from your account.",
+        "removeFromPlaylist": "Remove from playlist",
+        "moveUp": "Move Up",
+        "moveDown": "Move Down",
+        "duplicate": "Duplicate"
+
       },
       "entryDetails": {
         "sections": {
@@ -565,7 +637,8 @@
             "assetId": "Widevine Asset ID:",
             "mbr": "Multi-bitrate Package Source Flavors:",
             "start": "Current Distribution Window Start Time:",
-            "end": "Current Distribution Window End Time:"
+            "end": "Current Distribution Window End Time:",
+            "na": "N/A"
           },
           "preview": {
             "header": "Flavor Preview",
@@ -726,12 +799,44 @@
       },
       "categoryDetails": {
         "header": "Category - {{0}}",
+        "headerProps": {
+          "id": "ID: {{0}} |",
+          "subCategories": " Sub-Categories: {{0}} |",
+          "entries": " Entries: {{0}} |",
+          "creationDate": " Creation Date {{0}} |",
+          "lastUpdate": " Last Update {{0}} |",
+          "createdBy": " Created by: {{0}} |",
+          "privacyContextLabel": " Privacy Context Label: {{0}}"
+        },
         "cancelEdit": "Cancel Edit",
         "discard": "Discard all changes?",
         "sections": {
           "metadata": "Metadata",
           "entitlements": "Entitlements",
           "subcategories": "Sub Categories"
+        },
+        "metadata": {
+          "categoryID": "ID",
+          "categoryName": "Name",
+          "description": "Description",
+          "tags": "Tags",
+          "categories": "Categories",
+          "browse": "Browse categories",
+          "selectCategories": "Select Categories",
+          "addCategories": "Add Categories",
+          "catSelect": "Select one or several categories",
+          "offlineMsg": "Offline Message",
+          "refId": "Reference ID",
+          "jumpTo": "Jump to",
+          "add": "Add",
+          "delete": "Delete",
+          "thumbnail": "Thumbnail",
+          "addEntry": "Add Entry",
+          "remove": "Remove",
+          "selected": "Selected",
+          "clear": "Clear Selection",
+          "addGroup": "Add Group",
+          "deleteGroup": "Delete Group"
         },
         "errors": {
           "reload": "Reload",
@@ -774,9 +879,13 @@
         },
         "errors": {
           "retry": "Retry",
+          "dismiss": "Dismiss",
+          "ok": "Ok",
           "backToPlaylists": "Back To Playlists",
           "playlistTypeNotSupported": "playlist type not supported",
-          "validationError": "The form contains some invalid information. Please review the sections marked as invalid"
+          "validationError": "The form contains some invalid information. Please review the sections marked as invalid",
+          "contentValidationError": "Add at least one entry",
+          "loadError": "An error occurred while loading data"
         }
       }
     },
