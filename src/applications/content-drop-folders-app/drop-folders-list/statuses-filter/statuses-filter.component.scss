@@ -15,4 +15,20 @@
     color: $kGrayscale3;
     margin-left: 10px;
   }
+
+  .kSelectUnselect {
+    .ui-tree-container {
+      .ui-chkbox .fa-minus {
+        background-color: inherit;
+        border-color: #ccc;
+      }
+
+      .ui-treenode-children {
+        .ui-chkbox .fa-minus {
+          background-color: $kPrimary;
+          border: 1px solid $kPrimary;
+        }
+      }
+    }
+  }
 }

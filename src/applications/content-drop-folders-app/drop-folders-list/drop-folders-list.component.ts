@@ -100,7 +100,20 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
 
   _onTreeNodeSelected(node:any): void {
     let filters = this.statusFilters;
-    node.node.children ? node.node.children.filter(el => filters.push(el.data)) : filters.push(node.node.data);
+    if(node.node.children) {
+      if(!filters.length) {
+        node.node.children.filter(el => filters.push(el.data));
+      } else {
+        let nodes = node.node.children.map(el => el.data);
+        nodes.forEach(node => {
+          if(!filters.includes(node)) {
+            filters.push(node);
+          }
+        });
+      }
+    } else {
+      filters.push(node.node.data);
+    }
     this._dropFoldersService.reload({ statuses: filters});
   }
 
