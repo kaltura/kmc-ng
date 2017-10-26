@@ -1,21 +1,21 @@
-<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
 	<div class="kCaptions" #captions>
 		<p class="kTitle">{{'applications.content.entryDetails.captions.captions' | translate}}</p>
 		<button type="button" class="kButtonDefault" pButton label="{{'applications.content.entryDetails.captions.add' | translate}}" (click)="_addCaption()"></button>
 		<div class="kTable">
-			<p-dataTable [value]="(_handler._captions$ | async)?.items" scrollable="true" scrollHeight="100%" [rowStyleClass]="_handler._getRowStyle">
+			<p-dataTable [value]="(_widgetService._captions$ | async)?.items" scrollable="true" scrollHeight="100%" [rowStyleClass]="_widgetService._getRowStyle">
 				<p-column field="label" header="{{'applications.content.entryDetails.captions.label' | translate}}">
 				</p-column>
 				<p-column field="format" header="{{'applications.content.entryDetails.captions.type' | translate}}">
 					<ng-template let-col let-caption="rowData" pTemplate="body">
-						<span>{{_handler._getCaptionType(caption.format)}}</span>
+						<span>{{_widgetService._getCaptionType(caption.format)}}</span>
 					</ng-template>
 				</p-column>
 				<p-column field="language" header="{{'applications.content.entryDetails.captions.language' | translate}}">
 				</p-column>
 				<p-column field="status" header="{{'applications.content.entryDetails.captions.status' | translate}}">
 					<ng-template let-col let-caption="rowData" pTemplate="body">
-						<span *ngIf="!caption.uploadFailure">{{_handler._getCaptionStatus(caption)}}</span>
+						<span *ngIf="!caption.uploadFailure">{{_widgetService._getCaptionStatus(caption)}}</span>
 						<div *ngIf="caption.uploadFailure" class="kError">
 							<span>{{'applications.content.entryDetails.captions.uploadError' | translate}}</span>
 						</div>
@@ -24,7 +24,7 @@
 				<p-column header="{{'applications.content.entryDetails.captions.defaultTitle' | translate}}">
 					<ng-template let-col let-caption="rowData" pTemplate="body">
 						<span *ngIf="caption.isDefault">{{'applications.content.entryDetails.captions.default' | translate}}</span>
-						<a (click)="_handler._setAsDefault(caption)" *ngIf="!caption.isDefault && caption.status?.toString()==='2'">{{'applications.content.entryDetails.captions.setDefault' | translate}}</a>
+						<a (click)="_widgetService._setAsDefault(caption)" *ngIf="!caption.isDefault && caption.status?.toString()==='2'">{{'applications.content.entryDetails.captions.setDefault' | translate}}</a>
 					</ng-template>
 				</p-column>
 				<p-column [style]="{'width':'80px'}">
@@ -36,7 +36,7 @@
 							<span>{{caption.progress ? caption.progress : '0'}}%</span>
 						</div>
 						<div *ngIf="caption.uploadFailure">
-							<a (click)="_handler.removeCaption()">{{'applications.content.entryDetails.captions.remove' | translate}}</a>
+							<a (click)="_widgetService.removeCaption()">{{'applications.content.entryDetails.captions.remove' | translate}}</a>
 						</div>
 					</ng-template>
 				</p-column>
@@ -47,7 +47,7 @@
 
 	<kPopupWidget #editPopup [popupWidth]="380" [popupHeight]="460" [modal]="true">
 		<ng-template>
-			<kEntryCaptionsEdit [currentCaption]="_handler.currentCaption" [parentPopupWidget]="editPopup"></kEntryCaptionsEdit>
+			<kEntryCaptionsEdit [currentCaption]="_widgetService.currentCaption" [parentPopupWidget]="editPopup"></kEntryCaptionsEdit>
 		</ng-template>
 	</kPopupWidget>
 

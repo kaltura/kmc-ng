@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { EntryFormWidget } from '../entry-form-widget';
+import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { environment } from 'app-environment';
@@ -7,9 +6,10 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaE
 import { KalturaSourceType } from 'kaltura-typescript-client/types/KalturaSourceType';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 import { AppEventsService } from 'app-shared/kmc-shared';
+import { EntryWidget } from '../entry-widget';
 
 @Injectable()
-export class EntryPreviewHandler extends EntryFormWidget
+export class EntryPreviewWidget extends EntryWidget implements OnDestroy
 {
     public iframeSrc : string;
     private _urlHash: number = 0;
@@ -32,10 +32,13 @@ export class EntryPreviewHandler extends EntryFormWidget
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset()
+    protected onReset()
     {
         // DEVELOPER NOTICE: don't reset _urlHash to support refresh after saving
     }
+
+    ngOnDestroy()
+    {}
 
     private _createUrl(): string {
 
@@ -65,7 +68,7 @@ export class EntryPreviewHandler extends EntryFormWidget
 
         return result;
     }
-    protected _onActivate(firstTimeActivating: boolean) {
+    protected onActivate(firstTimeActivating: boolean) {
 	    this.iframeSrc = this._createUrl();
     }
 

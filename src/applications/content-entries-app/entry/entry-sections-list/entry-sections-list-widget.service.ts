@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppLocalization } from "@kaltura-ng/kaltura-common";
@@ -6,9 +6,10 @@ import { SectionsList } from './sections-list';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { EntryFormWidget } from '../entry-form-widget';
+
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { KalturaExternalMediaEntry } from 'kaltura-typescript-client/types/KalturaExternalMediaEntry';
+import { EntryWidget } from '../entry-widget';
 
 export interface SectionWidgetItem
 {
@@ -19,7 +20,7 @@ export interface SectionWidgetItem
 }
 
 @Injectable()
-export class EntrySectionsListHandler extends EntryFormWidget
+export class EntrySectionsListWidget extends EntryWidget implements OnDestroy
 {
     private _sections = new BehaviorSubject<SectionWidgetItem[]>([]);
     public sections$ : Observable<SectionWidgetItem[]> = this._sections.asObservable();
@@ -29,11 +30,11 @@ export class EntrySectionsListHandler extends EntryFormWidget
         super('sectionsList');
     }
 
-    protected _onDataLoading(dataId : any) : void {
+    protected onDataLoading(dataId : any) : void {
         this._clearSectionsList();
     }
 
-    protected _onActivate(firstTimeActivating: boolean)
+    protected onActivate(firstTimeActivating: boolean)
     {
         if (firstTimeActivating)
         {
@@ -41,12 +42,12 @@ export class EntrySectionsListHandler extends EntryFormWidget
         }
     }
 
-    protected _onDataLoaded(data : KalturaMediaEntry) : void {
+    protected onDataLoaded(data : KalturaMediaEntry) : void {
         this._reloadSections(data);
     }
 
     private _initialize() : void {
-        this._manager.widgetsState$
+        this.form.widgetsState$
             .cancelOnDestroy(this)
             .subscribe(
                 sectionsState => {
@@ -56,10 +57,6 @@ export class EntrySectionsListHandler extends EntryFormWidget
                         const isAttached = (!!sectionState && sectionState.isAttached);
 
                         if (section.attached !== isAttached || section.isValid !== isValid) {
-                            console.log(`entry sections list: updated section '${section.key}' state`, {
-                                isAttached,
-                                isValid
-                            });
                             section.attached = isAttached;
                             section.isValid = isValid;
                         }
@@ -71,7 +68,7 @@ export class EntrySectionsListHandler extends EntryFormWidget
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset()
+    protected onReset()
     {
 
     }
@@ -85,7 +82,7 @@ export class EntrySectionsListHandler extends EntryFormWidget
     private _reloadSections(entry : KalturaMediaEntry) : void
     {
         const sections = [];
-        const formWidgetsState = this._manager.widgetsState;
+        const formWidgetsState = this.form.widgetsState;
 
         if (entry) {
             SectionsList.forEach((section) => {
@@ -131,5 +128,10 @@ export class EntrySectionsListHandler extends EntryFormWidget
     private _isLive( entry : KalturaMediaEntry): boolean {
         const mediaType = entry.mediaType;
         return mediaType === KalturaMediaType.liveStreamFlash || mediaType === KalturaMediaType.liveStreamWindowsMedia || mediaType === KalturaMediaType.liveStreamRealMedia || mediaType === KalturaMediaType.liveStreamQuicktime;
+    }
+
+    ngOnDestroy()
+    {
+
     }
 }

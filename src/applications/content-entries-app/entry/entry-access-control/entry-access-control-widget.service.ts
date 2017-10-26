@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {SelectItem} from 'primeng/primeng';
@@ -23,11 +23,11 @@ import {AppLocalization, KalturaUtils} from '@kaltura-ng/kaltura-common';
 
 import 'rxjs/add/observable/forkJoin';
 import * as R from 'ramda';
-import {EntryFormWidget} from '../entry-form-widget';
+import {EntryWidget} from '../entry-widget';
 
 
 @Injectable()
-export class EntryAccessControlHandler extends EntryFormWidget {
+export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
 
   private _accessControlProfiles = new BehaviorSubject<{ items: SelectItem[] }>({items: []});
 
@@ -60,10 +60,10 @@ export class EntryAccessControlHandler extends EntryFormWidget {
   /**
    * Do some cleanups if needed once the section is removed
    */
-  protected _onReset() {
+  protected onReset() {
   }
 
-  protected _onActivate(firstTimeActivating: boolean) {
+  protected onActivate(firstTimeActivating: boolean) {
     if (firstTimeActivating) {
       super._showLoader();
       this._accessControlProfiles.next({items: []});
@@ -107,7 +107,7 @@ export class EntryAccessControlHandler extends EntryFormWidget {
     }
   }
 
-  protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
+  protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
     if (this.selectedProfile) {
       data.accessControlId = this.selectedProfile.id;
     }
@@ -199,7 +199,7 @@ export class EntryAccessControlHandler extends EntryFormWidget {
   }
 
   public setDirty() {
-    super._updateWidgetState({isDirty: true});
+    super.updateState({isDirty: true});
   }
 
   private _getCountriesByCode(codesList: string): string {
@@ -212,6 +212,11 @@ export class EntryAccessControlHandler extends EntryFormWidget {
       }
     });
     return countries.join(", ");
+  }
+
+  ngOnDestroy()
+  {
+
   }
 
 }
