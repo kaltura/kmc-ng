@@ -35,26 +35,26 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	public _selectedFlavor: Flavor;
 	public _uploadFilter: string = "";
     public _loadingError = null;
-	public _handler: EntryFlavoursHandler;
+
 	public _documentWidth: number = 2000;
 
 	private _importPopupStateChangeSubscribe: ISubscription;
 
-	constructor(private _entryFormManager: EntryFormManager,
+	constructor(public _widgetService: EntryFlavoursHandler,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
     }
 
     ngOnInit() {
 	    this._documentWidth = document.body.clientWidth;
-		this._handler = this._entryFormManager.attachWidget(EntryFlavoursHandler);
+        this._widgetService.attachForm();
     }
 
 	openActionsMenu(event: any, flavor: Flavor): void{
 		if (this.actionsMenu){
 			this._actions = [];
-			this._uploadFilter = this._setUploadFilter(this._handler.data);
-			if (this._handler.sourceAvailabale && (flavor.id === '' || (flavor.id !== '' && flavor.status === KalturaFlavorAssetStatus.deleted.toString()))){
+			this._uploadFilter = this._setUploadFilter(this._widgetService.data);
+			if (this._widgetService.sourceAvailabale && (flavor.id === '' || (flavor.id !== '' && flavor.status === KalturaFlavorAssetStatus.deleted.toString()))){
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.convert'), command: (event) => {this.actionSelected("convert");}});
 			}
 			if ((flavor.isSource && this.isSourceReady(flavor)) || ( !flavor.isSource && flavor.id !== '' &&
@@ -74,7 +74,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 					(flavor.id !== "" && flavor.isWeb && (flavor.status === KalturaFlavorAssetStatus.exporting.toString() || flavor.status === KalturaFlavorAssetStatus.ready.toString()))){
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.preview'), command: (event) => {this.actionSelected("preview");}});
 			}
-			if (this._handler.sourceAvailabale && !flavor.isSource && (flavor.status === KalturaFlavorAssetStatus.error.toString() || flavor.status === KalturaFlavorAssetStatus.exporting.toString() ||
+			if (this._widgetService.sourceAvailabale && !flavor.isSource && (flavor.status === KalturaFlavorAssetStatus.error.toString() || flavor.status === KalturaFlavorAssetStatus.exporting.toString() ||
 				flavor.status === KalturaFlavorAssetStatus.ready.toString() || flavor.status === KalturaFlavorAssetStatus.notApplicable.toString())){
 				this._actions.push({label: this._appLocalization.get('applications.content.entryDetails.flavours.actions.reconvert'), command: (event) => {this.actionSelected("reconvert");}});
 			}
@@ -97,10 +97,10 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	private actionSelected(action: string): void{
 		switch (action){
 			case "delete":
-				this._handler.deleteFlavor(this._selectedFlavor);
+				this._widgetService.deleteFlavor(this._selectedFlavor);
 				break;
 			case "download":
-				this._handler.downloadFlavor(this._selectedFlavor);
+				this._widgetService.downloadFlavor(this._selectedFlavor);
 				break;
 			case "upload":
 				this.fileDialog.open();
@@ -109,10 +109,10 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 				this.importPopup.open();
 				break;
 			case "convert":
-				this._handler.convertFlavor(this._selectedFlavor);
+				this._widgetService.convertFlavor(this._selectedFlavor);
 				break;
 			case "reconvert":
-				this._handler.reconvertFlavor(this._selectedFlavor);
+				this._widgetService.reconvertFlavor(this._selectedFlavor);
 				break;
 			case "preview":
 				this.previewPopup.open();
@@ -146,7 +146,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
       const fileData: File = selectedFiles[0];
 
       if (!this._validateFileSize(fileData)) {
-        this._handler.uploadFlavor(this._selectedFlavor, fileData);
+        this._widgetService.uploadFlavor(this._selectedFlavor, fileData);
       } else {
         this._browserService.alert({
           header: this._appLocalization.get('app.common.attention'),
@@ -160,7 +160,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	    this.actionsMenu.hide();
 	    this._importPopupStateChangeSubscribe.unsubscribe();
 
-		this._entryFormManager.detachWidget(this._handler);
+		this._widgetService.detachForm();
 
 	}
 
@@ -171,7 +171,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 			    .subscribe(event => {
 				    if (event.state === PopupWidgetStates.Close) {
 					    if (event.context && event.context.flavorUrl){
-						    this._handler.importFlavor(this._selectedFlavor, event.context.flavorUrl);
+						    this._widgetService.importFlavor(this._selectedFlavor, event.context.flavorUrl);
 					    }
 				    }
 			    });

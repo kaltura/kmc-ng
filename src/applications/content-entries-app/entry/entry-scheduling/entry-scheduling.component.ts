@@ -14,20 +14,20 @@ export class EntryScheduling implements AfterViewInit, OnInit, OnDestroy {
     public _loadingError = null;
 
 	_enableEndDate: boolean;
-    public _handler : EntrySchedulingHandler;
+
 	public _createdAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
 
     constructor(
-    	private _entryFormManager : EntryFormManager
+        public _widgetService: EntrySchedulingHandler
 	) {}
 
 
     ngOnInit() {
-        this._handler = this._entryFormManager.attachWidget(EntrySchedulingHandler);
+        this._widgetService.attachForm();
     }
 
     ngOnDestroy() {
-        this._entryFormManager.detachWidget(this._handler);
+        this._widgetService.detachForm();
     }
 
 

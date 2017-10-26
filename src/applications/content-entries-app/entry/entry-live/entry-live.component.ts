@@ -14,19 +14,19 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 
     public _loadingError = null;
 	public _copyToClipboardEnabled: boolean = false;
-	public _handler : EntryLiveHandler;
 
-	constructor(private _entryFormManager : EntryFormManager, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+
+	constructor(public _widgetService: EntryLiveHandler, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
     }
 
 
     ngOnInit() {
-		this._handler = this._entryFormManager.attachWidget(EntryLiveHandler);
+		this._widgetService.attachForm();
 		this._copyToClipboardEnabled = this._browserService.copyToClipboardEnabled();
     }
 
     ngOnDestroy() {
-		this._entryFormManager.detachWidget(this._handler);
+		this._widgetService.detachForm();
 
 	}
 
@@ -58,7 +58,7 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 				header: this._appLocalization.get('applications.content.entryDetails.live.regeneratePromptHeader'),
 				message: this._appLocalization.get('applications.content.entryDetails.live.regeneratePrompt'),
 				accept: () => {
-					this._handler.regenerateStreamToken();
+					this._widgetService.regenerateStreamToken();
 				}
 			}
 		);

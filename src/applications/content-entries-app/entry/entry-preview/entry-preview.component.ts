@@ -11,20 +11,20 @@ import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntry
 })
 export class EntryPreview implements OnInit, OnDestroy {
 
-	public _handler : EntryPreviewHandler;
+
 	public _entryHasContent: boolean = false;
 	public _entryReady: boolean = false;
 
 	private _currentEntry: KalturaMediaEntry;
 
 
-	constructor(private _entryFormManager : EntryFormManager) {
+	constructor(public _widgetService: EntryPreviewHandler, private _entryFormManager : EntryFormManager) {
 	}
 
 	ngOnInit() {
 
-		this._handler = this._entryFormManager.attachWidget(EntryPreviewHandler);
-		this._handler.data$.subscribe(
+        this._widgetService.attachForm();
+		this._widgetService.data$.subscribe(
 			data => {
 				if (data) {
 					this._currentEntry = data;
@@ -40,7 +40,7 @@ export class EntryPreview implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
-		this._entryFormManager.detachWidget(this._handler);
+		this._widgetService.detachForm();
 	}
 }
 

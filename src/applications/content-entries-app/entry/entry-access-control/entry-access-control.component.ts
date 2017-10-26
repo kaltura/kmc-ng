@@ -11,18 +11,17 @@ export class EntryAccessControl implements  OnInit, OnDestroy {
 
 	public _loading = false;
 	public _loadingError = null;
-	public _handler: EntryAccessControlHandler;
 
-	constructor(private _entryFormManager: EntryFormManager) {
+	constructor(public _widgetService: EntryAccessControlHandler) {
 	}
 
 
 	ngOnInit() {
-		this._handler = this._entryFormManager.attachWidget(EntryAccessControlHandler);
+        this._widgetService.attachForm();
 	}
 
 	ngOnDestroy() {
-		this._entryFormManager.detachWidget(this._handler);
+        this._widgetService.detachForm();
 	}
 }
 

@@ -19,18 +19,18 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 
 	private _searchUsersSubscription : ISubscription;
 	public _usersProvider = new Subject<SuggestionsProviderData>();
-	public _handler : EntryUsersHandler;
 
-	constructor(private _entryFormManager : EntryFormManager, private _appLocalization: AppLocalization) {
+
+	constructor(public _widgetService: EntryUsersHandler, private _appLocalization: AppLocalization) {
     }
 
 
     ngOnInit() {
-		this._handler = this._entryFormManager.attachWidget(EntryUsersHandler);
+		this._widgetService.attachForm();
     }
 
     ngOnDestroy() {
-		this._entryFormManager.detachWidget(this._handler);
+		this._widgetService.detachForm();
 	}
 
 
@@ -38,12 +38,12 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
     }
 
     public _openChangeOwner(): void{
-	    this._handler.usersForm.patchValue({owners: null});
+	    this._widgetService.usersForm.patchValue({owners: null});
 	    this.ownerPopup.open();
     }
 
     public _saveAndClose(): void{
-	    this._handler.saveOwner();
+	    this._widgetService.saveOwner();
 	    this.ownerPopup.close();
     }
 
@@ -75,12 +75,12 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 			this._searchUsersSubscription = null;
 		}
 
-		this._searchUsersSubscription = this._handler.searchUsers(event.query).subscribe(data => {
+		this._searchUsersSubscription = this._widgetService.searchUsers(event.query).subscribe(data => {
 				const suggestions = [];
 				(data || []).forEach((suggestedUser: KalturaUser) => {
 					let isSelectable = true;
 					if (formControl){
-						const owners = this._handler.usersForm.value[formControl] || [];
+						const owners = this._widgetService.usersForm.value[formControl] || [];
 						isSelectable = !owners.find(user => {
 							return user.id === suggestedUser.id;
 						});

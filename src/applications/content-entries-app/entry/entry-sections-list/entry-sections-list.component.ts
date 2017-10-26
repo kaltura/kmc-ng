@@ -20,9 +20,8 @@ export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
     public _loading = false;
     public _showList = false;
     public _sections : SectionWidgetItem[] = [];
-    private _handler : EntrySectionsListHandler;
 
-    constructor(private _entryFormManager : EntryFormManager, public _entryStore : EntryStore)  {
+    constructor(public _widgetService: EntrySectionsListHandler, public _entryStore : EntryStore)  {
     }
 
 
@@ -35,9 +34,9 @@ export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
 
     ngOnInit() {
 		this._loading = true;
-		this._handler = this._entryFormManager.attachWidget(EntrySectionsListHandler);
+        this._widgetService.attachForm();
 
-        this._handler.sections$
+        this._widgetService.sections$
         .cancelOnDestroy(this)
         .subscribe(
 			sections =>
@@ -51,7 +50,7 @@ export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
 	}
 
     ngOnDestroy() {
-        this._entryFormManager.detachWidget(this._handler);        
+        this._widgetService.detachForm();
     }
 
 

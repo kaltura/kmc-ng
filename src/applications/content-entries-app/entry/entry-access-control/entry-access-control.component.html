@@ -1,38 +1,38 @@
-<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
-	<div class="kAccessControl" *ngIf="_handler.selectedProfile">
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+	<div class="kAccessControl" *ngIf="_widgetService.selectedProfile">
 		<p class="kTitle">{{'applications.content.entryDetails.accessControl.accessControl' | translate}}</p>
 		<div class="kAccessControlDetails">
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.profile' | translate}}</span>
-				<p-dropdown [options]="(_handler._accessControlProfiles$ | async)?.items" [(ngModel)]="_handler.selectedProfile" (onChange)="_handler.setDirty()"></p-dropdown>
+				<p-dropdown [options]="(_widgetService._accessControlProfiles$ | async)?.items" [(ngModel)]="_widgetService.selectedProfile" (onChange)="_widgetService.setDirty()"></p-dropdown>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.name' | translate}}</span>
-				<span>{{_handler.selectedProfile.name}}</span>
+				<span>{{_widgetService.selectedProfile.name}}</span>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.description' | translate}}</span>
-				<span class="kMultiLine">{{_handler.selectedProfile.description | kLineBreak}}</span>
+				<span class="kMultiLine">{{_widgetService.selectedProfile.description | kLineBreak}}</span>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.domains' | translate}}</span>
-				<span>{{_handler._domainsRestriction}}</span>
+				<span>{{_widgetService._domainsRestriction}}</span>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.countries' | translate}}</span>
-				<span>{{_handler._countriesRestriction}}</span>
+				<span>{{_widgetService._countriesRestriction}}</span>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.ips' | translate}}</span>
-				<span>{{_handler._ipRestriction}}</span>
+				<span>{{_widgetService._ipRestriction}}</span>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.flavours' | translate}}</span>
-				<span>{{_handler._flavourRestriction}}</span>
+				<span>{{_widgetService._flavourRestriction}}</span>
 			</div>
 			<div class="kRow">
 				<span class="kLabels">{{'applications.content.entryDetails.accessControl.advanced' | translate}}</span>
-				<span>{{_handler._advancedRestriction}}</span>
+				<span>{{_widgetService._advancedRestriction}}</span>
 			</div>
 		</div>
 	</div>

@@ -27,19 +27,19 @@ export class EntryDetails implements OnInit, OnDestroy {
 	get currentEntry(): KalturaMediaEntry {
 		return this._currentEntry;
 	}
-	public _handler : EntryDetailsHandler;
 
 
-	constructor(private _entryFormManager : EntryFormManager,
+
+	constructor(public _widgetService: EntryDetailsHandler,
 				private browserService: BrowserService,
 
 				public _entryStore: EntryStore) {
 	}
 
 	ngOnInit() {
+        this._widgetService.attachForm();
 
-		this._handler = this._entryFormManager.attachWidget(EntryDetailsHandler);
-		this._handler.data$.subscribe(
+		this._widgetService.data$.subscribe(
 			data => {
 				if (data) {
 					this._currentEntry = data;
@@ -72,7 +72,7 @@ export class EntryDetails implements OnInit, OnDestroy {
 
 
 	ngOnDestroy() {
-		this._entryFormManager.detachWidget(this._handler);
+        this._widgetService.detachForm();
 	}
 }
 
