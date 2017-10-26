@@ -1,13 +1,13 @@
 import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
 import { Injectable } from '@angular/core';
-import { FormWidget } from '@kaltura-ng/kaltura-ui';
+import { WidgetBase } from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { CategoryFormManager } from './category-form-manager';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 
 @Injectable()
-export abstract class CategoryFormWidget extends FormWidget<CategoryFormManager, KalturaCategory, KalturaMultiRequest> {
+export abstract class CategoryFormWidget extends WidgetBase<CategoryFormManager, KalturaCategory, KalturaMultiRequest> {
     public sectionBlockerMessage: AreaBlockerMessage;
     public showSectionLoader: boolean;
 
@@ -69,7 +69,7 @@ export abstract class CategoryFormWidget extends FormWidget<CategoryFormManager,
                     {
                         label: 'Retry',
                         action: () => {
-                            this._activate();
+                            this.activate();
                         }
                     }
                 ]
