@@ -769,7 +769,7 @@
           "owner": "Administrative Owner",
           "changeOwner": "Change Owner",
           "changeOwnerText": "Set a new owner for this entry",
-          "changeOwnerPH": "Enter user name or id",
+          "changeOwnerPH": "Enter user name or user id",
           "save": "Save",
           "co-editors": "Co-Editors",
           "co-publishers": "Co-Publishers",
