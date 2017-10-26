@@ -102,7 +102,7 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
 					(data.objects || []).forEach((suggestedUser: KalturaUser) => {
 						let isSelectable = true;
 						suggestions.push({
-							name: suggestedUser.screenName + "(" + suggestedUser.id + ")",
+							name: suggestedUser.screenName + " (" + suggestedUser.id + ")",
 							item: suggestedUser,
 							isSelectable: isSelectable
 						});
@@ -119,7 +119,7 @@ export class BulkChangeOwner implements OnInit, OnDestroy, AfterViewInit {
 			);
 	}
 
-	public _convertUserInputToValidValue(value: string): KalturaUser {
+	public _convertUserInputToValidValue(value: string): any {
 		let result = null;
 		let tt = this._appLocalization.get('applications.content.entryDetails.users.tooltip', {0: value});
 
