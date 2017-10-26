@@ -86,6 +86,7 @@ import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/
   exports: [
     EntryStatusPipe,
     EntryTypePipe,
+    ModerationPipe,
     CategoriesTreeComponent,
     SchedulingComponent,
     EntryDurationPipe,
