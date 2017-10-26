@@ -199,7 +199,7 @@ export class EntryAccessControlHandler extends EntryFormWidget implements OnDest
   }
 
   public setDirty() {
-    super._updateWidgetState({isDirty: true});
+    super.updateState({isDirty: true});
   }
 
   private _getCountriesByCode(codesList: string): string {

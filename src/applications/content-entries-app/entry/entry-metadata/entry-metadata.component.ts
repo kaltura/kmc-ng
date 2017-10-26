@@ -32,18 +32,18 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
 	@ViewChild('metadataContainer')
 	public _container : ElementRef;
-    public _handler : EntryMetadataHandler;
 
     @ViewChild('nameField') private nameField: ElementRef;
 
-    constructor(private _entryFormManager : EntryFormManager,
+    constructor(public _widgetService: EntryMetadataHandler,
                 private _pageScrollService: PageScrollService,
                 @Inject(DOCUMENT) private document: any) {
     }
 
     ngOnInit() {
-        this._handler = this._entryFormManager.attachWidget(EntryMetadataHandler);
-        this._handler.data$.subscribe(
+        this._widgetService.attachForm();
+
+        this._widgetService.data$.subscribe(
             data => {
                 if (data) {
                     setTimeout(()=>{
@@ -67,9 +67,9 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
             this._searchTagsSubscription = null;
         }
 
-        this._searchTagsSubscription = this._handler.searchTags(event.query).subscribe(data => {
+        this._searchTagsSubscription = this._widgetService.searchTags(event.query).subscribe(data => {
                 const suggestions = [];
-                const entryTags = this._handler.metadataForm.value.tags || [];
+                const entryTags = this._widgetService.metadataForm.value.tags || [];
 
                 (data|| []).forEach(suggestedTag => {
                     const isSelectable = !entryTags.find(tag => {
@@ -94,9 +94,9 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
             this._searchCategoriesSubscription = null;
         }
 
-        this._searchCategoriesSubscription = this._handler.searchCategories(event.query).subscribe(data => {
+        this._searchCategoriesSubscription = this._widgetService.searchCategories(event.query).subscribe(data => {
                 const suggestions = [];
-                const entryCategories = this._handler.metadataForm.value.categories || [];
+                const entryCategories = this._widgetService.metadataForm.value.categories || [];
 
 
                 (data|| []).forEach(suggestedCategory => {
@@ -123,7 +123,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         this._searchCategoriesSubscription && this._searchCategoriesSubscription.unsubscribe();
 	    this._popupStateChangeSubscribe && this._popupStateChangeSubscribe.unsubscribe();
 
-        this._entryFormManager.detachWidget(this._handler);
+        this._widgetService.detachForm();
     }
 
     private _updateJumpToSectionsMenu()
@@ -154,7 +154,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 			    .subscribe(event => {
 				    if (event.state === PopupWidgetStates.Close) {
 					    if (event.context && event.context.isDirty){
-						   this._handler.setDirty();
+						   this._widgetService.setDirty();
 					    }
 				    }
 			    });
@@ -172,7 +172,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     _updateEntryCategories($event : any) : void{
         if ($event && $event instanceof Array)
         {
-            this._handler.metadataForm.patchValue({ categories : $event});
+            this._widgetService.metadataForm.patchValue({ categories : $event});
         }
     }
 

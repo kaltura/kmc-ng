@@ -69,7 +69,7 @@ export class CategoryMetadataHandler extends CategoryFormWidget implements OnDes
                 });
 
                 if (this.isDirty !== isDirty || this.isValid !== isValid) {
-                    super._updateWidgetState({
+                    super.updateState({
                         isValid: isValid,
                         isDirty: isDirty
                     });
@@ -79,7 +79,7 @@ export class CategoryMetadataHandler extends CategoryFormWidget implements OnDes
     }
 
     public setDirty() {
-        super._updateWidgetState({
+        super.updateState({
             isDirty: true
         });
     }

@@ -24,7 +24,6 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 	public _actions: MenuItem[] = [];
 
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
-	@ViewChild('sectionContainer') private bla: ElementRef;
 	@ViewChild('editPopup') public editPopup: PopupWidgetComponent;
 	public _handler : EntryCaptionsHandler;
 

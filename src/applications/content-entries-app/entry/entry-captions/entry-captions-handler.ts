@@ -348,7 +348,7 @@ export class EntryCaptionsHandler extends EntryFormWidget  implements OnDestroy 
     }
 
     public setDirty() {
-        super._updateWidgetState({isDirty: true});
+        super.updateState({isDirty: true});
     }
 
     ngOnDestroy()

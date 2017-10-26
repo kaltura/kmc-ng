@@ -321,7 +321,7 @@ export class EntryRelatedHandler extends EntryFormWidget implements OnDestroy
   }
 
 	public _setDirty(){
-		super._updateWidgetState({isDirty: true});
+		super.updateState({isDirty: true});
 	}
 
     ngOnDestroy()

@@ -56,10 +56,6 @@ export class EntrySectionsListHandler extends EntryFormWidget implements OnDestr
                         const isAttached = (!!sectionState && sectionState.isAttached);
 
                         if (section.attached !== isAttached || section.isValid !== isValid) {
-                            console.log(`entry sections list: updated section '${section.key}' state`, {
-                                isAttached,
-                                isValid
-                            });
                             section.attached = isAttached;
                             section.isValid = isValid;
                         }

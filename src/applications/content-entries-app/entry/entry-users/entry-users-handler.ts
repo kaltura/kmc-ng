@@ -41,7 +41,7 @@ export class EntryUsersHandler extends EntryFormWidget implements OnDestroy
             .cancelOnDestroy(this)
             .subscribe(
 				() => {
-					super._updateWidgetState({
+					super.updateState({
 						isValid: this.usersForm.status === 'VALID',
 						isDirty: this.usersForm.dirty
 					});

@@ -69,7 +69,7 @@ export class CategorySectionsListHandler extends CategoryFormWidget implements O
      */
     protected _onReset() {
         // TODO: remove this line!!!
-        // super._updateWidgetState({
+        // super.updateState({
         //     isDirty: true
         // });
     }

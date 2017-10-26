@@ -53,13 +53,6 @@ export class EntryMetadataHandler extends EntryFormWidget implements OnDestroy
     public metadataForm : FormGroup;
     public customDataForms : DynamicMetadataForm[] = [];
 
-
-    bla = null;
-    ngOnDestroy()
-    {
-        clearInterval(this.bla);
-        console.warn('metadata ngOnDestroy');
-    }
     constructor(private _kalturaServerClient: KalturaClient,
                 private _categoriesStore : CategoriesStore,
                 private _formBuilder : FormBuilder,
@@ -70,12 +63,6 @@ export class EntryMetadataHandler extends EntryFormWidget implements OnDestroy
         super(EntryWidgetKeys.Metadata);
 
         this._buildForm();
-
-        this.bla = setInterval(() =>
-        {
-            console.log('---> metadata')
-        },1000);
-
     }
 
     private _buildForm() : void {
@@ -112,7 +99,7 @@ export class EntryMetadataHandler extends EntryFormWidget implements OnDestroy
                     });
 
                     if (this.isDirty !== isDirty || this.isValid !== isValid) {
-                        super._updateWidgetState({
+                        super.updateState({
                             isValid: isValid,
                             isDirty: isDirty
                         });
@@ -123,7 +110,7 @@ export class EntryMetadataHandler extends EntryFormWidget implements OnDestroy
 
     public setDirty()
     {
-	    super._updateWidgetState({
+	    super.updateState({
 		    isDirty: true
 	    });
     }

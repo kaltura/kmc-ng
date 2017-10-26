@@ -51,20 +51,7 @@ export class EntryLiveHandler extends EntryFormWidget implements OnDestroy {
 
 	constructor(manager: EntryFormManager, private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
 		super(EntryWidgetKeys.Live);
-
-        this.bla = setInterval(() =>
-        {
-            console.log('---> Live')
-        },1000);
 	}
-
-    bla = null;
-    ngOnDestroy()
-    {
-        clearInterval((this.bla));
-        console.warn('Live ngOnDestroy');
-    }
-
 
 	protected _onReset() {
 		this.dirty = false;
@@ -265,7 +252,7 @@ export class EntryLiveHandler extends EntryFormWidget implements OnDestroy {
 			newStatus.isDirty = true;
 		}
 
-		super._updateWidgetState(newStatus);
+		super.updateState(newStatus);
 
 		return valid;
 	}
