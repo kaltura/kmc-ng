@@ -58,7 +58,9 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
   ngOnInit() {
     this._selectedCategories = this.value && this.value instanceof Array ? [...this.value] : [];
     setTimeout(() => {
-      this._tags.checkShowMore();
+      if (this._tags) {
+        this._tags.checkShowMore();
+      }
     }, 0);
 
   }
@@ -119,12 +121,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
     this.updateTreeSelections();
 
     if (this._categoriesLoaded) {
-      setTimeout(() => {
-        const inputField: any = this._autoComplete.domHandler.findSingle(this._autoComplete.el.nativeElement, 'input');
-        if (inputField && inputField.focus && !inputField.disabled) {
-          inputField.focus();
-        }
-      }, 0);
+      this._autoComplete.focusInput();
     }
   }
 
