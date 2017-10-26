@@ -14,12 +14,13 @@ import { BaseEntryListAction } from 'kaltura-typescript-client/types/BaseEntryLi
 import { AppLocalization, KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
-import { EntryFormWidget } from '../entry-form-widget';
+
 import { EntryStore } from '../entry-store.service';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { EntryFormManager } from '../entry-form-manager';
+
+import { EntryWidget } from '../entry-widget';
 
 
 export interface ClipsData
@@ -29,7 +30,7 @@ export interface ClipsData
 }
 
 @Injectable()
-export class EntryClipsHandler extends EntryFormWidget implements OnDestroy
+export class EntryClipsWidget extends EntryWidget implements OnDestroy
 {
     private _clips = new BehaviorSubject<ClipsData>({ items : null, totalItems : 0});
     public entries$ = this._clips.asObservable();

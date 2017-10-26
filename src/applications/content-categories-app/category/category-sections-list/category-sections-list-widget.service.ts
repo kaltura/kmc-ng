@@ -7,7 +7,7 @@ import { CategorySectionsList } from './category-sections-list';
 import { CategoryWidgetKeys } from '../category-widget-keys';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { CategoryFormWidget } from '../category-form-widget';
+import { CategoryWidget } from '../category-widget';
 
 export interface SectionWidgetItem {
     label: string,
@@ -17,7 +17,7 @@ export interface SectionWidgetItem {
 }
 
 @Injectable()
-export class CategorySectionsListHandler extends CategoryFormWidget implements OnDestroy {
+export class CategorySectionsListWidget extends CategoryWidget implements OnDestroy {
     private _sections = new BehaviorSubject<SectionWidgetItem[]>([]);
     public sections$: Observable<SectionWidgetItem[]> = this._sections.asObservable();
 

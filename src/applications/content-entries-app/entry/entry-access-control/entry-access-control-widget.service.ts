@@ -23,11 +23,11 @@ import {AppLocalization, KalturaUtils} from '@kaltura-ng/kaltura-common';
 
 import 'rxjs/add/observable/forkJoin';
 import * as R from 'ramda';
-import {EntryFormWidget} from '../entry-form-widget';
+import {EntryWidget} from '../entry-widget';
 
 
 @Injectable()
-export class EntryAccessControlHandler extends EntryFormWidget implements OnDestroy {
+export class EntryAccessControlWidget extends EntryWidget implements OnDestroy {
 
   private _accessControlProfiles = new BehaviorSubject<{ items: SelectItem[] }>({items: []});
 

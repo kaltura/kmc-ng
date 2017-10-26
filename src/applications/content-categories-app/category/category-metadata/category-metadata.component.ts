@@ -6,8 +6,9 @@ import { Component, OnInit, QueryList, ViewChild, ViewChildren, Inject, ElementR
 import { JumpToSection } from './jump-to-section.component';
 import { DOCUMENT } from '@angular/platform-browser';
 import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
-import { CategoryMetadataHandler } from "applications/content-categories-app/category/category-metadata/category-metadata-handler";
-import { CategoryFormManager } from "applications/content-categories-app/category/category-form-manager";
+import { CategoryMetadataWidget } from './category-metadata-widget.service';
+
+
 
 @Component({
   selector: 'kmc-category-metadata',
@@ -26,7 +27,7 @@ export class CategoryMetadataComponent implements OnInit {
   @ViewChild('metadataContainer')
   public _container: ElementRef;
 
-  constructor(public _widgetService: CategoryMetadataHandler,
+  constructor(public _widgetService: CategoryMetadataWidget,
     private _pageScrollService: PageScrollService,
     @Inject(DOCUMENT) private document: any) {
   }

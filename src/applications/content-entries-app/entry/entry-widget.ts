@@ -1,13 +1,11 @@
-import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
-import { Injectable } from '@angular/core';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { WidgetBase } from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { CategoryFormManager } from './category-form-manager';
+import { EntryWidgetsManager } from './entry-widgets-manager';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 
-@Injectable()
-export abstract class CategoryFormWidget extends WidgetBase<CategoryFormManager, KalturaCategory, KalturaMultiRequest> {
+export abstract class EntryWidget extends WidgetBase<EntryWidgetsManager, KalturaMediaEntry, KalturaMultiRequest> {
     public sectionBlockerMessage: AreaBlockerMessage;
     public showSectionLoader: boolean;
 
@@ -29,36 +27,40 @@ export abstract class CategoryFormWidget extends WidgetBase<CategoryFormManager,
         this.sectionBlockerMessage = null;
     }
 
-    protected _showBlockerMessage(message: AreaBlockerMessage, addBackToCategoriesButton: boolean) {
+    protected _showBlockerMessage(message: AreaBlockerMessage, addBackToEntriesButton: boolean) {
         let messageToShow = message;
-        if (addBackToCategoriesButton) {
+        if (addBackToEntriesButton) {
             messageToShow = new AreaBlockerMessage({
                 message: message.message,
                 buttons: [
-                    ...this._createBackToCategoriesButton(),
+                    ...this._createBackToEntriesButton(),
                     ... message.buttons
                 ]
-            });
-        };
+            })
+        }
+        ;
 
         this.showSectionLoader = false;
         this.sectionBlockerMessage = messageToShow;
     }
 
-    protected _createBackToCategoriesButton(): AreaBlockerMessageButton[] {
-        if (this.form instanceof CategoryFormManager)
-        {
+    protected _createBackToEntriesButton(): AreaBlockerMessageButton[] {
+        if (this.form) {
             return [{
-                label: 'Back To Categories',
+                label: 'Back To Entries',
                 action: () => {
-                    (<CategoryFormManager>this.form).returnToCategories();
+                    this.form.returnToEntries();
                 }
             }];
         }else
         {
-            return [];
+            return [{
+                label: 'dismiss',
+                action: () => {
+                    this._removeBlockerMessage();
+                }
+            }];
         }
-
     }
 
     protected _showActivationError() {

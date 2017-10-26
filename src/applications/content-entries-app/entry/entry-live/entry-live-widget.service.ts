@@ -15,11 +15,12 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
-import { EntryFormWidget } from '../entry-form-widget';
-import { EntryFormManager } from '../entry-form-manager';
+
+
 import { LiveXMLExporter } from './live-xml-exporter';
 import { AVAIL_BITRATES } from './bitrates';
 import { environment } from 'app-environment';
+import { EntryWidget } from '../entry-widget';
 
 export interface bitrate {
 	enabled: boolean,
@@ -30,7 +31,7 @@ export interface bitrate {
 }
 
 @Injectable()
-export class EntryLiveHandler extends EntryFormWidget implements OnDestroy {
+export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 
 	public _liveType: string = "";
 	private dirty: boolean;
@@ -49,7 +50,7 @@ export class EntryLiveHandler extends EntryFormWidget implements OnDestroy {
 	public _bitrates: bitrate[] = [];
 	public _availableBitrates = AVAIL_BITRATES;
 
-	constructor(manager: EntryFormManager, private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+	constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
 		super(EntryWidgetKeys.Live);
 	}
 

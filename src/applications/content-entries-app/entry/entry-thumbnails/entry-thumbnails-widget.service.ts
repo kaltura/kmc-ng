@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EntryFormWidget } from '../entry-form-widget';
+
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -24,6 +24,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { environment } from 'app-environment';
+import { EntryWidget } from '../entry-widget';
 
 export interface ThumbnailRow {
 	id: string,
@@ -39,7 +40,7 @@ export interface ThumbnailRow {
 }
 
 @Injectable()
-export class EntryThumbnailsHandler extends EntryFormWidget implements OnDestroy
+export class EntryThumbnailsWidget extends EntryWidget implements OnDestroy
 {
 	private _thumbnails = new BehaviorSubject<{ items : ThumbnailRow[]}>(
 		{ items : []}

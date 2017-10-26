@@ -19,13 +19,14 @@ import { AttachmentAssetUpdateAction } from 'kaltura-typescript-client/types/Att
 import { AttachmentAssetAddAction } from 'kaltura-typescript-client/types/AttachmentAssetAddAction';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 
-import { EntryFormWidget } from '../entry-form-widget';
+
 import { EntryWidgetKeys } from '../entry-widget-keys';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators'
 import { environment } from 'app-environment';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryRelatedFile } from './new-entry-related-file';
+import { EntryWidget } from '../entry-widget';
 
 export interface RelatedFile extends KalturaAttachmentAsset
 {
@@ -37,7 +38,7 @@ export interface RelatedFile extends KalturaAttachmentAsset
 }
 
 @Injectable()
-export class EntryRelatedHandler extends EntryFormWidget implements OnDestroy
+export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 {
 
 	relatedFilesListDiffer: IterableDiffer<RelatedFile>;

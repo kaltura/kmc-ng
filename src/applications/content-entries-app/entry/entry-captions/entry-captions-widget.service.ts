@@ -28,10 +28,11 @@ import { KalturaCaptionAssetStatus } from 'kaltura-typescript-client/types/Kaltu
 import { KalturaLanguage } from 'kaltura-typescript-client/types/KalturaLanguage';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 
-import { EntryFormWidget } from '../entry-form-widget';
+
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
 import { NewEntryCaptionFile } from './new-entry-caption-file';
+import { EntryWidget } from '../entry-widget';
 
 export interface CaptionRow {
     uploading: boolean,
@@ -49,7 +50,7 @@ export interface CaptionRow {
 }
 
 @Injectable()
-export class EntryCaptionsHandler extends EntryFormWidget  implements OnDestroy {
+export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     captionsListDiffer: IterableDiffer<CaptionRow>;
     captionDiffer: { [key: string]: KeyValueDiffer<string, any> } = {};
 

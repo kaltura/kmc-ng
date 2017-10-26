@@ -6,7 +6,7 @@ import { CategoryService } from './category.service';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 
 @Injectable()
-export class CategoryFormManager extends WidgetsManagerBase<KalturaCategory, KalturaMultiRequest>
+export class CategoryWidgetsManager extends WidgetsManagerBase<KalturaCategory, KalturaMultiRequest>
 {
     private _categoryStore: CategoryService;
 

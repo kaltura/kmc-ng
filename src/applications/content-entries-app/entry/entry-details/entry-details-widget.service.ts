@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
-    EntryFormWidget
-} from '../entry-form-widget';
+    EntryWidget
+} from '../entry-widget';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { environment } from 'app-environment';
@@ -14,7 +14,7 @@ export interface PreviewEntryData{
 }
 
 @Injectable()
-export class EntryDetailsHandler extends EntryFormWidget
+export class EntryDetailsWidget extends EntryWidget
 {
     public _landingPage : string;
     public iframeSrc : string;

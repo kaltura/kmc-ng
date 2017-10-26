@@ -5,8 +5,8 @@ import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntry
 import { KalturaSourceType } from 'kaltura-typescript-client/types/KalturaSourceType';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { EntryDetailsHandler } from './entry-details-handler';
-import { EntryFormManager } from '../entry-form-manager';
+import { EntryDetailsWidget } from './entry-details-widget.service';
+
 
 @Component({
 	selector: 'kEntryDetails',
@@ -30,7 +30,7 @@ export class EntryDetails implements OnInit, OnDestroy {
 
 
 
-	constructor(public _widgetService: EntryDetailsHandler,
+	constructor(public _widgetService: EntryDetailsWidget,
 				private browserService: BrowserService,
 
 				public _entryStore: EntryStore) {

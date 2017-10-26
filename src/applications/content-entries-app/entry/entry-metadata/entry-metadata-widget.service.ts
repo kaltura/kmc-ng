@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { IterableDiffers, IterableDiffer, IterableChangeRecord } from '@angular/core';
-import { EntryFormWidget } from '../entry-form-widget';
+
 import { Observable } from 'rxjs/Observable';
 import { KalturaCategoryEntryFilter } from 'kaltura-typescript-client/types/KalturaCategoryEntryFilter';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
@@ -32,6 +32,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
+import { EntryWidget } from '../entry-widget';
 
 export interface EntryCategoryItem
 {
@@ -43,7 +44,7 @@ export interface EntryCategoryItem
 }
 
 @Injectable()
-export class EntryMetadataHandler extends EntryFormWidget implements OnDestroy
+export class EntryMetadataWidget extends EntryWidget implements OnDestroy
 {
     private _entryCategoriesDiffers : IterableDiffer<EntryCategoryItem>;
     public _entryCategories : EntryCategoryItem[]  = [];

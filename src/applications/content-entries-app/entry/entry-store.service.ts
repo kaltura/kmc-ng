@@ -14,7 +14,7 @@ import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { BaseEntryGetAction } from 'kaltura-typescript-client/types/BaseEntryGetAction';
 import { BaseEntryUpdateAction } from 'kaltura-typescript-client/types/BaseEntryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { EntryFormManager } from './entry-form-manager';
+import { EntryWidgetsManager } from './entry-widgets-manager';
 import { KalturaTypesFactory } from 'kaltura-typescript-client';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
@@ -72,7 +72,7 @@ export class EntryStore implements  OnDestroy {
 				private _router: Router,
 				private _browserService : BrowserService,
 				private _entriesStore : EntriesStore,
-				@Host() private _sectionsManager : EntryFormManager,
+				@Host() private _sectionsManager : EntryWidgetsManager,
 				private _entryRoute: ActivatedRoute,
                 private _appLocalization: AppLocalization) {
 

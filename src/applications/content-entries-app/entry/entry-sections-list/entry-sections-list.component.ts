@@ -1,10 +1,10 @@
 import { Component, AfterViewInit,OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { EntryStore } from '../entry-store.service';
-import { SectionWidgetItem, EntrySectionsListHandler } from './entry-sections-list-handler';
+import { SectionWidgetItem, EntrySectionsListWidget } from './entry-sections-list-widget.service';
 import { StickyComponent } from '@kaltura-ng/kaltura-ui';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { EntryFormManager } from '../entry-form-manager';
+
 
 
 
@@ -21,7 +21,7 @@ export class EntrySectionsList implements AfterViewInit, OnInit, OnDestroy {
     public _showList = false;
     public _sections : SectionWidgetItem[] = [];
 
-    constructor(public _widgetService: EntrySectionsListHandler, public _entryStore : EntryStore)  {
+    constructor(public _widgetService: EntrySectionsListWidget, public _entryStore : EntryStore)  {
     }
 
 

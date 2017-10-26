@@ -7,9 +7,9 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaE
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { Menu, MenuItem } from 'primeng/primeng';
-import { EntryFlavoursHandler } from './entry-flavours-handler';
+import { EntryFlavoursWidget } from './entry-flavours-widget.service';
 import { Flavor } from './flavor';
-import { EntryFormManager } from '../entry-form-manager';
+
 import { environment } from 'app-environment';
 import { BrowserService } from 'app-shared/kmc-shell';
 
@@ -40,7 +40,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 
 	private _importPopupStateChangeSubscribe: ISubscription;
 
-	constructor(public _widgetService: EntryFlavoursHandler,
+	constructor(public _widgetService: EntryFlavoursWidget,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
     }

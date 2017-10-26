@@ -1,6 +1,6 @@
 import { Component, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
-import { EntrySchedulingHandler } from './entry-scheduling-handler';
-import { EntryFormManager } from '../entry-form-manager';
+import { EntrySchedulingWidget } from './entry-scheduling-widget.service';
+
 import { environment } from 'app-environment';
 
 @Component({
@@ -18,7 +18,7 @@ export class EntryScheduling implements AfterViewInit, OnInit, OnDestroy {
 	public _createdAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
 
     constructor(
-        public _widgetService: EntrySchedulingHandler
+        public _widgetService: EntrySchedulingWidget
 	) {}
 
 

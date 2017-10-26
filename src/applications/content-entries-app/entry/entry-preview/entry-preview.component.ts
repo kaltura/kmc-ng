@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { EntryPreviewHandler } from './entry-preview-handler';
-import { EntryFormManager } from '../entry-form-manager';
+import { EntryPreviewWidget } from './entry-preview-widget.service';
+
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
 
@@ -18,7 +18,7 @@ export class EntryPreview implements OnInit, OnDestroy {
 	private _currentEntry: KalturaMediaEntry;
 
 
-	constructor(public _widgetService: EntryPreviewHandler, private _entryFormManager : EntryFormManager) {
+	constructor(public _widgetService: EntryPreviewWidget) {
 	}
 
 	ngOnInit() {

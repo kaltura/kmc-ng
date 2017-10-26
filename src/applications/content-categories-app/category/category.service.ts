@@ -15,7 +15,7 @@ import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { CategoryGetAction } from 'kaltura-typescript-client/types/CategoryGetAction';
 import { CategoryUpdateAction } from 'kaltura-typescript-client/types/CategoryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { CategoryFormManager } from './category-form-manager';
+import { CategoryWidgetsManager } from './category-widgets-manager';
 import { KalturaTypesFactory } from 'kaltura-typescript-client';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
@@ -67,7 +67,7 @@ export class CategoryService implements OnDestroy {
 		private _router: Router,
 		private _browserService: BrowserService,
 		private _categoriesStore: CategoriesService,
-		@Host() private _sectionsManager: CategoryFormManager,
+		@Host() private _sectionsManager: CategoryWidgetsManager,
 		private _categoryRoute: ActivatedRoute,
 		private _appLocalization: AppLocalization) {
 

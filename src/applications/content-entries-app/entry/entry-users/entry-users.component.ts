@@ -5,8 +5,8 @@ import { Subject } from 'rxjs/Subject';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { EntryUsersHandler } from './entry-users-handler';
-import { EntryFormManager } from '../entry-form-manager';
+import { EntryUsersWidget } from './entry-users-widget.service';
+
 
 @Component({
   selector: 'kEntryUsers',
@@ -21,7 +21,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 	public _usersProvider = new Subject<SuggestionsProviderData>();
 
 
-	constructor(public _widgetService: EntryUsersHandler, private _appLocalization: AppLocalization) {
+	constructor(public _widgetService: EntryUsersWidget, private _appLocalization: AppLocalization) {
     }
 
 

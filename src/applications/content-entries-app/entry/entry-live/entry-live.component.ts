@@ -2,8 +2,8 @@ import { Component, AfterViewInit,OnInit, OnDestroy } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 
-import { EntryLiveHandler } from './entry-live-handler';
-import { EntryFormManager } from '../entry-form-manager';
+import { EntryLiveWidget } from './entry-live-widget.service';
+
 
 @Component({
     selector: 'kEntryLive',
@@ -16,7 +16,7 @@ export class EntryLive implements AfterViewInit, OnInit, OnDestroy {
 	public _copyToClipboardEnabled: boolean = false;
 
 
-	constructor(public _widgetService: EntryLiveHandler, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+	constructor(public _widgetService: EntryLiveWidget, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
     }
 
 

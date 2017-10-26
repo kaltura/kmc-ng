@@ -1,8 +1,7 @@
 import { ISubscription } from 'rxjs/Subscription';
 import { Component, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
 import { CategoryService } from '../category.service';
-import { SectionWidgetItem, CategorySectionsListHandler } from './category-sections-list-handler';
-import { CategoryFormManager } from '../category-form-manager';
+import { SectionWidgetItem, CategorySectionsListWidget } from './category-sections-list-widget.service';
 
 
 @Component({
@@ -17,7 +16,7 @@ export class CategorySectionsListComponent implements AfterViewInit, OnInit, OnD
   public _sections: SectionWidgetItem[] = [];
 
 
-  constructor(public _widgetService: CategorySectionsListHandler, public _categoryService: CategoryService) {
+  constructor(public _widgetService: CategorySectionsListWidget, public _categoryService: CategoryService) {
   }
 
   public navigateToSection(widget: SectionWidgetItem): void {

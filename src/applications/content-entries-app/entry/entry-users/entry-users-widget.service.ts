@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { EntryFormWidget } from '../entry-form-widget';
+
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { EntryWidgetKeys } from '../entry-widget-keys';
@@ -14,9 +14,10 @@ import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilte
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 
 import 'rxjs/add/observable/forkJoin';
+import { EntryWidget } from '../entry-widget';
 
 @Injectable()
-export class EntryUsersHandler extends EntryFormWidget implements OnDestroy
+export class EntryUsersWidget extends EntryWidget implements OnDestroy
 {
 
     public _creator: string = "";

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { EntryClipsHandler } from './entry-clips-handler';
-import { EntryFormManager } from '../entry-form-manager';
+import { EntryClipsWidget } from './entry-clips-widget.service';
+
 
 @Component({
     selector: 'kEntryClips',
@@ -14,7 +14,7 @@ export class EntryClips implements OnInit, OnDestroy {
     public _loadingError = null;
 
 
-    constructor(public _widgetService: EntryClipsHandler)
+    constructor(public _widgetService: EntryClipsWidget)
     {
     }
 

@@ -9,8 +9,8 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaCaptionAssetStatus } from 'kaltura-typescript-client/types/KalturaCaptionAssetStatus'
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
-import { EntryCaptionsHandler } from './entry-captions-handler';
-import { EntryFormManager } from '../entry-form-manager';
+import { EntryCaptionsWidget } from './entry-captions-widget.service';
+
 import { environment } from 'app-environment';
 
 @Component({
@@ -28,7 +28,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 
 
 	private _popupStateChangeSubscribe: ISubscription;
-	constructor(public _widgetService: EntryCaptionsHandler, private _appAuthentication: AppAuthentication, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+	constructor(public _widgetService: EntryCaptionsWidget, private _appAuthentication: AppAuthentication, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
     }
 
 	ngOnInit() {

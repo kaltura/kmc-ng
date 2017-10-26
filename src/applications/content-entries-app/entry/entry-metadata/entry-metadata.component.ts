@@ -7,11 +7,11 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 
 import { MenuItem } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
-import { EntryMetadataHandler, EntryCategoryItem } from './entry-metadata-handler';
+import { EntryMetadataWidget, EntryCategoryItem } from './entry-metadata-widget.service';
 import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
 import { JumpToSection } from './jump-to-section.component';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { EntryFormManager } from '../entry-form-manager';
+
 
 @Component({
     selector: 'kEntryMetadata',
@@ -35,7 +35,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
     @ViewChild('nameField') private nameField: ElementRef;
 
-    constructor(public _widgetService: EntryMetadataHandler,
+    constructor(public _widgetService: EntryMetadataWidget,
                 private _pageScrollService: PageScrollService,
                 @Inject(DOCUMENT) private document: any) {
     }

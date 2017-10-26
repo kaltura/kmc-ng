@@ -6,7 +6,7 @@ import { EntryStore } from './entry-store.service';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 
 @Injectable()
-export class EntryFormManager extends WidgetsManagerBase<KalturaMediaEntry, KalturaMultiRequest>
+export class EntryWidgetsManager extends WidgetsManagerBase<KalturaMediaEntry, KalturaMultiRequest>
 {
     private _entryStore : EntryStore;
 

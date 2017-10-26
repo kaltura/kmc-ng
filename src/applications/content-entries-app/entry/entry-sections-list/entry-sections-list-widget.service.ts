@@ -6,9 +6,10 @@ import { SectionsList } from './sections-list';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { EntryFormWidget } from '../entry-form-widget';
+
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { KalturaExternalMediaEntry } from 'kaltura-typescript-client/types/KalturaExternalMediaEntry';
+import { EntryWidget } from '../entry-widget';
 
 export interface SectionWidgetItem
 {
@@ -19,7 +20,7 @@ export interface SectionWidgetItem
 }
 
 @Injectable()
-export class EntrySectionsListHandler extends EntryFormWidget implements OnDestroy
+export class EntrySectionsListWidget extends EntryWidget implements OnDestroy
 {
     private _sections = new BehaviorSubject<SectionWidgetItem[]>([]);
     public sections$ : Observable<SectionWidgetItem[]> = this._sections.asObservable();

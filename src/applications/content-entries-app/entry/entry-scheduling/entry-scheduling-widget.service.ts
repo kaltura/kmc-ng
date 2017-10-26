@@ -6,8 +6,9 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaE
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
-import { EntryFormWidget } from '../entry-form-widget';
+
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { EntryWidget } from '../entry-widget';
 
 function datesValidation(checkRequired: boolean = false): ValidatorFn {
 	return (c: AbstractControl): {[key: string]: boolean} | null => {
@@ -33,7 +34,7 @@ function datesValidation(checkRequired: boolean = false): ValidatorFn {
 }
 
 @Injectable()
-export class EntrySchedulingHandler extends EntryFormWidget implements OnDestroy
+export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
 {
 	public schedulingForm: FormGroup;
 	public _timeZone = "";

@@ -18,11 +18,11 @@ import { DynamicMetadataForm, MetadataProfileStore, MetadataProfileTypes, Metada
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CategoryWidgetKeys } from './../category-widget-keys';
 import { Injectable, OnDestroy } from '@angular/core';
-import { CategoryFormWidget } from "../category-form-widget";
+import { CategoryWidget } from "../category-widget";
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 
 @Injectable()
-export class CategoryMetadataHandler extends CategoryFormWidget implements OnDestroy {
+export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy {
 
     public metadataForm: FormGroup;
     public customDataForms: DynamicMetadataForm[] = [];

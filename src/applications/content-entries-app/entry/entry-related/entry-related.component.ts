@@ -1,13 +1,13 @@
 import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { EntryRelatedHandler } from './entry-related-handler';
+import { EntryRelatedWidget } from './entry-related-widget.service';
 import { KalturaAttachmentType } from 'kaltura-typescript-client/types/KalturaAttachmentType';
 import { KalturaAttachmentAsset } from 'kaltura-typescript-client/types/KalturaAttachmentAsset';
 import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { SelectItem, Menu, MenuItem } from 'primeng/primeng';
-import { EntryFormManager } from '../entry-form-manager';
+
 
 @Component({
     selector: 'kEntryRelated',
@@ -33,7 +33,7 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
 
 	private _editPopupStateChangeSubscribe : ISubscription;
 
-	constructor(public _widgetService: EntryRelatedHandler,
+	constructor(public _widgetService: EntryRelatedWidget,
 				private _appLocalization: AppLocalization) {
     }
 
