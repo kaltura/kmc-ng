@@ -1,12 +1,11 @@
-import { ISubscription } from 'rxjs/Subscription';
-import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
-import { PopupWidgetComponent } from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
-import { CategoriesService, Categories, SortDirection } from './categories.service';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { AppLocalization } from "@kaltura-ng/kaltura-common";
+import {ISubscription} from 'rxjs/Subscription';
+import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
+import {CategoriesService, SortDirection} from './categories.service';
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import {AppLocalization} from "@kaltura-ng/kaltura-common";
 
 @Component({
     selector: 'kCategoriesList',
@@ -15,8 +14,6 @@ import { AppLocalization } from "@kaltura-ng/kaltura-common";
 })
 
 export class CategoriesListComponent implements OnInit, OnDestroy {
-
-    @ViewChild('addNewCategory') public addNewCategory: PopupWidgetComponent;
 
     public _isBusy = false
     public _blockerMessage: AreaBlockerMessage = null;
@@ -35,9 +32,9 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     };
 
     constructor(private _categoriesService: CategoriesService,
-        private router: Router,
-        private _browserService: BrowserService,
-        private _appLocalization: AppLocalization) {
+                private router: Router,
+                private _browserService: BrowserService,
+                private _appLocalization: AppLocalization) {
     }
 
     ngOnInit() {
@@ -120,10 +117,6 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         }
     }
 
-    _addCategory() {
-        this.addNewCategory.open();
-    }
-
     private _deleteCategory(categoryId: number): void {
         this._isBusy = true;
         this._blockerMessage = null;
@@ -166,5 +159,17 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         if (event.reload === true) {
             this._reload();
         }
+    }
+
+    onAddNewCategory(newCategory: {parentCategoryId: number, name: string}): void {
+      this._categoriesService.addNewCategory({
+        parentCategoryId: newCategory.parentCategoryId,
+        name: newCategory.name
+      })
+        .subscribe(category => {
+          this.router.navigate([`/content/categories/category/${category.id}/metadata`]);
+        },
+          error => {
+        });
     }
 }

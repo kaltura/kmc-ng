@@ -1,18 +1,20 @@
-import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
-import { KalturaCategoryFilter } from 'kaltura-typescript-client/types/KalturaCategoryFilter';
-import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { ISubscription } from 'rxjs/Subscription';
+import {BrowserService} from "app-shared/kmc-shell/providers/browser.service";
+import {KalturaCategoryFilter} from 'kaltura-typescript-client/types/KalturaCategoryFilter';
+import {Injectable, OnDestroy} from '@angular/core';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs/Observable';
+import {ISubscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
-import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
-import { CategoryListAction } from 'kaltura-typescript-client/types/CategoryListAction';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaCategoryListResponse } from "kaltura-typescript-client/types/KalturaCategoryListResponse";
-import { KalturaCategory } from "kaltura-typescript-client/types/KalturaCategory";
-import { CategoryDeleteAction } from "kaltura-typescript-client/types/CategoryDeleteAction";
+import {KalturaDetachedResponseProfile} from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
+import {KalturaFilterPager} from 'kaltura-typescript-client/types/KalturaFilterPager';
+import {KalturaResponseProfileType} from 'kaltura-typescript-client/types/KalturaResponseProfileType';
+import {CategoryListAction} from 'kaltura-typescript-client/types/CategoryListAction';
+import {KalturaClient} from '@kaltura-ng/kaltura-client';
+import {KalturaCategoryListResponse} from "kaltura-typescript-client/types/KalturaCategoryListResponse";
+import {KalturaCategory} from "kaltura-typescript-client/types/KalturaCategory";
+import {CategoryDeleteAction} from "kaltura-typescript-client/types/CategoryDeleteAction";
+import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import {CategoryAddAction} from "kaltura-typescript-client/types/CategoryAddAction";
 
 export type UpdateStatus = {
     loading: boolean;
@@ -39,6 +41,7 @@ export interface QueryData {
 
 export interface NewCategoryData {
     parentCategoryId: number;
+    name: string;
 }
 
 @Injectable()
@@ -60,7 +63,8 @@ export class CategoriesService implements OnDestroy {
     public queryData$ = this._queryData.asObservable();
     private _newCategoryData: NewCategoryData = null;
     constructor(private _kalturaClient: KalturaClient,
-        private browserService: BrowserService) {
+        private browserService: BrowserService,
+                private _appLocalization: AppLocalization) {
         const defaultPageSize = this.browserService.getFromLocalStorage("categories.list.pageSize");
         if (defaultPageSize !== null) {
             this._updateQueryData({
@@ -232,16 +236,34 @@ export class CategoriesService implements OnDestroy {
         });
     }
 
-    public setNewCategoryData(newCategoryData: NewCategoryData) {
-        this._newCategoryData = newCategoryData;
-    }
+    // public setNewCategoryData(newCategoryData: NewCategoryData) {
+    //     this._newCategoryData = newCategoryData;
+    // }
+    //
+    // public getNewCategoryData(): NewCategoryData {
+    //     return this._newCategoryData;
+    // }
+    //
+    // public clearNewCategoryData(): void {
+    //     this._newCategoryData = null
+    // }
 
-    public getNewCategoryData(): NewCategoryData {
-        return this._newCategoryData;
+  public addNewCategory(newCategoryData: NewCategoryData): Observable<KalturaCategory> {
+    if (!newCategoryData) {
+      const nameRequiredErrorMessage = this._appLocalization.get('applications.content.addNewCategory.error.nameRequired');
+      Observable.throw(new Error(nameRequiredErrorMessage));
     }
+    const category = new KalturaCategory({
+      name: newCategoryData.name,
+      parentId: newCategoryData.parentCategoryId
 
-    public clearNewCategoryData(): void {
-        this._newCategoryData = null
-    }
+    });
+
+    return <any>this._kalturaClient.request(
+      new CategoryAddAction({
+        category
+      })
+    )
+  }
 }
 

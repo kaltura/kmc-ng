@@ -1,24 +1,23 @@
-import { CategoriesService } from './../categories/categories.service';
-import { Injectable, OnDestroy, Host } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd, NavigationStart } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import {CategoriesService} from './../categories/categories.service';
+import {Host, Injectable, OnDestroy} from '@angular/core';
+import {ActivatedRoute, NavigationEnd, NavigationStart, Router} from '@angular/router';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {ISubscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { CategoryGetAction } from 'kaltura-typescript-client/types/CategoryGetAction';
-import { CategoryUpdateAction } from 'kaltura-typescript-client/types/CategoryUpdateAction';
+import {KalturaClient} from '@kaltura-ng/kaltura-client';
+import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-typescript-client';
+import {CategoryGetAction} from 'kaltura-typescript-client/types/CategoryGetAction';
+import {CategoryUpdateAction} from 'kaltura-typescript-client/types/CategoryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { CategoryFormManager } from './category-form-manager';
-import { KalturaTypesFactory } from 'kaltura-typescript-client';
-import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import {CategoryFormManager} from './category-form-manager';
+import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 
 export enum ActionTypes {
 	CategoryLoading,
@@ -143,18 +142,18 @@ export class CategoryService implements OnDestroy {
 					// to init them-selves when entering this module directly.
 					setTimeout(() => {
 						const currentCategoryId = this._categoryRoute.snapshot.params.id;
-						if (currentCategoryId === "new") {
-							if (this._categoriesStore && this._categoriesStore.getNewCategoryData()) {
-								const parentId = this._categoriesStore.getNewCategoryData().parentCategoryId;
-								this._loadCategory(parentId);
-							}
-						}
-						else {
+						// if (currentCategoryId === "new") {
+						// 	if (this._categoriesStore && this._categoriesStore.getNewCategoryData()) {
+						// 		const parentId = this._categoriesStore.getNewCategoryData().parentCategoryId;
+						// 		this._loadCategory(parentId);
+						// 	}
+						// }
+						// else {
 							const category = this._category.getValue();
 							if (!category || (category && category.id !== currentCategoryId)) {
 								this._loadCategory(currentCategoryId);
 							}
-						}
+						// }
 					});
 				}
 			}

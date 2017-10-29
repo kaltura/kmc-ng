@@ -3,10 +3,12 @@
     <span class="kTitle">{{('applications.content.addNewCategory.newCategory') | translate}}</span>
   </div>
   <div class="kContainer">
-    <div class="kAdditionalInformation">
-      <div>{{('applications.content.addNewCategory.selectCategoryParent') | translate}}</div>
-    </div>
+
     <div class="kTagsContainer">
+      <input [(ngModel)]="_name" type="text" pInputText/>
+
+      <div class="kAdditionalInformation">{{('applications.content.addNewCategory.selectCategoryParent') | translate}}
+      </div>
       <p-radioButton [value]="null" [(ngModel)]="_treeSelection" (click)="_clearSelection()"
                      label="No selection"></p-radioButton>
     </div>
@@ -36,9 +38,12 @@
                          (onNodeSelect)="_onTreeNodeSelected($event)"
                          (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)"></k-categories-tree>
     </div>
-    <span class="kSelectedCategoryTooltip" [kTooltip]="_selectionTooltip">{{ _selectionTooltip }}</span>
+    <!--<span class="kSelectedCategoryTooltip" [kTooltip]="_selectionTooltip">{{ _selectionTooltip }}</span>-->
   </div>
   <div class="kFooter">
+    <!--<button type="button" class="kButtonBranded" pButton-->
+            <!--label="{{'applications.content.addNewCategory.apply' | translate}}"-->
+            <!--(click)="_apply()" [disabled]="!_name"></button>    -->
     <button type="button" class="kButtonBranded" pButton
             label="{{'applications.content.addNewCategory.apply' | translate}}"
             (click)="_apply()"></button>

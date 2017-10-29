@@ -282,8 +282,10 @@
         "cancel": "Cancel",
         "noParent":"No Parent",
         "searchCategories": "Search Categories",
-        "selectedParentCategory":"Parent Category Id: {{value}}"
-
+        "selectedParentCategory":"Parent Category Id: {{value}}",
+"error": {
+  "nameRequired": "You must enter name"
+}
       },
       "entries": {
         "entries": "Entries",

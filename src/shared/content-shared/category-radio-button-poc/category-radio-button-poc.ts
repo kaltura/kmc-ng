@@ -1,4 +1,13 @@
-import {AfterViewChecked, ChangeDetectorRef, Component, Input, OnDestroy, ViewChild} from '@angular/core';
+import {
+  AfterViewChecked,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
 
 import {PrimeTreeNode} from '@kaltura-ng/kaltura-primeng-ui';
@@ -10,6 +19,7 @@ import {
 } from 'app-shared/content-shared/categories-tree/categories-tree.component';
 import {CategoriesPrimeService} from 'app-shared/content-shared/categories-prime.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
   selector: 'kCategoryRadioButtonPOC',
@@ -18,6 +28,8 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 })
 export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChecked {
   @Input() value: any = null;
+  @Input() parentPopupWidget: PopupWidgetComponent;
+  @Output() onCategorySelected = new EventEmitter<{parentCategoryId: number, name?: string}>();
 
   @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
   @ViewChild('autoComplete') private _autoComplete: AutoComplete = null;
@@ -31,6 +43,7 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
   private _searchCategoriesSubscription: ISubscription;
   public _categoriesProvider = new Subject<SuggestionsProviderData>();
   public _selectedCategory: any = null;
+  public _name: string = null;
 
   private parentPopupStateChangeSubscription: ISubscription;
 
@@ -193,10 +206,13 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
   }
 
   public _apply(): void {
-
+    const parentCategoryId = this._selectedCategory ? this._selectedCategory.id : 0;
+    this.onCategorySelected.emit({parentCategoryId, name: this._name});
   }
 
   public _cancel(): void {
-
+    if (this.parentPopupWidget) {
+      this.parentPopupWidget.close();
+    }
   }
 }

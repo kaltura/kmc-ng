@@ -4,7 +4,7 @@
       <kSticky [stickyClass]="'kStickyClass'" stickyId="categoriesListFilters" [scrollOffset]="80" [sticksTo]="'header'">
           <div class="kCategoriesTableFilters kContent">
             <button pButton type="button" label="{{'applications.content.categories.addCategory' | translate}}" class="kButtonBranded kAddCategoryBtn"
-              [disabled]="_selectedCategories?.length" (click)="_addCategory()"></button>
+              [disabled]="_selectedCategories?.length" (click)="addNewCategory.open()"></button>
             <span class="kSelectedCategoriesNum" *ngIf="_categoriesTotalCount">
               {{_categoriesTotalCount}} {{'applications.content.categories.categories' | translate}}
             </span>
@@ -41,8 +41,8 @@
   </div>
 </k-area-blocker>
 
-<kPopupWidget #addNewCategory [popupWidth]="568" [popupHeight]="586" [modal]="true">
+<kPopupWidget #addNewCategory [popupWidth]="586" [popupHeight]="568" [modal]="true">
   <ng-template>
-    <kCategoryRadioButtonPOC></kCategoryRadioButtonPOC>
+    <kCategoryRadioButtonPOC (onCategorySelected)="onAddNewCategory($event)" [parentPopupWidget]="addNewCategory"></kCategoryRadioButtonPOC>
   </ng-template>
 </kPopupWidget>
