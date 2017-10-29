@@ -67,7 +67,9 @@
         "placeholder": {
           "username": "Enter Email",
           "password": "Enter Password"
-        }
+        },
+        "browserVer1": "Browser version not supported",
+        "browserVer2": "Please use Internet Explorer version 11 or above"
       },
       "invalidLoginHash": {
         "title": "Invalid login link",
