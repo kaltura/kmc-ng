@@ -80,6 +80,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   private _proceedDeletePlaylists(ids: string[]): void {
+    this._browserService.setAppStatus({ isBusy: true, errorMessage: null });
     this._bulkDeleteService.deletePlaylist(ids)
       .cancelOnDestroy(this)
       .subscribe(
@@ -87,8 +88,10 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
           this._loading = false;
           this._playlistsStore.reload(true);
           this._clearSelection();
+          this._browserService.setAppStatus({ isBusy: false, errorMessage: null });
         },
         error => {
+          this._browserService.setAppStatus({ isBusy: false, errorMessage: null });
           this._blockerMessage = new AreaBlockerMessage({
             message: this.appLocalization.get('applications.content.bulkActions.errorPlaylists'),
             buttons: [{
