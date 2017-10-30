@@ -51,30 +51,24 @@
 * **login:** updated placeholder text for user name and password fields ([8a87d6d](https://github.com/kaltura/kmc-ng/commit/8a87d6d))
 * **shell:** submenu configuration fix ([dc53e10](https://github.com/kaltura/kmc-ng/commit/dc53e10))
 
-
 ### Features
 
-* add app events to allow communication between applications ([08cd89a](https://github.com/kaltura/kmc-ng/commit/08cd89a))
-* add changelog component ([5ad76ba](https://github.com/kaltura/kmc-ng/commit/5ad76ba))
-* add isIE11 public function to browser service and use it where needed to detect IE11 ([82429c6](https://github.com/kaltura/kmc-ng/commit/82429c6))
-* add playlist content tab (partial implementation) ([8f8edc2](https://github.com/kaltura/kmc-ng/commit/8f8edc2))
-* add scroll to top button ([cc2faf1](https://github.com/kaltura/kmc-ng/commit/cc2faf1))
-* add scroll-to-top button and provide an animated scroll to top method used by all screens upon data changes ([c7a1b8e](https://github.com/kaltura/kmc-ng/commit/c7a1b8e))
-* add test popup to show it's working ([86149cf](https://github.com/kaltura/kmc-ng/commit/86149cf))
-* add tooltip, add translation ([c1fc6ef](https://github.com/kaltura/kmc-ng/commit/c1fc6ef))
-* **categories:** add new category popup (partial implementation) ([5f2e9e5](https://github.com/kaltura/kmc-ng/commit/5f2e9e5))
-* allow set single selection on categories-tree compoenent ([e5851aa](https://github.com/kaltura/kmc-ng/commit/e5851aa))
-* **shell:** support chunked upload file and resume upload action ([0c1e904](https://github.com/kaltura/kmc-ng/commit/0c1e904))
-* issue a message when using Internet Explorer lower than 11 and prevent login ([3329b2e](https://github.com/kaltura/kmc-ng/commit/3329b2e))
-* **categories:** add categories bulk operations (partial implementation) ([3db8c16](https://github.com/kaltura/kmc-ng/commit/3db8c16))
-* make drill-down section sticky in entries and playlists ([9f071de](https://github.com/kaltura/kmc-ng/commit/9f071de))
-* **categories:** add category metadata section (partial implementation) ([3091595](https://github.com/kaltura/kmc-ng/commit/3091595))
+* new scroll system & layout supporting dynamic sticky elements
+* drill-down page layout redesign
+* **upload:** upload from desktop: support parralel uploads
+* **upload:** upload control view (list of active uploads and upload progress)
 * **shell:** add change account per partner ([82f3201](https://github.com/kaltura/kmc-ng/commit/82f3201))
+* add release notes popup ([5ad76ba](https://github.com/kaltura/kmc-ng/commit/5ad76ba))
+* **shell:** support chunked upload file (remove 2Gb file size limitation) ([0c1e904](https://github.com/kaltura/kmc-ng/commit/0c1e904))
+* issue a message when using Internet Explorer lower than 11 and prevent login ([3329b2e](https://github.com/kaltura/kmc-ng/commit/3329b2e))
 * **upload:** add high speed upload link to upload menu ([ec6228c](https://github.com/kaltura/kmc-ng/commit/ec6228c))
-* **upload:** allow multiple upload from desktop and upload control view ([bba9e02](https://github.com/kaltura/kmc-ng/commit/bba9e02))
-* show changelog once for user, change icons ([e905dd5](https://github.com/kaltura/kmc-ng/commit/e905dd5))
-* show tooltip if selected node is not loaded ([f1d28f9](https://github.com/kaltura/kmc-ng/commit/f1d28f9))
-* use kws publish command in release scripts ([f532d66](https://github.com/kaltura/kmc-ng/commit/f532d66))
+* add scroll to top button ([cc2faf1](https://github.com/kaltura/kmc-ng/commit/cc2faf1))
+
+
+### Technical Features
+
+* add app events to allow communication between applications ([08cd89a](https://github.com/kaltura/kmc-ng/commit/08cd89a))
+* add isIE11 public function to browser service and use it where needed to detect IE11 ([82429c6](https://github.com/kaltura/kmc-ng/commit/82429c6))
 
 
 
