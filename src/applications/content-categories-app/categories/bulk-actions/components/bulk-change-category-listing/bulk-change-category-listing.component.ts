@@ -40,7 +40,8 @@ export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, A
   private _confirmClose: boolean = true;
 
   // expose enum to the template
-  public _appearInListType = AppearInListType.NoRestriction;
+  public _appearInListType = AppearInListType;
+  public _appearInList = AppearInListType.NoRestriction;
 
   constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
   }
@@ -58,7 +59,7 @@ export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, A
           }
           if (event.state === PopupWidgetStates.BeforeClose) {
             if (event.context && event.context.allowClose) {
-              if (this._appearInListType && this._confirmClose) {
+              if (this._appearInList && this._confirmClose) {
                 event.context.allowClose = false;
                 this._browserService.confirm(
                   {
@@ -139,7 +140,7 @@ export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, A
   }
 
   public _apply() {
-    this.changeCategoryListingChanged.emit(this._appearInListType);
+    this.changeCategoryListingChanged.emit(this._appearInList);
     this._confirmClose = false;
     this.parentPopupWidget.close();
   }

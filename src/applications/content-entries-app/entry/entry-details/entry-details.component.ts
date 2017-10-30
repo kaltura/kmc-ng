@@ -22,7 +22,7 @@ export class EntryDetails implements OnInit, OnDestroy {
 	public _hasDuration: boolean = false;
 	public _isClip: boolean = false;
 
-	private _currentEntry: KalturaMediaEntry;
+	public _currentEntry: KalturaMediaEntry;
 
 	get currentEntry(): KalturaMediaEntry {
 		return this._currentEntry;
