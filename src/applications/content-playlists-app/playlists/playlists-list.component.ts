@@ -75,8 +75,10 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.querySubscription.unsubscribe();
-    this.querySubscription = null;
+    if (this.querySubscription) {
+      this.querySubscription.unsubscribe();
+      this.querySubscription = null;
+    }
   }
 
   private _proceedDeletePlaylists(ids: string[]): void {
@@ -107,7 +109,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   private _deletePlaylist(ids: string[]): void {
-    if (ids.length > environment.modules.contentEntries.bulkActionsLimit) {
+    if (ids.length > environment.modules.contentPlaylists.bulkActionsLimit) {
       this._browserService.confirm(
         {
           header: this.appLocalization.get('applications.content.bulkActions.note'),
