@@ -33,6 +33,7 @@ import { ContentPlaylistsComponent } from './content-playlists.component';
 import { PlaylistsComponentsList } from './playlists/playlists-components-list';
 import { PlaylistComponentsList } from './playlist/playlist-components-list';
 import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.service';
+import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
 
 @NgModule({
     imports: [
@@ -59,7 +60,8 @@ import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.servic
       SharedModule,
 	  DetailsBarModule,
       RouterModule.forChild(routing),
-	  StickyModule
+	  StickyModule,
+      ContentSharedModule
     ],
     declarations: [
       ContentPlaylistsComponent,
