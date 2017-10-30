@@ -147,6 +147,10 @@ export const environment = {
         "contentCategories": {
             "createdAtDateRange": "2005:2030",
             "bulkActionsLimit": 50
+        },
+        "contentModeration" : {
+          "createdAtDateRange" : "2005:2030",
+          "bulkActionsLimit": 2
         }
     },
     "entriesShared": {
