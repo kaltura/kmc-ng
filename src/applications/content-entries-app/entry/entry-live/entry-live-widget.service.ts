@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Message } from 'primeng/primeng';
@@ -15,11 +15,12 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
-import { EntryFormWidget } from '../entry-form-widget';
-import { EntryFormManager } from '../entry-form-manager';
+
+
 import { LiveXMLExporter } from './live-xml-exporter';
 import { AVAIL_BITRATES } from './bitrates';
 import { environment } from 'app-environment';
+import { EntryWidget } from '../entry-widget';
 
 export interface bitrate {
 	enabled: boolean,
@@ -30,7 +31,7 @@ export interface bitrate {
 }
 
 @Injectable()
-export class EntryLiveHandler extends EntryFormWidget {
+export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 
 	public _liveType: string = "";
 	private dirty: boolean;
@@ -49,16 +50,15 @@ export class EntryLiveHandler extends EntryFormWidget {
 	public _bitrates: bitrate[] = [];
 	public _availableBitrates = AVAIL_BITRATES;
 
-	constructor(manager: EntryFormManager, private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
+	constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
 		super(EntryWidgetKeys.Live);
 	}
 
-
-	protected _onReset() {
+	protected onReset() {
 		this.dirty = false;
 	}
 
-	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
+	protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
 		if (this._liveType === "universal") {
 			// create bitrate array for saving
 			let bitrates: KalturaLiveStreamBitrate[] = [];
@@ -75,7 +75,7 @@ export class EntryLiveHandler extends EntryFormWidget {
 		}
 	}
 
-	protected _onValidate(): Observable<{ isValid: boolean}> {
+	protected onValidate(): Observable<{ isValid: boolean}> {
 		return Observable.create(observer => {
 			const isValid = this._liveType === "universal" ? this._validateBitrates({updateDirtyMode: false}) : true;
 			observer.next({isValid});
@@ -83,7 +83,7 @@ export class EntryLiveHandler extends EntryFormWidget {
 		});
 	}
 
-	protected _onActivate(firstTimeActivating : boolean) {
+	protected onActivate(firstTimeActivating : boolean) {
 		// set live type
 		switch (this.data.sourceType.toString()) {
 			case KalturaSourceType.liveStream.toString():
@@ -253,8 +253,13 @@ export class EntryLiveHandler extends EntryFormWidget {
 			newStatus.isDirty = true;
 		}
 
-		super._updateWidgetState(newStatus);
+		super.updateState(newStatus);
 
 		return valid;
 	}
+
+    ngOnDestroy()
+    {
+
+    }
 }
