@@ -85,7 +85,7 @@ export class PlaylistContentComponent implements AfterViewInit, OnInit, OnDestro
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),
-          message: this._appLocalization.get('applications.content.bulkActions.confirmPlaylsts', {"0": ids.length}),
+          message: this._appLocalization.get('applications.content.bulkActions.confirmPlaylists', {"0": ids.length}),
           accept: () => {
             execute();
           }

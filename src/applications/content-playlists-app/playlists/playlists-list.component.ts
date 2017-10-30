@@ -1,9 +1,4 @@
-import {
-	Component,
-	OnDestroy,
-	OnInit,
-	ViewChild
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -11,10 +6,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
 
-import {
-	PlaylistsStore,
-	SortDirection
-} from './playlists-store/playlists-store.service';
+import { PlaylistsStore, SortDirection } from './playlists-store/playlists-store.service';
 import { BulkDeleteService } from './bulk-service/bulk-delete.service';
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -22,90 +14,247 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import * as moment from 'moment';
 
 export interface Filter {
-	type: string;
-	label: string;
-	tooltip: string
+  type: string;
+  label: string;
+  tooltip: string
 }
 
 @Component({
-    selector: 'kPlaylistsList',
-    templateUrl: './playlists-list.component.html',
-    styleUrls: ['./playlists-list.component.scss'],
-    providers: [BulkDeleteService]
+  selector: 'kPlaylistsList',
+  templateUrl: './playlists-list.component.html',
+  styleUrls: ['./playlists-list.component.scss'],
+  providers: [BulkDeleteService]
 })
 export class PlaylistsListComponent implements OnInit, OnDestroy {
 
-    @ViewChild('addNewPlaylist') public addNewPlaylist: PopupWidgetComponent;
-	@ViewChild('tags') private tags: StickyComponent;
+  @ViewChild('addNewPlaylist') public addNewPlaylist: PopupWidgetComponent;
+  @ViewChild('tags') private tags: StickyComponent;
+
+  private querySubscription: ISubscription;
 
   public _blockerMessage: AreaBlockerMessage = null;
-  public _loading: boolean = false;
+  public _loading = false;
 
-	_filter = {
-		pageIndex : 0,
-		freetextSearch : '',
-		createdAfter: null,
-		createdBefore : null,
-		pageSize : null, // pageSize is set to null by design. It will be modified after the first time loading playlists
-		sortBy : 'createdAt',
-		sortDirection : SortDirection.Desc
-	};
+  public _filter = {
+    pageIndex: 0,
+    freetextSearch: '',
+    createdAfter: null,
+    createdBefore: null,
+    pageSize: null, // pageSize is set to null by design. It will be modified after the first time loading playlists
+    sortBy: 'createdAt',
+    sortDirection: SortDirection.Desc
+  };
 
-	public _selectedPlaylists: KalturaPlaylist[] = [];
-	private querySubscription : ISubscription;
-	public activeFilters: Filter[] = [];
+  public _selectedPlaylists: KalturaPlaylist[] = [];
+  public activeFilters: Filter[] = [];
 
-	constructor(
-		public _playlistsStore: PlaylistsStore,
-		private appLocalization: AppLocalization,
-		private router: Router,
-    private _browserService : BrowserService,
-    public _bulkDeleteService : BulkDeleteService
-	) {}
+  constructor(public _playlistsStore: PlaylistsStore,
+              private appLocalization: AppLocalization,
+              private router: Router,
+              private _browserService: BrowserService,
+              public _bulkDeleteService: BulkDeleteService) {
+  }
 
-	onTagsChange(event){
-		this.tags.updateLayout();
-	}
-	removeTag(tag: Filter){
-		this.updateFilters(tag, 1);
-		if(tag.type === 'freeText') {
-			this._filter.freetextSearch = null;
-		}
-		if(tag.type === 'Dates') {
-			this._filter.createdBefore = null;
-			this._filter.createdAfter = null;
-		}
-		this._playlistsStore.reload({
+  ngOnInit() {
+    this.querySubscription = this._playlistsStore.query$.subscribe(
+      query => {
+        this._filter.pageSize = query.pageSize;
+        this._filter.pageIndex = query.pageIndex - 1;
+        this._filter.sortBy = query.sortBy;
+        this._filter.sortDirection = query.sortDirection;
+        this._filter.freetextSearch = query.freeText;
+        this._filter.createdAfter = query.createdAfter;
+        this._filter.createdBefore = query.createdBefore;
+
+        this._syncFilters(query);
+
+        this._browserService.scrollToTop();
+      }
+    );
+    this._playlistsStore.reload(false);
+  }
+
+  ngOnDestroy() {
+    this.querySubscription.unsubscribe();
+    this.querySubscription = null;
+  }
+
+  private _proceedDeletePlaylists(ids: string[]): void {
+    this._bulkDeleteService.deletePlaylist(ids)
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {
+          this._loading = false;
+          this._playlistsStore.reload(true);
+          this._clearSelection();
+        },
+        error => {
+          this._blockerMessage = new AreaBlockerMessage({
+            message: this.appLocalization.get('applications.content.bulkActions.errorPlaylists'),
+            buttons: [{
+              label: this.appLocalization.get('app.common.ok'),
+              action: () => {
+                this._blockerMessage = null;
+                this._loading = false;
+              }
+            }]
+          });
+        }
+      );
+  }
+
+  private _deletePlaylist(ids: string[]): void {
+    if (ids.length > environment.modules.contentEntries.bulkActionsLimit) {
+      this._browserService.confirm(
+        {
+          header: this.appLocalization.get('applications.content.bulkActions.note'),
+          message: this.appLocalization.get('applications.content.bulkActions.confirmPlaylists', { '0': ids.length }),
+          accept: () => {
+            this._proceedDeletePlaylists(ids);
+          }
+        }
+      );
+    } else {
+      this._proceedDeletePlaylists(ids);
+    }
+  }
+
+  private _deleteCurrentPlaylist(playlistId: string): void {
+    this._loading = true;
+    this._playlistsStore.deletePlaylist(playlistId)
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {
+          this._loading = false;
+          this._browserService.showGrowlMessage({
+            severity: 'success',
+            detail: this.appLocalization.get('applications.content.playlists.deleted')
+          });
+          this._playlistsStore.reload(true);
+        },
+        error => {
+          this._blockerMessage = new AreaBlockerMessage(
+            {
+              message: error.message,
+              buttons: [
+                {
+                  label: this.appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this._blockerMessage = null;
+                    this._loading = false;
+                    this._deleteCurrentPlaylist(playlistId);
+                  }
+                },
+                {
+                  label: this.appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this._blockerMessage = null;
+                    this._loading = false;
+                  }
+                }
+              ]
+            }
+          )
+        }
+      );
+  }
+
+  private _updateFilters(filter: Filter, flag?: number) { // if flag == 1 we won't push filter to activeFilters
+    if (!filter.label) {
+      flag = 1;
+    }
+    this.activeFilters.forEach((el, index, arr) => {
+      if (el.type === filter.type) {
+        arr.splice(index, 1);
+      }
+    });
+    if (!flag) {
+      this.activeFilters.push(filter);
+    }
+  }
+
+  private _syncFilters(query) {
+    const freeTextFilter: Filter = {
+      type: 'freeText',
+      label: query.freeText,
+      tooltip: this.appLocalization.get('applications.content.filters.freeText')
+    };
+    this._updateFilters(freeTextFilter);
+
+    const dateFilter: Filter = {
+      type: 'Dates',
+      label: freeTextFilter.type,
+      tooltip: null
+    };
+
+    if (query.createdAfter || query.createdBefore) {
+      dateFilter.type = 'Dates';
+      dateFilter.label = dateFilter.type;
+      if (!query.createdAfter) {
+        dateFilter.tooltip = this.appLocalization.get(
+          'applications.content.filters.dateFilter.until',
+          {
+            0: moment(query.createdBefore).format('LL')
+          }
+        );
+      } else if (!query.createdBefore) {
+        dateFilter.tooltip = this.appLocalization.get(
+          'applications.content.filters.dateFilter.from',
+          {
+            0: moment(query.createdAfter).format('LL')
+          }
+        );
+      } else {
+        dateFilter.tooltip = `${moment(query.createdAfter).format('LL')} - ${moment(query.createdBefore).format('LL')}`;
+      }
+      this._updateFilters(dateFilter);
+    }
+  }
+
+  public _onTagsChange(event) {
+    this.tags.updateLayout();
+  }
+
+  public _removeTag(tag: Filter) {
+    this._updateFilters(tag, 1);
+    if (tag.type === 'freeText') {
+      this._filter.freetextSearch = null;
+    }
+    if (tag.type === 'Dates') {
+      this._filter.createdBefore = null;
+      this._filter.createdAfter = null;
+    }
+    this._playlistsStore.reload({
       freeText: this._filter.freetextSearch,
       createdBefore: this._filter.createdBefore,
       createdAfter: this._filter.createdAfter,
       pageIndex: 1
     });
-	}
+  }
 
-	removeAllTags(){
-		this.clearSelection();
+  public _removeAllTags() {
+    this._clearSelection();
     this._playlistsStore.reload({
       freeText: '',
       createdBefore: null,
       createdAfter: null,
       pageIndex: 1
     });
-		this.activeFilters = [];
-	}
+    this.activeFilters = [];
+  }
 
-	onActionSelected(event) {
-    switch (event.action){
-      case "view":
+  public _onActionSelected(event) {
+    switch (event.action) {
+      case 'view':
         this.router.navigate(['/content/playlists/playlist', event.playlistID]);
         break;
-      case "delete":
+      case 'delete':
         this._browserService.confirm(
           {
             header: this.appLocalization.get('applications.content.playlists.deletePlaylist'),
-            message: this.appLocalization.get('applications.content.playlists.confirmDeleteSingle', {0: event.playlistID}),
+            message: this.appLocalization.get('applications.content.playlists.confirmDeleteSingle', { 0: event.playlistID }),
             accept: () => {
-              this.deleteCurrentPlaylist(event.playlistID);
+              this._deleteCurrentPlaylist(event.playlistID);
             }
           }
         );
@@ -113,232 +262,89 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
       default:
         break;
     }
-	}
-
-  private deletePlaylist(ids: string[]): void {
-    const execute = () => {
-      this._bulkDeleteService.deletePlaylist(ids)
-        .cancelOnDestroy(this)
-        .subscribe(
-          () => {
-            this._loading = false;
-            this._playlistsStore.reload(true);
-            this.clearSelection();
-          },
-          error => {
-            this._blockerMessage = new AreaBlockerMessage({
-              message: this.appLocalization.get('applications.content.bulkActions.errorPlaylists'),
-              buttons: [{
-                  label: this.appLocalization.get('app.common.ok'),
-                  action: () => {
-                    this._blockerMessage = null;
-                    this._loading = false;
-                  }
-                }]
-            });
-          }
-        );
-    };
-
-    if(ids.length > environment.modules.contentEntries.bulkActionsLimit) {
-      this._browserService.confirm(
-        {
-          header: this.appLocalization.get('applications.content.bulkActions.note'),
-          message: this.appLocalization.get('applications.content.bulkActions.confirmPlaylsts', {"0": ids.length}),
-          accept: () => {
-            execute();
-          }
-        }
-      );
-    } else{
-      execute();
-    }
   }
 
-  private deleteCurrentPlaylist(playlistId: string): void {
-	  this._loading = true;
-    this._playlistsStore.deletePlaylist(playlistId)
-      .cancelOnDestroy(this)
-      .subscribe(
-      () => {
-        this._loading = false;
-        this._browserService.showGrowlMessage({severity: 'success', detail: this.appLocalization.get('applications.content.playlists.deleted')});
-        this._playlistsStore.reload(true);
-      },
-      error => {
-        this._blockerMessage = new AreaBlockerMessage(
-          {
-            message: error.message,
-            buttons: [
-              {
-                label: this.appLocalization.get('app.common.retry'),
-                action: () => {
-                  this._blockerMessage = null;
-                  this._loading = false;
-                  this.deleteCurrentPlaylist(playlistId);
-                }
-              },
-              {
-                label: this.appLocalization.get('app.common.cancel'),
-                action: () => {
-                  this._blockerMessage = null;
-                  this._loading = false;
-                }
-              }
-            ]
-          }
-        )
-      }
-    );
-  }
-
-	onFreetextChanged() : void {
+  public _onFreetextChanged(): void {
     this._playlistsStore.reload({ freeText: this._filter.freetextSearch });
-	}
+  }
 
-	onSortChanged(event) : void {
+  public _onSortChanged(event): void {
     this._playlistsStore.reload({
       sortBy: event.field,
       sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
     });
-	}
+  }
 
-	onPaginationChanged(state : any) : void {
-		if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
+  public _onPaginationChanged(state: any): void {
+    if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
       this._filter.pageSize = state.page + 1;
       this._filter.pageIndex = state.rows;
       this._playlistsStore.reload({
         pageIndex: state.page + 1,
         pageSize: state.rows
       });
-			this.clearSelection();
-		}
-	}
+      this._clearSelection();
+    }
+  }
 
-	onCreatedChanged(dates) : void {
-		this._playlistsStore.reload({
+  public _onCreatedChanged(dates): void {
+    this._playlistsStore.reload({
       createdAfter: dates.createdAfter,
       createdBefore: dates.createdBefore,
       pageIndex: 1
     });
 
-		if(!dates.createdAfter && !dates.createdBefore) {
-			this.clearDates();
-		}
-	}
+    if (!dates.createdAfter && !dates.createdBefore) {
+      this._clearDates();
+    }
+  }
 
-	clearDates() {
-		this.activeFilters.forEach((el, index, arr) => {
-			if(el.type == 'Dates') {
-				arr.splice(index, 1);
-			}
-		});
-	}
+  public _clearDates() {
+    this.activeFilters.forEach((el, index, arr) => {
+      if (el.type === 'Dates') {
+        arr.splice(index, 1);
+      }
+    });
+  }
 
-	updateFilters(filter: Filter, flag?: number) { // if flag == 1 we won't push filter to activeFilters
-		if(!filter.label) {
-			flag = 1;
-		}
-		this.activeFilters.forEach((el, index, arr) => {
-			if(el.type == filter.type) {
-				arr.splice(index, 1);
-			}
-		});
-		if(!flag) {
-			this.activeFilters.push(filter);
-		}
-	}
+  public _reload() {
+    this._clearSelection();
+    this._playlistsStore.reload(true);
+  }
 
-	syncFilters(query) {
-		let freeTextFilter: Filter = {
-			type: 'freeText',
-			label: query.freeText,
-			tooltip: this.appLocalization.get('applications.content.filters.freeText')
-		};
-		this.updateFilters(freeTextFilter);
+  public _clearSelection() {
+    this._selectedPlaylists = [];
+  }
 
-		let dateFilter: Filter = {
-			type: 'Dates',
-			label: freeTextFilter.type,
-			tooltip: null
-		};
-
-		if (query.createdAfter || query.createdBefore) {
-			dateFilter.type = 'Dates';
-			dateFilter.label = dateFilter.type;
-			if (!query.createdAfter) {
-				dateFilter.tooltip = this.appLocalization.get('applications.content.filters.dateFilter.until', {0: moment(query.createdBefore).format('LL')});
-			} else if (!query.createdBefore) {
-				dateFilter.tooltip = this.appLocalization.get('applications.content.filters.dateFilter.from', {0: moment(query.createdAfter).format('LL')});
-			} else {
-				dateFilter.tooltip = `${moment(query.createdAfter).format('LL')} - ${moment(query.createdBefore).format('LL')}`;
-			}
-			this.updateFilters(dateFilter);
-		}
-	}
-
-	ngOnInit() {
-		this.querySubscription = this._playlistsStore.query$.subscribe(
-			query => {
-				this._filter.pageSize = query.pageSize;
-				this._filter.pageIndex = query.pageIndex - 1;
-				this._filter.sortBy = query.sortBy;
-				this._filter.sortDirection = query.sortDirection;
-				this._filter.freetextSearch = query.freeText;
-				this._filter.createdAfter = query.createdAfter;
-				this._filter.createdBefore = query.createdBefore;
-
-				this.syncFilters(query);
-
-				this._browserService.scrollToTop();
-			}
-		);
-		this._playlistsStore.reload(false);
-	}
-
-	ngOnDestroy() {
-		this.querySubscription.unsubscribe();
-		this.querySubscription = null;
-	}
-
-	public _reload() {
-		this.clearSelection();
-		this._playlistsStore.reload(true);
-	}
-
-	clearSelection() {
-		this._selectedPlaylists = [];
-	}
-
-  deletePlaylists(selectedPlaylists: KalturaPlaylist[]) {
-	  let playlistsToDelete = selectedPlaylists.map((playlist, index) => `${index + 1}: ${playlist.name}`),
-        playlists: string = selectedPlaylists.length <= 10 ? playlistsToDelete.join(',').replace(/,/gi, '\n') : '',
-        message = selectedPlaylists.length > 1 ?
-                  this.appLocalization.get('applications.content.playlists.confirmDeleteMultiple', {0: playlists}) :
-                  this.appLocalization.get('applications.content.playlists.confirmDeleteSingle', {0: playlists});
+  public _deletePlaylists(selectedPlaylists: KalturaPlaylist[]) {
+    const playlistsToDelete = selectedPlaylists.map((playlist, index) => `${index + 1}: ${playlist.name}`);
+    const playlists = selectedPlaylists.length <= 10 ? playlistsToDelete.join(',').replace(/,/gi, '\n') : '';
+    const message = selectedPlaylists.length > 1 ?
+      this.appLocalization.get('applications.content.playlists.confirmDeleteMultiple', { 0: playlists }) :
+      this.appLocalization.get('applications.content.playlists.confirmDeleteSingle', { 0: playlists });
     this._browserService.confirm(
       {
         header: this.appLocalization.get('applications.content.playlists.deletePlaylist'),
         message: message,
         accept: () => {
-          setTimeout(()=> {
-            this.deletePlaylist(selectedPlaylists.map(playlist => playlist.id));
+          setTimeout(() => {
+            this._deletePlaylist(selectedPlaylists.map(playlist => playlist.id));
           }, 0);
         }
       }
     );
   }
 
-  addPlaylist() {
+  public _addPlaylist() {
     this.addNewPlaylist.open();
   }
 
-  onShowNotSupportedMsg() {
-	  this._browserService.alert(
-		  {
-			  header: "Note",
-			  message: this.appLocalization.get('applications.content.addNewPlaylist.notSupportedMsg')
-		  }
-	  );
+  public _onShowNotSupportedMsg() {
+    this._browserService.alert(
+      {
+        header: 'Note',
+        message: this.appLocalization.get('applications.content.addNewPlaylist.notSupportedMsg')
+      }
+    );
   }
 }
