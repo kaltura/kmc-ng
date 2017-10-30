@@ -336,16 +336,9 @@ export class PlaylistStore implements OnDestroy {
   public returnToPlaylists() {
     this.canLeaveWithoutSaving()
       .cancelOnDestroy(this)
+      .filter(({ allowed }) => allowed)
       .monitor('playlist store: return to playlists list')
-      .subscribe(
-        response =>
-        {
-          if (response.allowed)
-          {
-            this._router.navigate(['content/playlists']);
-          }
-        }
-      );
+      .subscribe(() => this._router.navigate(['content/playlists']));
   }
 
   private _updatePageExitVerification(enable : boolean) : void {
