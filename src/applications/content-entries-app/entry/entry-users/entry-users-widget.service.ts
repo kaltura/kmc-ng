@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { EntryFormWidget } from '../entry-form-widget';
+
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { EntryWidgetKeys } from '../entry-widget-keys';
@@ -14,9 +14,10 @@ import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilte
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 
 import 'rxjs/add/observable/forkJoin';
+import { EntryWidget } from '../entry-widget';
 
 @Injectable()
-export class EntryUsersHandler extends EntryFormWidget
+export class EntryUsersWidget extends EntryWidget implements OnDestroy
 {
 
     public _creator: string = "";
@@ -41,7 +42,7 @@ export class EntryUsersHandler extends EntryFormWidget
             .cancelOnDestroy(this)
             .subscribe(
 				() => {
-					super._updateWidgetState({
+					super.updateState({
 						isValid: this.usersForm.status === 'VALID',
 						isDirty: this.usersForm.dirty
 					});
@@ -49,7 +50,7 @@ export class EntryUsersHandler extends EntryFormWidget
 			);
 	}
 
-	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest){
+	protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest){
 		if (this.usersForm.dirty){
 			// save owner
 			if (this._owner && this._owner.id) {
@@ -85,7 +86,7 @@ export class EntryUsersHandler extends EntryFormWidget
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset()
+    protected onReset()
     {
 	    this._creator = "";
 	    this._owner = null;
@@ -96,7 +97,7 @@ export class EntryUsersHandler extends EntryFormWidget
 	    });
     }
 
-    protected _onActivate(firstTimeActivating: boolean) {
+    protected onActivate(firstTimeActivating: boolean) {
 
 	    super._showLoader();
 
@@ -251,5 +252,10 @@ export class EntryUsersHandler extends EntryFormWidget
 	public saveOwner(): void{
 		this._owner = this.usersForm.value.owners[0];
 	}
+
+    ngOnDestroy()
+    {
+
+    }
 
 }

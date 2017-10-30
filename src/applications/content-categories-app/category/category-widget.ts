@@ -1,13 +1,13 @@
 import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
 import { Injectable } from '@angular/core';
-import { FormWidget } from '@kaltura-ng/kaltura-ui';
+import { WidgetBase } from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { CategoryFormManager } from './category-form-manager';
+import { CategoryWidgetsManager } from './category-widgets-manager';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 
-@Injectable()
-export abstract class CategoryFormWidget extends FormWidget<KalturaCategory, KalturaMultiRequest> {
+
+export abstract class CategoryWidget extends WidgetBase<CategoryWidgetsManager, KalturaCategory, KalturaMultiRequest> {
     public sectionBlockerMessage: AreaBlockerMessage;
     public showSectionLoader: boolean;
 
@@ -38,21 +38,20 @@ export abstract class CategoryFormWidget extends FormWidget<KalturaCategory, Kal
                     ...this._createBackToCategoriesButton(),
                     ... message.buttons
                 ]
-            })
-        }
-        ;
+            });
+        };
 
         this.showSectionLoader = false;
         this.sectionBlockerMessage = messageToShow;
     }
 
     protected _createBackToCategoriesButton(): AreaBlockerMessageButton[] {
-        if (this._manager instanceof CategoryFormManager)
+        if (this.form instanceof CategoryWidgetsManager)
         {
             return [{
                 label: 'Back To Categories',
                 action: () => {
-                    (<CategoryFormManager>this._manager).returnToCategories();
+                    (<CategoryWidgetsManager>this.form).returnToCategories();
                 }
             }];
         }else

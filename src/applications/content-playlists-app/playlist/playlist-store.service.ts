@@ -19,7 +19,7 @@ import { PlaylistExecuteAction} from 'kaltura-typescript-client/types/PlaylistEx
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
-import { PlaylistsStore } from 'applications/content-playlists-app/playlists/playlists-store/playlists-store.service';
+import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 import { KalturaPlaylistType } from 'kaltura-typescript-client/types/KalturaPlaylistType';
 import { PlaylistAddAction } from 'kaltura-typescript-client/types/PlaylistAddAction';
 
