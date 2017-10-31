@@ -21,7 +21,8 @@ import {PartnerInfo} from './partner-info';
 import {UserResetPasswordAction} from 'kaltura-typescript-client/types/UserResetPasswordAction';
 import {AdminUserUpdatePasswordAction} from 'kaltura-typescript-client/types/AdminUserUpdatePasswordAction';
 import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
-import {BrowserService} from 'app-shared/kmc-shell';
+import { BrowserService } from '../providers/browser.service';
+
 
 
 export enum AppAuthStatusTypes {
