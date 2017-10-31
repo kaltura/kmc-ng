@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { WidgetsManagerBase } from '@kaltura-ng/kaltura-ui'
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
+import { KalturaRequest } from 'kaltura-typescript-client';
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
 import { PlaylistStore } from './playlist-store.service';
 
 @Injectable()
-export class PlaylistWidgetsManager extends WidgetsManagerBase<KalturaPlaylist, KalturaMultiRequest> {
+export class PlaylistWidgetsManager extends WidgetsManagerBase<KalturaPlaylist, KalturaRequest<KalturaPlaylist>> {
   private _playlistStore: PlaylistStore;
 
   constructor() {
@@ -17,7 +17,7 @@ export class PlaylistWidgetsManager extends WidgetsManagerBase<KalturaPlaylist, 
     this._playlistStore = value;
   }
 
-  public returnToEntries(): void {
+  public returnToPlaylists(): void {
     if (this._playlistStore) {
       this._playlistStore.returnToPlaylists();
     }

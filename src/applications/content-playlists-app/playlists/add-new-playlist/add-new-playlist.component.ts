@@ -37,10 +37,8 @@ export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy
       if (this.addNewPlaylistForm.controls['playlistType'].value === 'ruleBased') {
         this.showNotSupportedMsg.emit();
       } else {
-        this._playlistsStore.setNewPlaylistData({
-          name: this.addNewPlaylistForm.controls['name'].value,
-          description: this.addNewPlaylistForm.controls['description'].value
-        });
+        const { name, description } = this.addNewPlaylistForm.value;
+        this._playlistsStore.setNewPlaylistData({ name, description });
         this.router.navigate(['/content/playlists/playlist/new/content']);
       }
     }

@@ -1,65 +1,50 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PlaylistStore } from '../playlist-store.service';
-import { PlaylistSections } from '../playlist-sections';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { StickyComponent } from '@kaltura-ng/kaltura-ui';
-
-export class SectionData{
-	constructor(
-	  public id: PlaylistSections,
-    public name: string,
-    public isActive: boolean  = false,
-    public hasErrors: boolean = false
-  ){}
-}
+import { PlaylistSectionsListWidget, SectionWidgetItem } from './playlist-sections-list-widget.service';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kPlaylistSectionsList',
   templateUrl: './playlist-sections-list.component.html',
   styleUrls: ['./playlist-sections-list.component.scss']
 })
-
 export class PlaylistSectionsList implements OnInit, OnDestroy {
-	public _loading = false;
-	public sections: SectionData[] = [];
+  public _loading = false;
+  public _showList = false;
+  public _sections: SectionWidgetItem[] = [];
 
-	@ViewChild('playlistSections') private playlistSections: StickyComponent;
+  @ViewChild('playlistSections') private playlistSections: StickyComponent;
 
-    constructor(
-      public _appLocalization: AppLocalization,
-      public _playlistStore : PlaylistStore
-	) {}
-
-	navigateToSection(section: SectionData) {
-		this._playlistStore.openSection(section.id);
-	}
+  constructor(public _appLocalization: AppLocalization,
+              public _playlistStore: PlaylistStore,
+              public _widgetService: PlaylistSectionsListWidget,
+              private _browserService: BrowserService) {
+  }
 
   ngOnInit() {
-    this.sections = [
-      new SectionData(PlaylistSections.Metadata, this._appLocalization.get('applications.content.playlistDetails.sections.metadata'), false, false),
-      new SectionData(PlaylistSections.Content, this._appLocalization.get('applications.content.playlistDetails.sections.content'), false, false)
-    ];
-    this._playlistStore.activeSection$
-      .cancelOnDestroy(this)
-      .subscribe(
-        response => {
-          if(response.section !== null) {
-            this.sections.forEach(section => section.isActive = false);
-            this.sections[response.section].isActive = true;
-            this.playlistSections.updateLayout();
-          }
-        }
-      );
+    this._loading = true;
+    this._widgetService.attachForm();
 
-    this._playlistStore.sectionsState$
+    this._widgetService.sections$
       .cancelOnDestroy(this)
-      .subscribe(
-        response => {
-          this.sections[PlaylistSections.Metadata].hasErrors = !response.metadata.isValid;
-          this.sections[PlaylistSections.Content].hasErrors = !response.content.isValid;
-        }
-      );
-	}
+      .subscribe(sections => {
+        this._loading = false;
+        this._sections = sections;
+        this._showList = sections && sections.length > 0;
+        this.playlistSections.updateLayout();
+      });
+  }
 
-	ngOnDestroy() {}
+  ngOnDestroy() {
+    this._widgetService.detachForm();
+  }
+
+  public _navigateToSection(widget: SectionWidgetItem): void {
+    this._browserService.scrollToTop();
+    this._playlistStore.openSection(widget.key);
+  }
+
+
 }

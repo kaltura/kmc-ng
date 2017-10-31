@@ -1,10 +1,10 @@
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { AreaBlockerMessage, AreaBlockerMessageButton, WidgetBase } from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
+import { KalturaMultiRequest, KalturaRequest } from 'kaltura-typescript-client';
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';
+import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
 
-export abstract class PlaylistWidget extends WidgetBase<PlaylistWidgetsManager, KalturaMediaEntry, KalturaMultiRequest> {
+export abstract class PlaylistWidget extends WidgetBase<PlaylistWidgetsManager, KalturaPlaylist, KalturaRequest<KalturaPlaylist>> {
   public sectionBlockerMessage: AreaBlockerMessage;
   public showSectionLoader: boolean;
 
@@ -25,9 +25,9 @@ export abstract class PlaylistWidget extends WidgetBase<PlaylistWidgetsManager, 
     this.sectionBlockerMessage = null;
   }
 
-  protected _showBlockerMessage(message: AreaBlockerMessage, addBackToEntriesButton: boolean) {
+  protected _showBlockerMessage(message: AreaBlockerMessage, addBackToPlaylistsButton: boolean) {
     let messageToShow = message;
-    if (addBackToEntriesButton) {
+    if (addBackToPlaylistsButton) {
       messageToShow = new AreaBlockerMessage({
         message: message.message,
         buttons: [
@@ -46,7 +46,7 @@ export abstract class PlaylistWidget extends WidgetBase<PlaylistWidgetsManager, 
       return [{
         label: 'Back To Playlists',
         action: () => {
-          this.form.returnToEntries();
+          this.form.returnToPlaylists();
         }
       }];
     } else {
