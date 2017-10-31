@@ -9,10 +9,6 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PlaylistUpdateAction } from 'kaltura-typescript-client/types/PlaylistUpdateAction';
 import { Observable } from 'rxjs/Observable';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { TagSearchAction } from 'kaltura-typescript-client/types/TagSearchAction';
-import { KalturaTagFilter } from 'kaltura-typescript-client/types/KalturaTagFilter';
-import { KalturaTaggedObjectType } from 'kaltura-typescript-client/types/KalturaTaggedObjectType';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
 import { KalturaMultiRequest, KalturaMultiResponse, KalturaTypesFactory } from 'kaltura-typescript-client';
 import { PlaylistExecuteAction } from 'kaltura-typescript-client/types/PlaylistExecuteAction';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
@@ -111,6 +107,7 @@ export class PlaylistStore implements OnDestroy {
       .debounce(() => Observable.timer(500))
       .subscribe(
         sectionsState => {
+          console.warn(sectionsState);
           const newDirtyState = Object.keys(sectionsState)
             .reduce((result, sectionName) => result || sectionsState[sectionName].isDirty, false);
 
@@ -435,44 +432,5 @@ export class PlaylistStore implements OnDestroy {
     this.entries.splice(rowIndex, 0, this.entries[rowIndex]);
     this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });
     // this.updateSectionState(PlaylistSections.Content, { isDirty: true });
-  }
-
-  public searchTags(text: string): Observable<string[]> {
-    return Observable.create(
-      observer => {
-        const requestSubscription = this._kalturaServerClient.request(
-          new TagSearchAction(
-            {
-              tagFilter: new KalturaTagFilter(
-                {
-                  tagStartsWith: text,
-                  objectTypeEqual: KalturaTaggedObjectType.entry
-                }
-              ),
-              pager: new KalturaFilterPager({
-                pageIndex: 0,
-                pageSize: 30
-              })
-            }
-          )
-        )
-          .cancelOnDestroy(this)
-          .monitor('search tags')
-          .subscribe(
-            result => {
-              const tags = result.objects.map(item => item.tag);
-              observer.next(tags);
-              observer.complete();
-            },
-            err => {
-              observer.error(err);
-            }
-          );
-
-        return () => {
-          console.log('entryMetadataHandler.searchTags(): cancelled');
-          requestSubscription.unsubscribe();
-        }
-      });
   }
 }

@@ -1,11 +1,8 @@
-import { Component, AfterViewInit, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { PlaylistStore } from '../playlist-store.service';
-import { PlaylistSections } from '../playlist-sections';
-import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { PlaylistMetadataWidget } from './playlist-metadata-widget.service';
 import { Subject } from 'rxjs/Subject';
+import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
 import { ISubscription } from 'rxjs/Subscription';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'kPlaylistMetadata',
@@ -14,98 +11,55 @@ import { ActivatedRoute } from '@angular/router';
 })
 
 export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestroy {
-  metadataForm : FormGroup;
-  _tagsProvider = new Subject<SuggestionsProviderData>();
-  private _searchTagsSubscription : ISubscription;
-  @ViewChild('metadataNameInput') private metadataNameInput;
+  private _searchTagsSubscription: ISubscription;
+  public _tagsProvider = new Subject<SuggestionsProviderData>();
 
-  constructor(
-    private _formBuilder : FormBuilder,
-    private _playlistStore: PlaylistStore,
-    private _route: ActivatedRoute
-  ) {
-    // build FormControl group
-    this.metadataForm = _formBuilder.group({
-      name        : ['', Validators.required],
-      description : '',
-      tags        : null
-    });
+  @ViewChild('metadataNameInput') public metadataNameInput;
+
+  constructor(public _widgetService: PlaylistMetadataWidget) {
   }
 
   ngOnInit() {
-    this._playlistStore.playlist$
-      .cancelOnDestroy(this)
-      .subscribe(
-        response => {
-          if(response.playlist) {
-            this.metadataForm.reset({
-              name: response.playlist.name,
-              description: response.playlist.description,
-              tags: response.playlist.tags ? response.playlist.tags.split(', ') : null
-            });
-            // this._playlistStore.updateSectionState(PlaylistSections.Metadata, {isDirty : false});
-          } else {
-            // TODO [kmc] missing implementation
-          }
-        }
-      );
-
-    this.metadataForm.statusChanges
-      .cancelOnDestroy(this)
-      .subscribe(
-        status => {
-          // this._playlistStore.updateSectionState(PlaylistSections.Metadata, {isValid : status === 'VALID'});
-        }
-      );
-
-    this.metadataForm.valueChanges
-      .cancelOnDestroy(this)
-      .subscribe(
-        form => {
-          // this._playlistStore.updateSectionState(PlaylistSections.Metadata, {isDirty: this.metadataForm.dirty});
-          this._playlistStore.playlist.name = form.name;
-          this._playlistStore.playlist.description = form.description;
-          if(form.tags) {
-            this._playlistStore.playlist.tags = form.tags.join(', ');
-          }
-        }
-      );
+    this._widgetService.attachForm();
   }
 
-  _searchTags(event) : void {
-    this._tagsProvider.next({ suggestions : [], isLoading : true});
+  ngOnDestroy() {
+    this._widgetService.detachForm();
+    this._tagsProvider.complete();
 
-    if (this._searchTagsSubscription)
-    {
+    if (this._searchTagsSubscription) {
+      this._searchTagsSubscription.unsubscribe();
+    }
+  }
+
+  ngAfterViewInit() {
+    this.metadataNameInput.nativeElement.focus();
+  }
+
+  public _searchTags(event): void {
+    this._tagsProvider.next({ suggestions: [], isLoading: true });
+
+    if (this._searchTagsSubscription) {
       // abort previous request
       this._searchTagsSubscription.unsubscribe();
       this._searchTagsSubscription = null;
     }
 
-    this._searchTagsSubscription = this._playlistStore.searchTags(event.query).subscribe(data => {
+    this._searchTagsSubscription = this._widgetService.searchTags(event.query).subscribe(data => {
         const suggestions = [];
-        const entryTags = this.metadataForm.value.tags || [];
+        const entryTags = this._widgetService.metadataForm.value.tags || [];
 
-        (data|| []).forEach(suggestedTag => {
+        (data || []).forEach(suggestedTag => {
           const isSelectable = !entryTags.find(tag => {
             return tag === suggestedTag;
           });
-          suggestions.push({ item: suggestedTag, isSelectable: isSelectable});
+          suggestions.push({ item: suggestedTag, isSelectable: isSelectable });
         });
-        this._tagsProvider.next({suggestions: suggestions, isLoading: false});
+        this._tagsProvider.next({ suggestions: suggestions, isLoading: false });
       },
       (err) => {
-        this._tagsProvider.next({ suggestions : [], isLoading : false, errorMessage : <any>(err.message || err)});
+        this._tagsProvider.next({ suggestions: [], isLoading: false, errorMessage: <any>(err.message || err) });
       });
-  }
-
-  ngOnDestroy() {
-    this._tagsProvider.complete();
-    this._searchTagsSubscription && this._searchTagsSubscription.unsubscribe();
-  }
-
-  ngAfterViewInit() {
-    this.metadataNameInput.nativeElement.focus();
   }
 
 }
