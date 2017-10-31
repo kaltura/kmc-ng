@@ -275,6 +275,7 @@
       },
       "addNewCategory": {
         "newCategory": "New Category",
+        "moveCategory": "Move Category",
         "selectCategoryParent": "Select the parent category under which the new category will appear",
         "cancelEdit": "Cancel Edit",
         "discard": "Discard all changes?",
@@ -283,8 +284,9 @@
         "noParent":"No Parent",
         "searchCategories": "Search Categories",
         "selectedParentCategory":"Parent Category Id: {{value}}",
-"error": {
-  "nameRequired": "You must enter name"
+        "name": "Name",
+"errors": {
+  "requiredName": "You must enter name"
 }
       },
       "entries": {

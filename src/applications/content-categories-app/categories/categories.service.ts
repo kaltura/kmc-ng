@@ -15,6 +15,7 @@ import {KalturaCategory} from "kaltura-typescript-client/types/KalturaCategory";
 import {CategoryDeleteAction} from "kaltura-typescript-client/types/CategoryDeleteAction";
 import {AppLocalization} from "@kaltura-ng/kaltura-common";
 import {CategoryAddAction} from "kaltura-typescript-client/types/CategoryAddAction";
+import {CategoryMoveAction} from "kaltura-typescript-client/types/CategoryMoveAction";
 
 export type UpdateStatus = {
     loading: boolean;
@@ -113,15 +114,14 @@ export class CategoriesService implements OnDestroy {
 
         // validate category exists
         const currentCategoryIndex = categories.findIndex(category => category.id == categoryId);
-        if (currentCategoryIndex == -1) {
+        if (currentCategoryIndex === -1) {
             return null;
         }
 
         // get next category ID
         if (currentCategoryIndex < categories.length - 1) {
             return (categories[currentCategoryIndex + 1].id);
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -236,17 +236,6 @@ export class CategoriesService implements OnDestroy {
         });
     }
 
-    // public setNewCategoryData(newCategoryData: NewCategoryData) {
-    //     this._newCategoryData = newCategoryData;
-    // }
-    //
-    // public getNewCategoryData(): NewCategoryData {
-    //     return this._newCategoryData;
-    // }
-    //
-    // public clearNewCategoryData(): void {
-    //     this._newCategoryData = null
-    // }
 
   public addNewCategory(newCategoryData: NewCategoryData): Observable<KalturaCategory> {
     if (!newCategoryData) {
@@ -256,12 +245,20 @@ export class CategoriesService implements OnDestroy {
     const category = new KalturaCategory({
       name: newCategoryData.name,
       parentId: newCategoryData.parentCategoryId
-
     });
 
     return <any>this._kalturaClient.request(
       new CategoryAddAction({
         category
+      })
+    )
+  }
+
+  public moveCategory(categoryToMove: {categoryId: string, targetCategoryParentId: number}): Observable<KalturaCategory> {
+    return <any>this._kalturaClient.request(
+      new CategoryMoveAction({
+        categoryIds: categoryToMove.categoryId,
+        targetCategoryParentId: categoryToMove.targetCategoryParentId
       })
     )
   }

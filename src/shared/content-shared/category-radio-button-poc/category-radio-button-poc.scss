@@ -20,14 +20,61 @@
    margin: 0 auto;
    padding-bottom: 20px;
 
-   .kTagsContainer {
-     font-size: 15px;
-     padding: 20px 0px 20px 25px;
+   &.kFullHeight{
+     height: 482px;
+   }
 
-     .kAdditionalInformation {
-       padding-bottom: 20px;
+   .kRow {
+     display: -webkit-box;
+     display: -ms-flexbox;
+     display: flex;
+     padding-bottom: 20px;
+
+     &:first-child {
+       padding-top: 20px;
+     }
+     .kLabel {
+       width: 100px;
+       -webkit-box-flex: 0;
+       -ms-flex: 0 0 auto;
+       flex: 0 0 auto;
+       height: 18px;
+       color: $kGrayscale1;
+       font-size: 15px;
+       line-height: 18px;
+     }
+
+     .kRequired {
+       width: 20px;
+       font-size: 24px;
+       color: $kGrayscale3;
+       &.kHasError {
+         color: $kDandger;
+         font-weight: bold;
+       }
+     }
+     .kRequired, .kLabel {
+       padding: 8px 4px 0px 0px;
+     }
+     .kControl {
+       height: 34px;
+       color: $kGrayscale2;
+       width: 375px;
+       border-radius: 3px;
+       &.kHasError {
+         border: 1px solid $kDandger;
+         background: initial;
+       }
+     }
+     .error {
+       padding-top: 8px;
      }
    }
+
+   .kRow.kNoParentOption {
+     padding-bottom: 0;
+   }
+
    .kMain {
      border: 1px solid $kGrayscale4;
      border-radius: 4px;

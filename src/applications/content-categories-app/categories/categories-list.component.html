@@ -41,8 +41,15 @@
   </div>
 </k-area-blocker>
 
-<kPopupWidget #addNewCategory [popupWidth]="586" [popupHeight]="568" [modal]="true">
+<kPopupWidget #addNewCategory [popupWidth]="586" [popupHeight]="645" [modal]="true" [preventPageScroll]="true">
   <ng-template>
-    <kCategoryRadioButtonPOC (onCategorySelected)="onAddNewCategory($event)" [parentPopupWidget]="addNewCategory"></kCategoryRadioButtonPOC>
+    <kCategoryRadioButtonPOC (onCategorySelected)="onAddNewCategory($event)" [parentPopupWidget]="addNewCategory" [mode]="'new'"></kCategoryRadioButtonPOC>
+  </ng-template>
+</kPopupWidget>
+
+
+<kPopupWidget #moveCategory [popupWidth]="586" [popupHeight]="568" [modal]="true" [preventPageScroll]="true">
+  <ng-template>
+    <kCategoryRadioButtonPOC (onCategorySelected)="onMoveCategory($event)" [parentPopupWidget]="moveCategory" [mode]="'move'"></kCategoryRadioButtonPOC>
   </ng-template>
 </kPopupWidget>

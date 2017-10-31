@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'kCategoryRadioButtonPOCPopup',
@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 
     <kPopupWidget #categoriesPopup [popupWidth]="560" [popupHeight]="586" [closeBtn]="true" [modal]="true">
       <ng-template>
-        <kCategoryRadioButtonPOC></kCategoryRadioButtonPOC>
+        <kCategoryRadioButtonPOC [mode]="'new'"></kCategoryRadioButtonPOC>
       </ng-template>
     </kPopupWidget>
   `

@@ -5,6 +5,7 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
+  OnInit,
   Output,
   ViewChild
 } from '@angular/core';
@@ -20,20 +21,25 @@ import {
 import {CategoriesPrimeService} from 'app-shared/content-shared/categories-prime.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
 
 @Component({
   selector: 'kCategoryRadioButtonPOC',
   templateUrl: './category-radio-button-poc.html',
   styleUrls: ['./category-radio-button-poc.scss']
 })
-export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChecked {
-  @Input() value: any = null;
+export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChecked, OnInit {
+  @Input() mode: 'move' | 'new' = 'move';
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Output() onCategorySelected = new EventEmitter<{parentCategoryId: number, name?: string}>();
+
 
   @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
   @ViewChild('autoComplete') private _autoComplete: AutoComplete = null;
 
+  public _isBusy = false;
+  public _blockerMessage: AreaBlockerMessage = null;
   private _emptyTreeSelection = new PrimeTreeNode(null, 'empty', 0, null);
   public _selectionMode: TreeSelectionMode = 'single';
   public _categoriesLoaded = false;
@@ -43,7 +49,7 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
   private _searchCategoriesSubscription: ISubscription;
   public _categoriesProvider = new Subject<SuggestionsProviderData>();
   public _selectedCategory: any = null;
-  public _name: string = null;
+  public newCategoryForm: FormGroup;
 
   private parentPopupStateChangeSubscription: ISubscription;
 
@@ -54,10 +60,18 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
 
   constructor(private _categoriesPrimeService: CategoriesPrimeService,
               private cdRef: ChangeDetectorRef,
-              private _appLocalization: AppLocalization) {
+              private _appLocalization: AppLocalization,
+              private _fb: FormBuilder) {
     this._updateSelectionTooltip();
   }
 
+  ngOnInit() {
+    if (this.mode === 'new') {
+      this.newCategoryForm = this._fb.group({
+        name: ['', Validators.required]
+      });
+    }
+  }
   ngOnDestroy() {
 
     if (this._searchCategoriesSubscription) {
@@ -207,7 +221,16 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
 
   public _apply(): void {
     const parentCategoryId = this._selectedCategory ? this._selectedCategory.id : 0;
-    this.onCategorySelected.emit({parentCategoryId, name: this._name});
+
+    if (this.newCategoryForm) {
+      this.onCategorySelected.emit({parentCategoryId, name: this.newCategoryForm.controls['name'].value});
+    } else {
+      this.onCategorySelected.emit({parentCategoryId});
+    }
+
+    if (this.parentPopupWidget) {
+      this.parentPopupWidget.close();
+    }
   }
 
   public _cancel(): void {
