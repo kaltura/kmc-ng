@@ -4,7 +4,7 @@
   </div>
   <div class="kContainer">
     <span>{{'applications.content.entryDetails.flavours.fileUrl' | translate}}</span>
-    <input class="kFlavorUrl" placeholder="{{'applications.content.entryDetails.flavours.urlPlaceholder' | translate}}" type="text" [(ngModel)]="_flavorURL" (blur)="_validate()" (keyup)="_onChange()" pInputText/>
+    <input class="kFlavorUrl" placeholder="{{'applications.content.entryDetails.flavours.urlPlaceholder' | translate}}" type="text" [(ngModel)]="_flavorURL" (blur)="_validate()" (ngModelChange)="this._validationErrorMsg = ''" pInputText/>
     <span class="kInvalid">{{_validationErrorMsg}}</span>
   </div>
 	<div class="kFooter">
