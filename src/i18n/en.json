@@ -10,7 +10,9 @@
       "Categories": "Categories",
       "Studio": "Studio",
       "Analytics": "Analytics",
+      "Administration": "Administration",
       "Settings": "Settings",
+      "Users": "Users",
       "Account Settings": "Account Settings",
       "Account Upgrade": "Account Upgrade",
       "Administration": "Administration",
@@ -326,6 +328,42 @@
         "refresh": "Refresh",
         "deleteNote": "Please note: {{0}} playlist{{1}} will be permanently deleted from your account."
       },
+      "users": {
+        "usersTitle": "Authorized KMC Users",
+        "usersExplanatory": "Here you can manage the KMC users with various levels of access to your account. You can add new users, edit permissions for existing users and more.",
+        "user": "user",
+        "users": "users",
+        "moreUsers": "Need more KMC users?",
+        "clickHere": "Click here",
+        "usersUpgrade": "to upgrade your account.",
+        "you": "You",
+        "accountOwner": "Account Owner",
+        "deleteUser": "Delete User",
+        "confirmDelete": "Are you sure you want to delete the selected user? \n ({{0}})",
+        "save": "Save",
+        "editUser": "Edit User",
+        "loginEmailAddress": "Login Email address",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "publisherUserId": "Publisher user ID \n (optional)",
+        "userRole": "User role",
+        "addRole": "Add role",
+        "userRoleDescription": "User role description",
+        "addUser": "Add User",
+        "usersInfo": "Current status: {{0}} KMC {{1}} in use. | {{2}} additional available",
+        "failedLoading": "Failed to load users data",
+        "cantPerform": "You don't have access to perform this action",
+        "successSavingUser": "Changes will take effect immediately. \nPlease instruct the user to refresh their browser.",
+        "personalDetails": "Personal Details",
+        "accountSpecificDetails": "Account Specific Details",
+        "required": "This field is required",
+        "emailFormat": "This Email format is not valid",
+        "userAlreadyExist": "{{0}} is already listed in the system and is associated with another KMC account. \nDo you want to associate this user with this account as well?",
+        "alreadyExist": "User already exist",
+        "alreadyExistError": "Login e-mail {{0}} is already listed in the system as an authorized user in your account.",
+        "userAssociatedCaption": "Associated user",
+        "userAssociated": "User with Id {{0}} already exists on the account. Do you want to enable KMC access to this user?"
+      },
       "filters": {
         "activeFilters": "Active Filters:",
         "clearAll": "Clear All",
@@ -377,7 +415,14 @@
         "delete": "Delete",
         "view": "View Details",
         "loading": "Loading...",
-        "noResults": "No Results"
+        "noResults": "No Results",
+        "userName": "User name",
+        "userId": "User ID",
+        "emailAddress": "Email Address",
+        "role": "Role",
+        "lastLogin": "Last Login",
+        "edit": "Edit",
+        "blockUnblock": "Block / Unblock"
       },
       "paginator": {
         "showRows": "Show rows:"
@@ -417,6 +462,11 @@
         "external": "External RSS",
         "staticList": "Manual",
         "unknown": "Unknown"
+      },
+      "userStatus": {
+        "active": "Active",
+        "blocked": "Blocked",
+        "deleted": "Deleted"
       },
       "addNewPlaylist": {
         "addNewPlaylist": "Add New Playlist",
@@ -790,7 +840,8 @@
           "entriesLoadError": "Error loading entries",
           "categoriesLoadError": "Error loading categories",
           "flavorsLoadError": "Error loading flavors",
-          "clipsLoadError": "Error loading clips"
+          "clipsLoadError": "Error loading clips",
+          "invalidCharacters": "The form contains the invalid characters. It must not contain the following characters: < or >"
         }
       },
       "categoryDetails": {

@@ -1,0 +1,42 @@
+@import 'app-theme/_variables.scss';
+
+.kUsersTable {
+  background-color: white;
+  overflow-y: hidden;
+  position: absolute;
+  padding: 0;
+
+  .kUsersTableActions {
+    width: 100%;
+    text-align: center;
+
+    button {
+      color: grey !important;
+      background-color: rgba(0, 0, 0, 0) !important;
+      border: none !important;
+      font-size: 16px !important;
+      outline: 0;
+    }
+  }
+}
+
+:host /deep/ .ui-datatable .kTableStatus {
+  padding-left: 14px;
+  width: 100px;
+}
+
+:host /deep/ .ui-datatable .kTableFullName {
+  width: 350px;
+}
+
+:host /deep/ .ui-datatable .kTableActions {
+  overflow: hidden;
+  width: 80px;
+}
+
+:host {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0;
+  flex-direction: column;
+}
