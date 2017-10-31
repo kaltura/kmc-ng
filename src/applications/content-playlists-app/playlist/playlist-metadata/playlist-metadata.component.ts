@@ -43,7 +43,7 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
               description: response.playlist.description,
               tags: response.playlist.tags ? response.playlist.tags.split(', ') : null
             });
-            this._playlistStore.updateSectionState(PlaylistSections.Metadata, {isDirty : false});
+            // this._playlistStore.updateSectionState(PlaylistSections.Metadata, {isDirty : false});
           } else {
             // TODO [kmc] missing implementation
           }
@@ -54,7 +54,7 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
       .cancelOnDestroy(this)
       .subscribe(
         status => {
-          this._playlistStore.updateSectionState(PlaylistSections.Metadata, {isValid : status === 'VALID'});
+          // this._playlistStore.updateSectionState(PlaylistSections.Metadata, {isValid : status === 'VALID'});
         }
       );
 
@@ -62,7 +62,7 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
       .cancelOnDestroy(this)
       .subscribe(
         form => {
-          this._playlistStore.updateSectionState(PlaylistSections.Metadata, {isDirty: this.metadataForm.dirty});
+          // this._playlistStore.updateSectionState(PlaylistSections.Metadata, {isDirty: this.metadataForm.dirty});
           this._playlistStore.playlist.name = form.name;
           this._playlistStore.playlist.description = form.description;
           if(form.tags) {

@@ -5,7 +5,7 @@
       <button pButton class="kButtonDefault kMoveBtn kMoveBtnBottom" icon="kIcondropdown_arrow_bottom"></button>
       <button pButton class="kButtonDanger kBulkDeleteBtn"
               label="{{'applications.content.playlists.remove' | translate}}"
-              (click)="deleteEntries(_selectedEntries)"></button>
+              (click)="_widgetService.deleteEntries(_selectedEntries)"></button>
     </div>
     <ng-template #addEntryWrap>
       <button
@@ -18,19 +18,19 @@
     </ng-template>
     <span
       class="kSelectedEntriesNum"
-      *ngIf="(_playlistStore.playlist$ | async)?.entriesTotalCount">
-        {{(_playlistStore.playlist$ | async)?.entriesTotalCount}} {{'applications.content.playlists.entries' | translate}}
+      *ngIf="(_widgetService.playlist$ | async)?.entriesTotalCount">
+        {{(_widgetService.playlist$ | async)?.entriesTotalCount}} {{'applications.content.playlists.entries' | translate}}
     </span>
     <div *ngIf="_selectedEntries.length" class="kSelected">
       <span class="kSelectedEntriesLabel">
-        � {{_selectedEntries.length}} {{'applications.content.playlists.selected' | translate}}
+        {{_selectedEntries.length}} {{'applications.content.playlists.selected' | translate}}
       </span>
       <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.playlists.cancel' | translate}}</a>
     </div>
   </div>
   <kPlaylistEntriesTable
     class="kPlaylistEntriesTable"
-    [entries]="(_playlistStore.playlist$ | async)?.entries"
+    [entries]="(_widgetService.playlist$ | async)?.entries"
     [(selectedEntries)]="_selectedEntries">
   </kPlaylistEntriesTable>
 </div>

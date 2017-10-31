@@ -409,41 +409,6 @@ export class PlaylistStore implements OnDestroy {
       });
   }
 
-  // public updateSectionState(section: PlaylistSections, state: { isValid?: boolean, isDirty?: boolean }): void {
-  //   const sections = Object.assign({}, this._sectionsState.getValue());
-  //   let hasChanges = false;
-  //
-  //   switch (section) {
-  //     case PlaylistSections.Metadata:
-  //       if (typeof state.isValid !== 'undefined' && state.isValid !== null && sections.metadata.isValid !== state.isValid) {
-  //         sections.metadata.isValid = state.isValid;
-  //         hasChanges = true;
-  //       }
-  //
-  //       if (typeof state.isDirty !== 'undefined' && state.isDirty !== null && sections.metadata.isDirty !== state.isDirty) {
-  //         sections.metadata.isDirty = state.isDirty;
-  //         hasChanges = true;
-  //       }
-  //       break;
-  //     case PlaylistSections.Content:
-  //       if (typeof state.isValid !== 'undefined' && state.isValid !== null && sections.content.isValid !== state.isValid) {
-  //         sections.content.isValid = state.isValid;
-  //         hasChanges = true;
-  //       }
-  //
-  //       if (typeof state.isDirty !== 'undefined' && state.isDirty !== null && sections.content.isDirty !== state.isDirty) {
-  //         sections.content.isDirty = state.isDirty;
-  //         hasChanges = true;
-  //       }
-  //       break;
-  //   }
-  //
-  //   if (hasChanges) {
-  //     this._sectionsState.next(sections);
-  //     this._updatePageExitVerification(sections.metadata.isDirty || sections.content.isDirty);
-  //   }
-  // }
-
   public deleteEntryFromPlaylist(rowIndex: number): void {
     this.entries.splice(rowIndex, 1);
     this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });

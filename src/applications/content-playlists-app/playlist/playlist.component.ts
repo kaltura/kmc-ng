@@ -7,6 +7,7 @@ import { ActionTypes, PlaylistStore } from './playlist-store.service';
 import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';
 import { PlaylistSectionsListWidget } from './playlist-sections-list/playlist-sections-list-widget.service';
+import { PlaylistContentWidget } from './playlist-content/playlist-content-widget.service';
 
 @Component({
   selector: 'kPlaylist',
@@ -15,7 +16,8 @@ import { PlaylistSectionsListWidget } from './playlist-sections-list/playlist-se
   providers: [
     PlaylistStore,
     PlaylistWidgetsManager,
-    PlaylistSectionsListWidget
+    PlaylistSectionsListWidget,
+    PlaylistContentWidget
   ]
 })
 export class PlaylistComponent implements OnInit, OnDestroy {
@@ -35,8 +37,9 @@ export class PlaylistComponent implements OnInit, OnDestroy {
               private _appLocalization: AppLocalization,
               private _playlistsStore: PlaylistsStore,
               playlistWidgetsManager: PlaylistWidgetsManager,
-              widget1: PlaylistSectionsListWidget) {
-    playlistWidgetsManager.registerWidgets([widget1])
+              widget1: PlaylistSectionsListWidget,
+              widget2: PlaylistContentWidget) {
+    playlistWidgetsManager.registerWidgets([widget1, widget2])
   }
 
   ngOnInit() {

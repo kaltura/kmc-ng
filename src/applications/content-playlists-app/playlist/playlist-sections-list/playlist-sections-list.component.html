@@ -2,7 +2,7 @@
 	<kSticky #playlistSections stickyId="playlistSections" [sticksTo]="'playlistHeader'" [scrollOffset]="120" [stickyClass]="'kStickySections'">
 		<div class="kSections">
 			<ul *ngIf="_showList">
-				<li [class.active]="section.attached" *ngFor="let section of _sections">
+				<li *ngFor="let section of _sections" [class.active]="section.attached">
 					<div (click)="_navigateToSection(section)" [class.kSectionHasErrors]="!section.isValid">
 						{{section.label}}
 					</div>
