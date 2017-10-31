@@ -29,7 +29,8 @@ export enum ActionTypes
 	EntryPrepareSavingFailed,
 	EntrySavingFailed,
 	EntryDataIsInvalid,
-	ActiveSectionBusy
+	ActiveSectionBusy,
+  EntryInvalidCharactersSavingFailed
 }
 
 declare type StatusArgs =
@@ -193,7 +194,13 @@ export class EntryStore implements  OnDestroy {
                             .map(
 								response => {
 									if (response.hasErrors()) {
-										this._state.next({action: ActionTypes.EntrySavingFailed});
+                    response.forEach(response => {
+                      if(response.error && (response.error.code === "UNSAFE_HTML_TAGS" || response.error.code === "INVALID_METADATA_DATA")) {
+                        this._state.next({action: ActionTypes.EntryInvalidCharactersSavingFailed});
+                      } else {
+                        this._state.next({action: ActionTypes.EntrySavingFailed});
+                      }
+                    });
 									} else {
 										this._loadEntry(this.entryId);
 									}
