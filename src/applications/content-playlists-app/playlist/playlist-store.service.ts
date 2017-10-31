@@ -170,11 +170,18 @@ export class PlaylistStore implements OnDestroy {
 			.cancelOnDestroy(this)
 			.subscribe(
 				response => {
-          this._playlist.next({playlist: response[0].result, entries: this.entries, entriesTotalCount: this._playlist.getValue().entriesTotalCount});
-          if(response[1].result && response[1].result.length) {
-            this._playlist.next({playlist: this.playlist, entries: <KalturaMediaEntry[]>response[1].result, entriesTotalCount: <number>response[1].result.length});
+          if(response.hasErrors()) {
+            this._state.next({
+              isBusy: true,
+              error: {message: this._appLocalization.get('applications.content.playlistDetails.errors.loadError'), origin: 'reload'}
+            });
           } else {
-            this._playlist.next({playlist: this.playlist, entries: [], entriesTotalCount: 0});
+            this._playlist.next({playlist: response[0].result, entries: this.entries, entriesTotalCount: this._playlist.getValue().entriesTotalCount});
+            if(response[1].result && response[1].result.length) {
+              this._playlist.next({playlist: this.playlist, entries: <KalturaMediaEntry[]>response[1].result, entriesTotalCount: <number>response[1].result.length});
+            } else {
+              this._playlist.next({playlist: this.playlist, entries: [], entriesTotalCount: 0});
+            }
           }
           this._state.next({isBusy: false});
 				},
