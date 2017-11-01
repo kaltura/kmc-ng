@@ -1,0 +1,53 @@
+<k-area-blocker class="kBulkUploadMenu" [showLoader]="_filesUploading" [message]="_blockerMessage">
+  <div class="kBulkUploadMenuHeader">
+    <h1>{{ 'applications.content.bulkUpload.menu.header' | translate }}</h1>
+  </div>
+  <div class="kBulkUploadMenuBody">
+    <p class="kBulkUploadMenuTypesTitle">{{ 'applications.content.bulkUpload.menu.selectType' | translate }}</p>
+    <div class="kBulkUploadMenuTypes">
+      <button pButton class="kButtonDefault"
+              [label]="'applications.content.bulkUpload.menu.types.entries' | translate"
+              (click)="_invokeFileSelection(_bulkUploadTypes.entries)"></button>
+      <button pButton class="kButtonDefault"
+              [label]="'applications.content.bulkUpload.menu.types.categories' | translate"
+              (click)="_invokeFileSelection(_bulkUploadTypes.categories)">
+      </button>
+      <button pButton class="kButtonDefault"
+              [label]="'applications.content.bulkUpload.menu.types.endUsers' | translate"
+              (click)="_invokeFileSelection(_bulkUploadTypes.endUsers)">
+      </button>
+      <button pButton class="kButtonDefault"
+              [label]="'applications.content.bulkUpload.menu.types.endUsersEntitlement' | translate"
+              (click)="_invokeFileSelection(_bulkUploadTypes.endUsersEntitlement)">
+      </button>
+    </div>
+  </div>
+</k-area-blocker>
+
+<kFileDialog #fileDialog
+             *ngIf="_showFileDialog"
+             [filter]="_allowedExtensions"
+             [allowMultiple]="true"
+             (onFileSelected)="_selectFiles($event)"></kFileDialog>
+
+<kPopupWidget #uploadSucceed [popupWidth]="440" [popupHeight]="233" [closeBtn]="false" [modal]="true">
+  <div class="kSuccessBulkUpload">
+    <div class="kSuccessBulkUploadMessage kCenterContent">
+      <p>
+        {{ 'applications.content.bulkUpload.menu.messages.uploadSuccess.body' | translate}}
+        <a (click)="_goToBulkUploadLog()">
+          {{ 'applications.content.bulkUpload.menu.messages.uploadSuccess.link' | translate}}
+        </a>
+      </p>
+    </div>
+
+    <div class="kSuccessBulkUploadFooter kCenterContent">
+      <button pButton
+              class="kButtonDefault kSuccessBulkUploadButton"
+              [label]="'app.common.ok' | translate"
+              (click)="uploadSucceed.close(); onClose.emit()"></button>
+    </div>
+
+  </div>
+</kPopupWidget>
+
