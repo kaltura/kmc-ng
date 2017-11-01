@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDes
 import { Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PlaylistStore } from '../playlist-store.service';
+import { PlaylistStore } from '../../playlist-store.service';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 
