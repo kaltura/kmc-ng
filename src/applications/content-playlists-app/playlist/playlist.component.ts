@@ -9,6 +9,7 @@ import { PlaylistWidgetsManager } from './playlist-widgets-manager';
 import { PlaylistSectionsListWidget } from './playlist-sections-list/playlist-sections-list-widget.service';
 import { PlaylistContentWidget } from './playlist-content/playlist-content-widget.service';
 import { PlaylistMetadataWidget } from './playlist-metadata/playlist-metadata-widget.service';
+import { PlaylistDetailsWidget } from './playlist-details/playlist-details-widget.service';
 
 @Component({
   selector: 'kPlaylist',
@@ -18,6 +19,7 @@ import { PlaylistMetadataWidget } from './playlist-metadata/playlist-metadata-wi
     PlaylistStore,
     PlaylistWidgetsManager,
     PlaylistSectionsListWidget,
+    PlaylistDetailsWidget,
     PlaylistContentWidget,
     PlaylistMetadataWidget
   ]
@@ -40,9 +42,10 @@ export class PlaylistComponent implements OnInit, OnDestroy {
               private _playlistsStore: PlaylistsStore,
               playlistWidgetsManager: PlaylistWidgetsManager,
               widget1: PlaylistSectionsListWidget,
-              widget2: PlaylistContentWidget,
-              widget3: PlaylistMetadataWidget) {
-    playlistWidgetsManager.registerWidgets([widget1, widget2, widget3])
+              widget2: PlaylistDetailsWidget,
+              widget3: PlaylistContentWidget,
+              widget4: PlaylistMetadataWidget) {
+    playlistWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4])
   }
 
   ngOnInit() {

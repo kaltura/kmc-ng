@@ -1,46 +1,39 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { PlaylistStore } from '../playlist-store.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
+import { PlaylistDetailsWidget } from './playlist-details-widget.service';
+import { PlaylistStore } from '../playlist-store.service';
 
 @Component({
-	selector: 'kPlaylistDetails',
-	templateUrl: './playlist-details.component.html',
-	styleUrls: ['./playlist-details.component.scss']
+  selector: 'kPlaylistDetails',
+  templateUrl: './playlist-details.component.html',
+  styleUrls: ['./playlist-details.component.scss']
 })
 export class PlaylistDetailsComponent implements OnInit, OnDestroy {
-	public playlist: KalturaPlaylist;
-	public numberOfEntries: number;
-	public entriesDuration: number = 0;
-  public _currentEntry = { creatorId: 0 }; // TODO [kmcng] check template for this
-  public _duration = 0; // TODO [kmcng] check template for this
-	constructor( public _playlistStore : PlaylistStore ) {}
+  public _currentPlaylist: KalturaPlaylist;
+  public _numberOfEntries: number;
+  public _duration = 0;
+  constructor(public _widgetService: PlaylistDetailsWidget, private _playlistStore: PlaylistStore) {
+  }
 
-	ngOnInit() {
-		this._playlistStore.playlist$
+  ngOnInit() {
+    this._widgetService.attachForm();
+    this._playlistStore.playlist$
       .cancelOnDestroy(this)
-			.subscribe(
-				response => {
-				  this.entriesDuration = 0;
-					if(response.playlist) {
-						this.playlist = response.playlist;
-						this.getNumberOfEntries(this.playlist.playlistContent);
-					}
-					if(response.entries) {
-					  response.entries.forEach(entry => {
-              this.entriesDuration += entry.duration;
-            });
-          }
-				}
-			);
-	}
+      .filter(({ playlist }) => !!playlist)
+      .subscribe(({ playlist, entries }) => {
+          this._currentPlaylist = playlist;
+          this._numberOfEntries = this._getNumberOfEntries(this._currentPlaylist.playlistContent);
+          this._duration = entries.reduce((acc, val) => acc + val.duration, 0);
+        }
+      );
+  }
 
-	getNumberOfEntries(playlistContent: string) {
-    this.numberOfEntries = 0;
-	  if(playlistContent) {
-      this.numberOfEntries = playlistContent.indexOf(',') != -1 ? playlistContent.split(',').length : 1;
-    }
-	}
+  ngOnDestroy() {
+    this._widgetService.detachForm();
+  }
 
-	ngOnDestroy() {}
+  private _getNumberOfEntries(playlistContent: string): number {
+    return playlistContent && playlistContent.indexOf(',') !== -1 ? playlistContent.split(',').length : 1;
+  }
 }
 
