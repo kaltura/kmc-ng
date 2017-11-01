@@ -1,0 +1,15 @@
+@import 'app-theme/_variables.scss';
+
+:host {
+  line-height: 1.5em;
+
+  h1{
+    color: $kPrimary;
+    font-style:italic;
+  }
+
+  h3{
+    padding-bottom:10px;
+    border-bottom: 1px solid gray;
+  }
+}

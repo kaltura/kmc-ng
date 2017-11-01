@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
 import { CommonModule } from '@angular/common';
 import { Ng2Webstorage } from 'ng2-webstorage';
-
+import { TranslateModule } from 'ng2-translate/ng2-translate';
 
 import {
   BootstrapAdapterToken,
@@ -94,6 +94,7 @@ export function clientConfigurationFactory() {
     AppEventsModule.forRoot(),
     KMCShellModule.forRoot(),
     KalturaCommonModule.forRoot(),
+    TranslateModule.forRoot(),
     Ng2Webstorage,
     PopupWidgetModule,
     routing,

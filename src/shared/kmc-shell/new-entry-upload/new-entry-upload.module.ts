@@ -1,5 +1,5 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { NewEntryUploadService } from 'app-shared/kmc-shell';
+import { NewEntryUploadService } from './new-entry-upload.service';
 
 @NgModule({
   imports: <any[]>[],

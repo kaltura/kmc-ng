@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { TrackedFile, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
-import { NewEntryUploadFile } from 'app-shared/kmc-shell';
+import { NewEntryUploadFile } from './new-entry-upload-file';
 import { MediaAddAction } from 'kaltura-typescript-client/types/MediaAddAction';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
