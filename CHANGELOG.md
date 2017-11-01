@@ -5,6 +5,7 @@
 ### Bug Fixes
 
 * app failure during bootstrap due to missing Translate module in app module ([23c066a](https://github.com/kaltura/kmc-ng/commit/23c066a))
+* deploy kmc-ng with optimization of production mode
 
 
 ### Features
