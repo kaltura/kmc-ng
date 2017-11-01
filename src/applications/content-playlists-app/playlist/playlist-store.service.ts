@@ -34,7 +34,7 @@ export class PlaylistStore implements OnDestroy {
   });
   private _loadPlaylistSubscription : ISubscription;
   private _sectionToRouteMapping : { [key : number] : string} = {};
-	private _activeSection = new BehaviorSubject<{ section: PlaylistSections}>({section: null});
+	private _activeSection = new BehaviorSubject<{ section: string}>({section: null});
 	private _playlist = new BehaviorSubject<{ playlist: KalturaPlaylist, entries: KalturaMediaEntry[], entriesTotalCount: number}>({playlist: null, entries: [], entriesTotalCount: 0});
 	private _state = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin?: 'reload' | 'save'  | 'pre-save'}}>({isBusy: false});
 
@@ -71,7 +71,7 @@ export class PlaylistStore implements OnDestroy {
     this._activeSection.next({section: this._playlistRoute.snapshot.firstChild.data.sectionKey});
 	}
 
-  public openSection(sectionId: PlaylistSections): void {
+  public openSection(sectionId: string): void {
     const navigatePath = this._sectionToRouteMapping[sectionId];
 
     if (navigatePath) {
@@ -187,7 +187,7 @@ export class PlaylistStore implements OnDestroy {
 			);
 	}
 
-  public updateSectionState(section: PlaylistSections, state : {isValid?: boolean, isDirty?: boolean}) : void {
+  public updateSectionState(section: string, state : {isValid?: boolean, isDirty?: boolean}) : void {
     const sections = Object.assign({}, this._sectionsState.getValue());
     let hasChanges = false;
 
