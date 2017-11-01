@@ -9,6 +9,7 @@ import { ModerationPipe } from './pipes/moderation.pipe';
 
 import { EntryTypePipe } from './pipes/entry-type.pipe';
 import { EntryDurationPipe } from './pipes/entry-duration.pipe';
+import { BulkOperationsComponent } from './playlist-content/bulk-operations/bulk-operations.component';
 
 export const PlaylistComponentsList = [
 	PlaylistMetadataComponent,
@@ -17,7 +18,9 @@ export const PlaylistComponentsList = [
 	PlaylistComponent,
 	PlaylistDetailsComponent,
   PlaylistEntriesTableComponent,
-  PlaylistAddEntryComponent,ModerationPipe,
+  PlaylistAddEntryComponent,
+  ModerationPipe,
   EntryTypePipe,
-  EntryDurationPipe
+  EntryDurationPipe,
+  BulkOperationsComponent
 ];

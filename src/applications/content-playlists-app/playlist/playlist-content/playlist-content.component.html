@@ -1,34 +1,12 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
   <div class="kPlaylistEntriesHolder">
-    <div class="kPlaylistEntriesTableFilters">
-      <div class="kBulkActions" *ngIf="_selectedEntries.length; else addEntryWrap">
-        <button pButton class="kButtonDefault kMoveBtn kMoveBtnTop" icon="kIcondropdown_arrow_top"></button>
-        <button pButton class="kButtonDefault kMoveBtn kMoveBtnBottom" icon="kIcondropdown_arrow_bottom"></button>
-        <button pButton class="kButtonDanger kBulkDeleteBtn"
-                label="{{'applications.content.playlists.remove' | translate}}"
-                (click)="_widgetService.deleteEntries(_selectedEntries)"></button>
-      </div>
-      <ng-template #addEntryWrap>
-        <button
-          pButton
-          type="button"
-          label="{{'applications.content.playlists.addEntry' | translate}}"
-          class="kButtonBranded kAddEntryBtn"
-          (click)="addEntry.open()">
-        </button>
-      </ng-template>
-      <span
-        class="kSelectedEntriesNum"
-        *ngIf="(_widgetService.playlist$ | async)?.entriesTotalCount">
-        {{(_widgetService.playlist$ | async)?.entriesTotalCount}} {{'applications.content.playlists.entries' | translate}}
-    </span>
-      <div *ngIf="_selectedEntries.length" class="kSelected">
-      <span class="kSelectedEntriesLabel">
-        {{_selectedEntries.length}} {{'applications.content.playlists.selected' | translate}}
-      </span>
-        <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.playlists.cancel' | translate}}</a>
-      </div>
-    </div>
+    <kPlaylistEntryListBulkOperationsContent
+      [selectedEntries]="_selectedEntries"
+      [entriesTotalCount]="(_widgetService.playlist$ | async)?.entriesTotalCount"
+      (addEntry)="addEntry.open()"
+      (deleteEntries)="_widgetService.deleteEntries($event)"
+      (clearSelection)="_clearSelection()">
+    </kPlaylistEntryListBulkOperationsContent>
     <kPlaylistEntriesTable
       class="kPlaylistEntriesTable"
       [entries]="(_widgetService.playlist$ | async)?.entries"
