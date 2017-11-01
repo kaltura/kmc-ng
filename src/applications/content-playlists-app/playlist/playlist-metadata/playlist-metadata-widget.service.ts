@@ -40,26 +40,22 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
   private _monitorFormChanges(): void {
     Observable.merge(this.metadataForm.valueChanges, this.metadataForm.statusChanges)
       .cancelOnDestroy(this)
-      .subscribe(
-        (form) => {
-          console.warn(form);
+      .subscribe(() => {
           super.updateState({
             isValid: this.metadataForm.status === 'VALID',
             isDirty: this.metadataForm.dirty
           });
-
-          this._playlistStore.playlist.name = form.name;
-          this._playlistStore.playlist.description = form.description;
-
-          if (form.tags) {
-            this._playlistStore.playlist.tags = form.tags.join(', ');
-          }
         }
       );
   }
 
   protected onDataSaving(data: KalturaPlaylist, request: KalturaRequest<KalturaPlaylist>): void {
+    const metadataFormValue = this.metadataForm.value;
 
+    // save static metadata form
+    data.name = metadataFormValue.name;
+    data.description = metadataFormValue.description;
+    data.tags = (metadataFormValue.tags || []).join(',');
   }
 
   /**
@@ -69,7 +65,7 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
     this.metadataForm.reset();
   }
 
-  protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean, error?: Error }> {
+  protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
     super._showLoader();
 
     return this._playlistStore.playlist$
@@ -87,7 +83,6 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
       .catch(error => {
         super._hideLoader();
         super._showActivationError();
-
         return Observable.of({ failed: true, error });
       });
   }

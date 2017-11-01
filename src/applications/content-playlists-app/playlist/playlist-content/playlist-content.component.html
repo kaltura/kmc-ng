@@ -13,7 +13,7 @@
         type="button"
         label="{{'applications.content.playlists.addEntry' | translate}}"
         class="kButtonBranded kAddEntryBtn"
-        (click)="addNewEntry()">
+        (click)="addEntry.open()">
       </button>
     </ng-template>
     <span
@@ -25,7 +25,7 @@
       <span class="kSelectedEntriesLabel">
         {{_selectedEntries.length}} {{'applications.content.playlists.selected' | translate}}
       </span>
-      <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.playlists.cancel' | translate}}</a>
+      <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.playlists.cancel' | translate}}</a>
     </div>
   </div>
   <kPlaylistEntriesTable
@@ -37,6 +37,6 @@
 
 <kPopupWidget #addEntry [popupWidth]="996" [popupHeight]="779" [modal]="true" [slider]="true" [preventPageScroll]="true">
   <ng-template>
-    <kAddEntry (onClosePopupWidget)="closePopupWidget($event)"></kAddEntry>
+    <kAddEntry (onClosePopupWidget)="addEntry.close()"></kAddEntry>
   </ng-template>
 </kPopupWidget>

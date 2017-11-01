@@ -874,8 +874,12 @@
           "nameIsMandatory": "You must enter a playlist name"
         },
         "errors": {
-          "retry": "Retry",
+          "reload": "Reload",
           "dismiss": "Dismiss",
+          "retry": "Retry",
+          "saveError": "An error occurred while saving.",
+          "busyError": "An operation is still in progress. Please try again in a while.",
+          "savePrepareError": "An error occurred while preparing to save. Please try again.",
           "ok": "Ok",
           "backToPlaylists": "Back To Playlists",
           "playlistTypeNotSupported": "playlist type not supported",

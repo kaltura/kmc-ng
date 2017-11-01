@@ -107,7 +107,6 @@ export class PlaylistStore implements OnDestroy {
       .debounce(() => Observable.timer(500))
       .subscribe(
         sectionsState => {
-          console.warn(sectionsState);
           const newDirtyState = Object.keys(sectionsState)
             .reduce((result, sectionName) => result || sectionsState[sectionName].isDirty, false);
 
@@ -312,23 +311,6 @@ export class PlaylistStore implements OnDestroy {
       );
   }
 
-  public savePlaylist(): void {
-    const newPlaylist = KalturaTypesFactory.createObject(this.playlist);
-
-    if (newPlaylist && newPlaylist instanceof KalturaPlaylist) {
-      this._transmitSaveRequest(newPlaylist)
-    } else {
-      console.error(new Error(`Failed to create a new instance of the playlist type '${this.playlist ? typeof this.playlist : 'n/a'}`));
-      this._state.next({ action: ActionTypes.PlaylistPrepareSavingFailed });
-    }
-  }
-
-  public reloadPlaylist(): void {
-    if (this._getPlaylistId()) {
-      this._loadPlaylist(this.playlistId);
-    }
-  }
-
   private _getPlaylist(playlistId: string): Observable<KalturaMultiResponse> {
     if (!playlistId) {
       return Observable.throw(new Error('missing entryId'));
@@ -348,6 +330,23 @@ export class PlaylistStore implements OnDestroy {
           responseProfile: responseProfile
         })
       ));
+  }
+
+  public savePlaylist(): void {
+    const newPlaylist = KalturaTypesFactory.createObject(this.playlist);
+
+    if (newPlaylist && newPlaylist instanceof KalturaPlaylist) {
+      this._transmitSaveRequest(newPlaylist)
+    } else {
+      console.error(new Error(`Failed to create a new instance of the playlist type '${this.playlist ? typeof this.playlist : 'n/a'}`));
+      this._state.next({ action: ActionTypes.PlaylistPrepareSavingFailed });
+    }
+  }
+
+  public reloadPlaylist(): void {
+    if (this._getPlaylistId()) {
+      this._loadPlaylist(this.playlistId);
+    }
   }
 
   public openSection(sectionKey: string): void {

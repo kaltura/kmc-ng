@@ -41,21 +41,21 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   protected onReset(): void {
   }
 
-  protected onActivate(firstTimeActivating: boolean) {
+  protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
     super._showLoader();
 
-    this._playlistStore.playlist$
+    return this._playlistStore.playlist$
       .cancelOnDestroy(this, this.widgetReset$)
       .map(({ entries, entriesTotalCount }) => {
         this._playlist.next({ entries, entriesTotalCount });
         super._hideLoader();
         return { failed: false };
-      }).catch(error => {
-      super._hideLoader();
-      super._showActivationError();
-
-      return Observable.of({ failed: true, error });
-    });
+      })
+      .catch(error => {
+        super._hideLoader();
+        super._showActivationError();
+        return Observable.of({ failed: true, error });
+      });
   }
 
   public deleteEntries(selectedEntries: KalturaMediaEntry[]) {
