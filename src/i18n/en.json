@@ -336,7 +336,8 @@
         "addEntry": "Add Entry",
         "addToPlaylist": "Add to Playlist",
         "refresh": "Refresh",
-        "deleteNote": "Please note: {{0}} playlist{{1}} will be permanently deleted from your account."
+        "deleteNote": "Please note: {{0}} playlist{{1}} will be permanently deleted from your account.",
+        "notSupportedMsg": "A rule based playlist is currently not supported"
       },
       "filters": {
         "activeFilters": "Active Filters:",

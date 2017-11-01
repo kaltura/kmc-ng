@@ -21,7 +21,7 @@
 				<ng-template let-col let-playlist="rowData" pTemplate="body">
           <div class="kPlaylistsNameWrap">
             <div [ngClass]="playlist.playlistType | playlistType: true" class="kMediaTypeIcon"></div>
-            <div class="kTitle" [kTooltip]="playlist[col.field]" [maxWidth]="300" (click)="onActionSelected('view',playlist.id)">{{playlist[col.field]}}</div>
+            <div class="kTitle" [kTooltip]="playlist[col.field]" [maxWidth]="300" (click)="onActionSelected('view',playlist)">{{playlist[col.field]}}</div>
           </div>
 				</ng-template>
 			</p-column>

@@ -12,6 +12,7 @@ import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 import * as moment from 'moment';
+import { KalturaPlaylistType } from 'kaltura-typescript-client/types/KalturaPlaylistType';
 
 export interface Filter {
   type: string;
@@ -164,7 +165,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
       );
   }
 
-  private _updateFilters(filter: Filter, flag?: number) { // if flag == 1 we won't push filter to activeFilters
+  private _updateFilters(filter: Filter, flag?: number): void { // if flag == 1 we won't push filter to activeFilters
     if (!filter.label) {
       flag = 1;
     }
@@ -178,7 +179,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _syncFilters(query) {
+  private _syncFilters(query): void {
     const freeTextFilter: Filter = {
       type: 'freeText',
       label: query.freeText,
@@ -216,11 +217,11 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
     }
   }
 
-  public _onTagsChange(event) {
+  public _onTagsChange(event): void {
     this.tags.updateLayout();
   }
 
-  public _removeTag(tag: Filter) {
+  public _removeTag(tag: Filter): void {
     this._updateFilters(tag, 1);
     if (tag.type === 'freeText') {
       this._filter.freetextSearch = null;
@@ -237,7 +238,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
     });
   }
 
-  public _removeAllTags() {
+  public _removeAllTags(): void {
     this._clearSelection();
     this._playlistsStore.reload({
       freeText: '',
@@ -248,18 +249,22 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
     this.activeFilters = [];
   }
 
-  public _onActionSelected(event) {
+  public _onActionSelected(event: { action: string, playlist: KalturaPlaylist }): void {
     switch (event.action) {
       case 'view':
-        this.router.navigate(['/content/playlists/playlist', event.playlistID]);
+        if (event.playlist.playlistType === KalturaPlaylistType.dynamic) {
+          this._onShowNotSupportedMsg(false);
+        } else {
+          this.router.navigate(['/content/playlists/playlist', event.playlist.id]);
+        }
         break;
       case 'delete':
         this._browserService.confirm(
           {
             header: this.appLocalization.get('applications.content.playlists.deletePlaylist'),
-            message: this.appLocalization.get('applications.content.playlists.confirmDeleteSingle', { 0: event.playlistID }),
+            message: this.appLocalization.get('applications.content.playlists.confirmDeleteSingle', { 0: event.playlist.id }),
             accept: () => {
-              this._deleteCurrentPlaylist(event.playlistID);
+              this._deleteCurrentPlaylist(event.playlist.id);
             }
           }
         );
@@ -304,7 +309,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
     }
   }
 
-  public _clearDates() {
+  public _clearDates(): void {
     this.activeFilters.forEach((el, index, arr) => {
       if (el.type === 'Dates') {
         arr.splice(index, 1);
@@ -312,16 +317,16 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
     });
   }
 
-  public _reload() {
+  public _reload(): void {
     this._clearSelection();
     this._playlistsStore.reload(true);
   }
 
-  public _clearSelection() {
+  public _clearSelection(): void {
     this._selectedPlaylists = [];
   }
 
-  public _deletePlaylists(selectedPlaylists: KalturaPlaylist[]) {
+  public _deletePlaylists(selectedPlaylists: KalturaPlaylist[]): void {
     const playlistsToDelete = selectedPlaylists.map((playlist, index) => `${index + 1}: ${playlist.name}`);
     const playlists = selectedPlaylists.length <= 10 ? playlistsToDelete.join(',').replace(/,/gi, '\n') : '';
     const message = selectedPlaylists.length > 1 ?
@@ -340,15 +345,16 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
     );
   }
 
-  public _addPlaylist() {
+  public _addPlaylist(): void {
     this.addNewPlaylist.open();
   }
 
-  public _onShowNotSupportedMsg() {
+  public _onShowNotSupportedMsg(newPlaylist = true): void {
+    const message = newPlaylist ? 'applications.content.addNewPlaylist.notSupportedMsg' : 'applications.content.playlists.notSupportedMsg';
     this._browserService.alert(
       {
-        header: 'Note',
-        message: this.appLocalization.get('applications.content.addNewPlaylist.notSupportedMsg')
+        header: this.appLocalization.get('app.common.note'),
+        message: this.appLocalization.get(message)
       }
     );
   }
