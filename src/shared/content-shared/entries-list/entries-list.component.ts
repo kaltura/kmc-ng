@@ -33,7 +33,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     sortDirection: SortDirection.Desc
   };
 
-  constructor(private _entriesStore: EntriesStore, private _browserService: BrowserService) {
+  constructor(public _entriesStore: EntriesStore, private _browserService: BrowserService) {
   }
 
   removeTag(tag: any) {

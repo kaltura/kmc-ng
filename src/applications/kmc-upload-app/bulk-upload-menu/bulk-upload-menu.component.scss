@@ -1,0 +1,81 @@
+@import 'app-theme/_variables.scss';
+
+.kBulkUploadMenu {
+  color: $kGrayscale1;
+  flex-direction: column;
+
+  .kBulkUploadMenuHeader {
+    height: 77px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px $kGrayscale4 solid;
+
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      line-height: 29px;
+    }
+  }
+
+  .kBulkUploadMenuBody {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .kBulkUploadMenuTypesTitle {
+      margin: 33px 0;
+      text-align: center;
+
+      p {
+        font-size: 15px;
+        line-height: 24px;
+      }
+    }
+
+    .kBulkUploadMenuTypes {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      button {
+        display: block;
+        font-size: 14px;
+        font-weight: bold;
+        width: 200px;
+        height: 34px;
+        margin-bottom: 30px;
+      }
+    }
+  }
+}
+
+.kSuccessBulkUpload {
+  .kCenterContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .kSuccessBulkUploadMessage {
+    height: 170px;
+    text-align: center;
+    padding: 0 20px;
+  }
+
+  .kSuccessBulkUploadFooter {
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 63px;
+    width: 100%;
+
+    .kSuccessBulkUploadButton {
+      width: 91px;
+      height: 27px;
+    }
+  }
+
+}

@@ -9,7 +9,7 @@ import { PrimeTableSortDirectionPipe } from './pipes/prime-table-sort-direction.
 import { CategoriesBulkChangeContentPrivacy } from "./bulk-actions/components/bulk-change-content-privacy/bulk-change-content-privacy.component";
 import { CategoriesBulkChangeCategoryListing } from "./bulk-actions/components/bulk-change-category-listing/bulk-change-category-listing.component";
 import { CategoriesBulkChangeContributionPolicy } from "./bulk-actions/components/bulk-change-contribution-policy/bulk-change-contribution-policy.component";
-import { AddNewCategory } from "./add-new-category/add-new-category.component";
+import { AddNewCategoryComponent } from "./add-new-category/add-new-category.component";
 
 export const CategoriesComponentsList = [
     CategoriesListComponent,
@@ -17,7 +17,7 @@ export const CategoriesComponentsList = [
     MaxCategoriesPipe,
     CategoriesBulkActionsComponent,
     PrimeTableSortDirectionPipe,
-    AddNewCategory,
+    AddNewCategoryComponent,
     PrimeTableSortDirectionPipe,
     CategoriesBulkAddTags,
     CategoriesBulkRemoveTags,

@@ -149,6 +149,11 @@
         display: flex;
     }
 }
+
+// prioritize sticky elements of header above other sticky elements in the page
 :host /deep/ .kStickyClass{
     z-index: 550 !important;
+}
+:host /deep/ .uploadMonitorPopup .tooltipUp{
+    margin-left: 234px !important;
 }

@@ -41,9 +41,12 @@ const routes: Routes = <Routes>[
           {
             path: 'drop-folders',
             loadChildren: '../applications/content-drop-folders-app/content-drop-folders-app.module#ContentDropFoldersAppModule'
+          },
+          {
+            path: 'bulk',
+            loadChildren: '../applications/content-bulk-log-app/content-bulk-log-app.module#ContentBulkLogAppModule'
           }
-        ]
-        },
+        ]},
         {
           path: 'settings', children: [
           { path: '', redirectTo: 'accountSettings', pathMatch: 'full' },
