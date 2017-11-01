@@ -7,6 +7,9 @@ import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaTy
 import { BrowserService } from 'app-shared/kmc-shell';
 import { EntryDetailsWidget } from './entry-details-widget.service';
 
+export interface EntryDetailsKalturaMediaEntry extends KalturaMediaEntry {
+  recordedEntryId?: string
+}
 
 @Component({
 	selector: 'kEntryDetails',
@@ -22,9 +25,9 @@ export class EntryDetails implements OnInit, OnDestroy {
 	public _hasDuration: boolean = false;
 	public _isClip: boolean = false;
 
-	public _currentEntry: KalturaMediaEntry;
+	public _currentEntry: EntryDetailsKalturaMediaEntry;
 
-	get currentEntry(): KalturaMediaEntry {
+	get currentEntry(): EntryDetailsKalturaMediaEntry {
 		return this._currentEntry;
 	}
 
