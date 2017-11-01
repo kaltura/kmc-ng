@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
 import { CommonModule } from '@angular/common';
 import { Ng2Webstorage } from 'ng2-webstorage';
-
+import { TranslateModule } from 'ng2-translate/ng2-translate';
 
 import {
   BootstrapAdapterToken,
@@ -65,6 +65,7 @@ import { TranscodingProfileManagementModule } from '@kaltura-ng/kaltura-server-u
 import { ChangeAccountComponent } from './components/changeAccount/change-account.component';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
+import { AppEventsModule } from 'app-shared/kmc-shared';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -90,8 +91,10 @@ export function clientConfigurationFactory() {
     InputTextModule,
     MetadataProfileModule,
     Ng2PageScrollModule.forRoot(),
+    AppEventsModule.forRoot(),
     KMCShellModule.forRoot(),
     KalturaCommonModule.forRoot(),
+    TranslateModule.forRoot(),
     Ng2Webstorage,
     PopupWidgetModule,
     routing,

@@ -1,5 +1,5 @@
 <div class="kEntryPreview">
-	<iframe *ngIf="_handler.iframeSrc" [src]="_handler.iframeSrc | safe" width="280" height="158" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
+	<iframe *ngIf="_widgetService.iframeSrc" [src]="_widgetService.iframeSrc | safe" width="280" height="158" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
 	<div class="kPreviewAndEmbedContainer" *ngIf="_entryHasContent">
 		<i (click)="openPreviewAndEmbed()" [class.disabled]="!_entryReady" class="kIconshare"></i><a [class.disabled]="!_entryReady" (click)="openPreviewAndEmbed()">{{'applications.content.entryDetails.preview.pande' | translate}}</a>
 	</div>

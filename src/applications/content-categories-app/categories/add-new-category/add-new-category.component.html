@@ -1,4 +1,4 @@
-<div class="kAddNewCategory">  
+<div class="kAddNewCategory">
     <div class="kHeader">
       <span class="kTitle">{{('applications.content.addNewCategory.newCategory') | translate}}</span>
     </div>
@@ -6,7 +6,7 @@
       <span>{{('applications.content.addNewCategory.selectCategoryParent') | translate}}</span>
       <span><p-radioButton label="{{'applications.content.addNewCategory.noParent' | translate}}"
         value=""
-        [(ngModel)]="_selectedCategory"        
+        [(ngModel)]="_selectedCategory"
         (click)="_onParentRadioButtonSelected()"></p-radioButton>
       </span>
     </div>
@@ -26,5 +26,5 @@
       <button type="button" class="kButtonBranded" pButton label="{{'applications.content.addNewCategory.apply' | translate}}"
         (click)="_goNext()"></button>
       <a class="kLink" (click)="_close()">{{'applications.content.addNewCategory.cancel' | translate}}</a>
-    </div>  
+    </div>
 </div>

@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { IterableDiffers, IterableDiffer, IterableChangeRecord } from '@angular/core';
-import { EntryFormWidget } from '../entry-form-widget';
+
 import { Observable } from 'rxjs/Observable';
 import { KalturaCategoryEntryFilter } from 'kaltura-typescript-client/types/KalturaCategoryEntryFilter';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
@@ -32,6 +32,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
+import { EntryWidget } from '../entry-widget';
 
 export interface EntryCategoryItem
 {
@@ -43,7 +44,7 @@ export interface EntryCategoryItem
 }
 
 @Injectable()
-export class EntryMetadataHandler extends EntryFormWidget
+export class EntryMetadataWidget extends EntryWidget implements OnDestroy
 {
     private _entryCategoriesDiffers : IterableDiffer<EntryCategoryItem>;
     public _entryCategories : EntryCategoryItem[]  = [];
@@ -99,7 +100,7 @@ export class EntryMetadataHandler extends EntryFormWidget
                     });
 
                     if (this.isDirty !== isDirty || this.isValid !== isValid) {
-                        super._updateWidgetState({
+                        super.updateState({
                             isValid: isValid,
                             isDirty: isDirty
                         });
@@ -110,12 +111,12 @@ export class EntryMetadataHandler extends EntryFormWidget
 
     public setDirty()
     {
-	    super._updateWidgetState({
+	    super.updateState({
 		    isDirty: true
 	    });
     }
 
-    protected _onActivate(firstTimeActivating : boolean) : Observable<{failed : boolean}> {
+    protected onActivate(firstTimeActivating : boolean) : Observable<{failed : boolean}> {
 
         super._showLoader();
         super._removeBlockerMessage();
@@ -273,7 +274,7 @@ export class EntryMetadataHandler extends EntryFormWidget
             .catch((error, caught) => Observable.of({failed: true, error}));
     }
 
-    protected _onDataSaving(newData : KalturaMediaEntry, request : KalturaMultiRequest) : void
+    protected onDataSaving(newData : KalturaMediaEntry, request : KalturaMultiRequest) : void
     {
 
 	    const metadataFormValue = this.metadataForm.value;
@@ -422,7 +423,7 @@ export class EntryMetadataHandler extends EntryFormWidget
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset() {
+    protected onReset() {
 
         this.metadataForm.reset({});
         this._entryCategoriesDiffers = null;
@@ -431,7 +432,7 @@ export class EntryMetadataHandler extends EntryFormWidget
         this.isLiveEntry = false;
     }
 
-    _onValidate() : Observable<{ isValid : boolean}>
+    onValidate() : Observable<{ isValid : boolean}>
     {
         return Observable.create(observer =>
         {
@@ -440,5 +441,10 @@ export class EntryMetadataHandler extends EntryFormWidget
             observer.next({  isValid });
             observer.complete();
         });
+    }
+
+    ngOnDestroy()
+    {
+
     }
 }

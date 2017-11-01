@@ -1,15 +1,15 @@
-<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
-	<form [formGroup]="_handler.usersForm" novalidate>
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+	<form [formGroup]="_widgetService.usersForm" novalidate>
 		<div class="kUsers">
 			<p class="kTitle">{{'applications.content.entryDetails.users.users' | translate}}</p>
 			<div class="kUsersDetails">
 				<div class="kRow">
 					<span class="kLabels">{{'applications.content.entryDetails.users.creator' | translate}}</span>
-					<span>{{_handler._creator}}</span>
+					<span>{{_widgetService._creator}}</span>
 				</div>
 				<div class="kRow">
 					<span class="kLabels">{{'applications.content.entryDetails.users.owner' | translate}}</span>
-					<span>{{_handler._owner?.screenName ? _handler._owner?.screenName : _handler._owner?.id}}</span>
+					<span>{{_widgetService._owner?.screenName ? _widgetService._owner?.screenName : _widgetService._owner?.id}}</span>
 					<a class="changeOwner" (click)="_openChangeOwner()">{{'applications.content.entryDetails.users.changeOwner' | translate}}</a>
 				</div>
 				<div class="kRow kSeparator">
@@ -62,7 +62,7 @@
                            [multiple]="false"
                            [limitToSuggestions]="false"
                            placeholder="{{'applications.content.entryDetails.users.changeOwnerPH' | translate}}"
-                           [minLength]="3"
+                           [minLength]="1"
                            [suggestionsProvider]="_usersProvider"
                            (completeMethod)="_searchUsers($event)">
             </kAutoComplete>

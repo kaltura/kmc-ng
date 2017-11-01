@@ -1,4 +1,7 @@
-import { Injectable, IterableChangeRecord, IterableDiffer, IterableDiffers, KeyValueDiffer, KeyValueDiffers } from '@angular/core';
+import {
+    Injectable, IterableChangeRecord, IterableDiffer, IterableDiffers, KeyValueDiffer, KeyValueDiffers,
+    OnDestroy
+} from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
@@ -16,13 +19,14 @@ import { AttachmentAssetUpdateAction } from 'kaltura-typescript-client/types/Att
 import { AttachmentAssetAddAction } from 'kaltura-typescript-client/types/AttachmentAssetAddAction';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 
-import { EntryFormWidget } from '../entry-form-widget';
+
 import { EntryWidgetKeys } from '../entry-widget-keys';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators'
 import { environment } from 'app-environment';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryRelatedFile } from './new-entry-related-file';
+import { EntryWidget } from '../entry-widget';
 
 export interface RelatedFile extends KalturaAttachmentAsset
 {
@@ -34,7 +38,7 @@ export interface RelatedFile extends KalturaAttachmentAsset
 }
 
 @Injectable()
-export class EntryRelatedHandler extends EntryFormWidget
+export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 {
 
 	relatedFilesListDiffer: IterableDiffer<RelatedFile>;
@@ -103,7 +107,7 @@ export class EntryRelatedHandler extends EntryFormWidget
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset()
+    protected onReset()
     {
 	    this.relatedFileDiffer = {};
 	    this.relatedFilesListDiffer = null;
@@ -111,12 +115,12 @@ export class EntryRelatedHandler extends EntryFormWidget
 	    this._relatedFiles.next({ items : [] });
     }
 
-    protected _onValidate(): Observable<{ isValid: boolean }> {
+    protected onValidate(): Observable<{ isValid: boolean }> {
       const fileTypeValid = this._relatedFiles.getValue().items.every(file => !!file.format);
       return Observable.of({ isValid: fileTypeValid });
     }
 
-	protected _onActivate(firstTimeActivating: boolean) {
+	protected onActivate(firstTimeActivating: boolean) {
 		this._entryId = this.data.id;
 		super._showLoader();
 
@@ -165,7 +169,7 @@ export class EntryRelatedHandler extends EntryFormWidget
 			);
 	}
 
-	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
+	protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
 	{
 		if (this._relatedFiles.getValue().items) {
 			// check for added and removed assets
@@ -318,6 +322,11 @@ export class EntryRelatedHandler extends EntryFormWidget
   }
 
 	public _setDirty(){
-		super._updateWidgetState({isDirty: true});
+		super.updateState({isDirty: true});
 	}
+
+    ngOnDestroy()
+    {
+
+    }
 }

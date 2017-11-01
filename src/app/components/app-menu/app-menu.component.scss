@@ -81,7 +81,7 @@
 
         .kIconhelp.has-notification:after {
           content: ' \25CF';
-          color: $kDandger;
+          color: lighten($kPrimary, 10%);
           position: absolute;
           margin-left: 15px;
           margin-top: 4px;
@@ -148,6 +148,11 @@
     .kSubMenu {
         display: flex;
     }
+}
+
+// prioritize sticky elements of header above other sticky elements in the page
+:host /deep/ .kStickyClass{
+    z-index: 550 !important;
 }
 :host /deep/ .uploadMonitorPopup .tooltipUp{
     margin-left: 234px !important;
