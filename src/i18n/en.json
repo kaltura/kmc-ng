@@ -802,7 +802,8 @@
           "entriesLoadError": "Error loading entries",
           "categoriesLoadError": "Error loading categories",
           "flavorsLoadError": "Error loading flavors",
-          "clipsLoadError": "Error loading clips"
+          "clipsLoadError": "Error loading clips",
+          "invalidCharacters": "The form contains the invalid characters. It must not contain the following characters: < or >"
         }
       },
       "categoryDetails": {
