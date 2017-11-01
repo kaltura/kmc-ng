@@ -201,6 +201,18 @@
           }
         },
         "uploadBtn": "Upload"
+      },
+      "uploadMonitor": {
+        "uploadFromDesktop": "Upload from desktop",
+        "bulkUpload": "Bulk upload",
+        "dropFolders": "Drop folders",
+        "viewDetails": "View details",
+        "uploading": "uploading",
+        "syncing": "syncing",
+        "queued": "queued",
+        "completed": "completed",
+        "error": "error",
+        "upToDate": "Up to date"
       }
     },
     "content": {
