@@ -71,7 +71,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
   private _trackUploadFiles(): void {
 
 
-    this._uploadManagement.onFileStatusChanged$
+    this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
       .map(uploadedFile => {
         let relevantCaption = null;
@@ -92,7 +92,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
               relevantCaption.uploading = false;
               relevantCaption.uploadFailure = false;
               break;
-            case TrackedFileStatuses.uploadFailed:
+            case TrackedFileStatuses.failure:
               relevantCaption.uploading = false;
               relevantCaption.uploadFailure = true;
               break;

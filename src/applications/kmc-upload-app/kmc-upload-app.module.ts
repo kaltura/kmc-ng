@@ -18,6 +18,8 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { UploadMenuComponent } from './upload-menu/upload-menu.component';
 import { UploadSettingsComponent } from './upload-settings/upload-settings.component';
 import { UploadButtonComponent } from './upload-button/upload-button.component';
+import { UploadMonitorComponent } from './upload-monitor/upload-monitor.component';
+import { UploadMonitorSectionComponent } from './upload-monitor/upload-monitor-section/upload-monitor-section.component';
 
 @NgModule({
   imports: [
@@ -40,10 +42,13 @@ import { UploadButtonComponent } from './upload-button/upload-button.component';
   declarations: [
     UploadMenuComponent,
     UploadSettingsComponent,
-    UploadButtonComponent
+    UploadButtonComponent,
+    UploadMonitorComponent,
+    UploadMonitorSectionComponent
   ],
   exports: [
-    UploadButtonComponent
+    UploadButtonComponent,
+    UploadMonitorComponent
   ]
 })
 export class KmcUploadAppModule {
