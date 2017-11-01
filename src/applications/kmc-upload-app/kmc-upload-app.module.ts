@@ -18,6 +18,7 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { UploadMenuComponent } from './upload-menu/upload-menu.component';
 import { UploadSettingsComponent } from './upload-settings/upload-settings.component';
 import { UploadButtonComponent } from './upload-button/upload-button.component';
+import { BulkUploadMenuComponent } from './bulk-upload-menu/bulk-upload-menu.component';
 import { UploadMonitorComponent } from './upload-monitor/upload-monitor.component';
 import { UploadMonitorSectionComponent } from './upload-monitor/upload-monitor-section/upload-monitor-section.component';
 
@@ -42,6 +43,8 @@ import { UploadMonitorSectionComponent } from './upload-monitor/upload-monitor-s
   declarations: [
     UploadMenuComponent,
     UploadSettingsComponent,
+    UploadButtonComponent,
+    BulkUploadMenuComponent,
     UploadButtonComponent,
     UploadMonitorComponent,
     UploadMonitorSectionComponent
