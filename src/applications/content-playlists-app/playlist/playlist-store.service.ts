@@ -250,16 +250,9 @@ export class PlaylistStore implements OnDestroy {
     this._state.next({ action: ActionTypes.PlaylistSaving });
 
     const id = this._getPlaylistId();
-    const playlist: KalturaPlaylist = new KalturaPlaylist({
-      name: this.playlist.name,
-      description: this.playlist.description,
-      tags: this.playlist.tags,
-      playlistContent: this.entries.map(entry => entry.id).join(',')
-    });
-
     const request = id
-      ? new PlaylistUpdateAction({ id, playlist })
-      : new PlaylistAddAction({ playlist: this._playlist.getValue().playlist });
+      ? new PlaylistUpdateAction({ id, playlist: newPlaylist })
+      : new PlaylistAddAction({ playlist: newPlaylist });
 
     this._sectionsManager.notifyDataSaving(newPlaylist, request, this.playlist)
       .cancelOnDestroy(this)
