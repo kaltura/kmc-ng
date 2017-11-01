@@ -285,9 +285,15 @@
         "searchCategories": "Search Categories",
         "selectedParentCategory":"Parent Category Id: {{value}}",
         "name": "Name",
-"errors": {
-  "requiredName": "You must enter name"
-}
+        "categoryMovedSuccessfully": "Category moved successfully",
+        "errors": {
+          "requiredName": "You must enter name",
+          "categoryMovedFailure": "Category move failed"
+        }
+      },
+      "moveCategory":{
+        "selectCategoryParent": "Select the parent category under which the selected category will appear",
+        "treeUpdateNotification": "Category tree will be updated in an asynchronous process. This operation may take a few minutes. Category editing options will be released when update is completed."
       },
       "entries": {
         "entries": "Entries",

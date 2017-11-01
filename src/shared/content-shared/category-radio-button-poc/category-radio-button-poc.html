@@ -23,8 +23,8 @@
         </div>
     </form>
     <div class="kRow">
-      <!--todo: might need to change the text for moving category-->
-        {{('applications.content.addNewCategory.selectCategoryParent') | translate}}
+      <span *ngIf="newCategoryForm">{{('applications.content.addNewCategory.selectCategoryParent') | translate}}</span>
+      <span *ngIf="!newCategoryForm">{{('applications.content.moveCategory.selectCategoryParent') | translate}}</span>
     </div>
     <div class="kRow kNoParentOption">
       <p-radioButton class="kControl" [value]="null" [(ngModel)]="_treeSelection" [ngModelOptions]="{standalone: true}"

@@ -201,29 +201,41 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     }
 
     onMoveCategory(newCategory: NewCategoryData): void {
-      this._categoriesService.moveCategory({
-        categoryId: this._selectedCategoryIdToMove.toString(),
-        targetCategoryParentId: newCategory.parentCategoryId
-      })
-        .subscribe(category => {
-          // todo: implement according to PRD of move category
-        },
-          error => {
-          // todo: add error handling according to PRD of move category
-            this._isBusy = false;
-
-            this._blockerMessage = new AreaBlockerMessage(
-              {
-                message: error.message,
-                buttons: [
-                  {
-                    label: this._appLocalization.get('app.common.cancel'),
-                    action: () => {
-                      this._blockerMessage = null;
-                    }
-                  }
-                ]
-              });
-        });
+      this._browserService.confirm(
+        {
+          header: this._appLocalization.get('applications.content.categories.moveCategory'),
+          message: this._appLocalization.get('applications.content.moveCategory.treeUpdateNotification'),
+          accept: () => {
+            this._moveCategory(newCategory);
+          }
+        }
+      );
     }
+
+  private _moveCategory(newCategory: NewCategoryData) {
+    this._isBusy = true;
+    this._categoriesService.moveCategory({
+      categoryId: this._selectedCategoryIdToMove.toString(),
+      targetCategoryParentId: newCategory.parentCategoryId
+    })
+      .subscribe(category => {
+          this._isBusy = false;
+
+          this._browserService.showGrowlMessage({
+            severity: 'success',
+            detail: this._appLocalization
+              .get('applications.content.addNewCategory.categoryMovedSuccessfully')
+          });
+          this._categoriesService.reload(true);
+        },
+        error => {
+          this._isBusy = false;
+          this._browserService.showGrowlMessage({
+            severity: 'error',
+            detail: this._appLocalization
+              .get('applications.content.addNewCategory.errors.categoryMovedFailure')
+          });
+          this._categoriesService.reload(true);
+        });
+  }
 }
