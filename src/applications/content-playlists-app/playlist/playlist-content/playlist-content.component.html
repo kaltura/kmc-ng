@@ -4,12 +4,13 @@
       [selectedEntries]="_selectedEntries"
       [entriesTotalCount]="(_widgetService.playlist$ | async)?.entriesTotalCount"
       (addEntry)="addEntry.open()"
-      (deleteEntries)="_widgetService.deleteEntries($event)"
+      (deleteEntries)="_deleteEntries($event)"
       (clearSelection)="_clearSelection()">
     </kPlaylistEntryListBulkOperationsContent>
     <kPlaylistEntriesTable
       class="kPlaylistEntriesTable"
       [entries]="(_widgetService.playlist$ | async)?.entries"
+      (onActionSelected)="_widgetService.onActionSelected($event)"
       [(selectedEntries)]="_selectedEntries">
     </kPlaylistEntriesTable>
   </div>

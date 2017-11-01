@@ -38,6 +38,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Output() sortChanged = new EventEmitter<any>();
   @Output() selectedEntriesChange = new EventEmitter<any>();
+  @Output() onActionSelected = new EventEmitter<{ action: string, rowIndex: any }>();
 
   constructor(private _appLocalization: AppLocalization,
               public _playlistStore: PlaylistStore,
@@ -47,92 +48,6 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 
   ngOnInit() {
     this.areaBlockerMessage = null;
-  }
-
-  onSortChanged(event) {
-    this.sortChanged.emit(event);
-  }
-
-  buildMenu(rowIndex: number): void {
-    this._items = [
-      {
-        label: this._appLocalization.get('applications.content.bulkActions.removeFromPlaylist'), command: (event) => {
-        this.onActionSelected('remove', rowIndex);
-      }
-      },
-      {
-        label: this._appLocalization.get('applications.content.bulkActions.moveUp'), command: (event) => {
-        this.onActionSelected('moveUp', rowIndex);
-      },
-        disabled: rowIndex === 0
-      },
-      {
-        label: this._appLocalization.get('applications.content.bulkActions.moveDown'), command: (event) => {
-        this.onActionSelected('moveDown', rowIndex);
-      },
-        disabled: rowIndex + 1 === this._playlistStore.entries.length
-      },
-      {
-        label: this._appLocalization.get('applications.content.bulkActions.duplicate'), command: (event) => {
-        this.onActionSelected('duplicate', rowIndex);
-      }
-      }
-    ];
-  }
-
-  onActionSelected(action: string, rowIndex: number) {
-    switch (action) {
-      case 'remove':
-        if (this._playlistStore.entries.length > 1) {
-          this._playlistStore.deleteEntryFromPlaylist(rowIndex);
-        } else {
-          this.areaBlockerMessage = new AreaBlockerMessage({
-            message: this._appLocalization.get('applications.content.playlistDetails.errors.contentValidationError'),
-            buttons: [{
-              label: this._appLocalization.get('applications.content.playlistDetails.errors.ok'),
-              action: () => {
-                this.areaBlockerMessage = null;
-              }
-            }]
-          });
-        }
-        break;
-      case 'moveUp':
-        this._playlistStore.moveUpEntry(rowIndex);
-        break;
-      case 'moveDown':
-        this._playlistStore.moveDownEntry(rowIndex);
-        break;
-      case 'duplicate':
-        this._playlistStore.duplicateEntry(rowIndex);
-        break;
-      default:
-        break;
-    }
-  }
-
-  goToEntry(entryId: KalturaMediaEntry): void {
-    this._router.navigate(['/content/entries/entry', entryId]);
-  }
-
-  openActionsMenu(event: any, rowIndex: number) {
-    if (this.actionsMenu) {
-      this.actionsMenu.toggle(event);
-      this.buildMenu(rowIndex);
-      this.actionsMenu.show(event);
-    }
-  }
-
-  scrollToTop() {
-    const scrollBodyArr = this.dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
-    if (scrollBodyArr && scrollBodyArr.length > 0) {
-      const scrollBody: HTMLDivElement = scrollBodyArr[0];
-      scrollBody.scrollTop = 0;
-    }
-  }
-
-  onSelectionChange(event) {
-    this.selectedEntriesChange.emit(event);
   }
 
   ngAfterViewInit() {
@@ -157,6 +72,57 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 
   ngOnDestroy() {
 
+  }
+
+  private _buildMenu(rowIndex: number): void {
+    this._items = [
+      {
+        label: this._appLocalization.get('applications.content.bulkActions.removeFromPlaylist'),
+        command: () => this.onActionSelected.emit({ action: 'remove', rowIndex })
+      },
+      {
+        label: this._appLocalization.get('applications.content.bulkActions.moveUp'),
+        command: (event) => this.onActionSelected.emit({ action: 'moveUp', rowIndex }),
+        disabled: rowIndex === 0
+      },
+      {
+        label: this._appLocalization.get('applications.content.bulkActions.moveDown'),
+        command: () => this.onActionSelected.emit({ action: 'moveDown', rowIndex }),
+        disabled: rowIndex + 1 === this._playlistStore.entries.length
+      },
+      {
+        label: this._appLocalization.get('applications.content.bulkActions.duplicate'),
+        command: () => this.onActionSelected.emit({ action: 'duplicate', rowIndex })
+      }
+    ];
+  }
+
+  public _onSortChanged(event) {
+    this.sortChanged.emit(event);
+  }
+
+  public _goToEntry(entryId: KalturaMediaEntry): void {
+    this._router.navigate(['/content/entries/entry', entryId]);
+  }
+
+  public _openActionsMenu(event: any, rowIndex: number) {
+    if (this.actionsMenu) {
+      this._buildMenu(rowIndex);
+      this.actionsMenu.toggle(event);
+      this.actionsMenu.show(event);
+    }
+  }
+
+  public _onSelectionChange(event) {
+    this.selectedEntriesChange.emit(event);
+  }
+
+  public scrollToTop() {
+    const scrollBodyArr = this.dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
+    if (scrollBodyArr && scrollBodyArr.length > 0) {
+      const scrollBody: HTMLDivElement = scrollBodyArr[0];
+      scrollBody.scrollTop = 0;
+    }
   }
 }
 

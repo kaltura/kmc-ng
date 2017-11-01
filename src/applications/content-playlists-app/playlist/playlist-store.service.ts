@@ -398,10 +398,14 @@ export class PlaylistStore implements OnDestroy {
       });
   }
 
+  public deleteEntriesFromPlaylist(ids: string[]): void {
+    ids.map(id => this.entries.findIndex(entry => entry.id === id))
+      .forEach(index => this.deleteEntryFromPlaylist(index));
+  }
+
   public deleteEntryFromPlaylist(rowIndex: number): void {
     this.entries.splice(rowIndex, 1);
     this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });
-    // this.updateSectionState(PlaylistSections.Content, { isDirty: true });
   }
 
   public moveUpEntry(rowIndex: number): void {
@@ -409,7 +413,6 @@ export class PlaylistStore implements OnDestroy {
     this.entries.splice(rowIndex, 1);
     this.entries.splice(rowIndex - 1, 0, currentEntry);
     this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });
-    // this.updateSectionState(PlaylistSections.Content, { isDirty: true });
   }
 
   public moveDownEntry(rowIndex: number): void {
@@ -417,12 +420,10 @@ export class PlaylistStore implements OnDestroy {
     this.entries.splice(rowIndex, 1);
     this.entries.splice(rowIndex + 1, 0, currentEntry);
     this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });
-    // this.updateSectionState(PlaylistSections.Content, { isDirty: true });
   }
 
   public duplicateEntry(rowIndex: number): void {
     this.entries.splice(rowIndex, 0, this.entries[rowIndex]);
     this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });
-    // this.updateSectionState(PlaylistSections.Content, { isDirty: true });
   }
 }

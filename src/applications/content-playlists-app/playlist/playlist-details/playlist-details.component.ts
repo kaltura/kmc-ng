@@ -23,7 +23,9 @@ export class PlaylistDetailsComponent implements OnInit, OnDestroy {
       .subscribe(({ playlist, entries }) => {
           this._currentPlaylist = playlist;
           this._numberOfEntries = this._getNumberOfEntries(this._currentPlaylist.playlistContent);
-          this._duration = entries.reduce((acc, val) => acc + val.duration, 0);
+          this._duration = entries
+            .filter(Boolean)
+            .reduce((acc, val) => acc + val.duration, 0);
         }
       );
   }
