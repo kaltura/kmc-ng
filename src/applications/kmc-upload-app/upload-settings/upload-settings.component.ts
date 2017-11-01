@@ -79,7 +79,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     this._loadTranscodingProfiles();
   }
 
-  private _handleSelectedFiles(files: FileList) {
+  public _handleSelectedFiles(files: FileList) {
     const isEditing = false;
 
     const newItems = Array.from(files).map(file => {

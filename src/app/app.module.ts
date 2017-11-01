@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
 import { CommonModule } from '@angular/common';
 import { Ng2Webstorage } from 'ng2-webstorage';
-
+import { TranslateModule } from 'ng2-translate/ng2-translate';
 
 import { AppBootstrap, AuthModule, BootstrapAdapterToken, BrowserService, KMCShellModule, NewEntryUploadModule } from 'app-shared/kmc-shell';
 import { AppLocalization, AppStorage, KalturaCommonModule, UploadManagement } from '@kaltura-ng/kaltura-common';
@@ -87,6 +87,7 @@ export function clientConfigurationFactory() {
     AppEventsModule.forRoot(),
     KMCShellModule.forRoot(),
     KalturaCommonModule.forRoot(),
+    TranslateModule.forRoot(),
     Ng2Webstorage,
     PopupWidgetModule,
     routing,
@@ -153,7 +154,7 @@ export class AppModule {
     // TODO [kmcng] move to a relevant location
     // TODO [kmcng] get max upload request
     // appLocalization.supportedLocales = environment.core.locales;
-    uploadManagement.setMaxUploadRequests(environment.uploadsShared.MAX_CONCURENT_UPLOADS);
+    uploadManagement.setMaxUploadRequests(2/*environment.uploadsShared.MAX_CONCURENT_UPLOADS*/);
 
     appBootstrap.initApp({ errorRoute: '/error' });
   }

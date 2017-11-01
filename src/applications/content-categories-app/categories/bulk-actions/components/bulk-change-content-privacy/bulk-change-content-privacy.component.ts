@@ -35,6 +35,7 @@ export class CategoriesBulkChangeContentPrivacy implements OnInit, OnDestroy, Af
   private _confirmClose: boolean = true;
 
   // expose enum to the template
+  public _privacyModes = PrivacyMode;
   public _privacyMode = PrivacyMode.NoRestriction;
 
   constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
@@ -78,6 +79,7 @@ export class CategoriesBulkChangeContentPrivacy implements OnInit, OnDestroy, Af
 
 
   public _apply() {
+    console.warn(this._privacyMode);
     this.changeContentPrivacyChanged.emit(this._privacyMode);
     this._confirmClose = false;
     this.parentPopupWidget.close();

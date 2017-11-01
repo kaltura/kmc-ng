@@ -1,12 +1,12 @@
 import {  Injectable } from '@angular/core';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { FormManager } from '@kaltura-ng/kaltura-ui'
+import { WidgetsManagerBase } from '@kaltura-ng/kaltura-ui'
 import { EntryStore } from './entry-store.service';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 
 @Injectable()
-export class EntryFormManager extends FormManager<KalturaMediaEntry, KalturaMultiRequest>
+export class EntryWidgetsManager extends WidgetsManagerBase<KalturaMediaEntry, KalturaMultiRequest>
 {
     private _entryStore : EntryStore;
 

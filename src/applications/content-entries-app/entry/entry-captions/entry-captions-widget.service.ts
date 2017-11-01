@@ -1,11 +1,11 @@
 import {
-  Injectable,
-  IterableChangeRecord,
-  IterableDiffer,
-  IterableDiffers,
-  KeyValueChangeRecord,
-  KeyValueDiffer,
-  KeyValueDiffers
+    Injectable,
+    IterableChangeRecord,
+    IterableDiffer,
+    IterableDiffers,
+    KeyValueChangeRecord,
+    KeyValueDiffer,
+    KeyValueDiffers, OnDestroy
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -28,10 +28,11 @@ import { KalturaCaptionAssetStatus } from 'kaltura-typescript-client/types/Kaltu
 import { KalturaLanguage } from 'kaltura-typescript-client/types/KalturaLanguage';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 
-import { EntryFormWidget } from '../entry-form-widget';
+
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
 import { NewEntryCaptionFile } from './new-entry-caption-file';
+import { EntryWidget } from '../entry-widget';
 
 export interface CaptionRow {
     uploading: boolean,
@@ -49,7 +50,7 @@ export interface CaptionRow {
 }
 
 @Injectable()
-export class EntryCaptionsHandler extends EntryFormWidget {
+export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     captionsListDiffer: IterableDiffer<CaptionRow>;
     captionDiffer: { [key: string]: KeyValueDiffer<string, any> } = {};
 
@@ -70,7 +71,7 @@ export class EntryCaptionsHandler extends EntryFormWidget {
   private _trackUploadFiles(): void {
 
 
-    this._uploadManagement.onFileStatusChanged$
+    this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
       .map(uploadedFile => {
         let relevantCaption = null;
@@ -91,7 +92,7 @@ export class EntryCaptionsHandler extends EntryFormWidget {
               relevantCaption.uploading = false;
               relevantCaption.uploadFailure = false;
               break;
-            case TrackedFileStatuses.uploadFailed:
+            case TrackedFileStatuses.failure:
               relevantCaption.uploading = false;
               relevantCaption.uploadFailure = true;
               break;
@@ -110,14 +111,14 @@ export class EntryCaptionsHandler extends EntryFormWidget {
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset() {
+    protected onReset() {
         this.captionsListDiffer = null;
         this.captionDiffer = {};
         this._entryId = '';
         this._captions.next({items: []});
     }
 
-    protected _onActivate(firstTimeActivating: boolean) {
+    protected onActivate(firstTimeActivating: boolean) {
         this._entryId = this.data.id;
         super._showLoader();
         if (firstTimeActivating) {
@@ -267,7 +268,7 @@ export class EntryCaptionsHandler extends EntryFormWidget {
     }
 
     // save data
-    protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
+    protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
         if (this._captions.getValue().items) {
 
             // check for added and removed captions
@@ -348,7 +349,12 @@ export class EntryCaptionsHandler extends EntryFormWidget {
     }
 
     public setDirty() {
-        super._updateWidgetState({isDirty: true});
+        super.updateState({isDirty: true});
+    }
+
+    ngOnDestroy()
+    {
+
     }
 
 }

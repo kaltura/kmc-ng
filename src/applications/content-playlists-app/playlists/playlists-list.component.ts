@@ -290,7 +290,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
 				this.syncFilters(query);
 
-				window.scrollTo(0, 0);
+				this._browserService.scrollToTop();
 			}
 		);
 		this._playlistsStore.reload(false);
