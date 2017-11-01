@@ -7,6 +7,7 @@ import {CategoriesService, NewCategoryData, SortDirection} from './categories.se
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {AppLocalization} from "@kaltura-ng/kaltura-common";
 import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
+import {CategoryWidgetKeys} from "../category/category-widget-keys";
 
 @Component({
     selector: 'kCategoriesList',
@@ -177,8 +178,9 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
       })
         .subscribe(category => {
             this._isBusy = false;
-            // todo: add a flag so the categories will be refreshed upon clicking 'back' from the category page
-          this.router.navigate([`/content/categories/category/${category.id}/metadata`]);
+            // use a flag so the categories will be refreshed upon clicking 'back' from the category page
+            this.router.navigate(['/content/categories/category', category.id],
+              {queryParams: {reloadCategoriesListOnNavigateOut: true, categorySectionsToDisable: [CategoryWidgetKeys.SubCategories]}})
         },
           error => {
             this._isBusy = false;

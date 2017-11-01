@@ -76,6 +76,16 @@ export class CategoryService implements OnDestroy {
 
 		this._onSectionsStateChanges();
 		this._onRouterEvents();
+
+    // hard reload the categories upon navigating back from category (by adding '_reloadCategoriesListOnNavigateOut' to the queryParams)
+    this._categoryRoute.queryParams.cancelOnDestroy(this)
+      .first()
+      .subscribe(queryParams => {
+        const reloadCategoriesListOnNavigateOut = !!queryParams['reloadCategoriesListOnNavigateOut']; // convert string to boolean
+        if (reloadCategoriesListOnNavigateOut) {
+          this._reloadCategoriesOnLeave = reloadCategoriesListOnNavigateOut;
+        }
+      });
 	}
 
 	private _onSectionsStateChanges() {

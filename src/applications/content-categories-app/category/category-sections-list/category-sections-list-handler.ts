@@ -1,13 +1,12 @@
-import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AppLocalization } from "@kaltura-ng/kaltura-common";
-import { CategorySectionsList } from './category-sections-list';
-import { CategoryWidgetKeys } from '../category-widget-keys';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
+import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import {CategorySectionsList} from './category-sections-list';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { CategoryFormWidget } from '../category-form-widget';
+import {CategoryFormWidget} from '../category-form-widget';
+import {ActivatedRoute} from "@angular/router";
 
 export interface SectionWidgetItem {
     label: string,
@@ -20,9 +19,21 @@ export interface SectionWidgetItem {
 export class CategorySectionsListHandler extends CategoryFormWidget {
     private _sections = new BehaviorSubject<SectionWidgetItem[]>([]);
     public sections$: Observable<SectionWidgetItem[]> = this._sections.asObservable();
+    private disabledSections: Array<string> = [];
 
-    constructor(private _appLocalization: AppLocalization) {
+    constructor(private _appLocalization: AppLocalization,
+                private _categoryRoute: ActivatedRoute) {
         super('categorySectionsList');
+
+        // check if need to hide the sub categories tab according
+      this._categoryRoute.queryParams.cancelOnDestroy(this)
+        .first()
+        .subscribe(queryParams => {
+          const categorySectionsToDisable = queryParams['categorySectionsToDisable'];
+          if (categorySectionsToDisable && categorySectionsToDisable.length) {
+            this.disabledSections = categorySectionsToDisable;
+          }
+        });
     }
 
     protected _onDataLoading(dataId: any): void {
@@ -105,23 +116,8 @@ export class CategorySectionsListHandler extends CategoryFormWidget {
         this._sections.next(sections);
     }
 
-    private _isSectionEnabled(sectionKey: string, entry: KalturaCategory): boolean {
-        //const mediaType = this.data.mediaType;
-        // todo: update section list
-        switch (sectionKey) {
-            // case EntryWidgetKeys.Thumbnails:
-            //     return mediaType !== KalturaMediaType.image;
-            // case EntryWidgetKeys.Flavours:
-            //     return mediaType !== KalturaMediaType.image && !this._isLive(entry);
-            // case EntryWidgetKeys.Captions:
-            //     return mediaType !== KalturaMediaType.image && !this._isLive(entry);
-            // case EntryWidgetKeys.Live:
-            //     return this._isLive(entry);
-            // case EntryWidgetKeys.Clips:
-            //     return mediaType !== KalturaMediaType.image;
-            default:
-                return true;
-        }
+    private _isSectionEnabled(sectionKey: string, category: KalturaCategory): boolean {
+      return this.disabledSections.indexOf(sectionKey) === -1;
     }
 
     // private _isLive( entry : KalturaMediaEntry): boolean {
