@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
@@ -6,8 +6,9 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaE
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
-import { EntryFormWidget } from '../entry-form-widget';
+
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { EntryWidget } from '../entry-widget';
 
 function datesValidation(checkRequired: boolean = false): ValidatorFn {
 	return (c: AbstractControl): {[key: string]: boolean} | null => {
@@ -33,7 +34,7 @@ function datesValidation(checkRequired: boolean = false): ValidatorFn {
 }
 
 @Injectable()
-export class EntrySchedulingHandler extends EntryFormWidget
+export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
 {
 	public schedulingForm: FormGroup;
 	public _timeZone = "";
@@ -46,12 +47,12 @@ export class EntrySchedulingHandler extends EntryFormWidget
 	    this.createForm();
     }
 
-	protected _onActivate(firstTimeActivating: boolean): void {
+	protected onActivate(firstTimeActivating: boolean): void {
 		this._syncForm();
 		this.setValidators(false);
 	}
 
-	protected _onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
+	protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
 	{
 		const startDate = this.schedulingForm.get('startDate').value;
 		const endDate = this.schedulingForm.get('endDate').value;
@@ -140,7 +141,7 @@ export class EntrySchedulingHandler extends EntryFormWidget
             .cancelOnDestroy(this)
             .subscribe(
 				() => {
-					super._updateWidgetState({
+					super.updateState({
 						isValid: this.schedulingForm.status === 'VALID',
 						isDirty: this.schedulingForm.dirty
 					});
@@ -163,7 +164,7 @@ export class EntrySchedulingHandler extends EntryFormWidget
 		this.schedulingForm.updateValueAndValidity();
 	}
 
-	protected _onValidate() : Observable<{ isValid : boolean}>
+	protected onValidate() : Observable<{ isValid : boolean}>
 	{
 		return Observable.create(observer =>
 		{
@@ -177,8 +178,13 @@ export class EntrySchedulingHandler extends EntryFormWidget
     /**
      * Do some cleanups if needed once the section is removed
      */
-	protected _onReset()
+	protected onReset()
 	{
 		this.schedulingForm.reset();
 	}
+
+    ngOnDestroy()
+    {
+
+    }
 }

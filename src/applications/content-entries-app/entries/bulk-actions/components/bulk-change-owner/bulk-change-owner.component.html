@@ -8,11 +8,11 @@
                      suggestionItemField="item"
                      suggestionLabelField="name"
                      field="screenName"
-                     [onItemAdding]="_convertUserInputToValidValue"
+                     [onItemAdding]="_convertUserInputToValidValue.bind(this)"
                      [multiple]="false"
                      [limitToSuggestions]="false"
                      placeholder="{{'applications.content.entryDetails.users.changeOwnerPH' | translate}}"
-                     [minLength]="3"
+                     [minLength]="1"
                      [suggestionsProvider]="_usersProvider"
                      (completeMethod)="_searchUsers($event)">
       </kAutoComplete>

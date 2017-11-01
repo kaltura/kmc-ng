@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { EntryFormWidget } from '../entry-form-widget';
+import { Injectable, OnDestroy } from '@angular/core';
+
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { Observable } from 'rxjs/Observable';
@@ -27,9 +27,10 @@ import { Flavor } from './flavor';
 import { FlavorAssetGetUrlAction } from 'kaltura-typescript-client/types/FlavorAssetGetUrlAction';
 import { NewEntryFlavourFile } from './new-entry-flavour-file';
 import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
+import { EntryWidget } from '../entry-widget';
 
 @Injectable()
-export class EntryFlavoursHandler extends EntryFormWidget
+export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
 {
 	private _flavors = new BehaviorSubject<{ items : Flavor[]}>(
 		{ items : []}
@@ -49,9 +50,9 @@ export class EntryFlavoursHandler extends EntryFormWidget
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset() {}
+    protected onReset() {}
 
-    protected _onActivate(firstTimeActivating: boolean) {
+    protected onActivate(firstTimeActivating: boolean) {
       if (firstTimeActivating) {
         this._trackUploadFiles();
       }
@@ -442,4 +443,9 @@ export class EntryFlavoursHandler extends EntryFormWidget
         // reload flavors on refresh
       });
   }
+
+    ngOnDestroy()
+    {
+
+    }
 }

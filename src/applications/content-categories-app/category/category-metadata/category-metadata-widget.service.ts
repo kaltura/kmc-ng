@@ -17,12 +17,12 @@ import { Observable } from 'rxjs/Observable';
 import { DynamicMetadataForm, MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, DynamicMetadataFormFactory } from '@kaltura-ng/kaltura-server-utils';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CategoryWidgetKeys } from './../category-widget-keys';
-import { Injectable } from '@angular/core';
-import { CategoryFormWidget } from "applications/content-categories-app/category/category-form-widget";
+import { Injectable, OnDestroy } from '@angular/core';
+import { CategoryWidget } from "../category-widget";
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
 
 @Injectable()
-export class CategoryMetadataHandler extends CategoryFormWidget {
+export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy {
 
     public metadataForm: FormGroup;
     public customDataForms: DynamicMetadataForm[] = [];
@@ -69,7 +69,7 @@ export class CategoryMetadataHandler extends CategoryFormWidget {
                 });
 
                 if (this.isDirty !== isDirty || this.isValid !== isValid) {
-                    super._updateWidgetState({
+                    super.updateState({
                         isValid: isValid,
                         isDirty: isDirty
                     });
@@ -79,12 +79,12 @@ export class CategoryMetadataHandler extends CategoryFormWidget {
     }
 
     public setDirty() {
-        super._updateWidgetState({
+        super.updateState({
             isDirty: true
         });
     }
 
-    protected _onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean }> {
+    protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean }> {
 
         super._showLoader();
         super._removeBlockerMessage();
@@ -200,7 +200,7 @@ export class CategoryMetadataHandler extends CategoryFormWidget {
             .catch((error, caught) => Observable.of({ failed: true, error }));
     }
 
-    protected _onDataSaving(newData: KalturaCategory, request: KalturaMultiRequest): void {
+    protected onDataSaving(newData: KalturaCategory, request: KalturaMultiRequest): void {
 
         const metadataFormValue = this.metadataForm.value;
 
@@ -283,18 +283,23 @@ export class CategoryMetadataHandler extends CategoryFormWidget {
     /**
    * Do some cleanups if needed once the section is removed
    */
-    protected _onReset() {
+    protected onReset() {
         this.metadataForm.reset({});
         this._categoryMetadata = [];
     }
 
-    _onValidate(): Observable<{ isValid: boolean }> {
+    onValidate(): Observable<{ isValid: boolean }> {
         return Observable.create(observer => {
             this.metadataForm.updateValueAndValidity();
             const isValid = this.metadataForm.valid;
             observer.next({ isValid });
             observer.complete();
         });
+    }
+
+    ngOnDestroy()
+    {
+
     }
 }
 

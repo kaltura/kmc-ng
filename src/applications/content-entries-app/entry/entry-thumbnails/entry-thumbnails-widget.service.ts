@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { EntryFormWidget } from '../entry-form-widget';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -26,6 +25,7 @@ import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { environment } from 'app-environment';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 import { AppEventsService } from 'app-shared/kmc-shared';
+import { EntryWidget } from '../entry-widget';
 import { KalturaThumbParams } from 'kaltura-typescript-client/types/KalturaThumbParams';
 import { ThumbAssetGenerateAction } from 'kaltura-typescript-client/types/ThumbAssetGenerateAction';
 
@@ -43,7 +43,7 @@ export interface ThumbnailRow {
 }
 
 @Injectable()
-export class EntryThumbnailsHandler extends EntryFormWidget
+export class EntryThumbnailsWidget extends EntryWidget
 {
 	private _thumbnails = new BehaviorSubject<{ items : ThumbnailRow[]}>(
 		{ items : []}
@@ -61,11 +61,11 @@ export class EntryThumbnailsHandler extends EntryFormWidget
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected _onReset()
+    protected onReset()
     {
     }
 
-    protected _onActivate(firstTimeActivating: boolean) {
+    protected onActivate(firstTimeActivating: boolean) {
 
 	    super._showLoader();
 
@@ -335,5 +335,11 @@ export class EntryThumbnailsHandler extends EntryFormWidget
 				}
 			);
 	}
+
+
+    ngOnDestroy()
+    {
+
+    }
 
 }

@@ -16,10 +16,10 @@ import { PopupWidgetComponent } from "@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { BrowserService } from "app-shared/kmc-shell";
 import { environment } from 'app-environment';
 import { KalturaUser } from "kaltura-typescript-client/types/KalturaUser";
-import { PrivacyMode } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-content-privacy/bulk-change-content-privacy.component";
+import { PrivacyMode } from "./components/bulk-change-content-privacy/bulk-change-content-privacy.component";
 import { KalturaPrivacyType } from "kaltura-typescript-client/types/KalturaPrivacyType";
 import { KalturaAppearInListType } from "kaltura-typescript-client/types/KalturaAppearInListType";
-import { AppearInListType } from "applications/content-categories-app/categories/bulk-actions/components/bulk-change-category-listing/bulk-change-category-listing.component";
+import { AppearInListType } from "./components/bulk-change-category-listing/bulk-change-category-listing.component";
 
 @Component({
   selector: 'kCategoriesBulkActions',

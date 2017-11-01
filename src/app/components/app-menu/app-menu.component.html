@@ -1,4 +1,4 @@
-<kSticky stickyId="header">
+<kSticky stickyId="header" [stickyClass]="'kStickyClass'">
     <div class="kMainMenuWrapper">
         <div #appmenu class="appMenu">
 
@@ -35,7 +35,7 @@
   </div>
 </div>
 
-<kPopupWidget #usersettings [appendTo]="appmenu" [popupWidth]="240" [popupHeight]="226" [closeBtn]="false" [targetRef]="username" [targetOffset]="{'x':-50, 'y': 20}" (onOpen)="username.className='kUserName open'" (onClose)="username.className='kUserName'">
+<kPopupWidget #usersettings [appendTo]="appmenu" [popupWidth]="240" [popupHeight]="232" [closeBtn]="false" [targetRef]="username" [targetOffset]="{'x':-50, 'y': 30}" (onOpen)="username.className='kUserName open'" (onClose)="username.className='kUserName'">
     <kKMCUserSettings></kKMCUserSettings>
 </kPopupWidget>
 
