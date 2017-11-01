@@ -5,7 +5,8 @@
       [entriesTotalCount]="(_widgetService.playlist$ | async)?.entriesTotalCount"
       (addEntry)="addEntry.open()"
       (deleteEntries)="_deleteEntries($event)"
-      (clearSelection)="_clearSelection()">
+      (clearSelection)="_clearSelection()"
+      (moveEntries)="_widgetService.moveEntries($event)">
     </kPlaylistEntryListBulkOperationsContent>
     <kPlaylistEntriesTable
       class="kPlaylistEntriesTable"

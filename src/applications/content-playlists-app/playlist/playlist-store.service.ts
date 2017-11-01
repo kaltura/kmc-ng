@@ -325,6 +325,13 @@ export class PlaylistStore implements OnDestroy {
       ));
   }
 
+  private _moveEntry(rowIndex: number, direction: 1 | -1): void {
+    const currentEntry = this.entries[rowIndex];
+    this.entries.splice(rowIndex, 1);
+    this.entries.splice(rowIndex + direction, 0, currentEntry);
+    this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });
+  }
+
   public savePlaylist(): void {
     const newPlaylist = KalturaTypesFactory.createObject(this.playlist);
 
@@ -409,17 +416,11 @@ export class PlaylistStore implements OnDestroy {
   }
 
   public moveUpEntry(rowIndex: number): void {
-    const currentEntry = this.entries[rowIndex];
-    this.entries.splice(rowIndex, 1);
-    this.entries.splice(rowIndex - 1, 0, currentEntry);
-    this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });
+    this._moveEntry(rowIndex, -1);
   }
 
   public moveDownEntry(rowIndex: number): void {
-    const currentEntry = this.entries[rowIndex];
-    this.entries.splice(rowIndex, 1);
-    this.entries.splice(rowIndex + 1, 0, currentEntry);
-    this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });
+    this._moveEntry(rowIndex, 1);
   }
 
   public duplicateEntry(rowIndex: number): void {

@@ -110,4 +110,10 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
         break;
     }
   }
+
+  public moveEntries({ entries, direction }: { entries: KalturaMediaEntry[], direction: 'up' | 'down' }): void {
+    // TODO
+
+    this._setDirty();
+  }
 }

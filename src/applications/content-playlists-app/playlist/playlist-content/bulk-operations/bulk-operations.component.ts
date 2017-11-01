@@ -13,5 +13,10 @@ export class BulkOperationsComponent {
   @Output() addEntry = new EventEmitter<void>();
   @Output() clearSelection = new EventEmitter<void>();
   @Output() deleteEntries = new EventEmitter<KalturaMediaEntry[]>();
+  @Output() moveEntries = new EventEmitter<{ entries: KalturaMediaEntry[], direction: 'up' | 'down' }>();
+
+  public _moveEntries(direction: 'up' | 'down'): void {
+    this.moveEntries.emit({ entries: this.selectedEntries, direction });
+  }
 }
 
