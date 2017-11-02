@@ -110,6 +110,15 @@
           </div>
         </ng-template>
       </p-column>
+      <p-column *ngIf="_columns.addToBucket"
+                header=""
+                [style]="{'overflow':'visible', 'width':'80px'}">
+        <ng-template let-col let-entry="rowData" pTemplate="body">
+          <div class="kEntriesTableActions">
+            <button type="button" pButton icon="kIconmore" (click)="_onActionSelected('addToBucket', entry)"></button>
+          </div>
+        </ng-template>
+      </p-column>
     </p-dataTable>
 
     <p-menu #actionsmenu

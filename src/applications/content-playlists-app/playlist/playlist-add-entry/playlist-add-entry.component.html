@@ -3,11 +3,16 @@
     <div class="kHeader">
       <span class="kTitle">{{'applications.content.playlists.addEntry' | translate}}</span>
       <div class="kButtons">
-        <a class="kCancel" (click)="closePopupWidget()">Cancel</a>
-        <button type="button" class="kButtonDefault" disabled pButton label="{{'applications.content.playlists.addToPlaylist' | translate}}"></button>
+        <a class="kCancel" (click)="onClosePopupWidget.emit()">Cancel</a>
+        <button type="button"
+                class="kButtonBranded"
+                [disabled]="_selectedEntries.length === 0"
+                pButton
+                [label]="_addButtonLabel"></button>
       </div>
     </div>
-    <div class="kContainer"></div>
-    <div class="kFooter"></div>
+    <div class="kContainer">
+      <kEntriesSelector (onSelectionChanged)="_selectionChanged($event)"></kEntriesSelector>
+    </div>
   </div>
 </div>
