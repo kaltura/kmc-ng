@@ -7,6 +7,9 @@ import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-com
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { EntryUsersWidget } from './entry-users-widget.service';
 
+export interface Publisher extends KalturaUser {
+  tooltip?: string
+}
 
 @Component({
   selector: 'kEntryUsers',
@@ -77,7 +80,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 
 		this._searchUsersSubscription = this._widgetService.searchUsers(event.query).subscribe(data => {
 				const suggestions = [];
-				(data || []).forEach((suggestedUser: KalturaUser) => {
+				(data || []).forEach((suggestedUser: Publisher) => {
 					let isSelectable = true;
 					if (formControl){
 						const owners = this._widgetService.usersForm.value[formControl] || [];
@@ -85,6 +88,9 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 							return user.id === suggestedUser.id;
 						});
 					}
+					if(formControl === 'publishers') {
+            suggestedUser.tooltip = suggestedUser.screenName;
+          }
 					suggestions.push({
 						name: suggestedUser.screenName + " (" + suggestedUser.id + ")",
 						item: suggestedUser,
