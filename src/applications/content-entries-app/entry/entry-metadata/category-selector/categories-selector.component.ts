@@ -1,15 +1,17 @@
-import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, ViewChild, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, ViewChild, AfterViewChecked, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 
 import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
 import { Subject } from 'rxjs/Subject';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { EntryCategoryItem } from '../entry-metadata-widget.service';
+import { BrowserService } from 'app-shared/kmc-shell';
 import { AutoComplete } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories-tree/categories-tree.component';
 import { CategoriesPrimeService } from 'app-shared/content-shared/categories-prime.service';
 import { TagsComponent } from '@kaltura-ng/kaltura-ui/tags/tags.component';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 
 @Component({
@@ -17,7 +19,7 @@ import { TagsComponent } from '@kaltura-ng/kaltura-ui/tags/tags.component';
     templateUrl: './categories-selector.component.html',
     styleUrls: ['./categories-selector.component.scss']
 })
-export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
+export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked, AfterViewInit {
 
 	@ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
 	@ViewChild('tags') _tags: TagsComponent;
@@ -43,8 +45,15 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 		expendTreeSelectionNodeId : null
 	};
 
-	constructor(private _categoriesPrimeService: CategoriesPrimeService, private cdRef:ChangeDetectorRef) {
-    }
+  private _parentPopupStateChangeSubscribe : ISubscription;
+  private _confirmClose: boolean = true;
+
+	constructor(
+	  private _categoriesPrimeService: CategoriesPrimeService,
+    private cdRef:ChangeDetectorRef,
+    private _browserService: BrowserService,
+    private _appLocalization: AppLocalization
+  ) {}
 
 
 	ngOnInit() {
@@ -54,6 +63,34 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 		},0);
 
 	}
+
+  ngAfterViewInit() {
+    if (this.parentPopupWidget) {
+      this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$
+        .subscribe(event => {
+          if (event.state === PopupWidgetStates.Open) {
+            this._confirmClose = true;
+          }
+          if (event.state === PopupWidgetStates.BeforeClose) {
+            if (event.context && event.context.allowClose){
+              if (this._selectedCategories.length && this._confirmClose){
+                event.context.allowClose = false;
+                this._browserService.confirm(
+                  {
+                    header: this._appLocalization.get('applications.content.categories.bActions.cancelEdit'),
+                    message: this._appLocalization.get('applications.content.categories.bActions.discard'),
+                    accept: () => {
+                      this._confirmClose = false;
+                      this.parentPopupWidget.close();
+                    }
+                  }
+                );
+              }
+            }
+          }
+        });
+    }
+  }
 
 	ngOnDestroy(){
 
@@ -71,12 +108,12 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 
 
 
-	public _apply():void{
-
+	public _apply(): void {
 	    this.valueChange.emit(this._selectedCategories);
 
 	    if (this.parentPopupWidget){
 		    this.parentPopupWidget.close({isDirty: true});
+        this._confirmClose = false;
 	    }
     }
 
