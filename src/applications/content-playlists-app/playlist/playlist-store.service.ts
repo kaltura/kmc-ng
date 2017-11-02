@@ -427,4 +427,44 @@ export class PlaylistStore implements OnDestroy {
     this.entries.splice(rowIndex, 0, this.entries[rowIndex]);
     this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });
   }
+
+  public moveUpEntries(selectedEntries: KalturaMediaEntry[]): void {
+    if (selectedEntries && selectedEntries.length) {
+      for (let i = 0; i < selectedEntries.length; i++) {
+        const selectedItem = selectedEntries[i];
+        const selectedItemIndex = this.entries.findIndex(({ id }) => id === selectedItem.id);
+
+        if (selectedItemIndex !== 0) {
+          const movedItem = this.entries[selectedItemIndex];
+          const temp = this.entries[selectedItemIndex - 1];
+          this.entries[selectedItemIndex - 1] = movedItem;
+          this.entries[selectedItemIndex] = temp;
+        } else {
+          break;
+        }
+      }
+
+      this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });
+    }
+  }
+
+  public moveDownEntries(selectedEntries: KalturaMediaEntry[]): void {
+      if (selectedEntries && selectedEntries.length) {
+        for (let i = selectedEntries.length - 1; i >= 0; i--) {
+          const selectedItem = selectedEntries[i];
+          const selectedItemIndex = this.entries.findIndex(({id}) => id === selectedItem.id);
+
+          if (selectedItemIndex !== (this.entries.length - 1)) {
+            const movedItem = this.entries[selectedItemIndex];
+            const temp = this.entries[selectedItemIndex + 1];
+            this.entries[selectedItemIndex + 1] = movedItem;
+            this.entries[selectedItemIndex] = temp;
+          } else {
+            break;
+          }
+        }
+
+        this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });
+      }
+  }
 }

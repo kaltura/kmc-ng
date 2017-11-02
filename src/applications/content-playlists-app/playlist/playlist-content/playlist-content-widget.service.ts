@@ -112,7 +112,11 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   public moveEntries({ entries, direction }: { entries: KalturaMediaEntry[], direction: 'up' | 'down' }): void {
-    // TODO
+    if (direction === 'up') {
+      this._playlistStore.moveUpEntries(entries);
+    } else {
+      this._playlistStore.moveDownEntries(entries);
+    }
 
     this._setDirty();
   }
