@@ -8,7 +8,8 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
   styleUrls: ['./playlist-add-entry.component.scss']
 })
 export class PlaylistAddEntryComponent {
-  @Output() onClosePopupWidget = new EventEmitter<any>();
+  @Output() onClosePopupWidget = new EventEmitter<void>();
+  @Output() onAddEntries = new EventEmitter<KalturaMediaEntry[]>();
 
   public _selectedEntries: KalturaMediaEntry[] = [];
   public _addButtonLabel = '';
@@ -18,11 +19,16 @@ export class PlaylistAddEntryComponent {
     this._addButtonLabelTranslation = this._addButtonLabel = this._appLocalization.get('applications.content.playlists.addToPlaylist');
   }
 
-  _selectionChanged(entries: KalturaMediaEntry[]): void {
+  public _selectionChanged(entries: KalturaMediaEntry[]): void {
     this._selectedEntries = entries;
     this._addButtonLabel = this._selectedEntries.length > 0
       ? `${this._addButtonLabelTranslation} ${this._selectedEntries.length}`
       : this._addButtonLabelTranslation;
+  }
+
+  public _addEntries(): void {
+    this.onAddEntries.emit(this._selectedEntries);
+    this.onClosePopupWidget.emit();
   }
 }
 

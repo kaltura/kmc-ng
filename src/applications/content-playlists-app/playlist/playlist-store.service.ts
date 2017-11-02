@@ -467,4 +467,8 @@ export class PlaylistStore implements OnDestroy {
         this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });
       }
   }
+
+  public addEntries(entries: KalturaMediaEntry[]): void {
+    this._playlist.next({ playlist: this.playlist, entries: [...this.entries, ...entries], entriesTotalCount: this.entries.length });
+  }
 }

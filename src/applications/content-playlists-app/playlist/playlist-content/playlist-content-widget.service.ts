@@ -120,4 +120,9 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
 
     this._setDirty();
   }
+
+  public addEntries(entries: KalturaMediaEntry[]): void {
+    this._playlistStore.addEntries(entries);
+    this._setDirty();
+  }
 }
