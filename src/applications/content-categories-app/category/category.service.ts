@@ -151,7 +151,7 @@ export class CategoryService implements OnDestroy {
 						}
 						else {
 							const category = this._category.getValue();
-							if (!category || (category && category.id !== currentCategoryId)) {
+							if (!category || (category && category.id.toString() !== currentCategoryId)) {
 								this._loadCategory(currentCategoryId);
 							}
 						}
