@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
@@ -13,6 +13,11 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaE
   providers: [EntriesStore]
 })
 export class EntriesSelectorComponent {
+  @Input() set selectedEntries(value: KalturaMediaEntry[]) {
+    if (value && Array.isArray(value) && value.every(item => item instanceof KalturaMediaEntry)) {
+      this._selectedEntries = value;
+    }
+  }
   @Output() onSelectionChanged = new EventEmitter<KalturaMediaEntry[]>();
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
 
