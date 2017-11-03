@@ -203,16 +203,18 @@ export class PlaylistStore implements OnDestroy {
             const newData = this._playlistsStore.getNewPlaylistData();
 
             if (newData) {
-              this._playlist.next({
-                playlist: new KalturaPlaylist({
-                  name: newData.name,
-                  description: newData.description,
-                  playlistType: KalturaPlaylistType.staticList,
-                  playlistContent: ''
-                }),
-                entries: [],
-                entriesTotalCount: 0
-              });
+              if (!this.playlist) {
+                this._playlist.next({
+                  playlist: new KalturaPlaylist({
+                    name: newData.name,
+                    description: newData.description,
+                    playlistType: KalturaPlaylistType.staticList,
+                    playlistContent: ''
+                  }),
+                  entries: [],
+                  entriesTotalCount: 0
+                });
+              }
 
               setTimeout(() => {
                 const playlistLoadedResult = this._sectionsManager.notifyDataLoaded(this.playlist);

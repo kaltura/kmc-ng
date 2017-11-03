@@ -35,7 +35,7 @@ export class PlaylistDetailsComponent implements OnInit, OnDestroy {
   }
 
   private _getNumberOfEntries(playlistContent: string): number {
-    return playlistContent && playlistContent.indexOf(',') !== -1 ? playlistContent.split(',').length : 1;
+    return playlistContent && playlistContent.indexOf(',') !== -1 ? playlistContent.split(',').length : 0;
   }
 }
 
