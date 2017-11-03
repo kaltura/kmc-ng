@@ -49,6 +49,8 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    let errorMessage;
+
     this._playlistStore.state$
       .cancelOnDestroy(this)
       .monitor('playlist state')
@@ -75,7 +77,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
                 break;
 
               case ActionTypes.PlaylistLoadingFailed:
-                const errorMessage = status.error
+                errorMessage = status.error
                   ? status.error.message
                   : this._appLocalization.get('applications.content.errors.loadError');
                 this._areaBlockerMessage = new AreaBlockerMessage({
@@ -95,11 +97,15 @@ export class PlaylistComponent implements OnInit, OnDestroy {
                 break;
 
               case ActionTypes.PlaylistSavingFailed:
+                errorMessage = status.error && status.error.message
+                  ? status.error.message
+                  : this._appLocalization.get('applications.content.playlistDetails.errors.saveError');
+
                 this._areaBlockerMessage = new AreaBlockerMessage({
-                  message: this._appLocalization.get('applications.content.playlistDetails.errors.saveError'),
+                  message: errorMessage,
                   buttons: [{
-                    label: this._appLocalization.get('applications.content.playlistDetails.errors.reload'),
-                    action: () => this._playlistStore.reloadPlaylist()
+                    label: this._appLocalization.get('applications.content.playlistDetails.errors.ok'),
+                    action: () => this._areaBlockerMessage = null
                   }]
                 });
                 break;
@@ -125,8 +131,11 @@ export class PlaylistComponent implements OnInit, OnDestroy {
                 break;
 
               case ActionTypes.PlaylistPrepareSavingFailed:
+                errorMessage = status.error && status.error.message
+                  ? status.error.message
+                  : this._appLocalization.get('applications.content.playlistDetails.errors.savePrepareError');
                 this._areaBlockerMessage = new AreaBlockerMessage({
-                  message: this._appLocalization.get('applications.content.playlistDetails.errors.savePrepareError'),
+                  message: errorMessage,
                   buttons: [{
                     label: this._appLocalization.get('applications.content.playlistDetails.errors.dismiss'),
                     action: () => this._areaBlockerMessage = null
@@ -140,8 +149,13 @@ export class PlaylistComponent implements OnInit, OnDestroy {
           }
         },
         error => {
-          // TODO [kmc] add error message
-          throw error;
+          this._areaBlockerMessage = new AreaBlockerMessage({
+            message: error.message,
+            buttons: [{
+              label: this._appLocalization.get('applications.content.playlistDetails.errors.ok'),
+              action: () => this._areaBlockerMessage = null
+            }]
+          });
         }
       );
 
