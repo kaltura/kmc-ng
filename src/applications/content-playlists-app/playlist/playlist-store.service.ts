@@ -207,10 +207,11 @@ export class PlaylistStore implements OnDestroy {
                 playlist: new KalturaPlaylist({
                   name: newData.name,
                   description: newData.description,
-                  playlistType: KalturaPlaylistType.staticList
+                  playlistType: KalturaPlaylistType.staticList,
+                  playlistContent: ''
                 }),
-                entries: this._playlist.getValue().entries,
-                entriesTotalCount: this._playlist.getValue().entriesTotalCount
+                entries: [],
+                entriesTotalCount: 0
               });
 
               setTimeout(() => {
@@ -242,68 +243,6 @@ export class PlaylistStore implements OnDestroy {
       )
   }
 
-  private _transmitSaveRequest(newPlaylist: KalturaPlaylist): void {
-    if (this._playlist.getValue().entriesTotalCount <= 0) {
-      return this._state.next({ action: ActionTypes.PlaylistSavingFailed, error: new Error('Add at least one media') });
-    }
-
-    this._state.next({ action: ActionTypes.PlaylistSaving });
-
-    const id = this._getPlaylistId();
-    const request = id
-      ? new PlaylistUpdateAction({ id, playlist: newPlaylist })
-      : new PlaylistAddAction({ playlist: newPlaylist });
-
-    this._sectionsManager.notifyDataSaving(newPlaylist, request, this.playlist)
-      .cancelOnDestroy(this)
-      .monitor('entry store: prepare entry for save')
-      .flatMap((response) => {
-          if (response.ready) {
-            this._savePlaylistInvoked = true;
-
-            return this._kalturaServerClient.request(request)
-              .monitor('playlist store: save playlist')
-              .map(res => {
-                  if ((<any>res).error) {
-                    this._state.next({ action: ActionTypes.PlaylistSavingFailed });
-                  } else {
-                    if (!id) {
-                      this._playlistsStore.clearNewPlaylistData();
-                    }
-                    this._loadPlaylist(this.playlistId);
-                  }
-
-                  return Observable.empty();
-                }
-              )
-          } else {
-            switch (response.reason) {
-              case OnDataSavingReasons.validationErrors:
-                this._state.next({ action: ActionTypes.PlaylistDataIsInvalid });
-                break;
-              case OnDataSavingReasons.attachedWidgetBusy:
-                this._state.next({ action: ActionTypes.ActiveSectionBusy });
-                break;
-              case OnDataSavingReasons.buildRequestFailure:
-                this._state.next({ action: ActionTypes.PlaylistPrepareSavingFailed });
-                break;
-            }
-
-            return Observable.empty();
-          }
-        }
-      )
-      .subscribe(
-        response => {
-          // do nothing - the service state is modified inside the map functions.
-        },
-        error => {
-          // should not reach here, this is a fallback plan.
-          this._state.next({ action: ActionTypes.PlaylistSavingFailed, error });
-        }
-      );
-  }
-
   private _getPlaylist(playlistId: string): Observable<KalturaMultiResponse> {
     if (!playlistId) {
       return Observable.throw(new Error('missing entryId'));
@@ -333,10 +272,78 @@ export class PlaylistStore implements OnDestroy {
   }
 
   public savePlaylist(): void {
-    const newPlaylist = KalturaTypesFactory.createObject(this.playlist);
+    if (this.playlist && this.playlist instanceof KalturaPlaylist) {
+      const newPlaylist = new KalturaPlaylist({
+        name: this.playlist.name,
+        description: this.playlist.description,
+        playlistContent: this.playlist.playlistContent,
+        playlistType: this.playlist.playlistType
+      });
 
-    if (newPlaylist && newPlaylist instanceof KalturaPlaylist) {
-      this._transmitSaveRequest(newPlaylist)
+      this._state.next({ action: ActionTypes.PlaylistSaving });
+
+      const id = this._getPlaylistId();
+      const request = id === 'new'
+        ? new PlaylistAddAction({ playlist: newPlaylist })
+        : new PlaylistUpdateAction({ id, playlist: newPlaylist });
+
+      this._sectionsManager.notifyDataSaving(newPlaylist, request, this.playlist)
+        .cancelOnDestroy(this)
+        .monitor('entry store: prepare entry for save')
+        .map(response => {
+          if (!newPlaylist.playlistContent || !newPlaylist.playlistContent.trim()) {
+            throw new Error(this._appLocalization.get('applications.content.playlistDetails.errors.addAtLeastOneMedia'));
+          }
+
+          return response;
+        })
+        .flatMap((response: { ready: boolean, reason?: OnDataSavingReasons, errors?: Error[] }) => {
+            if (response.ready) {
+              this._savePlaylistInvoked = true;
+
+              return this._kalturaServerClient.request(request)
+                .monitor('playlist store: save playlist')
+                .map(res => {
+                    if ((<any>res).error) {
+                      this._state.next({ action: ActionTypes.PlaylistSavingFailed });
+                    } else {
+                      if (id === 'new') {
+                        this._playlistsStore.clearNewPlaylistData();
+                        this._playlistIsDirty = false;
+                        this._router.navigate(['playlist', res.id], { relativeTo: this._playlistRoute.parent });
+                      } else {
+                        this._loadPlaylist(this.playlistId);
+                      }
+                    }
+
+                    return Observable.empty();
+                  }
+                )
+            } else {
+              switch (response.reason) {
+                case OnDataSavingReasons.validationErrors:
+                  this._state.next({ action: ActionTypes.PlaylistDataIsInvalid });
+                  break;
+                case OnDataSavingReasons.attachedWidgetBusy:
+                  this._state.next({ action: ActionTypes.ActiveSectionBusy });
+                  break;
+                case OnDataSavingReasons.buildRequestFailure:
+                  this._state.next({ action: ActionTypes.PlaylistPrepareSavingFailed });
+                  break;
+              }
+
+              return Observable.empty();
+            }
+          }
+        )
+        .subscribe(
+          response => {
+            // do nothing - the service state is modified inside the map functions.
+          },
+          error => {
+            this._state.next({ action: ActionTypes.PlaylistSavingFailed, error });
+          }
+        );
     } else {
       console.error(new Error(`Failed to create a new instance of the playlist type '${this.playlist ? typeof this.playlist : 'n/a'}`));
       this._state.next({ action: ActionTypes.PlaylistPrepareSavingFailed });
