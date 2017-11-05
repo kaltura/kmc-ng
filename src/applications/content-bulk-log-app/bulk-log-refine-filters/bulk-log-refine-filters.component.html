@@ -1,0 +1,49 @@
+<k-area-blocker [showLoader]="_showLoader" [message]="_blockerMessage">
+  <div class="kOverrideFAIcons kRefineFilters">
+    <div #refine class="kTreeContainer">
+      <div class="kFiltersGroupTitle">
+        <span>{{'applications.content.bulkUpload.filters.additionalFilters' | translate | uppercase}}</span>
+      </div>
+      <p>{{'applications.content.bulkUpload.filters.createdBetween' | translate}}</p>
+      <div class="kDateRange">
+        <p-calendar class="kDateRangeFirst" [(ngModel)]="_createdAfter" [readonlyInput]="true" [showIcon]="true"
+                    [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
+                    icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
+        <p-calendar class="kDateRangeLast kPullLeft30" [(ngModel)]="_createdBefore" [readonlyInput]="true"
+                    [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
+                    icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
+      </div>
+      <a class="kClearAll" (click)="_clearCreatedComponents()">{{'applications.content.bulkUpload.filters.clearDates' |
+        translate}}</a>
+      <span *ngIf="_createdFilterError" class="kError">{{_createdFilterError}}</span>
+      <div *ngFor="let filtersGroup of _filtersGroupList">
+        <div *ngIf="filtersGroup.label" class="kFiltersGroupTitle">
+          <span>{{filtersGroup.label | uppercase}}</span>
+        </div>
+        <div *ngFor="let treeInstance of filtersGroup.trees">
+          <p-tree [value]="treeInstance.items"
+                  kPrimeTreePropagation
+                  [disableTrackByData]="false"
+                  [(selection)]="treeInstance.selections"
+                  (onNodeSelect)="_onTreeNodeSelect($event, treeInstance)"
+                  (onNodeUnselect)="_onTreeNodeUnselect($event, treeInstance)"
+          >
+            <ng-template let-node pTemplate="default">
+              <span class="kTreeNodeLabel">
+                {{node.label}}
+                <span *ngIf="node.childrenCount" class="kTreeNodeNumChildren">{{ node.childrenCount}}</span>
+              </span>
+            </ng-template>
+          </p-tree>
+        </div>
+
+      </div>
+    </div>
+
+    <p>
+      <a class="clearAll" (click)="_clearAllComponents()">{{'applications.content.bulkUpload.filters.clearAll' | translate}}</a>
+      <a class="kClose" (click)="_close()">{{'applications.content.bulkUpload.filters.close' | translate}}</a>
+    </p>
+  </div>
+</k-area-blocker>
+

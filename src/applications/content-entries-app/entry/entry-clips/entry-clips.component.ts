@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { EntryClipsHandler } from './entry-clips-handler';
-import { EntryFormManager } from '../entry-form-manager';
+import { EntryClipsWidget } from './entry-clips-widget.service';
+
 
 @Component({
     selector: 'kEntryClips',
@@ -12,9 +12,9 @@ export class EntryClips implements OnInit, OnDestroy {
 
     public _loading = false;
     public _loadingError = null;
-    public _handler : EntryClipsHandler;
 
-    constructor(private _entryFormManager : EntryFormManager)
+
+    constructor(public _widgetService: EntryClipsWidget)
     {
     }
 
@@ -24,27 +24,26 @@ export class EntryClips implements OnInit, OnDestroy {
     }
     public _onSortChanged(event : any)
     {
-        this._handler.sortAsc = event.order === 1;
-        this._handler.sortBy = event.field;
+        this._widgetService.sortAsc = event.order === 1;
+        this._widgetService.sortBy = event.field;
 
-        this._handler.updateClips();
+        this._widgetService.updateClips();
     }
 
     public _onPaginationChanged(state : any) : void {
-        if (state.page !== this._handler.pageIndex || state.rows !== this._handler.pageSize) {
-            this._handler.pageIndex = state.page;
-            this._handler.pageSize = state.rows;
-            this._handler.updateClips();
+        if (state.page !== this._widgetService.pageIndex || state.rows !== this._widgetService.pageSize) {
+            this._widgetService.pageIndex = state.page;
+            this._widgetService.pageSize = state.rows;
+            this._widgetService.updateClips();
         }
     }
 
     ngOnInit() {
-        this._handler = this._entryFormManager.attachWidget(EntryClipsHandler);
+        this._widgetService.attachForm();
     }
 
     ngOnDestroy() {
-        this._entryFormManager.detachWidget(this._handler);
-
+        this._widgetService.detachForm();
     }
 }
 

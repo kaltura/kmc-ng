@@ -1,5 +1,4 @@
-export enum PlaylistSections
-{
-	Metadata,
-	Content
-}
+export const PlaylistSections = {
+  Metadata: 'Metadata',
+  Content: 'Content'
+};

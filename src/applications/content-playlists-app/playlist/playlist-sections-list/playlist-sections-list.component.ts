@@ -1,11 +1,12 @@
- import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { PlaylistStore } from '../playlist-store.service';
 import { PlaylistSections } from '../playlist-sections';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { StickyComponent } from '@kaltura-ng/kaltura-ui';
 
 export class SectionData{
 	constructor(
-	  public id: PlaylistSections,
+	  public id: string,
     public name: string,
     public isActive: boolean  = false,
     public hasErrors: boolean = false
@@ -21,6 +22,8 @@ export class SectionData{
 export class PlaylistSectionsList implements OnInit, OnDestroy {
 	public _loading = false;
 	public sections: SectionData[] = [];
+
+	@ViewChild('playlistSections') private playlistSections: StickyComponent;
 
     constructor(
       public _appLocalization: AppLocalization,
@@ -43,6 +46,7 @@ export class PlaylistSectionsList implements OnInit, OnDestroy {
           if(response.section !== null) {
             this.sections.forEach(section => section.isActive = false);
             this.sections[response.section].isActive = true;
+            this.playlistSections.updateLayout();
           }
         }
       );
