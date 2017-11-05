@@ -6,6 +6,7 @@
 	height: $contentArea;
 	padding-top: 30px;
 	width: 100%;
+  height: 100%;
 	button{
 		cursor: pointer;
 	}
@@ -19,11 +20,11 @@
 			align-items: center;
 			.kBackToCategoriesBtn{
 				position: absolute;
-				margin-top: 2px;
+				margin-top: 4px;
 				margin-left: -56px;
 				border: none;
 				outline: none;
-				background-color: $appBkgColor;
+				background-color: transparent;
 				color: $kGrayscale3;
 				height: 20px;
 				font-size: 16px;

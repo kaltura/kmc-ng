@@ -1,40 +1,58 @@
-import { CategoriesBulkAddTagsService,
-    CategoriesBulkRemoveTagsService,
-    CategoriesBulkChangeOwnerService,
-    CategoriesBulkDeleteService,
-    CategoriesBulkChangeContentPrivacyService,
-    CategoriesBulkChangeCategoryListingService,
-    CategoriesBulkChangeContributionPolicyService } from './categories/bulk-actions/services';
-import { CategoriesBulkActionsComponent } from './categories/bulk-actions/categories-bulk-actions.component';
-import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  CategoriesBulkAddTagsService,
+  CategoriesBulkChangeCategoryListingService,
+  CategoriesBulkChangeContentPrivacyService,
+  CategoriesBulkChangeContributionPolicyService,
+  CategoriesBulkChangeOwnerService,
+  CategoriesBulkDeleteService,
+  CategoriesBulkRemoveTagsService
+} from './categories/bulk-actions/services';
+import {CategoriesBulkActionsComponent} from './categories/bulk-actions/categories-bulk-actions.component';
+import {ContentSharedModule} from 'app-shared/content-shared/content-shared.module';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RouterModule} from '@angular/router';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
-import { TreeModule, TieredMenuModule, SharedModule, AccordionModule, ButtonModule, InputTextareaModule, PaginatorModule, InputTextModule, MenuModule, DataTableModule, DropdownModule, RadioButtonModule, MultiSelectModule, CheckboxModule, CalendarModule, SpinnerModule, ConfirmDialogModule } from 'primeng/primeng';
-import { KMCShellModule } from 'app-shared/kmc-shell';
+import {TagsModule} from '@kaltura-ng/kaltura-ui/tags';
+import {
+  AccordionModule,
+  ButtonModule,
+  CalendarModule,
+  CheckboxModule,
+  ConfirmDialogModule,
+  DataTableModule,
+  DropdownModule,
+  InputTextareaModule,
+  InputTextModule,
+  MenuModule,
+  MultiSelectModule,
+  PaginatorModule,
+  RadioButtonModule,
+  SharedModule,
+  SpinnerModule,
+  TieredMenuModule,
+  TreeModule
+} from 'primeng/primeng';
+import {KMCShellModule} from 'app-shared/kmc-shell';
 
-import { routing } from './content-categories-app.routes';
-import { ContentCategoriesComponent } from './content-categories.component';
+import {routing} from './content-categories-app.routes';
+import {ContentCategoriesComponent} from './content-categories.component';
 
-import { MetadataProfileModule } from '@kaltura-ng/kaltura-server-utils';
+import {DynamicMetadataFormModule, MetadataProfileModule} from '@kaltura-ng/kaltura-server-utils';
 
-import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
-import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { PrimeTreeModule, PrimeTreePropagation } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
-import { KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
-import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
-
-import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
-import { DynamicFormModule } from '@kaltura-ng/kaltura-ui/dynamic-form';
-import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
-import { DynamicMetadataFormModule } from '@kaltura-ng/kaltura-server-utils';
-import { CategoryComponentsList } from './category/category-components-list';
-import { CategoriesComponentsList } from './categories/categories-components-list';
-import { CategoryCanDeactivate } from "./category/category-can-deactivate.service";
+import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
+import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
+import {PrimeTreeModule} from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
+import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
+import {AutoCompleteModule} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
+import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
+import {DynamicFormModule} from '@kaltura-ng/kaltura-ui/dynamic-form';
+import {DynamicFormModule as PrimeDynamicFormModule} from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
+import {CategoryComponentsList} from './category/category-components-list';
+import {CategoriesComponentsList} from './categories/categories-components-list';
+import {CategoryCanDeactivate} from "./category/category-can-deactivate.service";
+import {DetailsBarModule} from "@kaltura-ng/kaltura-ui/details-bar";
 
 @NgModule({
     imports: [
@@ -73,6 +91,7 @@ import { CategoryCanDeactivate } from "./category/category-can-deactivate.servic
         TieredMenuModule,
         TooltipModule,
         TreeModule,
+        DetailsBarModule,
         ContentSharedModule,
         StickyModule
     ],

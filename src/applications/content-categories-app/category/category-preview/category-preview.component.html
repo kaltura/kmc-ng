@@ -1,3 +1,11 @@
-<div>
-  <span *ngFor="let prop of _headerProperties">{{prop}}</span>
-</div>
+<k-details-bar #detailsBar [data]="_currentCategory">
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.id' | translate" [valueField]="'id'"></kDetailInfo>
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.subCategories' | translate" [valueField]="'directSubCategoriesCount'"></kDetailInfo>
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.entries' | translate" [valueField]="'entriesCount'"></kDetailInfo>
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.creationDate' | translate" [valueField]="'createdAt'"
+               [value]="_currentCategory?.createdAt | date:'MM/dd/y'"></kDetailInfo>
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.lastUpdate' | translate"
+               [value]="_currentCategory?.updatedAt | date:'MM/dd/y'"></kDetailInfo>
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.createdBy' | translate" [valueField]="'owner'"></kDetailInfo>
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.privacyContextLabel' | translate" [valueField]="'privacyContexts'"></kDetailInfo>
+</k-details-bar>

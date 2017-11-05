@@ -886,13 +886,13 @@
       "categoryDetails": {
         "header": "Category - {{0}}",
         "headerProps": {
-          "id": "ID: {{0}} |",
-          "subCategories": " Sub-Categories: {{0}} |",
-          "entries": " Entries: {{0}} |",
-          "creationDate": " Creation Date {{0}} |",
-          "lastUpdate": " Last Update {{0}} |",
-          "createdBy": " Created by: {{0}} |",
-          "privacyContextLabel": " Privacy Context Label: {{0}}"
+          "id": "ID:",
+          "subCategories": " Sub-Categories:",
+          "entries": " Entries:",
+          "creationDate": " Creation Date:",
+          "lastUpdate": " Last Update:",
+          "createdBy": " Created by:",
+          "privacyContextLabel": " Privacy Context Label:"
         },
         "cancelEdit": "Cancel Edit",
         "discard": "Discard all changes?",
