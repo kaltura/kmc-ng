@@ -16,12 +16,12 @@ import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
 import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 
-import { UploadMenuComponent } from './upload-menu/upload-menu.component';
-import { UploadSettingsComponent } from './upload-settings/upload-settings.component';
-import { UploadButtonComponent } from './upload-button/upload-button.component';
-import { BulkUploadMenuComponent } from './bulk-upload-menu/bulk-upload-menu.component';
-import { UploadMonitorComponent } from './upload-monitor/upload-monitor.component';
-import { UploadMonitorSectionComponent } from './upload-monitor/upload-monitor-section/upload-monitor-section.component';
+import {UploadMenuComponent} from './upload-menu/upload-menu.component';
+import {UploadSettingsComponent} from './upload-settings/upload-settings.component';
+import {UploadButtonComponent} from './upload-button/upload-button.component';
+import {BulkUploadMenuComponent} from './bulk-upload-menu/bulk-upload-menu.component';
+import {UploadMonitorComponent} from './upload-monitor/upload-monitor.component';
+import {UploadMonitorSectionComponent} from './upload-monitor/upload-monitor-section/upload-monitor-section.component';
 import {ManualLiveComponent} from './create-live/manual-live/manual-live.component';
 import {UniversalLiveComponent} from './create-live/universal-live/universal-live.component';
 import {TranscodingProfileSelectComponent} from './prepare-entry/transcoding-profile-select/transcoding-profile-select.component';
@@ -56,7 +56,7 @@ import {PrepareEntryComponent} from './prepare-entry/prepare-entry.component';
     BulkUploadMenuComponent,
     UploadButtonComponent,
     UploadMonitorComponent,
-    UploadMonitorSectionComponent
+    UploadMonitorSectionComponent,
     UploadButtonComponent,
     PrepareEntryComponent,
     TranscodingProfileSelectComponent,

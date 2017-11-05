@@ -165,7 +165,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   private _confirmEntryNavigation(id) {
-    this._browserService.confi9rm(
+    this._browserService.confirm(
       {
         header: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.title'),
         message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.message'),
