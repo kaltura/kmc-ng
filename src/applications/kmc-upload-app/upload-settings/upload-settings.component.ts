@@ -79,7 +79,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     this._loadTranscodingProfiles();
   }
 
-  private _handleSelectedFiles(files: FileList) {
+  public _handleSelectedFiles(files: FileList) {
     const isEditing = false;
 
     const newItems = Array.from(files).map(file => {
@@ -200,7 +200,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
       const uploadFileDataList = this._files.map(fileData => ({
         file: fileData.file,
         mediaType: fileData.mediaType,
-        name: fileData.name
+        entryName: fileData.name
       }));
 
       this._newEntryUploadService.upload(uploadFileDataList, Number(trancodingProfileId));

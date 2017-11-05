@@ -4,9 +4,9 @@
     <div class="kContainer">
       <span class="kLabel">{{'applications.content.categories.bActions.changeCategoryListingLabel' | translate}}</span>
       <div class="kBlock">
-        <p-radioButton class="kRadio" name="privacy" [value]="_appearInListType.NoRestriction"
+        <p-radioButton class="kRadio" name="privacy" [value]="_appearInListType.NoRestriction" [(ngModel)]="_appearInList"
         label="{{'applications.content.categories.noRestriction' | translate}}"></p-radioButton>
-        <p-radioButton class="kRadio" name="privacy" [value]="_appearInListType.Private"
+        <p-radioButton class="kRadio" name="privacy" [value]="_appearInListType.Private" [(ngModel)]="_appearInList"
         label="{{'applications.content.categories.private' | translate}}"></p-radioButton>
       </div>
     </div>

@@ -6,8 +6,9 @@ import { Component, OnInit, QueryList, ViewChild, ViewChildren, Inject, ElementR
 import { JumpToSection } from './jump-to-section.component';
 import { DOCUMENT } from '@angular/platform-browser';
 import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
-import { CategoryMetadataHandler } from "applications/content-categories-app/category/category-metadata/category-metadata-handler";
-import { CategoryFormManager } from "applications/content-categories-app/category/category-form-manager";
+import { CategoryMetadataWidget } from './category-metadata-widget.service';
+
+
 
 @Component({
   selector: 'kmc-category-metadata',
@@ -16,7 +17,6 @@ import { CategoryFormManager } from "applications/content-categories-app/categor
 })
 export class CategoryMetadataComponent implements OnInit {
 
-  public _handler: CategoryMetadataHandler;
   public _tagsProvider = new Subject<SuggestionsProviderData>();
   private _searchTagsSubscription: ISubscription;
   private _popupStateChangeSubscribe: ISubscription;
@@ -27,13 +27,13 @@ export class CategoryMetadataComponent implements OnInit {
   @ViewChild('metadataContainer')
   public _container: ElementRef;
 
-  constructor(private _categoryFormManager: CategoryFormManager,
+  constructor(public _widgetService: CategoryMetadataWidget,
     private _pageScrollService: PageScrollService,
     @Inject(DOCUMENT) private document: any) {
   }
 
   ngOnInit() {
-    this._handler = this._categoryFormManager.attachWidget(CategoryMetadataHandler);
+      this._widgetService.attachForm();
   }
 
   _searchTags(event): void {
@@ -45,9 +45,9 @@ export class CategoryMetadataComponent implements OnInit {
       this._searchTagsSubscription = null;
     }
 
-    this._searchTagsSubscription = this._handler.searchTags(event.query).subscribe(data => {
+    this._searchTagsSubscription = this._widgetService.searchTags(event.query).subscribe(data => {
       const suggestions = [];
-      const categoryTags = this._handler.metadataForm.value.tags || [];
+      const categoryTags = this._widgetService.metadataForm.value.tags || [];
 
       (data || []).forEach(suggestedTag => {
         const isSelectable = !categoryTags.find(tag => {
@@ -66,7 +66,8 @@ export class CategoryMetadataComponent implements OnInit {
     this._tagsProvider.complete();
     this._searchTagsSubscription && this._searchTagsSubscription.unsubscribe();
     this._popupStateChangeSubscribe && this._popupStateChangeSubscribe.unsubscribe();
-    this._categoryFormManager.detachWidget(this._handler);
+
+      this._widgetService.detachForm();
   }
 
   ngAfterViewInit() {

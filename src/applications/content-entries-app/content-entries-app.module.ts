@@ -34,7 +34,7 @@ import { DynamicMetadataFormModule, MetadataProfileModule } from '@kaltura-ng/ka
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
-import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { DynamicFormModule } from '@kaltura-ng/kaltura-ui/dynamic-form';
@@ -94,7 +94,8 @@ import { ContentEntriesAppService } from './content-entries-app.service';
     TooltipModule,
     TreeModule,
     DetailsBarModule,
-    ContentSharedModule
+    ContentSharedModule,
+    StickyModule
   ],
   declarations: [
     ContentEntriesComponent,

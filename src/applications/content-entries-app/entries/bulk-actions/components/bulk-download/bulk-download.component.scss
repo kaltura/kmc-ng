@@ -9,10 +9,11 @@
   height: 78px;
   line-height: 78px;
 }
-.kContent{
+.kDownloadContainer{
   display: flex;
   flex-direction: column;
   height: 500px;
+  width: 100%;
   .kLabel{
     display: block;
     margin-bottom: 14px;

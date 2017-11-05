@@ -1,5 +1,5 @@
 import {
-  AfterViewChecked,
+  AfterViewChecked, AfterViewInit,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -15,7 +15,7 @@ import {PrimeTreeNode} from '@kaltura-ng/kaltura-primeng-ui';
 import {Subject} from 'rxjs/Subject';
 import {AutoComplete, SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {EntryCategoryItem} from '../entry-metadata-handler';
+import {EntryCategoryItem} from '../entry-metadata-widget.service';
 import {CategoriesTreeComponent} from 'app-shared/content-shared/categories-tree/categories-tree.component';
 import {CategoriesPrimeService} from 'app-shared/content-shared/categories-prime.service';
 import {TagsComponent} from '@kaltura-ng/kaltura-ui/tags/tags.component';
@@ -26,7 +26,7 @@ import {TagsComponent} from '@kaltura-ng/kaltura-ui/tags/tags.component';
   templateUrl: './categories-selector.component.html',
   styleUrls: ['./categories-selector.component.scss']
 })
-export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
+export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
 
   @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
   @ViewChild('tags') _tags: TagsComponent;
@@ -37,7 +37,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 
   private _searchCategoriesSubscription: ISubscription;
   public _categoriesProvider = new Subject<SuggestionsProviderData>();
-  @Input() buttonLabel = '';
+    @Input() buttonLabel = '';
   @Input() value: EntryCategoryItem[] = [];
   @Output() valueChange = new EventEmitter<EntryCategoryItem[]>();
 
@@ -55,15 +55,17 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
   }
 
 
-  ngOnInit() {
-    this._selectedCategories = this.value && this.value instanceof Array ? [...this.value] : [];
-    setTimeout(() => {
-      if (this._tags) {
-        this._tags.checkShowMore();
-      }
-    }, 0);
+	ngOnInit() {
+		this._selectedCategories = this.value && this.value instanceof Array ? [...this.value] : [];
+	}
 
-  }
+	ngAfterViewInit() {
+		setTimeout(()=>{
+			if (typeof this._tags !== "undefined"){
+				this._tags.checkShowMore();
+			}
+		},0);
+	}
 
   ngOnDestroy() {
 
@@ -202,13 +204,13 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
     if (selectedItem && selectedItem.id && selectedItem.fullIdPath && selectedItem.name) {
       const selectedCategoryIndex = this._selectedCategories.findIndex(item => item.id + '' === selectedItem.id + '');
 
-      if (selectedCategoryIndex === -1) {
-        this._selectedCategories.push({
-          id: selectedItem.id,
-          fullIdPath: selectedItem.fullIdPath,
-          fullNamePath: selectedItem.fullNamePath,
-          name: selectedItem.name
-        });
+			if (selectedCategoryIndex === -1) {
+				this._selectedCategories.push({
+					id: selectedItem.id,
+					fullIdPath: selectedItem.fullIdPath,
+					fullNamePath : selectedItem.fullNamePath,
+					name: selectedItem.name,
+				tooltip: selectedItem.tooltip});
 
         this._ngAfterViewCheckedContext.updateTreeSelections = true;
         this._ngAfterViewCheckedContext.expendTreeSelectionNodeId = selectedItem.id;
@@ -236,14 +238,14 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
       const autoCompleteItemIndex = this._selectedCategories.findIndex(item => item.id + '' === node.data + '');
 
 
-      if (autoCompleteItemIndex === -1) {
-        this._selectedCategories.push({
-          id: node.origin.id,
-          fullIdPath: node.origin.fullIdPath,
-          fullNamePath: node.origin.fullNamePath,
-          name: node.origin.name
-        });
-      }
-    }
-  }
+			if (autoCompleteItemIndex === -1) {
+				this._selectedCategories.push({
+					id: node.origin.id,
+					fullIdPath: node.origin.fullIdPath,
+					fullNamePath : node.origin.fullNamePath,
+					name: node.origin.name,
+				tooltip: node.origin.tooltip});
+			}
+		}
+	}
 }

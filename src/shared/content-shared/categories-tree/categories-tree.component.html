@@ -2,6 +2,7 @@
   <div class="kTreeContainer kOverrideFAIcons">
 
     <p-tree #tree
+            *ngIf="_selectionModes.multiple === _selectionMode"
             kPrimeTreePropagation
             [propagateDownMode]="disablePropagation ? 'preventNested' : 'none'"
             [propagateUpMode]="disablePropagation ? 'visualOnly' : 'none'"
@@ -13,6 +14,31 @@
             (onNodeExpand)="_onNodeExpand($event)">
       <ng-template let-node pTemplate="default">
         <div>
+          <span class="kTreeNodeLabel">{{node.label}}</span>
+          <span class="kTreeNodeNumChildren" *ngIf="node.childrenCount">{{node.childrenCount}}</span>
+        </div>
+        <div *ngIf="node.expanded && node.childrenStatus === 1"
+             class="kLoadingMessage" (click)="_blockTreeSelection($event)">
+          {{'entriesShared.categoriesFilters.loading' | translate}}
+        </div>
+        <div *ngIf="node.expanded && node.childrenStatus === 2"
+             class="kLoadingErrorMessage" (click)="_blockTreeSelection($event)">
+          {{ node.childrenLoadError || 'entriesShared.categoriesFilters.loadingError' | translate }}
+        </div>
+      </ng-template>
+    </p-tree>
+
+    <p-tree #tree
+            *ngIf="_selectionModes.single === _selectionMode"
+            selectionMode="single"
+            [value]="_categories"
+            [selection]="selection"
+            (selectionChange)="_selectionChange($event)"
+            (onNodeSelect)="onNodeSelect.emit($event)"
+            (onNodeExpand)="_onNodeExpand($event)">
+      <ng-template let-node pTemplate="default">
+        <div>
+          <p-radioButton [value]="node" [ngModel]="selection"></p-radioButton>
           <span class="kTreeNodeLabel">{{node.label}}</span>
           <span class="kTreeNodeNumChildren" *ngIf="node.childrenCount">{{node.childrenCount}}</span>
         </div>

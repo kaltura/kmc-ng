@@ -1,6 +1,5 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {RolesTableComponent} from './roles-table.component';
 import {RolesService} from './roles.service';
 import {KalturaUserRole} from 'kaltura-typescript-client/types/KalturaUserRole';
 import {BrowserService} from 'app-shared/kmc-shell';
@@ -15,7 +14,6 @@ import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/po
 
 export class RolesListComponent implements OnInit, OnDestroy {
 
-  @ViewChild(RolesTableComponent) private dataTable: RolesTableComponent;
   @ViewChild('editPopup') public editPopup: PopupWidgetComponent;
 
   public _isBusy = false
@@ -43,7 +41,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
         query => {
           this._filter.pageSize = query.pageSize;
           this._filter.pageIndex = query.pageIndex;
-          this.dataTable.scrollToTop();
+          this._browserService.scrollToTop();
         });
 
     this._rolesService.roles$
@@ -126,6 +124,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
   private deleteRole(role: KalturaUserRole): void {
     this._isBusy = true;
     this._blockerMessage = null;
+    this._browserService.scrollToTop();
     this._rolesService.deleteRole(role)
       .cancelOnDestroy(this)
       .subscribe(

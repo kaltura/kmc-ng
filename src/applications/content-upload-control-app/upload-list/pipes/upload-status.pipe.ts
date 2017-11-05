@@ -20,11 +20,12 @@ export class UploadStatusPipe implements PipeTransform {
 
       case TrackedFileStatuses.added:
       case TrackedFileStatuses.preparing:
-      case TrackedFileStatuses.waitingUpload:
+      case TrackedFileStatuses.prepared:
+      case TrackedFileStatuses.pendingPrepare:
         translateToken = 'queued';
         break;
 
-      case TrackedFileStatuses.uploadFailed:
+      case TrackedFileStatuses.failure:
         translateToken = 'uploadFailure';
         break;
 

@@ -27,6 +27,7 @@ import {
 	KalturaEntryStatus
 } from 'kaltura-typescript-client/types/KalturaEntryStatus';
 import { PlaylistsStore } from "./playlists-store/playlists-store.service";
+import { Filter } from './playlists-list.component';
 
 @Component({
 	selector: 'kPlaylistsTable',
@@ -50,6 +51,7 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 	}
 	@Input() filter: any = {};
 	@Input() selectedPlaylists: any[] = [];
+	@Input() activeFilters: Filter[] = [];
 	@Output() sortChanged = new EventEmitter<any>();
 	@Output() selectedPlaylistsChange = new EventEmitter<any>();
 	@Output() actionSelected = new EventEmitter<any>();

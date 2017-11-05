@@ -3,6 +3,7 @@ import { ConfirmationService } from 'primeng/primeng';
 import { BrowserService, AppStatus, GrowlMessage } from 'app-shared/kmc-shell/providers/browser.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { Router, NavigationEnd } from '@angular/router';
 
 /*
  * App Component
@@ -20,7 +21,7 @@ export class AppComponent implements OnInit {
   public _blockerMessage: AreaBlockerMessage = null;
   public _growlMessages: GrowlMessage[] = [];
 
-  constructor(private _confirmationService : ConfirmationService, private _browserService : BrowserService, private _appLocalization: AppLocalization ) {
+  constructor(private _confirmationService : ConfirmationService, private _browserService : BrowserService, private _appLocalization: AppLocalization, private router: Router ) {
 
   }
 
@@ -31,6 +32,13 @@ export class AppComponent implements OnInit {
       const newMessage = Object.assign({}, message, { message : htmlMessageContent });
       this._confirmationService.confirm(newMessage);
     });
+
+    // scroll window to top upon navigation change
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+          window.scrollTo(0, 0);
+        }
+      });
 
     // handle app status: busy and error messages. Allow closing error window using the 'OK' button
     this._browserService.appStatus$.subscribe(
