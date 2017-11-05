@@ -3,9 +3,9 @@
   <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.subCategories' | translate" [valueField]="'directSubCategoriesCount'"></kDetailInfo>
   <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.entries' | translate" [valueField]="'entriesCount'"></kDetailInfo>
   <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.creationDate' | translate" [valueField]="'createdAt'"
-               [value]="_currentCategory?.createdAt | date:'MM/dd/y'"></kDetailInfo>
+               [value]="_currentCategory?.createdAt | date:'MM/dd/y'" [tooltip]="_currentCategory?.createdAt | date:'MM/dd/y HH:MM'"></kDetailInfo>
   <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.lastUpdate' | translate"
-               [value]="_currentCategory?.updatedAt | date:'MM/dd/y'"></kDetailInfo>
+               [value]="_currentCategory?.updatedAt | date:'MM/dd/y'" [tooltip]="_currentCategory?.updatedAt | date:'MM/dd/y HH:MM'"></kDetailInfo>
   <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.createdBy' | translate" [valueField]="'owner'"></kDetailInfo>
   <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.privacyContextLabel' | translate" [valueField]="'privacyContexts'"></kDetailInfo>
 </k-details-bar>
