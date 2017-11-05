@@ -1,15 +1,15 @@
-<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [centerOnScreen]="true">
     <div class="jumpTo" *ngIf="_jumpToMenu.length > 2">
         <p-menu #menu popup="popup" [model]="_jumpToMenu" [appendTo]="'body'"></p-menu>
         <button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right"
                 label="{{'applications.content.entryDetails.metadata.jumpTo' | translate}}"
                 (click)="menu.toggle($event)"></button>
     </div>
-    <div class="kMetadataDetails" #metadataContainer *ngIf="_handler.data">
+    <div class="kMetadataDetails" #metadataContainer *ngIf="_widgetService.data">
 
         <k-jump-to-section [label]="'Metadata'"></k-jump-to-section>
 		<span class="kSchemaTitle">{{'applications.content.entryDetails.sections.metadata' | translate}}</span>
-        <form [formGroup]="_handler.metadataForm" novalidate>
+        <form [formGroup]="_widgetService.metadataForm" novalidate>
             <div class="kRow kValign">
                 <span class="kLabel">{{'applications.content.entryDetails.metadata.entryName' | translate}}</span>
                 <div class="kControl">
@@ -56,7 +56,7 @@
 				<span class="kLabel"></span>
 				<a (click)="categoriesPopup.open()" class="kLink">{{'applications.content.entryDetails.metadata.browse' | translate}}</a>
 			</div>
-            <div class="kRow" *ngIf="_handler.isLiveEntry">
+            <div class="kRow" *ngIf="_widgetService.isLiveEntry">
                 <span class="kLabel">{{'applications.content.entryDetails.metadata.offlineMsg' | translate}}</span>
                 <div class="kControl TextAreaControl">
                     <textarea formControlName="offlineMessage" class="threeRows" pInputTextarea></textarea>
@@ -71,7 +71,7 @@
         </form>
 
 
-        <div *ngFor="let customDataForm of _handler.customDataForms; let last = last">
+        <div *ngFor="let customDataForm of _widgetService.customDataForms; let last = last">
             <k-jump-to-section [label]="customDataForm.metadataProfile.name"></k-jump-to-section>
             <div class="kSchemaTitle">{{customDataForm.metadataProfile.name}}</div>
             <div *ngIf="customDataForm && customDataForm.isReady">
@@ -91,7 +91,7 @@
 
 	<kPopupWidget #categoriesPopup [popupWidth]="560" [popupHeight]="586" [closeBtn]="true" [modal]="true">
 		<ng-template>
-			<kCategoriesSelector [parentPopupWidget]="categoriesPopup" (valueChange)="_updateEntryCategories($event)" [value]="_handler.metadataForm.value.categories" [buttonLabel]="'applications.content.entryDetails.metadata.addCategories' | translate"></kCategoriesSelector>
+			<kCategoriesSelector [parentPopupWidget]="categoriesPopup" (valueChange)="_updateEntryCategories($event)" [value]="_widgetService.metadataForm.value.categories" [buttonLabel]="'applications.content.entryDetails.metadata.addCategories' | translate"></kCategoriesSelector>
 		</ng-template>
 	</kPopupWidget>
 

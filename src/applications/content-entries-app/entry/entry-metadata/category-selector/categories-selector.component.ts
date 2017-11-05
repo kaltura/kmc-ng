@@ -1,11 +1,11 @@
-import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, ViewChild, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, ViewChild, AfterViewChecked, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 
 import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
 import { Subject } from 'rxjs/Subject';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { EntryCategoryItem } from '../entry-metadata-handler';
+import { EntryCategoryItem } from '../entry-metadata-widget.service';
 import { AutoComplete } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories-tree/categories-tree.component';
 import { CategoriesPrimeService } from 'app-shared/content-shared/categories-prime.service';
@@ -17,7 +17,7 @@ import { TagsComponent } from '@kaltura-ng/kaltura-ui/tags/tags.component';
     templateUrl: './categories-selector.component.html',
     styleUrls: ['./categories-selector.component.scss']
 })
-export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
+export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
 
 	@ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
 	@ViewChild('tags') _tags: TagsComponent;
@@ -29,7 +29,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 
 	private _searchCategoriesSubscription : ISubscription;
 	public _categoriesProvider = new Subject<SuggestionsProviderData>();
-  @Input() buttonLabel: string  = "";
+    @Input() buttonLabel: string  = "";
 	@Input() value: EntryCategoryItem[]  = [];
 	@Output() valueChange = new EventEmitter<EntryCategoryItem[]>();
 
@@ -49,10 +49,14 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 
 	ngOnInit() {
 		this._selectedCategories = this.value && this.value instanceof Array ? [...this.value] : [];
-		setTimeout(()=>{
-			this._tags.checkShowMore();
-		},0);
+	}
 
+	ngAfterViewInit() {
+		setTimeout(()=>{
+			if (typeof this._tags !== "undefined"){
+				this._tags.checkShowMore();
+			}
+		},0);
 	}
 
 	ngOnDestroy(){
@@ -203,7 +207,8 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 					id: selectedItem.id,
 					fullIdPath: selectedItem.fullIdPath,
 					fullNamePath : selectedItem.fullNamePath,
-					name: selectedItem.name
+					name: selectedItem.name,
+          tooltip: selectedItem.tooltip
 				});
 
 				this._ngAfterViewCheckedContext.updateTreeSelections = true;
@@ -238,7 +243,8 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 					id: node.origin.id,
 					fullIdPath: node.origin.fullIdPath,
 					fullNamePath : node.origin.fullNamePath,
-					name: node.origin.name
+					name: node.origin.name,
+          tooltip: node.origin.tooltip
 				});
 			}
 		}

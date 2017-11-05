@@ -13,7 +13,7 @@ import { ContentEntriesAppService } from '../content-entries-app.service';
   templateUrl: './entries-list-holder.component.html'
 })
 export class EntriesListHolderComponent {
-  @ViewChild(EntriesListComponent) private _entriesList: EntriesListComponent;
+  @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
@@ -47,7 +47,7 @@ export class EntriesListHolderComponent {
   constructor(private _router: Router,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
-              private _entriesStore: EntriesStore,
+              public _entriesStore: EntriesStore,
               private _contentEntriesAppService: ContentEntriesAppService) {
     this._entriesStore.paginationCacheToken = 'entries-list';
   }
@@ -60,7 +60,7 @@ export class EntriesListHolderComponent {
       case 'delete':
         this._browserService.confirm(
           {
-            header: this._appLocalization.get('applications.content.entries._deleteEntry'),
+            header: this._appLocalization.get('applications.content.entries.deleteEntry'),
             message: this._appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: entryId }),
             accept: () => this._deleteEntry(entryId)
           }

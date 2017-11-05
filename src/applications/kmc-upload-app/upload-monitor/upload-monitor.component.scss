@@ -1,0 +1,37 @@
+@import 'app-theme/_variables.scss';
+
+.kUploadMonitorToggler {
+  display: flex;
+  margin-left: 12px;
+  color: $headerTextColor;
+  font-size: 24px;
+  cursor: pointer;
+  &.upToDate {
+    margin-right: 12px;
+  }
+
+  &:hover, &.open {
+    opacity: 1;
+    color: $mainLinkHoverColor;
+    i {
+      color: $mainLinkHoverColor;
+      opacity: 1;
+    }
+  }
+
+  .kIconrefresh_small {
+    font-size: 12px;
+    background-color: $kAqua;
+    color: $kBlue;
+    border: 2px $kBlue solid;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    right: 12px;
+    top: 9px;
+  }
+}

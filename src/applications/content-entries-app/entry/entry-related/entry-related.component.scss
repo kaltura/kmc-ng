@@ -4,8 +4,7 @@
 	padding-left: 12px;
 	position: relative;
 	height: 100%;
-	overflow-y: auto;
-  margin: 12px;
+  	margin: 12px;
 	button{
 		font-weight: 400;
 		height: 32px;
@@ -44,5 +43,10 @@
 
 :host /deep/ .ui-dropdown.ui-widget{
 	width: 120px;
+}
+
+
+:host /deep/ .ui-datatable-scrollable-body{
+	overflow: visible;
 }
 

@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { TrackedFile, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
-import { NewEntryUploadFile } from 'app-shared/kmc-shell';
+import { NewEntryUploadFile } from './new-entry-upload-file';
 import { MediaAddAction } from 'kaltura-typescript-client/types/MediaAddAction';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
@@ -13,10 +13,12 @@ import { KalturaAssetParamsResourceContainer } from 'kaltura-typescript-client/t
 import { KalturaAssetsParamsResourceContainers } from 'kaltura-typescript-client/types/KalturaAssetsParamsResourceContainers';
 import { MediaUpdateContentAction } from 'kaltura-typescript-client/types/MediaUpdateContentAction';
 import { UploadTokenDeleteAction } from 'kaltura-typescript-client/types/UploadTokenDeleteAction';
+import { TrackedFileData } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
 
 export interface KmcNewEntryUpload {
   file: File;
   mediaType: KalturaMediaType;
+  entryName: string;
 }
 
 @Injectable()
@@ -34,7 +36,7 @@ export class NewEntryUploadService implements OnDestroy {
   }
 
   private _monitorTrackedFilesChanges(): void {
-    this._uploadManagement.onFileStatusChanged$
+    this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
       .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile)
       .subscribe(
@@ -44,7 +46,7 @@ export class NewEntryUploadService implements OnDestroy {
             case TrackedFileStatuses.purged:
               this._cleanupUpload(trackedFile);
               break;
-            case TrackedFileStatuses.waitingUpload:
+            case TrackedFileStatuses.prepared:
               this._linkEntryWithFile(trackedFile);
               break;
             default:
@@ -54,7 +56,7 @@ export class NewEntryUploadService implements OnDestroy {
       );
   }
 
-  private _cleanupUpload(trackedFile: TrackedFile): void {
+  private _cleanupUpload(trackedFile: TrackedFileData): void {
     const trackedFileData = <NewEntryUploadFile>trackedFile.data;
 
     if (trackedFileData.createMediaEntrySubscription instanceof Subscription) {
@@ -74,7 +76,7 @@ export class NewEntryUploadService implements OnDestroy {
     }
   }
 
-  private _linkEntryWithFile(trackedFile: TrackedFile): void {
+  private _linkEntryWithFile(trackedFile: TrackedFileData): void {
     (<NewEntryUploadFile>trackedFile.data).createMediaEntrySubscription = this._createMediaEntry(<NewEntryUploadFile>trackedFile.data)
       .do(entry => {
         (<NewEntryUploadFile>trackedFile.data).entryId = entry.id;
@@ -110,7 +112,7 @@ export class NewEntryUploadService implements OnDestroy {
     return this._kalturaServerClient.request(new MediaAddAction({
       entry: new KalturaMediaEntry({
         mediaType: file.mediaType,
-        name: file.getFileName(),
+        name: file.entryName,
         conversionProfileId: file.transcodingProfileId
       })
     }));
@@ -127,7 +129,7 @@ export class NewEntryUploadService implements OnDestroy {
 
   public upload(files: KmcNewEntryUpload[], trancodingProfileId: number): void {
     this._uploadManagement.addFiles(
-      files.map(file => new NewEntryUploadFile(file.file, file.mediaType, trancodingProfileId))
+      files.map(file => new NewEntryUploadFile(file.file, file.mediaType, trancodingProfileId, file.entryName))
     );
   }
 }

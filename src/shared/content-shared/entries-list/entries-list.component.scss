@@ -3,7 +3,6 @@
 .kEntries {
   font-size: 15px;
   background-color: $appBkgColor;
-  height: $contentArea;
   padding-top: 30px;
   width: 100%;
   min-width: $minAppWidth;
@@ -11,7 +10,12 @@
   display: flex;
   flex-flow: row wrap;
   margin: 0px;
+  .kFiltersWrapper{
+    display: block;
+    height: 66px;
+  }
   .kEntriesHolder {
+    min-height: $minTableHeight;
     height: 100%;
     border: none;
     position: relative;
@@ -35,15 +39,15 @@
       color: $kPrimary;
     }
   }
+
   .kEntriesTableFilters {
     color: $kGrayscale1;
-    width: 100%;
+    z-index: 502;
     height: 66px;
     background-color: white;
     flex: 0 0 auto;
     align-items: center;
     margin-left: 0px;
-    border-bottom: none;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     display: flex;
@@ -59,11 +63,11 @@
     flex: 0 0 50px;
   }
   .kEntriesTableFooter {
-    width: 100%;
+    bottom: 0px;
     height: 34px;
     background-color: white;
     border-top: 1px solid $kGrayscale6;
-    position: relative;
+    position: fixed;
     box-sizing: border-box;
     flex: 0 0 auto;
     padding: 0 14px 28px;
@@ -82,12 +86,8 @@
   }
   .kSearchInput {
     background: $kMagnifyingGlassBkg;
-    background-color: $kGrayscale6;
     padding-left: 30px;
     margin-right: 8px;
-    &:focus {
-      background-color: white;
-    }
   }
   .kBulkOperations {
     width: 400px;
@@ -182,6 +182,15 @@
       border-radius: 3px;
     }
   }
+}
+
+.kForceFix{
+  position: fixed !important;
+  margin-top: 0px !important;
+}
+
+:host /deep/ .kStickyClass{
+  border-bottom: 1px solid $kGrayscale5;
 }
 
 :host /deep/ span.ui-button-icon-left.fa.kIcontrash {

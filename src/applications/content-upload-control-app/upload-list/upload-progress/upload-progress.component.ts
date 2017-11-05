@@ -16,13 +16,14 @@ export class UploadProgressComponent {
   set status(value: TrackedFileStatuses) {
     switch (value) {
       case TrackedFileStatuses.preparing:
-      case TrackedFileStatuses.waitingUpload:
+      case TrackedFileStatuses.prepared:
+      case TrackedFileStatuses.pendingPrepare:
         this._statusClass = 'pending';
         break;
       case TrackedFileStatuses.uploading:
         this._statusClass = 'uploading';
         break;
-      case TrackedFileStatuses.uploadFailed:
+      case TrackedFileStatuses.failure:
         this._statusClass = 'uploadFailure';
         break;
       case TrackedFileStatuses.uploadCompleted:
