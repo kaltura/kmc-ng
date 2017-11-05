@@ -10,7 +10,6 @@ import {
   ViewChild
 } from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
-
 import {PrimeTreeNode} from '@kaltura-ng/kaltura-primeng-ui';
 import {Subject} from 'rxjs/Subject';
 import {AutoComplete, SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
@@ -22,7 +21,7 @@ import {CategoriesPrimeService} from 'app-shared/content-shared/categories-prime
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 
 @Component({
   selector: 'kCategoryRadioButtonPOC',
