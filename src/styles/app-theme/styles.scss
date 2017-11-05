@@ -158,7 +158,7 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
       .kSections{
         display: flex;
         flex-direction: column;
-        overflow-y: auto;
+        overflow-y: hidden;
         overflow-x: hidden;
         width: 280px;
         flex: 0 0 auto;
@@ -186,5 +186,12 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
   .kSpacer{
     display: block;
     height: 40px;
+  }
+}
+
+@media screen and (max-width: 1090px) {
+  .kmcDetailsLayout .kDetailsWrapper .kDetailsHeader .kBackBtn {
+    margin-left: 0px;
+    margin-right: 12px;
   }
 }

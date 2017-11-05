@@ -13,6 +13,7 @@ export class UploadButtonComponent {
   @ViewChild('uploadsettings') uploadSettingsPopup: PopupWidgetComponent;
   @ViewChild('createLive') createLivePopup: PopupWidgetComponent;
   @ViewChild('prepareEntry') prepareEntryComponent: PrepareEntryComponent;
+  @ViewChild('bulkuploadmenu') bulkUploadMenu: PopupWidgetComponent;
 
   constructor() {
   }
@@ -23,6 +24,9 @@ export class UploadButtonComponent {
     switch (item) {
       case 'uploadFromDesktop':
         this.uploadSettingsPopup.open();
+        break;
+      case 'bulkUpload':
+        this.bulkUploadMenu.open();
         break;
       case 'prepareVideoEntry':
         this.prepareEntryComponent.prepareEntry(KalturaMediaType.video);

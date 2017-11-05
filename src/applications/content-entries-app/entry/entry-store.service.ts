@@ -14,10 +14,10 @@ import {KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-typescript-clien
 import {BaseEntryGetAction} from 'kaltura-typescript-client/types/BaseEntryGetAction';
 import {BaseEntryUpdateAction} from 'kaltura-typescript-client/types/BaseEntryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {EntryFormManager} from './entry-form-manager';
-import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
-import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {EntriesStore} from 'app-shared/content-shared/entries-store/entries-store.service';
+import { EntryWidgetsManager } from './entry-widgets-manager';
+import {  OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 
 export enum ActionTypes
 {
@@ -71,7 +71,7 @@ export class EntryStore implements  OnDestroy {
 				private _router: Router,
 				private _browserService : BrowserService,
 				private _entriesStore : EntriesStore,
-				@Host() private _sectionsManager : EntryFormManager,
+				@Host() private _sectionsManager : EntryWidgetsManager,
 				private _entryRoute: ActivatedRoute,
                 private _appLocalization: AppLocalization) {
 
@@ -189,7 +189,7 @@ export class EntryStore implements  OnDestroy {
 			})
 		);
 
-		this._sectionsManager.onDataSaving(newEntry, request, this.entry)
+		this._sectionsManager.notifyDataSaving(newEntry, request, this.entry)
             .cancelOnDestroy(this)
             .monitor('entry store: prepare entry for save')
             .flatMap(
@@ -269,7 +269,7 @@ export class EntryStore implements  OnDestroy {
 		this._updatePageExitVerification();
 
 		this._state.next({action: ActionTypes.EntryLoading});
-		this._sectionsManager.onDataLoading(entryId);
+		this._sectionsManager.notifyDataLoading(entryId);
 
 		this._loadEntrySubscription = this._getEntry(entryId)
             .cancelOnDestroy(this)
@@ -279,7 +279,7 @@ export class EntryStore implements  OnDestroy {
 						this._entry.next(response);
 						this._entryId = response.id;
 
-						const dataLoadedResult = this._sectionsManager.onDataLoaded(response);
+						const dataLoadedResult = this._sectionsManager.notifyDataLoaded(response);
 
 						if (dataLoadedResult.errors.length)
 						{

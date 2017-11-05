@@ -6,7 +6,7 @@ import { StickyComponent } from '@kaltura-ng/kaltura-ui';
 
 export class SectionData{
 	constructor(
-	  public id: PlaylistSections,
+	  public id: string,
     public name: string,
     public isActive: boolean  = false,
     public hasErrors: boolean = false

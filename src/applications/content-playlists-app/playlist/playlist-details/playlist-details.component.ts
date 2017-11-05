@@ -11,7 +11,8 @@ export class PlaylistDetailsComponent implements OnInit, OnDestroy {
 	public playlist: KalturaPlaylist;
 	public numberOfEntries: number;
 	public entriesDuration: number = 0;
-
+  public _currentEntry = { creatorId: 0 }; // TODO [kmcng] check template for this
+  public _duration = 0; // TODO [kmcng] check template for this
 	constructor( public _playlistStore : PlaylistStore ) {}
 
 	ngOnInit() {
