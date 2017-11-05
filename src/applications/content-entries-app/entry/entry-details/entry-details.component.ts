@@ -5,8 +5,11 @@ import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntry
 import { KalturaSourceType } from 'kaltura-typescript-client/types/KalturaSourceType';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { EntryDetailsHandler } from './entry-details-handler';
-import { EntryFormManager } from '../entry-form-manager';
+import { EntryDetailsWidget } from './entry-details-widget.service';
+
+export interface EntryDetailsKalturaMediaEntry extends KalturaMediaEntry {
+  recordedEntryId?: string
+}
 
 @Component({
 	selector: 'kEntryDetails',
@@ -22,24 +25,24 @@ export class EntryDetails implements OnInit, OnDestroy {
 	public _hasDuration: boolean = false;
 	public _isClip: boolean = false;
 
-	private _currentEntry: KalturaMediaEntry;
+	public _currentEntry: EntryDetailsKalturaMediaEntry;
 
-	get currentEntry(): KalturaMediaEntry {
+	get currentEntry(): EntryDetailsKalturaMediaEntry {
 		return this._currentEntry;
 	}
-	public _handler : EntryDetailsHandler;
 
 
-	constructor(private _entryFormManager : EntryFormManager,
+
+	constructor(public _widgetService: EntryDetailsWidget,
 				private browserService: BrowserService,
 
 				public _entryStore: EntryStore) {
 	}
 
 	ngOnInit() {
+        this._widgetService.attachForm();
 
-		this._handler = this._entryFormManager.attachWidget(EntryDetailsHandler);
-		this._handler.data$.subscribe(
+		this._widgetService.data$.subscribe(
 			data => {
 				if (data) {
 					this._currentEntry = data;
@@ -72,7 +75,7 @@ export class EntryDetails implements OnInit, OnDestroy {
 
 
 	ngOnDestroy() {
-		this._entryFormManager.detachWidget(this._handler);
+        this._widgetService.detachForm();
 	}
 }
 

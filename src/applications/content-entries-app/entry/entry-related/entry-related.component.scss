@@ -45,3 +45,8 @@
 	width: 120px;
 }
 
+
+:host /deep/ .ui-datatable-scrollable-body{
+	overflow: visible;
+}
+

@@ -1,13 +1,13 @@
 import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { EntryRelatedHandler } from './entry-related-handler';
+import { EntryRelatedWidget } from './entry-related-widget.service';
 import { KalturaAttachmentType } from 'kaltura-typescript-client/types/KalturaAttachmentType';
 import { KalturaAttachmentAsset } from 'kaltura-typescript-client/types/KalturaAttachmentAsset';
 import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { SelectItem, Menu, MenuItem } from 'primeng/primeng';
-import { EntryFormManager } from '../entry-form-manager';
+
 
 @Component({
     selector: 'kEntryRelated',
@@ -22,7 +22,7 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
 	@ViewChild('editPopup') public editPopup: PopupWidgetComponent;
 	public _currentFile: KalturaAttachmentAsset;
-	public _handler : EntryRelatedHandler;
+
 	public _fileTypes: SelectItem[] = [
 		{"label": this._appLocalization.get('applications.content.entryDetails.related.document'), "value": KalturaAttachmentType.document},
 		{"label": this._appLocalization.get('applications.content.entryDetails.related.media'), "value": KalturaAttachmentType.media},
@@ -33,14 +33,14 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
 
 	private _editPopupStateChangeSubscribe : ISubscription;
 
-	constructor(private _entryFormManager : EntryFormManager,
+	constructor(public _widgetService: EntryRelatedWidget,
 				private _appLocalization: AppLocalization) {
     }
 
     ngOnDestroy()
 	{
 		this.actionsMenu.hide();
-		this._entryFormManager.detachWidget(this._handler);
+		this._widgetService.detachForm();
 		if (this._editPopupStateChangeSubscribe) {
 			this._editPopupStateChangeSubscribe.unsubscribe();
 		}
@@ -49,7 +49,7 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
 
 	ngOnInit() {
 
-		this._handler = this._entryFormManager.attachWidget(EntryRelatedHandler);
+        this._widgetService.attachForm();
 
 		this._actions = [
 			{label: this._appLocalization.get('applications.content.entryDetails.related.edit'), command: (event) => {this.actionSelected("edit");}},
@@ -64,7 +64,7 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
 			this._editPopupStateChangeSubscribe = this.editPopup.state$
 				.subscribe(event => {
 					if (event.state === PopupWidgetStates.Close && event.context && event.context.dataChanged) {
-						this._handler._setDirty();
+						this._widgetService._setDirty();
 					}
 				});
 		}
@@ -92,13 +92,13 @@ export class EntryRelated implements OnInit, AfterViewInit, OnDestroy{
 				this.editPopup.open();
 				break;
 			case "delete":
-				this._handler._removeFile(this._currentFile);
+				this._widgetService._removeFile(this._currentFile);
 				break;
 			case "download":
-				this._handler.downloadFile(this._currentFile);
+				this._widgetService.downloadFile(this._currentFile);
 				break;
 			case "preview":
-				this._handler.previewFile(this._currentFile);
+				this._widgetService.previewFile(this._currentFile);
 				break;
 		}
 	}

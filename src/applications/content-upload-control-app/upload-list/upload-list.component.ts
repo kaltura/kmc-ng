@@ -3,6 +3,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService, NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
 import { AppLocalization, TrackedFile, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
+import { TrackedFileData } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
 
 export interface UploadFileData {
   id: string;
@@ -42,11 +43,11 @@ export class UploadListComponent implements OnInit, OnDestroy {
         }
       );
 
-    this._uploadManagement.onFileStatusChanged$
+    this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
       .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile)
       .subscribe(
-        (trackedFile: TrackedFile) => {
+        (trackedFile) => {
           // NOTE: this service does not handle 'waitingUpload' status by design.
           switch (trackedFile.status) {
             case TrackedFileStatuses.added:
@@ -78,7 +79,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
               }, 5000);
               break;
 
-            case TrackedFileStatuses.uploadFailed:
+            case TrackedFileStatuses.failure:
               this._updateFile(trackedFile.id, { status: trackedFile.status });
               this._sortUploads();
               break;
@@ -97,7 +98,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  private _addFile(trackedFile: TrackedFile): void {
+  private _addFile(trackedFile: TrackedFileData): void {
     const fileData = <NewEntryUploadFile>trackedFile.data;
 
     this._uploads.push({
@@ -132,7 +133,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
   private _getStatusWeight(status: string): number {
     switch (status) {
-      case TrackedFileStatuses.uploadFailed:
+      case TrackedFileStatuses.failure:
       case TrackedFileStatuses.uploadCompleted:
         return 0;
 
@@ -142,7 +143,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
       case TrackedFileStatuses.added:
       case TrackedFileStatuses.preparing:
       case TrackedFileStatuses.prepared:
-      case TrackedFileStatuses.waitingUpload:
+      case TrackedFileStatuses.pendingPrepare:
         return 2;
 
       default:
