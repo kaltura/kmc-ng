@@ -9,6 +9,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 export class UploadButtonComponent {
   @ViewChild('uploadmenu') uploadMenuPopup: PopupWidgetComponent;
   @ViewChild('uploadsettings') uploadSettingsPopup: PopupWidgetComponent;
+  @ViewChild('bulkuploadmenu') bulkUploadMenu: PopupWidgetComponent;
 
   constructor() {
   }
@@ -19,6 +20,9 @@ export class UploadButtonComponent {
     switch (item) {
       case 'uploadFromDesktop':
         this.uploadSettingsPopup.open();
+        break;
+      case 'bulkUpload':
+        this.bulkUploadMenu.open();
         break;
       default:
         break;

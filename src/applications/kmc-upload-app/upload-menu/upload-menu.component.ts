@@ -23,11 +23,11 @@ export class UploadMenuComponent {
     });
   }
 
-  onHighSpeedLinkClicked(){
+  onHighSpeedLinkClicked() {
     this._browserService.openLink(environment.core.externalLinks.HIGH_SPEED_UPLOAD);
   }
 
-  onDownloadSamplesClicked(){
+  onDownloadSamplesClicked() {
     this._browserService.openLink(environment.core.externalLinks.BULK_UPLOAD_SAMPLES);
   }
 }

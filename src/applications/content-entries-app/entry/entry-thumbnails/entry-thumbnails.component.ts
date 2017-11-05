@@ -5,9 +5,9 @@ import { AppAuthentication } from 'app-shared/kmc-shell';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
 import { BrowserService } from 'app-shared/kmc-shell';
 
-import { EntryThumbnailsHandler, ThumbnailRow } from './entry-thumbnails-handler';
+import { EntryThumbnailsWidget, ThumbnailRow } from './entry-thumbnails-widget.service';
 import { Menu, MenuItem } from 'primeng/primeng';
-import { EntryFormManager } from '../entry-form-manager';
+
 
 @Component({
     selector: 'kEntryThumbnails',
@@ -20,15 +20,15 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 
 	@ViewChild('actionsmenu') private actionsMenu: Menu;
 	public _actions: MenuItem[] = [];
-	public _handler : EntryThumbnailsHandler;
+
 	private currentThumb: ThumbnailRow;
 
-	constructor(private _entryFormManager : EntryFormManager, private _appLocalization: AppLocalization, private _browserService: BrowserService,
+	constructor(public _widgetService: EntryThumbnailsWidget, private _appLocalization: AppLocalization, private _browserService: BrowserService,
                 private _appAuthentication: AppAuthentication) {
     }
 
     ngOnInit() {
-		this._handler = this._entryFormManager.attachWidget(EntryThumbnailsHandler);
+        this._widgetService.attachForm();
 
 	    this._actions = [
 		    {label: this._appLocalization.get('applications.content.entryDetails.thumbnails.download'), command: (event) => {this.actionSelected("download");}},
@@ -53,7 +53,7 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
 						header: this._appLocalization.get('applications.content.entryDetails.thumbnails.deleteConfirmHeader'),
 						message: this._appLocalization.get('applications.content.entryDetails.thumbnails.deleteConfirm'),
 						accept: () => {
-							this._handler.deleteThumbnail(this.currentThumb.id);
+							this._widgetService.deleteThumbnail(this.currentThumb.id);
 						}
 					}
 				);
@@ -80,7 +80,7 @@ export class EntryThumbnails implements AfterViewInit, OnInit, OnDestroy {
     ngOnDestroy() {
 	    this.actionsMenu.hide();
 
-		this._entryFormManager.detachWidget(this._handler);
+		this._widgetService.detachForm();
 	}
 
     ngAfterViewInit() {

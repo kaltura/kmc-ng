@@ -1,9 +1,9 @@
-import {EventEmitter, Injectable} from '@angular/core';
-import {LocalStorageService, SessionStorageService} from 'ng2-webstorage';
-import {IAppStorage} from '@kaltura-ng/kaltura-common';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Subject} from 'rxjs/Subject';
-import {Observable} from 'rxjs/Observable';
+import {  EventEmitter , Injectable} from '@angular/core';
+import { LocalStorageService, SessionStorageService } from 'ng2-webstorage';
+import { IAppStorage } from '@kaltura-ng/kaltura-common';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
 
 export interface Confirmation {
 	message: string;
@@ -68,18 +68,18 @@ export class BrowserService implements IAppStorage {
 	constructor(private localStorage: LocalStorageService, private sessionStorage: SessionStorageService) {
 	}
 
-	private _downloadContent(url: string): void {
-		return Observable.create(observer => {
-			const xhr = new XMLHttpRequest();
-			xhr.responseType = 'blob';
-			xhr.onload = () => {
-				observer.next(xhr.response);
-				observer.complete();
-			};
-			xhr.open('GET', url);
-			xhr.send();
-		});
-	}
+  private _downloadContent(url: string): void {
+    return Observable.create(observer => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = () => {
+        observer.next(xhr.response);
+        observer.complete();
+      };
+      xhr.open('GET', url);
+      xhr.responseType = 'blob';
+      xhr.send();
+    });
+  }
 
 	public registerOnShowConfirmation(fn : OnShowConfirmationFn)
 	{

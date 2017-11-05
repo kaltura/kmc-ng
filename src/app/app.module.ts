@@ -5,6 +5,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpModule} from '@angular/http';
 import {CommonModule} from '@angular/common';
 import {Ng2Webstorage} from 'ng2-webstorage';
+import { TranslateModule } from 'ng2-translate/ng2-translate';
 
 
 import {
@@ -56,21 +57,23 @@ import {
   RadioButtonModule,
   TieredMenuModule
 } from 'primeng/primeng';
-import {UploadManagementModule} from '@kaltura-ng/kaltura-common/upload-management';
-import {Ng2PageScrollModule} from 'ng2-page-scroll';
-import {environment} from 'app-environment';
-import {LoginComponent} from './components/login/login.component';
-import {ForgotPasswordFormComponent} from './components/login/forgot-password-form/forgot-password-form.component';
-import {LoginFormComponent} from './components/login/login-form/login-form.component';
-import {PasswordExpiredFormComponent} from './components/login/password-expired-form/password-expired-form.component';
-import {InvalidLoginHashFormComponent} from './components/login/invalid-login-hash-form/invalid-login-hash-form.component';
-import {AppMenuContentComponent} from './components/app-menu/app-menu-content.component';
-import {KmcUploadAppModule} from '../applications/kmc-upload-app/kmc-upload-app.module';
-import {TranscodingProfileManagementModule} from '@kaltura-ng/kaltura-server-utils/transcoding-profile-management';
-import {ChangeAccountComponent} from './components/changeAccount/change-account.component';
-import {ChangelogComponent} from './components/changelog/changelog.component';
-import {ChangelogContentComponent} from './components/changelog/changelog-content/changelog-content.component';
-import {AppEventsModule} from 'app-shared/kmc-shared';
+
+
+import { UploadManagementModule } from '@kaltura-ng/kaltura-common/upload-management';
+import { Ng2PageScrollModule } from 'ng2-page-scroll';
+import { environment } from 'app-environment';
+import { LoginComponent } from './components/login/login.component';
+import { ForgotPasswordFormComponent } from './components/login/forgot-password-form/forgot-password-form.component';
+import { LoginFormComponent } from './components/login/login-form/login-form.component';
+import { PasswordExpiredFormComponent } from './components/login/password-expired-form/password-expired-form.component';
+import { InvalidLoginHashFormComponent } from './components/login/invalid-login-hash-form/invalid-login-hash-form.component';
+import { AppMenuContentComponent } from './components/app-menu/app-menu-content.component';
+import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-app.module';
+import { TranscodingProfileManagementModule } from '@kaltura-ng/kaltura-server-utils/transcoding-profile-management';
+import { ChangeAccountComponent } from './components/changeAccount/change-account.component';import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
+import { ChangelogComponent } from './components/changelog/changelog.component';
+import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
+import { AppEventsModule } from 'app-shared/kmc-shared';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -99,6 +102,7 @@ export function clientConfigurationFactory() {
     AppEventsModule.forRoot(),
     KMCShellModule.forRoot(),
     KalturaCommonModule.forRoot(),
+    TranslateModule.forRoot(),
     Ng2Webstorage,
     PopupWidgetModule,
     routing,
@@ -112,6 +116,7 @@ export function clientConfigurationFactory() {
     GrowlModule,
     KmcUploadAppModule,
     NewEntryUploadModule.forRoot(),
+    BulkUploadModule.forRoot(),
     TranscodingProfileManagementModule.forRoot(),
     RadioButtonModule,
     StickyModule.forRoot(),
@@ -165,8 +170,8 @@ export class AppModule {
     // TODO [kmcng] move to a relevant location
     // TODO [kmcng] get max upload request
     // appLocalization.supportedLocales = environment.core.locales;
-    uploadManagement.setMaxUploadRequests(environment.uploadsShared.MAX_CONCURENT_UPLOADS);
+    uploadManagement.setMaxUploadRequests(2/*environment.uploadsShared.MAX_CONCURENT_UPLOADS*/);
 
-    appBootstrap.initApp({errorRoute : '/error'});
+    appBootstrap.initApp({ errorRoute: '/error' });
   }
 }
