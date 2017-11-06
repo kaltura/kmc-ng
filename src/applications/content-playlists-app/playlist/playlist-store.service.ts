@@ -163,7 +163,7 @@ export class PlaylistStore implements OnDestroy {
               entriesTotalCount: 0
             });
           }
-          const playlistLoadedResult = this._sectionsManager.notifyDataLoaded(playlist.result);
+          const playlistLoadedResult = this._sectionsManager.notifyDataLoaded(playlist.result, { isNewData: false});
           if (playlistLoadedResult.errors.length) {
             this._state.next({
               action: ActionTypes.PlaylistLoadingFailed,
@@ -217,7 +217,7 @@ export class PlaylistStore implements OnDestroy {
               }
 
               setTimeout(() => {
-                const playlistLoadedResult = this._sectionsManager.notifyDataLoaded(this.playlist);
+                const playlistLoadedResult = this._sectionsManager.notifyDataLoaded(this.playlist, { isNewData: false});
                 if (playlistLoadedResult.errors.length) {
                   this._state.next({
                     action: ActionTypes.PlaylistLoadingFailed,

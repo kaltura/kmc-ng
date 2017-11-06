@@ -115,7 +115,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 	    this._relatedFiles.next({ items : [] });
     }
 
-    protected onValidate(): Observable<{ isValid: boolean }> {
+    protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
       const fileTypeValid = this._relatedFiles.getValue().items.every(file => !!file.format);
       return Observable.of({ isValid: fileTypeValid });
     }
