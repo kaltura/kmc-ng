@@ -37,9 +37,12 @@ const routes: Routes = <Routes>[
           {
             path: 'upload-control',
             loadChildren: '../applications/content-upload-control-app/content-upload-control-app.module#ContentUploadControlAppModule'
-          }
-        ]
-        },
+          },
+          {
+            path: 'bulk',
+            loadChildren: '../applications/content-bulk-log-app/content-bulk-log-app.module#ContentBulkLogAppModule'
+          },
+        ]},
         {
           path: 'settings', children: [
           { path: '', redirectTo: 'accountSettings', pathMatch: 'full' },

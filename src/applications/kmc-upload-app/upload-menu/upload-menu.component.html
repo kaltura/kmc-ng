@@ -10,7 +10,7 @@
   <div class="kUploadMenuListItem">
     <i class="kIconbulk kUploadMenuBulkUploadIcon"></i>
     <span>
-      <a (click)="_inDevelopment()">{{ 'applications.upload.uploadMenu.bulkUpload.title' | translate }}</a><br>
+      <a (click)="onItemSelected.emit('bulkUpload')">{{ 'applications.upload.uploadMenu.bulkUpload.title' | translate }}</a><br>
       <a class="kBulkUploadSamplesLink" (click)="onDownloadSamplesClicked()">
         {{ 'applications.upload.uploadMenu.bulkUpload.samplesLink' | translate }}
       </a>

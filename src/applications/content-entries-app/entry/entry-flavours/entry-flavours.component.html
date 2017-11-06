@@ -53,7 +53,7 @@
 					</ng-template>
 				</p-column>
 			</p-dataTable>
-			<p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'"></p-menu>
+			<p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 		</div>
 	</div>
 
@@ -61,7 +61,7 @@
 		<kDRMDetails [currentFlavor]="_selectedFlavor"></kDRMDetails>
 	</kPopupWidget>
 
-	<kPopupWidget #previewPopup [popupWidth]="500" [popupHeight]="644" [modal]="true">
+	<kPopupWidget #previewPopup [popupWidth]="500" [modal]="true">
 		<kFlavorPreview [currentFlavor]="_selectedFlavor" [parentPopupWidget]="previewPopup" [currentEntry]="_widgetService.data"></kFlavorPreview>
 	</kPopupWidget>
 

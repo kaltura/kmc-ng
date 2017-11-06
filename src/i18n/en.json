@@ -67,7 +67,9 @@
         "placeholder": {
           "username": "Enter Email",
           "password": "Enter Password"
-        }
+        },
+        "browserVer1": "Browser version not supported",
+        "browserVer2": "Please use Internet Explorer version 11 or above"
       },
       "invalidLoginHash": {
         "title": "Invalid login link",
@@ -199,6 +201,18 @@
           }
         },
         "uploadBtn": "Upload"
+      },
+      "uploadMonitor": {
+        "uploadFromDesktop": "Upload from desktop",
+        "bulkUpload": "Bulk upload",
+        "dropFolders": "Drop folders",
+        "viewDetails": "View details",
+        "uploading": "uploading",
+        "syncing": "syncing",
+        "queued": "queued",
+        "completed": "completed",
+        "error": "error",
+        "upToDate": "Up to date"
       }
     },
     "content": {
@@ -349,6 +363,7 @@
         "distribution": "Distribution: {{0}}",
         "freeText": "Free text search",
         "metaData": "{{0}}: {{1}}",
+        "uploadedItem": "Uploaded item: {{0}}",
         "preferences": {
           "preferences": "Preferences",
           "filterPreferences": "Filter Preferences",
@@ -379,6 +394,82 @@
       },
       "paginator": {
         "showRows": "Show rows:"
+      },
+      "bulkUpload": {
+        "menu": {
+          "header": "Bulk Upload",
+          "selectType": "Select CSV/XML type",
+          "types": {
+            "entries": "Entries",
+            "categories": "Categories",
+            "endUsers": "End users",
+            "endUsersEntitlement": "End users entitlement"
+          },
+          "messages": {
+            "uploadError": {
+              "header": "Error",
+              "message": "An unexpected permission error has occurred. Browser page refresh is recommended. When error is persistent, please contact Kaltura Support for additional information.\n{{value}}"
+            },
+            "uploadSuccess": {
+              "body": "Your request has been submitted. Track the progress of your bulk job in the ",
+              "link": "Bulk Upload Log page"
+            }
+          }
+        },
+        "table": {
+          "header": "Files",
+          "fileName": "File name",
+          "uploadedItem": "Item type",
+          "uploadedBy": "Uploaded by",
+          "uploadedOn": "Upload date",
+          "numOfObjects": "Items",
+          "status": "Status",
+          "actions": {
+            "delete": "Delete",
+            "downloadLog": "Download Log File",
+            "downloadFile": "Download Original File"
+          }
+        },
+        "deleteLog": {
+          "header": "Delete Bulk Log",
+          "message": "Are you sure you want to delete the selected file?",
+          "messageMultiple": "Are you sure you want to delete the selected files? \n Please note: these files will be permanently deleted from your account.",
+          "error": "Could not delete this upload"
+        },
+        "objectType": {
+          "category": "Categories",
+          "categoryUser": "End-User Entitlements",
+          "entry": "Entries",
+          "user": "End-users",
+          "other": "Other"
+        },
+        "bulkStatus": {
+          "pending": "Verifying file",
+          "queued": "Verified, Queued for import",
+          "processing": "Processing",
+          "finished": "Finished successfully",
+          "aborted": "Aborted",
+          "failed": "Failed",
+          "almostDone": "Almost done",
+          "fatal": "Fatal",
+          "retry": "Retry",
+          "dontProcess": "Pending",
+          "finishedPartially": "Finished with errors"
+        },
+        "list": {
+          "selected": "Selected",
+          "cancel": "Cancel",
+          "refine": "Refine",
+          "refresh": "Refresh"
+        },
+        "filters": {
+          "activeFilters": "Active Filters:",
+          "clearAll": "Clear All",
+          "close": "Close",
+          "clearDates": "Clear Dates",
+          "createdBetween": "Created Between",
+          "additionalFilters": "Additional Filters"
+        }
       },
       "entryStatus": {
         "errorImporting": "Error Uploading",
@@ -560,7 +651,7 @@
           "anyIP": "Any IP",
           "allowIPs": "Allow IPs: {{0}}",
           "blockIPs": "Blocked: {{0}}",
-          "anyFlavour": "Any Flavour",
+          "anyFlavour": "Any Flavor",
           "allowFlavours": "Allow Flavors: {{0}}",
           "blockFlavours": "Blocked: {{0}}",
           "ks": "KS",
@@ -788,7 +879,8 @@
           "entriesLoadError": "Error loading entries",
           "categoriesLoadError": "Error loading categories",
           "flavorsLoadError": "Error loading flavors",
-          "clipsLoadError": "Error loading clips"
+          "clipsLoadError": "Error loading clips",
+          "schedulingError": "Day before can't be earlier than day after"
         }
       },
       "categoryDetails": {

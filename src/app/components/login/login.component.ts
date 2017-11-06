@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _errorCode: string;
   public _inProgress = false;
   public _showLogin = false;
+  public _showIEMessage = false;
   public _loginScreens = LoginScreens;
   public _currentScreen = LoginScreens.Login;
   public _passwordReset = false;
@@ -89,9 +90,11 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     if (this._appAuthentication.isLogged()) {
       this._appNavigator.navigateToDefault();
-    } else {
-      this._showLogin = true;
-      this._username = this._browserService.getFromLocalStorage('login.username');
+    } else if (typeof document['documentMode'] !== "undefined" && document['documentMode'] < 11){
+        this._showIEMessage = true;
+      } else{
+        this._showLogin = true;
+        this._username = this._browserService.getFromLocalStorage('login.username');
     }
   }
 

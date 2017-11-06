@@ -93,7 +93,7 @@ export class AppBootstrap implements CanActivate {
         this._bootstrapConfig = appBootstrapConfig;
 
         // init localization, wait for localization to load before continuing
-        this.appLocalization.setFilesHash(environment.shell.languageHash);
+        this.appLocalization.setFilesHash(environment.appVersion);
         const language = this.getCurrentLanguage();
         this.appLocalization.load(language,'en').subscribe(
             () => {

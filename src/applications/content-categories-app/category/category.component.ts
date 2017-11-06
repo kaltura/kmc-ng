@@ -38,7 +38,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
         categoryWidgetsManager: CategoryWidgetsManager,
         widget1: CategorySectionsListWidget,
         widget2: CategoryMetadataWidget,
-		private _categoryStore: CategoryService,
+		public _categoryStore: CategoryService,
 		private _categoriesStore: CategoriesService,
 		private _browserService: BrowserService,
 		private _appLocalization: AppLocalization) {

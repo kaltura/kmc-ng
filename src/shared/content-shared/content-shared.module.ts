@@ -85,8 +85,10 @@ import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/
   exports: [
     EntryStatusPipe,
     EntryTypePipe,
+    MaxEntriesPipe,
     CategoriesTreeComponent,
     SchedulingComponent,
+    EntriesListComponent,
     EntryDurationPipe,
     MaxEntriesPipe,
     PrimeTableSortDirectionPipe,
@@ -95,7 +97,6 @@ import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/
     CategoriesFilterComponent,
     EntriesTableComponent,
     EntriesListComponent,
-
     CategoryRadioButtonPocPopupComponent,
     CategoryRadioButtonPocComponent
   ],
