@@ -31,6 +31,9 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   // Caution: this is extremely dirty hack, don't do something similar to that, damn you IE
   @HostListener('window:resize')
   onResize() {
+    if (!this._browserService.isIE11()) { // ignore for others
+      return;
+    }
     const areaBlocker = <any>document.querySelector('k-area-blocker');
     const content = this._el.nativeElement.querySelector('.kLoginCenter');
     const windowHeight = window.innerHeight;
@@ -51,7 +54,9 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.onResize();
+    if (this._browserService.isIE11()) {
+      this.onResize();
+    }
   }
 
   private _makeLoginRequest(username: string, password: string): Observable<ILoginResponse> {
