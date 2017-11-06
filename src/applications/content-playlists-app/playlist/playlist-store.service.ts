@@ -97,7 +97,6 @@ export class PlaylistStore implements OnDestroy {
             .reduce((result, sectionName) => result || sectionsState[sectionName].isDirty, false);
 
           if (this._playlistIsDirty !== newDirtyState) {
-            console.log(`playlist store: update entry is dirty state to ${newDirtyState}`);
             this._playlistIsDirty = newDirtyState;
 
             this._updatePageExitVerification();

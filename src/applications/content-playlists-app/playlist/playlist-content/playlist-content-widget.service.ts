@@ -34,6 +34,12 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
+    // tricky one because newly created playlist doesn't have id,
+    // but there's might be situation when playlist doesn't have id because of error
+    if (!this.data.id) {
+      return Observable.of({ failed: false });
+    }
+
     super._showLoader();
 
     const responseProfile = new KalturaDetachedResponseProfile({
