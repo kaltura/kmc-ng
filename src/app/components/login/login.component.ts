@@ -61,6 +61,9 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private _handleLoginResponse(success: boolean, error: ILoginError, username: string): void {
+    this._errorCode = '';
+    this._errorMessage = '';
+
     if (success) {
       this._appNavigator.navigateToDefault();
       return;
