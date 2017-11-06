@@ -7,7 +7,6 @@ import {CategoriesService, NewCategoryData, SortDirection} from './categories.se
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {AppLocalization} from "@kaltura-ng/kaltura-common";
 import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
-import {CategoryWidgetKeys} from "../category/category-widget-keys";
 
 @Component({
     selector: 'kCategoriesList',
@@ -117,6 +116,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
                 );
                 break;
             case 'moveCategory':
+              // TODO [kmc] missing Edit warnings popup implementation (implement after merging categories_table branch)
               this._selectedCategoryIdToMove = event.categoryID;
               this.moveCategoryPopup.open();
               break;
@@ -180,7 +180,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
             this._isBusy = false;
             // use a flag so the categories will be refreshed upon clicking 'back' from the category page
             this.router.navigate(['/content/categories/category', category.id],
-              {queryParams: {reloadCategoriesListOnNavigateOut: true, categorySectionsToDisable: [CategoryWidgetKeys.SubCategories]}})
+              {queryParams: {reloadCategoriesListOnNavigateOut: true}})
         },
           error => {
             this._isBusy = false;
@@ -226,7 +226,6 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
             detail: this._appLocalization
               .get('applications.content.addNewCategory.categoryMovedSuccessfully')
           });
-          this._categoriesService.reload(true);
         },
         error => {
           this._isBusy = false;
@@ -235,7 +234,6 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
             detail: this._appLocalization
               .get('applications.content.addNewCategory.errors.categoryMovedFailure')
           });
-          this._categoriesService.reload(true);
         });
   }
 }

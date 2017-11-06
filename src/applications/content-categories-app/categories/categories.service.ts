@@ -240,7 +240,7 @@ export class CategoriesService implements OnDestroy {
   public addNewCategory(newCategoryData: NewCategoryData): Observable<KalturaCategory> {
     if (!newCategoryData) {
       const nameRequiredErrorMessage = this._appLocalization.get('applications.content.addNewCategory.error.nameRequired');
-      Observable.throw(new Error(nameRequiredErrorMessage));
+      return Observable.throw(new Error(nameRequiredErrorMessage));
     }
     const category = new KalturaCategory({
       name: newCategoryData.name,

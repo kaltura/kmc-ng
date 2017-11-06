@@ -20,21 +20,10 @@ export interface SectionWidgetItem {
 export class CategorySectionsListWidget extends CategoryWidget implements OnDestroy {
     private _sections = new BehaviorSubject<SectionWidgetItem[]>([]);
     public sections$: Observable<SectionWidgetItem[]> = this._sections.asObservable();
-    private disabledSections: Array<string> = [];
 
     constructor(private _appLocalization: AppLocalization,
                 private _categoryRoute: ActivatedRoute) {
         super('categorySectionsList');
-
-        // check if need to hide the sub categories tab according
-      this._categoryRoute.queryParams.cancelOnDestroy(this)
-        .first()
-        .subscribe(queryParams => {
-          const categorySectionsToDisable = queryParams['categorySectionsToDisable'];
-          if (categorySectionsToDisable && categorySectionsToDisable.length) {
-            this.disabledSections = categorySectionsToDisable;
-          }
-        });
     }
 
     protected onDataLoading(dataId: any): void {
@@ -100,25 +89,18 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
 
                 const sectionFormWidgetState = formWidgetsState ? formWidgetsState[section.key] : null;
                 const isSectionActive = sectionFormWidgetState && sectionFormWidgetState.isActive;
-
-                if (this._isSectionEnabled(section.key, category)) {
-                    sections.push(
-                        {
-                            label: this._appLocalization.get(section.label),
-                            active: isSectionActive,
-                            hasErrors: sectionFormWidgetState ? sectionFormWidgetState.isValid : false,
-                            key: section.key
-                        }
-                    );
-                }
+                sections.push(
+                    {
+                        label: this._appLocalization.get(section.label),
+                        active: isSectionActive,
+                        hasErrors: sectionFormWidgetState ? sectionFormWidgetState.isValid : false,
+                        key: section.key
+                    }
+                );
             });
         }
 
         this._sections.next(sections);
-    }
-
-    private _isSectionEnabled(sectionKey: string, category: KalturaCategory): boolean {
-      return this.disabledSections.indexOf(sectionKey) === -1;
     }
 
     ngOnDestroy() {

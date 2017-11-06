@@ -15,9 +15,9 @@ import {KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-typescript-clien
 import {CategoryGetAction} from 'kaltura-typescript-client/types/CategoryGetAction';
 import {CategoryUpdateAction} from 'kaltura-typescript-client/types/CategoryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { CategoryWidgetsManager } from './category-widgets-manager';
-import {  OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import {CategoryWidgetsManager} from './category-widgets-manager';
+import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 
 export enum ActionTypes {
 	CategoryLoading,
@@ -152,18 +152,10 @@ export class CategoryService implements OnDestroy {
 					// to init them-selves when entering this module directly.
 					setTimeout(() => {
 						const currentCategoryId = this._categoryRoute.snapshot.params.id;
-						// if (currentCategoryId === "new") {
-						// 	if (this._categoriesStore && this._categoriesStore.getNewCategoryData()) {
-						// 		const parentId = this._categoriesStore.getNewCategoryData().parentCategoryId;
-						// 		this._loadCategory(parentId);
-						// 	}
-						// }
-						// else {
-							const category = this._category.getValue();
-							if (!category || (category && category.id.toString() !== currentCategoryId)) {
-								this._loadCategory(currentCategoryId);
-							}
-						// }
+                        const category = this._category.getValue();
+                        if (!category || (category && category.id.toString() !== currentCategoryId)) {
+                          this._loadCategory(currentCategoryId);
+                        }
 					});
 				}
 			}

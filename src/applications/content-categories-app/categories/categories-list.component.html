@@ -43,13 +43,13 @@
 
 <kPopupWidget #addNewCategory [popupWidth]="586" [popupHeight]="645" [modal]="true" [preventPageScroll]="true">
   <ng-template>
-    <kCategoryRadioButtonPOC (onCategorySelected)="onAddNewCategory($event)" [parentPopupWidget]="addNewCategory" [mode]="'new'"></kCategoryRadioButtonPOC>
+    <kCategoryParentSelector (onCategorySelected)="onAddNewCategory($event)" [parentPopupWidget]="addNewCategory" [mode]="'new'"></kCategoryParentSelector>
   </ng-template>
 </kPopupWidget>
 
 
 <kPopupWidget #moveCategory [popupWidth]="586" [popupHeight]="568" [modal]="true" [preventPageScroll]="true">
   <ng-template>
-    <kCategoryRadioButtonPOC (onCategorySelected)="onMoveCategory($event)" [parentPopupWidget]="moveCategory" [mode]="'move'"></kCategoryRadioButtonPOC>
+    <kCategoryParentSelector (onCategorySelected)="onMoveCategory($event)" [parentPopupWidget]="moveCategory" [mode]="'move'"></kCategoryParentSelector>
   </ng-template>
 </kPopupWidget>

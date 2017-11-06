@@ -24,11 +24,11 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 
 @Component({
-  selector: 'kCategoryRadioButtonPOC',
-  templateUrl: './category-radio-button-poc.html',
-  styleUrls: ['./category-radio-button-poc.scss']
+  selector: 'kCategoryParentSelector',
+  templateUrl: './category-parent-selector.html',
+  styleUrls: ['./category-parent-selector.scss']
 })
-export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChecked, OnInit {
+export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChecked, OnInit {
   @Input() mode: 'move' | 'new' = 'move';
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Output() onCategorySelected = new EventEmitter<{parentCategoryId: number, name?: string}>();
