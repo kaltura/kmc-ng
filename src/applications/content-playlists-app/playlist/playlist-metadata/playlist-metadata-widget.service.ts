@@ -1,11 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaRequest } from 'kaltura-typescript-client';
-
-import 'rxjs/add/observable/forkJoin';
+import { KalturaMultiRequest } from 'kaltura-typescript-client';
 import { PlaylistWidget } from '../playlist-widget';
 import { PlaylistWidgetKeys } from '../playlist-widget-keys';
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
-import { PlaylistStore } from '../playlist-store.service';
 import { Observable } from 'rxjs/Observable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TagSearchAction } from 'kaltura-typescript-client/types/TagSearchAction';
@@ -18,8 +15,7 @@ import { KalturaClient } from '@kaltura-ng/kaltura-client';
 export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy {
   public metadataForm: FormGroup;
 
-  constructor(private _playlistStore: PlaylistStore,
-              private _formBuilder: FormBuilder,
+  constructor(private _formBuilder: FormBuilder,
               private _kalturaServerClient: KalturaClient) {
     super(PlaylistWidgetKeys.Metadata);
     this._buildForm();
@@ -49,13 +45,17 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
       );
   }
 
-  protected onDataSaving(data: KalturaPlaylist, request: KalturaRequest<KalturaPlaylist>): void {
-    const metadataFormValue = this.metadataForm.value;
-
-    // save static metadata form
-    data.name = metadataFormValue.name;
-    data.description = metadataFormValue.description;
-    data.tags = (metadataFormValue.tags || []).join(',');
+  protected onDataSaving(newData: KalturaPlaylist, request: KalturaMultiRequest/*, originalData: KalturaPlaylist*/): void {
+    if (this.wasActivated) {
+      const metadataFormValue = this.metadataForm.value;
+      newData.name = metadataFormValue.name;
+      newData.description = metadataFormValue.description;
+      newData.tags = (metadataFormValue.tags || []).join(',');
+    }/* else {
+      newData.name = originalData.name;
+      newData.description = originalData.description;
+      newData.tags = originalData.tags;
+    }*/
   }
 
   /**
@@ -65,26 +65,13 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
     this.metadataForm.reset();
   }
 
-  protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
-    super._showLoader();
-
-    return this._playlistStore.playlist$
-      .cancelOnDestroy(this, this.widgetReset$)
-      .map(({ playlist }) => {
-        this.metadataForm.reset({
-          name: playlist.name,
-          description: playlist.description,
-          tags: playlist.tags ? playlist.tags.split(', ') : null
-        });
-        super._hideLoader();
-        this._monitorFormChanges();
-        return { failed: false };
-      })
-      .catch(error => {
-        super._hideLoader();
-        super._showActivationError();
-        return Observable.of({ failed: true, error });
-      });
+  protected onActivate(): void {
+    this.metadataForm.reset({
+      name: this.data.name,
+      description: this.data.description,
+      tags: this.data.tags ? this.data.tags.split(', ') : null
+    });
+    this._monitorFormChanges();
   }
 
   public searchTags(text: string): Observable<string[]> {

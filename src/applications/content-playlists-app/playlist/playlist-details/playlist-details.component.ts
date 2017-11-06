@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
 import { PlaylistDetailsWidget } from './playlist-details-widget.service';
-import { PlaylistStore } from '../playlist-store.service';
 
 @Component({
   selector: 'kPlaylistDetails',
@@ -10,24 +9,20 @@ import { PlaylistStore } from '../playlist-store.service';
 })
 export class PlaylistDetailsComponent implements OnInit, OnDestroy {
   public _currentPlaylist: KalturaPlaylist;
-  public _numberOfEntries: number;
-  public _duration = 0;
-  constructor(public _widgetService: PlaylistDetailsWidget, private _playlistStore: PlaylistStore) {
+  public _numberOfEntries = 0;
+
+  constructor(public _widgetService: PlaylistDetailsWidget) {
   }
 
   ngOnInit() {
     this._widgetService.attachForm();
-    this._playlistStore.playlist$
+    this._widgetService.data$
       .cancelOnDestroy(this)
-      .filter(({ playlist }) => !!playlist)
-      .subscribe(({ playlist, entries }) => {
-          this._currentPlaylist = playlist;
-          this._numberOfEntries = this._getNumberOfEntries(this._currentPlaylist.playlistContent);
-          this._duration = entries
-            .filter(Boolean)
-            .reduce((acc, val) => acc + val.duration, 0);
-        }
-      );
+      .filter(Boolean)
+      .subscribe(data => {
+        this._currentPlaylist = data;
+        this._numberOfEntries = this._getNumberOfEntries(data.playlistContent);
+      });
   }
 
   ngOnDestroy() {

@@ -2,7 +2,7 @@
   <div class="kPlaylistEntriesHolder">
     <kPlaylistEntryListBulkOperationsContent
       [selectedEntries]="_selectedEntries"
-      [entriesTotalCount]="(_widgetService.playlist$ | async)?.entriesTotalCount"
+      [entriesTotalCount]="_widgetService.entriesTotalCount"
       (addEntry)="addEntry.open()"
       (deleteEntries)="_deleteEntries($event)"
       (clearSelection)="_clearSelection()"
@@ -10,7 +10,7 @@
     </kPlaylistEntryListBulkOperationsContent>
     <kPlaylistEntriesTable
       class="kPlaylistEntriesTable"
-      [entries]="(_widgetService.playlist$ | async)?.entries"
+      [entries]="_widgetService.entries"
       (onActionSelected)="_widgetService.onActionSelected($event)"
       [(selectedEntries)]="_selectedEntries">
     </kPlaylistEntriesTable>

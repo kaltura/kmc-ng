@@ -12,8 +12,4 @@ export class PlaylistDetailsWidget extends PlaylistWidget {
    */
   protected onReset(): void {
   }
-
-  protected onActivate(firstTimeActivating: boolean): void {
-  }
-
 }

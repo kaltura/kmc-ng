@@ -1,27 +1,21 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaMultiRequest } from 'kaltura-typescript-client';
-
-import 'rxjs/add/observable/forkJoin';
 import { PlaylistWidget } from '../playlist-widget';
 import { PlaylistWidgetKeys } from '../playlist-widget-keys';
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { PlaylistStore } from '../playlist-store.service';
 import { Observable } from 'rxjs/Observable';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
+import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
+import { PlaylistExecuteAction } from 'kaltura-typescript-client/types/PlaylistExecuteAction';
+import { KalturaClient } from '@kaltura-ng/kaltura-client';
 
 @Injectable()
 export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
-  private _playlist = new BehaviorSubject<{ entries: KalturaMediaEntry[], entriesTotalCount: number }>({
-    entries: [],
-    entriesTotalCount: 0
-  });
-  public playlist$ = this._playlist.asObservable();
+  public entries: KalturaMediaEntry[] = [];
+  public entriesTotalCount = 0;
 
-  constructor(private _playlistStore: PlaylistStore,
-              private _appLocalization: AppLocalization) {
+  constructor(private _kalturaClient: KalturaClient) {
     super(PlaylistWidgetKeys.Content);
   }
 
@@ -30,7 +24,7 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   protected onDataSaving(data: KalturaPlaylist, request: KalturaMultiRequest): void {
-    data.playlistContent = this._playlistStore.entries.map(({ id }) => id).join(',');
+    data.playlistContent = this.entries.map(({ id }) => id).join(',');
   }
 
   /**
@@ -42,10 +36,22 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
     super._showLoader();
 
-    return this._playlistStore.playlist$
+    const responseProfile = new KalturaDetachedResponseProfile({
+      type: KalturaResponseProfileType.includeFields,
+      fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration'
+    });
+
+    const request = new PlaylistExecuteAction({
+      id: this.data.id,
+      acceptedTypes: [KalturaMediaEntry],
+      responseProfile: responseProfile
+    });
+
+    return this._kalturaClient.request(request)
       .cancelOnDestroy(this, this.widgetReset$)
-      .map(({ entries, entriesTotalCount }) => {
-        this._playlist.next({ entries, entriesTotalCount });
+      .map((entries: KalturaMediaEntry[]) => {
+        this.entries = entries;
+        this.entriesTotalCount = entries.length;
         super._hideLoader();
         return { failed: false };
       })
@@ -60,51 +66,79 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
     this.updateState({ isDirty: true });
   }
 
-  public deleteSelectedEntries(ids: string[]): void {
-    if (this._playlistStore.entries.length > ids.length) {
-      this._playlistStore.deleteEntriesFromPlaylist(ids);
-    } else {
-      this.sectionBlockerMessage = new AreaBlockerMessage({
-        message: this._appLocalization.get('applications.content.playlistDetails.errors.contentValidationError'),
-        buttons: [{
-          label: this._appLocalization.get('applications.content.playlistDetails.errors.ok'),
-          action: () => {
-            this.sectionBlockerMessage = null;
-          }
-        }]
-      });
+  private _deleteEntryFromPlaylist(entry: KalturaMediaEntry): void {
+    this.entries = this.entries.filter(({ id }) => id !== entry.id);
+    this.entriesTotalCount = this.entries.length;
+
+    this._setDirty();
+  }
+
+  private _duplicateEntry(entry: KalturaMediaEntry): void {
+    this.addEntries([entry]);
+    this.entriesTotalCount = this.entries.length;
+
+    this._setDirty();
+  }
+
+  private _moveUpEntries(selectedEntries: KalturaMediaEntry[]): void {
+    if (selectedEntries && selectedEntries.length) {
+      for (let i = 0; i < selectedEntries.length; i++) {
+        const selectedItem = selectedEntries[i];
+        const selectedItemIndex = this.entries.findIndex(({ id }) => id === selectedItem.id);
+
+        if (selectedItemIndex !== 0) {
+          const movedItem = this.entries[selectedItemIndex];
+          const temp = this.entries[selectedItemIndex - 1];
+          this.entries[selectedItemIndex - 1] = movedItem;
+          this.entries[selectedItemIndex] = temp;
+        } else {
+          break;
+        }
+      }
+
+      this.entries = [...this.entries];
+      this._setDirty();
     }
   }
 
-  public onActionSelected({ action, rowIndex }: { action: string, rowIndex: number }): void {
+  private _moveDownEntries(selectedEntries: KalturaMediaEntry[]): void {
+    if (selectedEntries && selectedEntries.length) {
+      for (let i = selectedEntries.length - 1; i >= 0; i--) {
+        const selectedItem = selectedEntries[i];
+        const selectedItemIndex = this.entries.findIndex(({ id }) => id === selectedItem.id);
+
+        if (selectedItemIndex !== (this.entries.length - 1)) {
+          const movedItem = this.entries[selectedItemIndex];
+          const temp = this.entries[selectedItemIndex + 1];
+          this.entries[selectedItemIndex + 1] = movedItem;
+          this.entries[selectedItemIndex] = temp;
+        } else {
+          break;
+        }
+      }
+
+      this.entries = [...this.entries];
+      this._setDirty();
+    }
+  }
+
+  public deleteSelectedEntries(entries: KalturaMediaEntry[]): void {
+    entries.forEach(entry => this._deleteEntryFromPlaylist(entry));
+  }
+
+  public onActionSelected({ action, entry }: { action: string, entry: KalturaMediaEntry }): void {
     switch (action) {
       case 'remove':
-        if (this._playlistStore.entries.length > 1) {
-          this._playlistStore.deleteEntryFromPlaylist(rowIndex);
-          this._setDirty();
-        } else {
-          this.sectionBlockerMessage = new AreaBlockerMessage({
-            message: this._appLocalization.get('applications.content.playlistDetails.errors.contentValidationError'),
-            buttons: [{
-              label: this._appLocalization.get('applications.content.playlistDetails.errors.ok'),
-              action: () => {
-                this.sectionBlockerMessage = null;
-              }
-            }]
-          });
-        }
+        this._deleteEntryFromPlaylist(entry);
         break;
       case 'moveUp':
-        this._playlistStore.moveUpEntry(rowIndex);
-        this._setDirty();
+        this._moveUpEntries([entry]);
         break;
       case 'moveDown':
-        this._playlistStore.moveDownEntry(rowIndex);
-        this._setDirty();
+        this._moveDownEntries([entry]);
         break;
       case 'duplicate':
-        this._playlistStore.duplicateEntry(rowIndex);
-        this._setDirty();
+        this._duplicateEntry(entry);
         break;
       default:
         break;
@@ -113,16 +147,17 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
 
   public moveEntries({ entries, direction }: { entries: KalturaMediaEntry[], direction: 'up' | 'down' }): void {
     if (direction === 'up') {
-      this._playlistStore.moveUpEntries(entries);
+      this._moveUpEntries(entries);
     } else {
-      this._playlistStore.moveDownEntries(entries);
+      this._moveDownEntries(entries);
     }
 
     this._setDirty();
   }
 
   public addEntries(entries: KalturaMediaEntry[]): void {
-    this._playlistStore.addEntries(entries);
+    this.entries = [...this.entries, ...entries];
+    this.entriesTotalCount = this.entries.length;
     this._setDirty();
   }
 }

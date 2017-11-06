@@ -38,7 +38,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Output() sortChanged = new EventEmitter<any>();
   @Output() selectedEntriesChange = new EventEmitter<any>();
-  @Output() onActionSelected = new EventEmitter<{ action: string, rowIndex: any }>();
+  @Output() onActionSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
 
   constructor(private _appLocalization: AppLocalization,
               public _playlistStore: PlaylistStore,
@@ -74,25 +74,25 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 
   }
 
-  private _buildMenu(rowIndex: number): void {
+  private _buildMenu(rowIndex: number, entry: KalturaMediaEntry): void {
     this._items = [
       {
         label: this._appLocalization.get('applications.content.bulkActions.removeFromPlaylist'),
-        command: () => this.onActionSelected.emit({ action: 'remove', rowIndex })
+        command: () => this.onActionSelected.emit({ action: 'remove', entry })
       },
       {
         label: this._appLocalization.get('applications.content.bulkActions.moveUp'),
-        command: (event) => this.onActionSelected.emit({ action: 'moveUp', rowIndex }),
+        command: (event) => this.onActionSelected.emit({ action: 'moveUp', entry }),
         disabled: rowIndex === 0
       },
       {
         label: this._appLocalization.get('applications.content.bulkActions.moveDown'),
-        command: () => this.onActionSelected.emit({ action: 'moveDown', rowIndex }),
-        disabled: rowIndex + 1 === this._playlistStore.entries.length
+        command: () => this.onActionSelected.emit({ action: 'moveDown', entry }),
+        disabled: rowIndex + 1 === this._entries.length
       },
       {
         label: this._appLocalization.get('applications.content.bulkActions.duplicate'),
-        command: () => this.onActionSelected.emit({ action: 'duplicate', rowIndex })
+        command: () => this.onActionSelected.emit({ action: 'duplicate', entry })
       }
     ];
   }
@@ -105,9 +105,9 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
     this._router.navigate(['/content/entries/entry', entryId]);
   }
 
-  public _openActionsMenu(event: any, rowIndex: number) {
+  public _openActionsMenu(event: any, rowIndex: number, entry: KalturaMediaEntry) {
     if (this.actionsMenu) {
-      this._buildMenu(rowIndex);
+      this._buildMenu(rowIndex, entry);
       this.actionsMenu.toggle(event);
       this.actionsMenu.show(event);
     }

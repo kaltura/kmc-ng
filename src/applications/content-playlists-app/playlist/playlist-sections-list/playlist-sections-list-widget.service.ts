@@ -23,6 +23,9 @@ export class PlaylistSectionsListWidget extends PlaylistWidget implements OnDest
     super('sectionsList');
   }
 
+  ngOnDestroy() {
+  }
+
   protected onDataLoading(dataId: any): void {
     this._clearSectionsList();
   }
@@ -96,9 +99,5 @@ export class PlaylistSectionsListWidget extends PlaylistWidget implements OnDest
 
   private _isSectionEnabled(sectionKey: string, playlist: KalturaPlaylist): boolean {
     return true;
-  }
-
-  ngOnDestroy() {
-
   }
 }

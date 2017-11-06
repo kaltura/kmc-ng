@@ -9,11 +9,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PlaylistUpdateAction } from 'kaltura-typescript-client/types/PlaylistUpdateAction';
 import { Observable } from 'rxjs/Observable';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaMultiRequest, KalturaMultiResponse, KalturaTypesFactory } from 'kaltura-typescript-client';
-import { PlaylistExecuteAction } from 'kaltura-typescript-client/types/PlaylistExecuteAction';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
+import { KalturaMultiRequest, KalturaResponse, KalturaTypesFactory } from 'kaltura-typescript-client';
 import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 import { KalturaPlaylistType } from 'kaltura-typescript-client/types/KalturaPlaylistType';
 import { PlaylistAddAction } from 'kaltura-typescript-client/types/PlaylistAddAction';
@@ -44,13 +40,8 @@ export class PlaylistStore implements OnDestroy {
   private _playlistIsDirty = false;
   private _savePlaylistInvoked = false;
   private _playlistId: string;
-  private _playlist = new BehaviorSubject<{ playlist: KalturaPlaylist, entries: KalturaMediaEntry[], entriesTotalCount: number }>({
-    playlist: null,
-    entries: [],
-    entriesTotalCount: 0
-  });
+  private _playlist: KalturaPlaylist;
 
-  public playlist$ = this._playlist.asObservable();
   public state$ = this._state.asObservable();
 
   private _getPlaylistId(): string {
@@ -58,15 +49,11 @@ export class PlaylistStore implements OnDestroy {
   }
 
   public get playlist(): KalturaPlaylist {
-    return this._playlist.getValue().playlist;
+    return this._playlist;
   }
 
   public get playlistId(): string {
     return this._playlistId;
-  }
-
-  public get entries(): KalturaMediaEntry[] {
-    return this._playlist.getValue().entries;
   }
 
   public get playlistIsDirty(): boolean {
@@ -88,7 +75,6 @@ export class PlaylistStore implements OnDestroy {
 
   ngOnDestroy() {
     this._state.complete();
-    this._playlist.complete();
 
     this._browserService.disablePageExitVerification();
 
@@ -141,29 +127,17 @@ export class PlaylistStore implements OnDestroy {
     this._state.next({ action: ActionTypes.PlaylistLoading });
     this._sectionsManager.notifyDataLoading(id);
 
-    this._loadPlaylistSubscription = this._getPlaylist(id)
-      .cancelOnDestroy(this)
-      .subscribe(([playlist, entries]) => {
-          this._playlist.next({
-            playlist: playlist.result,
-            entries: this.entries,
-            entriesTotalCount: this._playlist.getValue().entriesTotalCount
-          });
+    if (!id) {
+      return this._state.next({ action: ActionTypes.PlaylistLoadingFailed, error: new Error('Missing entryId') });
+    }
 
-          if (entries.result && entries.result.length) {
-            this._playlist.next({
-              playlist: this.playlist,
-              entries: <KalturaMediaEntry[]>entries.result,
-              entriesTotalCount: <number>entries.result.length
-            });
-          } else {
-            this._playlist.next({
-              playlist: this.playlist,
-              entries: [],
-              entriesTotalCount: 0
-            });
-          }
-          const playlistLoadedResult = this._sectionsManager.notifyDataLoaded(playlist.result, { isNewData: false});
+    this._loadPlaylistSubscription = this._kalturaServerClient
+      .request(new PlaylistGetAction({ id }))
+      .cancelOnDestroy(this)
+      .subscribe(playlist => {
+          this._loadPlaylistSubscription = null;
+          this._playlist = playlist;
+          const playlistLoadedResult = this._sectionsManager.notifyDataLoaded(playlist, { isNewData: false });
           if (playlistLoadedResult.errors.length) {
             this._state.next({
               action: ActionTypes.PlaylistLoadingFailed,
@@ -173,7 +147,10 @@ export class PlaylistStore implements OnDestroy {
             this._state.next({ action: ActionTypes.PlaylistLoaded });
           }
         },
-        error => this._state.next({ action: ActionTypes.PlaylistLoadingFailed, error })
+        error => {
+          this._loadPlaylistSubscription = null;
+          this._state.next({ action: ActionTypes.PlaylistLoadingFailed, error });
+        }
       );
   }
 
@@ -204,20 +181,16 @@ export class PlaylistStore implements OnDestroy {
 
             if (newData) {
               if (!this.playlist) {
-                this._playlist.next({
-                  playlist: new KalturaPlaylist({
-                    name: newData.name,
-                    description: newData.description,
-                    playlistType: KalturaPlaylistType.staticList,
-                    playlistContent: ''
-                  }),
-                  entries: [],
-                  entriesTotalCount: 0
+                this._playlist = new KalturaPlaylist({
+                  name: newData.name,
+                  description: newData.description,
+                  playlistType: KalturaPlaylistType.staticList,
+                  playlistContent: ''
                 });
               }
 
               setTimeout(() => {
-                const playlistLoadedResult = this._sectionsManager.notifyDataLoaded(this.playlist, { isNewData: false});
+                const playlistLoadedResult = this._sectionsManager.notifyDataLoaded(this.playlist, { isNewData: false });
                 if (playlistLoadedResult.errors.length) {
                   this._state.next({
                     action: ActionTypes.PlaylistLoadingFailed,
@@ -234,9 +207,7 @@ export class PlaylistStore implements OnDestroy {
             // we must defer the loadEntry to the next event cycle loop to allow components
             // to init them-selves when entering this module directly.
             setTimeout(() => {
-              const playlist = this._playlist.getValue();
-
-              if (!playlist.playlist || playlist.playlist.id !== currentPlaylistId) {
+              if (!this.playlist || this.playlist.id !== currentPlaylistId) {
                 this._loadPlaylist(currentPlaylistId);
               }
             }, 0);
@@ -245,49 +216,18 @@ export class PlaylistStore implements OnDestroy {
       )
   }
 
-  private _getPlaylist(playlistId: string): Observable<KalturaMultiResponse> {
-    if (!playlistId) {
-      return Observable.throw(new Error('missing entryId'));
-    }
-
-    const responseProfile = new KalturaDetachedResponseProfile({
-      type: KalturaResponseProfileType.includeFields,
-      fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration'
-    });
-
-    return this._kalturaServerClient.multiRequest(
-      new KalturaMultiRequest(
-        new PlaylistGetAction({ id: playlistId }),
-        new PlaylistExecuteAction({
-          id: playlistId,
-          acceptedTypes: [KalturaMediaEntry],
-          responseProfile: responseProfile
-        })
-      ));
-  }
-
-  private _moveEntry(rowIndex: number, direction: 1 | -1): void {
-    const currentEntry = this.entries[rowIndex];
-    this.entries.splice(rowIndex, 1);
-    this.entries.splice(rowIndex + direction, 0, currentEntry);
-    this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });
-  }
-
   public savePlaylist(): void {
     if (this.playlist && this.playlist instanceof KalturaPlaylist) {
-      const newPlaylist = new KalturaPlaylist({
-        name: this.playlist.name,
-        description: this.playlist.description,
-        playlistContent: this.playlist.playlistContent,
-        playlistType: this.playlist.playlistType
-      });
+      const newPlaylist = <KalturaPlaylist>KalturaTypesFactory.createObject(this.playlist);
+      newPlaylist.playlistType = this.playlist.playlistType;
 
       this._state.next({ action: ActionTypes.PlaylistSaving });
 
       const id = this._getPlaylistId();
-      const request = id === 'new'
+      const action = id === 'new'
         ? new PlaylistAddAction({ playlist: newPlaylist })
         : new PlaylistUpdateAction({ id, playlist: newPlaylist });
+      const request = new KalturaMultiRequest(action);
 
       this._sectionsManager.notifyDataSaving(newPlaylist, request, this.playlist)
         .cancelOnDestroy(this)
@@ -303,16 +243,16 @@ export class PlaylistStore implements OnDestroy {
             if (response.ready) {
               this._savePlaylistInvoked = true;
 
-              return this._kalturaServerClient.request(request)
+              return this._kalturaServerClient.multiRequest(request)
                 .monitor('playlist store: save playlist')
-                .map(res => {
-                    if ((<any>res).error) {
+                .map(([res]) => {
+                    if (res.error) {
                       this._state.next({ action: ActionTypes.PlaylistSavingFailed });
                     } else {
                       if (id === 'new') {
                         this._playlistsStore.clearNewPlaylistData();
                         this._playlistIsDirty = false;
-                        this._router.navigate(['playlist', res.id], { relativeTo: this._playlistRoute.parent });
+                        this._router.navigate(['playlist', res.result.id], { relativeTo: this._playlistRoute.parent });
                       } else {
                         this._loadPlaylist(this.playlistId);
                       }
@@ -412,72 +352,5 @@ export class PlaylistStore implements OnDestroy {
         this._playlistsStore.clearNewPlaylistData();
         this._router.navigate(['content/playlists'])
       });
-  }
-
-  public deleteEntriesFromPlaylist(ids: string[]): void {
-    ids.map(id => this.entries.findIndex(entry => entry.id === id))
-      .forEach(index => this.deleteEntryFromPlaylist(index));
-  }
-
-  public deleteEntryFromPlaylist(rowIndex: number): void {
-    this.entries.splice(rowIndex, 1);
-    this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });
-  }
-
-  public moveUpEntry(rowIndex: number): void {
-    this._moveEntry(rowIndex, -1);
-  }
-
-  public moveDownEntry(rowIndex: number): void {
-    this._moveEntry(rowIndex, 1);
-  }
-
-  public duplicateEntry(rowIndex: number): void {
-    this.entries.splice(rowIndex, 0, this.entries[rowIndex]);
-    this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });
-  }
-
-  public moveUpEntries(selectedEntries: KalturaMediaEntry[]): void {
-    if (selectedEntries && selectedEntries.length) {
-      for (let i = 0; i < selectedEntries.length; i++) {
-        const selectedItem = selectedEntries[i];
-        const selectedItemIndex = this.entries.findIndex(({ id }) => id === selectedItem.id);
-
-        if (selectedItemIndex !== 0) {
-          const movedItem = this.entries[selectedItemIndex];
-          const temp = this.entries[selectedItemIndex - 1];
-          this.entries[selectedItemIndex - 1] = movedItem;
-          this.entries[selectedItemIndex] = temp;
-        } else {
-          break;
-        }
-      }
-
-      this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });
-    }
-  }
-
-  public moveDownEntries(selectedEntries: KalturaMediaEntry[]): void {
-      if (selectedEntries && selectedEntries.length) {
-        for (let i = selectedEntries.length - 1; i >= 0; i--) {
-          const selectedItem = selectedEntries[i];
-          const selectedItemIndex = this.entries.findIndex(({id}) => id === selectedItem.id);
-
-          if (selectedItemIndex !== (this.entries.length - 1)) {
-            const movedItem = this.entries[selectedItemIndex];
-            const temp = this.entries[selectedItemIndex + 1];
-            this.entries[selectedItemIndex + 1] = movedItem;
-            this.entries[selectedItemIndex] = temp;
-          } else {
-            break;
-          }
-        }
-
-        this._playlist.next({ playlist: this.playlist, entries: this.entries, entriesTotalCount: this.entries.length });
-      }
-  }
-
-  public addEntries(entries: KalturaMediaEntry[]): void {
-    this._playlist.next({ playlist: this.playlist, entries: [...this.entries, ...entries], entriesTotalCount: this.entries.length });
   }
 }

@@ -51,7 +51,7 @@ export class PlaylistContentComponent implements OnInit, OnDestroy {
         `,
         accept: () => {
           setTimeout(() => {
-            this._widgetService.deleteSelectedEntries(selectedEntries.map(entry => entry.id));
+            this._widgetService.deleteSelectedEntries(selectedEntries);
             this._clearSelection();
           }, 0);
         }

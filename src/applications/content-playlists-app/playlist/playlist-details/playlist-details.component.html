@@ -4,7 +4,6 @@
 	<kDetailInfo [label]="'applications.content.playlistDetails.details.creationDate' | translate" [value]="_currentPlaylist?.createdAt | date:'MM/dd/y HH:MM'"></kDetailInfo>
 	<kDetailInfo [label]="'applications.content.playlistDetails.details.updatedAt' | translate" [value]="_currentPlaylist?.updatedAt | date:'MM/dd/y HH:MM'"></kDetailInfo>
 	<kDetailInfo [label]="'applications.content.playlistDetails.details.type' | translate" [value]="_currentPlaylist?.playlistType | playlistType"></kDetailInfo>
-	<kDetailInfo *ngIf="_duration > 0" [label]="'applications.content.playlistDetails.details.duration' | translate" [value]="_duration | kTime"></kDetailInfo>
 	<kDetailInfo [label]="'applications.content.playlistDetails.details.moderation' | translate" [value]="_currentPlaylist?.moderationStatus | moderation"></kDetailInfo>
 	<kDetailInfo [label]="'applications.content.playlistDetails.details.plays' | translate" [valueField]="'plays'"></kDetailInfo>
 	<kDetailInfo [label]="'applications.content.playlistDetails.details.numberOfEntries' | translate" [value]="_numberOfEntries"></kDetailInfo>
