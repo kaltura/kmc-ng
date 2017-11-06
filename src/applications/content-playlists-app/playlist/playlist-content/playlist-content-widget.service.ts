@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaRequest } from 'kaltura-typescript-client';
+import { KalturaMultiRequest } from 'kaltura-typescript-client';
 
 import 'rxjs/add/observable/forkJoin';
 import { PlaylistWidget } from '../playlist-widget';
@@ -29,7 +29,7 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
 
   }
 
-  protected onDataSaving(data: KalturaPlaylist, request: KalturaRequest<KalturaPlaylist>): void {
+  protected onDataSaving(data: KalturaPlaylist, request: KalturaMultiRequest): void {
     data.playlistContent = this._playlistStore.entries.map(({ id }) => id).join(',');
   }
 
