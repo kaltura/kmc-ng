@@ -54,9 +54,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this._browserService.isIE11()) {
-      this.onResize();
-    }
+    this.onResize();
   }
 
   private _makeLoginRequest(username: string, password: string): Observable<ILoginResponse> {
@@ -131,6 +129,8 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public _setScreen(screen: LoginScreens): void {
+    this.onResize();
+
     this._currentScreen = screen;
 
     this._inProgress = false;
