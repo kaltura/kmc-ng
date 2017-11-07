@@ -1,5 +1,6 @@
 import {
-  AfterViewChecked, AfterViewInit,
+  AfterViewChecked,
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -60,11 +61,11 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, Aft
 	}
 
 	ngAfterViewInit() {
-		setTimeout(()=>{
-			if (typeof this._tags !== "undefined"){
-				this._tags.checkShowMore();
-			}
-		},0);
+		setTimeout(() => {
+          if (typeof this._tags !== 'undefined' && this._tags !== null) {
+                this._tags.checkShowMore();
+          }
+		}, 0);
 	}
 
   ngOnDestroy() {
@@ -210,7 +211,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, Aft
 					fullIdPath: selectedItem.fullIdPath,
 					fullNamePath : selectedItem.fullNamePath,
 					name: selectedItem.name,
-				tooltip: selectedItem.tooltip});
+				    tooltip: selectedItem.tooltip});
 
         this._ngAfterViewCheckedContext.updateTreeSelections = true;
         this._ngAfterViewCheckedContext.expendTreeSelectionNodeId = selectedItem.id;
@@ -244,7 +245,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, Aft
 					fullIdPath: node.origin.fullIdPath,
 					fullNamePath : node.origin.fullNamePath,
 					name: node.origin.name,
-				tooltip: node.origin.tooltip});
+				    tooltip: node.origin.tooltip});
 			}
 		}
 	}
