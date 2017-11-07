@@ -657,7 +657,7 @@
           "anyIP": "Any IP",
           "allowIPs": "Allow IPs: {{0}}",
           "blockIPs": "Blocked: {{0}}",
-          "anyFlavour": "Any Flavour",
+          "anyFlavour": "Any Flavor",
           "allowFlavours": "Allow Flavors: {{0}}",
           "blockFlavours": "Blocked: {{0}}",
           "ks": "KS",
