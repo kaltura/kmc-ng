@@ -1,6 +1,6 @@
 <k-area-blocker [showLoader]="(categoriesService.state$ | async)?.loading || this._deferredLoading" [message]="_blockerMessage"	[centerOnScreen]="true">
   <div class="kCategoriesTable" [class.noResults]="!_categories.length">
-    <p-dataTable #dataTable [value]="_categories" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
+    <p-dataTable [value]="_categories" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
       scrollable="true" scrollHeight="100%" dataKey="id" [rowTrackBy]="rowTrackBy" (selectionChange)="_onSelectionChange($event)"
       (onSort)="_onSortChanged($event)" [(selection)]="selectedCategories" emptyMessage="{{_emptyMessage}}"
       kStickyHeader [sticksTo]="'categoriesListFilters'" stickyClass="stickyHeader" [stickyId]="'categoriesTable'">

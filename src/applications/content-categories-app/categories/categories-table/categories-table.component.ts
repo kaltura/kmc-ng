@@ -13,6 +13,7 @@ import {ISubscription} from 'rxjs/Subscription';
 import {DataTable, Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import { BrowserService } from 'app-shared/kmc-shell';
 import {CategoriesService} from '../categories.service';
 import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 
@@ -53,7 +54,6 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   @Output()
   selectedCategoriesChange = new EventEmitter<any>();
 
-  @ViewChild('dataTable') private _dataTable: DataTable;
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
   private _actionsMenuCategoryId = 0;
   private _categoriesServiceStatusSubscription: ISubscription;
@@ -66,7 +66,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
     return item.id
   };
 
-  constructor(private appLocalization: AppLocalization, public categoriesService: CategoriesService, private cdRef: ChangeDetectorRef) {
+  constructor(private appLocalization: AppLocalization, public categoriesService: CategoriesService, private cdRef: ChangeDetectorRef, private _browserService: BrowserService) {
   }
 
   ngOnInit() {
@@ -110,14 +110,6 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   }
 
   ngAfterViewInit() {
-    const scrollBody = this._dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
-    if (scrollBody && scrollBody.length > 0) {
-      scrollBody[0].onscroll = () => {
-        if (this._actionsMenu) {
-          this._actionsMenu.hide();
-        }
-      }
-    }
     if (this._deferredLoading) {
       // use timeout to allow the DOM to render before setting the data to the datagrid.
       // This prevents the screen from hanging during datagrid rendering of the data.
@@ -178,11 +170,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   }
 
   scrollToTop() {
-    const scrollBodyArr = this._dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
-    if (scrollBodyArr && scrollBodyArr.length > 0) {
-      const scrollBody: HTMLDivElement = scrollBodyArr[0];
-      scrollBody.scrollTop = 0;
-    }
+    this._browserService.scrollToTop();
   }
 }
 
