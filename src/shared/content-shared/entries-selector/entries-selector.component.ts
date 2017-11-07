@@ -13,17 +13,12 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaE
   providers: [EntriesStore]
 })
 export class EntriesSelectorComponent {
-  @Input() set selectedEntries(value: KalturaMediaEntry[]) {
-    if (value && Array.isArray(value) && value.every(item => item instanceof KalturaMediaEntry)) {
-      this._selectedEntries = value;
-    }
-  }
-  @Output() onSelectionChanged = new EventEmitter<KalturaMediaEntry[]>();
+  @Input() selectedEntries: KalturaMediaEntry[] = [];
+  @Output() selectedEntriesChange = new EventEmitter<KalturaMediaEntry[]>();
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
-  public _selectedEntries: KalturaMediaEntry[] = [];
 
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
@@ -41,8 +36,8 @@ export class EntriesSelectorComponent {
   public _onActionSelected({ action, entryId }: { action: string, entryId: KalturaMediaEntry }): void {
     switch (action) {
       case 'addToBucket':
-        this._selectedEntries.push(entryId);
-        this.onSelectionChanged.emit(this._selectedEntries);
+        this.selectedEntries.push(entryId);
+        this.selectedEntriesChange.emit(this.selectedEntries);
         break;
       default:
         break;
@@ -50,7 +45,7 @@ export class EntriesSelectorComponent {
   }
 
   public _removeSelected(entry: KalturaMediaEntry): void {
-    this._selectedEntries.splice(this._selectedEntries.indexOf(entry), 1);
-    this.onSelectionChanged.emit(this._selectedEntries);
+    this.selectedEntries.splice(this.selectedEntries.indexOf(entry), 1);
+    this.selectedEntriesChange.emit(this.selectedEntries);
   }
 }

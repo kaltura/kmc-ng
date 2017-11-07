@@ -20,9 +20,8 @@ export class PlaylistAddEntryComponent {
   }
 
   public _selectionChanged(entries: KalturaMediaEntry[]): void {
-    this._selectedEntries = entries;
-    this._addButtonLabel = this._selectedEntries.length > 0
-      ? `${this._addButtonLabelTranslation} ${this._selectedEntries.length}`
+    this._addButtonLabel = entries.length > 0
+      ? `${this._addButtonLabelTranslation} ${entries.length}`
       : this._addButtonLabelTranslation;
   }
 
