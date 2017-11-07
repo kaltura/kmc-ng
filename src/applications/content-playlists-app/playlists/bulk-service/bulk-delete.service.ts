@@ -5,7 +5,6 @@ import { PlaylistDeleteAction } from 'kaltura-typescript-client/types/PlaylistDe
 import { KalturaRequest } from 'kaltura-typescript-client';
 import { environment } from 'app-environment';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import * as R from 'ramda';
 
 @Injectable()
 export class BulkDeleteService {
@@ -26,8 +25,15 @@ export class BulkDeleteService {
       maxRequestsPerMultiRequest = environment.modules.contentPlaylists.bulkActionsLimit || requests.length;
     }
 
-    // splitEvery=> [[], [], ...], each of inner arrays has length of maxRequestsPerMultiRequest
-    const multiRequests = R.splitEvery(maxRequestsPerMultiRequest, requests)
+    // split request on chunks => [[], [], ...], each of inner arrays has length of maxRequestsPerMultiRequest
+    const splittedRequests = [];
+    let start = 0;
+    while (start < requests.length) {
+      const end = start + maxRequestsPerMultiRequest;
+      splittedRequests.push(requests.slice(start, end));
+      start = end;
+    }
+    const multiRequests = splittedRequests
       .map(reqChunk => this._kalturaServerClient.multiRequest(reqChunk));
 
     return Observable.forkJoin(multiRequests)
