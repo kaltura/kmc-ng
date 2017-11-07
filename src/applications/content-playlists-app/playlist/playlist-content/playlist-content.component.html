@@ -11,7 +11,7 @@
     <kPlaylistEntriesTable
       class="kPlaylistEntriesTable"
       [entries]="_widgetService.entries"
-      (onActionSelected)="_widgetService.onActionSelected($event)"
+      (onActionSelected)="_onActionSelected($event)"
       [(selectedEntries)]="_selectedEntries">
     </kPlaylistEntriesTable>
   </div>

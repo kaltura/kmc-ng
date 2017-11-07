@@ -31,7 +31,7 @@ export abstract class PlaylistWidget extends WidgetBase<PlaylistWidgetsManager, 
       messageToShow = new AreaBlockerMessage({
         message: message.message,
         buttons: [
-          ...this._createBackToEntriesButton(),
+          ...this._createBackToPlaylistsButton(),
           ...message.buttons
         ]
       })
@@ -41,7 +41,7 @@ export abstract class PlaylistWidget extends WidgetBase<PlaylistWidgetsManager, 
     this.sectionBlockerMessage = messageToShow;
   }
 
-  protected _createBackToEntriesButton(): AreaBlockerMessageButton[] {
+  protected _createBackToPlaylistsButton(): AreaBlockerMessageButton[] {
     if (this.form) {
       return [{
         label: 'Back To Playlists',

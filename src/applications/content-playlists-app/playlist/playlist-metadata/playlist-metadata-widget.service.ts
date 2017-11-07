@@ -45,17 +45,24 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
       );
   }
 
-  protected onDataSaving(newData: KalturaPlaylist, request: KalturaMultiRequest/*, originalData: KalturaPlaylist*/): void {
+  protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
+    const name = wasActivated ? this.metadataForm.value.name : this.data.name;
+    return Observable.of({
+      isValid: !!name.trim()
+    });
+  }
+
+  protected onDataSaving(newData: KalturaPlaylist, request: KalturaMultiRequest): void {
     if (this.wasActivated) {
       const metadataFormValue = this.metadataForm.value;
       newData.name = metadataFormValue.name;
       newData.description = metadataFormValue.description;
       newData.tags = (metadataFormValue.tags || []).join(',');
-    }/* else {
-      newData.name = originalData.name;
-      newData.description = originalData.description;
-      newData.tags = originalData.tags;
-    }*/
+    } else {
+      newData.name = this.data.name;
+      newData.description = this.data.description;
+      newData.tags = this.data.tags;
+    }
   }
 
   /**
@@ -65,13 +72,16 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
     this.metadataForm.reset();
   }
 
-  protected onActivate(): void {
+  protected onActivate(firstTimeActivating: boolean): void {
     this.metadataForm.reset({
       name: this.data.name,
       description: this.data.description,
       tags: this.data.tags ? this.data.tags.split(', ') : null
     });
-    this._monitorFormChanges();
+
+    if (firstTimeActivating) {
+      this._monitorFormChanges();
+    }
   }
 
   public searchTags(text: string): Observable<string[]> {

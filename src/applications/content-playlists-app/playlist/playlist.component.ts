@@ -25,7 +25,6 @@ import { PlaylistDetailsWidget } from './playlist-details/playlist-details-widge
   ]
 })
 export class PlaylistComponent implements OnInit, OnDestroy {
-  private _isSafari = false;
   public _playlistName: string;
   public _currentPlaylistId: string;
   public _showLoader = false;
@@ -34,7 +33,6 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   public isDirty = true;
   public _enablePrevButton: boolean;
   public _enableNextButton: boolean;
-  public _playlistHasChanges: boolean;
 
   constructor(private _browserService: BrowserService,
               private _playlistStore: PlaylistStore,
@@ -69,7 +67,6 @@ export class PlaylistComponent implements OnInit, OnDestroy {
                 // while 'playlist$' stream is null
                 this._currentPlaylistId = this._playlistStore.playlistId;
                 this._updateNavigationState();
-                this._playlistHasChanges = false;
                 break;
 
               case ActionTypes.PlaylistLoaded:
@@ -105,7 +102,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
                   message: errorMessage,
                   buttons: [{
                     label: this._appLocalization.get('applications.content.playlistDetails.errors.ok'),
-                    action: () => this._areaBlockerMessage = null
+                    action: () => this._playlistStore.reloadPlaylist()
                   }]
                 });
                 break;
@@ -153,13 +150,11 @@ export class PlaylistComponent implements OnInit, OnDestroy {
             message: error.message,
             buttons: [{
               label: this._appLocalization.get('applications.content.playlistDetails.errors.ok'),
-              action: () => this._areaBlockerMessage = null
+              action: () => this._playlistStore.reloadPlaylist()
             }]
           });
         }
       );
-
-    this._isSafari = this._browserService.isSafari();
   }
 
   ngOnDestroy() {

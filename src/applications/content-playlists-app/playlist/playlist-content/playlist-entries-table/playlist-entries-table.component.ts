@@ -51,14 +51,6 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   }
 
   ngAfterViewInit() {
-    const scrollBody = this.dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
-    if (scrollBody && scrollBody.length > 0) {
-      scrollBody[0].onscroll = () => {
-        if (this.actionsMenu) {
-          this.actionsMenu.hide();
-        }
-      }
-    }
     if (this.deferredLoading) {
       /* Use timeout to allow the DOM to render before setting the data to the datagrid.
          This prevents the screen from hanging during datagrid rendering of the data.*/
@@ -115,14 +107,6 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 
   public _onSelectionChange(event) {
     this.selectedEntriesChange.emit(event);
-  }
-
-  public scrollToTop() {
-    const scrollBodyArr = this.dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
-    if (scrollBodyArr && scrollBodyArr.length > 0) {
-      const scrollBody: HTMLDivElement = scrollBodyArr[0];
-      scrollBody.scrollTop = 0;
-    }
   }
 }
 

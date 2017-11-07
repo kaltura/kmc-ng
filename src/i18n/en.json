@@ -309,15 +309,12 @@
         "refine": "Refine",
         "refresh": "Refresh",
         "deleteEntry": "Delete Entry",
-        "deleteEntries": "Delete Entr{{0}}",
         "confirmDelete": "Are you sure you want to delete the selected entry?",
-        "confirmDeleteEntries": "Are you sure you want to delete the selected entr{{0}}?",
         "confirmDeleteSingle": "Are you sure you want to delete the selected entry? \n {{0}} \n Please note: the entry will be permanently deleted from your account.",
         "confirmDeleteMultiple": "Are you sure you want to delete the selected entries? \n {{0}} \n Please note: these entries will be permanently deleted from your account.",
         "deleted": "Entry deleted successfully",
         "entryId": "Entry ID: {{0}}",
-        "deleteNote": "Please note: the entry will be permanently deleted from your account.",
-        "deleteEntriesNote": "Please note: {{0}} entr{{1}} will be permanently deleted from your playlist."
+        "deleteNote": "Please note: the entry will be permanently deleted from your account."
       },
       "playlists": {
         "playlists": "Playlist's",
@@ -337,7 +334,13 @@
         "addToPlaylist": "Add",
         "refresh": "Refresh",
         "deleteNote": "Please note: {{0}} playlist{{1}} will be permanently deleted from your account.",
-        "notSupportedMsg": "A rule based playlist is currently not supported"
+        "notSupportedMsg": "A rule based playlist is currently not supported",
+        "deleteEntry": "Delete Entry",
+        "deleteEntries": "Delete Entries",
+        "deleteEntryNote": "Please note: this entry will be permanently deleted from your playlist.",
+        "deleteEntriesNote": "Please note: those entries will be permanently deleted from your playlist.",
+        "confirmDeleteEntry": "Are you sure you want to delete the selected entry?",
+        "confirmDeleteEntries": "Are you sure you want to delete the selected entries?"
       },
       "filters": {
         "activeFilters": "Active Filters:",

@@ -14,6 +14,7 @@ import { KalturaClient } from '@kaltura-ng/kaltura-client';
 export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   public entries: KalturaMediaEntry[] = [];
   public entriesTotalCount = 0;
+  public entriesDuration = 0;
 
   constructor(private _kalturaClient: KalturaClient) {
     super(PlaylistWidgetKeys.Content);
@@ -21,6 +22,12 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
 
   ngOnDestroy() {
 
+  }
+
+  protected onValidate(): Observable<{ isValid: boolean }> {
+    return Observable.of({
+      isValid: !!this.entries.length
+    });
   }
 
   protected onDataSaving(data: KalturaPlaylist, request: KalturaMultiRequest): void {
@@ -34,8 +41,6 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
-    // tricky one because newly created playlist doesn't have id,
-    // but there's might be situation when playlist doesn't have id because of error
     if (!this.data.id) {
       return Observable.of({ failed: false });
     }
