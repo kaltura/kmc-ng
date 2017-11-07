@@ -119,17 +119,13 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
       .kSaveBtn{
         margin-left: auto;
         width: 100px;
-        height: 34px;
-        font-weight: 400;
         margin-right: 24px;
       }
       .kNavigationBtn{
         margin-left: auto;
         width: 40px;
-        height: 34px;
         margin-left: 0px;
         margin-right: 0px;
-        font-weight: 400;
       }
       .kNavigationBtnLeft{
         @extend .kNavigationBtn;
