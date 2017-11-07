@@ -116,7 +116,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
                 );
                 break;
             case 'moveCategory':
-              // TODO [kmc] missing Edit warnings popup implementation (implement after merging categories_table branch)
+              console.warn('missing Edit warnings popup implementation (implement after merging categories_table branch)');
               this._selectedCategoryIdToMove = event.categoryID;
               this.moveCategoryPopup.open();
               break;
@@ -212,11 +212,31 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
       );
     }
 
-  private _moveCategory(newCategory: NewCategoryData) {
+  private _moveCategory(newCategoryData: NewCategoryData) {
     this._isBusy = true;
+    const categoryParent = this._categories.find((category) => (category.id === newCategoryData.parentCategoryId));
+    if (!categoryParent) {
+      this._isBusy = false;
+      this._browserService.showGrowlMessage({
+        severity: 'error',
+        detail: this._appLocalization
+          .get('applications.content.moveCategory.errors.categoryMovedFailure')
+      });
+      return;
+    }
+    if (!this._isParentSelectionValid(this._selectedCategoryIdToMove, categoryParent)) {
+      this._isBusy = false;
+      this._browserService.showGrowlMessage({
+        severity: 'error',
+        detail: this._appLocalization
+          .get('applications.content.moveCategory.errors.invalidParentSelection')
+      });
+      return;
+    }
+
     this._categoriesService.moveCategory({
-      categoryId: this._selectedCategoryIdToMove.toString(),
-      targetCategoryParentId: newCategory.parentCategoryId
+      categoryId: this._selectedCategoryIdToMove,
+      targetCategoryParentId: newCategoryData.parentCategoryId
     })
       .subscribe(category => {
           this._isBusy = false;
@@ -232,8 +252,16 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
           this._browserService.showGrowlMessage({
             severity: 'error',
             detail: this._appLocalization
-              .get('applications.content.addNewCategory.errors.categoryMovedFailure')
+              .get('applications.content.moveCategory.errors.categoryMovedFailure')
           });
         });
+  }
+
+  private _isParentSelectionValid(categoryId: number, targetCategoryParent: KalturaCategory): boolean {
+      const selectedCategoryIdSameAsParent = categoryId === targetCategoryParent.id;
+
+      // selected caterory to move ID is not in the selected parent fullIds field (from categories tree)
+      const selectedCategoryIsParentOfTarget = targetCategoryParent.fullIds && targetCategoryParent.fullIds.includes(categoryId.toString());
+      return !selectedCategoryIdSameAsParent && !selectedCategoryIsParentOfTarget;
   }
 }

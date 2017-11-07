@@ -56,7 +56,7 @@ export class CategoriesService implements OnDestroy {
         pageSize: 50,
         sortBy: 'createdAt',
         sortDirection: SortDirection.Desc,
-        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, fullName,tags'
+        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, fullName,tags, fullIds'
     });
 
     public state$ = this._state.asObservable();
@@ -239,7 +239,7 @@ export class CategoriesService implements OnDestroy {
 
   public addNewCategory(newCategoryData: NewCategoryData): Observable<KalturaCategory> {
     if (!newCategoryData) {
-      const nameRequiredErrorMessage = this._appLocalization.get('applications.content.addNewCategory.error.nameRequired');
+      const nameRequiredErrorMessage = this._appLocalization.get('applications.content.addNewCategory.errors.requiredName');
       return Observable.throw(new Error(nameRequiredErrorMessage));
     }
     const category = new KalturaCategory({
@@ -254,10 +254,10 @@ export class CategoriesService implements OnDestroy {
     )
   }
 
-  public moveCategory(categoryToMove: {categoryId: string, targetCategoryParentId: number}): Observable<KalturaCategory> {
+  public moveCategory(categoryToMove: {categoryId: number, targetCategoryParentId: number}): Observable<KalturaCategory> {
     return <any>this._kalturaClient.request(
       new CategoryMoveAction({
-        categoryIds: categoryToMove.categoryId,
+        categoryIds: categoryToMove.categoryId.toString(),
         targetCategoryParentId: categoryToMove.targetCategoryParentId
       })
     )
