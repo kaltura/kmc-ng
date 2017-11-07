@@ -68,8 +68,6 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
         this._filter.createdBefore = query.createdBefore;
 
         this._syncFilters(query);
-
-        this._browserService.scrollToTop();
       }
     );
     this._playlistsStore.reload(false);

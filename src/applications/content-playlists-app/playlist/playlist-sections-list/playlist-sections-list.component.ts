@@ -19,8 +19,7 @@ export class PlaylistSectionsList implements OnInit, OnDestroy {
 
   constructor(public _appLocalization: AppLocalization,
               public _playlistStore: PlaylistStore,
-              public _widgetService: PlaylistSectionsListWidget,
-              private _browserService: BrowserService) {
+              public _widgetService: PlaylistSectionsListWidget) {
   }
 
   ngOnInit() {
@@ -42,9 +41,7 @@ export class PlaylistSectionsList implements OnInit, OnDestroy {
   }
 
   public _navigateToSection(widget: SectionWidgetItem): void {
-    this._browserService.scrollToTop();
     this._playlistStore.openSection(widget.key);
   }
-
 
 }
