@@ -980,7 +980,8 @@
           "validationError": "The form contains some invalid information. Please review the sections marked as invalid",
           "contentValidationError": "Add at least one entry",
           "loadError": "An error occurred while loading data",
-          "addAtLeastOneMedia": "Add at least one media"
+          "addAtLeastOneMedia": "Add at least one media",
+          "entriesLoadError": "Error loading entries"
         }
       }
     },

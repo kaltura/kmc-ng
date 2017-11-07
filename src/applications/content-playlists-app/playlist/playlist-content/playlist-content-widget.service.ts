@@ -9,19 +9,28 @@ import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/
 import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
 import { PlaylistExecuteAction } from 'kaltura-typescript-client/types/PlaylistExecuteAction';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
+export interface LoadEntriesStatus {
+  loading: boolean;
+  error: boolean
+}
 
 @Injectable()
 export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
+  private _state = new BehaviorSubject<LoadEntriesStatus>({ loading: false, error: false });
+
   public entries: KalturaMediaEntry[] = [];
   public entriesTotalCount = 0;
   public entriesDuration = 0;
+  public state$ = this._state.asObservable();
 
   constructor(private _kalturaClient: KalturaClient) {
     super(PlaylistWidgetKeys.Content);
   }
 
   ngOnDestroy() {
-
+    this._state.complete();
   }
 
   protected onValidate(): Observable<{ isValid: boolean }> {
@@ -46,6 +55,7 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
     }
 
     super._showLoader();
+    this._state.next({ loading: true, error: false });
 
     const responseProfile = new KalturaDetachedResponseProfile({
       type: KalturaResponseProfileType.includeFields,
@@ -64,11 +74,13 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
         this.entries = entries;
         this.entriesTotalCount = entries.length;
         super._hideLoader();
+        this._state.next({ loading: false, error: false });
         return { failed: false };
       })
       .catch(error => {
         super._hideLoader();
-        super._showActivationError();
+        super._showActivationError(error.message);
+        this._state.next({ loading: false, error: true });
         return Observable.of({ failed: true, error });
       });
   }

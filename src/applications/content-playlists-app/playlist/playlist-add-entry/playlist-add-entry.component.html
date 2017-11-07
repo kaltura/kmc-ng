@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="kContainer">
-      <kEntriesSelector (onSelectionChanged)="_selectionChanged($event)"></kEntriesSelector>
+      <kEntriesSelector [(selectedEntries)]="_selectedEntries" (selectedEntriesChange)="_selectionChanged($event)"></kEntriesSelector>
     </div>
   </div>
 </div>

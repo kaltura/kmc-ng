@@ -51,7 +51,7 @@ export abstract class PlaylistWidget extends WidgetBase<PlaylistWidgetsManager, 
       }];
     } else {
       return [{
-        label: 'dismiss',
+        label: 'Dismiss',
         action: () => {
           this._removeBlockerMessage();
         }
@@ -59,10 +59,10 @@ export abstract class PlaylistWidget extends WidgetBase<PlaylistWidgetsManager, 
     }
   }
 
-  protected _showActivationError() {
+  protected _showActivationError(message?: string) {
     this._showBlockerMessage(new AreaBlockerMessage(
       {
-        message: 'An error occurred while loading data',
+        message: message || 'An error occurred while loading data',
         buttons: [
           {
             label: 'Retry',

@@ -5,6 +5,8 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PlaylistStore } from '../../playlist-store.service';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { PlaylistContentWidget } from '../playlist-content-widget.service';
+import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'kPlaylistEntriesTable',
@@ -12,50 +14,68 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaE
   styleUrls: ['./playlist-entries-table.component.scss']
 })
 export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
-  public _entries: KalturaMediaEntry[] = [];
-  private _deferredEntries: KalturaMediaEntry[];
-  public deferredLoading = true;
-  public areaBlockerMessage: AreaBlockerMessage;
-  public _items: MenuItem[];
-
   @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
+  @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Input() filter: any = {};
-
   @Input()
   set entries(data: any[]) {
-    if (!this.deferredLoading) {
+    if (!this._deferredLoading) {
       this._entries = [];
-      this.cdRef.detectChanges();
+      this._cdRef.detectChanges();
       this._entries = data;
-      this.cdRef.detectChanges();
+      this._cdRef.detectChanges();
     } else {
       this._deferredEntries = data
     }
   }
 
-  @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Output() sortChanged = new EventEmitter<any>();
   @Output() selectedEntriesChange = new EventEmitter<any>();
   @Output() onActionSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
 
+  private _deferredEntries: KalturaMediaEntry[];
+  private _entriesLoadSubscription: ISubscription;
+  public _entries: KalturaMediaEntry[] = [];
+  public _emptyMessage: string;
+  public _deferredLoading = true;
+  public _items: MenuItem[];
+
   constructor(private _appLocalization: AppLocalization,
-              public _playlistStore: PlaylistStore,
-              private cdRef: ChangeDetectorRef,
+              private _cdRef: ChangeDetectorRef,
+              private _widgetService: PlaylistContentWidget,
               private _router: Router) {
   }
 
   ngOnInit() {
-    this.areaBlockerMessage = null;
+    this._emptyMessage = '';
+    let loadedOnce = false; // used to set the empty message to 'no results' only after search
+    this._entriesLoadSubscription = this._widgetService.state$.subscribe(
+      result => {
+        if (!result.error) {
+          if (result.loading) {
+            this._emptyMessage = '';
+            loadedOnce = true;
+          } else {
+            if (loadedOnce) {
+              this._emptyMessage = this._appLocalization.get('applications.content.playlistDetails.errors.addAtLeastOneMedia');
+            }
+          }
+        }
+      },
+      error => {
+        console.warn('[kmcng] -> could not load entries'); // navigate to error page
+        throw error;
+      });
   }
 
   ngAfterViewInit() {
-    if (this.deferredLoading) {
+    if (this._deferredLoading) {
       /* Use timeout to allow the DOM to render before setting the data to the datagrid.
          This prevents the screen from hanging during datagrid rendering of the data.*/
       setTimeout(() => {
-        this.deferredLoading = false;
+        this._deferredLoading = false;
         this._entries = this._deferredEntries;
         this._deferredEntries = null;
       }, 0);
@@ -63,7 +83,10 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   }
 
   ngOnDestroy() {
-
+    if (this._entriesLoadSubscription) {
+      this._entriesLoadSubscription.unsubscribe();
+      this._entriesLoadSubscription = null;
+    }
   }
 
   private _buildMenu(rowIndex: number, entry: KalturaMediaEntry): void {

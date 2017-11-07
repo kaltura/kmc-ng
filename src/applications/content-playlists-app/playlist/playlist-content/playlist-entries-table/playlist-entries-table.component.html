@@ -6,7 +6,7 @@
     (onSort)="_onSortChanged($event)"
     [(selection)]="selectedEntries"
     [sortField]="filter.sortBy"
-    emptyMessage="{{areaBlockerMessage}}"
+    [emptyMessage]="_emptyMessage"
     dataKey="id"
     [sortOrder]="filter.sortDirection | kPrimeTableSortDirection">
     <p-column styleClass="selectionColumn" selectionMode="multiple"></p-column>
@@ -48,4 +48,3 @@
   </p-dataTable>
   <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'"></p-menu>
 </div>
-
