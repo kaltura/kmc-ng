@@ -156,26 +156,19 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       deleteMessage = this._appLocalization.get('applications.content.categories.editWarning');
     }
 
-    // get string of categories to delete
-    let categoriesToDelete = this.selectedCategories.map(category =>
-      this._appLocalization.get('applications.content.categories.categoryId', { 0: category.id }));
-
-    let categories: string = this.selectedCategories.length <= 10 ? categoriesToDelete.join(',').replace(/,/gi, '\n') : '';
-
-
     let isSubCategoriesExist: boolean = false;
     this.selectedCategories.forEach(obj => {
       if (obj.directSubCategoriesCount && obj.directSubCategoriesCount > 0) { isSubCategoriesExist = true; }
     });
     if (isSubCategoriesExist) {
       message = deleteMessage.concat(this.selectedCategories.length > 1 ?
-        this._appLocalization.get('applications.content.categories.confirmDeleteMultipleWithSubCategories', { 0: categories }) :
-        this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories', { 0: categories }));
+        this._appLocalization.get('applications.content.categories.confirmDeleteMultipleWithSubCategories') :
+        this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories'));
     }
     else {
       message = deleteMessage.concat(this.selectedCategories.length > 1 ?
-        this._appLocalization.get('applications.content.categories.confirmDeleteMultiple', { 0: categories }) :
-        this._appLocalization.get('applications.content.categories.confirmDeleteSingle', { 0: categories }));
+        this._appLocalization.get('applications.content.categories.confirmDeleteMultiple') :
+        this._appLocalization.get('applications.content.categories.confirmDeleteSingle'));
     }
 
     this._browserService.confirm(
@@ -184,7 +177,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
         message: message,
         accept: () => {
           setTimeout(() => {
-            this.executeService(this._bulkDeleteService, {}, true, false); // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
+            this.executeService(this._bulkDeleteService, {}, true, false);
+            // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
           }, 0);
         }
       }
@@ -192,15 +186,13 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   }
 
   private hasEditWarnings(): boolean {
-    let isEditWarning: boolean = false;
-    this.selectedCategories.every(obj => {
-      if (obj.tags && obj.tags.indexOf('__EditWarning') > -1) {
-        isEditWarning = true;
-        return false;
-      }
-      return true;
-    });
-    return isEditWarning;
+    const editWarningsExists: boolean =
+      // Find one of the selected categories that has '__EditWarning' in its 'tags' property
+      !!this.selectedCategories.find(obj => {
+          return (obj.tags && obj.tags.indexOf('__EditWarning') > -1);
+        });
+
+    return editWarningsExists;
   }
 
   private executeService(service: CategoriesBulkActionBaseService<any>, data: any = {}, reloadCategories: boolean = true, confirmChunks: boolean = true, callback?: Function): void {
