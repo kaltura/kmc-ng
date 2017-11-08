@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {DraftEntry, PrepareEntryService} from './prepare-entry.service';
 import {BrowserService} from 'app-shared/kmc-shell';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 @Component({
   selector: 'kPrepareEntry',
@@ -38,32 +39,28 @@ export class PrepareEntryComponent implements OnInit {
 
   private _loadEntry(selectedProfile: { profileId?: number }) {
     this._browserService.setAppStatus({
-      isBusy: true,
       errorMessage: null
     });
 
     /// passing profileId null will cause to create with default profileId
     this._prepareEntryService.createDraftEntry(this._selectedMediaType, selectedProfile.profileId)
+        .tag('block-shell')
       .subscribe((draftEntry: DraftEntry) => {
           this._router.navigate(['/content/entries/entry', draftEntry.id], {queryParams: {reloadEntriesListOnNavigateOut: true}})
             .then(() => {
               this._browserService.setAppStatus({
-                isBusy: false,
                 errorMessage: null
               });
             })
             .catch(() => {
               this._browserService.setAppStatus({
-                isBusy: false,
                 errorMessage: 'error occurred while navigating to entry'
               });
             });
           this.transcodingProfileSelectMenu.close();
-
         },
         error => {
           this._browserService.setAppStatus({
-            isBusy: false,
             errorMessage: error.message
           });
         });

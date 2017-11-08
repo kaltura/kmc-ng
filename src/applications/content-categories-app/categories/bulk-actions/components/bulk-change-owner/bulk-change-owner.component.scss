@@ -15,7 +15,7 @@
   height: 280px;
   width: 500px;
   .kLabel{
-    text-align: center;    
+    text-align: center;
     display: block;
     margin-bottom: 8px;
   }
@@ -39,5 +39,8 @@
   width: 100%;
   input{
     width: 100%;
+  }
+  .ui-autocomplete-input-token{
+    width:100%;
   }
 }
