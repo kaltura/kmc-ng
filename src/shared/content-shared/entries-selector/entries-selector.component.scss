@@ -6,7 +6,7 @@
   .kEntrySelectorBucket {
     width: 250px;
     border-left: 1px solid $kGrayscale6;
-    height: 680px;
+    height: 820px;
     overflow-y: auto;
 
     .KEntrySelectorSelectedItem {
@@ -60,9 +60,8 @@
     min-width: 0;
   }
 
-  // FIXME [kmcng] hack to show scroll, don't work properly
   .kEntriesTable {
-    height: 602px;
+    height: 723px;
     overflow-y: auto;
   }
 
