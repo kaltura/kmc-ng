@@ -35,11 +35,6 @@ export class ForgotPasswordFormComponent {
     return this.inProgress ? 'app.login.wait' : 'app.login.send';
   }
 
-  public get _sentInstructionsTranslateParam(): { value: string } {
-    const value = this._emailField ? this._emailField.value : '';
-    return { value };
-  }
-
   constructor(private _fb: FormBuilder, private _browserService: BrowserService) {
     this._buildForm();
   }
