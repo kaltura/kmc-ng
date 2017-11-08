@@ -82,6 +82,16 @@ export class EntryStore implements  OnDestroy {
 
 		this._onSectionsStateChanges();
 		this._onRouterEvents();
+
+		// hard reload the entries upon navigating back from entry (by adding 'reloadEntriesListOnNavigateOut' to the queryParams)
+    this._entryRoute.queryParams.cancelOnDestroy(this)
+      .first()
+      .subscribe(queryParams => {
+         const reloadEntriesListOnNavigateOut = !!queryParams['reloadEntriesListOnNavigateOut']; // convert string to boolean
+         if (reloadEntriesListOnNavigateOut) {
+           this._saveEntryInvoked = reloadEntriesListOnNavigateOut;
+         }
+       });
     }
 
     private _onSectionsStateChanges()

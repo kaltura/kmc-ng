@@ -1,0 +1,79 @@
+@import 'app-theme/_variables.scss';
+
+.kEditWin {
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+    .kTitle {
+      color: #333333;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+  .kContainer {
+    height: 530px;
+    width: 760px;
+  }
+  .kFooter {
+    height: 66px;
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button {
+      height: 34px;
+      width: 130px;
+      font-size: 14px;
+    }
+  }
+
+  .kContainer {
+    margin: 0 auto;
+    .kRow {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      padding-top: 20px;
+      padding-left: 28px;
+
+      .kRequired {
+        width: 20px;
+        font-size: 24px;
+        color: $kGrayscale2;
+        height: 18px;
+        padding: 8px 0px 8px 4px;
+      }
+
+      .kLabel {
+        width: 190px;
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 auto;
+        flex: 0 0 auto;
+        height: 18px;
+        color: $kGrayscale1;
+        font-size: 15px;
+        line-height: 18px;
+        padding: 8px 0px 8px 4px;
+      }
+    }
+  }
+}
+
+:host /deep/ {
+  .ui-widget.ui-dropdown {
+    width: 360px;
+    font-size: 14px;
+  }
+
+  .ui-chkbox-label {
+    font-weight: normal;
+    height: 18px;
+    color: $kGrayscale1;
+    font-size: 15px;
+    line-height: 18px;
+  }
+}
