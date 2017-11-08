@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { environment } from 'app-environment';
+import {Component, EventEmitter, Output} from '@angular/core';
+import {BrowserService} from 'app-shared/kmc-shell';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {environment} from 'app-environment';
 
 @Component({
   selector: 'kKMCUploadMenu',
@@ -10,6 +10,7 @@ import { environment } from 'app-environment';
 })
 export class UploadMenuComponent {
   @Output() onItemSelected = new EventEmitter<string>();
+
 
   constructor(private _browserService: BrowserService,
               private _appLocalization: AppLocalization) {
@@ -30,4 +31,5 @@ export class UploadMenuComponent {
   onDownloadSamplesClicked() {
     this._browserService.openLink(environment.core.externalLinks.BULK_UPLOAD_SAMPLES);
   }
+
 }
