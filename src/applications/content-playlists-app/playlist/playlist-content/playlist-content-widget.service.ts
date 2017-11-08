@@ -51,6 +51,9 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
 
   protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
     if (!this.data.id) {
+      this.entries = [];
+      this.entriesTotalCount = 0;
+      this.entriesDuration = 0;
       return Observable.of({ failed: false });
     }
 
@@ -73,6 +76,7 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
       .map((entries: KalturaMediaEntry[]) => {
         this.entries = entries;
         this.entriesTotalCount = entries.length;
+        this.entriesDuration = this.entries.reduce((acc, val) => acc + val.duration, 0);
         super._hideLoader();
         this._state.next({ loading: false, error: false });
         return { failed: false };
@@ -182,5 +186,27 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
     this.entries = [...this.entries, ...entries];
     this.entriesTotalCount = this.entries.length;
     this._setDirty();
+  }
+
+  public onSortChanged(event: { field: string, order: -1 | 1, multisortmeta: any }): void {
+    this.entries = [...this.entries.sort(this._getComparatorFor(event.field, event.order))];
+    this._setDirty();
+  }
+
+  private _getComparatorFor(field: string, order: -1 | 1): (a: KalturaMediaEntry, b: KalturaMediaEntry) => number {
+    return (a, b) => {
+      const fieldA = typeof a[field] === 'string' ? a[field].toLowerCase() : a[field];
+      const fieldB = typeof b[field] === 'string' ? b[field].toLowerCase() : b[field];
+
+      if (fieldA < fieldB) {
+        return order;
+      }
+
+      if (fieldA > fieldB) {
+        return -order;
+      }
+
+      return 0;
+    };
   }
 }

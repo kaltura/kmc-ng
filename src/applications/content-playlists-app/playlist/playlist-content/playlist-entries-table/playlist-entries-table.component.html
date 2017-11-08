@@ -17,23 +17,23 @@
         </div>
       </ng-template>
     </p-column>
-    <p-column field="name" header="{{'applications.content.table.name' | translate}}">
+    <p-column field="name" header="{{'applications.content.table.name' | translate}}" sortable="custom">
       <ng-template let-col let-entry="rowData" pTemplate="body">
         <span class="kTitle" (click)="_goToEntry(entry.id)">{{entry[col.field]}}</span>
       </ng-template>
     </p-column>
-    <p-column field="mediaType" header="{{'applications.content.table.type' | translate}}" styleClass="mediaTypeColumn">
+    <p-column field="mediaType" header="{{'applications.content.table.type' | translate}}" styleClass="mediaTypeColumn" sortable="custom">
       <ng-template let-col let-entry="rowData" pTemplate="body">
         <div [kTooltip]="entry[col.field] | entryType: true" [class]="entry[col.field] | entryType: false"></div>
       </ng-template>
     </p-column>
-    <p-column field="createdAt" header="Created On" styleClass="createdAtColumn">
+    <p-column field="createdAt" header="Created On" styleClass="createdAtColumn" sortable="custom">
       <ng-template let-col let-entry="rowData" pTemplate="body">
         <span>{{entry[col.field] | kDate}}</span>
       </ng-template>
     </p-column>
 
-    <p-column field="duration" header="{{'applications.content.table.duration' | translate}}" styleClass="durationColumn">
+    <p-column field="duration" header="{{'applications.content.table.duration' | translate}}" styleClass="durationColumn" sortable="custom">
       <ng-template let-col let-entry="rowData" pTemplate="body">
         <span>{{entry[col.field] | kTime | entryDuration:entry}}</span>
       </ng-template>
