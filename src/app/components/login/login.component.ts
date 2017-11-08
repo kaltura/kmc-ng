@@ -1,8 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { environment } from 'app-environment';
 
-import { AppAuthentication, AppNavigator, ILoginError, ILoginResponse } from 'app-shared/kmc-shell';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { AppAuthentication, AppNavigator, BrowserService, ILoginError, ILoginResponse } from 'app-shared/kmc-shell';
 import { TranslateService } from 'ng2-translate';
 import { Observable } from 'rxjs/Observable';
 
@@ -18,7 +17,7 @@ export enum LoginScreens {
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public _username: string;
   public _errorMessage: string;
   public _errorCode: string;
@@ -29,11 +28,33 @@ export class LoginComponent implements OnInit, OnDestroy {
   public _currentScreen = LoginScreens.Login;
   public _passwordReset = false;
 
+  // Caution: this is extremely dirty hack, don't do something similar to that, damn you IE
+  @HostListener('window:resize')
+  onResize() {
+    if (!this._browserService.isIE11()) { // ignore for others
+      return;
+    }
+    const areaBlocker = <any>document.querySelector('k-area-blocker');
+    const content = this._el.nativeElement.querySelector('.kLoginCenter');
+    const windowHeight = window.innerHeight;
+
+    if (windowHeight <= content.offsetHeight) {
+      this._renderer.setStyle(areaBlocker, 'height', 'auto');
+    } else {
+      this._renderer.setStyle(areaBlocker, 'height', '100%');
+    }
+  }
+
   constructor(private _appAuthentication: AppAuthentication,
               private _appNavigator: AppNavigator,
               private _translate: TranslateService,
-              private _browserService: BrowserService) {
+              private _browserService: BrowserService,
+              private _el: ElementRef,
+              private _renderer: Renderer2) {
+  }
 
+  ngAfterViewInit() {
+    this.onResize();
   }
 
   private _makeLoginRequest(username: string, password: string): Observable<ILoginResponse> {
@@ -44,6 +65,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   private _handleLoginResponse(success: boolean, error: ILoginError, username: string): void {
+    this._errorCode = '';
+    this._errorMessage = '';
+
     if (success) {
       this._appNavigator.navigateToDefault();
       return;
@@ -105,6 +129,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   public _setScreen(screen: LoginScreens): void {
+    this.onResize();
+
     this._currentScreen = screen;
 
     this._inProgress = false;

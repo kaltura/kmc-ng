@@ -45,6 +45,7 @@
         color: $headerTextColor;
         font-size: 24px;
         cursor: pointer;
+        position: relative;
         &:hover , &.open {
             opacity: 1;
             color: $mainLinkHoverColor;
@@ -83,8 +84,8 @@
           content: ' \25CF';
           color: lighten($kPrimary, 10%);
           position: absolute;
-          margin-left: 15px;
-          margin-top: 4px;
+          right: -4px;
+          bottom: -4px;
         }
     }
     .kUserName {

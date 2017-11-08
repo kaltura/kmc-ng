@@ -20,7 +20,8 @@ import {PrivacyMode} from "./components/bulk-change-content-privacy/bulk-change-
 import {KalturaPrivacyType} from "kaltura-typescript-client/types/KalturaPrivacyType";
 import {KalturaAppearInListType} from "kaltura-typescript-client/types/KalturaAppearInListType";
 import {AppearInListType} from "./components/bulk-change-category-listing/bulk-change-category-listing.component";
-import {KalturaContributionPolicyType} from "kaltura-typescript-client/types/KalturaContributionPolicyType";
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { KalturaContributionPolicyType } from "kaltura-typescript-client/types/KalturaContributionPolicyType";
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -76,9 +77,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   }
 
   openBulkActionWindow(action: string, popupWidth: number, popupHeight: number) {
-    this._bulkAction = action;
-    this._bulkWindowWidth = popupWidth;
-    this._bulkWindowHeight = popupHeight;
+
     if (this.hasEditWarnings()) {
       this._browserService.confirm(
         {
@@ -87,6 +86,9 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
           accept: () => {
             // use timeout to allow data binding of popup dimensions to update before opening the popup
             setTimeout(() => {
+              this._bulkAction = action;
+              this._bulkWindowWidth = popupWidth;
+              this._bulkWindowHeight = popupHeight;
               this.bulkActionsPopup.open();
             }, 0);
           }
@@ -95,7 +97,10 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     } else {
       // use timeout to allow data binding of popup dimensions to update before opening the popup
       setTimeout(() => {
-        this.bulkActionsPopup.open();
+          this._bulkAction = action;
+          this._bulkWindowWidth = popupWidth;
+          this._bulkWindowHeight = popupHeight;
+          this.bulkActionsPopup.open();
       }, 0);
     }
 
@@ -199,21 +204,20 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     this._bulkAction = "";
 
     const execute = () => {
-      this._browserService.setAppStatus({ isBusy: true, errorMessage: null });
-      service.execute(this.selectedCategories, data).subscribe(
+      service.execute(this.selectedCategories, data)
+        .tag('block-shell')
+        .subscribe(
         result => {
           this._browserService.showGrowlMessage({  severity : 'success',
             detail: this._appLocalization.get('applications.content.categories.bActions.success')});
-          this._browserService.setAppStatus({ isBusy: false, errorMessage: null });
+          this._browserService.setAppStatus({ errorMessage: null });
           if (callback) {
             callback(result);
           }
           this.onBulkChange.emit({ reload: reloadCategories });
         },
         error => {
-          this._browserService.setAppStatus({ isBusy: false, errorMessage: null});
-          this._browserService.showGrowlMessage({  severity : 'error',
-            detail: this._appLocalization.get('applications.content.categories.bActions.error')});
+          this._browserService.setAppStatus({ errorMessage: this._appLocalization.get('applications.content.bulkActions.error') });
           this.onBulkChange.emit({ reload: reloadCategories });
         }
       );

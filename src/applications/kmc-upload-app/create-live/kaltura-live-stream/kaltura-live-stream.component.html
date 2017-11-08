@@ -1,0 +1,81 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+<form [formGroup]="_form" novalidate class="kAccountUpgradeWrapper kContent">
+  <section class="kFormContainer">
+    <div class="kFormSection">
+
+      <div class="kRow">
+        <span class="kLabel">{{'applications.upload.prepareLive.kalturaStreamType.name' | translate}}</span>
+        <div class="kRequired" [ngClass]="{'kHasError':!_form.controls['name'].valid &&
+                   _form.controls['name'].touched}">*
+        </div>
+        <div>
+          <input class="kControl" formControlName="name" pInputText
+                 [ngClass]="{'kHasError':!_form.controls['name'].valid &&
+                   _form.controls['name'].touched}">
+          <div *ngIf="_form.controls['name'].touched">
+            <div *ngIf="_form.controls['name'].hasError('required')"
+                 class="error">
+              {{'applications.upload.prepareLive.kalturaStreamType.errors.required' | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kRow">
+        <span class="kLabel">{{'applications.upload.prepareLive.kalturaStreamType.description' | translate}}</span>
+        <div class="kRequired"></div>
+        <div>
+          <input class="kControl" formControlName="description" pInputText
+                 [ngClass]="{'kHasError':!_form.controls['description'].valid &&
+                   _form.controls['description'].touched}">
+          <div *ngIf="_form.controls['description'].touched">
+            <div *ngIf="_form.controls['description'].hasError('required')"
+                 class="error">
+              {{'applications.upload.prepareLive.kalturaStreamType.errors.required' | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kRow">
+        <span class="kLabel">{{'applications.upload.prepareLive.kalturaStreamType.transcodingProfile' | translate}}</span>
+        <div class="kRequired"></div>
+        <div>
+          <p-dropdown class="kControl" formControlName="transcodingProfile"
+                      [options]="_availableTranscodingProfiles" [autoWidth]="false"></p-dropdown>
+        </div>
+      </div>
+
+      <div class="kRow">
+        <span class="kLabel kInputSwitchLabel">{{'applications.upload.prepareLive.kalturaStreamType.liveDVR' | translate}}</span>
+        <div class="kRequired"></div>
+        <div>
+          <p-inputSwitch class="kControl kInputSwitch" formControlName="liveDVR"></p-inputSwitch>
+          <span>{{_form.controls['liveDVR'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+          <div class="kFieldMessage">{{'applications.upload.prepareLive.kalturaStreamType.liveDVR_message' | translate}}</div>
+
+        </div>
+      </div>
+
+      <div class="kRow">
+        <span class="kLabel kInputSwitchLabel">{{'applications.upload.prepareLive.kalturaStreamType.enableRecording' | translate}}</span>
+        <div class="kRequired"></div>
+        <div>
+          <p-inputSwitch class="kControl kInputSwitch" formControlName="enableRecording" (onChange)="_toggleRecordingSelectedOption($event.checked)"></p-inputSwitch>
+          <span>{{_form.controls['enableRecording'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
+          <p-dropdown class="kControl kEnableRecordingOptions" formControlName="enableRecordingSelectedOption"
+                      [options]="_enableRecordingOptions" [autoWidth]="false"></p-dropdown>
+        </div>
+      </div>
+
+      <div class="kRow">
+        <span class="kPreviewMode">
+          <p-checkbox
+            label="{{'applications.upload.prepareLive.kalturaStreamType.previewMode' | translate}}"
+            formControlName="previewMode" binary="true"></p-checkbox></span>
+      </div>
+
+    </div>
+  </section>
+</form>
+</k-area-blocker>

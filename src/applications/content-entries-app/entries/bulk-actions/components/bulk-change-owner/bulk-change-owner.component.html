@@ -12,7 +12,7 @@
                      [multiple]="false"
                      [limitToSuggestions]="false"
                      placeholder="{{'applications.content.entryDetails.users.changeOwnerPH' | translate}}"
-                     [minLength]="1"
+                     [minLength]="3"
                      [suggestionsProvider]="_usersProvider"
                      (completeMethod)="_searchUsers($event)">
       </kAutoComplete>
