@@ -94,10 +94,15 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   private _deleteEntryFromPlaylist(entry: KalturaMediaEntry): void {
-    this.entries = this.entries.filter(({ id }) => id !== entry.id);
-    this.entriesTotalCount = this.entries.length;
+    const entryIndex = this.entries.indexOf(entry);
 
-    this._setDirty();
+    if (entryIndex !== -1) {
+      this.entries.splice(entryIndex, 1);
+      this.entries = [...this.entries];
+      this.entriesTotalCount = this.entries.length;
+
+      this._setDirty();
+    }
   }
 
   private _duplicateEntry(entry: KalturaMediaEntry): void {
@@ -109,42 +114,47 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
 
   private _moveUpEntries(selectedEntries: KalturaMediaEntry[]): void {
     if (selectedEntries && selectedEntries.length) {
-      for (let i = 0; i < selectedEntries.length; i++) {
-        const selectedItem = selectedEntries[i];
-        const selectedItemIndex = this.entries.findIndex(({ id }) => id === selectedItem.id);
+      const selectedIndexes = selectedEntries.map(item => this.entries.indexOf(item)).filter(item => item !== -1);
+      let newIndex = Math.min(...selectedIndexes) - 1;
+      newIndex = newIndex < 0 ? 0 : newIndex;
 
-        if (selectedItemIndex !== 0) {
-          const movedItem = this.entries[selectedItemIndex];
-          const temp = this.entries[selectedItemIndex - 1];
-          this.entries[selectedItemIndex - 1] = movedItem;
-          this.entries[selectedItemIndex] = temp;
-        } else {
-          break;
-        }
+      let updatedEntries = this.entries.filter(item => selectedEntries.indexOf(item) === -1);
+
+      if (newIndex <= 0) {
+        updatedEntries = [...selectedEntries, ...updatedEntries];
+      } else {
+        updatedEntries = [
+          ...updatedEntries.slice(0, newIndex),
+          ...selectedEntries,
+          updatedEntries[newIndex],
+          ...updatedEntries.slice(newIndex + 1)
+        ];
       }
 
-      this.entries = [...this.entries];
+      this.entries = [...updatedEntries];
       this._setDirty();
     }
   }
 
   private _moveDownEntries(selectedEntries: KalturaMediaEntry[]): void {
     if (selectedEntries && selectedEntries.length) {
-      for (let i = selectedEntries.length - 1; i >= 0; i--) {
-        const selectedItem = selectedEntries[i];
-        const selectedItemIndex = this.entries.findIndex(({ id }) => id === selectedItem.id);
+      const selectedIndexes = selectedEntries.map(item => this.entries.indexOf(item)).filter(item => item !== -1);
+      let newIndex = Math.max(...selectedIndexes) + 1;
+      newIndex = newIndex >= this.entries.length ? this.entries.length : newIndex;
 
-        if (selectedItemIndex !== (this.entries.length - 1)) {
-          const movedItem = this.entries[selectedItemIndex];
-          const temp = this.entries[selectedItemIndex + 1];
-          this.entries[selectedItemIndex + 1] = movedItem;
-          this.entries[selectedItemIndex] = temp;
-        } else {
-          break;
-        }
+      let updatedEntries = this.entries.filter(item => selectedEntries.indexOf(item) === -1);
+
+      if (newIndex >= this.entries.length) {
+        updatedEntries = [...updatedEntries, ...selectedEntries];
+      } else {
+        updatedEntries = [
+          ...updatedEntries.slice(0, newIndex - 1),
+          ...selectedEntries,
+          ...updatedEntries.slice(newIndex - 1)
+        ];
       }
 
-      this.entries = [...this.entries];
+      this.entries = [...updatedEntries];
       this._setDirty();
     }
   }
