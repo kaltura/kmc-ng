@@ -1,22 +1,25 @@
 <k-area-blocker [showLoader]="_showLoader" [message]="_areaBlockerMessage">
   <div class="kCategoryDetails kOverrideFAIcons" [class.isSafari]="isSafari">
     <div class="kContent kCategoryDetailsWrapper">
-      <div class="kCategoryDetailsHeader">
-        <button pButton class="kButtonDefault kBackToCategoriesBtn small" icon="kIconarrow_backward" (click)="_backToList()"></button>
-        <div class="kCategoryTitle">{{ _categoryHeader }}</div>
-        <button pButton class="kButtonBranded kSaveBtn" [disabled]="!_categoryStore.categoryIsDirty" label="Save" (click)="_save()"></button>
-        <button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enablePrevButton" (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
-        <button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enableNextButton" (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
-      </div>
-
-
-      
-  
-
+      <kSticky stickyId="categoryHeader" [sticksTo]="'header'" stickyClass="stickyHeader">
+        <div class="kCategoryDetailsHeader">
+          <div class="kContent">
+            <button pButton class="kButtonDefault kBackToCategoriesBtn small" icon="kIconarrow_backward"
+                    (click)="_backToList()"></button>
+            <div class="kCategoryTitle">{{ _categoryHeader }}</div>
+            <button pButton class="kButtonBranded kSaveBtn" [disabled]="!_categoryStore.categoryIsDirty" label="Save"
+                    (click)="_save()"></button>
+            <button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enablePrevButton"
+                    (click)="_navigateToPrevious()" icon="kIconarrow_backward"></button>
+            <button pButton class="kButtonDefault kNavigationBtn" [disabled]="!_enableNextButton"
+                    (click)="_navigateToNext()" icon="kIconarrow_forward"></button>
+          </div>
+        </div>
+      </kSticky>
 
 
       <div class="kCategoryDetailsPreview">
-         <kCategoryPreview></kCategoryPreview> 
+        <kCategoryPreview></kCategoryPreview>
       </div>
 
       <div class="kCategoryDetailsMain">
