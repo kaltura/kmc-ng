@@ -4,7 +4,8 @@ import { PlaylistsStore } from './playlists/playlists-store/playlists-store.serv
 @Component({
     selector: 'kPlaylists',
     templateUrl: './content-playlists.component.html',
-    styleUrls: ['./content-playlists.component.scss']
+    styleUrls: ['./content-playlists.component.scss'],
+    providers: [PlaylistsStore]
 })
 export class ContentPlaylistsComponent  {}
 

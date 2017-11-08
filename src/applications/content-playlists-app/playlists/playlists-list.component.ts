@@ -10,6 +10,7 @@ import { PlaylistsStore, SortDirection } from './playlists-store/playlists-store
 import { BulkDeleteService } from './bulk-service/bulk-delete.service';
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 import * as moment from 'moment';
 import { KalturaPlaylistType } from 'kaltura-typescript-client/types/KalturaPlaylistType';
@@ -81,18 +82,16 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   private _proceedDeletePlaylists(ids: string[]): void {
-    this._browserService.setAppStatus({ isBusy: true, errorMessage: null });
     this._bulkDeleteService.deletePlaylist(ids)
+      .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe(
         () => {
           this._loading = false;
           this._playlistsStore.reload(true);
           this._clearSelection();
-          this._browserService.setAppStatus({ isBusy: false, errorMessage: null });
         },
         error => {
-          this._browserService.setAppStatus({ isBusy: false, errorMessage: null });
           this._blockerMessage = new AreaBlockerMessage({
             message: this.appLocalization.get('applications.content.bulkActions.errorPlaylists'),
             buttons: [{
