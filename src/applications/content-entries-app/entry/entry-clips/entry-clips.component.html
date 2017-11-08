@@ -4,7 +4,7 @@
 
 		<div class="kTable">
 			<p-dataTable [value]="(_widgetService.entries$ | async)?.items" scrollable="true" [sortField]="_widgetService.sortBy" [sortOrder]="_convertSortValue(_widgetService.sortAsc)" (onSort)="_onSortChanged($event)">
-				<p-column field="id" header="{{'applications.content.entryDetails.clips.id' | translate}}" [style]="{'width':'90px'}">
+				<p-column field="id" header="{{'applications.content.entryDetails.clips.id' | translate}}" [style]="{'width':'120px','padding-left': '24px'}">
 					<ng-template let-col let-entry="rowData" pTemplate="body">
 						<a (click)="_widgetService.navigateToEntry(entry.id)">{{entry.id}}</a>
 					</ng-template>

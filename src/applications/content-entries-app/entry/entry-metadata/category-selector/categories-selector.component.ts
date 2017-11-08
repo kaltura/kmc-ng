@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, ViewChild, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, ViewChild, AfterViewChecked, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 
 import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
@@ -17,7 +17,7 @@ import { TagsComponent } from '@kaltura-ng/kaltura-ui/tags/tags.component';
     templateUrl: './categories-selector.component.html',
     styleUrls: ['./categories-selector.component.scss']
 })
-export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
+export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
 
 	@ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
 	@ViewChild('tags') _tags: TagsComponent;
@@ -29,7 +29,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 
 	private _searchCategoriesSubscription : ISubscription;
 	public _categoriesProvider = new Subject<SuggestionsProviderData>();
-  @Input() buttonLabel: string  = "";
+    @Input() buttonLabel: string  = "";
 	@Input() value: EntryCategoryItem[]  = [];
 	@Output() valueChange = new EventEmitter<EntryCategoryItem[]>();
 
@@ -49,10 +49,14 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked {
 
 	ngOnInit() {
 		this._selectedCategories = this.value && this.value instanceof Array ? [...this.value] : [];
-		setTimeout(()=>{
-			this._tags.checkShowMore();
-		},0);
+	}
 
+	ngAfterViewInit() {
+		setTimeout(()=>{
+			if (typeof this._tags !== "undefined"){
+				this._tags.checkShowMore();
+			}
+		},0);
 	}
 
 	ngOnDestroy(){

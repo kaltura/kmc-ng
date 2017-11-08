@@ -12,7 +12,7 @@
 
 		<div class="kTable">
 			<p-dataTable [value]="(_widgetService._flavors$ | async)?.items" scrollable="true" scrollHeight="100%">
-				<p-column field="name" header="{{'applications.content.entryDetails.flavours.flavour' | translate}}" [style]="{'width':'120px'}">
+				<p-column field="name" header="{{'applications.content.entryDetails.flavours.flavour' | translate}}" [style]="{'width':'144px', 'padding-left': '24px'}">
 					<ng-template let-col let-flavor="rowData" pTemplate="body">
 						<span class="kFlavorName" [class.kConvertedFlavor]="flavor.status === '2'">{{flavor.name}}</span>
 					</ng-template>
@@ -53,7 +53,7 @@
 					</ng-template>
 				</p-column>
 			</p-dataTable>
-			<p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'"></p-menu>
+			<p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 		</div>
 	</div>
 
@@ -61,11 +61,11 @@
 		<kDRMDetails [currentFlavor]="_selectedFlavor"></kDRMDetails>
 	</kPopupWidget>
 
-	<kPopupWidget #previewPopup [popupWidth]="500" [popupHeight]="644" [modal]="true">
+	<kPopupWidget #previewPopup [popupWidth]="500" [modal]="true">
 		<kFlavorPreview [currentFlavor]="_selectedFlavor" [parentPopupWidget]="previewPopup" [currentEntry]="_widgetService.data"></kFlavorPreview>
 	</kPopupWidget>
 
-	<kPopupWidget #importPopup [popupWidth]="500" [popupHeight]="240" [modal]="true">
+	<kPopupWidget #importPopup [popupWidth]="500" [popupHeight]="260" [modal]="true">
 		<kFlavorImport [currentFlavor]="_selectedFlavor" [parentPopupWidget]="importPopup"></kFlavorImport>
 	</kPopupWidget>
 </k-area-blocker>
