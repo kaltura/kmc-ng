@@ -41,15 +41,15 @@
   </div>
 </k-area-blocker>
 
-<kPopupWidget #addNewCategory [popupWidth]="586" [popupHeight]="645" [modal]="true" [preventPageScroll]="true">
+<kPopupWidget #addNewCategory [popupWidth]="586" [popupHeight]="658" [modal]="true" [preventPageScroll]="true">
   <ng-template>
     <kCategoryParentSelector (onCategorySelected)="onAddNewCategory($event)" [parentPopupWidget]="addNewCategory" [mode]="'new'"></kCategoryParentSelector>
   </ng-template>
 </kPopupWidget>
 
 
-<kPopupWidget #moveCategory [popupWidth]="586" [popupHeight]="568" [modal]="true" [preventPageScroll]="true">
+<kPopupWidget #moveCategory [popupWidth]="586" [popupHeight]="580" [modal]="true" [preventPageScroll]="true">
   <ng-template>
-    <kCategoryParentSelector (onCategorySelected)="onMoveCategory($event)" [parentPopupWidget]="moveCategory" [mode]="'move'"></kCategoryParentSelector>
+    <kCategoryParentSelector (onCategorySelected)="onMoveCategory($event)" [parentPopupWidget]="moveCategory" [mode]="'move'" [categoryToMove]="_selectedCategoryToMove" ></kCategoryParentSelector>
   </ng-template>
 </kPopupWidget>

@@ -2,6 +2,8 @@
 
 .kTreeContainer {
   position: relative;
+  width: 100%;
+  height: 100%;
   .kHeader {
     width: 100%;
     text-align: center;
@@ -18,10 +20,9 @@
  .kContainer {
    width: 520px;
    margin: 0 auto;
-   padding-bottom: 20px;
 
    &.kFullHeight{
-     height: 482px;
+     height: 515px;
    }
 
    .kRow {

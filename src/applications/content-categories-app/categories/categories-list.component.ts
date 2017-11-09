@@ -3,7 +3,7 @@ import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
-import {CategoriesService, NewCategoryData, SortDirection} from './categories.service';
+import {CategoriesService, SortDirection, CategoryParentSelection} from './categories.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {AppLocalization} from "@kaltura-ng/kaltura-common";
 import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
@@ -21,7 +21,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     public _selectedCategories: KalturaCategory[] = [];
     public _categories: KalturaCategory[] = [];
     public _categoriesTotalCount: number = null;
-    public _selectedCategoryIdToMove: number;
+    public _selectedCategoryToMove: KalturaCategory;
     private categoriesSubscription: ISubscription;
     private querySubscription: ISubscription;
     @ViewChild('moveCategory') moveCategoryPopup: PopupWidgetComponent;
@@ -90,14 +90,14 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         }
     }
 
-    _onActionSelected(event: { action: string, categoryID: number }) {
+    _onActionSelected(event: { action: string, category: KalturaCategory }) {
         switch (event.action) {
             case 'edit':
-                this.router.navigate(['/content/categories/category', event.categoryID]);
+                this.router.navigate(['/content/categories/category', event.category.id]);
                 break;
 
             case 'delete':
-                const currentCategory = this._categories.find(category => category.id == event.categoryID);
+                const currentCategory = this._categories.find(category => category.id === event.category.id);
                 let message: string;
                 if (currentCategory.directSubCategoriesCount > 0) {
                     message = this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories',
@@ -110,14 +110,14 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
                         header: this._appLocalization.get('applications.content.categories.deleteCategory'),
                         message: message,
                         accept: () => {
-                            this._deleteCategory(event.categoryID);
+                            this._deleteCategory(event.category.id);
                         }
                     }
                 );
                 break;
             case 'moveCategory':
               console.warn('missing Edit warnings popup implementation (implement after merging categories_table branch)');
-              this._selectedCategoryIdToMove = event.categoryID;
+              this._selectedCategoryToMove = event.category;
               this.moveCategoryPopup.open();
               break;
             default:
@@ -169,13 +169,10 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         }
     }
 
-    onAddNewCategory(newCategory: NewCategoryData): void {
+    onAddNewCategory(categoryParentSelectionData: CategoryParentSelection): void {
       this._isBusy = true;
       this._blockerMessage = null;
-      this._categoriesService.addNewCategory({
-        parentCategoryId: newCategory.parentCategoryId,
-        name: newCategory.name
-      })
+      this._categoriesService.addNewCategory(categoryParentSelectionData)
         .subscribe(category => {
             this._isBusy = false;
             // use a flag so the categories will be refreshed upon clicking 'back' from the category page
@@ -200,68 +197,45 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         });
     }
 
-    onMoveCategory(newCategory: NewCategoryData): void {
+    onMoveCategory(categoryParentSelectionData: CategoryParentSelection): void {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.categories.moveCategory'),
           message: this._appLocalization.get('applications.content.moveCategory.treeUpdateNotification'),
           accept: () => {
-            this._moveCategory(newCategory);
+            this._moveCategory(categoryParentSelectionData);
           }
         }
       );
     }
 
-  private _moveCategory(newCategoryData: NewCategoryData) {
+  private _moveCategory(categoryParentSelectionData: CategoryParentSelection) {
     this._isBusy = true;
-    const categoryParent = this._categories.find((category) => (category.id === newCategoryData.parentCategoryId));
-    if (!categoryParent) {
-      this._isBusy = false;
-      this._browserService.showGrowlMessage({
-        severity: 'error',
-        detail: this._appLocalization
-          .get('applications.content.moveCategory.errors.categoryMovedFailure')
-      });
-      return;
-    }
-    if (!this._isParentSelectionValid(this._selectedCategoryIdToMove, categoryParent)) {
-      this._isBusy = false;
-      this._browserService.showGrowlMessage({
-        severity: 'error',
-        detail: this._appLocalization
-          .get('applications.content.moveCategory.errors.invalidParentSelection')
-      });
-      return;
-    }
-
-    this._categoriesService.moveCategory({
-      categoryId: this._selectedCategoryIdToMove,
-      targetCategoryParentId: newCategoryData.parentCategoryId
-    })
+    this._blockerMessage = null;
+    this._categoriesService
+      .moveCategory(categoryParentSelectionData)
       .subscribe(category => {
           this._isBusy = false;
-
-          this._browserService.showGrowlMessage({
-            severity: 'success',
-            detail: this._appLocalization
-              .get('applications.content.addNewCategory.categoryMovedSuccessfully')
-          });
         },
         error => {
           this._isBusy = false;
-          this._browserService.showGrowlMessage({
-            severity: 'error',
-            detail: this._appLocalization
-              .get('applications.content.moveCategory.errors.categoryMovedFailure')
-          });
+          this._blockerMessage = new AreaBlockerMessage(
+            {
+              message: this._appLocalization.get('applications.content.moveCategory.errors.categoryMovedFailure'),
+              buttons: [{
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => {
+                  this._moveCategory(categoryParentSelectionData);
+                }
+              },
+                {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this._blockerMessage = null;
+                  }
+                }
+              ]
+            });
         });
-  }
-
-  private _isParentSelectionValid(categoryId: number, targetCategoryParent: KalturaCategory): boolean {
-      const selectedCategoryIdSameAsParent = categoryId === targetCategoryParent.id;
-
-      // selected caterory to move ID is not in the selected parent fullIds field (from categories tree)
-      const selectedCategoryIsParentOfTarget = targetCategoryParent.fullIds && targetCategoryParent.fullIds.includes(categoryId.toString());
-      return !selectedCategoryIdSameAsParent && !selectedCategoryIsParentOfTarget;
   }
 }

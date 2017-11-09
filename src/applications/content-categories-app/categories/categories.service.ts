@@ -40,9 +40,10 @@ export interface QueryData {
     fields: string
 }
 
-export interface NewCategoryData {
-    parentCategoryId: number;
-    name: string;
+export interface CategoryParentSelection {
+    categoryId?: number;
+    categoryParentId?: number;
+    name?: string;
 }
 
 @Injectable()
@@ -56,13 +57,12 @@ export class CategoriesService implements OnDestroy {
         pageSize: 50,
         sortBy: 'createdAt',
         sortDirection: SortDirection.Desc,
-        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, fullName,tags, fullIds'
+        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, fullName,tags, fullIds, parentId'
     });
 
     public state$ = this._state.asObservable();
     public categories$ = this._categories.asObservable();
     public queryData$ = this._queryData.asObservable();
-    private _newCategoryData: NewCategoryData = null;
     constructor(private _kalturaClient: KalturaClient,
         private browserService: BrowserService,
                 private _appLocalization: AppLocalization) {
@@ -237,14 +237,19 @@ export class CategoriesService implements OnDestroy {
     }
 
 
-  public addNewCategory(newCategoryData: NewCategoryData): Observable<KalturaCategory> {
-    if (!newCategoryData) {
+  /**
+   * Move category to be existed under new parent
+   * @param moveCategoryData {MoveCategoryData} holds categoryToMoveId and selectedCategoryParent (if null - move to root)
+   * @return {Observable<KalturaCategory>}
+   */
+  public addNewCategory(categoryParentSelectionData: CategoryParentSelection): Observable<KalturaCategory> {
+    if (!categoryParentSelectionData || !categoryParentSelectionData.name) {
       const nameRequiredErrorMessage = this._appLocalization.get('applications.content.addNewCategory.errors.requiredName');
       return Observable.throw(new Error(nameRequiredErrorMessage));
     }
     const category = new KalturaCategory({
-      name: newCategoryData.name,
-      parentId: newCategoryData.parentCategoryId
+      name: categoryParentSelectionData.name,
+      parentId: categoryParentSelectionData.categoryParentId || 0
     });
 
     return <any>this._kalturaClient.request(
@@ -254,13 +259,42 @@ export class CategoriesService implements OnDestroy {
     )
   }
 
-  public moveCategory(categoryToMove: {categoryId: number, targetCategoryParentId: number}): Observable<KalturaCategory> {
+  /**
+   * Move category to be existed under new parent
+   * @param moveCategoryData {MoveCategoryData} holds category to move ID and selected category parent (if null - move to root)
+   * @return {Observable<KalturaCategory>}
+   */
+  public moveCategory(categoryParentSelectionData: CategoryParentSelection): Observable<KalturaCategory> {
+    if (!categoryParentSelectionData || !categoryParentSelectionData.categoryId) {
+      const categoryMovedFailureErrorMessage = this._appLocalization.get('applications.content.moveCategory.errors.categoryMovedFailure');
+      return Observable.throw(new Error(categoryMovedFailureErrorMessage));
+    }
+
     return <any>this._kalturaClient.request(
       new CategoryMoveAction({
-        categoryIds: categoryToMove.categoryId.toString(),
-        targetCategoryParentId: categoryToMove.targetCategoryParentId
+        categoryIds: categoryParentSelectionData.categoryId.toString(),
+        targetCategoryParentId: categoryParentSelectionData.categoryParentId || 0
       })
     )
+  }
+
+  /**
+   * Check if selected category can be assigned under the target category parent
+   * @param categoryId {number} selected category id to check
+   * @param targetCategoryParentId {number} selected category parent id to check
+   * @param fullIdPath {Array<number>} Selected category ancestors array
+   * @return {boolean}
+   */
+  public isParentCategorySelectionValid(categoryId: number, targetCategoryParentId: number, fullIdPath: Array<number>): boolean {
+    if (!fullIdPath) {
+      return true;
+    }
+
+    const selectedCategoryIdSameAsParent = categoryId === targetCategoryParentId;
+
+    // selected caterory to move ID is not in the selected parent fullIds field (from categories tree)
+    const selectedCategoryIsParentOfTarget = fullIdPath.includes(categoryId);
+    return !selectedCategoryIdSameAsParent && !selectedCategoryIsParentOfTarget;
   }
 }
 

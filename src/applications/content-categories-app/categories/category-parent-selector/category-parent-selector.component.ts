@@ -22,6 +22,16 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {CategoryParentSelection, CategoriesService} from '../categories.service';
+
+export interface ParentCategory {
+  id: number,
+  fullIdPath: number[],
+  fullNamePath: string[],
+  name: string
+}
+
 
 @Component({
   selector: 'kCategoryParentSelector',
@@ -31,7 +41,8 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChecked, OnInit {
   @Input() mode: 'move' | 'new' = 'move';
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @Output() onCategorySelected = new EventEmitter<{parentCategoryId: number, name?: string}>();
+  @Input() categoryToMove: KalturaCategory;
+  @Output() onCategorySelected = new EventEmitter<CategoryParentSelection>();
 
 
   @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
@@ -47,7 +58,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
 
   private _searchCategoriesSubscription: ISubscription;
   public _categoriesProvider = new Subject<SuggestionsProviderData>();
-  public _selectedCategory: any = null;
+  public _selectedParentCategory: any = null;
   public newCategoryForm: FormGroup;
 
   private parentPopupStateChangeSubscription: ISubscription;
@@ -58,6 +69,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
   };
 
   constructor(private _categoriesPrimeService: CategoriesPrimeService,
+              private _categoriesService: CategoriesService,
               private cdRef: ChangeDetectorRef,
               private _appLocalization: AppLocalization,
               private _fb: FormBuilder) {
@@ -69,6 +81,8 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
       this.newCategoryForm = this._fb.group({
         name: ['', Validators.required]
       });
+    } else if (this.mode === 'move' && !this.categoryToMove) {
+      console.warn('CategoryParentSelectorComponent: move category was selected without setting category Id to move');
     }
   }
   ngOnDestroy() {
@@ -95,19 +109,19 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
   }
 
   private _updateSelectionTooltip(): void {
-    const selectionPath = this._selectedCategory ? this._selectedCategory.fullNamePath : '';
+    const selectionPath = this._selectedParentCategory ? this._selectedParentCategory.fullNamePath : [];
     this._selectionTooltip = this._appLocalization.get(
       'applications.content.categories.selectedCategory',
-      { 0: this._createCategoryTooltip(selectionPath) || 'no parent' }
+      { 0: this._createCategoryTooltip(selectionPath) || this._appLocalization.get('applications.content.addNewCategory.noParent') }
     );
   }
 
   private _updateTreeSelections(expandNodeId = null, initial = false): void {
     let treeSelectedItem = initial ? null : this._emptyTreeSelection;
-    const treeItem = this._categoriesTree.findNodeByFullIdPath(this._selectedCategory ? this._selectedCategory.fullIdPath : []);
+    const treeItem = this._categoriesTree.findNodeByFullIdPath(this._selectedParentCategory ? this._selectedParentCategory.fullIdPath : []);
     if (treeItem) {
       treeSelectedItem = treeItem;
-      if (expandNodeId && this._selectedCategory && expandNodeId === this._selectedCategory.id) {
+      if (expandNodeId && this._selectedParentCategory && expandNodeId === this._selectedParentCategory.id) {
         treeItem.expand();
       }
     }
@@ -129,7 +143,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
       let selectedNode: PrimeTreeNode = null;
 
       node.children.forEach((attachedCategory) => {
-        if (this._selectedCategory && this._selectedCategory.id === attachedCategory.data) {
+        if (this._selectedParentCategory && this._selectedParentCategory.id === attachedCategory.data) {
           selectedNode = attachedCategory;
         }
       });
@@ -151,7 +165,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
 
     this._searchCategoriesSubscription = this._categoriesPrimeService.searchCategories(event.query).subscribe(data => {
         const suggestions = [];
-        const entryCategory = this._selectedCategory;
+        const entryCategory = this._selectedParentCategory;
 
 
         (data || []).forEach(suggestedCategory => {
@@ -174,10 +188,10 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
     const selectedItem = this._autoComplete.getValue();
 
     if (selectedItem && selectedItem.id && selectedItem.fullIdPath && selectedItem.name) {
-      const relevantCategory = this._selectedCategory && String(this._selectedCategory.id) === String(selectedItem.id);
+      const relevantCategory = this._selectedParentCategory && String(this._selectedParentCategory.id) === String(selectedItem.id);
 
       if (!relevantCategory) {
-        this._selectedCategory = {
+        this._selectedParentCategory = {
           id: selectedItem.id,
           fullIdPath: selectedItem.fullIdPath,
           fullNamePath: selectedItem.fullNamePath,
@@ -198,10 +212,10 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
 
   public _onTreeNodeSelected({ node }: { node: any }) {
     if (node instanceof PrimeTreeNode) {
-      const relevantCategory = this._selectedCategory && String(this._selectedCategory.id) === String(node.data);
+      const relevantCategory = this._selectedParentCategory && String(this._selectedParentCategory.id) === String(node.data);
 
       if (!relevantCategory) {
-        this._selectedCategory = {
+        this._selectedParentCategory = {
           id: node.origin.id,
           fullIdPath: node.origin.fullIdPath,
           fullNamePath: node.origin.fullNamePath,
@@ -214,21 +228,80 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
   }
 
   public _clearSelection(): void {
-    this._selectedCategory = null;
+    this._selectedParentCategory = null;
     this._updateSelectionTooltip();
   }
 
   public _apply(): void {
-    const parentCategoryId = this._selectedCategory ? this._selectedCategory.id : 0;
+    this._isBusy = true;
 
-    if (this.newCategoryForm) {
-      this.onCategorySelected.emit({parentCategoryId, name: this.newCategoryForm.controls['name'].value});
+    const categoryParent = this._selectedParentCategory;
+
+    if (this.mode === 'new') { // 'new' mode
+      this._createNewCategory(categoryParent);
     } else {
-      this.onCategorySelected.emit({parentCategoryId});
+      this._moveCategory(categoryParent);
     }
+  }
 
-    if (this.parentPopupWidget) {
-      this.parentPopupWidget.close();
+  private _moveCategory(categoryParent: ParentCategory) {
+    if (!categoryParent && !this.categoryToMove.parentId || categoryParent && this.categoryToMove.parentId === categoryParent.id) {
+      // if category moved to the same parent or to 'no parent' as it was before
+      this._blockerMessage = new AreaBlockerMessage({
+        message: this._appLocalization.get('applications.content.moveCategory.errors.categoryAlreadyBelongsToParent'),
+        buttons: [
+          {
+            label: this._appLocalization.get('app.common.cancel'),
+            action: () => {
+              this._isBusy = false;
+              this._blockerMessage = null;
+            }
+          }
+        ]
+      });
+    } else if (categoryParent && !this._categoriesService.isParentCategorySelectionValid(this.categoryToMove.id, categoryParent.id, categoryParent.fullIdPath)) {
+      // if trying to move category be a child of itself or one of its children show error message
+      this._blockerMessage = new AreaBlockerMessage({
+        message: this._appLocalization.get('applications.content.moveCategory.errors.invalidParentSelection'),
+        buttons: [
+          {
+            label: this._appLocalization.get('app.common.cancel'),
+            action: () => {
+              this._isBusy = false;
+              this._blockerMessage = null;
+            }
+          }
+        ]
+      });
+    } else {
+      this.onCategorySelected.emit({categoryId: this.categoryToMove.id, categoryParentId: categoryParent.id});
+      if (this.parentPopupWidget) {
+        this.parentPopupWidget.close();
+      }
+    }
+  }
+
+
+  private _createNewCategory(categoryParent: KalturaCategory) {
+    const categoryName = this.newCategoryForm.controls['name'].value;
+    if (!categoryName || !categoryName.length) {
+      this._blockerMessage = new AreaBlockerMessage({
+        message: this._appLocalization.get('applications.content.addNewCategory.errors.requiredName'),
+        buttons: [
+          {
+            label: this._appLocalization.get('app.common.cancel'),
+            action: () => {
+              this._isBusy = false;
+              this._blockerMessage = null;
+            }
+          }
+        ]
+      });
+    } else {
+      this.onCategorySelected.emit({categoryParentId: categoryParent.id, name: categoryName});
+      if (this.parentPopupWidget) {
+        this.parentPopupWidget.close();
+      }
     }
   }
 

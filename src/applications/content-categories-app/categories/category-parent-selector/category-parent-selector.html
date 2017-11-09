@@ -1,5 +1,8 @@
+<k-area-blocker kFillHeight [showLoader]="_isBusy" [message]="_blockerMessage" style="height: 100%">
+
 <div class="kTreeContainer kOverrideFAIcons kRadioButtonPOC">
-  <div class="kHeader">
+
+    <div class="kHeader">
     <span class="kTitle">
       <span *ngIf="newCategoryForm">{{('applications.content.addNewCategory.newCategory') | translate}}</span>
       <span *ngIf="!newCategoryForm">{{('applications.content.addNewCategory.moveCategory') | translate}}</span>
@@ -28,7 +31,7 @@
     </div>
     <div class="kRow kNoParentOption">
       <p-radioButton class="kControl" [value]="null" [(ngModel)]="_treeSelection" [ngModelOptions]="{standalone: true}"
-                     (click)="_clearSelection()" label="No selection"></p-radioButton>
+                     (click)="_clearSelection()" label="{{('applications.content.addNewCategory.noParent') | translate}}"></p-radioButton>
     </div>
     <div class="kMain">
       <kAutoComplete #autoComplete
@@ -51,6 +54,7 @@
                          (onNodeSelect)="_onTreeNodeSelected($event)"
                          (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)"></k-categories-tree>
     </div>
+      <div class="kSelectedCategoryTooltip" [kTooltip]="_selectionTooltip">{{ _selectionTooltip }}</div>
   </div>
   <div class="kFooter">
     <button type="button" class="kButtonBranded" pButton
@@ -59,3 +63,4 @@
     <a class="kLink" (click)="_cancel()">{{'applications.content.addNewCategory.cancel' | translate}}</a>
   </div>
 </div>
+</k-area-blocker>

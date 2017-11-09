@@ -309,7 +309,8 @@
         "treeUpdateNotification": "Category tree will be updated in an asynchronous process. This operation may take a few minutes. Category editing options will be released when update is completed.",
         "errors": {
           "invalidParentSelection": "Category cannot be moved into itself or one of its children categories",
-          "categoryMovedFailure": "Category move failed"
+          "categoryMovedFailure": "An error occurred while trying to move category to selected parent",
+          "categoryAlreadyBelongsToParent": "Category is already a child of selected parent"
         }
       },
       "entries": {
