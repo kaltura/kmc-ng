@@ -17,15 +17,15 @@ import {
   CategoriesTreeComponent,
   TreeSelectionMode
 } from 'app-shared/content-shared/categories-tree/categories-tree.component';
-import {CategoriesPrimeService} from 'app-shared/content-shared/categories-prime.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 import {CategoryParentSelection, CategoriesService} from '../categories.service';
+import {CategoriesSearchService, CategoryData} from 'app-shared/content-shared/categories-search.service';
 
-export interface ParentCategory {
+export interface SelectedParentCategory {
   id: number,
   fullIdPath: number[],
   fullNamePath: string[],
@@ -35,8 +35,8 @@ export interface ParentCategory {
 
 @Component({
   selector: 'kCategoryParentSelector',
-  templateUrl: './category-parent-selector.html',
-  styleUrls: ['./category-parent-selector.scss']
+  templateUrl: './category-parent-selector.component.html',
+  styleUrls: ['./category-parent-selector.component.scss']
 })
 export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChecked, OnInit {
   @Input() mode: 'move' | 'new' = 'move';
@@ -58,7 +58,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
 
   private _searchCategoriesSubscription: ISubscription;
   public _categoriesProvider = new Subject<SuggestionsProviderData>();
-  public _selectedParentCategory: any = null;
+  public _selectedParentCategory: CategoryData = null;
   public newCategoryForm: FormGroup;
 
   private parentPopupStateChangeSubscription: ISubscription;
@@ -68,7 +68,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
     expendTreeSelectionNodeId: null
   };
 
-  constructor(private _categoriesPrimeService: CategoriesPrimeService,
+  constructor(private _categoriesSearchService: CategoriesSearchService,
               private _categoriesService: CategoriesService,
               private cdRef: ChangeDetectorRef,
               private _appLocalization: AppLocalization,
@@ -163,12 +163,12 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
       this._searchCategoriesSubscription = null;
     }
 
-    this._searchCategoriesSubscription = this._categoriesPrimeService.searchCategories(event.query).subscribe(data => {
+    this._searchCategoriesSubscription = this._categoriesSearchService.getSuggestions(event.query).subscribe(data => {
         const suggestions = [];
         const entryCategory = this._selectedParentCategory;
 
 
-        (data || []).forEach(suggestedCategory => {
+        (data.items || []).forEach(suggestedCategory => {
           const label = suggestedCategory.fullNamePath.join(' > ') + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
 
           const isSelectable = !(entryCategory && entryCategory.id === suggestedCategory.id);
@@ -183,7 +183,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
       });
   }
 
-  public _onAutoCompleteSelected(event: any) {
+  public _onAutoCompleteSelected() {
 
     const selectedItem = this._autoComplete.getValue();
 
@@ -191,12 +191,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
       const relevantCategory = this._selectedParentCategory && String(this._selectedParentCategory.id) === String(selectedItem.id);
 
       if (!relevantCategory) {
-        this._selectedParentCategory = {
-          id: selectedItem.id,
-          fullIdPath: selectedItem.fullIdPath,
-          fullNamePath: selectedItem.fullNamePath,
-          name: selectedItem.name
-        };
+        this._selectedParentCategory =  selectedItem;
 
         this._ngAfterViewCheckedContext.updateTreeSelections = true;
         this._ngAfterViewCheckedContext.expendTreeSelectionNodeId = selectedItem.id;
@@ -210,18 +205,12 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
 
   }
 
-  public _onTreeNodeSelected({ node }: { node: any }) {
-    if (node instanceof PrimeTreeNode) {
-      const relevantCategory = this._selectedParentCategory && String(this._selectedParentCategory.id) === String(node.data);
+  public _onTreeNodeSelected(treeNode: PrimeTreeNode) {
+    if (treeNode instanceof PrimeTreeNode) {
+      const relevantCategory = this._selectedParentCategory && String(this._selectedParentCategory.id) === String(treeNode.data);
 
       if (!relevantCategory) {
-        this._selectedParentCategory = {
-          id: node.origin.id,
-          fullIdPath: node.origin.fullIdPath,
-          fullNamePath: node.origin.fullNamePath,
-          name: node.origin.name
-        };
-
+        this._selectedParentCategory = treeNode.origin;
         this._updateSelectionTooltip();
       }
     }
@@ -244,7 +233,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
     }
   }
 
-  private _moveCategory(categoryParent: ParentCategory) {
+  private _moveCategory(categoryParent: SelectedParentCategory) {
     if (!categoryParent && !this.categoryToMove.parentId || categoryParent && this.categoryToMove.parentId === categoryParent.id) {
       // if category moved to the same parent or to 'no parent' as it was before
       this._blockerMessage = new AreaBlockerMessage({
@@ -282,7 +271,7 @@ export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChec
   }
 
 
-  private _createNewCategory(categoryParent: KalturaCategory) {
+  private _createNewCategory(categoryParent: SelectedParentCategory) {
     const categoryName = this.newCategoryForm.controls['name'].value;
     if (!categoryName || !categoryName.length) {
       this._blockerMessage = new AreaBlockerMessage({

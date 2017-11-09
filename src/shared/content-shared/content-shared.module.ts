@@ -22,8 +22,7 @@ import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {EntryStatusPipe} from 'app-shared/content-shared/pipes/entry-status.pipe';
 import {CategoriesTreeComponent} from 'app-shared/content-shared/categories-tree/categories-tree.component';
 import {SchedulingComponent} from 'app-shared/content-shared/scheduling/scheduling.component';
-import {CategoriesPrimeService} from 'app-shared/content-shared/categories-prime.service';
-import {CategoriesStore} from 'app-shared/content-shared/categories-store.service';
+import {CategoriesSearchService} from 'app-shared/content-shared/categories-search.service';
 import {EntryTypePipe} from 'app-shared/content-shared/pipes/entry-type.pipe';
 import {EntryDurationPipe} from 'app-shared/content-shared/pipes/entry-duration.pipe';
 import {MaxEntriesPipe} from 'app-shared/content-shared/pipes/max-entries.pipe';
@@ -94,8 +93,7 @@ import {PrimeTableSortTransformPipe} from 'app-shared/content-shared/pipes/prime
     EntriesListComponent,
   ],
   providers: [
-    CategoriesPrimeService,
-    CategoriesStore,
+    CategoriesSearchService,
     EntriesRefineFiltersProvider
   ]
 })

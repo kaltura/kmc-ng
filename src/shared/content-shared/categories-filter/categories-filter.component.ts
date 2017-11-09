@@ -9,8 +9,7 @@ import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-prime
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories-tree/categories-tree.component';
-import { CategoryData } from 'app-shared/content-shared/categories-store.service';
-import { CategoriesPrimeService } from 'app-shared/content-shared/categories-prime.service';
+import {CategoriesSearchService, CategoryData} from 'app-shared/content-shared/categories-search.service';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import {
   CategoriesFilter,
@@ -45,7 +44,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
   public _TreeSelectionModes = TreeSelectionModes;
 
   constructor(private _entriesStore: EntriesStore,
-              private _categoriesPrimeService: CategoriesPrimeService,
+              private _categoriesSearchService: CategoriesSearchService,
               private _browserService: BrowserService,
               private _filtersRef: ElementRef) {
   }
@@ -338,10 +337,10 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
       this._searchCategoriesRequest$ = null;
     }
 
-    this._searchCategoriesRequest$ = this._categoriesPrimeService.searchCategories(event.query).subscribe(data => {
+    this._searchCategoriesRequest$ = this._categoriesSearchService.getSuggestions(event.query).subscribe(data => {
         const suggestions = [];
 
-        (data || []).forEach(item => {
+        (data.items || []).forEach(item => {
           const label = item.fullNamePath.join(' > ') + (item.referenceId ? ` (${item.referenceId})` : '');
 
           const isSelectable = !this._entriesStore.getFiltersByType(CategoriesFilter).find(categoryFilter => {
