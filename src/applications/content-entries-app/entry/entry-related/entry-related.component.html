@@ -5,7 +5,7 @@
 		<button type="button" class="kButtonDefault" (click)="fileDialog.open($event)" pButton label="{{'applications.content.entryDetails.related.add' | translate}}"></button>
 		<div class="kTable">
 			<p-dataTable [value]="(_widgetService._relatedFiles$ | async)?.items" scrollable="true" scrollHeight="100%" [rowStyleClass]="_relatedTableRowStyle" >
-				<p-column field="filename" header="{{'applications.content.entryDetails.related.name' | translate}}">
+				<p-column field="filename" header="{{'applications.content.entryDetails.related.name' | translate}}" [style]="{'padding-left': '24px'}">
 				</p-column>
 				<p-column header="{{'applications.content.entryDetails.related.type' | translate}}" [style]="{'width':'140px', 'overflow':'visible'}">
 					<ng-template let-col let-file="rowData" pTemplate="body">
@@ -49,7 +49,7 @@
 					</ng-template>
 				</p-column>
 			</p-dataTable>
-			<p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'"></p-menu>
+			<p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 		</div>
 	</div>
 	<kPopupWidget #editPopup [popupWidth]="380" [popupHeight]="300" [modal]="true">

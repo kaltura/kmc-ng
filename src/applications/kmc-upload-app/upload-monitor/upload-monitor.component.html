@@ -1,0 +1,33 @@
+<i #openuploadmonitor
+   class="kIconfolder_large kUploadMonitorToggler"
+   [class.upToDate]="_upToDate"
+   [class.open]="_menuOpened">
+  <i *ngIf="!_upToDate" class="kIconrefresh_small"></i>
+</i>
+
+<kPopupWidget #uploadmonitor class="uploadMonitorPopup"
+              [closeOnResize]="true"
+              [showTooltip]="true"
+              [appendTo]="appmenu"
+              [popupWidth]="553"
+              [popupHeight]="273"
+              [closeBtn]="false"
+              [targetRef]="openuploadmonitor"
+              [targetOffset]="{'x':-109, 'y': 37}"
+              (onOpen)="_menuOpened = true"
+              (onClose)="_menuOpened = false">
+  <ng-template>
+    <kUploadMonitorSection detailsLink="/content/upload-control"
+                           [uploadMonitorPopup]="uploadmonitor"
+                           [title]="'applications.upload.uploadMonitor.uploadFromDesktop' | translate"
+                           [uploading]="_uploadFromDesktop.uploading"
+                           [queued]="_uploadFromDesktop.queued"
+                           [completed]="_uploadFromDesktop.completed"
+                           [errors]="_uploadFromDesktop.errors"></kUploadMonitorSection>
+    <kUploadMonitorSection [title]="'applications.upload.uploadMonitor.bulkUpload' | translate"
+                           [uploadMonitorPopup]="uploadmonitor"></kUploadMonitorSection>
+    <kUploadMonitorSection type="dropFolder"
+                           [title]="'applications.upload.uploadMonitor.dropFolders' | translate"
+                           [uploadMonitorPopup]="uploadmonitor"></kUploadMonitorSection>
+  </ng-template>
+</kPopupWidget>

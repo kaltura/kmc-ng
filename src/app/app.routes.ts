@@ -21,29 +21,32 @@ const routes: Routes = <Routes>[
         path: '', component: DashboardComponent, canActivate: [AuthCanActivate], children: [
         {
           path: 'content', children: [
-            { path: '', redirectTo: 'entries', pathMatch: 'full' },
+          { path: '', redirectTo: 'entries', pathMatch: 'full' },
+          {
+            path: 'entries',
+            loadChildren: '../applications/content-entries-app/content-entries-app.module#ContentEntriesAppModule'
+          },
+          {
+            path: 'playlists',
+            loadChildren: '../applications/content-playlists-app/content-playlists-app.module#ContentPlaylistsAppModule'
+          },
+          {
+            path: 'categories',
+            loadChildren: '../applications/content-categories-app/content-categories-app.module#ContentCategoriesAppModule'
+          },
+          {
+            path: 'upload-control',
+            loadChildren: '../applications/content-upload-control-app/content-upload-control-app.module#ContentUploadControlAppModule'
+          },
+          {
+            path: 'bulk',
+            loadChildren: '../applications/content-bulk-log-app/content-bulk-log-app.module#ContentBulkLogAppModule'
+          },
             {
-              path: 'entries',
-              loadChildren: '../applications/content-entries-app/content-entries-app.module#ContentEntriesAppModule'
-            },
-            {
-              path: 'playlists',
-              loadChildren: '../applications/content-playlists-app/content-playlists-app.module#ContentPlaylistsAppModule'
-            },
-            {
-              path: 'categories',
-              loadChildren: '../applications/content-categories-app/content-categories-app.module#ContentCategoriesAppModule'
-            },
-            {
-              path: 'upload-control',
-              loadChildren: '../applications/content-upload-control-app/content-upload-control-app.module#ContentUploadControlAppModule'
-            },
-            {
-              path: 'moderation',
-              loadChildren: '../applications/content-moderation-app/content-moderation-app.module#ContentModerationAppModule'
+                path: 'moderation',
+                loadChildren: '../applications/content-moderation-app/content-moderation-app.module#ContentModerationAppModule'
             }
-          ]
-        },
+        ]},
         {
           path: 'settings', children: [
           { path: '', redirectTo: 'accountSettings', pathMatch: 'full' },

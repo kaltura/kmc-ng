@@ -1,18 +1,30 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { MenuItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {MenuItem} from 'primeng/primeng';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {BrowserService} from "app-shared/kmc-shell/providers/browser.service";
 
-import { SchedulingParams } from './services'
-import { BulkSchedulingService, BulkAccessControlService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, EntryCategoryItem, BulkChangeOwnerService, BulkRemoveCategoriesService, BulkDeleteService, BulkDownloadService } from './services';
-import { KalturaMediaEntry } from "kaltura-typescript-client/types/KalturaMediaEntry";
-import { BulkActionBaseService } from "./services/bulk-action-base.service";
-import { environment } from 'app-environment';
-import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import { KalturaAccessControl } from 'kaltura-typescript-client/types/KalturaAccessControl';
-import { BulkDeleteError } from './services/bulk-delete.service';
+import {
+  BulkAccessControlService,
+  BulkAddCategoriesService,
+  BulkAddTagsService,
+  BulkChangeOwnerService,
+  BulkDeleteService,
+  BulkDownloadService,
+  BulkRemoveCategoriesService,
+  BulkRemoveTagsService,
+  BulkSchedulingService,
+  EntryCategoryItem,
+  SchedulingParams
+} from './services'
+import {KalturaMediaEntry} from "kaltura-typescript-client/types/KalturaMediaEntry";
+import {BulkActionBaseService} from "./services/bulk-action-base.service";
+import {environment} from 'app-environment';
+import {KalturaUser} from 'kaltura-typescript-client/types/KalturaUser';
+import {KalturaMediaType} from 'kaltura-typescript-client/types/KalturaMediaType';
+import {KalturaAccessControl} from 'kaltura-typescript-client/types/KalturaAccessControl';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+
 @Component({
   selector: 'kBulkActions',
   templateUrl: './bulk-actions.component.html',
@@ -146,11 +158,10 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     this._bulkAction = "";
 
     const execute = () => {
-      this._browserService.setAppStatus({ isBusy: true, errorMessage: null });
-      service.execute(this.selectedEntries, data).subscribe(
-        result => {
-          this._browserService.setAppStatus({ isBusy: false, errorMessage: null });
-          if (callback) {
+      service.execute(this.selectedEntries, data)
+        .tag('block-shell')
+        .subscribe(
+        result => {if (callback) {
             callback(result);
           }
           this.onBulkChange.emit({ reload: reloadEntries });
@@ -159,7 +170,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
           const message = error.type === 'bulkDelete'
             ? error.message
             : this._appLocalization.get('applications.content.bulkActions.error');
-          this._browserService.setAppStatus({ isBusy: false, errorMessage: message });
+          this._browserService.setAppStatus({errorMessage: message });
         }
       );
     };

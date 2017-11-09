@@ -22,11 +22,11 @@ export class UploadListTableComponent {
   }
 
   public _hasError(status: TrackedFileStatuses): boolean {
-    return status === TrackedFileStatuses.uploadFailed;
+    return status === TrackedFileStatuses.failure;
   }
 
   public _relatedTableRowStyle(rowData: UploadFileData): string {
-    return rowData.status === TrackedFileStatuses.uploadFailed ? 'has-error' : '';
+    return rowData.status === TrackedFileStatuses.failure ? 'has-error' : '';
   }
 }
 

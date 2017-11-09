@@ -1,3 +1,19 @@
+<a name="3.2.0"></a>
+# [3.2.0](https://github.com/kaltura/kmc-ng/compare/v3.1.0...v3.2.0) (2017-11-01)
+
+
+### Bug Fixes
+
+* app failure during bootstrap due to missing Translate module in app module ([23c066a](https://github.com/kaltura/kmc-ng/commit/23c066a))
+* deploy kmc-ng with optimization of production mode
+
+
+### Features
+
+* prevent getting cached translation file when upgrading to new version ([02d43b0](https://github.com/kaltura/kmc-ng/commit/02d43b0))
+
+
+
 <a name="3.1.0"></a>
 # [3.1.0](https://github.com/kaltura/kmc-ng/compare/v3.0.1...v3.1.0) (2017-10-30)
 

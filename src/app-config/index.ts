@@ -1,7 +1,6 @@
 export const environment = {
-    "appVersion": "3.1.0", // will be changed by release script
+    "appVersion": "3.2.0", // will be changed by release script
     "shell": {
-        "languageHash": "12", /* this value is set manually at the moment and should be replaced with the published app version  */
         "defaultRoute": "/content/entries",
         "loginRoute" : "/login",
         "errorRoute" : "/error",
@@ -27,31 +26,54 @@ export const environment = {
                 "showSubMenu": true,
                 "enabled": true,
                 "children": [
-                    {
-                        "routePath": "content/entries",
-                        "titleToken": "Entries",
-                        "enabled": true
-                    },
-                    {
-                        "routePath": "content/moderation",
-                        "titleToken": "Moderation",
-                        "enabled": true
-                    },
-                    {
-                        "routePath": "content/playlists",
-                        "titleToken": "Playlists",
-                        "enabled": true
-                    },
-                    {
-                        "routePath": "content/syndication",
-                        "titleToken": "Syndication",
-                        "enabled": false
-                    },
-                    {
-                        "routePath": "content/categories",
-                        "titleToken": "Categories",
-                        "enabled": true
-                    }
+                  {
+                    "routePath": "content/entries",
+                    "titleToken": "Entries",
+                    "enabled": true,
+                    "position": "left"
+                  },
+                  {
+                    "routePath": "content/moderation",
+                    "titleToken": "Moderation",
+                    "enabled": true,
+                    "position": "left"
+                  },
+                  {
+                    "routePath": "content/playlists",
+                    "titleToken": "Playlists",
+                    "enabled": true,
+                    "position": "left"
+                  },
+                  {
+                    "routePath": "content/syndication",
+                    "titleToken": "Syndication",
+                    "enabled": false,
+                    "position": "left"
+                  },
+                  {
+                    "routePath": "content/categories",
+                    "titleToken": "Categories",
+                    "enabled": true,
+                    "position": "left"
+                  },
+                  {
+                    "routePath": "content/upload-control",
+                    "titleToken": "UploadControl",
+                    "enabled": true,
+                    "position": "right"
+                  },
+                  {
+                    "routePath": "content/bulk",
+                    "titleToken": "BulkUpload",
+                    "enabled": true,
+                    "position": "right"
+                  },
+                  {
+                    "routePath": "content/drop-folders",
+                    "titleToken": "DropFolders",
+                    "enabled": false,
+                    "position": "right"
+                  }
                 ]
             },
             {
@@ -143,6 +165,9 @@ export const environment = {
         "contentPlaylists" : {
             "createdAtDateRange" : "2005:2030",
             "bulkActionsLimit": 2
+        },
+        "createLive": {
+          "akamaiEdgeServerIpURL": "kalvodhds-i.akamaihd.net/serverIp"
         },
         "contentCategories": {
             "createdAtDateRange": "2005:2030",

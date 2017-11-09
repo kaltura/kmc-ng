@@ -83,8 +83,12 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   }
 
   ngOnDestroy() {
-    this._filterUpdateSubscription.unsubscribe();
-    this._parentPopupStateChangeSubscribe.unsubscribe();
+    if (this._filterUpdateSubscription) {
+      this._filterUpdateSubscription.unsubscribe();
+    }
+    if (this._parentPopupStateChangeSubscribe) {
+      this._parentPopupStateChangeSubscribe.unsubscribe();
+    }
   }
 
   /**

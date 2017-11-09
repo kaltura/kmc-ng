@@ -4,15 +4,15 @@
     <div class="kContainer">
       <span class="kLabel">{{'applications.content.categories.bActions.changeContentPrivacyLabel' | translate}}</span>
       <div class="kBlock">
-        <p-radioButton name="privacy" [value]="_privacyMode.NoRestriction"
+        <p-radioButton name="privacy" [value]="_privacyModes.NoRestriction" [(ngModel)]="_privacyMode"
         label="{{'applications.content.categories.noRestriction' | translate}}"></p-radioButton>
       </div>
       <div class="kBlock">
-        <p-radioButton name="privacy" [value]="_privacyMode.RequiresAuthentication"
+        <p-radioButton name="privacy" [value]="_privacyModes.RequiresAuthentication" [(ngModel)]="_privacyMode"
         label="{{'applications.content.categories.requiresAuthentication' | translate}}"></p-radioButton>
       </div>
       <div class="kBlock">
-        <p-radioButton name="privacy" [value]="_privacyMode.Private"
+        <p-radioButton name="privacy" [value]="_privacyModes.Private" [(ngModel)]="_privacyMode"
         label="{{'applications.content.categories.private' | translate}}"></p-radioButton>
       </div>
     </div>
