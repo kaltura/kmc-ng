@@ -1,0 +1,39 @@
+<k-area-blocker kFillHeight [showLoader]="_isBusy" [message]="_blockerMessage" style="height: 100%">
+
+  <div class="kTreeContainer kOverrideFAIcons kRadioButtonPOC">
+
+    <div class="kHeader">
+    <span class="kTitle">
+      <span *ngIf="newCategoryForm">{{('applications.content.addNewCategory.newCategory') | translate}}</span>
+    </span>
+    </div>
+    <div class="kContainer">
+      <form class="kRow" [formGroup]="newCategoryForm" novalidate>
+        <span class="kLabel">{{'applications.content.addNewCategory.name' | translate}}</span>
+        <div class="kRequired" [ngClass]="{'kHasError':!newCategoryForm.controls['name'].valid &&
+                   newCategoryForm.controls['name'].touched}">*
+        </div>
+        <div>
+          <input class="kControl" formControlName="name" pInputText
+                 [ngClass]="{'kHasError':!newCategoryForm.controls['name'].valid &&
+                   newCategoryForm.controls['name'].touched}">
+          <div *ngIf="newCategoryForm.controls['name'].touched &&
+                 newCategoryForm.controls['name'].hasError('required')"
+               class="error">
+            {{'applications.content.addNewCategory.errors.requiredName' | translate}}
+          </div>
+        </div>
+      </form>
+      <div class="kRow">
+        <span>{{('applications.content.addNewCategory.selectCategoryParent') | translate}}</span>
+      </div>
+      <kCategoryParentSelector (onCategorySelected)="_onCategorySelected($event)"></kCategoryParentSelector>
+    </div>
+    <div class="kFooter">
+      <button type="button" class="kButtonBranded" pButton
+              label="{{'applications.content.addNewCategory.apply' | translate}}"
+              (click)="_apply()" [disabled]="!newCategoryForm.controls['name'].valid"></button>
+      <a class="kLink" (click)="_cancel()">{{'applications.content.addNewCategory.cancel' | translate}}</a>
+    </div>
+  </div>
+</k-area-blocker>

@@ -1,114 +1,28 @@
 @import "app-theme/_variables.scss";
 
-.kTreeContainer {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  .kHeader {
-    width: 100%;
-    text-align: center;
-    border-bottom: 1px solid $kGrayscale4;
-    height: 78px;
-    padding-top: 24px;
-    box-sizing: border-box;
-    .kTitle {
-      color: $kGrayscale1;
-      font-size: 24px;
-      font-weight: 700;
-    }
-  }
- .kContainer {
-   width: 520px;
-   margin: 0 auto;
+.kNoParentOption {
+  padding-bottom: 8px;
+  display: block;
+}
 
-   &.kFullHeight{
-     height: 515px;
-   }
+.kMain {
+  border: 1px solid $kGrayscale4;
+  border-radius: 4px;
+  height: 311px;
+  padding: 8px;
+  box-sizing: border-box;
 
-   .kRow {
-     display: -webkit-box;
-     display: -ms-flexbox;
-     display: flex;
-     padding-bottom: 20px;
-
-     &:first-child {
-       padding-top: 20px;
-     }
-     .kLabel {
-       width: 100px;
-       -webkit-box-flex: 0;
-       -ms-flex: 0 0 auto;
-       flex: 0 0 auto;
-       height: 18px;
-       color: $kGrayscale1;
-       font-size: 15px;
-       line-height: 18px;
-     }
-
-     .kRequired {
-       width: 20px;
-       font-size: 24px;
-       color: $kGrayscale3;
-       &.kHasError {
-         color: $kDandger;
-         font-weight: bold;
-       }
-     }
-     .kRequired, .kLabel {
-       padding: 8px 4px 0px 0px;
-     }
-     .kControl {
-       height: 34px;
-       color: $kGrayscale2;
-       width: 375px;
-       border-radius: 3px;
-       &.kHasError {
-         border: 1px solid $kDandger;
-         background: initial;
-       }
-     }
-     .error {
-       padding-top: 8px;
-     }
-   }
-
-   .kRow.kNoParentOption {
-     padding-bottom: 0;
-   }
-
-   .kMain {
-     border: 1px solid $kGrayscale4;
-     border-radius: 4px;
-     height: 311px;
-     padding: 8px;
-     box-sizing: border-box;
-   }
-   .kSelectedCategoryTooltip {
-     display: inline-block;
-     font-size: 15px;
-     color: $kGrayscale3;
-     overflow: hidden;
-     width: 100%;
-     text-overflow: ellipsis;
-     white-space: nowrap;
-     padding: 8px 0 5px 0px;
-   }
- }
-  .kFooter {
-    border-top: 1px solid $kGrayscale4;
-    padding-top: 15px;
-    box-sizing: border-box;
-    text-align: center;
-    height: 66px;
-    .kButtonBranded {
-      height: 34px;
-      width: 100px;
-    }
-    .kLink {
-      padding-left: 24px;
-    }
+  .kSelectedCategoryTooltip {
+    display: inline-block;
+    font-size: 15px;
+    color: $kGrayscale3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 8px 0 5px 0px;
   }
 }
+
 
 :host /deep/ kautocomplete .kKalturaPrimeUIComponent.ui-autocomplete-multiple {
   width: 100%;

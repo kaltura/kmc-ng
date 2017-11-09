@@ -53,6 +53,8 @@ import {CategoryComponentsList} from './category/category-components-list';
 import {CategoriesComponentsList} from './categories/categories-components-list';
 import {CategoryCanDeactivate} from './category/category-can-deactivate.service';
 import {CategoryParentSelectorComponent} from './categories/category-parent-selector/category-parent-selector.component';
+import {NewCategoryComponent} from './categories/new-category/new-category.component';
+import {MoveCategoryComponent} from './categories/move-category/move-category.component';
 
 @NgModule({
     imports: [
@@ -100,6 +102,8 @@ import {CategoryParentSelectorComponent} from './categories/category-parent-sele
         CategoriesComponentsList,
         CategoriesBulkActionsComponent,
         CategoryParentSelectorComponent,
+        MoveCategoryComponent,
+        NewCategoryComponent
     ],
     exports: [],
     providers: [CategoryCanDeactivate,

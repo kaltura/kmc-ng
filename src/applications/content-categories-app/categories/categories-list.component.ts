@@ -3,10 +3,11 @@ import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
-import {CategoriesService, SortDirection, CategoryParentSelection} from './categories.service';
+import {CategoriesService, MoveCategoryData, SortDirection} from './categories.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {AppLocalization} from "@kaltura-ng/kaltura-common";
 import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
+import {CategoryData} from "app-shared/content-shared/categories-search.service";
 
 @Component({
     selector: 'kCategoriesList',
@@ -169,10 +170,10 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         }
     }
 
-    onAddNewCategory(categoryParentSelectionData: CategoryParentSelection): void {
+    onAddNewCategory(selectedCategoryData: CategoryData): void {
       this._isBusy = true;
       this._blockerMessage = null;
-      this._categoriesService.addNewCategory(categoryParentSelectionData)
+      this._categoriesService.addNewCategory(selectedCategoryData)
         .subscribe(category => {
             this._isBusy = false;
             // use a flag so the categories will be refreshed upon clicking 'back' from the category page
@@ -197,23 +198,23 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         });
     }
 
-    onMoveCategory(categoryParentSelectionData: CategoryParentSelection): void {
+    onMoveCategory(moveCategoryData: MoveCategoryData): void {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.categories.moveCategory'),
           message: this._appLocalization.get('applications.content.moveCategory.treeUpdateNotification'),
           accept: () => {
-            this._moveCategory(categoryParentSelectionData);
+            this._moveCategory(moveCategoryData);
           }
         }
       );
     }
 
-  private _moveCategory(categoryParentSelectionData: CategoryParentSelection) {
+  private _moveCategory(moveCategoryData: MoveCategoryData) {
     this._isBusy = true;
     this._blockerMessage = null;
     this._categoriesService
-      .moveCategory(categoryParentSelectionData)
+      .moveCategory(moveCategoryData)
       .subscribe(category => {
           this._isBusy = false;
         },
@@ -225,7 +226,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
               buttons: [{
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
-                  this._moveCategory(categoryParentSelectionData);
+                  this._moveCategory(moveCategoryData);
                 }
               },
                 {
