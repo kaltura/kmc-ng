@@ -75,6 +75,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
         }
         return { relevantRelatedFile, uploadedFile };
       })
+      .filter(({ relevantRelatedFile }) => !!relevantRelatedFile)
       .subscribe(
         ({ relevantRelatedFile, uploadedFile }) => {
           switch (uploadedFile.status) {
@@ -83,6 +84,8 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
               break;
             case TrackedFileStatuses.prepared:
               relevantRelatedFile.serverUploadToken = (<NewEntryRelatedFile>uploadedFile.data).serverUploadToken;
+              this.updateState({ isBusy: false });
+
               break;
             case TrackedFileStatuses.uploadCompleted:
               relevantRelatedFile.uploading = false;
@@ -227,6 +230,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 
 		this._relatedFiles.next({items: files});
 
+    this.updateState({ isBusy: true });
 		this._setDirty();
 
 		return newFile;
