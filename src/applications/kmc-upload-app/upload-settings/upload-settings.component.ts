@@ -112,11 +112,11 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     ];
 
     switch (true) {
-      case videoFiles.includes(extension):
+      case videoFiles.indexOf(extension) !== -1:
         return KalturaMediaType.video;
-      case audioFiles.includes(extension):
+      case audioFiles.indexOf(extension) !== -1:
         return KalturaMediaType.audio;
-      case imageFiles.includes(extension):
+      case imageFiles.indexOf(extension) !== -1:
         return KalturaMediaType.image;
       default:
         return null;
@@ -216,7 +216,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     files.forEach(file => {
       const fileSize = file.size / 1024 / 1024; // convert to Mb
 
-      if (!allowedTypes.includes(file.mediaType)) {
+      if (allowedTypes.indexOf(file.mediaType) === -1) {
         result = false;
         file.errorToken = 'applications.upload.validation.wrongType';
         file.hasError = true;
