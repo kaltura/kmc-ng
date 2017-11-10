@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -14,6 +14,8 @@ import { ValueFilter } from 'app-shared/content-shared/entries-store/value-filte
 import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item';
 import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 import { CreatedAtFilter } from '../bulk-log-store/filters/created-at-filter';
+import { ISubscription } from 'rxjs/Subscription';
+import { ScrollToTopContainerComponent } from 'app-shared/content-shared/scroll-to-top-container/scroll-to-top-container.component';
 
 export interface TreeFilterData {
   items: PrimeTreeNode[];
@@ -34,8 +36,10 @@ export interface FiltersGroup {
 })
 export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
+  @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
 
   private _filterNameToTreeData: { [key: string]: TreeFilterData } = {};
+  private _parentPopupStateChangeSubscribe: ISubscription;
 
   // properties that are exposed to the template
   public _filtersGroupList: FiltersGroup[] = [];
@@ -50,7 +54,6 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   constructor(public additionalFiltersStore: BulkLogRefineFiltersProviderService,
               private _primeTreeDataProvider: PrimeTreeDataProvider,
               private _bulkLogStore: BulkLogStoreService,
-              private _elementRef: ElementRef,
               private _appLocalization: AppLocalization) {
   }
 
@@ -60,14 +63,11 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
   ngAfterViewInit() {
     if (this.parentPopupWidget) {
-      this.parentPopupWidget.state$
+      this._parentPopupStateChangeSubscribe =  this.parentPopupWidget.state$
         .cancelOnDestroy(this)
         .subscribe(event => {
-          if (event.state === PopupWidgetStates.Close) {
-            const nativeElement: HTMLElement = this._elementRef.nativeElement;
-            if (nativeElement && nativeElement.getElementsByClassName('kTreeContainer').length > 0) {
-              nativeElement.getElementsByClassName('kTreeContainer')[0].scrollTop = 0;
-            }
+          if (event.state === PopupWidgetStates.Close && this._treeContainer) {
+            this._treeContainer.scrollToTop();
           }
         });
     }
@@ -75,6 +75,10 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
   // keep for cancelOnDestroy operator
   ngOnDestroy() {
+    if (this._parentPopupStateChangeSubscribe) {
+      this._parentPopupStateChangeSubscribe.unsubscribe();
+      this._parentPopupStateChangeSubscribe = null;
+    }
   }
 
   /**

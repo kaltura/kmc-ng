@@ -16,6 +16,7 @@ import {
   CategoriesFilter,
   CategoriesFilterModes
 } from 'app-shared/content-shared/entries-store/filters/categories-filter';
+import { ScrollToTopContainerComponent } from 'app-shared/content-shared/scroll-to-top-container/scroll-to-top-container.component';
 
 export enum TreeSelectionModes {
   Self = 0,
@@ -30,6 +31,7 @@ export enum TreeSelectionModes {
 export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
 
+  @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
   @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
   @ViewChild('searchCategory')
 
@@ -68,11 +70,8 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
             setTimeout(() => inputFields[0].focus(), 0);
           }
         }
-        if (event.state === PopupWidgetStates.Close) {
-          const nativeElement: HTMLElement = this._filtersRef.nativeElement;
-          if (nativeElement && nativeElement.getElementsByClassName('kTreeContainer').length > 0) {
-            nativeElement.getElementsByClassName('kTreeContainer')[0].scrollTop = 0;
-          }
+        if (event.state === PopupWidgetStates.Close && this._treeContainer) {
+          this._treeContainer.scrollToTop();
         }
       });
     }
