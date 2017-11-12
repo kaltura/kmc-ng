@@ -44,12 +44,6 @@ export class FlavorImport implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	_onChange(){console.log("change");
-		if (this._validationErrorMsg.length){
-			this._validate();
-		}
-	}
-
 	_saveAndClose(){
 		let context = {}; // pass selected file or file URL to the parent component via the popup widget close context
 		if (this._validationErrorMsg === "" && this._flavorURL.length){
