@@ -1,0 +1,32 @@
+<k-area-blocker [showLoader]="(categoriesService.state$ | async)?.loading || this._deferredLoading" [message]="_blockerMessage"	[centerOnScreen]="true">
+  <div class="kCategoriesTable" [class.noResults]="!_categories.length">
+    <p-dataTable [value]="_categories" [sortField]="filter.sortBy" [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
+      scrollable="true" scrollHeight="100%" dataKey="id" [rowTrackBy]="rowTrackBy" (selectionChange)="_onSelectionChange($event)"
+      (onSort)="_onSortChanged($event)" [(selection)]="selectedCategories" emptyMessage="{{_emptyMessage}}"
+      kStickyHeader [sticksTo]="'categoriesListFilters'" stickyClass="stickyHeader" [stickyId]="'categoriesTable'">
+      <p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
+      <p-column field="name" header="Name" [sortable]="'custom'" [style]="{'width':'100px'}">
+        <ng-template let-col let-category="rowData" pTemplate="body">
+          <div [kTooltip]="category.fullName" class="kTitle" (click)="onActionSelected('edit',category.id)" [maxWidth]="300">
+            {{category[col.field]}}</div>
+        </ng-template>
+      </p-column>
+      <p-column field="id" header="ID" [sortable]="false" [style]="{'width':'100px'}"></p-column>
+      <p-column field="createdAt" header="Created On" [sortable]="'custom'" [style]="{'width':'140px'}">
+        <ng-template let-col let-category="rowData" pTemplate="body">
+          <span>{{category[col.field] | kDate}}</span>
+        </ng-template>
+      </p-column>
+      <p-column field="directSubCategoriesCount" header="Sub - Categories" [sortable]="'custom'" [style]="{'width':'100px'}"></p-column>
+      <p-column field="entriesCount" header="Entries" [sortable]="'custom'" [style]="{'width':'100px'}"></p-column>
+      <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
+        <ng-template let-col let-category="rowData" pTemplate="body">
+          <div class="kCategoriesTableActions">
+            <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, category)"></button>
+          </div>
+        </ng-template>
+      </p-column>
+    </p-dataTable>
+    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+  </div>
+</k-area-blocker>

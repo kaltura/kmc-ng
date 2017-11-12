@@ -39,14 +39,10 @@ const routes: Routes = <Routes>[
             loadChildren: '../applications/content-upload-control-app/content-upload-control-app.module#ContentUploadControlAppModule'
           },
           {
-            path: 'administration', children: [
-              { path: '', redirectTo: 'users', pathMatch: 'full' },
-              { path: 'users', loadChildren: '../applications/administration-users-app/administration-users-app.module#AdministrationUsersAppModule'  },
-              { path: 'roles', loadChildren: '../applications/administration-roles-app/administration-roles-app.module#AdministrationRolesAppModule'  }
-            ]
-          }
-        ]
-        },
+            path: 'bulk',
+            loadChildren: '../applications/content-bulk-log-app/content-bulk-log-app.module#ContentBulkLogAppModule'
+          },
+        ]},
         {
           path: 'settings', children: [
           { path: '', redirectTo: 'accountSettings', pathMatch: 'full' },

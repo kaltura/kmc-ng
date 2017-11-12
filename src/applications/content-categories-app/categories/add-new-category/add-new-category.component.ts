@@ -27,7 +27,7 @@ export interface CategoryItem {
     templateUrl: './add-new-category.component.html',
     styleUrls: ['./add-new-category.component.scss']
 })
-export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecked {
+export class AddNewCategoryComponent implements AfterViewInit, OnDestroy, AfterViewChecked {
 
     @Input() parentPopupWidget: PopupWidgetComponent;
     @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
@@ -45,9 +45,12 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
         expendTreeSelectionNodeId: null
     };
 
-    constructor(private _appLocalization: AppLocalization, public router: Router,
-        private _browserService: BrowserService, private cdRef: ChangeDetectorRef, private _categoriesPrimeService: CategoriesPrimeService,
-        private _categoriesService: CategoriesService) {
+    constructor(private _router: Router,
+                private _appLocalization: AppLocalization,
+                private _browserService: BrowserService,
+                private _cdRef: ChangeDetectorRef,
+                private _categoriesPrimeService: CategoriesPrimeService,
+                private _categoriesService: CategoriesService) {
     }
 
     ngAfterViewInit() {
@@ -110,7 +113,7 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
     public _onTreeNodeSelected({ node }: { node: any }) {
         if (node instanceof PrimeTreeNode) {
 
-            // we must explicitly cast the nopde.origin. the value it set to be CategoryData when creating the suggested results            
+            // we must explicitly cast the nopde.origin. the value it set to be CategoryData when creating the suggested results
             const selectedItem: CategoryData = <CategoryData>node.origin;
 
             const selectedCategoryId = this._selectedCategory ? this._selectedCategory.id : null;
@@ -156,14 +159,14 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
         this._categoriesService.setNewCategoryData({
             parentCategoryId: parentCategoryId
         });
-        this.router.navigate(['/content/categories/category/new/metadata']);
+        this._router.navigate(['/content/categories/category/new/metadata']);
     }
 
     _close() {
         this.parentPopupWidget.close();
     }
 
-    public _onAutoCompleteSelected() {
+    public _onAutoCompleteSelected(event) {
 
         // we must explicitly cast the getValue. the value it set to be CategoryData when creating the suggested results
         const selectedItem: CategoryData = <CategoryData>this._autoComplete.getValue();
@@ -202,7 +205,7 @@ export class AddNewCategory implements AfterViewInit, OnDestroy, AfterViewChecke
 
             this._ngAfterViewCheckedContext.expendTreeSelectionNodeId = null;
             this._ngAfterViewCheckedContext.updateTreeSelections = false;
-            this.cdRef.detectChanges();
+            this._cdRef.detectChanges();
         }
     }
 

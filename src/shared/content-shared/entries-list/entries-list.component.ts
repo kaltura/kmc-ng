@@ -4,7 +4,8 @@ import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 
 import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { FreetextFilter } from 'app-shared/content-shared/entries-store/filters/freetext-filter';
-import { EntriesTableColumns, EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
+import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
+import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kEntriesList',
@@ -18,7 +19,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   @Input() columns: EntriesTableColumns | null;
   @Input() rowActions: { label: string, commandName: string }[];
 
-  @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
   @ViewChild('tags') private tags: StickyComponent;
 
   @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
@@ -33,7 +33,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     sortDirection: SortDirection.Desc
   };
 
-  constructor(private _entriesStore: EntriesStore) {
+  constructor(public _entriesStore: EntriesStore, private _browserService: BrowserService) {
   }
 
   removeTag(tag: any) {
@@ -96,7 +96,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
         this._filter.pageSize = query.data.pageSize;
         this._filter.pageIndex = query.data.pageIndex - 1;
-        this.dataTable.scrollToTop();
+        this._browserService.scrollToTop();
       }
     );
 

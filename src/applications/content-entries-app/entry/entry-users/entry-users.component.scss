@@ -5,8 +5,8 @@ form{
 }
 
 .kUsers {
-	padding-left: 12px;
-	padding-right: 12px;
+	padding-left: 24px;
+	padding-right: 24px;
 	width: 100%;
 	box-sizing: border-box;
 	.kTitle {
@@ -58,7 +58,7 @@ form{
   .kContainer{
     flex: 0 0 auto;
     height: 72px;
-    margin: 20px;
+    margin: 24px;
     .kLabel{
       display: block;
       margin-bottom: 8px;
@@ -85,6 +85,9 @@ form{
   /deep/ kAutoComplete{
     margin-top: 4px;
     width: 100%;
+    .ui-autocomplete-input-token{
+      width: 200px;
+    }
   }
 }
 

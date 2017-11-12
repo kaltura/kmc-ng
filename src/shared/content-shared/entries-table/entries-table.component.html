@@ -4,8 +4,8 @@
                   [centerOnScreen]="true">
     <p-dataTable #dataTable
                  dataKey="id"
-                 [scrollable]="_scrollable"
-                 [scrollHeight]="_scrollHeight"
+                 scrollable="true"
+                 scrollHeight="100%"
                  [value]="_entries"
                  [sortField]="filter.sortBy"
                  [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
@@ -39,11 +39,11 @@
                 [sortable]="_columns.name?.sortable | kPrimeTableSortTransform"
                 [style]="_getColumnStyle(_columns.name)">
         <ng-template let-col let-entry="rowData" pTemplate="body">
-          <span class="kTitle"
+          <div class="kTitle" [kTooltip]="entry[col.field]" [maxWidth]="300"
                 [class.disable]="!_allowDrilldown(entry.mediaType,entry.status)"
                 (click)="_onActionSelected('view',entry.id,entry.mediaType,entry.status)">
             {{entry[col.field]}}
-          </span>
+          </div>
         </ng-template>
       </p-column>
 
@@ -112,9 +112,6 @@
       </p-column>
     </p-dataTable>
 
-    <p-menu #actionsmenu
-            popup="popup"
-            [model]="_items"
-            [appendTo]="'body'"></p-menu>
+    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
   </k-area-blocker>
 </div>

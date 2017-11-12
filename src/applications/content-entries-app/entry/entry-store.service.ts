@@ -1,22 +1,21 @@
-import { Injectable,  OnDestroy, Host } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd, NavigationStart } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import {Host, Injectable, OnDestroy} from '@angular/core';
+import {ActivatedRoute, NavigationEnd, NavigationStart, Router} from '@angular/router';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {ISubscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { BaseEntryGetAction } from 'kaltura-typescript-client/types/BaseEntryGetAction';
-import { BaseEntryUpdateAction } from 'kaltura-typescript-client/types/BaseEntryUpdateAction';
+import {KalturaClient} from '@kaltura-ng/kaltura-client';
+import {KalturaMediaEntry} from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import {KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-typescript-client';
+import {BaseEntryGetAction} from 'kaltura-typescript-client/types/BaseEntryGetAction';
+import {BaseEntryUpdateAction} from 'kaltura-typescript-client/types/BaseEntryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { EntryFormManager } from './entry-form-manager';
-import { KalturaTypesFactory } from 'kaltura-typescript-client';
-import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
+import { EntryWidgetsManager } from './entry-widgets-manager';
+import {  OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 
@@ -72,7 +71,7 @@ export class EntryStore implements  OnDestroy {
 				private _router: Router,
 				private _browserService : BrowserService,
 				private _entriesStore : EntriesStore,
-				@Host() private _sectionsManager : EntryFormManager,
+				@Host() private _sectionsManager : EntryWidgetsManager,
 				private _entryRoute: ActivatedRoute,
                 private _appLocalization: AppLocalization) {
 
@@ -83,6 +82,16 @@ export class EntryStore implements  OnDestroy {
 
 		this._onSectionsStateChanges();
 		this._onRouterEvents();
+
+		// hard reload the entries upon navigating back from entry (by adding 'reloadEntriesListOnNavigateOut' to the queryParams)
+    this._entryRoute.queryParams.cancelOnDestroy(this)
+      .first()
+      .subscribe(queryParams => {
+         const reloadEntriesListOnNavigateOut = !!queryParams['reloadEntriesListOnNavigateOut']; // convert string to boolean
+         if (reloadEntriesListOnNavigateOut) {
+           this._saveEntryInvoked = reloadEntriesListOnNavigateOut;
+         }
+       });
     }
 
     private _onSectionsStateChanges()
@@ -180,7 +189,7 @@ export class EntryStore implements  OnDestroy {
 			})
 		);
 
-		this._sectionsManager.onDataSaving(newEntry, request, this.entry)
+		this._sectionsManager.notifyDataSaving(newEntry, request, this.entry)
             .cancelOnDestroy(this)
             .monitor('entry store: prepare entry for save')
             .flatMap(
@@ -190,6 +199,7 @@ export class EntryStore implements  OnDestroy {
 
 						return this._kalturaServerClient.multiRequest(request)
                             .monitor('entry store: save entry')
+                            .tag('block-shell')
                             .map(
 								response => {
 									if (response.hasErrors()) {
@@ -260,7 +270,7 @@ export class EntryStore implements  OnDestroy {
 		this._updatePageExitVerification();
 
 		this._state.next({action: ActionTypes.EntryLoading});
-		this._sectionsManager.onDataLoading(entryId);
+		this._sectionsManager.notifyDataLoading(entryId);
 
 		this._loadEntrySubscription = this._getEntry(entryId)
             .cancelOnDestroy(this)
@@ -270,7 +280,7 @@ export class EntryStore implements  OnDestroy {
 						this._entry.next(response);
 						this._entryId = response.id;
 
-						const dataLoadedResult = this._sectionsManager.onDataLoaded(response);
+						const dataLoadedResult = this._sectionsManager.notifyDataLoaded(response);
 
 						if (dataLoadedResult.errors.length)
 						{

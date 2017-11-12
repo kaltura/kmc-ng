@@ -19,7 +19,7 @@
     margin-bottom: 8px;
   }
   .kContainer{
-    margin: 20px;
+    margin: 24px;
   }
 }
 .kFooter{
@@ -38,5 +38,8 @@
   width: 100%;
   input{
     width: 100%;
+  }
+  .ui-autocomplete-input-token{
+    width: 200px;
   }
 }

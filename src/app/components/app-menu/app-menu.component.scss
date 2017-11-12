@@ -45,6 +45,7 @@
         color: $headerTextColor;
         font-size: 24px;
         cursor: pointer;
+        position: relative;
         &:hover , &.open {
             opacity: 1;
             color: $mainLinkHoverColor;
@@ -81,10 +82,10 @@
 
         .kIconhelp.has-notification:after {
           content: ' \25CF';
-          color: $kDandger;
+          color: lighten($kPrimary, 10%);
           position: absolute;
-          margin-left: 15px;
-          margin-top: 4px;
+          right: -4px;
+          bottom: -4px;
         }
     }
     .kUserName {
@@ -148,4 +149,12 @@
     .kSubMenu {
         display: flex;
     }
+}
+
+// prioritize sticky elements of header above other sticky elements in the page
+:host /deep/ .kStickyClass{
+    z-index: 550 !important;
+}
+:host /deep/ .uploadMonitorPopup .tooltipUp{
+    margin-left: 234px !important;
 }

@@ -1,11 +1,11 @@
-<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
-	<kFileDialog #fileDialog [allowMultiple]="true" (onFileSelected)="_handler._onFileSelected($event)"></kFileDialog>
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+	<kFileDialog #fileDialog [allowMultiple]="true" (onFileSelected)="_widgetService._onFileSelected($event)"></kFileDialog>
 	<div class="kRelated">
 		<p class="kTitle">{{'applications.content.entryDetails.related.related' | translate}}</p>
 		<button type="button" class="kButtonDefault" (click)="fileDialog.open($event)" pButton label="{{'applications.content.entryDetails.related.add' | translate}}"></button>
 		<div class="kTable">
-			<p-dataTable [value]="(_handler._relatedFiles$ | async)?.items" scrollable="true" scrollHeight="100%" [rowStyleClass]="_relatedTableRowStyle" >
-				<p-column field="filename" header="{{'applications.content.entryDetails.related.name' | translate}}">
+			<p-dataTable [value]="(_widgetService._relatedFiles$ | async)?.items" scrollable="true" scrollHeight="100%" [rowStyleClass]="_relatedTableRowStyle" >
+				<p-column field="filename" header="{{'applications.content.entryDetails.related.name' | translate}}" [style]="{'padding-left': '24px'}">
 				</p-column>
 				<p-column header="{{'applications.content.entryDetails.related.type' | translate}}" [style]="{'width':'140px', 'overflow':'visible'}">
 					<ng-template let-col let-file="rowData" pTemplate="body">
@@ -15,7 +15,7 @@
                         [autoWidth]="false"
                         [placeholder]="'applications.content.entryDetails.related.select' | translate"
                         [(ngModel)]="file.format"
-                        (onChange)="_handler._setDirty()"></p-dropdown>
+                        (onChange)="_widgetService._setDirty()"></p-dropdown>
 					</ng-template>
 				</p-column>
 				<p-column field="size" header="{{'applications.content.entryDetails.related.size' | translate}}">
@@ -41,15 +41,15 @@
 						</div>
 						<div *ngIf="file.uploading" class="kUploadMonitor">
 							<span>{{file.progress ? file.progress : '0'}}%</span>
-							<a (click)="_handler._cancelUpload(file)">{{'applications.content.entryDetails.related.cancel' | translate}}</a>
+							<a (click)="_widgetService._cancelUpload(file)">{{'applications.content.entryDetails.related.cancel' | translate}}</a>
 						</div>
 						<div *ngIf="file.uploadFailure">
-							<a (click)="_handler._removeFile(file)">{{'applications.content.entryDetails.related.remove' | translate}}</a>
+							<a (click)="_widgetService._removeFile(file)">{{'applications.content.entryDetails.related.remove' | translate}}</a>
 						</div>
 					</ng-template>
 				</p-column>
 			</p-dataTable>
-			<p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'"></p-menu>
+			<p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 		</div>
 	</div>
 	<kPopupWidget #editPopup [popupWidth]="380" [popupHeight]="300" [modal]="true">

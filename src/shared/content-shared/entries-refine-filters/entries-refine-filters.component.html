@@ -9,7 +9,7 @@
         <p-calendar class="kDateRangeFirst" [(ngModel)]="_createdAfter" [readonlyInput]="true" [showIcon]="true"
                     [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
                     icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
-        <p-calendar class="kDateRangeLast kPullLeft30" [(ngModel)]="_createdBefore" [readonlyInput]="true"
+        <p-calendar class="kDateRangeLast kPullLeft40" [(ngModel)]="_createdBefore" [readonlyInput]="true"
                     [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
                     icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
       </div>
@@ -39,7 +39,7 @@
                               icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true"
                               [yearNavigator]="true" [yearRange]="_createdAtDateRange" [readonlyInput]="true"
                               (onSelect)="_onSchedulingChanged(scheduledfrom)"></p-calendar>
-                  <p-calendar class="kDateRangeLast kPullLeft90" #scheduledto [(ngModel)]="_scheduledBefore"
+                  <p-calendar class="kDateRangeLast kPullLeft100" #scheduledto [(ngModel)]="_scheduledBefore"
                               [showIcon]="true" icon="kIconcalendar" [disabled]="!_scheduledSelected"
                               [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
                               [readonlyInput]="true" (onSelect)="_onSchedulingChanged(scheduledto)"></p-calendar>

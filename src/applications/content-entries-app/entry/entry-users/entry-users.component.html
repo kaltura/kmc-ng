@@ -1,15 +1,17 @@
-<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
-	<form [formGroup]="_handler.usersForm" novalidate>
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+	<form [formGroup]="_widgetService.usersForm" novalidate>
 		<div class="kUsers">
 			<p class="kTitle">{{'applications.content.entryDetails.users.users' | translate}}</p>
 			<div class="kUsersDetails">
 				<div class="kRow">
 					<span class="kLabels">{{'applications.content.entryDetails.users.creator' | translate}}</span>
-					<span>{{_handler._creator}}</span>
+					<span [kTooltip]="_widgetService._creator">{{_widgetService._creator}}</span>
 				</div>
 				<div class="kRow">
 					<span class="kLabels">{{'applications.content.entryDetails.users.owner' | translate}}</span>
-					<span>{{_handler._owner?.screenName ? _handler._owner?.screenName : _handler._owner?.id}}</span>
+					<span [kTooltip]="_widgetService._owner?.screenName ? _widgetService._owner?.screenName : _widgetService._owner?.id">
+            {{_widgetService._owner?.screenName ? _widgetService._owner?.screenName : _widgetService._owner?.id}}
+          </span>
 					<a class="changeOwner" (click)="_openChangeOwner()">{{'applications.content.entryDetails.users.changeOwner' | translate}}</a>
 				</div>
 				<div class="kRow kSeparator">
@@ -18,7 +20,7 @@
 								   formControlName="editors"
 								   suggestionItemField="item"
 								   suggestionLabelField="name"
-								   field="screenName"
+								   field="id"
 								   [multiple]="true"
 								   [onItemAdding]="_convertUserInputToValidValue.bind(this)"
 								   [limitToSuggestions]="false"
@@ -46,7 +48,7 @@
 			</div>
 		</div>
 
-		<kPopupWidget #ownerPopup [popupWidth]="500" [popupHeight]="260" [modal]="true">
+		<kPopupWidget #ownerPopup [popupWidth]="500" [popupHeight]="264" [modal]="true">
         <div class="kFloater kOverrideFAIcons">
           <div class="kHeader">
             <span class="kTitle">{{'applications.content.entryDetails.users.changeOwner' | translate}}</span>

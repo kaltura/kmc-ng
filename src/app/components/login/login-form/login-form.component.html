@@ -20,7 +20,7 @@
            pInputText
            [placeholder]="'app.login.login.placeholder.password' | translate"
            [formControl]="_passwordField"
-           [class.has-error]="errorMessage">
+           [class.has-error]="errorMessage || _showError(_passwordField)">
   </div>
 
   <p *ngIf="errorMessage" class="kErrorMessage" [innerHTML]="errorMessage"></p>

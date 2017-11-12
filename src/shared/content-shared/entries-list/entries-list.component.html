@@ -1,7 +1,7 @@
-<k-area-blocker [showLoader]="isBusy" [message]="blockerMessage">
+<k-area-blocker [showLoader]="isBusy" [message]="blockerMessage" [centerOnScreen]="true">
   <div class="kEntries kOverrideFAIcons">
     <div #entriesTableHolder class="kEntriesHolder kContent">
-      <kSticky [stickyClass]="'kStickyClass'" stickyId="entriesFilters" [scrollOffset]="80" [sticksTo]="'header'" >
+      <kSticky stickyId="entriesFilters" [scrollOffset]="80" [sticksTo]="'header'" >
         <div class="kEntriesTableFilters kContent">
           <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries$ | async)?.totalCount">{{(_entriesStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
 
