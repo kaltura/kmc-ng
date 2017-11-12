@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { KalturaCategoryEntry } from 'kaltura-typescript-client/types/KalturaCategoryEntry';
@@ -27,7 +28,10 @@ export class BulkRemoveCategoriesService extends BulkActionBaseService<number[]>
 
 	private entryCategories: KalturaCategoryEntry[] = [];
 
-	constructor(_kalturaServerClient: KalturaClient) {
+	constructor(
+	  _kalturaServerClient: KalturaClient,
+    private _appLocalization: AppLocalization
+  ) {
 		super(_kalturaServerClient);
 	}
 
@@ -53,32 +57,35 @@ export class BulkRemoveCategoriesService extends BulkActionBaseService<number[]>
 				pager: pager
 			})).subscribe(
 				response => {
-					// got all entry categories - load category details for each entry category
-					this.entryCategories = response.objects;
-					let categoriesIds = "";
-					this.entryCategories.forEach(category => {
-						if (categoriesIds.indexOf(category.categoryId.toString()) === -1) {
-							categoriesIds += category.categoryId + ",";
-						}
-					});
-					if (categoriesIds.lastIndexOf(",") === categoriesIds.length - 1) {
-						categoriesIds = categoriesIds.substr(0, categoriesIds.length - 1); // remove last comma
-					}
-					const categoriesFilter: KalturaCategoryFilter = new KalturaCategoryFilter();
-					categoriesFilter.idIn = categoriesIds;
-					this._kalturaServerClient.request(new CategoryListAction({
-						filter: categoriesFilter,
-						pager: pager
-					})).subscribe(
-						response => {
-							observer.next(response.objects);
-							observer.complete();
-						},
-						error => {
-							observer.error(error);
-						}
-					);
-
+				  if(response.totalCount) {
+            // got all entry categories - load category details for each entry category
+            this.entryCategories = response.objects;
+            let categoriesIds = "";
+            this.entryCategories.forEach(category => {
+              if (categoriesIds.indexOf(category.categoryId.toString()) === -1) {
+                categoriesIds += category.categoryId + ",";
+              }
+            });
+            if (categoriesIds.lastIndexOf(",") === categoriesIds.length - 1) {
+              categoriesIds = categoriesIds.substr(0, categoriesIds.length - 1); // remove last comma
+            }
+            const categoriesFilter: KalturaCategoryFilter = new KalturaCategoryFilter();
+            categoriesFilter.idIn = categoriesIds;
+            this._kalturaServerClient.request(new CategoryListAction({
+              filter: categoriesFilter,
+              pager: pager
+            })).subscribe(
+              response => {
+                observer.next(response.objects);
+                observer.complete();
+              },
+              error => {
+                observer.error(error);
+              }
+            );
+          } else {
+            observer.error(new Error(this._appLocalization.get('applications.content.bulkActions.removeCategoriesNone')));
+          }
 				},
 				error => {
 					observer.error(error);
