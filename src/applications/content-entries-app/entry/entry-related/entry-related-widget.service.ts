@@ -64,7 +64,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 
 
   private _trackUploadFiles(): void {
-    this._uploadManagement.onFileStatusChanged$
+    this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
       .filter(uploadedFile => uploadedFile.data instanceof NewEntryRelatedFile)
       .map(uploadedFile => {
@@ -88,7 +88,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
               relevantRelatedFile.uploading = false;
               relevantRelatedFile.uploadFailure = false;
               break;
-            case TrackedFileStatuses.uploadFailed:
+            case TrackedFileStatuses.failure:
               relevantRelatedFile.uploading = false;
               relevantRelatedFile.uploadFailure = true;
               break;
@@ -113,11 +113,6 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 	    this.relatedFilesListDiffer = null;
     	this._entryId = '';
 	    this._relatedFiles.next({ items : [] });
-    }
-
-    protected onValidate(): Observable<{ isValid: boolean }> {
-      const fileTypeValid = this._relatedFiles.getValue().items.every(file => !!file.format);
-      return Observable.of({ isValid: fileTypeValid });
     }
 
 	protected onActivate(firstTimeActivating: boolean) {

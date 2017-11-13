@@ -1,0 +1,80 @@
+<k-area-blocker [showLoader]="isBusy" [message]="_blockerMessage">
+  <div class="kBulkLog kOverrideFAIcons">
+    <div #entriesTableHolder class="kBulkLogHolder kContent">
+      <kSticky [stickyClass]="'kStickyClass'" stickyId="bulklogFilters" [scrollOffset]="80" [sticksTo]="'header'" >
+        <div class="kBulkLogTableFilters kContent">
+          <span class="kSelectedEntriesNum" *ngIf="(_store.bulkLog$ | async)?.totalCount">
+            {{(_store.bulkLog$ | async)?.totalCount}} {{'applications.content.bulkUpload.table.header' | translate}}
+          </span>
+
+          <div [class.kHidden]="!selectedBulkLogItems.length" class="kBulkOperations">
+            <span class="kSelectedEntriesLabel">• {{selectedBulkLogItems.length}} {{'applications.content.bulkUpload.list.selected' | translate}}</span>
+            <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_deleteFiles()"></button>
+
+            <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.bulkUpload.list.cancel' | translate}}</a>
+          </div>
+          <div [class.kHidden]="selectedBulkLogItems.length" class="kFilters">
+            <div #refineBtn class="kRefine">
+              <i class="kIconfilter"></i>
+              <span>{{'applications.content.bulkUpload.list.refine' | translate}}</span>
+              <i class="kIcondropdown_arrow_bottom dropdown"></i>
+            </div>
+          </div>
+          <button pButton
+                  class="kButtonDefault kRefreshBtn small"
+                  type="text"
+                  icon="kIconrefresh"
+                  [kTooltip]="'applications.content.bulkUpload.list.refresh' | translate"
+                  (click)="_reload()"></button>
+        </div>
+      </kSticky>
+      <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="bulklogTags" [sticksTo]="'bulklogFilters'">
+        <div class="kContent">
+          <kTags [title]="'applications.content.bulkUpload.filters.activeFilters' | translate"
+                 [data]="(_store.activeFilters$ | async)?.filters"
+                 [labelField]="'label'"
+                 [tooltipField]="'tooltip'"
+                 (onTagRemove)="_removeTag($event)"
+                 (onRemoveAll)="_removeAllTags()"
+                 (onTagsChange)="onTagsChange($event)">
+            <ng-template let-item="item">
+              <div class="kTagContent" [kTooltip]="item.tooltip?.token | translate : item.tooltip?.args">
+                <span class="kTagLabel">{{item.label}}</span>
+                <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="_removeTag(item.data)"></i>
+              </div>
+            </ng-template>
+          </kTags>
+        </div>
+      </kSticky>
+      <kBulkLogTable class="kBulkLogTable"
+                     [list]="(_store.bulkLog$ | async)?.items"
+                     [filter]="_filter"
+                     (actionSelected)="_onActionSelected($event)"
+                     [(selectedBulkLogItems)]="selectedBulkLogItems"
+      ></kBulkLogTable>
+
+      <div class="kBulkLogTableFooter kContent" #footer *ngIf="(_store.bulkLog$ | async)?.totalCount">
+        <p-paginator
+          [rows]="_filter.pageSize"
+          [first]="_filter.pageIndex * _filter.pageSize"
+          [totalRecords]="(_store.bulkLog$ | async)?.totalCount | kMaxEntries"
+          [rowsPerPageOptions]="[25,50,75,100]"
+          (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+      </div>
+    </div>
+  </div>
+</k-area-blocker>
+
+<kPopupWidget #refinePopup
+              [appendTo]="entriesTableHolder"
+              [popupWidth]="400"
+              [popupHeight]="500"
+              [closeBtn]="false"
+              [targetRef]="refineBtn"
+              [targetOffset]="{'x':-200, 'y': -15}"
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'bulklogFilterPopup'" [scrollOffset]="80" [appendTo]="entriesTableHolder">
+  <ng-template>
+    <k-bulk-log-refine-filters [parentPopupWidget]="refinePopup"></k-bulk-log-refine-filters>
+  </ng-template>
+</kPopupWidget>

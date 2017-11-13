@@ -1,27 +1,28 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ISubscription } from 'rxjs/Subscription';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { PlaylistGetAction } from 'kaltura-typescript-client/types/PlaylistGetAction';
-import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { PlaylistUpdateAction} from 'kaltura-typescript-client/types/PlaylistUpdateAction';
-import { Observable } from 'rxjs/Observable';
-import { BrowserService } from "app-shared/kmc-shell";
-import { TagSearchAction } from 'kaltura-typescript-client/types/TagSearchAction';
-import { KalturaTagFilter } from 'kaltura-typescript-client/types/KalturaTagFilter';
-import { KalturaTaggedObjectType } from 'kaltura-typescript-client/types/KalturaTaggedObjectType';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { PlaylistSections } from './playlist-sections';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { PlaylistExecuteAction} from 'kaltura-typescript-client/types/PlaylistExecuteAction';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
-import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
-import { KalturaPlaylistType } from 'kaltura-typescript-client/types/KalturaPlaylistType';
-import { PlaylistAddAction } from 'kaltura-typescript-client/types/PlaylistAddAction';
+import {Injectable, OnDestroy} from '@angular/core';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {ISubscription} from 'rxjs/Subscription';
+import {KalturaClient} from '@kaltura-ng/kaltura-client';
+import {PlaylistGetAction} from 'kaltura-typescript-client/types/PlaylistGetAction';
+import {KalturaPlaylist} from 'kaltura-typescript-client/types/KalturaPlaylist';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {PlaylistUpdateAction} from 'kaltura-typescript-client/types/PlaylistUpdateAction';
+import {Observable} from 'rxjs/Observable';
+import {BrowserService} from "app-shared/kmc-shell";
+import {TagSearchAction} from 'kaltura-typescript-client/types/TagSearchAction';
+import {KalturaTagFilter} from 'kaltura-typescript-client/types/KalturaTagFilter';
+import {KalturaTaggedObjectType} from 'kaltura-typescript-client/types/KalturaTaggedObjectType';
+import {KalturaFilterPager} from 'kaltura-typescript-client/types/KalturaFilterPager';
+import {PlaylistSections} from './playlist-sections';
+import {KalturaMultiRequest} from 'kaltura-typescript-client';
+import {PlaylistExecuteAction} from 'kaltura-typescript-client/types/PlaylistExecuteAction';
+import {KalturaMediaEntry} from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import {KalturaDetachedResponseProfile} from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
+import {KalturaResponseProfileType} from 'kaltura-typescript-client/types/KalturaResponseProfileType';
+import {PlaylistsStore} from '../playlists/playlists-store/playlists-store.service';
+import {KalturaPlaylistType} from 'kaltura-typescript-client/types/KalturaPlaylistType';
+import {PlaylistAddAction} from 'kaltura-typescript-client/types/PlaylistAddAction';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 @Injectable()
 export class PlaylistStore implements OnDestroy {
@@ -34,7 +35,7 @@ export class PlaylistStore implements OnDestroy {
   });
   private _loadPlaylistSubscription : ISubscription;
   private _sectionToRouteMapping : { [key : number] : string} = {};
-	private _activeSection = new BehaviorSubject<{ section: PlaylistSections}>({section: null});
+	private _activeSection = new BehaviorSubject<{ section: string}>({section: null});
 	private _playlist = new BehaviorSubject<{ playlist: KalturaPlaylist, entries: KalturaMediaEntry[], entriesTotalCount: number}>({playlist: null, entries: [], entriesTotalCount: 0});
 	private _state = new BehaviorSubject<{ isBusy: boolean, error?: { message: string, origin?: 'reload' | 'save'  | 'pre-save'}}>({isBusy: false});
 
@@ -71,7 +72,7 @@ export class PlaylistStore implements OnDestroy {
     this._activeSection.next({section: this._playlistRoute.snapshot.firstChild.data.sectionKey});
 	}
 
-  public openSection(sectionId: PlaylistSections): void {
+  public openSection(sectionId: string): void {
     const navigatePath = this._sectionToRouteMapping[sectionId];
 
     if (navigatePath) {
@@ -187,7 +188,7 @@ export class PlaylistStore implements OnDestroy {
 			);
 	}
 
-  public updateSectionState(section: PlaylistSections, state : {isValid?: boolean, isDirty?: boolean}) : void {
+  public updateSectionState(section: string, state : {isValid?: boolean, isDirty?: boolean}) : void {
     const sections = Object.assign({}, this._sectionsState.getValue());
     let hasChanges = false;
 
@@ -237,12 +238,12 @@ export class PlaylistStore implements OnDestroy {
         });
       if(this._playlist.getValue().entriesTotalCount >= 1) {
         playlist.playlistContent = this.entries.map(entry => entry.id).join(',');
-        this._state.next({isBusy: true});
         if(id) {
           this._kalturaServerClient.request(
             new PlaylistUpdateAction({id, playlist})
           )
             .cancelOnDestroy(this)
+            .tag('block-shell')
             .subscribe(
               () => {
                 this._savePlaylistInvoked = true;
@@ -250,7 +251,7 @@ export class PlaylistStore implements OnDestroy {
               },
               error => {
                 this._state.next({
-                  isBusy: true,
+                  isBusy: false,
                   error: {message: error.message, origin: 'reload'}
                 });
               }
@@ -261,15 +262,15 @@ export class PlaylistStore implements OnDestroy {
             new PlaylistAddAction({playlist})
           )
             .cancelOnDestroy(this)
+            .tag('block-shell')
             .subscribe(
               response => {
-                this._state.next({isBusy: false});
                 this._savePlaylistInvoked = true;
                 this.openPlaylist(response.id);
               },
               error => {
                 this._state.next({
-                  isBusy: true,
+                  isBusy: false,
                   error: {message: error.message, origin: 'pre-save'}
                 });
               }

@@ -313,7 +313,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
 	}
 
   private _trackUploadFiles(): void {
-    this._uploadManagement.onFileStatusChanged$
+    this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
       .map(uploadedFile => {
         let relevantFlavor = null;
@@ -341,7 +341,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
               this._refresh(false, false);
               break;
 
-            case TrackedFileStatuses.uploadFailed:
+            case TrackedFileStatuses.failure:
               this._browserService.showGrowlMessage({
                 severity: 'error',
                 detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')
