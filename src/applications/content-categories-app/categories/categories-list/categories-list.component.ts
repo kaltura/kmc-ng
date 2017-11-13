@@ -16,8 +16,6 @@ import {AppLocalization} from "@kaltura-ng/kaltura-common";
 })
 
 export class CategoriesListComponent implements OnInit, OnDestroy {
-
-    @ViewChild(CategoriesTableComponent) private dataTable: CategoriesTableComponent;
     @ViewChild('addNewCategory') public addNewCategory: PopupWidgetComponent;
 
     public _isBusy = false
@@ -50,7 +48,6 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
                 this._filter.pageIndex = query.pageIndex - 1;
                 this._filter.sortBy = query.sortBy;
                 this._filter.sortDirection = query.sortDirection;
-                this.dataTable.scrollToTop();
             });
 
         this.categoriesSubscription = this._categoriesService.categories$.subscribe(

@@ -168,9 +168,5 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   _onSortChanged(event) {
     this.sortChanged.emit(event);
   }
-
-  scrollToTop() {
-    this._browserService.scrollToTop();
-  }
 }
 
