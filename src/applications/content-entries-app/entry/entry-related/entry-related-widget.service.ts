@@ -1,6 +1,11 @@
 import {
-    Injectable, IterableChangeRecord, IterableDiffer, IterableDiffers, KeyValueDiffer, KeyValueDiffers,
-    OnDestroy
+  Injectable,
+  IterableChangeRecord,
+  IterableDiffer,
+  IterableDiffers,
+  KeyValueDiffer,
+  KeyValueDiffers,
+  OnDestroy
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -82,19 +87,28 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
             case TrackedFileStatuses.purged:
               this._removeFile(relevantRelatedFile);
               break;
+
             case TrackedFileStatuses.prepared:
               relevantRelatedFile.serverUploadToken = (<NewEntryRelatedFile>uploadedFile.data).serverUploadToken;
-              this.updateState({ isBusy: false });
-
+              this._syncBusyState();
               break;
+
             case TrackedFileStatuses.uploadCompleted:
               relevantRelatedFile.uploading = false;
               relevantRelatedFile.uploadFailure = false;
               break;
+
+            case TrackedFileStatuses.cancelled:
+              relevantRelatedFile.uploading = false;
+              this._syncBusyState();
+              break;
+
             case TrackedFileStatuses.failure:
               relevantRelatedFile.uploading = false;
               relevantRelatedFile.uploadFailure = true;
+              this._syncBusyState();
               break;
+
             case TrackedFileStatuses.uploading:
               relevantRelatedFile.progress = (uploadedFile.progress * 100).toFixed(0);
               relevantRelatedFile.uploading = true;
@@ -118,54 +132,61 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 	    this._relatedFiles.next({ items : [] });
     }
 
-	protected onActivate(firstTimeActivating: boolean) {
-		this._entryId = this.data.id;
-		super._showLoader();
+  protected onActivate(firstTimeActivating: boolean) {
+    this._entryId = this.data.id;
+    super._showLoader();
 
-		if (firstTimeActivating)
-		{
-			this._trackUploadFiles();
-		}
+    if (firstTimeActivating) {
+      this._trackUploadFiles();
+    }
 
-		this._relatedFiles.next({items : []});
+    this._relatedFiles.next({ items: [] });
 
-		return this._kalturaServerClient.request(new AttachmentAssetListAction({
-			filter: new KalturaAssetFilter(
-				{
-					entryIdEqual : this._entryId
-				}
-			)}))
-			.cancelOnDestroy(this,this.widgetReset$)
-			.monitor('get entry related files')
-			.do(
-				response =>
-				{
-					// set file type
-					response.objects.forEach((asset: RelatedFile) => {
-						if (!asset.format && asset.fileExt){
-							asset.format = this._getFormatByExtension(asset.fileExt);
-						}
-					});
-					this._relatedFiles.next({items : response.objects});
-					this.relatedFilesListDiffer = this._listDiffers.find([]).create();
-					this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
+    return this._kalturaServerClient.request(new AttachmentAssetListAction({
+      filter: new KalturaAssetFilter({ entryIdEqual: this._entryId })
+    }))
+      .cancelOnDestroy(this, this.widgetReset$)
+      .monitor('get entry related files')
+      .do(response => {
+        // set file type
+        response.objects.map((asset: RelatedFile) => {
+          if (!asset.format && asset.fileExt) {
+            asset.format = this._getFormatByExtension(asset.fileExt);
+          }
 
-					this.relatedFileDiffer = {};
-					this._relatedFiles.getValue().items.forEach((asset: RelatedFile) => {
-						this.relatedFileDiffer[asset.id] = this._objectDiffers.find([]).create(null);
-						this.relatedFileDiffer[asset.id].diff(asset);
-					});
-					super._hideLoader();
-				})
-			.catch((error, caught) =>
-				{
-					this._relatedFiles.next({items : []});
-					super._hideLoader();
-					super._showActivationError();
-					return Observable.throw(error);
-				}
-			);
-	}
+          // TODO [kmcng] find a way to get relevant file
+          // const trackedFiles = this._uploadManagement.getTrackedFiles().filter(file => file.data instanceof NewEntryRelatedFile);
+          // const relevantFile = trackedFiles.find(file => asset.uploadFileId === file.id);
+          //
+          // console.warn('relevantFile', trackedFiles);
+          // console.warn('asset', asset);
+          //
+          // if (relevantFile) {
+          //   asset.progress = (relevantFile.progress * 100).toFixed(0);
+          //   asset.uploading = relevantFile.progress < 1;
+          //   asset.uploadFailure = !!relevantFile.failureReason;
+          //   asset.serverUploadToken = (<NewEntryRelatedFile>relevantFile.data).serverUploadToken;
+          // }
+        });
+        this._relatedFiles.next({ items: response.objects });
+        this.relatedFilesListDiffer = this._listDiffers.find([]).create();
+        this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
+
+        this.relatedFileDiffer = {};
+        this._relatedFiles.getValue().items.forEach((asset: RelatedFile) => {
+          this.relatedFileDiffer[asset.id] = this._objectDiffers.find([]).create(null);
+          this.relatedFileDiffer[asset.id].diff(asset);
+        });
+        super._hideLoader();
+      })
+      .catch(error => {
+          this._relatedFiles.next({ items: [] });
+          super._hideLoader();
+          super._showActivationError();
+          return Observable.throw(error);
+        }
+      );
+  }
 
 	protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
 	{
@@ -214,6 +235,10 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 
 	}
 
+	private _syncBusyState(): void {
+    const isBusy = this._relatedFiles.getValue().items.some(file => !file.serverUploadToken);
+    this.updateState({ isBusy });
+  }
 
 	private _addFile(fileName : string, format :KalturaAttachmentType) : KalturaAttachmentAsset {
     	const existingItems = this._relatedFiles.getValue().items;
@@ -236,19 +261,21 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 		return newFile;
 	}
 
-	public _removeFile(file: RelatedFile): void{
-		// update the list by filtering the assets array.
+  public _removeFile(file: RelatedFile): void {
+    // update the list by filtering the assets array.
+    this._relatedFiles.next({ items: this._relatedFiles.getValue().items.filter((item: RelatedFile) => item !== file) });
 
-		this._relatedFiles.next({items : this._relatedFiles.getValue().items.filter((item: RelatedFile) => {return item !== file})});
+    this._uploadManagement.cancelUpload(file.uploadFileId);
 
-		// stop tracking changes on this asset
-		// if file id is empty it was added by the user so no need to track its changes.
-		if (file.id && this.relatedFileDiffer[file.id]){
-			delete this.relatedFileDiffer[file.id];
-		}
+    // stop tracking changes on this asset
+    // if file id is empty it was added by the user so no need to track its changes.
+    if (file.id && this.relatedFileDiffer[file.id]) {
+      delete this.relatedFileDiffer[file.id];
+    }
 
-		this._setDirty();
-	}
+    this._syncBusyState();
+    this._setDirty();
+  }
 
 	private _openFile(fileId: string, operation: string): void {
 		const apiUrl = environment.core.kaltura.apiUrl;
