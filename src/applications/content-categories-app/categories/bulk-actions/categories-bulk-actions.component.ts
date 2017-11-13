@@ -21,7 +21,7 @@ import {KalturaPrivacyType} from "kaltura-typescript-client/types/KalturaPrivacy
 import {KalturaAppearInListType} from "kaltura-typescript-client/types/KalturaAppearInListType";
 import {AppearInListType} from "./components/bulk-change-category-listing/bulk-change-category-listing.component";
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { KalturaContributionPolicyType } from "kaltura-typescript-client/types/KalturaContributionPolicyType";
+import {KalturaContributionPolicyType} from "kaltura-typescript-client/types/KalturaContributionPolicyType";
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -31,8 +31,6 @@ import { KalturaContributionPolicyType } from "kaltura-typescript-client/types/K
 export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   public _bulkActionsMenu: MenuItem[] = [];
-  public _bulkWindowWidth = 500;
-  public _bulkWindowHeight = 500;
   public _bulkAction: string = "";
 
   @Input() selectedCategories: KalturaCategory[];
@@ -67,7 +65,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
           { label: this._appLocalization.get('applications.content.categories.bActions.addTags'), command: (event) => { this.openBulkActionWindow("addTags", 500, 500) } },
           { label: this._appLocalization.get('applications.content.categories.bActions.removeTags'), command: (event) => { this.openBulkActionWindow("removeTags", 500, 500) } }]
       },
-      { label: this._appLocalization.get('applications.content.categories.bActions.moveCategories'), command: (event) => { this.openBulkActionWindow("moveCategories", 500, 500) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.moveCategories'), command: (event) => { this._moveCategories() } },
       { label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'), command: (event) => { this.openBulkActionWindow("changeContentPrivacy", 586, 352) } },
       { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'), command: (event) => { this.openBulkActionWindow("changeCategoryListing", 586, 314) } },
       { label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'), command: (event) => { this.openBulkActionWindow("changeContributionPolicy", 586, 314) } },
@@ -87,8 +85,9 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
             // use timeout to allow data binding of popup dimensions to update before opening the popup
             setTimeout(() => {
               this._bulkAction = action;
-              this._bulkWindowWidth = popupWidth;
-              this._bulkWindowHeight = popupHeight;
+              // override the width and height of the popup
+              this.bulkActionsPopup.popupWidth = popupWidth;
+              this.bulkActionsPopup.popupHeight = popupHeight;
               this.bulkActionsPopup.open();
             }, 0);
           }
@@ -97,10 +96,10 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     } else {
       // use timeout to allow data binding of popup dimensions to update before opening the popup
       setTimeout(() => {
-          this._bulkAction = action;
-          this._bulkWindowWidth = popupWidth;
-          this._bulkWindowHeight = popupHeight;
-          this.bulkActionsPopup.open();
+        this._bulkAction = action;
+        this.bulkActionsPopup.popupWidth = popupWidth;
+        this.bulkActionsPopup.popupHeight = popupHeight;
+        this.bulkActionsPopup.open();
       }, 0);
     }
 
@@ -188,6 +187,23 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+  private _moveCategories(): void {
+    if (this.selectedCategories.length > 0) {
+      const movingOnlySiblings: boolean = this.selectedCategories.every((category) => {
+        return category.parentId === this.selectedCategories[0].parentId;
+      });
+
+      if (!movingOnlySiblings) {
+        this._browserService.setAppStatus(
+          {errorMessage: this._appLocalization.get('applications.content.moveCategory.errors.onlySiblingsMoveAllowed')});
+      } else {
+        this.openBulkActionWindow('moveCategories', 586, 580);
+      }
+    } else {
+      console.log('[CategoriesBulkActionsComponent._moveCategories] this.selectedCategories.length must be greater than 0');
+    }
   }
 
   private hasEditWarnings(): boolean {

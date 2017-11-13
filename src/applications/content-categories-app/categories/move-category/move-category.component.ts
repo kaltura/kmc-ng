@@ -15,7 +15,7 @@ import {BrowserService} from 'app-shared/kmc-shell';
 export class MoveCategoryComponent implements OnInit {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @Input() categoryToMove: KalturaCategory;
+  @Input() selectedCategories: KalturaCategory[];
 
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -26,7 +26,7 @@ export class MoveCategoryComponent implements OnInit {
                 private _browserService: BrowserService) { }
 
   ngOnInit() {
-    if (!this.categoryToMove) {
+    if (!this.selectedCategories || !this.selectedCategories.length) {
       console.warn('CategoryParentSelectorComponent: move category was selected without setting category Id to move');
     }
   }
@@ -36,7 +36,8 @@ export class MoveCategoryComponent implements OnInit {
   }
 
   public _apply(): void {
-    if (this._validateCategoryMove(this._selectedParentCategory)) {
+    const invalidCategory = this.selectedCategories.find((category) => (!this._validateCategoryMove(category, this._selectedParentCategory)))
+    if (!invalidCategory) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.categories.moveCategory'),
@@ -53,7 +54,7 @@ export class MoveCategoryComponent implements OnInit {
 
   private _moveCategory(categoryParent: CategoryData) {
     this._categoriesService
-      .moveCategory({category: this.categoryToMove, categoryParent: {id: categoryParent.id, fullIds: categoryParent.fullIdPath}})
+      .moveCategory({categories: this.selectedCategories, categoryParent: {id: categoryParent.id, fullIds: categoryParent.fullIdPath}})
       .subscribe(result => {
           this._isBusy = false;
           if (this.parentPopupWidget) {
@@ -82,10 +83,10 @@ export class MoveCategoryComponent implements OnInit {
         });
   }
 
-  private _validateCategoryMove(selectedCategoryParent: CategoryData) {
+  private _validateCategoryMove(categoryToMove: KalturaCategory, selectedCategoryParent: CategoryData) {
     // if category moved to the same parent or to 'no parent' as it was before
-    if (!selectedCategoryParent && !this.categoryToMove.parentId ||
-        selectedCategoryParent && this.categoryToMove.parentId === selectedCategoryParent.id) {
+    if (!selectedCategoryParent && !categoryToMove.parentId ||
+        selectedCategoryParent && categoryToMove.parentId === selectedCategoryParent.id) {
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization.get('applications.content.moveCategory.errors.categoryAlreadyBelongsToParent'),
         buttons: [
@@ -100,7 +101,7 @@ export class MoveCategoryComponent implements OnInit {
       });
       return false;
     } else if (selectedCategoryParent && !this._categoriesService.isParentCategorySelectionValid(
-          {category: this.categoryToMove, categoryParent: {id: selectedCategoryParent.id, fullIds: selectedCategoryParent.fullIdPath}})) {
+          {categories: this.selectedCategories, categoryParent: {id: selectedCategoryParent.id, fullIds: selectedCategoryParent.fullIdPath}})) {
       // if trying to move category be a child of itself or one of its children show error message
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization.get('applications.content.moveCategory.errors.invalidParentSelection'),
@@ -119,6 +120,7 @@ export class MoveCategoryComponent implements OnInit {
 
     return true;
   }
+
 
   public _cancel(): void {
     if (this.parentPopupWidget) {

@@ -50,6 +50,6 @@
 
 <kPopupWidget #moveCategory [popupWidth]="586" [popupHeight]="580" [modal]="true" [preventPageScroll]="true">
   <ng-template>
-    <kMoveCategory [parentPopupWidget]="moveCategory" [categoryToMove]="_selectedCategoryToMove" ></kMoveCategory>
+    <kMoveCategory [parentPopupWidget]="moveCategory" [selectedCategories]="[_selectedCategoryToMove]" ></kMoveCategory>
   </ng-template>
 </kPopupWidget>

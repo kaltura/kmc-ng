@@ -45,7 +45,7 @@ export interface QueryData {
 }
 
 export interface MoveCategoryData {
-    category: KalturaCategory;
+    categories: KalturaCategory[];
     categoryParent: {id?: number, fullIds: number[]};
 }
 export interface NewCategoryData {
@@ -277,17 +277,14 @@ export class CategoriesService implements OnDestroy {
    * @return {Observable<KalturaCategory>}
    */
   public moveCategory(moveCategoryData: MoveCategoryData): Observable<KalturaCategory> {
-    if (!moveCategoryData ||
-        !moveCategoryData.category ||
-        !moveCategoryData.category.id ||
-        !this.isParentCategorySelectionValid(moveCategoryData)) {
+    if (!this.isParentCategorySelectionValid(moveCategoryData)) {
       const categoryMovedFailureErrorMessage = this._appLocalization.get('applications.content.moveCategory.errors.categoryMovedFailure');
       return Observable.throw(new Error(categoryMovedFailureErrorMessage));
     }
 
     return <any>this._kalturaClient.request(
       new CategoryMoveAction({
-        categoryIds: moveCategoryData.category.id.toString(),
+        categoryIds: moveCategoryData.categories.map(category => (category.id)).join(','),
         targetCategoryParentId: moveCategoryData.categoryParent ? moveCategoryData.categoryParent.id : 0
       })
     )
@@ -299,19 +296,30 @@ export class CategoriesService implements OnDestroy {
    * @return {boolean}
    */
   public isParentCategorySelectionValid(moveCategoryData: MoveCategoryData): boolean {
-    if (!moveCategoryData || !moveCategoryData.category || !moveCategoryData.category.id || !moveCategoryData.category.fullIds) {
-      console.log('[CategoriesService.isParentCategorySelectionValid] invalid parameters')
+
+    const isValid = (category) => {
+      // Only siblings are allowed to be moved
+      if (!category || !category.id || !category.fullIds || category.parentId !== moveCategoryData.categories[0].parentId) {
+        console.log('[CategoriesService.isParentCategorySelectionValid] invalid category');
+        return false;
+      }
+      // Check if we put the category as a descendant of itself
+      const selectedCategoryIdSameAsParent = moveCategoryData.categoryParent &&
+        category.id === moveCategoryData.categoryParent.id;
+
+      // Check that the parent category isn't a descendant of the category
+      const selectedParentIsDescendantOfCategoryToMove =
+        moveCategoryData.categoryParent.fullIds.includes(category.id);
+      return !selectedCategoryIdSameAsParent && !selectedParentIsDescendantOfCategoryToMove;
+    };
+
+
+    if (!moveCategoryData || !moveCategoryData.categories || !moveCategoryData.categories.length) {
+      console.log('[CategoriesService.isParentCategorySelectionValid] invalid categories parameter');
       return false;
     }
 
-    // Check if we put the category as a descendant of itself
-    const selectedCategoryIdSameAsParent = moveCategoryData.categoryParent &&
-      moveCategoryData.category.id === moveCategoryData.categoryParent.id;
-
-    // Check that the parent category isn't a descendant of the category
-    const selectedParentIsDescendantOfCategoryToMove =
-      moveCategoryData.categoryParent.fullIds.includes(moveCategoryData.category.id);
-    return !selectedCategoryIdSameAsParent && !selectedParentIsDescendantOfCategoryToMove;
+    return moveCategoryData.categories.every(isValid);
   }
 }
 

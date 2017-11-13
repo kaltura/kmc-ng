@@ -7,7 +7,7 @@
 <!--since we append the menu to the body, any styling modifications are currently not available-->
 <p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"></p-tieredMenu>
 
-<kPopupWidget #bulkActionsPopup [popupWidth]="_bulkWindowWidth" [popupHeight]="_bulkWindowHeight" [modal]="true">
+<kPopupWidget #bulkActionsPopup [modal]="true" [popupWidth]="500">
   <ng-template>
     <div [ngSwitch]="_bulkAction">
       <kCategoriesBulkAddTags *ngSwitchCase="'addTags'" [parentPopupWidget]="bulkActionsPopup" (addTagsChanged)="onAddTagsChanged($event)"></kCategoriesBulkAddTags>
@@ -17,6 +17,7 @@
       <kCategoriesBulkChangeContentPrivacy *ngSwitchCase="'changeContentPrivacy'" [parentPopupWidget]="bulkActionsPopup" (changeContentPrivacyChanged)="onChangeContentPrivacyChanged($event)"></kCategoriesBulkChangeContentPrivacy>
       <kCategoriesBulkChangeCategoryListing *ngSwitchCase="'changeCategoryListing'" [parentPopupWidget]="bulkActionsPopup" (changeCategoryListingChanged)="onChangeCategoryListingChanged($event)"></kCategoriesBulkChangeCategoryListing>
       <kCategoriesBulkChangeContributionPolicy *ngSwitchCase="'changeContributionPolicy'" [parentPopupWidget]="bulkActionsPopup" (changeContributionPolicyChanged)="onChangeContributionPolicyChanged($event)"></kCategoriesBulkChangeContributionPolicy>
+      <kMoveCategory *ngSwitchCase="'moveCategories'" [parentPopupWidget]="bulkActionsPopup" [selectedCategories]="selectedCategories"></kMoveCategory>
     </div>
   </ng-template>
 </kPopupWidget>
