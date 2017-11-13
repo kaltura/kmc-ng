@@ -45,7 +45,6 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked, 
 		expendTreeSelectionNodeId : null
 	};
 
-  private _parentPopupStateChangeSubscribe : ISubscription;
   private _confirmClose: boolean = true;
 
 	constructor(
@@ -66,7 +65,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked, 
 
   ngAfterViewInit() {
     if (this.parentPopupWidget) {
-      this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$
+      this.parentPopupStateChangeSubscription = this.parentPopupWidget.state$
         .subscribe(event => {
           if (event.state === PopupWidgetStates.Open) {
             this._confirmClose = true;
@@ -100,10 +99,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewChecked, 
 			this._searchCategoriesSubscription = null;
 		}
 
-		if (this.parentPopupStateChangeSubscription) {
-			this.parentPopupStateChangeSubscription.unsubscribe();
-			this.parentPopupStateChangeSubscription = null;
-		}
+		this.parentPopupStateChangeSubscription.unsubscribe();
 	}
 
 
