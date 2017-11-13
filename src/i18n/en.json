@@ -960,6 +960,7 @@
           "busyError": "An operation is still in progress. Please try again in a while.",
           "savePrepareError": "An error occurred while preparing to save. Please try again.",
           "thumbnailsError": "Error reloading thumbnails",
+          "thumbnailsUploadError": "Error uploading thumbnail.",
           "entriesLoadError": "Error loading entries",
           "categoriesLoadError": "Error loading categories",
           "flavorsLoadError": "Error loading flavors",
