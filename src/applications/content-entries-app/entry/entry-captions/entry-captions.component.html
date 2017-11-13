@@ -33,7 +33,7 @@
 							<button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, caption)"></button>
 						</div>
 						<div *ngIf="caption.uploading">
-							<span>{{caption.progress ? caption.progress : '0'}}%</span>
+							<span>{{caption.progress ? caption.progress + '%' : 'applications.content.entryDetails.captions.pending'}}</span>
 						</div>
 						<div *ngIf="caption.uploadFailure">
 							<a (click)="_widgetService.removeCaption()">{{'applications.content.entryDetails.captions.remove' | translate}}</a>
