@@ -15,7 +15,7 @@ import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item'
 import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 import { CreatedAtFilter } from '../bulk-log-store/filters/created-at-filter';
 import { ISubscription } from 'rxjs/Subscription';
-import { ScrollToTopContainerComponent } from 'app-shared/content-shared/scroll-to-top-container/scroll-to-top-container.component';
+import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 
 export interface TreeFilterData {
   items: PrimeTreeNode[];

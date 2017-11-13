@@ -16,7 +16,7 @@ import {
   CategoriesFilter,
   CategoriesFilterModes
 } from 'app-shared/content-shared/entries-store/filters/categories-filter';
-import { ScrollToTopContainerComponent } from 'app-shared/content-shared/scroll-to-top-container/scroll-to-top-container.component';
+import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 
 export enum TreeSelectionModes {
   Self = 0,
