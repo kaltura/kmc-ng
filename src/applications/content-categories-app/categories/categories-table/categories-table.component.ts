@@ -10,10 +10,10 @@ import {
   ViewChild
 } from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
-import {DataTable, Menu, MenuItem} from 'primeng/primeng';
+import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell';
+import {BrowserService} from 'app-shared/kmc-shell';
 import {CategoriesService} from '../categories.service';
 import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 

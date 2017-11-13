@@ -43,13 +43,13 @@
 
 <kPopupWidget #addNewCategory [popupWidth]="586" [popupHeight]="658" [modal]="true" [preventPageScroll]="true">
   <ng-template>
-    <kNewCategory (onApply)="onAddNewCategory($event)" [parentPopupWidget]="addNewCategory"></kNewCategory>
+    <kNewCategory (onApply)="onCategoryAdded($event)" [parentPopupWidget]="addNewCategory"></kNewCategory>
   </ng-template>
 </kPopupWidget>
 
 
 <kPopupWidget #moveCategory [popupWidth]="586" [popupHeight]="580" [modal]="true" [preventPageScroll]="true">
   <ng-template>
-    <kMoveCategory (onApply)="onMoveCategory($event)" [parentPopupWidget]="moveCategory" [categoryToMove]="_selectedCategoryToMove" ></kMoveCategory>
+    <kMoveCategory [parentPopupWidget]="moveCategory" [categoryToMove]="_selectedCategoryToMove" ></kMoveCategory>
   </ng-template>
 </kPopupWidget>

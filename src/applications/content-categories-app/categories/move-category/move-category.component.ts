@@ -1,10 +1,11 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {CategoriesService, MoveCategoryData} from '../categories.service';
+import {CategoriesService} from '../categories.service';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {CategoryData} from 'app-shared/content-shared/categories-search.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {BrowserService} from 'app-shared/kmc-shell';
 
 @Component({
   selector: 'kMoveCategory',
@@ -15,15 +16,14 @@ export class MoveCategoryComponent implements OnInit {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() categoryToMove: KalturaCategory;
-  @Output() onApply = new EventEmitter<MoveCategoryData>();
-
 
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedParentCategory: CategoryData = null;
 
   constructor(  private _categoriesService: CategoriesService,
-                private _appLocalization: AppLocalization) { }
+                private _appLocalization: AppLocalization,
+                private _browserService: BrowserService) { }
 
   ngOnInit() {
     if (!this.categoryToMove) {
@@ -36,17 +36,50 @@ export class MoveCategoryComponent implements OnInit {
   }
 
   public _apply(): void {
-    this._isBusy = true;
-    this._moveCategory(this._selectedParentCategory);
+    if (this._validateCategoryMove(this._selectedParentCategory)) {
+      this._browserService.confirm(
+        {
+          header: this._appLocalization.get('applications.content.categories.moveCategory'),
+          message: this._appLocalization.get('applications.content.moveCategory.treeUpdateNotification'),
+          accept: () => {
+            this._isBusy = true;
+            this._blockerMessage = null;
+            this._moveCategory(this._selectedParentCategory);
+          }
+        }
+      );
+    }
   }
 
   private _moveCategory(categoryParent: CategoryData) {
-    if (this._validateCategoryMove(categoryParent)) {
-      this.onApply.emit({category: this.categoryToMove, categoryParentId: categoryParent && categoryParent.id});
-      if (this.parentPopupWidget) {
-        this.parentPopupWidget.close();
-      }
-    }
+    this._categoriesService
+      .moveCategory({category: this.categoryToMove, categoryParent: {id: categoryParent.id, fullIds: categoryParent.fullIdPath}})
+      .subscribe(result => {
+          this._isBusy = false;
+          if (this.parentPopupWidget) {
+            this.parentPopupWidget.close();
+          }
+        },
+        error => {
+          this._isBusy = false;
+          this._blockerMessage = new AreaBlockerMessage(
+            {
+              message: this._appLocalization.get('applications.content.moveCategory.errors.categoryMovedFailure'),
+              buttons: [{
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => {
+                  this._moveCategory(categoryParent);
+                }
+              },
+                {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this._blockerMessage = null;
+                  }
+                }
+              ]
+            });
+        });
   }
 
   private _validateCategoryMove(selectedCategoryParent: CategoryData) {
@@ -66,9 +99,8 @@ export class MoveCategoryComponent implements OnInit {
         ]
       });
       return false;
-    } else if (selectedCategoryParent
-        && !this._categoriesService
-          .isParentCategorySelectionValid({category: this.categoryToMove, categoryParentId: selectedCategoryParent.id})) {
+    } else if (selectedCategoryParent && !this._categoriesService.isParentCategorySelectionValid(
+          {category: this.categoryToMove, categoryParent: {id: selectedCategoryParent.id, fullIds: selectedCategoryParent.fullIdPath}})) {
       // if trying to move category be a child of itself or one of its children show error message
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization.get('applications.content.moveCategory.errors.invalidParentSelection'),

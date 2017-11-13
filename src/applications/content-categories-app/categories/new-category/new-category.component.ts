@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {NewCategoryData} from '../categories.service';
+import {CategoriesService} from '../categories.service';
 import {CategoryData} from 'app-shared/content-shared/categories-search.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 
@@ -15,8 +15,7 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 export class NewCategoryComponent implements OnInit {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @Input() categoryToMove: KalturaCategory;
-  @Output() onApply = new EventEmitter<NewCategoryData>();
+  @Output() onApply = new EventEmitter<{category: KalturaCategory}>();
 
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -24,7 +23,8 @@ export class NewCategoryComponent implements OnInit {
   public newCategoryForm: FormGroup;
 
   constructor(private _appLocalization: AppLocalization,
-              private _fb: FormBuilder) { }
+              private _fb: FormBuilder,
+              private _categoriesService: CategoriesService) { }
 
   ngOnInit() {
     this.newCategoryForm = this._fb.group({
@@ -38,6 +38,7 @@ export class NewCategoryComponent implements OnInit {
 
   public _apply(): void {
     this._isBusy = true;
+    this._blockerMessage = null;
     this._createNewCategory(this._selectedParentCategory);
   }
 
@@ -57,13 +58,32 @@ export class NewCategoryComponent implements OnInit {
         ]
       });
     } else {
-      this.onApply.emit({categoryParentId: categoryParent && categoryParent.id, name: categoryName});
-      if (this.parentPopupWidget) {
-        this.parentPopupWidget.close();
-      }
+      this._categoriesService.addNewCategory({categoryParentId: categoryParent && categoryParent.id, name: categoryName})
+        .subscribe(category => {
+            this._isBusy = false;
+            this.onApply.emit({category});
+            if (this.parentPopupWidget) {
+              this.parentPopupWidget.close();
+            }
+          },
+          error => {
+            this._isBusy = false;
+
+            this._blockerMessage = new AreaBlockerMessage(
+              {
+                message: error.message,
+                buttons: [
+                  {
+                    label: this._appLocalization.get('app.common.cancel'),
+                    action: () => {
+                      this._blockerMessage = null;
+                    }
+                  }
+                ]
+              });
+          });
     }
   }
-
   public _cancel(): void {
     if (this.parentPopupWidget) {
       this.parentPopupWidget.close();

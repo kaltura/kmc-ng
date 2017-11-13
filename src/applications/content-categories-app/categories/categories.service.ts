@@ -13,9 +13,13 @@ import {KalturaClient} from '@kaltura-ng/kaltura-client';
 import {KalturaCategoryListResponse} from 'kaltura-typescript-client/types/KalturaCategoryListResponse';
 import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 import {CategoryDeleteAction} from 'kaltura-typescript-client/types/CategoryDeleteAction';
-import {AppLocalization} from "@kaltura-ng/kaltura-common";
-import {CategoryAddAction} from "kaltura-typescript-client/types/CategoryAddAction";
-import {CategoryMoveAction} from "kaltura-typescript-client/types/CategoryMoveAction";
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {CategoryAddAction} from 'kaltura-typescript-client/types/CategoryAddAction';
+import {CategoryMoveAction} from 'kaltura-typescript-client/types/CategoryMoveAction';
+import {KalturaPrivacyType} from 'kaltura-typescript-client/types/KalturaPrivacyType';
+import {KalturaAppearInListType} from "kaltura-typescript-client/types/KalturaAppearInListType";
+import {KalturaContributionPolicyType} from "kaltura-typescript-client/types/KalturaContributionPolicyType";
+import {KalturaInheritanceType} from "kaltura-typescript-client/types/KalturaInheritanceType";
 
 export interface UpdateStatus {
     loading: boolean;
@@ -42,7 +46,7 @@ export interface QueryData {
 
 export interface MoveCategoryData {
     category: KalturaCategory;
-    categoryParentId?: number;
+    categoryParent: {id?: number, fullIds: number[]};
 }
 export interface NewCategoryData {
     categoryParentId?: number;
@@ -253,7 +257,11 @@ export class CategoriesService implements OnDestroy {
     }
     const category = new KalturaCategory({
       name: newCategoryData.name,
-      parentId: newCategoryData.categoryParentId || 0
+      parentId: newCategoryData.categoryParentId || 0,
+      privacy: KalturaPrivacyType.all,
+      appearInList: KalturaAppearInListType.partnerOnly,
+      contributionPolicy: KalturaContributionPolicyType.all,
+      inheritanceType: KalturaInheritanceType.manual
     });
 
     return <any>this._kalturaClient.request(
@@ -269,7 +277,10 @@ export class CategoriesService implements OnDestroy {
    * @return {Observable<KalturaCategory>}
    */
   public moveCategory(moveCategoryData: MoveCategoryData): Observable<KalturaCategory> {
-    if (!moveCategoryData || !moveCategoryData.category || !moveCategoryData.category.id) {
+    if (!moveCategoryData ||
+        !moveCategoryData.category ||
+        !moveCategoryData.category.id ||
+        !this.isParentCategorySelectionValid(moveCategoryData)) {
       const categoryMovedFailureErrorMessage = this._appLocalization.get('applications.content.moveCategory.errors.categoryMovedFailure');
       return Observable.throw(new Error(categoryMovedFailureErrorMessage));
     }
@@ -277,7 +288,7 @@ export class CategoriesService implements OnDestroy {
     return <any>this._kalturaClient.request(
       new CategoryMoveAction({
         categoryIds: moveCategoryData.category.id.toString(),
-        targetCategoryParentId: moveCategoryData.categoryParentId || 0
+        targetCategoryParentId: moveCategoryData.categoryParent ? moveCategoryData.categoryParent.id : 0
       })
     )
   }
@@ -294,11 +305,13 @@ export class CategoriesService implements OnDestroy {
     }
 
     // Check if we put the category as a descendant of itself
-    const selectedCategoryIdSameAsParent = moveCategoryData.category.id === moveCategoryData.categoryParentId;
+    const selectedCategoryIdSameAsParent = moveCategoryData.categoryParent &&
+      moveCategoryData.category.id === moveCategoryData.categoryParent.id;
 
     // Check that the parent category isn't a descendant of the category
-    const selectedCategoryIsParentOfTarget = moveCategoryData.category.fullIds.includes(moveCategoryData.categoryParentId.toString());
-    return !selectedCategoryIdSameAsParent && !selectedCategoryIsParentOfTarget;
+    const selectedParentIsDescendantOfCategoryToMove =
+      moveCategoryData.categoryParent.fullIds.includes(moveCategoryData.category.id);
+    return !selectedCategoryIdSameAsParent && !selectedParentIsDescendantOfCategoryToMove;
   }
 }
 
