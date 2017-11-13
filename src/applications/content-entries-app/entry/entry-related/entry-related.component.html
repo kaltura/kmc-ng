@@ -40,7 +40,7 @@
 							<button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, file)"></button>
 						</div>
 						<div *ngIf="file.uploading" class="kUploadMonitor">
-							<span>{{file.progress ? file.progress : '0'}}%</span>
+							<span>{{file.progress ? file.progress + '%' : 'applications.content.entryDetails.related.pending' | translate }}</span>
 							<a (click)="_widgetService._cancelUpload(file)">{{'applications.content.entryDetails.related.cancel' | translate}}</a>
 						</div>
 						<div *ngIf="file.uploadFailure">

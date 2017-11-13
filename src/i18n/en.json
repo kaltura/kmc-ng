@@ -925,7 +925,8 @@
           "done": "Done",
           "cancel": "Cancel",
           "uploadError": "Upload Error",
-          "remove": "Remove"
+          "remove": "Remove",
+          "pending": "Pending"
         },
         "clips": {
           "clips": "Clips",
