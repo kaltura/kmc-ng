@@ -660,8 +660,8 @@
         "removeFromPlaylist": "Remove from playlist",
         "moveUp": "Move Up",
         "moveDown": "Move Down",
-        "duplicate": "Duplicate"
-
+        "duplicate": "Duplicate",
+        "removeCategoriesNone": "No categories to remove"
       },
       "entryDetails": {
         "sections": {
