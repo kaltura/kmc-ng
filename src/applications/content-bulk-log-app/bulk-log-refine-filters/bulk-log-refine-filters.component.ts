@@ -39,7 +39,6 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
 
   private _filterNameToTreeData: { [key: string]: TreeFilterData } = {};
-  private _parentPopupStateChangeSubscribe: ISubscription;
 
   // properties that are exposed to the template
   public _filtersGroupList: FiltersGroup[] = [];
@@ -63,7 +62,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
   ngAfterViewInit() {
     if (this.parentPopupWidget) {
-      this._parentPopupStateChangeSubscribe =  this.parentPopupWidget.state$
+      this.parentPopupWidget.state$
         .cancelOnDestroy(this)
         .subscribe(event => {
           if (event.state === PopupWidgetStates.Close && this._treeContainer) {
@@ -75,10 +74,6 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
   // keep for cancelOnDestroy operator
   ngOnDestroy() {
-    if (this._parentPopupStateChangeSubscribe) {
-      this._parentPopupStateChangeSubscribe.unsubscribe();
-      this._parentPopupStateChangeSubscribe = null;
-    }
   }
 
   /**
