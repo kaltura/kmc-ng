@@ -1,4 +1,4 @@
-import {BrowserService} from "app-shared/kmc-shell/providers/browser.service";
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {KalturaCategoryFilter} from 'kaltura-typescript-client/types/KalturaCategoryFilter';
 import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
@@ -10,17 +10,17 @@ import {KalturaFilterPager} from 'kaltura-typescript-client/types/KalturaFilterP
 import {KalturaResponseProfileType} from 'kaltura-typescript-client/types/KalturaResponseProfileType';
 import {CategoryListAction} from 'kaltura-typescript-client/types/CategoryListAction';
 import {KalturaClient} from '@kaltura-ng/kaltura-client';
-import {KalturaCategoryListResponse} from "kaltura-typescript-client/types/KalturaCategoryListResponse";
-import {KalturaCategory} from "kaltura-typescript-client/types/KalturaCategory";
-import {CategoryDeleteAction} from "kaltura-typescript-client/types/CategoryDeleteAction";
+import {KalturaCategoryListResponse} from 'kaltura-typescript-client/types/KalturaCategoryListResponse';
+import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {CategoryDeleteAction} from 'kaltura-typescript-client/types/CategoryDeleteAction';
 import {AppLocalization} from "@kaltura-ng/kaltura-common";
 import {CategoryAddAction} from "kaltura-typescript-client/types/CategoryAddAction";
 import {CategoryMoveAction} from "kaltura-typescript-client/types/CategoryMoveAction";
 
-export type UpdateStatus = {
+export interface UpdateStatus {
     loading: boolean;
     errorMessage: string;
-};
+}
 
 export interface Categories {
     items: KalturaCategory[],
@@ -69,7 +69,7 @@ export class CategoriesService implements OnDestroy {
     constructor(private _kalturaClient: KalturaClient,
         private browserService: BrowserService,
                 private _appLocalization: AppLocalization) {
-        const defaultPageSize = this.browserService.getFromLocalStorage("categories.list.pageSize");
+        const defaultPageSize = this.browserService.getFromLocalStorage('categories.list.pageSize');
         if (defaultPageSize !== null) {
             this._updateQueryData({
                 pageSize: defaultPageSize
@@ -106,17 +106,18 @@ export class CategoriesService implements OnDestroy {
         this._queryData.next(newQueryData);
 
         if (partialData.pageSize) {
-            this.browserService.setInLocalStorage("categories.list.pageSize", partialData.pageSize);
+            this.browserService.setInLocalStorage('categories.list.pageSize', partialData.pageSize);
         }
     }
 
     public getNextCategoryId(categoryId: number): number | null {
         const categories = this._categories.getValue().items;
-        if (!categories)
-            return null;
+        if (!categories || !categories.length) {
+          return null;
+        }
 
         // validate category exists
-        const currentCategoryIndex = categories.findIndex(category => category.id == categoryId);
+        const currentCategoryIndex = categories.findIndex(category => category.id === categoryId);
         if (currentCategoryIndex === -1) {
             return null;
         }
@@ -131,20 +132,20 @@ export class CategoriesService implements OnDestroy {
 
     public getPrevCategoryId(categoryId: number): number | null {
         const categories = this._categories.getValue().items;
-        if (!categories)
-            return null;
+        if (!categories || !categories.length) {
+          return null;
+        }
 
         // validate category exists
-        const currentCategoryIndex = categories.findIndex(category => category.id == categoryId);
-        if (currentCategoryIndex == -1) {
+        const currentCategoryIndex = categories.findIndex(category => category.id === categoryId);
+        if (currentCategoryIndex === -1) {
             return null;
         }
 
         // get previous category ID
-        if (currentCategoryIndex != 0) {
+        if (currentCategoryIndex !== 0) {
             return (categories[currentCategoryIndex - 1].id);
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -171,16 +172,16 @@ export class CategoriesService implements OnDestroy {
             },
             error => {
                 this._categoriesExecuteSubscription = null;
-                const errorMessage = error & error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+                const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
                 this._state.next({ loading: false, errorMessage });
             });
     }
 
     private buildQueryRequest(queryData: QueryData): Observable<KalturaCategoryListResponse> {
         try {
-            let filter: KalturaCategoryFilter = new KalturaCategoryFilter({});
+            const filter: KalturaCategoryFilter = new KalturaCategoryFilter({});
             let pagination: KalturaFilterPager = null;
-            let responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
+            const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
                 type: KalturaResponseProfileType.includeFields,
                 fields: queryData.fields
             });
@@ -207,7 +208,7 @@ export class CategoriesService implements OnDestroy {
                     pager: pagination,
                     responseProfile
                 })
-            )
+            );
         } catch (err) {
             return Observable.throw(err);
         }

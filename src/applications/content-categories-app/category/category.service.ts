@@ -15,9 +15,9 @@ import {KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-typescript-clien
 import {CategoryGetAction} from 'kaltura-typescript-client/types/CategoryGetAction';
 import {CategoryUpdateAction} from 'kaltura-typescript-client/types/CategoryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {CategoryWidgetsManager} from './category-widgets-manager';
-import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
-import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import { CategoryWidgetsManager } from './category-widgets-manager';
+import {  OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 export enum ActionTypes {
 	CategoryLoading,
@@ -182,7 +182,8 @@ export class CategoryService implements OnDestroy {
 
 					return this._kalturaServerClient.multiRequest(request)
 						.monitor('category store: save category')
-						.map(
+                        .tag('block-shell')
+                        .map(
 						response => {
 							if (response.hasErrors()) {
 								this._state.next({ action: ActionTypes.CategorySavingFailed });

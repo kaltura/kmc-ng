@@ -4,7 +4,7 @@
 		<button type="button" class="kButtonDefault" pButton label="{{'applications.content.entryDetails.captions.add' | translate}}" (click)="_addCaption()"></button>
 		<div class="kTable">
 			<p-dataTable [value]="(_widgetService._captions$ | async)?.items" scrollable="true" scrollHeight="100%" [rowStyleClass]="_widgetService._getRowStyle">
-				<p-column field="label" header="{{'applications.content.entryDetails.captions.label' | translate}}">
+				<p-column field="label" header="{{'applications.content.entryDetails.captions.label' | translate}}" [style]="{'padding-left': '24px'}">
 				</p-column>
 				<p-column field="format" header="{{'applications.content.entryDetails.captions.type' | translate}}">
 					<ng-template let-col let-caption="rowData" pTemplate="body">
@@ -45,7 +45,7 @@
 		</div>
 	</div>
 
-	<kPopupWidget #editPopup [popupWidth]="380" [popupHeight]="460" [modal]="true">
+	<kPopupWidget #editPopup [popupWidth]="380" [popupHeight]="472" [modal]="true">
 		<ng-template>
 			<kEntryCaptionsEdit [currentCaption]="_widgetService.currentCaption" [parentPopupWidget]="editPopup"></kEntryCaptionsEdit>
 		</ng-template>

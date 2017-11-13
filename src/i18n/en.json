@@ -27,7 +27,7 @@
       "title": "Change account",
       "choose": "Choose a different partner:",
       "continue": "Continue",
-      "errors":{
+      "errors": {
         "loadPartners": "An error occurred while loading accounts."
       }
     },
@@ -58,7 +58,10 @@
       "confirm": "Confirm",
       "close": "Close",
       "note": "Note:",
-      "attention": "Attention"
+      "attention": "Attention",
+      "yes": "Yes",
+      "no": "No",
+      "apply": "Apply"
     },
     "login": {
       "login": {
@@ -85,7 +88,8 @@
         "instructions": "Instructions to reset your password will be sent to your email. If you forgot which email you used, please ",
         "contactUs": "contact us.",
         "sent": {
-          "instructions": "An email has been sent to {{value}} with a link to reset your password. If you don't see the message in your inbox, check to see if the message is in your spam or junk folders.",
+          "emailSent": "An email has been sent to your inbox!",
+          "instructions": "If you don't see the message in your inbox, check to see if the message is in your spam or junk folders.",
           "redirectTo": "Redirect to",
           "login": "login"
         }
@@ -158,7 +162,7 @@
       "validation": {
         "error": "Error",
         "wrongType": "Select media type",
-        "missingTranscodingProfile" : "Select transcoding profile",
+        "missingTranscodingProfile": "Select transcoding profile",
         "fileSizeExceeded": "File size exceeded",
         "fileNameRequired": "File name is required"
       },
@@ -174,6 +178,12 @@
           "title": "Prepare entry",
           "video": "Video entry",
           "audio": "Audio entry"
+        },
+        "createDraft": {
+          "draftEntry": "Draft Entry"
+        },
+        "errors": {
+          "prepareEntry": "An error occurred during prepare entry"
         }
       },
       "uploadSettings": {
@@ -213,6 +223,72 @@
         "completed": "completed",
         "error": "error",
         "upToDate": "Up to date"
+      },
+      "transcodingProfilesSelect": {
+        "titleVideo": "Prepare Video Entry",
+        "titleAudio": "Prepare Audio Entry",
+        "selectTranscodingProfile": "Select transcoding profile",
+        "defaultOption": "Default",
+        "apply": "Apply",
+        "errors": {
+          "loadFailed": "An error occurred during transcoding profiles loading"
+        }
+      },
+      "prepareLive": {
+        "createLiveStreamTitle": "Create Live Stream Entry",
+        "streamTypeLabel": "Stream type",
+        "streamTypes": {
+          "kaltura": "Kaltura Live Streaming (HDS/HLS/DASH)",
+          "universal": "Universal Streaming, Flash and Mobile (HDS/HLS)",
+          "manual": "Manual Live Stream URLs"
+        },
+        "create": "Create",
+        "kalturaStreamType": {
+          "name": "Name",
+          "description": "Description",
+          "transcodingProfile": "Live Transcoding Profiles",
+          "liveDVR": "Live DVR",
+          "liveDVR_message": "Seeking to early parts of the live stream. DVR window is 2 hours by default",
+          "enableRecording": "Enable Recording",
+          "enableRecordingOptions": {
+            "perSession": "Create new entries for every broadcast session",
+            "appended": "Append recorded content to a single entry"
+          },
+          "previewMode": "Preview Mode",
+          "errors": {
+            "required": "This field is required"
+          }
+        },
+        "manualStreamType": {
+          "name": "Name",
+          "description": "Description",
+          "flashHDSURL": "Live Flash HDS stream URL",
+          "hlsStreamUrl": "Live Mobile HLS stream URL",
+          "useAkamaiHdProtocol": "Akamai HD protocol is used on this HDS URL",
+          "errors": {
+            "required": "This field is required",
+            "enterUrl": "You must enter at least one of HDS/HLS stream URL",
+            "invalidUrl": "You must enter a valid URL"
+          }
+        },
+        "universalStreamType": {
+          "name": "Name",
+          "description": "Description",
+          "primaryEncoderIp": "Primary Encoder IP",
+          "secondaryEncoderIp": "Secondary Encoder IP",
+          "secondaryEncoderIp_message": "By default we use your public IP accessing this KMC",
+          "broadcastPassword": "Broadcast password",
+          "liveDvr": "Live DVR",
+          "liveDVR_message": "Seeking to early parts of the live stream. DVR window is 2 hours by default.",
+          "errors": {
+            "required": "This field is required",
+            "invalidIp": "You must enter a valid IP Address"
+          }
+        },
+        "confirmEntryNavigation": {
+          "title" : "Stream has been created successfully.",
+          "message": "Live Stream Entry has been created successfully. \n Do you want to view entry details?"
+        }
       }
     },
     "content": {
@@ -253,6 +329,7 @@
         "edit": "Edit",
         "delete": "Delete",
         "deleteCategory": "Delete Category",
+        "editCategory": "Edit Category",
         "viewEntries": "View Entries",
         "moveCategory": "Move Category",
         "cancel": "Cancel",
@@ -267,25 +344,32 @@
           "changeContentPrivacyLabel": "Change the Content Privacy settings for all selected categories",
           "changeCategoryListing": "Change Category Listing",
           "changeCategoryListingLabel": " Change the Category Listing settings for all selected categories",
-          "changeContributionPolicy": "Change Contribution Policy",
+          "changeContributionPolicy": "Change Category Contribution Policy Settings",
           "changeContributionPolicyLabel": "Change the Category Contribution Policy settings for all selected categories",
           "changeCategoryOwner": "Change Category Owner",
           "delete": "Delete",
           "save": "Save changes",
-          "changeOwnerLabel": "Set a new owner for the selected categories"
+          "changeOwnerLabel": "Set a new owner for the selected categories",
+          "error": "Categories update failed",
+          "success": "Categories updated successfully"
         },
         "deleteCategories": "Delete Categories",
         "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
-        "confirmDeleteWithSubCategories": "The category will be deleted with its sub-categories. Do you want to continue?\n {{0}}",
-        "confirmDeleteSingle": "Are you sure you want to delete this category?\n {{0}}",
-        "confirmDeleteMultipleWithSubCategories": "Categories will be deleted with their sub-categories. Do you want to continue?\n {{0}}",
-        "confirmDeleteMultiple": "Are you sure you want to delete these categories?\n {{0}}",
+        "deleteWithEditWarningTags": "This category was created by another application and deleting it will effect this application or site.\n Do you want to continue?",
+        "editWithEditWarningTags": "This category was created by another application and editing it will effect this application or site.\n Do you want to continue?",
+        "confirmDeleteWithSubCategories": "The category will be deleted with its sub-categories. Do you want to continue?",
+        "confirmDeleteSingle": "Are you sure you want to delete this category?",
+        "confirmDeleteMultipleWithSubCategories": "Categories will be deleted with their sub-categories. Do you want to continue?",
+        "confirmDeleteMultiple": "Are you sure you want to delete these categories?",
         "deleted": "Category deleted successfully",
         "categoryId": "Category ID: {{0}}",
         "noRestriction": "No Restriction",
         "requiresAuthentication": "Requires Authentication",
         "private": "Private",
-        "selectedCategory": "Selected: {{0}}"
+        "selectedCategory": "Selected: {{0}}",
+        "errors" : {
+          "categoryCouldNotBeDeleted" : "Category could not be deleted"
+        }
       },
       "addNewCategory": {
         "newCategory": "New Category",
@@ -576,8 +660,8 @@
         "removeFromPlaylist": "Remove from playlist",
         "moveUp": "Move Up",
         "moveDown": "Move Down",
-        "duplicate": "Duplicate"
-
+        "duplicate": "Duplicate",
+        "removeCategoriesNone": "No categories to remove"
       },
       "entryDetails": {
         "sections": {
@@ -665,7 +749,7 @@
           "anyIP": "Any IP",
           "allowIPs": "Allow IPs: {{0}}",
           "blockIPs": "Blocked: {{0}}",
-          "anyFlavour": "Any Flavour",
+          "anyFlavour": "Any Flavor",
           "allowFlavours": "Allow Flavors: {{0}}",
           "blockFlavours": "Blocked: {{0}}",
           "ks": "KS",
