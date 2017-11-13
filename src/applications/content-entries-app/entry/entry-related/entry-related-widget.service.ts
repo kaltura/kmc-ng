@@ -33,13 +33,13 @@ import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-commo
 import { NewEntryRelatedFile } from './new-entry-related-file';
 import { EntryWidget } from '../entry-widget';
 
-export interface RelatedFile extends KalturaAttachmentAsset
-{
-    uploading?: boolean,
-    uploadFileId?: string,
-    serverUploadToken? : string,
-    uploadFailure? : boolean,
-    progress? : string;
+export interface RelatedFile extends KalturaAttachmentAsset {
+  uploading?: boolean,
+  uploadFileId?: string,
+  serverUploadToken?: string,
+  uploadFailure?: boolean,
+  progress?: string;
+  assetId?: string
 }
 
 @Injectable()
@@ -49,6 +49,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 	relatedFilesListDiffer: IterableDiffer<RelatedFile>;
 	relatedFileDiffer : { [key : string] : KeyValueDiffer<string,any> } = {};
 
+  private _relatedFilesCache: RelatedFile[] = [];
 	private _relatedFiles = new BehaviorSubject<{ items : RelatedFile[]}>(
 		{ items : []}
 	);
@@ -124,12 +125,11 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected onReset()
-    {
-	    this.relatedFileDiffer = {};
-	    this.relatedFilesListDiffer = null;
-    	this._entryId = '';
-	    this._relatedFiles.next({ items : [] });
+    protected onReset() {
+      this.relatedFileDiffer = {};
+      this.relatedFilesListDiffer = null;
+      this._entryId = '';
+      this._relatedFiles.next({ items: [] });
     }
 
   protected onActivate(firstTimeActivating: boolean) {
@@ -154,20 +154,22 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
             asset.format = this._getFormatByExtension(asset.fileExt);
           }
 
-          // TODO [kmcng] find a way to get relevant file
-          // const trackedFiles = this._uploadManagement.getTrackedFiles().filter(file => file.data instanceof NewEntryRelatedFile);
-          // const relevantFile = trackedFiles.find(file => asset.uploadFileId === file.id);
-          //
-          // console.warn('relevantFile', trackedFiles);
-          // console.warn('asset', asset);
-          //
-          // if (relevantFile) {
-          //   asset.progress = (relevantFile.progress * 100).toFixed(0);
-          //   asset.uploading = relevantFile.progress < 1;
-          //   asset.uploadFailure = !!relevantFile.failureReason;
-          //   asset.serverUploadToken = (<NewEntryRelatedFile>relevantFile.data).serverUploadToken;
-          // }
+          const trackedFiles = this._uploadManagement.getTrackedFiles().filter(file => file.data instanceof NewEntryRelatedFile);
+          const relatedFile = this._relatedFilesCache.find(file => file.assetId === asset.id);
+
+          if (relatedFile) {
+            const relevantFile = trackedFiles.find(file => relatedFile.uploadFileId === file.id);
+
+            if (relevantFile) {
+              asset.uploadFileId = relevantFile.id;
+              asset.progress = (relevantFile.progress * 100).toFixed(0);
+              asset.uploading = relevantFile.progress < 1;
+              asset.uploadFailure = !!relevantFile.failureReason;
+              asset.serverUploadToken = (<NewEntryRelatedFile>relevantFile.data).serverUploadToken;
+            }
+          }
         });
+
         this._relatedFiles.next({ items: response.objects });
         this.relatedFilesListDiffer = this._listDiffers.find([]).create();
         this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
@@ -177,9 +179,11 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
           this.relatedFileDiffer[asset.id] = this._objectDiffers.find([]).create(null);
           this.relatedFileDiffer[asset.id].diff(asset);
         });
+        this._relatedFilesCache = [];
         super._hideLoader();
       })
       .catch(error => {
+          this._relatedFilesCache = [];
           this._relatedFiles.next({ items: [] });
           super._hideLoader();
           super._showActivationError();
@@ -188,55 +192,66 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
       );
   }
 
-	protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
-	{
-		if (this._relatedFiles.getValue().items) {
-			// check for added and removed assets
-			if (this.relatedFilesListDiffer) {
-				let changes = this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
-				if (changes) {
-					changes.forEachAddedItem((record: IterableChangeRecord<RelatedFile>) => {
-						// added assets
-						let newAsset:RelatedFile = record.item as RelatedFile;
-						const addAssetRequest: AttachmentAssetAddAction = new AttachmentAssetAddAction({entryId: this.data.id, attachmentAsset: newAsset});
-						request.requests.push(addAssetRequest);
+  protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
+    if (this._relatedFiles.getValue().items) {
+      this._relatedFilesCache = this._relatedFiles.getValue().items;
 
-						let resource = new KalturaUploadedFileTokenResource();
-						resource.token = record.item.serverUploadToken;
-						let setContentRequest: AttachmentAssetSetContentAction = new AttachmentAssetSetContentAction({id: '0', contentResource: resource})
-							.setDependency(['id', (request.requests.length-1), 'id']);
+      // check for added and removed assets
+      if (this.relatedFilesListDiffer) {
+        const changes = this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
+        if (changes) {
+          changes.forEachAddedItem((record: IterableChangeRecord<RelatedFile>) => {
+            // added assets
+            const newAsset = record.item as RelatedFile;
+            const addAssetRequest: AttachmentAssetAddAction = new AttachmentAssetAddAction({
+              entryId: this.data.id,
+              attachmentAsset: newAsset
+            });
+            request.requests.push(addAssetRequest);
 
-						request.requests.push(setContentRequest);
+            const resource = new KalturaUploadedFileTokenResource();
+            resource.token = record.item.serverUploadToken;
+            const setContentRequest = new AttachmentAssetSetContentAction({ id: '0', contentResource: resource })
+              .setDependency(['id', (request.requests.length - 1), 'id'])
+              .setCompletion(response => {
+                if (response.error) {
+                  this._cancelUpload(newAsset);
+                } else {
+                  const relevantAsset = this._relatedFiles.getValue().items
+                    .find(file => file.uploadFileId === newAsset.uploadFileId);
+                  if (relevantAsset) {
+                    relevantAsset.assetId = response.result.id;
+                  }
+                }
+              });
 
-					});
-					changes.forEachRemovedItem((record: IterableChangeRecord<RelatedFile>) => {
-						// remove deleted assets
-						const deleteAssetRequest: AttachmentAssetDeleteAction = new AttachmentAssetDeleteAction({attachmentAssetId: (record.item as RelatedFile).id});
-						request.requests.push(deleteAssetRequest);
-					});
-				}
-			}
+            request.requests.push(setContentRequest);
 
-			// update changed assets
-			this._relatedFiles.getValue().items.forEach((asset: RelatedFile) => {
-				var relatedFileDiffer = this.relatedFileDiffer[asset.id];
-				if (relatedFileDiffer) {
-					var objChanges = relatedFileDiffer.diff(asset);
-					if (objChanges) {
-						const updateAssetRequest: AttachmentAssetUpdateAction = new AttachmentAssetUpdateAction({
-							id: asset.id,
-							attachmentAsset: asset
-						});
-						request.requests.push(updateAssetRequest);
-					}
-				}
-			});
-		}
+          });
+          changes.forEachRemovedItem((record: IterableChangeRecord<RelatedFile>) => {
+            // remove deleted assets
+            const deleteAssetRequest = new AttachmentAssetDeleteAction({ attachmentAssetId: (record.item as RelatedFile).id });
+            request.requests.push(deleteAssetRequest);
+          });
+        }
+      }
 
-	}
+      // update changed assets
+      this._relatedFiles.getValue().items.forEach((asset: RelatedFile) => {
+        const relatedFileDiffer = this.relatedFileDiffer[asset.id];
+        if (relatedFileDiffer && relatedFileDiffer.diff(asset)) {
+          const updateAssetRequest = new AttachmentAssetUpdateAction({ id: asset.id, attachmentAsset: asset });
+          request.requests.push(updateAssetRequest);
+        }
+      });
+    }
+  }
 
 	private _syncBusyState(): void {
-    const isBusy = this._relatedFiles.getValue().items.some(file => !file.serverUploadToken);
+    const trackedFiles = this._uploadManagement.getTrackedFiles();
+    const relevantFiles = this._relatedFiles.getValue()
+      .items.filter(({ uploadFileId }) => trackedFiles.find(({ id }) => id === uploadFileId));
+    const isBusy = relevantFiles.some(file => !file.serverUploadToken);
     this.updateState({ isBusy });
   }
 
