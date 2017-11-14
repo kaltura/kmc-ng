@@ -9,6 +9,7 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaE
 export class BulkOperationsComponent {
   @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Input() entriesTotalCount = 0;
+  @Input() duration = 0;
 
   @Output() addEntry = new EventEmitter<void>();
   @Output() clearSelection = new EventEmitter<void>();
