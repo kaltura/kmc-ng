@@ -106,10 +106,14 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   private _duplicateEntry(entry: KalturaMediaEntry): void {
-    this.addEntries([entry]);
-    this.entriesTotalCount = this.entries.length;
+    const entryIndex = this.entries.indexOf(entry);
 
-    this._setDirty();
+    if (entryIndex !== -1) {
+      this.entries.splice(entryIndex, 0, Object.assign({}, entry));
+      this.entries = [...this.entries];
+      this.entriesTotalCount = this.entries.length;
+      this._setDirty();
+    }
   }
 
   private _moveUpEntries(selectedEntries: KalturaMediaEntry[]): void {
