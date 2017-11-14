@@ -95,10 +95,6 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
               relevantCaption.serverUploadToken = (<NewEntryCaptionFile>uploadedFile.data).serverUploadToken;
               this._syncBusyState();
               break;
-            case TrackedFileStatuses.cancelled:
-              relevantCaption.uploading = false;
-              this._syncBusyState();
-              break;
             case TrackedFileStatuses.uploadCompleted:
               relevantCaption.uploading = false;
               relevantCaption.uploadFailure = false;
