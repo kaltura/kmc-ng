@@ -1,14 +1,20 @@
 <div class="kPlaylistEntriesTable" [class.noResults]="!_entries.length">
   <p-dataTable
     #dataTable
+    kStickyHeader
+    dataKey="id"
+    scrollable="true"
+    scrollHeight="100%"
+    sticksTo="playlistContentBulk"
+    stickyId="playlistEntriesTable"
+    stickyClass="stickyHeader"
     [value]="_entries"
-    (selectionChange)="_onSelectionChange($event)"
-    (onSort)="_onSortChanged($event)"
-    [(selection)]="selectedEntries"
     [sortField]="filter.sortBy"
     [emptyMessage]="_emptyMessage"
-    dataKey="id"
-    [sortOrder]="filter.sortDirection | kPrimeTableSortDirection">
+    [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
+    (selectionChange)="_onSelectionChange($event)"
+    (onSort)="_onSortChanged($event)"
+    [(selection)]="selectedEntries">
     <p-column styleClass="selectionColumn" selectionMode="multiple"></p-column>
     <p-column styleClass="thumbnailColumn" field="thumbnailUrl" header="{{'applications.content.table.thumbnail' | translate}}">
       <ng-template let-col let-entry="rowData" pTemplate="body">
