@@ -59,5 +59,10 @@ export class PlaylistContentComponent implements OnInit, OnDestroy {
     this._clearSelection();
     this._widgetService.onActionSelected(event);
   }
+
+  public _onSortChanged(event: { field: string, order: -1 | 1, multisortmeta: any }): void {
+    this._clearSelection();
+    this._widgetService.onSortChanged(event);
+  }
 }
 
