@@ -18,19 +18,14 @@
 			font-weight: 700;
 			padding-left: 12px;
 			&:hover{
-				color: $kTertiary;
+				color: $kGrayscale1;
 			}
 			&.active{
-				color: $kTertiary;
+				color: $kGrayscale1;
 				cursor: default;
 			}
 		}
 	}
-}
-
-.kSectionHasErrors
-{
-  color:red;
 }
 
 :host /deep/ .kStickySections{
