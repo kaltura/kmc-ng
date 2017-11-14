@@ -1,13 +1,13 @@
-import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
-import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AppLocalization } from "@kaltura-ng/kaltura-common";
-import { CategorySectionsList } from './category-sections-list';
-import { CategoryWidgetKeys } from '../category-widget-keys';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
+import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {Injectable, OnDestroy} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {CategorySectionsList} from './category-sections-list';
+import {CategoryWidgetKeys} from '../category-widget-keys';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { CategoryWidget } from '../category-widget';
+import {CategoryWidget} from '../category-widget';
+import {environment} from 'app-environment';
 
 export interface SectionWidgetItem {
     label: string,
@@ -68,10 +68,6 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
      * Do some cleanups if needed once the section is removed
      */
     protected onReset() {
-        // TODO: remove this line!!!
-        // super.updateState({
-        //     isDirty: true
-        // });
     }
 
     private _clearSectionsList(): void {
@@ -105,31 +101,23 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
         this._sections.next(sections);
     }
 
-    private _isSectionEnabled(sectionKey: string, entry: KalturaCategory): boolean {
-        //const mediaType = this.data.mediaType;
-        // todo: update section list
+    private _isSectionEnabled(sectionKey: string, category: KalturaCategory): boolean {
         switch (sectionKey) {
-            // case EntryWidgetKeys.Thumbnails:
-            //     return mediaType !== KalturaMediaType.image;
-            // case EntryWidgetKeys.Flavours:
-            //     return mediaType !== KalturaMediaType.image && !this._isLive(entry);
-            // case EntryWidgetKeys.Captions:
-            //     return mediaType !== KalturaMediaType.image && !this._isLive(entry);
-            // case EntryWidgetKeys.Live:
-            //     return this._isLive(entry);
-            // case EntryWidgetKeys.Clips:
-            //     return mediaType !== KalturaMediaType.image;
+            case CategoryWidgetKeys.Metadata:
+              return true;
+            case CategoryWidgetKeys.Entitlements:
+              // Enable if any of these conditions are met:
+              // TODO [kmc] Permissions: showEndUsersTab is set to true
+              // KalturaCategory.privacyContexts is defined
+              return category.privacyContexts && typeof(category.privacyContexts) !== 'undefined';
+           case CategoryWidgetKeys.SubCategories:
+              return category.directSubCategoriesCount < 1 &&
+                category.directSubCategoriesCount > environment.categoriesShared.SUB_CATEGORIES_LIMIT;
             default:
                 return true;
         }
     }
 
-    ngOnDestroy()
-    {
-
+    ngOnDestroy() {
     }
-    // private _isLive( entry : KalturaMediaEntry): boolean {
-    //     const mediaType = entry.mediaType;
-    //     return mediaType === KalturaMediaType.liveStreamFlash || mediaType === KalturaMediaType.liveStreamWindowsMedia || mediaType === KalturaMediaType.liveStreamRealMedia || mediaType === KalturaMediaType.liveStreamQuicktime;
-    // }
 }
