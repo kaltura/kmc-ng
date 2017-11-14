@@ -24,6 +24,7 @@ import { UserGetByLoginIdAction } from 'kaltura-typescript-client/types/UserGetB
 import { UserGetAction } from 'kaltura-typescript-client/types/UserGetAction';
 import { UserAddAction } from 'kaltura-typescript-client/types/UserAddAction';
 import { UserEnableLoginAction } from 'kaltura-typescript-client/types/UserEnableLoginAction';
+import { IsUserExistsStatuses } from './user-exists-statuses';
 
 export interface QueryData
 {
@@ -210,7 +211,7 @@ export class UsersStore implements OnDestroy {
     });
   }
 
-  public isUserAlreadyExist(email: string) : Observable<void> {
+  public isUserAlreadyExists(email: string) : Observable<IsUserExistsStatuses> {
     return Observable.create(observer => {
       this._kalturaServerClient.request(
         new UserGetByLoginIdAction(
@@ -222,11 +223,11 @@ export class UsersStore implements OnDestroy {
         .cancelOnDestroy(this)
         .subscribe(
           () => {
-            observer.next();
+            observer.next(IsUserExistsStatuses.kmcUser);
             observer.complete();
           },
           error => {
-            observer.error(error);
+            observer.error(error.code === 'LOGIN_DATA_NOT_FOUND' ? IsUserExistsStatuses.otherSystemUser : (error.code === 'USER_NOT_FOUND' ? IsUserExistsStatuses.unknownUser : ''));
           }
         );
     });
@@ -257,16 +258,18 @@ export class UsersStore implements OnDestroy {
   public addUser(userForm: FormGroup) : Observable<void> {
     return Observable.create(observer => {
       let roleIds = userForm.controls['roleIds'].value,
-        publisherId = userForm.controls['id'].value;
+          publisherId = userForm.controls['id'].value;
       this._kalturaServerClient.request(
         new UserAddAction(
           {
             user: new KalturaUser({
-              email:      userForm.controls['email'].value,
-              firstName:  userForm.controls['firstName'].value,
-              lastName:   userForm.controls['lastName'].value,
-              roleIds:    roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
-              id:         publisherId ? publisherId : userForm.controls['email'].value
+              email:        userForm.controls['email'].value,
+              firstName:    userForm.controls['firstName'].value,
+              lastName:     userForm.controls['lastName'].value,
+              roleIds:      roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
+              id:           publisherId ? publisherId : userForm.controls['email'].value,
+              isAdmin:      true //,loginEnabled: true
+              // todo [kmcng]: "loginEnabled" is not assignable to parameter of type 'KalturaUserArgs'
             })
           }
         )

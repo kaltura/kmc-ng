@@ -14,7 +14,7 @@
       </div>
       <kSticky stickyId="usersFilters" [sticksTo]="'header'" [scrollOffset]="166">
         <div class="kUsersTableFilters kContent">
-          <button [disabled]="usersTotalCount === _partnerInfo.adminLoginUsersQuota"
+          <button [disabled]="usersTotalCount >= _partnerInfo.adminLoginUsersQuota"
             pButton
             type="button"
             label="{{'applications.administration.users.addUser' | translate}}"
@@ -47,14 +47,9 @@
   <kPopupWidget #editUserPopup [popupWidth]="791" [popupHeight]="663" [modal]="true">
     <ng-template>
       <kEditUser
-        [parentPopupWidget]="editPopup"
-        [isBusy]="isBusy"
-        [popupTitle]="popupTitle"
-        [userForm]="userForm"
-        [selectedRole]="selectedRole"
-        [rolesList]="rolesList"
-        (getRoleDescription)="getRoleDescription($event)"
-        (saveUser)="saveUser()">
+        [parentPopupWidget]="editUserPopup"
+        [user]="user"
+        (getRoleDescription)="getRoleDescription($event)">
       </kEditUser>
     </ng-template>
   </kPopupWidget>

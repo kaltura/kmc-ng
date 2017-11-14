@@ -1,7 +1,10 @@
-<k-area-blocker [showLoader]="isBusy">
+<k-area-blocker [showLoader]="isBusy" [message]="blockerMessage">
   <div class="kFloater kOverrideFAIcons">
     <div class="kHeader">
-      <div class="kTitle">{{popupTitle}}</div>
+      <div class="kTitle">
+        <span *ngIf="!isNewUser; else addTitleText">{{'applications.administration.users.editUser' | translate}}</span>
+        <ng-template #addTitleText>{{'applications.administration.users.addUser' | translate}}</ng-template>
+      </div>
     </div>
 
     <div class="kContainer">
@@ -48,7 +51,7 @@
         <div class="kRow kValign">
           <span class="kLabel kExtraWidth">{{'applications.administration.users.userRole' | translate}}</span>
           <div class="kControl">
-            <p-dropdown [options]="rolesList" (onChange)="this.getRoleDescription.emit($event)" formControlName="roleIds" styleClass="rolesList" [autoWidth]="false"></p-dropdown>
+            <p-dropdown [options]="rolesList" (onChange)="this.getRoleDescription($event)" formControlName="roleIds" styleClass="rolesList" [autoWidth]="false"></p-dropdown>
           </div>
         </div>
         <div class="kRow kValign">
@@ -64,7 +67,7 @@
       <button type="button" class="kButtonBranded"
               [disabled]="!userForm.dirty" pButton
               label="{{'applications.administration.users.save' | translate}}"
-              (click)="this.saveUser.emit()"></button>
+              (click)="this.saveUser()"></button>
     </div>
   </div>
 </k-area-blocker>
