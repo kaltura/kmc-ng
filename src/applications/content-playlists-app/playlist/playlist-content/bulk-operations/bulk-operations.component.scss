@@ -10,6 +10,11 @@
   display: flex;
   justify-content: space-between;
 
+  .kBulkActionsContainer {
+    display: inline-flex;
+    align-items: center;
+  }
+
   .kPlaylistEntriesTableDuration {
     margin-right: 14px;
   }
