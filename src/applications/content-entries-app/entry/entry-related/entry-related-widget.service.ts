@@ -32,6 +32,7 @@ import { environment } from 'app-environment';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryRelatedFile } from './new-entry-related-file';
 import { EntryWidget } from '../entry-widget';
+import { KalturaAttachmentAssetListResponse } from 'kaltura-typescript-client/types/KalturaAttachmentAssetListResponse';
 
 export interface RelatedFile extends KalturaAttachmentAsset {
   uploading?: boolean,
@@ -39,7 +40,6 @@ export interface RelatedFile extends KalturaAttachmentAsset {
   serverUploadToken?: string,
   uploadFailure?: boolean,
   progress?: string;
-  assetId?: string
 }
 
 @Injectable()
@@ -49,7 +49,6 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 	relatedFilesListDiffer: IterableDiffer<RelatedFile>;
 	relatedFileDiffer : { [key : string] : KeyValueDiffer<string,any> } = {};
 
-  private _relatedFilesCache: RelatedFile[] = [];
 	private _relatedFiles = new BehaviorSubject<{ items : RelatedFile[]}>(
 		{ items : []}
 	);
@@ -148,27 +147,9 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
       .cancelOnDestroy(this, this.widgetReset$)
       .monitor('get entry related files')
       .do(response => {
-        // set file type
-        response.objects.map((asset: RelatedFile) => {
-          if (!asset.format && asset.fileExt) {
-            asset.format = this._getFormatByExtension(asset.fileExt);
-          }
-
-          const trackedFiles = this._uploadManagement.getTrackedFiles().filter(file => file.data instanceof NewEntryRelatedFile);
-          const relatedFile = this._relatedFilesCache.find(file => file.assetId === asset.id);
-
-          if (relatedFile) {
-            const relevantFile = trackedFiles.find(file => relatedFile.uploadFileId === file.id);
-
-            if (relevantFile) {
-              asset.uploadFileId = relevantFile.id;
-              asset.progress = (relevantFile.progress * 100).toFixed(0);
-              asset.uploading = relevantFile.progress < 1;
-              asset.uploadFailure = !!relevantFile.failureReason;
-              asset.serverUploadToken = (<NewEntryRelatedFile>relevantFile.data).serverUploadToken;
-            }
-          }
-        });
+        // WARN: mutating of the response object
+        // Set file type and restore previous upload state
+        this._updateAssetsResponse(response);
 
         this._relatedFiles.next({ items: response.objects });
         this.relatedFilesListDiffer = this._listDiffers.find([]).create();
@@ -179,11 +160,9 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
           this.relatedFileDiffer[asset.id] = this._objectDiffers.find([]).create(null);
           this.relatedFileDiffer[asset.id].diff(asset);
         });
-        this._relatedFilesCache = [];
         super._hideLoader();
       })
       .catch(error => {
-          this._relatedFilesCache = [];
           this._relatedFiles.next({ items: [] });
           super._hideLoader();
           super._showActivationError();
@@ -194,8 +173,6 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 
   protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
     if (this._relatedFiles.getValue().items) {
-      this._relatedFilesCache = this._relatedFiles.getValue().items;
-
       // check for added and removed assets
       if (this.relatedFilesListDiffer) {
         const changes = this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
@@ -217,10 +194,11 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
                 if (response.error) {
                   this._cancelUpload(newAsset);
                 } else {
-                  const relevantAsset = this._relatedFiles.getValue().items
-                    .find(file => file.uploadFileId === newAsset.uploadFileId);
-                  if (relevantAsset) {
-                    relevantAsset.assetId = response.result.id;
+                  const relevantUploadFile = this._uploadManagement.getTrackedFiles().find(file =>
+                    file.data instanceof NewEntryRelatedFile && file.id === newAsset.uploadFileId
+                  );
+                  if (relevantUploadFile) {
+                    (<NewEntryRelatedFile>relevantUploadFile.data).assetId = response.result.id;
                   }
                 }
               });
@@ -247,10 +225,31 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
     }
   }
 
-	private _syncBusyState(): void {
+  private _updateAssetsResponse(response: KalturaAttachmentAssetListResponse): void {
+    response.objects.forEach((asset: RelatedFile) => {
+      if (!asset.format && asset.fileExt) {
+        asset.format = this._getFormatByExtension(asset.fileExt);
+      }
+
+      const relevantFile = this._uploadManagement.getTrackedFiles().find(file =>
+        file.data instanceof NewEntryRelatedFile && file.data.assetId === asset.id
+      );
+
+      if (relevantFile) {
+        asset.uploadFileId = relevantFile.id;
+        asset.progress = (relevantFile.progress * 100).toFixed(0);
+        asset.uploading = relevantFile.progress < 1;
+        asset.uploadFailure = !!relevantFile.failureReason;
+        asset.serverUploadToken = (<NewEntryRelatedFile>relevantFile.data).serverUploadToken;
+      }
+    });
+  }
+
+  private _syncBusyState(): void {
     const trackedFiles = this._uploadManagement.getTrackedFiles();
-    const relevantFiles = this._relatedFiles.getValue()
-      .items.filter(({ uploadFileId }) => trackedFiles.find(({ id }) => id === uploadFileId));
+    // find intersection of tracked files and related files to avoid checking serverUploadToken on already uploaded assets
+    const relevantFiles = this._relatedFiles.getValue().items
+      .filter(({ uploadFileId }) => trackedFiles.find(({ id }) => id === uploadFileId));
     const isBusy = relevantFiles.some(file => !file.serverUploadToken);
     this.updateState({ isBusy });
   }

@@ -26,7 +26,7 @@
 				<p-column field="id" header="{{'applications.content.entryDetails.related.assetId' | translate}}">
 					<ng-template let-col let-file="rowData" pTemplate="body">
 						<div *ngIf="!file.uploadFailure">
-              <span *ngIf="!file.id">{{ 'applications.content.entryDetails.captions.ready' | translate }}</span>
+              <span *ngIf="!file.id && file.progress === '100'">{{ 'applications.content.entryDetails.captions.ready' | translate }}</span>
 							<span *ngIf="file.id">{{file[col.field]}}</span>
 						</div>
 						<div *ngIf="file.uploadFailure" class="kError">
