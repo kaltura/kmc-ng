@@ -59,9 +59,26 @@ hr{
 			.kControl, k-prime-control
 			{
 				width:100%;
+                .kHasError {
+                  border: 1px solid $kDandger;
+                  background: initial;
+                }
 			}
 
 		}
+
+        .kNameRow{
+          height: 40px;
+          padding-top: 10px;
+
+          .kControl {
+            height: 40px;
+
+            .error {
+              padding-top: 3px;
+            }
+          }
+        }
 
 
 		/*******************/

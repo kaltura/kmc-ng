@@ -1021,7 +1021,8 @@
           "entriesLoadError": "Error loading entries",
           "categoriesLoadError": "Error loading categories",
           "flavorsLoadError": "Error loading flavors",
-          "clipsLoadError": "Error loading clips"
+          "clipsLoadError": "Error loading clips",
+          "fieldRequired": "This field is required"
         }
       },
       "playlistDetails": {
