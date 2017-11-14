@@ -173,6 +173,7 @@ export class CategoryService implements OnDestroy {
 		this._widgetsManager.notifyDataSaving(newCategory, request, this.category)
 			.cancelOnDestroy(this)
 			.monitor('category store: prepare category for save')
+      .tag('block-shell')
 			.flatMap(
 			(response) => {
 				if (response.ready) {
