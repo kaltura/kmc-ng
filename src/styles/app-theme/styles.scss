@@ -71,7 +71,7 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
 .kmcDetailsLayout {
   font-size: 15px;
   background-color: $appBkgColor;
-  padding-top: 30px;
+  padding-top: 20px;
   width: 100%;
   button{
     cursor: pointer;
@@ -87,14 +87,15 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
       flex: 0 0 auto;
       .kBackBtn{
         margin-top: 4px;
-        margin-left: -56px;
-        margin-right: 23px;
+        margin-left: -46px;
+        margin-right: 26px;
         border: none;
         outline: none;
         background-color: transparent;
         color: $kGrayscale3;
         height: 20px;
-        font-size: 16px;
+        width: 18px;
+        font-size: 24px;
         &:active{
           box-shadow: none;
         }
@@ -113,7 +114,7 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
         color: $kGrayscale1;
         font-size: 24px;
         font-weight: 700;
-        margin-left: 12px;
+        margin-left: 24px;
         margin-right: 100px;
       }
       .kSaveBtn{
@@ -122,6 +123,7 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
         margin-right: 24px;
       }
       .kNavigationBtn{
+        font-size: 24px;
         margin-left: auto;
         width: 40px;
         margin-left: 0px;
@@ -141,9 +143,9 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
     }
     .kHeaderDetails{
       width: 100%;
-      margin-top: 20px;
-      margin-bottom: 20px;
-      height: 14px;
+      height: 54px;
+      padding-top: 12px;
+      box-sizing: border-box;
       flex: 0 0 auto;
     }
     .kDetailsMain{
@@ -158,6 +160,13 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
         overflow-x: hidden;
         width: 280px;
         flex: 0 0 auto;
+        .kSectionHasErrors::before {
+          font-family: 'kmcng-icon-pack';
+          content: '\e922';
+          color:red;
+          margin-right: 8px;
+          font-size: 10px;
+        }
         .kPreview{
           width: 280px;
           background-color: #ffffff;
