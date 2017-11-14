@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {KalturaPartner} from 'kaltura-typescript-client/types/KalturaPartner';
-import {AccountSettings, SettingsAccountSettingsService} from './settings-account-settings.service';
+import {SettingsAccountSettingsService} from './settings-account-settings.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {SelectItem} from 'primeng/primeng';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
@@ -72,13 +72,12 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
     if (!this.accountSettingsForm.valid) {
       return;
     }
-    this._updateAreaBlockerState(true, null);
     this._accountSettingsService
       .updatePartnerData(this.accountSettingsForm.value)
+      .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe(updatedPartner => {
           this._fillForm(updatedPartner);
-          this._updateAreaBlockerState(false, null);
         },
         error => {
           const blockerMessage = new AreaBlockerMessage(
@@ -94,7 +93,6 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
               ]
             }
           );
-          this._updateAreaBlockerState(false, blockerMessage);
         });
   }
 
