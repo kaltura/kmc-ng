@@ -64,10 +64,10 @@ export abstract class EntryWidget extends WidgetBase<EntryWidgetsManager, Kaltur
         }
     }
 
-    protected _showActivationError() {
+    protected _showActivationError(message?: string) {
         this._showBlockerMessage(new AreaBlockerMessage(
             {
-                message: 'An error occurred while loading data',
+                message: message || 'An error occurred while loading data',
                 buttons: [
                     {
                         label: 'Retry',
