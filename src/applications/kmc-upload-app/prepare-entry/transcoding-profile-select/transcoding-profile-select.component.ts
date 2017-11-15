@@ -102,7 +102,7 @@ export class TranscodingProfileSelectComponent implements OnInit {
     }
   }
 
-  private _saveAndClose() {
+  public _saveAndClose() {
     // set profile in local cache
     const selectedProfile = this.transcodingProfileSelectForm.get('profile').value;
     if (selectedProfile) {
