@@ -29,7 +29,7 @@ import { EntryWidgetKeys } from '../entry-widget-keys';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators'
 import { environment } from 'app-environment';
-import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryRelatedFile } from './new-entry-related-file';
 import { EntryWidget } from '../entry-widget';
 import { KalturaAttachmentAssetListResponse } from 'kaltura-typescript-client/types/KalturaAttachmentAssetListResponse';
@@ -57,15 +57,15 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 
 	private _entryId: string = '';
 
-	constructor(
-				private _kalturaServerClient: KalturaClient,
-	            private _browserService: BrowserService,
-				private _appAuthentication: AppAuthentication,
-				private _objectDiffers: KeyValueDiffers,
-				private _listDiffers : IterableDiffers,
-				private _uploadManagement : UploadManagement) {
-        super(EntryWidgetKeys.Related);
-    }
+  constructor(private _kalturaServerClient: KalturaClient,
+              private _appLocalization: AppLocalization,
+              private _browserService: BrowserService,
+              private _appAuthentication: AppAuthentication,
+              private _objectDiffers: KeyValueDiffers,
+              private _listDiffers: IterableDiffers,
+              private _uploadManagement: UploadManagement) {
+    super(EntryWidgetKeys.Related);
+  }
 
 
   private _trackUploadFiles(): void {
@@ -280,6 +280,13 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 		return newFile;
 	}
 
+  private _validateFileSize(file: File): boolean {
+    const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
+    const fileSize = file.size / 1024 / 1024; // convert to Mb
+
+    return this._uploadManagement.supportChunkUpload(new NewEntryRelatedFile(null)) || fileSize < maxFileSize;
+  }
+
   public _removeFile(file: RelatedFile): void {
     // update the list by filtering the assets array.
     this._relatedFiles.next({ items: this._relatedFiles.getValue().items.filter((item: RelatedFile) => item !== file) });
@@ -309,23 +316,35 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 	}
 
 
-	public _onFileSelected(selectedFiles: FileList) {
-        if (selectedFiles && selectedFiles.length) {
-            const entryRelatedFiles = Array.from(selectedFiles).map(file => new NewEntryRelatedFile(file));
-            const newFiles: RelatedFile[] = this._uploadManagement.addFiles(entryRelatedFiles)
-                .map(addedFile => {
-                    const originalFileName = addedFile.data.getFileName();
-                    const hasExtension = originalFileName.indexOf('.') !== -1;
-                    const extension = hasExtension ? originalFileName.substr(originalFileName.lastIndexOf('.') + 1) : null;
-                    const newFile: RelatedFile = this._addFile(originalFileName, this._getFormatByExtension(extension));
-                    newFile.uploadFileId = addedFile.id;
-                    newFile.uploading = true;
-                    (<any>newFile).size = addedFile.data.getFileSize(); // we set type explicitly since size is readonly because it readonly
+  public _onFileSelected(selectedFiles: FileList) {
+    if (selectedFiles && selectedFiles.length) {
+      const files = Array.from(selectedFiles);
+      const invalidFiles = files.filter(file => !this._validateFileSize(file));
 
-                    return newFile;
-                });
-        }
+      if (invalidFiles.length) {
+        return this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
+          message: `
+            ${this._appLocalization.get('applications.upload.validation.fileSizeExceededFor')}
+            ${invalidFiles.map(({ name }) => name).join('\n')}
+          `
+        });
+      }
+
+      const entryRelatedFiles = files.map(file => new NewEntryRelatedFile(file));
+      this._uploadManagement.addFiles(entryRelatedFiles).forEach(addedFile => {
+        const originalFileName = addedFile.data.getFileName();
+        const hasExtension = originalFileName.indexOf('.') !== -1;
+        const extension = hasExtension ? originalFileName.substr(originalFileName.lastIndexOf('.') + 1) : null;
+        const newFile: RelatedFile = this._addFile(originalFileName, this._getFormatByExtension(extension));
+        newFile.uploadFileId = addedFile.id;
+        newFile.uploading = true;
+        (<any>newFile).size = addedFile.data.getFileSize(); // we set type explicitly since size is readonly because it readonly
+
+        return newFile;
+      });
     }
+  }
 
   public _cancelUpload(file: RelatedFile): void {
     if (!file.id) {

@@ -164,6 +164,7 @@
         "wrongType": "Select media type",
         "missingTranscodingProfile": "Select transcoding profile",
         "fileSizeExceeded": "File size exceeded",
+        "fileSizeExceededFor": "File size exceeded for:",
         "fileNameRequired": "File name is required"
       },
       "uploadMenu": {
