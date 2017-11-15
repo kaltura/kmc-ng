@@ -14,6 +14,9 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaE
 })
 export class EntriesSelectorComponent {
   @Input() selectedEntries: KalturaMediaEntry[] = [];
+  @Input() set filterByStatus(statuses: number[]) {
+    this._entriesStore.queryStatusIn = statuses;
+  }
   @Output() selectedEntriesChange = new EventEmitter<KalturaMediaEntry[]>();
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
 
@@ -30,7 +33,8 @@ export class EntriesSelectorComponent {
   };
 
   constructor(public _entriesStore: EntriesStore) {
-    this._entriesStore.paginationCacheToken = 'entries-list';
+    this._entriesStore.paginationCacheToken = 'entries-selector';
+    this._entriesStore.queryStatusIn = [1, 2, 5, 6]; // default value
   }
 
   public _onActionSelected({ action, entryId }: { action: string, entryId: KalturaMediaEntry }): void {

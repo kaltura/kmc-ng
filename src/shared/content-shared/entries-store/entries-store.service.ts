@@ -49,7 +49,8 @@ export interface QueryData {
   sortBy?: string,
   sortDirection?: SortDirection,
   fields?: string,
-  metadataProfiles?: number[]
+  metadataProfiles?: number[],
+  statusIn?: string
 }
 
 export interface FilterArgs {
@@ -119,6 +120,12 @@ export class EntriesStore implements OnDestroy {
   public static registerFilterType<T extends FilterItem>(filterType: FilterTypeConstructor<T>,
                                                          handler: (items: T[], request: FilterArgs) => void): void {
     EntriesStore.filterTypeMapping[this.getFilterType(filterType)] = handler;
+  }
+
+  public set queryStatusIn(value: number[]) {
+    if (Array.isArray(value) && value.length) {
+      this._queryData.statusIn = value.join(',');
+    }
   }
 
   public set paginationCacheToken(token: string) {
@@ -427,6 +434,10 @@ export class EntriesStore implements OnDestroy {
       // handle default value for statuses
       if (!filter.statusIn) {
         filter.statusIn = '-1,-2,0,1,2,7,4';
+      }
+
+      if (this.queryData.statusIn) {
+        filter.statusIn = this.queryData.statusIn;
       }
 
       // update the sort by args
