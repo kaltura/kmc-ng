@@ -147,7 +147,6 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
       .cancelOnDestroy(this, this.widgetReset$)
       .monitor('get entry related files')
       .do(response => {
-        // WARN: mutating of the response object
         // Set file type and restore previous upload state
         this._updateAssetsResponse(response);
 
@@ -191,9 +190,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
                 if (response.error) {
                   this._uploadManagement.cancelUpload(newAsset.uploadFileId, true);
                 } else {
-                  const relevantUploadFile = this._uploadManagement.getTrackedFiles().find(file =>
-                    file.data instanceof NewEntryRelatedFile && file.id === newAsset.uploadFileId
-                  );
+                  const relevantUploadFile = this._uploadManagement.getTrackedFile(newAsset.uploadFileId);
                   if (relevantUploadFile) {
                     // backup assetId so it can be easily be found during restore state step
                     (<NewEntryRelatedFile>relevantUploadFile.data).assetId = response.result.id;
@@ -208,9 +205,7 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
             // remove deleted assets
             const deleteAssetRequest = new AttachmentAssetDeleteAction({ attachmentAssetId: (record.item as RelatedFile).id });
             const asset = record.item as RelatedFile;
-            const relevantUploadFile = this._uploadManagement.getTrackedFiles().find(file =>
-              file.data instanceof NewEntryRelatedFile && file.id === asset.uploadFileId
-            );
+            const relevantUploadFile = this._uploadManagement.getTrackedFile(asset.uploadFileId);
 
             if (relevantUploadFile) {
               deleteAssetRequest.setCompletion(response => {
@@ -257,10 +252,9 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
   }
 
   private _syncBusyState(): void {
-    const trackedFiles = this._uploadManagement.getTrackedFiles();
     // find intersection of tracked files and related files to avoid checking serverUploadToken on already uploaded assets
     const relevantFiles = this._relatedFiles.getValue().items
-      .filter(({ uploadFileId }) => trackedFiles.find(({ id }) => id === uploadFileId));
+      .filter(({ uploadFileId }) => !!this._uploadManagement.getTrackedFile(uploadFileId));
     const isBusy = relevantFiles.some(file => !file.serverUploadToken);
     this.updateState({ isBusy });
   }

@@ -69,9 +69,9 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     }
 
   private _syncBusyState(): void {
-    const trackedFiles = this._uploadManagement.getTrackedFiles();
-    const relevantFiles = this._captions.getValue()
-      .items.filter(({ uploadFileId }) => trackedFiles.find(({ id }) => id === uploadFileId));
+    // find intersection of tracked files and captions to avoid checking serverUploadToken on already uploaded assets
+    const relevantFiles = this._captions.getValue().items
+      .filter(({ uploadFileId }) => !!this._uploadManagement.getTrackedFile(uploadFileId));
     const isBusy = relevantFiles.some(file => !file.serverUploadToken);
     this.updateState({ isBusy });
   }
@@ -140,7 +140,6 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       .cancelOnDestroy(this, this.widgetReset$)
       .monitor('get captions')
       .do(response => {
-        // WARN: mutating of the response object
         // Restore previous upload state
         this._updateCaptionsResponse(response);
 
@@ -246,11 +245,11 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
     captions.push(newCaption);
     this._captions.next({ items: captions });
     this.currentCaption = newCaption;
-    this.updateState({ isBusy: true });
   }
 
     public upload(captionFile: File): void {
         this.currentCaption.uploading = true;
+        this.updateState({ isBusy: true });
 
         Observable.of(this._uploadManagement.addFile(new NewEntryCaptionFile(captionFile)))
             .subscribe((response) => {
@@ -327,9 +326,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
                   if (response.error) {
                     this._uploadManagement.cancelUpload(newCaption.uploadFileId, true);
                   } else {
-                    const relevantUploadFile = this._uploadManagement.getTrackedFiles().find(file =>
-                      file.data instanceof NewEntryCaptionFile && file.id === newCaption.uploadFileId
-                    );
+                    const relevantUploadFile = this._uploadManagement.getTrackedFile(newCaption.uploadFileId);
                     if (relevantUploadFile) {
                       (<NewEntryCaptionFile>relevantUploadFile.data).captionId = response.result.id;
                     }
