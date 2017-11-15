@@ -1,6 +1,6 @@
 import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { KalturaFlavorAssetStatus } from 'kaltura-typescript-client/types/KalturaFlavorAssetStatus';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
@@ -12,6 +12,7 @@ import { Flavor } from './flavor';
 
 import { environment } from 'app-environment';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { NewEntryFlavourFile } from './new-entry-flavour-file';
 
 @Component({
     selector: 'kEntryFlavours',
@@ -41,6 +42,7 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
 	private _importPopupStateChangeSubscribe: ISubscription;
 
 	constructor(public _widgetService: EntryFlavoursWidget,
+              private _uploadManagement: UploadManagement,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
     }
@@ -138,14 +140,14 @@ export class EntryFlavours implements AfterViewInit, OnInit, OnDestroy {
     const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
     const fileSize = file.size / 1024 / 1024; // convert to Mb
 
-    return fileSize > maxFileSize;
+    return this._uploadManagement.supportChunkUpload(new NewEntryFlavourFile(null)) || fileSize < maxFileSize;
   }
 
   public _onFileSelected(selectedFiles: FileList) {
     if (selectedFiles && selectedFiles.length) {
       const fileData: File = selectedFiles[0];
 
-      if (!this._validateFileSize(fileData)) {
+      if (this._validateFileSize(fileData)) {
         this._widgetService.uploadFlavor(this._selectedFlavor, fileData);
       } else {
         this._browserService.alert({
