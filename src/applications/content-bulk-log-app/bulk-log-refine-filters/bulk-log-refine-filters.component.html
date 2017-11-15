@@ -1,6 +1,6 @@
 <k-area-blocker [showLoader]="_showLoader" [message]="_blockerMessage">
   <div class="kOverrideFAIcons kRefineFilters">
-    <div #refine class="kTreeContainer">
+    <kScrollToTopContainer #refine class="kTreeContainer">
       <div class="kFiltersGroupTitle">
         <span>{{'applications.content.bulkUpload.filters.additionalFilters' | translate | uppercase}}</span>
       </div>
@@ -38,7 +38,7 @@
         </div>
 
       </div>
-    </div>
+    </kScrollToTopContainer>
 
     <p>
       <a class="clearAll" (click)="_clearAllComponents()">{{'applications.content.bulkUpload.filters.clearAll' | translate}}</a>

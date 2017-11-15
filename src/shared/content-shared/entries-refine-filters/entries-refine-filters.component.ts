@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
@@ -18,6 +18,7 @@ import { ValueFilter } from 'app-shared/content-shared/entries-store/value-filte
 import { TimeSchedulingFilter } from 'app-shared/content-shared/entries-store/filters/time-scheduling-filter';
 import { CreatedAtFilter } from 'app-shared/content-shared/entries-store/filters/created-at-filter';
 import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item';
+import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 
 export interface TreeFilterData {
   items: PrimeTreeNode[];
@@ -37,6 +38,7 @@ export interface FiltersGroup {
 })
 export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
+  @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
 
   // subscription that will be disposed later upon ngDestroy
   private _filterUpdateSubscription: ISubscription;
@@ -61,7 +63,6 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   constructor(public additionalFiltersStore: EntriesRefineFiltersProvider,
               private primeTreeDataProvider: PrimeTreeDataProvider,
               private entriesStore: EntriesStore,
-              private elementRef: ElementRef,
               private appLocalization: AppLocalization) {
   }
 
@@ -72,11 +73,8 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   ngAfterViewInit() {
     if (this.parentPopupWidget) {
       this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$.subscribe(event => {
-        if (event.state === PopupWidgetStates.Close) {
-          const nativeElement: HTMLElement = this.elementRef.nativeElement;
-          if (nativeElement && nativeElement.getElementsByClassName('kTreeContainer').length > 0) {
-            nativeElement.getElementsByClassName('kTreeContainer')[0].scrollTop = 0;
-          }
+        if (event.state === PopupWidgetStates.Close && this._treeContainer) {
+          this._treeContainer.scrollToTop();
         }
       });
     }
@@ -85,9 +83,11 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   ngOnDestroy() {
     if (this._filterUpdateSubscription) {
       this._filterUpdateSubscription.unsubscribe();
+      this._filterUpdateSubscription = null;
     }
     if (this._parentPopupStateChangeSubscribe) {
       this._parentPopupStateChangeSubscribe.unsubscribe();
+      this._parentPopupStateChangeSubscribe = null;
     }
   }
 
