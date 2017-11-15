@@ -74,8 +74,9 @@ If you need to configure these enpoint, edit the [environment.ts](https://github
 ## Deploy standalone application
 
 To create a standalone application you will need to build the application:
+(Replace url with the relative path this application will be hosted at. Make sure you use `/` as a suffix.
 ```
-$ ng build --prod
+$ ng build --prod --base-href {url}
 ```
 
 A distrubted standalone application will be created in the `dist/` folder.
