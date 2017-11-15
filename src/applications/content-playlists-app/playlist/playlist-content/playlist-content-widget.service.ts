@@ -10,18 +10,24 @@ import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/Kalt
 import { PlaylistExecuteAction } from 'kaltura-typescript-client/types/PlaylistExecuteAction';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 
 export interface LoadEntriesStatus {
   loading: boolean;
   error: boolean
 }
 
+export interface PlaylistContentMediaEntry extends KalturaMediaEntry {
+  selectionId?: string;
+}
+
 @Injectable()
 export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   private _state = new BehaviorSubject<LoadEntriesStatus>({ loading: false, error: false });
+  private _selectionIdGenerator = new FriendlyHashId();
 
   public isNewPlaylist = false;
-  public entries: KalturaMediaEntry[] = [];
+  public entries: PlaylistContentMediaEntry[] = [];
   public entriesTotalCount = 0;
   public entriesDuration = 0;
   public state$ = this._state.asObservable();
@@ -79,7 +85,7 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
     return this._kalturaClient.request(request)
       .cancelOnDestroy(this, this.widgetReset$)
       .map((entries: KalturaMediaEntry[]) => {
-        this.entries = entries;
+        this.entries = this._extendWithSelectionId(entries);
         this.entriesTotalCount = entries.length;
         this.entriesDuration = this.entries.reduce((acc, val) => acc + val.duration, 0);
         super._hideLoader();
@@ -94,11 +100,15 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
       });
   }
 
+  private _extendWithSelectionId(entries: PlaylistContentMediaEntry[]): PlaylistContentMediaEntry[] {
+    return entries.map(entry => Object.assign({}, entry, { selectionId: this._selectionIdGenerator.generate() }));
+  }
+
   private _setDirty(): void {
     this.updateState({ isDirty: true });
   }
 
-  private _deleteEntryFromPlaylist(entry: KalturaMediaEntry): void {
+  private _deleteEntryFromPlaylist(entry: PlaylistContentMediaEntry): void {
     const entryIndex = this.entries.indexOf(entry);
 
     if (entryIndex !== -1) {
@@ -109,17 +119,17 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
     }
   }
 
-  private _duplicateEntry(entry: KalturaMediaEntry): void {
+  private _duplicateEntry(entry: PlaylistContentMediaEntry): void {
     const entryIndex = this.entries.indexOf(entry);
 
     if (entryIndex !== -1) {
-      this.entries.splice(entryIndex, 0, Object.assign({}, entry));
+      this.entries.splice(entryIndex, 0, ...this._extendWithSelectionId([entry]));
       this.entriesTotalCount = this.entries.length;
       this._setDirty();
     }
   }
 
-  private _moveUpEntries(selectedEntries: KalturaMediaEntry[]): void {
+  private _moveUpEntries(selectedEntries: PlaylistContentMediaEntry[]): void {
     if (selectedEntries && selectedEntries.length) {
       const selectedIndexes = selectedEntries
         .map(item => this.entries.indexOf(item))
@@ -142,7 +152,7 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
     }
   }
 
-  private _moveDownEntries(selectedEntries: KalturaMediaEntry[]): void {
+  private _moveDownEntries(selectedEntries: PlaylistContentMediaEntry[]): void {
     if (selectedEntries && selectedEntries.length) {
       const selectedIndexes = selectedEntries
         .map(item => this.entries.indexOf(item))
@@ -169,11 +179,11 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
     }
   }
 
-  public deleteSelectedEntries(entries: KalturaMediaEntry[]): void {
+  public deleteSelectedEntries(entries: PlaylistContentMediaEntry[]): void {
     entries.forEach(entry => this._deleteEntryFromPlaylist(entry));
   }
 
-  public onActionSelected({ action, entry }: { action: string, entry: KalturaMediaEntry }): void {
+  public onActionSelected({ action, entry }: { action: string, entry: PlaylistContentMediaEntry }): void {
     switch (action) {
       case 'remove':
         this._deleteEntryFromPlaylist(entry);
@@ -192,7 +202,7 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
     }
   }
 
-  public moveEntries({ entries, direction }: { entries: KalturaMediaEntry[], direction: 'up' | 'down' }): void {
+  public moveEntries({ entries, direction }: { entries: PlaylistContentMediaEntry[], direction: 'up' | 'down' }): void {
     if (direction === 'up') {
       this._moveUpEntries(entries);
     } else {
@@ -202,8 +212,8 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
     this._setDirty();
   }
 
-  public addEntries(entries: KalturaMediaEntry[]): void {
-    this.entries.push(...entries);
+  public addEntries(entries: PlaylistContentMediaEntry[]): void {
+    this.entries.push(...this._extendWithSelectionId(entries));
     this.entriesTotalCount = this.entries.length;
     this._setDirty();
   }
@@ -213,7 +223,7 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
     this._setDirty();
   }
 
-  private _getComparatorFor(field: string, order: -1 | 1): (a: KalturaMediaEntry, b: KalturaMediaEntry) => number {
+  private _getComparatorFor(field: string, order: -1 | 1): (a: PlaylistContentMediaEntry, b: PlaylistContentMediaEntry) => number {
     return (a, b) => {
       const fieldA = typeof a[field] === 'string' ? a[field].toLowerCase() : a[field];
       const fieldB = typeof b[field] === 'string' ? b[field].toLowerCase() : b[field];
