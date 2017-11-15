@@ -440,7 +440,7 @@
         "duration": "Duration: {{0}}",
         "replacementStatuses": "Replacement Statuses: {{0}}",
         "moderation": "Moderation: {{0}}",
-        "originalClipped": "Original Clipped: {{0}}",
+        "originalClipped": "Original & Clipped: {{0}}",
         "scheduling": "Scheduling: {{0}}",
         "accessControl": "Access Control: {{0}}",
         "flavor": "Flavor: {{0}}",
