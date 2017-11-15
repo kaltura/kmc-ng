@@ -98,7 +98,6 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
 
     if (entryIndex !== -1) {
       this.entries.splice(entryIndex, 1);
-      this.entries = [...this.entries];
       this.entriesTotalCount = this.entries.length;
 
       this._setDirty();
@@ -110,7 +109,6 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
 
     if (entryIndex !== -1) {
       this.entries.splice(entryIndex, 0, Object.assign({}, entry));
-      this.entries = [...this.entries];
       this.entriesTotalCount = this.entries.length;
       this._setDirty();
     }
@@ -118,38 +116,50 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
 
   private _moveUpEntries(selectedEntries: KalturaMediaEntry[]): void {
     if (selectedEntries && selectedEntries.length) {
-      const selectedIndexes = selectedEntries.map(item => this.entries.indexOf(item)).filter(item => item !== -1);
-      let newIndex = Math.min(...selectedIndexes) - 1;
-      newIndex = newIndex < 0 ? 0 : newIndex;
+      const selectedIndexes = selectedEntries
+        .map(item => this.entries.indexOf(item))
+        .filter(item => item !== -1)
+        .sort((a, b) => a - b);
+      const relevantIndex = selectedEntries
+        .sort((a, b) => this.entries.indexOf(a) - this.entries.indexOf(b))
+        .reduce((acc, val) => {
+          const currentIndex = this.entries.indexOf(val);
+          return currentIndex < acc ? currentIndex : acc;
+        }, this.entries.length - 1);
 
-      let updatedEntries = this.entries.filter(item => selectedEntries.indexOf(item) === -1);
+      const newIndex = relevantIndex <= 0 ? 0 : relevantIndex - 1;
 
-      if (newIndex <= 0) {
-        updatedEntries = [...selectedEntries, ...updatedEntries];
-      } else {
-        updatedEntries.splice(newIndex, 0, ...selectedEntries)
-      }
-
-      this.entries = [...updatedEntries];
+      selectedIndexes.forEach((currentIndex, index) => {
+        this.entries.splice(currentIndex - index, 1);
+      });
+      this.entries.splice(newIndex, 0, ...selectedEntries);
       this._setDirty();
     }
   }
 
   private _moveDownEntries(selectedEntries: KalturaMediaEntry[]): void {
     if (selectedEntries && selectedEntries.length) {
-      const selectedIndexes = selectedEntries.map(item => this.entries.indexOf(item)).filter(item => item !== -1);
-      let newIndex = Math.max(...selectedIndexes) + 1;
-      newIndex = newIndex >= this.entries.length ? this.entries.length : newIndex;
+      const selectedIndexes = selectedEntries
+        .map(item => this.entries.indexOf(item))
+        .filter(item => item !== -1)
+        .sort((a, b) => a - b);
+      const relevantIndex = selectedEntries
+        .sort((a, b) => this.entries.indexOf(a) - this.entries.indexOf(b))
+        .reduce((acc, val) => {
+          const currentIndex = this.entries.indexOf(val);
+          if (!acc) {
+            return currentIndex;
+          }
+          return currentIndex > acc ? currentIndex : acc;
+        }, 0);
 
-      let updatedEntries = this.entries.filter(item => selectedEntries.indexOf(item) === -1);
+      let newIndex = selectedEntries.length > 1 ? relevantIndex : relevantIndex + 1;
+      newIndex = newIndex >= this.entries.length - 1 ? this.entries.length - 1 : newIndex;
 
-      if (newIndex >= this.entries.length - 1) {
-        updatedEntries = [...updatedEntries, ...selectedEntries];
-      } else {
-        updatedEntries.splice(newIndex - 1, 0, ...selectedEntries)
-      }
-
-      this.entries = [...updatedEntries];
+      selectedIndexes.forEach((currentIndex, index) => {
+        this.entries.splice(currentIndex - index, 1);
+      });
+      this.entries.splice(newIndex, 0, ...selectedEntries);
       this._setDirty();
     }
   }
@@ -188,13 +198,13 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   public addEntries(entries: KalturaMediaEntry[]): void {
-    this.entries = [...this.entries, ...entries];
+    this.entries.push(...entries);
     this.entriesTotalCount = this.entries.length;
     this._setDirty();
   }
 
   public onSortChanged(event: { field: string, order: -1 | 1, multisortmeta: any }): void {
-    this.entries = [...this.entries.sort(this._getComparatorFor(event.field, event.order))];
+    this.entries.sort(this._getComparatorFor(event.field, event.order));
     this._setDirty();
   }
 
