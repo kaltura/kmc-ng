@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import { NewEntryUploadService } from 'app-shared/kmc-shell';
+import { NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { environment } from 'app-environment';
@@ -62,6 +62,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   constructor(private _newEntryUploadService: NewEntryUploadService,
               private _formBuilder: FormBuilder,
               private _transcodingProfileManagement: TranscodingProfileManagement,
+              private _uploadManagement: UploadManagement,
               private _appLocalization: AppLocalization) {
     this._buildForm();
   }
@@ -220,7 +221,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
         result = false;
         file.errorToken = 'applications.upload.validation.wrongType';
         file.hasError = true;
-      } else if (fileSize > maxFileSize) {
+      } else if (!(this._uploadManagement.supportChunkUpload(new NewEntryUploadFile(null, null, null, null)) || fileSize < maxFileSize)) {
         result = false;
         file.hasError = true;
         file.errorToken = 'applications.upload.validation.fileSizeExceeded';
