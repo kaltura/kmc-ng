@@ -163,7 +163,7 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
         .kSectionHasErrors::before {
           font-family: 'kmcng-icon-pack';
           content: '\e922';
-          color:red;
+          color: $kDandger;
           margin-right: 8px;
           font-size: 10px;
         }
