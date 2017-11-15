@@ -250,6 +250,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
           this.parentPopupWidget.close();
         },
         error => {
+          // todo [kmcng]: need to figure out why it was already enabled
           if(error.code === 'USER_LOGIN_ALREADY_ENABLED') {
             this.usersStore.reload(true);
             this.parentPopupWidget.close();
