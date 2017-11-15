@@ -31,7 +31,6 @@ export class BulkUploadMenuComponent {
   public _bulkUploadTypes = BulkUploadTypes;
   public _allowedExtensions = '';
   public _showFileDialog = true;
-  public _filesUploading = false;
   public _blockerMessage: AreaBlockerMessage;
 
   constructor(private _bulkUploadService: BulkUploadService,
@@ -50,7 +49,6 @@ export class BulkUploadMenuComponent {
   }
 
   private _handleUploadSuccess(): void {
-    this._filesUploading = false;
     this._selectedFiles = null;
     this.uploadSucceed.open();
     this._appEvents.publish(new BulkLogUploadingStartedEvent());
@@ -58,8 +56,6 @@ export class BulkUploadMenuComponent {
 
   // TODO NEED TO TEST INVALID_KS ERROR CODE
   private _handleUploadError(error: KalturaAPIException): void {
-    this._filesUploading = false;
-
     if (error.code === 'SERVICE_FORBIDDEN') {
       this._showErrorAlert(this._appLocalization.get(
         'applications.content.bulkUpload.menu.messages.uploadError.message',
@@ -97,9 +93,8 @@ export class BulkUploadMenuComponent {
 
   private _invokeUpload(): void {
     if (this._selectedFiles) {
-      this._filesUploading = true;
-
       this._bulkUploadService.upload(this._selectedFiles, this._selectedType)
+        .tag('block-shell')
         .subscribe(
           () => this._handleUploadSuccess(),
           (error) => this._handleUploadError(error)
