@@ -127,12 +127,7 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
       if (newIndex <= 0) {
         updatedEntries = [...selectedEntries, ...updatedEntries];
       } else {
-        updatedEntries = [
-          ...updatedEntries.slice(0, newIndex),
-          ...selectedEntries,
-          updatedEntries[newIndex],
-          ...updatedEntries.slice(newIndex + 1)
-        ];
+        updatedEntries.splice(newIndex, 0, ...selectedEntries)
       }
 
       this.entries = [...updatedEntries];
@@ -148,14 +143,10 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
 
       let updatedEntries = this.entries.filter(item => selectedEntries.indexOf(item) === -1);
 
-      if (newIndex >= this.entries.length) {
+      if (newIndex >= this.entries.length - 1) {
         updatedEntries = [...updatedEntries, ...selectedEntries];
       } else {
-        updatedEntries = [
-          ...updatedEntries.slice(0, newIndex - 1),
-          ...selectedEntries,
-          ...updatedEntries.slice(newIndex - 1)
-        ];
+        updatedEntries.splice(newIndex - 1, 0, ...selectedEntries)
       }
 
       this.entries = [...updatedEntries];
