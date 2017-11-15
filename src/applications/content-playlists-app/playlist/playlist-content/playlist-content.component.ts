@@ -33,13 +33,13 @@ export class PlaylistContentComponent implements OnInit, OnDestroy {
 
   public _deleteEntries(selectedEntries: KalturaMediaEntry[]) {
     const entriesToDelete = selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}`);
-    const entries = selectedEntries.length <= 10 ? entriesToDelete.join(',').replace(/,/gi, '<br />') + '<br />' : '';
+    const entries = selectedEntries.length <= 10 ? `${entriesToDelete.join(',').replace(/,/gi, '\n')}\n` : '';
     const plural = selectedEntries.length > 1;
     const header = this._appLocalization.get(`applications.content.playlists.${plural ? 'deleteEntries' : 'deleteEntry'}`);
     const message = `
-      ${this._appLocalization.get('applications.content.playlists.' + plural ? 'confirmDeleteEntries' : 'confirmDeleteEntry')}\n
+      ${this._appLocalization.get('applications.content.playlists.' + (plural ? 'confirmDeleteEntries' : 'confirmDeleteEntry'))}\n
       ${entries}
-      ${this._appLocalization.get('applications.content.entries.' + plural ? 'deleteEntriesNote' : 'deleteEntryNote')}
+      ${this._appLocalization.get('applications.content.playlists.' + (plural ? 'deleteEntriesNote' : 'deleteEntryNote'))}
     `;
     this._browserService.confirm(
       {
