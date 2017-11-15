@@ -20,6 +20,7 @@ export interface LoadEntriesStatus {
 export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   private _state = new BehaviorSubject<LoadEntriesStatus>({ loading: false, error: false });
 
+  public isNewPlaylist = false;
   public entries: KalturaMediaEntry[] = [];
   public entriesTotalCount = 0;
   public entriesDuration = 0;
@@ -54,11 +55,15 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
       this.entries = [];
       this.entriesTotalCount = 0;
       this.entriesDuration = 0;
+      this.isNewPlaylist = true;
+      this._state.next({ loading: true, error: false });  // simulate loading to show empty message
+      this._state.next({ loading: false, error: false }); // for the new playlist
       return Observable.of({ failed: false });
     }
 
     super._showLoader();
     this._state.next({ loading: true, error: false });
+    this.isNewPlaylist = false;
 
     const responseProfile = new KalturaDetachedResponseProfile({
       type: KalturaResponseProfileType.includeFields,

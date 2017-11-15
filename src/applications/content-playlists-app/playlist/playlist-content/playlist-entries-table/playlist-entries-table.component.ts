@@ -17,6 +17,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
+  @Input() isNewPlaylist = true;
   @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Input() filter: any = {};
   @Input()
@@ -50,7 +51,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 
   ngOnInit() {
     this._emptyMessage = '';
-    let loadedOnce = false; // used to set the empty message to 'no results' only after search
+    let loadedOnce = this.isNewPlaylist; // used to set the empty message to 'no results' only after search
     this._entriesLoadSubscription = this._widgetService.state$.subscribe(
       result => {
         if (!result.error) {
