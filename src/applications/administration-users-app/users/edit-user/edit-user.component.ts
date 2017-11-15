@@ -250,31 +250,34 @@ export class EditUserComponent implements OnInit, OnDestroy {
           this.parentPopupWidget.close();
         },
         error => {
-          this.isBusy = false;
-          this.blockerMessage = new AreaBlockerMessage(
-            {
-              message: error.message,
-              buttons: [{
-                label: this._appLocalization.get('app.common.ok'),
-                action: () => {
-                  this.blockerMessage = null;
-                }
-              }]
-            }
-          )
+          if(error.code === 'USER_LOGIN_ALREADY_ENABLED') {
+            this.usersStore.reload(true);
+            this.parentPopupWidget.close();
+          } else {
+            this.isBusy = false;
+            this.blockerMessage = new AreaBlockerMessage(
+              {
+                message: error.message,
+                buttons: [{
+                  label: this._appLocalization.get('app.common.ok'),
+                  action: () => {
+                    this.blockerMessage = null;
+                  }
+                }]
+              }
+            )
+          }
         }
       );
   }
 
   addNewUser(): void {
-    this.parentPopupWidget.close();
     this.isBusy = true;
     this.usersStore.addUser(this.userForm)
       .cancelOnDestroy(this)
       .subscribe(
-        () => {
-          this.isBusy = false;
-          this.usersStore.reload(true);
+        user => {
+          this.enableUserLogin(user);
         },
         error => {
           this.isBusy = false;
@@ -325,7 +328,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
               this.user.id === this._partnerInfo.adminUserId ? this.userForm.get('roleIds').disable() : this.userForm.get('roleIds').enable();
 
               this.getRoleDescription(item.roleIds);
-            } else if(!this.user) {
+            } else {
               this.isNewUser = true;
               this.userForm.reset({
                 email: '',

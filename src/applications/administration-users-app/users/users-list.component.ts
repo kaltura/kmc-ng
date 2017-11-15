@@ -7,6 +7,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { UsersTableComponent } from './users-table.component';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -25,7 +26,6 @@ export class UsersListComponent implements OnInit, OnDestroy {
   usersInfo: string = '';
   isDirty: boolean = true;
   loading: boolean = false;
-  isBusy: boolean = false;
   blockerMessage: AreaBlockerMessage = null;
   _users: KalturaUser[];
   _partnerInfo: PartnerInfo = {adminLoginUsersQuota: 0, adminUserId: null};
@@ -66,16 +66,14 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   onToggleUserStatus(user: KalturaUser): void {
-    this.loading = true;
     this.usersStore.toggleUserStatus(user)
       .cancelOnDestroy(this)
+      .tag('block-shell')
       .subscribe(
         () => {
-          this.loading = false;
           this.usersStore.reload(true);
         },
         error => {
-          this.loading = false;
           this.blockerMessage = new AreaBlockerMessage(
             {
               message: error.message,
@@ -101,16 +99,14 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   onDeleteUser(user: KalturaUser): void {
-    this.loading = true;
     this.usersStore.deleteUser(user)
       .cancelOnDestroy(this)
+      .tag('block-shell')
       .subscribe(
         () => {
-          this.loading = false;
           this.usersStore.reload(true);
         },
         error => {
-          this.loading = false;
           this.blockerMessage = new AreaBlockerMessage(
             {
               message: error.message,

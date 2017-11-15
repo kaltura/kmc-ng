@@ -25,6 +25,7 @@ import { UserGetAction } from 'kaltura-typescript-client/types/UserGetAction';
 import { UserAddAction } from 'kaltura-typescript-client/types/UserAddAction';
 import { UserEnableLoginAction } from 'kaltura-typescript-client/types/UserEnableLoginAction';
 import { IsUserExistsStatuses } from './user-exists-statuses';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 export interface QueryData
 {
@@ -43,15 +44,15 @@ export class UsersStore implements OnDestroy {
     roles: {items: [], totalCount: 0},
     partnerInfo: {adminLoginUsersQuota: 0, adminUserId: null}
   });
-  private _state = new BehaviorSubject<{loading : boolean, errorMessage?: string}>({ loading : false});
+  private _state = new BehaviorSubject<{errorMessage?: string}>({});
   private _querySource = new BehaviorSubject<QueryData>({
     pageIndex: 1,
     pageSize: 25
   });
 
-  public usersData$ = this._usersData.asObservable();
-  public state$ = this._state.asObservable();
-  public query$ = this._querySource.monitor('queryData update');
+  usersData$ = this._usersData.asObservable();
+  state$ = this._state.asObservable();
+  query$ = this._querySource.monitor('queryData update');
 
   constructor(
     private _kalturaServerClient: KalturaClient,
@@ -92,8 +93,6 @@ export class UsersStore implements OnDestroy {
   }
 
   private _loadData(): void {
-    this._state.next({loading: true});
-
     this._kalturaServerClient.multiRequest([
       new UserRoleListAction(
         {
@@ -121,11 +120,10 @@ export class UsersStore implements OnDestroy {
       new PartnerGetInfoAction ()
     ])
       .cancelOnDestroy(this)
+      .tag('block-shell')
       .subscribe(
         response => {
           if(!response.hasErrors()) {
-            this._state.next({loading: false});
-
             this._usersData.next({
               users: {
                 items : response[1].result.objects,
@@ -141,13 +139,12 @@ export class UsersStore implements OnDestroy {
               }
             });
           } else {
-            this._state.next({ loading: false, errorMessage: this._appLocalization.get('applications.administration.users.failedLoading') });
+            this._state.next({ errorMessage: this._appLocalization.get('applications.administration.users.failedLoading') });
           }
 
         },
         error => {
-
-          this._state.next({ loading: false, errorMessage: this._appLocalization.get('applications.administration.users.failedLoading') });
+          this._state.next({ errorMessage: this._appLocalization.get('applications.administration.users.failedLoading') });
         }
       );
   }
@@ -255,7 +252,7 @@ export class UsersStore implements OnDestroy {
     });
   }
 
-  public addUser(userForm: FormGroup) : Observable<void> {
+  public addUser(userForm: FormGroup) : Observable<KalturaUser> {
     return Observable.create(observer => {
       let roleIds = userForm.controls['roleIds'].value,
           publisherId = userForm.controls['id'].value;
@@ -268,17 +265,15 @@ export class UsersStore implements OnDestroy {
               lastName:     userForm.controls['lastName'].value,
               roleIds:      roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
               id:           publisherId ? publisherId : userForm.controls['email'].value,
-              isAdmin:      true //,loginEnabled: true
-              // todo [kmcng]: "loginEnabled" is not assignable to parameter of type 'KalturaUserArgs'
+              isAdmin:      true
             })
           }
-        )
-      )
+        ))
         .cancelOnDestroy(this)
         .subscribe(
-          () => {
-            observer.next();
-            observer.complete();
+          response => {
+              observer.next(response);
+              observer.complete();
           },
           error => {
             observer.error(error);
