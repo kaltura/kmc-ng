@@ -4,9 +4,9 @@
   display: flex;
 
   .kEntrySelectorBucket {
+    height: calc(100vh - 158px);
     width: 250px;
     border-left: 1px solid $kGrayscale6;
-    height: 820px;
     overflow-y: auto;
 
     .KEntrySelectorSelectedItem {
@@ -61,15 +61,16 @@
   }
 
   .kEntriesTable {
-    height: 723px;
+    height: calc(100vh - 223px);
     overflow-y: auto;
   }
 
   .kEntriesTableFooter {
-    width: 980px;
+    width: 996px;
   }
 
   .kEntriesSelectorBucketOpened .kEntriesTableFooter {
-    width: 745px;
+    width: 746px;
+    border-right: 1px solid #ebebeb;
   }
 }

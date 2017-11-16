@@ -168,7 +168,7 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
           return currentIndex > acc ? currentIndex : acc;
         }, 0);
 
-      let newIndex = selectedEntries.length > 1 ? relevantIndex : relevantIndex + 1;
+      let newIndex = selectedEntries.length > 1 ? relevantIndex - (selectedEntries.length - 2) : relevantIndex + 1;
       newIndex = newIndex >= this.entries.length - 1 ? this.entries.length - 1 : newIndex;
 
       selectedIndexes.forEach((currentIndex, index) => {
