@@ -36,6 +36,9 @@
         width: 180px;
         flex: 0 0 auto;
       }
+      .kMultiLine{
+        white-space: pre-wrap;
+      }
     }
   }
 }

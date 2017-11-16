@@ -166,6 +166,9 @@ export const environment = {
             "createdAtDateRange" : "2005:2030",
             "bulkActionsLimit": 2
         },
+        "createLive": {
+          "akamaiEdgeServerIpURL": "kalvodhds-i.akamaihd.net/serverIp"
+        },
         "contentCategories": {
             "createdAtDateRange": "2005:2030",
             "bulkActionsLimit": 50

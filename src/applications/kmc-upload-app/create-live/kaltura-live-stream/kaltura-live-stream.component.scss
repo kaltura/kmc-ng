@@ -1,0 +1,16 @@
+@import 'app-theme/_variables.scss';
+@import "../live-form";
+
+.kFieldMessage {
+  padding-top: 10px;
+  min-height: 32px;
+  max-width: 310px;
+  color: $kGrayscale3;
+  font-size: 13px;
+  line-height: 16px;
+}
+
+.kEnableRecordingOptions {
+  display: block;
+  padding-top: 28px;
+}

@@ -109,6 +109,7 @@ export class RolesService implements OnDestroy {
       this._rolesExecuteSubscription.unsubscribe();
     }
 
+    this._browserService.scrollToTop();
     this._state.next({loading: true, errorMessage: null});
 
     // execute the request
@@ -167,7 +168,7 @@ export class RolesService implements OnDestroy {
 
   }
 
-  public deleteRole(role: KalturaUserRole): Observable<void> {
+  public deleteRole(role: KalturaUserRole): Observable<KalturaUserRole> {
     if (!role) {
       return Observable.throw(new Error('Unable to delete role'));
     }
@@ -179,8 +180,8 @@ export class RolesService implements OnDestroy {
       userRoleId: role.id
     }))
       .do(() => this.reload(true))
-      .map(() => {
-        return;
+      .map((deletedRole) => {
+        return deletedRole;
       })
       .catch(error => {
         if (error.code === 'ROLE_IS_BEING_USED') {

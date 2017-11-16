@@ -16,8 +16,6 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
   providers: [EntriesBulkDeleteService]
 })
 export class PlaylistContentComponent implements AfterViewInit, OnInit, OnDestroy {
-
-  @ViewChild(PlaylistEntriesTableComponent) private dataTable: PlaylistEntriesTableComponent;
   @ViewChild('addEntry') public addEntry: PopupWidgetComponent;
 
   public _selectedEntries: KalturaMediaEntry[] = [];
@@ -105,8 +103,6 @@ export class PlaylistContentComponent implements AfterViewInit, OnInit, OnDestro
   }
 
   ngOnInit() {
-    this.dataTable.scrollToTop();
-
     this._playlistStore.playlist$
       .cancelOnDestroy(this)
       .subscribe(

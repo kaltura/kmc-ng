@@ -1,11 +1,13 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
 	<kFileDialog #fileDialog [filter]="'image/*'" (onFileSelected)="_widgetService._onFileSelected($event)"></kFileDialog>
 	<div class="kThumbnails" #thumbnails>
-		<p class="kTitle">{{'applications.content.entryDetails.thumbnails.thumbnails' | translate}}</p>
-		<p><button pButton class="kButtonDefault" (click)="fileDialog.open($event)" icon="kIconupload" label="{{'applications.content.entryDetails.thumbnails.upload' | translate}}"></button></p>
+		<div class="kHeader">
+			<p class="kTitle">{{'applications.content.entryDetails.thumbnails.thumbnails' | translate}}</p>
+			<p><button pButton class="kButtonDefault" (click)="fileDialog.open($event)" icon="kIconupload" label="{{'applications.content.entryDetails.thumbnails.upload' | translate}}"></button></p>
+		</div>
 		<div class="kTable">
 			<p-dataTable [value]="(_widgetService._thumbnails$ | async)?.items" scrollable="true" scrollHeight="100%" [rowStyleClass]="_widgetService._getRowStyle" sortField="width" [sortOrder]="-1">
-				<p-column field="url" header="{{'applications.content.entryDetails.thumbnails.thumbnail' | translate}}" [style]="{'width':'100px'}">
+				<p-column field="url" header="{{'applications.content.entryDetails.thumbnails.thumbnail' | translate}}" [style]="{'width':'124px', 'padding-left': '24px'}">
 					<ng-template let-col let-thumb="rowData" pTemplate="body">
 						<div class="kThumbnailHolder"><img src="{{thumb[col.field]}}" onError="this.onerror=null;this.style.display='none'"></div>
 					</ng-template>
@@ -36,7 +38,7 @@
 					</ng-template>
 				</p-column>
 			</p-dataTable>
-			<p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'"></p-menu>
+			<p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 		</div>
 	</div>
 </k-area-blocker>

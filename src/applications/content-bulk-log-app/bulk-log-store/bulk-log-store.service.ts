@@ -202,6 +202,7 @@ export class BulkLogStoreService implements OnDestroy {
     }
 
     this.browserService.setInLocalStorage('bulkupload.list.pageSize', this._queryData.pageSize);
+    this.browserService.scrollToTop();
 
     this._stateSource.next({ loading: true, errorMessage: null });
 
