@@ -18,7 +18,7 @@
       <span>{{'applications.content.filters.allCategories' | translate | uppercase}} </span>
     </div>
   </div>
-  <div class="kTreeContainer">
+  <kScrollToTopContainer class="kTreeContainer">
     <k-categories-tree #categoriesTree
                        [disablePropagation]="_selectionMode === _TreeSelectionModes.SelfAndChildren"
                        [(selection)]="_selection"
@@ -27,7 +27,7 @@
                        (onCategoriesLoad)="_onCategoriesLoad($event)"
                        (onNodeChildrenLoaded)="_onNodeChildrenLoaded($event)">
     </k-categories-tree>
-  </div>
+  </kScrollToTopContainer>
 
   <p>
     <a (click)="_clearAll()">{{'applications.content.filters.clearAll' | translate}}</a>

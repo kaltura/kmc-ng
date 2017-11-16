@@ -280,7 +280,7 @@ export class EntryStore implements  OnDestroy {
 						this._entry.next(response);
 						this._entryId = response.id;
 
-						const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false});
+						const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
 
 						if (dataLoadedResult.errors.length)
 						{

@@ -260,7 +260,7 @@ export class CategoryService implements OnDestroy {
 				this._category.next(response);
 				this._categoryId = response.id;
 
-				const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false});
+				const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
 
 				if (dataLoadedResult.errors.length) {
 					this._state.next({

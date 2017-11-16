@@ -109,6 +109,7 @@ export class RolesService implements OnDestroy {
       this._rolesExecuteSubscription.unsubscribe();
     }
 
+    this._browserService.scrollToTop();
     this._state.next({loading: true, errorMessage: null});
 
     // execute the request
