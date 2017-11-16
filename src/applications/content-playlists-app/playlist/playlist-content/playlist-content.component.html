@@ -1,9 +1,5 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
   <div class="kPlaylistEntriesHolder">
-    <kSticky #playlistSections
-             stickyId="playlistContentBulk"
-             sticksTo="playlistHeader"
-             [scrollOffset]="120">
       <kPlaylistEntryListBulkOperationsContent
         [selectedEntries]="_selectedEntries"
         [duration]="_widgetService.entriesDuration"
@@ -13,7 +9,7 @@
         (clearSelection)="_clearSelection()"
         (moveEntries)="_widgetService.moveEntries($event)">
       </kPlaylistEntryListBulkOperationsContent>
-    </kSticky>
+
     <kPlaylistEntriesTable
       class="kPlaylistEntriesTable"
       [isNewPlaylist]="_widgetService.isNewPlaylist"
@@ -24,7 +20,7 @@
     </kPlaylistEntriesTable>
   </div>
 
-  <kPopupWidget #addEntry [popupWidth]="996" [editModal]="true" [modal]="true" [slider]="true" [preventPageScroll]="true">
+  <kPopupWidget #addEntry [popupWidth]="995" [slider]="true">
     <ng-template>
       <kAddEntry (onClosePopupWidget)="addEntry.close()" (onAddEntries)="_widgetService.addEntries($event)"></kAddEntry>
     </ng-template>

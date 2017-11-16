@@ -2,13 +2,9 @@
   <div class="kPlaylistEntriesTable" [class.noResults]="!_entries.length">
     <p-dataTable
       #dataTable
-      kStickyHeader
       dataKey="selectionId"
       scrollable="true"
       scrollHeight="100%"
-      sticksTo="playlistContentBulk"
-      stickyId="playlistEntriesTable"
-      stickyClass="stickyHeader"
       [immutable]="false"
       [value]="_entries"
       [sortField]="filter.sortBy"
