@@ -3,7 +3,11 @@ import { ValueFilter } from '../value-filter';
 
 export class FreetextFilterOld extends ValueFilter<string> {
 
-  constructor(value: string) {
+    static filterType = "Freetext"; // IMPORTANT: you must have a static filterType property that is used at runtime
+
+
+
+    constructor(value: string) {
     super(value + '', value, { token: 'applications.content.filters.freeText' });
   }
 }

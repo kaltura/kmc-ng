@@ -1,18 +1,42 @@
-<k-area-blocker [showLoader]="" [message]="">
-  <div class="kContentDetails">
-    <div class="kPlaylistsTableFilters">
+<div class="kPlaylistEntriesHolder">
+  <div class="kPlaylistEntriesTableFilters">
+    <div class="kBulkActions" *ngIf="_selectedEntries.length; else addEntryWrap">
+      <button pButton class="kButtonDefault kMoveBtn kMoveBtnTop"  icon="kIcondropdown_arrow_top"></button>
+      <button pButton class="kButtonDefault kMoveBtn kMoveBtnBottom" icon="kIcondropdown_arrow_bottom"></button>
+      <button pButton class="kButtonDanger kBulkDeleteBtn"
+              label="{{'applications.content.playlists.remove' | translate}}"
+              (click)="deleteEntries(_selectedEntries)"></button>
+    </div>
+    <ng-template #addEntryWrap>
       <button
         pButton
         type="button"
         label="{{'applications.content.playlists.addEntry' | translate}}"
-        class="kButtonBranded kAddPlaylistBtn"></button>
-      <span
-        class="kSelectedPlaylistsNum"
-        *ngIf="(_playlistStore.entries$ | async)?.totalCount">
-				{{(_playlistStore.entries$ | async)?.totalCount}} {{'applications.content.playlists.playlists' | translate}}</span>
+        class="kButtonBranded kAddEntryBtn"
+        (click)="addNewEntry()">
+      </button>
+    </ng-template>
+    <span
+      class="kSelectedEntriesNum"
+      *ngIf="(_playlistStore.playlist$ | async)?.entriesTotalCount">
+        {{(_playlistStore.playlist$ | async)?.entriesTotalCount}} {{'applications.content.playlists.entries' | translate}}
+    </span>
+    <div *ngIf="_selectedEntries.length" class="kSelected">
+      <span class="kSelectedEntriesLabel">
+        � {{_selectedEntries.length}} {{'applications.content.playlists.selected' | translate}}
+      </span>
+      <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.playlists.cancel' | translate}}</a>
     </div>
-    <kPlaylistEntriesTable
-      class="kPlaylistEntriesTable"
-      [entries]="(_playlistStore.entries$ | async)?.items"></kPlaylistEntriesTable>
   </div>
-</k-area-blocker>
+  <kPlaylistEntriesTable
+    class="kPlaylistEntriesTable"
+    [entries]="(_playlistStore.playlist$ | async)?.entries"
+    [(selectedEntries)]="_selectedEntries">
+  </kPlaylistEntriesTable>
+</div>
+
+<kPopupWidget #addEntry [popupWidth]="996" [popupHeight]="779" [modal]="true" [slider]="true" [preventPageScroll]="true">
+  <ng-template>
+    <kAddEntry (onClosePopupWidget)="closePopupWidget($event)"></kAddEntry>
+  </ng-template>
+</kPopupWidget>

@@ -1,0 +1,34 @@
+<div class="kUploadMenu">
+  <div class="kUploadMenuListItem">
+    <i class="kIconUpload kUploadMenuUploadIcon"></i>
+    <span>
+      <a (click)="onItemSelected.emit('uploadFromDesktop')">{{ 'applications.upload.uploadMenu.uploadFromDesktop' | translate }}</a><br>
+      <a class="kBulkUploadSamplesLink" (click)="onHighSpeedLinkClicked()">{{ 'applications.upload.uploadMenu.highSpeed' | translate }}</a>
+    </span>
+  </div>
+
+  <div class="kUploadMenuListItem">
+    <i class="kIconbulk kUploadMenuBulkUploadIcon"></i>
+    <span>
+      <a (click)="onItemSelected.emit('bulkUpload')">{{ 'applications.upload.uploadMenu.bulkUpload.title' | translate }}</a><br>
+      <a class="kBulkUploadSamplesLink" (click)="onDownloadSamplesClicked()">
+        {{ 'applications.upload.uploadMenu.bulkUpload.samplesLink' | translate }}
+      </a>
+    </span>
+
+  </div>
+
+  <div class="kUploadMenuListItem last">
+    <i class="kIconlive kUploadMenuLiveStreamIcon"></i>
+    <span>
+      <a (click)="onItemSelected.emit('createLive')">{{ 'applications.upload.uploadMenu.liveStream' | translate }}</a>
+    </span>
+  </div>
+
+  <div class="kPrepareEntryList">
+    <p class="kPrepareEntryListTitle">{{ 'applications.upload.uploadMenu.entryList.title' | translate }}</p>
+    <p class="kPrepareEntryListItem"><a (click)="onItemSelected.emit('prepareVideoEntry')">{{ 'applications.upload.uploadMenu.entryList.video' | translate }}</a></p>
+    <p class="kPrepareEntryListItem"><a (click)="onItemSelected.emit('prepareAudioEntry')">{{ 'applications.upload.uploadMenu.entryList.audio' | translate }}</a></p>
+  </div>
+</div>
+

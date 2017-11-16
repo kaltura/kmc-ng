@@ -5,7 +5,10 @@ import { ValueFilter } from '../value-filter';
 
 export class AccessControlProfilesFilter extends ValueFilter<string> {
 
-  constructor(value: string, label: string) {
+    static filterType = "AccessControlProfiles"; // IMPORTANT: you must have a static filterType property that is used at runtime
+
+
+    constructor(value: string, label: string) {
     super(label, value, { token: 'applications.content.filters.accessControl', args: { '0': label } });
   }
 }

@@ -1,8 +1,9 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import {  EventEmitter , Injectable} from '@angular/core';
 import { LocalStorageService, SessionStorageService } from 'ng2-webstorage';
 import { IAppStorage } from '@kaltura-ng/kaltura-common';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
 
 export interface Confirmation {
 	message: string;
@@ -26,14 +27,13 @@ export interface GrowlMessage {
 export type OnShowConfirmationFn = (confirmation : Confirmation) => void;
 
 export type AppStatus = {
-  isBusy : boolean;
   errorMessage : string;
 };
 
 @Injectable()
 export class BrowserService implements IAppStorage {
 
-  private _appStatus = new BehaviorSubject<{isBusy : boolean, errorMessage : string}>({ isBusy : false, errorMessage : null});
+  private _appStatus = new BehaviorSubject<{errorMessage : string}>({ errorMessage : null});
   private _growlMessage = new Subject<GrowlMessage>();
   public appStatus$ = this._appStatus.asObservable();
   public growlMessage$ = this._growlMessage.asObservable();
@@ -68,6 +68,18 @@ export class BrowserService implements IAppStorage {
 	constructor(private localStorage: LocalStorageService, private sessionStorage: SessionStorageService) {
 	}
 
+  private _downloadContent(url: string): void {
+    return Observable.create(observer => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = () => {
+        observer.next(xhr.response);
+        observer.complete();
+      };
+      xhr.open('GET', url);
+      xhr.responseType = 'blob';
+      xhr.send();
+    });
+  }
 
 	public registerOnShowConfirmation(fn : OnShowConfirmationFn)
 	{
@@ -133,6 +145,10 @@ export class BrowserService implements IAppStorage {
 		return Object.prototype.toString.call(window['HTMLElement']).indexOf('Constructor') > 0 || !isChrome && window['webkitAudioContext'] !== undefined;
 	}
 
+	public isIE11(): boolean{
+		return !!window['MSInputMethodContext'] && !!document['documentMode'];
+	}
+
 	public copyToClipboardEnabled(): boolean {
 		let enabled = true;
 
@@ -171,21 +187,33 @@ export class BrowserService implements IAppStorage {
 	}
 
 	public download(data, filename, type): void {
-		let	file = new Blob([data], {type: type});
-		if (window.navigator.msSaveOrOpenBlob) // IE10+
-			window.navigator.msSaveOrOpenBlob(file, filename);
-		else { // Others
-			let a = document.createElement("a");
-			let url = URL.createObjectURL(file);
-			a.href = url;
-			a.download = filename;
-			document.body.appendChild(a);
-			a.click();
-			setTimeout(function() {
-				document.body.removeChild(a);
-				window.URL.revokeObjectURL(url);
-			}, 0);
+		let file;
+		if (typeof data === 'string' && /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(data)) { // if data is url
+			if (this.isIE11()){
+				this.openLink(data);
+				return;
+			}
+			file = this._downloadContent(data);
+		} else {
+			file = Observable.of(new Blob([data], { type: type }));
 		}
+
+		file.subscribe(content => {
+			if (window.navigator.msSaveOrOpenBlob) {// IE10+
+				window.navigator.msSaveOrOpenBlob(content, filename);
+			} else { // Others
+				const a = document.createElement('a');
+				const url = URL.createObjectURL(content);
+				a.href = url;
+				a.download = filename;
+				document.body.appendChild(a);
+				a.click();
+				setTimeout(function () {
+					document.body.removeChild(a);
+					window.URL.revokeObjectURL(url);
+				}, 0);
+			}
+		});
 	}
 
 	public enablePageExitVerification(verificationMsg: string = null): void{
@@ -196,13 +224,35 @@ export class BrowserService implements IAppStorage {
 		};
 	}
 
+	private scrolling = false;
+	public scrollToTop(duration: number = 500): void {
+		if (!this.scrolling){
+			this.scrolling = true;
+			const cosParameter = window.pageYOffset / 2;
+			let scrollCount: number = 0;
+			let oldTimestamp: number = performance.now();
+			const step = newTimestamp => {
+				scrollCount += Math.PI / (duration / (newTimestamp - oldTimestamp));
+				if (scrollCount >= Math.PI) window.scrollTo(0, 0);
+				if (window.pageYOffset === 0) {
+					this.scrolling = false;
+					return;
+				}
+				window.scrollTo(0, Math.round(cosParameter + cosParameter * Math.cos(scrollCount)));
+				oldTimestamp = newTimestamp;
+				window.requestAnimationFrame(step);
+			};
+			window.requestAnimationFrame(step);
+		}
+	}
+
 	public disablePageExitVerification(): void{
 		window.onbeforeunload = (e) => {};
 	}
 
 	public showGrowlMessage(message: GrowlMessage): void {
-	  if(message.detail || message.summary) {
-      this._growlMessage.next(message);
-    }
-  }
+		if (message.detail || message.summary) {
+			this._growlMessage.next(message);
+		}
+	}
 }

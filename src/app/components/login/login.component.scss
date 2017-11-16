@@ -1,12 +1,18 @@
 @import 'app-theme/_variables.scss';
 @import '../../styles/scss/kmc-logo';
 
-.kLoginContainer {
-  position: absolute;
-  width: 100%;
+:host {
   height: 100%;
-  flex-flow: column;
   display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+.kLoginContainer {
+  width: 100%;
+  display: flex;
+  flex: 1 1 auto;
+  align-items: flex-start;
   box-sizing: border-box;
   margin: 0;
   background: $kTertiary;
@@ -14,13 +20,9 @@
 
   .kLoginCenter {
     box-sizing: border-box;
-    display: flex;
-    flex-flow: row wrap;
-    margin: 0 -14px;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
+    margin: auto;
+    flex: 0 0 auto;
+    padding: 20px;
 
     .kLoginWindow {
       background-color: white;
@@ -31,7 +33,7 @@
 
       .kLogo {
         margin: 0 auto;
-        width: 386px;
+        width: 100%;
         height: 30px;
         line-height: 32px;
         text-align: center;
@@ -81,3 +83,31 @@
     }
   }
 }
+
+.kBrowserMsgContainer{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  background: $kTertiary;
+  .kBrowserMsg{
+    position: absolute;
+    left: calc(50% - 250px);
+    top: 150px;
+    text-align: center;
+    box-sizing: border-box;
+    padding-top: 150px;
+    background-color: white;
+    border-radius: 6px;
+    width: 500px;
+    height: 400px;
+    color: $kGrayscale1;
+    span{
+      font-size: 18px;
+      line-height: 28px;
+      font-weight: 700;
+    }
+  }
+}
+

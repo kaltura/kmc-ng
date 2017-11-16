@@ -1,6 +1,6 @@
-<k-area-blocker kFillHeight
+<k-area-blocker
 	[showLoader]="(playlistsStore.state$ | async)?.loading || this._deferredLoading"
-	[message]="_blockerMessage">
+	[message]="_blockerMessage"	[centerOnScreen]="true">
 	<div class="kPlaylistsTable" [class.noResults]="!_playlists.length">
 		<p-dataTable
 			#dataTable
@@ -13,14 +13,15 @@
 			scrollable="true"
 			scrollHeight="100%"
 			dataKey="id"
-      [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
-			[rowTrackBy]="rowTrackBy">
+      		[sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
+			[rowTrackBy]="rowTrackBy"
+			kStickyHeader [sticksTo]="'playlistsTags'" stickyClass="stickyHeader" [stickyId]="'playlistsTable'">
 			<p-column [style]="{'width':'44px', 'padding-left': '14px'}" selectionMode="multiple"></p-column>
 			<p-column field="name" [sortable]="'custom'" header="{{'applications.content.table.name' | translate}}">
 				<ng-template let-col let-playlist="rowData" pTemplate="body">
           <div class="kPlaylistsNameWrap">
             <div [ngClass]="playlist.playlistType | playlistType: true" class="kMediaTypeIcon"></div>
-            <div class="kTitle" (click)="onActionSelected('view',playlist.id)">{{playlist[col.field]}}</div>
+            <div class="kTitle" [kTooltip]="playlist[col.field]" [maxWidth]="300" (click)="onActionSelected('view',playlist.id)">{{playlist[col.field]}}</div>
           </div>
 				</ng-template>
 			</p-column>
@@ -44,6 +45,6 @@
 				</ng-template>
 			</p-column>
 		</p-dataTable>
-		<p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'"></p-menu>
+		<p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 	</div>
 </k-area-blocker>

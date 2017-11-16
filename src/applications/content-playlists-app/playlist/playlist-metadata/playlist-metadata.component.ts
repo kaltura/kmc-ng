@@ -5,6 +5,7 @@ import { PlaylistSections } from '../playlist-sections';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { Subject } from 'rxjs/Subject';
 import { ISubscription } from 'rxjs/Subscription';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'kPlaylistMetadata',
@@ -20,7 +21,8 @@ export class PlaylistMetadataComponent implements AfterViewInit, OnInit, OnDestr
 
   constructor(
     private _formBuilder : FormBuilder,
-    private _playlistStore: PlaylistStore
+    private _playlistStore: PlaylistStore,
+    private _route: ActivatedRoute
   ) {
     // build FormControl group
     this.metadataForm = _formBuilder.group({

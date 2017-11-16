@@ -5,9 +5,9 @@ hr{
 }
 .jumpTo{
 	position: absolute;
-	right: 130px;
+	right: 8px;
+	top: 8px;
 	button{
-		position: fixed;
 		font-weight: 400;
 		height: 34px;
 		width: 110px;
@@ -20,15 +20,15 @@ hr{
 	}
 }
 .kMetadataDetails{
-	padding-left: 12px;
-	padding-right: 130px;
-	padding-top: 18px;
-	overflow-y: auto;
+	padding-bottom: 8px;
+	padding-left: 24px;
+	padding-right: 138px;
+	padding-top: 30px;
 	width: 100%;
 
 	.kSchemaTitle{
 		color: $kGrayscale1;
-		font-size: 18px;
+		font-size: 20px;
 		font-weight: 700;
 		padding-top: 30px;
 		padding-bottom: 12px;

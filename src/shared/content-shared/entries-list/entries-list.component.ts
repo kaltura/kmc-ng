@@ -1,14 +1,14 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 
 import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
-
+import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
+import { BrowserService } from 'app-shared/kmc-shell';
 import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { EntriesFilters, EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { Router } from '@angular/router';
 
 
 // TODO sakal remove
@@ -19,6 +19,7 @@ function mapFromArray(array, prop) {
     }
     return map;
 }
+
 
 function getDelta<T>(source : T[], compareTo : T[], keyPropertyName : string, comparator : (a : T, b : T) => boolean) : { added : T[], deleted : T[], changed : T[]} {
     var delta = {
@@ -52,14 +53,17 @@ function getDelta<T>(source : T[], compareTo : T[], keyPropertyName : string, co
   styleUrls: ['./entries-list.component.scss']
 })
 export class EntriesListComponent implements OnInit, OnDestroy {
-  @Input() selectedEntries: Array<any> = [];
-  @ViewChild(EntriesTableComponent) private dataTable: EntriesTableComponent;
+  @Input() isBusy = false;
+  @Input() blockerMessage: AreaBlockerMessage = null;
+  @Input() selectedEntries: any[] = [];
+  @Input() columns: EntriesTableColumns | null;
+  @Input() rowActions: { label: string, commandName: string }[];
 
-  public isBusy = false;
-  public _blockerMessage: AreaBlockerMessage = null;
+  @ViewChild('tags') private tags: StickyComponent;
+
+  @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
   public _filterTags : { type : string, value : string, label : string, tooltip : {token : string, args?: any[]}}[] = [];
   private _handledFiltersInTags : EntriesFilters = null;
-
 
     private querySubscription: ISubscription;
 
@@ -152,7 +156,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
         this._filter.pageSize = query.data.pageSize;
         this._filter.pageIndex = query.data.pageIndex - 1;
-        this.dataTable.scrollToTop();
+        this._browserService.scrollToTop();
       }
     );
 
@@ -212,65 +216,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   public _reload() {
     this.clearSelection();
     this._entriesStore.reload(true);
-  }
-
-  onActionSelected(event) {
-    switch (event.action) {
-      case 'view':
-        this.router.navigate(['/content/entries/entry', event.entryID]);
-        break;
-      case 'delete':
-        this._browserService.confirm(
-          {
-            header: this.appLocalization.get('applications.content.entries.deleteEntry'),
-            message: this.appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: event.entryID }),
-            accept: () => {
-              this.deleteEntry(event.entryID);
-            }
-          }
-        );
-        break;
-      default:
-        break;
-    }
-  }
-
-  private deleteEntry(entryId: string): void {
-    this.isBusy = true;
-    this._blockerMessage = null;
-    this._entriesStore.deleteEntry(entryId).subscribe(
-      () => {
-        this.isBusy = false;
-        this._browserService.showGrowlMessage({
-          severity: 'success',
-          detail: this.appLocalization.get('applications.content.entries.deleted')
-        });
-        this._entriesStore.reload(true);
-      },
-      error => {
-        this.isBusy = false;
-
-        this._blockerMessage = new AreaBlockerMessage(
-          {
-            message: error.message,
-            buttons: [
-              {
-                label: this.appLocalization.get('app.common.retry'),
-                action: () => {
-                  this.deleteEntry(entryId);
-                }
-              },
-              {
-                label: this.appLocalization.get('app.common.cancel'),
-                action: () => {
-                  this._blockerMessage = null;
-                }
-              }
-            ]
-          }
-        )
-      }
-    );
   }
 
   clearSelection() {

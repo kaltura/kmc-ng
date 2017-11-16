@@ -54,12 +54,7 @@ export class EntriesFiltersService {
     private _filters = new BehaviorSubject<EntriesFilters>( {
         freetext: null,
         createdAt: null,
-        mediaTypes : {},
-        changes : {
-            freetext: null,
-            createdAt: null,
-            mediaTypes : {},
-        }
+        mediaTypes : {}
     });
     public filters$ = this._filters.asObservable();
 

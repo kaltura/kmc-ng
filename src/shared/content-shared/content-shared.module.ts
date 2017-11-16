@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
-import { AreaBlockerModule, KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
+
 import {
   ButtonModule,
   CalendarModule,
@@ -34,6 +35,9 @@ import { EntriesRefineFiltersProvider } from 'app-shared/content-shared/entries-
 import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
+import { PrimeTableSortTransformPipe } from 'app-shared/content-shared/pipes/prime-table-sort-transform.pipe';
+import { CategoryRadioButtonPocComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc';
+import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc-popup';
 
 @NgModule({
   imports: [
@@ -57,7 +61,8 @@ import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
     MenuModule,
     TagsModule,
     PaginatorModule,
-    InputTextModule
+    InputTextModule,
+    StickyModule
   ],
   declarations: [
     EntryStatusPipe,
@@ -67,17 +72,23 @@ import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
     EntryDurationPipe,
     MaxEntriesPipe,
     PrimeTableSortDirectionPipe,
+    PrimeTableSortTransformPipe,
     EntriesRefineFiltersComponent,
     CategoriesFilterPrefsComponent,
     CategoriesFilterComponent,
     EntriesTableComponent,
-    EntriesListComponent
+    EntriesListComponent,
+
+    CategoryRadioButtonPocComponent,
+    CategoryRadioButtonPocPopupComponent
   ],
   exports: [
     EntryStatusPipe,
     EntryTypePipe,
+    MaxEntriesPipe,
     CategoriesTreeComponent,
     SchedulingComponent,
+    EntriesListComponent,
     EntryDurationPipe,
     MaxEntriesPipe,
     PrimeTableSortDirectionPipe,
@@ -85,7 +96,9 @@ import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
     CategoriesFilterPrefsComponent,
     CategoriesFilterComponent,
     EntriesTableComponent,
-    EntriesListComponent
+    EntriesListComponent,
+    CategoryRadioButtonPocPopupComponent,
+    CategoryRadioButtonPocComponent
   ],
   providers: [
     CategoriesPrimeService,

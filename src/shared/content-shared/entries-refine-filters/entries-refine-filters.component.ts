@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
@@ -18,7 +18,8 @@ import { ValueFilter } from 'app-shared/content-shared/entries-store/value-filte
 import { TimeSchedulingFilter } from 'app-shared/content-shared/entries-store/filters/time-scheduling-filter';
 import { CreatedAtFilter } from 'app-shared/content-shared/entries-store/filters/created-at-filter';
 import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item';
-import { EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
+import { EntriesFilters, EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
+import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 
 export interface TreeFilterData {
   items: PrimeTreeNode[];
@@ -38,6 +39,7 @@ export interface FiltersGroup {
 })
 export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
+  @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
 
   // subscription that will be disposed later upon ngDestroy
   private _filterUpdateSubscription: ISubscription;
@@ -74,19 +76,22 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   ngAfterViewInit() {
     if (this.parentPopupWidget) {
       this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$.subscribe(event => {
-        if (event.state === PopupWidgetStates.Close) {
-          const nativeElement: HTMLElement = this.elementRef.nativeElement;
-          if (nativeElement && nativeElement.getElementsByClassName('kTreeContainer').length > 0) {
-            nativeElement.getElementsByClassName('kTreeContainer')[0].scrollTop = 0;
-          }
+        if (event.state === PopupWidgetStates.Close && this._treeContainer) {
+          this._treeContainer.scrollToTop();
         }
       });
     }
   }
 
   ngOnDestroy() {
-    this._filterUpdateSubscription.unsubscribe();
-    this._parentPopupStateChangeSubscribe.unsubscribe();
+    if (this._filterUpdateSubscription) {
+      this._filterUpdateSubscription.unsubscribe();
+      this._filterUpdateSubscription = null;
+    }
+    if (this._parentPopupStateChangeSubscribe) {
+      this._parentPopupStateChangeSubscribe.unsubscribe();
+      this._parentPopupStateChangeSubscribe = null;
+    }
   }
     private _handledFiltersInTags : EntriesFilters = null;
 
@@ -101,33 +106,33 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
           .cancelOnDestroy(this)
           .subscribe(
               (filters) => {
-                  const previousFilters = this._handledFiltersInTags;
-                  
-                  if (!previousFilters || previousFilters.mediaTypes !== filters.mediaTypes) {
-                      const existingMediaTypes = existingFilterTags.filter(filter => filter.type === 'mediaType');
-                      const newMediaTypes = Object.entries(filters.mediaTypes).map(([value, label]) =>
-                          ({
-                              type: 'mediaType',
-                              value: value,
-                              label,
-                              tooltip : { token: 'tooltip' }
-
-                          }));
-
-                      const delta = getDelta(existingMediaTypes,newMediaTypes, 'value', (a,b) => a.value === b.value);
-
-                      existingFilterTags.push(...delta.added);
-
-                      delta.deleted.forEach(removedMediaType =>
-                      {
-                          existingFilterTags.splice(
-                              existingFilterTags.findIndex(item => item.value === removedMediaType.value),
-                              1);
-
-                      });
-                  }
-
-                  this._handledFiltersInTags = filters;
+                  // const previousFilters = this._handledFiltersInTags;
+                  //
+                  // if (!previousFilters || previousFilters.mediaTypes !== filters.mediaTypes) {
+                  //     const existingMediaTypes = existingFilterTags.filter(filter => filter.type === 'mediaType');
+                  //     const newMediaTypes = Object.entries(filters.mediaTypes).map(([value, label]) =>
+                  //         ({
+                  //             type: 'mediaType',
+                  //             value: value,
+                  //             label,
+                  //             tooltip : { token: 'tooltip' }
+                  //
+                  //         }));
+                  //
+                  //     const delta = getDelta(existingMediaTypes,newMediaTypes, 'value', (a,b) => a.value === b.value);
+                  //
+                  //     existingFilterTags.push(...delta.added);
+                  //
+                  //     delta.deleted.forEach(removedMediaType =>
+                  //     {
+                  //         existingFilterTags.splice(
+                  //             existingFilterTags.findIndex(item => item.value === removedMediaType.value),
+                  //             1);
+                  //
+                  //     });
+                  // }
+                  //
+                  // this._handledFiltersInTags = filters;
               }
   );
     // TODO sakal remove

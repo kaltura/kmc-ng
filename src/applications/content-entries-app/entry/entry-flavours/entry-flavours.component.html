@@ -1,23 +1,23 @@
-<k-area-blocker [showLoader]="_handler.showSectionLoader" [message]="_handler.sectionBlockerMessage">
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [centerOnScreen]="true">
 	<kFileDialog #fileDialog (onFileSelected)="_onFileSelected($event)" [filter]="_uploadFilter"></kFileDialog>
 	<div class="kFlavours kOverrideFAIcons" #flavors>
-		<p class="kTitle">{{'applications.content.entryDetails.flavours.flavours' | translate}}<span style="color: #ff5b00; font-size: 14px"> (UI design not final)</span></p>
+		<p class="kTitle">{{'applications.content.entryDetails.flavours.flavours' | translate}}</p>
 		<div class="kEntryStatus">
-			<i class="{{_handler._entryStatusClassName}}"></i><span>{{_handler._entryStatus}}</span>
+			<i class="{{_widgetService._entryStatusClassName}}"></i><span>{{_widgetService._entryStatus}}</span>
 		</div>
 		<!--button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right" label="{{'applications.content.entryDetails.flavours.replace' | translate}}"></button-->
 		<div>
-			<button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" (click)="_handler._refresh()"></button>
+			<button pButton class="kButtonDefault kRefreshBtn small" type="text" icon="kIconrefresh" (click)="_widgetService._refresh()"></button>
 		</div>
 
 		<div class="kTable">
-			<p-dataTable [value]="(_handler._flavors$ | async)?.items" scrollable="true" scrollHeight="100%">
-				<p-column field="name" header="{{'applications.content.entryDetails.flavours.flavour' | translate}}" [style]="{'width':'120px'}">
+			<p-dataTable [value]="(_widgetService._flavors$ | async)?.items" scrollable="true" scrollHeight="100%">
+				<p-column field="name" header="{{'applications.content.entryDetails.flavours.flavour' | translate}}" [style]="{'width':'144px', 'padding-left': '24px'}">
 					<ng-template let-col let-flavor="rowData" pTemplate="body">
 						<span class="kFlavorName" [class.kConvertedFlavor]="flavor.status === '2'">{{flavor.name}}</span>
 					</ng-template>
 				</p-column>
-				<p-column field="id" header="{{'applications.content.entryDetails.flavours.assetId' | translate}}" [style]="{'width':'100px'}">
+				<p-column field="id" [hidden]="_documentWidth < 1300" header="{{'applications.content.entryDetails.flavours.assetId' | translate}}" [style]="{'width':'100px'}">
 				</p-column>
 				<p-column field="format" header="{{'applications.content.entryDetails.flavours.format' | translate}}">
 				</p-column>
@@ -29,12 +29,12 @@
 				</p-column>
 				<p-column field="size" header="{{'applications.content.entryDetails.flavours.size' | translate}}">
 				</p-column>
-				<p-column field="statusLabel" header="{{'applications.content.entryDetails.flavours.stat' | translate}}">
+				<p-column field="statusLabel" header="{{'applications.content.entryDetails.flavours.stat' | translate}}" [style]="{'width':'85px'}">
 					<ng-template let-col let-flavor="rowData" pTemplate="body">
 						<span [kTooltip]="flavor.statusTooltip" [class.kFlavorStatusError]="flavor.status === '-1'">{{flavor.statusLabel}}</span>
 					</ng-template>
 				</p-column>
-				<p-column field="tags" header="{{'applications.content.entryDetails.flavours.tags' | translate}}">
+				<p-column field="tags" [hidden]="_documentWidth < 1400" header="{{'applications.content.entryDetails.flavours.tags' | translate}}">
 					<ng-template let-col let-flavor="rowData" pTemplate="body">
 						<span>{{flavor.tags | tags}}</span>
 					</ng-template>
@@ -53,7 +53,7 @@
 					</ng-template>
 				</p-column>
 			</p-dataTable>
-			<p-menu kMenuCloseOnScroll [scrollTarget]="flavors" #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'"></p-menu>
+			<p-menu #actionsmenu popup="popup" [model]="_actions" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
 		</div>
 	</div>
 
@@ -61,11 +61,11 @@
 		<kDRMDetails [currentFlavor]="_selectedFlavor"></kDRMDetails>
 	</kPopupWidget>
 
-	<kPopupWidget #previewPopup [popupWidth]="500" [popupHeight]="644" [modal]="true">
-		<kFlavorPreview [currentFlavor]="_selectedFlavor" [parentPopupWidget]="previewPopup" [currentEntry]="_handler.data"></kFlavorPreview>
+	<kPopupWidget #previewPopup [popupWidth]="500" [modal]="true">
+		<kFlavorPreview [currentFlavor]="_selectedFlavor" [parentPopupWidget]="previewPopup" [currentEntry]="_widgetService.data"></kFlavorPreview>
 	</kPopupWidget>
 
-	<kPopupWidget #importPopup [popupWidth]="500" [popupHeight]="240" [modal]="true">
+	<kPopupWidget #importPopup [popupWidth]="500" [popupHeight]="260" [modal]="true">
 		<kFlavorImport [currentFlavor]="_selectedFlavor" [parentPopupWidget]="importPopup"></kFlavorImport>
 	</kPopupWidget>
 </k-area-blocker>

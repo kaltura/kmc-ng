@@ -16,6 +16,7 @@
       "node_modules/@types"
     ],
     "lib": [
+      "es2016",
       "es2017",
       "dom"
     ],
@@ -24,7 +25,7 @@
         "shared/*"
       ],
       "app-environment": [
-        "environments/environment"
+        "app-config"
       ],
       "app-theme/*": [
         "styles/app-theme/*"

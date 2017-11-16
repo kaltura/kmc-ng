@@ -1,0 +1,18 @@
+<k-details-bar #detailsBar [data]="_currentEntry">
+    <kDetailInfo [label]="'applications.content.entryDetails.preview.entryID' | translate" [valueField]="'id'"></kDetailInfo>
+    <kDetailInfo [label]="'applications.content.entryDetails.preview.creator' | translate" [valueField]="'creatorId'" [tooltip]="_currentEntry?.creatorId"></kDetailInfo>
+    <kDetailInfo [label]="'applications.content.entryDetails.preview.creationDate' | translate" [value]="_currentEntry?.createdAt | date:'MM/dd/y HH:MM'"></kDetailInfo>
+    <kDetailInfo [label]="'applications.content.entryDetails.preview.updateDate' | translate" [value]="_currentEntry?.updatedAt | date:'MM/dd/y HH:MM'"></kDetailInfo>
+    <kDetailInfo *ngIf="_widgetService._landingPage" [label]="'applications.content.entryDetails.preview.landingPage' | translate" [link]="_widgetService._landingPage" [tooltip]="_widgetService._landingPage"></kDetailInfo>
+    <kDetailInfo *ngIf="_isLive && _currentEntry?.recordedEntryId" [label]="'applications.content.entryDetails.preview.vodEntry' | translate" [value]="_currentEntry?.recordedEntryId" (itemClick)="navigateToEntry(currentEntry.recordedEntryId)"></kDetailInfo>
+    <kDetailInfo *ngIf="_isRecordedLive && _currentEntry?.rootEntryId" [label]="'applications.content.entryDetails.preview.archiveOf' | translate" [value]="_currentEntry?.rootEntryId" (itemClick)="navigateToEntry(currentEntry.rootEntryId)"></kDetailInfo>
+    <kDetailInfo [label]="'applications.content.entryDetails.preview.type' | translate" [value]="_currentEntry?.mediaType | entryType: true"></kDetailInfo>
+    <kDetailInfo [label]="'applications.content.entryDetails.preview.moderation' | translate" [value]="_currentEntry?.moderationStatus | moderation"></kDetailInfo>
+    <kDetailInfo *ngIf="_entryReady" [label]="'applications.content.entryDetails.preview.plays' | translate" [valueField]="'plays'"></kDetailInfo>
+    <kDetailInfo *ngIf="_entryReady && _currentEntry?.rank" [label]="'applications.content.entryDetails.preview.rating' | translate" [valueField]="'rank'"></kDetailInfo>
+    <kDetailInfo *ngIf="_hasDuration" [label]="'applications.content.entryDetails.preview.duration' | translate" [value]="_currentEntry?.duration | kTime"></kDetailInfo>
+    <kDetailInfo *ngIf="_entryReady && _currentEntry?.moderationCount" [label]="'applications.content.entryDetails.preview.flags' | translate" [valueField]="'moderationCount'"></kDetailInfo>
+    <kDetailInfo *ngIf="_entryReady && _currentEntry?.votes" [label]="'applications.content.entryDetails.preview.votes' | translate" [valueField]="'votes'"></kDetailInfo>
+    <kDetailInfo *ngIf="_isClip" [label]="'applications.content.entryDetails.preview.clippedFrom' | translate" [value]="_currentEntry?.rootEntryId" (itemClick)="navigateToEntry(currentEntry.rootEntryId)"></kDetailInfo>
+</k-details-bar>
+

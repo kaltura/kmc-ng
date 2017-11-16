@@ -1,0 +1,31 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [centerOnScreen]="true">
+  <div class="kRoles kOverrideFAIcons">
+    <div #rolesTableHolder class="kRolesHolder kContent">
+      <div class="kContent kFiltersWrapper">
+        <kSticky stickyId="rolesFilters" [sticksTo]="'header'" [scrollOffset]="80">
+          <div class="kRolesTableFilters kContent">
+            <button pButton type="button" label="{{'applications.administration.roles.addRole' | translate}}" class="kButtonBranded kAddRoleBtn"
+                    (click)="addRole()"></button>
+            <span class="kSelectedRolesNum" *ngIf="_rolesTotalCount">
+            {{_rolesTotalCount}}
+          </span>
+            <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh" [kTooltip]="'applications.administration.roles.refresh' | translate"></button>
+          </div>
+        </kSticky>
+      </div>
+      <kRolesTable class="kRolesTable" [roles]="_roles" [filter]="_filter"
+        (actionSelected)="_onActionSelected($event)" >
+      </kRolesTable>
+      <div class="kRolesTableFooter kContent" #footer *ngIf="_rolesTotalCount">
+        <p-paginator [rows]="_filter.pageSize" (onPageChange)="_onPaginationChanged($event)" [first]="_filter.pageIndex * _filter.pageSize"
+          [totalRecords]="_rolesTotalCount | kMaxRoles" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
+        <span class="kPaginatorShowRowsLabel">{{'applications.administration.paginator.showRows' | translate}}</span>
+      </div>
+    </div>
+  </div>
+  <kPopupWidget #editPopup [popupWidth]="600" [popupHeight]="400" [modal]="true" [preventPageScroll]="true">
+    <ng-template>
+      <kEditRole (onRoleSaved)="_reload(true)" [role]="_currentEditRole"  [parentPopupWidget]="editPopup" [duplicatedRole]="_currentEditRoleIsDuplicated"></kEditRole>
+    </ng-template>
+  </kPopupWidget>
+</k-area-blocker>

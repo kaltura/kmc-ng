@@ -1,7 +1,7 @@
-<k-area-blocker kFillHeight
-                [showLoader]="(entriesStore.state$ | async)?.loading || this._deferredLoading"
-                [message]="_blockerMessage">
-  <div class="kEntriesTable" [class.noResults]="!_entries.length">
+<div class="kEntriesTable" [class.noResults]="!_entries.length">
+  <k-area-blocker [showLoader]="(entriesStore.state$ | async)?.loading || this._deferredLoading"
+                  [message]="_blockerMessage"
+                  [centerOnScreen]="true">
     <p-dataTable #dataTable
                  dataKey="id"
                  scrollable="true"
@@ -10,81 +10,108 @@
                  [sortField]="filter.sortBy"
                  [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
                  [emptyMessage]="_emptyMessage"
-                 [rowTrackBy]="rowTrackBy"
-                 (selectionChange)="onSelectionChange($event)"
-                 (onSort)="onSortChanged($event)"
-                 [(selection)]="selectedEntries">
-      <p-column [style]="{'width':'44px', 'padding-left': '14px'}"
+                 [rowTrackBy]="_rowTrackBy"
+                 (selectionChange)="_onSelectionChange($event)"
+                 (onSort)="_onSortChanged($event)"
+                 [(selection)]="selectedEntries"
+                 kStickyHeader [sticksTo]="'entriesTags'" stickyClass="stickyHeader" [stickyId]="'entriesTable'">
+      <p-column *ngIf="showBulkSelect"
+                [style]="{'width':'44px', 'padding-left': '14px'}"
                 selectionMode="multiple"></p-column>
-      <p-column field="thumbnailUrl"
-                header="{{'applications.content.table.thumbnail' | translate}}"
-                [style]="{'width':'100px'}">
+
+      <p-column *ngIf="_columns.thumbnailUrl"
+                field="thumbnailUrl"
+                [header]="'applications.content.table.thumbnail' | translate"
+                [sortable]="_columns.thumbnailUrl?.sortable | kPrimeTableSortTransform"
+                [style]="_getColumnStyle(_columns.thumbnailUrl)">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <div class="kThumbnailHolder"
-               [class.disable]="!allowDrilldown(entry.mediaType,entry.status)"
-               (click)="onActionSelected('view',entry.id,entry.mediaType,entry.status)">
+               [class.disable]="!_allowDrilldown(entry.mediaType,entry.status)"
+               (click)="_onActionSelected('view',entry.id,entry.mediaType,entry.status)">
             <img src="{{entry[col.field]}}" onError="this.onerror=null;this.style.display='none'">
           </div>
         </ng-template>
       </p-column>
-      <p-column field="name"
-                header="{{'applications.content.table.name' | translate}}"
-                [sortable]="'custom'">
+
+      <p-column *ngIf="_columns.name"
+                field="name"
+                [header]="'applications.content.table.name' | translate"
+                [sortable]="_columns.name?.sortable | kPrimeTableSortTransform"
+                [style]="_getColumnStyle(_columns.name)">
         <ng-template let-col let-entry="rowData" pTemplate="body">
-          <span class="kTitle"
-                [class.disable]="!allowDrilldown(entry.mediaType,entry.status)"
-                (click)="onActionSelected('view',entry.id,entry.mediaType,entry.status)">
+          <div class="kTitle" [kTooltip]="entry[col.field]" [maxWidth]="300"
+                [class.disable]="!_allowDrilldown(entry.mediaType,entry.status)"
+                (click)="_onActionSelected('view',entry.id,entry.mediaType,entry.status)">
             {{entry[col.field]}}
-          </span>
+          </div>
         </ng-template>
       </p-column>
-      <p-column field="id"
-                header="ID"
-                [sortable]="false"
-                [style]="{'width':'100px'}"></p-column>
-      <p-column field="mediaType"
-                header="{{'applications.content.table.type' | translate}}"
-                [sortable]="'custom'"
-                [style]="{'width':'80px', 'text-align': 'center'}">
+
+      <p-column *ngIf="_columns.id"
+                field="id"
+                [header]="'applications.content.table.id' | translate"
+                [sortable]="_columns.id?.sortable | kPrimeTableSortTransform"
+                [style]="_getColumnStyle(_columns.id)">
+      </p-column>
+
+      <p-column *ngIf="_columns.mediaType"
+                field="mediaType"
+                [header]="'applications.content.table.type' | translate"
+                [sortable]="_columns.mediaType?.sortable | kPrimeTableSortTransform"
+                [style]="_getColumnStyle(_columns.mediaType)">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <div [kTooltip]="entry[col.field] | entryType: true" [class]="entry[col.field] | entryType: false"></div>
         </ng-template>
       </p-column>
-      <p-column field="plays"
-                header="{{'applications.content.table.plays' | translate}}"
-                [sortable]="'custom'"
-                [style]="{'width':'76px'}"></p-column>
-      <p-column field="createdAt"
-                header="Created On"
-                [sortable]="true"
-                [style]="{'width':'140px'}">
+
+      <p-column *ngIf="_columns.plays"
+                field="plays"
+                [header]="'applications.content.table.plays' | translate"
+                [sortable]="_columns.plays?.sortable | kPrimeTableSortTransform"
+                [style]="_getColumnStyle(_columns.plays)">
+      </p-column>
+
+      <p-column *ngIf="_columns.createdAt"
+                field="createdAt"
+                [header]="'applications.content.table.createdOn' | translate"
+                [sortable]="_columns.createdAt?.sortable | kPrimeTableSortTransform"
+                [style]="_getColumnStyle(_columns.createdAt)">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <span>{{entry[col.field] | kDate}}</span>
         </ng-template>
       </p-column>
-      <p-column field="duration"
-                header="{{'applications.content.table.duration' | translate}}"
-                [sortable]="'custom'"
-                [style]="{'width':'104px'}">
+
+      <p-column *ngIf="_columns.duration"
+                field="duration"
+                [header]="'applications.content.table.duration' | translate"
+                [sortable]="_columns.duration?.sortable | kPrimeTableSortTransform"
+                [style]="_getColumnStyle(_columns.duration)">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <span>{{entry[col.field] | kTime | entryDuration:entry}}</span>
         </ng-template>
       </p-column>
-      <p-column field="status"
-                header="{{'applications.content.table.status' | translate}}"
-                [style]="{'width':'100px'}">
+
+      <p-column *ngIf="_columns.status"
+                field="status"
+                [header]="'applications.content.table.status' | translate"
+                [sortable]="_columns.status?.sortable | kPrimeTableSortTransform"
+                [style]="_getColumnStyle(_columns.status)">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <span>{{entry | entryStatus}}</span>
         </ng-template>
       </p-column>
-      <p-column header="" [style]="{'overflow':'visible', 'width':'80px'}">
+
+      <p-column *ngIf="rowActions?.length"
+                header=""
+                [style]="{'overflow':'visible', 'width':'80px'}">
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <div class="kEntriesTableActions">
-            <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, entry)"></button>
+            <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, entry)"></button>
           </div>
         </ng-template>
       </p-column>
     </p-dataTable>
-    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'"></p-menu>
-  </div>
-</k-area-blocker>
+
+    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+  </k-area-blocker>
+</div>

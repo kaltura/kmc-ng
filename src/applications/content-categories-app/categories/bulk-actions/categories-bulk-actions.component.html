@@ -1,9 +1,22 @@
 <div class="kBulkActions">
-  <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"></button>
-  <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton label="{{'applications.content.categories.bulkActions' | translate}}" ></button>
+  <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="deleteCategories()"></button>
+  <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton label="{{'applications.content.categories.bulkActions' | translate}}"
+    (click)="menu.toggle($event)"></button>
 </div>
 
+<!--since we append the menu to the body, any styling modifications are currently not available-->
+<p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"></p-tieredMenu>
 
-
-
-
+<kPopupWidget #bulkActionsPopup [popupWidth]="_bulkWindowWidth" [popupHeight]="_bulkWindowHeight" [modal]="true">
+  <ng-template>
+    <div [ngSwitch]="_bulkAction">
+      <kCategoriesBulkAddTags *ngSwitchCase="'addTags'" [parentPopupWidget]="bulkActionsPopup" (addTagsChanged)="onAddTagsChanged($event)"></kCategoriesBulkAddTags>
+      <kCategoriesBulkRemoveTags *ngSwitchCase="'removeTags'" [selectedCategories]="selectedCategories" [parentPopupWidget]="bulkActionsPopup"
+        (removeTagsChanged)="onRemoveTagsChanged($event)"></kCategoriesBulkRemoveTags>
+      <kCategoriesBulkChangeOwner *ngSwitchCase="'changeOwner'" [parentPopupWidget]="bulkActionsPopup" (ownerChanged)="onOwnerChanged($event)"></kCategoriesBulkChangeOwner>
+      <kCategoriesBulkChangeContentPrivacy *ngSwitchCase="'changeContentPrivacy'" [parentPopupWidget]="bulkActionsPopup" (changeContentPrivacyChanged)="onChangeContentPrivacyChanged($event)"></kCategoriesBulkChangeContentPrivacy>
+      <kCategoriesBulkChangeCategoryListing *ngSwitchCase="'changeCategoryListing'" [parentPopupWidget]="bulkActionsPopup" (changeCategoryListingChanged)="onChangeCategoryListingChanged($event)"></kCategoriesBulkChangeCategoryListing>
+      <kCategoriesBulkChangeContributionPolicy *ngSwitchCase="'changeContributionPolicy'" [parentPopupWidget]="bulkActionsPopup" (changeContributionPolicyChanged)="onChangeContributionPolicyChanged($event)"></kCategoriesBulkChangeContributionPolicy>
+    </div>
+  </ng-template>
+</kPopupWidget>

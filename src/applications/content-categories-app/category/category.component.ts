@@ -1,12 +1,13 @@
-import { Categories } from './../categories/categories.service';
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { CategoryMetadataWidget } from './category-metadata/category-metadata-widget.service';
+
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { CategoryService, ActionTypes } from './category.service';
-import { CategorySectionsListHandler } from './category-sections-list/category-sections-list-handler';
+import { CategorySectionsListWidget } from './category-sections-list/category-sections-list-widget.service';
 import { CategoriesService } from '../categories/categories.service';
-import { CategoryFormManager } from './category-form-manager';
+import { CategoryWidgetsManager } from './category-widgets-manager';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { CategoryFormWidget } from './category-form-widget';
+import { CategoryWidget } from './category-widget';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Observable } from 'rxjs/Observable';
 
@@ -16,12 +17,9 @@ import { Observable } from 'rxjs/Observable';
 	styleUrls: ['./category.component.scss'],
 	providers: [
 		CategoryService,
-		CategoryFormManager,
-		{
-			provide: CategoryFormWidget,
-			useClass: CategorySectionsListHandler,
-			multi: true
-		}
+		CategoryWidgetsManager,
+        CategorySectionsListWidget,
+        CategoryMetadataWidget
 	]
 })
 export class CategoryComponent implements OnInit, OnDestroy {
@@ -36,13 +34,15 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
 	public isSafari: boolean = false; // used for Safari specific styling
 
-	constructor(public _categoryStore: CategoryService,
+	constructor(
+        categoryWidgetsManager: CategoryWidgetsManager,
+        widget1: CategorySectionsListWidget,
+        widget2: CategoryMetadataWidget,
+		public _categoryStore: CategoryService,
 		private _categoriesStore: CategoriesService,
-		private _categoryFormManager: CategoryFormManager,
 		private _browserService: BrowserService,
-		@Inject(CategoryFormWidget) private _widgets: CategoryFormWidget[],
 		private _appLocalization: AppLocalization) {
-
+        categoryWidgetsManager.registerWidgets([widget1, widget2]);
 	}
 
 	ngOnDestroy() {
@@ -60,8 +60,6 @@ export class CategoryComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-
-		this._categoryFormManager.registerWidgets(this._widgets);
 
 		this.isSafari = this._browserService.isSafari();
 
@@ -86,7 +84,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
 							this._categoryHasChanges = false;
 							break;
 						case ActionTypes.CategoryLoaded:
-							this._categoryHeader = this._appLocalization.get('applications.content.categoryDetails.header', { 0: this._categoryStore.category.name });;
+							this._categoryHeader = this._appLocalization.get('applications.content.categoryDetails.header', { 0: this._categoryStore.category.name });
 							break;
 						case ActionTypes.CategoryLoadingFailed:
 							let message = status.error ? status.error.message : '';

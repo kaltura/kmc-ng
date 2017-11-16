@@ -1,3 +1,12 @@
+import { CategoriesBulkAddTagsService,
+    CategoriesBulkRemoveTagsService,
+    CategoriesBulkChangeOwnerService,
+    CategoriesBulkDeleteService,
+    CategoriesBulkChangeContentPrivacyService,
+    CategoriesBulkChangeCategoryListingService,
+    CategoriesBulkChangeContributionPolicyService } from './categories/bulk-actions/services';
+import { CategoriesBulkActionsComponent } from './categories/bulk-actions/categories-bulk-actions.component';
+import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -14,8 +23,8 @@ import { MetadataProfileModule } from '@kaltura-ng/kaltura-server-utils';
 
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
-import { KalturaUIModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
+import { PrimeTreeModule, PrimeTreePropagation } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
+import { KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 
@@ -25,7 +34,7 @@ import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura
 import { DynamicMetadataFormModule } from '@kaltura-ng/kaltura-server-utils';
 import { CategoryComponentsList } from './category/category-components-list';
 import { CategoriesComponentsList } from './categories/categories-components-list';
-import { CategoryCanDeactivate } from "applications/content-categories-app/category/category-can-deactivate.service";
+import { CategoryCanDeactivate } from "./category/category-can-deactivate.service";
 
 @NgModule({
     imports: [
@@ -63,15 +72,25 @@ import { CategoryCanDeactivate } from "applications/content-categories-app/categ
         TagsModule,
         TieredMenuModule,
         TooltipModule,
-        TreeModule
+        TreeModule,
+        ContentSharedModule,
+        StickyModule
     ],
     declarations: [
         ContentCategoriesComponent,
         CategoryComponentsList,
-        CategoriesComponentsList
+        CategoriesComponentsList,
+        CategoriesBulkActionsComponent
     ],
     exports: [],
-    providers: [CategoryCanDeactivate],
+    providers: [CategoryCanDeactivate,
+        CategoriesBulkAddTagsService,
+        CategoriesBulkRemoveTagsService,
+        CategoriesBulkChangeOwnerService,
+        CategoriesBulkDeleteService,
+        CategoriesBulkChangeContentPrivacyService,
+        CategoriesBulkChangeContributionPolicyService,
+        CategoriesBulkChangeCategoryListingService]
 })
 export class ContentCategoriesAppModule {
 }

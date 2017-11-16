@@ -1,18 +1,22 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { MenuItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { BrowserService } from "app-shared/kmc-shell/providers/browser.service";
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {MenuItem} from 'primeng/primeng';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {BrowserService} from "app-shared/kmc-shell/providers/browser.service";
 
-import { SchedulingParams } from './services'
-import { BulkSchedulingService, BulkAccessControlService, BulkAddTagsService, BulkRemoveTagsService, BulkAddCategoriesService, EntryCategoryItem, BulkChangeOwnerService, BulkRemoveCategoriesService, BulkDeleteService, BulkDownloadService } from './services';
+import {
+ BulkAccessControlService,  BulkAddCategoriesService, BulkAddTagsService, BulkChangeOwnerService,  BulkDeleteService, BulkDownloadService ,
+  BulkRemoveCategoriesService,
+  BulkRemoveTagsService,
+  BulkSchedulingService,
+  EntryCategoryItem,
+  SchedulingParams} from './services'
 import { KalturaMediaEntry } from "kaltura-typescript-client/types/KalturaMediaEntry";
 import { BulkActionBaseService } from "./services/bulk-action-base.service";
 import { environment } from 'app-environment';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import { KalturaAccessControl } from 'kaltura-typescript-client/types/KalturaAccessControl';
-
+import { KalturaAccessControl } from 'kaltura-typescript-client/types/KalturaAccessControl';import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 @Component({
   selector: 'kBulkActions',
   templateUrl: './bulk-actions.component.html',
@@ -125,7 +129,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   // bulk delete
   public deleteEntries(): void {
-    let entriesToDelete = this.selectedEntries.map(entry => this._appLocalization.get('applications.content.entries.entryId', { 0: entry.id })),
+    let entriesToDelete = this.selectedEntries.map((entry, index) => entry.name ),
       entries: string = this.selectedEntries.length <= 10 ? entriesToDelete.join(',').replace(/,/gi, '\n') : '',
       message: string = this.selectedEntries.length > 1 ?
         this._appLocalization.get('applications.content.entries.confirmDeleteMultiple', { 0: entries }) :
@@ -157,17 +161,19 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     this._bulkAction = "";
 
     const execute = () => {
-      this._browserService.setAppStatus({ isBusy: true, errorMessage: null });
-      service.execute(this.selectedEntries, data).subscribe(
-        result => {
-          this._browserService.setAppStatus({ isBusy: false, errorMessage: null });
-          if (callback) {
+      service.execute(this.selectedEntries, data)
+        .tag('block-shell')
+        .subscribe(
+        result => {if (callback) {
             callback(result);
           }
           this.onBulkChange.emit({ reload: reloadEntries });
         },
         error => {
-          this._browserService.setAppStatus({ isBusy: false, errorMessage: this._appLocalization.get('applications.content.bulkActions.error') });
+          const message = error.type === 'bulkDelete'
+            ? error.message
+            : this._appLocalization.get('applications.content.bulkActions.error');
+          this._browserService.setAppStatus({errorMessage: message });
         }
       );
     };
@@ -189,26 +195,25 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   getBulkActionItems(): MenuItem[] {
     return [
-      { label: this._appLocalization.get('applications.content.bulkActions.setScheduling'), command: (event) => { this.openBulkActionWindow("setScheduling", 500, 500) } },
-      { label: this._appLocalization.get('applications.content.bulkActions.setAccessControl'), command: (event) => { this.openBulkActionWindow("setAccessControl", 500, 550) } },
+      { label: this._appLocalization.get('applications.content.bulkActions.download'), command: (event) => { this.downloadEntries() } },
+      { label: this._appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => { this.openBulkActionWindow("changeOwner", 500, 280) } },
       {
-        label: this._appLocalization.get('applications.content.bulkActions.addRemoveTags'), items: [
-          { label: this._appLocalization.get('applications.content.bulkActions.addTags'), command: (event) => { this.openBulkActionWindow("addTags", 500, 500) } },
-          { label: this._appLocalization.get('applications.content.bulkActions.removeTags'), command: (event) => { this.openBulkActionWindow("removeTags", 500, 500) } }]
+        label: this._appLocalization.get('applications.content.bulkActions.addToNewCategoryPlaylist'), items: [
+        { label: this._appLocalization.get('applications.content.bulkActions.addToNewCategory'), command: (event) => { this.openBulkActionWindow("addToNewCategory", 500, 500) } },
+        { label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'), command: (event) => { this.openBulkActionWindow("addToNewPlaylist", 500, 500) } }]
       },
       {
         label: this._appLocalization.get('applications.content.bulkActions.addRemoveCategories'), items: [
-          { label: this._appLocalization.get('applications.content.bulkActions.addToCategories'), command: (event) => { this.openBulkActionWindow("addToCategories", 560, 586) } },
-          { label: this._appLocalization.get('applications.content.bulkActions.removeFromCategories'), command: (event) => { this.openBulkActionWindow("removeFromCategories", 500, 500) } }]
+        { label: this._appLocalization.get('applications.content.bulkActions.addToCategories'), command: (event) => { this.openBulkActionWindow("addToCategories", 560, 586) } },
+        { label: this._appLocalization.get('applications.content.bulkActions.removeFromCategories'), command: (event) => { this.openBulkActionWindow("removeFromCategories", 500, 500) } }]
       },
       {
-        label: this._appLocalization.get('applications.content.bulkActions.addToNewCategoryPlaylist'), items: [
-          { label: this._appLocalization.get('applications.content.bulkActions.addToNewCategory'), command: (event) => { this.openBulkActionWindow("addToNewCategory", 500, 500) } },
-          { label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'), command: (event) => { this.openBulkActionWindow("addToNewPlaylist", 500, 500) } }]
+        label: this._appLocalization.get('applications.content.bulkActions.addRemoveTags'), items: [
+        { label: this._appLocalization.get('applications.content.bulkActions.addTags'), command: (event) => { this.openBulkActionWindow("addTags", 500, 500) } },
+        { label: this._appLocalization.get('applications.content.bulkActions.removeTags'), command: (event) => { this.openBulkActionWindow("removeTags", 500, 500) } }]
       },
-      { label: this._appLocalization.get('applications.content.bulkActions.changeOwner'), command: (event) => { this.openBulkActionWindow("changeOwner", 500, 280) } },
-      { label: this._appLocalization.get('applications.content.bulkActions.download'), command: (event) => { this.downloadEntries() } },
-      { label: this._appLocalization.get('applications.content.bulkActions.delete'), command: (event) => { this.deleteEntries() } }
+      { label: this._appLocalization.get('applications.content.bulkActions.setAccessControl'), command: (event) => { this.openBulkActionWindow("setAccessControl", 500, 550) } },
+      { label: this._appLocalization.get('applications.content.bulkActions.setScheduling'), command: (event) => { this.openBulkActionWindow("setScheduling", 500, 500) } }
     ];
   }
 }

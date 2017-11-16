@@ -1,62 +1,80 @@
-<k-area-blocker [showLoader]="isBusy" [message]="_blockerMessage">
+<k-area-blocker [showLoader]="isBusy" [message]="blockerMessage" [centerOnScreen]="true">
   <div class="kEntries kOverrideFAIcons">
     <div #entriesTableHolder class="kEntriesHolder kContent">
-      <div class="kEntriesTableFilters">
-        <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries$ | async)?.totalCount">{{(_entriesStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
+      <kSticky stickyId="entriesFilters" [scrollOffset]="80" [sticksTo]="'header'" >
+        <div class="kEntriesTableFilters kContent">
+          <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries$ | async)?.totalCount">{{(_entriesStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
 
-        <div [class.kHidden]="!selectedEntries.length" class="kBulkOperations">
-          <span class="kSelectedEntriesLabel">• {{selectedEntries.length}} {{'applications.content.entries.selected' | translate}}</span>
-          <ng-content select=".bulk-actions"></ng-content>
+          <div [class.kHidden]="!selectedEntries.length" class="kBulkOperations">
+            <span *ngIf="bulkWrapper.children.length !== 0"
+                  class="kSelectedEntriesLabel">
+              • {{selectedEntries.length}} {{'applications.content.entries.selected' | translate}}
+            </span>
+            <div #bulkWrapper>
+              <ng-content select=".bulk-actions"></ng-content>
+            </div>
 
-          <a class="kBulkCancel" (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
+            <a *ngIf="bulkWrapper.children.length !== 0"
+               class="kBulkCancel"
+               (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
+          </div>
+          <div [class.kHidden]="selectedEntries.length" class="kFilters">
+            <input type="text"
+                   pInputText
+                   class="kSearchInput"
+                   [(ngModel)]="_filter.freetextSearch"
+                   (keyup.enter)="onFreetextChanged()"
+                   placeholder="{{'applications.content.entries.searchEntries' | translate}}">
+            <div #categoriesFilterBtn class="kCategoriesFilter">
+              <i class="kIconfolder"></i>
+              <span>{{'applications.content.entries.filterCategories' | translate}}</span>
+              <i class="kIcondropdown_arrow_bottom dropdown"></i>
+            </div>
+            <div #refineBtn class="kRefine">
+              <i class="kIconfilter"></i>
+              <span>{{'applications.content.entries.refine' | translate}}</span>
+              <i class="kIcondropdown_arrow_bottom dropdown"></i>
+            </div>
+          </div>
+          <button pButton
+                  class="kButtonDefault kRefreshBtn small"
+                  type="text"
+                  icon="kIconrefresh"
+                  [kTooltip]="'applications.content.entries.refresh' | translate"
+                  (click)="_reload()"></button>
         </div>
-        <div [class.kHidden]="selectedEntries.length" class="kFilters">
-          <input type="text"
-                 pInputText
-                 class="kSearchInput"
-                 [(ngModel)]="_filter.freetextSearch"
-                 (keyup.enter)="onFreetextChanged()"
-                 placeholder="{{'applications.content.entries.searchEntries' | translate}}">
-          <div #categoriesFilterBtn class="kCategoriesFilter">
-            <i class="kIconfolder"></i>
-            <span>{{'applications.content.entries.filterCategories' | translate}}</span>
-            <i class="kIcondropdown_arrow_bottom dropdown"></i>
-          </div>
-          <div #refineBtn class="kRefine">
-            <i class="kIconfilter"></i>
-            <span>{{'applications.content.entries.refine' | translate}}</span>
-            <i class="kIcondropdown_arrow_bottom dropdown"></i>
-          </div>
+      </kSticky>
+      <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="entriesTags" [sticksTo]="'entriesFilters'">
+        <div class="kContent">
+            <kTags [title]="'applications.content.filters.activeFilters' | translate"
+                   [data]="_filterTags"
+                   [labelField]="'label'"
+                   [tooltipField]="'tooltip'"
+                   (onTagRemove)="removeTag($event)"
+                   (onRemoveAll)="removeAllTags()"
+                   (onTagsChange)="onTagsChange($event)">
+              <ng-template let-item="item">
+                <div class="kTagContent" [kTooltip]="item.tooltip?.token | translate : item.tooltip?.args">
+                  <span class="kTagLabel">{{item.label}}</span>
+                  <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
+                </div>
+              </ng-template>
+            </kTags>
         </div>
-        <button pButton
-                class="kButtonDefault kRefreshBtn small"
-                type="text"
-                icon="kIconrefresh"
-                [kTooltip]="'applications.content.entries.refresh' | translate"
-                (click)="_reload()"></button>
-      </div>
-      <kTags [title]="'applications.content.filters.activeFilters' | translate"
-             [data]="_filterTags"
-             [labelField]="'label'"
-             [tooltipField]="'tooltip'"
-             (onTagRemove)="removeTag($event)"
-             (onRemoveAll)="removeAllTags()">
-        <ng-template let-item="item">
-          <div class="kTagContent" [kTooltip]="item.tooltip?.token | translate : item.tooltip?.args">
-            <span class="kTagLabel">{{item.label}}</span>
-            <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
-          </div>
-        </ng-template>
-      </kTags>
+      </kSticky>
       <kEntriesTable class="kEntriesTable"
+                     scrollHeight="100%"
                      [entries]="(_entriesStore.entries$ | async)?.items"
+                     [showBulkSelect]="bulkWrapper.children.length !== 0"
                      [filter]="_filter"
+                     [columns]="columns"
+                     [rowActions]="rowActions"
+                     (actionSelected)="onActionsSelected.emit($event)"
                      (sortChanged)="onSortChanged($event)"
-                     (actionSelected)="onActionSelected($event)"
                      [(selectedEntries)]="selectedEntries"
       ></kEntriesTable>
 
-      <div class="kEntriesTableFooter" #footer *ngIf="(_entriesStore.entries$ | async)?.totalCount">
+      <div class="kEntriesTableFooter kContent" #footer *ngIf="(_entriesStore.entries$ | async)?.totalCount">
         <p-paginator
           [rows]="_filter.pageSize"
           [first]="_filter.pageIndex * _filter.pageSize"
@@ -76,7 +94,8 @@
               [popupHeight]="500"
               [closeBtn]="false"
               [targetRef]="categoriesFilterBtn"
-              [targetOffset]="{'x':-10, 'y': -21}">
+              [targetOffset]="{'x':-10, 'y': -21}"
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'categoriesFilterPopup'" [scrollOffset]="80" [appendTo]="entriesTableHolder" >
   <kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup"></kCategoriesFilter>
 </kPopupWidget>
 
@@ -86,8 +105,8 @@
               [popupHeight]="500"
               [closeBtn]="false"
               [targetRef]="refineBtn"
-              [targetOffset]="{'x':-200, 'y': -20}">
-
+              [targetOffset]="{'x':-200, 'y': -15}"
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'refinePopup'" [scrollOffset]="80" [appendTo]="entriesTableHolder">
     <k-entries-refine-filters [parentPopupWidget]="refinePopup"></k-entries-refine-filters>
 
 </kPopupWidget>

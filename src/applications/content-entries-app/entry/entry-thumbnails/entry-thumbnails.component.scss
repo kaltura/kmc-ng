@@ -1,16 +1,13 @@
 @import 'app-theme/_variables.scss';
 
 .kThumbnails{
-	padding-left: 12px;
-	overflow-y: auto;
+	.kHeader{
+		padding-left: 24px;
+	}
 	.kTitle{
 		color: $kGrayscale1;
 		font-size: 20px;
 		font-weight: 700;
-	}
-	button{
-		height: 32px;
-		font-weight: 400;
 	}
 	.kTable{
 		padding-top: 12px;

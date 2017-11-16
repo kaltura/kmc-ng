@@ -1,23 +1,22 @@
-import { CategoriesService } from './../categories/categories.service';
-import { Injectable, OnDestroy, Host } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd, NavigationStart } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import {CategoriesService} from './../categories/categories.service';
+import {Host, Injectable, OnDestroy} from '@angular/core';
+import {ActivatedRoute, NavigationEnd, NavigationStart, Router} from '@angular/router';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {ISubscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { CategoryGetAction } from 'kaltura-typescript-client/types/CategoryGetAction';
-import { CategoryUpdateAction } from 'kaltura-typescript-client/types/CategoryUpdateAction';
+import {KalturaClient} from '@kaltura-ng/kaltura-client';
+import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-typescript-client';
+import {CategoryGetAction} from 'kaltura-typescript-client/types/CategoryGetAction';
+import {CategoryUpdateAction} from 'kaltura-typescript-client/types/CategoryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { CategoryFormManager } from './category-form-manager';
-import { KalturaTypesFactory } from 'kaltura-typescript-client';
-import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
+import { CategoryWidgetsManager } from './category-widgets-manager';
+import {  OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 export enum ActionTypes {
@@ -43,7 +42,7 @@ export class CategoryService implements OnDestroy {
 	private _loadCategorySubscription: ISubscription;
 	private _sectionToRouteMapping: { [key: number]: string } = {};
 	private _state = new BehaviorSubject<StatusArgs>({ action: ActionTypes.CategoryLoading, error: null });
-
+	private _saveCategoryInvoked = false;
 	public state$ = this._state.asObservable();
 	private _categoryIsDirty: boolean;
 
@@ -67,7 +66,7 @@ export class CategoryService implements OnDestroy {
 		private _router: Router,
 		private _browserService: BrowserService,
 		private _categoriesStore: CategoriesService,
-		@Host() private _sectionsManager: CategoryFormManager,
+		@Host() private _sectionsManager: CategoryWidgetsManager,
 		private _categoryRoute: ActivatedRoute,
 		private _appLocalization: AppLocalization) {
 
@@ -143,9 +142,17 @@ export class CategoryService implements OnDestroy {
 					// to init them-selves when entering this module directly.
 					setTimeout(() => {
 						const currentCategoryId = this._categoryRoute.snapshot.params.id;
-						const category = this._category.getValue();
-						if (!category || (category && category.id !== currentCategoryId)) {
-							this._loadCategory(currentCategoryId);
+						if (currentCategoryId === "new") {
+							if (this._categoriesStore && this._categoriesStore.getNewCategoryData()) {
+								const parentId = this._categoriesStore.getNewCategoryData().parentCategoryId;
+								this._loadCategory(parentId);
+							}
+						}
+						else {
+							const category = this._category.getValue();
+							if (!category || (category && category.id.toString() !== currentCategoryId)) {
+								this._loadCategory(currentCategoryId);
+							}
 						}
 					});
 				}
@@ -158,59 +165,60 @@ export class CategoryService implements OnDestroy {
 
 		const request = new KalturaMultiRequest(
 			new CategoryUpdateAction({
-				id: newCategory.id,
+				id: this.categoryId,
 				category: newCategory
 			})
 		);
 
-		// this._sectionsManager.onDataSaving(newCategory, request, this.category)
-		// 	.cancelOnDestroy(this)
-		// 	.monitor('category store: prepare category for save')
-		// 	.flatMap(
-		// 	(response) => {
-		// 		if (response.ready) {
-		// 			this._saveCategoryInvoked = true;
+		this._sectionsManager.notifyDataSaving(newCategory, request, this.category)
+			.cancelOnDestroy(this)
+			.monitor('category store: prepare category for save')
+			.flatMap(
+			(response) => {
+				if (response.ready) {
+					this._saveCategoryInvoked = true;
 
-		// 			return this._kalturaServerClient.multiRequest(request)
-		// 				.monitor('category store: save category')
-		// 				.map(
-		// 				response => {
-		// 					if (response.hasErrors()) {
-		// 						this._state.next({ action: ActionTypes.CategorySavingFailed });
-		// 					} else {
-		// 						this._loadCategory(this.categoryId);
-		// 					}
+					return this._kalturaServerClient.multiRequest(request)
+						.monitor('category store: save category')
+                        .tag('block-shell')
+                        .map(
+						response => {
+							if (response.hasErrors()) {
+								this._state.next({ action: ActionTypes.CategorySavingFailed });
+							} else {
+								this._loadCategory(this.categoryId);
+							}
 
-		// 					return Observable.empty();
-		// 				}
-		// 				)
-		// 		}
-		// 		else {
-		// 			switch (response.reason) {
-		// 				case OnDataSavingReasons.validationErrors:
-		// 					this._state.next({ action: ActionTypes.CategoryDataIsInvalid });
-		// 					break;
-		// 				case OnDataSavingReasons.attachedWidgetBusy:
-		// 					this._state.next({ action: ActionTypes.ActiveSectionBusy });
-		// 					break;
-		// 				case OnDataSavingReasons.buildRequestFailure:
-		// 					this._state.next({ action: ActionTypes.CategoryPrepareSavingFailed });
-		// 					break;
-		// 			}
+							return Observable.empty();
+						}
+						)
+				}
+				else {
+					switch (response.reason) {
+						case OnDataSavingReasons.validationErrors:
+							this._state.next({ action: ActionTypes.CategoryDataIsInvalid });
+							break;
+						case OnDataSavingReasons.attachedWidgetBusy:
+							this._state.next({ action: ActionTypes.ActiveSectionBusy });
+							break;
+						case OnDataSavingReasons.buildRequestFailure:
+							this._state.next({ action: ActionTypes.CategoryPrepareSavingFailed });
+							break;
+					}
 
-		// 			return Observable.empty();
-		// 		}
-		// 	}
-		// 	)
-		// 	.subscribe(
-		// 	response => {
-		// 		// do nothing - the service state is modified inside the map functions.
-		// 	},
-		// 	error => {
-		// 		// should not reach here, this is a fallback plan.
-		// 		this._state.next({ action: ActionTypes.CategorySavingFailed });
-		// 	}
-		// 	);
+					return Observable.empty();
+				}
+			}
+			)
+			.subscribe(
+			response => {
+				// do nothing - the service state is modified inside the map functions.
+			},
+			error => {
+				// should not reach here, this is a fallback plan.
+				this._state.next({ action: ActionTypes.CategorySavingFailed });
+			}
+			);
 	}
 	public saveCategory(): void {
 
@@ -241,7 +249,7 @@ export class CategoryService implements OnDestroy {
 		this._updatePageExitVerification();
 
 		this._state.next({ action: ActionTypes.CategoryLoading });
-		this._sectionsManager.onDataLoading(categoryId);
+		this._sectionsManager.notifyDataLoading(categoryId);
 
 		this._loadCategorySubscription = this._getCategory(categoryId)
 			.cancelOnDestroy(this)
@@ -251,7 +259,7 @@ export class CategoryService implements OnDestroy {
 				this._category.next(response);
 				this._categoryId = response.id;
 
-				const dataLoadedResult = this._sectionsManager.onDataLoaded(response);
+				const dataLoadedResult = this._sectionsManager.notifyDataLoaded(response, { isNewData: false });
 
 				if (dataLoadedResult.errors.length) {
 					this._state.next({

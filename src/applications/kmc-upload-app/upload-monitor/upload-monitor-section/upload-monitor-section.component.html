@@ -1,0 +1,43 @@
+<div class="kUploadMonitorSection">
+  <div class="kUploadMonitorSectionHeading">
+    <span class="kUploadMonitorSectionHeadingTitle">{{ title }}</span>
+
+    <!--TODO [kmcng] cleanup after implement all sections -->
+    <a *ngIf="!detailsLink" class="kUploadMonitorSectionHeadingDetails" (click)="uploadMonitorPopup.close()">
+      {{ 'applications.upload.uploadMonitor.viewDetails' | translate }}
+    </a>
+
+    <a *ngIf="detailsLink"
+       [routerLink]="detailsLink"
+       class="kUploadMonitorSectionHeadingDetails"
+       (click)="uploadMonitorPopup.close()">
+      {{ 'applications.upload.uploadMonitor.viewDetails' | translate }}
+    </a>
+  </div>
+  <div class="kUploadMonitorSectionContent">
+    <span *ngIf="!_isUpToDate">
+      <span class="kUploadMonitorStatus" *ngIf="uploading !== 0">
+        <i class="kIconrefresh_small kUploadMonitorStatusIcon uploading"></i>
+        {{ uploading }} {{ _uploadingTitle | translate }}
+      </span>
+      <span class="kUploadMonitorStatus" *ngIf="queued !== 0">
+        <i class="kIconcheck_small kUploadMonitorStatusIcon queued"></i>
+        {{ queued }} {{ 'applications.upload.uploadMonitor.queued' | translate }}
+      </span>
+      <span class="kUploadMonitorStatus" *ngIf="completed !== 0">
+        <i class="kIconcheck_small kUploadMonitorStatusIcon completed"></i>
+        {{ completed }} {{ 'applications.upload.uploadMonitor.completed' | translate }}
+      </span>
+      <span class="kUploadMonitorStatus" *ngIf="errors !== 0">
+        <i class="kIconinfo kUploadMonitorStatusIcon error"></i>
+        {{ errors }} {{ 'applications.upload.uploadMonitor.error' | translate }}
+      </span>
+    </span>
+    <span *ngIf="_isUpToDate">
+      <span class="kUploadMonitorStatus">
+        <i class="kIconcheck_small kUploadMonitorStatusIcon completed"></i>
+        {{ 'applications.upload.uploadMonitor.upToDate' | translate }}
+      </span>
+    </span>
+  </div>
+</div>

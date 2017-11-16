@@ -2,6 +2,7 @@
 
 .kRefineFilters {
   margin: 12px;
+  background-color: white;
 }
 
 .kFiltersGroupTitle {
@@ -11,7 +12,7 @@
   font-size: 13px;
   border-top: 1px solid $kGrayscale6;
   border-bottom: 1px solid $kGrayscale6;
-  margin-left: -20px;
+  margin-left: -12px;
   padding-left: 20px;
   margin-right: -20px;
   margin-bottom: 8px;
@@ -74,13 +75,13 @@ a.disabled {
 }
 
 /* prevent calendars from being cut by the popup widget borders */
-:host /deep/ .kPullLeft30 .ui-datepicker.ui-widget {
-  margin-left: -30px;
+:host /deep/ .kPullLeft40 .ui-datepicker.ui-widget {
+  margin-left: -40px;
   left: 0px !important;
 }
 
-:host /deep/ .kPullLeft90 .ui-datepicker.ui-widget {
-  margin-left: -90px;
+:host /deep/ .kPullLeft100 .ui-datepicker.ui-widget {
+  margin-left: -100px;
   left: 0px !important;
 }
 
@@ -110,4 +111,8 @@ a.disabled {
 :host /deep/ .ui-tree .ui-chkbox {
   vertical-align: top;
   margin-top: 14px;
+}
+
+:host /deep/ .kErrorMessage {
+  width: 320px !important;
 }

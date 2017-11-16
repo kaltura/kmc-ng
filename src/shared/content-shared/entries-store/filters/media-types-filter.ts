@@ -5,7 +5,10 @@ import { ValueFilter } from '../value-filter';
 
 export class MediaTypesFilterOld extends ValueFilter<string> {
 
-  constructor(value: string, label: string) {
+    static filterType = "MediaTypes"; // IMPORTANT: you must have a static filterType property that is used at runtime
+
+
+    constructor(value: string, label: string) {
     super(label, value, { token: 'applications.content.filters.mediaType', args: { '0': label } });
   }
 }

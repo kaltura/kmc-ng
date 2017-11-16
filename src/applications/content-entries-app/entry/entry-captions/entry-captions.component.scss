@@ -1,13 +1,11 @@
 @import 'app-theme/_variables.scss';
 
 .kCaptions{
-	padding-left: 12px;
-	overflow-y: auto;
 	button{
-		font-weight: 400;
-		height: 32px;
+		margin-left: 24px;
 	}
 	.kTitle{
+		padding-left: 24px;
 		color: $kGrayscale1;
 		font-size: 20px;
 		font-weight: 700;

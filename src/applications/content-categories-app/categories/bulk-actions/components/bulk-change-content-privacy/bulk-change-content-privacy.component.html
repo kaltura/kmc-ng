@@ -1,0 +1,24 @@
+<k-area-blocker [showLoader]="_loading" [message]="_sectionBlockerMessage">
+  <div class="kContent kOverrideFAIcons">
+    <span class="kTitle">{{'applications.content.categories.bActions.changeContentPrivacy' | translate}}</span>
+    <div class="kContainer">
+      <span class="kLabel">{{'applications.content.categories.bActions.changeContentPrivacyLabel' | translate}}</span>
+      <div class="kBlock">
+        <p-radioButton name="privacy" [value]="_privacyModes.NoRestriction" [(ngModel)]="_privacyMode"
+        label="{{'applications.content.categories.noRestriction' | translate}}"></p-radioButton>
+      </div>
+      <div class="kBlock">
+        <p-radioButton name="privacy" [value]="_privacyModes.RequiresAuthentication" [(ngModel)]="_privacyMode"
+        label="{{'applications.content.categories.requiresAuthentication' | translate}}"></p-radioButton>
+      </div>
+      <div class="kBlock">
+        <p-radioButton name="privacy" [value]="_privacyModes.Private" [(ngModel)]="_privacyMode"
+        label="{{'applications.content.categories.private' | translate}}"></p-radioButton>
+      </div>
+    </div>
+    <div class="kFooter">
+      <button type="button" class="kButtonBranded" pButton label="{{'applications.content.categories.bActions.save' | translate}}"
+        (click)="_apply()"></button>
+    </div>
+  </div>
+</k-area-blocker>

@@ -1,7 +1,8 @@
 @import 'app-theme/_variables.scss';
 
 .kUserSettings {
-  margin: 12px;
+  margin-left: 12px;
+  padding-top: 3px;
 }
 
 ul {
@@ -21,7 +22,6 @@ hr {
   height: 1px;
   border: none;
   margin-left: -12px;
-  margin-right: -12px;
   color: $kGrayscale4;
   background-color: $kGrayscale4;
 }

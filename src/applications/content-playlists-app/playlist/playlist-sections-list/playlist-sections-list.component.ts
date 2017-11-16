@@ -1,11 +1,12 @@
- import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { PlaylistStore } from '../playlist-store.service';
 import { PlaylistSections } from '../playlist-sections';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { StickyComponent } from '@kaltura-ng/kaltura-ui';
 
 export class SectionData{
 	constructor(
-	  public id: PlaylistSections,
+	  public id: string,
     public name: string,
     public isActive: boolean  = false,
     public hasErrors: boolean = false
@@ -21,6 +22,8 @@ export class SectionData{
 export class PlaylistSectionsList implements OnInit, OnDestroy {
 	public _loading = false;
 	public sections: SectionData[] = [];
+
+	@ViewChild('playlistSections') private playlistSections: StickyComponent;
 
     constructor(
       public _appLocalization: AppLocalization,
@@ -42,7 +45,14 @@ export class PlaylistSectionsList implements OnInit, OnDestroy {
         response => {
           if(response.section !== null) {
             this.sections.forEach(section => section.isActive = false);
-            this.sections[response.section].isActive = true;
+
+            // TODO [kmcng] will be removed after merge of the playlists-adjustments branch
+            const relevantSection = this.sections.find(({ id }) => response.section === name);
+            if (relevantSection) {
+              relevantSection.isActive = true;
+            }
+
+            this.playlistSections.updateLayout();
           }
         }
       );
@@ -51,8 +61,16 @@ export class PlaylistSectionsList implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         response => {
-          this.sections[PlaylistSections.Metadata].hasErrors = !response.metadata.isValid;
-          this.sections[PlaylistSections.Content].hasErrors = !response.content.isValid;
+          // TODO [kmcng] will be removed after merge of the playlists-adjustments branch
+          this.sections.forEach(section => {
+            if (section.id === PlaylistSections.Metadata) {
+              section.hasErrors = !response.metadata.isValid;
+            }
+
+            if (section.id === PlaylistSections.Content) {
+              section.hasErrors = !response.content.isValid;
+            }
+          });
         }
       );
 	}

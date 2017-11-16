@@ -1,6 +1,6 @@
 {
   "name": "kmc-ng",
-  "version": "2.3.1",
+  "version": "3.2.0",
   "license": "AGPL-3.0",
   "private": true,
   "repository": {
@@ -39,7 +39,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "checkout-standalone": "kws bookmark standalone",
-    "compodoc": "./node_modules/.bin/compodoc -p tsconfig.json --disableGraph --disablePrivateOrInternalSupport --toggleMenuItems"
+    "compodoc": "./node_modules/.bin/compodoc -p tsconfig.json --disableGraph --disablePrivateOrInternalSupport --toggleMenuItems",
+    "release:prepare": "kws publish --publish=false",
+    "release:publish": "kws publish --prepare=false"
   },
   "dependencies": {
     "@angular/animations": "^4.0.0",
@@ -51,16 +53,16 @@
     "@angular/platform-browser": "^4.0.0",
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
-    "@kaltura-ng/kaltura-client": "0.x",
-    "@kaltura-ng/kaltura-common": "1.x",
-    "@kaltura-ng/kaltura-primeng-ui": "0.x",
-    "@kaltura-ng/kaltura-server-utils": "1.x",
-    "@kaltura-ng/kaltura-ui": "1.x",
-    "@kaltura-ng/mc-theme": "0.x",
+    "@kaltura-ng/kaltura-client": "~0.2.0",
+    "@kaltura-ng/kaltura-common": "~2.2.0",
+    "@kaltura-ng/kaltura-primeng-ui": "~0.6.0",
+    "@kaltura-ng/kaltura-server-utils": "~2.2.0",
+    "@kaltura-ng/kaltura-ui": "~3.1.0",
+    "@kaltura-ng/mc-theme": "~0.8.0",
     "core-js": "^2.4.1",
     "intl": "^1.2.5",
     "jquery": "^3.1.0",
-    "kaltura-typescript-client": "^4.0.0",
+    "kaltura-typescript-client": "~5.1.2",
     "moment": "^2.14.1",
     "ng2-page-scroll": "^4.0.0-beta.7",
     "ng2-translate": "^5.0.0",
@@ -79,13 +81,14 @@
     "@angular/compiler-cli": "^4.0.0",
     "@angular/language-service": "^4.0.0",
     "@compodoc/compodoc": "^1.0.0-beta.10",
-    "@kaltura-ng/dev-workspace": "^2.1.0",
+    "@kaltura-ng/dev-workspace": "~2.2.0",
     "@types/core-js": "0.9.28",
     "@types/jasmine": "2.5.45",
     "@types/jquery": "^2.0.40",
     "@types/node": "~6.0.60",
     "@types/ramda": "^0.0.3",
     "codelyzer": "~3.0.1",
+    "enhanced-resolve": "~3.3.0",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
     "karma": "~1.7.0",
@@ -103,6 +106,6 @@
   },
   "engines": {
     "node": ">= 7.0.0",
-    "yarn": ">= 0.24.6"
+    "npm": ">= 5.0.0"
   }
 }

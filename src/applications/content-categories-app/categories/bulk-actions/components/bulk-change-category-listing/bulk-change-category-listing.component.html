@@ -1,0 +1,18 @@
+<k-area-blocker [showLoader]="_loading" [message]="_sectionBlockerMessage">
+  <div class="kContent kOverrideFAIcons">
+    <span class="kTitle">{{'applications.content.categories.bActions.changeCategoryListing' | translate}}</span>
+    <div class="kContainer">
+      <span class="kLabel">{{'applications.content.categories.bActions.changeCategoryListingLabel' | translate}}</span>
+      <div class="kBlock">
+        <p-radioButton class="kRadio" name="privacy" [value]="_appearInListType.NoRestriction" [(ngModel)]="_appearInList"
+        label="{{'applications.content.categories.noRestriction' | translate}}"></p-radioButton>
+        <p-radioButton class="kRadio" name="privacy" [value]="_appearInListType.Private" [(ngModel)]="_appearInList"
+        label="{{'applications.content.categories.private' | translate}}"></p-radioButton>
+      </div>
+    </div>
+    <div class="kFooter">
+      <button type="button" class="kButtonBranded" pButton label="{{'applications.content.categories.bActions.save' | translate}}"
+        (click)="_apply()"></button>
+    </div>
+  </div>
+</k-area-blocker>

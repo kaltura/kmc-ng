@@ -1,0 +1,139 @@
+@import 'app-theme/_variables.scss';
+
+.kUploads {
+  font-size: 15px;
+  background-color: $appBkgColor;
+  height: $contentArea;
+  padding-top: 30px;
+  width: 100%;
+  min-width: $minAppWidth;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0;
+  .kUploadsHolder {
+    height: 100%;
+    border: none;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .kRefreshBtn {
+    font-size: 24px;
+    border: none;
+    min-width: inherit;
+    margin-right: 16px;
+    width: 40px;
+    outline: 0;
+    color: $kGrayscale3;
+    &:active {
+      box-shadow: none;
+      transform: rotate(45deg);
+    }
+    &:hover {
+      background-color: #ffffff;
+      color: $kPrimary;
+    }
+  }
+  .kUploadsTableFilters {
+    color: $kGrayscale1;
+    z-index: 500;
+    height: 66px;
+    background-color: white;
+    flex: 0 0 auto;
+    align-items: center;
+    margin-left: 0px;
+    border-bottom: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    display: flex;
+    .kSelectedUploadsNum {
+      padding-left: 16px;
+    }
+  }
+  .kUploadsTableTags {
+    width: 100%;
+    height: 50px;
+    background-color: #f3f3f3;
+    border: 1px solid grey;
+    flex: 0 0 50px;
+  }
+  .kUploadsTable {
+    border: none;
+    position: relative;
+    background-color: white;
+    flex: 1 1 auto;
+  }
+  .kSelectedUploadsLabel {
+    font-weight: bold;
+    margin-right: 36px;
+    margin-left: 5px;
+  }
+  .kBulkOperations {
+    width: 400px;
+    display: flex;
+    align-items: center;
+    .kBulkDeleteBtn {
+      margin-right: 10px;
+      width: 44px;
+      font-size: 18px;
+    }
+  }
+  .kPaginatorShowRowsLabel {
+    color: $kGrayscale1;
+    position: absolute;
+    top: 7px;
+    right: 80px;
+  }
+  .kBulkCancel {
+    margin-left: 10px;
+  }
+  .kBulkDeleteBtn {
+    margin-right: 10px;
+    width: 44px;
+    font-size: 18px;
+  }
+  .kBulkActionsBtn {
+    font-weight: 400;
+    font-size: 15px;
+  }
+  .kFilters {
+    display: flex;
+    margin-left: auto;
+  }
+
+  .kHidden {
+    visibility: hidden;
+    width: 0;
+    height: 0;
+  }
+}
+
+:host /deep/ span.ui-button-icon-left.fa.kIcontrash {
+  margin-left: -.5em;
+}
+
+:host /deep/ .ui-tree {
+  width: 380px;
+}
+
+:host /deep/ .ui-button-icon-right.kIcondropdown_arrow_bottom {
+  font-size: 10px;
+  margin-right: 2px;
+  pointer-events: none;
+}
+
+:host /deep/ .ui-tieredmenu.ui-menu {
+  width: 250px;
+  .ui-submenu-icon {
+    font-size: 10px;
+    margin-top: 3px;
+  }
+}
+
+:host /deep/ .ui-button-icon-only .fa {
+  margin-left: -.5em;
+}
+:host /deep/ .kStickyClass{
+  border-bottom: 1px solid $kGrayscale5;
+}

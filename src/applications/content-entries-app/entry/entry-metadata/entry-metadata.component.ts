@@ -7,11 +7,11 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 
 import { MenuItem } from 'primeng/primeng';
 import { ISubscription } from 'rxjs/Subscription';
-import { EntryMetadataHandler, EntryCategoryItem } from './entry-metadata-handler';
+import { EntryMetadataWidget, EntryCategoryItem } from './entry-metadata-widget.service';
 import { PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
 import { JumpToSection } from './jump-to-section.component';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { EntryFormManager } from '../entry-form-manager';
+
 
 @Component({
     selector: 'kEntryMetadata',
@@ -32,16 +32,29 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 
 	@ViewChild('metadataContainer')
 	public _container : ElementRef;
-    public _handler : EntryMetadataHandler;
 
-    constructor(private _entryFormManager : EntryFormManager,
+    @ViewChild('nameField') private nameField: ElementRef;
+
+    constructor(public _widgetService: EntryMetadataWidget,
                 private _pageScrollService: PageScrollService,
                 @Inject(DOCUMENT) private document: any) {
     }
 
     ngOnInit() {
-        this._handler = this._entryFormManager.attachWidget(EntryMetadataHandler);
+        this._widgetService.attachForm();
 
+        this._widgetService.data$.subscribe(
+            data => {
+                if (data) {
+                    setTimeout(()=>{
+                        if (this.nameField) {
+                            this.nameField.nativeElement.focus(); // use timeout to allow data binding of ngIf to update the DOM
+                        }
+                    },0);
+
+                }
+            }
+        );
     }
 
     _searchTags(event) : void {
@@ -54,9 +67,9 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
             this._searchTagsSubscription = null;
         }
 
-        this._searchTagsSubscription = this._handler.searchTags(event.query).subscribe(data => {
+        this._searchTagsSubscription = this._widgetService.searchTags(event.query).subscribe(data => {
                 const suggestions = [];
-                const entryTags = this._handler.metadataForm.value.tags || [];
+                const entryTags = this._widgetService.metadataForm.value.tags || [];
 
                 (data|| []).forEach(suggestedTag => {
                     const isSelectable = !entryTags.find(tag => {
@@ -81,9 +94,9 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
             this._searchCategoriesSubscription = null;
         }
 
-        this._searchCategoriesSubscription = this._handler.searchCategories(event.query).subscribe(data => {
+        this._searchCategoriesSubscription = this._widgetService.searchCategories(event.query).subscribe(data => {
                 const suggestions = [];
-                const entryCategories = this._handler.metadataForm.value.categories || [];
+                const entryCategories = this._widgetService.metadataForm.value.categories || [];
 
 
                 (data|| []).forEach(suggestedCategory => {
@@ -110,7 +123,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         this._searchCategoriesSubscription && this._searchCategoriesSubscription.unsubscribe();
 	    this._popupStateChangeSubscribe && this._popupStateChangeSubscribe.unsubscribe();
 
-        this._entryFormManager.detachWidget(this._handler);
+        this._widgetService.detachForm();
     }
 
     private _updateJumpToSectionsMenu()
@@ -141,7 +154,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
 			    .subscribe(event => {
 				    if (event.state === PopupWidgetStates.Close) {
 					    if (event.context && event.context.isDirty){
-						   this._handler.setDirty();
+						   this._widgetService.setDirty();
 					    }
 				    }
 			    });
@@ -159,7 +172,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
     _updateEntryCategories($event : any) : void{
         if ($event && $event instanceof Array)
         {
-            this._handler.metadataForm.patchValue({ categories : $event});
+            this._widgetService.metadataForm.patchValue({ categories : $event});
         }
     }
 
@@ -167,7 +180,7 @@ export class EntryMetadata implements AfterViewInit, OnInit, OnDestroy {
         let pageScrollInstance: PageScrollInstance = PageScrollInstance.newInstance({
          document : this.document,
             scrollTarget : element,
-            scrollingViews : [this._container.nativeElement]
+            pageScrollOffset: 105
         });
         this._pageScrollService.start(pageScrollInstance);
     }

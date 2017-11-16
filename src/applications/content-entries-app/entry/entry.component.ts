@@ -2,21 +2,21 @@ import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { EntryStore, ActionTypes } from './entry-store.service';
-import { EntrySectionsListHandler } from './entry-sections-list/entry-sections-list-handler';
-import { EntryMetadataHandler } from './entry-metadata/entry-metadata-handler';
-import { EntryPreviewHandler } from './entry-preview/entry-preview-handler';
-import { EntryCaptionsHandler } from './entry-captions/entry-captions-handler';
-import { EntryAccessControlHandler } from './entry-access-control/entry-access-control-handler';
-import { EntryClipsHandler } from './entry-clips/entry-clips-handler';
-import { EntryRelatedHandler } from './entry-related/entry-related-handler';
-import { EntryLiveHandler } from './entry-live/entry-live-handler';
-import { EntryFlavoursHandler } from './entry-flavours/entry-flavours-handler';
-import { EntryThumbnailsHandler } from './entry-thumbnails/entry-thumbnails-handler';
-import { EntrySchedulingHandler } from './entry-scheduling/entry-scheduling-handler';
-import { EntryUsersHandler } from './entry-users/entry-users-handler';
-import { EntryFormManager } from './entry-form-manager';
+import { EntrySectionsListWidget } from './entry-sections-list/entry-sections-list-widget.service';
+import { EntryMetadataWidget } from './entry-metadata/entry-metadata-widget.service';
+import { EntryPreviewWidget } from './entry-preview/entry-preview-widget.service';
+import { EntryDetailsWidget } from './entry-details/entry-details-widget.service';
+import { EntryCaptionsWidget } from './entry-captions/entry-captions-widget.service';
+import { EntryAccessControlWidget } from './entry-access-control/entry-access-control-widget.service';
+import { EntryClipsWidget } from './entry-clips/entry-clips-widget.service';
+import { EntryRelatedWidget } from './entry-related/entry-related-widget.service';
+import { EntryLiveWidget } from './entry-live/entry-live-widget.service';
+import { EntryFlavoursWidget } from './entry-flavours/entry-flavours-widget.service';
+import { EntryThumbnailsWidget } from './entry-thumbnails/entry-thumbnails-widget.service';
+import { EntrySchedulingWidget } from './entry-scheduling/entry-scheduling-widget.service';
+import { EntryUsersWidget } from './entry-users/entry-users-widget.service';
+import { EntryWidgetsManager } from './entry-widgets-manager';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { EntryFormWidget } from './entry-form-widget';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Observable } from 'rxjs/Observable';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
@@ -27,67 +27,20 @@ import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-st
     styleUrls: ['./entry.component.scss'],
 	providers : [
 		EntryStore,
-		EntryFormManager,
-		{
-			provide: EntryFormWidget,
-			useClass: EntrySectionsListHandler,
-			multi: true
-		},
-		{
-			provide: EntryFormWidget,
-			useClass: EntryUsersHandler,
-			multi: true
-		},
-		{
-			provide: EntryFormWidget,
-			useClass: EntryThumbnailsHandler,
-			multi: true
-		},
-		{
-			provide: EntryFormWidget,
-			useClass: EntrySchedulingHandler,
-			multi: true
-		},
-		{
-			provide: EntryFormWidget,
-			useClass: EntryRelatedHandler,
-			multi: true
-		},
-		{
-			provide: EntryFormWidget,
-			useClass: EntryFlavoursHandler,
-			multi: true
-		},
-		{
-			provide: EntryFormWidget,
-			useClass: EntryLiveHandler,
-			multi: true
-		},
-		{
-			provide: EntryFormWidget,
-			useClass: EntryClipsHandler,
-			multi: true
-		},
-		{
-			provide: EntryFormWidget,
-			useClass: EntryCaptionsHandler,
-			multi: true
-		},
-		{
-			provide: EntryFormWidget,
-			useClass: EntryAccessControlHandler,
-			multi: true
-		},
-		{
-			provide: EntryFormWidget,
-			useClass: EntryMetadataHandler,
-			multi: true
-		},
-		{
-			provide: EntryFormWidget,
-			useClass: EntryPreviewHandler,
-			multi: true
-		}
+		EntryWidgetsManager,
+        EntrySectionsListWidget,
+        EntryUsersWidget,
+        EntryThumbnailsWidget,
+        EntrySchedulingWidget,
+        EntryRelatedWidget,
+        EntryFlavoursWidget,
+        EntryLiveWidget,
+        EntryClipsWidget,
+        EntryCaptionsWidget,
+        EntryAccessControlWidget,
+        EntryMetadataWidget,
+        EntryDetailsWidget,
+        EntryPreviewWidget
 	]
 })
 export class EntryComponent implements OnInit, OnDestroy {
@@ -102,16 +55,26 @@ export class EntryComponent implements OnInit, OnDestroy {
 	public _enableNextButton: boolean;
 	public _entryHasChanges : boolean;
 
-	public isSafari: boolean = false; // used for Safari specific styling
-
-	constructor(public _entryStore: EntryStore,
-				private  _entriesStore: EntriesStore,
-				private _entryFormManager : EntryFormManager,
-				private _browserService: BrowserService,
-				@Inject(EntryFormWidget)private  _widgets : EntryFormWidget[],
-				private _appLocalization: AppLocalization) {
-
-	}
+	constructor(
+                entryWidgetsManager: EntryWidgetsManager,
+                widget1: EntrySectionsListWidget,
+                widget2: EntryUsersWidget,
+                widget3: EntryThumbnailsWidget,
+                widget4: EntrySchedulingWidget,
+                widget5: EntryRelatedWidget,
+                widget6: EntryFlavoursWidget,
+                widget7: EntryLiveWidget,
+                widget8: EntryClipsWidget,
+                widget9: EntryCaptionsWidget,
+                widget10: EntryAccessControlWidget,
+                widget11: EntryMetadataWidget,
+				widget12: EntryDetailsWidget,
+				widget13: EntryPreviewWidget,
+				private _entriesStore: EntriesStore,
+				private _appLocalization: AppLocalization,
+    			public _entryStore: EntryStore) {
+        entryWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5, widget6, widget7, widget8, widget9, widget10, widget11, widget12, widget13]);
+    }
 
 	ngOnDestroy() {
 	}
@@ -131,11 +94,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-
-		this._entryFormManager.registerWidgets(this._widgets);
-
-		this.isSafari = this._browserService.isSafari();
-
 		this._entryStore.state$
             .cancelOnDestroy(this)
             .subscribe(

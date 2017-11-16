@@ -5,8 +5,8 @@ import { Subject } from 'rxjs/Subject';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { EntryUsersHandler } from './entry-users-handler';
-import { EntryFormManager } from '../entry-form-manager';
+import { EntryUsersWidget } from './entry-users-widget.service';
+
 
 @Component({
   selector: 'kEntryUsers',
@@ -19,18 +19,18 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 
 	private _searchUsersSubscription : ISubscription;
 	public _usersProvider = new Subject<SuggestionsProviderData>();
-	public _handler : EntryUsersHandler;
 
-	constructor(private _entryFormManager : EntryFormManager, private _appLocalization: AppLocalization) {
+
+	constructor(public _widgetService: EntryUsersWidget, private _appLocalization: AppLocalization) {
     }
 
 
     ngOnInit() {
-		this._handler = this._entryFormManager.attachWidget(EntryUsersHandler);
+		this._widgetService.attachForm();
     }
 
     ngOnDestroy() {
-		this._entryFormManager.detachWidget(this._handler);
+		this._widgetService.detachForm();
 	}
 
 
@@ -38,12 +38,12 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
     }
 
     public _openChangeOwner(): void{
-	    this._handler.usersForm.patchValue({owners: null});
+	    this._widgetService.usersForm.patchValue({owners: null});
 	    this.ownerPopup.open();
     }
 
     public _saveAndClose(): void{
-	    this._handler.saveOwner();
+	    this._widgetService.saveOwner();
 	    this.ownerPopup.close();
     }
 
@@ -65,7 +65,7 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 	}
 
 
-	public _searchUsers(event, formControl) : void {
+	public _searchUsers(event, formControl?) : void {
 		this._usersProvider.next({ suggestions : [], isLoading : true});
 
 		if (this._searchUsersSubscription)
@@ -75,18 +75,18 @@ export class EntryUsers implements AfterViewInit, OnInit, OnDestroy {
 			this._searchUsersSubscription = null;
 		}
 
-		this._searchUsersSubscription = this._handler.searchUsers(event.query).subscribe(data => {
+		this._searchUsersSubscription = this._widgetService.searchUsers(event.query).subscribe(data => {
 				const suggestions = [];
 				(data || []).forEach((suggestedUser: KalturaUser) => {
 					let isSelectable = true;
 					if (formControl){
-						const owners = this._handler.usersForm.value[formControl] || [];
+						const owners = this._widgetService.usersForm.value[formControl] || [];
 						isSelectable = !owners.find(user => {
 							return user.id === suggestedUser.id;
 						});
 					}
 					suggestions.push({
-						name: suggestedUser.screenName + "(" + suggestedUser.id + ")",
+						name: suggestedUser.screenName + " (" + suggestedUser.id + ")",
 						item: suggestedUser,
 						isSelectable: isSelectable
 					});

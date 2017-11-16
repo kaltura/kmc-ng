@@ -1,0 +1,48 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [centerOnScreen]="true">
+  <div class="kCategories kOverrideFAIcons">
+    <div #categoriesTableHolder class="kCategoriesHolder kContent">
+      <kSticky [stickyClass]="'kStickyClass'" stickyId="categoriesListFilters" [scrollOffset]="80" [sticksTo]="'header'">
+          <div class="kCategoriesTableFilters kContent">
+            <button pButton type="button" label="{{'applications.content.categories.addCategory' | translate}}" class="kButtonBranded kAddCategoryBtn"
+              [disabled]="_selectedCategories?.length" (click)="_addCategory()"></button>
+            <span class="kSelectedCategoriesNum" *ngIf="_categoriesTotalCount">
+              {{_categoriesTotalCount}} {{'applications.content.categories.categories' | translate}}
+            </span>
+            <div [class.kHidden]="!_selectedCategories?.length" class="kBulkOperations">
+              <span class="kSelectedCategoriesLabel">• {{_selectedCategories?.length}} {{'applications.content.categories.selected' | translate}}</span>
+              <kCategoriesBulkActions [selectedCategories]="_selectedCategories"
+              (onBulkChange)="onBulkChange($event)"></kCategoriesBulkActions>
+              <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.categories.cancel' | translate}}</a>
+            </div>
+            <div [class.kHidden]="_selectedCategories?.length" class="kFilters">
+              <input type="text" pInputText class="kSearchInput" placeholder="{{'applications.content.categories.search' | translate}}">
+              <div #categoriesFilterBtn class="kCategoriesFilter">
+                <i class="kIconfolder"></i>
+                <span>{{'applications.content.categories.filterCategories' | translate}}</span><i class="kIcondropdown_arrow_bottom dropdown"></i>
+              </div>
+              <div #refineBtn class="kRefine">
+                <i class="kIconfilter"></i>
+                <span>{{'applications.content.categories.refine' | translate}}</span>
+                <i class="kIcondropdown_arrow_bottom dropdown"></i>
+              </div>
+            </div>
+            <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh" [kTooltip]="'applications.content.categories.refresh' | translate"></button>
+          </div>
+      </kSticky>
+      <kCategoriesTable class="kCategoriesTable" [categories]="_categories" [filter]="_filter" (sortChanged)="_onSortChanged($event)"
+        (actionSelected)="_onActionSelected($event)" [(selectedCategories)]="_selectedCategories">
+      </kCategoriesTable>
+      <div class="kCategoriesTableFooter kContent" #footer *ngIf="_categoriesTotalCount">
+        <p-paginator [rows]="_filter.pageSize" (onPageChange)="_onPaginationChanged($event)" [first]="_filter.pageIndex * _filter.pageSize"
+          [totalRecords]="_categoriesTotalCount | kMaxCategories" [rowsPerPageOptions]="[25,50,75,100]"></p-paginator>
+        <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
+      </div>
+    </div>
+  </div>
+</k-area-blocker>
+
+<kPopupWidget #addNewCategory [popupWidth]="568" [popupHeight]="586" [modal]="true">
+  <ng-template>
+    <kAddNewCategory [parentPopupWidget]="addNewCategory"></kAddNewCategory>
+  </ng-template>
+</kPopupWidget>

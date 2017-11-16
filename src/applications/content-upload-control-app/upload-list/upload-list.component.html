@@ -1,0 +1,27 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+  <div class="kUploads kOverrideFAIcons">
+    <div class="kUploadsHolder kContent">
+      <kSticky [stickyClass]="'kStickyClass'" stickyId="uploadControlFilters" [scrollOffset]="80" [sticksTo]="'header'">
+        <div class="kUploadsTableFilters kContent">
+          <span class="kSelectedUploadsNum" *ngIf="_uploads.length">
+            {{ _uploads.length }} {{ 'applications.content.uploadControl.files' | translate }}
+          </span>
+
+          <div [class.kHidden]="!_selectedUploads.length" class="kBulkOperations">
+            <span class="kSelectedUploadsLabel">• {{_selectedUploads.length}} {{'applications.content.uploadControl.selected' | translate}}</span>
+            <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_bulkCancel()"></button>
+            <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.uploadControl.cancel' | translate}}</a>
+          </div>
+        </div>
+        </kSticky>
+
+      <kUploadListTable class="kUploadsTable"
+                        [uploads]="_uploads"
+                        (onSelectedEntriesChange)="_selectedEntriesChange($event)"
+                        (onCancelUpload)="_cancelUpload($event)"
+                        (onRetryUpload)="_retryUpload($event)"
+                        [selectedUploads]="_selectedUploads"
+      ></kUploadListTable>
+    </div>
+  </div>
+</k-area-blocker>

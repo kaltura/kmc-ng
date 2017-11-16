@@ -1,120 +1,22 @@
 @import 'app-theme/_variables.scss';
 
-.kPlaylistDetails {
-	font-size: 15px;
-	background-color: $appBkgColor;
-	height: $contentArea;
-	padding-top: 30px;
-	width: 100%;
-	button{
-		cursor: pointer;
-	}
-	.kPlaylistDetailsWrapper {
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		.kPlaylistDetailsHeader {
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-			.kBackToPlaylistsBtn {
-				position: absolute;
-				margin-top: 2px;
-				margin-left: -56px;
-				border: none;
-				outline: none;
-				background-color: $appBkgColor;
-				color: $kGrayscale3;
-				height: 20px;
-				font-size: 16px;
-				&:active{
-					box-shadow: none;
-				}
-				&:hover{
-					color: $kPrimary;
-				}
-			}
-			.kPlaylistTitle {
-				color: $kGrayscale1;
-				font-size: 24px;
-				font-weight: 700;
-				margin-left: 12px;
-				margin-right: 100px;
-			}
-			.kMediaTypeIcon {
-				width: 24px;
-				height: 24px;
-				margin-top: 2px;
-				font-size: 24px;
-				color: $kGrayscale3;
-			}
-			.kSaveBtn {
-				margin-left: auto;
-				width: 100px;
-				height: 34px;
-				font-weight: 400;
-			}
-			.kNavigationBtn{
-				width: 40px;
-				height: 34px;
-				font-weight: 400;
-        margin-right: 0px;
-			}
-      .kNavigationBtnLeft {
-        margin-left: 18px;
-        border-top-right-radius: 0px;
-        border-bottom-right-radius: 0px;
-      }
-      .kNavigationBtnRight {
-        margin-left: -1px;
-        border-top-left-radius: 0px;
-        border-bottom-left-radius: 0px;
-      }
-		}
-		.kPlaylistDetailsMain {
-			display: flex;
-			flex-direction: row;
-			padding-top: 30px;
-			height: 100%;
-			min-height: 0;
-			.kPlaylistDetailsSections {
-				overflow-y: auto;
-				width: 176px;
-				background-color: #ffffff;
-				border: 1px solid $kGrayscale4;
-				border-top-left-radius: 3px;
-				flex: 0 0 auto;
-			}
-			.kPlaylistDetailsContent {
-				overflow-y: hidden;
-				background-color: #ffffff;
-				border: 1px solid $kGrayscale4;
-				border-left: none;
-				border-top-right-radius: 3px;
-				flex: 1 1 auto;
-				margin-right: 28px;
-			}
-			.kPlaylistDetailsPreview {
-				margin-left: auto;
-				width: 280px;
-				background-color: #ffffff;
-				border: 1px solid $kGrayscale4;
-				border-radius: 3px;
-				flex: 0 0 auto;
-			}
-		}
-	}
-	.kSpacer{
-		display: block;
-		height: 40px;
-	}
+.kSectionsWrapper{
+	min-width: 178px;
+	border: 0px solid white;
+	border-top-left-radius: 3px;
+	flex: 0 0 auto;
 }
-.kPlaylistDetails.isSafari {
-	.kPlaylistDetailsContent {
-		height: calc(100vh - 216px);
-	}
-}
-:host /deep/ span.ui-button-icon-left.fa.kIconarrow_forward,
-:host /deep/ span.ui-button-icon-left.fa.kIconarrow_backward {
+
+:host /deep/ span.ui-button-icon-left.fa.kIconarrow_forward, :host /deep/ span.ui-button-icon-left.fa.kIconarrow_backward {
 	margin-left: -.5em;
+}
+:host /deep/ .stickyHeader{
+	background-color: white;
+	height: 55px;
+	z-index: 500;
+	left: 0px;
+	right: 0px;
+	padding-top: 11px;
+	box-sizing: border-box;
+	box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.2);
 }

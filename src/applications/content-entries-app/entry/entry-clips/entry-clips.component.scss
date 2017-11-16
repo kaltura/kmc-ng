@@ -1,14 +1,16 @@
 @import 'app-theme/_variables.scss';
 
 .kClips{
-	padding-left: 12px;
-	overflow-y: auto;
 	.kTitle{
 		color: $kGrayscale1;
 		font-size: 20px;
 		font-weight: 700;
+		padding-left: 24px;
 	}
 	.kTable{
 		margin-top: 24px;
 	}
+}
+:host /deep/ .ui-paginator {
+	padding-right: 12px;
 }

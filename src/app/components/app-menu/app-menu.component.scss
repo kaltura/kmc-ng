@@ -1,10 +1,16 @@
 @import 'app-theme/_variables.scss';
 @import '../../styles/scss/kmc-logo';
 
+.kMainMenuWrapper{
+    min-height: 50px;
+}
+
 .appMenu {
     background-color: $menuBkgColor;
     display: flex;
-
+    position: fixed;
+    z-index: 700;
+    width: 100%;
     a {
         color: $mainLinkColor;
         outline: 0;
@@ -39,6 +45,7 @@
         color: $headerTextColor;
         font-size: 24px;
         cursor: pointer;
+        position: relative;
         &:hover , &.open {
             opacity: 1;
             color: $mainLinkHoverColor;
@@ -72,17 +79,14 @@
         margin-left: auto;
         display: flex;
         align-items: center;
-    }
-    .kUploadBtn {
-        height: 28px;
-        font-size: 12px;
-        letter-spacing: 0.1em;
-        font-weight: 700;
-        border: 0px solid $menuBkgColor;
-        color: $kGrayscale1;
-        margin-right: 12px;
-        padding-left: 6px;
-        padding-right: 6px;
+
+        .kIconhelp.has-notification:after {
+          content: ' \25CF';
+          color: lighten($kPrimary, 10%);
+          position: absolute;
+          right: -4px;
+          bottom: -4px;
+        }
     }
     .kUserName {
         display: flex;
@@ -137,46 +141,20 @@
 .appSubMenu {
     background-color: white;
     border-bottom: 2px solid $kGrayscale5;
-    a {
-        color: $subLinkColor;
-        line-height: $appMenuHeight;
-        font-size: 12px;
-        letter-spacing: 0.1em;
-        letter-spacing: 0.5px;
-        cursor: pointer;
-        text-decoration: none;
-		&.disabled{
-			color: $kGrayscale4;
-			border: 0px solid white;
-			pointer-events: none;
-		}
-        &:hover {
-            text-decoration: none;
-            color: $menuBkgColor;
-        }
-        &.activeLink {
-            text-decoration: none;
-            color: $menuBkgColor;
-        }
+
+    .kSubMenuHolder {
+        justify-content: space-between;
     }
-    .subMenuContainer {
-        margin-right: 30px;
-        position: relative;
-        &.active {
-            > .linkMarker {
-                opacity: 1;
-            }
-        }
+
+    .kSubMenu {
+        display: flex;
     }
-    .linkMarker {
-        width: 100%;
-        height: 4px;
-        position: absolute;
-        background-color: $menuBkgColor;
-        opacity: 0;
-        bottom: 0px;
-        transition: opacity .3s ease-in-out;
-        -moz-transition: opacity .3s ease-in-out;
-        -webkit-transition: opacity .3s ease-in-out;
-    }
+}
+
+// prioritize sticky elements of header above other sticky elements in the page
+:host /deep/ .kStickyClass{
+    z-index: 550 !important;
+}
+:host /deep/ .uploadMonitorPopup .tooltipUp{
+    margin-left: 234px !important;
 }

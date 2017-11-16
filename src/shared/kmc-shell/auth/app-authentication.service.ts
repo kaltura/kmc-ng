@@ -1,25 +1,28 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/map';
 import * as R from 'ramda';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import {KalturaClient} from '@kaltura-ng/kaltura-client';
 
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { KalturaPermissionFilter } from 'kaltura-typescript-client/types/KalturaPermissionFilter';
-import { UserLoginByLoginIdAction } from 'kaltura-typescript-client/types/UserLoginByLoginIdAction';
-import { UserGetByLoginIdAction } from 'kaltura-typescript-client/types/UserGetByLoginIdAction';
-import { UserGetAction } from 'kaltura-typescript-client/types/UserGetAction';
-import { PermissionListAction } from 'kaltura-typescript-client/types/PermissionListAction';
-import { PartnerGetInfoAction } from 'kaltura-typescript-client/types/PartnerGetInfoAction';
-import { PermissionGetCurrentPermissionsAction } from 'kaltura-typescript-client/types/PermissionGetCurrentPermissionsAction';
+import {KalturaMultiRequest} from 'kaltura-typescript-client';
+import {KalturaPermissionFilter} from 'kaltura-typescript-client/types/KalturaPermissionFilter';
+import {UserLoginByLoginIdAction} from 'kaltura-typescript-client/types/UserLoginByLoginIdAction';
+import {UserGetByLoginIdAction} from 'kaltura-typescript-client/types/UserGetByLoginIdAction';
+import {UserGetAction} from 'kaltura-typescript-client/types/UserGetAction';
+import {PermissionListAction} from 'kaltura-typescript-client/types/PermissionListAction';
+import {PartnerGetInfoAction} from 'kaltura-typescript-client/types/PartnerGetInfoAction';
+import {PermissionGetCurrentPermissionsAction} from 'kaltura-typescript-client/types/PermissionGetCurrentPermissionsAction';
 
-import { AppUser } from './app-user';
-import { AppStorage } from '@kaltura-ng/kaltura-common';
-import { PartnerInfo } from './partner-info';
-import { UserResetPasswordAction } from 'kaltura-typescript-client/types/UserResetPasswordAction';
-import { AdminUserUpdatePasswordAction } from 'kaltura-typescript-client/types/AdminUserUpdatePasswordAction';
+import {AppUser} from './app-user';
+import {AppStorage} from '@kaltura-ng/kaltura-common';
+import {PartnerInfo} from './partner-info';
+import {UserResetPasswordAction} from 'kaltura-typescript-client/types/UserResetPasswordAction';
+import {AdminUserUpdatePasswordAction} from 'kaltura-typescript-client/types/AdminUserUpdatePasswordAction';
+import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
+import { BrowserService } from '../providers/browser.service';
+
 
 
 export enum AppAuthStatusTypes {
@@ -61,12 +64,13 @@ export class AppAuthentication {
   };
 
   constructor(private kalturaServerClient: KalturaClient,
-              private appStorage: AppStorage) {
+              private appStorage: AppStorage,
+              private browserService: BrowserService) {
     this._appUser = new AppUser();
   }
 
-  private _getLoginErrorMessage({ error }): ILoginError {
-    const { message, code } = error;
+  private _getLoginErrorMessage({error}): ILoginError {
+    const {message, code} = error;
     const custom = true;
     const errors = {
       'USER_NOT_FOUND': 'app.login.error.badCredentials',
@@ -100,7 +104,7 @@ export class AppAuthentication {
       };
     }
 
-    return { message, custom, code };
+    return {message, custom, code};
   }
 
   get currentAppEvent(): AppAuthStatusTypes {
@@ -112,12 +116,12 @@ export class AppAuthentication {
   }
 
   resetPassword(email: string): Observable<void> {
-    return this.kalturaServerClient.request(new UserResetPasswordAction({ email }));
+    return this.kalturaServerClient.request(new UserResetPasswordAction({email}));
   }
 
   updatePassword(payload: IUpdatePasswordPayload): Observable<{ email: string, password: string }> {
     return this.kalturaServerClient.request(new AdminUserUpdatePasswordAction(payload))
-      .catch(error => Observable.throw(this._getLoginErrorMessage({ error })));
+      .catch(error => Observable.throw(this._getLoginErrorMessage({error})));
   }
 
   login(loginId: string, password: string, optional: { privileges?, expiry? } = {
@@ -142,7 +146,7 @@ export class AppAuthentication {
           expiry: expiry,
           privileges: privileges
         }),
-      new UserGetByLoginIdAction({ loginId, ks: '{1:result}' }),
+      new UserGetByLoginIdAction({loginId, ks: '{1:result}'}),
       new PermissionListAction(
         {
           filter: permissionFilter,
@@ -189,11 +193,11 @@ export class AppAuthentication {
 
           this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedIn);
 
-          return { success: true, error: null };
+          return {success: true, error: null};
         }
 
         const [loginResponse] = response;
-        return { success: false, error: this._getLoginErrorMessage(loginResponse) };
+        return {success: false, error: this._getLoginErrorMessage(loginResponse)};
       }
     ));
   }
@@ -209,6 +213,7 @@ export class AppAuthentication {
     this.appStorage.removeFromSessionStorage('auth.login.ks');
 
     this._appAuthStatus.next(AppAuthStatusTypes.UserLoggedOut);
+    this.forceReload();
   }
 
   public loginAutomatically(): Observable<boolean> {
@@ -279,5 +284,35 @@ export class AppAuthentication {
         }
       }
     });
+  }
+
+  public loginByKs(requestedPartnerId: number): Observable<void> {
+    return Observable.create((observer: any) => {
+      return this.kalturaServerClient.request(new UserLoginByKsAction({requestedPartnerId}))
+        .subscribe(
+          result => {
+            const ks = result.ks;
+            this.appUser.ks = ks;
+            this.appStorage.setInSessionStorage('auth.login.ks', ks);
+            this.forceReload();
+
+            // observer next/complete not implemented by design (since we are breaking the stream by reloading the page)
+          },
+          error => {
+            observer.error(error);
+          }
+        );
+    });
+  }
+
+  // reload page
+  public reload() {
+    document.location.reload();
+  }
+
+  // Prevents the browser to verify page exit before reload
+  private forceReload() {
+    this.browserService.disablePageExitVerification();
+    this.reload();
   }
 }

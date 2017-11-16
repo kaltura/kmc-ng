@@ -6,6 +6,7 @@ import { FilterItem } from '../filter-item';
 
 export class TimeSchedulingFilter extends ValueFilter<string> {
 
+  static filterType = "TimeScheduling"; // IMPORTANT: you must have a static filterType property that is used at runtime
   private _scheduledBefore: Date;
   private _scheduledAfter: Date;
 

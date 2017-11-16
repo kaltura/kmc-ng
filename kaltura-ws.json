@@ -15,8 +15,17 @@
   "commands": {
     "bookmark": {
       "standalone": [
-        "ebf2233bbb0a4a472f89963b3ec6845bab92d3b8"
+        "ac674d16ce3a35ed45f2de95458268b5446bdd4b"
       ]
+    },
+    "release": {
+      "appConfig": {
+        "path": "./src/app-config/index.ts",
+        "key": "appVersion"
+      },
+      "changeLog": {
+        "htmlPath": "./src/app/components/changelog/changelog-content/changelog-content.component.html"
+      }
     }
   }
 }

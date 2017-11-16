@@ -1,8 +1,9 @@
-import { OnInit, Component } from '@angular/core';
-import { ConfirmationService } from 'primeng/primeng';
-import { BrowserService, AppStatus, GrowlMessage } from 'app-shared/kmc-shell/providers/browser.service';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import {Component, OnInit} from '@angular/core';
+import {ConfirmationService} from 'primeng/primeng';
+import {AppStatus, BrowserService, GrowlMessage} from 'app-shared/kmc-shell/providers/browser.service';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {AppLocalization, OperationTagManagerService} from '@kaltura-ng/kaltura-common';
+import {NavigationEnd, Router} from '@angular/router';
 
 /*
  * App Component
@@ -20,7 +21,7 @@ export class AppComponent implements OnInit {
   public _blockerMessage: AreaBlockerMessage = null;
   public _growlMessages: GrowlMessage[] = [];
 
-  constructor(private _confirmationService : ConfirmationService, private _browserService : BrowserService, private _appLocalization: AppLocalization ) {
+  constructor(private _confirmationService : ConfirmationService, private _browserService : BrowserService, private _appLocalization: AppLocalization, private router: Router, private _oprationsTagManager: OperationTagManagerService) {
 
   }
 
@@ -32,10 +33,16 @@ export class AppComponent implements OnInit {
       this._confirmationService.confirm(newMessage);
     });
 
+    // scroll window to top upon navigation change
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+          window.scrollTo(0, 0);
+        }
+      });
+
     // handle app status: busy and error messages. Allow closing error window using the 'OK' button
     this._browserService.appStatus$.subscribe(
       (status: AppStatus) => {
-        this._isBusy = status.isBusy;
         if ( status.errorMessage !== null ){
           this._blockerMessage = new AreaBlockerMessage({
             message: status.errorMessage,
@@ -48,6 +55,14 @@ export class AppComponent implements OnInit {
             }]
           });
         }
+      }
+    );
+
+    // handle app status: busy and error messages. Allow closing error window using the 'OK' button
+    this._oprationsTagManager.tagStatus$.subscribe(
+      (tags: {[key: string]: number}) => {
+        this._isBusy = tags['block-shell'] > 0;
+        console.log(status);
       }
     );
 

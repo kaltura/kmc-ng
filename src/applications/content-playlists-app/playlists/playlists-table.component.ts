@@ -27,6 +27,7 @@ import {
 	KalturaEntryStatus
 } from 'kaltura-typescript-client/types/KalturaEntryStatus';
 import { PlaylistsStore } from "./playlists-store/playlists-store.service";
+import { Filter } from './playlists-list.component';
 
 @Component({
 	selector: 'kPlaylistsTable',
@@ -50,6 +51,7 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 	}
 	@Input() filter: any = {};
 	@Input() selectedPlaylists: any[] = [];
+	@Input() activeFilters: Filter[] = [];
 	@Output() sortChanged = new EventEmitter<any>();
 	@Output() selectedPlaylistsChange = new EventEmitter<any>();
 	@Output() actionSelected = new EventEmitter<any>();
@@ -106,14 +108,6 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 	}
 
 	ngAfterViewInit() {
-		const scrollBody = this.dataTable.el.nativeElement.getElementsByClassName("ui-datatable-scrollable-body");
-		if (scrollBody && scrollBody.length > 0) {
-			scrollBody[0].onscroll = () => {
-				if (this.actionsMenu) {
-					this.actionsMenu.hide();
-				}
-			}
-		}
 		if (this._deferredLoading) {
 			// use timeout to allow the DOM to render before setting the data to the datagrid. This prevents the screen from hanging during datagrid rendering of the data.
 			setTimeout(()=> {
@@ -177,14 +171,6 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 
 	onSortChanged(event) {
 		this.sortChanged.emit(event);
-	}
-
-	scrollToTop() {
-		const scrollBodyArr = this.dataTable.el.nativeElement.getElementsByClassName("ui-datatable-scrollable-body");
-		if (scrollBodyArr && scrollBodyArr.length > 0) {
-			const scrollBody: HTMLDivElement = scrollBodyArr[0];
-			scrollBody.scrollTop = 0;
-		}
 	}
 }
 
