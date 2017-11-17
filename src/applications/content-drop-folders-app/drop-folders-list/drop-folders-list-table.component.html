@@ -1,71 +1,70 @@
-<k-area-blocker kFillHeight [showLoader]="(_dropFoldersService.state$ | async)?.loading">
-  <div class="kDropFoldersTableWrapper" kFillHeight>
-    <div class="kDropFoldersTable" [class.noResults]="!_dropFolders.length">
-      <p-dataTable #dataTable
-                   [scrollable]="true"
-                   scrollHeight="100%"
-                   dataKey="id"
-                   [emptyMessage]="(_dropFoldersService.dropFolders$ | async)?.items ? ('applications.content.table.noResults' | translate):''"
-                   [value]="_dropFolders"
-                   (selectionChange)="onSelectedDropFoldersChange.emit($event)"
-                   [(selection)]="selectedDropFolders">
-        <p-column styleClass="kSelectionColumn" selectionMode="multiple"></p-column>
-        <p-column styleClass="kFileNameColumn" field="fileName"
-                  [header]="'applications.content.dropFolders.table.fileName' | translate"
-                  [sortable]="true">
-          <ng-template let-col let-folder="rowData" pTemplate="body">
-            {{ folder[col.field] }}
-          </ng-template>
-        </p-column>
-        <p-column field="dropFolderId"
-                  [header]="'applications.content.dropFolders.table.dropFolderName' | translate"
-                  [sortable]="true">
-          <ng-template let-col let-folder="rowData" pTemplate="body">
-            {{ folder[col.field] | kFolderName:folder }}
-          </ng-template>
-        </p-column>
-        <p-column field="createdAt"
-                  [header]="'applications.content.dropFolders.table.createdOn' | translate"
-                  [sortable]="true">
-          <ng-template let-col let-folder="rowData" pTemplate="body">
-            <span [kTooltip]="dateTooltip(folder)">{{ folder[col.field] | date: 'dd/MM/yy' }}</span>
-          </ng-template>
-        </p-column>
-        <p-column field="fileSize"
-                  [header]="'applications.content.dropFolders.table.fileSize' | translate"
-                  [sortable]="true">
-          <ng-template let-col let-folder="rowData" pTemplate="body">
-            {{ folder[col.field] | kFileSize }}
-          </ng-template>
-        </p-column>
-        <p-column field="entryId"
-                  [header]="'applications.content.dropFolders.table.entryId' | translate"
-                  [sortable]="true">
-          <ng-template let-col let-folder="rowData" pTemplate="body">
-            <a (click)="isExistEntry(folder)">{{ folder[col.field] }}</a>
-          </ng-template>
-        </p-column>
-        <p-column field="status"
-                  [header]="'applications.content.dropFolders.table.status' | translate"
-                  [sortable]="true">
-          <ng-template let-col let-folder="rowData" pTemplate="body">
-            <div class="kStatusWrap">
-              <div [ngClass]="folder.status | kFolderFileStatus: true: false" class="kDropFolderStatusIcon"></div>
-              <div class="kStatusLabel" [kTooltip]="folder.status | kFolderFileStatus: false: true">
-                {{ folder[col.field] | kFolderFileStatus: false: false }}
-              </div>
+<div class="kDropFoldersTableWrapper">
+  <div class="kDropFoldersTable" [class.noResults]="!_dropFolders.length">
+    <p-dataTable #dataTable
+                 scrollable="true"
+                 scrollHeight="100%"
+                 dataKey="id"
+                 [emptyMessage]="_emptyMessage"
+                 [value]="_dropFolders"
+                 (selectionChange)="onSelectedDropFoldersChange.emit($event)"
+                 [(selection)]="selectedDropFolders"
+                 kStickyHeader [sticksTo]="'dropFoldersTags'" stickyClass="stickyHeader" [stickyId]="'dropFoldersTable'">
+      <p-column styleClass="kSelectionColumn" selectionMode="multiple"></p-column>
+      <p-column styleClass="kFileNameColumn" field="fileName"
+                [header]="'applications.content.dropFolders.table.fileName' | translate"
+                [sortable]="true">
+        <ng-template let-col let-folder="rowData" pTemplate="body">
+          {{ folder[col.field] }}
+        </ng-template>
+      </p-column>
+      <p-column field="dropFolderId"
+                [header]="'applications.content.dropFolders.table.dropFolderName' | translate"
+                [sortable]="true">
+        <ng-template let-col let-folder="rowData" pTemplate="body">
+          {{ folder[col.field] | kFolderName:folder }}
+        </ng-template>
+      </p-column>
+      <p-column field="createdAt"
+                [header]="'applications.content.dropFolders.table.createdOn' | translate"
+                [sortable]="true">
+        <ng-template let-col let-folder="rowData" pTemplate="body">
+          <span [kTooltip]="dateTooltip(folder)">{{ folder[col.field] | kDate }}</span>
+        </ng-template>
+      </p-column>
+      <p-column field="fileSize"
+                [header]="'applications.content.dropFolders.table.fileSize' | translate"
+                [sortable]="true">
+        <ng-template let-col let-folder="rowData" pTemplate="body">
+          {{ folder[col.field] | kFileSize }}
+        </ng-template>
+      </p-column>
+      <p-column field="entryId"
+                [header]="'applications.content.dropFolders.table.entryId' | translate"
+                [sortable]="true">
+        <ng-template let-col let-folder="rowData" pTemplate="body">
+          <a (click)="navigateToEntry.emit(folder.entryId)">{{ folder[col.field] }}</a>
+        </ng-template>
+      </p-column>
+      <p-column field="status"
+                [header]="'applications.content.dropFolders.table.status' | translate"
+                [sortable]="true">
+        <ng-template let-col let-folder="rowData" pTemplate="body">
+          <div class="kStatusWrap">
+            <div [ngClass]="folder.status | kFolderFileStatus: true: false" class="kDropFolderStatusIcon"></div>
+            <div class="kStatusLabel" [kTooltip]="folder.status | kFolderFileStatus: false: true">
+              {{ folder[col.field] | kFolderFileStatus: false: false }}
             </div>
-          </ng-template>
-        </p-column>
-        <p-column header="" styleClass="actionsColumn">
-          <ng-template let-col let-folder="rowData" pTemplate="body" let-i="rowIndex">
-            <div class="kDropFoldersTableActions">
-              <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, i, folder)"></button>
-            </div>
-          </ng-template>
-        </p-column>
-      </p-dataTable>
-      <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" styleClass="kActionsMenu"></p-menu>
-    </div>
+          </div>
+        </ng-template>
+      </p-column>
+      <p-column header="" styleClass="actionsColumn">
+        <ng-template let-col let-folder="rowData" pTemplate="body" let-i="rowIndex">
+          <div class="kDropFoldersTableActions">
+            <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, i, folder)"></button>
+          </div>
+        </ng-template>
+      </p-column>
+    </p-dataTable>
+    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" styleClass="kActionsMenu" kMenuCloseOnScroll></p-menu>
   </div>
-</k-area-blocker>
+</div>

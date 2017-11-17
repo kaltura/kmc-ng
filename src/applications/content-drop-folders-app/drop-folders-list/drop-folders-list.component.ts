@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { DropFoldersService } from './drop-folders.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { Router } from '@angular/router';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { environment } from 'app-environment';
@@ -12,6 +11,7 @@ import { KalturaDropFolderFile } from 'kaltura-typescript-client/types/KalturaDr
 import { FolderFileStatusPipe } from './pipes/folder-file-status.pipe';
 import { StatusesFilterComponent } from './statuses-filter/statuses-filter.component';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import * as moment from 'moment';
 
 export interface Filter {
@@ -29,10 +29,10 @@ export interface Filter {
 
 export class DropFoldersListComponent implements OnInit, OnDestroy {
   @ViewChild(DropFoldersListTableComponent) private dataTable: DropFoldersListTableComponent;
-  @ViewChild('statusFilter') private statusFilter: StatusesFilterComponent;
-  @ViewChild('statusesFilterPopup') public statusesFilterPopup: PopupWidgetComponent;
+  @ViewChild(StatusesFilterComponent) private statusFilter: StatusesFilterComponent;
+  @ViewChild(PopupWidgetComponent) public statusesFilterPopup: PopupWidgetComponent;
+  @ViewChild('tags') private tags: StickyComponent;
 
-  _isBusy = false;
   _blockerMessage: AreaBlockerMessage = null;
   _selectedDropFolders: any[] = [];
 
@@ -131,16 +131,16 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateFilters(filter: Filter, flag?: number) { // if flag == 1 we won't push filter to activeFilters
+  updateFilters(filter: Filter, updateActiveFilters?: boolean) { // if updateActiveFilters === true we won't push filter to activeFilters
     if(!filter.label) {
-      flag = 1;
+      updateActiveFilters = true;
     }
     this.activeFilters.forEach((el, index, arr) => {
       if(el.type == filter.type) {
         arr.splice(index, 1);
       }
     });
-    if(!flag) {
+    if(!updateActiveFilters) {
       this.activeFilters.push(filter);
     }
   }
@@ -159,7 +159,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   }
 
   removeTag(tag: Filter): void {
-    this.updateFilters(tag, 1);
+    this.updateFilters(tag, true);
     if(tag.type === 'freeText') {
       this._filter.fileNameLike = null;
     }
@@ -177,7 +177,6 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
         arr.splice(index, 1);
       }
     });
-    this.statusFilter.removeFilter(tag.type);
     this._dropFoldersService.reload({
       freeText: this._filter.fileNameLike,
       createdBefore: this._filter.createdBefore,
@@ -191,21 +190,17 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
     this._selectedDropFolders = event;
   }
 
-  goToEntry(entryId: KalturaMediaEntry): void {
-    this._router.navigate(['/content/entries/entry', entryId]);
-  }
-
-  checkIfEntryExist(event): void {
-    this._isBusy = true;
-    this._dropFoldersService._isEntryExist(event.entryId)
+  doNavigateToEntry(entryId: string): void {
+    this._dropFoldersService._isEntryExist(entryId)
       .cancelOnDestroy(this)
+      .tag('block-shell')
       .subscribe(
-        () => {
-          this._isBusy = false;
-          this.goToEntry(event.entryId);
+        response => {
+          if(response) {
+            this._router.navigate(['/content/entries/entry', entryId]);
+          }
         },
         error => {
-          this._isBusy = false;
           this._browserService.alert({
             message: error.message
           })
@@ -226,13 +221,12 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   }
 
   private deleteDropFiles(ids:number[]): void {
-    this._isBusy = false;
     const execute = () => {
       this._bulkDeleteService.deleteDropFiles(ids)
         .cancelOnDestroy(this)
+        .tag('block-shell')
         .subscribe(
           () => {
-            this._isBusy = false;
             this._dropFoldersService.reload(true);
             this._clearSelection();
           },
@@ -243,7 +237,6 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
                 label: this._appLocalization.get('app.common.ok'),
                 action: () => {
                   this._blockerMessage = null;
-                  this._isBusy = false;
                 }
               }]
             });
@@ -251,7 +244,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
         );
     };
 
-    if(ids.length > environment.modules.contentEntries.bulkActionsLimit) {
+    if(ids.length > environment.modules.dropFolders.bulkActionsLimit) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.bulkActions.note'),
@@ -331,6 +324,10 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
     this.statusesFilterPopup.close();
   }
 
+  onTagsChange(event){
+    this.tags.updateLayout();
+  }
+
   ngOnInit() {
     this._dropFoldersService.query$
       .cancelOnDestroy(this)
@@ -344,8 +341,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
           this._filter.statuses = query.statuses;
 
           this.syncFilters(query);
-
-          this.dataTable.scrollToTop();
+          this._browserService.scrollToTop();
         }
       );
 
@@ -353,7 +349,6 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         response => {
-          this._isBusy = false;
           if (response.errorMessage) {
             this._blockerMessage = new AreaBlockerMessage({
               message: response.errorMessage,
@@ -366,7 +361,6 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
             });
           } else {
             this._blockerMessage = null;
-            this._isBusy = false;
           }
         },
         error => {

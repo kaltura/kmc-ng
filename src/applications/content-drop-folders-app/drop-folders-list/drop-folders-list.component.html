@@ -1,58 +1,66 @@
-<k-area-blocker [showLoader]="(_bulkDeleteService.stateDelete$ | async)?.loading || _isBusy" [message]="_blockerMessage">
+<k-area-blocker [message]="_blockerMessage">
   <div class="kDropFolders kOverrideFAIcons">
     <div #dropFoldersTableHolder class="kDropFoldersHolder kContent">
-      <div class="kDropFoldersTableFilters">
-        <span class="kSelectedDropFoldersNum" *ngIf="(_dropFoldersService.dropFolders$ | async)?.totalCount">
-          {{ (_dropFoldersService.dropFolders$ | async)?.totalCount }} {{ 'applications.content.uploadControl.files' | translate }}
-        </span>
+      <kSticky stickyId="dropFolderFilters" [scrollOffset]="80" [sticksTo]="'header'" >
+        <div class="kDropFoldersTableFilters kContent">
+          <span class="kSelectedDropFoldersNum" *ngIf="(_dropFoldersService.dropFolders$ | async)?.totalCount">
+            {{ (_dropFoldersService.dropFolders$ | async)?.totalCount }} {{ 'applications.content.uploadControl.files' | translate }}
+          </span>
 
-        <div [class.kHidden]="!_selectedDropFolders.length" class="kBulkOperations">
-          <span class="kSelectedDropFoldersLabel">• {{_selectedDropFolders.length}} {{'applications.content.uploadControl.selected' | translate}}</span>
-          <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_bulkDelete(_selectedDropFolders)"></button>
-          <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.uploadControl.cancel' | translate}}</a>
-        </div>
-        <div [class.kHidden]="_selectedDropFolders.length" class="kFilters">
-          <input type="text" pInputText class="kSearchInput"
-                 [(ngModel)]="_filter.fileNameLike"
-                 (keyup.enter)="onFreetextChanged()"
-                 placeholder="{{'applications.content.dropFolders.search' | translate}}">
-          <div #statusesFilterBtn class="kStatusesFilter">
-            <i class="kIconfilter"></i>
-            <span>{{'applications.content.dropFolders.allStatuses' | translate}}</span>
-            <i class="kIcondropdown_arrow_bottom dropdown"></i>
+          <div [class.kHidden]="!_selectedDropFolders.length" class="kBulkOperations">
+            <span class="kSelectedDropFoldersLabel">• {{_selectedDropFolders.length}} {{'applications.content.uploadControl.selected' | translate}}</span>
+            <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_bulkDelete(_selectedDropFolders)"></button>
+            <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.uploadControl.cancel' | translate}}</a>
           </div>
+          <div [class.kHidden]="_selectedDropFolders.length" class="kFilters">
+            <input type="text" pInputText class="kSearchInput"
+                   [(ngModel)]="_filter.fileNameLike"
+                   (keyup.enter)="onFreetextChanged()"
+                   placeholder="{{'applications.content.dropFolders.search' | translate}}">
+            <div #statusesFilterBtn class="kStatusesFilter">
+              <i class="kIconfilter"></i>
+              <span>{{'applications.content.dropFolders.allStatuses' | translate}}</span>
+              <i class="kIcondropdown_arrow_bottom dropdown"></i>
+            </div>
+          </div>
+          <button pButton
+                  class="kButtonDefault kRefreshBtn small"
+                  type="text"
+                  (click)="_reload()"
+                  icon="kIconrefresh"
+                  [kTooltip]="'applications.content.dropFolders.refresh' | translate"></button>
         </div>
-        <button pButton
-                class="kButtonDefault kRefreshBtn small"
-                type="text"
-                (click)="_reload()"
-                icon="kIconrefresh"
-                [kTooltip]="'applications.content.dropFolders.refresh' | translate"></button>
-      </div>
+      </kSticky>
 
-      <kTags
-        [title]="'applications.content.filters.activeFilters' | translate"
-        [data]="activeFilters"
-        [labelField]="'label'"
-        [tooltipField]="'tooltip'"
-        (onRemoveAll)="removeAllTags()">
-        <ng-template let-item="item">
-          <div class="kTagContent" [kTooltip]="item.tooltip">
-            <span class="kTagLabel">{{item.label}}</span>
-            <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
-          </div>
-        </ng-template>
-      </kTags>
+      <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="dropFoldersTags" [sticksTo]="'dropFolderFilters'">
+        <div class="kContent">
+          <kTags
+            [title]="'applications.content.filters.activeFilters' | translate"
+            [data]="activeFilters"
+            [labelField]="'label'"
+            [tooltipField]="'tooltip'"
+            (onTagRemove)="removeTag($event)"
+            (onRemoveAll)="removeAllTags()"
+            (onTagsChange)="onTagsChange($event)">
+            <ng-template let-item="item">
+              <div class="kTagContent" [kTooltip]="item.tooltip">
+                <span class="kTagLabel">{{item.label}}</span>
+                <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
+              </div>
+            </ng-template>
+          </kTags>
+        </div>
+      </kSticky>
 
       <kDropFoldersListTable
         class="kDropFoldersTable"
         [dropFolders]="(_dropFoldersService.dropFolders$ | async)?.items"
-        (isEntryExist)="checkIfEntryExist($event)"
+        (navigateToEntry)="doNavigateToEntry($event)"
         (deleteDropFolderFiles)="deleteDropFolderFiles($event)"
         (onSelectedDropFoldersChange)="_selectedDropFoldersChange($event)"
         [selectedDropFolders]="_selectedDropFolders"></kDropFoldersListTable>
 
-      <div class="kDropFoldersTableFooter" #footer *ngIf="(_dropFoldersService.dropFolders$ | async)?.totalCount">
+      <div class="kDropFoldersTableFooter kContent" #footer *ngIf="(_dropFoldersService.dropFolders$ | async)?.totalCount">
         <p-paginator
           [rows]="_filter.pageSize"
           [first]="_filter.pageIndex * _filter.pageSize"
@@ -66,15 +74,13 @@
 </k-area-blocker>
 
 <!-- popup widgets section -->
-<kPopupWidget #statusesFilterPopup
-              [appendTo]="dropFoldersTableHolder"
+<kPopupWidget [appendTo]="dropFoldersTableHolder"
               [popupWidth]="400"
               [popupHeight]="400"
               [closeBtn]="false"
               [targetRef]="statusesFilterBtn"
               [targetOffset]="{'x':-160, 'y': -15}"
               kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'statusesFilterPopup'" [scrollOffset]="80">
-
   <div class="kOverrideFAIcons kRefineFilters">
     <div class="kTreeContainer">
       <kDatesFilters
@@ -83,7 +89,6 @@
         [_createdBefore]="_filter.createdBefore"></kDatesFilters>
 
       <kStatusesFilter
-        #statusFilter
         (onNodeSelect)="_onTreeNodeSelected($event)"
         (onNodeUnselect)="_onTreeNodeUnselected($event)">
       </kStatusesFilter>

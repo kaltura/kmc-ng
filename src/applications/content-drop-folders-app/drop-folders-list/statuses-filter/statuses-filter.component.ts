@@ -23,14 +23,6 @@ export class StatusesFilterComponent implements OnInit, AfterViewInit, OnDestroy
     this.selectedStatuses = [];
   }
 
-  removeFilter(id: string) {
-    this.selectedStatuses.forEach((status, index, arr) => {
-      if(status.data === id) {
-        arr.splice(index, 1);
-      }
-    });
-  }
-
   ngOnInit() {
     this.statuses = [{
       "label": this._appLocalization.get("applications.content.dropFolders.allStatuses"),

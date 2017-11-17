@@ -1,17 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { environment } from 'app-environment';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { DropFoldersService } from 'applications/content-drop-folders-app/drop-folders-list/drop-folders.service';
 import { DropFolderFileDeleteAction } from 'kaltura-typescript-client/types/DropFolderFileDeleteAction';
 import { KalturaMultiRequest, KalturaMultiResponse, KalturaRequest } from 'kaltura-typescript-client';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 @Injectable()
-export class BulkDeleteService {
-  private _stateDelete = new BehaviorSubject<{loading : boolean}>({ loading : false});
-  public stateDelete$ = this._stateDelete.asObservable();
-
+export class BulkDeleteService implements OnDestroy {
   constructor(
     public _dropFoldersService: DropFoldersService,
     public _kalturaServerClient: KalturaClient
@@ -19,24 +16,23 @@ export class BulkDeleteService {
 
   public deleteDropFiles(ids: number[]): Observable<void>{
     return Observable.create(observer =>{
-      this._stateDelete.next({loading: true});
       let requests: DropFolderFileDeleteAction[] = [];
       if(ids && ids.length > 0) {
         ids.forEach(id => requests.push(new DropFolderFileDeleteAction({ dropFolderFileId: id })));
 
-        this._transmit(requests, true).subscribe(
+        this._transmit(requests, true)
+          .cancelOnDestroy(this)
+          .tag('block-shell')
+          .subscribe(
           () => {
-            this._stateDelete.next({loading: false});
             observer.next({});
             observer.complete();
           },
           error => {
-            this._stateDelete.next({loading: false});
             observer.error(error);
           }
         );
       } else {
-        this._stateDelete.next({loading: false});
         observer.next({});
         observer.complete();
       }
@@ -76,4 +72,6 @@ export class BulkDeleteService {
         }
       });
   }
+
+  ngOnDestroy() {}
 }

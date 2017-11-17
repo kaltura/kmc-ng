@@ -175,7 +175,7 @@ export const environment = {
         },
         "dropFolders" : {
           "createdAtDateRange" : "2005:2030",
-          "bulkActionsLimit": 2
+          "bulkActionsLimit": 50
         }
     },
     "entriesShared": {

@@ -21,6 +21,7 @@ import { KalturaDropFolderFile } from 'kaltura-typescript-client/types/KalturaDr
 import { BaseEntryGetAction } from 'kaltura-typescript-client/types/BaseEntryGetAction';
 import { Observable } from 'rxjs/Observable';
 import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 export interface QueryData {
 	pageIndex: number,
@@ -37,7 +38,7 @@ export class DropFoldersService implements OnDestroy {
 		items: [],
 		totalCount: 0
 	});
-	private _state = new BehaviorSubject<{ loading: boolean, errorMessage?: string }>({loading: false});
+	private _state = new BehaviorSubject<{ errorMessage?: string }>({});
 	private _query = new BehaviorSubject<QueryData>({
 		pageIndex: 1,
 		pageSize: 50,
@@ -98,8 +99,6 @@ export class DropFoldersService implements OnDestroy {
 	}
 
 	private _loadDropFoldersList(): void {
-		this._state.next({loading: true});
-
 		this._kalturaServerClient.request(
 			new DropFolderListAction(
 				{
@@ -146,7 +145,6 @@ export class DropFoldersService implements OnDestroy {
 							this.loadDropFoldersFiles();
 						}
 					}
-          this._state.next({loading: false});
 				},
 				error => {
 					this._browserService.alert(
@@ -154,14 +152,11 @@ export class DropFoldersService implements OnDestroy {
 							message: error.message
 						}
 					);
-					this._state.next({loading: false});
 				}
 			);
 	}
 
 	loadDropFoldersFiles(): void {
-		this._state.next({loading: true});
-
 		let folderIds: String = '';
 		this.ar.forEach(kdf => {
 			folderIds += kdf.id + ",";
@@ -194,13 +189,13 @@ export class DropFoldersService implements OnDestroy {
 			)
 		)
 			.cancelOnDestroy(this)
+      .tag('block-shell')
 			.subscribe(
 				response => {
-					this._state.next({loading: false});
 					this._dropFolders.next({items: response.objects, totalCount: response.totalCount})
 				},
 				error => {
-					this._state.next({loading: false, errorMessage: error.message});
+					this._state.next({errorMessage: error.message});
 				}
 			);
 	}
@@ -216,8 +211,8 @@ export class DropFoldersService implements OnDestroy {
 			)
 				.cancelOnDestroy(this)
 				.subscribe(
-					() => {
-						observer.next();
+					response => {
+						observer.next(response);
 						observer.complete();
 					},
 					error => {
