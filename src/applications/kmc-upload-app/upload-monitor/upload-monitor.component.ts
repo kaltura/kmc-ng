@@ -27,8 +27,9 @@ export class UploadMonitorComponent implements OnDestroy {
     errors: 0,
   };
 
-  constructor(private _uploadManagement: UploadManagement) {
+  constructor(private _uploadManagement: UploadManagement, private _serverPolls: KalturaServerPolls) {
     this._monitorNewEntryUploadFilesChanges();
+    this._monitorBulkUploadChanges();
   }
 
   ngOnDestroy() {
@@ -104,6 +105,10 @@ export class UploadMonitorComponent implements OnDestroy {
           }
         }
       );
+  }
+
+  private _monitorBulkUploadChanges(): void {
+
   }
 }
 

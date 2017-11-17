@@ -120,7 +120,8 @@ export function clientConfigurationFactory() {
     TranscodingProfileManagementModule.forRoot(),
     RadioButtonModule,
     StickyModule.forRoot(),
-    OperationTagModule.forRoot()
+    OperationTagModule.forRoot(),
+    KalturaServerPollsModule
   ],
   declarations: <any>[
     AppComponent,
