@@ -1,6 +1,9 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { RequestFactory, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryUploadFile } from 'app-shared/kmc-shell';
+import { KalturaServerPolls } from '@kaltura-ng/kaltura-server-utils/server-polls';
+import { BaseEntryListAction } from 'kaltura-typescript-client/types/BaseEntryListAction';
+import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
 
 interface UploadMonitorStatuses {
   uploading: number;
@@ -108,7 +111,34 @@ export class UploadMonitorComponent implements OnDestroy {
   }
 
   private _monitorBulkUploadChanges(): void {
+    this._serverPolls.register(30, new BulkLogUploadChanges())
+      .subscribe(res => {
+        console.warn('A');
+      });
 
+    this._test = this._serverPolls.register(10, new BulkLogUploadChanges())
+      .subscribe(res => {
+        console.warn('B');
+      });
+
+    this._serverPolls.register(10, new BulkLogUploadChanges())
+      .subscribe(res => {
+        console.warn('C');
+      });
+  }
+
+  _test;
+
+  test() {
+    if (this._test) {
+      this._test.unsubscribe();
+    }
   }
 }
 
+
+export class BulkLogUploadChanges implements RequestFactory<BaseEntryListAction> {
+  create(): BaseEntryListAction {
+    return new BaseEntryListAction({ pager: new KalturaFilterPager({ pageSize: 5 }) });
+  }
+}

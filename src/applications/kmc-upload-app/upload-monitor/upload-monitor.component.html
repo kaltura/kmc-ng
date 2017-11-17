@@ -1,7 +1,8 @@
 <i #openuploadmonitor
    class="kIconfolder_large kUploadMonitorToggler"
    [class.upToDate]="_upToDate"
-   [class.open]="_menuOpened">
+   [class.open]="_menuOpened"
+(click)="test()">
   <i *ngIf="!_upToDate" class="kIconrefresh_small"></i>
 </i>
 
