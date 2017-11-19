@@ -4,11 +4,11 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 
 @Component({
-  selector: 'kCategoryPreview',
-  templateUrl: './category-preview.component.html',
-  styleUrls: ['./category-preview.component.scss']
+  selector: 'kCategoryDetails',
+  templateUrl: './category-details.component.html',
+  styleUrls: ['./category-details.component.scss']
 })
-export class CategoryPreviewComponent implements OnInit, OnDestroy {
+export class CategoryDetailsComponent implements OnInit, OnDestroy {
   public _currentCategory: KalturaCategory;
 
   constructor(private _categoryStore: CategoryService,

@@ -1,25 +1,28 @@
-import { MetadataAddAction } from 'kaltura-typescript-client/types/MetadataAddAction';
-import { MetadataUpdateAction } from 'kaltura-typescript-client/types/MetadataUpdateAction';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaTagFilter } from 'kaltura-typescript-client/types/KalturaTagFilter';
-import { TagSearchAction } from 'kaltura-typescript-client/types/TagSearchAction';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { KalturaTaggedObjectType } from 'kaltura-typescript-client/types/KalturaTaggedObjectType';
-import { MetadataListAction } from 'kaltura-typescript-client/types/MetadataListAction';
-import { KalturaMetadataObjectType } from 'kaltura-typescript-client/types/KalturaMetadataObjectType';
-import { KalturaCategoryFilter } from 'kaltura-typescript-client/types/KalturaCategoryFilter';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
-import { KalturaMetadataFilter } from 'kaltura-typescript-client/types/KalturaMetadataFilter';
-import { KalturaMetadata } from 'kaltura-typescript-client/types/KalturaMetadata';
-import { CategoryListAction } from 'kaltura-typescript-client/types/CategoryListAction';
-import { Observable } from 'rxjs/Observable';
-import { DynamicMetadataForm, MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, DynamicMetadataFormFactory } from '@kaltura-ng/kaltura-server-utils';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { CategoryWidgetKeys } from './../category-widget-keys';
-import { Injectable, OnDestroy } from '@angular/core';
-import { CategoryWidget } from "../category-widget";
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
+import {MetadataAddAction} from 'kaltura-typescript-client/types/MetadataAddAction';
+import {MetadataUpdateAction} from 'kaltura-typescript-client/types/MetadataUpdateAction';
+import {KalturaTagFilter} from 'kaltura-typescript-client/types/KalturaTagFilter';
+import {TagSearchAction} from 'kaltura-typescript-client/types/TagSearchAction';
+import {KalturaFilterPager} from 'kaltura-typescript-client/types/KalturaFilterPager';
+import {KalturaTaggedObjectType} from 'kaltura-typescript-client/types/KalturaTaggedObjectType';
+import {MetadataListAction} from 'kaltura-typescript-client/types/MetadataListAction';
+import {KalturaMetadataObjectType} from 'kaltura-typescript-client/types/KalturaMetadataObjectType';
+import {KalturaClient} from '@kaltura-ng/kaltura-client';
+import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {KalturaMetadataFilter} from 'kaltura-typescript-client/types/KalturaMetadataFilter';
+import {KalturaMetadata} from 'kaltura-typescript-client/types/KalturaMetadata';
+import {Observable} from 'rxjs/Observable';
+import {
+  DynamicMetadataForm,
+  DynamicMetadataFormFactory,
+  MetadataProfileCreateModes,
+  MetadataProfileStore,
+  MetadataProfileTypes
+} from '@kaltura-ng/kaltura-server-utils';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {CategoryWidgetKeys} from './../category-widget-keys';
+import {Injectable, OnDestroy} from '@angular/core';
+import {CategoryWidget} from '../category-widget';
+import {KalturaMultiRequest} from 'kaltura-typescript-client';
 
 @Injectable()
 export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy {
@@ -105,7 +108,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             .map(responses => {
                 super._hideLoader();
 
-                let hasFailure = (<Array<{ failed: boolean, error?: Error }>>responses).reduce((result, response) => result || response.failed, false);;
+                const hasFailure = (<Array<{ failed: boolean, error?: Error }>>responses).reduce((result, response) => result || response.failed, false); ;
 
                 if (hasFailure) {
                     super._showActivationError();
@@ -127,10 +130,10 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
     private _syncHandlerContent() {
 
         // validate reference ID
-        let referenceId: string = '';
+        let referenceId = '';
         if (!this.data.referenceId &&
-            this.data.referenceId != "" &&
-            this.data.referenceId != "__null_string__") {
+            this.data.referenceId != '' &&
+            this.data.referenceId != '__null_string__') {
             referenceId = this.data.referenceId;
         }
 
@@ -274,7 +277,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
                     );
 
                 return () => {
-                    console.log("categoryMetadataHandler.searchTags(): cancelled");
+                    console.log('categoryMetadataHandler.searchTags(): cancelled');
                     requestSubscription.unsubscribe();
                 }
             });

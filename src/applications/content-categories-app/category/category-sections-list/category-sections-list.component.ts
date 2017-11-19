@@ -1,7 +1,7 @@
-import { ISubscription } from 'rxjs/Subscription';
-import { Component, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
-import { CategoryService } from '../category.service';
-import { SectionWidgetItem, CategorySectionsListWidget } from './category-sections-list-widget.service';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {CategoryService} from '../category.service';
+import {CategorySectionsListWidget, SectionWidgetItem} from './category-sections-list-widget.service';
+import {StickyComponent} from '@kaltura-ng/kaltura-ui';
 
 
 @Component({
@@ -10,6 +10,8 @@ import { SectionWidgetItem, CategorySectionsListWidget } from './category-sectio
   styleUrls: ['./category-sections-list.component.scss']
 })
 export class CategorySectionsListComponent implements AfterViewInit, OnInit, OnDestroy {
+
+  @ViewChild('categorySections') private categorySections: StickyComponent;
 
   public _loading = false;
   public _showList = false;
@@ -34,6 +36,7 @@ export class CategorySectionsListComponent implements AfterViewInit, OnInit, OnD
         this._loading = false;
         this._sections = sections;
         this._showList = sections && sections.length > 0;
+        this.categorySections.updateLayout();
       }
       );
   }

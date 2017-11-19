@@ -10,10 +10,10 @@ import {
   ViewChild
 } from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
-import {DataTable, Menu, MenuItem} from 'primeng/primeng';
+import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell';
+import {BrowserService} from 'app-shared/kmc-shell';
 import {CategoriesService} from '../categories.service';
 import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 
@@ -33,8 +33,8 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   @Input()
   set categories(data: any[]) {
     if (!this._deferredLoading) {
-      // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of entries
-      // (ie when returning from entry page) - we should force detect changes on an empty list
+      // the table uses 'rowTrackBy' to track changes by id. To be able to reflect changes of categories
+      // (ie when returning from category page) - we should force detect changes on an empty list
       this._categories = [];
       this.cdRef.detectChanges();
       this._categories = data;
