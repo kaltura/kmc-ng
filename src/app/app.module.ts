@@ -6,7 +6,7 @@ import {HttpModule} from '@angular/http';
 import {CommonModule} from '@angular/common';
 import {Ng2Webstorage} from 'ng2-webstorage';
 import { TranslateModule } from 'ng2-translate/ng2-translate';
-
+import { KalturaLogger } from '@kaltura-ng/kaltura-log';
 
 import {
   AppBootstrap,
@@ -70,13 +70,18 @@ import { InvalidLoginHashFormComponent } from './components/login/invalid-login-
 import { AppMenuContentComponent } from './components/app-menu/app-menu-content.component';
 import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-app.module';
 import { TranscodingProfileManagementModule } from '@kaltura-ng/kaltura-server-utils/transcoding-profile-management';
-import { ChangeAccountComponent } from './components/changeAccount/change-account.component';import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
+import { ChangeAccountComponent } from './components/changeAccount/change-account.component';
+import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
 import { AppEventsModule } from 'app-shared/kmc-shared';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
+export function createAppLogger()
+{
+    return KalturaLogger.createFactory('kmc');
+}
 
 export function clientConfigurationFactory() {
   const result = new KalturaClientConfiguration();
@@ -84,7 +89,6 @@ export function clientConfigurationFactory() {
   result.clientTag = 'KMCng';
   return result;
 }
-
 @NgModule({
   imports: <any>[
     AuthModule,
@@ -144,6 +148,7 @@ export function clientConfigurationFactory() {
   exports: [],
   providers: <any>[
     ...partnerProviders,
+      createAppLogger(),
     AppMenuService,
     {
       provide: BootstrapAdapterToken,

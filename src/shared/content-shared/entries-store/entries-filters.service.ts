@@ -3,13 +3,14 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { KalturaSearchOperator } from 'kaltura-typescript-client/types/KalturaSearchOperator';
 import { KalturaMediaEntryFilter } from 'kaltura-typescript-client/types/KalturaMediaEntryFilter';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
+import { KalturaLogger } from '@kaltura-ng/kaltura-log';
 
 export interface EntriesFilters
 {
     freetext? : string,
     createdAt? : {
-        createdAtBefore: Date,
-        createdAtAfter: Date
+        createdBefore: Date,
+        createdAfter: Date
     },
     mediaTypes : { [value: string] : string }
 }
@@ -58,6 +59,17 @@ export class EntriesFiltersService {
     });
     public filters$ = this._filters.asObservable();
 
+    constructor(private _logger: KalturaLogger)
+    {
+
+    }
+
+
+    public get filters(): EntriesFilters {
+        return this._filters.getValue();
+    }
+
+
     private _update(filters : Partial<EntriesFilters>) : void{
         const newFilters = Object.assign({}, this._filters.getValue(), filters);
 
@@ -66,26 +78,34 @@ export class EntriesFiltersService {
     }
 
     public setFreeText(freetext: string) : void{
+        this._logger.info('set free text', { freetext });
         this._update({
             freetext
         });
     }
 
-    public setCreatedAtAfter(createdAtAfter : Date | null) : void{
-        const currentCreatedAtValue = this._filters.getValue().createdAt;
+    public setCreatedAt({createdAfter, createdBefore} : {createdAfter?: Date | null, createdBefore?: Date | null}) : void {
+        const {createdAfter : currentCreatedAfter, createdBefore: currentCreatedBefore} = this._filters.getValue().createdAt || { createdAfter: null, createdBefore: null};
+        createdAfter = createdAfter ? KalturaUtils.getStartDateValue(createdAfter) : typeof createdAfter === 'undefined' ? currentCreatedAfter : null;
+        createdBefore = createdBefore ? KalturaUtils.getStartDateValue(createdBefore) : typeof createdBefore === 'undefined' ? currentCreatedBefore : null;
 
-        this._update({
-            createdAt : {
-                createdAtBefore : currentCreatedAtValue ? currentCreatedAtValue.createdAtBefore : null,
-                createdAtAfter
-            }
-        });
+        this._logger.info('set created at', { createdAfter, createdBefore });
+        if (currentCreatedAfter !== createdAfter || currentCreatedBefore !== createdBefore) {
+            this._update({
+                createdAt: {
+                    createdBefore,
+                    createdAfter
+                }
+            });
+        }else {
+            this._logger.info('query already contains the requested value. update request was ignored');
+        }
     }
 
     public addMediaTypes(...mediaTypes : { label : string, value : string }[]) : void{
         const filters = this._filters.getValue();
         let newMediaTypes = null;
-
+    
         mediaTypes.forEach(({label, value}) =>
         {
             if (typeof value !== 'undefined' && value !== null) {
@@ -100,6 +120,9 @@ export class EntriesFiltersService {
 
         if (newMediaTypes)
         {
+            // TODO sakal - use lazy logging and change info to debug
+            this._logger.info('add media types', {mediaTypes});
+
             filters.mediaTypes = newMediaTypes;
             this._filters.next(filters);
         }
@@ -122,25 +145,21 @@ export class EntriesFiltersService {
 
         if (newMediaTypes)
         {
+            // TODO sakal - use lazy logging
+            this._logger.info('remove media types', {mediaTypeValues});
+            
             filters.mediaTypes = newMediaTypes;
             this._filters.next(filters);
         }
     }
 
-    public setCreatedAtBefore(createdAtBefore : Date | null) : void{
-        const currentCreatedAtValue = this._filters.getValue().createdAt;
 
-        this._update({
-            createdAt : {
-                createdAtBefore,
-                createdAtAfter : currentCreatedAtValue ? currentCreatedAtValue.createdAtAfter : null
-            }
-        })
-    }
 
     public assignFiltersToRequest(request : { filter: KalturaMediaEntryFilter,
                                advancedSearch: KalturaSearchOperator }) : void{
         const filters = this._filters.getValue();
+
+        this._logger.info('assign filters to request', { filters});
 
         if (filters.freetext)
         {
@@ -148,12 +167,12 @@ export class EntriesFiltersService {
         }
 
         if (filters.createdAt ) {
-            if (filters.createdAt.createdAtAfter) {
-                request.filter.createdAtGreaterThanOrEqual = KalturaUtils.getStartDateValue(filters.createdAt.createdAtAfter);
+            if (filters.createdAt.createdAfter) {
+                request.filter.createdAtGreaterThanOrEqual = KalturaUtils.getStartDateValue(filters.createdAt.createdAfter);
             }
 
-            if (filters.createdAt.createdAtBefore) {
-                request.filter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(filters.createdAt.createdAtBefore);
+            if (filters.createdAt.createdBefore) {
+                request.filter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(filters.createdAt.createdBefore);
             }
         }
 

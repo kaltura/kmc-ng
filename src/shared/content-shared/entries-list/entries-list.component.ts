@@ -9,7 +9,7 @@ import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/e
 import { EntriesFilters, EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Router } from '@angular/router';
-
+import * as moment from 'moment';
 
 // TODO sakal remove
 function mapFromArray(array, prop) {
@@ -62,7 +62,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   @ViewChild('tags') private tags: StickyComponent;
 
   @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
-  public _filterTags : { type : string, value : string, label : string, tooltip : {token : string, args?: any[]}}[] = [];
+  public _filterTags : { type : string, value? : string, label : string, tooltip : {token : string, args?: any[]}}[] = [];
   private _handledFiltersInTags : EntriesFilters = null;
 
     private querySubscription: ISubscription;
@@ -93,6 +93,9 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         case "freetext":
           this._entriesFilters.setFreeText(null);
           break;
+        case "createdAt":
+            this._entriesFilters.setCreatedAt({ createdAfter: null, createdBefore: null});
+            break;
     }
   }
 
@@ -168,41 +171,63 @@ export class EntriesListComponent implements OnInit, OnDestroy {
       const previousFilters = this._handledFiltersInTags;
       const existingFilterTags = [...this._filterTags];
 
-      if ((!previousFilters || previousFilters.freetext !== filters.freetext))
+      if ((!previousFilters || previousFilters.createdAt !== filters.createdAt))
       {
           existingFilterTags.splice(
-              existingFilterTags.findIndex(item => item.value === filters.freetext),
+              existingFilterTags.findIndex(item => item.type === 'createdAt'),
               1);
 
-        if (filters.freetext)
+        if (filters.createdAt)
         {
-            existingFilterTags.push({ type : 'freetext', value : filters.freetext, label : filters.freetext, tooltip : {token: `applications.content.filters.freeText`}});
+            const { createdAfter, createdBefore } = filters.createdAt;
+            let tooltip = '';
+            if (createdAfter && createdBefore) {
+                tooltip = `${moment(createdAfter).format('LL')} - ${moment(createdBefore).format('LL')}`;
+            } else if (createdAfter) {
+                tooltip = `From ${moment(createdAfter).format('LL')}`;
+            } else if (createdBefore) {
+                tooltip = `Until ${moment(createdBefore).format('LL')}`;
+            }
+            // TODO sakal fix tooltip as token
+            existingFilterTags.push({ type : 'createdAt', label : 'Dates' , tooltip : {token: tooltip}});
         }
       }
 
-      if (!previousFilters || previousFilters.mediaTypes !== filters.mediaTypes) {
-          const existingMediaTypes = existingFilterTags.filter(filter => filter.type === 'mediaType');
-          const newMediaTypes = Object.entries(filters.mediaTypes).map(([value, label]) =>
-              ({
-              type: 'mediaType',
-              value: value,
-              label,
-              tooltip : { token: 'tooltip' }
+      if ((!previousFilters || previousFilters.freetext !== filters.freetext))
+      {
+          existingFilterTags.splice(
+              existingFilterTags.findIndex(item => item.type === 'freetext'),
+              1);
 
-          }));
-
-          const delta = getDelta(existingMediaTypes,newMediaTypes, 'value', (a,b) => a.value === b.value);
-
-          existingFilterTags.push(...delta.added);
-
-          delta.deleted.forEach(removedMediaType =>
+          if (filters.freetext)
           {
-              existingFilterTags.splice(
-                  existingFilterTags.findIndex(item => item.value === removedMediaType.value),
-                  1);
-
-          });
+              existingFilterTags.push({ type : 'freetext', value : filters.freetext, label : filters.freetext, tooltip : {token: `applications.content.filters.freeText`}});
+          }
       }
+
+      // if (!previousFilters || previousFilters.mediaTypes !== filters.mediaTypes) {
+      //     const existingMediaTypes = existingFilterTags.filter(filter => filter.type === 'mediaType');
+      //     const newMediaTypes = Object.entries(filters.mediaTypes).map(([value, label]) =>
+      //         ({
+      //         type: 'mediaType',
+      //         value: value,
+      //         label,
+      //         tooltip : { token: 'tooltip' }
+      //
+      //     }));
+      //
+      //     const delta = getDelta(existingMediaTypes,newMediaTypes, 'value', (a,b) => a.value === b.value);
+      //
+      //     existingFilterTags.push(...delta.added);
+      //
+      //     delta.deleted.forEach(removedMediaType =>
+      //     {
+      //         existingFilterTags.splice(
+      //             existingFilterTags.findIndex(item => item.value === removedMediaType.value),
+      //             1);
+      //
+      //     });
+      // }
 
       this._handledFiltersInTags = filters;
       this._filterTags = existingFilterTags;
@@ -226,7 +251,12 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     this.selectedEntries = event;
   }
 
-  onBulkChange(event): void {
+    onTagsChange(event){
+        this.tags.updateLayout();
+    }
+
+
+    onBulkChange(event): void {
     if (event.reload === true) {
       this._reload();
     }

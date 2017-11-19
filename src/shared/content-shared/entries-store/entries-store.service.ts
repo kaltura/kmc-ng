@@ -33,6 +33,8 @@ import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaL
 import { KalturaExternalMediaEntry } from 'kaltura-typescript-client/types/KalturaExternalMediaEntry';
 import { EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
 import { environment } from 'app-environment';
+import { KalturaLogger } from '@kaltura-ng/kaltura-log';
+
 
 export type UpdateStatus = {
   loading: boolean;
@@ -134,7 +136,8 @@ export class EntriesStore implements OnDestroy {
   constructor(private kalturaServerClient: KalturaClient,
               private browserService: BrowserService,
               @Host() private _entriesFilters : EntriesFiltersService,
-              private metadataProfileService: MetadataProfileStore) {
+              private metadataProfileService: MetadataProfileStore,
+              private _logger: KalturaLogger) {
     const defaultPageSize = this.browserService.getFromLocalStorage(this._getPaginationCacheKey());
     if (defaultPageSize !== null) {
       this._queryData.pageSize = defaultPageSize;
@@ -332,6 +335,7 @@ export class EntriesStore implements OnDestroy {
 
             this.executeQueryState.deferredAddedFilters = [];
             this.executeQueryState.deferredRemovedFilters = [];
+
 
 
             return this.buildQueryRequest(queryArgs)

@@ -142,7 +142,6 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
       .subscribe(result => {
         // sync components
         this.syncScheduledComponents();
-        this.syncCreatedComponents();
 
         if (result.filters) {
           result.filters.forEach(filter => {
@@ -160,7 +159,6 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
         // sync components
         this.syncScheduledComponents();
-        this.syncCreatedComponents();
 
 
         if (filter.removedFilters) {
@@ -346,6 +344,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    * @private
    */
   private syncCreatedFilters() {
+
     this._createdFilterError = null;
     if (this._createdBefore && this._createdAfter) {
       const isValid = this._createdAfter <= this._createdBefore;
@@ -358,16 +357,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
       }
     }
 
-    this.entriesStore.removeFiltersByType(CreatedAtFilter);
-
-    if (this._createdAfter || this._createdBefore) {
-      this.entriesStore.addFilters(
-        new CreatedAtFilter(
-          KalturaUtils.getStartDateValue(this._createdAfter),
-          KalturaUtils.getEndDateValue(this._createdBefore)
-        )
-      );
-    }
+    this._entriesFilters.setCreatedAt({ createdAfter: this._createdAfter, createdBefore: this._createdBefore});
   }
 
   /**
