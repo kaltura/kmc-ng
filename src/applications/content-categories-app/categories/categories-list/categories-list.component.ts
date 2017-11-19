@@ -25,6 +25,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
   private categoriesSubscription: ISubscription;
   private querySubscription: ISubscription;
   @ViewChild('moveCategory') moveCategoryPopup: PopupWidgetComponent;
+  @ViewChild('addNewCategory') public addNewCategory: PopupWidgetComponent;
 
   public _filter = {
     pageIndex: 0,

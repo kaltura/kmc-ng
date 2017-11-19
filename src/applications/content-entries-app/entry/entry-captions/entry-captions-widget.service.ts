@@ -1,11 +1,12 @@
 import {
-    Injectable,
-    IterableChangeRecord,
-    IterableDiffer,
-    IterableDiffers,
-    KeyValueChangeRecord,
-    KeyValueDiffer,
-    KeyValueDiffers, OnDestroy
+  Injectable,
+  IterableChangeRecord,
+  IterableDiffer,
+  IterableDiffers,
+  KeyValueChangeRecord,
+  KeyValueDiffer,
+  KeyValueDiffers,
+  OnDestroy
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -30,7 +31,6 @@ import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaE
 
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
-import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
 import { NewEntryCaptionFile } from './new-entry-caption-file';
 import { EntryWidget } from '../entry-widget';
 
@@ -68,9 +68,15 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         super(EntryWidgetKeys.Captions);
     }
 
+  private _syncBusyState(): void {
+    // find intersection of tracked files and captions to avoid checking serverUploadToken on already uploaded assets
+    const relevantFiles = this._captions.getValue().items
+      .filter(({ uploadFileId }) => !!this._uploadManagement.getTrackedFile(uploadFileId));
+    const isBusy = relevantFiles.some(file => !file.serverUploadToken);
+    this.updateState({ isBusy });
+  }
+
   private _trackUploadFiles(): void {
-
-
     this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
       .map(uploadedFile => {
@@ -87,6 +93,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
           switch (uploadedFile.status) {
             case TrackedFileStatuses.prepared:
               relevantCaption.serverUploadToken = (<NewEntryCaptionFile>uploadedFile.data).serverUploadToken;
+              this._syncBusyState();
               break;
             case TrackedFileStatuses.uploadCompleted:
               relevantCaption.uploading = false;
@@ -95,6 +102,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
             case TrackedFileStatuses.failure:
               relevantCaption.uploading = false;
               relevantCaption.uploadFailure = true;
+              this._syncBusyState();
               break;
             case TrackedFileStatuses.uploading:
               relevantCaption.progress = (uploadedFile.progress * 100).toFixed(0);
@@ -118,42 +126,58 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         this._captions.next({items: []});
     }
 
-    protected onActivate(firstTimeActivating: boolean) {
-        this._entryId = this.data.id;
-        super._showLoader();
-        if (firstTimeActivating) {
-            this._trackUploadFiles();
-        }
-        this._captions.next({items: []});
-
-        return this._kalturaServerClient.request(new CaptionAssetListAction({
-            filter: new KalturaAssetFilter({
-                entryIdEqual: this._entryId
-            })
-        }))
-            .cancelOnDestroy(this, this.widgetReset$)
-            .monitor('get captions')
-            .do(
-                response => {
-                    this._captions.next({items: response.objects as any[]});
-                    this.captionsListDiffer = this._listDiffers.find([]).create(null);
-                    this.captionsListDiffer.diff(this._captions.getValue().items);
-
-                    this.captionDiffer = {};
-                    this._captions.getValue().items.forEach((caption) => {
-                        this.captionDiffer[caption.id] = this._objectDiffers.find([]).create();
-                        this.captionDiffer[caption.id].diff(caption);
-                    });
-                    super._hideLoader();
-                })
-            .catch((error, caught) => {
-                    super._hideLoader();
-                    super._showActivationError();
-                    this._captions.next({items: []});
-                    return Observable.throw(error);
-                }
-            );
+  protected onActivate(firstTimeActivating: boolean) {
+    this._entryId = this.data.id;
+    super._showLoader();
+    if (firstTimeActivating) {
+      this._trackUploadFiles();
     }
+    this._captions.next({ items: [] });
+
+    return this._kalturaServerClient.request(new CaptionAssetListAction({
+      filter: new KalturaAssetFilter({ entryIdEqual: this._entryId })
+    }))
+      .cancelOnDestroy(this, this.widgetReset$)
+      .monitor('get captions')
+      .do(response => {
+        // Restore previous upload state
+        this._updateCaptionsResponse(response);
+
+        this._captions.next({ items: response.objects as any[] });
+        this.captionsListDiffer = this._listDiffers.find([]).create(null);
+        this.captionsListDiffer.diff(this._captions.getValue().items);
+
+        this.captionDiffer = {};
+        this._captions.getValue().items.forEach((caption) => {
+          this.captionDiffer[caption.id] = this._objectDiffers.find([]).create();
+          this.captionDiffer[caption.id].diff(caption);
+        });
+        super._hideLoader();
+      })
+      .catch(error => {
+          super._hideLoader();
+          super._showActivationError();
+          this._captions.next({ items: [] });
+          return Observable.throw(error);
+        }
+      );
+  }
+
+  private _updateCaptionsResponse(response): void {
+    response.objects.forEach((caption: CaptionRow) => {
+      const relevantFile = this._uploadManagement.getTrackedFiles().find(file =>
+        file.data instanceof NewEntryCaptionFile && file.data.captionId === caption.id
+      );
+
+      if (relevantFile) {
+          caption.uploadFileId = relevantFile.id;
+          caption.progress = (relevantFile.progress * 100).toFixed(0);
+          caption.uploading = relevantFile.progress < 1;
+          caption.uploadFailure = !!relevantFile.failureReason;
+          caption.serverUploadToken = (<NewEntryCaptionFile>relevantFile.data).serverUploadToken;
+        }
+    });
+  }
 
     public _setAsDefault(caption: KalturaCaptionAsset): void {
         const captionId = caption.id;
@@ -201,29 +225,31 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         return status;
     }
 
-    public _addCaption(): any {
+  public _addCaption(): any {
 
-        let newCaption: CaptionRow = {
-            uploading: false,
-            uploadFileId: "",
-            serverUploadToken : '',
-            uploadUrl: "",
-            id: null,
-            format: KalturaCaptionType.srt,
-            language: KalturaLanguage.en,
-            label: "English",
-            isDefault: 0,
-            fileExt: ""
-        };
+    const newCaption: CaptionRow = {
+      uploading: false,
+      uploadFileId: '',
+      serverUploadToken: '',
+      uploadUrl: '',
+      id: null,
+      format: KalturaCaptionType.srt,
+      language: KalturaLanguage.en,
+      label: 'English',
+      isDefault: 0,
+      fileExt: ''
+    };
 
-        let captions = Array.from(this._captions.getValue().items); // create a copy of the captions array without a reference to the original array
-        captions.push(newCaption);
-        this._captions.next({items: captions});
-        this.currentCaption = newCaption;
-    }
+    // create a copy of the captions array without a reference to the original array
+    const captions = Array.from(this._captions.getValue().items);
+    captions.push(newCaption);
+    this._captions.next({ items: captions });
+    this.currentCaption = newCaption;
+  }
 
     public upload(captionFile: File): void {
         this.currentCaption.uploading = true;
+        this.updateState({ isBusy: true });
 
         Observable.of(this._uploadManagement.addFile(new NewEntryCaptionFile(captionFile)))
             .subscribe((response) => {
@@ -267,86 +293,88 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
         return rowData.uploading ? "uploading" : rowData.uploadFailure ? "uploadFailure" : '';
     }
 
-    // save data
-    protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
-        if (this._captions.getValue().items) {
-
-            // check for added and removed captions
-            if (this.captionsListDiffer) {
-                let changes = this.captionsListDiffer.diff(this._captions.getValue().items);
-                if (changes) {
-                    changes.forEachAddedItem((record: IterableChangeRecord<CaptionRow>) => {
-                        // added captions
-                        let captionAsset = new KalturaCaptionAsset({
-                            language: record.item.language,
-                            format: record.item.format,
-                            label: record.item.label,
-                            isDefault: 0
-                        });
-                        const addCaptionRequest: CaptionAssetAddAction = new CaptionAssetAddAction({
-                            entryId: this.data.id,
-                            captionAsset: captionAsset
-                        });
-                        request.requests.push(addCaptionRequest);
-
-                        let resource = null;
-                        if ((record.item).uploadUrl) { // add new caption from URL
-                            resource = new KalturaUrlResource({
-                                url: (record.item).uploadUrl
-                            });
-                        }
-                        if ((record.item).serverUploadToken) { // add new caption from upload token
-                            resource = new KalturaUploadedFileTokenResource({
-                                token: (record.item).serverUploadToken
-                            });
-                        }
-                        if (resource) {
-                            let setContentRequest: CaptionAssetSetContentAction = new CaptionAssetSetContentAction({
-                                id: '0',
-                                contentResource: resource
-                            })
-                                .setDependency(['id', (request.requests.length - 1), 'id']);
-
-                            request.requests.push(setContentRequest);
-                        }
-                    });
-                    changes.forEachRemovedItem((record: IterableChangeRecord<CaptionRow>) => {
-                        // remove deleted captions
-                        const deleteCaptionRequest: CaptionAssetDeleteAction = new CaptionAssetDeleteAction({captionAssetId: (record.item).id});
-                        request.requests.push(deleteCaptionRequest);
-                    });
-                }
-            }
-
-            // update changed captions and setting default caption
-            this._captions.getValue().items.forEach((caption: any) => {
-                let captionDiffer = this.captionDiffer[caption.id];
-                if (captionDiffer) {
-                    let objChanges = captionDiffer.diff(caption);
-                    if (objChanges) {
-                        let updatedCaptionIDs = []; // array holding changed caption IDs. Used to verify we update each caption only once even if more than one fields was updated
-                        objChanges.forEachChangedItem((record: KeyValueChangeRecord<string, any>) => {
-                            // update default caption if changed
-                            if (record.key === "isDefault" && record.currentValue === 1) {
-                                const setAsDefaultRequest: CaptionAssetSetAsDefaultAction = new CaptionAssetSetAsDefaultAction({captionAssetId: caption.id});
-                                request.requests.push(setAsDefaultRequest);
-                            } else {
-                                // update other fields
-                                if (updatedCaptionIDs.indexOf(caption.id) === -1) { // make sure we update each caption only once as we update all changed fields at once
-                                    updatedCaptionIDs.push(caption.id);
-                                    const updateCaptionRequest: CaptionAssetUpdateAction = new CaptionAssetUpdateAction({
-                                        id: caption.id,
-                                        captionAsset: caption
-                                    });
-                                    request.requests.push(updateCaptionRequest);
-                                }
-                            }
-                        });
-                    }
-                }
+  // save data
+  protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
+    if (this._captions.getValue().items) {
+      // check for added and removed captions
+      if (this.captionsListDiffer) {
+        const changes = this.captionsListDiffer.diff(this._captions.getValue().items);
+        if (changes) {
+          changes.forEachAddedItem((record: IterableChangeRecord<CaptionRow>) => {
+            // added captions
+            const newCaption = record.item as CaptionRow;
+            const captionAsset = new KalturaCaptionAsset({
+              language: record.item.language,
+              format: record.item.format,
+              label: record.item.label,
+              isDefault: 0
             });
+            const addCaptionRequest = new CaptionAssetAddAction({ entryId: this.data.id, captionAsset: captionAsset });
+            request.requests.push(addCaptionRequest);
+
+            let resource = null;
+            if ((record.item).uploadUrl) { // add new caption from URL
+              resource = new KalturaUrlResource({ url: (record.item).uploadUrl });
+            }
+            if ((record.item).serverUploadToken) { // add new caption from upload token
+              resource = new KalturaUploadedFileTokenResource({ token: (record.item).serverUploadToken });
+            }
+            if (resource) {
+              const setContentRequest = new CaptionAssetSetContentAction({ id: '0', contentResource: resource })
+                .setDependency(['id', (request.requests.length - 1), 'id'])
+                .setCompletion(response => {
+                  if (response.error) {
+                    this._uploadManagement.cancelUpload(newCaption.uploadFileId, true);
+                  } else {
+                    const relevantUploadFile = this._uploadManagement.getTrackedFile(newCaption.uploadFileId);
+                    if (relevantUploadFile) {
+                      (<NewEntryCaptionFile>relevantUploadFile.data).captionId = response.result.id;
+                    }
+                  }
+                });
+
+              request.requests.push(setContentRequest);
+            }
+          });
+          changes.forEachRemovedItem((record: IterableChangeRecord<CaptionRow>) => {
+            // remove deleted captions
+            const deleteCaptionRequest: CaptionAssetDeleteAction = new CaptionAssetDeleteAction({ captionAssetId: (record.item).id });
+            request.requests.push(deleteCaptionRequest);
+          });
         }
+      }
+
+      // update changed captions and setting default caption
+      this._captions.getValue().items.forEach((caption: any) => {
+        const captionDiffer = this.captionDiffer[caption.id];
+        if (captionDiffer) {
+          const objChanges = captionDiffer.diff(caption);
+          if (objChanges) {
+            const updatedCaptionIDs = []; // array holding changed caption IDs.
+                                          // Used to verify we update each caption only once even if more than one fields was updated
+            objChanges.forEachChangedItem((record: KeyValueChangeRecord<string, any>) => {
+              // update default caption if changed
+              if (record.key === 'isDefault' && record.currentValue === 1) {
+                const setAsDefaultRequest = new CaptionAssetSetAsDefaultAction({ captionAssetId: caption.id });
+                request.requests.push(setAsDefaultRequest);
+              } else {
+                // update other fields
+                // make sure we update each caption only once as we update all changed fields at once
+                if (updatedCaptionIDs.indexOf(caption.id) === -1) {
+                  updatedCaptionIDs.push(caption.id);
+                  const updateCaptionRequest = new CaptionAssetUpdateAction({
+                    id: caption.id,
+                    captionAsset: caption
+                  });
+                  request.requests.push(updateCaptionRequest);
+                }
+              }
+            });
+          }
+        }
+      });
     }
+  }
 
     public setDirty() {
         super.updateState({isDirty: true});
