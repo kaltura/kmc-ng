@@ -171,11 +171,6 @@
 	}
 }
 
-.kForceFix{
-  position: fixed !important;
-  margin-top: 0px !important;
-}
-
 :host /deep/ k-area-blocker>.kAreaBlockerContainer {
   z-index: 203;
 }
