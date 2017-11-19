@@ -76,12 +76,6 @@ a.disabled {
   padding-left: 6px;
 }
 
-.kForceFix{
-  position: fixed !important;
-  margin-top: 50px !important;
-  top: 0px !important;
-}
-
 /* Make sure toggler and checkbox remain aligned even if the node height changes */
 :host /deep/ .ui-treenode .ui-tree-toggler {
   vertical-align: top;

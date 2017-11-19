@@ -45,7 +45,13 @@ export class PlaylistSectionsList implements OnInit, OnDestroy {
         response => {
           if(response.section !== null) {
             this.sections.forEach(section => section.isActive = false);
-            this.sections[response.section].isActive = true;
+
+            // TODO [kmcng] will be removed after merge of the playlists-adjustments branch
+            const relevantSection = this.sections.find(({ id }) => response.section === name);
+            if (relevantSection) {
+              relevantSection.isActive = true;
+            }
+
             this.playlistSections.updateLayout();
           }
         }
@@ -55,8 +61,16 @@ export class PlaylistSectionsList implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         response => {
-          this.sections[PlaylistSections.Metadata].hasErrors = !response.metadata.isValid;
-          this.sections[PlaylistSections.Content].hasErrors = !response.content.isValid;
+          // TODO [kmcng] will be removed after merge of the playlists-adjustments branch
+          this.sections.forEach(section => {
+            if (section.id === PlaylistSections.Metadata) {
+              section.hasErrors = !response.metadata.isValid;
+            }
+
+            if (section.id === PlaylistSections.Content) {
+              section.hasErrors = !response.content.isValid;
+            }
+          });
         }
       );
 	}

@@ -149,6 +149,8 @@ export class CategoriesService implements OnDestroy {
             this._categoriesExecuteSubscription.unsubscribe();
         }
 
+        this.browserService.scrollToTop();
+
         this._state.next({ loading: true, errorMessage: null });
 
         // execute the request

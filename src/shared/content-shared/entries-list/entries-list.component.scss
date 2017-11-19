@@ -88,6 +88,7 @@
     background: $kMagnifyingGlassBkg;
     padding-left: 30px;
     margin-right: 8px;
+    width: 260px;
   }
   .kBulkOperations {
     width: 400px;
@@ -125,12 +126,13 @@
     align-items: center;
     cursor: pointer;
     color: $kGrayscale1;
-    width: 180px;
+    width: 190px;
     position: relative;
     margin-right: 8px;
     i {
       margin-right: 12px;
       margin-left: 8px;
+      font-size: 24px;
       color: $kGrayscale4;
       &.dropdown {
         font-size: 10px;
@@ -153,7 +155,7 @@
   }
   .kRefine {
     @extend .kCategoriesFilter;
-    width: 140px;
+    width: 160px;
   }
   .kHidden {
     visibility: hidden;
@@ -182,11 +184,6 @@
       border-radius: 3px;
     }
   }
-}
-
-.kForceFix{
-  position: fixed !important;
-  margin-top: 0px !important;
 }
 
 :host /deep/ .kStickyClass{

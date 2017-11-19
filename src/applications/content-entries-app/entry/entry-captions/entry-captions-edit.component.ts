@@ -1,15 +1,17 @@
-import { Component, Input, OnInit, AfterContentInit, OnDestroy, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
+import { AfterContentInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 
 import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaCaptionAsset } from 'kaltura-typescript-client/types/KalturaCaptionAsset';
 import { KalturaLanguage } from 'kaltura-typescript-client/types/KalturaLanguage';
 import { KalturaCaptionType } from 'kaltura-typescript-client/types/KalturaCaptionType';
-import { AppLocalization, KalturaUtils } from '@kaltura-ng/kaltura-common';
+import { AppLocalization, KalturaUtils, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { NewEntryCaptionFile } from './new-entry-caption-file';
+import { environment } from 'app-environment';
 
 function urlValidator(control: AbstractControl): {[key: string]: boolean} | null {
 	let v: string = control.value;
@@ -39,9 +41,12 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 	private _confirmClose: boolean = true;
 	private fileToUpload: File;
 
-    constructor(private _appLocalization: AppLocalization, private _fb: FormBuilder, private _browserService: BrowserService) {
+  constructor(private _appLocalization: AppLocalization,
+              private _uploadManagement: UploadManagement,
+              private _fb: FormBuilder,
+              private _browserService: BrowserService) {
 
-    }
+  }
 
     ngOnInit(){
 	    // load all supported languages
@@ -109,6 +114,13 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 		this._parentPopupStateChangeSubscribe.unsubscribe();
 	}
 
+  private _validateFileSize(file: File): boolean {
+    const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
+    const fileSize = file.size / 1024 / 1024; // convert to Mb
+
+    return this._uploadManagement.supportChunkUpload(new NewEntryCaptionFile(null)) || fileSize < maxFileSize;
+  }
+
 	public _saveAndClose(): void{
 		if (this.captionsEditForm.get("label").dirty) {
 			this.currentCaption.label = this.captionsEditForm.get("label").value;
@@ -149,12 +161,20 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 		this.fileDialog.open();
 	}
 
-	public _onFileSelected(selectedFiles: FileList) {
-		if (selectedFiles && selectedFiles.length) {
-			this.fileToUpload = selectedFiles[0];
-			this._uploadFileName = this.fileToUpload.name;
-		}
-	}
+  public _onFileSelected(selectedFiles: FileList) {
+    if (selectedFiles && selectedFiles.length) {
+      const file = selectedFiles[0];
+      if (this._validateFileSize(file)) {
+        this.fileToUpload = file;
+        this._uploadFileName = this.fileToUpload.name;
+      } else {
+        this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
+          message: this._appLocalization.get('applications.upload.validation.fileSizeExceeded')
+        });
+      }
+    }
+  }
 
 	public _resetUpload(uploadMethod: string){
 		this.captionsEditForm.get('captionUrl').reset();
