@@ -1,8 +1,7 @@
 <i #openuploadmonitor
    class="kIconfolder_large kUploadMonitorToggler"
    [class.upToDate]="_upToDate"
-   [class.open]="_menuOpened"
-(click)="test()">
+   [class.open]="_menuOpened">
   <i *ngIf="!_upToDate" class="kIconrefresh_small"></i>
 </i>
 
@@ -25,8 +24,13 @@
                            [queued]="_uploadFromDesktop.queued"
                            [completed]="_uploadFromDesktop.completed"
                            [errors]="_uploadFromDesktop.errors"></kUploadMonitorSection>
-    <kUploadMonitorSection [title]="'applications.upload.uploadMonitor.bulkUpload' | translate"
-                           [uploadMonitorPopup]="uploadmonitor"></kUploadMonitorSection>
+    <kUploadMonitorSection detailsLink="/content/bulk/list"
+                           [title]="'applications.upload.uploadMonitor.bulkUpload' | translate"
+                           [uploadMonitorPopup]="uploadmonitor"
+                           [uploading]="_bulkUpload.uploading"
+                           [queued]="_bulkUpload.queued"
+                           [completed]="_bulkUpload.completed"
+                           [errors]="_bulkUpload.errors"></kUploadMonitorSection>
     <kUploadMonitorSection type="dropFolder"
                            [title]="'applications.upload.uploadMonitor.dropFolders' | translate"
                            [uploadMonitorPopup]="uploadmonitor"></kUploadMonitorSection>

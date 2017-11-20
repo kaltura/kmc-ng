@@ -1,9 +1,12 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { RequestFactory, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
-import { NewEntryUploadFile } from 'app-shared/kmc-shell';
+import { BrowserService, NewEntryUploadFile } from 'app-shared/kmc-shell';
 import { KalturaServerPolls } from '@kaltura-ng/kaltura-server-utils/server-polls';
-import { BaseEntryListAction } from 'kaltura-typescript-client/types/BaseEntryListAction';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
+import { KalturaMultiRequest } from 'kaltura-typescript-client';
+import { BulkListAction } from 'kaltura-typescript-client/types/BulkListAction';
+import { KalturaBulkUploadFilter } from 'kaltura-typescript-client/types/KalturaBulkUploadFilter';
+import { KalturaBatchJobStatus } from 'kaltura-typescript-client/types/KalturaBatchJobStatus';
+import { KalturaBulkUploadListResponse } from 'kaltura-typescript-client/types/KalturaBulkUploadListResponse';
 
 interface UploadMonitorStatuses {
   uploading: number;
@@ -19,8 +22,6 @@ interface UploadMonitorStatuses {
 })
 export class UploadMonitorComponent implements OnDestroy {
   @Input() appmenu;
-
-  private _newUploadFiles: { id: string, status: string }[] = [];
   public _menuOpened = false;
   public _upToDate = true;
   public _uploadFromDesktop: UploadMonitorStatuses = {
@@ -29,8 +30,18 @@ export class UploadMonitorComponent implements OnDestroy {
     completed: 0,
     errors: 0,
   };
+  public _bulkUpload: UploadMonitorStatuses = {
+    uploading: 0,
+    queued: 0,
+    completed: 0,
+    errors: 0,
+  };
+  private _newUploadFiles: { [key: string]: { status: string } } = {};
+  private _bulkUploadFiles: { [key: string]: { status: KalturaBatchJobStatus, newUpload?: boolean } } = {};
 
-  constructor(private _uploadManagement: UploadManagement, private _serverPolls: KalturaServerPolls) {
+  constructor(private _uploadManagement: UploadManagement,
+              private _serverPolls: KalturaServerPolls,
+              private _browserService: BrowserService) {
     this._monitorNewEntryUploadFilesChanges();
     this._monitorBulkUploadChanges();
   }
@@ -40,7 +51,8 @@ export class UploadMonitorComponent implements OnDestroy {
 
   private _checkUpToDate(): void {
     const uploadFromDesktop = this._uploadFromDesktop.uploading + this._uploadFromDesktop.queued;
-    this._upToDate = !uploadFromDesktop;
+    const bulkUpload = this._bulkUpload.uploading + this._bulkUpload.queued;
+    this._upToDate = !uploadFromDesktop && !bulkUpload;
   }
 
   private _increaseParam(objectName: string, paramName: string): void {
@@ -61,10 +73,10 @@ export class UploadMonitorComponent implements OnDestroy {
       .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile)
       .subscribe(
         trackedFile => {
-          let relevantFile = this._newUploadFiles.find(({ id }) => id === trackedFile.id);
+          let relevantFile = this._newUploadFiles[trackedFile.id];
           if (!relevantFile) {
-            relevantFile = { id: trackedFile.id, status: trackedFile.status };
-            this._newUploadFiles.push(relevantFile);
+            relevantFile = { status: trackedFile.status };
+            this._newUploadFiles[trackedFile.id] = relevantFile;
           }
 
           switch (trackedFile.status) {
@@ -111,34 +123,150 @@ export class UploadMonitorComponent implements OnDestroy {
   }
 
   private _monitorBulkUploadChanges(): void {
-    this._serverPolls.register(30, new BulkLogUploadChanges())
-      .subscribe(res => {
-        console.warn('A');
-      });
-
-    this._test = this._serverPolls.register(10, new BulkLogUploadChanges())
-      .subscribe(res => {
-        console.warn('B');
-      });
-
-    this._serverPolls.register(10, new BulkLogUploadChanges())
-      .subscribe(res => {
-        console.warn('C');
+    this._serverPolls
+      .register(10, new BulkLogUploadChanges(this._browserService.sessionStartedAt))
+      .cancelOnDestroy(this)
+      .subscribe(([progressing, completed]) => {
+        this._handleProgressingBulkUploads(progressing.result);
+        this._handleCompletedBulkUploads(completed.result);
       });
   }
 
-  _test;
+  private _handleProgressingBulkUploads(response: KalturaBulkUploadListResponse): void {
+    response.objects.forEach(item => {
+      let relevantUpload = this._bulkUploadFiles[item.id];
 
-  test() {
-    if (this._test) {
-      this._test.unsubscribe();
-    }
+      if (!relevantUpload) {
+        relevantUpload = { status: item.status, newUpload: true };
+        this._bulkUploadFiles[item.id] = relevantUpload;
+      } else {
+        relevantUpload.newUpload = false;
+      }
+
+      switch (item.status) {
+        case KalturaBatchJobStatus.pending:
+        case KalturaBatchJobStatus.queued:
+          if (relevantUpload.newUpload) {
+            this._increaseParam('_bulkUpload', 'queued');
+          }
+          break;
+
+        case KalturaBatchJobStatus.processing:
+        case KalturaBatchJobStatus.almostDone:
+        case KalturaBatchJobStatus.retry:
+          if (relevantUpload.newUpload) {
+            this._increaseParam('_bulkUpload', 'uploading');
+          } else if (relevantUpload.status !== item.status) {
+            relevantUpload.status = item.status;
+            this._increaseParam('_bulkUpload', 'uploading');
+            this._decreaseParam('_bulkUpload', 'queued');
+          }
+          break;
+
+        default:
+          break;
+      }
+    });
+  }
+
+  private _handleCompletedBulkUploads(response: KalturaBulkUploadListResponse): void {
+    response.objects.forEach(item => {
+      let relevantUpload = this._bulkUploadFiles[item.id];
+
+      if (!relevantUpload) {
+        relevantUpload = { status: item.status, newUpload: true };
+        this._bulkUploadFiles[item.id] = relevantUpload;
+      } else {
+        relevantUpload.newUpload = false;
+      }
+
+      switch (item.status) {
+        case KalturaBatchJobStatus.finishedPartially:
+        case KalturaBatchJobStatus.finished:
+        case KalturaBatchJobStatus.processed:
+          if (relevantUpload.newUpload) {
+            this._increaseParam('_bulkUpload', 'completed');
+          } else if (relevantUpload.status !== item.status) {
+            this._increaseParam('_bulkUpload', 'completed');
+
+            if ([KalturaBatchJobStatus.pending, KalturaBatchJobStatus.queued].indexOf(relevantUpload.status) !== -1) {
+              this._decreaseParam('_bulkUpload', 'queued');
+            } else {
+              this._decreaseParam('_bulkUpload', 'uploading');
+            }
+
+            relevantUpload.status = item.status;
+          }
+          break;
+
+        case KalturaBatchJobStatus.failed:
+        case KalturaBatchJobStatus.fatal:
+        case KalturaBatchJobStatus.aborted:
+        case KalturaBatchJobStatus.dontProcess:
+        case KalturaBatchJobStatus.movefile:
+          if (relevantUpload.newUpload) {
+            this._increaseParam('_bulkUpload', 'errors');
+          } else if (relevantUpload.status !== item.status) {
+            this._increaseParam('_bulkUpload', 'errors');
+
+            if ([KalturaBatchJobStatus.pending, KalturaBatchJobStatus.queued].indexOf(relevantUpload.status) !== -1) {
+              this._decreaseParam('_bulkUpload', 'queued');
+            } else {
+              this._decreaseParam('_bulkUpload', 'uploading');
+            }
+
+            relevantUpload.status = item.status;
+          }
+          break;
+
+        default:
+          break;
+      }
+    });
   }
 }
 
 
-export class BulkLogUploadChanges implements RequestFactory<BaseEntryListAction> {
-  create(): BaseEntryListAction {
-    return new BaseEntryListAction({ pager: new KalturaFilterPager({ pageSize: 5 }) });
+export class BulkLogUploadChanges implements RequestFactory<KalturaMultiRequest> {
+  constructor(private _sessionStartedAt: Date) {
+  }
+
+  create(): KalturaMultiRequest {
+    const processingStatusId = [
+      KalturaBatchJobStatus.pending,
+      KalturaBatchJobStatus.queued,
+      KalturaBatchJobStatus.processing,
+      KalturaBatchJobStatus.almostDone,
+      KalturaBatchJobStatus.retry
+    ];
+    const processingBulkUpload = new BulkListAction({
+      bulkUploadFilter: new KalturaBulkUploadFilter({
+        statusIn: processingStatusId.join(','),
+        bulkUploadObjectTypeIn: '1,2,3,4',
+      })
+    });
+
+    const finishedStatusId = [
+      KalturaBatchJobStatus.finished,
+      KalturaBatchJobStatus.finishedPartially,
+      KalturaBatchJobStatus.processed,
+      KalturaBatchJobStatus.failed,
+      KalturaBatchJobStatus.fatal,
+      KalturaBatchJobStatus.aborted,
+      KalturaBatchJobStatus.dontProcess,
+      KalturaBatchJobStatus.movefile,
+    ];
+    const finishedBulkUpload = new BulkListAction({
+      bulkUploadFilter: new KalturaBulkUploadFilter({
+        statusIn: finishedStatusId.join(','),
+        bulkUploadObjectTypeIn: '1,2,3,4',
+        uploadedOnGreaterThanOrEqual: this._sessionStartedAt
+      })
+    });
+
+    return new KalturaMultiRequest(
+      processingBulkUpload,
+      finishedBulkUpload
+    );
   }
 }
