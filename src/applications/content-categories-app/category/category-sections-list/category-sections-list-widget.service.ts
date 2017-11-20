@@ -105,7 +105,7 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
         // KalturaCategory.privacyContexts is defined
         return category.privacyContexts && typeof(category.privacyContexts) !== 'undefined';
       case CategoryWidgetKeys.SubCategories:
-        return category.directSubCategoriesCount > 0 ||
+        return category.directSubCategoriesCount > 0 &&
           category.directSubCategoriesCount <= environment.categoriesShared.SUB_CATEGORIES_LIMIT;
       default:
         return true;
