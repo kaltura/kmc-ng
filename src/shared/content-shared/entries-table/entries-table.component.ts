@@ -151,9 +151,15 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     return !(isNotReady && commandName === 'preview');
   }
 
-  private _buildMenu(status: any = null): void {
+  private _exceptView(mediaType, { commandName }) {
+    const isLiveStreamFlash = mediaType && mediaType.toString() === KalturaMediaType.liveStreamFlash.toString();
+    return !(isLiveStreamFlash && commandName === 'view');
+  }
+
+  private _buildMenu(mediaType: KalturaMediaType = null, status: any = null): void {
     this._items = this.rowActions
       .filter(item => this._exceptPreview(status, item))
+      .filter(item => this._exceptView(mediaType, item))
       .map(action =>
         Object.assign({}, action, {
           command: ({ item }) => {
@@ -172,7 +178,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
       this.actionsMenu.toggle(event);
       if (this.actionsMenuEntryId !== entry.id) {
         this.actionsMenuEntryId = entry.id;
-        this._buildMenu(entry.status);
+        this._buildMenu(entry.mediaType, entry.status);
         this.actionsMenu.show(event);
       }
     }
