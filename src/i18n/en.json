@@ -287,7 +287,7 @@
           }
         },
         "confirmEntryNavigation": {
-          "title" : "Stream has been created successfully.",
+          "title": "Stream has been created successfully.",
           "message": "Live Stream Entry has been created successfully. \n Do you want to view entry details?"
         }
       }
@@ -368,8 +368,8 @@
         "requiresAuthentication": "Requires Authentication",
         "private": "Private",
         "selectedCategory": "Selected: {{0}}",
-        "errors" : {
-          "categoryCouldNotBeDeleted" : "Category could not be deleted"
+        "errors": {
+          "categoryCouldNotBeDeleted": "Category could not be deleted"
         }
       },
       "addNewCategory": {
@@ -379,10 +379,9 @@
         "discard": "Discard all changes?",
         "apply": "Apply",
         "cancel": "Cancel",
-        "noParent":"No Parent",
+        "noParent": "No Parent",
         "searchCategories": "Search Categories",
-        "selectedParentCategory":"Parent Category Id: {{value}}"
-
+        "selectedParentCategory": "Parent Category Id: {{value}}"
       },
       "entries": {
         "entries": "Entries",
@@ -474,6 +473,8 @@
         "previewAndEmbed": "Preview & Embed",
         "delete": "Delete",
         "view": "View Details",
+        "entries": "Entries",
+        "subcategories": "Sub - Categories",
         "loading": "Loading...",
         "noResults": "No Results"
       },
@@ -1011,6 +1012,13 @@
           "clear": "Clear Selection",
           "addGroup": "Add Group",
           "deleteGroup": "Delete Group"
+        },
+        "subcategories" : {
+          "actions" : {
+            "moveUp": "Move Up",
+            "moveDown": "Move Down",
+            "delete": "Delete"
+          }
         },
         "errors": {
           "reload": "Reload",

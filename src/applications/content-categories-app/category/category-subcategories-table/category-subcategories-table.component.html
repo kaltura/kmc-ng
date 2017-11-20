@@ -1,0 +1,54 @@
+<!--TODO: might need to add [class.noResults]="!_subcategories.length"-->
+<div class="kSubcategoriesTable">
+  <k-area-blocker [showLoader]="this._deferredLoading"
+                  [message]="_blockerMessage"
+                  [centerOnScreen]="true">
+    <p-dataTable #dataTable
+                 dataKey="id"
+                 scrollable="true"
+                 scrollHeight="100%"
+                 [value]="_subcategories"
+                 [emptyMessage]="_emptyMessage"
+                 [rowTrackBy]="rowTrackBy"
+                 [(selection)]="_selectedSubcategories"
+                 kStickyHeader [sticksTo]="'entriesTags'" stickyClass="stickyHeader" [stickyId]="'entriesTable'">
+      <p-column [style]="{'width':'44px', 'padding-left': '14px'}"
+                selectionMode="multiple"></p-column>
+      <p-column field="name"
+                [header]="'applications.content.table.name' | translate">
+        <ng-template let-col let-subcategory="rowData" pTemplate="body">
+          <div class="kTitle" [kTooltip]="subcategory[col.field]" [maxWidth]="300">
+            {{subcategory[col.field]}}
+          </div>
+        </ng-template>
+      </p-column>
+
+      <p-column field="createdAt"
+                [header]="'applications.content.table.createdOn' | translate">
+      <ng-template let-col let-subcategory="rowData" pTemplate="body">
+        <span>{{subcategory[col.field] | kDate}}</span>
+      </ng-template>
+      </p-column>
+
+
+      <p-column field="entriesCount"
+                [header]="'applications.content.table.entries' | translate">
+      <ng-template let-col let-subcategory="rowData" pTemplate="body">
+        <span>{{subcategory[col.field]}}</span>
+      </ng-template>
+      </p-column>
+
+      <p-column *ngIf="rowActions?.length"
+        header=""
+                [style]="{'overflow':'visible', 'width':'80px'}">
+        <ng-template let-col let-subcategory="rowData" pTemplate="body">
+          <div class="kEntriesTableActions">
+            <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, subcategory)"></button>
+          </div>
+        </ng-template>
+      </p-column>
+    </p-dataTable>
+
+    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+  </k-area-blocker>
+</div>

@@ -1,3 +1,10 @@
-<p>
-  category-subcategories works!
-</p>
+<!--TODO: might need to add [class.noResults]="!_subcategories.length"-->
+<div class="kSubcategoriesTable">
+  <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+   <kCategorySubcategoriesTable [(selectedSubcategories)]="_selectedSubcategories"
+                                [subcategories]="_subcategories"
+                                [rowActions]="_rowActions"
+                                (actionSelected)="_onActionsSelected($event)">
+   </kCategorySubcategoriesTable>
+  </k-area-blocker>
+</div>
