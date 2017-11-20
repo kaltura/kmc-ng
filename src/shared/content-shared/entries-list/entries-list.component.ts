@@ -54,11 +54,10 @@ export class EntriesListComponent implements OnInit, OnDestroy {
               //this._entriesFilters.removeMediaTypes(tag.value);
               break;
           case "freetext":
-              this._filters.syncStoreData({freetext: null});
-              this._syncFreetextTag();
+              this._filters.syncStore({freetext: null});
               break;
           case "createdAt":
-              this._filters.syncStoreData({createdAt: {createdAfter: null, createdBefore: null}});
+              this._filters.syncStore({createdAt: {createdAfter: null, createdBefore: null}});
               break;
       }
   }
@@ -69,8 +68,8 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   }
 
   onFreetextChanged(): void {
-    this._filters.syncStoreData();
-    this._syncFreetextTag();
+    this._filters.syncStoreByLocal();
+    this._syncTagFreetext();
   }
 
   onSortChanged(event) {
@@ -97,14 +96,86 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
   }
 
+
+    private _syncTags(filters : any) : void {
+
+        // const previousFilters = this._handledFiltersInTags;
+        // const existingFilterTags = [...this._filterTags];
+        //
+        // if ((!previousFilters || previousFilters.createdAt !== filters.createdAt))
+        // {
+        //     existingFilterTags.splice(
+        //         existingFilterTags.findIndex(item => item.type === 'createdAt'),
+        //         1);
+        //
+        //   if (filters.createdAt)
+        //   {
+        //       const { createdAfter, createdBefore } = filters.createdAt;
+        //       let tooltip = '';
+        //       if (createdAfter && createdBefore) {
+        //           tooltip = `${moment(createdAfter).format('LL')} - ${moment(createdBefore).format('LL')}`;
+        //       } else if (createdAfter) {
+        //           tooltip = `From ${moment(createdAfter).format('LL')}`;
+        //       } else if (createdBefore) {
+        //           tooltip = `Until ${moment(createdBefore).format('LL')}`;
+        //       }
+        //       // TODO sakal fix tooltip as token
+        //       existingFilterTags.push({ type : 'createdAt', label : 'Dates' , tooltip : {token: tooltip}});
+        //   }
+        // }
+        //
+        // if ((!previousFilters || previousFilters.freetext !== filters.freetext))
+        // {
+        //     existingFilterTags.splice(
+        //         existingFilterTags.findIndex(item => item.type === 'freetext'),
+        //         1);
+        //
+        //     if (filters.freetext)
+        //     {
+        //         existingFilterTags.push({ type : 'freetext', value : filters.freetext, label : filters.freetext, tooltip : {token: `applications.content.filters.freeText`}});
+        //     }
+        // }
+
+        // if (!previousFilters || previousFilters.mediaTypes !== filters.mediaTypes) {
+        //     const existingMediaTypes = existingFilterTags.filter(filter => filter.type === 'mediaType');
+        //     const newMediaTypes = Object.entries(filters.mediaTypes).map(([value, label]) =>
+        //         ({
+        //         type: 'mediaType',
+        //         value: value,
+        //         label,
+        //         tooltip : { token: 'tooltip' }
+        //
+        //     }));
+        //
+        //     const delta = getDelta(existingMediaTypes,newMediaTypes, 'value', (a,b) => a.value === b.value);
+        //
+        //     existingFilterTags.push(...delta.added);
+        //
+        //     delta.deleted.forEach(removedMediaType =>
+        //     {
+        //         existingFilterTags.splice(
+        //             existingFilterTags.findIndex(item => item.value === removedMediaType.value),
+        //             1);
+        //
+        //     });
+        // }
+
+        // this._handledFiltersInTags = filters;
+        // this._filterTags = existingFilterTags;
+    }
+
+
+
   ngOnInit() {
       this._filters.localDataChanges$
           .cancelOnDestroy(this)
-          .subscribe(changes =>
-          {
-              if (typeof changes.freetext !== 'undefined')
-              {
-                  this._syncFreetextTag();
+          .subscribe(changes => {
+              if (typeof changes.createdAt !== 'undefined') {
+                  this._syncTagCreatedAt();
+              }
+
+              if (typeof changes.freetext !== 'undefined') {
+                  this._syncTagFreetext();
               }
           });
 
@@ -129,7 +200,27 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     this._entriesStore.reload(false);
   }
 
-  private _syncFreetextTag(): void {
+    private _syncTagCreatedAt(): void {
+        this._filterTags.splice(
+            this._filterTags.findIndex(item => item.type === 'createdAt'),
+            1);
+
+        const {createdAfter, createdBefore} = this._filters.localData.createdAt || { createdAfter: null, createdBefore: null};
+        if (createdAfter || createdBefore) {
+            let tooltip = '';
+            if (createdAfter && createdBefore) {
+                tooltip = `${moment(createdAfter).format('LL')} - ${moment(createdBefore).format('LL')}`;
+            } else if (createdAfter) {
+                tooltip = `From ${moment(createdAfter).format('LL')}`;
+            } else if (createdBefore) {
+                tooltip = `Until ${moment(createdBefore).format('LL')}`;
+            }
+            // TODO sakal fix tooltip as token
+            this._filterTags.push({type: 'createdAt', label: 'Dates', tooltip: {token: tooltip}});
+        }
+    }
+
+  private _syncTagFreetext(): void {
       this._filterTags.splice(
           this._filterTags.findIndex(item => item.type === 'freetext'),
           1);
@@ -140,78 +231,12 @@ export class EntriesListComponent implements OnInit, OnDestroy {
           this._filterTags.push({
               type: 'freetext',
               value: currentFreetextValue,
-              label: currentFreetextValue + '',
+              label: currentFreetextValue,
               tooltip: {token: `applications.content.filters.freeText`}
           });
       }
   }
 
-  private _syncTags(filters : any) : void {
-
-      // const previousFilters = this._handledFiltersInTags;
-      // const existingFilterTags = [...this._filterTags];
-      //
-      // if ((!previousFilters || previousFilters.createdAt !== filters.createdAt))
-      // {
-      //     existingFilterTags.splice(
-      //         existingFilterTags.findIndex(item => item.type === 'createdAt'),
-      //         1);
-      //
-      //   if (filters.createdAt)
-      //   {
-      //       const { createdAfter, createdBefore } = filters.createdAt;
-      //       let tooltip = '';
-      //       if (createdAfter && createdBefore) {
-      //           tooltip = `${moment(createdAfter).format('LL')} - ${moment(createdBefore).format('LL')}`;
-      //       } else if (createdAfter) {
-      //           tooltip = `From ${moment(createdAfter).format('LL')}`;
-      //       } else if (createdBefore) {
-      //           tooltip = `Until ${moment(createdBefore).format('LL')}`;
-      //       }
-      //       // TODO sakal fix tooltip as token
-      //       existingFilterTags.push({ type : 'createdAt', label : 'Dates' , tooltip : {token: tooltip}});
-      //   }
-      // }
-      //
-      // if ((!previousFilters || previousFilters.freetext !== filters.freetext))
-      // {
-      //     existingFilterTags.splice(
-      //         existingFilterTags.findIndex(item => item.type === 'freetext'),
-      //         1);
-      //
-      //     if (filters.freetext)
-      //     {
-      //         existingFilterTags.push({ type : 'freetext', value : filters.freetext, label : filters.freetext, tooltip : {token: `applications.content.filters.freeText`}});
-      //     }
-      // }
-
-      // if (!previousFilters || previousFilters.mediaTypes !== filters.mediaTypes) {
-      //     const existingMediaTypes = existingFilterTags.filter(filter => filter.type === 'mediaType');
-      //     const newMediaTypes = Object.entries(filters.mediaTypes).map(([value, label]) =>
-      //         ({
-      //         type: 'mediaType',
-      //         value: value,
-      //         label,
-      //         tooltip : { token: 'tooltip' }
-      //
-      //     }));
-      //
-      //     const delta = getDelta(existingMediaTypes,newMediaTypes, 'value', (a,b) => a.value === b.value);
-      //
-      //     existingFilterTags.push(...delta.added);
-      //
-      //     delta.deleted.forEach(removedMediaType =>
-      //     {
-      //         existingFilterTags.splice(
-      //             existingFilterTags.findIndex(item => item.value === removedMediaType.value),
-      //             1);
-      //
-      //     });
-      // }
-
-      // this._handledFiltersInTags = filters;
-      // this._filterTags = existingFilterTags;
-  }
 
   ngOnDestroy() {
     this.querySubscription.unsubscribe();

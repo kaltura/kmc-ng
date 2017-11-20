@@ -66,7 +66,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   }
 
   ngOnInit() {
-    this._registerToAdditionalFiltersStore();
+
   }
 
   ngAfterViewInit() {
@@ -290,20 +290,25 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    * @private
    */
   private syncCreatedFilters() {
-      const {createdAfter, createdBefore} = this._filters.localData.createdAt || {createdAfter: null, createdBefore: null};
+      const {createdAfter, createdBefore} = this._filters.localData.createdAt || {
+          createdAfter: null,
+          createdBefore: null
+      };
       this._createdFilterError = null;
 
       if (createdAfter && createdBefore) {
           const isValid = createdAfter <= createdBefore;
 
           if (!isValid) {
-              this._filters.localData.createdAt = this._filters.getStoreData().createdAt;
+              setTimeout(() => {
+                  this._filters.localData.createdAt = this._filters.getStoreDataSnapshot().createdAt;
+              }, 0);
               this._createdFilterError = this.appLocalization.get('applications.content.entryDetails.errors.schedulingError');
               return;
           }
       }
 
-      this._filters.syncStoreData();
+      this._filters.syncStoreByLocal();
   }
 
   /**
@@ -313,7 +318,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    */
   public _clearCreatedComponents(): void {
       this._filters.localData.createdAt = {createdBefore: null, createdAfter: null};
-      this._filters.syncStoreData();
+      this._filters.syncStoreByLocal();
   }
 
   /**

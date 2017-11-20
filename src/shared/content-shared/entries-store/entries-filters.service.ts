@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, SimpleChange, SimpleChanges } from '@angular/core';
+import { Injectable, InjectionToken, OnDestroy, SimpleChange, SimpleChanges } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { KalturaSearchOperator } from 'kaltura-typescript-client/types/KalturaSearchOperator';
 import { KalturaMediaEntryFilter } from 'kaltura-typescript-client/types/KalturaMediaEntryFilter';
@@ -63,6 +63,30 @@ function getDelta<T>(source : T[], compareTo : T[], keyPropertyName : string, co
 //     return false;
 // }
 
+function copyObject<T>(original: T, cloneDepth: number = 0): T {
+    // TODO sakal clone depth should be simplified to , cloneSelf: boolean, cloneChildrenDepth: number
+    let result: any = null;
+
+    if (cloneDepth > 0)
+    {
+        if (original instanceof Array) {
+            result = [...original];
+        } else if (original instanceof Object) {
+            result = {};
+            Object.keys(original).forEach(propertyName => {
+                result[propertyName] = copyObject(original[propertyName],cloneDepth - 1);
+            });
+        } else {
+            result = original;
+        }
+    }else {
+        result = original;
+    }
+
+    return result;
+}
+const internalAPISecret = { purpose: "internal_api_dont_use_directly" };
+
 @Injectable()
 export class EntriesFiltersStore {
     private _data = new BehaviorSubject<EntriesFilters>({
@@ -74,11 +98,18 @@ export class EntriesFiltersStore {
     public data$ = this._data.asObservable();
 
     constructor(private _logger: KalturaLogger) {
-
+        (<any>this)._getActualData = (secret: any): EntriesFilters => {
+            if (internalAPISecret === secret) {
+                return this._data.getValue();
+            } else {
+                this._logger.warn(`function '_getActualData() is internal and should not be used directly. returning a snapshot instead`);
+                return this.dataSnapshot;
+            }
+        }
     }
 
-    public get data(): EntriesFilters{
-        return this._data.getValue();
+    public get dataSnapshot(): EntriesFilters{
+        return copyObject(this._data.getValue(),2);
     }
 
     public update(updates: Partial<EntriesFilters>): void {
@@ -88,7 +119,7 @@ export class EntriesFiltersStore {
         Object.keys(updates).forEach(propName => {
             if (newFilters[propName] !== updates[propName]) {
                 hasChanges = true;
-                newFilters[propName] = updates[propName];
+                newFilters[propName] = copyObject(updates[propName],1);
             }
         });
 
@@ -98,9 +129,13 @@ export class EntriesFiltersStore {
         }
     }
 
+    public createCopy(): EntriesFilters {
+        return copyObject(this._data.getValue(), 2);
+    }
+
     public toRequest(request : { filter: KalturaMediaEntryFilter, advancedSearch: KalturaSearchOperator }) : void{
         // TODO sakal replace with adapters
-        const filters = this.data;
+        const filters = this._data.getValue();
 
         this._logger.info('assign filters to request', { filters});
 
@@ -124,7 +159,7 @@ export class EntriesFiltersStore {
         }
     }
 }
-let tempName = 1;
+
 @Injectable()
 export class EntriesFiltersService implements OnDestroy {
 
@@ -137,7 +172,8 @@ export class EntriesFiltersService implements OnDestroy {
     }
 
     constructor(private _store: EntriesFiltersStore, private _logger: KalturaLogger) {
-        this._localData = Object.assign({}, _store.data);
+
+        this._localData = _store.createCopy();
 
         _store.data$
             .cancelOnDestroy(this)
@@ -152,9 +188,11 @@ export class EntriesFiltersService implements OnDestroy {
                         if (currentValue !== previousValue) {
                             hasChanges = true;
                             changesArgument[propName] = new SimpleChange(previousValue, currentValue, false);
-                            newLocalData[propName] = filters[propName];
+                            newLocalData[propName] = copyObject(filters[propName],1);
                         }
                     });
+
+                    this._logger.debug(`checking for local data changes resulted with '${hasChanges ? 'has changes' : 'no changes found'}'`);
 
                     if (hasChanges) {
                         this._localData = newLocalData;
@@ -164,25 +202,27 @@ export class EntriesFiltersService implements OnDestroy {
             );
     }
 
-    getStoreData(): EntriesFilters {
-        return this._store.data;
+    getStoreDataSnapshot(): EntriesFilters {
+        return this._store.dataSnapshot;
     }
 
-    syncStoreData(updates?: Partial<EntriesFilters>): void {
-        if (updates) {
-            Object.assign(this.localData, updates);
-        }
-        const storeFilters = this._store.data;
-        Object.keys(this.localData).forEach(propertyName => {
-            const localValue = this.localData[propertyName];
-            if (storeFilters[propertyName] !== localValue) {
+    syncStoreByLocal(): void {
+        this.syncStore(this._localData);
+    }
+
+    syncStore(updates: Partial<EntriesFilters>): void {
+        const storeFilters = this._storeActualData;
+        Object.keys(updates).forEach(propertyName => {
+            const currentValue = updates[propertyName];
+            const storeValue = storeFilters[propertyName];
+            if (storeValue !== currentValue) {
                 // TODO sakal switch to adapters
                 switch (propertyName) {
                     case 'freetext':
-                        this._setFreeText(localValue);
+                        this._setFreeText(currentValue);
                         break;
                     case 'createdAt':
-                        this._setCreatedAt(localValue);
+                        this._setCreatedAt(currentValue);
                         break;
                     default:
                         break;
@@ -199,8 +239,12 @@ export class EntriesFiltersService implements OnDestroy {
         });
     }
 
+    private get _storeActualData(): EntriesFilters {
+        return (<any>this._store)._getActualData(internalAPISecret);
+    }
+
     private _setCreatedAt({createdAfter, createdBefore}: { createdAfter?: Date | null, createdBefore?: Date | null }): void {
-        const {createdAfter: currentCreatedAfter, createdBefore: currentCreatedBefore} = this._store.data.createdAt || {
+        const {createdAfter: currentCreatedAfter, createdBefore: currentCreatedBefore} = this._storeActualData.createdAt || {
             createdAfter: null,
             createdBefore: null
         };
