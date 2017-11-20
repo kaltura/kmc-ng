@@ -36,7 +36,6 @@ import { MetadataProfileFilter } from 'app-shared/content-shared/entries-store/f
 import { AccessControlProfilesFilter } from 'app-shared/content-shared/entries-store/filters/access-control-profiles-filter';
 import { FlavorsFilter } from 'app-shared/content-shared/entries-store/filters/flavors-filter';
 import { DistributionsFilter } from 'app-shared/content-shared/entries-store/filters/distributions-filter';
-import { EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
 
 
 // TODO
@@ -86,7 +85,6 @@ export class EntriesRefineFiltersProvider {
 
 
   constructor(private kalturaServerClient: KalturaClient,
-              private _entriesFilters : EntriesFiltersService,
               private _metadataProfileStore: MetadataProfileStore, private _flavoursStore: FlavoursStore) {
     this.load();
   }
@@ -192,26 +190,27 @@ export class EntriesRefineFiltersProvider {
   private _buildDefaultFiltersGroup(responses: KalturaMultiResponse, flavours: KalturaFlavorParams[]): RefineFilterGroup {
     const result: RefineFilterGroup = { label: '', filters: [] };
 
+    // TODO sakal
     // build constant filters
-    DefaultFiltersList.forEach((defaultFilterList) => {
-      const newRefineFilter = new RefineFilter(
-        defaultFilterList.name,
-        defaultFilterList.label,
-          (item) =>
-          {
-            this._entriesFilters.addMediaTypes({value : item.value, label : item.label});
-          },
-          (value) =>
-        {
-          this._entriesFilters.removeMediaTypes(value);
-        }
-      );
-      result.filters.push(newRefineFilter);
-      defaultFilterList.items.forEach((item: any) => {
-        newRefineFilter.items.push({ value: item.value, label: item.label });
-      });
-
-    });
+    // DefaultFiltersList.forEach((defaultFilterList) => {
+    //   const newRefineFilter = new RefineFilter(
+    //     defaultFilterList.name,
+    //     defaultFilterList.label,
+    //       (item) =>
+    //       {
+    //         this._entriesFilters.addMediaTypes({value : item.value, label : item.label});
+    //       },
+    //       (value) =>
+    //     {
+    //       this._entriesFilters.removeMediaTypes(value);
+    //     }
+    //   );
+    //   result.filters.push(newRefineFilter);
+    //   defaultFilterList.items.forEach((item: any) => {
+    //     newRefineFilter.items.push({ value: item.value, label: item.label });
+    //   });
+    //
+    // });
 
     // build access control profile filters
       // TODO

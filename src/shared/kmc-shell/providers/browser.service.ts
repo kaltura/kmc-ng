@@ -65,6 +65,7 @@ export class BrowserService implements IAppStorage {
 		}
 	};
 
+
 	constructor(private localStorage: LocalStorageService, private sessionStorage: SessionStorageService) {
 	}
 

@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {NgModule, Provider} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -6,7 +6,7 @@ import {HttpModule} from '@angular/http';
 import {CommonModule} from '@angular/common';
 import {Ng2Webstorage} from 'ng2-webstorage';
 import { TranslateModule } from 'ng2-translate/ng2-translate';
-import { KalturaLogger } from '@kaltura-ng/kaltura-log';
+import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-log';
 
 import {
   AppBootstrap,
@@ -78,10 +78,7 @@ import { AppEventsModule } from 'app-shared/kmc-shared';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
-export function createAppLogger()
-{
-    return KalturaLogger.createFactory('kmc');
-}
+
 
 export function clientConfigurationFactory() {
   const result = new KalturaClientConfiguration();
@@ -148,7 +145,10 @@ export function clientConfigurationFactory() {
   exports: [],
   providers: <any>[
     ...partnerProviders,
-      createAppLogger(),
+      KalturaLogger,
+      {
+          provide: KalturaLoggerName, useValue: 'kmc'
+      },
     AppMenuService,
     {
       provide: BootstrapAdapterToken,

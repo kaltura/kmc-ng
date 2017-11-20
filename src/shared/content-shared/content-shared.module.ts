@@ -102,7 +102,8 @@ import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/
   ],
   providers: [
     CategoriesPrimeService,
-    CategoriesStore
+    CategoriesStore,
+    EntriesRefineFiltersProvider
   ]
 })
 export class ContentSharedModule {

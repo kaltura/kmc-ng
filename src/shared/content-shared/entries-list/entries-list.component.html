@@ -22,7 +22,7 @@
             <input type="text"
                    pInputText
                    class="kSearchInput"
-                   [(ngModel)]="_filter.freetextSearch"
+                   [(ngModel)]="_filters.localData.freetext"
                    (keyup.enter)="onFreetextChanged()"
                    placeholder="{{'applications.content.entries.searchEntries' | translate}}">
             <div #categoriesFilterBtn class="kCategoriesFilter">
@@ -66,7 +66,7 @@
                      scrollHeight="100%"
                      [entries]="(_entriesStore.entries$ | async)?.items"
                      [showBulkSelect]="bulkWrapper.children.length !== 0"
-                     [filter]="_filter"
+                     [filter]="_query"
                      [columns]="columns"
                      [rowActions]="rowActions"
                      (actionSelected)="onActionsSelected.emit($event)"
@@ -76,8 +76,8 @@
 
       <div class="kEntriesTableFooter kContent" #footer *ngIf="(_entriesStore.entries$ | async)?.totalCount">
         <p-paginator
-          [rows]="_filter.pageSize"
-          [first]="_filter.pageIndex * _filter.pageSize"
+          [rows]="_query.pageSize"
+          [first]="_query.pageIndex * _query.pageSize"
           [totalRecords]="(_entriesStore.entries$ | async)?.totalCount | kMaxEntries"
           [rowsPerPageOptions]="[25,50,75,100]"
           (onPageChange)="onPaginationChanged($event)"></p-paginator>

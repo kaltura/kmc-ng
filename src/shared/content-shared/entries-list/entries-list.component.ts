@@ -1,56 +1,21 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, Self, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 
 import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
-import { EntriesFilters, EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
+import { EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 
-// TODO sakal remove
-function mapFromArray(array, prop) {
-    var map = {};
-    for (var i=0; i < array.length; i++) {
-        map[ array[i][prop] ] = array[i];
-    }
-    return map;
-}
-
-
-function getDelta<T>(source : T[], compareTo : T[], keyPropertyName : string, comparator : (a : T, b : T) => boolean) : { added : T[], deleted : T[], changed : T[]} {
-    var delta = {
-        added: [],
-        deleted: [],
-        changed: []
-    };
-
-    var mapSource = mapFromArray(source, keyPropertyName);
-    var mapCompareTo = mapFromArray(compareTo, keyPropertyName);
-    for (var id in mapSource) {
-        if (!mapCompareTo.hasOwnProperty(id)) {
-            delta.deleted.push(mapSource[id]);
-        } else if (!comparator(mapCompareTo[id], mapSource[id])){
-            delta.changed.push(mapCompareTo[id]);
-        }
-    }
-
-    for (var id in mapCompareTo) {
-        if (!mapSource.hasOwnProperty(id)) {
-            delta.added.push( mapCompareTo[id] )
-        }
-    }
-    return delta;
-}
-
-
 @Component({
   selector: 'kEntriesList',
   templateUrl: './entries-list.component.html',
-  styleUrls: ['./entries-list.component.scss']
+  styleUrls: ['./entries-list.component.scss'],
+    providers: [EntriesFiltersService]
+
 })
 export class EntriesListComponent implements OnInit, OnDestroy {
   @Input() isBusy = false;
@@ -62,41 +27,40 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   @ViewChild('tags') private tags: StickyComponent;
 
   @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
-  public _filterTags : { type : string, value? : string, label : string, tooltip : {token : string, args?: any[]}}[] = [];
-  private _handledFiltersInTags : EntriesFilters = null;
+  public _filterTags : { type : string, value? : any, label : string, tooltip : {token : string, args?: any[]}}[] = [];
+
 
     private querySubscription: ISubscription;
 
-  public _filter = {
+  public _query = {
     pageIndex: 0,
-    freetextSearch: '',
     pageSize: null, // pageSize is set to null by design. It will be modified after the first time loading entries
     sortBy: 'createdAt',
     sortDirection: SortDirection.Desc
   };
 
   constructor(private _entriesStore: EntriesStore,
-              private _entriesFilters : EntriesFiltersService,
+              @Self() private _filters: EntriesFiltersService,
               private appLocalization: AppLocalization,
               private router: Router,
               private _browserService: BrowserService) {
   }
 
   removeTag(tag: any) {
-    this.clearSelection();
+      this.clearSelection();
 
-    switch (tag.type)
-    {
-        case "mediaType":
-          this._entriesFilters.removeMediaTypes(tag.value);
-          break;
-        case "freetext":
-          this._entriesFilters.setFreeText(null);
-          break;
-        case "createdAt":
-            this._entriesFilters.setCreatedAt({ createdAfter: null, createdBefore: null});
-            break;
-    }
+      switch (tag.type) {
+          case "mediaType":
+              //this._entriesFilters.removeMediaTypes(tag.value);
+              break;
+          case "freetext":
+              this._filters.syncStoreData({freetext: null});
+              this._syncFreetextTag();
+              break;
+          case "createdAt":
+              this._filters.syncStoreData({createdAt: {createdAfter: null, createdBefore: null}});
+              break;
+      }
   }
 
   removeAllTags() {
@@ -105,60 +69,59 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   }
 
   onFreetextChanged(): void {
-    this._entriesFilters.setFreeText(this._filter.freetextSearch);
+    this._filters.syncStoreData();
+    this._syncFreetextTag();
   }
 
   onSortChanged(event) {
     this.clearSelection();
-    this._filter.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
-    this._filter.sortBy = event.field;
+    this._query.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
+    this._query.sortBy = event.field;
 
     this._entriesStore.reload({
-      sortBy: this._filter.sortBy,
-      sortDirection: this._filter.sortDirection
+      sortBy: this._query.sortBy,
+      sortDirection: this._query.sortDirection
     });
   }
 
   onPaginationChanged(state: any): void {
-    if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
-      this._filter.pageIndex = state.page;
-      this._filter.pageSize = state.rows;
+    if (state.page !== this._query.pageIndex || state.rows !== this._query.pageSize) {
+      this._query.pageIndex = state.page;
+      this._query.pageSize = state.rows;
 
       this.clearSelection();
       this._entriesStore.reload({
-        pageIndex: this._filter.pageIndex + 1,
-        pageSize: this._filter.pageSize
+        pageIndex: this._query.pageIndex + 1,
+        pageSize: this._query.pageSize
       });
     }
   }
 
   ngOnInit() {
-
+      this._filters.localDataChanges$
+          .cancelOnDestroy(this)
+          .subscribe(changes =>
+          {
+              if (typeof changes.freetext !== 'undefined')
+              {
+                  this._syncFreetextTag();
+              }
+          });
 
     const queryData = this._entriesStore.queryData;
 
     if (queryData) {
-      this._filter.pageSize = queryData.pageSize;
-      this._filter.pageIndex = queryData.pageIndex - 1;
-      this._filter.sortBy = queryData.sortBy;
-      this._filter.sortDirection = queryData.sortDirection;
+      this._query.pageSize = queryData.pageSize;
+      this._query.pageIndex = queryData.pageIndex - 1;
+      this._query.sortBy = queryData.sortBy;
+      this._query.sortDirection = queryData.sortDirection;
     }
-
-    // TODO sakal subscribe async
-    this._entriesFilters.filters$
-        .cancelOnDestroy(this)
-        .subscribe(filters =>
-        {
-          this._filter.freetextSearch = filters.freetext;
-
-          this._syncFiltersList(filters);
-        });
 
     this.querySubscription = this._entriesStore.query$.subscribe(
       query => {
 
-        this._filter.pageSize = query.data.pageSize;
-        this._filter.pageIndex = query.data.pageIndex - 1;
+        this._query.pageSize = query.data.pageSize;
+        this._query.pageIndex = query.data.pageIndex - 1;
         this._browserService.scrollToTop();
       }
     );
@@ -166,44 +129,61 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     this._entriesStore.reload(false);
   }
 
-  private _syncFiltersList(filters : EntriesFilters) : void{
+  private _syncFreetextTag(): void {
+      this._filterTags.splice(
+          this._filterTags.findIndex(item => item.type === 'freetext'),
+          1);
 
-      const previousFilters = this._handledFiltersInTags;
-      const existingFilterTags = [...this._filterTags];
+      const currentFreetextValue = this._filters.localData.freetext;
 
-      if ((!previousFilters || previousFilters.createdAt !== filters.createdAt))
-      {
-          existingFilterTags.splice(
-              existingFilterTags.findIndex(item => item.type === 'createdAt'),
-              1);
-
-        if (filters.createdAt)
-        {
-            const { createdAfter, createdBefore } = filters.createdAt;
-            let tooltip = '';
-            if (createdAfter && createdBefore) {
-                tooltip = `${moment(createdAfter).format('LL')} - ${moment(createdBefore).format('LL')}`;
-            } else if (createdAfter) {
-                tooltip = `From ${moment(createdAfter).format('LL')}`;
-            } else if (createdBefore) {
-                tooltip = `Until ${moment(createdBefore).format('LL')}`;
-            }
-            // TODO sakal fix tooltip as token
-            existingFilterTags.push({ type : 'createdAt', label : 'Dates' , tooltip : {token: tooltip}});
-        }
+      if (currentFreetextValue) {
+          this._filterTags.push({
+              type: 'freetext',
+              value: currentFreetextValue,
+              label: currentFreetextValue + '',
+              tooltip: {token: `applications.content.filters.freeText`}
+          });
       }
+  }
 
-      if ((!previousFilters || previousFilters.freetext !== filters.freetext))
-      {
-          existingFilterTags.splice(
-              existingFilterTags.findIndex(item => item.type === 'freetext'),
-              1);
+  private _syncTags(filters : any) : void {
 
-          if (filters.freetext)
-          {
-              existingFilterTags.push({ type : 'freetext', value : filters.freetext, label : filters.freetext, tooltip : {token: `applications.content.filters.freeText`}});
-          }
-      }
+      // const previousFilters = this._handledFiltersInTags;
+      // const existingFilterTags = [...this._filterTags];
+      //
+      // if ((!previousFilters || previousFilters.createdAt !== filters.createdAt))
+      // {
+      //     existingFilterTags.splice(
+      //         existingFilterTags.findIndex(item => item.type === 'createdAt'),
+      //         1);
+      //
+      //   if (filters.createdAt)
+      //   {
+      //       const { createdAfter, createdBefore } = filters.createdAt;
+      //       let tooltip = '';
+      //       if (createdAfter && createdBefore) {
+      //           tooltip = `${moment(createdAfter).format('LL')} - ${moment(createdBefore).format('LL')}`;
+      //       } else if (createdAfter) {
+      //           tooltip = `From ${moment(createdAfter).format('LL')}`;
+      //       } else if (createdBefore) {
+      //           tooltip = `Until ${moment(createdBefore).format('LL')}`;
+      //       }
+      //       // TODO sakal fix tooltip as token
+      //       existingFilterTags.push({ type : 'createdAt', label : 'Dates' , tooltip : {token: tooltip}});
+      //   }
+      // }
+      //
+      // if ((!previousFilters || previousFilters.freetext !== filters.freetext))
+      // {
+      //     existingFilterTags.splice(
+      //         existingFilterTags.findIndex(item => item.type === 'freetext'),
+      //         1);
+      //
+      //     if (filters.freetext)
+      //     {
+      //         existingFilterTags.push({ type : 'freetext', value : filters.freetext, label : filters.freetext, tooltip : {token: `applications.content.filters.freeText`}});
+      //     }
+      // }
 
       // if (!previousFilters || previousFilters.mediaTypes !== filters.mediaTypes) {
       //     const existingMediaTypes = existingFilterTags.filter(filter => filter.type === 'mediaType');
@@ -229,8 +209,8 @@ export class EntriesListComponent implements OnInit, OnDestroy {
       //     });
       // }
 
-      this._handledFiltersInTags = filters;
-      this._filterTags = existingFilterTags;
+      // this._handledFiltersInTags = filters;
+      // this._filterTags = existingFilterTags;
   }
 
   ngOnDestroy() {

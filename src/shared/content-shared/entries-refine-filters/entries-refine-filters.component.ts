@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, Self, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 
 import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
@@ -16,7 +16,6 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { ValueFilter } from 'app-shared/content-shared/entries-store/value-filter';
 import { TimeSchedulingFilter } from 'app-shared/content-shared/entries-store/filters/time-scheduling-filter';
-import { CreatedAtFilter } from 'app-shared/content-shared/entries-store/filters/created-at-filter';
 import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item';
 import { EntriesFilters, EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
@@ -35,7 +34,8 @@ export interface FiltersGroup {
 @Component({
   selector: 'k-entries-refine-filters',
   templateUrl: './entries-refine-filters.component.html',
-  styleUrls: ['./entries-refine-filters.component.scss']
+  styleUrls: ['./entries-refine-filters.component.scss'],
+    providers: [EntriesFiltersService]
 })
 export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
@@ -52,20 +52,16 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
   public _showLoader = false;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _createdAfter: Date;
-  public _createdBefore: Date;
   public _createdFilterError: string = null;
   public _scheduledAfter: Date;
   public _scheduledBefore: Date;
   public _scheduledFilterError: string = null;
-  public _scheduledSelected = false;
   public _createdAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
 
   constructor(public additionalFiltersStore: EntriesRefineFiltersProvider,
+              @Self() private _filters: EntriesFiltersService,
               private primeTreeDataProvider: PrimeTreeDataProvider,
               private entriesStore: EntriesStore,
-              private _entriesFilters : EntriesFiltersService,
-              private elementRef: ElementRef,
               private appLocalization: AppLocalization) {
   }
 
@@ -102,39 +98,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    **/
   private _registerToFilterUpdates(): void {
 
-      this._entriesFilters.filters$
-          .cancelOnDestroy(this)
-          .subscribe(
-              (filters) => {
-                  // const previousFilters = this._handledFiltersInTags;
-                  //
-                  // if (!previousFilters || previousFilters.mediaTypes !== filters.mediaTypes) {
-                  //     const existingMediaTypes = existingFilterTags.filter(filter => filter.type === 'mediaType');
-                  //     const newMediaTypes = Object.entries(filters.mediaTypes).map(([value, label]) =>
-                  //         ({
-                  //             type: 'mediaType',
-                  //             value: value,
-                  //             label,
-                  //             tooltip : { token: 'tooltip' }
-                  //
-                  //         }));
-                  //
-                  //     const delta = getDelta(existingMediaTypes,newMediaTypes, 'value', (a,b) => a.value === b.value);
-                  //
-                  //     existingFilterTags.push(...delta.added);
-                  //
-                  //     delta.deleted.forEach(removedMediaType =>
-                  //     {
-                  //         existingFilterTags.splice(
-                  //             existingFilterTags.findIndex(item => item.value === removedMediaType.value),
-                  //             1);
-                  //
-                  //     });
-                  // }
-                  //
-                  // this._handledFiltersInTags = filters;
-              }
-  );
+
     // TODO sakal remove
     this.entriesStore.activeFilters$
       .cancelOnDestroy(this)
@@ -265,41 +229,23 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
         });
   }
 
-
-  /**
-   * Update content created components when filters are modified somewhere outside of this component
-   *
-   * @private
-   */
-  private syncCreatedComponents(): void {
-
-    const createdAtFilter = this.entriesStore.getFirstFilterByType(CreatedAtFilter);
-
-    if (createdAtFilter instanceof CreatedAtFilter) {
-      this._createdAfter = createdAtFilter.createdAfter;
-      this._createdBefore = createdAtFilter.createdBefore;
-    } else {
-      this._createdAfter = null;
-      this._createdBefore = null;
-    }
-  }
-
   /**
    * Update content created components when filters are modified somewhere outside of this component
    * @private
    */
   private syncScheduledComponents(): void {
-    const scheduledFilterItem = this._getScheduledFilter();
-
-    if (scheduledFilterItem !== null) {
-      this._scheduledSelected = true;
-      this._scheduledAfter = scheduledFilterItem.scheduledAfter;
-      this._scheduledBefore = scheduledFilterItem.scheduledBefore;
-    } else {
-      this._scheduledBefore = null;
-      this._scheduledAfter = null;
-      this._scheduledSelected = false;
-    }
+    // TODO sakal
+    // const scheduledFilterItem = this._getScheduledFilter();
+    //
+    // if (scheduledFilterItem !== null) {
+    //   this._scheduledSelected = true;
+    //   this._scheduledAfter = scheduledFilterItem.scheduledAfter;
+    //   this._scheduledBefore = scheduledFilterItem.scheduledBefore;
+    // } else {
+    //   this._scheduledBefore = null;
+    //   this._scheduledAfter = null;
+    //   this._scheduledSelected = false;
+    // }
   }
 
 
@@ -344,20 +290,20 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    * @private
    */
   private syncCreatedFilters() {
+      const {createdAfter, createdBefore} = this._filters.localData.createdAt || {createdAfter: null, createdBefore: null};
+      this._createdFilterError = null;
 
-    this._createdFilterError = null;
-    if (this._createdBefore && this._createdAfter) {
-      const isValid = this._createdAfter <= this._createdBefore;
+      if (createdAfter && createdBefore) {
+          const isValid = createdAfter <= createdBefore;
 
-      if (!isValid) {
-        setTimeout(this.syncCreatedComponents.bind(this), 0);
-
-        this._createdFilterError = this.appLocalization.get('applications.content.entryDetails.errors.schedulingError');
-        return;
+          if (!isValid) {
+              this._filters.localData.createdAt = this._filters.getStoreData().createdAt;
+              this._createdFilterError = this.appLocalization.get('applications.content.entryDetails.errors.schedulingError');
+              return;
+          }
       }
-    }
 
-    this._entriesFilters.setCreatedAt({ createdAfter: this._createdAfter, createdBefore: this._createdBefore});
+      this._filters.syncStoreData();
   }
 
   /**
@@ -366,11 +312,8 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    * Not part of the API, don't use it from outside this component
    */
   public _clearCreatedComponents(): void {
-    this._createdAfter = null;
-    this._createdBefore = null;
-
-
-    this.syncCreatedFilters();
+      this._filters.localData.createdAt = {createdBefore: null, createdAfter: null};
+      this._filters.syncStoreData();
   }
 
   /**

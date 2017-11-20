@@ -23,7 +23,7 @@
             </div>
             <div [class.kHidden]="_selectedPlaylists.length" class="kFilters">
               <input type="text" pInputText class="kSearchInput"
-                     [(ngModel)]="_filter.freetextSearch"
+                     [(ngModel)]="_query.freetextSearch"
                      (keyup.enter)="onFreetextChanged()"
                      placeholder="{{'applications.content.playlists.searchEntries' | translate}}">
               <div #refineBtn class="kRefine"><i class="kIconcalendar"></i></div>
@@ -60,14 +60,14 @@
         [activeFilters]="activeFilters"
         [playlists]="(_playlistsStore.playlists$ | async)?.items"
         (sortChanged)="onSortChanged($event)"
-        [filter]="_filter"
+        [filter]="_query"
         (actionSelected)="onActionSelected($event)"
         [(selectedPlaylists)]="_selectedPlaylists"></kPlaylistsTable>
 
       <div class="kPlaylistsTableFooter kContent" #footer *ngIf="(_playlistsStore.playlists$ | async)?.totalCount">
         <p-paginator
-          [rows]="_filter.pageSize"
-          [first]="_filter.pageIndex * _filter.pageSize"
+          [rows]="_query.pageSize"
+          [first]="_query.pageIndex * _query.pageSize"
           [rowsPerPageOptions]="[25,50,75,100]"
           [totalRecords]="(_playlistsStore.playlists$ | async)?.totalCount"
           (onPageChange)="onPaginationChanged($event)"></p-paginator>
@@ -88,8 +88,8 @@
   <kPlaylistsAdditionalFilter
     [parentPopupWidget]="refinePopup"
     (createdChanged)="onCreatedChanged($event)"
-    [_createdAfter]="_filter.createdAfter"
-    [_createdBefore]="_filter.createdBefore"></kPlaylistsAdditionalFilter>
+    [_createdAfter]="_query.createdAfter"
+    [_createdBefore]="_query.createdBefore"></kPlaylistsAdditionalFilter>
 </kPopupWidget>
 
 <kPopupWidget #addNewPlaylist [popupWidth]="586" [popupHeight]="453" [modal]="true" [preventPageScroll]="true">

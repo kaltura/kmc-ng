@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {KalturaClient} from '@kaltura-ng/kaltura-client';
-import {KalturaMultiRequest} from 'kaltura-typescript-client';
+import { KalturaMultiRequest, KalturaRequest, KalturaRequestBase } from 'kaltura-typescript-client';
 import {KalturaUserRoleFilter} from 'kaltura-typescript-client/types/KalturaUserRoleFilter';
 import {KalturaUserRoleStatus} from 'kaltura-typescript-client/types/KalturaUserRoleStatus';
 import {KalturaUserFilter} from 'kaltura-typescript-client/types/KalturaUserFilter';

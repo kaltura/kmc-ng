@@ -31,7 +31,9 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaLiveStreamAdminEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamAdminEntry';
 import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamEntry';
 import { KalturaExternalMediaEntry } from 'kaltura-typescript-client/types/KalturaExternalMediaEntry';
-import { EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
+import {
+    EntriesFiltersStore
+} from 'app-shared/content-shared/entries-store/entries-filters.service';
 import { environment } from 'app-environment';
 import { KalturaLogger } from '@kaltura-ng/kaltura-log';
 
@@ -135,7 +137,7 @@ export class EntriesStore implements OnDestroy {
 
   constructor(private kalturaServerClient: KalturaClient,
               private browserService: BrowserService,
-              @Host() private _entriesFilters : EntriesFiltersService,
+              @Host() private _entriesStore : EntriesFiltersStore,
               private metadataProfileService: MetadataProfileStore,
               private _logger: KalturaLogger) {
     const defaultPageSize = this.browserService.getFromLocalStorage(this._getPaginationCacheKey());
@@ -145,7 +147,7 @@ export class EntriesStore implements OnDestroy {
 
     this._getMetadataProfiles();
 
-    this._entriesFilters.filters$
+    this._entriesStore.data$
         .cancelOnDestroy(this)
         .subscribe(filters =>
         {
@@ -401,7 +403,7 @@ export class EntriesStore implements OnDestroy {
         });
       }
 
-      this._entriesFilters.assignFiltersToRequest({
+      this._entriesStore.toRequest({
           filter: filter,
           advancedSearch: advancedSearch
       });
