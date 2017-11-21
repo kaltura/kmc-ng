@@ -27,7 +27,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   @ViewChild('tags') private tags: StickyComponent;
 
   @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
-  public _filterTags : { type : string, value? : any, label : string, tooltip : {token : string, args?: any[]}}[] = [];
+  public _filterTags : { type : string, value : any, label : string, tooltip : {token : string, args?: any}}[] = [];
 
 
     private querySubscription: ISubscription;
@@ -51,7 +51,11 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
       switch (tag.type) {
           case "mediaType":
-              //this._entriesFilters.removeMediaTypes(tag.value);
+              this._filters.localData.mediaTypes.splice(
+                  this._filters.localData.mediaTypes.findIndex(item => item.value === tag.value)
+                  , 1
+              );
+              this._filters.syncStoreByLocal();
               break;
           case "freetext":
               this._filters.syncStore({freetext: null});
@@ -69,7 +73,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
   onFreetextChanged(): void {
     this._filters.syncStoreByLocal();
-    this._syncTagFreetext();
+    this._syncTagOfFreetext();
   }
 
   onSortChanged(event) {
@@ -171,11 +175,15 @@ export class EntriesListComponent implements OnInit, OnDestroy {
           .cancelOnDestroy(this)
           .subscribe(changes => {
               if (typeof changes.createdAt !== 'undefined') {
-                  this._syncTagCreatedAt();
+                  this._syncTagOfCreatedAt();
+              }
+
+              if (typeof changes.mediaTypes !== 'undefined') {
+                  this._syncTagsOfMediaTypes();
               }
 
               if (typeof changes.freetext !== 'undefined') {
-                  this._syncTagFreetext();
+                  this._syncTagOfFreetext();
               }
           });
 
@@ -200,7 +208,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     this._entriesStore.reload(false);
   }
 
-    private _syncTagCreatedAt(): void {
+    private _syncTagOfCreatedAt(): void {
         this._filterTags.splice(
             this._filterTags.findIndex(item => item.type === 'createdAt'),
             1);
@@ -216,11 +224,11 @@ export class EntriesListComponent implements OnInit, OnDestroy {
                 tooltip = `Until ${moment(createdBefore).format('LL')}`;
             }
             // TODO sakal fix tooltip as token
-            this._filterTags.push({type: 'createdAt', label: 'Dates', tooltip: {token: tooltip}});
+            this._filterTags.push({type: 'createdAt', value: null, label: 'Dates', tooltip: {token: tooltip}});
         }
     }
 
-  private _syncTagFreetext(): void {
+  private _syncTagOfFreetext(): void {
       this._filterTags.splice(
           this._filterTags.findIndex(item => item.type === 'freetext'),
           1);
@@ -235,6 +243,27 @@ export class EntriesListComponent implements OnInit, OnDestroy {
               tooltip: {token: `applications.content.filters.freeText`}
           });
       }
+  }
+  private _syncTagsOfMediaTypes(): void {
+
+      const currentFilters = this._filterTags.filter(item => item.type === 'mediaType');
+
+      const diff = this._filters.getDiff(currentFilters, this._filters.localData.mediaTypes, 'value');
+
+      diff.deleted.forEach(item => {
+          this._filterTags.splice(
+              this._filterTags.indexOf(item),
+              1);
+      });
+
+      diff.added.forEach(item => {
+          this._filterTags.push({
+              type: 'mediaType',
+              value: item.value,
+              label: item.label,
+              tooltip: {token: 'applications.content.filters.mediaType', args: {'0': item.label}}
+          });
+      });
   }
 
 

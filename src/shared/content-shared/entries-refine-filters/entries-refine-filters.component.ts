@@ -66,7 +66,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   }
 
   ngOnInit() {
-
+      this._registerToAdditionalFiltersStore();
   }
 
   ngAfterViewInit() {
@@ -444,6 +444,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   }
 
 
+  // TODO sakal remove
   private _createFiltersByNode(node: PrimeTreeNode): FilterItem[] {
     const result: FilterItem[] = [];
 
@@ -513,15 +514,37 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
       const treeData = this._filterNameToTreeData[node.payload.filterName];
 
       if (treeData) {
-        this._createFiltersByNode(node);
+        // TODO sakal
+          switch (node.payload.filterName)
+          {
+              case "Media Types":
+                if (!this._filters.localData.mediaTypes.find(item => item.value === node.data)) {
+                    this._filters.localData.mediaTypes.push({value: node.data, label: node.label});
+                    this._filters.syncStoreByLocal();
+                }
+                break;
+          }
       }
     }
   }
 
   public _onTreeNodeUnselect({ node }: { node: PrimeTreeNode }, treeSection: TreeFilterData) {
-    if (node instanceof PrimeTreeNode) {
-      this._removeFiltersByNode(node);
-    }
+      if (node instanceof PrimeTreeNode && node.payload.filterName) {
+          const treeData = this._filterNameToTreeData[node.payload.filterName];
+
+          if (treeData) {
+              // TODO sakal
+              switch (node.payload.filterName)
+              {
+                  case "Media Types":
+                      this._filters.localData.mediaTypes.splice(
+                          this._filters.localData.mediaTypes.findIndex(item => item.value === node.data), 1);
+
+                      this._filters.syncStoreByLocal();
+                      break;
+              }
+          }
+      }
   }
 
   /**

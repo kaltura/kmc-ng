@@ -13,7 +13,7 @@ export interface EntriesFilters
         createdBefore: Date,
         createdAfter: Date
     },
-    mediaTypes : { [value: string] : string }
+    mediaTypes : {value: any, label: string }[]
 }
 
 function mapFromArray(array, prop) {
@@ -92,7 +92,7 @@ export class EntriesFiltersStore {
     private _data = new BehaviorSubject<EntriesFilters>({
         freetext: '',
         createdAt: { createdAfter: null, createdBefore: null },
-        mediaTypes: {}
+        mediaTypes: []
     });
 
     public data$ = this._data.asObservable();
@@ -156,7 +156,7 @@ export class EntriesFiltersStore {
             }
         }
 
-        const mediaTypeFilters = Object.keys(filters.mediaTypes).join(',');
+        const mediaTypeFilters = filters.mediaTypes.map(item => item.value).join(',');
         if (mediaTypeFilters) {
             request.filter.mediaTypeIn = mediaTypeFilters;
         }
@@ -213,7 +213,10 @@ export class EntriesFiltersService implements OnDestroy {
         return this._store.dataSnapshot;
     }
 
-    syncStoreByLocal(): void {
+    syncStoreByLocal(updates?: Partial<EntriesFilters>): void {
+        if (updates) {
+            Object.assign(this._localData, updates);
+        }
         this.syncStore(this._localData);
     }
 
@@ -266,58 +269,59 @@ export class EntriesFiltersService implements OnDestroy {
         });
     }
 
-    public _setMediaTypes(value: { [value: string]: string }): void {
-        // const filters = this._filters.getValue();
-        // let newMediaTypes = null;
-        //
-        // mediaTypes.forEach(({label, value}) =>
-        // {
-        //     if (typeof value !== 'undefined' && value !== null) {
-        //         const valueAsKey = value + '';
-        //
-        //         if (!filters.mediaTypes[valueAsKey]) {
-        //             newMediaTypes = newMediaTypes || Object.assign({}, filters.mediaTypes);
-        //             newMediaTypes[valueAsKey] = label;
-        //         }
-        //     }
-        // });
-        //
-        // if (newMediaTypes)
-        // {
-        //     // TODO sakal - use lazy logging and change info to debug
-        //     this._logger.info('add media types', {mediaTypes});
-        //
-        //     filters.mediaTypes = newMediaTypes;
-        //     this._filters.next(filters);
-        // }
-    }
-
-    public removeMediaTypes(...mediaTypeValues: string[]): void {
-        // const filters = this._filters.getValue();
-        // let newMediaTypes = null;
-        //
-        // mediaTypeValues.forEach(mediaTypeValue =>
-        // {
-        //     if (typeof mediaTypeValue !== 'undefined' && mediaTypeValue !== null) {
-        //
-        //         if (filters.mediaTypes[mediaTypeValue]) {
-        //             newMediaTypes = newMediaTypes || Object.assign({}, filters.mediaTypes);
-        //             delete newMediaTypes[mediaTypeValue];
-        //         }
-        //     }
-        // });
-        //
-        // if (newMediaTypes)
-        // {
-        //     // TODO sakal - use lazy logging
-        //     this._logger.info('remove media types', {mediaTypeValues});
-        //
-        //     filters.mediaTypes = newMediaTypes;
-        //     this._filters.next(filters);
-        // }
+    public _setMediaTypes(value: { value: any, label: string }[]): void {
+        this._logger.info('update media types');
+        this._store.update({
+            mediaTypes: value
+        });
     }
 
     ngOnDestroy() {
 
     }
+
+    getDiff<TSource, TCompareTo>(source: TSource[], compareTo: TCompareTo[], keyPropertyName: string): { added: TCompareTo[], deleted: TSource[] } {
+        const delta = {
+            added: [],
+            deleted: []
+        };
+
+        const mapSource =  mapFromArray(source, keyPropertyName);
+        const mapCompareTo = mapFromArray(compareTo, keyPropertyName);
+        for (const id in mapSource) {
+            if (!mapCompareTo.hasOwnProperty(id)) {
+                delta.deleted.push(mapSource[id]);
+            }
+        }
+
+        for (const id in mapCompareTo) {
+            if (!mapSource.hasOwnProperty(id)) {
+                delta.added.push(mapCompareTo[id])
+            }
+        }
+        return delta;
+    }
+    // getDiff<T>(source: T[], compareTo: T[], keyPropertyName: string): { added: T[], deleted: T[] };
+    // getDiff<T>(source: { [key: string]: T }, compareTo: { [key: string]: T }): { added: T[], deleted: T[] };
+    // getDiff<T>(source: T[] | { [key: string]: T }, compareTo: T[] | { [key: string]: T }, keyPropertyName?: string): { added: T[], deleted: T[] } {
+    //     var delta = {
+    //         added: [],
+    //         deleted: []
+    //     };
+    //
+    //     var mapSource = Array.isArray(source) ? mapFromArray(source, keyPropertyName) : source;
+    //     var mapCompareTo = Array.isArray(compareTo) ? mapFromArray(compareTo, keyPropertyName) : compareTo;
+    //     for (var id in mapSource) {
+    //         if (!mapCompareTo.hasOwnProperty(id)) {
+    //             delta.deleted.push(mapSource[id]);
+    //         }
+    //     }
+    //
+    //     for (var id in mapCompareTo) {
+    //         if (!mapSource.hasOwnProperty(id)) {
+    //             delta.added.push(mapCompareTo[id])
+    //         }
+    //     }
+    //     return delta;
+    // }
 }
