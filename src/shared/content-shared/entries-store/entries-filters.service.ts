@@ -126,6 +126,9 @@ export class EntriesFiltersStore {
         if (hasChanges) {
             this._logger.trace('update filters', { updates });
             this._data.next(newFilters);
+        }else {
+            this._logger.warn('filters already contains the requested values. ignoring update request');
+
         }
     }
 
@@ -167,6 +170,10 @@ export class EntriesFiltersService implements OnDestroy {
     public localDataChanges$ = this._localDataChanges.asObservable();
     private _localData: Partial<EntriesFilters>;
 
+    private get _storeActualData(): EntriesFilters {
+        return (<any>this._store)._getActualData(internalAPISecret);
+    }
+
     public get localData(): Partial<EntriesFilters> {
         return this._localData;
     }
@@ -177,29 +184,29 @@ export class EntriesFiltersService implements OnDestroy {
 
         _store.data$
             .cancelOnDestroy(this)
-            .subscribe(
-                filters => {
-                    const changesArgument: SimpleChanges = {};
-                    let hasChanges = false;
-                    const newLocalData = Object.assign({}, this.localData);
-                    Object.keys(filters).forEach(propName => {
-                        const previousValue = newLocalData[propName];
-                        const currentValue = filters[propName];
-                        if (currentValue !== previousValue) {
-                            hasChanges = true;
-                            changesArgument[propName] = new SimpleChange(previousValue, currentValue, false);
-                            newLocalData[propName] = copyObject(filters[propName],1);
-                        }
-                    });
+            .subscribe(this._onStoreDataUpdated.bind(this));
+    }
 
-                    this._logger.debug(`checking for local data changes resulted with '${hasChanges ? 'has changes' : 'no changes found'}'`);
+    private _onStoreDataUpdated(filters: EntriesFilters): void {
+        const changesArgument: SimpleChanges = {};
+        let hasChanges = false;
+        const newLocalData = Object.assign({}, this.localData);
+        Object.keys(filters).forEach(propName => {
+            const previousValue = newLocalData[propName];
+            const currentValue = filters[propName];
+            if (currentValue !== previousValue) {
+                hasChanges = true;
+                changesArgument[propName] = new SimpleChange(previousValue, currentValue, false);
+                newLocalData[propName] = copyObject(filters[propName], 1);
+            }
+        });
 
-                    if (hasChanges) {
-                        this._localData = newLocalData;
-                        this._localDataChanges.next(changesArgument);
-                    }
-                }
-            );
+        this._logger.debug(`checking for local data changes resulted with '${hasChanges ? 'has changes' : 'no changes found'}'`);
+
+        if (hasChanges) {
+            this._localData = newLocalData;
+            this._localDataChanges.next(changesArgument);
+        }
     }
 
     getStoreDataSnapshot(): EntriesFilters {
@@ -224,6 +231,9 @@ export class EntriesFiltersService implements OnDestroy {
                     case 'createdAt':
                         this._setCreatedAt(currentValue);
                         break;
+                    case 'mediaTypes':
+                        this._setMediaTypes(currentValue);
+                        break;
                     default:
                         break;
                 }
@@ -239,32 +249,24 @@ export class EntriesFiltersService implements OnDestroy {
         });
     }
 
-    private get _storeActualData(): EntriesFilters {
-        return (<any>this._store)._getActualData(internalAPISecret);
-    }
-
     private _setCreatedAt({createdAfter, createdBefore}: { createdAfter?: Date | null, createdBefore?: Date | null }): void {
-        const {createdAfter: currentCreatedAfter, createdBefore: currentCreatedBefore} = this._storeActualData.createdAt || {
+        const {createdAfter: storeCreatedAfter, createdBefore: storeCreatedBefore} = this._storeActualData.createdAt || {
             createdAfter: null,
             createdBefore: null
         };
-        createdAfter = createdAfter ? KalturaUtils.getStartDateValue(createdAfter) : typeof createdAfter === 'undefined' ? currentCreatedAfter : null;
-        createdBefore = createdBefore ? KalturaUtils.getStartDateValue(createdBefore) : typeof createdBefore === 'undefined' ? currentCreatedBefore : null;
+        createdAfter = createdAfter ? KalturaUtils.getStartDateValue(createdAfter) : typeof createdAfter === 'undefined' ? storeCreatedAfter : null;
+        createdBefore = createdBefore ? KalturaUtils.getStartDateValue(createdBefore) : typeof createdBefore === 'undefined' ? storeCreatedBefore : null;
 
         this._logger.info('update created at');
-        if (currentCreatedAfter !== createdAfter || currentCreatedBefore !== createdBefore) {
-            this._store.update({
-                createdAt: {
-                    createdBefore,
-                    createdAfter
-                }
-            });
-        } else {
-            this._logger.info('query already contains the requested value. update request was ignored');
-        }
+        this._store.update({
+            createdAt: {
+                createdBefore,
+                createdAfter
+            }
+        });
     }
 
-    public addMediaTypes(...mediaTypes: { label: string, value: string }[]): void {
+    public _setMediaTypes(value: { [value: string]: string }): void {
         // const filters = this._filters.getValue();
         // let newMediaTypes = null;
         //
