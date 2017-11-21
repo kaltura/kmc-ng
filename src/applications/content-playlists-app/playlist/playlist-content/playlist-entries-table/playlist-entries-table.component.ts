@@ -1,12 +1,9 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PlaylistStore } from '../../playlist-store.service';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { PlaylistContentWidget } from '../playlist-content-widget.service';
-import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'kPlaylistEntriesTable',
@@ -20,6 +17,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   @Input() isNewPlaylist = true;
   @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Input() filter: any = {};
+
   @Input()
   set entries(data: any[]) {
     if (!this._deferredLoading) {
@@ -37,7 +35,6 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   @Output() onActionSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
 
   private _deferredEntries: KalturaMediaEntry[];
-  private _entriesLoadSubscription: ISubscription;
   public _entries: KalturaMediaEntry[] = [];
   public _emptyMessage: string;
   public _deferredLoading = true;
@@ -51,24 +48,31 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 
   ngOnInit() {
     this._emptyMessage = '';
-    let loadedOnce = this.isNewPlaylist; // used to set the empty message to 'no results' only after search
-    this._entriesLoadSubscription = this._widgetService.state$.subscribe(
-      result => {
-        if (!result.error) {
-          if (result.loading) {
-            this._emptyMessage = '';
-            loadedOnce = true;
-          } else {
-            if (loadedOnce) {
-              this._emptyMessage = this._appLocalization.get('applications.content.playlistDetails.errors.addAtLeastOneMedia');
+    let loadedOnce = false;
+
+    if (this.isNewPlaylist) {
+      this.assignEmptyMessage();
+    }
+
+    this._widgetService.state$
+      .cancelOnDestroy(this)
+      .subscribe(
+        result => {
+          if (!result.error) {
+            if (result.loading) {
+              this._emptyMessage = '';
+              loadedOnce = true;
+            } else {
+              if (loadedOnce) {
+                this.assignEmptyMessage();
+              }
             }
           }
-        }
-      },
-      error => {
-        console.warn('[kmcng] -> could not load entries'); // navigate to error page
-        throw error;
-      });
+        },
+        error => {
+          console.warn('[kmcng] -> could not load entries'); // navigate to error page
+          throw error;
+        });
   }
 
   ngAfterViewInit() {
@@ -84,10 +88,6 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   }
 
   ngOnDestroy() {
-    if (this._entriesLoadSubscription) {
-      this._entriesLoadSubscription.unsubscribe();
-      this._entriesLoadSubscription = null;
-    }
   }
 
   private _buildMenu(rowIndex: number, entry: KalturaMediaEntry): void {
@@ -131,6 +131,10 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
 
   public _onSelectionChange(event) {
     this.selectedEntriesChange.emit(event);
+  }
+
+  public assignEmptyMessage(): void {
+    this._emptyMessage = this._appLocalization.get('applications.content.playlistDetails.errors.addAtLeastOneMedia');
   }
 }
 
