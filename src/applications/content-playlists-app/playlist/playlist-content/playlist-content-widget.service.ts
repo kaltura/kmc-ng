@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
+import { KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-typescript-client';
 import { PlaylistWidget } from '../playlist-widget';
 import { PlaylistWidgetKeys } from '../playlist-widget-keys';
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
@@ -83,7 +83,8 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
     return this._kalturaClient.request(request)
       .cancelOnDestroy(this, this.widgetReset$)
       .map((entries: KalturaMediaEntry[]) => {
-        this.entries = this._extendWithSelectionId(entries);
+        this._extendWithSelectionId(entries);
+        this.entries = entries;
         this.entriesTotalCount = entries.length;
         this.entriesDuration = this.entries.reduce((acc, val) => acc + val.duration, 0);
         super._hideLoader();
@@ -98,8 +99,10 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
       });
   }
 
-  private _extendWithSelectionId(entries: PlaylistContentMediaEntry[]): PlaylistContentMediaEntry[] {
-    return entries.map(entry => Object.assign({}, entry, { selectionId: this._selectionIdGenerator.generate() }));
+  private _extendWithSelectionId(entries: PlaylistContentMediaEntry[]): void {
+    entries.forEach(entry => {
+      entry.selectionId = this._selectionIdGenerator.generateUnique(entries.map(item => item.selectionId));
+    });
   }
 
   private _setDirty(): void {
@@ -121,7 +124,9 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
     const entryIndex = this.entries.indexOf(entry);
 
     if (entryIndex !== -1) {
-      this.entries.splice(entryIndex, 0, ...this._extendWithSelectionId([entry]));
+      const clonedEntry = <PlaylistContentMediaEntry>Object.assign(KalturaTypesFactory.createObject(entry), entry);
+      this._extendWithSelectionId([clonedEntry]);
+      this.entries.splice(entryIndex, 0, clonedEntry);
       this.entriesTotalCount = this.entries.length;
       this._setDirty();
     }
@@ -211,7 +216,8 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   public addEntries(entries: PlaylistContentMediaEntry[]): void {
-    this.entries.push(...this._extendWithSelectionId(entries));
+    this._extendWithSelectionId(entries);
+    this.entries.push(...entries);
     this.entriesTotalCount = this.entries.length;
     this._setDirty();
   }
