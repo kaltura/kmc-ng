@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
 
 @Component({
   selector: 'kAddEntry',
@@ -14,6 +15,12 @@ export class PlaylistAddEntryComponent {
   public _selectedEntries: KalturaMediaEntry[] = [];
   public _addButtonLabel = '';
   public _addButtonLabelTranslation = '';
+  public _addPlaylistEntriesStatuses = [
+    KalturaEntryStatus.preconvert,
+    KalturaEntryStatus.ready,
+    KalturaEntryStatus.moderate,
+    KalturaEntryStatus.blocked
+  ];
 
   constructor(private _appLocalization: AppLocalization) {
     this._addButtonLabelTranslation = this._addButtonLabel = this._appLocalization.get('applications.content.playlists.addToPlaylist');

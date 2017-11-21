@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -34,7 +33,6 @@ export class EntriesSelectorComponent {
 
   constructor(public _entriesStore: EntriesStore) {
     this._entriesStore.paginationCacheToken = 'entries-selector';
-    this._entriesStore.queryStatusIn = [1, 2, 5, 6]; // default value
   }
 
   public _onActionSelected({ action, entryId }: { action: string, entryId: KalturaMediaEntry }): void {
