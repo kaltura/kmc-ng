@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { routing } from './content-moderation-app.routes';
 
 import { ContentModerationComponent } from './content-moderation.component';
-import { EntriesComponentsList } from './entries/entries-components-list';
+import { EntriesComponentsList } from './entries-components-list';
 import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
 
 import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';

@@ -20,11 +20,11 @@ export class BulkService implements OnDestroy {
       entryIds.forEach(entryId => requests.push(new BaseEntryApproveAction({entryId: entryId})));
       this._transmit(requests, true).subscribe(
         () => {
-          observer.next({});
+          observer.next(undefined);
           observer.complete();
         },
         error => {
-          observer.error(new Error(this._appLocalization.get('applications.content.moderation.errorConnecting')));
+          observer.error(new Error(error && error.message ? error.message : typeof error === 'string' ? error : this._appLocalization.get('applications.content.moderation.errorConnecting')));
         });
     });
   }
@@ -72,7 +72,7 @@ export class BulkService implements OnDestroy {
           observer.complete();
         },
         error => {
-          observer.error(new Error(this._appLocalization.get('applications.content.moderation.errorConnecting')));
+          observer.error(new Error(error && error.message ? error.message : typeof error === 'string' ? error : this._appLocalization.get('applications.content.moderation.errorConnecting')));
         });
     });
   }

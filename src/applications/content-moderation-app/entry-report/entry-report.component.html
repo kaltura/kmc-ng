@@ -39,7 +39,7 @@
           <div class="kFlagsComment" *ngFor="let flag of flags;">
             <div class="kFlagsCaption">
               <div class="kIconReport"></div>
-              {{flag.flagType | flagType}}
+              {{flag.flagType | kFlagType}}
             </div>
             <div class="kFlagsDate">{{flag.createdAt | kDate}}</div>
             <div class="kFlagsText">{{flag.comments}}</div>
