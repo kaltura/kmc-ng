@@ -43,7 +43,7 @@ export class UploadMonitorComponent implements OnDestroy {
               private _serverPolls: KalturaServerPolls,
               private _browserService: BrowserService) {
     this._monitorNewEntryUploadFilesChanges();
-    this._monitorBulkUploadChanges();
+    // this._monitorBulkUploadChanges();
   }
 
   ngOnDestroy() {
@@ -67,6 +67,30 @@ export class UploadMonitorComponent implements OnDestroy {
     this._checkUpToDate();
   }
 
+  private _syncNewEntryUploadTotals(): void {
+    this._uploadFromDesktop = Object.keys(this._newUploadFiles).reduce((totals, key) => {
+      const upload = this._newUploadFiles[key];
+      switch (upload.status) {
+        case TrackedFileStatuses.added:
+        case TrackedFileStatuses.pendingPrepare:
+        case TrackedFileStatuses.preparing:
+        case TrackedFileStatuses.prepared:
+        case TrackedFileStatuses.pendingUpload:
+          return Object.assign(totals, { queued: totals.queued + 1 });
+        case TrackedFileStatuses.uploading:
+          return Object.assign(totals, { uploading: totals.uploading + 1 });
+        case TrackedFileStatuses.uploadCompleted:
+          return Object.assign(totals, { completed: totals.completed + 1 });
+        case TrackedFileStatuses.failure:
+          return Object.assign(totals, { errors: totals.errors + 1 });
+        default:
+          return totals;
+      }
+    }, { uploading: 0, queued: 0, completed: 0, errors: 0 });
+
+    this._checkUpToDate();
+  }
+
   private _monitorNewEntryUploadFilesChanges(): void {
     this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
@@ -77,47 +101,14 @@ export class UploadMonitorComponent implements OnDestroy {
           if (!relevantFile) {
             relevantFile = { status: trackedFile.status };
             this._newUploadFiles[trackedFile.id] = relevantFile;
+          } else {
+            if (!([TrackedFileStatuses.cancelled, TrackedFileStatuses.purged].indexOf(trackedFile.status) !== -1
+              && relevantFile.status === TrackedFileStatuses.failure)) {
+              relevantFile.status = trackedFile.status;
+            }
           }
 
-          switch (trackedFile.status) {
-            case TrackedFileStatuses.added:
-              relevantFile.status = TrackedFileStatuses.added;
-              this._increaseParam('_uploadFromDesktop', 'queued');
-              break;
-            case TrackedFileStatuses.uploading:
-              if (relevantFile.status !== TrackedFileStatuses.uploading) {
-                relevantFile.status = TrackedFileStatuses.uploading;
-                this._increaseParam('_uploadFromDesktop', 'uploading');
-                this._decreaseParam('_uploadFromDesktop', 'queued');
-              }
-              break;
-            case TrackedFileStatuses.uploadCompleted:
-              relevantFile.status = TrackedFileStatuses.uploadCompleted;
-              this._increaseParam('_uploadFromDesktop', 'completed');
-              this._decreaseParam('_uploadFromDesktop', 'uploading');
-              break;
-            case TrackedFileStatuses.failure:
-              this._increaseParam('_uploadFromDesktop', 'errors');
-              if (relevantFile.status === TrackedFileStatuses.uploading) {
-                this._decreaseParam('_uploadFromDesktop', 'uploading');
-              } else if (relevantFile.status === TrackedFileStatuses.added) {
-                this._decreaseParam('_uploadFromDesktop', 'queued');
-              }
-
-              relevantFile.status = TrackedFileStatuses.failure;
-              break;
-            case TrackedFileStatuses.purged:
-              if (relevantFile.status === TrackedFileStatuses.uploading) {
-                this._decreaseParam('_uploadFromDesktop', 'uploading');
-              } else if (relevantFile.status === TrackedFileStatuses.added) {
-                this._decreaseParam('_uploadFromDesktop', 'queued');
-              } else if (relevantFile.status === TrackedFileStatuses.failure) {
-                this._decreaseParam('_uploadFromDesktop', 'errors');
-              }
-              break;
-            default:
-              break;
-          }
+          this._syncNewEntryUploadTotals();
         }
       );
   }
