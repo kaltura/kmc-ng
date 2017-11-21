@@ -10,6 +10,8 @@ import { KalturaServerPolls } from '@kaltura-ng/kaltura-server-utils/server-poll
 import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events/bulk-log-uploading-started.event';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
+import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
 
 @Injectable()
 export class BulkUploadMonitorService implements OnDestroy {
@@ -65,6 +67,10 @@ export class BulkUploadMonitorService implements OnDestroy {
       bulkUploadFilter: new KalturaBulkUploadFilter({
         statusIn: processingStatusId.join(','),
         bulkUploadObjectTypeIn: '1,2,3,4',
+      }),
+      responseProfile: new KalturaDetachedResponseProfile({
+        type: KalturaResponseProfileType.includeFields,
+        fields: 'id,status,uploadedOn'
       })
     });
 
@@ -161,6 +167,10 @@ export class BulkLogUploadChanges implements RequestFactory<BulkListAction> {
       bulkUploadFilter: new KalturaBulkUploadFilter({
         bulkUploadObjectTypeIn: '1,2,3,4',
         uploadedOnGreaterThanOrEqual: this._uploadedOn
+      }),
+      responseProfile: new KalturaDetachedResponseProfile({
+        type: KalturaResponseProfileType.includeFields,
+        fields: 'id,status,uploadedOn'
       })
     });
   }
