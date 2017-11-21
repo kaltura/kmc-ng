@@ -58,7 +58,7 @@
         (navigateToEntry)="doNavigateToEntry($event)"
         (deleteDropFolderFiles)="deleteDropFolderFiles($event)"
         (onSelectedDropFoldersChange)="_selectedDropFoldersChange($event)"
-        [selectedDropFolders]="_selectedDropFolders"></kDropFoldersListTable>
+        [(selectedDropFolders)]="_selectedDropFolders"></kDropFoldersListTable>
 
       <div class="kDropFoldersTableFooter kContent" #footer *ngIf="(_dropFoldersService.dropFolders$ | async)?.totalCount">
         <p-paginator

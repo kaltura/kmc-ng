@@ -27,6 +27,7 @@ import {
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
+import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
 
 import { ContentDropFoldersComponent } from './content-drop-folders.component';
 import { DropFoldersComponentesList } from './drop-folders-list/drop-folders-components-list';
@@ -57,6 +58,7 @@ import { KMCShellModule } from 'app-shared/kmc-shell';
     FormsModule,
     ReactiveFormsModule,
     StickyModule,
+    ContentSharedModule,
     RouterModule.forChild(routing)
   ],
   declarations: [

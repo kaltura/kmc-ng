@@ -21,7 +21,7 @@
                 [header]="'applications.content.dropFolders.table.dropFolderName' | translate"
                 [sortable]="true">
         <ng-template let-col let-folder="rowData" pTemplate="body">
-          {{ folder[col.field] | kFolderName:folder }}
+          {{ folder[col.field] }}
         </ng-template>
       </p-column>
       <p-column field="createdAt"

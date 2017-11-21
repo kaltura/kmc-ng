@@ -10,8 +10,8 @@ import { environment } from 'app-environment';
 export class DatesFiltersComponent{
   _createdAtDateRange: string = environment.modules.dropFolders.createdAtDateRange;
 	@Input() parentPopupWidget: PopupWidgetComponent;
-	@Input() _createdAfter: Date;
-	@Input() _createdBefore: Date;
+	@Input() _createdAfter: number;
+	@Input() _createdBefore: number;
 	@Output() createdChanged = new EventEmitter<any>();
 
    constructor() {}

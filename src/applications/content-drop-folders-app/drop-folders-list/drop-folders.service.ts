@@ -134,7 +134,9 @@ export class DropFoldersService implements OnDestroy {
 								} else if (df.fileHandlerType === KalturaDropFolderFileHandlerType.xml) {
 									this.ar.push(df);
 								}
-							}
+							} else {
+                throw new Error(`invalid type provided, expected KalturaDropFolder, got ${typeof object}`);
+              }
 						});
 
 						if (!this.ar.length) {
@@ -144,7 +146,9 @@ export class DropFoldersService implements OnDestroy {
 						} else {
 							this.loadDropFoldersFiles();
 						}
-					}
+					} else {
+            throw new Error("error occurred in action \'_loadDropFoldersList\'");
+          }
 				},
 				error => {
 					this._browserService.alert(
@@ -192,7 +196,14 @@ export class DropFoldersService implements OnDestroy {
       .tag('block-shell')
 			.subscribe(
 				response => {
-					this._dropFolders.next({items: response.objects, totalCount: response.totalCount})
+          response.objects.forEach(object => {
+            this.ar.forEach(folder => {
+              if(object.dropFolderId === folder.id) {
+                object.dropFolderId = folder.name;
+              }
+            })
+          });
+					this._dropFolders.next({items: response.objects, totalCount: response.totalCount});
 				},
 				error => {
 					this._state.next({errorMessage: error.message});

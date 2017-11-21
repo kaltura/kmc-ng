@@ -231,15 +231,27 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
             this._clearSelection();
           },
           error => {
-            this._blockerMessage = new AreaBlockerMessage({
-              message: this._appLocalization.get('applications.content.dropFolders.errors.errorDropFoldersFiles'),
-              buttons: [{
-                label: this._appLocalization.get('app.common.ok'),
-                action: () => {
-                  this._blockerMessage = null;
-                }
-              }]
-            });
+            this._blockerMessage = new AreaBlockerMessage(
+              {
+                message: this._appLocalization.get('applications.content.dropFolders.errors.errorDropFoldersFiles'),
+                buttons: [
+                  {
+                    label: this._appLocalization.get('app.common.retry'),
+                    action: () => {
+                      this._blockerMessage = null;
+                      this.deleteDropFiles(ids);
+
+                    }
+                  },
+                  {
+                    label: this._appLocalization.get('app.common.cancel'),
+                    action: () => {
+                      this._blockerMessage = null;
+                    }
+                  }
+                ]
+              }
+            )
           }
         );
     };

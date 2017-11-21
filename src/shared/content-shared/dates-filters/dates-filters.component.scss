@@ -29,21 +29,23 @@
   margin-bottom: 8px;
 }
 
-:host /deep/ .kDateRange .kDateRangeFirst .ui-calendar.ui-calendar-w-btn {
-  border-bottom-left-radius: 3px;
-  border-top-left-radius: 3px;
-}
+:host /deep/ {
+  .kDateRange .kDateRangeFirst .ui-calendar.ui-calendar-w-btn {
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
+  }
 
-:host /deep/ .ui-calendar.ui-calendar-w-btn {
-  border-radius: 0px;
-}
+  .ui-calendar.ui-calendar-w-btn {
+    border-radius: 0;
+  }
 
-:host /deep/ .ui-calendar .ui-inputtext {
-  width: 120px;
-}
+  .ui-calendar .ui-inputtext {
+    width: 120px;
+  }
 
-:host /deep/ .kDateRange .kDateRangeLast .ui-calendar.ui-calendar-w-btn {
-  border-left: 0px solid $kGrayscale4;
-  border-bottom-right-radius: 3px;
-  border-top-right-radius: 3px;
+  .kDateRange .kDateRangeLast .ui-calendar.ui-calendar-w-btn {
+    border-left: 0 solid $kGrayscale4;
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
+  }
 }
