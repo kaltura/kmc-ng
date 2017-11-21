@@ -8,6 +8,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { BulkUploadService, BulkUploadTypes } from 'app-shared/kmc-shell/bulk-upload';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events/bulk-log-uploading-started.event';
+import { KalturaBulkUpload } from 'kaltura-typescript-client/types/KalturaBulkUpload';
 
 @Component({
   selector: 'kKMCBulkUploadMenu',
@@ -48,10 +49,10 @@ export class BulkUploadMenuComponent {
     setTimeout(() => this.fileDialog.open(), 0);
   }
 
-  private _handleUploadSuccess(): void {
+  private _handleUploadSuccess(response: KalturaBulkUpload): void {
     this._selectedFiles = null;
     this.uploadSucceed.open();
-    this._appEvents.publish(new BulkLogUploadingStartedEvent());
+    this._appEvents.publish(new BulkLogUploadingStartedEvent(response.id, response.status, response.uploadedOn));
   }
 
   // TODO NEED TO TEST INVALID_KS ERROR CODE
@@ -96,7 +97,7 @@ export class BulkUploadMenuComponent {
       this._bulkUploadService.upload(this._selectedFiles, this._selectedType)
         .tag('block-shell')
         .subscribe(
-          () => this._handleUploadSuccess(),
+          (response) => this._handleUploadSuccess(response),
           (error) => this._handleUploadError(error)
         );
     } else {
