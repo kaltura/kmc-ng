@@ -1,0 +1,31 @@
+<div class="kFiltersGroupTitle">
+  <span>{{'applications.content.filters.additionalFilters' | translate | uppercase}}</span>
+</div>
+<p>{{'applications.content.filters.createdBetween' | translate}}</p>
+<div class="kDateRange">
+  <p-calendar
+    class="kDateRangeFirst"
+    [(ngModel)]="_createdAfter"
+    [readonlyInput]="true"
+    [showIcon]="true"
+    [monthNavigator]="true"
+    [yearNavigator]="true"
+    [maxDate]="_createdBefore"
+    [yearRange]="_createdAtDateRange"
+    icon="kIconcalendar"
+    (onSelect)="_onCreatedChanged()"></p-calendar>
+  <p-calendar
+    class="kDateRangeLast kPullLeft30"
+    [(ngModel)]="_createdBefore"
+    [readonlyInput]="true"
+    [showIcon]="true"
+    [monthNavigator]="true"
+    [yearNavigator]="true"
+    [minDate]="_createdAfter"
+    [yearRange]="_createdAtDateRange"
+    icon="kIconcalendar"
+    (onSelect)="_onCreatedChanged()"></p-calendar>
+</div>
+<div class="kClearDates">
+  <a (click)="_clearCreatedComponents()" [ngClass]="{disabledLink: !_createdAfter && !_createdBefore}">{{'applications.content.filters.clearDates' | translate}}</a>
+</div>

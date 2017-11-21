@@ -318,6 +318,56 @@
           }
         }
       },
+      "dropFolders": {
+        "search": "Search",
+        "allStatuses": "All Statuses",
+        "refresh" : "Refresh",
+        "deleteFiles": "Delete files",
+        "confirmDelete": "Are you sure you want to permanently delete all selected files? \n {{0}}",
+        "table": {
+          "fileName": "File name",
+          "dropFolderName": "Dropfolder name",
+          "createdOn": "Created on",
+          "fileSize": "File size",
+          "entryId": "Entry ID",
+          "status": "Status",
+          "datesTooltip": "Upload start detected on: {{0}}\n Upload completion detected on: {{1}}\n File transfer from drop folder to Kaltura started on: {{2}} \n File transfer of drop folder to Kaltura ended on: {{3}}",
+          "notAvailable": "N/A",
+          "unknown": "Unknown",
+          "delete": "Delete"
+        },
+        "dropFolderStatusLabels": {
+          "uploading": "Uploading",
+          "downloading": "Downloading",
+          "pending": "Pending",
+          "processing": "Processing",
+          "parsedFromXml": "Parsed from XML",
+          "waitingForRelatedFiles": "Waiting for Related Files",
+          "waitingForMatchedEntry": "Waiting for Matched Entry",
+          "error": "Error",
+          "deleteFailed": "Delete Failed",
+          "done": "Done",
+          "downloadFailed": "Download Failed"
+        },
+        "dropFolderStatusTooltips": {
+          "uploading": "File is currently uploading to the drop folder",
+          "downloading": "The file is currently importing from the drop folder to Kaltura",
+          "pending": "File upload is completed - Waiting for drop folder processing to start",
+          "processing": "Drop folder engine is currently processing this file",
+          "parsedFromXml": "File reference was parsed from the XML. File is expected but is not yet available in the drop folder",
+          "waitingForRelatedFiles": "Processing of this file should continue when all related files are available in the drop folder (e.g. XML file, other media files referenced in the same XML or other flavors expected for the same entry).",
+          "waitingForMatchedEntry": "Processing of this file should continue when a matched entry is found",
+          "error": "Drop folder engine processing failed",
+          "deleteFailed": "Failed to delete the file from the drop folder",
+          "done": "Drop folder processing was completed for this file",
+          "downloadFailed": "Failed to import the file from the drop folder to Kaltura"
+        },
+        "errors": {
+          "retry": "Retry",
+          "dropFoldersAlert": "The drop folder capability allows you to easily trigger content ingestion by dropping files into a folder in your environment. To enable this capability for your account, <a href=\"http://corp.kaltura.com/about/contact\" target=\"_blank\">contact us</a>.\n<a href=\"http://knowledge.kaltura.com/kaltura-drop-folders-service-content-ingestion-0\" target=\"_blank\">Learn more about drop folders</a>",
+          "errorDropFoldersFiles": "An error occurred during drop folder files update."
+        }
+      },
       "categories": {
         "categories": "Categories",
         "search": "Search",
@@ -641,6 +691,7 @@
         "note": "Update Note",
         "confirm": "Are you sure you want to update {{0}} entries? It could take a while...",
         "confirmPlaylsts": "Are you sure you want to update {{0}} playlists? It could take a while...",
+        "confirmDropFolders": "Are you sure you want to update {{0}} drop folders files? It could take a while...",
         "deleteEntries": "Delete Entries",
         "deleteConfirm": "Are you sure you want to delete the selected entries?",
         "deleteNote": "Please note: the selected entries will be permanently deleted from your account.",
