@@ -35,7 +35,7 @@ export const environment = {
                   {
                     "routePath": "content/moderation",
                     "titleToken": "Moderation",
-                    "enabled": false,
+                    "enabled": true,
                     "position": "left"
                   },
                   {
@@ -172,6 +172,10 @@ export const environment = {
         "contentCategories": {
             "createdAtDateRange": "2005:2030",
             "bulkActionsLimit": 50
+        },
+        "contentModeration" : {
+          "createdAtDateRange" : "2005:2030",
+          "bulkActionsLimit": 50
         }
     },
     "entriesShared": {

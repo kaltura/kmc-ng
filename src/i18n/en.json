@@ -423,6 +423,39 @@
         "refresh": "Refresh",
         "deleteNote": "Please note: {{0}} playlist{{1}} will be permanently deleted from your account."
       },
+      "moderation": {
+        "entryReports": "Entry Reports",
+        "approveEntry": "Approve Entry",
+        "rejectEntry": "Reject Entry",
+        "report": "Report",
+        "details": "Details",
+        "banCreator": "Ban Creator",
+        "flagSingular": "{{0}} Flag",
+        "flagPlural": "{{0}} Flags",
+        "sexualContent": "Sexual Content",
+        "harmfulOrDangerousAct": "Harmful Or Dangerous Act",
+        "spamOrCommercials": "Spam / Commercials",
+        "violentOrRepulsive": "Violent / Repulsive",
+        "errorConnecting": "Error connecting to server",
+        "errorOccured": "An error has occurred",
+        "notificationHasBeenSent": "A notification has been sent to your CMS system to flag this user.",
+        "approveMedia": "Moderation: Approve media",
+        "sureToApprove": "Are you sure you want to approve the following entry? \n {{0}}",
+        "sureToApproveMultiple": "Are you sure you want to approve the following entries? \n {{0}}",
+        "rejectMedia": "Moderation: Reject media",
+        "sureToReject": "Are you sure you want to reject the following entry? \n {{0}}",
+        "sureToRejectMultiple": "Are you sure you want to reject the following entries? \n {{0}}",
+        "selectAction": "Select Action"
+      },
+      "moderationDetails": {
+        "name": "Name",
+        "entryId": "Entry ID",
+        "duration": "Duration",
+        "plays": "Plays",
+        "moderationStatus": "Moderation Status",
+        "clippedFrom": "Clipped from",
+        "creator": "Creator"
+      },
       "filters": {
         "activeFilters": "Active Filters:",
         "clearAll": "Clear All",
@@ -475,7 +508,12 @@
         "delete": "Delete",
         "view": "View Details",
         "loading": "Loading...",
-        "noResults": "No Results"
+        "noResults": "No Results",
+        "flags": "Flags",
+        "moderationStatus": "Moderation Status",
+        "reportsAndDetails": "Reports & Details",
+        "approve": "Approve",
+        "reject": "Reject"
       },
       "paginator": {
         "showRows": "Show rows:"
@@ -648,7 +686,9 @@
         "moveUp": "Move Up",
         "moveDown": "Move Down",
         "duplicate": "Duplicate",
-        "removeCategoriesNone": "No categories to remove"
+        "removeCategoriesNone": "No categories to remove",
+        "approve": "Approve",
+        "reject": "Reject"
       },
       "entryDetails": {
         "sections": {

@@ -66,7 +66,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() selectedEntries: any[] = [];
 
   @Output() sortChanged = new EventEmitter<any>();
-  @Output() actionSelected = new EventEmitter<{ action: string, entryId: string }>();
+  @Output() actionSelected = new EventEmitter<{ action: string, entryId: string, entryName: string }>();
   @Output() selectedEntriesChange = new EventEmitter<any>();
 
   @ViewChild('dataTable') private dataTable: DataTable;
@@ -75,6 +75,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   private _deferredEntries: any[];
   private entriesStoreStatusSubscription: ISubscription;
   private actionsMenuEntryId = '';
+  private actionsMenuEntryName = '';
   private _defaultColumns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
     name: { sortable: true },
@@ -163,7 +164,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
       .map(action =>
         Object.assign({}, action, {
           command: ({ item }) => {
-            this._onActionSelected(item.commandName, this.actionsMenuEntryId);
+            this._onActionSelected(item.commandName, this.actionsMenuEntryId, this.actionsMenuEntryName);
           }
         })
       );
@@ -176,6 +177,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _openActionsMenu(event: any, entry: KalturaMediaEntry) {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
+      this.actionsMenuEntryName = entry.name;
       if (this.actionsMenuEntryId !== entry.id) {
         this.actionsMenuEntryId = entry.id;
         this._buildMenu(entry.mediaType, entry.status);
@@ -190,8 +192,8 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     return !(isLiveStream && isReady);
   }
 
-  public _onActionSelected(action: string, entryId: string) {
-    this.actionSelected.emit({ action, entryId });
+  public _onActionSelected(action: string, entryId: string, entryName: string) {
+    this.actionSelected.emit({ action, entryId, entryName });
   }
 
   public _onSortChanged(event) {

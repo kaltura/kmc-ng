@@ -88,7 +88,7 @@ export class EntriesStore implements OnDestroy {
     fields: `
       id,name,thumbnailUrl,mediaType,plays,createdAt,
       duration,status,startDate,endDate,moderationStatus,
-      tags,categoriesIds,downloadUrl
+      tags,categoriesIds,downloadUrl,moderationCount
     `
   };
   private _querySource = new Subject<QueryRequestArgs>();
@@ -427,6 +427,10 @@ export class EntriesStore implements OnDestroy {
       // handle default value for statuses
       if (!filter.statusIn) {
         filter.statusIn = '-1,-2,0,1,2,7,4';
+      }
+
+      if(!filter.moderationStatusIn) {
+        filter.moderationStatusIn =  '5,1';
       }
 
       // update the sort by args

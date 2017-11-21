@@ -1,0 +1,88 @@
+<k-area-blocker [message]="areaBlockerMessage" [showLoader]="(_moderationStore.moderationState$ | async)?.isBusy || showLoader">
+  <div class="kEntryReportWrap kOverrideFAIcons">
+    <div class="kHeader">
+      <span class="kTitle">{{('applications.content.moderation.entryReports') | translate}}</span>
+
+      <div class="kButtons">
+        <a class="cancelLink" (click)="closePopup()">Cancel</a>
+        <button
+          pButton
+          type="button"
+          label="{{'applications.content.moderation.approveEntry' | translate}}"
+          (click)="approveEntry()"
+          class="kButtonBranded kApproveEntryBtn"></button>
+
+        <button
+          pButton
+          type="button"
+          label="{{'applications.content.moderation.rejectEntry' | translate}}"
+          (click)="rejectEntry()"
+          class="kButtonDefault kRejectEntryBtn"></button>
+      </div>
+    </div>
+
+    <div class="kContainer">
+      <div class="kFrame">
+        <iframe *ngIf="iframeSrc" [src]="iframeSrc | safe" width="339" height="191" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
+      </div>
+
+      <div class="appSubMenu">
+        <div *ngFor="let tab of tabs; let i = index;" class="subMenuContainer" [class.active]="tab.isActive" (click)="changeTab(i)">
+          <a class="menuLink">{{tab.name}}</a>
+          <div class="linkMarker"></div>
+        </div>
+      </div>
+
+      <div *ngIf="entry && entry.moderationCount > 0">
+        <div class="kEntryReport" *ngIf="tabs[EntryReportSections.Report].isActive">
+          <div class="kFlagsAmount">{{flagsAmount}}</div>
+          <div class="kFlagsComment" *ngFor="let flag of flags;">
+            <div class="kFlagsCaption">
+              <div class="kIconReport"></div>
+              {{flag.flagType | kFlagType}}
+            </div>
+            <div class="kFlagsDate">{{flag.createdAt | kDate}}</div>
+            <div class="kFlagsText">{{flag.comments}}</div>
+          </div>
+        </div>
+
+        <div class="kEntryDetails" *ngIf="tabs[EntryReportSections.Details].isActive">
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.moderationDetails.name' | translate}}</span>
+            <span>{{entry.name}}</span>
+          </div>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.moderationDetails.entryId' | translate}}</span>
+            <a (click)="navigateToEntry(entry.rootEntryId)">{{entry.id}}</a>
+          </div>
+          <div class="kRow" *ngIf="hasDuration">
+            <span class="kLabels">{{'applications.content.moderationDetails.duration' | translate}}</span>
+            <span>{{entry.duration | kTime}}</span>
+          </div>
+          <div class="kRow" *ngIf="isEntryReady">
+            <span class="kLabels">{{'applications.content.moderationDetails.plays' | translate}}</span>
+            <span>{{entry.plays}}</span>
+          </div>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.moderationDetails.moderationStatus' | translate}}</span>
+            <span>{{entry.moderationStatus | kModerationStatus}}</span>
+          </div>
+          <div class="kRow" *ngIf="isClip">
+            <span class="kLabels">{{'applications.content.moderationDetails.clippedFrom' | translate}}</span>
+            <a (click)="navigateToEntry(entry.rootEntryId)">{{entry.rootEntryId}}</a>
+          </div>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.moderationDetails.creator' | translate}}</span>
+            <span [kTooltip]="entry.creatorId">{{entry.creatorId}}</span>
+            <button
+              pButton
+              type="button"
+              label="{{'applications.content.moderation.banCreator' | translate}}"
+              (click)="banCreator()"
+              class="kButtonDefault kBanCreatorBtn"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</k-area-blocker>
