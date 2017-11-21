@@ -28,7 +28,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 
   public _categories: KalturaCategory[] = [];
   private _deferredCategories: any[];
-  private _deferredLoading = true;
+  public _deferredLoading = true;
 
   @Input()
   set categories(data: any[]) {
@@ -167,10 +167,6 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
 
   _onSortChanged(event) {
     this.sortChanged.emit(event);
-  }
-
-  scrollToTop() {
-    this._browserService.scrollToTop();
   }
 }
 

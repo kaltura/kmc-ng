@@ -103,14 +103,6 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    const scrollBody = this.dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
-    if (scrollBody && scrollBody.length > 0) {
-      scrollBody[0].onscroll = () => {
-        if (this.actionsMenu) {
-          this.actionsMenu.hide();
-        }
-      }
-    }
     if (this._deferredLoading) {
       // use timeout to allow the DOM to render before setting the data to the datagrid.
       // This prevents the screen from hanging during datagrid rendering of the data.
@@ -160,14 +152,6 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   public _onSelectionChange(event): void {
     this.selectedBulkLogItemsChange.emit(event);
-  }
-
-  public scrollToTop(): void {
-    const scrollBodyArr = this.dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
-    if (scrollBodyArr && scrollBodyArr.length > 0) {
-      const scrollBody: HTMLDivElement = scrollBodyArr[0];
-      scrollBody.scrollTop = 0;
-    }
   }
 }
 
