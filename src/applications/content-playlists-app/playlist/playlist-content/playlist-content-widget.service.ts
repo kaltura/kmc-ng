@@ -62,8 +62,6 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
       this.entriesTotalCount = 0;
       this.entriesDuration = 0;
       this.isNewPlaylist = true;
-      this._state.next({ loading: true, error: false });  // simulate loading to show empty message
-      this._state.next({ loading: false, error: false }); // for the new playlist
       return Observable.of({ failed: false });
     }
 
