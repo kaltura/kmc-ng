@@ -5,7 +5,7 @@
         [duration]="_widgetService.entriesDuration"
         [entriesTotalCount]="_widgetService.entriesTotalCount"
         (addEntry)="addEntry.open()"
-        (deleteEntries)="_deleteEntries($event)"
+        (deleteEntries)="_widgetService.deleteSelectedEntries($event)"
         (clearSelection)="_clearSelection()"
         (moveEntries)="_widgetService.moveEntries($event)">
       </kPlaylistEntryListBulkOperationsContent>
