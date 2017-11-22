@@ -17,8 +17,12 @@ interface UploadMonitorStatuses {
 })
 export class UploadMonitorComponent implements OnDestroy {
   @Input() appmenu;
+
+  private _errorsCount = 0;
+
   public _menuOpened = false;
   public _upToDate = true;
+  public _hasError = false;
   public _uploadFromDesktop: UploadMonitorStatuses = {
     uploading: 0,
     queued: 0,
@@ -38,6 +42,7 @@ export class UploadMonitorComponent implements OnDestroy {
       .subscribe(totals => {
         this._uploadFromDesktop = totals;
         this._checkUpToDate();
+        this._checkErrors();
       });
 
     this._bulkUploadMonitor.getTotals()
@@ -45,6 +50,7 @@ export class UploadMonitorComponent implements OnDestroy {
       .subscribe(totals => {
         this._bulkUpload = totals;
         this._checkUpToDate();
+        this._checkErrors();
       })
   }
 
@@ -55,5 +61,15 @@ export class UploadMonitorComponent implements OnDestroy {
     const uploadFromDesktop = this._uploadFromDesktop.uploading + this._uploadFromDesktop.queued;
     const bulkUpload = this._bulkUpload.uploading + this._bulkUpload.queued;
     this._upToDate = !uploadFromDesktop && !bulkUpload;
+  }
+
+  private _checkErrors(): void {
+    this._hasError = this._uploadFromDesktop.errors + this._bulkUpload.errors !== this._errorsCount;
+  }
+
+  public _onMonitorOpen(): void {
+    this._menuOpened = true;
+    this._errorsCount = this._uploadFromDesktop.errors + this._bulkUpload.errors;
+    this._checkErrors();
   }
 }

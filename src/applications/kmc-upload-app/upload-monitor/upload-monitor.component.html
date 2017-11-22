@@ -2,7 +2,8 @@
    class="kIconfolder_large kUploadMonitorToggler"
    [class.upToDate]="_upToDate"
    [class.open]="_menuOpened">
-  <i *ngIf="!_upToDate" class="kIconrefresh_small"></i>
+  <i *ngIf="!_upToDate && !_hasError" class="kIconrefresh_small"></i>
+  <i *ngIf="_hasError" class="kIconerror"></i>
 </i>
 
 <kPopupWidget #uploadmonitor class="uploadMonitorPopup"
@@ -14,7 +15,7 @@
               [closeBtn]="false"
               [targetRef]="openuploadmonitor"
               [targetOffset]="{'x':-109, 'y': 37}"
-              (onOpen)="_menuOpened = true"
+              (onOpen)="_onMonitorOpen()"
               (onClose)="_menuOpened = false">
   <ng-template>
     <kUploadMonitorSection detailsLink="/content/upload-control"
