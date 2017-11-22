@@ -67,6 +67,30 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
   ngOnInit() {
       this._registerToAdditionalFiltersStore();
+
+      this._filters.localDataChanges$
+          .cancelOnDestroy(this)
+          .subscribe(
+              changes => {
+                  if (typeof changes.mediaTypes !== 'undefined') {
+                      // TODO sakal
+                      const treeData = this._filterNameToTreeData['Media Types'];
+
+                      const diff = this._filters.getDiff(treeData.selections, this._filters.localData.mediaTypes, 'value');
+
+                      diff.added.forEach(addedItem => {
+                          treeData.items.find(item => item.data === addedItem.value)
+                      });
+
+                      diff.deleted.forEach(removedItem => {
+                          treeData.selections.splice(
+                              treeData.selections.indexOf(removedItem),
+                              1
+                          );
+                      });
+                  }
+              }
+          );
   }
 
   ngAfterViewInit() {
