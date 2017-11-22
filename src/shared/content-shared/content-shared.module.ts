@@ -11,7 +11,7 @@ import {
   InputTextModule,
   MenuModule,
   PaginatorModule,
-  RadioButtonModule,
+  RadioButtonModule, TieredMenuModule,
   TreeModule
 } from 'primeng/primeng';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -38,6 +38,7 @@ import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { PrimeTableSortTransformPipe } from 'app-shared/content-shared/pipes/prime-table-sort-transform.pipe';
 import { CategoryRadioButtonPocComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc';
 import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc-popup';
+import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-selector/entries-selector.component';
 
 @NgModule({
   imports: [
@@ -61,6 +62,7 @@ import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/
     MenuModule,
     TagsModule,
     PaginatorModule,
+    TieredMenuModule,
     InputTextModule,
     StickyModule
   ],
@@ -78,6 +80,7 @@ import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/
     CategoriesFilterComponent,
     EntriesTableComponent,
     EntriesListComponent,
+    EntriesSelectorComponent,
 
     CategoryRadioButtonPocComponent,
     CategoryRadioButtonPocPopupComponent
@@ -97,6 +100,7 @@ import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/
     CategoriesFilterComponent,
     EntriesTableComponent,
     EntriesListComponent,
+    EntriesSelectorComponent,
     CategoryRadioButtonPocPopupComponent,
     CategoryRadioButtonPocComponent
   ],

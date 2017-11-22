@@ -18,6 +18,7 @@ import * as moment from 'moment';
 
 })
 export class EntriesListComponent implements OnInit, OnDestroy {
+  @Input() showReload = true;
   @Input() isBusy = false;
   @Input() blockerMessage: AreaBlockerMessage = null;
   @Input() selectedEntries: any[] = [];

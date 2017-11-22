@@ -435,7 +435,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         this.isLiveEntry = false;
     }
 
-    onValidate() : Observable<{ isValid : boolean}>
+    onValidate(wasActivated: boolean) : Observable<{ isValid : boolean}>
     {
         return Observable.create(observer =>
         {
