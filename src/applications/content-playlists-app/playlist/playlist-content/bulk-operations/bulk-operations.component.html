@@ -1,4 +1,3 @@
-
 <div class="kPlaylistEntriesTableFilters">
   <kSticky stickyId="playlistContentBulk"
            sticksTo="playlistHeader"
@@ -29,17 +28,19 @@
           </button>
         </ng-template>
         <span class="kSelectedEntriesNum" *ngIf="entriesTotalCount">
-        {{entriesTotalCount}} {{'applications.content.playlists.entries' | translate}}
+          {{ _getTranslation('applications.content.playlists.entries', entriesTotalCount) }}
       </span>
         <div *ngIf="selectedEntries.length" class="kSelected">
         <span class="kSelectedEntriesLabel">
-          {{selectedEntries.length}} {{'applications.content.playlists.selected' | translate}}
+          {{ _getTranslation('applications.content.playlists.selected', selectedEntries.length) }}
         </span>
-          <a class="kBulkCancel" (click)="clearSelection.emit()">{{'applications.content.playlists.cancel' | translate}}</a>
+          <a class="kBulkCancel" (click)="clearSelection.emit()">
+            {{'applications.content.playlists.cancel' | translate}}
+          </a>
         </div>
       </div>
       <div *ngIf="duration" class="kPlaylistEntriesTableDuration">
-        <span>{{'applications.content.playlistDetails.details.duration' | translate}} {{ duration | kTime }}</span>
+        <span>{{_getTranslation('applications.content.playlistDetails.details.duration', (duration | kTime)) }}</span>
       </div>
     </div>
   </kSticky>

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kPlaylistEntryListBulkOperationsContent',
@@ -16,8 +17,15 @@ export class BulkOperationsComponent {
   @Output() deleteEntries = new EventEmitter<KalturaMediaEntry[]>();
   @Output() moveEntries = new EventEmitter<{ entries: KalturaMediaEntry[], direction: 'up' | 'down' }>();
 
+  constructor(private _appLocalization: AppLocalization) {
+  }
+
   public _moveEntries(direction: 'up' | 'down'): void {
     this.moveEntries.emit({ entries: this.selectedEntries, direction });
+  }
+
+  public _getTranslation(key: string, params: string): string {
+    return this._appLocalization.get(key, { 0: params });
   }
 }
 

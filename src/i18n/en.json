@@ -403,8 +403,8 @@
       },
       "playlists": {
         "playlists": "Playlist's",
-        "entries": "Entries",
-        "selected": "Selected",
+        "entries": "{{0}} Entries",
+        "selected": "{{0}} Selected",
         "bulkActions": "Bulk Actions",
         "remove": "Remove",
         "cancel": "Cancel",
@@ -1044,7 +1044,7 @@
           "creationDate": "Creation date:",
           "updatedAt": "Updated at:",
           "type": "Type:",
-          "duration": "Duration:",
+          "duration": "Duration: {{0}}",
           "moderation": "Moderation:",
           "plays": "Plays:",
           "numberOfEntries": "Number of Entries:"
