@@ -40,7 +40,6 @@ export class NewUploadMonitorService implements OnDestroy {
   public getTotals(): Observable<{ uploading: number, queued: number, completed: number, errors: number }> {
     return this._uploadManagement
       .onTrackedFileChanged$
-      .cancelOnDestroy(this)
       .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile)
       .map(trackedFile => {
           let relevantFile = this._newUploadFiles[trackedFile.id];
