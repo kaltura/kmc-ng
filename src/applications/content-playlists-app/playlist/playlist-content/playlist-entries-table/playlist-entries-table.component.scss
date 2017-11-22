@@ -107,3 +107,8 @@
   margin: 0;
   flex-direction: column;
 }
+
+:host /deep/ p-datatable .stickyHeader{
+  z-index: 10;
+  display: table;
+}
