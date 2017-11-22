@@ -154,7 +154,7 @@ export class EntriesStore implements OnDestroy {
 
     this._getMetadataProfiles();
 
-    this._entriesStore.data$
+    this._entriesStore.dataChanges$
         .cancelOnDestroy(this)
         .subscribe(filters =>
         {

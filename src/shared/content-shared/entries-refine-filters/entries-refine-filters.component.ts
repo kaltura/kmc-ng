@@ -76,10 +76,11 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
                       // TODO sakal
                       const treeData = this._filterNameToTreeData['Media Types'];
 
-                      const diff = this._filters.getDiff(treeData.selections, this._filters.localData.mediaTypes, 'value');
+                      const diff = this._filters.getDiff(treeData.selections, 'data', this._filters.localData.mediaTypes, 'value');
 
                       diff.added.forEach(addedItem => {
-                          treeData.items.find(item => item.data === addedItem.value)
+                          const matchingItem = treeData.items.find(item => item.data === addedItem.value);
+                          treeData.selections.push(matchingItem);
                       });
 
                       diff.deleted.forEach(removedItem => {
@@ -332,7 +333,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
           }
       }
 
-      this._filters.syncStoreByLocal();
+      this._filters.syncStoreByLocal('createdAt');
   }
 
   /**
@@ -342,7 +343,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    */
   public _clearCreatedComponents(): void {
       this._filters.localData.createdAt = {createdBefore: null, createdAfter: null};
-      this._filters.syncStoreByLocal();
+      this._filters.syncStoreByLocal('createdAt');
   }
 
   /**
@@ -544,7 +545,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
               case "Media Types":
                 if (!this._filters.localData.mediaTypes.find(item => item.value === node.data)) {
                     this._filters.localData.mediaTypes.push({value: node.data, label: node.label});
-                    this._filters.syncStoreByLocal();
+                    this._filters.syncStoreByLocal('mediaTypes');
                 }
                 break;
           }
@@ -564,7 +565,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
                       this._filters.localData.mediaTypes.splice(
                           this._filters.localData.mediaTypes.findIndex(item => item.value === node.data), 1);
 
-                      this._filters.syncStoreByLocal();
+                      this._filters.syncStoreByLocal('mediaTypes');
                       break;
               }
           }

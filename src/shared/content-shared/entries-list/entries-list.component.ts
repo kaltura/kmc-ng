@@ -56,7 +56,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
                   this._filters.localData.mediaTypes.findIndex(item => item.value === tag.value)
                   , 1
               );
-              this._filters.syncStoreByLocal();
+              this._filters.syncStoreByLocal('mediaTypes');
               break;
           case "freetext":
               this._filters.syncStore({freetext: null});
@@ -73,7 +73,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   }
 
   onFreetextChanged(): void {
-    this._filters.syncStoreByLocal();
+    this._filters.syncStoreByLocal('freetext');
     this._syncTagOfFreetext();
   }
 
@@ -249,7 +249,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
       const currentFilters = this._filterTags.filter(item => item.type === 'mediaType');
 
-      const diff = this._filters.getDiff(currentFilters, this._filters.localData.mediaTypes, 'value');
+      const diff = this._filters.getDiff(currentFilters, 'value', this._filters.localData.mediaTypes, 'value');
 
       diff.deleted.forEach(item => {
           this._filterTags.splice(

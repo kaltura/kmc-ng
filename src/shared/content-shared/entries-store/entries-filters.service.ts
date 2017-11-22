@@ -1,10 +1,12 @@
 import { Injectable, InjectionToken, OnDestroy, SimpleChange, SimpleChanges } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { async } from 'rxjs/scheduler/async';
 import { KalturaSearchOperator } from 'kaltura-typescript-client/types/KalturaSearchOperator';
 import { KalturaMediaEntryFilter } from 'kaltura-typescript-client/types/KalturaMediaEntryFilter';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common/utils/kaltura-utils';
 import { KalturaLogger } from '@kaltura-ng/kaltura-log';
 import { Subject } from 'rxjs/Subject';
+import * as Immutable from 'seamless-immutable';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 export interface EntriesFilters
 {
@@ -89,18 +91,19 @@ const internalAPISecret = { purpose: "internal_api_dont_use_directly" };
 
 @Injectable()
 export class EntriesFiltersStore {
-    private _data = new BehaviorSubject<EntriesFilters>({
+    private _data = (Immutable({
         freetext: '',
         createdAt: { createdAfter: null, createdBefore: null },
         mediaTypes: []
-    });
+    }));
 
-    public data$ = this._data.asObservable();
+    private _dataChanges = new ReplaySubject<EntriesFilters>(1);
+    public dataChanges$ = this._dataChanges.asObservable();
 
     constructor(private _logger: KalturaLogger) {
         (<any>this)._getActualData = (secret: any): EntriesFilters => {
             if (internalAPISecret === secret) {
-                return this._data.getValue();
+                return this._data;
             } else {
                 this._logger.warn(`function '_getActualData() is internal and should not be used directly. returning a snapshot instead`);
                 return this.dataSnapshot;
@@ -109,23 +112,24 @@ export class EntriesFiltersStore {
     }
 
     public get dataSnapshot(): EntriesFilters{
-        return copyObject(this._data.getValue(),2);
+        return this._data.asMutable({ deep: true });// copyObject(this._data,2);
     }
 
     public update(updates: Partial<EntriesFilters>): void {
-        const newFilters = Object.assign({}, this._data.getValue());
+        let newFilters = this._data;
         let hasChanges = false;
 
         Object.keys(updates).forEach(propName => {
             if (newFilters[propName] !== updates[propName]) {
                 hasChanges = true;
-                newFilters[propName] = copyObject(updates[propName],1);
+                newFilters = newFilters.set(propName, updates[propName]);
             }
         });
 
         if (hasChanges) {
             this._logger.trace('update filters', { updates });
-            this._data.next(newFilters);
+            this._data = newFilters;
+            this._dataChanges.next(newFilters.asMutable({deep: true}));
         }else {
             this._logger.warn('filters already contains the requested values. ignoring update request');
 
@@ -133,12 +137,12 @@ export class EntriesFiltersStore {
     }
 
     public createCopy(): EntriesFilters {
-        return copyObject(this._data.getValue(), 2);
+        return this._data.asMutable({ deep: true });// copyObject(this._data, 2);
     }
 
     public toRequest(request : { filter: KalturaMediaEntryFilter, advancedSearch: KalturaSearchOperator }) : void{
         // TODO sakal replace with adapters
-        const filters = this._data.getValue();
+        const filters = this._data;
 
         this._logger.info('assign filters to request', { filters});
 
@@ -178,33 +182,46 @@ export class EntriesFiltersService implements OnDestroy {
         return this._localData;
     }
 
+    private _dataChangesTimeoutValue = null;
     constructor(private _store: EntriesFiltersStore, private _logger: KalturaLogger) {
 
         this._localData = _store.createCopy();
 
-        _store.data$
+
+        _store.dataChanges$
             .cancelOnDestroy(this)
-            .subscribe(this._onStoreDataUpdated.bind(this));
+            // .observeOn(async)
+            .subscribe((data) =>
+            {
+                // TODO sakal prefer using of rxjs operators
+                if (this._dataChangesTimeoutValue)
+                {
+                    clearTimeout(this._dataChangesTimeoutValue);
+                }
+
+                this._dataChangesTimeoutValue = setTimeout(() => {
+                    this._onStoreDataUpdated(data)
+                });
+            });
     }
 
     private _onStoreDataUpdated(filters: EntriesFilters): void {
         const changesArgument: SimpleChanges = {};
         let hasChanges = false;
-        const newLocalData = Object.assign({}, this.localData);
         Object.keys(filters).forEach(propName => {
-            const previousValue = newLocalData[propName];
+            const previousValue = this.localData[propName];
             const currentValue = filters[propName];
             if (currentValue !== previousValue) {
                 hasChanges = true;
                 changesArgument[propName] = new SimpleChange(previousValue, currentValue, false);
-                newLocalData[propName] = copyObject(filters[propName], 1);
+                // TODO sakal can I remove copy Ojbect
+                this.localData[propName] = copyObject(filters[propName], 1);
             }
         });
 
         this._logger.debug(`checking for local data changes resulted with '${hasChanges ? 'has changes' : 'no changes found'}'`);
 
         if (hasChanges) {
-            this._localData = newLocalData;
             this._localDataChanges.next(changesArgument);
         }
     }
@@ -213,11 +230,8 @@ export class EntriesFiltersService implements OnDestroy {
         return this._store.dataSnapshot;
     }
 
-    syncStoreByLocal(updates?: Partial<EntriesFilters>): void {
-        if (updates) {
-            Object.assign(this._localData, updates);
-        }
-        this.syncStore(this._localData);
+    syncStoreByLocal(propertyName: keyof EntriesFilters): void {
+        this.syncStore({ [propertyName]: this._localData[propertyName]});
     }
 
     syncStore(updates: Partial<EntriesFilters>): void {
@@ -280,14 +294,14 @@ export class EntriesFiltersService implements OnDestroy {
 
     }
 
-    getDiff<TSource, TCompareTo>(source: TSource[], compareTo: TCompareTo[], keyPropertyName: string): { added: TCompareTo[], deleted: TSource[] } {
+    getDiff<TSource, TCompareTo>(source: TSource[], sourceKeyPropertyName: string, compareTo: TCompareTo[], compareToKeyPropertyName: string): { added: TCompareTo[], deleted: TSource[] } {
         const delta = {
             added: [],
             deleted: []
         };
 
-        const mapSource =  mapFromArray(source, keyPropertyName);
-        const mapCompareTo = mapFromArray(compareTo, keyPropertyName);
+        const mapSource =  mapFromArray(source, sourceKeyPropertyName);
+        const mapCompareTo = mapFromArray(compareTo, compareToKeyPropertyName);
         for (const id in mapSource) {
             if (!mapCompareTo.hasOwnProperty(id)) {
                 delta.deleted.push(mapSource[id]);
