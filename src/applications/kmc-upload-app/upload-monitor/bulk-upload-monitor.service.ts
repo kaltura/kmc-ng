@@ -12,11 +12,29 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
+import { KalturaBulkUpload } from 'kaltura-typescript-client/types/KalturaBulkUpload';
 
 @Injectable()
 export class BulkUploadMonitorService implements OnDestroy {
   private _bulkUploadFiles: { [key: string]: { status: KalturaBatchJobStatus, uploadedOn: Date, id: number } } = {};
   private _bulkUploadChangesFactory = new BulkLogUploadChanges();
+  private _activeStatuses = [
+    KalturaBatchJobStatus.dontProcess,
+    KalturaBatchJobStatus.pending,
+    KalturaBatchJobStatus.queued,
+    KalturaBatchJobStatus.processing,
+    KalturaBatchJobStatus.almostDone,
+    KalturaBatchJobStatus.retry
+  ];
+  private _finishedStatuses = [
+    KalturaBatchJobStatus.finished,
+    KalturaBatchJobStatus.finishedPartially,
+    KalturaBatchJobStatus.processed,
+    KalturaBatchJobStatus.failed,
+    KalturaBatchJobStatus.fatal,
+    KalturaBatchJobStatus.aborted,
+    KalturaBatchJobStatus.movefile
+  ];
 
   constructor(private _kalturaClient: KalturaClient,
               private _serverPolls: KalturaServerPolls,
@@ -77,25 +95,16 @@ export class BulkUploadMonitorService implements OnDestroy {
     return this._kalturaClient.request(activeUploads);
   }
 
-  public getTotals(): Observable<{ uploading: number, queued: number, completed: number, errors: number }> {
-    const activeStatuses = [
-      KalturaBatchJobStatus.dontProcess,
-      KalturaBatchJobStatus.pending,
-      KalturaBatchJobStatus.queued,
-      KalturaBatchJobStatus.processing,
-      KalturaBatchJobStatus.almostDone,
-      KalturaBatchJobStatus.retry
-    ];
-    const finishedUploads = [
-      KalturaBatchJobStatus.finished,
-      KalturaBatchJobStatus.finishedPartially,
-      KalturaBatchJobStatus.processed,
-      KalturaBatchJobStatus.failed,
-      KalturaBatchJobStatus.fatal,
-      KalturaBatchJobStatus.aborted,
-      KalturaBatchJobStatus.movefile
-    ];
+  private _cleanUpDeletedUploads(uploads: KalturaBulkUpload[]): void {
+    const uploadIds = uploads.map(({ id }) => id);
+    Object.keys(this._bulkUploadFiles).forEach(key => {
+      if (this._activeStatuses.indexOf(this._bulkUploadFiles[key].status) !== -1 && uploadIds.indexOf(Number(key)) === -1) {
+        delete this._bulkUploadFiles[key];
+      }
+    })
+  }
 
+  public getTotals(): Observable<{ uploading: number, queued: number, completed: number, errors: number }> {
     const mainFlow$ = this._getActiveUploadsList()
       .do(response => {
         response.objects.forEach(upload => {
@@ -114,18 +123,21 @@ export class BulkUploadMonitorService implements OnDestroy {
         this._bulkUploadChangesFactory.uploadedOn = smallestUploadedOn;
         return this._serverPolls.register(10, this._bulkUploadChangesFactory)
       })
-      .map(([response]) => {
+      .do(([response]) => {
         let smallestUploadedOn;
         let needUpdateFactory = false;
+
+        this._cleanUpDeletedUploads(response.result.objects);
+
         response.result.objects.forEach(upload => {
-          if (finishedUploads.indexOf(upload.status) !== -1) {
+          if (this._finishedStatuses.indexOf(upload.status) !== -1) {
             needUpdateFactory = true;
             smallestUploadedOn = Number(upload.uploadedOn) < smallestUploadedOn ? upload.uploadedOn : smallestUploadedOn;
           }
 
           let relevantUpload = this._bulkUploadFiles[upload.id];
           if (!relevantUpload) {
-            if (activeStatuses.indexOf(upload.status) !== -1) {
+            if (this._activeStatuses.indexOf(upload.status) !== -1) {
               relevantUpload = { id: upload.id, status: upload.status, uploadedOn: upload.uploadedOn };
               this._bulkUploadFiles[upload.id] = relevantUpload;
             }
