@@ -159,8 +159,8 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
       if (relevantEntries.length) {
         const maxIndexInSelected = relevantEntries[relevantEntries.length - 1].index;
         const nextIndex = Math.min(this.entries.length - 1, maxIndexInSelected + 1);
-        [...relevantEntries].reverse().forEach(item => {
-          this.entries.splice(item.index, 1);
+        relevantEntries.forEach((item, i) => {
+          this.entries.splice(item.index - i, 1);
         });
         const correctedIndex = nextIndex - relevantEntries.length;
 
