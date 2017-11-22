@@ -133,52 +133,41 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   private _moveUpEntries(selectedEntries: PlaylistContentMediaEntry[]): void {
-    if (selectedEntries && selectedEntries.length) {
-      const selectedIndexes = selectedEntries
-        .map(item => this.entries.indexOf(item))
-        .filter(item => item !== -1)
-        .sort((a, b) => a - b);
-      const relevantIndex = selectedEntries
-        .sort((a, b) => this.entries.indexOf(a) - this.entries.indexOf(b))
-        .reduce((acc, val) => {
-          const currentIndex = this.entries.indexOf(val);
-          return currentIndex < acc ? currentIndex : acc;
-        }, this.entries.length - 1);
+    if (selectedEntries && selectedEntries.length && this.entries && this.entries.length) {
+      const relevantEntries = selectedEntries.map(item => ({ entry: item, index: this.entries.indexOf(item) }))
+        .filter(item => item.index !== -1)
+        .sort((a, b) => a.index - b.index);
+      if (relevantEntries.length) {
+        const minIndexInSelected = relevantEntries[0].index;
+        const nextIndex = Math.max(0, minIndexInSelected - 1);
+        relevantEntries.forEach((item, i) => {
+          this.entries.splice(item.index - i, 1);
+        });
 
-      const newIndex = relevantIndex <= 0 ? 0 : relevantIndex - 1;
+        this.entries.splice(nextIndex, 0, ...relevantEntries.map(item => item.entry));
 
-      selectedIndexes.forEach((currentIndex, index) => {
-        this.entries.splice(currentIndex - index, 1);
-      });
-      this.entries.splice(newIndex, 0, ...selectedEntries);
-      this._setDirty();
+        this._setDirty();
+      }
     }
   }
 
   private _moveDownEntries(selectedEntries: PlaylistContentMediaEntry[]): void {
-    if (selectedEntries && selectedEntries.length) {
-      const selectedIndexes = selectedEntries
-        .map(item => this.entries.indexOf(item))
-        .filter(item => item !== -1)
-        .sort((a, b) => a - b);
-      const relevantIndex = selectedEntries
-        .sort((a, b) => this.entries.indexOf(a) - this.entries.indexOf(b))
-        .reduce((acc, val) => {
-          const currentIndex = this.entries.indexOf(val);
-          if (!acc) {
-            return currentIndex;
-          }
-          return currentIndex > acc ? currentIndex : acc;
-        }, 0);
+    if (selectedEntries && selectedEntries.length && this.entries && this.entries.length) {
+      const relevantEntries = selectedEntries.map(item => ({ entry: item, index: this.entries.indexOf(item) }))
+        .filter(item => item.index !== -1)
+        .sort((a, b) => a.index - b.index);
+      if (relevantEntries.length) {
+        const maxIndexInSelected = relevantEntries[relevantEntries.length - 1].index;
+        const nextIndex = Math.min(this.entries.length - 1, maxIndexInSelected + 1);
+        [...relevantEntries].reverse().forEach(item => {
+          this.entries.splice(item.index, 1);
+        });
+        const correctedIndex = nextIndex - relevantEntries.length;
 
-      let newIndex = selectedEntries.length > 1 ? relevantIndex - (selectedEntries.length - 2) : relevantIndex + 1;
-      newIndex = newIndex >= this.entries.length - 1 ? this.entries.length - 1 : newIndex;
+        this.entries.splice(correctedIndex + 1, 0, ...relevantEntries.map(item => item.entry));
 
-      selectedIndexes.forEach((currentIndex, index) => {
-        this.entries.splice(currentIndex - index, 1);
-      });
-      this.entries.splice(newIndex, 0, ...selectedEntries);
-      this._setDirty();
+        this._setDirty();
+      }
     }
   }
 
@@ -211,8 +200,6 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
     } else {
       this._moveDownEntries(entries);
     }
-
-    this._setDirty();
   }
 
   public addEntries(entries: PlaylistContentMediaEntry[]): void {

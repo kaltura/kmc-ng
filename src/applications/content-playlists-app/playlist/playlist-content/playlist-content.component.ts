@@ -36,5 +36,10 @@ export class PlaylistContentComponent implements OnInit, OnDestroy {
     this._clearSelection();
     this._widgetService.onSortChanged(event);
   }
+
+  public _deleteSelected(selectedEntries: KalturaMediaEntry[]): void {
+    this._clearSelection();
+    this._widgetService.deleteSelectedEntries(selectedEntries);
+  }
 }
 
