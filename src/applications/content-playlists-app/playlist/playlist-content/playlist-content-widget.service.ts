@@ -11,6 +11,7 @@ import { PlaylistExecuteAction } from 'kaltura-typescript-client/types/PlaylistE
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
+import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 
 export interface LoadEntriesStatus {
   loading: boolean;
@@ -133,42 +134,17 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   private _moveUpEntries(selectedEntries: PlaylistContentMediaEntry[]): void {
-    if (selectedEntries && selectedEntries.length && this.entries && this.entries.length) {
-      const relevantEntries = selectedEntries.map(item => ({ entry: item, index: this.entries.indexOf(item) }))
-        .filter(item => item.index !== -1)
-        .sort((a, b) => a.index - b.index);
-      if (relevantEntries.length) {
-        const minIndexInSelected = relevantEntries[0].index;
-        const nextIndex = Math.max(0, minIndexInSelected - 1);
-        relevantEntries.forEach((item, i) => {
-          this.entries.splice(item.index - i, 1);
-        });
-
-        this.entries.splice(nextIndex, 0, ...relevantEntries.map(item => item.entry));
-
+    if (KalturaUtils.moveUpItems(this.entries, selectedEntries))
+    {
         this._setDirty();
-      }
     }
   }
 
   private _moveDownEntries(selectedEntries: PlaylistContentMediaEntry[]): void {
-    if (selectedEntries && selectedEntries.length && this.entries && this.entries.length) {
-      const relevantEntries = selectedEntries.map(item => ({ entry: item, index: this.entries.indexOf(item) }))
-        .filter(item => item.index !== -1)
-        .sort((a, b) => a.index - b.index);
-      if (relevantEntries.length) {
-        const maxIndexInSelected = relevantEntries[relevantEntries.length - 1].index;
-        const nextIndex = Math.min(this.entries.length - 1, maxIndexInSelected + 1);
-        [...relevantEntries].reverse().forEach(item => {
-          this.entries.splice(item.index, 1);
-        });
-        const correctedIndex = nextIndex - relevantEntries.length;
-
-        this.entries.splice(correctedIndex + 1, 0, ...relevantEntries.map(item => item.entry));
-
-        this._setDirty();
+      if (KalturaUtils.moveDownItems(this.entries, selectedEntries))
+      {
+          this._setDirty();
       }
-    }
   }
 
   public deleteSelectedEntries(entries: PlaylistContentMediaEntry[]): void {
