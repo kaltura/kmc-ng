@@ -108,7 +108,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             .map(responses => {
                 super._hideLoader();
 
-                const hasFailure = (<Array<{ failed: boolean, error?: Error }>>responses).reduce((result, response) => result || response.failed, false); ;
+                const hasFailure = (<Array<{ failed: boolean, error?: Error }>>responses).reduce((result, response) => result || response.failed, false);
 
                 if (hasFailure) {
                     super._showActivationError();
@@ -132,8 +132,8 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
         // validate reference ID
         let referenceId = '';
         if (!this.data.referenceId &&
-            this.data.referenceId != '' &&
-            this.data.referenceId != '__null_string__') {
+            this.data.referenceId !== '' &&
+            this.data.referenceId !== '__null_string__') {
             referenceId = this.data.referenceId;
         }
 
@@ -300,9 +300,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
         });
     }
 
-    ngOnDestroy()
-    {
-
+    ngOnDestroy() {
     }
 }
 

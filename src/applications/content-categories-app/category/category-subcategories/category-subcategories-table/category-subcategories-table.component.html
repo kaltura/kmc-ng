@@ -1,17 +1,19 @@
-<!--TODO: might need to add [class.noResults]="!_subcategories.length"-->
-<div class="kSubcategoriesTable">
-  <k-area-blocker [showLoader]="this._deferredLoading"
+<div class="kTable">
+  <k-area-blocker [showLoader]="deferredLoading"
                   [message]="_blockerMessage"
                   [centerOnScreen]="true">
     <p-dataTable #dataTable
                  dataKey="id"
                  scrollable="true"
                  scrollHeight="100%"
+                 [immutable]="false"
                  [value]="_subcategories"
                  [emptyMessage]="_emptyMessage"
                  [rowTrackBy]="rowTrackBy"
                  [(selection)]="_selectedSubcategories"
-                 kStickyHeader [sticksTo]="'entriesTags'" stickyClass="stickyHeader" [stickyId]="'entriesTable'">
+                 [class.noResults]="!_subcategories.length">
+      <!--TODO: Fix sticky, talk to amir-->
+      <!--kStickyHeader [sticksTo]="'categoryHeader'" stickyClass="stickyHeader" [stickyId]="'subcategoriesTable'"-->
       <p-column [style]="{'width':'44px', 'padding-left': '14px'}"
                 selectionMode="multiple"></p-column>
       <p-column field="name"
@@ -25,25 +27,24 @@
 
       <p-column field="createdAt"
                 [header]="'applications.content.table.createdOn' | translate">
-      <ng-template let-col let-subcategory="rowData" pTemplate="body">
-        <span>{{subcategory[col.field] | kDate}}</span>
-      </ng-template>
+        <ng-template let-col let-subcategory="rowData" pTemplate="body">
+          <span>{{subcategory[col.field] | kDate}}</span>
+        </ng-template>
       </p-column>
 
 
       <p-column field="entriesCount"
                 [header]="'applications.content.table.entries' | translate">
-      <ng-template let-col let-subcategory="rowData" pTemplate="body">
-        <span>{{subcategory[col.field]}}</span>
-      </ng-template>
+        <ng-template let-col let-subcategory="rowData" pTemplate="body">
+          <span>{{subcategory[col.field]}}</span>
+        </ng-template>
       </p-column>
 
-      <p-column *ngIf="rowActions?.length"
-        header=""
+      <p-column header=""
                 [style]="{'overflow':'visible', 'width':'80px'}">
-        <ng-template let-col let-subcategory="rowData" pTemplate="body">
-          <div class="kEntriesTableActions">
-            <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, subcategory)"></button>
+        <ng-template let-subcategory="rowData" let-i="rowIndex" pTemplate="body">
+          <div class="kTableActions">
+            <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, i, subcategory)"></button>
           </div>
         </ng-template>
       </p-column>

@@ -7,7 +7,7 @@ import {CategorySubcategoriesComponent} from './category-subcategories/category-
 import {CategoryMetadataComponent} from './category-metadata/category-metadata.component';
 import {CategoryEntitlementsComponent} from './category-entitlements/category-entitlements.component';
 import {CategoryComponent} from './category.component';
-import {CategorySubcategoriesTableComponent} from './category-subcategories-table/category-subcategories-table.component';
+import {CategorySubcategoriesTableComponent} from './category-subcategories/category-subcategories-table/category-subcategories-table.component';
 
 export const CategoryComponentsList = [
     CategoryComponent,

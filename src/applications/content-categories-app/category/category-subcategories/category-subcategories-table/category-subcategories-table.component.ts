@@ -11,8 +11,8 @@ import {
 } from '@angular/core';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
-import {Menu} from 'primeng/primeng';
-import {CustomMenuItem} from 'app-shared/content-shared/entries-table/entries-table.component';
+import {Menu, MenuItem} from 'primeng/primeng';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kCategorySubcategoriesTable',
@@ -20,16 +20,16 @@ import {CustomMenuItem} from 'app-shared/content-shared/entries-table/entries-ta
   styleUrls: ['./category-subcategories-table.component.scss']
 })
 export class CategorySubcategoriesTableComponent implements OnInit, OnDestroy, AfterViewInit {
-
-  @Input() rowActions: { label: string, commandName: string }[] = [];
-  private _subcategories: KalturaCategory[] = [];
-  public _emptyMessage: string = null; // todo: implement
+  public _subcategories: KalturaCategory[] = [];
+  public _emptyMessage: string = this._appLocalization.get('applications.content.table.noResults');
   private _deferredSubcategories: any[];
-  private actionsMenuCategoryId: number = null;
-  public _items: CustomMenuItem[];
+  public _items: MenuItem[];
   public deferredLoading = true;
   public _blockerMessage: AreaBlockerMessage = null;
+
+  @Input() _selectedSubcategories: KalturaCategory[] = []; // todo: implement
   @Input() selectedSubcategories: KalturaCategory[] = [];
+
   @Input()
   set subcategories(data: KalturaCategory[]) {
     if (!this.deferredLoading) {
@@ -43,46 +43,44 @@ export class CategorySubcategoriesTableComponent implements OnInit, OnDestroy, A
   }
 
   @Output() selectedSubcategoriesChange = new EventEmitter<KalturaCategory[]>();
-  @Output() actionSelected = new EventEmitter<{ action: string, categoryId: number }>();
+  @Output() onActionSelected = new EventEmitter<{ action: string, subcategory: KalturaCategory }>();
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
 
-  constructor(private cdRef: ChangeDetectorRef) {
+  constructor(private cdRef: ChangeDetectorRef, private _appLocalization: AppLocalization) {
   }
 
-  public rowTrackBy: Function = (index: number, item: any) => {
-    return item.id
-  };
+  public rowTrackBy: Function  = (index: number, item: any) => item;
 
-  public _openActionsMenu(event: any, category: KalturaCategory) {
+  public _openActionsMenu(event: any, rowIndex: number, category: KalturaCategory) {
     if (this.actionsMenu) {
+      this._buildMenu(rowIndex, category);
       this.actionsMenu.toggle(event);
-      if (this.actionsMenuCategoryId !== category.id) {
-        this.actionsMenuCategoryId = category.id;
-        this._buildMenu();
-        this.actionsMenu.show(event);
-      }
+      this.actionsMenu.show(event);
     }
   }
 
-  private _buildMenu(): void {
-    this._items = this.rowActions
-      // .filter(item => this._exceptPreview(status, item))
-      // .filter(item => this._exceptView(mediaType, item))
-      .map(action =>
-        Object.assign({}, action, {
-          command: ({ item }) => {
-            this._onActionSelected(item.commandName, this.actionsMenuCategoryId);
-          }
-        })
-      );
+
+  private _buildMenu(rowIndex: number, subcategory: KalturaCategory): void {
+    this._items = [
+      {
+        label: this._appLocalization.get('applications.content.categoryDetails.subcategories.actions.moveUp'),
+        command: (event) => this.onActionSelected.emit({ action: 'moveUp', subcategory }),
+        disabled: rowIndex === 0
+      },
+      {
+        label: this._appLocalization.get('applications.content.categoryDetails.subcategories.actions.moveDown'),
+        command: () => this.onActionSelected.emit({ action: 'moveDown', subcategory }),
+        disabled: rowIndex + 1 === this._subcategories.length
+      },
+      {
+        label: this._appLocalization.get('applications.content.categoryDetails.subcategories.actions.delete'),
+        command: () => {
+          this.onActionSelected.emit({action: 'delete', subcategory});
+        }
+      }
+    ];
   }
-
-  public _onActionSelected(action: string, categoryId: number) {
-    this.actionSelected.emit({ action, categoryId });
-  }
-
-
 
   ngOnInit() {
   }

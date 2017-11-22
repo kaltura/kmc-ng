@@ -104,8 +104,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
 								]
 							});
 							break;
-						case ActionTypes.CategorySaving:
-							this._showLoader = true;
+            case ActionTypes.CategorySaving:
+              // loader is enabled using 'block-shell' tag automatically, no need to set the showLoader = true
 							break;
 						case ActionTypes.CategorySavingFailed:
 

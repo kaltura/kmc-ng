@@ -1,9 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {CategoryService} from '../category.service';
-import {BrowserService} from 'app-shared/kmc-shell';
 import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 import {CategorySubcategoriesWidget} from './category-subcategories-widget.service';
-import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+
 
 @Component({
   selector: 'kCategorySubcategories',
@@ -12,13 +11,12 @@ import {AppLocalization} from "@kaltura-ng/kaltura-common";
 })
 export class CategorySubcategoriesComponent implements OnInit, OnDestroy {
 
-  // @Input() rowActions: { label: string, commandName: string }[] = [];
   public _emptyMessage: string = null; // todo: implement
+  public _selectedSubcategories: KalturaCategory[] = [];
   public _subcategories: KalturaCategory[] = [];
-  public _selectedSubcategories: KalturaCategory[] = []; // todo: implement
-  public _rowActions: { label: string, commandName: string }[];
+  private _subcategoriesCount: number;
 
-  constructor(public _widgetService: CategorySubcategoriesWidget, public _categoryService: CategoryService, private _browserService: BrowserService,
+  constructor(public _widgetService: CategorySubcategoriesWidget,
               private _appLocalization: AppLocalization) {
   }
 
@@ -26,44 +24,22 @@ export class CategorySubcategoriesComponent implements OnInit, OnDestroy {
     return item.id
   };
 
+  public get totalSubcategories(): string {
+    return this._appLocalization.get('applications.content.categoryDetails.subcategories.tableHeaderDetails.total',
+      {'0': this._subcategoriesCount});
+  }
+
 
   ngOnInit() {
-    this.fillRowActions();
-
     this._widgetService.attachForm();
-
-    this._widgetService.subcategories$
-      .cancelOnDestroy(this)
-      .subscribe(
-        subcategories => {
-          this._subcategories = subcategories;
-        }
-      );
+    this._widgetService.subcategories$.subscribe(subcategories => {
+      this._subcategories = subcategories;
+      this._subcategoriesCount = subcategories.length;
+    })
   }
 
-  private fillRowActions() {
-    this._rowActions = [
-      {
-        label: this._appLocalization.get('applications.content.categoryDetails.subcategories.actions.moveUp'),
-        commandName: 'moveUp'
-      },
-      {
-        label: this._appLocalization.get('applications.content.categoryDetails.subcategories.actions.moveDown'),
-        commandName: 'moveDown'
-      },
-      {
-        label: this._appLocalization.get('applications.content.categoryDetails.subcategories.actions.delete'),
-        commandName: 'delete'
-      }
-    ];
-  }
-
-  private _onActionsSelected(event) {
-    console.log('TODO: REMOVE event: ', event); // TODO: IMPLEMENT AND REMOVE LINE
-  }
 
   ngOnDestroy() {
     this._widgetService.detachForm();
   }
-
 }
