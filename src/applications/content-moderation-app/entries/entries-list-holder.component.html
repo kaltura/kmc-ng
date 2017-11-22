@@ -1,6 +1,5 @@
 <kEntriesList [columns]="_columns"
               [rowActions]="_rowActions"
-              [isBusy]="_isBusy"
               [blockerMessage]="_blockerMessage"
               (onActionsSelected)="_onActionSelected($event)">
   <div class="kBulkActions bulk-actions">
@@ -9,7 +8,7 @@
   <p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons" [appendTo]="'body'"></p-tieredMenu>
 </kEntriesList>
 
-<kPopupWidget #moderationDetails [popupWidth]="792" [popupHeight]="700" [modal]="true" [closeBtn]="false" class="kPopupWidgetWrap">
+<kPopupWidget #moderationDetails [slider]="true" [popupWidth]="792" [popupHeight]="700" [modal]="true" [closeBtn]="false" class="kPopupWidgetWrap">
   <ng-template>
     <kEntryReport
       [parentPopupWidget]="moderationDetails"

@@ -3,6 +3,7 @@ import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BaseEntryApproveAction } from 'kaltura-typescript-client/types/BaseEntryApproveAction';
 import { Observable } from 'rxjs/Observable';
+import { ISubscription } from 'rxjs/Subscription';
 import { BaseEntryRejectAction } from 'kaltura-typescript-client/types/BaseEntryRejectAction';
 import { KalturaMultiRequest, KalturaMultiResponse, KalturaRequest } from 'kaltura-typescript-client';
 import { environment } from 'app-environment';
@@ -16,16 +17,26 @@ export class BulkService implements OnDestroy {
 
   approveEntry(entryIds: string[]): Observable<void> {
     return Observable.create(observer => {
-      let requests: BaseEntryApproveAction[] = [];
-      entryIds.forEach(entryId => requests.push(new BaseEntryApproveAction({entryId: entryId})));
-      this._transmit(requests, true).subscribe(
-        () => {
-          observer.next(undefined);
-          observer.complete();
-        },
-        error => {
-          observer.error(new Error(error && error.message ? error.message : typeof error === 'string' ? error : this._appLocalization.get('applications.content.moderation.errorConnecting')));
-        });
+      let subscription: ISubscription,
+          requests: BaseEntryApproveAction[] = [];
+      if(entryIds && entryIds.length) {
+        entryIds.forEach(entryId => requests.push(new BaseEntryApproveAction({entryId: entryId})));
+        subscription = this._transmit(requests, true).subscribe(
+          () => {
+            observer.next(undefined);
+            observer.complete();
+          },
+          error => {
+            observer.error(new Error(error && error.message ? error.message : typeof error === 'string' ? error : this._appLocalization.get('applications.content.moderation.errorConnecting')));
+          });
+      } else {
+        observer.error(new Error('missing entryIds argument'));
+      }
+      return () => {
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+      }
     });
   }
 
@@ -64,16 +75,26 @@ export class BulkService implements OnDestroy {
 
   rejectEntry(entryIds: string[]): Observable<void> {
     return Observable.create(observer => {
-      let requests: BaseEntryRejectAction[] = [];
-      entryIds.forEach(entryId => requests.push(new BaseEntryRejectAction({entryId: entryId})));
-      this._transmit(requests, true).subscribe(
-        () => {
-          observer.next({});
-          observer.complete();
-        },
-        error => {
-          observer.error(new Error(error && error.message ? error.message : typeof error === 'string' ? error : this._appLocalization.get('applications.content.moderation.errorConnecting')));
-        });
+      let subscription: ISubscription,
+          requests: BaseEntryRejectAction[] = [];
+      if(entryIds && entryIds.length) {
+        entryIds.forEach(entryId => requests.push(new BaseEntryRejectAction({entryId: entryId})));
+        subscription = this._transmit(requests, true).subscribe(
+          () => {
+            observer.next(undefined);
+            observer.complete();
+          },
+          error => {
+            observer.error(new Error(error && error.message ? error.message : typeof error === 'string' ? error : this._appLocalization.get('applications.content.moderation.errorConnecting')));
+          });
+      } else {
+        observer.error(new Error('missing entryIds argument'));
+      }
+      return () => {
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+      }
     });
   }
 

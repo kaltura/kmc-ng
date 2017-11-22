@@ -14,6 +14,7 @@ import { BulkService } from '../bulk-service/bulk.service';
 import { environment } from 'app-environment';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { EntryReportSections } from './entry-report-sections';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 export interface Tabs {
   name: string;
@@ -38,8 +39,8 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   isClip: boolean = false;
   flagsAmount: string = '';
   userId: string = '';
-  isEntryPermissionApproved: boolean = false;
-  isEntryPermissionRejected: boolean = false;
+  shouldConfirmEntryApproval: boolean = false; // TODO [kmcng] need to get such permissions from somewhere
+  shouldConfirmEntryRejection: boolean = false; // TODO [kmcng] need to get such permissions from somewhere
   EntryReportSections = EntryReportSections;
 
   @Input() parentPopupWidget: PopupWidgetComponent;
@@ -60,28 +61,27 @@ export class EntryReportComponent implements OnInit, OnDestroy {
     private _entriesStore: EntriesStore
   ) {}
 
-  closePopup(): void {
+  private _closePopup(): void {
     if (this.parentPopupWidget){
       this.parentPopupWidget.close();
     }
   }
 
-  changeTab(index: number): void {
+  private _changeTab(index: number): void {
     this.tabs.forEach(tab => tab.isActive = false);
     this.tabs[index].isActive = true;
   }
 
-  navigateToEntry(entryId): void {
+  private _navigateToEntry(entryId): void {
     this._router.navigate(["content/entries/entry", entryId]);
   }
 
-  banCreator(): void {
-    this.showLoader = true;
+  private _banCreator(): void {
     this._moderationStore.banCreator(this.userId)
       .cancelOnDestroy(this)
+      .tag('block-shell')
       .subscribe(
         () => {
-          this.showLoader = false;
           this._browserService.alert(
             {
               message: this._appLocalization.get('applications.content.moderation.notificationHasBeenSent')
@@ -89,7 +89,6 @@ export class EntryReportComponent implements OnInit, OnDestroy {
           );
         },
         error => {
-          this.showLoader = false;
           this.areaBlockerMessage = new AreaBlockerMessage(
             {
               message: error.message,
@@ -98,7 +97,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
                     this.areaBlockerMessage = null;
-                    this.banCreator();
+                    this._banCreator();
                   }
                 },
                 {
@@ -114,34 +113,32 @@ export class EntryReportComponent implements OnInit, OnDestroy {
       );
   }
 
-  approveEntry(): void {
-    if(!this.isEntryPermissionApproved) { // TODO [kmcng] need to get such permissions from somewhere
+  private _approveEntry(): void {
+    if(!this.shouldConfirmEntryApproval) { // TODO [kmcng] need to get such permissions from somewhere
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.moderation.approveMedia'),
           message: this._appLocalization.get('applications.content.moderation.sureToApprove', {0: this.entry.name}),
           accept: () => {
-            this.doApproveEntry();
+            this._doApproveEntry();
           }
         }
       )
     } else {
-      this.doApproveEntry();
+      this._doApproveEntry();
     }
   }
 
-  doApproveEntry(): void {
-    this.showLoader = true;
+  private _doApproveEntry(): void {
     this._bulkService.approveEntry([this.entry.id])
       .cancelOnDestroy(this)
+      .tag('block-shell')
       .subscribe(
         () => {
-          this.showLoader = false;
-          this.closePopup();
+          this._closePopup();
           this._entriesStore.reload(true);
         },
         error => {
-          this.showLoader = false;
           this.areaBlockerMessage = new AreaBlockerMessage(
             {
               message: error.message,
@@ -150,7 +147,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
                     this.areaBlockerMessage = null;
-                    this.doApproveEntry();
+                    this._doApproveEntry();
                   }
                 },
                 {
@@ -166,34 +163,32 @@ export class EntryReportComponent implements OnInit, OnDestroy {
       );
   }
 
-  rejectEntry(): void {
-    if(!this.isEntryPermissionRejected) { // TODO [kmcng] need to get such permissions from somewhere
+  private _rejectEntry(): void {
+    if(!this.shouldConfirmEntryRejection) { // TODO [kmcng] need to get such permissions from somewhere
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.moderation.rejectMedia'),
           message: this._appLocalization.get('applications.content.moderation.sureToReject', {0: this.entry.name}),
           accept: () => {
-            this.doRejectEntry();
+            this._doRejectEntry();
           }
         }
       );
     } else {
-      this.doRejectEntry();
+      this._doRejectEntry();
     }
   }
 
-  doRejectEntry(): void {
-    this.showLoader = true;
+  private _doRejectEntry(): void {
     this._bulkService.rejectEntry([this.entry.id])
       .cancelOnDestroy(this)
+      .tag('block-shell')
       .subscribe(
         () => {
-          this.showLoader = false;
-          this.closePopup();
+          this._closePopup();
           this._entriesStore.reload(true);
         },
         error => {
-          this.showLoader = false;
           this.areaBlockerMessage = new AreaBlockerMessage(
             {
               message: error.message,
@@ -202,7 +197,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
                   label: this._appLocalization.get('app.common.retry'),
                   action: () => {
                     this.areaBlockerMessage = null;
-                    this.doRejectEntry();
+                    this._doRejectEntry();
                   }
                 },
                 {

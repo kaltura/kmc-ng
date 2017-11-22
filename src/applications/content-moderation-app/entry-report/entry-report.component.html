@@ -4,19 +4,19 @@
       <span class="kTitle">{{('applications.content.moderation.entryReports') | translate}}</span>
 
       <div class="kButtons">
-        <a class="cancelLink" (click)="closePopup()">Cancel</a>
+        <a class="cancelLink" (click)="_closePopup()">Cancel</a>
         <button
           pButton
           type="button"
           label="{{'applications.content.moderation.approveEntry' | translate}}"
-          (click)="approveEntry()"
+          (click)="_approveEntry()"
           class="kButtonBranded kApproveEntryBtn"></button>
 
         <button
           pButton
           type="button"
           label="{{'applications.content.moderation.rejectEntry' | translate}}"
-          (click)="rejectEntry()"
+          (click)="_rejectEntry()"
           class="kButtonDefault kRejectEntryBtn"></button>
       </div>
     </div>
@@ -27,7 +27,7 @@
       </div>
 
       <div class="appSubMenu">
-        <div *ngFor="let tab of tabs; let i = index;" class="subMenuContainer" [class.active]="tab.isActive" (click)="changeTab(i)">
+        <div *ngFor="let tab of tabs; let i = index;" class="subMenuContainer" [class.active]="tab.isActive" (click)="_changeTab(i)">
           <a class="menuLink">{{tab.name}}</a>
           <div class="linkMarker"></div>
         </div>
@@ -53,7 +53,7 @@
           </div>
           <div class="kRow">
             <span class="kLabels">{{'applications.content.moderationDetails.entryId' | translate}}</span>
-            <a (click)="navigateToEntry(entry.rootEntryId)">{{entry.id}}</a>
+            <a (click)="_navigateToEntry(entry.rootEntryId)">{{entry.id}}</a>
           </div>
           <div class="kRow" *ngIf="hasDuration">
             <span class="kLabels">{{'applications.content.moderationDetails.duration' | translate}}</span>
@@ -69,7 +69,7 @@
           </div>
           <div class="kRow" *ngIf="isClip">
             <span class="kLabels">{{'applications.content.moderationDetails.clippedFrom' | translate}}</span>
-            <a (click)="navigateToEntry(entry.rootEntryId)">{{entry.rootEntryId}}</a>
+            <a (click)="_navigateToEntry(entry.rootEntryId)">{{entry.rootEntryId}}</a>
           </div>
           <div class="kRow">
             <span class="kLabels">{{'applications.content.moderationDetails.creator' | translate}}</span>
@@ -78,7 +78,7 @@
               pButton
               type="button"
               label="{{'applications.content.moderation.banCreator' | translate}}"
-              (click)="banCreator()"
+              (click)="_banCreator()"
               class="kButtonDefault kBanCreatorBtn"></button>
           </div>
         </div>
