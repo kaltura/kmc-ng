@@ -249,11 +249,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   public _onActionSelected(event: { action: string, playlist: KalturaPlaylist }): void {
     switch (event.action) {
       case 'view':
-        if (event.playlist.playlistType === KalturaPlaylistType.dynamic) {
-          this._onShowNotSupportedMsg(false);
-        } else {
-          this.router.navigate(['/content/playlists/playlist', event.playlist.id]);
-        }
+        this.router.navigate(['/content/playlists/playlist', event.playlist.id]);
         break;
       case 'delete':
         this._browserService.confirm(

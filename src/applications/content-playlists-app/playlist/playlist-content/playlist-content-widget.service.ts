@@ -134,17 +134,15 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   private _moveUpEntries(selectedEntries: PlaylistContentMediaEntry[]): void {
-    if (KalturaUtils.moveUpItems(this.entries, selectedEntries))
-    {
-        this._setDirty();
+    if (KalturaUtils.moveUpItems(this.entries, selectedEntries)) {
+      this._setDirty();
     }
   }
 
   private _moveDownEntries(selectedEntries: PlaylistContentMediaEntry[]): void {
-      if (KalturaUtils.moveDownItems(this.entries, selectedEntries))
-      {
-          this._setDirty();
-      }
+    if (KalturaUtils.moveDownItems(this.entries, selectedEntries)) {
+      this._setDirty();
+    }
   }
 
   public deleteSelectedEntries(entries: PlaylistContentMediaEntry[]): void {
