@@ -71,12 +71,12 @@ export class EntryStore implements  OnDestroy {
 				private _router: Router,
 				private _browserService : BrowserService,
 				private _entriesStore : EntriesStore,
-				@Host() private _sectionsManager : EntryWidgetsManager,
+				@Host() private _widgetsManager: EntryWidgetsManager,
 				private _entryRoute: ActivatedRoute,
                 private _appLocalization: AppLocalization) {
 
 
-		this._sectionsManager.entryStore = this;
+		this._widgetsManager.entryStore = this;
 
 		this._mapSections();
 
@@ -96,7 +96,7 @@ export class EntryStore implements  OnDestroy {
 
     private _onSectionsStateChanges()
 	{
-		this._sectionsManager.widgetsState$
+		this._widgetsManager.widgetsState$
             .cancelOnDestroy(this)
             .debounce(() => Observable.timer(500))
             .subscribe(
@@ -189,7 +189,7 @@ export class EntryStore implements  OnDestroy {
 			})
 		);
 
-		this._sectionsManager.notifyDataSaving(newEntry, request, this.entry)
+		this._widgetsManager.notifyDataSaving(newEntry, request, this.entry)
             .cancelOnDestroy(this)
             .monitor('entry store: prepare entry for save')
             .flatMap(
@@ -270,7 +270,7 @@ export class EntryStore implements  OnDestroy {
 		this._updatePageExitVerification();
 
 		this._state.next({action: ActionTypes.EntryLoading});
-		this._sectionsManager.notifyDataLoading(entryId);
+		this._widgetsManager.notifyDataLoading(entryId);
 
 		this._loadEntrySubscription = this._getEntry(entryId)
             .cancelOnDestroy(this)
@@ -280,7 +280,7 @@ export class EntryStore implements  OnDestroy {
 						this._entry.next(response);
 						this._entryId = response.id;
 
-						const dataLoadedResult = this._sectionsManager.notifyDataLoaded(response, { isNewData: false });
+						const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
 
 						if (dataLoadedResult.errors.length)
 						{
