@@ -8,12 +8,14 @@ import {CategoryMetadataComponent} from './category-metadata/category-metadata.c
 import {CategoryEntitlementsComponent} from './category-entitlements/category-entitlements.component';
 import {CategoryComponent} from './category.component';
 import {CategorySubcategoriesTableComponent} from './category-subcategories/category-subcategories-table/category-subcategories-table.component';
+import {BulkOperationsComponent} from './category-subcategories/bulk-operations/bulk-operations.component';
 
 export const CategoryComponentsList = [
     CategoryComponent,
     CategoryEntitlementsComponent,
     CategoryMetadataComponent,
     CategorySubcategoriesComponent,
+    BulkOperationsComponent,
     CategorySubcategoriesTableComponent,
     CategorySectionsListComponent,
     CategoryDetailsComponent,

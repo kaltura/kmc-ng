@@ -1,7 +1,7 @@
 import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 import {Injectable, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {AppLocalization, KalturaUtils} from '@kaltura-ng/kaltura-common';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {CategoryWidget} from '../category-widget';
 import {CategoryWidgetKeys} from '../category-widget-keys';
@@ -19,19 +19,12 @@ import {CategoryUpdateAction} from 'kaltura-typescript-client/types/CategoryUpda
 import {BrowserService} from 'app-shared/kmc-shell';
 import {CategoryDeleteAction} from 'kaltura-typescript-client/types/CategoryDeleteAction';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-
-export interface Subcategories {
-  items: KalturaCategory[],
-  totalCount: number
-}
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class CategorySubcategoriesWidget extends CategoryWidget implements OnDestroy {
   private _subcategories = new BehaviorSubject<KalturaCategory[]>([]);
   public subcategories$ = this._subcategories.asObservable();
-
-
   private _subcategoriesMarkedForDelete: KalturaCategory[];
 
   constructor(private _kalturaClient: KalturaClient,
@@ -56,8 +49,11 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
       });
   }
 
+  protected onReset() {
+  }
+
   private _fetchSubcategories(): Observable<{ failed: boolean, error?: Error }> {
-    return this.getSubcategories(this.data)
+    return this._getSubcategories(this.data)
       .monitor('get category subcategories')
       .cancelOnDestroy(this, this.widgetReset$)
       .do(
@@ -75,13 +71,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
   }
 
-  /**
-   * Do some cleanups if needed once the section is removed
-   */
-  protected onReset() {
-  }
-
-  private getSubcategories(parentCategory: KalturaCategory): Observable<KalturaCategoryListResponse> {
+  private _getSubcategories(parentCategory: KalturaCategory): Observable<KalturaCategoryListResponse> {
     const subcategoriesLimit: number = environment.categoriesShared.SUB_CATEGORIES_LIMIT || 50;
     if (!parentCategory) {
       return Observable.throw(new Error('parentCategory to get subcategories for is not defined'));
@@ -119,112 +109,32 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
     }
   }
 
-  // TODO: Ben move to util function after stas finish
-  private _moveUpSubcategories(subcategories: KalturaCategory[], selectedSubcategories: KalturaCategory[]): void {
-    if (selectedSubcategories && selectedSubcategories.length) {
-      const selectedIndexes = selectedSubcategories
-        .map(item =>     subcategories.indexOf(item))
-        .filter(item => item !== -1)
-        .sort((a, b) => a - b);
-      const relevantIndex = selectedSubcategories
-        .sort((a, b) =>     subcategories.indexOf(a) - subcategories.indexOf(b))
-        .reduce((acc, val) => {
-          const currentIndex = subcategories.indexOf(val);
-          return currentIndex < acc ? currentIndex : acc;
-        }, subcategories.length - 1);
-
-      const newIndex = relevantIndex <= 0 ? 0 : relevantIndex - 1;
-
-      selectedIndexes.forEach((currentIndex, index) => {
-        subcategories.splice(currentIndex - index, 1);
-      });
-      subcategories.splice(newIndex, 0, ...selectedSubcategories);
-      this._setDirty();
-    }
-  }
-
-  // TODO: Ben move to util function after stas finish
-  private _moveDownSubcategories(subcategories: KalturaCategory[], selectedSubcategories: KalturaCategory[]): void {
-    if (selectedSubcategories && selectedSubcategories.length) {
-      const selectedIndexes = selectedSubcategories
-        .map(item => subcategories.indexOf(item))
-        .filter(item => item !== -1)
-        .sort((a, b) => a - b);
-      const relevantIndex = selectedSubcategories
-        .sort((a, b) => subcategories.indexOf(a) - subcategories.indexOf(b))
-        .reduce((acc, val) => {
-          const currentIndex = subcategories.indexOf(val);
-          if (!acc) {
-            return currentIndex;
-          }
-          return currentIndex > acc ? currentIndex : acc;
-        }, 0);
-
-      let newIndex = selectedSubcategories.length > 1 ? relevantIndex - (selectedSubcategories.length - 2) : relevantIndex + 1;
-      newIndex = newIndex >= subcategories.length - 1 ? subcategories.length - 1 : newIndex;
-
-      selectedIndexes.forEach((currentIndex, index) => {
-        subcategories.splice(currentIndex - index, 1);
-      });
-      subcategories.splice(newIndex, 0, ...selectedSubcategories);
-      this._setDirty();
-    }
-  }
-
-
   public onActionSelected({action, subcategory}: { action: 'delete' | 'moveUp' | 'moveDown', subcategory: KalturaCategory }): void {
     switch (action) {
       case 'delete':
         this._handleDelete(subcategory);
         break;
       case 'moveUp':
-        this._moveUpSubcategories(this._subcategories.getValue(),[subcategory]);
+        this._moveUpSubcategories([subcategory]);
         break;
       case 'moveDown':
-        this._moveDownSubcategories(this._subcategories.getValue(),[subcategory]);
+        this._moveDownSubcategories([subcategory]);
         break;
       default:
         break;
     }
   }
 
-  public moveSubcategories({subcategories, direction}: { subcategories: KalturaCategory[], direction: 'up' | 'down' }): void {
-    if (direction === 'up') {
-      this._moveUpSubcategories(this._subcategories.getValue(), subcategories);
-    } else {
-      this._moveDownSubcategories(this._subcategories.getValue(), subcategories);
-    }
-
-    this._setDirty();
-  }
-
-  private _setDirty(): void {
-    this.updateState({isDirty: true});
-  }
-
-  protected onDataSaving(newData: KalturaCategory, request: KalturaMultiRequest): void {
-    if (this.isDirty) {
-      this._subcategoriesMarkedForDelete.forEach(subcategory => {
-        request.requests.push(new CategoryDeleteAction({id: subcategory.id}));
-      });
-      this._subcategories.getValue().forEach((subcategory, index) => {
-        request.requests.push(new CategoryUpdateAction({
-          id: subcategory.id,
-          category: new KalturaCategory({
-            partnerSortValue: index
-          })
-        }));
-      });
-    }
+  public deleteSelectedSubcategories(subcategories: KalturaCategory[]): void {
+    this._deleteCategories(subcategories);
   }
 
   // TODO: Ben move to shared util function for the categories table (consult Eran)
   private _handleDelete(subcategory: KalturaCategory): void {
-    const deleteSubCategory = () => {
-      const hasWarningTags: boolean = subcategory.tags && subcategory.tags.indexOf('__EditWarning') > -1;
+    const deleteCategory = () => {
       const hasSubcategories: boolean = subcategory.directSubCategoriesCount > 0;
       let message: string;
-      if (hasWarningTags) {
+      if (this._hasEditWarnings(subcategory)) {
         message = hasSubcategories ?
           this._appLocalization.get('applications.content.categoryDetails.subcategories.deleteAction.deleteWarningSubcategoriesConfirmation') :
           this._appLocalization.get('applications.content.categoryDetails.subcategories.deleteAction.deleteWarningConfirmation');
@@ -251,7 +161,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
     const selectedIndex = this._subcategories.getValue().indexOf(subcategory);
     if (selectedIndex > -1) {
-      deleteSubCategory();
+      deleteCategory();
     } else {
       const deleteError = new AreaBlockerMessage({
         message: this._appLocalization.get('applications.content.categoryDetails.subcategories.errors.categoryCouldNotBeDeleted'),
@@ -264,6 +174,109 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
       });
       this._showBlockerMessage(deleteError, false);
     }
+  }
+
+  // bulk delete
+  // TODO: BEN move to shared place (exists on categories-bulk-actions.component.ts)
+  private _deleteCategories(categories: KalturaCategory[]): void {
+    if (!categories || !categories.length) {
+      return undefined;
+    }
+    let message = '';
+    let deleteMessage = '';
+
+    if (this._hasEditWarnings(categories)) {
+      deleteMessage = this._appLocalization.get('applications.content.categories.editWarning');
+    }
+
+    let isSubCategoriesExist = false;
+    categories.forEach(obj => {
+      if (obj.directSubCategoriesCount && obj.directSubCategoriesCount > 0) {
+        isSubCategoriesExist = true;
+      }
+    });
+    if (isSubCategoriesExist) {
+      message = deleteMessage.concat(categories.length > 1 ?
+        this._appLocalization.get('applications.content.categories.confirmDeleteMultipleWithSubCategories') :
+        this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories'));
+    } else {
+      message = deleteMessage.concat(categories.length > 1 ?
+        this._appLocalization.get('applications.content.categories.confirmDeleteMultiple') :
+        this._appLocalization.get('applications.content.categories.confirmDeleteSingle'));
+    }
+
+    this._browserService.confirm(
+      {
+        header: this._appLocalization.get('applications.content.categories.deleteCategories'),
+        message: message,
+        accept: () => {
+          setTimeout(() => {
+            categories.forEach((category) => {
+              const selectedIndex = this._subcategories.getValue().indexOf(category);
+              if (selectedIndex > -1) {
+                this._subcategories.getValue().splice(selectedIndex, 1); // TODO: BEN emit once
+                this._subcategoriesMarkedForDelete.push(category);
+                this._subcategories.next(this._subcategories.getValue());
+                this._setDirty();
+              }
+            });
+            // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
+          }, 0);
+        }
+      }
+    );
+  }
+
+  // TODO: BEN move to shared place (exists on categories-bulk-actions.component.ts)
+  private _hasEditWarnings(categories: KalturaCategory | KalturaCategory[]): boolean {
+    categories = categories && (!Array.isArray(categories)) ? [categories] : categories;
+    const editWarningsExists: boolean =
+      // Find one of the selected categories that has '__EditWarning' in its 'tags' property
+      !!(<KalturaCategory[]>categories).find(category => {
+        return (category.tags && category.tags.indexOf('__EditWarning') > -1);
+      });
+
+    return editWarningsExists;
+  }
+
+  public moveSubcategories({items, direction}: { items: KalturaCategory[], direction: 'up' | 'down' }): void {
+    if (direction === 'up') {
+      this._moveUpSubcategories(items);
+    } else {
+      this._moveDownSubcategories(items);
+    }
+  }
+
+  private _moveUpSubcategories(selectedSubcategories: KalturaCategory[]): void {
+    if (KalturaUtils.moveUpItems(this._subcategories.getValue(), selectedSubcategories)) {
+      this._setDirty();
+    }
+  }
+
+  private _moveDownSubcategories(selectedSubcategories: KalturaCategory[]): void {
+    if (KalturaUtils.moveDownItems(this._subcategories.getValue(), selectedSubcategories)) {
+      this._setDirty();
+    }
+  }
+
+  protected onDataSaving(newData: KalturaCategory, request: KalturaMultiRequest): void {
+    if (this.isDirty) {
+      this._subcategoriesMarkedForDelete.forEach(subcategory => {
+        request.requests.push(new CategoryDeleteAction({id: subcategory.id}));
+      });
+      this._subcategories.getValue().forEach((subcategory, index) => {
+        request.requests.push(new CategoryUpdateAction({
+          id: subcategory.id,
+          category: new KalturaCategory({
+            partnerSortValue: index
+          })
+        }));
+      });
+    }
+  }
+
+  private _setDirty(): void {
+    this.updateState({isDirty: true});
   }
 
   ngOnDestroy() {

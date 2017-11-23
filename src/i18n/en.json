@@ -325,6 +325,7 @@
         "addCategory": "Add Category",
         "selected": "Selected",
         "bulkActions": "Bulk Actions",
+        "confirmDeleteSingle": "Are you sure you want to delete these categories?",
         "refine": "Refine",
         "filterCategories": "Filter Categories",
         "edit": "Edit",
@@ -1025,7 +1026,11 @@
         },
         "subcategories": {
           "tableHeaderDetails": {
-            "total": "{{0}} Sub - Categories"
+            "total": "{{0}} Sub - Categories",
+            "addSubcategory": "Add Sub - Category",
+            "remove": "Remove",
+            "selected": "{{0}} Selected",
+            "cancel": "Cancel"
           },
           "actions": {
             "moveUp": "Move Up",

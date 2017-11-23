@@ -1,7 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 import {CategorySubcategoriesWidget} from './category-subcategories-widget.service';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
 
 
 @Component({
@@ -14,21 +13,14 @@ export class CategorySubcategoriesComponent implements OnInit, OnDestroy {
   public _emptyMessage: string = null; // todo: implement
   public _selectedSubcategories: KalturaCategory[] = [];
   public _subcategories: KalturaCategory[] = [];
-  private _subcategoriesCount: number;
+  public _subcategoriesCount: number;
 
-  constructor(public _widgetService: CategorySubcategoriesWidget,
-              private _appLocalization: AppLocalization) {
+  constructor(public _widgetService: CategorySubcategoriesWidget) {
   }
 
   public rowTrackBy: Function = (index: number, item: any) => {
     return item.id
   };
-
-  public get totalSubcategories(): string {
-    return this._appLocalization.get('applications.content.categoryDetails.subcategories.tableHeaderDetails.total',
-      {'0': this._subcategoriesCount});
-  }
-
 
   ngOnInit() {
     this._widgetService.attachForm();
@@ -38,8 +30,21 @@ export class CategorySubcategoriesComponent implements OnInit, OnDestroy {
     })
   }
 
-
   ngOnDestroy() {
     this._widgetService.detachForm();
+  }
+
+  public _clearSelection() {
+    this._selectedSubcategories = [];
+  }
+
+  public _onActionSelected(event: { action: 'delete' | 'moveUp' | 'moveDown', subcategory: KalturaCategory }): void {
+    this._clearSelection();
+    this._widgetService.onActionSelected(event);
+  }
+
+  public _deleteSelected(selectedSubcategories: KalturaCategory[]): void {
+    // this._clearSelection();
+    this._widgetService.deleteSelectedSubcategories(selectedSubcategories);
   }
 }

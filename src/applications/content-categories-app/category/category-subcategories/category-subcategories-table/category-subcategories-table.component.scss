@@ -2,15 +2,10 @@
 
 .kTable {
   background-color: white;
-  height: auto;
+  overflow: hidden;
+  position: relative;
   padding: 0px;
-  width: 100%;
-  .kTitle {
-    color: $kGrayscale1;
-    font-weight: 700;
-    overflow: hidden;
-    max-height: 45px;
-  }
+
   .kTableActions {
     width: 100%;
     text-align: center;
@@ -22,17 +17,43 @@
       outline: 0;
     }
   }
+
+  .kTitle {
+    color: #333333;
+    font-weight: 700;
+  }
 }
+
+:host /deep/ .selectionColumn {
+  width: 24px;
+  padding-left: 14px!important;
+}
+
+:host /deep/ .ui-datatable .nameColumn {
+  width: 100px;
+}
+
+:host /deep/ .ui-datatable .createdAtColumn {
+  width: 40px;
+  text-align: center;
+}
+
+:host /deep/ .ui-datatable .entriesCountColumn {
+  width: 50px;
+  text-align: center;
+}
+
+:host /deep/ .ui-datatable .actionsColumn {
+  overflow: visible;
+  width: 30px;
+}
+
 
 :host {
   display: flex;
   flex-flow: row wrap;
-  margin: 0px;
+  margin: 0;
   flex-direction: column;
-}
-
-:host /deep/ p-datatable .ui-datatable-scrollable-body{
-  margin-bottom: 34px;
 }
 
 :host /deep/ p-datatable .stickyHeader{

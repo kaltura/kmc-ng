@@ -27,8 +27,8 @@ export class CategorySubcategoriesTableComponent implements OnInit, OnDestroy, A
   public deferredLoading = true;
   public _blockerMessage: AreaBlockerMessage = null;
 
-  @Input() _selectedSubcategories: KalturaCategory[] = []; // todo: implement
   @Input() selectedSubcategories: KalturaCategory[] = [];
+  @Output() selectedSubcategoriesChange = new EventEmitter<KalturaCategory[]>();
 
   @Input()
   set subcategories(data: KalturaCategory[]) {
@@ -38,11 +38,10 @@ export class CategorySubcategoriesTableComponent implements OnInit, OnDestroy, A
       this._subcategories = data;
       this.cdRef.detectChanges();
     } else {
-      this._deferredSubcategories = data
+      this._deferredSubcategories = data;
     }
   }
 
-  @Output() selectedSubcategoriesChange = new EventEmitter<KalturaCategory[]>();
   @Output() onActionSelected = new EventEmitter<{ action: string, subcategory: KalturaCategory }>();
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
@@ -50,7 +49,7 @@ export class CategorySubcategoriesTableComponent implements OnInit, OnDestroy, A
   constructor(private cdRef: ChangeDetectorRef, private _appLocalization: AppLocalization) {
   }
 
-  public rowTrackBy: Function  = (index: number, item: any) => item;
+  public rowTrackBy: Function = (index: number, item: any) => item;
 
   public _openActionsMenu(event: any, rowIndex: number, category: KalturaCategory) {
     if (this.actionsMenu) {
@@ -65,12 +64,12 @@ export class CategorySubcategoriesTableComponent implements OnInit, OnDestroy, A
     this._items = [
       {
         label: this._appLocalization.get('applications.content.categoryDetails.subcategories.actions.moveUp'),
-        command: (event) => this.onActionSelected.emit({ action: 'moveUp', subcategory }),
+        command: (event) => this.onActionSelected.emit({action: 'moveUp', subcategory}),
         disabled: rowIndex === 0
       },
       {
         label: this._appLocalization.get('applications.content.categoryDetails.subcategories.actions.moveDown'),
-        command: () => this.onActionSelected.emit({ action: 'moveDown', subcategory }),
+        command: () => this.onActionSelected.emit({action: 'moveDown', subcategory}),
         disabled: rowIndex + 1 === this._subcategories.length
       },
       {
@@ -100,4 +99,9 @@ export class CategorySubcategoriesTableComponent implements OnInit, OnDestroy, A
       }, 0);
     }
   }
+
+  public _onSelectionChange(event) {
+    this.selectedSubcategoriesChange.emit(event);
+  }
+
 }

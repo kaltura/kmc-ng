@@ -1,13 +1,20 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader"
                 [message]="_widgetService.sectionBlockerMessage">
-  <div class="">
-    <!--TODO: BEN add the summary and bulk actions-->
-    <div class="kSelectedNum">
-      {{totalSubcategories}}
-    </div>
-    <kCategorySubcategoriesTable [(selectedSubcategories)]="_selectedSubcategories"
-                                 [subcategories]="_subcategories"
-                                 (onActionSelected)="_widgetService.onActionSelected($event)">
+  <div class="kSubcategoriesHolder">
+    <kSubcategoriesListBulkOperationsContent
+      [itemsTotalCount]="_subcategoriesCount"
+      (deleteItems)="_deleteSelected($event)"
+      (clearSelection)="_clearSelection()"
+      (moveItems)="_widgetService.moveSubcategories($event)"
+      [selectedItems]="_selectedSubcategories">
+    </kSubcategoriesListBulkOperationsContent>
+    <!--(addItem)="addEntry.open()"-->
+
+    <kCategorySubcategoriesTable
+      class="kSubcategoriesTable"
+      [(selectedSubcategories)]="_selectedSubcategories"
+      [subcategories]="_subcategories"
+      (onActionSelected)="_onActionSelected($event)">
     </kCategorySubcategoriesTable>
   </div>
 </k-area-blocker>

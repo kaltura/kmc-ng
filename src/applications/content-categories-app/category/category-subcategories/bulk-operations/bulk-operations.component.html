@@ -1,0 +1,45 @@
+<div class="kSubcategoriesTableFilters">
+  <kSticky stickyId="subcategoryContentBulk"
+           sticksTo="categoryHeader"
+           stickyClass="kStickyHeader"
+           [scrollOffset]="120">
+    <div class="kHeader">
+      <div class="kBulkActionsContainer">
+        <div class="kBulkActions" *ngIf="selectedItems.length; else addItemWrap">
+          <button pButton
+                  class="kButtonDefault kMoveBtn kMoveBtnTop"
+                  icon="kIcondropdown_arrow_top"
+                  (click)="_moveItems('up')"></button>
+          <button pButton
+                  class="kButtonDefault kMoveBtn kMoveBtnBottom"
+                  icon="kIcondropdown_arrow_bottom"
+                  (click)="_moveItems('down')"></button>
+          <button pButton class="kButtonDanger kBulkDeleteBtn"
+                  label="{{'applications.content.categoryDetails.subcategories.tableHeaderDetails.remove' | translate}}"
+                  (click)="deleteItems.emit(selectedItems)"></button>
+        </div>
+        <ng-template #addItemWrap>
+          <button
+            pButton
+            type="button"
+            label="{{'applications.content.categoryDetails.subcategories.tableHeaderDetails.addSubcategory' | translate}}"
+            class="kButtonBranded kAddItemBtn"
+            (click)="addItem.emit()">
+          </button>
+        </ng-template>
+        <span class="kSelectedItemsNum" *ngIf="itemsTotalCount">
+          {{ _getTranslation('applications.content.categoryDetails.subcategories.tableHeaderDetails.total', itemsTotalCount) }}
+      </span>
+        <div *ngIf="selectedItems.length" class="kSelected">
+        <span class="kSelectedItemsLabel">
+          {{ _getTranslation('applications.content.categoryDetails.subcategories.tableHeaderDetails.selected', selectedItems.length) }}
+        </span>
+          <a class="kBulkCancel" (click)="clearSelection.emit()">
+            {{'applications.content.categoryDetails.subcategories.tableHeaderDetails.cancel' | translate}}
+          </a>
+        </div>
+      </div>
+    </div>
+  </kSticky>
+</div>
+
