@@ -3,44 +3,42 @@ import { KalturaSearchOperator } from 'kaltura-typescript-client/types/KalturaSe
 import { KalturaMediaEntryFilter } from 'kaltura-typescript-client/types/KalturaMediaEntryFilter';
 import { KalturaLogger } from '@kaltura-ng/kaltura-log';
 import { FiltersStoreBase, TypeAdaptersMapping } from './filters-store-base';
-import { SimpleTypeAdapter } from './filter-types/simple-type';
+import { StringTypeAdapter } from './filter-types/string-type';
+import { DatesRangeAdapter, DatesRangeType } from './filter-types/dates-range-type';
+import { ValuesListAdapter, ValuesListType } from './filter-types/values-list-type';
+import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 
 export interface EntriesFilters {
     freetext: string,
-    createdAt : {
-        createdBefore: Date,
-        createdAfter: Date
-    },
-    mediaTypes : {value: any, label: string }[]
-    /*mediaTypes : { [value:string]: { label: string}} TODO SAKAL */
+    createdAt: DatesRangeType,
+    mediaTypes: ValuesListType
 }
 
 
 @Injectable()
 export class EntriesFiltersStore extends FiltersStoreBase<EntriesFilters> {
 
-    constructor(_logger: KalturaLogger)
-    {
+    constructor(_logger: KalturaLogger) {
         super(_logger);
     }
 
     protected _createEmptyStore(): EntriesFilters {
         return {
             freetext: '',
-            createdAt: {createdAfter: null, createdBefore: null},
+            createdAt: {fromDate: null, toDate: null},
             mediaTypes: []
         };
     }
 
     protected _getTypeAdaptersMapping(): TypeAdaptersMapping<EntriesFilters> {
         return {
-            freetext: new SimpleTypeAdapter<string>(),
-            createdAt: new SimpleTypeAdapter<string>(),
-            mediaTypes: new SimpleTypeAdapter<string>()
+            freetext: new StringTypeAdapter(),
+            createdAt: new DatesRangeAdapter(),
+            mediaTypes: new ValuesListAdapter()
         };
     }
 
-    public toRequest(request : { filter: KalturaMediaEntryFilter, advancedSearch: KalturaSearchOperator }) : void{
+    public toRequest(request: { filter: KalturaMediaEntryFilter, advancedSearch: KalturaSearchOperator }) : void{
         // TODO sakal replace with adapters
         const data = this._getData();
 
@@ -50,21 +48,22 @@ export class EntriesFiltersStore extends FiltersStoreBase<EntriesFilters> {
             request.filter.freeText = data.freetext;
         }
 
-        //
-        // if (filters.createdAt ) {
-        //     if (filters.createdAt.createdAfter) {
-        //         request.filter.createdAtGreaterThanOrEqual = KalturaUtils.getStartDateValue(filters.createdAt.createdAfter);
-        //     }
-        //
-        //     if (filters.createdAt.createdBefore) {
-        //         request.filter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(filters.createdAt.createdBefore);
-        //     }
-        // }
-        //
-        // const mediaTypeFilters = filters.mediaTypes.map(item => item.value).join(',');
-        // if (mediaTypeFilters) {
-        //     request.filter.mediaTypeIn = mediaTypeFilters;
-        // }
+
+        if (data.createdAt ) {
+            if (data.createdAt.fromDate) {
+                request.filter.createdAtGreaterThanOrEqual = KalturaUtils.getStartDateValue(data.createdAt.fromDate);
+            }
+
+            if (data.createdAt.toDate) {
+                request.filter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(data.createdAt.toDate);
+            }
+        }
+
+        const mediaTypeFilters = data.mediaTypes.map(item => item.value).join(',');
+
+        if (mediaTypeFilters) {
+            request.filter.mediaTypeIn = mediaTypeFilters;
+        }
     }
 
 }

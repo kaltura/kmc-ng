@@ -1,6 +1,6 @@
 
-export abstract class TypeAdapterBase
+export abstract class TypeAdapterBase<T>
 {
-    abstract copy(value: any): any;
-    abstract hasChanged(currentValue: any, previousValue: any): boolean;
+    abstract copy(value: T): T;
+    abstract hasChanged(currentValue: T, previousValue: T): boolean;
 }

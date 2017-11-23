@@ -1,23 +1,16 @@
 import { TypeAdapterBase } from './type-adapter-base';
 
-export type SimpleTypes = SimpleTypeString;
+export type SimpleTypes = string | number | boolean;
 
-export type SimpleTypeString = string;
+export abstract class SimpleTypeAdapterBase<T extends SimpleTypes> extends TypeAdapterBase<T> {
+    protected abstract _validateType(value: any);
 
-
-export class SimpleTypeAdapter<T extends SimpleTypes> extends TypeAdapterBase {
-    private _validateType(value: any) {
-        if (value !== null && !(typeof value === 'string')) {
-            throw new Error('invalid value type. expected value of type string');
-        }
-    }
-
-    copy(value: any): any {
+    copy(value: T): T {
         this._validateType(value);
         return value;
     }
 
-    hasChanged(currentValue: any, previousValue: any): boolean {
+    hasChanged(currentValue: T, previousValue: T): boolean {
         this._validateType(previousValue);
         this._validateType(currentValue);
 

@@ -5,9 +5,12 @@ import * as Immutable from 'seamless-immutable';
 import { KalturaLogger } from '@kaltura-ng/kaltura-log';
 
 export type TypeAdaptersMapping<T> = {
-    readonly [P in keyof T]: TypeAdapterBase;
-    }
+    readonly [P in keyof T]: TypeAdapterBase<T[P]>;
+}
 
+export type DataChanges<T> = {
+    [P in keyof T]? : {previousValue: T[P] | null, currentValue: T[P] | null };
+}
 
 function mapFromArray(array, prop) {
     const map = {};
@@ -19,7 +22,7 @@ function mapFromArray(array, prop) {
 
 export abstract class FiltersStoreBase<T extends { [key: string]: any }> {
     private _data: Immutable.ImmutableObject<T> = Immutable(this._createEmptyStore());
-    private _dataChanges = new Subject<SimpleChanges>();
+    private _dataChanges = new Subject<DataChanges<T>>();
     public dataChanges$ = this._dataChanges.asObservable();
     private _typeAdaptersMapping: TypeAdaptersMapping<T> = null;
 
@@ -42,16 +45,15 @@ export abstract class FiltersStoreBase<T extends { [key: string]: any }> {
     public update(updates: Partial<T>): void {
         let newFilters = this._data;
         let hasChanges = false;
-        const dataChanges: SimpleChanges = {};
+        const dataChanges: DataChanges<T> = {};
 
         Object.keys(updates).forEach(filterName => {
 
             const adapter = this._typeAdaptersMapping[filterName];
 
             if (!adapter) {
-                return;
-                //this._logger.error(`cannot sync store, failed to extract type adapter for '${filterName}'`);
-                //throw new Error(`cannot sync store, failed to extract type adapter for '${filterName}'`);
+                this._logger.error(`cannot sync store, failed to extract type adapter for '${filterName}'`);
+                throw new Error(`cannot sync store, failed to extract type adapter for '${filterName}'`);
             }
 
             const currentValue = updates[filterName];

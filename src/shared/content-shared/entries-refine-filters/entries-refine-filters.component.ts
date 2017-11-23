@@ -75,8 +75,8 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
       const createdAt = this._store.getFilterData('createdAt');
       if (createdAt) {
-          this._createdAfter = createdAt.createdAfter;
-          this._createdBefore = createdAt.createdBefore;
+          this._createdAfter = createdAt.fromDate;
+          this._createdBefore = createdAt.toDate;
       }
 
       // TODO sakal get filter data of mediatypes
@@ -88,8 +88,8 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
                   if (typeof changes.createdAt !== 'undefined')
                   {
-                      this._createdAfter = changes.createdAt.currentValue ? changes.createdAt.currentValue.createdAfter : null;
-                      this._createdBefore = changes.createdAt.currentValue ? changes.createdAt.currentValue.createdBefore : null;
+                      this._createdAfter = changes.createdAt.currentValue ? changes.createdAt.currentValue.fromDate : null;
+                      this._createdBefore = changes.createdAt.currentValue ? changes.createdAt.currentValue.toDate : null;
                   }
 
                   if (typeof changes.mediaTypes !== 'undefined') {
@@ -348,8 +348,8 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
           if (!isValid) {
               setTimeout(() => {
                   const createdAt = this._store.getFilterData('createdAt');
-                  this._createdAfter = createdAt ? createdAt.createdAfter : null;
-                  this._createdBefore = createdAt ? createdAt.createdBefore : null;
+                  this._createdAfter = createdAt ? createdAt.fromDate : null;
+                  this._createdBefore = createdAt ? createdAt.toDate : null;
 
               }, 0);
               this._createdFilterError = this.appLocalization.get('applications.content.entryDetails.errors.schedulingError');
@@ -359,8 +359,8 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
       this._store.update({
           createdAt: {
-              createdAfter: this._createdAfter,
-              createdBefore: this._createdBefore
+              fromDate: this._createdAfter,
+              toDate: this._createdBefore
           }
       });
   }
@@ -373,8 +373,8 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   public _clearCreatedComponents(): void {
       this._store.update({
           createdAt: {
-              createdAfter: null,
-              createdBefore: null
+              fromDate: null,
+              toDate: null
           }
       });
   }
@@ -578,7 +578,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
               case "Media Types":
                   const newValue = this._store.getFilterData('mediaTypes') || [];
                 if (!newValue.find(item => item.value === node.data)) {
-                    newValue.push({value: node.data, label: node.label});
+                    newValue.push({value: node.data + '', label: node.label});
                     this._store.update({ mediaTypes: newValue});
                 }
                 break;

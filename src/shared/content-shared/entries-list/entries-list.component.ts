@@ -72,7 +72,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
               this._store.update({freetext: null});
               break;
           case "createdAt":
-              this._store.update({createdAt: {createdAfter: null, createdBefore: null}});
+              this._store.update({createdAt: {fromDate: null, toDate: null}});
               break;
       }
   }
@@ -152,19 +152,22 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   }
 
     private _syncTagOfCreatedAt(): void {
-        this._filterTags.splice(
-            this._filterTags.findIndex(item => item.type === 'createdAt'),
-            1);
+        const previousItem = this._filterTags.findIndex(item => item.type === 'createdAt');
+        if (previousItem !== -1) {
+            this._filterTags.splice(
+                previousItem,
+                1);
+        }
 
-        const {createdAfter, createdBefore} = this._store.getFilterData('createdAt')|| { createdAfter: null, createdBefore: null};
-        if (createdAfter || createdBefore) {
+        const {fromDate, toDate} = this._store.getFilterData('createdAt') || { fromDate: null, toDate: null};
+        if (fromDate || toDate) {
             let tooltip = '';
-            if (createdAfter && createdBefore) {
-                tooltip = `${moment(createdAfter).format('LL')} - ${moment(createdBefore).format('LL')}`;
-            } else if (createdAfter) {
-                tooltip = `From ${moment(createdAfter).format('LL')}`;
-            } else if (createdBefore) {
-                tooltip = `Until ${moment(createdBefore).format('LL')}`;
+            if (fromDate && toDate) {
+                tooltip = `${moment(fromDate).format('LL')} - ${moment(toDate).format('LL')}`;
+            } else if (fromDate) {
+                tooltip = `From ${moment(fromDate).format('LL')}`;
+            } else if (toDate) {
+                tooltip = `Until ${moment(toDate).format('LL')}`;
             }
             // TODO sakal fix tooltip as token
             this._filterTags.push({type: 'createdAt', value: null, label: 'Dates', tooltip: {token: tooltip}});
@@ -172,9 +175,12 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
 
   private _syncTagOfFreetext(): void {
-      this._filterTags.splice(
-          this._filterTags.findIndex(item => item.type === 'freetext'),
-          1);
+      const previousItem = this._filterTags.findIndex(item => item.type === 'freetext');
+      if (previousItem !== -1) {
+          this._filterTags.splice(
+              previousItem,
+              1);
+      }
 
       const currentFreetextValue = this._store.getFilterData('freetext');
 
