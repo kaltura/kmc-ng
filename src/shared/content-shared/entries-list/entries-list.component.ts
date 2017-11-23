@@ -78,6 +78,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   }
 
   removeAllTags() {
+      // TODO sakal not working
     this.clearSelection();
 
   }

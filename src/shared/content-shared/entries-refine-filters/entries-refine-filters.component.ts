@@ -86,8 +86,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
           .subscribe(
               changes => {
 
-                  if (typeof changes.createdAt !== 'undefined')
-                  {
+                  if (typeof changes.createdAt !== 'undefined') {
                       this._createdAfter = changes.createdAt.currentValue ? changes.createdAt.currentValue.fromDate : null;
                       this._createdBefore = changes.createdAt.currentValue ? changes.createdAt.currentValue.toDate : null;
                   }
