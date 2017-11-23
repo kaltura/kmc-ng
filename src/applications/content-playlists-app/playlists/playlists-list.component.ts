@@ -355,4 +355,8 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
       }
     );
   }
+
+  public _getTranslation(key: string, param: string): string {
+    return this.appLocalization.get(key, { 0: param });
+  }
 }
