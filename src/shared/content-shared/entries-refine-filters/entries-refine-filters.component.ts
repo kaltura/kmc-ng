@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, Self, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PrimeTreeDataProvider, PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -9,29 +8,26 @@ import { environment } from 'app-environment';
 
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
+// TODO sakal remove
 import * as R from 'ramda';
 
-import { EntriesRefineFiltersProvider, RefineFilter } from '../entries-store/entries-refine-filters-provider.service';
+import { EntriesRefineFiltersService } from './entries-refine-filters.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
-import { ValueFilter } from 'app-shared/content-shared/entries-store/value-filter';
 import { TimeSchedulingFilter } from 'app-shared/content-shared/entries-store/filters/time-scheduling-filter';
-import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item';
 import {
-    EntriesFilters,
     EntriesFiltersStore
 } from 'app-shared/content-shared/entries-store/entries-filters.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 
-export interface TreeFilterData {
+export interface FiltersGroupList {
   items: PrimeTreeNode[];
   selections: PrimeTreeNode[];
-  refineFilter: RefineFilter
 }
 
 export interface FiltersGroup {
   label: string;
-  trees: TreeFilterData[];
+  lists: FiltersGroupList[];
 }
 
 @Component({
@@ -43,11 +39,8 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
 
-  // subscription that will be disposed later upon ngDestroy
-  private _filterUpdateSubscription: ISubscription;
-  private _parentPopupStateChangeSubscribe: ISubscription;
 
-  private _filterNameToTreeData: { [key: string]: TreeFilterData } = {};
+  private _filtersGroupListMapping: { [key: string]: FiltersGroupList } = {};
 
   // properties that are exposed to the template
   public _filtersGroupList: FiltersGroup[] = [];
@@ -63,62 +56,23 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   public _createdBefore: Date;
 
 
-  constructor(public additionalFiltersStore: EntriesRefineFiltersProvider,
+  constructor(private _entriesRefineFilters: EntriesRefineFiltersService,
               private _store: EntriesFiltersStore,
-              private primeTreeDataProvider: PrimeTreeDataProvider,
-              private entriesStore: EntriesStore,
-              private appLocalization: AppLocalization) {
+              private _primeTreeDataProvider: PrimeTreeDataProvider,
+              private _entriesStore: EntriesStore,
+              private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
-      this._registerToAdditionalFiltersStore();
-
-      const createdAt = this._store.getFilterData('createdAt');
-      if (createdAt) {
-          this._createdAfter = createdAt.fromDate;
-          this._createdBefore = createdAt.toDate;
-      }
-
-      // TODO sakal get filter data of mediatypes
-
-      this._store.dataChanges$
-          .cancelOnDestroy(this)
-          .subscribe(
-              changes => {
-
-                  if (typeof changes.createdAt !== 'undefined') {
-                      this._createdAfter = changes.createdAt.currentValue ? changes.createdAt.currentValue.fromDate : null;
-                      this._createdBefore = changes.createdAt.currentValue ? changes.createdAt.currentValue.toDate : null;
-                  }
-
-                  if (typeof changes.mediaTypes !== 'undefined') {
-                      // TODO sakal
-                      const treeData = this._filterNameToTreeData['Media Types'];
-                      const currentValue = this._store.getFilterData('mediaTypes');
-
-                      // TODO remove <any>
-                      const diff = this._store.getDiff(treeData.selections, 'data', currentValue, 'value');
-
-                      diff.added.forEach(addedItem => {
-                          // TODO remove <any>
-                          const matchingItem = treeData.items.find(item => item.data === (<any>addedItem).value);
-                          treeData.selections.push(matchingItem);
-                      });
-
-                      diff.deleted.forEach(removedItem => {
-                          treeData.selections.splice(
-                              treeData.selections.indexOf(removedItem),
-                              1
-                          );
-                      });
-                  }
-              }
-          );
+      this._registerToRefineFiltersService();
+      this._restoreFiltersState();
+      this._registerToFilterStoreDataChanges();
   }
 
   ngAfterViewInit() {
     if (this.parentPopupWidget) {
-      this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$.subscribe(event => {
+      this.parentPopupWidget.state$
+          .cancelOnDestroy(this).subscribe(event => {
         if (event.state === PopupWidgetStates.Close && this._treeContainer) {
           this._treeContainer.scrollToTop();
         }
@@ -127,81 +81,58 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   }
 
   ngOnDestroy() {
-    if (this._filterUpdateSubscription) {
-      this._filterUpdateSubscription.unsubscribe();
-      this._filterUpdateSubscription = null;
-    }
-    if (this._parentPopupStateChangeSubscribe) {
-      this._parentPopupStateChangeSubscribe.unsubscribe();
-      this._parentPopupStateChangeSubscribe = null;
-    }
-  }
-    private _handledFiltersInTags : EntriesFilters = null;
-
-  /**
-   * Register to 'entriesStore' filters changes and update content component accordingly
-   *
-   * @private
-   **/
-  private _registerToFilterUpdates(): void {
-
-
-    // TODO sakal remove
-    this.entriesStore.activeFilters$
-      .cancelOnDestroy(this)
-      .first()
-      .subscribe(result => {
-        // sync components
-        this.syncScheduledComponents();
-
-        if (result.filters) {
-          result.filters.forEach(filter => {
-            if (filter instanceof ValueFilter) {
-              this._onFilterAdded(filter);
-            }
-          })
-        }
-      });
-
-
-    // update content components when the filter list is being updated.
-    this._filterUpdateSubscription = this.entriesStore.query$.subscribe(
-      filter => {
-
-        // sync components
-        this.syncScheduledComponents();
-
-
-        if (filter.removedFilters) {
-          filter.removedFilters.forEach(removeFilter => {
-
-            if (removeFilter instanceof ValueFilter) {
-              let shouldRemoveFilter = true;
-
-              if (removeFilter instanceof TimeSchedulingFilter && removeFilter.value === 'scheduled') {
-                const scheduledFilterItem = this._getScheduledFilter();
-
-                shouldRemoveFilter = !scheduledFilterItem;
-              }
-
-              if (shouldRemoveFilter) {
-                this._onFilterRemoved(removeFilter);
-              }
-            }
-          });
-        }
-      }
-    );
 
   }
 
-  /**
-   * Register to additional filters store 'filters list changes' and update internal filters when needed.
-   *
-   * @private
-   */
-  private _registerToAdditionalFiltersStore(): void {
-    this.additionalFiltersStore.status$
+    private _registerToFilterStoreDataChanges(): void {
+        this._store.dataChanges$
+            .cancelOnDestroy(this)
+            .subscribe(
+                changes => {
+
+                    if (typeof changes.createdAt !== 'undefined') {
+                        this._createdAfter = changes.createdAt.currentValue ? changes.createdAt.currentValue.fromDate : null;
+                        this._createdBefore = changes.createdAt.currentValue ? changes.createdAt.currentValue.toDate : null;
+                    }
+                    // TODO sakal split to smaller functions
+                    if (typeof changes.mediaTypes !== 'undefined') {
+                        // TODO sakal
+                        const treeData = this._filtersGroupListMapping['Media Types'];
+                        const currentValue = this._store.getFilterData('mediaTypes');
+
+                        // TODO remove <any>
+                        const diff = this._store.getDiff(treeData.selections, 'data', currentValue, 'value');
+
+                        diff.added.forEach(addedItem => {
+                            // TODO remove <any>
+                            const matchingItem = treeData.items.find(item => item.data === (<any>addedItem).value);
+                            treeData.selections.push(matchingItem);
+                        });
+
+                        diff.deleted.forEach(removedItem => {
+                            treeData.selections.splice(
+                                treeData.selections.indexOf(removedItem),
+                                1
+                            );
+                        });
+                    }
+                }
+            );
+    }
+
+    private _restoreFiltersState(): void{
+        const createdAt = this._store.getFilterData('createdAt');
+        if (createdAt) {
+            this._createdAfter = createdAt.fromDate;
+            this._createdBefore = createdAt.toDate;
+        }
+
+        // TODO sakal get filter data of mediatypes
+
+    }
+
+    private _registerToRefineFiltersService(): void {
+    this._entriesRefineFilters.status$
       .cancelOnDestroy(this)
       .subscribe(
         result => {
@@ -213,7 +144,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
               buttons: [{
                 label: 'Retry',
                 action: () => {
-                  this.additionalFiltersStore.load();
+                  this._entriesRefineFilters.load();
                 }
               }
               ]
@@ -227,37 +158,35 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
           throw error;
         });
 
-
-
-
-    this.additionalFiltersStore.filters$
+    this._entriesRefineFilters.groups$
       .cancelOnDestroy(this)
       .subscribe(
-        (filters) => {
-          this._filterNameToTreeData = {};
+        (groups) => {
+          this._filtersGroupListMapping = {};
           this._filtersGroupList = [];
 
           // create root nodes
-          filters.groups.forEach(group => {
-            const filtersGroup = { label: group.label, trees: [] };
+          groups.forEach(group => {
+            const filtersGroup = { label: group.label, lists: [] };
             this._filtersGroupList.push(filtersGroup);
 
-            group.filters.forEach(refineFilter => {
+            group.lists.forEach(groupList => {
 
-              if (refineFilter.items.length > 0) {
-                const treeData = { items: [], selections: [], refineFilter: refineFilter };
-                this._filterNameToTreeData[refineFilter.name] = treeData;
-                filtersGroup.trees.push(treeData);
+              if (groupList.items.length > 0) {
+                const treeData = { items: [], selections: []};
 
-                const listRootNode = new PrimeTreeNode(null, refineFilter.label, [], null, { filterName: refineFilter.name });
+                this._filtersGroupListMapping[groupList.name] = treeData;
+                filtersGroup.lists.push(treeData);
 
-                this.primeTreeDataProvider.create(
+                const listRootNode = new PrimeTreeNode(null, groupList.label, [], null, { filterName: groupList.name });
+
+                this._primeTreeDataProvider.create(
                   {
-                    items: refineFilter.items,
+                    items: groupList.items,
                     idProperty: 'value',
                     rootParent: listRootNode,
                     nameProperty: 'label',
-                    payload: { filterName: refineFilter.name },
+                    payload: { filterName: groupList.name },
                     preventSort: true
                   }
                 );
@@ -267,8 +196,6 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
             });
 
           });
-
-          this._registerToFilterUpdates();
         },
         (error) => {
           // TODO [kmc] navigate to error page
@@ -301,68 +228,39 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    * @private
    */
   private syncSchedulingFilters(): boolean {
-    this._scheduledFilterError = null;
-    if (this._scheduledBefore && this._scheduledAfter) {
-      const isValid = this._scheduledAfter <= this._scheduledBefore;
-
-      if (!isValid) {
-        setTimeout(this.syncScheduledComponents.bind(this), 0);
-
-        this._scheduledFilterError = this.appLocalization.get('applications.content.entryDetails.errors.schedulingError');
-        return false;
-      }
-    }
-
-    const previousFilter = <TimeSchedulingFilter>this.entriesStore.getFiltersByType(TimeSchedulingFilter)
-      .find(filter => filter.value === 'scheduled');
-
-    if (previousFilter) {
-      // make sure the filter is already set for 'schedule', otherwise ignore update
-      this.entriesStore.removeFilters(previousFilter);
-      this.entriesStore.addFilters(
-        new TimeSchedulingFilter(
-          previousFilter.value,
-          previousFilter.label,
-          KalturaUtils.getEndDateValue(this._scheduledBefore),
-          KalturaUtils.getStartDateValue(this._scheduledAfter)
-        )
-      );
-    }
+      // TODO sakal scheduling
+    // this._scheduledFilterError = null;
+    // if (this._scheduledBefore && this._scheduledAfter) {
+    //   const isValid = this._scheduledAfter <= this._scheduledBefore;
+    //
+    //   if (!isValid) {
+    //     setTimeout(this.syncScheduledComponents.bind(this), 0);
+    //
+    //     this._scheduledFilterError = this.appLocalization.get('applications.content.entryDetails.errors.schedulingError');
+    //     return false;
+    //   }
+    // }
+    //
+    // const previousFilter = <TimeSchedulingFilter>this.entriesStore.getFiltersByType(TimeSchedulingFilter)
+    //   .find(filter => filter.value === 'scheduled');
+    //
+    // if (previousFilter) {
+    //   // make sure the filter is already set for 'schedule', otherwise ignore update
+    //   this.entriesStore.removeFilters(previousFilter);
+    //   this.entriesStore.addFilters(
+    //     new TimeSchedulingFilter(
+    //       previousFilter.value,
+    //       previousFilter.label,
+    //       KalturaUtils.getEndDateValue(this._scheduledBefore),
+    //       KalturaUtils.getStartDateValue(this._scheduledAfter)
+    //     )
+    //   );
+    // }
 
     return true;
   }
 
 
-  /**
-   * Update entries store filters with changes in the content created components
-   * @private
-   */
-  private syncCreatedFilters() {
-
-      this._createdFilterError = null;
-
-      if (this._createdAfter && this._createdBefore) {
-          const isValid = this._createdAfter <= this._createdBefore;
-
-          if (!isValid) {
-              setTimeout(() => {
-                  const createdAt = this._store.getFilterData('createdAt');
-                  this._createdAfter = createdAt ? createdAt.fromDate : null;
-                  this._createdBefore = createdAt ? createdAt.toDate : null;
-
-              }, 0);
-              this._createdFilterError = this.appLocalization.get('applications.content.entryDetails.errors.schedulingError');
-              return;
-          }
-      }
-
-      this._store.update({
-          createdAt: {
-              fromDate: this._createdAfter,
-              toDate: this._createdBefore
-          }
-      });
-  }
 
   /**
    * Clear content of created components and sync filters accordingly.
@@ -387,8 +285,8 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
     this._scheduledFilterError = null;
 
     const handledFilterTypeList = [];
-    Object.keys(this._filterNameToTreeData).forEach(filterName => {
-      const treeData = this._filterNameToTreeData[filterName];
+    Object.keys(this._filtersGroupListMapping).forEach(filterName => {
+      const treeData = this._filtersGroupListMapping[filterName];
 
       // TODO sakal
       // if (handledFilterTypeList.indexOf(treeData.refineFilter.entriesFilterType) === -1) {
@@ -405,7 +303,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    */
   private _getScheduledFilter(): TimeSchedulingFilter {
     let result: TimeSchedulingFilter = null;
-    const timeFilters = this.entriesStore.getFiltersByType(TimeSchedulingFilter);
+    const timeFilters = this._entriesStore.getFiltersByType(TimeSchedulingFilter);
 
     if (timeFilters && timeFilters.length > 0) {
       result = R.find(R.propEq('value', 'scheduled'), timeFilters);
@@ -414,14 +312,26 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
     return result || null;
   }
 
-
-  /**
-   * Create or update created components filter once the component data was changed by the user
-   *
-   * Not part of the API, don't use it from outside this component
-   */
   public _onCreatedChanged(): void {
-    this.syncCreatedFilters();
+      const updateResult = this._store.update({
+          createdAt: {
+              fromDate: this._createdAfter,
+              toDate: this._createdBefore
+          }
+      });
+
+      if (updateResult.createdAt.failed) {
+          this._createdFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
+
+          setTimeout(() => {
+              const createdAt = this._store.getFilterData('createdAt');
+              this._createdAfter = createdAt ? createdAt.fromDate : null;
+              this._createdBefore = createdAt ? createdAt.toDate : null;
+
+          }, 0);
+      } else {
+          this._createdFilterError = null;
+      }
   }
 
   /**
@@ -438,137 +348,9 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
   }
 
-
-  private _getNodeByFilterItem(filterItem: FilterItem): { node: PrimeTreeNode, treeData: TreeFilterData }[] {
-    const result: { node: PrimeTreeNode, treeData: TreeFilterData }[] = [];
-    const listOfFilterNames = Object.keys(this._filterNameToTreeData);
-    let treeData: TreeFilterData = null;
-
-    for (let i = 0, length = listOfFilterNames.length; i < length && !treeData; i++) {
-      const treeDataOfFilterName = this._filterNameToTreeData[listOfFilterNames[i]];
-
-        // TODO sakal
-      // if (treeDataOfFilterName && treeDataOfFilterName.refineFilter.isEntryFilterOfRefineFilter(filterItem)) {
-      //   treeData = treeDataOfFilterName;
-      // }
-    }
-
-    if (treeData) {
-      for (let i = 0, length = treeData.items.length; i < length; i++) {
-        const filterNodes = (treeData.items[i].children || [])
-          .filter(childNode => filterItem instanceof ValueFilter && childNode.data + '' === filterItem.value + '');
-
-        filterNodes.forEach(filterNode => {
-          result.push({ node: filterNode, treeData: treeData });
-        })
-      }
-    }
-
-    return result;
-  }
-
-
-  private _onFilterAdded(filter: ValueFilter<any>) {
-    if (filter) {
-      const filterNodes = this._getNodeByFilterItem(filter);
-
-      filterNodes.forEach(filterNode => {
-        // we find all occurrences of the required value because users can create a metadataschema with two items with the same value.
-        const { node, treeData } = filterNode;
-        const filterNodeSelectionIndex = treeData && treeData.selections ? treeData.selections.indexOf(node) : -1;
-
-        if (filterNodeSelectionIndex === -1) {
-          treeData.selections.push(node);
-        }
-      });
-    }
-  }
-
-  private _onFilterRemoved(filter: ValueFilter<any>) {
-    if (filter) {
-      const filterNodes = this._getNodeByFilterItem(filter);
-
-      filterNodes.forEach(filterNode => {
-        // we find all occurrences of the required value because users can create a metadataschema with two items with the same value.
-        const { node, treeData } = filterNode;
-
-        const filterNodeSelectionIndex = treeData.selections ? treeData.selections.indexOf(node) : -1;
-        if (filterNodeSelectionIndex > -1) {
-          treeData.selections.splice(filterNodeSelectionIndex, 1);
-        }
-      });
-    }
-  }
-
-
-  // TODO sakal remove
-  private _createFiltersByNode(node: PrimeTreeNode): FilterItem[] {
-    const result: FilterItem[] = [];
-
+  public _onTreeNodeSelect({ node }: { node: PrimeTreeNode }, treeSection: FiltersGroupList) {
     if (node instanceof PrimeTreeNode && node.payload.filterName) {
-      const treeData = this._filterNameToTreeData[node.payload.filterName];
-
-      if (treeData) {
-        // ignore undefined/null filters data (the virtual roots has undefined/null data)
-        const isDataNode = typeof node.data !== 'undefined' && node.data !== null;
-
-        if (isDataNode) {
-          treeData.refineFilter.addFilter( { value: node.data + '', label : node.label });
-
-        } else if (node.children.length) {
-          node.children.forEach(childNode => {
-            const childFilter = this._createFiltersByNode(childNode);
-
-            if (childFilter) {
-              result.push(...childFilter);
-            }
-          });
-        }
-      }
-    }
-
-    return result;
-  }
-
-
-  /**
-   *
-   *
-   * @param {PrimeTreeNode} node  The node that will be used to to find a matching filter.
-   */
-  private _removeFiltersByNode(node: PrimeTreeNode): FilterItem[] {
-      const result: FilterItem[] = [];
-
-      if (node instanceof PrimeTreeNode && node.payload.filterName) {
-          const treeData = this._filterNameToTreeData[node.payload.filterName];
-
-          if (treeData) {
-
-              if (node.data === 'scheduled') {
-                  this._scheduledFilterError = null;
-              }
-
-              // ignore undefined/null filters data (the virtual roots has undefined/null data)
-              const isDataNode = typeof node.data !== 'undefined' && node.data !== null;
-
-              if (isDataNode) {
-                  treeData.refineFilter.removeFilter(node.data + '');
-              } else if (node.children.length) {
-                  node.children.forEach(childNode => {
-                      const childFilter = this._removeFiltersByNode(childNode);
-                  });
-              }
-          }
-
-      }
-
-      return result;
-  }
-
-
-  public _onTreeNodeSelect({ node }: { node: PrimeTreeNode }, treeSection: TreeFilterData) {
-    if (node instanceof PrimeTreeNode && node.payload.filterName) {
-      const treeData = this._filterNameToTreeData[node.payload.filterName];
+      const treeData = this._filtersGroupListMapping[node.payload.filterName];
 
       if (treeData) {
         // TODO sakal
@@ -586,9 +368,9 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
     }
   }
 
-  public _onTreeNodeUnselect({ node }: { node: PrimeTreeNode }, treeSection: TreeFilterData) {
+  public _onTreeNodeUnselect({ node }: { node: PrimeTreeNode }, treeSection: FiltersGroupList) {
       if (node instanceof PrimeTreeNode && node.payload.filterName) {
-          const treeData = this._filterNameToTreeData[node.payload.filterName];
+          const treeData = this._filtersGroupListMapping[node.payload.filterName];
 
           if (treeData) {
               // TODO sakal

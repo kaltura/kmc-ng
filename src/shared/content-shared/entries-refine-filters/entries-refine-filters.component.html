@@ -21,7 +21,7 @@
           <div *ngIf="filtersGroup.label" class="kFiltersGroupTitle">
             <span>{{filtersGroup.label | uppercase}}</span>
           </div>
-          <div *ngFor="let treeInstance of filtersGroup.trees">
+          <div *ngFor="let treeInstance of filtersGroup.lists">
             <p-tree [value]="treeInstance.items"
                     kPrimeTreePropagation
                     [disableTrackByData]="false"

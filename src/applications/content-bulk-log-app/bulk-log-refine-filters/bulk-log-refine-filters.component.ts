@@ -169,7 +169,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, AfterViewInit, OnD
               if (refineFilter.items.length > 0) {
                 const treeData = { items: [], selections: [], refineFilter: refineFilter };
                 this._filterNameToTreeData[refineFilter.name] = treeData;
-                filtersGroup.trees.push(treeData);
+                filtersGroup.lists.push(treeData);
 
                 const listRootNode = new PrimeTreeNode(null, refineFilter.label, [], null, { filterName: refineFilter.name });
 

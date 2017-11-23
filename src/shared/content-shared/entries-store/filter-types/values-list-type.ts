@@ -58,6 +58,10 @@ export class ValuesListAdapter extends TypeAdapterBase<ValuesListType> {
         return value ? [...value] : null;
     }
 
+    validate(value: ValuesListType): { failed: boolean, failureCode: string } {
+        return {failed: false, failureCode: null};
+    }
+
     hasChanged(currentValue: ValuesListType, previousValue: ValuesListType): boolean {
         this._validateType(previousValue);
         this._validateType(currentValue);

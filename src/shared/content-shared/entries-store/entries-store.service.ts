@@ -107,9 +107,12 @@ export class EntriesStore implements OnDestroy {
     deferredRemovedFilters: []
   };
 
+  // TODO sakal remove 1
   public activeFilters$ = this._activeFilters.asObservable();
   public entries$ = this._entries.asObservable();
   public state$ = this._state.asObservable();
+
+  // TODO sakal remove 1
   public query$ = this._querySource.asObservable();
 
   public static getFilterType(filter: any): string {

@@ -28,7 +28,7 @@ import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilte
 import { KalturaFlavorParams } from 'kaltura-typescript-client/types/KalturaFlavorParams';
 import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
 
-import { DefaultFiltersList } from '../entries-refine-filters/default-filters-list';
+import { DefaultFiltersList } from './default-filters-list';
 
 import * as R from 'ramda';
 
@@ -37,50 +37,39 @@ import { AccessControlProfilesFilter } from 'app-shared/content-shared/entries-s
 import { FlavorsFilter } from 'app-shared/content-shared/entries-store/filters/flavors-filter';
 import { DistributionsFilter } from 'app-shared/content-shared/entries-store/filters/distributions-filter';
 
-
-// TODO
-// export type EntriesFilterResolver = (node: PrimeTreeNode) => ValueFilter<any>;
-// export type EntriesFilterType = { new(...args): FilterItem };
-// export type IsEntryFilterOfRefineFilter = (filter: FilterItem) => boolean;
-//
-// public entriesFilterType: EntriesFilterType,
-//     public isEntryFilterOfRefineFilter: IsEntryFilterOfRefineFilter,
-//     public entriesFilterResolver: EntriesFilterResolver
-
 export type UpdateStatus = {
   loading: boolean;
   errorMessage: string;
 };
 
-export interface RefineFilterItem
+export interface RefineGroupListItem
 { value: string, label: string }
 
-export class RefineFilter {
-  public items: RefineFilterItem[] = [];
+export class RefineGroupList {
+  public items: RefineGroupListItem[] = [];
 
   constructor(public name: string,
-              public label: string,
-              public addFilter : (item : RefineFilterItem) => void,
-              public removeFilter : (value : string) => void
+              public label: string
               ) {
   }
 }
 
-export interface RefineFilterGroup {
+export interface RefineGroup {
   label: string;
-  filters: RefineFilter[];
+  lists: RefineGroupList[];
 }
 
 @Injectable()
-export class EntriesRefineFiltersProvider {
-  private _filters = new ReplaySubject<{ groups: RefineFilterGroup[] }>(1);
-  private _status: BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({
+export class EntriesRefineFiltersService {
+  private _groups = new ReplaySubject<RefineGroup[]>(1);
+    public groups$ = this._groups.asObservable();
+
+    private _status: BehaviorSubject<UpdateStatus> = new BehaviorSubject<UpdateStatus>({
     loading: false,
     errorMessage: null
   });
   private executeQuerySubscription: ISubscription = null;
 
-  public filters$ = this._filters.asObservable();
   public status$ = this._status.asObservable();
 
 
@@ -108,30 +97,30 @@ export class EntriesRefineFiltersProvider {
         (responses) => {
           this.executeQuerySubscription = null;
           if (responses[1].hasErrors()) {
-            this._filters.next({ groups: [] });
+            this._groups.next({ groups: [] });
             this._status.next({ loading: false, errorMessage: 'failed to load refine filters' });
 
           } else {
             const metadataData = this._buildMetadataFiltersGroups(responses[0].items);
             const defaultFilterGroup = this._buildDefaultFiltersGroup(responses[1], responses[2].items);
 
-            this._filters.next({ groups: [defaultFilterGroup, ...metadataData.groups] });
+            this._groups.next({ groups: [defaultFilterGroup, ...metadataData.groups] });
             this._status.next({ loading: false, errorMessage: null });
           }
         },
         (error) => {
           this.executeQuerySubscription = null;
 
-          this._filters.next({ groups: [] });
+          this._groups.next({ groups: [] });
           const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
           this._status.next({ loading: false, errorMessage });
         }
       );
   }
 
-  private _buildMetadataFiltersGroups(metadataProfiles: MetadataProfile[]): { metadataProfiles: number[], groups: RefineFilterGroup[] } {
+  private _buildMetadataFiltersGroups(metadataProfiles: MetadataProfile[]): { metadataProfiles: number[], groups: RefineGroup[] } {
 
-    const result: { metadataProfiles: number[], groups: RefineFilterGroup[] } = { metadataProfiles: [], groups: [] };
+    const result: { metadataProfiles: number[], groups: RefineGroup[] } = { metadataProfiles: [], groups: [] };
 
     metadataProfiles.forEach(metadataProfile => {
       result.metadataProfiles.push(metadataProfile.id);
@@ -182,31 +171,17 @@ export class EntriesRefineFiltersProvider {
 
     return result;
   }
-  // TODO
-    //
-    // defaultFilterList.entriesFilterType,
-    // defaultFilterList.isEntryFilterOfRefineFilter,
-    // defaultFilterList.entriesFilterResolver
-  private _buildDefaultFiltersGroup(responses: KalturaMultiResponse, flavours: KalturaFlavorParams[]): RefineFilterGroup {
-    const result: RefineFilterGroup = { label: '', filters: [] };
+
+  private _buildDefaultFiltersGroup(responses: KalturaMultiResponse, flavours: KalturaFlavorParams[]): RefineGroup {
+    const result: RefineGroup = { label: '', lists: [] };
 
     // build constant filters
     DefaultFiltersList.forEach((defaultFilterList) => {
-      const newRefineFilter = new RefineFilter(
+      const newRefineFilter = new RefineGroupList(
         defaultFilterList.name,
-        defaultFilterList.label,
-          (item) =>
-          {
-              // TODO sakal
-            // this._entriesFilters.addMediaTypes({value : item.value, label : item.label});
-          },
-          (value) =>
-        {
-          // TODO sakal
-          // this._entriesFilters.removeMediaTypes(value);
-        }
+        defaultFilterList.label
       );
-      result.filters.push(newRefineFilter);
+      result.lists.push(newRefineFilter);
       defaultFilterList.items.forEach((item: any) => {
         newRefineFilter.items.push({ value: item.value, label: item.label });
       });

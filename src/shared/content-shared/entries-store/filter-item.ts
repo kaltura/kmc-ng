@@ -3,6 +3,8 @@ export interface FilterItemLocalizedTooltip {
   args?: { [key: string ]: string }
 }
 
+
+// TODO sakal remove 1
 export abstract class FilterItem {
   private _tooltip: FilterItemLocalizedTooltip;
 
