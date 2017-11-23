@@ -7,6 +7,9 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-log';
 import { Subject } from 'rxjs/Subject';
 import * as Immutable from 'seamless-immutable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { FreetextFilter } from './filters/freetext-filter';
+import { CreatedAtFilter } from './filters/created-at-filter';
+import { FilterAdapter } from './filters/filter-adapter';
 
 export interface EntriesFilters
 {
@@ -16,6 +19,7 @@ export interface EntriesFilters
         createdAfter: Date
     },
     mediaTypes : {value: any, label: string }[]
+    /*mediaTypes : { [value:string]: { label: string}}*/
 }
 
 function mapFromArray(array, prop) {
@@ -64,29 +68,25 @@ function getDelta<T>(source : T[], compareTo : T[], keyPropertyName : string, co
 //     }
 //     return false;
 // }
+//
+// function copyObject<T>(original: T): T {
+//     // TODO sakal clone depth should be simplified to , cloneSelf: boolean, cloneChildrenDepth: number
+//     let result: any = null;
+//
+//     if (original instanceof Array) {
+//         result = [...original];
+//     } else if (original instanceof Object) {
+//         result = {};
+//         Object.keys(original).forEach(propertyName => {
+//             result[propertyName] = copyObject(original[propertyName]);
+//         });
+//     } else {
+//         result = original;
+//     }
+//
+//     return result;
+// }
 
-function copyObject<T>(original: T, cloneDepth: number = 0): T {
-    // TODO sakal clone depth should be simplified to , cloneSelf: boolean, cloneChildrenDepth: number
-    let result: any = null;
-
-    if (cloneDepth > 0)
-    {
-        if (original instanceof Array) {
-            result = [...original];
-        } else if (original instanceof Object) {
-            result = {};
-            Object.keys(original).forEach(propertyName => {
-                result[propertyName] = copyObject(original[propertyName],cloneDepth - 1);
-            });
-        } else {
-            result = original;
-        }
-    }else {
-        result = original;
-    }
-
-    return result;
-}
 const internalAPISecret = { purpose: "internal_api_dont_use_directly" };
 
 @Injectable()
@@ -208,14 +208,25 @@ export class EntriesFiltersService implements OnDestroy {
     private _onStoreDataUpdated(filters: EntriesFilters): void {
         const changesArgument: SimpleChanges = {};
         let hasChanges = false;
-        Object.keys(filters).forEach(propName => {
-            const previousValue = this.localData[propName];
-            const currentValue = filters[propName];
-            if (currentValue !== previousValue) {
+        Object.keys(filters).forEach(filterName => {
+            const adapter = this._getFilterAdapter(filterName);
+
+            if (!adapter)
+            {
+                // TODO sakal
+                return;
+                //this._logger.error(`cannot sync store, unknown filter '${filterName}'`);
+                //throw new Error(`cannot sync store, unknown filter '${filterName}'`);
+            }
+
+            const previousValue = this.localData[filterName];
+            const currentValue = filters[filterName];
+            // consider improving this part
+            if(adapter.hasChanged(previousValue, currentValue))
+            {
                 hasChanges = true;
-                changesArgument[propName] = new SimpleChange(previousValue, currentValue, false);
-                // TODO sakal can I remove copy Ojbect
-                this.localData[propName] = copyObject(filters[propName], 1);
+                changesArgument[filterName] = new SimpleChange(previousValue, currentValue, false);
+                this.localData[filterName] = adapter.copy(currentValue);
             }
         });
 
@@ -234,53 +245,47 @@ export class EntriesFiltersService implements OnDestroy {
         this.syncStore({ [propertyName]: this._localData[propertyName]});
     }
 
+    private _getFilterAdapter(filterName: string): FilterAdapter
+    {
+        switch (filterName) {
+            case 'freetext':
+                return new FreetextFilter();
+            case 'createdAt':
+                return new CreatedAtFilter();
+        }
+
+        return null;
+    }
+
     syncStore(updates: Partial<EntriesFilters>): void {
         const storeFilters = this._storeActualData;
-        Object.keys(updates).forEach(propertyName => {
-            const currentValue = updates[propertyName];
-            const storeValue = storeFilters[propertyName];
-            if (storeValue !== currentValue) {
-                // TODO sakal switch to adapters
-                switch (propertyName) {
-                    case 'freetext':
-                        this._setFreeText(currentValue);
-                        break;
-                    case 'createdAt':
-                        this._setCreatedAt(currentValue);
-                        break;
-                    case 'mediaTypes':
-                        this._setMediaTypes(currentValue);
-                        break;
-                    default:
-                        break;
-                }
+        Object.keys(updates).forEach(filterName => {
+
+            const adapter = this._getFilterAdapter(filterName);
+
+            if (!adapter) {
+                // TODO sakal
+                return;
+                // this._logger.error(`cannot sync store, unknown filter \'${filterName}\'`);
+                // throw new Error(`cannot sync store, unknown filter '${filterName}'`);
+            }
+
+            const currentValue = updates[filterName];
+            const previousValue = storeFilters[filterName];
+
+            if (adapter.hasChanged(currentValue,previousValue)) {
+                const newValue =  adapter.copy(currentValue);
+                this._logger.info(`update filter '${filterName}'`);
+                this._store.update({
+                    [filterName]: newValue
+                });
             }
         });
     }
 
     // TODO sakal replace with adapters
-    private _setFreeText(freetext: string): void {
-        this._logger.info('update freetext');
-        this._store.update({
-            freetext
-        });
-    }
-
     private _setCreatedAt({createdAfter, createdBefore}: { createdAfter?: Date | null, createdBefore?: Date | null }): void {
-        const {createdAfter: storeCreatedAfter, createdBefore: storeCreatedBefore} = this._storeActualData.createdAt || {
-            createdAfter: null,
-            createdBefore: null
-        };
-        createdAfter = createdAfter ? KalturaUtils.getStartDateValue(createdAfter) : typeof createdAfter === 'undefined' ? storeCreatedAfter : null;
-        createdBefore = createdBefore ? KalturaUtils.getStartDateValue(createdBefore) : typeof createdBefore === 'undefined' ? storeCreatedBefore : null;
 
-        this._logger.info('update created at');
-        this._store.update({
-            createdAt: {
-                createdBefore,
-                createdAfter
-            }
-        });
     }
 
     public _setMediaTypes(value: { value: any, label: string }[]): void {

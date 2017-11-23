@@ -59,7 +59,11 @@ export class EntriesListComponent implements OnInit, OnDestroy {
               this._filters.syncStoreByLocal('mediaTypes');
               break;
           case "freetext":
-              this._filters.syncStore({freetext: null});
+              this._filters.localData.freetext = null;
+              this._filters.syncStoreByLocal('freetext');
+              this._syncTagOfFreetext();
+
+        //      this._filters.syncStore({freetext: null});
               break;
           case "createdAt":
               this._filters.syncStore({createdAt: {createdAfter: null, createdBefore: null}});

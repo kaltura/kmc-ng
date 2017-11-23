@@ -1,18 +1,22 @@
-import { EntriesStore } from '../entries-store.service';
-import { ValueFilter } from '../value-filter';
 
-export class FreetextFilterOld extends ValueFilter<string> {
+import { FilterAdapter } from './filter-adapter';
 
-    static filterType = "Freetext"; // IMPORTANT: you must have a static filterType property that is used at runtime
+export class FreetextFilter implements FilterAdapter {
+    private _validateType(value: any) {
+        if (value !== null && !(typeof value === 'string')) {
+            throw new Error('invalid value type. expected value of type string');
+        }
+    }
 
+    copy(value: any): any {
+        this._validateType(value);
+        return value;
+    }
 
+    hasChanged(currentValue: any, previousValue: any): boolean {
+        this._validateType(previousValue);
+        this._validateType(currentValue);
 
-    constructor(value: string) {
-    super(value + '', value, { token: 'applications.content.filters.freeText' });
-  }
+        return previousValue !== currentValue;
+    }
 }
-
-// EntriesStore.registerFilterType(FreetextFilter, (items, request) => {
-//   const firstItem = items[0];
-//   request.filter.freeText = firstItem.value;
-// });

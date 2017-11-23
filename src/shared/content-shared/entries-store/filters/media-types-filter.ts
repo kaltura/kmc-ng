@@ -1,21 +1,22 @@
-import * as R from 'ramda';
 
-import { EntriesStore } from '../entries-store.service';
-import { ValueFilter } from '../value-filter';
+import { FilterAdapter } from './filter-adapter';
 
-export class MediaTypesFilterOld extends ValueFilter<string> {
+export class MediaTypesFilter implements FilterAdapter {
+    private _validateType(value: any) {
 
-    static filterType = "MediaTypes"; // IMPORTANT: you must have a static filterType property that is used at runtime
+        if (value !== null && !(value instanceof Array)) {
+            throw new Error(`invalid value type. expected value of type 'Array'`);
+        }
+    }
 
+    copy(value: any): any {
+        return value ? [...value] : null;
+    }
 
-    constructor(value: string, label: string) {
-    super(label, value, { token: 'applications.content.filters.mediaType', args: { '0': label } });
-  }
+    hasChanged(currentValue: any, previousValue: any): boolean {
+        this._validateType(previousValue);
+        this._validateType(currentValue);
+
+        return previousValue !== currentValue;
+    }
 }
-//
-// EntriesStore.registerFilterType(MediaTypesFilter, (items, request) => {
-//   request.filter.mediaTypeIn = R.reduce((acc: string, item: ValueFilter<string>) => {
-//     return `${acc}${acc ? ',' : ''}${item.value}`;
-//   }, '', items);
-// });
-//
