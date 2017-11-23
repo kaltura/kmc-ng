@@ -6,7 +6,6 @@ import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-s
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { BrowserService } from 'app-shared/kmc-shell';
 import {
-    EntriesFiltersService,
     EntriesFiltersStore
 } from 'app-shared/content-shared/entries-store/entries-filters.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -16,8 +15,7 @@ import * as moment from 'moment';
 @Component({
   selector: 'kEntriesList',
   templateUrl: './entries-list.component.html',
-  styleUrls: ['./entries-list.component.scss'],
-    providers: [EntriesFiltersService]
+  styleUrls: ['./entries-list.component.scss']
 
 })
 export class EntriesListComponent implements OnInit, OnDestroy {
@@ -81,7 +79,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
   removeAllTags() {
     this.clearSelection();
-    this._entriesStore.clearAllFilters();
+
   }
 
   onFreetextChanged(): void {

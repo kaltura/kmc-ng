@@ -18,7 +18,7 @@ import { ValueFilter } from 'app-shared/content-shared/entries-store/value-filte
 import { TimeSchedulingFilter } from 'app-shared/content-shared/entries-store/filters/time-scheduling-filter';
 import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item';
 import {
-    EntriesFilters, EntriesFiltersService,
+    EntriesFilters,
     EntriesFiltersStore
 } from 'app-shared/content-shared/entries-store/entries-filters.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
@@ -37,8 +37,7 @@ export interface FiltersGroup {
 @Component({
   selector: 'k-entries-refine-filters',
   templateUrl: './entries-refine-filters.component.html',
-  styleUrls: ['./entries-refine-filters.component.scss'],
-    providers: [EntriesFiltersService]
+  styleUrls: ['./entries-refine-filters.component.scss']
 })
 export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
@@ -333,6 +332,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
     return true;
   }
+
 
   /**
    * Update entries store filters with changes in the content created components
