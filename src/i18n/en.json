@@ -985,6 +985,7 @@
       },
       "categoryDetails": {
         "header": "Category - {{0}}",
+        "backToCategories": "Back to Categories",
         "headerProps": {
           "id": "ID:",
           "subCategories": " Sub-Categories:",

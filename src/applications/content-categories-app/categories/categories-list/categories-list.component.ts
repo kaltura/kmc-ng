@@ -1,4 +1,3 @@
-import {ISubscription} from 'rxjs/Subscription';
 import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
@@ -22,9 +21,6 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedCategories: KalturaCategory[] = [];
   public _categories: KalturaCategory[] = [];
-  public _categoriesTotalCount: number = null;
-  private categoriesSubscription: ISubscription;
-  private querySubscription: ISubscription;
 
   public _filter = {
     pageIndex: 0,
@@ -34,7 +30,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     sortDirection: SortDirection.Desc
   };
 
-  constructor(private _categoriesService: CategoriesService,
+  constructor(public _categoriesService: CategoriesService,
               private router: Router,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
@@ -43,7 +39,10 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.querySubscription = this._categoriesService.queryData$.subscribe(
+    this._categoriesService
+      .queryData$
+      .cancelOnDestroy(this)
+      .subscribe(
       query => {
         this._filter.pageSize = query.pageSize;
         this._filter.pageIndex = query.pageIndex - 1;
@@ -51,17 +50,10 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         this._filter.sortDirection = query.sortDirection;
       });
 
-    this.categoriesSubscription = this._categoriesService.categories$.subscribe(
-      (data) => {
-        this._categories = data.items;
-        this._categoriesTotalCount = data.totalCount;
-      }
-    );
+    this._categoriesService.reload(true);
   }
 
   ngOnDestroy() {
-    this.categoriesSubscription.unsubscribe();
-    this.querySubscription.unsubscribe();
   }
 
   public _reload() {
@@ -91,28 +83,26 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     }
   }
 
-  _onActionSelected(event: { action: string, categoryID: number }) {
-    const currentCategory = this._categories.find(category => category.id === event.categoryID);
-
-    switch (event.action) {
+  _onActionSelected({action, category}: { action: string, category: KalturaCategory }) {
+    switch (action) {
       case 'edit':
         // show category edit warning if needed
-        if (currentCategory.tags && currentCategory.tags.indexOf('__EditWarning') > -1) {
+        if (category.tags && category.tags.indexOf('__EditWarning') > -1) {
           this._browserService.confirm(
             {
               header: this._appLocalization.get('applications.content.categories.editCategory'),
               message: this._appLocalization.get('applications.content.categories.editWithEditWarningTags'),
               accept: () => {
-                this.router.navigate(['/content/categories/category', event.categoryID]);
+                this.router.navigate(['/content/categories/category', category.id]);
               }
             }
           );
         } else {
-          this.router.navigate(['/content/categories/category', event.categoryID]);
+          this.router.navigate(['/content/categories/category', category.id]);
         }
         break;
       case 'delete':
-        this.deleteCategory(currentCategory);
+        this.deleteCategory(category);
         break;
       default:
         break;

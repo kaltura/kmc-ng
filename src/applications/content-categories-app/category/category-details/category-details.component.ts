@@ -1,7 +1,6 @@
-import {ActionTypes, CategoryService} from './../category.service';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {CategoryDetailsWidget} from './category-details-widget.service';
 
 @Component({
   selector: 'kCategoryDetails',
@@ -11,50 +10,22 @@ import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 export class CategoryDetailsComponent implements OnInit, OnDestroy {
   public _currentCategory: KalturaCategory;
 
-  constructor(private _categoryStore: CategoryService,
-    private _appLocalization: AppLocalization) {
+  constructor(public _widgetService: CategoryDetailsWidget) {
   }
 
-
-
-
   ngOnInit() {
-    this._categoryStore.state$
-      .cancelOnDestroy(this)
-      .subscribe(
-      status => {
 
-        if (status) {
-          switch (status.action) {
-            case ActionTypes.CategoryLoading:
-              break;
-            case ActionTypes.CategoryLoaded:
-              this._currentCategory = this._categoryStore.category;
-              break;
-            case ActionTypes.CategoryLoadingFailed:
-              break;
-            case ActionTypes.CategorySaving:
-              break;
-            case ActionTypes.CategorySavingFailed:
-              break;
-            case ActionTypes.CategoryDataIsInvalid:
-              break;
-            case ActionTypes.ActiveSectionBusy:
-              break;
-            case ActionTypes.CategoryPrepareSavingFailed:
-              break;
-            default:
-              break;
-          }
-        }
-      },
-      error => {
-        // TODO [kmc] navigate to error page
-        throw error;
+    this._widgetService.attachForm();
+    this._widgetService.data$
+      .cancelOnDestroy(this)
+      .filter(Boolean)
+      .subscribe(data => {
+        this._currentCategory = data;
       });
   }
 
 
   ngOnDestroy() {
+    this._widgetService.detachForm();
   }
 }

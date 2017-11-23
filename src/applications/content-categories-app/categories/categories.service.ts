@@ -68,7 +68,6 @@ export class CategoriesService implements OnDestroy {
                 pageSize: defaultPageSize
             });
         }
-        this.reload(false);
     }
 
     ngOnDestroy() {
@@ -101,6 +100,11 @@ export class CategoriesService implements OnDestroy {
         if (partialData.pageSize) {
             this.browserService.setInLocalStorage('categories.list.pageSize', partialData.pageSize);
         }
+    }
+
+    public get categories(): KalturaCategory[]
+    {
+      return this._categories.getValue().items;
     }
 
     public getNextCategoryId(categoryId: number): number | null {
@@ -147,6 +151,7 @@ export class CategoriesService implements OnDestroy {
         // cancel previous requests
         if (this._categoriesExecuteSubscription) {
             this._categoriesExecuteSubscription.unsubscribe();
+          this._categoriesExecuteSubscription = null
         }
 
         this.browserService.scrollToTop();
@@ -154,7 +159,10 @@ export class CategoriesService implements OnDestroy {
         this._state.next({ loading: true, errorMessage: null });
 
         // execute the request
-        this._categoriesExecuteSubscription = this.buildQueryRequest(this._queryData.getValue()).subscribe(
+        this._categoriesExecuteSubscription = this.buildQueryRequest(this._queryData.getValue())
+        // TODO: [kmcng] When developing filters - using async scheduler go allow calling this function multiple times in the same event loop cycle before invoking the logic.
+          .monitor('playlists store: get playlists()')
+          .subscribe(
             response => {
                 this._categoriesExecuteSubscription = null;
 
