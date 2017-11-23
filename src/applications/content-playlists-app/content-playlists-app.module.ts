@@ -35,7 +35,7 @@ import { PlaylistComponentsList } from './playlist/playlist-components-list';
 import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.service';
 import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
 import { PlaylistsStore } from './playlists/playlists-store/playlists-store.service';
-import { PlaylistContentRuleBasedComponent } from './playlist/playlist-content-rule-based/playlist-content-rule-based.component';
+import { PlaylistContentRuleBasedComponent } from './playlist/playlist-content/rule-based/playlist-content-rule-based.component';
 
 @NgModule({
     imports: [

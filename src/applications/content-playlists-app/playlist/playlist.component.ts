@@ -7,10 +7,10 @@ import { ActionTypes, PlaylistStore } from './playlist-store.service';
 import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';
 import { PlaylistSectionsListWidget } from './playlist-sections-list/playlist-sections-list-widget.service';
-import { PlaylistContentWidget } from './playlist-content/playlist-content-widget.service';
+import { PlaylistContentWidget } from './playlist-content/manual/playlist-content-widget.service';
 import { PlaylistMetadataWidget } from './playlist-metadata/playlist-metadata-widget.service';
 import { PlaylistDetailsWidget } from './playlist-details/playlist-details-widget.service';
-import { PlaylistContentRuleBasedWidget } from './playlist-content-rule-based/playlist-content-rule-based-widget.service';
+import { PlaylistContentRuleBasedWidget } from './playlist-content/rule-based/playlist-content-rule-based-widget.service';
 
 @Component({
   selector: 'kPlaylist',

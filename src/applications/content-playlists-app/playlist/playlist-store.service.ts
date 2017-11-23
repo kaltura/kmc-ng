@@ -308,8 +308,7 @@ export class PlaylistStore implements OnDestroy {
         .subscribe(
           response => {
             if (response.allowed) {
-              // NOTE: Must navigate to the metadata section first to properly load content section for different types of playlist
-              this._router.navigate(['playlist', playlistId, 'metadata'], { relativeTo: this._playlistRoute.parent });
+              this._router.navigate(['playlist', playlistId], { relativeTo: this._playlistRoute.parent });
             }
           }
         );

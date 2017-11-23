@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { PlaylistStore } from '../playlist-store.service';
+import { PlaylistStore } from '../../playlist-store.service';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { PlaylistContentWidget } from './playlist-content-widget.service';
 
@@ -16,6 +16,8 @@ export class PlaylistContentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    console.warn('manual');
+
     this._widgetService.attachForm();
   };
 

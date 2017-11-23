@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-typescript-client';
-import { PlaylistWidget } from '../playlist-widget';
-import { PlaylistWidgetKeys } from '../playlist-widget-keys';
+import { PlaylistWidget } from '../../playlist-widget';
+import { PlaylistWidgetKeys } from '../../playlist-widget-keys';
 import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { Observable } from 'rxjs/Observable';

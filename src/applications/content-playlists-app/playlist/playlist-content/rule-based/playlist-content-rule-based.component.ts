@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { PlaylistStore } from '../playlist-store.service';
+import { PlaylistStore } from '../../playlist-store.service';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { PlaylistContentRuleBasedWidget } from './playlist-content-rule-based-widget.service';
 
@@ -16,6 +16,8 @@ export class PlaylistContentRuleBasedComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    console.warn('rulebased');
+
     this._widgetService.attachForm();
   };
 
