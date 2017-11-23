@@ -55,6 +55,7 @@
       "ok": "OK",
       "cancel": "Cancel",
       "retry": "Retry",
+      "reload": "Reload",
       "confirm": "Confirm",
       "close": "Close",
       "note": "Note:",
@@ -445,7 +446,11 @@
         "rejectMedia": "Moderation: Reject media",
         "sureToReject": "Are you sure you want to reject the following entry? \n {{0}}",
         "sureToRejectMultiple": "Are you sure you want to reject the following entries? \n {{0}}",
-        "selectAction": "Select Action"
+        "selectAction": "Select Action",
+        "errors": {
+          "bulkApproveEntry": "An error occurred while approving entry. \n Please try again.",
+          "bulkRejectEntry": "An error occurred while rejecting entry. \n Please try again."
+        }
       },
       "moderationDetails": {
         "name": "Name",

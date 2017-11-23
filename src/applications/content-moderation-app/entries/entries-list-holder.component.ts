@@ -7,14 +7,13 @@ import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-st
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { ModerationStore } from '../moderation-store/moderation-store.service';
 import { BulkService } from '../bulk-service/bulk.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 @Component({
   selector: 'kEntriesListHolder',
   templateUrl: './entries-list-holder.component.html',
-  providers : [ ModerationStore, BulkService ]
+  providers : [ BulkService ]
 })
 export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent) private _entriesList: EntriesListComponent;
@@ -115,19 +114,13 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         error => {
           this._blockerMessage = new AreaBlockerMessage(
             {
-              message: error.message,
+              message: this._appLocalization.get('applications.content.moderation.errors.bulkApproveEntry'),
               buttons: [
                 {
-                  label: this._appLocalization.get('app.common.retry'),
+                  label: this._appLocalization.get('app.common.reload'),
                   action: () => {
                     this._blockerMessage = null;
-                    this._doApproveEntry(entryIds);
-                  }
-                },
-                {
-                  label: this._appLocalization.get('app.common.cancel'),
-                  action: () => {
-                    this._blockerMessage = null;
+                    this._entriesList.onBulkChange({reload: true});
                   }
                 }
               ]
@@ -139,8 +132,8 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
 
   private _rejectEntries(): void {
     let entriesToReject = this._entriesList.selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}`),
-      entries: string = this._entriesList.selectedEntries.length <= 10 ? entriesToReject.join(',').replace(/,/gi, '\n') : '',
-      message = this._entriesList.selectedEntries.length > 1 ?
+        entries: string = this._entriesList.selectedEntries.length <= 10 ? entriesToReject.join(',').replace(/,/gi, '\n') : '',
+        message = this._entriesList.selectedEntries.length > 1 ?
         this._appLocalization.get('applications.content.moderation.sureToRejectMultiple', {0: entries}) :
         this._appLocalization.get('applications.content.moderation.sureToReject', {0: entries});
     if(!this.shouldConfirmEntryRejection) { // TODO [kmcng] need to get such permissions from somewhere
@@ -185,19 +178,13 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
         error => {
           this._blockerMessage = new AreaBlockerMessage(
             {
-              message: error.message,
+              message: this._appLocalization.get('applications.content.moderation.errors.bulkRejectEntry'),
               buttons: [
                 {
-                  label: this._appLocalization.get('app.common.retry'),
+                  label: this._appLocalization.get('app.common.reload'),
                   action: () => {
                     this._blockerMessage = null;
-                    this._doRejectEntry(entryIds);
-                  }
-                },
-                {
-                  label: this._appLocalization.get('app.common.cancel'),
-                  action: () => {
-                    this._blockerMessage = null;
+                    this._entriesList.onBulkChange({reload: true});
                   }
                 }
               ]

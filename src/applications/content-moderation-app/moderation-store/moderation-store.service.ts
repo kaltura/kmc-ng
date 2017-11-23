@@ -62,25 +62,10 @@ export class ModerationStore implements OnDestroy {
   }
 
   banCreator(userId: string): Observable<void> {
-    return Observable.create(observer => {
-      this._kalturaServerClient.request(
-        new UserNotifyBanAction(
-          {
-            userId: userId
-          }
-        )
-      )
-        .cancelOnDestroy(this)
-        .subscribe(
-          () => {
-            observer.next();
-            observer.complete();
-          },
-          error => {
-            observer.error(new Error(this._appLocalization.get('applications.content.moderation.errorOccured')));
-          }
-        );
-    });
+    return this._kalturaServerClient.request(new UserNotifyBanAction({userId: userId}))
+      .catch(error => {
+        return Observable.throw(new Error('Unable to ban the Creator'));
+      })
   }
 
   ngOnDestroy() {}
