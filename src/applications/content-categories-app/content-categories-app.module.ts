@@ -51,8 +51,9 @@ import {DynamicFormModule} from '@kaltura-ng/kaltura-ui/dynamic-form';
 import {DynamicFormModule as PrimeDynamicFormModule} from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
 import {CategoryComponentsList} from './category/category-components-list';
 import {CategoriesComponentsList} from './categories/categories-components-list';
-import {CategoryCanDeactivate} from "./category/category-can-deactivate.service";
-import {DetailsBarModule} from "@kaltura-ng/kaltura-ui/details-bar";
+import {CategoryCanDeactivate} from './category/category-can-deactivate.service';
+import {DetailsBarModule} from '@kaltura-ng/kaltura-ui/details-bar';
+import {CategoriesUtilsService} from './categories-utils.service';
 
 @NgModule({
     imports: [
@@ -109,7 +110,8 @@ import {DetailsBarModule} from "@kaltura-ng/kaltura-ui/details-bar";
         CategoriesBulkDeleteService,
         CategoriesBulkChangeContentPrivacyService,
         CategoriesBulkChangeContributionPolicyService,
-        CategoriesBulkChangeCategoryListingService]
+        CategoriesBulkChangeCategoryListingService,
+        CategoriesUtilsService]
 })
 export class ContentCategoriesAppModule {
 }

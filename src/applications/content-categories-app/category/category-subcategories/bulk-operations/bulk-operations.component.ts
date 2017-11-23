@@ -23,6 +23,11 @@ export class BulkOperationsComponent {
     this.moveItems.emit({ items: this.selectedItems, direction });
   }
 
+  public _deleteItems(): void {
+    this.deleteItems.emit(this.selectedItems);
+    this.clearSelection.emit();
+  }
+
   public _getTranslation(key: string, params: string): string {
     return this._appLocalization.get(key, { 0: params });
   }

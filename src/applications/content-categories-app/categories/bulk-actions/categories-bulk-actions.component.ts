@@ -21,7 +21,8 @@ import {KalturaPrivacyType} from "kaltura-typescript-client/types/KalturaPrivacy
 import {KalturaAppearInListType} from "kaltura-typescript-client/types/KalturaAppearInListType";
 import {AppearInListType} from "./components/bulk-change-category-listing/bulk-change-category-listing.component";
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { KalturaContributionPolicyType } from "kaltura-typescript-client/types/KalturaContributionPolicyType";
+import {KalturaContributionPolicyType} from "kaltura-typescript-client/types/KalturaContributionPolicyType";
+import {CategoriesUtilsService} from "../../categories-utils.service";
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -42,14 +43,16 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   @ViewChild('bulkActionsPopup') public bulkActionsPopup: PopupWidgetComponent;
 
 
-  constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService,
-    private _bulkAddTagsService: CategoriesBulkAddTagsService,
-    private _bulkRemoveTagsService: CategoriesBulkRemoveTagsService,
-    private _bulkChangeOwnerService: CategoriesBulkChangeOwnerService,
-    private _bulkDeleteService: CategoriesBulkDeleteService,
-    private _bulkChangeContentPrivacyService: CategoriesBulkChangeContentPrivacyService,
-    private _bulkChangeCategoryListingService: CategoriesBulkChangeCategoryListingService,
-    private _bulkChangeContributionPolicyService: CategoriesBulkChangeContributionPolicyService) {
+  constructor(private _appLocalization: AppLocalization,
+              private _browserService: BrowserService,
+              private _bulkAddTagsService: CategoriesBulkAddTagsService,
+              private _bulkRemoveTagsService: CategoriesBulkRemoveTagsService,
+              private _bulkChangeOwnerService: CategoriesBulkChangeOwnerService,
+              private _bulkDeleteService: CategoriesBulkDeleteService,
+              private _bulkChangeContentPrivacyService: CategoriesBulkChangeContentPrivacyService,
+              private _bulkChangeCategoryListingService: CategoriesBulkChangeCategoryListingService,
+              private _bulkChangeContributionPolicyService: CategoriesBulkChangeContributionPolicyService,
+              private _categoriesUtilsService: CategoriesUtilsService) {
   }
 
   ngOnInit() {
@@ -78,7 +81,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   openBulkActionWindow(action: string, popupWidth: number, popupHeight: number) {
 
-    if (this.hasEditWarnings()) {
+    if (this._categoriesUtilsService.hasEditWarnings(this.selectedCategories)) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.categories.editCategory'),
@@ -154,51 +157,16 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   // bulk delete
   public deleteCategories(): void {
-    let message: string = "";
-    let deleteMessage: string = "";
 
-    if (this.hasEditWarnings()) {
-      deleteMessage = this._appLocalization.get('applications.content.categories.editWarning');
-    }
-
-    let isSubCategoriesExist: boolean = false;
-    this.selectedCategories.forEach(obj => {
-      if (obj.directSubCategoriesCount && obj.directSubCategoriesCount > 0) { isSubCategoriesExist = true; }
-    });
-    if (isSubCategoriesExist) {
-      message = deleteMessage.concat(this.selectedCategories.length > 1 ?
-        this._appLocalization.get('applications.content.categories.confirmDeleteMultipleWithSubCategories') :
-        this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories'));
-    }
-    else {
-      message = deleteMessage.concat(this.selectedCategories.length > 1 ?
-        this._appLocalization.get('applications.content.categories.confirmDeleteMultiple') :
-        this._appLocalization.get('applications.content.categories.confirmDeleteSingle'));
-    }
-
-    this._browserService.confirm(
-      {
-        header: this._appLocalization.get('applications.content.categories.deleteCategories'),
-        message: message,
-        accept: () => {
-          setTimeout(() => {
-            this.executeService(this._bulkDeleteService, {}, true, false);
-            // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
-          }, 0);
-        }
-      }
-    );
+    this._categoriesUtilsService.confirmDeleteMultiple(this.selectedCategories)
+      .subscribe(result => {
+        setTimeout(() => {
+          this.executeService(this._bulkDeleteService, {}, true, false);
+          // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
+        }, 0);
+      });
   }
 
-  private hasEditWarnings(): boolean {
-    const editWarningsExists: boolean =
-      // Find one of the selected categories that has '__EditWarning' in its 'tags' property
-      !!this.selectedCategories.find(obj => {
-          return (obj.tags && obj.tags.indexOf('__EditWarning') > -1);
-        });
-
-    return editWarningsExists;
-  }
 
   private executeService(service: CategoriesBulkActionBaseService<any>, data: any = {}, reloadCategories: boolean = true, confirmChunks: boolean = true, callback?: Function): void {
     this._bulkAction = "";

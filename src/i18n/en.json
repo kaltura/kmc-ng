@@ -1044,7 +1044,8 @@
             "deleteConfirmation": "Are you sure you want to delete this category?"
           },
           "errors": {
-            "categoryCouldNotBeDeleted": "Category could not be deleted"
+            "categoryCouldNotBeDeleted": "Category could not be deleted",
+            "categoriesCouldNotBeDeleted": "At least one of selected categories could not be deleted.\nPlease retry with different categories selection."
           }
         },
         "errors": {

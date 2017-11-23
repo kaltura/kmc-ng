@@ -16,7 +16,7 @@
                   (click)="_moveItems('down')"></button>
           <button pButton class="kButtonDanger kBulkDeleteBtn"
                   label="{{'applications.content.categoryDetails.subcategories.tableHeaderDetails.remove' | translate}}"
-                  (click)="deleteItems.emit(selectedItems)"></button>
+                  (click)="_deleteItems()"></button>
         </div>
         <ng-template #addItemWrap>
           <button

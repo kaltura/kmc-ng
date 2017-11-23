@@ -15,9 +15,9 @@ import {KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-typescript-clien
 import {CategoryGetAction} from 'kaltura-typescript-client/types/CategoryGetAction';
 import {CategoryUpdateAction} from 'kaltura-typescript-client/types/CategoryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { CategoryWidgetsManager } from './category-widgets-manager';
-import {  OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import {CategoryWidgetsManager} from './category-widgets-manager';
+import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 
 export enum ActionTypes {
 	CategoryLoading,
@@ -42,7 +42,6 @@ export class CategoryService implements OnDestroy {
 	private _loadCategorySubscription: ISubscription;
 	private _sectionToRouteMapping: { [key: number]: string } = {};
 	private _state = new BehaviorSubject<StatusArgs>({ action: ActionTypes.CategoryLoading, error: null });
-	private _saveCategoryInvoked = false;
 	public state$ = this._state.asObservable();
 	private _categoryIsDirty: boolean;
 
@@ -177,7 +176,7 @@ export class CategoryService implements OnDestroy {
 			.flatMap(
 			(response) => {
 				if (response.ready) {
-					this._saveCategoryInvoked = true;
+					this._reloadCategoriesOnLeave = true;
 
 					return this._kalturaServerClient.multiRequest(request)
 						.monitor('category store: save category')

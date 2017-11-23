@@ -7,6 +7,7 @@ import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-wi
 import {CategoriesService, SortDirection} from '../categories.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import {CategoriesUtilsService} from "../../categories-utils.service";
 
 @Component({
     selector: 'kCategoriesList',
@@ -36,7 +37,8 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
   constructor(private _categoriesService: CategoriesService,
               private router: Router,
               private _browserService: BrowserService,
-              private _appLocalization: AppLocalization) {
+              private _appLocalization: AppLocalization,
+              private _categoriesUtilsService: CategoriesUtilsService) {
   }
 
   ngOnInit() {
@@ -110,58 +112,44 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         }
         break;
       case 'delete':
-        this._handleDelete(currentCategory);
+        this.deleteCategory(currentCategory);
         break;
       default:
         break;
     }
   }
 
-  private _handleDelete(category: KalturaCategory): void {
-    const deleteCategory = () => {
-      this._isBusy = true;
-      this._blockerMessage = null;
-      this._categoriesService.deleteCategory(category.id).subscribe(
-        () => {
-          this._isBusy = false;
-          this._browserService.showGrowlMessage({
-            severity: 'success',
-            detail: this._appLocalization.get('applications.content.categories.deleted')
-          });
-          this._categoriesService.reload(true);
-        },
-        error => {
-          this._isBusy = false;
-          this._browserService.alert({
-            header: this._appLocalization.get('applications.content.categories.errors.deleteError.header'),
-            message: this._appLocalization.get('applications.content.categories.errors.deleteError.message')
-          });
+  private deleteCategory(category: KalturaCategory): void {
+    this._categoriesUtilsService.confirmDelete(category).subscribe(result => {
+        if (result.confirmed) {
+          this._isBusy = true;
+          this._blockerMessage = null;
+          this._categoriesService.deleteCategory(category.id).subscribe(
+            () => {
+              this._isBusy = false;
+              this._browserService.showGrowlMessage({
+                severity: 'success',
+                detail: this._appLocalization.get('applications.content.categories.deleted')
+              });
+              this._categoriesService.reload(true);
+            },
+            error => {
+              this._isBusy = false;
+              this._browserService.alert({
+                header: this._appLocalization.get('applications.content.categories.errors.deleteError.header'),
+                message: this._appLocalization.get('applications.content.categories.errors.deleteError.message')
+              });
+            }
+          );
         }
-      );
-    };
-
-    const hasWarningTags: boolean = category.tags && category.tags.indexOf('__EditWarning') > -1;
-    const hasSubcategories: boolean = category.directSubCategoriesCount > 0;
-    let message: string;
-    if (hasWarningTags) {
-      message = hasSubcategories ?
-        this._appLocalization.get('applications.content.categories.deleteAction.deleteWarningSubcategoriesConfirmation') :
-        this._appLocalization.get('applications.content.categories.deleteAction.deleteWarningConfirmation');
-    } else {
-      message = hasSubcategories ?
-        this._appLocalization.get('applications.content.categories.deleteAction.deleteSubcategoriesConfirmation') :
-        this._appLocalization.get('applications.content.categories.deleteAction.deleteConfirmation');
-    }
-
-    this._browserService.confirm(
-      {
-        header: this._appLocalization.get('applications.content.categories.deleteCategory'),
-        message: message,
-        accept: () => {
-          deleteCategory();
-        }
-      }
-    );
+      },
+      error => {
+        this._isBusy = false;
+        this._browserService.alert({
+          header: this._appLocalization.get('applications.content.categories.errors.deleteError.header'),
+          message: this._appLocalization.get('applications.content.categories.errors.deleteError.message')
+        });
+      });
   }
 
   _addCategory() {

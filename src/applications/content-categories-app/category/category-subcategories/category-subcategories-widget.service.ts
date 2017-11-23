@@ -20,6 +20,7 @@ import {BrowserService} from 'app-shared/kmc-shell';
 import {CategoryDeleteAction} from 'kaltura-typescript-client/types/CategoryDeleteAction';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {CategoriesUtilsService} from '../../categories-utils.service';
 
 @Injectable()
 export class CategorySubcategoriesWidget extends CategoryWidget implements OnDestroy {
@@ -29,6 +30,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
   constructor(private _kalturaClient: KalturaClient,
               private _browserService: BrowserService,
+              private _categoriesUtilsService: CategoriesUtilsService,
               private _appLocalization: AppLocalization) {
     super(CategoryWidgetKeys.SubCategories);
   }
@@ -112,7 +114,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
   public onActionSelected({action, subcategory}: { action: 'delete' | 'moveUp' | 'moveDown', subcategory: KalturaCategory }): void {
     switch (action) {
       case 'delete':
-        this._handleDelete(subcategory);
+        this._deleteSubcategory(subcategory);
         break;
       case 'moveUp':
         this._moveUpSubcategories([subcategory]);
@@ -125,119 +127,63 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
     }
   }
 
-  public deleteSelectedSubcategories(subcategories: KalturaCategory[]): void {
-    this._deleteCategories(subcategories);
-  }
-
-  // TODO: Ben move to shared util function for the categories table (consult Eran)
-  private _handleDelete(subcategory: KalturaCategory): void {
-    const deleteCategory = () => {
-      const hasSubcategories: boolean = subcategory.directSubCategoriesCount > 0;
-      let message: string;
-      if (this._hasEditWarnings(subcategory)) {
-        message = hasSubcategories ?
-          this._appLocalization.get('applications.content.categoryDetails.subcategories.deleteAction.deleteWarningSubcategoriesConfirmation') :
-          this._appLocalization.get('applications.content.categoryDetails.subcategories.deleteAction.deleteWarningConfirmation');
-      } else {
-        message = hasSubcategories ?
-          this._appLocalization.get('applications.content.categoryDetails.subcategories.deleteAction.deleteSubcategoriesConfirmation') :
-          this._appLocalization.get('applications.content.categoryDetails.subcategories.deleteAction.deleteConfirmation');
-      }
-
-      this._browserService.confirm(
-        {
-          header: this._appLocalization.get('applications.content.categories.deleteCategory'),
-          message: message,
-          accept: () => {
-            this._subcategories.getValue().splice(selectedIndex, 1);
-            this._subcategoriesMarkedForDelete.push(subcategory);
-            this._setDirty();
-            this._subcategories.next(this._subcategories.getValue());
-
-          }
+  private _deleteSubcategory(subcategory: KalturaCategory) {
+    this._categoriesUtilsService.confirmDelete(subcategory, this._subcategories.getValue())
+      .subscribe(confirmationResult => {
+        if (confirmationResult.confirmed) {
+          this._subcategories.getValue().splice(confirmationResult.categoryIndex, 1);
+          this._subcategoriesMarkedForDelete.push(subcategory);
+          this._setDirty();
+          this._subcategories.next(this._subcategories.getValue());
         }
-      );
-    };
-
-    const selectedIndex = this._subcategories.getValue().indexOf(subcategory);
-    if (selectedIndex > -1) {
-      deleteCategory();
-    } else {
-      const deleteError = new AreaBlockerMessage({
-        message: this._appLocalization.get('applications.content.categoryDetails.subcategories.errors.categoryCouldNotBeDeleted'),
-        buttons: [{
-          label: this._appLocalization.get('app.common.ok'),
-          action: () => {
-            this._removeBlockerMessage();
-          }
-        }]
+      }, error => {
+        const deleteError = new AreaBlockerMessage({
+          message: this._appLocalization.get('applications.content.categoryDetails.subcategories.errors.categoryCouldNotBeDeleted'),
+          buttons: [{
+            label: this._appLocalization.get('app.common.ok'),
+            action: () => {
+              this._removeBlockerMessage();
+            }
+          }]
+        });
+        this._showBlockerMessage(deleteError, false);
       });
-      this._showBlockerMessage(deleteError, false);
-    }
   }
 
-  // bulk delete
-  // TODO: BEN move to shared place (exists on categories-bulk-actions.component.ts)
-  private _deleteCategories(categories: KalturaCategory[]): void {
-    if (!categories || !categories.length) {
-      return undefined;
-    }
-    let message = '';
-    let deleteMessage = '';
-
-    if (this._hasEditWarnings(categories)) {
-      deleteMessage = this._appLocalization.get('applications.content.categories.editWarning');
-    }
-
-    let isSubCategoriesExist = false;
-    categories.forEach(obj => {
-      if (obj.directSubCategoriesCount && obj.directSubCategoriesCount > 0) {
-        isSubCategoriesExist = true;
-      }
-    });
-    if (isSubCategoriesExist) {
-      message = deleteMessage.concat(categories.length > 1 ?
-        this._appLocalization.get('applications.content.categories.confirmDeleteMultipleWithSubCategories') :
-        this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories'));
-    } else {
-      message = deleteMessage.concat(categories.length > 1 ?
-        this._appLocalization.get('applications.content.categories.confirmDeleteMultiple') :
-        this._appLocalization.get('applications.content.categories.confirmDeleteSingle'));
-    }
-
-    this._browserService.confirm(
-      {
-        header: this._appLocalization.get('applications.content.categories.deleteCategories'),
-        message: message,
-        accept: () => {
-          setTimeout(() => {
-            categories.forEach((category) => {
+  public deleteSelectedSubcategories(subcategories: KalturaCategory[]): void {
+    this._categoriesUtilsService.confirmDeleteMultiple(subcategories, this._subcategories.getValue())
+      .subscribe(result => {
+        if (result.confirmed) {
+          setTimeout(() => { // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
+            let deleted = false;
+            subcategories.forEach((category) => {
               const selectedIndex = this._subcategories.getValue().indexOf(category);
               if (selectedIndex > -1) {
-                this._subcategories.getValue().splice(selectedIndex, 1); // TODO: BEN emit once
+                this._subcategories.getValue().splice(selectedIndex, 1);
                 this._subcategoriesMarkedForDelete.push(category);
-                this._subcategories.next(this._subcategories.getValue());
-                this._setDirty();
+                deleted = true;
               }
             });
-            // need to use a timeout between multiple confirm dialogues (if more than 50 entries are selected)
+            if (deleted) {
+              this._subcategories.next(this._subcategories.getValue());
+              this._setDirty();
+            }
           }, 0);
         }
-      }
-    );
-  }
-
-  // TODO: BEN move to shared place (exists on categories-bulk-actions.component.ts)
-  private _hasEditWarnings(categories: KalturaCategory | KalturaCategory[]): boolean {
-    categories = categories && (!Array.isArray(categories)) ? [categories] : categories;
-    const editWarningsExists: boolean =
-      // Find one of the selected categories that has '__EditWarning' in its 'tags' property
-      !!(<KalturaCategory[]>categories).find(category => {
-        return (category.tags && category.tags.indexOf('__EditWarning') > -1);
+      }, error => {
+        const deleteError = new AreaBlockerMessage({
+          message: this._appLocalization.get('applications.content.categoryDetails.subcategories.errors.categoriesCouldNotBeDeleted'),
+          buttons: [{
+            label: this._appLocalization.get('app.common.ok'),
+            action: () => {
+              this._removeBlockerMessage();
+            }
+          }]
+        });
+        this._showBlockerMessage(deleteError, false);
       });
-
-    return editWarningsExists;
   }
+
 
   public moveSubcategories({items, direction}: { items: KalturaCategory[], direction: 'up' | 'down' }): void {
     if (direction === 'up') {
