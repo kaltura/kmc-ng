@@ -20,9 +20,10 @@ export const routing: Route[] = [
           playlistRoute: true
         },
         children: [
-          { path: '', redirectTo: 'content', pathMatch: 'full' },
+          { path: '', redirectTo: 'metadata', pathMatch: 'full' },
           { path: 'metadata', component: PlaylistMetadataComponent, data: { sectionKey: PlaylistWidgetKeys.Metadata } },
-          { path: 'content', component: PlaylistContentComponent, data: { sectionKey: PlaylistWidgetKeys.Content } }
+          { path: 'content', component: PlaylistContentComponent, data: { sectionKey: PlaylistWidgetKeys.Content } },
+          { path: 'content', component: PlaylistContentComponent, data: { sectionKey: PlaylistWidgetKeys.ContentRuleBased } }
         ]
       }
     ]

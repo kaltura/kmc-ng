@@ -295,6 +295,7 @@ export class PlaylistStore implements OnDestroy {
   public openSection(sectionKey: string): void {
     const navigatePath = this._sectionToRouteMapping[sectionKey];
 
+    console.warn(navigatePath, this._sectionToRouteMapping, sectionKey);
     if (navigatePath) {
       this._router.navigate([navigatePath], { relativeTo: this._playlistRoute });
     }
@@ -307,7 +308,8 @@ export class PlaylistStore implements OnDestroy {
         .subscribe(
           response => {
             if (response.allowed) {
-              this._router.navigate(['playlist', playlistId], { relativeTo: this._playlistRoute.parent });
+              // NOTE: Must navigate to the metadata section first to properly load content section for different types of playlist
+              this._router.navigate(['playlist', playlistId, 'metadata'], { relativeTo: this._playlistRoute.parent });
             }
           }
         );
