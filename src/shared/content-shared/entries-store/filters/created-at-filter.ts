@@ -19,14 +19,14 @@ export class CreatedAtFilter implements FilterAdapter {
         };
 
         return {
-            createdAfter : new Date(createdAfter.getTime()),
-            createdBefore : new Date(createdBefore.getTime())
+            createdAfter : createdAfter ? new Date(createdAfter.getTime()) : null,
+            createdBefore : createdBefore? new Date(createdBefore.getTime()) : null
         };
     }
 
     hasChanged(currentValue: any, previousValue: any): boolean {
-        const previousCreatedBefore = currentValue && currentValue.createdBefore ? currentValue.createdBefore.getTime() : null;
-        const previousCreatedAfter = currentValue && currentValue.createdAfter ? currentValue.createdAfter.getTime() : null;
+        const previousCreatedBefore = previousValue && previousValue.createdBefore ? previousValue.createdBefore.getTime() : null;
+        const previousCreatedAfter = previousValue && previousValue.createdAfter ? previousValue.createdAfter.getTime() : null;
         const currentCreatedBefore = currentValue && currentValue.createdBefore ? currentValue.createdBefore.getTime() : null;
         const currentCreatedAfter = currentValue && currentValue.createdAfter ? currentValue.createdAfter.getTime() : null;
 

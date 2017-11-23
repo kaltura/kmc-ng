@@ -22,7 +22,7 @@
             <input type="text"
                    pInputText
                    class="kSearchInput"
-                   [(ngModel)]="_filters.localData.freetext"
+                   [(ngModel)]="_query.freetext"
                    (keyup.enter)="onFreetextChanged()"
                    placeholder="{{'applications.content.entries.searchEntries' | translate}}">
             <div #categoriesFilterBtn class="kCategoriesFilter">

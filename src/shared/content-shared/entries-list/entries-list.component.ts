@@ -5,7 +5,10 @@ import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
+import {
+    EntriesFiltersService,
+    EntriesFiltersStore
+} from 'app-shared/content-shared/entries-store/entries-filters.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
@@ -33,7 +36,11 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
     private querySubscription: ISubscription;
 
+    // TODO sakal add type
   public _query = {
+      freetext:'',
+      createdAfter :null,
+      createdBefore: null,
     pageIndex: 0,
     pageSize: null, // pageSize is set to null by design. It will be modified after the first time loading entries
     sortBy: 'createdAt',
@@ -41,7 +48,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   };
 
   constructor(private _entriesStore: EntriesStore,
-              @Self() private _filters: EntriesFiltersService,
+              private _store: EntriesFiltersStore,
               private appLocalization: AppLocalization,
               private router: Router,
               private _browserService: BrowserService) {
@@ -52,21 +59,22 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
       switch (tag.type) {
           case "mediaType":
-              this._filters.localData.mediaTypes.splice(
-                  this._filters.localData.mediaTypes.findIndex(item => item.value === tag.value)
+              const previousData = this._store.getFilterData('mediaTypes');
+
+              previousData.splice(
+                  previousData.findIndex(item => item.value === tag.value)
                   , 1
               );
-              this._filters.syncStoreByLocal('mediaTypes');
+
+              this._store.update({
+                  mediaTypes: previousData
+              });
               break;
           case "freetext":
-              this._filters.localData.freetext = null;
-              this._filters.syncStoreByLocal('freetext');
-              this._syncTagOfFreetext();
-
-        //      this._filters.syncStore({freetext: null});
+              this._store.update({freetext: null});
               break;
           case "createdAt":
-              this._filters.syncStore({createdAt: {createdAfter: null, createdBefore: null}});
+              this._store.update({createdAt: {createdAfter: null, createdBefore: null}});
               break;
       }
   }
@@ -77,8 +85,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   }
 
   onFreetextChanged(): void {
-    this._filters.syncStoreByLocal('freetext');
-    this._syncTagOfFreetext();
+    this._store.update({ freetext: this._query.freetext});
   }
 
   onSortChanged(event) {
@@ -105,78 +112,10 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
   }
 
-
-    private _syncTags(filters : any) : void {
-
-        // const previousFilters = this._handledFiltersInTags;
-        // const existingFilterTags = [...this._filterTags];
-        //
-        // if ((!previousFilters || previousFilters.createdAt !== filters.createdAt))
-        // {
-        //     existingFilterTags.splice(
-        //         existingFilterTags.findIndex(item => item.type === 'createdAt'),
-        //         1);
-        //
-        //   if (filters.createdAt)
-        //   {
-        //       const { createdAfter, createdBefore } = filters.createdAt;
-        //       let tooltip = '';
-        //       if (createdAfter && createdBefore) {
-        //           tooltip = `${moment(createdAfter).format('LL')} - ${moment(createdBefore).format('LL')}`;
-        //       } else if (createdAfter) {
-        //           tooltip = `From ${moment(createdAfter).format('LL')}`;
-        //       } else if (createdBefore) {
-        //           tooltip = `Until ${moment(createdBefore).format('LL')}`;
-        //       }
-        //       // TODO sakal fix tooltip as token
-        //       existingFilterTags.push({ type : 'createdAt', label : 'Dates' , tooltip : {token: tooltip}});
-        //   }
-        // }
-        //
-        // if ((!previousFilters || previousFilters.freetext !== filters.freetext))
-        // {
-        //     existingFilterTags.splice(
-        //         existingFilterTags.findIndex(item => item.type === 'freetext'),
-        //         1);
-        //
-        //     if (filters.freetext)
-        //     {
-        //         existingFilterTags.push({ type : 'freetext', value : filters.freetext, label : filters.freetext, tooltip : {token: `applications.content.filters.freeText`}});
-        //     }
-        // }
-
-        // if (!previousFilters || previousFilters.mediaTypes !== filters.mediaTypes) {
-        //     const existingMediaTypes = existingFilterTags.filter(filter => filter.type === 'mediaType');
-        //     const newMediaTypes = Object.entries(filters.mediaTypes).map(([value, label]) =>
-        //         ({
-        //         type: 'mediaType',
-        //         value: value,
-        //         label,
-        //         tooltip : { token: 'tooltip' }
-        //
-        //     }));
-        //
-        //     const delta = getDelta(existingMediaTypes,newMediaTypes, 'value', (a,b) => a.value === b.value);
-        //
-        //     existingFilterTags.push(...delta.added);
-        //
-        //     delta.deleted.forEach(removedMediaType =>
-        //     {
-        //         existingFilterTags.splice(
-        //             existingFilterTags.findIndex(item => item.value === removedMediaType.value),
-        //             1);
-        //
-        //     });
-        // }
-
-        // this._handledFiltersInTags = filters;
-        // this._filterTags = existingFilterTags;
-    }
-
-
-
   ngOnInit() {
-      this._filters.localDataChanges$
+      this._query.freetext = this._store.getFilterData('freetext');
+
+      this._store.dataChanges$
           .cancelOnDestroy(this)
           .subscribe(changes => {
               if (typeof changes.createdAt !== 'undefined') {
@@ -189,6 +128,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
               if (typeof changes.freetext !== 'undefined') {
                   this._syncTagOfFreetext();
+                  this._query.freetext = changes.freetext.currentValue;
               }
           });
 
@@ -218,7 +158,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
             this._filterTags.findIndex(item => item.type === 'createdAt'),
             1);
 
-        const {createdAfter, createdBefore} = this._filters.localData.createdAt || { createdAfter: null, createdBefore: null};
+        const {createdAfter, createdBefore} = this._store.getFilterData('createdAt')|| { createdAfter: null, createdBefore: null};
         if (createdAfter || createdBefore) {
             let tooltip = '';
             if (createdAfter && createdBefore) {
@@ -238,7 +178,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
           this._filterTags.findIndex(item => item.type === 'freetext'),
           1);
 
-      const currentFreetextValue = this._filters.localData.freetext;
+      const currentFreetextValue = this._store.getFilterData('freetext');
 
       if (currentFreetextValue) {
           this._filterTags.push({
@@ -251,9 +191,10 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   }
   private _syncTagsOfMediaTypes(): void {
 
-      const currentFilters = this._filterTags.filter(item => item.type === 'mediaType');
+      const currentValue =  this._store.getFilterData('mediaTypes');
+      const tagsFilters = this._filterTags.filter(item => item.type === 'mediaType');
 
-      const diff = this._filters.getDiff(currentFilters, 'value', this._filters.localData.mediaTypes, 'value');
+      const diff = this._store.getDiff(tagsFilters, 'value', currentValue, 'value');
 
       diff.deleted.forEach(item => {
           this._filterTags.splice(
@@ -261,12 +202,13 @@ export class EntriesListComponent implements OnInit, OnDestroy {
               1);
       });
 
+      // TODO sakal remove explicit types
       diff.added.forEach(item => {
           this._filterTags.push({
               type: 'mediaType',
-              value: item.value,
-              label: item.label,
-              tooltip: {token: 'applications.content.filters.mediaType', args: {'0': item.label}}
+              value: (<any>item).value,
+              label: (<any>item).label,
+              tooltip: {token: 'applications.content.filters.mediaType', args: {'0': (<any>item).label}}
           });
       });
   }

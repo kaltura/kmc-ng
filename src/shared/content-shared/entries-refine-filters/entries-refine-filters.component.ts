@@ -17,7 +17,10 @@ import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-st
 import { ValueFilter } from 'app-shared/content-shared/entries-store/value-filter';
 import { TimeSchedulingFilter } from 'app-shared/content-shared/entries-store/filters/time-scheduling-filter';
 import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item';
-import { EntriesFilters, EntriesFiltersService } from 'app-shared/content-shared/entries-store/entries-filters.service';
+import {
+    EntriesFilters, EntriesFiltersService,
+    EntriesFiltersStore
+} from 'app-shared/content-shared/entries-store/entries-filters.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 
 export interface TreeFilterData {
@@ -57,9 +60,12 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   public _scheduledBefore: Date;
   public _scheduledFilterError: string = null;
   public _createdAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
+  public _createdAfter: Date;
+  public _createdBefore: Date;
+
 
   constructor(public additionalFiltersStore: EntriesRefineFiltersProvider,
-              @Self() private _filters: EntriesFiltersService,
+              private _store: EntriesFiltersStore,
               private primeTreeDataProvider: PrimeTreeDataProvider,
               private entriesStore: EntriesStore,
               private appLocalization: AppLocalization) {
@@ -68,18 +74,36 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   ngOnInit() {
       this._registerToAdditionalFiltersStore();
 
-      this._filters.localDataChanges$
+      const createdAt = this._store.getFilterData('createdAt');
+      if (createdAt) {
+          this._createdAfter = createdAt.createdAfter;
+          this._createdBefore = createdAt.createdBefore;
+      }
+
+      // TODO sakal get filter data of mediatypes
+
+      this._store.dataChanges$
           .cancelOnDestroy(this)
           .subscribe(
               changes => {
+
+                  if (typeof changes.createdAt !== 'undefined')
+                  {
+                      this._createdAfter = changes.createdAt.currentValue ? changes.createdAt.currentValue.createdAfter : null;
+                      this._createdBefore = changes.createdAt.currentValue ? changes.createdAt.currentValue.createdBefore : null;
+                  }
+
                   if (typeof changes.mediaTypes !== 'undefined') {
                       // TODO sakal
                       const treeData = this._filterNameToTreeData['Media Types'];
+                      const currentValue = this._store.getFilterData('mediaTypes');
 
-                      const diff = this._filters.getDiff(treeData.selections, 'data', this._filters.localData.mediaTypes, 'value');
+                      // TODO remove <any>
+                      const diff = this._store.getDiff(treeData.selections, 'data', currentValue, 'value');
 
                       diff.added.forEach(addedItem => {
-                          const matchingItem = treeData.items.find(item => item.data === addedItem.value);
+                          // TODO remove <any>
+                          const matchingItem = treeData.items.find(item => item.data === (<any>addedItem).value);
                           treeData.selections.push(matchingItem);
                       });
 
@@ -315,25 +339,30 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    * @private
    */
   private syncCreatedFilters() {
-      const {createdAfter, createdBefore} = this._filters.localData.createdAt || {
-          createdAfter: null,
-          createdBefore: null
-      };
+
       this._createdFilterError = null;
 
-      if (createdAfter && createdBefore) {
-          const isValid = createdAfter <= createdBefore;
+      if (this._createdAfter && this._createdBefore) {
+          const isValid = this._createdAfter <= this._createdBefore;
 
           if (!isValid) {
               setTimeout(() => {
-                  this._filters.localData.createdAt = this._filters.getStoreDataSnapshot().createdAt;
+                  const createdAt = this._store.getFilterData('createdAt');
+                  this._createdAfter = createdAt ? createdAt.createdAfter : null;
+                  this._createdBefore = createdAt ? createdAt.createdBefore : null;
+
               }, 0);
               this._createdFilterError = this.appLocalization.get('applications.content.entryDetails.errors.schedulingError');
               return;
           }
       }
 
-      this._filters.syncStoreByLocal('createdAt');
+      this._store.update({
+          createdAt: {
+              createdAfter: this._createdAfter,
+              createdBefore: this._createdBefore
+          }
+      });
   }
 
   /**
@@ -342,8 +371,12 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    * Not part of the API, don't use it from outside this component
    */
   public _clearCreatedComponents(): void {
-      this._filters.localData.createdAt = {createdBefore: null, createdAfter: null};
-      this._filters.syncStoreByLocal('createdAt');
+      this._store.update({
+          createdAt: {
+              createdAfter: null,
+              createdBefore: null
+          }
+      });
   }
 
   /**
@@ -543,9 +576,10 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
           switch (node.payload.filterName)
           {
               case "Media Types":
-                if (!this._filters.localData.mediaTypes.find(item => item.value === node.data)) {
-                    this._filters.localData.mediaTypes.push({value: node.data, label: node.label});
-                    this._filters.syncStoreByLocal('mediaTypes');
+                  const newValue = this._store.getFilterData('mediaTypes') || [];
+                if (!newValue.find(item => item.value === node.data)) {
+                    newValue.push({value: node.data, label: node.label});
+                    this._store.update({ mediaTypes: newValue});
                 }
                 break;
           }
@@ -559,13 +593,14 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
           if (treeData) {
               // TODO sakal
-              switch (node.payload.filterName)
-              {
+              switch (node.payload.filterName) {
                   case "Media Types":
-                      this._filters.localData.mediaTypes.splice(
-                          this._filters.localData.mediaTypes.findIndex(item => item.value === node.data), 1);
-
-                      this._filters.syncStoreByLocal('mediaTypes');
+                      const newValue = this._store.getFilterData('mediaTypes') || [];
+                      const itemIndex = newValue.findIndex(item => item.value === node.data);
+                      if (itemIndex > -1) {
+                          newValue.splice(itemIndex, 1);
+                          this._store.update({mediaTypes: newValue});
+                      }
                       break;
               }
           }
