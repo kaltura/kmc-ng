@@ -1,23 +1,21 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PlaylistStore } from '../../playlist-store.service';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { PlaylistContentRuleBasedWidget } from './playlist-content-rule-based-widget.service';
+import { RuleBasedContentWidget } from './rule-based-content-widget.service';
 
 @Component({
-  selector: 'kPlaylistContent',
-  templateUrl: './playlist-content-rule-based.component.html',
-  styleUrls: ['./playlist-content-rule-based.component.scss'],
+  selector: 'kPlaylistContentRuleBased',
+  templateUrl: './rule-based-content.component.html',
+  styleUrls: ['./rule-based-content.component.scss'],
 })
-export class PlaylistContentRuleBasedComponent implements OnInit, OnDestroy {
+export class RuleBasedContentComponent implements OnInit, OnDestroy {
   public _selectedEntries: KalturaMediaEntry[] = [];
 
   constructor(public _playlistStore: PlaylistStore,
-              public _widgetService: PlaylistContentRuleBasedWidget) {
+              public _widgetService: RuleBasedContentWidget) {
   }
 
   ngOnInit() {
-    console.warn('rulebased');
-
     this._widgetService.attachForm();
   };
 

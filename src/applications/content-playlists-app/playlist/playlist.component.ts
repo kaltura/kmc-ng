@@ -7,10 +7,10 @@ import { ActionTypes, PlaylistStore } from './playlist-store.service';
 import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';
 import { PlaylistSectionsListWidget } from './playlist-sections-list/playlist-sections-list-widget.service';
-import { PlaylistContentWidget } from './playlist-content/manual/playlist-content-widget.service';
+import { ManualContentWidget } from './playlist-content/manual/manual-content-widget.service';
 import { PlaylistMetadataWidget } from './playlist-metadata/playlist-metadata-widget.service';
 import { PlaylistDetailsWidget } from './playlist-details/playlist-details-widget.service';
-import { PlaylistContentRuleBasedWidget } from './playlist-content/rule-based/playlist-content-rule-based-widget.service';
+import { RuleBasedContentWidget } from './playlist-content/rule-based/rule-based-content-widget.service';
 
 @Component({
   selector: 'kPlaylist',
@@ -21,9 +21,9 @@ import { PlaylistContentRuleBasedWidget } from './playlist-content/rule-based/pl
     PlaylistWidgetsManager,
     PlaylistSectionsListWidget,
     PlaylistDetailsWidget,
-    PlaylistContentWidget,
+    ManualContentWidget,
     PlaylistMetadataWidget,
-    PlaylistContentRuleBasedWidget
+    RuleBasedContentWidget
   ]
 })
 export class PlaylistComponent implements OnInit, OnDestroy {
@@ -43,9 +43,9 @@ export class PlaylistComponent implements OnInit, OnDestroy {
               playlistWidgetsManager: PlaylistWidgetsManager,
               widget1: PlaylistSectionsListWidget,
               widget2: PlaylistDetailsWidget,
-              widget3: PlaylistContentWidget,
+              widget3: ManualContentWidget,
               widget4: PlaylistMetadataWidget,
-              widget5: PlaylistContentRuleBasedWidget) {
+              widget5: RuleBasedContentWidget) {
     playlistWidgetsManager.registerWidgets([widget1, widget2, widget3, widget4, widget5])
   }
 

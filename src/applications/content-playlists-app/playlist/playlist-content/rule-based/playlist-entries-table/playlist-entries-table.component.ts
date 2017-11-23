@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { PlaylistContentWidget } from '../playlist-content-rule-based-widget.service';
+import { PlaylistContentWidget } from '../rule-based-content-widget.service';
 
 @Component({
   selector: 'kPlaylistEntriesTable',

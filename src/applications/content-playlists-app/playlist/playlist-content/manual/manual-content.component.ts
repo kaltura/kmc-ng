@@ -1,23 +1,21 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PlaylistStore } from '../../playlist-store.service';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { PlaylistContentWidget } from './playlist-content-widget.service';
+import { ManualContentWidget } from './manual-content-widget.service';
 
 @Component({
-  selector: 'kPlaylistContent',
-  templateUrl: './playlist-content.component.html',
-  styleUrls: ['./playlist-content.component.scss'],
+  selector: 'kPlaylistContentManual',
+  templateUrl: './manual-content.component.html',
+  styleUrls: ['./manual-content.component.scss'],
 })
-export class PlaylistContentComponent implements OnInit, OnDestroy {
+export class ManualContentComponent implements OnInit, OnDestroy {
   public _selectedEntries: KalturaMediaEntry[] = [];
 
   constructor(public _playlistStore: PlaylistStore,
-              public _widgetService: PlaylistContentWidget) {
+              public _widgetService: ManualContentWidget) {
   }
 
   ngOnInit() {
-    console.warn('manual');
-
     this._widgetService.attachForm();
   };
 

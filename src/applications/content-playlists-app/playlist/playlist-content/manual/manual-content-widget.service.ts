@@ -23,7 +23,7 @@ export interface PlaylistContentMediaEntry extends KalturaMediaEntry {
 }
 
 @Injectable()
-export class PlaylistContentRuleBasedWidget extends PlaylistWidget implements OnDestroy {
+export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
   private _state = new BehaviorSubject<LoadEntriesStatus>({ loading: false, error: false });
   private _selectionIdGenerator = new FriendlyHashId();
 
@@ -34,7 +34,7 @@ export class PlaylistContentRuleBasedWidget extends PlaylistWidget implements On
   public state$ = this._state.asObservable();
 
   constructor(private _kalturaClient: KalturaClient) {
-    super(PlaylistWidgetKeys.ContentRuleBased);
+    super(PlaylistWidgetKeys.Content);
   }
 
   ngOnDestroy() {
