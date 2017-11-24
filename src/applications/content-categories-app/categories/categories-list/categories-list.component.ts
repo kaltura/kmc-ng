@@ -50,7 +50,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         this._filter.sortDirection = query.sortDirection;
       });
 
-    this._categoriesService.reload(true);
+    this._categoriesService.reload(false);
   }
 
   ngOnDestroy() {

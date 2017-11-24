@@ -65,7 +65,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
                 // when loading new category in progress, the 'categoryID' property
                 // reflect the category that is currently being loaded
                 // while 'category$' stream is null
-                this._currentCategoryId = this._categoryStore.categoryId;
+                this._currentCategoryId = +this._categoryStore.categoryId;
                 this._updateNavigationState();
                 break;
               case ActionTypes.CategoryLoaded:
@@ -161,7 +161,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
     // TODO [kmcng] find a better way that doesn't need access to the category directly
     const categories = this._categoriesStore.categories;
     if (categories && categories.length && this._currentCategoryId) {
-      const currentCategoryIndex = categories.findIndex(category => category.id === this._currentCategoryId);
+      const currentCategoryIndex = categories.findIndex(category => category.id === +this._currentCategoryId);
       this._enableNextButton = currentCategoryIndex >= 0 && (currentCategoryIndex < categories.length - 1);
       this._enablePrevButton = currentCategoryIndex > 0;
     } else {
@@ -191,7 +191,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
     // TODO [kmcng] find a better way that doesn't need access to the category directly
     const categories = this._categoriesStore.categories;
     if (categories && this._currentCategoryId) {
-      const currentPlaylistIndex = categories.findIndex(category => category.id === this._currentCategoryId);
+      const currentPlaylistIndex = categories.findIndex(category => category.id === +this._currentCategoryId);
       let newCategory = null;
       if (direction === 'next' && this._enableNextButton) {
         newCategory = categories[currentPlaylistIndex + 1];
