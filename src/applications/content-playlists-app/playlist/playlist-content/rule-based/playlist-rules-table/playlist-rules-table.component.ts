@@ -1,5 +1,4 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { PlaylistRule, RuleBasedContentWidget } from '../rule-based-content-widget.service';
@@ -13,11 +12,13 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
   @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
-  @Input() set isNewPlaylist(value) {
+  @Input()
+  set isNewPlaylist(value) {
     if (value) {
       this.assignEmptyMessage();
     }
   };
+
   @Input() selectedRules: PlaylistRule[] = [];
   @Input() filter: any = {};
 
@@ -45,8 +46,7 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
 
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
-              private _widgetService: RuleBasedContentWidget,
-              private _router: Router) {
+              private _widgetService: RuleBasedContentWidget) {
   }
 
   ngOnInit() {
@@ -91,8 +91,8 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
   private _buildMenu(rowIndex: number, rule: PlaylistRule): void {
     this._items = [
       {
-        label: this._appLocalization.get('applications.content.bulkActions.removeFromPlaylist'),
-        command: () => this.onActionSelected.emit({ action: 'remove', rule: rule })
+        label: this._appLocalization.get('applications.content.bulkActions.viewRule'),
+        command: () => this.onActionSelected.emit({ action: 'view', rule: rule })
       },
       {
         label: this._appLocalization.get('applications.content.bulkActions.moveUp'),
@@ -105,17 +105,17 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
         disabled: rowIndex + 1 === this._rules.length
       },
       {
-        label: this._appLocalization.get('applications.content.bulkActions.duplicate'),
-        command: () => this.onActionSelected.emit({ action: 'duplicate', rule: rule })
+        label: this._appLocalization.get('applications.content.bulkActions.deleteRule'),
+        command: () => this.onActionSelected.emit({ action: 'delete', rule: rule })
       }
     ];
   }
 
-  public _onSortChanged(event) {
+  public _onSortChanged(event): void {
     this.sortChanged.emit(event);
   }
 
-  public _openActionsMenu(event: any, rowIndex: number, rule: PlaylistRule) {
+  public _openActionsMenu(event: any, rowIndex: number, rule: PlaylistRule): void {
     if (this.actionsMenu) {
       this._buildMenu(rowIndex, rule);
       this.actionsMenu.toggle(event);
@@ -123,8 +123,12 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
     }
   }
 
-  public _onSelectionChange(event) {
+  public _onSelectionChange(event): void {
     this.selectedRulesChange.emit(event);
+  }
+
+  public _viewRule(rule: PlaylistRule): void {
+    this.onActionSelected.emit({ action: 'view', rule: rule });
   }
 
   public assignEmptyMessage(): void {

@@ -656,7 +656,9 @@
         "moveUp": "Move Up",
         "moveDown": "Move Down",
         "duplicate": "Duplicate",
-        "removeCategoriesNone": "No categories to remove"
+        "removeCategoriesNone": "No categories to remove",
+        "viewRule": "View/Edit rule",
+        "deleteRule": "Delete rule"
       },
       "entryDetails": {
         "sections": {
@@ -1058,6 +1060,14 @@
           "description": "Description",
           "tags": "Tags",
           "nameIsMandatory": "You must enter a playlist name"
+        },
+        "content": {
+          "orderBy": {
+            "mostPlayed": "Most Played",
+            "mostRecent": "Most Recent",
+            "highestRated": "Highest Rated",
+            "entryName": "Entry Name"
+          }
         },
         "errors": {
           "reload": "Reload",
