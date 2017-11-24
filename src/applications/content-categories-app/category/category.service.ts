@@ -31,9 +31,9 @@ export enum ActionTypes {
 }
 
 declare interface StatusArgs {
-    action: ActionTypes;
-    error?: Error;
-  }
+  action: ActionTypes;
+  error?: Error;
+}
 
 @Injectable()
 export class CategoryService implements OnDestroy {
@@ -83,7 +83,9 @@ export class CategoryService implements OnDestroy {
       .debounce(() => Observable.timer(500))
       .subscribe(
         sectionsState => {
-          const newDirtyState = Object.keys(sectionsState).reduce((result, sectionName) => result || sectionsState[sectionName].isDirty, false);
+          const newDirtyState = Object.keys(sectionsState)
+            .reduce((result, sectionName) =>
+              result || sectionsState[sectionName].isDirty, false);
 
           if (this._categoryIsDirty !== newDirtyState) {
             console.log(`category store: update category is dirty state to ${newDirtyState}`);
@@ -97,8 +99,7 @@ export class CategoryService implements OnDestroy {
   private _updatePageExitVerification() {
     if (this._categoryIsDirty) {
       this._browserService.enablePageExitVerification();
-    }
-    else {
+    } else {
       this._browserService.disablePageExitVerification();
     }
   }
@@ -146,19 +147,19 @@ export class CategoryService implements OnDestroy {
 
                 this._category.next(
                   new KalturaCategory({
-                    parentId: newData.parentCategoryId
+                    parentId: newData.categoryParentId
                   })
                 );
 
                 setTimeout(() => {
-                  const categoryLoadedResult = this._widgetsManager.notifyDataLoaded(this.category, { isNewData: true });
+                  const categoryLoadedResult = this._widgetsManager.notifyDataLoaded(this.category, {isNewData: true});
                   if (categoryLoadedResult.errors.length) {
                     this._state.next({
                       action: ActionTypes.CategoryLoadingFailed,
                       error: new Error('one of the widgets failed while handling data loaded event')
                     });
                   } else {
-                    this._state.next({ action: ActionTypes.CategoryLoaded });
+                    this._state.next({action: ActionTypes.CategoryLoaded});
                   }
                 }, 0);
               } else {
@@ -262,11 +263,11 @@ export class CategoryService implements OnDestroy {
     this._categoryIsDirty = false;
     this._updatePageExitVerification();
 
-    this._state.next({ action: ActionTypes.CategoryLoading});
+    this._state.next({action: ActionTypes.CategoryLoading});
     this._widgetsManager.notifyDataLoading(id);
 
     if (!id) {
-      return this._state.next({ action: ActionTypes.CategoryLoadingFailed, error: new Error('Missing categoryId') });
+      return this._state.next({action: ActionTypes.CategoryLoadingFailed, error: new Error('Missing categoryId')});
     }
 
     this._loadCategorySubscription = this._kalturaServerClient
