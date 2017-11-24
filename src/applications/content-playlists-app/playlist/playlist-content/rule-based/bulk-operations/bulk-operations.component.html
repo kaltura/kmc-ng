@@ -1,45 +1,45 @@
-<div class="kPlaylistEntriesTableFilters">
+<div class="kPlaylistRulesTableFilters">
   <kSticky stickyId="playlistContentBulk"
            sticksTo="playlistHeader"
            stickyClass="kStickyHeader"
            [scrollOffset]="120">
     <div class="kHeader">
       <div class="kBulkActionsContainer">
-        <div class="kBulkActions" *ngIf="selectedEntries.length; else addEntryWrap">
+        <div class="kBulkActions" *ngIf="selectedRules.length; else addRuleWrap">
           <button pButton
                   class="kButtonDefault kMoveBtn kMoveBtnTop"
                   icon="kIcondropdown_arrow_top"
-                  (click)="_moveEntries('up')"></button>
+                  (click)="_moveRules('up')"></button>
           <button pButton
                   class="kButtonDefault kMoveBtn kMoveBtnBottom"
                   icon="kIcondropdown_arrow_bottom"
-                  (click)="_moveEntries('down')"></button>
+                  (click)="_moveRules('down')"></button>
           <button pButton class="kButtonDanger kBulkDeleteBtn"
                   label="{{'applications.content.playlists.remove' | translate}}"
-                  (click)="deleteEntries.emit(selectedEntries)"></button>
+                  (click)="deleteRules.emit(selectedRules)"></button>
         </div>
-        <ng-template #addEntryWrap>
+        <ng-template #addRuleWrap>
           <button
             pButton
             type="button"
-            label="{{'applications.content.playlists.addEntry' | translate}}"
-            class="kButtonBranded kAddEntryBtn"
-            (click)="addEntry.emit()">
+            label="{{'applications.content.playlistDetails.content.addRule' | translate}}"
+            class="kButtonBranded kAddRuleBtn"
+            (click)="addRule.emit()">
           </button>
         </ng-template>
-        <span class="kSelectedEntriesNum" *ngIf="entriesTotalCount">
-          {{ _getTranslation('applications.content.playlists.entries', entriesTotalCount) }}
+        <span class="kSelectedRulesNum" *ngIf="rulesTotalCount">
+          {{ _getTranslation('applications.content.playlistDetails.content.rules', rulesTotalCount) }}
       </span>
-        <div *ngIf="selectedEntries.length" class="kSelected">
-        <span class="kSelectedEntriesLabel">
-          {{ _getTranslation('applications.content.playlists.selected', selectedEntries.length) }}
+        <div *ngIf="selectedRules.length" class="kSelected">
+        <span class="kSelectedRulesLabel">
+          {{ _getTranslation('applications.content.playlists.selected', selectedRules.length) }}
         </span>
           <a class="kBulkCancel" (click)="clearSelection.emit()">
             {{'applications.content.playlists.cancel' | translate}}
           </a>
         </div>
       </div>
-      <div *ngIf="duration" class="kPlaylistEntriesTableDuration">
+      <div *ngIf="duration" class="kPlaylistRulesTableDuration">
         <span>{{_getTranslation('applications.content.playlistDetails.details.duration', (duration | kTime)) }}</span>
       </div>
     </div>

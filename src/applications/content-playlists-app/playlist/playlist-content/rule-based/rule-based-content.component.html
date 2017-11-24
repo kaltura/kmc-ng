@@ -1,8 +1,26 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
-  <kPlaylistRulesTable class="kPlaylistRulesTable"
-                       [isNewPlaylist]="_widgetService.isNewPlaylist"
-                       [rules]="_widgetService.rules"
-                       (onActionSelected)="_onActionSelected($event)"
-                       (sortChanged)="_onSortChanged($event)"
-                       [(selectedRules)]="_selectedEntries"></kPlaylistRulesTable>
+  <div class="kPlaylistEntriesHolder">
+    <kPlaylistRulesListBulkOperationsContent
+      [selectedRules]="_selectedRules"
+      [duration]="_widgetService.entriesDuration"
+      [rulesTotalCount]="_widgetService.rulesTotalCount"
+      (addRule)="addRule.open()"
+      (deleteRules)="_deleteSelected($event)"
+      (clearSelection)="_clearSelection()"
+      (moveRules)="_widgetService.moveRules($event)">
+    </kPlaylistRulesListBulkOperationsContent>
+    <kPlaylistRulesTable
+      class="kPlaylistRulesTable"
+      [isNewPlaylist]="_widgetService.isNewPlaylist"
+      [rules]="_widgetService.rules"
+      (onActionSelected)="_onActionSelected($event)"
+      (sortChanged)="_onSortChanged($event)"
+      [(selectedRules)]="_selectedRules"></kPlaylistRulesTable>
+  </div>
+
+  <kPopupWidget #addRule [popupWidth]="995" [slider]="true">
+    <ng-template>
+      <h1>TBD</h1>
+    </ng-template>
+  </kPopupWidget>
 </k-area-blocker>

@@ -27,19 +27,19 @@ export class RuleBasedContentComponent implements OnInit, OnDestroy {
     this._selectedRules = [];
   }
 
-  // public _onActionSelected(event: { action: string, entry: KalturaMediaEntry }): void {
-  //   this._clearSelection();
-  //   this._widgetService.onActionSelected(event);
-  // }
-  //
-  // public _onSortChanged(event: { field: string, order: -1 | 1, multisortmeta: any }): void {
-  //   this._clearSelection();
-  //   this._widgetService.onSortChanged(event);
-  // }
-  //
-  // public _deleteSelected(selectedRules: KalturaMediaEntry[]): void {
-  //   this._clearSelection();
-  //   this._widgetService.deleteSelectedEntries(selectedRules);
-  // }
+  public _onActionSelected(event: { action: string, rule: PlaylistRule }): void {
+    this._clearSelection();
+    this._widgetService.onActionSelected(event);
+  }
+
+  public _onSortChanged(event: { field: string, order: -1 | 1, multisortmeta: any }): void {
+    this._clearSelection();
+    this._widgetService.onSortChanged(event);
+  }
+
+  public _deleteSelected(selectedRules: PlaylistRule[]): void {
+    this._clearSelection();
+    this._widgetService.deleteSelectedRules(selectedRules);
+  }
 }
 

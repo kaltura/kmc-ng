@@ -1067,7 +1067,9 @@
             "mostRecent": "Most Recent",
             "highestRated": "Highest Rated",
             "entryName": "Entry Name"
-          }
+          },
+          "addRule": "Add rule",
+          "rules": "{{0}} Rules"
         },
         "errors": {
           "reload": "Reload",

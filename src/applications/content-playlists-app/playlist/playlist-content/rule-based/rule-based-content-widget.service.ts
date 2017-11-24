@@ -12,7 +12,6 @@ import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { PlaylistExecuteFromFiltersAction } from 'kaltura-typescript-client/types/PlaylistExecuteFromFiltersAction';
 import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
-import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-typescript-client/types/KalturaMediaEntryFilterForPlaylist';
 
 export interface LoadEntriesStatus {
   loading: boolean;
@@ -20,6 +19,7 @@ export interface LoadEntriesStatus {
 }
 
 export interface PlaylistRule {
+  selectionId?: string;
   name: string;
   entriesCount: number;
   entriesDuration: number;
@@ -34,7 +34,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
 
   public isNewPlaylist = false;
   public rules: PlaylistRule[] = [];
-  public entriesTotalCount = 0;
+  public rulesTotalCount = 0;
   public entriesDuration = 0;
   public state$ = this._state.asObservable();
 
@@ -92,8 +92,11 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
             orderBy: filter.orderBy,
             limit: filter.limit,
             entriesCount: result.length,
+            selectionId: this._selectionIdGenerator.generateUnique(this.rules.map(item => item.selectionId)),
             entriesDuration
           });
+
+          this.rulesTotalCount = this.rules.length;
         });
         super._hideLoader();
         this._state.next({ loading: false, error: false });
@@ -107,108 +110,95 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
       });
   }
 
-  // private _extendWithSelectionId(entries: PlaylistContentMediaEntry[]): void {
-  //   entries.forEach(entry => {
-  //     entry.selectionId = this._selectionIdGenerator.generateUnique(entries.map(item => item.selectionId));
-  //   });
-  // }
-  //
-  // private _setDirty(): void {
-  //   this.updateState({ isDirty: true });
-  // }
-  //
-  // private _deleteEntryFromPlaylist(entry: PlaylistContentMediaEntry): void {
-  //   const entryIndex = this.rules.indexOf(entry);
-  //
-  //   if (entryIndex !== -1) {
-  //     this.rules.splice(entryIndex, 1);
-  //     this.entriesTotalCount = this.rules.length;
-  //
-  //     this._setDirty();
-  //   }
-  // }
-  //
-  // private _duplicateEntry(entry: PlaylistContentMediaEntry): void {
-  //   const entryIndex = this.rules.indexOf(entry);
-  //
-  //   if (entryIndex !== -1) {
-  //     const clonedEntry = <PlaylistContentMediaEntry>Object.assign(KalturaTypesFactory.createObject(entry), entry);
-  //     this._extendWithSelectionId([clonedEntry]);
-  //     this.rules.splice(entryIndex, 0, clonedEntry);
-  //     this.entriesTotalCount = this.rules.length;
-  //     this._setDirty();
-  //   }
-  // }
-  //
-  // private _moveUpEntries(selectedRules: PlaylistContentMediaEntry[]): void {
-  //   if (KalturaUtils.moveUpItems(this.rules, selectedRules)) {
-  //     this._setDirty();
-  //   }
-  // }
-  //
-  // private _moveDownEntries(selectedRules: PlaylistContentMediaEntry[]): void {
-  //   if (KalturaUtils.moveDownItems(this.rules, selectedRules)) {
-  //     this._setDirty();
-  //   }
-  // }
-  //
-  // public deleteSelectedEntries(entries: PlaylistContentMediaEntry[]): void {
-  //   entries.forEach(entry => this._deleteEntryFromPlaylist(entry));
-  // }
-  //
-  // public onActionSelected({ action, entry }: { action: string, entry: PlaylistContentMediaEntry }): void {
-  //   switch (action) {
-  //     case 'remove':
-  //       this._deleteEntryFromPlaylist(entry);
-  //       break;
-  //     case 'moveUp':
-  //       this._moveUpEntries([entry]);
-  //       break;
-  //     case 'moveDown':
-  //       this._moveDownEntries([entry]);
-  //       break;
-  //     case 'duplicate':
-  //       this._duplicateEntry(entry);
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
-  //
-  // public moveEntries({ entries, direction }: { entries: PlaylistContentMediaEntry[], direction: 'up' | 'down' }): void {
-  //   if (direction === 'up') {
-  //     this._moveUpEntries(entries);
-  //   } else {
-  //     this._moveDownEntries(entries);
-  //   }
-  // }
-  //
-  // public addEntries(entries: PlaylistContentMediaEntry[]): void {
-  //   this._extendWithSelectionId(entries);
-  //   this.rules.push(...entries);
-  //   this.entriesTotalCount = this.rules.length;
-  //   this._setDirty();
-  // }
-  //
-  // public onSortChanged(event: { field: string, order: -1 | 1, multisortmeta: any }): void {
-  //   this.rules.sort(this._getComparatorFor(event.field, event.order));
-  //   this._setDirty();
-  // }
-  //
-  // private _getComparatorFor(field: string, order: -1 | 1): (a: PlaylistContentMediaEntry, b: PlaylistContentMediaEntry) => number {
-  //   return (a, b) => {
-  //     const fieldA = typeof a[field] === 'string' ? a[field].toLowerCase() : a[field];
-  //     const fieldB = typeof b[field] === 'string' ? b[field].toLowerCase() : b[field];
-  //
-  //     if (fieldA < fieldB) {
-  //       return order;
-  //     }
-  //
-  //     if (fieldA > fieldB) {
-  //       return -order;
-  //     }
-  //
-  //     return 0;
-  //   };
-  // }
+  private _extendWithSelectionId(rules: PlaylistRule[]): void {
+    rules.forEach(rule => {
+      rule.selectionId = this._selectionIdGenerator.generateUnique(rules.map(item => item.selectionId));
+    });
+  }
+
+  private _setDirty(): void {
+    this.updateState({ isDirty: true });
+  }
+
+  private _deleteRuleFromPlaylist(rule: PlaylistRule): void {
+    const ruleIndex = this.rules.indexOf(rule);
+
+    if (ruleIndex !== -1) {
+      this.rules.splice(ruleIndex, 1);
+      this.rulesTotalCount = this.rules.length;
+
+      this._setDirty();
+    }
+  }
+
+  private _moveUpRules(selectedRules: PlaylistRule[]): void {
+    if (KalturaUtils.moveUpItems(this.rules, selectedRules)) {
+      this._setDirty();
+    }
+  }
+
+  private _moveDownRules(selectedRules: PlaylistRule[]): void {
+    if (KalturaUtils.moveDownItems(this.rules, selectedRules)) {
+      this._setDirty();
+    }
+  }
+
+  public deleteSelectedRules(rules: PlaylistRule[]): void {
+    rules.forEach(rule => this._deleteRuleFromPlaylist(rule));
+  }
+
+  public onActionSelected({ action, rule }: { action: string, rule: PlaylistRule }): void {
+    switch (action) {
+      case 'remove':
+        this._deleteRuleFromPlaylist(rule);
+        break;
+      case 'moveUp':
+        this._moveUpRules([rule]);
+        break;
+      case 'moveDown':
+        this._moveDownRules([rule]);
+        break;
+      case 'view':
+        break;
+      default:
+        break;
+    }
+  }
+
+  public moveRules({ rules, direction }: { rules: PlaylistRule[], direction: 'up' | 'down' }): void {
+    if (direction === 'up') {
+      this._moveUpRules(rules);
+    } else {
+      this._moveDownRules(rules);
+    }
+  }
+
+  public addEntries(rules: PlaylistRule[]): void {
+    this._extendWithSelectionId(rules);
+    this.rules.push(...rules);
+    this.rulesTotalCount = this.rules.length;
+    this._setDirty();
+  }
+
+  public onSortChanged(event: { field: string, order: -1 | 1, multisortmeta: any }): void {
+    this.rules.sort(this._getComparatorFor(event.field, event.order));
+    this._setDirty();
+  }
+
+  private _getComparatorFor(field: string, order: -1 | 1): (a: PlaylistRule, b: PlaylistRule) => number {
+    return (a, b) => {
+      const fieldA = typeof a[field] === 'string' ? a[field].toLowerCase() : a[field];
+      const fieldB = typeof b[field] === 'string' ? b[field].toLowerCase() : b[field];
+
+      if (fieldA < fieldB) {
+        return order;
+      }
+
+      if (fieldA > fieldB) {
+        return -order;
+      }
+
+      return 0;
+    };
+  }
 }
