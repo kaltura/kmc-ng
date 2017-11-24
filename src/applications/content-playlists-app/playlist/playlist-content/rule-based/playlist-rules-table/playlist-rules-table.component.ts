@@ -128,7 +128,7 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
   }
 
   public assignEmptyMessage(): void {
-    this._emptyMessage = this._appLocalization.get('applications.content.playlistDetails.errors.addAtLeastOneMedia');
+    this._emptyMessage = this._appLocalization.get('applications.content.playlistDetails.errors.addRules');
   }
 }
 

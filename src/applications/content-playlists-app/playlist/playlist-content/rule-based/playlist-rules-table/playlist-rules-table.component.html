@@ -1,5 +1,5 @@
 <k-area-blocker [showLoader]="_deferredLoading">
-  <div class="kPlaylistEntriesTable" [class.noResults]="!_rules.length">
+  <div class="kPlaylistRulesTable" [class.noResults]="!_rules.length">
     <p-dataTable
       #dataTable
       dataKey="selectionId"
@@ -13,32 +13,40 @@
       (selectionChange)="_onSelectionChange($event)"
       (onSort)="_onSortChanged($event)"
       [(selection)]="selectedRules">
-      <p-column styleClass="selectionColumn" selectionMode="multiple"></p-column>
+      <p-column selectionMode="multiple" [style]="{'width':'44px', 'padding-left': '14px'}"></p-column>
 
-      <p-column field="name" header="{{'applications.content.table.name' | translate}}" sortable="custom">
+      <p-column field="name" header="{{'applications.content.table.ruleName' | translate}}" sortable="custom">
         <ng-template let-col let-rule="rowData" pTemplate="body">
           <span class="kTitle">{{rule[col.field]}}</span>
         </ng-template>
       </p-column>
 
-      <p-column field="entriesCount" [header]="'applications.content.table.type' | translate" sortable="custom">
+      <p-column field="entriesCount"
+                [style]="{'width': '80px'}"
+                [header]="'applications.content.table.entriesCount' | translate" sortable="custom">
       </p-column>
 
-      <p-column field="limit" [header]="'applications.content.table.type' | translate" sortable="custom">
+      <p-column field="limit"
+                [style]="{'width': '70px'}"
+                [header]="'applications.content.table.limit' | translate" sortable="custom">
       </p-column>
 
-      <p-column field="orderBy" [header]="'applications.content.table.type' | translate" sortable="custom">
+      <p-column field="orderBy"
+                [style]="{'width': '70px'}"
+                [header]="'applications.content.table.orderBy' | translate" sortable="custom">
       </p-column>
 
-      <p-column field="entriesDuration" [header]="'applications.content.table.duration' | translate" sortable="custom">
+      <p-column field="entriesDuration"
+                [style]="{'width': '70px'}"
+                [header]="'applications.content.table.duration' | translate" sortable="custom">
         <ng-template let-col let-rule="rowData" pTemplate="body">
           <span>{{rule[col.field] | kTime}}</span>
         </ng-template>
       </p-column>
 
-      <p-column header="" styleClass="actionsColumn">
+      <p-column header="" [style]="{'width': '70px'}">
         <ng-template let-col let-rule="rowData" pTemplate="body" let-i="rowIndex">
-          <div class="kPlaylistEntriesTableActions">
+          <div class="kPlaylistRulesTableActions">
             <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, i, rule)"></button>
           </div>
         </ng-template>

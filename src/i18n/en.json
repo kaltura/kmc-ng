@@ -479,7 +479,11 @@
         "delete": "Delete",
         "view": "View Details",
         "loading": "Loading...",
-        "noResults": "No Results"
+        "noResults": "No Results",
+        "ruleName": "Rule Name",
+        "entriesCount": "No.Entries",
+        "limit": "Limit",
+        "orderBy": "Order By"
       },
       "paginator": {
         "showRows": "Show rows:"
@@ -1069,7 +1073,8 @@
           "contentValidationError": "Add at least one entry",
           "loadError": "An error occurred while loading data",
           "addAtLeastOneMedia": "Add at least one media",
-          "entriesLoadError": "Error loading entries"
+          "entriesLoadError": "Error loading entries",
+          "addRules": "Add rules to your playlist"
         }
       }
     },
