@@ -1,18 +1,24 @@
-import { CategoriesService } from './../categories.service';
-import { PrimeTreeNode, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui';
-import { Component, Input, AfterViewInit, Output, OnInit, OnDestroy, EventEmitter, ViewChild, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { CategoriesTreeComponent } from 'app-shared/content-shared/categories-tree/categories-tree.component';
-import { TreeModule } from 'primeng/primeng';
-import { AutoComplete } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { Subject } from "rxjs/Subject";
-import { ISubscription } from "rxjs/Subscription";
-import { CategoriesPrimeService } from "app-shared/content-shared/categories-prime.service";
-import { CategoryData } from "app-shared/content-shared/categories-store.service";
+import {CategoriesService} from './../categories.service';
+import {PrimeTreeNode, SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui';
+import {
+  AfterViewChecked,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
+import {Router} from '@angular/router';
+import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {BrowserService} from 'app-shared/kmc-shell';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {CategoriesTreeComponent} from 'app-shared/content-shared/categories-tree/categories-tree.component';
+import {AutoComplete} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
+import {Subject} from "rxjs/Subject";
+import {ISubscription} from "rxjs/Subscription";
+import {CategoriesPrimeService} from "app-shared/content-shared/categories-prime.service";
+import {CategoryData} from "app-shared/content-shared/categories-store.service";
 
 
 export interface CategoryItem {
@@ -156,9 +162,9 @@ export class AddNewCategoryComponent implements AfterViewInit, OnDestroy, AfterV
         var parentCategoryId = 0;
         if (this._selectedCategory)
         { parentCategoryId = this._selectedCategory.id }
-        this._categoriesService.setNewCategoryData({
-            parentCategoryId: parentCategoryId
-        });
+        // this._categoriesService.setNewCategoryData({
+        //     parentCategoryId: parentCategoryId
+        // });
         this._router.navigate(['/content/categories/category/new/metadata']);
     }
 
