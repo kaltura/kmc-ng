@@ -12,6 +12,7 @@ import { EntryDurationPipe } from './pipes/entry-duration.pipe';
 import { BulkOperationsComponent } from './playlist-content/manual/bulk-operations/bulk-operations.component';
 import { RuleBasedContentComponent } from './playlist-content/rule-based/rule-based-content.component';
 import { PlaylistContentComponent } from './playlist-content/playlist-content.component';
+import { PlaylistRulesTableComponent } from './playlist-content/rule-based/playlist-rules-table/playlist-rules-table.component';
 
 export const PlaylistComponentsList = [
   PlaylistMetadataComponent,
@@ -22,6 +23,7 @@ export const PlaylistComponentsList = [
   PlaylistComponent,
   PlaylistDetailsComponent,
   PlaylistEntriesTableComponent,
+  PlaylistRulesTableComponent,
   PlaylistAddEntryComponent,
   ModerationPipe,
   EntryTypePipe,

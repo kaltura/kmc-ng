@@ -1,10 +1,10 @@
 @import 'app-theme/_variables.scss';
 
-.kPlaylistEntriesTable {
+.kPlaylistRulesTable {
   background-color: white;
   overflow: hidden;
   position: relative;
-  padding: 0px;
+  padding: 0;
 
   .kThumbnailHolder {
     overflow: hidden;
@@ -29,19 +29,7 @@
     }
   }
 
-  .kPlaylistEntriesTableActions {
-    width: 100%;
-    text-align: center;
-    button {
-      color: grey !important;
-      background-color: rgba(0, 0, 0, 0) !important;
-      border: none !important;
-      font-size: 16px !important;
-      outline: 0;
-    }
-  }
-
-  .kPlaylistEntriesTableActions {
+  .kPlaylistRulesTableActions {
     width: 100%;
     text-align: center;
     button {
@@ -70,35 +58,6 @@
     font-weight: 700;
     cursor: pointer;
   }
-}
-
-:host /deep/ .selectionColumn {
-  width: 44px;
-  padding-left: 14px!important;
-}
-
-:host /deep/ .ui-datatable .thumbnailColumn {
-  width: 100px;
-}
-
-:host /deep/ .ui-datatable .mediaTypeColumn {
-  width: 80px;
-  text-align: center;
-}
-
-:host /deep/ .ui-datatable .createdAtColumn {
-  width: 140px;
-  text-align: center;
-}
-
-:host /deep/ .ui-datatable .durationColumn {
-  width: 100px;
-  text-align: center;
-}
-
-:host /deep/ .ui-datatable .actionsColumn {
-  overflow: visible;
-  width: 80px;
 }
 
 :host {

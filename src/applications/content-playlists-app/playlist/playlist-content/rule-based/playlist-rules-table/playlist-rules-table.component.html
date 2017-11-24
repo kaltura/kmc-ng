@@ -1,0 +1,49 @@
+<k-area-blocker [showLoader]="_deferredLoading">
+  <div class="kPlaylistEntriesTable" [class.noResults]="!_rules.length">
+    <p-dataTable
+      #dataTable
+      dataKey="selectionId"
+      scrollable="true"
+      scrollHeight="100%"
+      [immutable]="false"
+      [value]="_rules"
+      [sortField]="filter.sortBy"
+      [emptyMessage]="_emptyMessage"
+      [sortOrder]="filter.sortDirection | kPrimeTableSortDirection"
+      (selectionChange)="_onSelectionChange($event)"
+      (onSort)="_onSortChanged($event)"
+      [(selection)]="selectedRules">
+      <p-column styleClass="selectionColumn" selectionMode="multiple"></p-column>
+
+      <p-column field="name" header="{{'applications.content.table.name' | translate}}" sortable="custom">
+        <ng-template let-col let-rule="rowData" pTemplate="body">
+          <span class="kTitle">{{rule[col.field]}}</span>
+        </ng-template>
+      </p-column>
+
+      <p-column field="entriesCount" [header]="'applications.content.table.type' | translate" sortable="custom">
+      </p-column>
+
+      <p-column field="limit" [header]="'applications.content.table.type' | translate" sortable="custom">
+      </p-column>
+
+      <p-column field="orderBy" [header]="'applications.content.table.type' | translate" sortable="custom">
+      </p-column>
+
+      <p-column field="entriesDuration" [header]="'applications.content.table.duration' | translate" sortable="custom">
+        <ng-template let-col let-rule="rowData" pTemplate="body">
+          <span>{{rule[col.field] | kTime}}</span>
+        </ng-template>
+      </p-column>
+
+      <p-column header="" styleClass="actionsColumn">
+        <ng-template let-col let-rule="rowData" pTemplate="body" let-i="rowIndex">
+          <div class="kPlaylistEntriesTableActions">
+            <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, i, rule)"></button>
+          </div>
+        </ng-template>
+      </p-column>
+    </p-dataTable>
+    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
+  </div>
+</k-area-blocker>

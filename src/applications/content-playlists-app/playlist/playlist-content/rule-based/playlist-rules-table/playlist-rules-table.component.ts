@@ -2,15 +2,14 @@ import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDes
 import { Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { PlaylistContentWidget } from '../rule-based-content-widget.service';
+import { PlaylistRule, RuleBasedContentWidget } from '../rule-based-content-widget.service';
 
 @Component({
-  selector: 'kPlaylistEntriesTable',
-  templateUrl: './playlist-entries-table.component.html',
-  styleUrls: ['./playlist-entries-table.component.scss']
+  selector: 'kPlaylistRulesTable',
+  templateUrl: './playlist-rules-table.component.html',
+  styleUrls: ['./playlist-rules-table.component.scss']
 })
-export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
+export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('dataTable') private dataTable: DataTable;
   @ViewChild('actionsmenu') private actionsMenu: Menu;
 
@@ -19,34 +18,34 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
       this.assignEmptyMessage();
     }
   };
-  @Input() selectedEntries: KalturaMediaEntry[] = [];
+  @Input() selectedRules: PlaylistRule[] = [];
   @Input() filter: any = {};
 
   @Input()
-  set entries(data: any[]) {
+  set rules(data: any[]) {
     if (!this._deferredLoading) {
-      this._entries = [];
+      this._rules = [];
       this._cdRef.detectChanges();
-      this._entries = data;
+      this._rules = data;
       this._cdRef.detectChanges();
     } else {
-      this._deferredEntries = data
+      this._deferredRules = data
     }
   }
 
   @Output() sortChanged = new EventEmitter<any>();
-  @Output() selectedEntriesChange = new EventEmitter<any>();
-  @Output() onActionSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
+  @Output() selectedRulesChange = new EventEmitter<any>();
+  @Output() onActionSelected = new EventEmitter<{ action: string, rule: PlaylistRule }>();
 
-  private _deferredEntries: KalturaMediaEntry[];
-  public _entries: KalturaMediaEntry[] = [];
+  private _deferredRules: PlaylistRule[];
+  public _rules: PlaylistRule[] = [];
   public _emptyMessage: string;
   public _deferredLoading = true;
   public _items: MenuItem[];
 
   constructor(private _appLocalization: AppLocalization,
               private _cdRef: ChangeDetectorRef,
-              private _widgetService: PlaylistContentWidget,
+              private _widgetService: RuleBasedContentWidget,
               private _router: Router) {
   }
 
@@ -69,7 +68,7 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
           }
         },
         error => {
-          console.warn('[kmcng] -> could not load entries'); // navigate to error page
+          console.warn('[kmcng] -> could not load rules'); // navigate to error page
           throw error;
         });
   }
@@ -80,8 +79,8 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
          This prevents the screen from hanging during datagrid rendering of the data.*/
       setTimeout(() => {
         this._deferredLoading = false;
-        this._entries = this._deferredEntries;
-        this._deferredEntries = null;
+        this._rules = this._deferredRules;
+        this._deferredRules = null;
       }, 0);
     }
   }
@@ -89,25 +88,25 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
   ngOnDestroy() {
   }
 
-  private _buildMenu(rowIndex: number, entry: KalturaMediaEntry): void {
+  private _buildMenu(rowIndex: number, rule: PlaylistRule): void {
     this._items = [
       {
         label: this._appLocalization.get('applications.content.bulkActions.removeFromPlaylist'),
-        command: () => this.onActionSelected.emit({ action: 'remove', entry })
+        command: () => this.onActionSelected.emit({ action: 'remove', rule: rule })
       },
       {
         label: this._appLocalization.get('applications.content.bulkActions.moveUp'),
-        command: (event) => this.onActionSelected.emit({ action: 'moveUp', entry }),
+        command: (event) => this.onActionSelected.emit({ action: 'moveUp', rule: rule }),
         disabled: rowIndex === 0
       },
       {
         label: this._appLocalization.get('applications.content.bulkActions.moveDown'),
-        command: () => this.onActionSelected.emit({ action: 'moveDown', entry }),
-        disabled: rowIndex + 1 === this._entries.length
+        command: () => this.onActionSelected.emit({ action: 'moveDown', rule: rule }),
+        disabled: rowIndex + 1 === this._rules.length
       },
       {
         label: this._appLocalization.get('applications.content.bulkActions.duplicate'),
-        command: () => this.onActionSelected.emit({ action: 'duplicate', entry })
+        command: () => this.onActionSelected.emit({ action: 'duplicate', rule: rule })
       }
     ];
   }
@@ -116,20 +115,16 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
     this.sortChanged.emit(event);
   }
 
-  public _goToEntry(entryId: KalturaMediaEntry): void {
-    this._router.navigate(['/content/entries/entry', entryId]);
-  }
-
-  public _openActionsMenu(event: any, rowIndex: number, entry: KalturaMediaEntry) {
+  public _openActionsMenu(event: any, rowIndex: number, rule: PlaylistRule) {
     if (this.actionsMenu) {
-      this._buildMenu(rowIndex, entry);
+      this._buildMenu(rowIndex, rule);
       this.actionsMenu.toggle(event);
       this.actionsMenu.show(event);
     }
   }
 
   public _onSelectionChange(event) {
-    this.selectedEntriesChange.emit(event);
+    this.selectedRulesChange.emit(event);
   }
 
   public assignEmptyMessage(): void {

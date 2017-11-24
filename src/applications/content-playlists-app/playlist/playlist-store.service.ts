@@ -295,7 +295,6 @@ export class PlaylistStore implements OnDestroy {
   public openSection(sectionKey: string): void {
     const navigatePath = this._sectionToRouteMapping[sectionKey];
 
-    console.warn(navigatePath, this._sectionToRouteMapping, sectionKey);
     if (navigatePath) {
       this._router.navigate([navigatePath], { relativeTo: this._playlistRoute });
     }
