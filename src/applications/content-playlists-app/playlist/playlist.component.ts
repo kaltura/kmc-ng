@@ -11,6 +11,7 @@ import { ManualContentWidget } from './playlist-content/manual/manual-content-wi
 import { PlaylistMetadataWidget } from './playlist-metadata/playlist-metadata-widget.service';
 import { PlaylistDetailsWidget } from './playlist-details/playlist-details-widget.service';
 import { RuleBasedContentWidget } from './playlist-content/rule-based/rule-based-content-widget.service';
+import { KalturaPlaylistType } from 'kaltura-typescript-client/types/KalturaPlaylistType';
 
 @Component({
   selector: 'kPlaylist',
@@ -28,6 +29,7 @@ import { RuleBasedContentWidget } from './playlist-content/rule-based/rule-based
 })
 export class PlaylistComponent implements OnInit, OnDestroy {
   public _playlistName: string;
+  public _playlistTypeIcon: string;
   public _currentPlaylistId: string;
   public _showLoader = false;
   public _areaBlockerMessage: AreaBlockerMessage;
@@ -74,6 +76,9 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
               case ActionTypes.PlaylistLoaded:
                 this._playlistName = this._playlistStore.playlist.name;
+                this._playlistTypeIcon = this._playlistStore.playlist.playlistType === KalturaPlaylistType.staticList
+                  ? 'kIconPlaylist_Manual'
+                  : 'kIconPlaylist_RuleBased';
                 break;
 
               case ActionTypes.PlaylistLoadingFailed:
