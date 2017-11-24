@@ -1066,6 +1066,24 @@
           "fieldRequired": "This field is required"
         }
       },
+      "addNewCategory": {
+        "newCategory": "New Category",
+        "newSubcategory": "New Subcategory",
+        "selectCategoryParent": "Select the parent category under which the new category will appear",
+        "cancelEdit": "Cancel Edit",
+        "discard": "Discard all changes?",
+        "apply": "Apply",
+        "cancel": "Cancel",
+        "noParent":"No Parent",
+        "searchCategories": "Search Categories",
+        "selectedParentCategory":"Parent Category Id: {{value}}",
+        "name": "Name",
+        "categoryMovedSuccessfully": "Category moved successfully",
+        "errors": {
+          "requiredName": "You must enter name",
+          "unableToLoadParentCategoryId" : "Unable to load Parent Category ID"
+        }
+      },
       "playlistDetails": {
         "sections": {
           "metadata": "Metadata",

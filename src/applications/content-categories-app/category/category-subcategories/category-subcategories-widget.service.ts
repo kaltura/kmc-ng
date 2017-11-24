@@ -36,41 +36,63 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
   }
 
   protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean }> {
-    super._showLoader();
-    super._removeBlockerMessage();
+    return this._fetchSubcategories('activation', true);
 
-    return this._fetchSubcategories()
-      .map(response => {
-        super._hideLoader();
-        if (response.failed) {
-          super._showActivationError();
-          return {failed: true};
-        } else {
-          return {failed: false};
-        }
-      });
   }
 
   protected onReset() {
   }
 
-  private _fetchSubcategories(): Observable<{ failed: boolean, error?: Error }> {
-    return this._getSubcategories(this.data)
-      .monitor('get category subcategories')
-      .cancelOnDestroy(this, this.widgetReset$)
-      .do(
-        response => {
-          this._subcategories.next(response.objects || []);
-          this._subcategoriesMarkedForDelete = [];
-        }
-      )
-      .map(response => {
-        return ({failed: false})
-      })
-      .catch(error => {
-        return Observable.of({failed: true, error})
-      });
+  public _fetchSubcategories(origin: 'activation' | 'reload', reset: boolean = true, showLoader: boolean = true): Observable<{ failed: boolean, error?: Error }> {
+    return Observable.create(observer => {
+      if (showLoader) {
+        super._showLoader();
+      }
+      if (reset) {
+        this._subcategories.next([]);
+        this._subcategoriesMarkedForDelete = [];
+      }
 
+      let requestSubscription = this._getSubcategories(this.data)
+        .monitor('get category subcategories')
+        .cancelOnDestroy(this, this.widgetReset$)
+        .subscribe(
+          response => {
+            super._hideLoader();
+            this._subcategories.next(response.objects || []);
+            this._subcategoriesMarkedForDelete = [];
+            observer.next({failed: false});
+            observer.complete();
+          }, error => {
+            this._subcategories.next([]);
+            super._hideLoader();
+            if (origin === 'activation') {
+              super._showActivationError();
+            } else {
+              this._showBlockerMessage(new AreaBlockerMessage(
+                {
+                  message: this._appLocalization.get('applications.content.entryDetails.errors.flavorsLoadError'),
+                  buttons: [
+                    {
+                      label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
+                      action: () => {
+                        this.refresh(reset);
+                      }
+                    }
+                  ]
+                }
+              ), true);
+            }
+            observer.error({failed: true, error});
+          }
+        );
+      return () => {
+        if (requestSubscription) {
+          requestSubscription.unsubscribe();
+          requestSubscription = null;
+        }
+      }
+    });
   }
 
   private _getSubcategories(parentCategory: KalturaCategory): Observable<KalturaCategoryListResponse> {
@@ -223,6 +245,15 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
 
   private _setDirty(): void {
     this.updateState({isDirty: true});
+  }
+
+
+  public refresh(reset = false, showLoader = true) {
+    this._fetchSubcategories('reload', reset, showLoader)
+      .cancelOnDestroy(this, this.widgetReset$)
+      .subscribe(() => {
+        // reload flavors on refresh
+      });
   }
 
   ngOnDestroy() {
