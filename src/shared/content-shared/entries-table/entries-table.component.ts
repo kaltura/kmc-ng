@@ -39,8 +39,6 @@ export interface CustomMenuItem extends MenuItem {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
-  @Input() fillHeight = true;
-
   @Input() set columns(value: EntriesTableColumns) {
     this._columns = value || this._defaultColumns;
   }
@@ -66,7 +64,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() selectedEntries: any[] = [];
 
   @Output() sortChanged = new EventEmitter<any>();
-  @Output() actionSelected = new EventEmitter<{ action: string, entryId: string, entryName: string }>();
+  @Output() actionSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
   @Output() selectedEntriesChange = new EventEmitter<any>();
 
   @ViewChild('dataTable') private dataTable: DataTable;
@@ -74,8 +72,6 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private _deferredEntries: any[];
   private entriesStoreStatusSubscription: ISubscription;
-  private actionsMenuEntryId = '';
-  private actionsMenuEntryName = '';
   private _defaultColumns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
     name: { sortable: true },
@@ -147,24 +143,19 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  private _exceptPreview(status, { commandName }) {
-    const isNotReady = status instanceof KalturaEntryStatus && status.toString() !== KalturaEntryStatus.ready.toString();
-    return !(isNotReady && commandName === 'preview');
-  }
-
-  private _exceptView(mediaType, { commandName }) {
-    const isLiveStreamFlash = mediaType && mediaType.toString() === KalturaMediaType.liveStreamFlash.toString();
-    return !(isLiveStreamFlash && commandName === 'view');
-  }
-
-  private _buildMenu(mediaType: KalturaMediaType = null, status: any = null): void {
+  private _buildMenu(entry: KalturaMediaEntry): void {//mediaType: KalturaMediaType = null, status: any = null): void {
+    const isNotReady = entry.status instanceof KalturaEntryStatus && status.toString() !== KalturaEntryStatus.ready.toString();
+    const isLiveStreamFlash = entry.mediaType && entry.mediaType.toString() === KalturaMediaType.liveStreamFlash.toString();
     this._items = this.rowActions
-      .filter(item => this._exceptPreview(status, item))
-      .filter(item => this._exceptView(mediaType, item))
+      .filter(item => !(isNotReady && item.commandName === 'preview'))
+      .filter(item => !(isLiveStreamFlash && item.commandName === 'view'))
       .map(action =>
         Object.assign({}, action, {
           command: ({ item }) => {
-            this._onActionSelected(item.commandName, this.actionsMenuEntryId, this.actionsMenuEntryName);
+            this.actionSelected.emit({
+              action: item.commandName,
+              entry: entry
+            });
           }
         })
       );
@@ -177,12 +168,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   public _openActionsMenu(event: any, entry: KalturaMediaEntry) {
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
-      this.actionsMenuEntryName = entry.name;
-      if (this.actionsMenuEntryId !== entry.id) {
-        this.actionsMenuEntryId = entry.id;
-        this._buildMenu(entry.mediaType, entry.status);
-        this.actionsMenu.show(event);
-      }
+      this._buildMenu(entry);
     }
   }
 
@@ -190,10 +176,6 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     const isLiveStream = mediaType && mediaType === KalturaMediaType.liveStreamFlash.toString();
     const isReady = status && status !== KalturaEntryStatus.ready.toString();
     return !(isLiveStream && isReady);
-  }
-
-  public _onActionSelected(action: string, entryId: string, entryName: string) {
-    this.actionSelected.emit({ action, entryId, entryName });
   }
 
   public _onSortChanged(event) {

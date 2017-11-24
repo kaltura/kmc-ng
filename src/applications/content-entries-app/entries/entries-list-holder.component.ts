@@ -52,17 +52,17 @@ export class EntriesListHolderComponent {
     this._entriesStore.paginationCacheToken = 'entries-list';
   }
 
-  public _onActionSelected({ action, entryId }) {
+  public _onActionSelected({ action, entry }) {
     switch (action) {
       case 'view':
-        this._viewEntry(entryId);
+        this._viewEntry(entry.id);
         break;
       case 'delete':
         this._browserService.confirm(
           {
             header: this._appLocalization.get('applications.content.entries.deleteEntry'),
-            message: this._appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: entryId }),
-            accept: () => this._deleteEntry(entryId)
+            message: this._appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: entry.id }),
+            accept: () => this._deleteEntry(entry.id)
           }
         );
         break;

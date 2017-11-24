@@ -194,16 +194,16 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       );
   }
 
-  private _onActionSelected({ action, entryId, entryName }) {
+  private _onActionSelected({ action, entry }) {
     switch (action) {
       case 'view':
-        this._openModerationDetails(entryId);
+        this._openModerationDetails(entry.id);
         break;
       case 'approve':
-        this._approveEntry(entryId, entryName);
+        this._approveEntry(entry.id, entry.name);
         break;
       case 'reject':
-        this._rejectEntry(entryId, entryName);
+        this._rejectEntry(entry.id, entry.name);
         break;
       default:
         break;
