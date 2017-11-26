@@ -26,22 +26,8 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
 
         if (status) {
           switch (status.action) {
-            case ActionTypes.CategoryLoading:
-              break;
             case ActionTypes.CategoryLoaded:
               this._currentCategory = this._categoryStore.category;
-              break;
-            case ActionTypes.CategoryLoadingFailed:
-              break;
-            case ActionTypes.CategorySaving:
-              break;
-            case ActionTypes.CategorySavingFailed:
-              break;
-            case ActionTypes.CategoryDataIsInvalid:
-              break;
-            case ActionTypes.ActiveSectionBusy:
-              break;
-            case ActionTypes.CategoryPrepareSavingFailed:
               break;
             default:
               break;
