@@ -302,8 +302,10 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
   }
 
 	private _openFile(fileId: string, operation: string): void {
-		const apiUrl = environment.core.kaltura.apiUrl;
-		let url = apiUrl + "/service/attachment_attachmentasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/attachmentAssetId/" + fileId;
+		const serverEndpoint = environment.core.kaltura.serverEndpoint;
+        const protocol = environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://';
+
+        let url = protocol + serverEndpoint + "/api_v3/service/attachment_attachmentasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/attachmentAssetId/" + fileId;
 		this._browserService.openLink(url);
 	}
 
