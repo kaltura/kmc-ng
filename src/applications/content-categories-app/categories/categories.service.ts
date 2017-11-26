@@ -248,11 +248,11 @@ export class CategoriesService implements OnDestroy {
 
 
   /**
-   * Move category to be existed under new parent
-   * @param moveCategoryData {MoveCategoryData} holds categoryToMoveId and selectedCategoryParent (if null - move to root)
-   * @return {Observable<KalturaCategory>}
+   * Add new category to be existed under parent given as parameter
+   * @param newCategoryData {NewCategoryData} holds name and desired categoryParentId (if null - move to root)
+   * @return {Observable<number>} new category ID
    */
-  public addNewCategory(newCategoryData: NewCategoryData): Observable<KalturaCategory> {
+  public addNewCategory(newCategoryData: NewCategoryData): Observable<number> {
     if (!newCategoryData || !newCategoryData.name) {
       const nameRequiredErrorMessage = this._appLocalization.get('applications.content.addNewCategory.errors.requiredName');
       return Observable.throw(new Error(nameRequiredErrorMessage));
@@ -269,17 +269,18 @@ export class CategoriesService implements OnDestroy {
     return <any>this._kalturaClient.request(
       new CategoryAddAction({
         category
-      })
-    )
+      })).map(addedCategory => {
+      return addedCategory.id;
+    });
   }
 
   /**
    * Move category to be existed under new parent
    * @param moveCategoryData {MoveCategoryData} holds category to move ID and selected category parent (if null - move to root)
-   * @return {Observable<KalturaCategory>}
+   * @return {Observable<void>}
    */
-  public moveCategory(moveCategoryData: MoveCategoryData): Observable<KalturaCategory> {
-    if (!this.isParentCategorySelectionValid(moveCategoryData)) {
+  public moveCategory(moveCategoryData: MoveCategoryData): Observable<void> {
+    if (!moveCategoryData || !this.isParentCategorySelectionValid(moveCategoryData)) {
       const categoryMovedFailureErrorMessage = this._appLocalization.get('applications.content.moveCategory.errors.categoryMovedFailure');
       return Observable.throw(new Error(categoryMovedFailureErrorMessage));
     }
@@ -289,7 +290,7 @@ export class CategoriesService implements OnDestroy {
         categoryIds: moveCategoryData.categories.map(category => (category.id)).join(','),
         targetCategoryParentId: moveCategoryData.categoryParent ? moveCategoryData.categoryParent.id : 0
       })
-    )
+    ).map(categoryMoved => (undefined));
   }
 
   /**

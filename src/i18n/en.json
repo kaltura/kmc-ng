@@ -395,6 +395,7 @@
         "errors": {
           "invalidParentSelection": "Category cannot be moved into itself or one of its children categories",
           "categoryMovedFailure": "An error occurred while trying to move category to selected parent",
+          "unableToMove": "Cannot perform Move Category action since no categories to move were selected",
           "categoryAlreadyBelongsToParent": "Category is already a child of selected parent",
           "onlySiblingsMoveAllowed" : "Only sub-categories of the same parent category can be moved together."
         }

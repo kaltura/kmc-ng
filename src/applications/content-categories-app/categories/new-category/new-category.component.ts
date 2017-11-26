@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {CategoriesService} from '../categories.service';
 import {CategoryData} from 'app-shared/content-shared/categories-search.service';
@@ -15,7 +14,7 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 export class NewCategoryComponent implements OnInit {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @Output() onApply = new EventEmitter<{category: KalturaCategory}>();
+  @Output() onApply = new EventEmitter<{categoryId: number}>();
 
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -59,9 +58,9 @@ export class NewCategoryComponent implements OnInit {
       });
     } else {
       this._categoriesService.addNewCategory({categoryParentId: categoryParent && categoryParent.id, name: categoryName})
-        .subscribe(category => {
+        .subscribe(categoryId => {
             this._isBusy = false;
-            this.onApply.emit({category});
+            this.onApply.emit({categoryId: categoryId});
             if (this.parentPopupWidget) {
               this.parentPopupWidget.close();
             }

@@ -202,12 +202,12 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     }
   }
 
-  onCategoryAdded(event: {category: KalturaCategory}): void {
-    if (!event.category) {
+  onCategoryAdded({categoryId}: {categoryId: number}): void {
+    if (!categoryId) {
       console.log('[CategoriesListComponent.onCategoryAdded] invalid parameters')
     } else {
       // use a flag so the categories will be refreshed upon clicking 'back' from the category page
-      this.router.navigate(['/content/categories/category', event.category.id],
+      this.router.navigate(['/content/categories/category', categoryId],
         {queryParams: {reloadCategoriesListOnNavigateOut: true}});
     }
   }

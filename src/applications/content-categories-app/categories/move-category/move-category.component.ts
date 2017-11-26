@@ -27,6 +27,21 @@ export class MoveCategoryComponent implements OnInit {
 
   ngOnInit() {
     if (!this.selectedCategories || !this.selectedCategories.length) {
+      this._blockerMessage = new AreaBlockerMessage(
+        {
+          message: this._appLocalization.get('applications.content.moveCategory.errors.unableToMove'),
+          buttons: [
+            {
+              label: this._appLocalization.get('app.common.cancel'),
+              action: () => {
+                this._blockerMessage = null;
+                if (this.parentPopupWidget) {
+                  this.parentPopupWidget.close();
+                }
+              }
+            }
+          ]
+        });
       console.warn('CategoryParentSelectorComponent: move category was selected without setting category Id to move');
     }
   }
@@ -36,7 +51,9 @@ export class MoveCategoryComponent implements OnInit {
   }
 
   public _apply(): void {
-    const invalidCategory = this.selectedCategories.find((category) => (!this._validateCategoryMove(category, this._selectedParentCategory)))
+    const invalidCategory = this.selectedCategories.find((category) =>
+      (!this._validateCategoryMove(category, this._selectedParentCategory))
+    );
     if (!invalidCategory) {
       this._browserService.confirm(
         {
@@ -52,10 +69,13 @@ export class MoveCategoryComponent implements OnInit {
     }
   }
 
-  private _moveCategory(categoryParent: CategoryData) {
+  private _moveCategory(categoryParentData: CategoryData) {
+    const categoryParent = categoryParentData ?
+      {id: categoryParentData.id, fullIds: categoryParentData.fullIdPath} :
+      {id: 0, fullIds: []};
     this._categoriesService
-      .moveCategory({categories: this.selectedCategories, categoryParent: {id: categoryParent.id, fullIds: categoryParent.fullIdPath}})
-      .subscribe(result => {
+      .moveCategory({categories: this.selectedCategories, categoryParent})
+      .subscribe(() => {
           this._isBusy = false;
           if (this.parentPopupWidget) {
             this.parentPopupWidget.close();
@@ -69,7 +89,7 @@ export class MoveCategoryComponent implements OnInit {
               buttons: [{
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
-                  this._moveCategory(categoryParent);
+                  this._moveCategory(categoryParentData);
                 }
               },
                 {
