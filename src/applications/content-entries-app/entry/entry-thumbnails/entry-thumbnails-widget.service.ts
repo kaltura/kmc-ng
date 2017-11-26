@@ -4,11 +4,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 
-import { ThumbAssetListAction } from 'kaltura-typescript-client/types/ThumbAssetListAction';
 import { ThumbAssetSetAsDefaultAction } from 'kaltura-typescript-client/types/ThumbAssetSetAsDefaultAction';
-import { KalturaThumbAssetListResponse } from 'kaltura-typescript-client/types/KalturaThumbAssetListResponse';
+import { ThumbAssetGetByEntryIdAction } from 'kaltura-typescript-client/types/ThumbAssetGetByEntryIdAction';
 import { KalturaThumbAsset } from 'kaltura-typescript-client/types/KalturaThumbAsset';
-import { KalturaAssetFilter } from 'kaltura-typescript-client/types/KalturaAssetFilter';
 import { DistributionProfileListAction } from 'kaltura-typescript-client/types/DistributionProfileListAction';
 import { KalturaDistributionProfileListResponse } from 'kaltura-typescript-client/types/KalturaDistributionProfileListResponse';
 import { KalturaDistributionProfile } from 'kaltura-typescript-client/types/KalturaDistributionProfile';
@@ -69,13 +67,9 @@ export class EntryThumbnailsWidget extends EntryWidget
 
 	    this._thumbnails.next({items : []});
 
-	    const getThumbnails$ = this._kalturaServerClient.request(new ThumbAssetListAction(
+	    const getThumbnails$ = this._kalturaServerClient.request(new ThumbAssetGetByEntryIdAction(
 		    {
-			    filter: new KalturaAssetFilter(
-				    {
-					    entryIdEqual : this.data.id
-				    }
-			    )
+			    entryId : this.data.id
 		    }))
 		    .monitor('get thumbnails');
 
@@ -94,7 +88,7 @@ export class EntryThumbnailsWidget extends EntryWidget
 			    return Observable.throw(error);
 		    })
 		    .do(responses => {
-			    const thumbnails = (responses[0] as KalturaThumbAssetListResponse).objects || [];
+			    const thumbnails = responses[0] || [];
 			    this._distributionProfiles = (responses[1] as KalturaDistributionProfileListResponse).objects || [];
 			    this.buildThumbnailsData(thumbnails);
 			    super._hideLoader();
@@ -152,14 +146,15 @@ export class EntryThumbnailsWidget extends EntryWidget
     private reloadThumbnails(){
 	    super._showLoader();
 	    const thumbs = Array.from(this._thumbnails.getValue().items);
-	    this._kalturaServerClient.request(new ThumbAssetListAction({ filter: new KalturaAssetFilter({
-			entryIdEqual : this.data.id
-		})}))
+	    this._kalturaServerClient.request(new ThumbAssetGetByEntryIdAction(
+	    {
+		    entryId : this.data.id
+	    }))
 	    .cancelOnDestroy(this,this.widgetReset$)
 	    .monitor('reload thumbnails')
 	    .subscribe(
 			    (responses) => {
-				    const thumbnails = (responses as KalturaThumbAssetListResponse).objects || [];
+				    const thumbnails = responses || [];
 				    this.buildThumbnailsData(thumbnails);
 				    super._hideLoader();
 			    },
