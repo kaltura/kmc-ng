@@ -134,14 +134,6 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    const scrollBody = this.dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
-    if (scrollBody && scrollBody.length > 0) {
-      scrollBody[0].onscroll = () => {
-        if (this.actionsMenu) {
-          this.actionsMenu.hide();
-        }
-      }
-    }
     if (this._deferredLoading) {
       // use timeout to allow the DOM to render before setting the data to the datagrid.
       // This prevents the screen from hanging during datagrid rendering of the data.
@@ -212,14 +204,6 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   public _getColumnStyle({ width = 'auto', align = 'left' } = {}): { 'width': string, 'text-align': string } {
     return { 'width': width, 'text-align': align };
-  }
-
-  public scrollToTop() {
-    const scrollBodyArr = this.dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
-    if (scrollBodyArr && scrollBodyArr.length > 0) {
-      const scrollBody: HTMLDivElement = scrollBodyArr[0];
-      scrollBody.scrollTop = 0;
-    }
   }
 }
 

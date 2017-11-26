@@ -164,6 +164,7 @@
         "wrongType": "Select media type",
         "missingTranscodingProfile": "Select transcoding profile",
         "fileSizeExceeded": "File size exceeded",
+        "fileSizeExceededFor": "File size exceeded for:",
         "fileNameRequired": "File name is required"
       },
       "uploadMenu": {
@@ -408,20 +409,17 @@
         "refine": "Refine",
         "refresh": "Refresh",
         "deleteEntry": "Delete Entry",
-        "deleteEntries": "Delete Entr{{0}}",
         "confirmDelete": "Are you sure you want to delete the selected entry?",
-        "confirmDeleteEntries": "Are you sure you want to delete the selected entr{{0}}?",
         "confirmDeleteSingle": "Are you sure you want to delete the selected entry? \n {{0}} \n Please note: the entry will be permanently deleted from your account.",
         "confirmDeleteMultiple": "Are you sure you want to delete the selected entries? \n {{0}} \n Please note: these entries will be permanently deleted from your account.",
         "deleted": "Entry deleted successfully",
         "entryId": "Entry ID: {{0}}",
-        "deleteNote": "Please note: the entry will be permanently deleted from your account.",
-        "deleteEntriesNote": "Please note: {{0}} entr{{1}} will be permanently deleted from your playlist."
+        "deleteNote": "Please note: the entry will be permanently deleted from your account."
       },
       "playlists": {
         "playlists": "Playlist's",
-        "entries": "Entries",
-        "selected": "Selected",
+        "entries": "{{0}} Entries",
+        "selected": "{{0}} Selected",
         "bulkActions": "Bulk Actions",
         "remove": "Remove",
         "cancel": "Cancel",
@@ -433,9 +431,16 @@
         "searchEntries": "Search Playlists",
         "addPlaylist": "Add Playlist",
         "addEntry": "Add Entry",
-        "addToPlaylist": "Add to Playlist",
+        "addToPlaylist": "Add",
         "refresh": "Refresh",
-        "deleteNote": "Please note: {{0}} playlist{{1}} will be permanently deleted from your account."
+        "deleteNote": "Please note: {{0}} playlist{{1}} will be permanently deleted from your account.",
+        "notSupportedMsg": "A rule based playlist is currently not supported",
+        "deleteEntry": "Delete Entry",
+        "deleteEntries": "Delete Entries",
+        "deleteEntryNote": "Please note: this entry will be permanently deleted from your playlist.",
+        "deleteEntriesNote": "Please note: those entries will be permanently deleted from your playlist.",
+        "confirmDeleteEntry": "Are you sure you want to delete the selected entry?",
+        "confirmDeleteEntries": "Are you sure you want to delete the selected entries?"
       },
       "filters": {
         "activeFilters": "Active Filters:",
@@ -455,7 +460,7 @@
         "duration": "Duration: {{0}}",
         "replacementStatuses": "Replacement Statuses: {{0}}",
         "moderation": "Moderation: {{0}}",
-        "originalClipped": "Original Clipped: {{0}}",
+        "originalClipped": "Original & Clipped: {{0}}",
         "scheduling": "Scheduling: {{0}}",
         "accessControl": "Access Control: {{0}}",
         "flavor": "Flavor: {{0}}",
@@ -654,7 +659,7 @@
         "updated": "Entries updated successfully",
         "note": "Update Note",
         "confirm": "Are you sure you want to update {{0}} entries? It could take a while...",
-        "confirmPlaylsts": "Are you sure you want to update {{0}} playlists? It could take a while...",
+        "confirmPlaylists": "Are you sure you want to update {{0}} playlists? It could take a while...",
         "deleteEntries": "Delete Entries",
         "deleteConfirm": "Are you sure you want to delete the selected entries?",
         "deleteNote": "Please note: the selected entries will be permanently deleted from your account.",
@@ -877,7 +882,8 @@
           "discard": "Discard all changes?",
           "uploadError": "Upload Error",
           "remove": "Remove",
-          "noLabel": "Since no label was provided, the caption language will be used in the player captions menu"
+          "noLabel": "Since no label was provided, the caption language will be used in the player captions menu",
+          "pending": "Pending"
         },
         "live": {
           "live": "Live Stream",
@@ -940,7 +946,8 @@
           "done": "Done",
           "cancel": "Cancel",
           "uploadError": "Upload Error",
-          "remove": "Remove"
+          "remove": "Remove",
+          "pending": "Pending"
         },
         "clips": {
           "clips": "Clips",
@@ -975,6 +982,7 @@
           "busyError": "An operation is still in progress. Please try again in a while.",
           "savePrepareError": "An error occurred while preparing to save. Please try again.",
           "thumbnailsError": "Error reloading thumbnails",
+          "thumbnailsUploadError": "Error uploading thumbnail.",
           "entriesLoadError": "Error loading entries",
           "categoriesLoadError": "Error loading categories",
           "flavorsLoadError": "Error loading flavors",
@@ -1051,7 +1059,7 @@
           "creationDate": "Creation date:",
           "updatedAt": "Updated at:",
           "type": "Type:",
-          "duration": "Duration:",
+          "duration": "Duration: {{0}}",
           "moderation": "Moderation:",
           "plays": "Plays:",
           "numberOfEntries": "Number of Entries:"
@@ -1063,14 +1071,20 @@
           "nameIsMandatory": "You must enter a playlist name"
         },
         "errors": {
-          "retry": "Retry",
+          "reload": "Reload",
           "dismiss": "Dismiss",
+          "retry": "Retry",
+          "saveError": "An error occurred while saving.",
+          "busyError": "An operation is still in progress. Please try again in a while.",
+          "savePrepareError": "An error occurred while preparing to save. Please try again.",
           "ok": "Ok",
           "backToPlaylists": "Back To Playlists",
           "playlistTypeNotSupported": "playlist type not supported",
           "validationError": "The form contains some invalid information. Please review the sections marked as invalid",
           "contentValidationError": "Add at least one entry",
-          "loadError": "An error occurred while loading data"
+          "loadError": "An error occurred while loading data",
+          "addAtLeastOneMedia": "Add at least one media",
+          "entriesLoadError": "Error loading entries"
         }
       }
     },

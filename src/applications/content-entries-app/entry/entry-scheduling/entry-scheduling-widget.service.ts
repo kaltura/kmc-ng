@@ -164,7 +164,7 @@ export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
 		this.schedulingForm.updateValueAndValidity();
 	}
 
-	protected onValidate() : Observable<{ isValid : boolean}>
+	protected onValidate(wasActivated: boolean) : Observable<{ isValid : boolean}>
 	{
 		return Observable.create(observer =>
 		{
