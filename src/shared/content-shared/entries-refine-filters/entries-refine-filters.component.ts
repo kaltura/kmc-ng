@@ -320,7 +320,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
           }
       });
 
-      if (updateResult.createdAt.failed) {
+      if (updateResult.createdAt && updateResult.createdAt.failed) {
           this._createdFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
 
           setTimeout(() => {
