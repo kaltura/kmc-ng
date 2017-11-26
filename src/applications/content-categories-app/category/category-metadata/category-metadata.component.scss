@@ -5,9 +5,8 @@ hr{
 }
 .jumpTo{
 	position: absolute;
-	right: 130px;
+	right: 0px;
 	button{
-		position: fixed;
 		font-weight: 400;
 		height: 34px;
 		width: 110px;
@@ -60,9 +59,26 @@ hr{
 			.kControl, k-prime-control
 			{
 				width:100%;
+                .kHasError {
+                  border: 1px solid $kDandger;
+                  background: initial;
+                }
 			}
 
 		}
+
+        .kNameRow{
+          height: 40px;
+          padding-top: 10px;
+
+          .kControl {
+            height: 40px;
+
+            .error {
+              padding-top: 3px;
+            }
+          }
+        }
 
 
 		/*******************/

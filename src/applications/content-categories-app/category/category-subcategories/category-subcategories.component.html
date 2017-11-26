@@ -1,3 +1,27 @@
-<p>
-  category-subcategories works!
-</p>
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader"
+                [message]="_widgetService.sectionBlockerMessage">
+  <div class="kSubcategoriesHolder">
+    <kSubcategoriesListBulkOperationsContent
+      [itemsTotalCount]="_subcategoriesCount"
+      (deleteItems)="_deleteSelected($event)"
+      (clearSelection)="_clearSelection()"
+      (moveItems)="_widgetService.moveSubcategories($event)"
+      [selectedItems]="_selectedSubcategories"
+      (addItem)="addNewSubcategory.open()">
+    </kSubcategoriesListBulkOperationsContent>
+
+    <kCategorySubcategoriesTable
+      class="kSubcategoriesTable"
+      [(selectedSubcategories)]="_selectedSubcategories"
+      [subcategories]="_subcategories"
+      (onActionSelected)="_onActionSelected($event)">
+    </kCategorySubcategoriesTable>
+  </div>
+</k-area-blocker>
+
+
+<kPopupWidget #addNewSubcategory [popupWidth]="586" [popupHeight]="260" [modal]="true" [preventPageScroll]="true">
+  <ng-template>
+    <kNewSubcategory [categoryParentId]="_widgetService.data?.id" (onApply)="_widgetService.refresh()" [parentPopupWidget]="addNewSubcategory"></kNewSubcategory>
+  </ng-template>
+</kPopupWidget>

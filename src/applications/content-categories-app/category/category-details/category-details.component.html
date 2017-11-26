@@ -1,0 +1,10 @@
+<k-details-bar #detailsBar [data]="_currentCategory">
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.id' | translate" [valueField]="'id'"></kDetailInfo>
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.subCategories' | translate" [valueField]="'directSubCategoriesCount'"></kDetailInfo>
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.entries' | translate" [valueField]="'entriesCount'"></kDetailInfo>
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.creationDate' | translate" [valueField]="'createdAt'"
+               [value]="_currentCategory?.createdAt | kDate:'MM/DD/YYYY'" [tooltip]="_currentCategory?.createdAt | kDate"></kDetailInfo>
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.lastUpdate' | translate"
+               [value]="_currentCategory?.updatedAt | kDate:'MM/DD/YYYY'" [tooltip]="_currentCategory?.updatedAt | kDate"></kDetailInfo>
+  <kDetailInfo [label]="'applications.content.categoryDetails.headerProps.createdBy' | translate" [valueField]="'owner'"></kDetailInfo>
+</k-details-bar>

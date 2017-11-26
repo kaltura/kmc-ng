@@ -13,6 +13,12 @@ import {KalturaClient} from '@kaltura-ng/kaltura-client';
 import {KalturaCategoryListResponse} from 'kaltura-typescript-client/types/KalturaCategoryListResponse';
 import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 import {CategoryDeleteAction} from 'kaltura-typescript-client/types/CategoryDeleteAction';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {CategoryAddAction} from 'kaltura-typescript-client/types/CategoryAddAction';
+import {KalturaPrivacyType} from 'kaltura-typescript-client/types/KalturaPrivacyType';
+import {KalturaAppearInListType} from "kaltura-typescript-client/types/KalturaAppearInListType";
+import {KalturaContributionPolicyType} from "kaltura-typescript-client/types/KalturaContributionPolicyType";
+import {KalturaInheritanceType} from "kaltura-typescript-client/types/KalturaInheritanceType";
 
 export interface UpdateStatus {
     loading: boolean;
@@ -38,7 +44,8 @@ export interface QueryData {
 }
 
 export interface NewCategoryData {
-    parentCategoryId: number;
+  categoryParentId?: number;
+  name: string;
 }
 
 @Injectable()
@@ -60,15 +67,15 @@ export class CategoriesService implements OnDestroy {
     public queryData$ = this._queryData.asObservable();
     private _newCategoryData: NewCategoryData = null;
 
-    constructor(private _kalturaClient: KalturaClient,
-        private browserService: BrowserService) {
+  constructor(private _kalturaClient: KalturaClient,
+              private browserService: BrowserService,
+              private _appLocalization: AppLocalization) {
         const defaultPageSize = this.browserService.getFromLocalStorage('categories.list.pageSize');
         if (defaultPageSize !== null) {
             this._updateQueryData({
                 pageSize: defaultPageSize
             });
         }
-        this.reload(false);
     }
 
     ngOnDestroy() {
@@ -101,6 +108,11 @@ export class CategoriesService implements OnDestroy {
         if (partialData.pageSize) {
             this.browserService.setInLocalStorage('categories.list.pageSize', partialData.pageSize);
         }
+    }
+
+    public get categories(): KalturaCategory[]
+    {
+      return this._categories.getValue().items;
     }
 
     public getNextCategoryId(categoryId: number): number | null {
@@ -147,6 +159,7 @@ export class CategoriesService implements OnDestroy {
         // cancel previous requests
         if (this._categoriesExecuteSubscription) {
             this._categoriesExecuteSubscription.unsubscribe();
+          this._categoriesExecuteSubscription = null
         }
 
         this.browserService.scrollToTop();
@@ -154,7 +167,10 @@ export class CategoriesService implements OnDestroy {
         this._state.next({ loading: true, errorMessage: null });
 
         // execute the request
-        this._categoriesExecuteSubscription = this.buildQueryRequest(this._queryData.getValue()).subscribe(
+        this._categoriesExecuteSubscription = this.buildQueryRequest(this._queryData.getValue())
+        // TODO: [kmcng] When developing filters - using async scheduler go allow calling this function multiple times in the same event loop cycle before invoking the logic.
+          .monitor('playlists store: get playlists()')
+          .subscribe(
             response => {
                 this._categoriesExecuteSubscription = null;
 
@@ -246,5 +262,31 @@ export class CategoriesService implements OnDestroy {
     public clearNewCategoryData(): void {
         this._newCategoryData = null
     }
+
+  /**
+   * Move category to be existed under new parent
+   * @param moveCategoryData {MoveCategoryData} holds categoryToMoveId and selectedCategoryParent (if null - move to root)
+   * @return {Observable<KalturaCategory>}
+   */
+  public addNewCategory(newCategoryData: NewCategoryData): Observable<KalturaCategory> {
+    if (!newCategoryData || !newCategoryData.name) {
+      const nameRequiredErrorMessage = this._appLocalization.get('applications.content.addNewCategory.errors.requiredName');
+      return Observable.throw(new Error(nameRequiredErrorMessage));
+    }
+    const category = new KalturaCategory({
+      name: newCategoryData.name,
+      parentId: newCategoryData.categoryParentId || 0,
+      privacy: KalturaPrivacyType.all,
+      appearInList: KalturaAppearInListType.partnerOnly,
+      contributionPolicy: KalturaContributionPolicyType.all,
+      inheritanceType: KalturaInheritanceType.manual
+    });
+
+    return <any>this._kalturaClient.request(
+      new CategoryAddAction({
+        category
+      })
+    )
+  }
 }
 
