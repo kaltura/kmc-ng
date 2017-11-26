@@ -288,7 +288,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
         this._categoryMetadata = [];
     }
 
-    onValidate(): Observable<{ isValid: boolean }> {
+    onValidate(wasActivated: boolean): Observable<{ isValid: boolean }> {
         return Observable.create(observer => {
             this.metadataForm.updateValueAndValidity();
             const isValid = this.metadataForm.valid;

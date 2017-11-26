@@ -11,7 +11,7 @@ import {
   InputTextModule,
   MenuModule,
   PaginatorModule,
-  RadioButtonModule,
+  RadioButtonModule, TieredMenuModule,
   TreeModule
 } from 'primeng/primeng';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -35,6 +35,7 @@ import {EntriesTableComponent} from 'app-shared/content-shared/entries-table/ent
 import {EntriesListComponent} from 'app-shared/content-shared/entries-list/entries-list.component';
 import {TagsModule} from '@kaltura-ng/kaltura-ui/tags';
 import {PrimeTableSortTransformPipe} from 'app-shared/content-shared/pipes/prime-table-sort-transform.pipe';
+import {EntriesSelectorComponent} from 'app-shared/content-shared/entries-selector/entries-selector.component';
 
 @NgModule({
   imports: [
@@ -58,6 +59,7 @@ import {PrimeTableSortTransformPipe} from 'app-shared/content-shared/pipes/prime
     MenuModule,
     TagsModule,
     PaginatorModule,
+    TieredMenuModule,
     InputTextModule,
     StickyModule
   ],
@@ -75,6 +77,7 @@ import {PrimeTableSortTransformPipe} from 'app-shared/content-shared/pipes/prime
     CategoriesFilterComponent,
     EntriesTableComponent,
     EntriesListComponent,
+    EntriesSelectorComponent
   ],
   exports: [
     EntryStatusPipe,
@@ -91,6 +94,7 @@ import {PrimeTableSortTransformPipe} from 'app-shared/content-shared/pipes/prime
     CategoriesFilterComponent,
     EntriesTableComponent,
     EntriesListComponent,
+    EntriesSelectorComponent
   ],
   providers: [
     CategoriesSearchService,

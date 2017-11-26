@@ -1,36 +1,42 @@
-<div class="kMetadataWrap">
-  <div class="kMetadataDetails">
-    <span class="kSchemaTitle">{{'applications.content.playlistDetails.sections.metadata' | translate}}</span>
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+  <div class="kMetadataWrap">
+    <div class="kMetadataDetails">
+      <span class="kSchemaTitle">{{'applications.content.playlistDetails.sections.metadata' | translate}}</span>
 
-    <form [formGroup]="metadataForm" novalidate>
-      <div class="kRow kValign">
-        <span class="kLabel" [ngClass]="{'extraPadding': metadataForm.invalid}">{{'applications.content.playlistDetails.metadata.playlistName' | translate}}</span>
-        <div class="kControl">
-          <input formControlName="name" type="text" pInputText #metadataNameInput />
-          <div [ngClass]="{'invalid': metadataForm.invalid, 'hidden': metadataForm.valid}">{{'applications.content.playlistDetails.metadata.nameIsMandatory' | translate}}</div>
+      <form [formGroup]="_widgetService.metadataForm" novalidate>
+        <div class="kRow kValign">
+        <span class="kLabel" [ngClass]="{'extraPadding': _widgetService.metadataForm.invalid}">
+          {{'applications.content.playlistDetails.metadata.playlistName' | translate}}
+        </span>
+          <div class="kControl">
+            <input formControlName="name" type="text" pInputText #metadataNameInput/>
+            <div [ngClass]="{'invalid': _widgetService.metadataForm.invalid, 'hidden': _widgetService.metadataForm.valid}">
+              {{'applications.content.playlistDetails.metadata.nameIsMandatory' | translate}}
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="kRow">
-        <span class="kLabel">{{'applications.content.playlistDetails.metadata.description' | translate}}</span>
-        <div class="kControl">
-          <textarea formControlName="description" pInputTextarea class="threeRows"></textarea>
+        <div class="kRow">
+          <span class="kLabel">{{'applications.content.playlistDetails.metadata.description' | translate}}</span>
+          <div class="kControl">
+            <textarea formControlName="description" pInputTextarea class="threeRows"></textarea>
+          </div>
         </div>
-      </div>
-      <div class="kRow kValign">
-        <span class="kLabel">{{'applications.content.playlistDetails.metadata.tags' | translate}}</span>
-        <div class="kControl">
-          <kAutoComplete
-            formControlName="tags"
-            suggestionItemField="item"
-            suggestionSelectableField="isSelectable"
-            [multiple]="true"
-            [limitToSuggestions]="false"
-            [minLength]="3"
-            [suggestionsProvider]="_tagsProvider"
-            (completeMethod)="_searchTags($event)">
-          </kAutoComplete>
+        <div class="kRow kValign">
+          <span class="kLabel">{{'applications.content.playlistDetails.metadata.tags' | translate}}</span>
+          <div class="kControl">
+            <kAutoComplete
+              formControlName="tags"
+              suggestionItemField="item"
+              suggestionSelectableField="isSelectable"
+              [multiple]="true"
+              [limitToSuggestions]="false"
+              [minLength]="3"
+              [suggestionsProvider]="_tagsProvider"
+              (completeMethod)="_searchTags($event)">
+            </kAutoComplete>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
-</div>
+</k-area-blocker>
