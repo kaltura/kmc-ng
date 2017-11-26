@@ -75,7 +75,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 		}
 	}
 
-	protected onValidate(): Observable<{ isValid: boolean}> {
+	protected onValidate(wasActivated: boolean): Observable<{ isValid: boolean}> {
 		return Observable.create(observer => {
 			const isValid = this._liveType === "universal" ? this._validateBitrates({updateDirtyMode: false}) : true;
 			observer.next({isValid});

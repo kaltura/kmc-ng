@@ -66,11 +66,11 @@ export class CategoryService implements OnDestroy {
 		private _router: Router,
 		private _browserService: BrowserService,
 		private _categoriesStore: CategoriesService,
-		@Host() private _sectionsManager: CategoryWidgetsManager,
+		@Host() private _widgetsManager: CategoryWidgetsManager,
 		private _categoryRoute: ActivatedRoute,
 		private _appLocalization: AppLocalization) {
 
-		this._sectionsManager.categoryStore = this;
+		this._widgetsManager.categoryStore = this;
 
 		this._mapSections();
 
@@ -79,7 +79,7 @@ export class CategoryService implements OnDestroy {
 	}
 
 	private _onSectionsStateChanges() {
-		this._sectionsManager.widgetsState$
+		this._widgetsManager.widgetsState$
 			.cancelOnDestroy(this)
 			.debounce(() => Observable.timer(500))
 			.subscribe(
@@ -170,9 +170,10 @@ export class CategoryService implements OnDestroy {
 			})
 		);
 
-		this._sectionsManager.notifyDataSaving(newCategory, request, this.category)
+		this._widgetsManager.notifyDataSaving(newCategory, request, this.category)
 			.cancelOnDestroy(this)
 			.monitor('category store: prepare category for save')
+      .tag('block-shell')
 			.flatMap(
 			(response) => {
 				if (response.ready) {
@@ -249,7 +250,7 @@ export class CategoryService implements OnDestroy {
 		this._updatePageExitVerification();
 
 		this._state.next({ action: ActionTypes.CategoryLoading });
-		this._sectionsManager.notifyDataLoading(categoryId);
+		this._widgetsManager.notifyDataLoading(categoryId);
 
 		this._loadCategorySubscription = this._getCategory(categoryId)
 			.cancelOnDestroy(this)
@@ -259,7 +260,7 @@ export class CategoryService implements OnDestroy {
 				this._category.next(response);
 				this._categoryId = response.id;
 
-				const dataLoadedResult = this._sectionsManager.notifyDataLoaded(response, { isNewData: false });
+				const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
 
 				if (dataLoadedResult.errors.length) {
 					this._state.next({
