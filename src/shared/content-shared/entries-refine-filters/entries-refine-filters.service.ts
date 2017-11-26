@@ -97,21 +97,21 @@ export class EntriesRefineFiltersService {
         (responses) => {
           this.executeQuerySubscription = null;
           if (responses[1].hasErrors()) {
-            this._groups.next({ groups: [] });
+            this._groups.next([]);
             this._status.next({ loading: false, errorMessage: 'failed to load refine filters' });
 
           } else {
             const metadataData = this._buildMetadataFiltersGroups(responses[0].items);
             const defaultFilterGroup = this._buildDefaultFiltersGroup(responses[1], responses[2].items);
 
-            this._groups.next({ groups: [defaultFilterGroup, ...metadataData.groups] });
+            this._groups.next([defaultFilterGroup, ...metadataData.groups] );
             this._status.next({ loading: false, errorMessage: null });
           }
         },
         (error) => {
           this.executeQuerySubscription = null;
 
-          this._groups.next({ groups: [] });
+          this._groups.next([]);
           const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
           this._status.next({ loading: false, errorMessage });
         }
@@ -132,7 +132,7 @@ export class EntriesRefineFiltersService {
 
       // if found relevant lists, create a group for that profile
       if (profileLists && profileLists.length > 0) {
-        const filterGroup = { label: metadataProfile.name, filters: [] };
+        const filterGroup = { label: metadataProfile.name, lists: [] };
         result.groups.push(filterGroup);
 
 

@@ -94,41 +94,56 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
                         this._createdAfter = changes.createdAt.currentValue ? changes.createdAt.currentValue.fromDate : null;
                         this._createdBefore = changes.createdAt.currentValue ? changes.createdAt.currentValue.toDate : null;
                     }
-                    // TODO sakal split to smaller functions
-                    if (typeof changes.mediaTypes !== 'undefined') {
-                        // TODO sakal
-                        const treeData = this._filtersGroupListMapping['Media Types'];
-                        const currentValue = this._store.getFilterData('mediaTypes');
 
-                        // TODO remove <any>
-                        const diff = this._store.getDiff(treeData.selections, 'data', currentValue, 'value');
+                    Object.keys(this._filtersGroupListMapping).forEach(listName => {
+                        const groupListData = this._filtersGroupListMapping[listName];
+                        const listFilteredItems = changes[listName];
 
-                        diff.added.forEach(addedItem => {
-                            // TODO remove <any>
-                            const matchingItem = treeData.items.find(item => item.data === (<any>addedItem).value);
-                            treeData.selections.push(matchingItem);
-                        });
+                        if (typeof listFilteredItems !== 'undefined') {
+                            const diff = this._store.getDiff(groupListData.selections, 'data', listFilteredItems.currentValue, 'value');
 
-                        diff.deleted.forEach(removedItem => {
-                            treeData.selections.splice(
-                                treeData.selections.indexOf(removedItem),
-                                1
-                            );
-                        });
-                    }
+                            diff.added.forEach(addedItem => {
+                                const matchingItem = groupListData.items.find(item => item.data === (<any>addedItem).value);
+                                groupListData.selections.push(matchingItem);
+                            });
+
+                            diff.deleted.forEach(removedItem => {
+                                groupListData.selections.splice(
+                                    groupListData.selections.indexOf(removedItem),
+                                    1
+                                );
+                            });
+                        }
+                    });
                 }
             );
     }
 
-    private _restoreFiltersState(): void{
+    private _restoreFiltersState(): void {
         const createdAt = this._store.getFilterData('createdAt');
         if (createdAt) {
             this._createdAfter = createdAt.fromDate;
             this._createdBefore = createdAt.toDate;
         }
 
-        // TODO sakal get filter data of mediatypes
+        Object.keys(this._filtersGroupListMapping).forEach(listName => {
+            const groupListData = this._filtersGroupListMapping[listName];
 
+            if (groupListData.items && groupListData.items.length) {
+                const listItems = groupListData.items[0].children;
+
+                // developer notice: since we get the list name dynamically we must cast 'filterName' to 'any'
+                const filteredItems = this._store.getFilterData(<any>listName) || [];
+                groupListData.selections = groupListData.selections || []; // makes sure selection array exists
+                filteredItems.forEach(filteredItem => {
+                    const listItem = listItems.find(listDataItem => listDataItem.data === filteredItem.value);
+                    if (listItem) {
+                        groupListData.selections.push(listItem);
+                    }
+
+                });
+            }
+        });
     }
 
     private _registerToRefineFiltersService(): void {
@@ -286,7 +301,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
     const handledFilterTypeList = [];
     Object.keys(this._filtersGroupListMapping).forEach(filterName => {
-      const treeData = this._filtersGroupListMapping[filterName];
+      const groupListData = this._filtersGroupListMapping[filterName];
 
       // TODO sakal
       // if (handledFilterTypeList.indexOf(treeData.refineFilter.entriesFilterType) === -1) {
@@ -349,40 +364,36 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   }
 
   public _onTreeNodeSelect({ node }: { node: PrimeTreeNode }, treeSection: FiltersGroupList) {
-    if (node instanceof PrimeTreeNode && node.payload.filterName) {
-      const treeData = this._filtersGroupListMapping[node.payload.filterName];
+      const filterName = node instanceof PrimeTreeNode && node.payload ? node.payload.filterName : null;
+      if (filterName) {
+          const groupListData = this._filtersGroupListMapping[filterName];
 
-      if (treeData) {
-        // TODO sakal
-          switch (node.payload.filterName)
-          {
-              case "Media Types":
-                  const newValue = this._store.getFilterData('mediaTypes') || [];
-                if (!newValue.find(item => item.value === node.data)) {
-                    newValue.push({value: node.data + '', label: node.label});
-                    this._store.update({ mediaTypes: newValue});
-                }
-                break;
+          if (groupListData) {
+
+              const selectedNodes = ((node.children && node.children.length > 0) ? node.children : [node]);
+              const newValue = this._store.getFilterData(filterName) || [];
+              selectedNodes
+                  .filter(selectedNode => selectedNode.data !== null && typeof selectedNode.data !== 'undefined')
+                  .forEach(selectedNode => {
+                      if (!newValue.find(item => item.value === selectedNode.data)) {
+                          newValue.push({value: selectedNode.data + '', label: selectedNode.label});
+                      }
+                  });
+              this._store.update({[filterName]: newValue});
           }
       }
-    }
   }
 
   public _onTreeNodeUnselect({ node }: { node: PrimeTreeNode }, treeSection: FiltersGroupList) {
       if (node instanceof PrimeTreeNode && node.payload.filterName) {
-          const treeData = this._filtersGroupListMapping[node.payload.filterName];
+          const groupListData = this._filtersGroupListMapping[node.payload.filterName];
 
-          if (treeData) {
-              // TODO sakal
-              switch (node.payload.filterName) {
-                  case "Media Types":
-                      const newValue = this._store.getFilterData('mediaTypes') || [];
-                      const itemIndex = newValue.findIndex(item => item.value === node.data);
-                      if (itemIndex > -1) {
-                          newValue.splice(itemIndex, 1);
-                          this._store.update({mediaTypes: newValue});
-                      }
-                      break;
+          if (groupListData) {
+              const newValue = this._store.getFilterData(node.payload.filterName) || [];
+              const itemIndex = newValue.findIndex(item => item.value === node.data);
+              if (itemIndex > -1) {
+                  newValue.splice(itemIndex, 1);
+                  this._store.update({ [node.payload.filterName]: newValue});
               }
           }
       }
