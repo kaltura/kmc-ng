@@ -87,7 +87,6 @@ import {EntriesSelectorComponent} from 'app-shared/content-shared/entries-select
     SchedulingComponent,
     EntriesListComponent,
     EntryDurationPipe,
-    MaxEntriesPipe,
     PrimeTableSortDirectionPipe,
     EntriesRefineFiltersComponent,
     CategoriesFilterPrefsComponent,
