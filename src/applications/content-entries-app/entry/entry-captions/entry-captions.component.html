@@ -36,7 +36,7 @@
 							<span>{{caption.progress && caption.progress !== '0' ? caption.progress + '%' : 'applications.content.entryDetails.captions.pending' | translate}}</span>
 						</div>
 						<div *ngIf="caption.uploadFailure">
-							<a (click)="_widgetService.removeCaption()">{{'applications.content.entryDetails.captions.remove' | translate}}</a>
+							<a (click)="_widgetService.removeCaption(caption.id)">{{'applications.content.entryDetails.captions.remove' | translate}}</a>
 						</div>
 					</ng-template>
 				</p-column>
