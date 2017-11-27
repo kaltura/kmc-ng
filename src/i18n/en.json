@@ -127,7 +127,8 @@
     },
     "changelog": {
       "header": "Change Log"
-    }
+    },
+    "pageExitVerificationMessage": "Are you sure you want to leave this page?"
   },
   "applications": {
     "entries": {

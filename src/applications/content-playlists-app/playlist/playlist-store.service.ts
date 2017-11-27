@@ -15,6 +15,7 @@ import { KalturaPlaylistType } from 'kaltura-typescript-client/types/KalturaPlay
 import { PlaylistAddAction } from 'kaltura-typescript-client/types/PlaylistAddAction';
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
+import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 
 export enum ActionTypes {
   PlaylistLoading,
@@ -41,6 +42,7 @@ export class PlaylistStore implements OnDestroy {
   private _savePlaylistInvoked = false;
   private _playlistId: string;
   private _playlist = new BehaviorSubject<{ playlist: KalturaPlaylist }>({ playlist: null });
+  private _pageExitVerificationToken: string;
 
   public state$ = this._state.asObservable();
 
@@ -66,6 +68,7 @@ export class PlaylistStore implements OnDestroy {
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               private _playlistsStore: PlaylistsStore,
+              private _pageExitVerificationService: PageExitVerificationService,
               @Host() private _widgetsManager: PlaylistWidgetsManager) {
     this._widgetsManager.playlistStore = this;
     this._mapSections();
@@ -77,7 +80,7 @@ export class PlaylistStore implements OnDestroy {
     this._playlist.complete();
     this._state.complete();
 
-    this._browserService.disablePageExitVerification();
+    this._pageExitVerificationService.disablePageExitVerification(this._pageExitVerificationToken);
 
     if (this._loadPlaylistSubscription) {
       this._loadPlaylistSubscription.unsubscribe();
@@ -108,9 +111,10 @@ export class PlaylistStore implements OnDestroy {
 
   private _updatePageExitVerification(): void {
     if (this._playlistIsDirty) {
-      this._browserService.enablePageExitVerification();
+      this._pageExitVerificationToken = this._pageExitVerificationService.enablePageExitVerification();
     } else {
-      this._browserService.disablePageExitVerification();
+      this._pageExitVerificationService.disablePageExitVerification(this._pageExitVerificationToken);
+      this._pageExitVerificationToken = null;
     }
   }
 

@@ -74,6 +74,7 @@ import { ChangeAccountComponent } from './components/changeAccount/change-accoun
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
 import { AppEventsModule } from 'app-shared/kmc-shared';
+import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -162,7 +163,8 @@ export function clientConfigurationFactory() {
       provide: KalturaClientConfiguration,
       useFactory: clientConfigurationFactory
     },
-    ConfirmationService
+    ConfirmationService,
+    PageExitVerificationService
   ]
 })
 export class AppModule {
