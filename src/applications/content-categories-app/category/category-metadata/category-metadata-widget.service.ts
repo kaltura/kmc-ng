@@ -131,7 +131,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
 
         // validate reference ID
         let referenceId = '';
-        if (!this.data.referenceId &&
+        if (this.data.referenceId &&
             this.data.referenceId !== '' &&
             this.data.referenceId !== '__null_string__') {
             referenceId = this.data.referenceId;

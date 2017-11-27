@@ -1,6 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 import {CategoryDetailsWidget} from './category-details-widget.service';
+import {ActionTypes, CategoryService} from '../category.service';
 
 @Component({
   selector: 'kCategoryDetails',
@@ -10,17 +11,29 @@ import {CategoryDetailsWidget} from './category-details-widget.service';
 export class CategoryDetailsComponent implements OnInit, OnDestroy {
   public _currentCategory: KalturaCategory;
 
-  constructor(public _widgetService: CategoryDetailsWidget) {
+  constructor(private _categoryStore: CategoryService,
+              public _widgetService: CategoryDetailsWidget) {
   }
 
   ngOnInit() {
-
-    this._widgetService.attachForm();
-    this._widgetService.data$
+    this._categoryStore.state$
       .cancelOnDestroy(this)
-      .filter(Boolean)
-      .subscribe(data => {
-        this._currentCategory = data;
+      .subscribe(
+      status => {
+
+        if (status) {
+          switch (status.action) {
+            case ActionTypes.CategoryLoaded:
+              this._currentCategory = this._categoryStore.category;
+              break;
+            default:
+              break;
+          }
+        }
+      },
+      error => {
+        // TODO [kmc] navigate to error page
+        throw error;
       });
   }
 
