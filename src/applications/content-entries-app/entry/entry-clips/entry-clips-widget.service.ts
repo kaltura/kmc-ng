@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaBaseEntryFilter } from 'kaltura-typescript-client/types/KalturaBaseEntryFilter';
+import { KalturaMediaEntryFilter } from 'kaltura-typescript-client/types/KalturaMediaEntryFilter';
 import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
 import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
@@ -122,7 +122,7 @@ export class EntryClipsWidget extends EntryWidget implements OnDestroy
 
             // build the request
 	        let requestSubscription = this._kalturaServerClient.request(new BaseEntryListAction({
-                filter: new KalturaBaseEntryFilter(
+                filter: new KalturaMediaEntryFilter(
                     {
                         rootEntryIdEqual : entry.id,
                         orderBy : `${this.sortAsc ? '+' : '-'}${this.sortBy}`
