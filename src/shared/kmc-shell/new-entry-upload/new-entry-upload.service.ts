@@ -2,9 +2,8 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import { TrackedFile, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryUploadFile } from './new-entry-upload-file';
 import { MediaAddAction } from 'kaltura-typescript-client/types/MediaAddAction';
 import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
@@ -14,6 +13,7 @@ import { KalturaAssetsParamsResourceContainers } from 'kaltura-typescript-client
 import { MediaUpdateContentAction } from 'kaltura-typescript-client/types/MediaUpdateContentAction';
 import { UploadTokenDeleteAction } from 'kaltura-typescript-client/types/UploadTokenDeleteAction';
 import { TrackedFileData } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
+import { Subject } from 'rxjs/Subject';
 
 export interface KmcNewEntryUpload {
   file: File;
@@ -23,7 +23,7 @@ export interface KmcNewEntryUpload {
 
 @Injectable()
 export class NewEntryUploadService implements OnDestroy {
-  public _mediaCreated = new BehaviorSubject<{ id?: string, entryId?: string }>({});
+  public _mediaCreated = new Subject<{ id?: string, entryId?: string }>();
   public onMediaCreated$ = this._mediaCreated.asObservable();
 
   constructor(private _kalturaServerClient: KalturaClient,

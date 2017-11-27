@@ -1,9 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService, NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
-import { AppLocalization, TrackedFile, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { TrackedFileData } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
+import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
+import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
 
 export interface UploadFileData {
   id: string;
@@ -35,6 +37,8 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._uploadManagement.getTrackedFiles().forEach(file => this._addFile(file));
+
+    // listen for mediaCreated to show entryId in the upload list once media is created for this upload
     this._newEntryUploadService.onMediaCreated$
       .cancelOnDestroy(this)
       .subscribe(
@@ -45,7 +49,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
     this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
-      .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile)
+      .filter(({ data }) => this._filterUploadFiles(<KalturaUploadFile>data))
       .subscribe(
         (trackedFile) => {
           // NOTE: this service does not handle 'waitingUpload' status by design.
@@ -55,14 +59,17 @@ export class UploadListComponent implements OnInit, OnDestroy {
               break;
 
             case TrackedFileStatuses.uploading:
-              this._updateFile(trackedFile.id, {
+              const changes = {
                 progress: trackedFile.progress,
                 status: trackedFile.status
-              });
+              };
 
               if (trackedFile.progress === 0) {
                 this._sortUploads();
+                Object.assign(changes, { uploadedOn: trackedFile.uploadStartAt });
               }
+
+              this._updateFile(trackedFile.id, changes);
 
               break;
 
@@ -98,11 +105,16 @@ export class UploadListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
+  private _filterUploadFiles(data: KalturaUploadFile): boolean {
+    return data instanceof NewEntryUploadFile || data instanceof NewEntryFlavourFile;
+  }
+
   private _addFile(trackedFile: TrackedFileData): void {
-    const fileData = <NewEntryUploadFile>trackedFile.data;
+    const fileData = <NewEntryUploadFile | NewEntryFlavourFile>trackedFile.data;
 
     this._uploads.push({
       id: trackedFile.id,
+      entryId: fileData.entryId,
       fileName: fileData.getFileName(),
       fileSize: fileData.getFileSize(),
       mediaType: fileData.mediaType,
