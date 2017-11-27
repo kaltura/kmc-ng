@@ -29,7 +29,6 @@ export interface Tabs {
 })
 
 export class EntryReportComponent implements OnInit, OnDestroy {
-  showLoader = false;
   areaBlockerMessage: AreaBlockerMessage = null;
   tabs: Tabs[] = [];
   flags: KalturaModerationFlag[] = null;
@@ -213,8 +212,39 @@ export class EntryReportComponent implements OnInit, OnDestroy {
       );
   }
 
+  private loadEntryModerationDetails(): void {
+    this._moderationStore.loadEntryModerationDetails(this.entryId)
+      .cancelOnDestroy(this)
+      .subscribe(
+        () => {},
+        error => {
+          this.areaBlockerMessage = new AreaBlockerMessage(
+            {
+              message: error.message,
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    this.areaBlockerMessage = null;
+                    this.loadEntryModerationDetails();
+                  }
+                },
+                {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this._closePopup();
+                    this.areaBlockerMessage = null;
+                  }
+                }
+              ]
+            }
+          )
+        }
+      );
+  }
+
   ngOnInit() {
-    this._moderationStore.loadEntryModerationDetails(this.entryId);
+	  this.loadEntryModerationDetails();
 
     this.tabs = [
       { name: this._appLocalization.get('applications.content.moderation.report'), isActive: true },
@@ -225,7 +255,6 @@ export class EntryReportComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         response => {
-          this.showLoader = false;
           this.areaBlockerMessage = null;
           if(response.entry && response.flag) {
             this.entry = response.entry;
@@ -249,39 +278,6 @@ export class EntryReportComponent implements OnInit, OnDestroy {
               this.isClip = !this.isRecordedLive && (response.entry.id !== response.entry.rootEntryId);
             }
             this.iframeSrc = `${environment.core.kaltura.cdnUrl}/p/${this.partnerID}/sp/${this.partnerID}00/embedIframeJs/uiconf_id/${this.UIConfID}/partner_id/${this.partnerID}?iframeembed=true&${this.flashVars}&entry_id=${this.entryId}`;
-          }
-        }
-      );
-
-    this._moderationStore.moderationState$
-      .cancelOnDestroy(this)
-      .subscribe(
-        response => {
-          this.showLoader = response.isBusy;
-          this.areaBlockerMessage = null;
-
-          if(response.error) {
-            this.areaBlockerMessage = new AreaBlockerMessage(
-              {
-                message: response.error.message,
-                buttons: [
-                  {
-                    label: this._appLocalization.get('app.common.retry'),
-                    action: () => {
-                      this._moderationStore.loadEntryModerationDetails(this.entryId);
-                    }
-                  },
-                  {
-                    label: this._appLocalization.get('app.common.cancel'),
-                    action: () => {
-                      this.areaBlockerMessage = null;
-                    }
-                  }
-                ]
-              }
-            );
-          } else {
-            this.areaBlockerMessage = null;
           }
         }
       );
