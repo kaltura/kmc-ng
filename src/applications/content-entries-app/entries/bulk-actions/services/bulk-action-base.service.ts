@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs/Observable';
 import { environment } from 'app-environment';
 
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaRequest, KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-typescript-client';
+import { KalturaRequest, KalturaMultiRequest, KalturaMultiResponse } from '@kaltura-ng/kaltura-client';
 
 
 export abstract class BulkActionBaseService<T> {

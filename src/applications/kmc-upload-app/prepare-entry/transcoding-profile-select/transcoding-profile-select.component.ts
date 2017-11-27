@@ -5,7 +5,7 @@ import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {TranscodingProfilesService} from './transcoding-profiles.service';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {KalturaMediaType} from 'kaltura-typescript-client/types/KalturaMediaType';
+import {KalturaMediaType} from '@kaltura-ng/kaltura-client/api/types/KalturaMediaType';
 
 @Component({
   selector: 'kTranscodingProfileSelect',

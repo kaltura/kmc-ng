@@ -13,21 +13,21 @@ import { Observable } from 'rxjs/Observable';
 import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { CaptionAssetListAction } from 'kaltura-typescript-client/types/CaptionAssetListAction';
-import { CaptionAssetDeleteAction } from 'kaltura-typescript-client/types/CaptionAssetDeleteAction';
-import { CaptionAssetSetAsDefaultAction } from 'kaltura-typescript-client/types/CaptionAssetSetAsDefaultAction';
-import { CaptionAssetUpdateAction } from 'kaltura-typescript-client/types/CaptionAssetUpdateAction';
-import { CaptionAssetSetContentAction } from 'kaltura-typescript-client/types/CaptionAssetSetContentAction';
-import { CaptionAssetAddAction } from 'kaltura-typescript-client/types/CaptionAssetAddAction';
-import { KalturaUrlResource } from 'kaltura-typescript-client/types/KalturaUrlResource';
-import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
-import { KalturaCaptionAsset } from 'kaltura-typescript-client/types/KalturaCaptionAsset';
-import { KalturaAssetFilter } from 'kaltura-typescript-client/types/KalturaAssetFilter';
-import { KalturaCaptionType } from 'kaltura-typescript-client/types/KalturaCaptionType';
-import { KalturaCaptionAssetStatus } from 'kaltura-typescript-client/types/KalturaCaptionAssetStatus';
-import { KalturaLanguage } from 'kaltura-typescript-client/types/KalturaLanguage';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaMultiRequest } from '@kaltura-ng/kaltura-client';
+import { CaptionAssetListAction } from '@kaltura-ng/kaltura-client/api/types/CaptionAssetListAction';
+import { CaptionAssetDeleteAction } from '@kaltura-ng/kaltura-client/api/types/CaptionAssetDeleteAction';
+import { CaptionAssetSetAsDefaultAction } from '@kaltura-ng/kaltura-client/api/types/CaptionAssetSetAsDefaultAction';
+import { CaptionAssetUpdateAction } from '@kaltura-ng/kaltura-client/api/types/CaptionAssetUpdateAction';
+import { CaptionAssetSetContentAction } from '@kaltura-ng/kaltura-client/api/types/CaptionAssetSetContentAction';
+import { CaptionAssetAddAction } from '@kaltura-ng/kaltura-client/api/types/CaptionAssetAddAction';
+import { KalturaUrlResource } from '@kaltura-ng/kaltura-client/api/types/KalturaUrlResource';
+import { KalturaUploadedFileTokenResource } from '@kaltura-ng/kaltura-client/api/types/KalturaUploadedFileTokenResource';
+import { KalturaCaptionAsset } from '@kaltura-ng/kaltura-client/api/types/KalturaCaptionAsset';
+import { KalturaAssetFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaAssetFilter';
+import { KalturaCaptionType } from '@kaltura-ng/kaltura-client/api/types/KalturaCaptionType';
+import { KalturaCaptionAssetStatus } from '@kaltura-ng/kaltura-client/api/types/KalturaCaptionAssetStatus';
+import { KalturaLanguage } from '@kaltura-ng/kaltura-client/api/types/KalturaLanguage';
+import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
 
 
 import { EntryWidgetKeys } from '../entry-widget-keys';

@@ -6,20 +6,20 @@ import 'rxjs/add/operator/map';
 import * as R from 'ramda';
 import {KalturaClient} from '@kaltura-ng/kaltura-client';
 
-import {KalturaMultiRequest} from 'kaltura-typescript-client';
-import {KalturaPermissionFilter} from 'kaltura-typescript-client/types/KalturaPermissionFilter';
-import {UserLoginByLoginIdAction} from 'kaltura-typescript-client/types/UserLoginByLoginIdAction';
-import {UserGetByLoginIdAction} from 'kaltura-typescript-client/types/UserGetByLoginIdAction';
-import {UserGetAction} from 'kaltura-typescript-client/types/UserGetAction';
-import {PermissionListAction} from 'kaltura-typescript-client/types/PermissionListAction';
-import {PartnerGetInfoAction} from 'kaltura-typescript-client/types/PartnerGetInfoAction';
-import {PermissionGetCurrentPermissionsAction} from 'kaltura-typescript-client/types/PermissionGetCurrentPermissionsAction';
+import {KalturaMultiRequest} from '@kaltura-ng/kaltura-client';
+import {KalturaPermissionFilter} from '@kaltura-ng/kaltura-client/api/types/KalturaPermissionFilter';
+import {UserLoginByLoginIdAction} from '@kaltura-ng/kaltura-client/api/types/UserLoginByLoginIdAction';
+import {UserGetByLoginIdAction} from '@kaltura-ng/kaltura-client/api/types/UserGetByLoginIdAction';
+import {UserGetAction} from '@kaltura-ng/kaltura-client/api/types/UserGetAction';
+import {PermissionListAction} from '@kaltura-ng/kaltura-client/api/types/PermissionListAction';
+import {PartnerGetInfoAction} from '@kaltura-ng/kaltura-client/api/types/PartnerGetInfoAction';
+import {PermissionGetCurrentPermissionsAction} from '@kaltura-ng/kaltura-client/api/types/PermissionGetCurrentPermissionsAction';
 
 import {AppUser} from './app-user';
 import {AppStorage} from '@kaltura-ng/kaltura-common';
 import {PartnerInfo} from './partner-info';
-import {UserResetPasswordAction} from 'kaltura-typescript-client/types/UserResetPasswordAction';
-import {AdminUserUpdatePasswordAction} from 'kaltura-typescript-client/types/AdminUserUpdatePasswordAction';
+import {UserResetPasswordAction} from '@kaltura-ng/kaltura-client/api/types/UserResetPasswordAction';
+import {AdminUserUpdatePasswordAction} from '@kaltura-ng/kaltura-client/api/types/AdminUserUpdatePasswordAction';
 import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
 import { BrowserService } from '../providers/browser.service';
 

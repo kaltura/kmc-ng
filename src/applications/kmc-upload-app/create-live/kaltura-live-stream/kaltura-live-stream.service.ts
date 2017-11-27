@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {KalturaClient} from '@kaltura-ng/kaltura-client';
 import {Observable} from 'rxjs/Observable';
-import {ConversionProfileListAction} from 'kaltura-typescript-client/types/ConversionProfileListAction';
-import {KalturaConversionProfileFilter} from 'kaltura-typescript-client/types/KalturaConversionProfileFilter';
-import {KalturaConversionProfileType} from 'kaltura-typescript-client/types/KalturaConversionProfileType';
-import {KalturaFilterPager} from 'kaltura-typescript-client/types/KalturaFilterPager';
-import {KalturaConversionProfile} from 'kaltura-typescript-client/types/KalturaConversionProfile';
+import {ConversionProfileListAction} from '@kaltura-ng/kaltura-client/api/types/ConversionProfileListAction';
+import {KalturaConversionProfileFilter} from '@kaltura-ng/kaltura-client/api/types/KalturaConversionProfileFilter';
+import {KalturaConversionProfileType} from '@kaltura-ng/kaltura-client/api/types/KalturaConversionProfileType';
+import {KalturaFilterPager} from '@kaltura-ng/kaltura-client/api/types/KalturaFilterPager';
+import {KalturaConversionProfile} from '@kaltura-ng/kaltura-client/api/types/KalturaConversionProfile';
 
 @Injectable()
 export class KalturaLiveStreamService {

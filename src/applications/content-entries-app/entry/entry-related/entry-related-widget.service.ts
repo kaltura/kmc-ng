@@ -11,18 +11,18 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
+import { KalturaMultiRequest } from '@kaltura-ng/kaltura-client';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import { KalturaAssetFilter } from 'kaltura-typescript-client/types/KalturaAssetFilter';
-import { KalturaAttachmentAsset } from 'kaltura-typescript-client/types/KalturaAttachmentAsset';
-import { KalturaAttachmentType } from 'kaltura-typescript-client/types/KalturaAttachmentType';
-import { AttachmentAssetListAction } from 'kaltura-typescript-client/types/AttachmentAssetListAction';
-import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
-import { AttachmentAssetSetContentAction } from 'kaltura-typescript-client/types/AttachmentAssetSetContentAction';
-import { AttachmentAssetDeleteAction } from 'kaltura-typescript-client/types/AttachmentAssetDeleteAction';
-import { AttachmentAssetUpdateAction } from 'kaltura-typescript-client/types/AttachmentAssetUpdateAction';
-import { AttachmentAssetAddAction } from 'kaltura-typescript-client/types/AttachmentAssetAddAction';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaAssetFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaAssetFilter';
+import { KalturaAttachmentAsset } from '@kaltura-ng/kaltura-client/api/types/KalturaAttachmentAsset';
+import { KalturaAttachmentType } from '@kaltura-ng/kaltura-client/api/types/KalturaAttachmentType';
+import { AttachmentAssetListAction } from '@kaltura-ng/kaltura-client/api/types/AttachmentAssetListAction';
+import { KalturaUploadedFileTokenResource } from '@kaltura-ng/kaltura-client/api/types/KalturaUploadedFileTokenResource';
+import { AttachmentAssetSetContentAction } from '@kaltura-ng/kaltura-client/api/types/AttachmentAssetSetContentAction';
+import { AttachmentAssetDeleteAction } from '@kaltura-ng/kaltura-client/api/types/AttachmentAssetDeleteAction';
+import { AttachmentAssetUpdateAction } from '@kaltura-ng/kaltura-client/api/types/AttachmentAssetUpdateAction';
+import { AttachmentAssetAddAction } from '@kaltura-ng/kaltura-client/api/types/AttachmentAssetAddAction';
+import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
 
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
@@ -32,7 +32,7 @@ import { environment } from 'app-environment';
 import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryRelatedFile } from './new-entry-related-file';
 import { EntryWidget } from '../entry-widget';
-import { KalturaAttachmentAssetListResponse } from 'kaltura-typescript-client/types/KalturaAttachmentAssetListResponse';
+import { KalturaAttachmentAssetListResponse } from '@kaltura-ng/kaltura-client/api/types/KalturaAttachmentAssetListResponse';
 
 export interface RelatedFile extends KalturaAttachmentAsset {
   uploading?: boolean,

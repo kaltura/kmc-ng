@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { KalturaBulkUploadObjectType } from 'kaltura-typescript-client/types/KalturaBulkUploadObjectType';
+import { KalturaBulkUploadObjectType } from '@kaltura-ng/kaltura-client/api/types/KalturaBulkUploadObjectType';
 
 @Pipe({ name: 'kBulkLogTableObjectType' })
 

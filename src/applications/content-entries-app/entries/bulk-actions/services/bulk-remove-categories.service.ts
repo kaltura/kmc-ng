@@ -3,18 +3,18 @@ import { Observable } from 'rxjs/Observable';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaCategoryEntry } from 'kaltura-typescript-client/types/KalturaCategoryEntry';
+import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
+import { KalturaCategoryEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaCategoryEntry';
 import { BulkActionBaseService } from './bulk-action-base.service';
-import { CategoryEntryAddAction } from "kaltura-typescript-client/types/CategoryEntryAddAction";
-import { CategoryEntryListAction } from 'kaltura-typescript-client/types/CategoryEntryListAction';
+import { CategoryEntryAddAction } from "@kaltura-ng/kaltura-client/api/types/CategoryEntryAddAction";
+import { CategoryEntryListAction } from '@kaltura-ng/kaltura-client/api/types/CategoryEntryListAction';
 
-import { KalturaCategoryEntryFilter } from 'kaltura-typescript-client/types/KalturaCategoryEntryFilter';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { CategoryListAction } from 'kaltura-typescript-client/types/CategoryListAction';
-import { KalturaCategoryFilter } from 'kaltura-typescript-client/types/KalturaCategoryFilter';
-import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
-import { CategoryEntryDeleteAction } from 'kaltura-typescript-client/types/CategoryEntryDeleteAction';
+import { KalturaCategoryEntryFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaCategoryEntryFilter';
+import { KalturaFilterPager } from '@kaltura-ng/kaltura-client/api/types/KalturaFilterPager';
+import { CategoryListAction } from '@kaltura-ng/kaltura-client/api/types/CategoryListAction';
+import { KalturaCategoryFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaCategoryFilter';
+import { KalturaCategory } from '@kaltura-ng/kaltura-client/api/types/KalturaCategory';
+import { CategoryEntryDeleteAction } from '@kaltura-ng/kaltura-client/api/types/CategoryEntryDeleteAction';
 
 export interface EntryCategoryItem {
 	id: number,

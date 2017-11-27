@@ -3,14 +3,14 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaBaseEntryFilter } from 'kaltura-typescript-client/types/KalturaBaseEntryFilter';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaClipAttributes } from 'kaltura-typescript-client/types/KalturaClipAttributes';
-import { KalturaOperationAttributes } from 'kaltura-typescript-client/types/KalturaOperationAttributes';
-import { BaseEntryListAction } from 'kaltura-typescript-client/types/BaseEntryListAction';
+import { KalturaBaseEntryFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaBaseEntryFilter';
+import { KalturaFilterPager } from '@kaltura-ng/kaltura-client/api/types/KalturaFilterPager';
+import { KalturaDetachedResponseProfile } from '@kaltura-ng/kaltura-client/api/types/KalturaDetachedResponseProfile';
+import { KalturaResponseProfileType } from '@kaltura-ng/kaltura-client/api/types/KalturaResponseProfileType';
+import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
+import { KalturaClipAttributes } from '@kaltura-ng/kaltura-client/api/types/KalturaClipAttributes';
+import { KalturaOperationAttributes } from '@kaltura-ng/kaltura-client/api/types/KalturaOperationAttributes';
+import { BaseEntryListAction } from '@kaltura-ng/kaltura-client/api/types/BaseEntryListAction';
 import { AppLocalization, KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 

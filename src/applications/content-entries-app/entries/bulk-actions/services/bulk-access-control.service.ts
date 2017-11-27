@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaBaseEntry } from 'kaltura-typescript-client/types/KalturaBaseEntry';
-import { BaseEntryUpdateAction } from 'kaltura-typescript-client/types/BaseEntryUpdateAction';
+import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
+import { KalturaBaseEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaBaseEntry';
+import { BaseEntryUpdateAction } from '@kaltura-ng/kaltura-client/api/types/BaseEntryUpdateAction';
 import { BulkActionBaseService } from './bulk-action-base.service';
-import { KalturaAccessControl } from 'kaltura-typescript-client/types/KalturaAccessControl';
+import { KalturaAccessControl } from '@kaltura-ng/kaltura-client/api/types/KalturaAccessControl';
 
 @Injectable()
 export class BulkAccessControlService extends BulkActionBaseService<KalturaAccessControl> {

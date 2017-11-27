@@ -6,7 +6,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaMediaEntry } from "kaltura-typescript-client/types/KalturaMediaEntry";
+import { KalturaMediaEntry } from "@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry";
 
 @Component({
   selector: 'kBulkRemoveTags',

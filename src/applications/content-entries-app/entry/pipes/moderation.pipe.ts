@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { KalturaEntryModerationStatus } from 'kaltura-typescript-client/types/KalturaEntryModerationStatus';
+import { KalturaEntryModerationStatus } from '@kaltura-ng/kaltura-client/api/types/KalturaEntryModerationStatus';
 
 @Pipe({name: 'moderation'})
 export class ModerationPipe implements PipeTransform {

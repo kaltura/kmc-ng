@@ -4,11 +4,11 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppLocalization } from "@kaltura-ng/kaltura-common";
 import { SectionsList } from './sections-list';
 import { EntryWidgetKeys } from '../entry-widget-keys';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
+import { KalturaMediaType } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaType';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaExternalMediaEntry } from 'kaltura-typescript-client/types/KalturaExternalMediaEntry';
+import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
+import { KalturaExternalMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaExternalMediaEntry';
 import { EntryWidget } from '../entry-widget';
 
 export interface SectionWidgetItem

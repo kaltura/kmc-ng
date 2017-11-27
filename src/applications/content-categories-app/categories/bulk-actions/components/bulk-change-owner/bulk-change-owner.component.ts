@@ -3,15 +3,15 @@ import { ISubscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
+import { KalturaFilterPager } from '@kaltura-ng/kaltura-client/api/types/KalturaFilterPager';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
-import { KalturaUserFilter } from 'kaltura-typescript-client/types/KalturaUserFilter';
-import { UserListAction } from 'kaltura-typescript-client/types/UserListAction';
+import { KalturaUser } from '@kaltura-ng/kaltura-client/api/types/KalturaUser';
+import { KalturaUserFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaUserFilter';
+import { UserListAction } from '@kaltura-ng/kaltura-client/api/types/UserListAction';
 
 @Component({
   selector: 'kCategoriesBulkChangeOwner',

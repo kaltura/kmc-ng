@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {KalturaMediaType} from 'kaltura-typescript-client/types/KalturaMediaType';
+import {KalturaMediaType} from '@kaltura-ng/kaltura-client/api/types/KalturaMediaType';
 import {Router} from '@angular/router';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {DraftEntry, PrepareEntryService} from './prepare-entry.service';

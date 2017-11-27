@@ -2,9 +2,9 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {KalturaClient} from '@kaltura-ng/kaltura-client';
 import {CategoriesBulkActionBaseService} from './categories-bulk-action-base.service';
-import {CategoryUpdateAction} from 'kaltura-typescript-client/types/CategoryUpdateAction';
-import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
-import {KalturaContributionPolicyType} from 'kaltura-typescript-client/types/KalturaContributionPolicyType';
+import {CategoryUpdateAction} from '@kaltura-ng/kaltura-client/api/types/CategoryUpdateAction';
+import {KalturaCategory} from '@kaltura-ng/kaltura-client/api/types/KalturaCategory';
+import {KalturaContributionPolicyType} from '@kaltura-ng/kaltura-client/api/types/KalturaContributionPolicyType';
 
 @Injectable()
 export class CategoriesBulkChangeContributionPolicyService extends CategoriesBulkActionBaseService<KalturaContributionPolicyType> {
