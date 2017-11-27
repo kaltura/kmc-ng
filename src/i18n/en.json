@@ -128,7 +128,10 @@
     "changelog": {
       "header": "Change Log"
     },
-    "pageExitVerificationMessage": "Are you sure you want to leave this page?"
+    "pageExitVerification": {
+      "defaultMessage": "Are you sure you want to leave this page?",
+      "fileUploadMessage": "Are you sure you want to leave this page? You have unsaved changes or currently uploading files"
+    }
   },
   "applications": {
     "entries": {

@@ -7,7 +7,7 @@ export class PageExitVerificationService {
   private _tokenGenerator = new FriendlyHashId();
   private _tokens: string[] = [];
   private _verificationMessage: string;
-  private _defaultVerificationMessage = this._appLocalizations.get('app.pageExitVerificationMessage');
+  private _defaultVerificationMessage = this._appLocalizations.get('app.pageExitVerification.defaultMessage');
 
   constructor(private _appLocalizations: AppLocalization) {
     window.onbeforeunload = (e) => {
