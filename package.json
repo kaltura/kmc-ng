@@ -62,7 +62,7 @@
     "core-js": "^2.4.1",
     "intl": "^1.2.5",
     "jquery": "^3.1.0",
-    "kaltura-typescript-client": "~5.1.2",
+    "kaltura-typescript-client": "~6.0.0",
     "moment": "^2.14.1",
     "ng2-page-scroll": "^4.0.0-beta.7",
     "ng2-translate": "^5.0.0",
