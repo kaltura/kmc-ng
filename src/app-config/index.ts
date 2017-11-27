@@ -10,9 +10,10 @@ export const environment = {
     },
     "core": {
         "kaltura": {
-            "apiUrl" : "https://www.kaltura.com/api_v3/index.php",
+            "serverEndpoint" : "www.kaltura.com",
+            "useHttpsProtocol": true,
             "cdnUrl": "http://cdnapi.kaltura.com",
-            "kmcUrl": "kmc.kaltura.com",
+            "legacyKmcUrl": "kmc.kaltura.com",
             "expiry": "86400",
             "privileges": "disableentitlement",
             "previewUIConf": "38524931",
