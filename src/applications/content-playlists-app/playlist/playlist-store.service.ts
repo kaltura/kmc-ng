@@ -10,11 +10,11 @@ import { PlaylistUpdateAction } from '@kaltura-ng/kaltura-client/api/types/Playl
 import { Observable } from 'rxjs/Observable';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaMultiRequest, KalturaTypesFactory } from '@kaltura-ng/kaltura-client';
-import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 import { KalturaPlaylistType } from '@kaltura-ng/kaltura-client/api/types/KalturaPlaylistType';
 import { PlaylistAddAction } from '@kaltura-ng/kaltura-client/api/types/PlaylistAddAction';
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
+import { PlaylistsStore } from 'app-shared/content-shared/playlists-store/playlists-store.service';
 
 export enum ActionTypes {
   PlaylistLoading,

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { PlaylistsStore } from '../playlists-store/playlists-store.service';
 import { PlaylistDeleteAction } from '@kaltura-ng/kaltura-client/api/types/PlaylistDeleteAction';
 import { KalturaRequest } from '@kaltura-ng/kaltura-client';
 import { environment } from 'app-environment';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { PlaylistsStore } from 'app-shared/content-shared/playlists-store/playlists-store.service';
 
 @Injectable()
 export class BulkDeleteService {

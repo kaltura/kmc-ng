@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PlaylistsStore } from './playlists/playlists-store/playlists-store.service';
+import { PlaylistsStore } from 'app-shared/content-shared/playlists-store/playlists-store.service';
 
 @Component({
     selector: 'kPlaylists',

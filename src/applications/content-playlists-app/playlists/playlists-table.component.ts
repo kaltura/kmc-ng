@@ -3,9 +3,9 @@ import { ISubscription } from 'rxjs/Subscription';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PlaylistsStore } from './playlists-store/playlists-store.service';
 import { Filter } from './playlists-list.component';
 import { KalturaPlaylist } from '@kaltura-ng/kaltura-client/api/types/KalturaPlaylist';
+import { PlaylistsStore } from 'app-shared/content-shared/playlists-store/playlists-store.service';
 
 @Component({
   selector: 'kPlaylistsTable',

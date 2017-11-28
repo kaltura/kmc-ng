@@ -6,7 +6,6 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
 
-import { PlaylistsStore, SortDirection } from './playlists-store/playlists-store.service';
 import { BulkDeleteService } from './bulk-service/bulk-delete.service';
 import { KalturaPlaylist } from '@kaltura-ng/kaltura-client/api/types/KalturaPlaylist';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -14,6 +13,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 import * as moment from 'moment';
 import { KalturaPlaylistType } from '@kaltura-ng/kaltura-client/api/types/KalturaPlaylistType';
+import { PlaylistsStore, SortDirection } from 'app-shared/content-shared/playlists-store/playlists-store.service';
 
 export interface Filter {
   type: string;

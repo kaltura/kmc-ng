@@ -4,12 +4,12 @@ import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltur
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Observable } from 'rxjs/Observable';
 import { ActionTypes, PlaylistStore } from './playlist-store.service';
-import { PlaylistsStore } from '../playlists/playlists-store/playlists-store.service';
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';
 import { PlaylistSectionsListWidget } from './playlist-sections-list/playlist-sections-list-widget.service';
 import { PlaylistContentWidget } from './playlist-content/playlist-content-widget.service';
 import { PlaylistMetadataWidget } from './playlist-metadata/playlist-metadata-widget.service';
 import { PlaylistDetailsWidget } from './playlist-details/playlist-details-widget.service';
+import { PlaylistsStore } from 'app-shared/content-shared/playlists-store/playlists-store.service';
 
 @Component({
   selector: 'kPlaylist',
