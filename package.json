@@ -53,7 +53,7 @@
     "@angular/platform-browser": "^4.0.0",
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
-    "@kaltura-ng/kaltura-client": "~7.0.1",
+    "@kaltura-ng/kaltura-client": "~7.0.2",
     "@kaltura-ng/kaltura-common": "~2.2.0",
     "@kaltura-ng/kaltura-primeng-ui": "~0.6.0",
     "@kaltura-ng/kaltura-ui": "~3.1.0",
