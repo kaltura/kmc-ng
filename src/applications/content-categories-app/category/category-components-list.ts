@@ -7,6 +7,7 @@ import {CategorySubcategoriesComponent} from './category-subcategories/category-
 import {CategoryMetadataComponent} from './category-metadata/category-metadata.component';
 import {CategoryEntitlementsComponent} from './category-entitlements/category-entitlements.component';
 import {CategoryComponent} from './category.component';
+import {CategoryChangeOwnerComponent} from "./category-entitlements/change-owner/change-owner.component";
 
 export const CategoryComponentsList = [
     CategoryComponent,
@@ -15,6 +16,8 @@ export const CategoryComponentsList = [
     CategorySubcategoriesComponent,
     CategorySectionsListComponent,
     CategoryDetailsComponent,
+    CategoryEntitlementsComponent,
+    CategoryChangeOwnerComponent,
     JumpToSection,
     LinkedEntriesPopup,
     LinkedEntries

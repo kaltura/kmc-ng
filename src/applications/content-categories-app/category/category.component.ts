@@ -1,25 +1,26 @@
-import { CategoryMetadataWidget } from './category-metadata/category-metadata-widget.service';
+import {CategoryMetadataWidget} from './category-metadata/category-metadata-widget.service';
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { BrowserService } from 'app-shared/kmc-shell';
-import { CategoryService, ActionTypes } from './category.service';
-import { CategorySectionsListWidget } from './category-sections-list/category-sections-list-widget.service';
-import { CategoriesService } from '../categories/categories.service';
-import { CategoryWidgetsManager } from './category-widgets-manager';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { CategoryWidget } from './category-widget';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { Observable } from 'rxjs/Observable';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {BrowserService} from 'app-shared/kmc-shell';
+import {ActionTypes, CategoryService} from './category.service';
+import {CategorySectionsListWidget} from './category-sections-list/category-sections-list-widget.service';
+import {CategoriesService} from '../categories/categories.service';
+import {CategoryWidgetsManager} from './category-widgets-manager';
+import {AreaBlockerMessage, AreaBlockerMessageButton} from '@kaltura-ng/kaltura-ui';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {Observable} from 'rxjs/Observable';
+import {CategoryEntitlementsWidget} from './category-entitlements/category-entitlements-widget.service';
 
 @Component({
 	selector: 'kCategory',
 	templateUrl: './category.component.html',
 	styleUrls: ['./category.component.scss'],
 	providers: [
-		CategoryService,
-		CategoryWidgetsManager,
+        CategoryService,
+        CategoryWidgetsManager,
         CategorySectionsListWidget,
-        CategoryMetadataWidget
+        CategoryEntitlementsWidget,
+        CategoryMetadataWidget,
 	]
 })
 export class CategoryComponent implements OnInit, OnDestroy {
@@ -38,11 +39,12 @@ export class CategoryComponent implements OnInit, OnDestroy {
         categoryWidgetsManager: CategoryWidgetsManager,
         widget1: CategorySectionsListWidget,
         widget2: CategoryMetadataWidget,
+		    widget5: CategoryEntitlementsWidget,
 		public _categoryStore: CategoryService,
 		private _categoriesStore: CategoriesService,
 		private _browserService: BrowserService,
 		private _appLocalization: AppLocalization) {
-        categoryWidgetsManager.registerWidgets([widget1, widget2]);
+        categoryWidgetsManager.registerWidgets([widget1, widget2, widget5]);
 	}
 
 	ngOnDestroy() {

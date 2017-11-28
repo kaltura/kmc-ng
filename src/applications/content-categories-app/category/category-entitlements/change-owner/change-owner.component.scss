@@ -1,0 +1,66 @@
+@import "app-theme/_variables.scss";
+
+$autoCompleteWidth: 258px;
+.kTitle{
+  color: $kGrayscale1;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  border-bottom: 1px solid $kGrayscale4;
+  height: 78px;
+  line-height: 78px;
+}
+.kContent{
+  display: flex;
+  flex-direction: column;
+  height: 278px;
+  width: 586px;
+
+  .kContainer{
+    height: 132px;
+    padding: 20px;
+
+    .kLabel{
+    text-align: center;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+    .kAutoCompleteContainer {
+      width: $autoCompleteWidth;
+      margin: 0 auto;
+    }
+  }
+}
+.kFooter{
+  position: absolute;
+  bottom: 0px;
+  display: flex;
+  width: 100%;
+  height: 66px;
+  border-top: 1px solid $kGrayscale4;
+  align-items: center;
+  justify-content: center;
+
+  .kButtonDefault, .kButtonBranded {
+    height: 34px;	width: 130px;
+  }
+
+  .kButtonDefault {
+    border-radius: 0;
+    margin-right: 16px;
+  }
+}
+
+
+/deep/ .ui-autocomplete.ui-widget{
+  width: $autoCompleteWidth;
+  font-size: 15px;
+
+  input{
+    width: 100%;
+  }
+  .ui-autocomplete-input-token{
+    width:100%;
+  }
+}

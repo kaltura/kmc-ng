@@ -23,6 +23,7 @@ import {
   ConfirmDialogModule,
   DataTableModule,
   DropdownModule,
+  InputSwitchModule,
   InputTextareaModule,
   InputTextModule,
   MenuModule,
@@ -32,7 +33,7 @@ import {
   SharedModule,
   SpinnerModule,
   TieredMenuModule,
-  TreeModule
+  TreeModule,
 } from 'primeng/primeng';
 import {KMCShellModule} from 'app-shared/kmc-shell';
 
@@ -93,7 +94,8 @@ import {DetailsBarModule} from "@kaltura-ng/kaltura-ui/details-bar";
         TreeModule,
         DetailsBarModule,
         ContentSharedModule,
-        StickyModule
+        StickyModule,
+        InputSwitchModule
     ],
     declarations: [
         ContentCategoriesComponent,

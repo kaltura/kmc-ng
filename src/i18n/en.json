@@ -1016,6 +1016,74 @@
           "addGroup": "Add Group",
           "deleteGroup": "Delete Group"
         },
+        "entitlements": {
+          "title": "Entitlements",
+          "description": "Manage your entitlements settings and specific end-user permissions to content in your applications.",
+          "privacyContentLabel": {
+            "label" : "Privacy Content Label"
+          },
+          "contentPrivacy": {
+            "label": "Content Privacy",
+            "help": "The content privacy option that you select will define the visibility of content in this category, including its related metadata. This setting will apply to the application's content search results, content lists or specific content item retrieved.\n\nFor content associated with more than one category, the privacy will be determined based on the category with the lowest restriction level.\n\nAdditional playback restrictions may apply through each entry's access control settings.",
+            "noRestrictions": "No Restrictions",
+            "noRestrictions_explanation": "Visible to everyone with access to the application page",
+            "requiresAuthentication": "Requires Authentication",
+            "requiresAuthentication_explanation": "Visible only to authenticated end users",
+            "private": "Private",
+            "private_explanation": "Visible only to users with specific permissions to access this category content"
+          },
+          "categoryListing": {
+            "label": "Category Listing",
+            "help": "The category listing option that you select will define who can see this category's name and metadata in the application's category menus & listing.",
+            "noRestrictions": "No Restrictions",
+            "noRestrictions_explanation": "Visible to everyone with access to the application page",
+            "private": "Private",
+            "private_explanation": "Visible only to users with specific permissions to access this category content"
+          },
+          "contentPublishPermissions": {
+            "label": "Content Publish Permissions",
+            "help": "Which end-users can add content to this category through your applications?",
+            "noRestrictions": "No Restrictions",
+            "noRestrictions_explanation": "Any authorized end-user",
+            "private": "Private",
+            "private_explanation": "Only end-users with specific permission can add content to this category"
+          },
+          "moderateContent": {
+            "label": "Moderate Content"
+          },
+          "inheritUsersPermissions": {
+            "label": "Inherit Users Permissions",
+            "help": "Inherit Specific End-User Permissions from Parent Category?",
+            "parentCategory": "Inherit Specific End-User Permissions from Parent Category: <a (click)=\"\">{{1}}</a>",
+            "errors" : {
+              "categoryLoadError": "Error loading parent category information"
+            }
+          },
+          "defaultPermissionLevel": {
+            "label": "Default Permission Level",
+            "member": "Member",
+            "contributor": "Contributor",
+            "moderator": "Moderator",
+            "manager": "Manager"
+          },
+          "owner": {
+            "label": "Owner",
+            "changeOwner": "Change Owner",
+            "changeOwnerLabel": "Set a new owner for this category",
+            "changeOwnerPlaceholder": "Enter Username/Id",
+            "errors": {
+              "changeOwnerFailed" : "An error occurred while changing owner",
+              "unableToChange": "Unable to change owner for current category",
+              "selectUser" : "Unable to change owner since no user was selected"
+            }
+          },
+          "permittedUsers": {
+            "label": "Permitted Users",
+            "none": "None",
+            "manageUsers": "Manage Users",
+            "viewUsers": "View Users"
+          }
+        },
         "errors": {
           "reload": "Reload",
           "dismiss": "Dismiss",

@@ -1,0 +1,125 @@
+@import 'app-theme/_variables.scss';
+
+.kEntitlementsDetails {
+  padding-left: 18px;
+  padding-top: 18px;
+  width: 100%;
+
+  .kSchemaTitle {
+    color: $kGrayscale1;
+    font-size: 20px;
+    font-weight: 700;
+    padding-top: 27px;
+    padding-bottom: 12px;
+  }
+  .kSchemaDescription {
+    padding-top: 24px;
+    padding-bottom: 32px;
+  }
+
+  .kRow {
+    display: flex;
+    padding-top: 60px;
+
+    .kLabel {
+      width: 180px;
+      flex: 0 0 auto;
+      word-wrap: break-word;
+
+      .kLabelText{
+        width: 110px;
+        display: inline-block;
+      }
+
+      .kHelp {
+        width: 16px;
+        padding: 3px 0px 0px 10px;
+        color: $kGrayscale3;
+        height: 16px;
+        display: inline-block;
+        vertical-align: top;
+      }
+      .kHelp:hover{
+        color: $kSecondary;
+      }
+    }
+
+    input, p-dropdown {
+      width: 330px !important;
+      height: 34px;
+    }
+
+    .kControl, k-prime-control {
+      width: 100%;
+      flex: 0 0 auto;
+      display: inline-block;
+      .kRadioOption {
+        padding-top: 20px;
+
+        .kExplanation {
+          padding-left: 29px;
+          padding-top: 10px;
+        }
+      }
+
+      .kRadioOption:first-child {
+        padding-top: 0;
+      }
+
+
+      .kExplanation {
+        padding-top: 7px;
+        color: $kGrayscale3;
+        font-size: 13px;
+        line-height: 16px;
+        padding-left: 54px;
+      }
+
+      .kInputSwitch {
+        padding-right: 10px;
+      }
+
+      .kActionLink{
+        padding-left: 20px;
+        font-size: 15px;
+      }
+    }
+  }
+
+  .kRow:first-child {
+    padding-top: 0;
+  }
+
+  .kRow:last-child {
+    padding-bottom: 60px;
+  }
+
+  a {
+    color: $kTertiary;
+  }
+
+  a.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    color: $kGrayscale5;
+    border: none;
+  }
+  /*********************/
+  /* PrimeNG overrides */
+  /*********************/
+  /deep/ {
+
+    .ui-radiobutton-label {
+      font-weight: normal;
+      padding-left: 5px;
+      color: $kGrayscale1;
+      font-size: 15px;
+      line-height: 18px;
+    }
+
+    .ui-dropdown-label.ui-inputtext {
+      background-color: #ffffff;
+      width: 330px;
+    }
+  }
+}

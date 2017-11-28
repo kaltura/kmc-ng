@@ -39,30 +39,24 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
         this._reloadSections(data);
     }
 
-    private _initialize(): void {
-        this.form.widgetsState$
-            .cancelOnDestroy(this)
-            .subscribe(
-            sectionsState => {
-                this._sections.getValue().forEach((section: SectionWidgetItem) => {
-                    const sectionState = sectionsState[section.key];
-                    if (sectionState) {
-                        const isValid = (!sectionState || sectionState.isBusy || sectionState.isValid || !sectionState.isActive);
-                        const isAttached = (!!sectionState && sectionState.isAttached);
+  private _initialize(): void {
+    this.form.widgetsState$
+      .cancelOnDestroy(this)
+      .subscribe(
+        sectionsState => {
+          this._sections.getValue().forEach((section: SectionWidgetItem) => {
+            const sectionState = sectionsState[section.key];
+            const isValid = (!sectionState || sectionState.isBusy || sectionState.isValid || !sectionState.isActive);
+            const isAttached = (!!sectionState && sectionState.isAttached);
 
-                        if (section.attached !== isAttached || section.isValid !== isValid) {
-                            console.log(`category sections list: updated section '${section.key}' state`, {
-                                isAttached,
-                                isValid
-                            });
-                            section.attached = isAttached;
-                            section.isValid = isValid;
-                        }
-                    }
-                });
+            if (section.attached !== isAttached || section.isValid !== isValid) {
+              section.attached = isAttached;
+              section.isValid = isValid;
             }
-            );
-    }
+          });
+        }
+      );
+  }
 
     /**
      * Do some cleanups if needed once the section is removed
