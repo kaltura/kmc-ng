@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="" [message]="">
+<k-area-blocker [showLoader]="_isBusy" [message]="_areaBlockerMessage">
   <div class="kMyUserSettingsWrapper kContent">
     <section class="kFormContainer">
       <div class="kTitle">
@@ -12,29 +12,29 @@
       <div class="kUserDetailsSection">
         <div class="kRow">
           <div class="kLabel">{{'applications.settings.myUserSettings.userName' | translate}}</div>
-          <span>Shlomit Raivit</span>
+          <span>{{user?.fullName}}</span>
           <i class="kIconpen"></i>
         </div>
         <div class="kRow">
           <div class="kLabel">{{'applications.settings.myUserSettings.userId' | translate}}</div>
-          <span>34947902</span>
+          <span>{{user?.id}}</span>
         </div>
         <div class="kRow">
           <div class="kLabel">{{'applications.settings.myUserSettings.emailAddress' | translate}}</div>
-          <span>Shlomit.ravit@gmail.com</span>
+          <span>{{user?.email}}</span>
           <i class="kIconpen"></i>
         </div>
         <div class="kRow">
           <div class="kLabel">{{'applications.settings.myUserSettings.role' | translate}}</div>
-          <span>Publisher Administator</span>
+          <span>{{role?.name}}</span>
         </div>
         <div class="kRow">
           <div class="kLabel">{{'applications.settings.myUserSettings.roleDescription' | translate}}</div>
-          <span>Full control over publisher account and user management functionalities</span>
+          <span>{{role?.description}}</span>
         </div>
         <div class="kRow">
           <div class="kLabel">{{'applications.settings.myUserSettings.password' | translate}}</div>
-          <span><a>Edit Password</a></span>
+          <span><a>{{'applications.settings.myUserSettings.editUser' | translate}}</a></span>
         </div>
       </div>
     </section>

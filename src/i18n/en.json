@@ -1161,7 +1161,8 @@
         "emailAddress": "Email Address",
         "role": "Role",
         "roleDescription": "Role Description",
-        "password": "Password"
+        "password": "Password",
+        "editUser": "Edit Password"
       }
     }
   },
