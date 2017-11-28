@@ -1,6 +1,10 @@
 @import 'app-theme/_variables.scss';
 
 .kAddNewPlaylist {
+  &.kAddNewPlaylistSilent {
+    padding-top: 27px;
+  }
+
   .kHeader {
     height: 78px;
     width: 100%;

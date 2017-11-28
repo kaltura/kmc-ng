@@ -5,6 +5,11 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PlaylistsStore } from 'app-shared/content-shared/playlists-store/playlists-store.service';
+import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
+import { PlaylistAddAction } from '@kaltura-ng/kaltura-client/api/types/PlaylistAddAction';
+import { KalturaPlaylist } from '@kaltura-ng/kaltura-client/api/types/KalturaPlaylist';
+import { KalturaPlaylistType } from '@kaltura-ng/kaltura-client/api/types/KalturaPlaylistType';
+import { KalturaAPIException, KalturaClient } from '@kaltura-ng/kaltura-client';
 
 @Component({
   selector: 'kAddNewPlaylist',
@@ -12,21 +17,35 @@ import { PlaylistsStore } from 'app-shared/content-shared/playlists-store/playli
   styleUrls: ['./add-new-playlist.component.scss']
 })
 export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() silent = false;
+  @Input()
+  set silent(value: boolean) {
+    this._silent = value;
+
+    if (this._addNewPlaylistForm) {
+      this._addNewPlaylistButtonLabel = this._appLocalization.get('applications.content.addNewPlaylist.save');
+      this._addNewPlaylistForm.controls['playlistType'].disable();
+    }
+  }
+
+  @Input() entries: KalturaMediaEntry[] = [];
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Output() showNotSupportedMsg = new EventEmitter<boolean>();
+  @Output() actionPerformed = new EventEmitter<void>();
 
   private _showConfirmationOnClose = true;
 
-  public addNewPlaylistForm: FormGroup;
+  public _addNewPlaylistForm: FormGroup;
+  public _silent = false;
+  public _addNewPlaylistButtonLabel = this._appLocalization.get('applications.content.addNewPlaylist.next');
 
   constructor(private _formBuilder: FormBuilder,
               private _router: Router,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
+              private _kalturaClient: KalturaClient,
               @Optional() private _playlistsStore: PlaylistsStore) {
     // build FormControl group
-    this.addNewPlaylistForm = _formBuilder.group({
+    this._addNewPlaylistForm = _formBuilder.group({
       name: ['', Validators.required],
       description: '',
       playlistType: ['manual'],
@@ -47,7 +66,7 @@ export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy
           }
           if (state === PopupWidgetStates.BeforeClose
             && context && context.allowClose
-            && this.addNewPlaylistForm.dirty
+            && this._addNewPlaylistForm.dirty
             && this._showConfirmationOnClose) {
             context.allowClose = false;
             this._browserService.confirm(
@@ -68,15 +87,60 @@ export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy
   ngOnDestroy() {
   }
 
-  public _goNext(): void {
-    if (this.addNewPlaylistForm.valid) {
-      if (this.addNewPlaylistForm.controls['playlistType'].value === 'ruleBased') {
-        this.showNotSupportedMsg.emit();
-      } else {
-        const { name, description } = this.addNewPlaylistForm.value;
-        this._playlistsStore.setNewPlaylistData({ name, description });
-        this._router.navigate(['/content/playlists/playlist/new/content']);
-      }
+  private _create(): void {
+    if (this._addNewPlaylistForm.controls['playlistType'].value === 'ruleBased') {
+      this.showNotSupportedMsg.emit();
+    } else {
+      const { name, description } = this._addNewPlaylistForm.value;
+      this._playlistsStore.setNewPlaylistData({ name, description });
+      this._router.navigate(['/content/playlists/playlist/new/content']);
+    }
+  }
+
+  private _createSilently(): void {
+    const { name, description = '' } = this._addNewPlaylistForm.value;
+    const playlist = new KalturaPlaylist({
+      playlistType: KalturaPlaylistType.staticList,
+      playlistContent: this.entries.map(({ id }) => id).join(','),
+      name,
+      description
+    });
+
+    this._kalturaClient.request(new PlaylistAddAction({ playlist }))
+      .tag('block-shell')
+      .subscribe(
+        () => {
+          if (this.parentPopupWidget) {
+            this._showConfirmationOnClose = false;
+            this.parentPopupWidget.close();
+            this.actionPerformed.emit();
+          }
+        },
+        (error) => {
+          this._browserService.alert(
+            {
+              header: this._appLocalization.get('applications.content.addNewPlaylist.creationError.header'),
+              message: error.message || this._appLocalization.get('applications.content.addNewPlaylist.creationError.body'),
+              accept: () => {
+                this._showConfirmationOnClose = false;
+                this.parentPopupWidget.close()
+                this.actionPerformed.emit();
+              }
+            }
+          );
+        }
+      );
+  }
+
+  public _createPlaylist(): void {
+    if (!this._addNewPlaylistForm.valid) {
+      return;
+    }
+
+    if (this._silent) {
+      this._createSilently();
+    } else {
+      this._create();
     }
   }
 }
