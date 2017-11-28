@@ -79,10 +79,11 @@ const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, Flav
 
 
 export function clientConfigurationFactory() {
-  const result = new KalturaClientConfiguration();
-  result.endpointUrl = environment.core.kaltura.apiUrl;
-  result.clientTag = 'KMCng';
-  return result;
+    const result = new KalturaClientConfiguration();
+    const { useHttpsProtocol, serverEndpoint } = environment.core.kaltura;
+    result.endpointUrl = `${useHttpsProtocol ? 'https' : 'http'}://${serverEndpoint}`;
+    result.clientTag = 'KMCng';
+    return result;
 }
 
 @NgModule({

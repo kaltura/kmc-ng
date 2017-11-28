@@ -167,7 +167,7 @@ export class EntryLiveWidget extends EntryWidget implements OnDestroy {
 	 */
 
 	public _openLiveReport(): void {
-		const base_url = window.location.protocol + '//' + environment.core.kaltura.kmcUrl;
+		const base_url = window.location.protocol + '//' + environment.core.kaltura.legacyKmcUrl;
 		const url = base_url + '/apps/liveanalytics/' + environment.core.kaltura.liveAnalyticsVersion + '/index.html#/entry/' + this.data.id + '/nonav';
 		this._browserService.openLink(url);
 	}
