@@ -2,8 +2,8 @@ import { Observable } from 'rxjs/Observable';
 import { environment } from 'app-environment';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaRequest, KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-typescript-client';
-import { KalturaCategory } from "kaltura-typescript-client/types/KalturaCategory";
+import { KalturaRequest, KalturaMultiRequest, KalturaMultiResponse } from '@kaltura-ng/kaltura-client';
+import { KalturaCategory } from "@kaltura-ng/kaltura-client/api/types/KalturaCategory";
 
 
 export abstract class CategoriesBulkActionBaseService<T> {

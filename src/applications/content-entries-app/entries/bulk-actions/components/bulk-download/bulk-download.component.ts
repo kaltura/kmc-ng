@@ -6,11 +6,11 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaMediaEntry } from "kaltura-typescript-client/types/KalturaMediaEntry";
+import { KalturaMediaEntry } from "@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry";
 import { BulkRemoveCategoriesService } from '../../services/';
-import { KalturaFlavorParams } from 'kaltura-typescript-client/types/KalturaFlavorParams';
-import { FlavorParamsListAction } from 'kaltura-typescript-client/types/FlavorParamsListAction';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
+import { KalturaFlavorParams } from '@kaltura-ng/kaltura-client/api/types/KalturaFlavorParams';
+import { FlavorParamsListAction } from '@kaltura-ng/kaltura-client/api/types/FlavorParamsListAction';
+import { KalturaFilterPager } from '@kaltura-ng/kaltura-client/api/types/KalturaFilterPager';
 
 import {SelectItem} from 'primeng/primeng';
 

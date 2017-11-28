@@ -6,7 +6,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaCaptionAssetStatus } from 'kaltura-typescript-client/types/KalturaCaptionAssetStatus'
+import { KalturaCaptionAssetStatus } from '@kaltura-ng/kaltura-client/api/types/KalturaCaptionAssetStatus'
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 import { EntryCaptionsWidget } from './entry-captions-widget.service';
@@ -92,7 +92,9 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 				this._downloadFile();
 				break;
 			case "preview":
-				const previewUrl = environment.core.kaltura.apiUrl + "/service/caption_captionasset/action/serve/captionAssetId/" + this._widgetService.currentCaption.id +"/ks/" + this._appAuthentication.appUser.ks;
+                const protocol = environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://';
+
+                const previewUrl = protocol + environment.core.kaltura.serverEndpoint + "/api_v3/service/caption_captionasset/action/serve/captionAssetId/" + this._widgetService.currentCaption.id +"/ks/" + this._appAuthentication.appUser.ks;
 				this._browserService.openLink(previewUrl);
 				break;
 		}
@@ -107,8 +109,9 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 			let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + entryId + '/flavorId/' + this._widgetService.currentCaption.id + '/format/download/protocol/' + protocol;
 			this._browserService.openLink(url);
 		}else {
-			const apiUrl = environment.core.kaltura.apiUrl;
-			let url = apiUrl + "/service/caption_captionasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/captionAssetId/" + this._widgetService.currentCaption.id;
+            const protocol = environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://';
+			const serverEndpoint = environment.core.kaltura.serverEndpoint;
+			let url = protocol + serverEndpoint + "/api_v3/service/caption_captionasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/captionAssetId/" + this._widgetService.currentCaption.id;
 			this._browserService.download(url, this._widgetService.currentCaption.id + "." + this._widgetService.currentCaption.fileExt, this._widgetService.currentCaption.fileExt);
 		}
 	}

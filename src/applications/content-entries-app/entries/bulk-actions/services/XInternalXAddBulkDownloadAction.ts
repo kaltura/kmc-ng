@@ -1,6 +1,6 @@
-import { KalturaRequest } from 'kaltura-typescript-client';
-import { KalturaRequestArgs } from 'kaltura-typescript-client/kaltura-request';
-import { KalturaObjectMetadata } from 'kaltura-typescript-client/kaltura-object-base';
+import { KalturaRequest } from '@kaltura-ng/kaltura-client';
+import { KalturaRequestArgs } from '@kaltura-ng/kaltura-client/api/kaltura-request';
+import { KalturaObjectMetadata } from '@kaltura-ng/kaltura-client/api/kaltura-object-base';
 
 export interface XInternalXAddBulkDownloadActionArgs  extends KalturaRequestArgs {
     entryIds : string;

@@ -1,18 +1,18 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { BulkListAction } from 'kaltura-typescript-client/types/BulkListAction';
-import { KalturaBatchJobStatus } from 'kaltura-typescript-client/types/KalturaBatchJobStatus';
-import { KalturaBulkUploadFilter } from 'kaltura-typescript-client/types/KalturaBulkUploadFilter';
+import { BulkListAction } from '@kaltura-ng/kaltura-client/api/types/BulkListAction';
+import { KalturaBatchJobStatus } from '@kaltura-ng/kaltura-client/api/types/KalturaBatchJobStatus';
+import { KalturaBulkUploadFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaBulkUploadFilter';
 import { Observable } from 'rxjs/Observable';
-import { KalturaBulkUploadListResponse } from 'kaltura-typescript-client/types/KalturaBulkUploadListResponse';
+import { KalturaBulkUploadListResponse } from '@kaltura-ng/kaltura-client/api/types/KalturaBulkUploadListResponse';
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
-import { KalturaServerPolls } from '@kaltura-ng/kaltura-server-utils/server-polls';
+import { KalturaServerPolls } from 'app-shared/kmc-shared/server-polls';
 import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events/bulk-log-uploading-started.event';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
-import { KalturaBulkUpload } from 'kaltura-typescript-client/types/KalturaBulkUpload';
+import { KalturaDetachedResponseProfile } from '@kaltura-ng/kaltura-client/api/types/KalturaDetachedResponseProfile';
+import { KalturaResponseProfileType } from '@kaltura-ng/kaltura-client/api/types/KalturaResponseProfileType';
+import { KalturaBulkUpload } from '@kaltura-ng/kaltura-client/api/types/KalturaBulkUpload';
 
 @Injectable()
 export class BulkUploadMonitorService implements OnDestroy {

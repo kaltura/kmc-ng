@@ -1,7 +1,7 @@
-import {KalturaObjectMetadata} from 'kaltura-typescript-client/kaltura-object-base';
-import {KalturaRequest, KalturaRequestArgs} from 'kaltura-typescript-client/kaltura-request';
-import {KalturaTypesFactory} from 'kaltura-typescript-client';
-import {KalturaObjectBase, KalturaObjectBaseArgs} from 'kaltura-typescript-client/kaltura-object-base';
+import {KalturaObjectMetadata} from '@kaltura-ng/kaltura-client/api/kaltura-object-base';
+import {KalturaRequest, KalturaRequestArgs} from '@kaltura-ng/kaltura-client/api/kaltura-request';
+import {KalturaTypesFactory} from '@kaltura-ng/kaltura-client';
+import {KalturaObjectBase, KalturaObjectBaseArgs} from '@kaltura-ng/kaltura-client/api/kaltura-object-base';
 
 
 // TODO [kmcng] should remove once this service will be added to production (https://kaltura.atlassian.net/browse/KMCNG-623)

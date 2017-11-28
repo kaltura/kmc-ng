@@ -2,9 +2,9 @@ import {Injectable} from '@angular/core';
 import {KalturaClient} from '@kaltura-ng/kaltura-client';
 import {Observable} from 'rxjs/Observable';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {MediaAddAction} from "kaltura-typescript-client/types/MediaAddAction";
-import {KalturaMediaEntry} from "kaltura-typescript-client/types/KalturaMediaEntry";
-import {KalturaMediaType} from "kaltura-typescript-client/types/KalturaMediaType";
+import {MediaAddAction} from "@kaltura-ng/kaltura-client/api/types/MediaAddAction";
+import {KalturaMediaEntry} from "@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry";
+import {KalturaMediaType} from "@kaltura-ng/kaltura-client/api/types/KalturaMediaType";
 import {AppLocalization} from "@kaltura-ng/kaltura-common";
 
 

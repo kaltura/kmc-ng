@@ -1,10 +1,10 @@
-import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
+import { KalturaCategory } from '@kaltura-ng/kaltura-client/api/types/KalturaCategory';
 import { Injectable } from '@angular/core';
 import { WidgetBase } from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { CategoryWidgetsManager } from './category-widgets-manager';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
+import { KalturaMultiRequest } from '@kaltura-ng/kaltura-client';
 
 
 export abstract class CategoryWidget extends WidgetBase<CategoryWidgetsManager, KalturaCategory, KalturaMultiRequest> {
@@ -61,10 +61,10 @@ export abstract class CategoryWidget extends WidgetBase<CategoryWidgetsManager, 
 
     }
 
-    protected _showActivationError() {
+    protected _showActivationError(message?: string) {
         this._showBlockerMessage(new AreaBlockerMessage(
             {
-                message: 'An error occurred while loading data',
+                message: message || 'An error occurred while loading data',
                 buttons: [
                     {
                         label: 'Retry',

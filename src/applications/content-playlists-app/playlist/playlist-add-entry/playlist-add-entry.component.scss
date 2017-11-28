@@ -4,7 +4,6 @@
   .kFloater{
     display: flex;
     flex-direction: column;
-    height: 240px;
 
     .kHeader {
       height: 78px;
@@ -40,16 +39,7 @@
     }
 
     .kContainer{
-      flex: 0 0 auto;
-      height: 72px;
-      margin: 12px;
-    }
-
-    .kFooter{
-      flex: 0 0 auto;
-      height: 66px;
-      border-top: 1px solid $kGrayscale4;
-      display: flex;
+      flex: 1 1 auto;
     }
   }
 }

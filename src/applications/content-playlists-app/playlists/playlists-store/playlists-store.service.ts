@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
+import { KalturaUtils } from '@kaltura-ng/kaltura-client/api/utils/kaltura-utils';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -7,19 +7,19 @@ import { ISubscription } from 'rxjs/Subscription';
 import { Scheduler } from 'rxjs';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 
-import { PlaylistListAction } from 'kaltura-typescript-client/types/PlaylistListAction';
-import { KalturaPlaylistListResponse } from 'kaltura-typescript-client/types/KalturaPlaylistListResponse';
-import { KalturaPlaylistFilter } from 'kaltura-typescript-client/types/KalturaPlaylistFilter';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
-import { PlaylistDeleteAction } from 'kaltura-typescript-client/types/PlaylistDeleteAction';
+import { PlaylistListAction } from '@kaltura-ng/kaltura-client/api/types/PlaylistListAction';
+import { KalturaPlaylistListResponse } from '@kaltura-ng/kaltura-client/api/types/KalturaPlaylistListResponse';
+import { KalturaPlaylistFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaPlaylistFilter';
+import { KalturaFilterPager } from '@kaltura-ng/kaltura-client/api/types/KalturaFilterPager';
+import { KalturaDetachedResponseProfile } from '@kaltura-ng/kaltura-client/api/types/KalturaDetachedResponseProfile';
+import { KalturaResponseProfileType } from '@kaltura-ng/kaltura-client/api/types/KalturaResponseProfileType';
+import { PlaylistDeleteAction } from '@kaltura-ng/kaltura-client/api/types/PlaylistDeleteAction';
 
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
-import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
+import { KalturaPlaylist } from '@kaltura-ng/kaltura-client/api/types/KalturaPlaylist';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 export enum SortDirection {

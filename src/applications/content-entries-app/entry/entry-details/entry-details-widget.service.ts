@@ -5,8 +5,8 @@ import {
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { environment } from 'app-environment';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaSourceType } from 'kaltura-typescript-client/types/KalturaSourceType';
+import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
+import { KalturaSourceType } from '@kaltura-ng/kaltura-client/api/types/KalturaSourceType';
 
 export interface PreviewEntryData{
     landingPage : string;

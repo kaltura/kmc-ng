@@ -5,16 +5,16 @@ import 'rxjs/add/operator/publishReplay';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 
-import { CategoryListAction } from 'kaltura-typescript-client/types/CategoryListAction';
-import { KalturaCategoryFilter } from 'kaltura-typescript-client/types/KalturaCategoryFilter';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
-import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
-import { KalturaCategoryListResponse } from 'kaltura-typescript-client/types/KalturaCategoryListResponse';
-import { KalturaPrivacyType } from 'kaltura-typescript-client/types/KalturaPrivacyType';
-import { KalturaAppearInListType } from 'kaltura-typescript-client/types/KalturaAppearInListType';
-import { KalturaContributionPolicyType } from 'kaltura-typescript-client/types/KalturaContributionPolicyType';
+import { CategoryListAction } from '@kaltura-ng/kaltura-client/api/types/CategoryListAction';
+import { KalturaCategoryFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaCategoryFilter';
+import { KalturaFilterPager } from '@kaltura-ng/kaltura-client/api/types/KalturaFilterPager';
+import { KalturaCategory } from '@kaltura-ng/kaltura-client/api/types/KalturaCategory';
+import { KalturaDetachedResponseProfile } from '@kaltura-ng/kaltura-client/api/types/KalturaDetachedResponseProfile';
+import { KalturaResponseProfileType } from '@kaltura-ng/kaltura-client/api/types/KalturaResponseProfileType';
+import { KalturaCategoryListResponse } from '@kaltura-ng/kaltura-client/api/types/KalturaCategoryListResponse';
+import { KalturaPrivacyType } from '@kaltura-ng/kaltura-client/api/types/KalturaPrivacyType';
+import { KalturaAppearInListType } from '@kaltura-ng/kaltura-client/api/types/KalturaAppearInListType';
+import { KalturaContributionPolicyType } from '@kaltura-ng/kaltura-client/api/types/KalturaContributionPolicyType';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 export interface CategoryData {

@@ -1,9 +1,9 @@
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
 import { WidgetBase } from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
 import { EntryWidgetsManager } from './entry-widgets-manager';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
+import { KalturaMultiRequest } from '@kaltura-ng/kaltura-client';
 
 export abstract class EntryWidget extends WidgetBase<EntryWidgetsManager, KalturaMediaEntry, KalturaMultiRequest>
 {
@@ -64,10 +64,10 @@ export abstract class EntryWidget extends WidgetBase<EntryWidgetsManager, Kaltur
         }
     }
 
-    protected _showActivationError() {
+    protected _showActivationError(message?: string) {
         this._showBlockerMessage(new AreaBlockerMessage(
             {
-                message: 'An error occurred while loading data',
+                message: message || 'An error occurred while loading data',
                 buttons: [
                     {
                         label: 'Retry',

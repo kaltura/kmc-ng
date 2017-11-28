@@ -5,32 +5,32 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { async } from 'rxjs/scheduler/async';
-import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from '@kaltura-ng/kaltura-server-utils';
+import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
-import { KalturaBaseEntryListResponse } from 'kaltura-typescript-client/types/KalturaBaseEntryListResponse';
-import { BaseEntryDeleteAction } from 'kaltura-typescript-client/types/BaseEntryDeleteAction';
-import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { KalturaMediaEntryFilter } from 'kaltura-typescript-client/types/KalturaMediaEntryFilter';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaMetadataSearchItem } from 'kaltura-typescript-client/types/KalturaMetadataSearchItem';
-import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
-import { KalturaSearchOperator } from 'kaltura-typescript-client/types/KalturaSearchOperator';
-import { KalturaSearchOperatorType } from 'kaltura-typescript-client/types/KalturaSearchOperatorType';
-import { BaseEntryListAction } from 'kaltura-typescript-client/types/BaseEntryListAction';
+import { KalturaBaseEntryListResponse } from '@kaltura-ng/kaltura-client/api/types/KalturaBaseEntryListResponse';
+import { BaseEntryDeleteAction } from '@kaltura-ng/kaltura-client/api/types/BaseEntryDeleteAction';
+import { KalturaDetachedResponseProfile } from '@kaltura-ng/kaltura-client/api/types/KalturaDetachedResponseProfile';
+import { KalturaFilterPager } from '@kaltura-ng/kaltura-client/api/types/KalturaFilterPager';
+import { KalturaMediaEntryFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntryFilter';
+import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
+import { KalturaMetadataSearchItem } from '@kaltura-ng/kaltura-client/api/types/KalturaMetadataSearchItem';
+import { KalturaResponseProfileType } from '@kaltura-ng/kaltura-client/api/types/KalturaResponseProfileType';
+import { KalturaSearchOperator } from '@kaltura-ng/kaltura-client/api/types/KalturaSearchOperator';
+import { KalturaSearchOperatorType } from '@kaltura-ng/kaltura-client/api/types/KalturaSearchOperatorType';
+import { BaseEntryListAction } from '@kaltura-ng/kaltura-client/api/types/BaseEntryListAction';
 
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 import { FilterItem } from './filter-item';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { KalturaLiveStreamAdminEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamAdminEntry';
-import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamEntry';
-import { KalturaExternalMediaEntry } from 'kaltura-typescript-client/types/KalturaExternalMediaEntry';
+import { KalturaLiveStreamAdminEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaLiveStreamAdminEntry';
+import { KalturaLiveStreamEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaLiveStreamEntry';
+import { KalturaExternalMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaExternalMediaEntry';
 import { environment } from 'app-environment';
 
 export type UpdateStatus = {
@@ -49,7 +49,8 @@ export interface QueryData {
   sortBy?: string,
   sortDirection?: SortDirection,
   fields?: string,
-  metadataProfiles?: number[]
+  metadataProfiles?: number[],
+  statusIn?: string
 }
 
 export interface FilterArgs {
@@ -119,6 +120,12 @@ export class EntriesStore implements OnDestroy {
   public static registerFilterType<T extends FilterItem>(filterType: FilterTypeConstructor<T>,
                                                          handler: (items: T[], request: FilterArgs) => void): void {
     EntriesStore.filterTypeMapping[this.getFilterType(filterType)] = handler;
+  }
+
+  public set queryStatusIn(value: number[]) {
+    if (Array.isArray(value) && value.length) {
+      this._queryData.statusIn = value.join(',');
+    }
   }
 
   public set paginationCacheToken(token: string) {
@@ -427,6 +434,10 @@ export class EntriesStore implements OnDestroy {
       // handle default value for statuses
       if (!filter.statusIn) {
         filter.statusIn = '-1,-2,0,1,2,7,4';
+      }
+
+      if (this.queryData.statusIn) {
+        filter.statusIn = this.queryData.statusIn;
       }
 
       // update the sort by args

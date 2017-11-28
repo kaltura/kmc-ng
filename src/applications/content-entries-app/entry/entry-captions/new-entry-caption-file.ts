@@ -1,4 +1,4 @@
-import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
+import { KalturaUploadFile } from 'app-shared/kmc-shared';
 
 export class NewEntryCaptionFile extends KalturaUploadFile {
   public captionId?: string;
