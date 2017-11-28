@@ -1,0 +1,76 @@
+@import 'app-theme/_variables.scss';
+
+.kContent {
+
+  padding-left: 28px;
+
+  > .kRow:first-child {
+    padding-top: 28px;
+  }
+
+  .kRow {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    padding-top: 20px;
+
+    .kRequired {
+      width: 20px;
+      font-size: 24px;
+      color: $kGrayscale2;
+      &.kHasError {
+        color: $kDandger;
+        font-weight: bold;
+      }
+    }
+    .kRequired, .kLabel {
+      padding: 8px 0px 8px 4px;
+      height: 18px;
+    }
+
+    .kFieldMessage {
+      padding-top: 10px;
+      max-width: 310px;
+      color: $kGrayscale3;
+      font-size: 13px;
+      line-height: 16px;
+    }
+
+    .kLabel {
+      width: 190px;
+      -webkit-box-flex: 0;
+      -ms-flex: 0 0 auto;
+      flex: 0 0 auto;
+      height: 18px;
+      color: $kGrayscale1;
+      font-size: 15px;
+      line-height: 18px;
+
+      &.kInputSwitchLabel {
+        padding-top: 3px;
+      }
+    }
+
+    .kControl {
+      color: $kGrayscale2;
+      height: 34px;
+      width: 360px;
+      border-radius: 3px;
+      &.kHasError {
+        border: 1px solid $kDandger;
+        background: initial;
+      }
+      &.kInputSwitch {
+        padding-right: 12px;
+
+        & + span {
+          vertical-align: middle;
+        }
+      }
+    }
+    .error {
+      padding-top: 8px;
+      font-size: 15px;
+    }
+  }
+}

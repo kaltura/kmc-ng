@@ -229,6 +229,9 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 {
                     filter: new KalturaCategoryEntryFilter({
                         entryIdEqual: entry.id
+                    }),
+                    pager: new KalturaFilterPager({
+                        pageSize: 32
                     })
                 }
             ))
@@ -432,7 +435,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         this.isLiveEntry = false;
     }
 
-    onValidate() : Observable<{ isValid : boolean}>
+    onValidate(wasActivated: boolean) : Observable<{ isValid : boolean}>
     {
         return Observable.create(observer =>
         {

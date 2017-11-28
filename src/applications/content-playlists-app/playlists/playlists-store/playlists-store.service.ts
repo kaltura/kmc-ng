@@ -137,6 +137,8 @@ export class PlaylistsStore implements OnDestroy {
 			this.requestSubscription = null;
 		}
 
+    this.browserService.scrollToTop();
+
 		this._stateSource.next({loading: true, errorMessage: null});
 
 		// execute the request

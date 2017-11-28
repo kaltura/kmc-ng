@@ -36,7 +36,8 @@
               <i class="kIcondropdown_arrow_bottom dropdown"></i>
             </div>
           </div>
-          <button pButton
+          <button *ngIf="showReload"
+                  pButton
                   class="kButtonDefault kRefreshBtn small"
                   type="text"
                   icon="kIconrefresh"

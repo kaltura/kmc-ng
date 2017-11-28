@@ -1,6 +1,6 @@
 <k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [centerOnScreen]="true">
     <div class="jumpTo" *ngIf="_jumpToMenu.length > 2">
-        <p-menu #menu popup="popup" [model]="_jumpToMenu" [appendTo]="'body'"></p-menu>
+        <p-menu #menu popup="popup" [model]="_jumpToMenu" [appendTo]="'body'" kMenuCloseOnScroll></p-menu>
         <button type="button" class="kButtonDefault" pButton icon="kIcondropdown_arrow_bottom" iconPos="right"
                 label="{{'applications.content.entryDetails.metadata.jumpTo' | translate}}"
                 (click)="menu.toggle($event)"></button>
@@ -30,7 +30,7 @@
                                    suggestionSelectableField="isSelectable"
                                    [multiple]="true"
                                    [limitToSuggestions]="false"
-                                   [minLength]="2"
+                                   [minLength]="3"
                                    [suggestionsProvider]="_tagsProvider"
                                    (completeMethod)="_searchTags($event)">
                     </kAutoComplete>

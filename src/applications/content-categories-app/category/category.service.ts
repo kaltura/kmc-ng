@@ -1,23 +1,22 @@
-import { CategoriesService } from './../categories/categories.service';
-import { Injectable, OnDestroy, Host } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd, NavigationStart } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import {CategoriesService} from './../categories/categories.service';
+import {Host, Injectable, OnDestroy} from '@angular/core';
+import {ActivatedRoute, NavigationEnd, NavigationStart, Router} from '@angular/router';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {ISubscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { CategoryGetAction } from 'kaltura-typescript-client/types/CategoryGetAction';
-import { CategoryUpdateAction } from 'kaltura-typescript-client/types/CategoryUpdateAction';
+import {KalturaClient} from '@kaltura-ng/kaltura-client';
+import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-typescript-client';
+import {CategoryGetAction} from 'kaltura-typescript-client/types/CategoryGetAction';
+import {CategoryUpdateAction} from 'kaltura-typescript-client/types/CategoryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { CategoryWidgetsManager } from './category-widgets-manager';
-import { KalturaTypesFactory } from 'kaltura-typescript-client';
-import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
+import {  OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 export enum ActionTypes {
@@ -67,11 +66,11 @@ export class CategoryService implements OnDestroy {
 		private _router: Router,
 		private _browserService: BrowserService,
 		private _categoriesStore: CategoriesService,
-		@Host() private _sectionsManager: CategoryWidgetsManager,
+		@Host() private _widgetsManager: CategoryWidgetsManager,
 		private _categoryRoute: ActivatedRoute,
 		private _appLocalization: AppLocalization) {
 
-		this._sectionsManager.categoryStore = this;
+		this._widgetsManager.categoryStore = this;
 
 		this._mapSections();
 
@@ -80,7 +79,7 @@ export class CategoryService implements OnDestroy {
 	}
 
 	private _onSectionsStateChanges() {
-		this._sectionsManager.widgetsState$
+		this._widgetsManager.widgetsState$
 			.cancelOnDestroy(this)
 			.debounce(() => Observable.timer(500))
 			.subscribe(
@@ -171,9 +170,10 @@ export class CategoryService implements OnDestroy {
 			})
 		);
 
-		this._sectionsManager.notifyDataSaving(newCategory, request, this.category)
+		this._widgetsManager.notifyDataSaving(newCategory, request, this.category)
 			.cancelOnDestroy(this)
 			.monitor('category store: prepare category for save')
+      .tag('block-shell')
 			.flatMap(
 			(response) => {
 				if (response.ready) {
@@ -181,7 +181,8 @@ export class CategoryService implements OnDestroy {
 
 					return this._kalturaServerClient.multiRequest(request)
 						.monitor('category store: save category')
-						.map(
+                        .tag('block-shell')
+                        .map(
 						response => {
 							if (response.hasErrors()) {
 								this._state.next({ action: ActionTypes.CategorySavingFailed });
@@ -249,7 +250,7 @@ export class CategoryService implements OnDestroy {
 		this._updatePageExitVerification();
 
 		this._state.next({ action: ActionTypes.CategoryLoading });
-		this._sectionsManager.notifyDataLoading(categoryId);
+		this._widgetsManager.notifyDataLoading(categoryId);
 
 		this._loadCategorySubscription = this._getCategory(categoryId)
 			.cancelOnDestroy(this)
@@ -259,7 +260,7 @@ export class CategoryService implements OnDestroy {
 				this._category.next(response);
 				this._categoryId = response.id;
 
-				const dataLoadedResult = this._sectionsManager.notifyDataLoaded(response);
+				const dataLoadedResult = this._widgetsManager.notifyDataLoaded(response, { isNewData: false });
 
 				if (dataLoadedResult.errors.length) {
 					this._state.next({

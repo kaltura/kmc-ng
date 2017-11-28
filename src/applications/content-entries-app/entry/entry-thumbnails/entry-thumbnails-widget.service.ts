@@ -262,40 +262,28 @@ export class EntryThumbnailsWidget extends EntryWidget
 			);
 	}
 
-	public _onFileSelected(selectedFiles: FileList) {
-		if (selectedFiles && selectedFiles.length) {
-			const fileData: File = selectedFiles[0];
-
-			const thumbs = Array.from(this._thumbnails.getValue().items);
-			super._showLoader();
-			this._kalturaServerClient.request(new ThumbAssetAddFromImageAction({
-				entryId: this.data.id,
-				fileData: fileData
-			}))
-                .cancelOnDestroy(this, this.widgetReset$)
-                .monitor('add thumb')
-                .subscribe(
-					() => {
-						this.reloadThumbnails();
-					},
-					error => {
-						this._showBlockerMessage(new AreaBlockerMessage(
-							{
-								message: 'Error uploading thumbnail',
-								buttons: [
-									{
-										label: 'Dismiss',
-										action: () => {
-											super._removeBlockerMessage();
-										}
-									}
-								]
-							}
-						), true);
-					}
-				);
-		}
-	}
+  public _onFileSelected(selectedFiles: FileList) {
+    if (selectedFiles && selectedFiles.length) {
+      const fileData: File = selectedFiles[0];
+      super._showLoader();
+      this._kalturaServerClient.request(new ThumbAssetAddFromImageAction({ entryId: this.data.id, fileData: fileData }))
+        .tag('block-shell')
+        .cancelOnDestroy(this, this.widgetReset$)
+        .monitor('add thumb')
+        .subscribe(
+          () => this.reloadThumbnails(),
+          () => {
+            this._showBlockerMessage(new AreaBlockerMessage({
+              message: this._appLocalization.get('applications.content.entryDetails.errors.thumbnailsUploadError'),
+              buttons: [{
+                label: this._appLocalization.get('applications.content.entryDetails.errors.dismiss'),
+                action: () => super._removeBlockerMessage()
+              }]
+            }), true);
+          }
+        );
+    }
+  }
 
 
     ngOnDestroy()

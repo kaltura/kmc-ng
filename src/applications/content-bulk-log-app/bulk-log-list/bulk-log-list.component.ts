@@ -19,7 +19,6 @@ import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events/bulk-
 })
 export class BulkLogListComponent implements OnInit, OnDestroy {
   @Input() selectedBulkLogItems: Array<any> = [];
-  @ViewChild(BulkLogTableComponent) private dataTable: BulkLogTableComponent;
   @ViewChild('tags') private tags: StickyComponent;
 
   public isBusy = false;
@@ -60,7 +59,6 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
       query => {
         this._filter.pageSize = query.data.pageSize;
         this._filter.pageIndex = query.data.pageIndex - 1;
-        this.dataTable.scrollToTop();
       }
     );
 

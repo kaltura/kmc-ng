@@ -1,0 +1,29 @@
+<div class="kEditWin kOverrideFAIcons" #captionsEdit>
+  <div class="kHeader">
+    <span class="kTitle">{{'applications.upload.prepareLive.createLiveStreamTitle' | translate}}</span>
+  </div>
+  <k-area-blocker [showLoader]="_blockerState.isBusy" [message]="_blockerState.message">
+
+  <div class="kContainer">
+
+    <div class="kRow">
+      <span class="kLabel">{{'applications.upload.prepareLive.streamTypeLabel' | translate}}</span>
+      <div class="kRequired"></div>
+      <p-dropdown [options]="_availableStreamTypes" [(ngModel)]="_selectedStreamType" [autoWidth]="false"></p-dropdown>
+    </div>
+
+    <div [ngSwitch]="_selectedStreamType">
+      <kKalturaLiveStream #kalturaLiveStreamComponent *ngSwitchCase="_streamTypes.kaltura"
+                          [(data)]="kalturaLiveStreamData"></kKalturaLiveStream>
+      <kManualLive #manualLiveComponent *ngSwitchCase="_streamTypes.manual" [(data)]="manualLiveData"></kManualLive>
+      <kUniversalLive #universalLiveComponent *ngSwitchCase="_streamTypes.universal" [(data)]="universalLiveData"></kUniversalLive>
+
+    </div>
+  </div>
+  </k-area-blocker>
+
+  <div class="kFooter">
+    <button type="button" class="kButtonBranded" (click)="submitCurrentSelectedForm()" pButton
+            label="{{'applications.upload.prepareLive.create' | translate}}"></button>
+  </div>
+</div>
