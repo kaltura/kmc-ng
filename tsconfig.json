@@ -132,12 +132,6 @@
       "jquery/*": [
         "../node_modules/jquery/*"
       ],
-      "kaltura-typescript-client": [
-        "../node_modules/kaltura-typescript-client"
-      ],
-      "kaltura-typescript-client/*": [
-        "../node_modules/kaltura-typescript-client/*"
-      ],
       "moment": [
         "../node_modules/moment"
       ],
