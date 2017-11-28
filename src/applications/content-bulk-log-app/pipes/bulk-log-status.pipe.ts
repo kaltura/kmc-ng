@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { KalturaBatchJobStatus } from 'kaltura-typescript-client/types/KalturaBatchJobStatus';
+import { KalturaBatchJobStatus } from '@kaltura-ng/kaltura-client/api/types/KalturaBatchJobStatus';
 
 @Pipe({ name: 'kBulkLogTableStatus' })
 

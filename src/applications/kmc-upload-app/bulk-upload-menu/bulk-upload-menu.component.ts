@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication, AppNavigator } from 'app-shared/kmc-shell';
-import { KalturaAPIException } from 'kaltura-typescript-client';
+import { KalturaAPIException } from '@kaltura-ng/kaltura-client';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BulkUploadService, BulkUploadTypes } from 'app-shared/kmc-shell/bulk-upload';
 import { AppEventsService } from 'app-shared/kmc-shared';

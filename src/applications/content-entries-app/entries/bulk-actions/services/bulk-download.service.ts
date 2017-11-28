@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
 import { BulkActionBaseService } from './bulk-action-base.service';
 import { XInternalXAddBulkDownloadAction } from './XInternalXAddBulkDownloadAction';
 

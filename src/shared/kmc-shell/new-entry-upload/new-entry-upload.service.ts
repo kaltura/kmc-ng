@@ -3,16 +3,16 @@ import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
+import { KalturaMediaType } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaType';
 import { TrackedFile, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryUploadFile } from './new-entry-upload-file';
-import { MediaAddAction } from 'kaltura-typescript-client/types/MediaAddAction';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
-import { KalturaAssetParamsResourceContainer } from 'kaltura-typescript-client/types/KalturaAssetParamsResourceContainer';
-import { KalturaAssetsParamsResourceContainers } from 'kaltura-typescript-client/types/KalturaAssetsParamsResourceContainers';
-import { MediaUpdateContentAction } from 'kaltura-typescript-client/types/MediaUpdateContentAction';
-import { UploadTokenDeleteAction } from 'kaltura-typescript-client/types/UploadTokenDeleteAction';
+import { MediaAddAction } from '@kaltura-ng/kaltura-client/api/types/MediaAddAction';
+import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
+import { KalturaUploadedFileTokenResource } from '@kaltura-ng/kaltura-client/api/types/KalturaUploadedFileTokenResource';
+import { KalturaAssetParamsResourceContainer } from '@kaltura-ng/kaltura-client/api/types/KalturaAssetParamsResourceContainer';
+import { KalturaAssetsParamsResourceContainers } from '@kaltura-ng/kaltura-client/api/types/KalturaAssetsParamsResourceContainers';
+import { MediaUpdateContentAction } from '@kaltura-ng/kaltura-client/api/types/MediaUpdateContentAction';
+import { UploadTokenDeleteAction } from '@kaltura-ng/kaltura-client/api/types/UploadTokenDeleteAction';
 import { TrackedFileData } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
 
 export interface KmcNewEntryUpload {

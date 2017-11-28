@@ -3,9 +3,9 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 
 import { ISubscription } from 'rxjs/Subscription';
 
-import { KalturaCaptionAsset } from 'kaltura-typescript-client/types/KalturaCaptionAsset';
-import { KalturaLanguage } from 'kaltura-typescript-client/types/KalturaLanguage';
-import { KalturaCaptionType } from 'kaltura-typescript-client/types/KalturaCaptionType';
+import { KalturaCaptionAsset } from '@kaltura-ng/kaltura-client/api/types/KalturaCaptionAsset';
+import { KalturaLanguage } from '@kaltura-ng/kaltura-client/api/types/KalturaLanguage';
+import { KalturaCaptionType } from '@kaltura-ng/kaltura-client/api/types/KalturaCaptionType';
 import { AppLocalization, KalturaUtils, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { FileDialogComponent } from '@kaltura-ng/kaltura-ui';

@@ -1,4 +1,4 @@
-import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
+import { KalturaCategory } from '@kaltura-ng/kaltura-client/api/types/KalturaCategory';
 import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 

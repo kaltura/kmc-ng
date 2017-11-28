@@ -1,4 +1,4 @@
-import { KalturaBulkUploadType } from 'kaltura-typescript-client/types/KalturaBulkUploadType';
+import { KalturaBulkUploadType } from '@kaltura-ng/kaltura-client/api/types/KalturaBulkUploadType';
 
 export function getBulkUploadType(type: KalturaBulkUploadType): string {
   switch (true) {

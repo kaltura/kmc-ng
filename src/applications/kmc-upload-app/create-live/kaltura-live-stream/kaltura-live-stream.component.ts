@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {KalturaRecordStatus} from 'kaltura-typescript-client/types/KalturaRecordStatus';
+import {KalturaRecordStatus} from '@kaltura-ng/kaltura-client/api/types/KalturaRecordStatus';
 import {KalturaLiveStreamService} from './kaltura-live-stream.service';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';

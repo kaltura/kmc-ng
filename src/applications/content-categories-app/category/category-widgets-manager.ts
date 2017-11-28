@@ -1,9 +1,9 @@
-import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
+import { KalturaCategory } from '@kaltura-ng/kaltura-client/api/types/KalturaCategory';
 import { Injectable } from '@angular/core';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { WidgetsManagerBase } from '@kaltura-ng/kaltura-ui'
 import { CategoryService } from './category.service';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
+import { KalturaMultiRequest } from '@kaltura-ng/kaltura-client';
 
 @Injectable()
 export class CategoryWidgetsManager extends WidgetsManagerBase<KalturaCategory, KalturaMultiRequest>

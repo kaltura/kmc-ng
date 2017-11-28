@@ -1,14 +1,14 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
+import { KalturaMultiRequest } from '@kaltura-ng/kaltura-client';
 import { PlaylistWidget } from '../playlist-widget';
 import { PlaylistWidgetKeys } from '../playlist-widget-keys';
-import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
+import { KalturaPlaylist } from '@kaltura-ng/kaltura-client/api/types/KalturaPlaylist';
 import { Observable } from 'rxjs/Observable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TagSearchAction } from 'kaltura-typescript-client/types/TagSearchAction';
-import { KalturaTagFilter } from 'kaltura-typescript-client/types/KalturaTagFilter';
-import { KalturaTaggedObjectType } from 'kaltura-typescript-client/types/KalturaTaggedObjectType';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
+import { TagSearchAction } from '@kaltura-ng/kaltura-client/api/types/TagSearchAction';
+import { KalturaTagFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaTagFilter';
+import { KalturaTaggedObjectType } from '@kaltura-ng/kaltura-client/api/types/KalturaTaggedObjectType';
+import { KalturaFilterPager } from '@kaltura-ng/kaltura-client/api/types/KalturaFilterPager';
 import { KalturaClient } from '@kaltura-ng/kaltura-client';
 
 @Injectable()

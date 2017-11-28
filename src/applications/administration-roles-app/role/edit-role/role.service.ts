@@ -2,9 +2,9 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {KalturaClient} from '@kaltura-ng/kaltura-client';
-import {KalturaUserRole} from 'kaltura-typescript-client/types/KalturaUserRole';
-import {UserRoleUpdateAction} from 'kaltura-typescript-client/types/UserRoleUpdateAction';
-import {UserRoleAddAction} from 'kaltura-typescript-client/types/UserRoleAddAction';
+import {KalturaUserRole} from '@kaltura-ng/kaltura-client/api/types/KalturaUserRole';
+import {UserRoleUpdateAction} from '@kaltura-ng/kaltura-client/api/types/UserRoleUpdateAction';
+import {UserRoleAddAction} from '@kaltura-ng/kaltura-client/api/types/UserRoleAddAction';
 
 @Injectable()
 export class RoleService implements OnDestroy {

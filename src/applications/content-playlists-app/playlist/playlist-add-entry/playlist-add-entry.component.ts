@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
+import { KalturaEntryStatus } from '@kaltura-ng/kaltura-client/api/types/KalturaEntryStatus';
 
 @Component({
   selector: 'kAddEntry',

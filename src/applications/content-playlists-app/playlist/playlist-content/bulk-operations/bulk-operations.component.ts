@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 @Component({

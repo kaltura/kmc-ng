@@ -1,4 +1,4 @@
-import {KalturaRecordStatus} from 'kaltura-typescript-client/types/KalturaRecordStatus';
+import {KalturaRecordStatus} from '@kaltura-ng/kaltura-client/api/types/KalturaRecordStatus';
 
 export interface KalturaLive {
   name: string
