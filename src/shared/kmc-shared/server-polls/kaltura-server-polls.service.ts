@@ -3,9 +3,9 @@ import {
   KalturaMultiRequest,
   KalturaRequest,
   KalturaRequestBase
-} from '@kaltura-ng/kaltura-client';
+} from 'kaltura-ngx-client';
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaClient } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs/Observable';
 import { ServerPolls } from '@kaltura-ng/kaltura-common';
 
