@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaClient } from 'kaltura-ngx-client';
 
-import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
-import { KalturaCategoryEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaCategoryEntry';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaCategoryEntry } from 'kaltura-ngx-client/api/types/KalturaCategoryEntry';
 import { BulkActionBaseService } from './bulk-action-base.service';
-import { CategoryEntryAddAction } from "@kaltura-ng/kaltura-client/api/types/CategoryEntryAddAction";
-import { CategoryEntryListAction } from '@kaltura-ng/kaltura-client/api/types/CategoryEntryListAction';
-import { KalturaCategoryEntryFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaCategoryEntryFilter';
+import { CategoryEntryAddAction } from "kaltura-ngx-client/api/types/CategoryEntryAddAction";
+import { CategoryEntryListAction } from 'kaltura-ngx-client/api/types/CategoryEntryListAction';
+import { KalturaCategoryEntryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryEntryFilter';
 
 export interface EntryCategoryItem
 {

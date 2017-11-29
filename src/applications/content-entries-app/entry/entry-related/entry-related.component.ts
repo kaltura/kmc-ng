@@ -1,9 +1,9 @@
 import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { EntryRelatedWidget } from './entry-related-widget.service';
-import { KalturaAttachmentType } from '@kaltura-ng/kaltura-client/api/types/KalturaAttachmentType';
-import { KalturaAttachmentAsset } from '@kaltura-ng/kaltura-client/api/types/KalturaAttachmentAsset';
-import { KalturaEntryStatus } from '@kaltura-ng/kaltura-client/api/types/KalturaEntryStatus';
+import { KalturaAttachmentType } from 'kaltura-ngx-client/api/types/KalturaAttachmentType';
+import { KalturaAttachmentAsset } from 'kaltura-ngx-client/api/types/KalturaAttachmentAsset';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { SelectItem, Menu, MenuItem } from 'primeng/primeng';

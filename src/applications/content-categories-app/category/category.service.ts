@@ -9,11 +9,11 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
-import {KalturaClient} from '@kaltura-ng/kaltura-client';
-import {KalturaCategory} from '@kaltura-ng/kaltura-client/api/types/KalturaCategory';
-import {KalturaMultiRequest, KalturaTypesFactory} from '@kaltura-ng/kaltura-client';
-import {CategoryGetAction} from '@kaltura-ng/kaltura-client/api/types/CategoryGetAction';
-import {CategoryUpdateAction} from '@kaltura-ng/kaltura-client/api/types/CategoryUpdateAction';
+import {KalturaClient} from 'kaltura-ngx-client';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-ngx-client';
+import {CategoryGetAction} from 'kaltura-ngx-client/api/types/CategoryGetAction';
+import {CategoryUpdateAction} from 'kaltura-ngx-client/api/types/CategoryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { CategoryWidgetsManager } from './category-widgets-manager';
 import {  OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';

@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 
-import { KalturaUtils } from '@kaltura-ng/kaltura-client/api/utils/kaltura-utils';
+import { KalturaUtils } from 'kaltura-ngx-client/api/utils/kaltura-utils';
 import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item';
 import { BulkLogStoreService } from '../bulk-log-store.service';
 

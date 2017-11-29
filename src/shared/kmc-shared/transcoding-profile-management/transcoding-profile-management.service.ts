@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { ConversionProfileListAction } from '@kaltura-ng/kaltura-client/api/types/ConversionProfileListAction';
-import { KalturaConversionProfileFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaConversionProfileFilter';
-import { KalturaConversionProfileType } from '@kaltura-ng/kaltura-client/api/types/KalturaConversionProfileType';
-import { KalturaFilterPager } from '@kaltura-ng/kaltura-client/api/types/KalturaFilterPager';
-import { KalturaConversionProfileListResponse } from '@kaltura-ng/kaltura-client/api/types/KalturaConversionProfileListResponse';
-import { KalturaConversionProfile } from '@kaltura-ng/kaltura-client/api/types/KalturaConversionProfile';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { ConversionProfileListAction } from 'kaltura-ngx-client/api/types/ConversionProfileListAction';
+import { KalturaConversionProfileFilter } from 'kaltura-ngx-client/api/types/KalturaConversionProfileFilter';
+import { KalturaConversionProfileType } from 'kaltura-ngx-client/api/types/KalturaConversionProfileType';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaConversionProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaConversionProfileListResponse';
+import { KalturaConversionProfile } from 'kaltura-ngx-client/api/types/KalturaConversionProfile';
 
 @Injectable()
 export class TranscodingProfileManagement {

@@ -1,11 +1,11 @@
-import { KalturaCategory } from '@kaltura-ng/kaltura-client/api/types/KalturaCategory';
+import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppLocalization } from "@kaltura-ng/kaltura-common";
 import { CategorySectionsList } from './category-sections-list';
 import { CategoryWidgetKeys } from '../category-widget-keys';
-import { KalturaMediaType } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaType';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { CategoryWidget } from '../category-widget';
 

@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { EntryStore } from '../entry-store.service';
-import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
-import { KalturaEntryStatus } from '@kaltura-ng/kaltura-client/api/types/KalturaEntryStatus';
-import { KalturaSourceType } from '@kaltura-ng/kaltura-client/api/types/KalturaSourceType';
-import { KalturaMediaType } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaType';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { EntryDetailsWidget } from './entry-details-widget.service';
 

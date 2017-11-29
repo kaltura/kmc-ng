@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { KalturaMultiRequest } from '@kaltura-ng/kaltura-client';
-import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
+import { KalturaMultiRequest } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';

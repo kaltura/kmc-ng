@@ -1,7 +1,7 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {RolesService} from './roles.service';
-import {KalturaUserRole} from '@kaltura-ng/kaltura-client/api/types/KalturaUserRole';
+import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';

@@ -1,6 +1,6 @@
-import { KalturaLiveStreamEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaLiveStreamEntry';
-import { KalturaSourceType } from '@kaltura-ng/kaltura-client/api/types/KalturaSourceType';
-import { KalturaLiveStreamBitrate } from '@kaltura-ng/kaltura-client/api/types/KalturaLiveStreamBitrate';
+import { KalturaLiveStreamEntry } from 'kaltura-ngx-client/api/types/KalturaLiveStreamEntry';
+import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
+import { KalturaLiveStreamBitrate } from 'kaltura-ngx-client/api/types/KalturaLiveStreamBitrate';
 
 export class LiveXMLExporter
 {

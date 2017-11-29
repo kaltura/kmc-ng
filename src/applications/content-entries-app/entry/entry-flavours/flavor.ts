@@ -1,4 +1,4 @@
-import { KalturaFlavorAssetWithParams } from '@kaltura-ng/kaltura-client/api/types/KalturaFlavorAssetWithParams';
+import { KalturaFlavorAssetWithParams } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetWithParams';
 
 export interface Flavor extends KalturaFlavorAssetWithParams{
     name: string,
