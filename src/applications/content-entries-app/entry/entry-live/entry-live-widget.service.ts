@@ -3,14 +3,14 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Message } from 'primeng/primeng';
 
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { KalturaSourceType } from 'kaltura-typescript-client/types/KalturaSourceType';
-import { KalturaLiveStreamBitrate } from 'kaltura-typescript-client/types/KalturaLiveStreamBitrate';
-import { KalturaRecordStatus } from 'kaltura-typescript-client/types/KalturaRecordStatus';
-import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamEntry';
-import { KalturaDVRStatus } from 'kaltura-typescript-client/types/KalturaDVRStatus';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaMultiRequest } from 'kaltura-ngx-client';
+import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
+import { KalturaLiveStreamBitrate } from 'kaltura-ngx-client/api/types/KalturaLiveStreamBitrate';
+import { KalturaRecordStatus } from 'kaltura-ngx-client/api/types/KalturaRecordStatus';
+import { KalturaLiveStreamEntry } from 'kaltura-ngx-client/api/types/KalturaLiveStreamEntry';
+import { KalturaDVRStatus } from 'kaltura-ngx-client/api/types/KalturaDVRStatus';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 
