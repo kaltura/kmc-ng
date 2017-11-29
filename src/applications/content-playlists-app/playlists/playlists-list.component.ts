@@ -8,12 +8,12 @@ import { environment } from 'app-environment';
 
 import { PlaylistsStore, SortDirection } from './playlists-store/playlists-store.service';
 import { BulkDeleteService } from './bulk-service/bulk-delete.service';
-import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
+import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 import * as moment from 'moment';
-import { KalturaPlaylistType } from 'kaltura-typescript-client/types/KalturaPlaylistType';
+import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 
 export interface Filter {
   type: string;
