@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {KalturaNullableBoolean} from 'kaltura-typescript-client/types/KalturaNullableBoolean';
-import {TranscodingProfileManagement} from '@kaltura-ng/kaltura-server-utils/transcoding-profile-management';
+import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import {TranscodingProfileManagement} from 'app-shared/kmc-shared/transcoding-profile-management';
 
 
 export interface TranscodingProfile {

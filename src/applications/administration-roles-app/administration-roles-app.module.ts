@@ -28,7 +28,7 @@ import {KMCShellModule} from 'app-shared/kmc-shell';
 import {routing} from './administration-roles-app.routes';
 import {AdministrationRolesComponent} from './administration-roles.component';
 
-import {MetadataProfileModule} from '@kaltura-ng/kaltura-server-utils';
+import {MetadataProfileModule} from 'app-shared/kmc-shared';
 
 import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
 import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
@@ -40,7 +40,7 @@ import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {AreaBlockerModule} from '@kaltura-ng/kaltura-ui';
 import {DynamicFormModule} from '@kaltura-ng/kaltura-ui/dynamic-form';
 import {DynamicFormModule as PrimeDynamicFormModule} from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
-import {DynamicMetadataFormModule} from '@kaltura-ng/kaltura-server-utils';
+import {DynamicMetadataFormModule} from 'app-shared/kmc-shared';
 import {RolesComponentsList} from './roles/roles-components-list';
 import {EditRoleComponent} from './role/edit-role/edit-role.component';
 
