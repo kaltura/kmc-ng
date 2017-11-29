@@ -117,14 +117,14 @@ export function clientConfigurationFactory() {
     ReactiveFormsModule,
     TooltipModule,
     GrowlModule,
-    KmcUploadAppModule,
+    KmcUploadAppModule.forRoot(),
     NewEntryUploadModule.forRoot(),
     BulkUploadModule.forRoot(),
     TranscodingProfileManagementModule.forRoot(),
     RadioButtonModule,
     StickyModule.forRoot(),
     OperationTagModule.forRoot(),
-    KalturaServerPollsModule
+    KalturaServerPollsModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,

@@ -1,21 +1,40 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryUploadFile } from 'app-shared/kmc-shell';
-import { Observable } from 'rxjs/Observable';
+import { UploadMonitorStatuses } from './upload-monitor.component';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class NewUploadMonitorService implements OnDestroy {
   private _newUploadFiles: { [key: string]: { status: string } } = {};
+  private _totals = new BehaviorSubject<UploadMonitorStatuses>({ uploading: 0, queued: 0, completed: 0, errors: 0 });
+  public totals$ = this._totals.asObservable();
 
   constructor(private _uploadManagement: UploadManagement) {
+    this._uploadManagement
+      .onTrackedFileChanged$
+      .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile) // TODO [kmcng] track flavor as well
+      .filter(({ status }) => TrackedFileStatuses.purged !== status)
+      .cancelOnDestroy(this)
+      .subscribe(trackedFile => {
+          let relevantFile = this._newUploadFiles[trackedFile.id];
+          if (!relevantFile) {
+            relevantFile = { status: trackedFile.status };
+            this._newUploadFiles[trackedFile.id] = relevantFile;
+          } else {
+            relevantFile.status = trackedFile.status;
+          }
 
+          this._totals.next(this._calculateTotalsFromState());
+        }
+      );
   }
 
   ngOnDestroy() {
-
+    this._totals.complete();
   }
 
-  private _syncNewEntryUploadTotals(): { uploading: number, queued: number, completed: number, errors: number } {
+  private _calculateTotalsFromState(): UploadMonitorStatuses {
     return Object.keys(this._newUploadFiles).reduce((totals, key) => {
       const upload = this._newUploadFiles[key];
       switch (upload.status) {
@@ -24,37 +43,22 @@ export class NewUploadMonitorService implements OnDestroy {
         case TrackedFileStatuses.preparing:
         case TrackedFileStatuses.prepared:
         case TrackedFileStatuses.pendingUpload:
-          return Object.assign(totals, { queued: totals.queued + 1 });
+          totals.queued += 1;
+          break;
         case TrackedFileStatuses.uploading:
-          return Object.assign(totals, { uploading: totals.uploading + 1 });
+          totals.uploading += 1;
+          break;
         case TrackedFileStatuses.uploadCompleted:
-          return Object.assign(totals, { completed: totals.completed + 1 });
+          totals.completed += 1;
+          break;
         case TrackedFileStatuses.failure:
-          return Object.assign(totals, { errors: totals.errors + 1 });
+          totals.errors += 1;
+          break;
         default:
-          return totals;
+          break;
       }
+
+      return totals;
     }, { uploading: 0, queued: 0, completed: 0, errors: 0 });
-  }
-
-  public getTotals(): Observable<{ uploading: number, queued: number, completed: number, errors: number }> {
-    return this._uploadManagement
-      .onTrackedFileChanged$
-      .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile)
-      .map(trackedFile => {
-          let relevantFile = this._newUploadFiles[trackedFile.id];
-          if (!relevantFile) {
-            relevantFile = { status: trackedFile.status };
-            this._newUploadFiles[trackedFile.id] = relevantFile;
-          } else {
-            if (!([TrackedFileStatuses.cancelled, TrackedFileStatuses.purged].indexOf(trackedFile.status) !== -1
-                && relevantFile.status === TrackedFileStatuses.failure)) {
-              relevantFile.status = trackedFile.status;
-            }
-          }
-
-          return this._syncNewEntryUploadTotals();
-        }
-      );
   }
 }

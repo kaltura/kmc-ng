@@ -16,7 +16,7 @@
               [targetRef]="openuploadmonitor"
               [targetOffset]="{'x':-109, 'y': 37}"
               (onOpen)="_onMonitorOpen()"
-              (onClose)="_menuOpened = false">
+              (onClose)="_onMonitorClose()">
   <ng-template>
     <kUploadMonitorSection detailsLink="/content/upload-control"
                            [uploadMonitorPopup]="uploadmonitor"

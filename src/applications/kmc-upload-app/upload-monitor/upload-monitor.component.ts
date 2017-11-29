@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { BulkUploadMonitorService } from './bulk-upload-monitor.service';
 import { NewUploadMonitorService } from './new-upload-monitor.service';
 
-interface UploadMonitorStatuses {
+export interface UploadMonitorStatuses {
   uploading: number;
   queued: number;
   completed: number;
@@ -12,8 +12,7 @@ interface UploadMonitorStatuses {
 @Component({
   selector: 'kUploadMonitor',
   templateUrl: './upload-monitor.component.html',
-  styleUrls: ['./upload-monitor.component.scss'],
-  providers: [BulkUploadMonitorService, NewUploadMonitorService]
+  styleUrls: ['./upload-monitor.component.scss']
 })
 export class UploadMonitorComponent implements OnDestroy {
   @Input() appmenu;
@@ -37,7 +36,7 @@ export class UploadMonitorComponent implements OnDestroy {
   };
 
   constructor(private _bulkUploadMonitor: BulkUploadMonitorService, private _newUploadMonitor: NewUploadMonitorService) {
-    this._newUploadMonitor.getTotals()
+    this._newUploadMonitor.totals$
       .cancelOnDestroy(this)
       .subscribe(totals => {
         this._uploadFromDesktop = totals;
@@ -45,13 +44,13 @@ export class UploadMonitorComponent implements OnDestroy {
         this._checkErrors();
       });
 
-    this._bulkUploadMonitor.getTotals()
-      .cancelOnDestroy(this)
-      .subscribe(totals => {
-        this._bulkUpload = totals;
-        this._checkUpToDate();
-        this._checkErrors();
-      })
+    // this._bulkUploadMonitor.getTotals()
+    //   .cancelOnDestroy(this)
+    //   .subscribe(totals => {
+    //     this._bulkUpload = totals;
+    //     this._checkUpToDate();
+    //     this._checkErrors();
+    //   })
   }
 
   ngOnDestroy() {
@@ -64,12 +63,17 @@ export class UploadMonitorComponent implements OnDestroy {
   }
 
   private _checkErrors(): void {
-    this._hasError = this._uploadFromDesktop.errors + this._bulkUpload.errors !== this._errorsCount;
+    this._hasError = (this._uploadFromDesktop.errors + this._bulkUpload.errors) !== this._errorsCount;
   }
 
   public _onMonitorOpen(): void {
     this._menuOpened = true;
     this._errorsCount = this._uploadFromDesktop.errors + this._bulkUpload.errors;
     this._checkErrors();
+  }
+
+  public _onMonitorClose(): void {
+    this._menuOpened = false;
+    this._errorsCount = 0;
   }
 }

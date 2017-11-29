@@ -1,11 +1,5 @@
-import {
-  KalturaAPIException,
-  KalturaMultiRequest,
-  KalturaRequest,
-  KalturaRequestBase
-} from 'kaltura-ngx-client';
+import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaRequest, KalturaRequestBase } from 'kaltura-ngx-client';
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaClient } from 'kaltura-ngx-client';
 import { Observable } from 'rxjs/Observable';
 import { ServerPolls } from '@kaltura-ng/kaltura-common';
 
@@ -14,11 +8,11 @@ export class KalturaServerPolls extends ServerPolls<KalturaRequestBase, KalturaA
   constructor(private _kalturaClient: KalturaClient) {
     super();
   }
-  
+
   protected _createGlobalError(): KalturaAPIException {
     return new KalturaAPIException();
   }
-  
+
   /*
    *   Before execution of the request function will flatten request array
    *   to perform correct multi-request and aggregate responses to according requests
@@ -49,9 +43,9 @@ export class KalturaServerPolls extends ServerPolls<KalturaRequestBase, KalturaA
         }, []);
       });
   }
-  
+
   ngOnDestroy(): void {
-    this._onDestroy.next();
-    this._onDestroy.complete();
+    this._onDestroy$.next();
+    this._onDestroy$.complete();
   }
 }
