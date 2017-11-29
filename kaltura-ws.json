@@ -2,7 +2,6 @@
   "version": "2.0.0",
   "licenses": {
     "ignoreList": [
-      "@kaltura-ng/kaltura-client",
       "@kaltura-ng/kaltura-common",
       "@kaltura-ng/kaltura-primeng-ui",
       "@kaltura-ng/kaltura-ui",
