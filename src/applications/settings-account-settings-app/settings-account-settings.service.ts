@@ -1,19 +1,19 @@
 import {Injectable} from '@angular/core';
-import {KalturaClient} from '@kaltura-ng/kaltura-client';
-import {KalturaMultiRequest} from '@kaltura-ng/kaltura-client';
-import {KalturaUserRoleFilter} from '@kaltura-ng/kaltura-client/api/types/KalturaUserRoleFilter';
-import {KalturaUserRoleStatus} from '@kaltura-ng/kaltura-client/api/types/KalturaUserRoleStatus';
-import {KalturaUserFilter} from '@kaltura-ng/kaltura-client/api/types/KalturaUserFilter';
-import {KalturaNullableBoolean} from '@kaltura-ng/kaltura-client/api/types/KalturaNullableBoolean';
-import {KalturaUserStatus} from '@kaltura-ng/kaltura-client/api/types/KalturaUserStatus';
-import {UserRoleListAction} from '@kaltura-ng/kaltura-client/api/types/UserRoleListAction';
-import {UserListAction} from '@kaltura-ng/kaltura-client/api/types/UserListAction';
+import {KalturaClient} from 'kaltura-ngx-client';
+import {KalturaMultiRequest} from 'kaltura-ngx-client';
+import {KalturaUserRoleFilter} from 'kaltura-ngx-client/api/types/KalturaUserRoleFilter';
+import {KalturaUserRoleStatus} from 'kaltura-ngx-client/api/types/KalturaUserRoleStatus';
+import {KalturaUserFilter} from 'kaltura-ngx-client/api/types/KalturaUserFilter';
+import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import {KalturaUserStatus} from 'kaltura-ngx-client/api/types/KalturaUserStatus';
+import {UserRoleListAction} from 'kaltura-ngx-client/api/types/UserRoleListAction';
+import {UserListAction} from 'kaltura-ngx-client/api/types/UserListAction';
 import {Observable} from 'rxjs/Observable';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {KalturaPartner} from '@kaltura-ng/kaltura-client/api/types/KalturaPartner';
-import {PartnerGetInfoAction} from '@kaltura-ng/kaltura-client/api/types/PartnerGetInfoAction';
-import {PartnerUpdateAction} from "@kaltura-ng/kaltura-client/api/types/PartnerUpdateAction";
-import {KalturaUserListResponse} from "@kaltura-ng/kaltura-client/api/types/KalturaUserListResponse";
+import {KalturaPartner} from 'kaltura-ngx-client/api/types/KalturaPartner';
+import {PartnerGetInfoAction} from 'kaltura-ngx-client/api/types/PartnerGetInfoAction';
+import {PartnerUpdateAction} from "kaltura-ngx-client/api/types/PartnerUpdateAction";
+import {KalturaUserListResponse} from "kaltura-ngx-client/api/types/KalturaUserListResponse";
 
 
 export interface AccountSettings {

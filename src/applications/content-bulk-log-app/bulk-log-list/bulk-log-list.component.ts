@@ -7,7 +7,7 @@ import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { BulkLogTableComponent } from '../bulk-log-table/bulk-log-table.component';
 import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
-import { KalturaBulkUpload } from '@kaltura-ng/kaltura-client/api/types/KalturaBulkUpload';
+import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
 import { getBulkUploadType } from '../utils/get-bulk-upload-type';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events/bulk-log-uploading-started.event';

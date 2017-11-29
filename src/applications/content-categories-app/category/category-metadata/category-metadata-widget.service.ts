@@ -1,25 +1,25 @@
-import { MetadataAddAction } from '@kaltura-ng/kaltura-client/api/types/MetadataAddAction';
-import { MetadataUpdateAction } from '@kaltura-ng/kaltura-client/api/types/MetadataUpdateAction';
-import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
-import { KalturaTagFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaTagFilter';
-import { TagSearchAction } from '@kaltura-ng/kaltura-client/api/types/TagSearchAction';
-import { KalturaFilterPager } from '@kaltura-ng/kaltura-client/api/types/KalturaFilterPager';
-import { KalturaTaggedObjectType } from '@kaltura-ng/kaltura-client/api/types/KalturaTaggedObjectType';
-import { MetadataListAction } from '@kaltura-ng/kaltura-client/api/types/MetadataListAction';
-import { KalturaMetadataObjectType } from '@kaltura-ng/kaltura-client/api/types/KalturaMetadataObjectType';
-import { KalturaCategoryFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaCategoryFilter';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaCategory } from '@kaltura-ng/kaltura-client/api/types/KalturaCategory';
-import { KalturaMetadataFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaMetadataFilter';
-import { KalturaMetadata } from '@kaltura-ng/kaltura-client/api/types/KalturaMetadata';
-import { CategoryListAction } from '@kaltura-ng/kaltura-client/api/types/CategoryListAction';
+import { MetadataAddAction } from 'kaltura-ngx-client/api/types/MetadataAddAction';
+import { MetadataUpdateAction } from 'kaltura-ngx-client/api/types/MetadataUpdateAction';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaTagFilter } from 'kaltura-ngx-client/api/types/KalturaTagFilter';
+import { TagSearchAction } from 'kaltura-ngx-client/api/types/TagSearchAction';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaTaggedObjectType } from 'kaltura-ngx-client/api/types/KalturaTaggedObjectType';
+import { MetadataListAction } from 'kaltura-ngx-client/api/types/MetadataListAction';
+import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
+import { KalturaCategoryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { KalturaMetadataFilter } from 'kaltura-ngx-client/api/types/KalturaMetadataFilter';
+import { KalturaMetadata } from 'kaltura-ngx-client/api/types/KalturaMetadata';
+import { CategoryListAction } from 'kaltura-ngx-client/api/types/CategoryListAction';
 import { Observable } from 'rxjs/Observable';
 import { DynamicMetadataForm, MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, DynamicMetadataFormFactory } from 'app-shared/kmc-shared';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CategoryWidgetKeys } from './../category-widget-keys';
 import { Injectable, OnDestroy } from '@angular/core';
 import { CategoryWidget } from "../category-widget";
-import { KalturaMultiRequest } from '@kaltura-ng/kaltura-client';
+import { KalturaMultiRequest } from 'kaltura-ngx-client';
 
 @Injectable()
 export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy {
