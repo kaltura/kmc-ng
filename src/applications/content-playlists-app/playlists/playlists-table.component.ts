@@ -5,7 +5,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PlaylistsStore } from './playlists-store/playlists-store.service';
 import { Filter } from './playlists-list.component';
-import { KalturaPlaylist } from '@kaltura-ng/kaltura-client/api/types/KalturaPlaylist';
+import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 
 @Component({
   selector: 'kPlaylistsTable',

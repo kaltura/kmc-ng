@@ -2,16 +2,16 @@ import { Injectable } from '@angular/core';
 import { UploadFileAdapter, UploadFileData } from '@kaltura-ng/kaltura-common';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { UploadTokenAddAction } from '@kaltura-ng/kaltura-client/api/types/UploadTokenAddAction';
-import { UploadTokenUploadAction } from '@kaltura-ng/kaltura-client/api/types/UploadTokenUploadAction';
-import { KalturaUploadToken } from '@kaltura-ng/kaltura-client/api/types/KalturaUploadToken';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { UploadTokenAddAction } from 'kaltura-ngx-client/api/types/UploadTokenAddAction';
+import { UploadTokenUploadAction } from 'kaltura-ngx-client/api/types/UploadTokenUploadAction';
+import { KalturaUploadToken } from 'kaltura-ngx-client/api/types/KalturaUploadToken';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KalturaUploadFile } from './kaltura-upload-file';
-import { KalturaRequest } from '@kaltura-ng/kaltura-client';
-import { UploadTokenListAction } from '@kaltura-ng/kaltura-client/api/types/UploadTokenListAction';
-import { KalturaUploadTokenFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaUploadTokenFilter';
-import { KalturaUploadTokenListResponse } from "@kaltura-ng/kaltura-client/api/types/KalturaUploadTokenListResponse";
+import { KalturaRequest } from 'kaltura-ngx-client';
+import { UploadTokenListAction } from 'kaltura-ngx-client/api/types/UploadTokenListAction';
+import { KalturaUploadTokenFilter } from 'kaltura-ngx-client/api/types/KalturaUploadTokenFilter';
+import { KalturaUploadTokenListResponse } from "kaltura-ngx-client/api/types/KalturaUploadTokenListResponse";
 
 @Injectable()
 export class KalturaUploadAdapter extends UploadFileAdapter<KalturaUploadFile> {

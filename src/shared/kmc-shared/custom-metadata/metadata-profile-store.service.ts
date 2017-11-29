@@ -3,14 +3,14 @@ import { PartnerProfileStore } from '../partner-profile';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaMetadataObjectType } from '@kaltura-ng/kaltura-client/api/types/KalturaMetadataObjectType';
-import { MetadataProfileListAction } from '@kaltura-ng/kaltura-client/api/types/MetadataProfileListAction';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
+import { MetadataProfileListAction } from 'kaltura-ngx-client/api/types/MetadataProfileListAction';
 import { MetadataProfile } from './metadata-profile';
 import { MetadataProfileParser } from './kaltura-metadata-parser';
-import { KalturaMetadataProfileCreateMode } from '@kaltura-ng/kaltura-client/api/types/KalturaMetadataProfileCreateMode';
-import { KalturaMetadataProfileFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaMetadataProfileFilter';
-import { KalturaMetadataProfileListResponse } from '@kaltura-ng/kaltura-client/api/types/KalturaMetadataProfileListResponse';
+import { KalturaMetadataProfileCreateMode } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileCreateMode';
+import { KalturaMetadataProfileFilter } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileFilter';
+import { KalturaMetadataProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaMetadataProfileListResponse';
 
 export enum MetadataProfileCreateModes {
     Api,

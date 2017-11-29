@@ -11,17 +11,17 @@ import {CategoriesBulkActionBaseService} from './services/categories-bulk-action
 import {MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {KalturaCategory} from "@kaltura-ng/kaltura-client/api/types/KalturaCategory";
+import {KalturaCategory} from "kaltura-ngx-client/api/types/KalturaCategory";
 import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
 import {BrowserService} from "app-shared/kmc-shell";
 import {environment} from 'app-environment';
-import {KalturaUser} from "@kaltura-ng/kaltura-client/api/types/KalturaUser";
+import {KalturaUser} from "kaltura-ngx-client/api/types/KalturaUser";
 import {PrivacyMode} from "./components/bulk-change-content-privacy/bulk-change-content-privacy.component";
-import {KalturaPrivacyType} from "@kaltura-ng/kaltura-client/api/types/KalturaPrivacyType";
-import {KalturaAppearInListType} from "@kaltura-ng/kaltura-client/api/types/KalturaAppearInListType";
+import {KalturaPrivacyType} from "kaltura-ngx-client/api/types/KalturaPrivacyType";
+import {KalturaAppearInListType} from "kaltura-ngx-client/api/types/KalturaAppearInListType";
 import {AppearInListType} from "./components/bulk-change-category-listing/bulk-change-category-listing.component";
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { KalturaContributionPolicyType } from "@kaltura-ng/kaltura-client/api/types/KalturaContributionPolicyType";
+import { KalturaContributionPolicyType } from "kaltura-ngx-client/api/types/KalturaContributionPolicyType";
 
 @Component({
   selector: 'kCategoriesBulkActions',

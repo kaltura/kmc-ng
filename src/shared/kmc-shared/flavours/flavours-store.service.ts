@@ -4,14 +4,14 @@ import { PartnerProfileStore } from '../partner-profile';
 import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/throw';
 
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaClient } from 'kaltura-ngx-client';
 
-import { FlavorParamsListAction } from '@kaltura-ng/kaltura-client/api/types/FlavorParamsListAction';
-import { KalturaFlavorParams } from '@kaltura-ng/kaltura-client/api/types/KalturaFlavorParams';
-import { KalturaFilterPager } from '@kaltura-ng/kaltura-client/api/types/KalturaFilterPager';
-import { KalturaFlavorParamsListResponse } from '@kaltura-ng/kaltura-client/api/types/KalturaFlavorParamsListResponse';
-import { KalturaDetachedResponseProfile } from '@kaltura-ng/kaltura-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from '@kaltura-ng/kaltura-client/api/types/KalturaResponseProfileType';
+import { FlavorParamsListAction } from 'kaltura-ngx-client/api/types/FlavorParamsListAction';
+import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaFlavorParamsListResponse } from 'kaltura-ngx-client/api/types/KalturaFlavorParamsListResponse';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 
 @Injectable()
 export class FlavoursStore extends PartnerProfileStore

@@ -1,6 +1,6 @@
-import { KalturaSearchOperator } from '@kaltura-ng/kaltura-client/api/types/KalturaSearchOperator';
-import { KalturaContentDistributionSearchItem } from '@kaltura-ng/kaltura-client/api/types/KalturaContentDistributionSearchItem';
-import { KalturaSearchOperatorType } from '@kaltura-ng/kaltura-client/api/types/KalturaSearchOperatorType';
+import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
+import { KalturaContentDistributionSearchItem } from 'kaltura-ngx-client/api/types/KalturaContentDistributionSearchItem';
+import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
 
 import { EntriesStore } from '../entries-store.service';
 import { ValueFilter } from '../value-filter';

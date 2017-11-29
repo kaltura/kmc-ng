@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaClient } from 'kaltura-ngx-client';
 
-import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { BulkActionBaseService } from './bulk-action-base.service';
 import { XInternalXAddBulkDownloadAction } from './XInternalXAddBulkDownloadAction';
 

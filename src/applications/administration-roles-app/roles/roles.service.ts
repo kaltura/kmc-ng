@@ -1,22 +1,22 @@
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {KalturaUserRoleFilter} from '@kaltura-ng/kaltura-client/api/types/KalturaUserRoleFilter';
+import {KalturaUserRoleFilter} from 'kaltura-ngx-client/api/types/KalturaUserRoleFilter';
 import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import {ISubscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
-import {KalturaFilterPager} from '@kaltura-ng/kaltura-client/api/types/KalturaFilterPager';
-import {KalturaClient} from '@kaltura-ng/kaltura-client';
-import {KalturaUserRoleListResponse} from '@kaltura-ng/kaltura-client/api/types/KalturaUserRoleListResponse';
-import {KalturaUserRole} from '@kaltura-ng/kaltura-client/api/types/KalturaUserRole';
-import {UserRoleListAction} from '@kaltura-ng/kaltura-client/api/types/UserRoleListAction';
-import {KalturaUserRoleStatus} from '@kaltura-ng/kaltura-client/api/types/KalturaUserRoleStatus';
-import {KalturaUserRoleOrderBy} from '@kaltura-ng/kaltura-client/api/types/KalturaUserRoleOrderBy';
-import {UserRoleDeleteAction} from '@kaltura-ng/kaltura-client/api/types/UserRoleDeleteAction';
-import {UserRoleUpdateAction} from '@kaltura-ng/kaltura-client/api/types/UserRoleUpdateAction';
+import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import {KalturaClient} from 'kaltura-ngx-client';
+import {KalturaUserRoleListResponse} from 'kaltura-ngx-client/api/types/KalturaUserRoleListResponse';
+import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import {UserRoleListAction} from 'kaltura-ngx-client/api/types/UserRoleListAction';
+import {KalturaUserRoleStatus} from 'kaltura-ngx-client/api/types/KalturaUserRoleStatus';
+import {KalturaUserRoleOrderBy} from 'kaltura-ngx-client/api/types/KalturaUserRoleOrderBy';
+import {UserRoleDeleteAction} from 'kaltura-ngx-client/api/types/UserRoleDeleteAction';
+import {UserRoleUpdateAction} from 'kaltura-ngx-client/api/types/UserRoleUpdateAction';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {UserRoleCloneAction} from '@kaltura-ng/kaltura-client/api/types/UserRoleCloneAction';
-import {KalturaMultiRequest} from '@kaltura-ng/kaltura-client';
+import {UserRoleCloneAction} from 'kaltura-ngx-client/api/types/UserRoleCloneAction';
+import {KalturaMultiRequest} from 'kaltura-ngx-client';
 
 export interface UpdateStatus {
   loading: boolean;
