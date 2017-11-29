@@ -5,11 +5,11 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PlaylistsStore } from 'app-shared/content-shared/playlists-store/playlists-store.service';
-import { KalturaMediaEntry } from '@kaltura-ng/kaltura-client/api/types/KalturaMediaEntry';
-import { PlaylistAddAction } from '@kaltura-ng/kaltura-client/api/types/PlaylistAddAction';
-import { KalturaPlaylist } from '@kaltura-ng/kaltura-client/api/types/KalturaPlaylist';
-import { KalturaPlaylistType } from '@kaltura-ng/kaltura-client/api/types/KalturaPlaylistType';
-import { KalturaAPIException, KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { PlaylistAddAction } from 'kaltura-ngx-client/api/types/PlaylistAddAction';
+import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import { KalturaAPIException, KalturaClient } from 'kaltura-ngx-client';
 
 @Component({
   selector: 'kAddNewPlaylist',

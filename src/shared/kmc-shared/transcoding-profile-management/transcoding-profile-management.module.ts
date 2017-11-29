@@ -1,5 +1,5 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { KalturaClientModule } from '@kaltura-ng/kaltura-client';
+import { KalturaClientModule } from 'kaltura-ngx-client';
 import { TranscodingProfileManagement } from './transcoding-profile-management.service';
 
 @NgModule({

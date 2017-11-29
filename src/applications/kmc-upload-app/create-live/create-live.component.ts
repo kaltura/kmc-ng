@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CreateLiveService} from './create-live.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {KalturaRecordStatus} from '@kaltura-ng/kaltura-client/api/types/KalturaRecordStatus';
+import {KalturaRecordStatus} from 'kaltura-ngx-client/api/types/KalturaRecordStatus';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {Router} from '@angular/router';

@@ -4,19 +4,19 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { async } from 'rxjs/scheduler/async';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaFilterPager } from '@kaltura-ng/kaltura-client/api/types/KalturaFilterPager';
-import { KalturaDetachedResponseProfile } from '@kaltura-ng/kaltura-client/api/types/KalturaDetachedResponseProfile';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { KalturaBulkUploadFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaBulkUploadFilter';
-import { KalturaBulkUpload } from '@kaltura-ng/kaltura-client/api/types/KalturaBulkUpload';
-import { BulkUploadAbortAction } from '@kaltura-ng/kaltura-client/api/types/BulkUploadAbortAction';
+import { KalturaBulkUploadFilter } from 'kaltura-ngx-client/api/types/KalturaBulkUploadFilter';
+import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
+import { BulkUploadAbortAction } from 'kaltura-ngx-client/api/types/BulkUploadAbortAction';
 import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item';
 import { Subject } from 'rxjs/Subject';
 import { QueryRequestArgs } from 'app-shared/content-shared/entries-store/entries-store.service';
-import { BulkListAction } from '@kaltura-ng/kaltura-client/api/types/BulkListAction';
-import { KalturaResponseProfileType } from '@kaltura-ng/kaltura-client/api/types/KalturaResponseProfileType';
-import { KalturaMultiResponse } from '@kaltura-ng/kaltura-client';
+import { BulkListAction } from 'kaltura-ngx-client/api/types/BulkListAction';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
+import { KalturaMultiResponse } from 'kaltura-ngx-client';
 
 export enum SortDirection {
   Desc,

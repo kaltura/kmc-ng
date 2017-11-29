@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { KalturaClientModule } from '@kaltura-ng/kaltura-client';
+import { KalturaClientModule } from 'kaltura-ngx-client';
 import { UploadFileAdapterToken, UploadManagementModule } from '@kaltura-ng/kaltura-common';
 import { KalturaUploadAdapter } from './kaltura-upload-adapter.service';
 

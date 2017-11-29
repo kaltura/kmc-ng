@@ -4,13 +4,13 @@ import { PartnerProfileStore } from '../partner-profile';
 import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/throw';
 
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { AccessControlListAction } from '@kaltura-ng/kaltura-client/api/types/AccessControlListAction';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { AccessControlListAction } from 'kaltura-ngx-client/api/types/AccessControlListAction';
 
-import { KalturaAccessControlFilter } from '@kaltura-ng/kaltura-client/api/types/KalturaAccessControlFilter';
-import { KalturaAccessControl } from '@kaltura-ng/kaltura-client/api/types/KalturaAccessControl';
-import { KalturaFilterPager } from '@kaltura-ng/kaltura-client/api/types/KalturaFilterPager';
-import { KalturaAccessControlListResponse } from '@kaltura-ng/kaltura-client/api/types/KalturaAccessControlListResponse';
+import { KalturaAccessControlFilter } from 'kaltura-ngx-client/api/types/KalturaAccessControlFilter';
+import { KalturaAccessControl } from 'kaltura-ngx-client/api/types/KalturaAccessControl';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaAccessControlListResponse } from 'kaltura-ngx-client/api/types/KalturaAccessControlListResponse';
 
 @Injectable()
 export class AccessControlProfileStore extends PartnerProfileStore

@@ -13,7 +13,7 @@ import {MenuItem, DataTable, Menu} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {RolesService} from './roles.service';
-import {KalturaUserRole} from '@kaltura-ng/kaltura-client/api/types/KalturaUserRole';
+import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
 
 @Component({
   selector: 'kRolesTable',
