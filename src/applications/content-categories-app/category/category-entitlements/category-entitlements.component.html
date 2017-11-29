@@ -156,8 +156,10 @@
         <div class="kControl">
           <p-inputSwitch class="kInputSwitch" formControlName="inheritUsersPermissions" (onChange)="_toggleInherit($event)"></p-inputSwitch>
           <span>{{_widgetService.entitlementsForm.controls['inheritUsersPermissions'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
-          <div class="kAdditional kExplanation"
-               [innerHTML]="'applications.content.categoryDetails.entitlements.inheritUsersPermissions.parentCategory' | translate:{'0': _parentCategory?.id, '1': _parentCategory?.name}"></div>
+          <div class="kAdditional kExplanation">
+            <span>{{'applications.content.categoryDetails.entitlements.inheritUsersPermissions.parentCategory' | translate}}</span>
+            <a (click)="_widgetService.openCategory(_parentCategory)">{{_parentCategory?.name}}</a>
+          </div>
         </div>
       </div>
 
@@ -172,7 +174,7 @@
       <div class="kRow">
         <span class="kLabel"><span class="kLabelText">{{'applications.content.categoryDetails.entitlements.owner.label' | translate}}</span></span>
         <div class="kControl">
-          <input formControlName="owner" pInputText>
+          <span class="kOwner" [kTooltip]="_widgetService.entitlementsForm.get('owner').value">{{_widgetService.entitlementsForm.get('owner').value}}</span>
           <a [class.disabled]="_widgetService.entitlementsForm.get('owner').disabled" class="kActionLink" (click)="changeOwnerPopup.open()">{{'applications.content.categoryDetails.entitlements.owner.changeOwner' | translate}}</a>
         </div>
       </div>

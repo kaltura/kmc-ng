@@ -79,6 +79,14 @@
         padding-right: 10px;
       }
 
+
+      .kOwner{
+        display:inline-block;
+        width: 330px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
       .kActionLink{
         padding-left: 20px;
         font-size: 15px;

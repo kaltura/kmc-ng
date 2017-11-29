@@ -224,8 +224,10 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
 
   }
 
-  public openCategory(categoryId: number) {
-    this._categoryService.openCategory(categoryId);
+  public openCategory(category: KalturaCategory) {
+    if (category && category.id) {
+      this._categoryService.openCategory(category.id);
+    }
   }
 }
 

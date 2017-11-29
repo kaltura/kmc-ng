@@ -1054,7 +1054,7 @@
           "inheritUsersPermissions": {
             "label": "Inherit Users Permissions",
             "help": "Inherit Specific End-User Permissions from Parent Category?",
-            "parentCategory": "Inherit Specific End-User Permissions from Parent Category: <a (click)=\"\">{{1}}</a>",
+            "parentCategory": "Inherit Specific End-User Permissions from Parent Category:",
             "errors" : {
               "categoryLoadError": "Error loading parent category information"
             }
