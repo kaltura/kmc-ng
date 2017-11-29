@@ -47,7 +47,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
       this._resetFormData();
       this._monitorFormChanges();
       this._hideLoader();
-      return Observable.of({ failed: false });
+      return Observable.of({failed: false});
     }
   }
 
@@ -108,16 +108,11 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
       return Observable.throw(new Error('parentCategoryId to get Parent category for is not defined'));
     }
 
-    try {
-      // build the request
-      return <any>this._kalturaClient.request(
-        new CategoryGetAction({
-          id: parentCategoryId
-        })
-      );
-    } catch (err) {
-      return Observable.throw(err);
-    }
+    return <any>this._kalturaClient.request(
+      new CategoryGetAction({
+        id: parentCategoryId
+      })
+    );
   }
 
   private _buildForm(): void {
@@ -134,26 +129,15 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   }
 
   private _monitorFormChanges() {
-    const formGroups = [this.entitlementsForm];
     const formsChanges: Observable<any>[] = [];
-
-    formGroups.forEach(formGroup => {
-      formsChanges.push(formGroup.valueChanges, formGroup.statusChanges);
-    });
+    formsChanges.push(this.entitlementsForm.valueChanges, this.entitlementsForm.statusChanges);
 
     Observable.merge(...formsChanges)
       .cancelOnDestroy(this, this.widgetReset$)
       .subscribe(
         () => {
-          let isValid = true;
-          let isDirty = false;
-
-          formGroups.forEach(formGroup => {
-            isValid = isValid && formGroup.status === 'VALID';
-            isDirty = isDirty || formGroup.dirty;
-
-          });
-
+          const isValid = this.entitlementsForm.status === 'VALID';
+          const isDirty = this.entitlementsForm.dirty;
           if (this.isDirty !== isDirty || this.isValid !== isValid) {
             super.updateState({
               isValid: isValid,

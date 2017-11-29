@@ -33,7 +33,7 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
   public _owner: KalturaUser = null;
 
   private _searchUsersSubscription: ISubscription;
-  private _parentPopupStateChangeSubscribe: ISubscription;
+  private _parentPopupStateChangesSubscription: ISubscription;
   private _confirmClose = true;
 
   constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService,
@@ -61,7 +61,7 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
 
   ngAfterViewInit() {
     if (this.parentPopupWidget) {
-      this._parentPopupStateChangeSubscribe = this.parentPopupWidget.state$
+      this._parentPopupStateChangesSubscription = this.parentPopupWidget.state$
         .subscribe(event => {
           if (event.state === PopupWidgetStates.Open) {
             this._confirmClose = true;
@@ -88,7 +88,9 @@ export class CategoryChangeOwnerComponent implements OnInit, OnDestroy, AfterVie
   }
 
   ngOnDestroy() {
-    this._parentPopupStateChangeSubscribe.unsubscribe();
+    if (this._parentPopupStateChangesSubscription) {
+      this._parentPopupStateChangesSubscription.unsubscribe();
+    }
   }
 
   public _searchUsers(event): void {

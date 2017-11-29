@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
-import { AppAuthentication } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { PrimeTreePropagation } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
-import { CategoriesPrimeService } from 'app-shared/content-shared/categories-prime.service';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {PrimeTreeNode} from '@kaltura-ng/kaltura-primeng-ui';
+import {AppAuthentication} from 'app-shared/kmc-shell';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {PrimeTreePropagation} from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
+import {CategoriesPrimeService} from 'app-shared/content-shared/categories-prime.service';
 
 export type TreeSelectionMode = 'single' | 'multiple';
 
@@ -80,9 +80,9 @@ export class CategoriesTreeComponent implements OnInit {
         },
         error => {
           this._blockerMessage = new AreaBlockerMessage({
-            message: error.message || this._appLocalization.get('applications.content.entryDetails.errors.categoriesLoadError'),
+            message: error.message || this._appLocalization.get('shared.contentShared.categoriesTree.errors.categoriesLoadError'),
             buttons: [{
-              label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
+              label: this._appLocalization.get('app.common.retry'),
               action: () => this._loadCategories()
             }]
           });
