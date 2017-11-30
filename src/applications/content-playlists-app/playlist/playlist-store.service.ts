@@ -223,8 +223,6 @@ export class PlaylistStore implements OnDestroy {
       const newPlaylist = <KalturaPlaylist>KalturaTypesFactory.createObject(this.playlist);
       newPlaylist.playlistType = this.playlist.playlistType;
 
-      this._state.next({ action: ActionTypes.PlaylistSaving });
-
       const id = this._getPlaylistId();
       const action = id === 'new'
         ? new PlaylistAddAction({ playlist: newPlaylist })
@@ -234,6 +232,7 @@ export class PlaylistStore implements OnDestroy {
       this._widgetsManager.notifyDataSaving(newPlaylist, request, this.playlist)
         .cancelOnDestroy(this)
         .monitor('playlist store: prepare playlist for save')
+        .tag('block-shell')
         .flatMap((response: { ready: boolean, reason?: OnDataSavingReasons, errors?: Error[] }) => {
             if (response.ready) {
               this._savePlaylistInvoked = true;

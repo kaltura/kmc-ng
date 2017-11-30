@@ -35,7 +35,6 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   private querySubscription: ISubscription;
 
   public _blockerMessage: AreaBlockerMessage = null;
-  public _loading = false;
 
   public _filter = {
     pageIndex: 0,
@@ -87,7 +86,6 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         () => {
-          this._loading = false;
           this._playlistsStore.reload(true);
           this._clearSelection();
         },
@@ -98,7 +96,6 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
               label: this.appLocalization.get('app.common.ok'),
               action: () => {
                 this._blockerMessage = null;
-                this._loading = false;
               }
             }]
           });
@@ -123,16 +120,12 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   private _deleteCurrentPlaylist(playlistId: string): void {
-    this._loading = true;
     this._playlistsStore.deletePlaylist(playlistId)
       .cancelOnDestroy(this)
+      .tag('block-shell')
       .subscribe(
         () => {
-          this._loading = false;
-          this._browserService.showGrowlMessage({
-            severity: 'success',
-            detail: this.appLocalization.get('applications.content.playlists.deleted')
-          });
+          this._clearSelection();
           this._playlistsStore.reload(true);
         },
         error => {
@@ -144,7 +137,6 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
                   label: this.appLocalization.get('app.common.retry'),
                   action: () => {
                     this._blockerMessage = null;
-                    this._loading = false;
                     this._deleteCurrentPlaylist(playlistId);
                   }
                 },
@@ -152,7 +144,6 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
                   label: this.appLocalization.get('app.common.cancel'),
                   action: () => {
                     this._blockerMessage = null;
-                    this._loading = false;
                   }
                 }
               ]
