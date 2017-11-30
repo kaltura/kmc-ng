@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SettingsMyUserSettingsService } from './settings-my-user-settings.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import { KalturaUserRole } from 'kaltura-typescript-client/types/KalturaUserRole';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
   selector: 'kmc-settings-my-user-settings',
@@ -13,6 +14,10 @@ import { KalturaUserRole } from 'kaltura-typescript-client/types/KalturaUserRole
 })
 
 export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
+  @ViewChild('editUserNamePopup') public editUserNamePopup: PopupWidgetComponent;
+  @ViewChild('editEmailAddressPopup') public editEmailAddressPopup: PopupWidgetComponent;
+  @ViewChild('changePasswordPopup') public changePasswordPopup: PopupWidgetComponent;
+
   private _areaBlockerMessage: AreaBlockerMessage = null;
   user: KalturaUser = null;
   role: KalturaUserRole = null;
@@ -94,6 +99,18 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
           )
         }
       );
+  }
+
+  private _editUserName(): void {
+    this.editUserNamePopup.open();
+  }
+
+  private _editEmailAddress(): void {
+    this.editEmailAddressPopup.open();
+  }
+
+  private _changePassword(): void {
+    this.changePasswordPopup.open();
   }
 
   ngOnInit() {

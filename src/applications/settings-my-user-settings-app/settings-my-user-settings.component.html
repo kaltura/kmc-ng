@@ -13,7 +13,7 @@
         <div class="kRow">
           <div class="kLabel">{{'applications.settings.myUserSettings.userName' | translate}}</div>
           <span>{{user?.fullName}}</span>
-          <i class="kIconpen"></i>
+          <i class="kIconpen" (click)="_editUserName()"></i>
         </div>
         <div class="kRow">
           <div class="kLabel">{{'applications.settings.myUserSettings.userId' | translate}}</div>
@@ -22,7 +22,7 @@
         <div class="kRow">
           <div class="kLabel">{{'applications.settings.myUserSettings.emailAddress' | translate}}</div>
           <span>{{user?.email}}</span>
-          <i class="kIconpen"></i>
+          <i class="kIconpen" (click)="_editEmailAddress()"></i>
         </div>
         <div class="kRow">
           <div class="kLabel">{{'applications.settings.myUserSettings.role' | translate}}</div>
@@ -34,9 +34,27 @@
         </div>
         <div class="kRow">
           <div class="kLabel">{{'applications.settings.myUserSettings.password' | translate}}</div>
-          <span><a>{{'applications.settings.myUserSettings.editUser' | translate}}</a></span>
+          <span><a (click)="_changePassword()">{{'applications.settings.myUserSettings.editUser' | translate}}</a></span>
         </div>
       </div>
     </section>
   </div>
+
+  <kPopupWidget #editUserNamePopup [popupWidth]="600" [popupHeight]="455" [modal]="true" [preventPageScroll]="true">
+    <ng-template>
+      <kEditUserName [parentPopupWidget]="editUserNamePopup"></kEditUserName>
+    </ng-template>
+  </kPopupWidget>
+
+  <kPopupWidget #editEmailAddressPopup [popupWidth]="600" [popupHeight]="370" [modal]="true" [preventPageScroll]="true">
+    <ng-template>
+      <kEditEmailAddress [parentPopupWidget]="editEmailAddressPopup"></kEditEmailAddress>
+    </ng-template>
+  </kPopupWidget>
+
+  <kPopupWidget #changePasswordPopup [popupWidth]="600" [popupHeight]="440" [modal]="true" [preventPageScroll]="true">
+    <ng-template>
+      <kChangePassword [parentPopupWidget]="changePasswordPopup"></kChangePassword>
+    </ng-template>
+  </kPopupWidget>
 </k-area-blocker>
