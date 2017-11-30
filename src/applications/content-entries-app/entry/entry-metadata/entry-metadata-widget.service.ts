@@ -107,6 +107,19 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                     }
                 }
             );
+
+        // make tags lowercase and keep only unique values
+        const tagsControl = this.metadataForm.controls['tags'];
+        tagsControl.valueChanges.subscribe(() => {
+          const tags = tagsControl.value.map(tag => tag.toLowerCase());
+          this.metadataForm.patchValue({ tags }, { emitEvent: false });
+
+          const uniqueTags = tags.filter((value, index, array) => array.indexOf(value) === index);
+
+          if (uniqueTags.length !== tags.length) {
+            this.metadataForm.patchValue({ tags: uniqueTags }, { emitEvent: false });
+          }
+        });
     }
 
     public setDirty()
