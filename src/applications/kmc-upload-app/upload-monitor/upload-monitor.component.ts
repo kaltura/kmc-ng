@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryUploadFile } from 'app-shared/kmc-shell';
-import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
+import { KalturaUploadFile } from 'app-shared/kmc-shell';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 
 interface UploadMonitorStatuses {

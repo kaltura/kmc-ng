@@ -1,5 +1,5 @@
-import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
+import { KalturaUploadFile } from 'app-shared/kmc-shell';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 
 export class NewEntryFlavourFile extends KalturaUploadFile {
   constructor(file: File, public entryId?: string, public mediaType?: KalturaMediaType) {
