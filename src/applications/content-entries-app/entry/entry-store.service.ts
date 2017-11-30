@@ -8,11 +8,11 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
-import {KalturaClient} from '@kaltura-ng/kaltura-client';
-import {KalturaMediaEntry} from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import {KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-typescript-client';
-import {BaseEntryGetAction} from 'kaltura-typescript-client/types/BaseEntryGetAction';
-import {BaseEntryUpdateAction} from 'kaltura-typescript-client/types/BaseEntryUpdateAction';
+import {KalturaClient} from 'kaltura-ngx-client';
+import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import {KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-ngx-client';
+import {BaseEntryGetAction} from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
+import {BaseEntryUpdateAction} from 'kaltura-ngx-client/api/types/BaseEntryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryWidgetsManager } from './entry-widgets-manager';
 import {  OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';

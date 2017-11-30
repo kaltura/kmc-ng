@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
+import { KalturaUtils } from 'kaltura-ngx-client/api/utils/kaltura-utils';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PrimeTreeDataProvider, PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
