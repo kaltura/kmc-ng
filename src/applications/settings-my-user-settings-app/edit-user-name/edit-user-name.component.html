@@ -1,0 +1,60 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+  <div class="kEditWin">
+    <form [formGroup]="editUserNameForm" novalidate>
+      <div class="kHeader">
+        <span class="kTitle">{{'applications.settings.myUserSettings.editUserName' | translate}}</span>
+      </div>
+
+      <div class="kContainer">
+        <div class="kRow">
+          <span class="kLabel">{{'applications.settings.myUserSettings.firstName' | translate}}</span>
+          <div>
+            <input class="kControl" formControlName="firstName" pInputText
+              [ngClass]="{'kHasError':!editUserNameForm.controls['firstName'].valid && editUserNameForm.controls['firstName'].touched}">
+            <div
+              *ngIf="editUserNameForm.controls['firstName'].touched && editUserNameForm.controls['firstName'].hasError('required')"
+              class="error">
+              {{'applications.settings.myUserSettings.errors.required' | translate}}
+            </div>
+          </div>
+        </div>
+        <div class="kRow">
+          <span class="kLabel">{{'applications.settings.myUserSettings.lastName' | translate}}</span>
+          <div>
+            <input class="kControl" formControlName="lastName" pInputText
+              [ngClass]="{'kHasError':!editUserNameForm.controls['lastName'].valid && editUserNameForm.controls['lastName'].touched}">
+            <div
+              *ngIf="editUserNameForm.controls['lastName'].touched && editUserNameForm.controls['lastName'].hasError('required')"
+              class="error">
+              {{'applications.settings.myUserSettings.errors.required' | translate}}
+            </div>
+          </div>
+        </div>
+        <div class="kRow">
+          <span class="kLabel">{{'applications.settings.myUserSettings.password' | translate}}</span>
+          <div>
+            <input class="kControl"
+                   formControlName="password"
+                   pInputText
+                   [ngClass]="{'kHasError':!editUserNameForm.controls['password'].valid && editUserNameForm.controls['password'].touched}">
+            <div
+              *ngIf="editUserNameForm.controls['password'].touched && editUserNameForm.controls['password'].hasError('required')"
+              class="error">
+                {{'applications.settings.myUserSettings.errors.required' | translate}}
+            </div>
+            <div class="kPasswordRequired">{{'applications.settings.myUserSettings.passwordRequiredName' | translate}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kFooter">
+        <button pButton class="kButtonDefault kButton" label="{{'applications.settings.myUserSettings.cancel' | translate}}"></button>
+        <button
+          pButton class="kButtonBranded kButton"
+          label="{{'applications.settings.myUserSettings.save' | translate}}"
+          [disabled]="editUserNameForm.pristine"></button>
+      </div>
+    </form>
+  </div>
+
+</k-area-blocker>
