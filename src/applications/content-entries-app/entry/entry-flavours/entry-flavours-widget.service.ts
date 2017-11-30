@@ -241,6 +241,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
 						    {
 							    super._hideLoader();
                   this._refresh();
+							    this._browserService.scrollToTop();
 						    },
 						    error => {
 							    super._hideLoader();
