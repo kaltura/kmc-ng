@@ -4,17 +4,17 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 
-import { ThumbAssetSetAsDefaultAction } from 'kaltura-typescript-client/types/ThumbAssetSetAsDefaultAction';
-import { ThumbAssetGetByEntryIdAction } from 'kaltura-typescript-client/types/ThumbAssetGetByEntryIdAction';
-import { KalturaThumbAsset } from 'kaltura-typescript-client/types/KalturaThumbAsset';
-import { DistributionProfileListAction } from 'kaltura-typescript-client/types/DistributionProfileListAction';
-import { KalturaDistributionProfileListResponse } from 'kaltura-typescript-client/types/KalturaDistributionProfileListResponse';
-import { KalturaDistributionProfile } from 'kaltura-typescript-client/types/KalturaDistributionProfile';
-import { KalturaThumbAssetStatus } from 'kaltura-typescript-client/types/KalturaThumbAssetStatus';
-import { KalturaDistributionThumbDimensions } from 'kaltura-typescript-client/types/KalturaDistributionThumbDimensions';
-import { ThumbAssetDeleteAction } from 'kaltura-typescript-client/types/ThumbAssetDeleteAction';
-import { ThumbAssetAddFromImageAction } from 'kaltura-typescript-client/types/ThumbAssetAddFromImageAction';
-import { AppAuthentication } from 'app-shared/kmc-shell';
+import { ThumbAssetSetAsDefaultAction } from 'kaltura-ngx-client/api/types/ThumbAssetSetAsDefaultAction';
+import { ThumbAssetGetByEntryIdAction } from 'kaltura-ngx-client/api/types/ThumbAssetGetByEntryIdAction';
+import { KalturaThumbAsset } from 'kaltura-ngx-client/api/types/KalturaThumbAsset';
+import { DistributionProfileListAction } from 'kaltura-ngx-client/api/types/DistributionProfileListAction';
+import { KalturaDistributionProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileListResponse';
+import { KalturaDistributionProfile } from 'kaltura-ngx-client/api/types/KalturaDistributionProfile';
+import { KalturaThumbAssetStatus } from 'kaltura-ngx-client/api/types/KalturaThumbAssetStatus';
+import { KalturaDistributionThumbDimensions } from 'kaltura-ngx-client/api/types/KalturaDistributionThumbDimensions';
+import { ThumbAssetDeleteAction } from 'kaltura-ngx-client/api/types/ThumbAssetDeleteAction';
+import { ThumbAssetAddFromImageAction } from 'kaltura-ngx-client/api/types/ThumbAssetAddFromImageAction';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
