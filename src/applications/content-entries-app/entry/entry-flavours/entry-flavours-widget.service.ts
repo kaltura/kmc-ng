@@ -239,8 +239,9 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
 						    response =>
 						    {
 							    super._hideLoader();
-                  this._browserService.showGrowlMessage({severity: 'success', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteSuccess')});
-                  this._refresh();
+                                this._browserService.showGrowlMessage({severity: 'success', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteSuccess')});
+							    this._browserService.scrollToTop();
+                                this._refresh();
 						    },
 						    error =>
 						    {

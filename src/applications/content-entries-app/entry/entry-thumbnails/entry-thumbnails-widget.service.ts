@@ -16,7 +16,7 @@ import { KalturaThumbAssetStatus } from 'kaltura-ngx-client/api/types/KalturaThu
 import { KalturaDistributionThumbDimensions } from 'kaltura-ngx-client/api/types/KalturaDistributionThumbDimensions';
 import { ThumbAssetDeleteAction } from 'kaltura-ngx-client/api/types/ThumbAssetDeleteAction';
 import { ThumbAssetAddFromImageAction } from 'kaltura-ngx-client/api/types/ThumbAssetAddFromImageAction';
-import { AppAuthentication } from 'app-shared/kmc-shell';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
@@ -51,7 +51,7 @@ export class EntryThumbnailsWidget extends EntryWidget
 	private _distributionProfiles: KalturaDistributionProfile[]; // used to save the response profiles array as it is loaded only once
 
     constructor( private _kalturaServerClient: KalturaClient, private _appAuthentication: AppAuthentication,
-                private _appLocalization: AppLocalization, private _appEvents: AppEventsService)
+                private _appLocalization: AppLocalization, private _appEvents: AppEventsService, private _browserService: BrowserService)
     {
         super(EntryWidgetKeys.Thumbnails);
     }
@@ -240,6 +240,7 @@ export class EntryThumbnailsWidget extends EntryWidget
 				() =>
 				{
 					super._hideLoader();
+					this._browserService.scrollToTop();
 					this.reloadThumbnails();
 				},
 				error =>
