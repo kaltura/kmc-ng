@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { BulkUploadMonitorService } from './bulk-upload-monitor.service';
+import { BulkUploadMonitorErrors, BulkUploadMonitorService } from './bulk-upload-monitor.service';
 import { NewUploadMonitorService } from './new-upload-monitor.service';
 
 export interface UploadMonitorStatuses {
@@ -35,6 +35,8 @@ export class UploadMonitorComponent implements OnDestroy {
     errors: 0,
   };
 
+  public _bulkUploadErrors: BulkUploadMonitorErrors;
+
   constructor(private _bulkUploadMonitor: BulkUploadMonitorService, private _newUploadMonitor: NewUploadMonitorService) {
     this._newUploadMonitor.totals$
       .cancelOnDestroy(this)
@@ -44,13 +46,22 @@ export class UploadMonitorComponent implements OnDestroy {
         this._checkErrors();
       });
 
-    // this._bulkUploadMonitor.getTotals()
-    //   .cancelOnDestroy(this)
-    //   .subscribe(totals => {
-    //     this._bulkUpload = totals;
-    //     this._checkUpToDate();
-    //     this._checkErrors();
-    //   })
+    this._bulkUploadMonitor.totals$
+      .cancelOnDestroy(this)
+      .subscribe(totals => {
+        this._bulkUpload = totals;
+        this._checkUpToDate();
+        this._checkErrors();
+      });
+
+    this._bulkUploadMonitor.errors$
+      .cancelOnDestroy(this)
+      .subscribe((errors) => {
+        this._bulkUploadErrors = errors;
+        if (errors.prepare) {
+          this._hasError = true;
+        }
+      });
   }
 
   ngOnDestroy() {
@@ -63,7 +74,7 @@ export class UploadMonitorComponent implements OnDestroy {
   }
 
   private _checkErrors(): void {
-    this._hasError = (this._uploadFromDesktop.errors + this._bulkUpload.errors) !== this._errorsCount;
+    this._hasError = !this._menuOpened && (this._uploadFromDesktop.errors + this._bulkUpload.errors) !== this._errorsCount;
   }
 
   public _onMonitorOpen(): void {
@@ -74,6 +85,9 @@ export class UploadMonitorComponent implements OnDestroy {
 
   public _onMonitorClose(): void {
     this._menuOpened = false;
-    this._errorsCount = 0;
+  }
+
+  public _bulkTryReconnect(): void {
+    this._bulkUploadMonitor.retryTracking();
   }
 }

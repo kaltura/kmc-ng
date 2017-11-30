@@ -31,7 +31,9 @@
                            [uploading]="_bulkUpload.uploading"
                            [queued]="_bulkUpload.queued"
                            [completed]="_bulkUpload.completed"
-                           [errors]="_bulkUpload.errors"></kUploadMonitorSection>
+                           [errors]="_bulkUpload.errors"
+                           [bulkErrors]="_bulkUploadErrors"
+                           (onBulkTryReconnect)="_bulkTryReconnect()"></kUploadMonitorSection>
     <kUploadMonitorSection type="dropFolder"
                            [title]="'applications.upload.uploadMonitor.dropFolders' | translate"
                            [uploadMonitorPopup]="uploadmonitor"></kUploadMonitorSection>

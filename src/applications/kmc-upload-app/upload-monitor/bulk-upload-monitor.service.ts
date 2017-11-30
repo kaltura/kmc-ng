@@ -17,10 +17,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { UploadMonitorStatuses } from './upload-monitor.component';
 import { KalturaBulkUploadObjectType } from 'kaltura-ngx-client/api/types/KalturaBulkUploadObjectType';
 
-export enum MonitorErrorTypes {
-  PREPARATION,
-  POLLING
-}
 export class BulkLogUploadChanges implements RequestFactory<BulkListAction> {
   private _uploadedOn: Date;
 
@@ -58,10 +54,16 @@ export class BulkLogUploadChanges implements RequestFactory<BulkListAction> {
   }
 }
 
+export interface BulkUploadMonitorErrors {
+  prepare?: boolean;
+  poll?: boolean;
+}
+
 @Injectable()
 export class BulkUploadMonitorService implements OnDestroy {
   private _bulkUploadFiles: { [key: string]: { status: KalturaBatchJobStatus, uploadedOn: Date, id: number } } = {};
   private _totals = new BehaviorSubject<UploadMonitorStatuses>({ uploading: 0, queued: 0, completed: 0, errors: 0 });
+  private _errors = new BehaviorSubject<BulkUploadMonitorErrors>({ prepare: false, poll: false });
   private _bulkUploadChangesFactory = new BulkLogUploadChanges();
   private _bulkUploadObjectTypeIn = [
     KalturaBulkUploadObjectType.entry,
@@ -77,17 +79,9 @@ export class BulkUploadMonitorService implements OnDestroy {
     KalturaBatchJobStatus.almostDone,
     KalturaBatchJobStatus.retry
   ];
-  private _finishedStatuses = [
-    KalturaBatchJobStatus.finished,
-    KalturaBatchJobStatus.finishedPartially,
-    KalturaBatchJobStatus.processed,
-    KalturaBatchJobStatus.failed,
-    KalturaBatchJobStatus.fatal,
-    KalturaBatchJobStatus.aborted,
-    KalturaBatchJobStatus.movefile
-  ];
 
   public totals$ = this._totals.asObservable();
+  public errors$ = this._errors.asObservable();
 
   constructor(private _kalturaClient: KalturaClient,
               private _serverPolls: KalturaServerPolls,
@@ -103,9 +97,9 @@ export class BulkUploadMonitorService implements OnDestroy {
 
     this._initTracking();
   }
-
   ngOnDestroy() {
     this._totals.complete();
+    this._errors.complete();
   }
 
   private _calculateTotalsFromState(): UploadMonitorStatuses {
@@ -167,6 +161,12 @@ export class BulkUploadMonitorService implements OnDestroy {
     })
   }
 
+  private _recoverFromError(state: keyof BulkUploadMonitorErrors): void {
+    if (this._errors.value[state]) {
+      this._errors.next({ [state]: false })
+    }
+  }
+
   private _initTracking(): void {
     this._getActiveUploadsList()
       .subscribe(
@@ -186,7 +186,7 @@ export class BulkUploadMonitorService implements OnDestroy {
           this._startPolling();
         },
         () => {
-          this._totals.error(MonitorErrorTypes.PREPARATION);
+          this._errors.next({ prepare: true });
         }
       );
   }
@@ -195,9 +195,11 @@ export class BulkUploadMonitorService implements OnDestroy {
     this._serverPolls.register(10, this._bulkUploadChangesFactory)
       .subscribe(([response]) => {
         if (response.error) {
-          this._totals.error(MonitorErrorTypes.POLLING);
+          this._errors.next({ poll: true });
           return;
         }
+
+        this._recoverFromError('poll');
 
         const uploads = response.result.objects;
 
@@ -221,5 +223,14 @@ export class BulkUploadMonitorService implements OnDestroy {
 
         this._totals.next(this._calculateTotalsFromState());
       });
+  }
+
+  public retryTracking(): void {
+    if (this._errors.value.prepare) {
+      this._recoverFromError('prepare');
+      this._initTracking();
+    } else {
+      console.log('log: [warn] [bulk-upload-monitor]: Everything is operating normally, nothing to retry')
+    }
   }
 }
