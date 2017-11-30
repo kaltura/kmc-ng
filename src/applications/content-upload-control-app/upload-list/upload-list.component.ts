@@ -5,7 +5,7 @@ import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { TrackedFileData } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
-import { KalturaUploadFile } from 'app-shared/kmc-shell';
+import { KalturaUploadFile } from 'app-shared/kmc-shared';
 
 export interface UploadFileData {
   id: string;

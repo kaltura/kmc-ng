@@ -1,4 +1,4 @@
-import { KalturaUploadFile } from 'app-shared/kmc-shell';
+import { KalturaUploadFile } from 'app-shared/kmc-shared';
 import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 
 export class NewEntryFlavourFile extends KalturaUploadFile {
