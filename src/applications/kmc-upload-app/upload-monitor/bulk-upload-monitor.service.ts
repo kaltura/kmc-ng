@@ -17,12 +17,21 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { UploadMonitorStatuses } from './upload-monitor.component';
 import { KalturaBulkUploadObjectType } from 'kaltura-ngx-client/api/types/KalturaBulkUploadObjectType';
 
+export enum MonitorErrorTypes {
+  PREPARATION,
+  POLLING
+}
 export class BulkLogUploadChanges implements RequestFactory<BulkListAction> {
   private _uploadedOn: Date;
 
   public set uploadedOn(value: number | Date) {
     if (value) {
-      this._uploadedOn = typeof value === 'number' ? new Date(value) : value;
+      const newUploadedOn = typeof value === 'number' ? new Date(value) : value;
+
+      // initialize first time and set only if new is less then current
+      if (!this._uploadedOn || (Number(newUploadedOn) < Number(this._uploadedOn))) {
+        this._uploadedOn = newUploadedOn;
+      }
     }
   }
 
@@ -91,6 +100,8 @@ export class BulkUploadMonitorService implements OnDestroy {
         this._bulkUploadFiles[id] = { id, status, uploadedOn };
         this._totals.next(this._calculateTotalsFromState());
       });
+
+    this._initTracking();
   }
 
   ngOnDestroy() {
@@ -131,16 +142,9 @@ export class BulkUploadMonitorService implements OnDestroy {
   }
 
   private _getActiveUploadsList(): Observable<KalturaBulkUploadListResponse> {
-    const processingStatusId = [
-      KalturaBatchJobStatus.pending,
-      KalturaBatchJobStatus.queued,
-      KalturaBatchJobStatus.processing,
-      KalturaBatchJobStatus.almostDone,
-      KalturaBatchJobStatus.retry
-    ];
     const activeUploads = new BulkListAction({
       bulkUploadFilter: new KalturaBulkUploadFilter({
-        statusIn: processingStatusId.join(','),
+        statusIn: this._activeStatuses.join(','),
         bulkUploadObjectTypeIn: this._bulkUploadObjectTypeIn.join(','),
       }),
       responseProfile: new KalturaDetachedResponseProfile({
@@ -152,16 +156,18 @@ export class BulkUploadMonitorService implements OnDestroy {
     return this._kalturaClient.request(activeUploads);
   }
 
-  private _cleanUpDeletedUploads(uploads: KalturaBulkUpload[]): void {
+  private _cleanDeletedUploads(uploads: KalturaBulkUpload[]): void {
     const uploadIds = uploads.map(({ id }) => id);
     Object.keys(this._bulkUploadFiles).forEach(key => {
-      if (this._activeStatuses.indexOf(this._bulkUploadFiles[key].status) !== -1 && uploadIds.indexOf(Number(key)) === -1) {
+      const trackedUploadIsActive = this._activeStatuses.indexOf(this._bulkUploadFiles[key].status) !== -1;
+      const trackedUploadIsNotInResponse = uploadIds.indexOf(Number(key)) === -1;
+      if (trackedUploadIsActive && trackedUploadIsNotInResponse) {
         delete this._bulkUploadFiles[key];
       }
     })
   }
 
-  private _prepare(): void {
+  private _initTracking(): void {
     this._getActiveUploadsList()
       .subscribe(
         response => {
@@ -176,9 +182,11 @@ export class BulkUploadMonitorService implements OnDestroy {
           this._bulkUploadChangesFactory.uploadedOn = response.objects.length
             ? Math.min(...response.objects.map(({ uploadedOn }) => Number(uploadedOn)))
             : this._browserService.sessionStartedAt;
+
+          this._startPolling();
         },
-        error => {
-          this._totals.error(error);
+        () => {
+          this._totals.error(MonitorErrorTypes.PREPARATION);
         }
       );
   }
@@ -187,39 +195,29 @@ export class BulkUploadMonitorService implements OnDestroy {
     this._serverPolls.register(10, this._bulkUploadChangesFactory)
       .subscribe(([response]) => {
         if (response.error) {
-          this._totals.error(response.error);
+          this._totals.error(MonitorErrorTypes.POLLING);
           return;
         }
 
         const uploads = response.result.objects;
-        let smallestUploadedOn;
-        let needUpdateFactory = false;
 
-        this._cleanUpDeletedUploads(uploads);
+        this._cleanDeletedUploads(uploads);
 
         uploads.forEach(upload => {
+          const currentUploadIsActive = this._activeStatuses.indexOf(upload.status) !== -1;
+          let relevantUpload = this._bulkUploadFiles[upload.id];
 
-          // TODO for tomorrow: fix this one
-          if (this._finishedStatuses.indexOf(upload.status) !== -1) {
-            needUpdateFactory = true;
-            smallestUploadedOn = Number(upload.uploadedOn) < smallestUploadedOn ? upload.uploadedOn : smallestUploadedOn;
+          if (relevantUpload) { // update status for existing upload
+            relevantUpload.status = upload.status;
+          } else if (currentUploadIsActive) { // track new active upload
+            relevantUpload = { id: upload.id, status: upload.status, uploadedOn: upload.uploadedOn };
+            this._bulkUploadFiles[upload.id] = relevantUpload;
           }
 
-          let relevantUpload = this._bulkUploadFiles[upload.id];
-          if (!relevantUpload) {
-            const currentUploadIsActive = this._activeStatuses.indexOf(upload.status) !== -1;
-            if (currentUploadIsActive) {
-              relevantUpload = { id: upload.id, status: upload.status, uploadedOn: upload.uploadedOn };
-              this._bulkUploadFiles[upload.id] = relevantUpload;
-            }
-          } else {
-            relevantUpload.status = upload.status;
+          if (currentUploadIsActive) { // update smallest uploaded on for active upload
+            this._bulkUploadChangesFactory.uploadedOn = relevantUpload.uploadedOn;
           }
         });
-
-        if (needUpdateFactory) {
-          this._bulkUploadChangesFactory.uploadedOn = smallestUploadedOn;
-        }
 
         this._totals.next(this._calculateTotalsFromState());
       });
