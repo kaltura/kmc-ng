@@ -19,7 +19,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaClient } from 'kaltura-ngx-client';
 import { environment } from 'app-environment';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 import { AppEventsService } from 'app-shared/kmc-shared';
@@ -49,7 +49,7 @@ export class EntryThumbnailsWidget extends EntryWidget
 	private _distributionProfiles: KalturaDistributionProfile[]; // used to save the response profiles array as it is loaded only once
 
     constructor( private _kalturaServerClient: KalturaClient, private _appAuthentication: AppAuthentication,
-                private _appLocalization: AppLocalization, private _appEvents: AppEventsService)
+                private _appLocalization: AppLocalization, private _appEvents: AppEventsService, private _browserService: BrowserService)
     {
         super(EntryWidgetKeys.Thumbnails);
     }
@@ -235,6 +235,7 @@ export class EntryThumbnailsWidget extends EntryWidget
 				() =>
 				{
 					super._hideLoader();
+					this._browserService.scrollToTop();
 					this.reloadThumbnails();
 				},
 				error =>

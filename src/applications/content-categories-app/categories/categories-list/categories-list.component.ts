@@ -1,5 +1,5 @@
 import {ISubscription} from 'rxjs/Subscription';
-import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";

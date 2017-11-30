@@ -7,10 +7,10 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/forkJoin';
 import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
 
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-typescript-client';
-import { DistributionProfileListAction } from 'kaltura-typescript-client/types/DistributionProfileListAction';
-import { AccessControlListAction } from 'kaltura-typescript-client/types/AccessControlListAction';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaMultiRequest, KalturaMultiResponse } from 'kaltura-ngx-client';
+import { DistributionProfileListAction } from 'kaltura-ngx-client/api/types/DistributionProfileListAction';
+import { AccessControlListAction } from 'kaltura-ngx-client/api/types/AccessControlListAction';
 import {
   FlavoursStore,
   MetadataItemTypes,
@@ -18,15 +18,15 @@ import {
   MetadataProfileCreateModes,
   MetadataProfileStore,
   MetadataProfileTypes
-} from '@kaltura-ng/kaltura-server-utils';
+} from 'app-shared/kmc-shared';
 
-import { KalturaAccessControlFilter } from 'kaltura-typescript-client/types/KalturaAccessControlFilter';
-import { KalturaAccessControlProfile } from 'kaltura-typescript-client/types/KalturaAccessControlProfile';
-import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
-import { KalturaDistributionProfile } from 'kaltura-typescript-client/types/KalturaDistributionProfile';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { KalturaFlavorParams } from 'kaltura-typescript-client/types/KalturaFlavorParams';
-import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
+import { KalturaAccessControlFilter } from 'kaltura-ngx-client/api/types/KalturaAccessControlFilter';
+import { KalturaAccessControlProfile } from 'kaltura-ngx-client/api/types/KalturaAccessControlProfile';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
+import { KalturaDistributionProfile } from 'kaltura-ngx-client/api/types/KalturaDistributionProfile';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaFlavorParams } from 'kaltura-ngx-client/api/types/KalturaFlavorParams';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 
 import { DefaultFiltersList } from './default-filters-list';
 

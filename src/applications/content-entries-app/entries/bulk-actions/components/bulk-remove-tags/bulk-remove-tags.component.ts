@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaClient } from 'kaltura-ngx-client';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaMediaEntry } from "kaltura-typescript-client/types/KalturaMediaEntry";
+import { KalturaMediaEntry } from "kaltura-ngx-client/api/types/KalturaMediaEntry";
 
 @Component({
   selector: 'kBulkRemoveTags',

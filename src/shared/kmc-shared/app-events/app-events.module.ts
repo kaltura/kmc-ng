@@ -1,5 +1,5 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { AppEventsService } from 'app-shared/kmc-shared/app-events/app-events.service';
+import { AppEventsService } from './app-events.service';
 
 @NgModule({
     providers: [
