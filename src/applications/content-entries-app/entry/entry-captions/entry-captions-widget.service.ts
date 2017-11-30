@@ -12,27 +12,28 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { CaptionAssetListAction } from 'kaltura-typescript-client/types/CaptionAssetListAction';
-import { CaptionAssetDeleteAction } from 'kaltura-typescript-client/types/CaptionAssetDeleteAction';
-import { CaptionAssetSetAsDefaultAction } from 'kaltura-typescript-client/types/CaptionAssetSetAsDefaultAction';
-import { CaptionAssetUpdateAction } from 'kaltura-typescript-client/types/CaptionAssetUpdateAction';
-import { CaptionAssetSetContentAction } from 'kaltura-typescript-client/types/CaptionAssetSetContentAction';
-import { CaptionAssetAddAction } from 'kaltura-typescript-client/types/CaptionAssetAddAction';
-import { KalturaUrlResource } from 'kaltura-typescript-client/types/KalturaUrlResource';
-import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
-import { KalturaCaptionAsset } from 'kaltura-typescript-client/types/KalturaCaptionAsset';
-import { KalturaAssetFilter } from 'kaltura-typescript-client/types/KalturaAssetFilter';
-import { KalturaCaptionType } from 'kaltura-typescript-client/types/KalturaCaptionType';
-import { KalturaCaptionAssetStatus } from 'kaltura-typescript-client/types/KalturaCaptionAssetStatus';
-import { KalturaLanguage } from 'kaltura-typescript-client/types/KalturaLanguage';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaMultiRequest } from 'kaltura-ngx-client';
+import { CaptionAssetListAction } from 'kaltura-ngx-client/api/types/CaptionAssetListAction';
+import { CaptionAssetDeleteAction } from 'kaltura-ngx-client/api/types/CaptionAssetDeleteAction';
+import { CaptionAssetSetAsDefaultAction } from 'kaltura-ngx-client/api/types/CaptionAssetSetAsDefaultAction';
+import { CaptionAssetUpdateAction } from 'kaltura-ngx-client/api/types/CaptionAssetUpdateAction';
+import { CaptionAssetSetContentAction } from 'kaltura-ngx-client/api/types/CaptionAssetSetContentAction';
+import { CaptionAssetAddAction } from 'kaltura-ngx-client/api/types/CaptionAssetAddAction';
+import { KalturaUrlResource } from 'kaltura-ngx-client/api/types/KalturaUrlResource';
+import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client/api/types/KalturaUploadedFileTokenResource';
+import { KalturaCaptionAsset } from 'kaltura-ngx-client/api/types/KalturaCaptionAsset';
+import { KalturaAssetFilter } from 'kaltura-ngx-client/api/types/KalturaAssetFilter';
+import { KalturaCaptionType } from 'kaltura-ngx-client/api/types/KalturaCaptionType';
+import { KalturaCaptionAssetStatus } from 'kaltura-ngx-client/api/types/KalturaCaptionAssetStatus';
+import { KalturaLanguage } from 'kaltura-ngx-client/api/types/KalturaLanguage';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import { NewEntryCaptionFile } from './new-entry-caption-file';
 import { EntryWidget } from '../entry-widget';
+import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 
 export interface CaptionRow {
     uploading: boolean,
@@ -51,6 +52,8 @@ export interface CaptionRow {
 
 @Injectable()
 export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
+    private _idGenerator = new FriendlyHashId();
+
     captionsListDiffer: IterableDiffer<CaptionRow>;
     captionDiffer: { [key: string]: KeyValueDiffer<string, any> } = {};
 
@@ -248,6 +251,7 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
   }
 
     public upload(captionFile: File): void {
+        this.currentCaption.id = this._idGenerator.generateUnique(this._captions.getValue().items.map(({ id }) => id));
         this.currentCaption.uploading = true;
         this.updateState({ isBusy: true });
 
@@ -262,11 +266,11 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
                 });
     }
 
-    public removeCaption(): void {
+    public removeCaption(captionId?: string): void {
         // update the list by filtering the assets array.
         this._captions.next({
             items: this._captions.getValue().items.filter((item: CaptionRow) => {
-                return item !== this.currentCaption
+                return item.id !== (captionId || this.currentCaption.id)
             })
         });
 

@@ -1,18 +1,18 @@
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {KalturaCategoryFilter} from 'kaltura-typescript-client/types/KalturaCategoryFilter';
+import {KalturaCategoryFilter} from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
 import {Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import {ISubscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
-import {KalturaDetachedResponseProfile} from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
-import {KalturaFilterPager} from 'kaltura-typescript-client/types/KalturaFilterPager';
-import {KalturaResponseProfileType} from 'kaltura-typescript-client/types/KalturaResponseProfileType';
-import {CategoryListAction} from 'kaltura-typescript-client/types/CategoryListAction';
-import {KalturaClient} from '@kaltura-ng/kaltura-client';
-import {KalturaCategoryListResponse} from 'kaltura-typescript-client/types/KalturaCategoryListResponse';
-import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
-import {CategoryDeleteAction} from 'kaltura-typescript-client/types/CategoryDeleteAction';
+import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
+import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
+import {CategoryListAction} from 'kaltura-ngx-client/api/types/CategoryListAction';
+import {KalturaClient} from 'kaltura-ngx-client';
+import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {CategoryDeleteAction} from 'kaltura-ngx-client/api/types/CategoryDeleteAction';
 
 export interface UpdateStatus {
     loading: boolean;

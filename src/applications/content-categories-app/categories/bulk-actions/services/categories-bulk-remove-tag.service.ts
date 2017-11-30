@@ -1,9 +1,9 @@
-import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
+import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaClient } from 'kaltura-ngx-client';
 import { CategoriesBulkActionBaseService } from "./categories-bulk-action-base.service";
-import { CategoryUpdateAction } from "kaltura-typescript-client/types/CategoryUpdateAction";
+import { CategoryUpdateAction } from "kaltura-ngx-client/api/types/CategoryUpdateAction";
 
 @Injectable()
 export class CategoriesBulkRemoveTagsService extends CategoriesBulkActionBaseService<string[]> {

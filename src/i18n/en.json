@@ -406,7 +406,7 @@
         "deleteNote": "Please note: the entry will be permanently deleted from your account."
       },
       "playlists": {
-        "playlists": "Playlist's",
+        "playlists": "{{0}} Playlist's",
         "entries": "{{0}} Entries",
         "selected": "{{0}} Selected",
         "bulkActions": "Bulk Actions",
