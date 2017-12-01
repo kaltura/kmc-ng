@@ -12,6 +12,7 @@ import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/Kal
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import { environment } from 'app-environment';
 
 export interface LoadEntriesStatus {
   loading: boolean;
@@ -53,7 +54,10 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
 
   protected onDataSaving(data: KalturaPlaylist, request: KalturaMultiRequest): void {
     if (data.playlistType === KalturaPlaylistType.dynamic) {
-      // TODO [kmcng] investigate wht filters property is ignored by request
+      if (typeof data.totalResults === 'undefined' || data.totalResults <= 0) {
+        data.totalResults = environment.modules.contentPlaylists.ruleBasedTotalResults;
+      }
+      // TODO [kmcng] investigate why filters property is ignored by request
       data.filters = this.rules.map(({ originalFilter }) => originalFilter);
     }
   }
