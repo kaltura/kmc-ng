@@ -6,27 +6,27 @@ import { Observable } from 'rxjs/Observable';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization, TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaFlavorAsset } from 'kaltura-typescript-client/types/KalturaFlavorAsset';
-import { KalturaFlavorAssetWithParams } from 'kaltura-typescript-client/types/KalturaFlavorAssetWithParams';
-import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-typescript-client/types/FlavorAssetGetFlavorAssetsWithParamsAction';
-import { KalturaFlavorAssetStatus } from 'kaltura-typescript-client/types/KalturaFlavorAssetStatus';
-import { KalturaLiveParams } from 'kaltura-typescript-client/types/KalturaLiveParams';
-import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
-import { KalturaWidevineFlavorAsset } from 'kaltura-typescript-client/types/KalturaWidevineFlavorAsset';
-import { FlavorAssetDeleteAction } from 'kaltura-typescript-client/types/FlavorAssetDeleteAction';
-import { FlavorAssetConvertAction } from 'kaltura-typescript-client/types/FlavorAssetConvertAction';
-import { FlavorAssetReconvertAction } from 'kaltura-typescript-client/types/FlavorAssetReconvertAction';
-import { FlavorAssetSetContentAction } from 'kaltura-typescript-client/types/FlavorAssetSetContentAction';
-import { FlavorAssetAddAction } from 'kaltura-typescript-client/types/FlavorAssetAddAction';
-import { KalturaUrlResource } from 'kaltura-typescript-client/types/KalturaUrlResource';
-import { KalturaContentResource } from 'kaltura-typescript-client/types/KalturaContentResource';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaFlavorAsset';
+import { KalturaFlavorAssetWithParams } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetWithParams';
+import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client/api/types/FlavorAssetGetFlavorAssetsWithParamsAction';
+import { KalturaFlavorAssetStatus } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetStatus';
+import { KalturaLiveParams } from 'kaltura-ngx-client/api/types/KalturaLiveParams';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaWidevineFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaWidevineFlavorAsset';
+import { FlavorAssetDeleteAction } from 'kaltura-ngx-client/api/types/FlavorAssetDeleteAction';
+import { FlavorAssetConvertAction } from 'kaltura-ngx-client/api/types/FlavorAssetConvertAction';
+import { FlavorAssetReconvertAction } from 'kaltura-ngx-client/api/types/FlavorAssetReconvertAction';
+import { FlavorAssetSetContentAction } from 'kaltura-ngx-client/api/types/FlavorAssetSetContentAction';
+import { FlavorAssetAddAction } from 'kaltura-ngx-client/api/types/FlavorAssetAddAction';
+import { KalturaUrlResource } from 'kaltura-ngx-client/api/types/KalturaUrlResource';
+import { KalturaContentResource } from 'kaltura-ngx-client/api/types/KalturaContentResource';
 import { UploadManagement } from '@kaltura-ng/kaltura-common/upload-management';
 import { environment } from 'app-environment';
 import { Flavor } from './flavor';
-import { FlavorAssetGetUrlAction } from 'kaltura-typescript-client/types/FlavorAssetGetUrlAction';
+import { FlavorAssetGetUrlAction } from 'kaltura-ngx-client/api/types/FlavorAssetGetUrlAction';
 import { NewEntryFlavourFile } from './new-entry-flavour-file';
-import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
+import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client/api/types/KalturaUploadedFileTokenResource';
 import { EntryWidget } from '../entry-widget';
 
 @Injectable()
@@ -239,8 +239,9 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
 						    response =>
 						    {
 							    super._hideLoader();
-                  this._browserService.showGrowlMessage({severity: 'success', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteSuccess')});
-                  this._refresh();
+                                this._browserService.showGrowlMessage({severity: 'success', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteSuccess')});
+							    this._browserService.scrollToTop();
+                                this._refresh();
 						    },
 						    error =>
 						    {
