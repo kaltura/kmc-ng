@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PlaylistStore } from '../../playlist-store.service';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { PlaylistRule, RuleBasedContentWidget } from './rule-based-content-widget.service';
 
 @Component({

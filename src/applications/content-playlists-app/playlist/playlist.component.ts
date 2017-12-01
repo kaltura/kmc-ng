@@ -11,7 +11,7 @@ import { ManualContentWidget } from './playlist-content/manual/manual-content-wi
 import { PlaylistMetadataWidget } from './playlist-metadata/playlist-metadata-widget.service';
 import { PlaylistDetailsWidget } from './playlist-details/playlist-details-widget.service';
 import { RuleBasedContentWidget } from './playlist-content/rule-based/rule-based-content-widget.service';
-import { KalturaPlaylistType } from 'kaltura-typescript-client/types/KalturaPlaylistType';
+import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 
 @Component({
   selector: 'kPlaylist',

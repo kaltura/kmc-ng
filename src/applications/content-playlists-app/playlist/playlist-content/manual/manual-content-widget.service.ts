@@ -1,7 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
-import { PlaylistWidget } from '../playlist-widget';
-import { PlaylistWidgetKeys } from '../playlist-widget-keys';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { Observable } from 'rxjs/Observable';
@@ -12,6 +10,8 @@ import { KalturaClient } from 'kaltura-ngx-client';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
+import { PlaylistWidget } from '../../playlist-widget';
+import { PlaylistWidgetKeys } from '../../playlist-widget-keys';
 
 export interface LoadEntriesStatus {
   loading: boolean;

@@ -1,17 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-typescript-client';
 import { PlaylistWidget } from '../../playlist-widget';
 import { PlaylistWidgetKeys } from '../../playlist-widget-keys';
-import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { Observable } from 'rxjs/Observable';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
-import { PlaylistExecuteFromFiltersAction } from 'kaltura-typescript-client/types/PlaylistExecuteFromFiltersAction';
-import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
+import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
+import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { PlaylistExecuteFromFiltersAction } from 'kaltura-ngx-client/api/types/PlaylistExecuteFromFiltersAction';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 
 export interface LoadEntriesStatus {
   loading: boolean;
