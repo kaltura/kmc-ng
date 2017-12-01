@@ -11,6 +11,7 @@ import { PlaylistExecuteFromFiltersAction } from 'kaltura-ngx-client/api/types/P
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
+import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 
 export interface LoadEntriesStatus {
   loading: boolean;
@@ -46,15 +47,15 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     this._state.complete();
   }
 
-  protected onValidate(): Observable<{ isValid: boolean }> {
-    return Observable.of({
-      isValid: true
-    });
+  protected onValidate(wasActivated?: boolean): Observable<{ isValid: boolean }> {
+    return Observable.of({ isValid: !wasActivated || !!this.rules.length });
   }
 
   protected onDataSaving(data: KalturaPlaylist, request: KalturaMultiRequest): void {
-    // TODO [kmcng] investigate filters property in request
-    data.filters = this.rules.map(({ originalFilter }) => originalFilter);
+    if (data.playlistType === KalturaPlaylistType.dynamic) {
+      // TODO [kmcng] investigate wht filters property is ignored by request
+      data.filters = this.rules.map(({ originalFilter }) => originalFilter);
+    }
   }
 
   /**

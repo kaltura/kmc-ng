@@ -12,6 +12,7 @@ import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { PlaylistWidget } from '../../playlist-widget';
 import { PlaylistWidgetKeys } from '../../playlist-widget-keys';
+import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 
 export interface LoadEntriesStatus {
   loading: boolean;
@@ -41,14 +42,14 @@ export class ManualContentWidget extends PlaylistWidget implements OnDestroy {
     this._state.complete();
   }
 
-  protected onValidate(): Observable<{ isValid: boolean }> {
-    return Observable.of({
-      isValid: !!this.entries.length
-    });
+  protected onValidate(wasActivated?: boolean): Observable<{ isValid: boolean }> {
+    return Observable.of({ isValid: !wasActivated || !!this.entries.length });
   }
 
   protected onDataSaving(data: KalturaPlaylist, request: KalturaMultiRequest): void {
-    data.playlistContent = this.entries.map(({ id }) => id).join(',');
+    if (data.playlistType === KalturaPlaylistType.staticList) {
+      data.playlistContent = this.entries.map(({ id }) => id).join(',');
+    }
   }
 
   /**
