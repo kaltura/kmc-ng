@@ -33,7 +33,8 @@
         <div class="kRow">
           <span class="kLabel">{{'applications.settings.myUserSettings.password' | translate}}</span>
           <div>
-            <input class="kControl"
+            <input type="password"
+                   class="kControl"
                    formControlName="password"
                    pInputText
                    [ngClass]="{'kHasError':!editUserNameForm.controls['password'].valid && editUserNameForm.controls['password'].touched}">
@@ -48,7 +49,7 @@
       </div>
 
       <div class="kFooter">
-        <button pButton class="kButtonDefault kButton" label="{{'applications.settings.myUserSettings.cancel' | translate}}"></button>
+        <button pButton class="kButtonDefault kButton" (click)="_closePopup()" label="{{'applications.settings.myUserSettings.cancel' | translate}}"></button>
         <button
           pButton class="kButtonBranded kButton"
           label="{{'applications.settings.myUserSettings.save' | translate}}"

@@ -9,6 +9,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.scss']
 })
+
 export class ChangePasswordComponent implements OnInit, OnDestroy {
 
   public changePasswordForm: FormGroup;
@@ -20,6 +21,14 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     private _fb: FormBuilder
   ) {}
 
+  private _closePopup() {
+    this.parentPopupWidget.close();
+  }
+
+  _passwordMatchValidator(g: FormGroup) {
+    return g.parent && g.parent.value.newPassword === g.value ? null : {'mismatch': true};
+  }
+
   ngOnInit() {
     this._createForm();
   }
@@ -29,9 +38,9 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
   // Create empty structured form on loading
   private _createForm(): void {
     this.changePasswordForm = this._fb.group({
-      currentPassword: ['', Validators.compose([ Validators.required, Validators.minLength(1), Validators.maxLength(200) ])],
-      newPassword: ['', Validators.compose([ Validators.required, Validators.minLength(1), Validators.maxLength(200) ])],
-      reTypeNewPassword: ['', Validators.compose([ Validators.required, Validators.minLength(1), Validators.maxLength(200) ])]
+      currentPassword:    ['', Validators.compose([ Validators.required, Validators.minLength(1), Validators.maxLength(200) ])],
+      newPassword:        ['', Validators.compose([ Validators.required, Validators.minLength(1), Validators.maxLength(200) ])],
+      reTypeNewPassword:  ['', Validators.compose([ Validators.required, Validators.minLength(1), Validators.maxLength(200), this._passwordMatchValidator ])]
     });
   }
 

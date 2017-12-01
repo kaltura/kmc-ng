@@ -20,6 +20,10 @@ export class EditUserNameComponent implements OnInit, OnDestroy {
     private _fb: FormBuilder
   ) {}
 
+  private _closePopup() {
+    this.parentPopupWidget.close();
+  }
+
   ngOnInit() {
     this._createForm();
   }

@@ -1178,7 +1178,8 @@
         "newPassword": "New password",
         "reTypeNewPassword": "Re-type new password",
         "errors": {
-          "required": "This field is required"
+          "required": "This field is required",
+          "doNotMuchPasswords": "Password fields do not match"
         }
       }
     }
