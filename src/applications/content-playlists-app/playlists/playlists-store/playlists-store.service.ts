@@ -21,6 +21,7 @@ import 'rxjs/add/observable/throw';
 
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 
 export enum SortDirection {
 	Desc,
@@ -41,6 +42,8 @@ export interface QueryData
 export interface PlaylistData {
   name: string;
   description?: string;
+  playlistType: KalturaPlaylistType;
+  ruleBasedSub?: boolean;
 }
 
 

@@ -342,16 +342,6 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
     this.addNewPlaylist.open();
   }
 
-  public _onShowNotSupportedMsg(newPlaylist = true): void {
-    const message = newPlaylist ? 'applications.content.addNewPlaylist.notSupportedMsg' : 'applications.content.playlists.notSupportedMsg';
-    this._browserService.alert(
-      {
-        header: this.appLocalization.get('app.common.note'),
-        message: this.appLocalization.get(message)
-      }
-    );
-  }
-
   public _getTranslation(key: string, param: string): string {
     return this.appLocalization.get(key, { 0: param });
   }

@@ -189,7 +189,7 @@ export class PlaylistStore implements OnDestroy {
                   playlist: new KalturaPlaylist({
                     name: newData.name,
                     description: newData.description,
-                    playlistType: KalturaPlaylistType.staticList,
+                    playlistType: newData.playlistType,
                     playlistContent: ''
                   })
                 });

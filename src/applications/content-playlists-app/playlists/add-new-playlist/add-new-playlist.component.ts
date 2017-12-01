@@ -5,6 +5,7 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PlaylistsStore } from '../playlists-store/playlists-store.service';
+import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 
 @Component({
   selector: 'kAddNewPlaylist',
@@ -14,9 +15,10 @@ import { PlaylistsStore } from '../playlists-store/playlists-store.service';
 export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @Output() showNotSupportedMsg = new EventEmitter<boolean>();
   addNewPlaylistForm: FormGroup;
   private _showConfirmationOnClose = true;
+
+  public _playlistTypes = KalturaPlaylistType;
 
   constructor(private _formBuilder: FormBuilder,
               public router: Router,
@@ -27,20 +29,15 @@ export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy
     this.addNewPlaylistForm = _formBuilder.group({
       name: ['', Validators.required],
       description: '',
-      playlistType: ['manual'],
+      playlistType: KalturaPlaylistType.staticList,
       ruleBasedSub: false
     });
   }
 
   goNext() {
     if (this.addNewPlaylistForm.valid) {
-      if (this.addNewPlaylistForm.controls['playlistType'].value === 'ruleBased') {
-        this.showNotSupportedMsg.emit();
-      } else {
-        const { name, description } = this.addNewPlaylistForm.value;
-        this._playlistsStore.setNewPlaylistData({ name, description });
-        this.router.navigate(['/content/playlists/playlist/new/content']);
-      }
+      this._playlistsStore.setNewPlaylistData(this.addNewPlaylistForm.value);
+      this.router.navigate(['/content/playlists/playlist/new/content']);
     }
   }
 

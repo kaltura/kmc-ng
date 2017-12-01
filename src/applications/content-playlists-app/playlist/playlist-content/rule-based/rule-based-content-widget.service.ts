@@ -10,6 +10,7 @@ import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { PlaylistExecuteFromFiltersAction } from 'kaltura-ngx-client/api/types/PlaylistExecuteFromFiltersAction';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
+import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
 
 export interface LoadEntriesStatus {
   loading: boolean;
@@ -23,6 +24,7 @@ export interface PlaylistRule {
   entriesDuration: number;
   orderBy: string;
   limit: number;
+  originalFilter: KalturaMediaEntryFilterForPlaylist
 }
 
 @Injectable()
@@ -51,6 +53,8 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
   }
 
   protected onDataSaving(data: KalturaPlaylist, request: KalturaMultiRequest): void {
+    // TODO [kmcng] investigate filters property in request
+    data.filters = this.rules.map(({ originalFilter }) => originalFilter);
   }
 
   /**
@@ -63,6 +67,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     super._showLoader();
     this._state.next({ loading: true, error: false });
     this.isNewPlaylist = false;
+    this.rules = [];
 
     const rules = this.data.filters.map(filter => {
       return new PlaylistExecuteFromFiltersAction({
@@ -91,6 +96,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
             limit: filter.limit,
             entriesCount: result.length,
             selectionId: this._selectionIdGenerator.generateUnique(this.rules.map(item => item.selectionId)),
+            originalFilter: filter,
             entriesDuration
           });
 
