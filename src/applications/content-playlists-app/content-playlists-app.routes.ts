@@ -22,7 +22,8 @@ export const routing: Route[] = [
         children: [
           { path: '', redirectTo: 'content', pathMatch: 'full' },
           { path: 'metadata', component: PlaylistMetadataComponent, data: { sectionKey: PlaylistWidgetKeys.Metadata } },
-          { path: 'content', component: PlaylistContentComponent, data: { sectionKey: PlaylistWidgetKeys.Content } }
+          { path: 'content', component: PlaylistContentComponent, data: { sectionKey: PlaylistWidgetKeys.Content } },
+          { path: 'content', component: PlaylistContentComponent, data: { sectionKey: PlaylistWidgetKeys.ContentRuleBased } },
         ]
       }
     ]
