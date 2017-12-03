@@ -54,7 +54,10 @@ export class EntryCaptionsEdit implements  OnInit, AfterContentInit, OnDestroy{
 	    let exludedLanguages = ['he', 'id', 'yi']; // duplicated languages [TODO-KMCNG] - should be checked with beckend
 	    for (let lang in KalturaLanguage){
 		    if (lang !== "en" && exludedLanguages.indexOf(lang) === -1) { // we push English to the top of the array after sorting
-			    this._languages.push( {label: this._appLocalization.get("languages." + lang.toUpperCase()), value: lang.toUpperCase() });
+			    const label = this._appLocalization.get("languages." + lang.toUpperCase());
+			    if (label !== "languages." + lang.toUpperCase()) {
+				    this._languages.push({label: this._appLocalization.get("languages." + lang.toUpperCase()), value: lang.toUpperCase()});
+			    }
 		    }
 	    }
 	    // sort the language array by language alphabetically
