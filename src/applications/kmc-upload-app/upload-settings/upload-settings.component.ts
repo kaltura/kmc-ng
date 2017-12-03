@@ -84,7 +84,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     const isEditing = false;
 
     const newItems = Array.from(files).map(file => {
-      const ext = this._getFileExtension(file.name);
+      const ext = this._getFileExtension(file.name).toLowerCase();
       const mediaType = this._getMediaTypeFromExtension(ext);
       const { name, size } = file;
       return ({ file, mediaType, name, size, isEditing });
