@@ -7,6 +7,13 @@ import { TrackedFileData } from '@kaltura-ng/kaltura-common/upload-management/tr
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 import { KalturaUploadFile } from 'app-shared/kmc-shared';
 
+type MonitoredUploadFile = NewEntryUploadFile | NewEntryFlavourFile;
+
+function isMonitoredUploadFile(object: any): object is MonitoredUploadFile
+{
+    return object instanceof NewEntryUploadFile || object instanceof NewEntryFlavourFile;
+}
+
 export interface UploadFileData {
   id: string;
   fileName: string;
@@ -49,7 +56,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
     this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
-      .filter(({ data }) => this._filterUploadFiles(<KalturaUploadFile>data))
+      .filter(trackedFile => isMonitoredUploadFile(trackedFile.data))
       .subscribe(
         (trackedFile) => {
           // NOTE: this service does not handle 'waitingUpload' status by design.
@@ -110,18 +117,21 @@ export class UploadListComponent implements OnInit, OnDestroy {
   }
 
   private _addFile(trackedFile: TrackedFileData): void {
-    const fileData = <NewEntryUploadFile | NewEntryFlavourFile>trackedFile.data;
 
-    this._uploads.push({
-      id: trackedFile.id,
-      entryId: fileData.entryId,
-      fileName: fileData.getFileName(),
-      fileSize: fileData.getFileSize(),
-      mediaType: fileData.mediaType,
-      status: trackedFile.status,
-      uploadedOn: trackedFile.uploadStartAt,
-      progress: trackedFile.progress
-    });
+    if (isMonitoredUploadFile(trackedFile.data)) {
+        const fileData = trackedFile.data;
+
+        this._uploads.push({
+            id: trackedFile.id,
+            entryId: fileData.entryId,
+            fileName: fileData.getFileName(),
+            fileSize: fileData.getFileSize(),
+            mediaType: fileData.mediaType,
+            status: trackedFile.status,
+            uploadedOn: trackedFile.uploadStartAt,
+            progress: trackedFile.progress
+        });
+    }
   }
 
   private _removeFile(id: string): void {
