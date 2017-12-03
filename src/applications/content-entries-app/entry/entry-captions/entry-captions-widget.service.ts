@@ -28,6 +28,7 @@ import { KalturaCaptionType } from 'kaltura-ngx-client/api/types/KalturaCaptionT
 import { KalturaCaptionAssetStatus } from 'kaltura-ngx-client/api/types/KalturaCaptionAssetStatus';
 import { KalturaLanguage } from 'kaltura-ngx-client/api/types/KalturaLanguage';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { CaptionAssetServeAction } from 'kaltura-ngx-client/api/types/CaptionAssetServeAction';
 
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
@@ -379,6 +380,14 @@ export class EntryCaptionsWidget extends EntryWidget  implements OnDestroy {
       });
     }
   }
+
+    getCaptionPreviewUrl(): Observable<{ url: string }> {
+        if (this.currentCaption.id) {
+            return this._kalturaServerClient.request(new CaptionAssetServeAction({captionAssetId: this.currentCaption.id}));
+        } else {
+            return Observable.throw(new Error('cannot generate caption preview url. missing caption id'));
+        }
+    }
 
     public setDirty() {
         super.updateState({isDirty: true});

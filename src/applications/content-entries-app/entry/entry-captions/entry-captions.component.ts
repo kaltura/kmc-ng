@@ -92,10 +92,12 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 				this._downloadFile();
 				break;
 			case "preview":
-                const protocol = environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://';
+				this._widgetService.getCaptionPreviewUrl()
+					.subscribe(({ url }) =>
+					{
+                        this._browserService.openLink(url);
+					})
 
-                const previewUrl = protocol + environment.core.kaltura.serverEndpoint + "/api_v3/service/caption_captionasset/action/serve/captionAssetId/" + this._widgetService.currentCaption.id +"/ks/" + this._appAuthentication.appUser.ks;
-				this._browserService.openLink(previewUrl);
 				break;
 		}
 	}
