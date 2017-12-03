@@ -5,7 +5,6 @@ import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 import { SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
-import { BulkLogTableComponent } from '../bulk-log-table/bulk-log-table.component';
 import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
 import { getBulkUploadType } from '../utils/get-bulk-upload-type';
@@ -21,7 +20,6 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   @Input() selectedBulkLogItems: Array<any> = [];
   @ViewChild('tags') private tags: StickyComponent;
 
-  public isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
 
   private querySubscription: ISubscription;
@@ -73,13 +71,13 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   }
 
   private _deleteBulkLog(id: number): void {
-    this.isBusy = true;
     this._blockerMessage = null;
 
     this._store.deleteBulkLog(id)
+      .cancelOnDestroy(this)
+      .tag('block-shell')
       .subscribe(
         () => {
-          this.isBusy = false;
           this._store.reload(true)
         },
         () => {
@@ -90,7 +88,6 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
                 label: this._appLocalization.get('app.common.retry'),
                 action: () => {
                   this._blockerMessage = null;
-                  this.isBusy = false;
                   this._deleteBulkLog(id);
                 }
               },
@@ -98,7 +95,6 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
                 label: this._appLocalization.get('app.common.cancel'),
                 action: () => {
                   this._blockerMessage = null;
-                  this.isBusy = false;
                 }
               }
             ]
@@ -108,12 +104,13 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
   }
 
   private _deleteBulkLogs(files: Array<KalturaBulkUpload>): void {
-    this.isBusy = true;
     this._blockerMessage = null;
 
-    this._store.deleteBulkLogs(files).subscribe(
+    this._store.deleteBulkLogs(files)
+      .cancelOnDestroy(this)
+      .tag('block-shell')
+      .subscribe(
       () => {
-        this.isBusy = false;
         this._store.reload(true);
         this._clearSelection();
       },
@@ -125,7 +122,6 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
               label: this._appLocalization.get('app.common.retry'),
               action: () => {
                 this._blockerMessage = null;
-                this.isBusy = false;
                 this._deleteBulkLogs(files);
               }
             },
@@ -133,7 +129,6 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
               label: this._appLocalization.get('app.common.cancel'),
               action: () => {
                 this._blockerMessage = null;
-                this.isBusy = false;
               }
             }
           ]
