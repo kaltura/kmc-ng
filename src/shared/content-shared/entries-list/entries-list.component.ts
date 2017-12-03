@@ -50,9 +50,10 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   onFreetextChanged(): void {
 
     this._entriesStore.removeFiltersByType(FreetextFilter);
+    const freetextSearch = this._filter.freetextSearch.trim();
 
-    if (this._filter.freetextSearch) {
-      this._entriesStore.addFilters(new FreetextFilter(this._filter.freetextSearch));
+    if (freetextSearch) {
+      this._entriesStore.addFilters(new FreetextFilter(freetextSearch));
     }
   }
 

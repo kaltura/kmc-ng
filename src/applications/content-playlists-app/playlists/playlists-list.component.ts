@@ -272,7 +272,8 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   public _onFreetextChanged(): void {
-    this._playlistsStore.reload({ freeText: this._filter.freetextSearch });
+    const freeText = this._filter.freetextSearch.trim();
+    this._playlistsStore.reload({ freeText });
   }
 
   public _onSortChanged(event): void {
