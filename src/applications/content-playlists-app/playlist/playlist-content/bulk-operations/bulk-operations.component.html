@@ -1,0 +1,48 @@
+<div class="kPlaylistEntriesTableFilters">
+  <kSticky stickyId="playlistContentBulk"
+           sticksTo="playlistHeader"
+           stickyClass="kStickyHeader"
+           [scrollOffset]="120">
+    <div class="kHeader">
+      <div class="kBulkActionsContainer">
+        <div class="kBulkActions" *ngIf="selectedEntries.length; else addEntryWrap">
+          <button pButton
+                  class="kButtonDefault kMoveBtn kMoveBtnTop"
+                  icon="kIcondropdown_arrow_top"
+                  (click)="_moveEntries('up')"></button>
+          <button pButton
+                  class="kButtonDefault kMoveBtn kMoveBtnBottom"
+                  icon="kIcondropdown_arrow_bottom"
+                  (click)="_moveEntries('down')"></button>
+          <button pButton class="kButtonDanger kBulkDeleteBtn"
+                  label="{{'applications.content.playlists.remove' | translate}}"
+                  (click)="deleteEntries.emit(selectedEntries)"></button>
+        </div>
+        <ng-template #addEntryWrap>
+          <button
+            pButton
+            type="button"
+            label="{{'applications.content.playlists.addEntry' | translate}}"
+            class="kButtonBranded kAddEntryBtn"
+            (click)="addEntry.emit()">
+          </button>
+        </ng-template>
+        <span class="kSelectedEntriesNum" *ngIf="entriesTotalCount">
+          {{ _getTranslation('applications.content.playlists.entries', entriesTotalCount) }}
+      </span>
+        <div *ngIf="selectedEntries.length" class="kSelected">
+        <span class="kSelectedEntriesLabel">
+          {{ _getTranslation('applications.content.playlists.selected', selectedEntries.length) }}
+        </span>
+          <a class="kBulkCancel" (click)="clearSelection.emit()">
+            {{'applications.content.playlists.cancel' | translate}}
+          </a>
+        </div>
+      </div>
+      <div *ngIf="duration" class="kPlaylistEntriesTableDuration">
+        <span>{{_getTranslation('applications.content.playlistDetails.details.duration', (duration | kTime)) }}</span>
+      </div>
+    </div>
+  </kSticky>
+</div>
+

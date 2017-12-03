@@ -2,16 +2,16 @@ import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, EventEmitte
 import { ISubscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
-import { KalturaUserFilter } from 'kaltura-typescript-client/types/KalturaUserFilter';
-import { UserListAction } from 'kaltura-typescript-client/types/UserListAction';
+import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
+import { KalturaUserFilter } from 'kaltura-ngx-client/api/types/KalturaUserFilter';
+import { UserListAction } from 'kaltura-ngx-client/api/types/UserListAction';
 
 export enum AppearInListType {
   NoRestriction = 0,
@@ -40,7 +40,8 @@ export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, A
   private _confirmClose: boolean = true;
 
   // expose enum to the template
-  public _appearInListType = AppearInListType.NoRestriction;
+  public _appearInListType = AppearInListType;
+  public _appearInList = AppearInListType.NoRestriction;
 
   constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
   }
@@ -58,7 +59,7 @@ export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, A
           }
           if (event.state === PopupWidgetStates.BeforeClose) {
             if (event.context && event.context.allowClose) {
-              if (this._appearInListType && this._confirmClose) {
+              if (this._appearInList && this._confirmClose) {
                 event.context.allowClose = false;
                 this._browserService.confirm(
                   {
@@ -139,7 +140,7 @@ export class CategoriesBulkChangeCategoryListing implements OnInit, OnDestroy, A
   }
 
   public _apply() {
-    this.changeCategoryListingChanged.emit(this._appearInListType);
+    this.changeCategoryListingChanged.emit(this._appearInList);
     this._confirmClose = false;
     this.parentPopupWidget.close();
   }

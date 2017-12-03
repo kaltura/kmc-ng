@@ -10,7 +10,7 @@
 
             <div class="kMenu-right">
                 <kUploadButton></kUploadButton>
-                <i class="kIconfolder_large"></i>
+                <kUploadMonitor [appmenu]="appmenu"></kUploadMonitor>
                 <i class="kIconuser" (click)="navigate('/administration')" [class.open]="selectedMenuItem?.routePath==='administration'" [kTooltip]="'app.menu.Administration' | translate" [placement]="'bottom'"></i>
                 <i class="kIcongear" (click)="navigate('/settings')" [class.open]="selectedMenuItem?.routePath==='settings'" [kTooltip]="'app.menu.Settings' | translate" [placement]="'bottom'"></i>
                 <i #help class="kIconhelp" [class.has-notification]="_showChangelog" [class.open]="_helpMenuOpened"></i>
@@ -35,7 +35,15 @@
   </div>
 </div>
 
-<kPopupWidget #usersettings [appendTo]="appmenu" [popupWidth]="240" [popupHeight]="232" [closeBtn]="false" [targetRef]="username" [targetOffset]="{'x':-50, 'y': 30}" (onOpen)="username.className='kUserName open'" (onClose)="username.className='kUserName'">
+<kPopupWidget #usersettings
+              [popupWidth]="240"
+              [popupHeight]="232"
+              [closeBtn]="false"
+              [targetRef]="username"
+              [targetOffset]="{'x':-50, 'y': 30}"
+              (onOpen)="username.className='kUserName open'"
+              (onClose)="username.className='kUserName'"
+              kSticky [sticksTo]="'header'" [stickyId]="'usersettingsPopup'" [stickyClass]="'kForceFix'">
     <kKMCUserSettings></kKMCUserSettings>
 </kPopupWidget>
 

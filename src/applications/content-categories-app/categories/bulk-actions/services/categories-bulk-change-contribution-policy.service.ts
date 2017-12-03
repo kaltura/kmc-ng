@@ -1,26 +1,26 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
-import { CategoriesBulkActionBaseService } from "./categories-bulk-action-base.service";
-import { CategoryUpdateAction } from "kaltura-typescript-client/types/CategoryUpdateAction";
-import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {KalturaClient} from 'kaltura-ngx-client';
+import {CategoriesBulkActionBaseService} from './categories-bulk-action-base.service';
+import {CategoryUpdateAction} from 'kaltura-ngx-client/api/types/CategoryUpdateAction';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
 
 @Injectable()
-export class CategoriesBulkChangeContributionPolicyService extends CategoriesBulkActionBaseService<KalturaUser> {
+export class CategoriesBulkChangeContributionPolicyService extends CategoriesBulkActionBaseService<KalturaContributionPolicyType> {
 
   constructor(_kalturaServerClient: KalturaClient) {
     super(_kalturaServerClient);
   }
 
-  public execute(selectedCategories: KalturaCategory[], owner : KalturaUser) : Observable<{}>{
-    return Observable.create(observer =>{
+  public execute(selectedCategories: KalturaCategory[], policyType: KalturaContributionPolicyType): Observable<{}>{
+    return Observable.create(observer => {
 
-      let requests: CategoryUpdateAction[] = [];
+      const requests: CategoryUpdateAction[] = [];
 
       selectedCategories.forEach(category => {
-        let updatedCategory: KalturaCategory = new KalturaCategory();
-        updatedCategory.owner = owner.id;
+        const updatedCategory: KalturaCategory = new KalturaCategory();
+        updatedCategory.contributionPolicy = policyType;
         requests.push(new CategoryUpdateAction({
           id: category.id,
           category: updatedCategory

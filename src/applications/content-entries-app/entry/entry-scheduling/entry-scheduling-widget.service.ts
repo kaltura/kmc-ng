@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaMultiRequest } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
@@ -164,7 +164,7 @@ export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
 		this.schedulingForm.updateValueAndValidity();
 	}
 
-	protected onValidate() : Observable<{ isValid : boolean}>
+	protected onValidate(wasActivated: boolean) : Observable<{ isValid : boolean}>
 	{
 		return Observable.create(observer =>
 		{

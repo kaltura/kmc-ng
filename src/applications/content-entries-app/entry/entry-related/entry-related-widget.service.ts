@@ -1,40 +1,45 @@
 import {
-    Injectable, IterableChangeRecord, IterableDiffer, IterableDiffers, KeyValueDiffer, KeyValueDiffers,
-    OnDestroy
+  Injectable,
+  IterableChangeRecord,
+  IterableDiffer,
+  IterableDiffers,
+  KeyValueDiffer,
+  KeyValueDiffers,
+  OnDestroy
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import { KalturaAssetFilter } from 'kaltura-typescript-client/types/KalturaAssetFilter';
-import { KalturaAttachmentAsset } from 'kaltura-typescript-client/types/KalturaAttachmentAsset';
-import { KalturaAttachmentType } from 'kaltura-typescript-client/types/KalturaAttachmentType';
-import { AttachmentAssetListAction } from 'kaltura-typescript-client/types/AttachmentAssetListAction';
-import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
-import { AttachmentAssetSetContentAction } from 'kaltura-typescript-client/types/AttachmentAssetSetContentAction';
-import { AttachmentAssetDeleteAction } from 'kaltura-typescript-client/types/AttachmentAssetDeleteAction';
-import { AttachmentAssetUpdateAction } from 'kaltura-typescript-client/types/AttachmentAssetUpdateAction';
-import { AttachmentAssetAddAction } from 'kaltura-typescript-client/types/AttachmentAssetAddAction';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaAssetFilter } from 'kaltura-ngx-client/api/types/KalturaAssetFilter';
+import { KalturaAttachmentAsset } from 'kaltura-ngx-client/api/types/KalturaAttachmentAsset';
+import { KalturaAttachmentType } from 'kaltura-ngx-client/api/types/KalturaAttachmentType';
+import { AttachmentAssetListAction } from 'kaltura-ngx-client/api/types/AttachmentAssetListAction';
+import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client/api/types/KalturaUploadedFileTokenResource';
+import { AttachmentAssetSetContentAction } from 'kaltura-ngx-client/api/types/AttachmentAssetSetContentAction';
+import { AttachmentAssetDeleteAction } from 'kaltura-ngx-client/api/types/AttachmentAssetDeleteAction';
+import { AttachmentAssetUpdateAction } from 'kaltura-ngx-client/api/types/AttachmentAssetUpdateAction';
+import { AttachmentAssetAddAction } from 'kaltura-ngx-client/api/types/AttachmentAssetAddAction';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators'
 import { environment } from 'app-environment';
-import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
 import { NewEntryRelatedFile } from './new-entry-related-file';
 import { EntryWidget } from '../entry-widget';
+import { KalturaAttachmentAssetListResponse } from 'kaltura-ngx-client/api/types/KalturaAttachmentAssetListResponse';
 
-export interface RelatedFile extends KalturaAttachmentAsset
-{
-    uploading?: boolean,
-    uploadFileId?: string,
-    serverUploadToken? : string,
-    uploadFailure? : boolean,
-    progress? : string;
+export interface RelatedFile extends KalturaAttachmentAsset {
+  uploading?: boolean,
+  uploadFileId?: string,
+  serverUploadToken?: string,
+  uploadFailure?: boolean,
+  progress?: string;
 }
 
 @Injectable()
@@ -52,19 +57,19 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 
 	private _entryId: string = '';
 
-	constructor(
-				private _kalturaServerClient: KalturaClient,
-	            private _browserService: BrowserService,
-				private _appAuthentication: AppAuthentication,
-				private _objectDiffers: KeyValueDiffers,
-				private _listDiffers : IterableDiffers,
-				private _uploadManagement : UploadManagement) {
-        super(EntryWidgetKeys.Related);
-    }
+  constructor(private _kalturaServerClient: KalturaClient,
+              private _appLocalization: AppLocalization,
+              private _browserService: BrowserService,
+              private _appAuthentication: AppAuthentication,
+              private _objectDiffers: KeyValueDiffers,
+              private _listDiffers: IterableDiffers,
+              private _uploadManagement: UploadManagement) {
+    super(EntryWidgetKeys.Related);
+  }
 
 
   private _trackUploadFiles(): void {
-    this._uploadManagement.onFileStatusChanged$
+    this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
       .filter(uploadedFile => uploadedFile.data instanceof NewEntryRelatedFile)
       .map(uploadedFile => {
@@ -75,23 +80,35 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
         }
         return { relevantRelatedFile, uploadedFile };
       })
+      .filter(({ relevantRelatedFile }) => !!relevantRelatedFile)
       .subscribe(
         ({ relevantRelatedFile, uploadedFile }) => {
           switch (uploadedFile.status) {
             case TrackedFileStatuses.purged:
               this._removeFile(relevantRelatedFile);
               break;
+
             case TrackedFileStatuses.prepared:
               relevantRelatedFile.serverUploadToken = (<NewEntryRelatedFile>uploadedFile.data).serverUploadToken;
+              this._syncBusyState();
               break;
+
             case TrackedFileStatuses.uploadCompleted:
               relevantRelatedFile.uploading = false;
               relevantRelatedFile.uploadFailure = false;
               break;
-            case TrackedFileStatuses.uploadFailed:
+
+            case TrackedFileStatuses.cancelled:
+              relevantRelatedFile.uploading = false;
+              this._syncBusyState();
+              break;
+
+            case TrackedFileStatuses.failure:
               relevantRelatedFile.uploading = false;
               relevantRelatedFile.uploadFailure = true;
+              this._syncBusyState();
               break;
+
             case TrackedFileStatuses.uploading:
               relevantRelatedFile.progress = (uploadedFile.progress * 100).toFixed(0);
               relevantRelatedFile.uploading = true;
@@ -107,115 +124,140 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
     /**
      * Do some cleanups if needed once the section is removed
      */
-    protected onReset()
-    {
-	    this.relatedFileDiffer = {};
-	    this.relatedFilesListDiffer = null;
-    	this._entryId = '';
-	    this._relatedFiles.next({ items : [] });
+    protected onReset() {
+      this.relatedFileDiffer = {};
+      this.relatedFilesListDiffer = null;
+      this._entryId = '';
+      this._relatedFiles.next({ items: [] });
     }
 
-    protected onValidate(): Observable<{ isValid: boolean }> {
-      const fileTypeValid = this._relatedFiles.getValue().items.every(file => !!file.format);
-      return Observable.of({ isValid: fileTypeValid });
+  protected onActivate(firstTimeActivating: boolean) {
+    this._entryId = this.data.id;
+    super._showLoader();
+
+    if (firstTimeActivating) {
+      this._trackUploadFiles();
     }
 
-	protected onActivate(firstTimeActivating: boolean) {
-		this._entryId = this.data.id;
-		super._showLoader();
+    this._relatedFiles.next({ items: [] });
 
-		if (firstTimeActivating)
-		{
-			this._trackUploadFiles();
-		}
+    return this._kalturaServerClient.request(new AttachmentAssetListAction({
+      filter: new KalturaAssetFilter({ entryIdEqual: this._entryId })
+    }))
+      .cancelOnDestroy(this, this.widgetReset$)
+      .monitor('get entry related files')
+      .do(response => {
+        // Set file type and restore previous upload state
+        this._updateAssetsResponse(response);
 
-		this._relatedFiles.next({items : []});
+        this._relatedFiles.next({ items: response.objects });
+        this.relatedFilesListDiffer = this._listDiffers.find([]).create();
+        this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
 
-		return this._kalturaServerClient.request(new AttachmentAssetListAction({
-			filter: new KalturaAssetFilter(
-				{
-					entryIdEqual : this._entryId
-				}
-			)}))
-			.cancelOnDestroy(this,this.widgetReset$)
-			.monitor('get entry related files')
-			.do(
-				response =>
-				{
-					// set file type
-					response.objects.forEach((asset: RelatedFile) => {
-						if (!asset.format && asset.fileExt){
-							asset.format = this._getFormatByExtension(asset.fileExt);
-						}
-					});
-					this._relatedFiles.next({items : response.objects});
-					this.relatedFilesListDiffer = this._listDiffers.find([]).create();
-					this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
+        this.relatedFileDiffer = {};
+        this._relatedFiles.getValue().items.forEach((asset: RelatedFile) => {
+          this.relatedFileDiffer[asset.id] = this._objectDiffers.find([]).create(null);
+          this.relatedFileDiffer[asset.id].diff(asset);
+        });
+        super._hideLoader();
+      })
+      .catch(error => {
+          this._relatedFiles.next({ items: [] });
+          super._hideLoader();
+          super._showActivationError();
+          return Observable.throw(error);
+        }
+      );
+  }
 
-					this.relatedFileDiffer = {};
-					this._relatedFiles.getValue().items.forEach((asset: RelatedFile) => {
-						this.relatedFileDiffer[asset.id] = this._objectDiffers.find([]).create(null);
-						this.relatedFileDiffer[asset.id].diff(asset);
-					});
-					super._hideLoader();
-				})
-			.catch((error, caught) =>
-				{
-					this._relatedFiles.next({items : []});
-					super._hideLoader();
-					super._showActivationError();
-					return Observable.throw(error);
-				}
-			);
-	}
+  protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest) {
+    if (this._relatedFiles.getValue().items) {
+      // check for added and removed assets
+      if (this.relatedFilesListDiffer) {
+        const changes = this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
+        if (changes) {
+          changes.forEachAddedItem((record: IterableChangeRecord<RelatedFile>) => {
+            // added assets
+            const newAsset = record.item as RelatedFile;
+            const addAssetRequest = new AttachmentAssetAddAction({ entryId: this.data.id, attachmentAsset: newAsset });
+            request.requests.push(addAssetRequest);
 
-	protected onDataSaving(data: KalturaMediaEntry, request: KalturaMultiRequest)
-	{
-		if (this._relatedFiles.getValue().items) {
-			// check for added and removed assets
-			if (this.relatedFilesListDiffer) {
-				let changes = this.relatedFilesListDiffer.diff(this._relatedFiles.getValue().items);
-				if (changes) {
-					changes.forEachAddedItem((record: IterableChangeRecord<RelatedFile>) => {
-						// added assets
-						let newAsset:RelatedFile = record.item as RelatedFile;
-						const addAssetRequest: AttachmentAssetAddAction = new AttachmentAssetAddAction({entryId: this.data.id, attachmentAsset: newAsset});
-						request.requests.push(addAssetRequest);
+            const resource = new KalturaUploadedFileTokenResource();
+            resource.token = record.item.serverUploadToken;
+            const setContentRequest = new AttachmentAssetSetContentAction({ id: '0', contentResource: resource })
+              .setDependency(['id', (request.requests.length - 1), 'id'])
+              .setCompletion(response => {
+                if (response.error) {
+                  this._uploadManagement.cancelUpload(newAsset.uploadFileId, true);
+                } else {
+                  const relevantUploadFile = this._uploadManagement.getTrackedFile(newAsset.uploadFileId);
+                  if (relevantUploadFile) {
+                    // backup assetId so it can be easily be found during restore state step
+                    (<NewEntryRelatedFile>relevantUploadFile.data).assetId = response.result.id;
+                  }
+                }
+              });
 
-						let resource = new KalturaUploadedFileTokenResource();
-						resource.token = record.item.serverUploadToken;
-						let setContentRequest: AttachmentAssetSetContentAction = new AttachmentAssetSetContentAction({id: '0', contentResource: resource})
-							.setDependency(['id', (request.requests.length-1), 'id']);
+            request.requests.push(setContentRequest);
 
-						request.requests.push(setContentRequest);
+          });
+          changes.forEachRemovedItem((record: IterableChangeRecord<RelatedFile>) => {
+            // remove deleted assets
+            const deleteAssetRequest = new AttachmentAssetDeleteAction({ attachmentAssetId: (record.item as RelatedFile).id });
+            const asset = record.item as RelatedFile;
+            const relevantUploadFile = this._uploadManagement.getTrackedFile(asset.uploadFileId);
 
-					});
-					changes.forEachRemovedItem((record: IterableChangeRecord<RelatedFile>) => {
-						// remove deleted assets
-						const deleteAssetRequest: AttachmentAssetDeleteAction = new AttachmentAssetDeleteAction({attachmentAssetId: (record.item as RelatedFile).id});
-						request.requests.push(deleteAssetRequest);
-					});
-				}
-			}
+            if (relevantUploadFile) {
+              deleteAssetRequest.setCompletion(response => {
+                if (!response.error) {
+                  this._uploadManagement.cancelUpload(asset.uploadFileId, true);
+                }
+              })
+            }
 
-			// update changed assets
-			this._relatedFiles.getValue().items.forEach((asset: RelatedFile) => {
-				var relatedFileDiffer = this.relatedFileDiffer[asset.id];
-				if (relatedFileDiffer) {
-					var objChanges = relatedFileDiffer.diff(asset);
-					if (objChanges) {
-						const updateAssetRequest: AttachmentAssetUpdateAction = new AttachmentAssetUpdateAction({
-							id: asset.id,
-							attachmentAsset: asset
-						});
-						request.requests.push(updateAssetRequest);
-					}
-				}
-			});
-		}
+            request.requests.push(deleteAssetRequest);
+          });
+        }
+      }
 
-	}
+      // update changed assets
+      this._relatedFiles.getValue().items.forEach((asset: RelatedFile) => {
+        const relatedFileDiffer = this.relatedFileDiffer[asset.id];
+        if (relatedFileDiffer && relatedFileDiffer.diff(asset)) {
+          const updateAssetRequest = new AttachmentAssetUpdateAction({ id: asset.id, attachmentAsset: asset });
+          request.requests.push(updateAssetRequest);
+        }
+      });
+    }
+  }
 
+  private _updateAssetsResponse(response: KalturaAttachmentAssetListResponse): void {
+    response.objects.forEach((asset: RelatedFile) => {
+      if (!asset.format && asset.fileExt) {
+        asset.format = this._getFormatByExtension(asset.fileExt);
+      }
+
+      const relevantFile = this._uploadManagement.getTrackedFiles().find(file =>
+        file.data instanceof NewEntryRelatedFile && file.data.assetId === asset.id
+      );
+
+      if (relevantFile) {
+        asset.uploadFileId = relevantFile.id;
+        asset.progress = (relevantFile.progress * 100).toFixed(0);
+        asset.uploading = relevantFile.progress < 1;
+        asset.uploadFailure = !!relevantFile.failureReason;
+        asset.serverUploadToken = (<NewEntryRelatedFile>relevantFile.data).serverUploadToken;
+      }
+    });
+  }
+
+  private _syncBusyState(): void {
+    // find intersection of tracked files and related files to avoid checking serverUploadToken on already uploaded assets
+    const relevantFiles = this._relatedFiles.getValue().items
+      .filter(({ uploadFileId }) => !!this._uploadManagement.getTrackedFile(uploadFileId));
+    const isBusy = relevantFiles.some(file => !file.serverUploadToken);
+    this.updateState({ isBusy });
+  }
 
 	private _addFile(fileName : string, format :KalturaAttachmentType) : KalturaAttachmentAsset {
     	const existingItems = this._relatedFiles.getValue().items;
@@ -232,28 +274,38 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 
 		this._relatedFiles.next({items: files});
 
+    this.updateState({ isBusy: true });
 		this._setDirty();
 
 		return newFile;
 	}
 
-	public _removeFile(file: RelatedFile): void{
-		// update the list by filtering the assets array.
+  private _validateFileSize(file: File): boolean {
+    const maxFileSize = environment.uploadsShared.MAX_FILE_SIZE;
+    const fileSize = file.size / 1024 / 1024; // convert to Mb
 
-		this._relatedFiles.next({items : this._relatedFiles.getValue().items.filter((item: RelatedFile) => {return item !== file})});
+    return this._uploadManagement.supportChunkUpload(new NewEntryRelatedFile(null)) || fileSize < maxFileSize;
+  }
 
-		// stop tracking changes on this asset
-		// if file id is empty it was added by the user so no need to track its changes.
-		if (file.id && this.relatedFileDiffer[file.id]){
-			delete this.relatedFileDiffer[file.id];
-		}
+  public _removeFile(file: RelatedFile): void {
+    // update the list by filtering the assets array.
+    this._relatedFiles.next({ items: this._relatedFiles.getValue().items.filter((item: RelatedFile) => item !== file) });
 
-		this._setDirty();
-	}
+    // stop tracking changes on this asset
+    // if file id is empty it was added by the user so no need to track its changes.
+    if (file.id && this.relatedFileDiffer[file.id]) {
+      delete this.relatedFileDiffer[file.id];
+    }
+
+    this._syncBusyState();
+    this._setDirty();
+  }
 
 	private _openFile(fileId: string, operation: string): void {
-		const apiUrl = environment.core.kaltura.apiUrl;
-		let url = apiUrl + "/service/attachment_attachmentasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/attachmentAssetId/" + fileId;
+		const serverEndpoint = environment.core.kaltura.serverEndpoint;
+        const protocol = environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://';
+
+        let url = protocol + serverEndpoint + "/api_v3/service/attachment_attachmentasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/attachmentAssetId/" + fileId;
 		this._browserService.openLink(url);
 	}
 
@@ -266,27 +318,43 @@ export class EntryRelatedWidget extends EntryWidget implements OnDestroy
 	}
 
 
-	public _onFileSelected(selectedFiles: FileList) {
-        if (selectedFiles && selectedFiles.length) {
-            const entryRelatedFiles = Array.from(selectedFiles).map(file => new NewEntryRelatedFile(file));
-            const newFiles: RelatedFile[] = this._uploadManagement.addFiles(entryRelatedFiles)
-                .map(addedFile => {
-                    const originalFileName = addedFile.data.getFileName();
-                    const hasExtension = originalFileName.indexOf('.') !== -1;
-                    const extension = hasExtension ? originalFileName.substr(originalFileName.lastIndexOf('.') + 1) : null;
-                    const newFile: RelatedFile = this._addFile(originalFileName, this._getFormatByExtension(extension));
-                    newFile.uploadFileId = addedFile.id;
-                    newFile.uploading = true;
-                    (<any>newFile).size = addedFile.data.getFileSize(); // we set type explicitly since size is readonly because it readonly
+  public _onFileSelected(selectedFiles: FileList) {
+    if (selectedFiles && selectedFiles.length) {
+      const files = Array.from(selectedFiles);
+      const invalidFiles = files.filter(file => !this._validateFileSize(file));
 
-                    return newFile;
-                });
-        }
+      if (invalidFiles.length) {
+        return this._browserService.alert({
+          header: this._appLocalization.get('app.common.attention'),
+          message: `
+            ${this._appLocalization.get('applications.upload.validation.fileSizeExceededFor')}
+            ${invalidFiles.map(({ name }) => name).join('\n')}
+          `
+        });
+      }
+
+      const entryRelatedFiles = files.map(file => new NewEntryRelatedFile(file));
+      this._uploadManagement.addFiles(entryRelatedFiles).forEach(addedFile => {
+        const originalFileName = addedFile.data.getFileName();
+        const hasExtension = originalFileName.indexOf('.') !== -1;
+        const extension = hasExtension ? originalFileName.substr(originalFileName.lastIndexOf('.') + 1) : null;
+        const newFile: RelatedFile = this._addFile(originalFileName, this._getFormatByExtension(extension));
+        newFile.uploadFileId = addedFile.id;
+        newFile.uploading = true;
+        (<any>newFile).size = addedFile.data.getFileSize(); // we set type explicitly since size is readonly because it readonly
+
+        return newFile;
+      });
     }
+  }
 
-	public _cancelUpload(file: RelatedFile): void {
-    	this._uploadManagement.cancelUpload(file.uploadFileId, true);
-	}
+  public _cancelUpload(file: RelatedFile): void {
+    if (!file.id) {
+      this._uploadManagement.cancelUpload(file.uploadFileId, true);
+    } else {
+      this._removeFile(file);
+    }
+  }
 
   private _getFormatByExtension(ext: string): KalturaAttachmentType {
     let format: KalturaAttachmentType = null;

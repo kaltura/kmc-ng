@@ -13,6 +13,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
   styleUrls: ['./entries-list.component.scss']
 })
 export class EntriesListComponent implements OnInit, OnDestroy {
+  @Input() showReload = true;
   @Input() isBusy = false;
   @Input() blockerMessage: AreaBlockerMessage = null;
   @Input() selectedEntries: any[] = [];
@@ -33,7 +34,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     sortDirection: SortDirection.Desc
   };
 
-  constructor(private _entriesStore: EntriesStore, private _browserService: BrowserService) {
+  constructor(public _entriesStore: EntriesStore, private _browserService: BrowserService) {
   }
 
   removeTag(tag: any) {
@@ -49,9 +50,10 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   onFreetextChanged(): void {
 
     this._entriesStore.removeFiltersByType(FreetextFilter);
+    const freetextSearch = this._filter.freetextSearch.trim();
 
-    if (this._filter.freetextSearch) {
-      this._entriesStore.addFilters(new FreetextFilter(this._filter.freetextSearch));
+    if (freetextSearch) {
+      this._entriesStore.addFilters(new FreetextFilter(freetextSearch));
     }
   }
 

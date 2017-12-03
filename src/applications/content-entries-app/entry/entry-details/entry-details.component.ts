@@ -1,12 +1,15 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { EntryStore } from '../entry-store.service';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
-import { KalturaSourceType } from 'kaltura-typescript-client/types/KalturaSourceType';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { EntryDetailsWidget } from './entry-details-widget.service';
 
+export interface EntryDetailsKalturaMediaEntry extends KalturaMediaEntry {
+  recordedEntryId?: string
+}
 
 @Component({
 	selector: 'kEntryDetails',
@@ -22,9 +25,9 @@ export class EntryDetails implements OnInit, OnDestroy {
 	public _hasDuration: boolean = false;
 	public _isClip: boolean = false;
 
-	private _currentEntry: KalturaMediaEntry;
+	public _currentEntry: EntryDetailsKalturaMediaEntry;
 
-	get currentEntry(): KalturaMediaEntry {
+	get currentEntry(): EntryDetailsKalturaMediaEntry {
 		return this._currentEntry;
 	}
 

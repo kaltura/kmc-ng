@@ -47,12 +47,20 @@
   .kEntriesTableActions {
     width: 100%;
     text-align: center;
-    button {
+
+    .kMoreButton {
       color: grey !important;
       background-color: rgba(0, 0, 0, 0) !important;
       border: none !important;
       font-size: 16px !important;
       outline: 0;
+    }
+
+    .kButtonAddToBucket {
+      width: 42px;
+      height: 34px;
+      font-size: 25px;
+      font-weight: normal;
     }
   }
 }
@@ -71,4 +79,8 @@
 :host /deep/ p-datatable .stickyHeader{
   z-index: 10;
   display: table;
+}
+
+:host /deep/ .kButtonAddToBucket .ui-button-text {
+  padding: 0;
 }

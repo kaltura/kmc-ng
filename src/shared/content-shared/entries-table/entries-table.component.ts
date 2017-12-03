@@ -14,9 +14,9 @@ import { ISubscription } from 'rxjs/Subscription';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 
 export interface EntriesTableColumns {
@@ -134,14 +134,6 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    const scrollBody = this.dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
-    if (scrollBody && scrollBody.length > 0) {
-      scrollBody[0].onscroll = () => {
-        if (this.actionsMenu) {
-          this.actionsMenu.hide();
-        }
-      }
-    }
     if (this._deferredLoading) {
       // use timeout to allow the DOM to render before setting the data to the datagrid.
       // This prevents the screen from hanging during datagrid rendering of the data.
@@ -154,20 +146,18 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  private _exceptPreview(status, { commandName }) {
+  private _hideMenuItems(status, mediaType, { commandName }): boolean {
     const isNotReady = status instanceof KalturaEntryStatus && status.toString() !== KalturaEntryStatus.ready.toString();
-    return !(isNotReady && commandName === 'preview');
-  }
-
-  private _exceptView(mediaType, { commandName }) {
     const isLiveStreamFlash = mediaType && mediaType.toString() === KalturaMediaType.liveStreamFlash.toString();
-    return !(isLiveStreamFlash && commandName === 'view');
+    const isPreviewCommand = commandName === 'preview';
+    const isViewCommand = commandName === 'view';
+
+    return !(isNotReady && isPreviewCommand) && !(isNotReady && isLiveStreamFlash && isViewCommand);
   }
 
   private _buildMenu(mediaType: KalturaMediaType = null, status: any = null): void {
     this._items = this.rowActions
-      .filter(item => this._exceptPreview(status, item))
-      .filter(item => this._exceptView(mediaType, item))
+      .filter(item => this._hideMenuItems(status, mediaType, item))
       .map(action =>
         Object.assign({}, action, {
           command: ({ item }) => {
@@ -212,14 +202,6 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   public _getColumnStyle({ width = 'auto', align = 'left' } = {}): { 'width': string, 'text-align': string } {
     return { 'width': width, 'text-align': align };
-  }
-
-  public scrollToTop() {
-    const scrollBodyArr = this.dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
-    if (scrollBodyArr && scrollBodyArr.length > 0) {
-      const scrollBody: HTMLDivElement = scrollBodyArr[0];
-      scrollBody.scrollTop = 0;
-    }
   }
 }
 

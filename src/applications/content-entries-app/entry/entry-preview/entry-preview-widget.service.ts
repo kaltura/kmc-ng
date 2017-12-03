@@ -1,9 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaClient } from 'kaltura-ngx-client';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { environment } from 'app-environment';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaSourceType } from 'kaltura-typescript-client/types/KalturaSourceType';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { EntryWidget } from '../entry-widget';
@@ -57,7 +57,7 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
             const partnerID = this.appAuthentication.appUser.partnerId;
             const ks = this.appAuthentication.appUser.ks || "";
 
-            let flashVars = `flashvars[closedCaptions.plugin]=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[ks]=${ks}&flashvars[EmbedPlayer.EnableMobileSkin]=true`;
+            let flashVars = `flashvars[closedCaptions.plugin]=true&flashvars[ks]=${ks}`;
             if (isLive) {
                 flashVars += '&flashvars[disableEntryRedirect]=true';
             }

@@ -12,11 +12,13 @@
 
 :host /deep/ .stickyHeader{
 	background-color: white;
-	height: 55px;
+	height: auto;
 	z-index: 500;
 	left: 0px;
 	right: 0px;
 	padding-top: 11px;
+	padding-bottom: 11px;
 	box-sizing: border-box;
 	box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.2);
+	width: 100% !important;
 }

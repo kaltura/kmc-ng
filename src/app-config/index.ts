@@ -1,7 +1,6 @@
 export const environment = {
-    "appVersion": "3.1.0", // will be changed by release script
+    "appVersion": "3.2.0", // will be changed by release script
     "shell": {
-        "languageHash": "12", /* this value is set manually at the moment and should be replaced with the published app version  */
         "defaultRoute": "/content/entries",
         "loginRoute" : "/login",
         "errorRoute" : "/error",
@@ -11,9 +10,10 @@ export const environment = {
     },
     "core": {
         "kaltura": {
-            "apiUrl" : "https://www.kaltura.com/api_v3/index.php",
+            "serverEndpoint" : "www.kaltura.com",
+            "useHttpsProtocol": true,
             "cdnUrl": "http://cdnapi.kaltura.com",
-            "kmcUrl": "kmc.kaltura.com",
+            "legacyKmcUrl": "kmc.kaltura.com",
             "expiry": "86400",
             "privileges": "disableentitlement",
             "previewUIConf": "38524931",
@@ -64,9 +64,9 @@ export const environment = {
                     "position": "right"
                   },
                   {
-                    "routePath": "content/bulk-upload",
+                    "routePath": "content/bulk",
                     "titleToken": "BulkUpload",
-                    "enabled": false,
+                    "enabled": true,
                     "position": "right"
                   },
                   {
@@ -166,6 +166,9 @@ export const environment = {
         "contentPlaylists" : {
             "createdAtDateRange" : "2005:2030",
             "bulkActionsLimit": 2
+        },
+        "createLive": {
+          "akamaiEdgeServerIpURL": "kalvodhds-i.akamaihd.net/serverIp"
         },
         "contentCategories": {
             "createdAtDateRange": "2005:2030",

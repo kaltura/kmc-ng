@@ -2,30 +2,30 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { IterableDiffers, IterableDiffer, IterableChangeRecord } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
-import { KalturaCategoryEntryFilter } from 'kaltura-typescript-client/types/KalturaCategoryEntryFilter';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaTagFilter } from 'kaltura-typescript-client/types/KalturaTagFilter';
-import { KalturaTaggedObjectType } from 'kaltura-typescript-client/types/KalturaTaggedObjectType';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { TagSearchAction } from 'kaltura-typescript-client/types/TagSearchAction';
-import { CategoryEntryListAction } from 'kaltura-typescript-client/types/CategoryEntryListAction';
-import { KalturaLiveStreamEntry } from 'kaltura-typescript-client/types/KalturaLiveStreamEntry';
-import { MetadataListAction } from 'kaltura-typescript-client/types/MetadataListAction';
-import { KalturaMetadataFilter } from 'kaltura-typescript-client/types/KalturaMetadataFilter';
-import { KalturaMetadata } from 'kaltura-typescript-client/types/KalturaMetadata';
-import { MetadataUpdateAction } from 'kaltura-typescript-client/types/MetadataUpdateAction';
-import { MetadataAddAction } from 'kaltura-typescript-client/types/MetadataAddAction';
-import { KalturaMetadataObjectType } from 'kaltura-typescript-client/types/KalturaMetadataObjectType';
-import { CategoryEntryAddAction } from 'kaltura-typescript-client/types/CategoryEntryAddAction';
-import { CategoryEntryDeleteAction } from 'kaltura-typescript-client/types/CategoryEntryDeleteAction';
-import { KalturaCategoryEntry } from 'kaltura-typescript-client/types/KalturaCategoryEntry';
+import { KalturaCategoryEntryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryEntryFilter';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaTagFilter } from 'kaltura-ngx-client/api/types/KalturaTagFilter';
+import { KalturaTaggedObjectType } from 'kaltura-ngx-client/api/types/KalturaTaggedObjectType';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { TagSearchAction } from 'kaltura-ngx-client/api/types/TagSearchAction';
+import { CategoryEntryListAction } from 'kaltura-ngx-client/api/types/CategoryEntryListAction';
+import { KalturaLiveStreamEntry } from 'kaltura-ngx-client/api/types/KalturaLiveStreamEntry';
+import { MetadataListAction } from 'kaltura-ngx-client/api/types/MetadataListAction';
+import { KalturaMetadataFilter } from 'kaltura-ngx-client/api/types/KalturaMetadataFilter';
+import { KalturaMetadata } from 'kaltura-ngx-client/api/types/KalturaMetadata';
+import { MetadataUpdateAction } from 'kaltura-ngx-client/api/types/MetadataUpdateAction';
+import { MetadataAddAction } from 'kaltura-ngx-client/api/types/MetadataAddAction';
+import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
+import { CategoryEntryAddAction } from 'kaltura-ngx-client/api/types/CategoryEntryAddAction';
+import { CategoryEntryDeleteAction } from 'kaltura-ngx-client/api/types/CategoryEntryDeleteAction';
+import { KalturaCategoryEntry } from 'kaltura-ngx-client/api/types/KalturaCategoryEntry';
 import { EntryWidgetKeys } from '../entry-widget-keys';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from '@kaltura-ng/kaltura-server-utils';
+import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes } from 'app-shared/kmc-shared';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { DynamicMetadataForm, DynamicMetadataFormFactory } from '@kaltura-ng/kaltura-server-utils';
+import { KalturaMultiRequest } from 'kaltura-ngx-client';
+import { DynamicMetadataForm, DynamicMetadataFormFactory } from 'app-shared/kmc-shared';
 import { CategoriesStore } from 'app-shared/content-shared/categories-store.service';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
@@ -229,6 +229,9 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 {
                     filter: new KalturaCategoryEntryFilter({
                         entryIdEqual: entry.id
+                    }),
+                    pager: new KalturaFilterPager({
+                        pageSize: 32
                     })
                 }
             ))
@@ -432,7 +435,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         this.isLiveEntry = false;
     }
 
-    onValidate() : Observable<{ isValid : boolean}>
+    onValidate(wasActivated: boolean) : Observable<{ isValid : boolean}>
     {
         return Observable.create(observer =>
         {

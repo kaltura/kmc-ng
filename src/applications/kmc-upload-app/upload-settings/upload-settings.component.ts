@@ -1,13 +1,13 @@
 import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import { NewEntryUploadService } from 'app-shared/kmc-shell';
+import { AppLocalization, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import { NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { environment } from 'app-environment';
-import { TranscodingProfileManagement } from '@kaltura-ng/kaltura-server-utils/transcoding-profile-management';
+import { TranscodingProfileManagement } from 'app-shared/kmc-shared/transcoding-profile-management';
 
 export interface UploadSettingsFile {
   file: File;
@@ -62,6 +62,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   constructor(private _newEntryUploadService: NewEntryUploadService,
               private _formBuilder: FormBuilder,
               private _transcodingProfileManagement: TranscodingProfileManagement,
+              private _uploadManagement: UploadManagement,
               private _appLocalization: AppLocalization) {
     this._buildForm();
   }
@@ -79,7 +80,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     this._loadTranscodingProfiles();
   }
 
-  private _handleSelectedFiles(files: FileList) {
+  public _handleSelectedFiles(files: FileList) {
     const isEditing = false;
 
     const newItems = Array.from(files).map(file => {
@@ -112,11 +113,11 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     ];
 
     switch (true) {
-      case videoFiles.includes(extension):
+      case videoFiles.indexOf(extension) !== -1:
         return KalturaMediaType.video;
-      case audioFiles.includes(extension):
+      case audioFiles.indexOf(extension) !== -1:
         return KalturaMediaType.audio;
-      case imageFiles.includes(extension):
+      case imageFiles.indexOf(extension) !== -1:
         return KalturaMediaType.image;
       default:
         return null;
@@ -216,11 +217,11 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     files.forEach(file => {
       const fileSize = file.size / 1024 / 1024; // convert to Mb
 
-      if (!allowedTypes.includes(file.mediaType)) {
+      if (allowedTypes.indexOf(file.mediaType) === -1) {
         result = false;
         file.errorToken = 'applications.upload.validation.wrongType';
         file.hasError = true;
-      } else if (fileSize > maxFileSize) {
+      } else if (!(this._uploadManagement.supportChunkUpload(new NewEntryUploadFile(null, null, null, null)) || fileSize < maxFileSize)) {
         result = false;
         file.hasError = true;
         file.errorToken = 'applications.upload.validation.fileSizeExceeded';

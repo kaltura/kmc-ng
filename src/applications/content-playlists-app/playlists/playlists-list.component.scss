@@ -93,6 +93,7 @@
 		background: $kMagnifyingGlassBkg;
 		margin-right: 8px;
 		padding: 9px 4px 8px 30px;
+		width: 260px;
 	}
 	.kTagContent {
 		display: flex;
@@ -147,7 +148,7 @@
 		border-radius: 4px;
 		display: flex;
 		background-color: #ffffff;
-		height: 34px;
+		height: 32px;
 		align-items: center;
 		cursor: pointer;
 		color: $kGrayscale1;
@@ -168,11 +169,6 @@
 			}
 		}
 	}
-}
-
-.kForceFix{
-  position: fixed !important;
-  margin-top: 0px !important;
 }
 
 :host /deep/ k-area-blocker>.kAreaBlockerContainer {

@@ -13,7 +13,7 @@ import {MenuItem, DataTable, Menu} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {RolesService} from './roles.service';
-import {KalturaUserRole} from 'kaltura-typescript-client/types/KalturaUserRole';
+import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
 
 @Component({
   selector: 'kRolesTable',
@@ -99,14 +99,6 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    const scrollBody = this._dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
-    if (scrollBody && scrollBody.length > 0) {
-      scrollBody[0].onscroll = () => {
-        if (this._actionsMenu) {
-          this._actionsMenu.hide();
-        }
-      }
-    }
     if (this._deferredLoading) {
       // use timeout to allow the DOM to render before setting the data to the datagrid.
       // This prevents the screen from hanging during datagrid rendering of the data.
@@ -151,14 +143,6 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
       }
       }
     ];
-  }
-
-  scrollToTop() {
-    const scrollBodyArr = this._dataTable.el.nativeElement.getElementsByClassName('ui-datatable-scrollable-body');
-    if (scrollBodyArr && scrollBodyArr.length > 0) {
-      const scrollBody: HTMLDivElement = scrollBodyArr[0];
-      scrollBody.scrollTop = 0;
-    }
   }
 }
 
