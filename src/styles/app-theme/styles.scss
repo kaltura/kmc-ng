@@ -115,7 +115,10 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
         font-size: 24px;
         font-weight: 700;
         margin-left: 24px;
-        margin-right: 100px;
+        margin-right: 40px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .kSaveBtn{
         margin-left: auto;
