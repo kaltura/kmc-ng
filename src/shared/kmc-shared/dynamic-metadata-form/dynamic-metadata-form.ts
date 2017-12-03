@@ -87,8 +87,8 @@ export class DynamicMetadataForm
         }
     }
 
-    private _escapeXml (string: string) {
-        return string.replace(/[&<>"']/g, char => this._xmlCharMap[char]);
+    private _escapeXml (value: string) {
+        return (value || '').replace(/[&<>"']/g, char => this._xmlCharMap[char]);
     }
 
     private _toServerValue(formValue : {}, fields : MetadataItem[]) : {} {
