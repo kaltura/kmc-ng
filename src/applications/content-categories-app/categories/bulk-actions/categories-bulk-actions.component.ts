@@ -208,7 +208,6 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
         .tag('block-shell')
         .subscribe(
         result => {
-          this._browserService.setAppStatus({ errorMessage: null });
           if (callback) {
             callback(result);
           }
