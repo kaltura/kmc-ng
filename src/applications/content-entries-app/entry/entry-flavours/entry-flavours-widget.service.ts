@@ -223,39 +223,35 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
 	    this._entryStatus = this._appLocalization.get('applications.content.entryDetails.flavours.' + this._entryStatusClassName.split(" ")[0]);
     }
 
-    public deleteFlavor(flavor: Flavor): void{
-	    this._browserService.confirm(
-		    {
-			    header: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirmTitle'),
-			    message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirm',{"0": flavor.id}),
-			    accept: () => {
-				    super._showLoader();
-				    this._kalturaServerClient.request(new FlavorAssetDeleteAction({
-					    id: flavor.id
-				    }))
-              .tag('block-shell')
-					    .cancelOnDestroy(this,this.widgetReset$)
-					    .monitor('delete flavor: '+flavor.id)
-					    .subscribe(
-						    response =>
-						    {
-							    super._hideLoader();
-                  this._refresh();
-							    this._browserService.scrollToTop();
-						    },
-						    error => {
-							    super._hideLoader();
-							    this._showBlockerMessage(new AreaBlockerMessage({
-                    message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteFailure'),
-                    buttons: [{
-                        label: this._appLocalization.get('app.common.ok'),
-                        action: () => this._removeBlockerMessage()
-                      }]
-                  }), false);
-						    }
-					    );
-			    }
-		    });
+    public deleteFlavor(flavor: Flavor): void {
+        this._browserService.confirm(
+            {
+                header: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirmTitle'),
+                message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirm', {"0": flavor.id}),
+                accept: () => {
+                    this._kalturaServerClient.request(new FlavorAssetDeleteAction({
+                        id: flavor.id
+                    }))
+                        .cancelOnDestroy(this, this.widgetReset$)
+                        .tag('block-shell')
+                        .monitor('delete flavor: ' + flavor.id)
+                        .subscribe(
+                            response => {
+                                this._refresh();
+                                this._browserService.scrollToTop();
+                            },
+                            error => {
+                                this._showBlockerMessage(new AreaBlockerMessage({
+                                    message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteFailure'),
+                                    buttons: [{
+                                        label: this._appLocalization.get('app.common.ok'),
+                                        action: () => this._removeBlockerMessage()
+                                    }]
+                                }), false);
+                            }
+                        );
+                }
+            });
     }
 
     public downloadFlavor (flavor: Flavor): void{

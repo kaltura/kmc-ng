@@ -184,12 +184,12 @@ export class EntryThumbnailsWidget extends EntryWidget
 
 	public _setAsDefault(thumb: ThumbnailRow):void{
 		const thumbs = Array.from(this._thumbnails.getValue().items);
-		super._showLoader();
 
 		const entryId = this.data ? this.data.id : null;
 
 		this._kalturaServerClient.request(new ThumbAssetSetAsDefaultAction({thumbAssetId: thumb.id}))
 			.cancelOnDestroy(this,this.widgetReset$)
+			.tag('block-shell')
 			.monitor('set thumb as default')
 			.subscribe(
 				() =>
@@ -202,12 +202,9 @@ export class EntryThumbnailsWidget extends EntryWidget
 					if (entryId) {
                         this._appEvents.publish(new PreviewMetadataChangedEvent(entryId));
                     }
-
-					super._hideLoader();
 				},
 				error =>
 				{
-					super._hideLoader();
 					this._showBlockerMessage(new AreaBlockerMessage(
 						{
 							message: 'Error setting default thumb',
@@ -227,20 +224,19 @@ export class EntryThumbnailsWidget extends EntryWidget
 
 	public deleteThumbnail(id: string): void{
 		const thumbs = Array.from(this._thumbnails.getValue().items);
-		super._showLoader();
+
 		this._kalturaServerClient.request(new ThumbAssetDeleteAction({thumbAssetId: id}))
 			.cancelOnDestroy(this,this.widgetReset$)
+            .tag('show-blocker')
 			.monitor('delete thumb')
 			.subscribe(
 				() =>
 				{
-					super._hideLoader();
 					this._browserService.scrollToTop();
 					this.reloadThumbnails();
 				},
 				error =>
 				{
-					super._hideLoader();
 					this._showBlockerMessage(new AreaBlockerMessage(
 						{
 							message: 'Error deleting thumbnail',
@@ -261,7 +257,7 @@ export class EntryThumbnailsWidget extends EntryWidget
   public _onFileSelected(selectedFiles: FileList) {
     if (selectedFiles && selectedFiles.length) {
       const fileData: File = selectedFiles[0];
-      super._showLoader();
+
       this._kalturaServerClient.request(new ThumbAssetAddFromImageAction({ entryId: this.data.id, fileData: fileData }))
         .tag('block-shell')
         .cancelOnDestroy(this, this.widgetReset$)

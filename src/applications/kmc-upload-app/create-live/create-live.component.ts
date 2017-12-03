@@ -187,7 +187,6 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(response => {
-          this._blockerMessage = null;
           this._confirmEntryNavigation(response.id);
         }, error => {
           this._blockerMessage = error.message;
@@ -201,7 +200,6 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(response => {
-          this._blockerMessage = null;
           this._confirmEntryNavigation(response.id);
         }, error => {
           this._blockerMessage = error.message;
@@ -215,7 +213,6 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(response => {
-          this._blockerMessage = null;
           this._confirmEntryNavigation(response.id);
         }, error => {
           this._blockerMessage = error.message;
