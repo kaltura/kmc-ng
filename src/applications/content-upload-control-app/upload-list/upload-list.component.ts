@@ -166,6 +166,11 @@ export class UploadListComponent implements OnInit, OnDestroy {
   public _retryUpload(file: UploadFileData): void {
     if (file.entryId) {
       this._uploadManagement.resumeUpload(file.id);
+    } else {
+      this._browserService.alert({
+        header: this._appLocalization.get('applications.content.uploadControl.retryError.header'),
+        message: this._appLocalization.get('applications.content.uploadControl.retryError.message')
+      });
     }
   }
 
