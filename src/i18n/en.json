@@ -600,12 +600,17 @@
         "addRuleBasedSubPlaylist": "Add rule based sub playlist",
         "nameIsMandatory": "You must enter a playlist name",
         "next": "Next",
+        "save": "Save",
         "playlistName": "Playlist Name",
         "description": "Description",
         "cancelEdit": "Cancel Edit",
         "discard": "Discard all changes?",
         "notSupportedMsg": "Adding a new rule based playlist is currently not supported",
-        "dismiss": "Dismiss"
+        "dismiss": "Dismiss",
+        "creationError": {
+          "header": "Failed",
+          "body": "An error occurred during playlist creation"
+        }
       },
       "bulkActions": {
         "setScheduling": "Set Scheduling",

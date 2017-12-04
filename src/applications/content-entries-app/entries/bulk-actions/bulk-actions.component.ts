@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {MenuItem} from 'primeng/primeng';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {BrowserService} from "app-shared/kmc-shell/providers/browser.service";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { MenuItem } from 'primeng/primeng';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
 import {
   BulkAccessControlService,
@@ -24,6 +24,7 @@ import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import {KalturaAccessControl} from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { KalturaAPIException } from 'kaltura-ngx-client';
 
 @Component({
   selector: 'kBulkActions',
@@ -109,6 +110,10 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     if (owners && owners.length) {
       this.executeService(this._bulkChangeOwnerService, owners[0]);
     }
+  }
+
+  onPlaylistCreated(): void {
+    this.onBulkChange.emit({ reload: true });
   }
 
   // download changed
