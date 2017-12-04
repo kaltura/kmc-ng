@@ -94,7 +94,8 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   }
 
   private _getFileExtension(filename: string): string {
-    return /(?:\.([^.]+))?$/.exec(filename)[1];
+  	const extension = /(?:\.([^.]+))?$/.exec(filename)[1];
+    return typeof extension === "undefined" ? '' : extension.toLowerCase();
   }
 
   private _getMediaTypeFromExtension(extension: string): KalturaMediaType | null {

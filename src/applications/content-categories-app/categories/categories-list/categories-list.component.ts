@@ -1,13 +1,12 @@
-import {ISubscription} from 'rxjs/Subscription';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
-import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
-import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
-import {CategoriesTableComponent} from "../categories-table/categories-table.component";
-import {CategoriesService, SortDirection} from '../categories.service';
-import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import { ISubscription } from 'rxjs/Subscription';
+import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { CategoriesService, SortDirection } from '../categories.service';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 @Component({
     selector: 'kCategoriesList',
@@ -18,7 +17,6 @@ import {AppLocalization} from "@kaltura-ng/kaltura-common";
 export class CategoriesListComponent implements OnInit, OnDestroy {
     @ViewChild('addNewCategory') public addNewCategory: PopupWidgetComponent;
 
-    public _isBusy = false
     public _blockerMessage: AreaBlockerMessage = null;
     public _selectedCategories: KalturaCategory[] = [];
     public _categories: KalturaCategory[] = [];
@@ -147,26 +145,34 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
       );
     };
     const deleteCategory = () => {
-      this._isBusy = true;
       this._blockerMessage = null;
-      this._categoriesService.deleteCategory(category.id).subscribe(
-        () => {
-          this._isBusy = false;
-          this._browserService.showGrowlMessage({
-            severity: 'success',
-            detail: this._appLocalization.get('applications.content.categories.deleted')
-          });
-          this._categoriesService.reload(true);
-        },
-        error => {
-          this._isBusy = false;
-          this._browserService.showGrowlMessage({
-            severity: 'error',
-            detail: this._appLocalization.get('applications.content.categories.errors.categoryCouldNotBeDeleted')
-          });
-        }
+      this._categoriesService.deleteCategory(category.id)
+        .tag('block-shell')
+        .subscribe(
+          () => {
+            this._categoriesService.reload(true);
+          },
+          error => {
+            this._blockerMessage = new AreaBlockerMessage({
+              message: this._appLocalization.get('applications.content.categories.errors.categoryCouldNotBeDeleted'),
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    deleteCategory();
+                    this._blockerMessage = null;
+                  }
+                },
+                {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this._blockerMessage = null;
+                  }
+                }]
+            });
+          }
       );
-    }
+    };
 
     // show category edit warning if needed
     if (category.tags && category.tags.indexOf('__EditWarning') > -1) {

@@ -50,7 +50,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   };
   public _availableStreamTypes: Array<{ value: StreamTypes, label: string }>;
   public _streamTypes = StreamTypes;
-  public _blockerState: { isBusy: boolean, message: AreaBlockerMessage } = {isBusy: false, message: null};
+  public _blockerMessage: AreaBlockerMessage;
   private _showConfirmationOnClose = true;
 
   @ViewChild('kalturaLiveStreamComponent') kalturaLiveStreamComponent;
@@ -129,18 +129,16 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       default: {
         // add error message for trying to submit unsupported form type
-        const blockerMessage = new AreaBlockerMessage({
+        this._blockerMessage = new AreaBlockerMessage({
           title: 'Cannot create stream',
           message: 'Unsupported stream type, please select different stream type from the \'Stream type\' select menu',
           buttons: [{
             label: this._appLocalization.get('app.common.confirm'),
             action: () => {
-              this._updateAreaBlockerState(false, null);
+              this._blockerMessage = null;
             }
           }]
         });
-
-        this._updateAreaBlockerState(false, blockerMessage);
         break;
       }
     }
@@ -185,51 +183,40 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private _submitKalturaLiveStreamData() {
     if (this.kalturaLiveStreamComponent.validate()) {
-      this._updateAreaBlockerState(true, null);
-
       this.createLiveService.createKalturaLiveStream(this.kalturaLiveStreamData)
         .cancelOnDestroy(this)
+        .tag('block-shell')
         .subscribe(response => {
-          this._updateAreaBlockerState(false, null);
           this._confirmEntryNavigation(response.id);
         }, error => {
-          this._updateAreaBlockerState(false, error.message)
+          this._blockerMessage = error.message;
         });
     }
   }
 
   private _submitUniversalLiveStreamData() {
     if (this.universalLiveComponent.validate()) {
-      this._updateAreaBlockerState(true, null);
-
       this.createLiveService.createUniversalLiveStream(this.universalLiveData)
         .cancelOnDestroy(this)
+        .tag('block-shell')
         .subscribe(response => {
-          this._updateAreaBlockerState(false, null);
           this._confirmEntryNavigation(response.id);
         }, error => {
-          this._updateAreaBlockerState(false, error.message)
+          this._blockerMessage = error.message;
         });
     }
   }
 
   private _submitManualLiveStreamData() {
     if (this.manualLiveComponent.validate()) {
-      this._updateAreaBlockerState(true, null);
-
       this.createLiveService.createManualLiveStream(this.manualLiveData)
         .cancelOnDestroy(this)
+        .tag('block-shell')
         .subscribe(response => {
-          this._updateAreaBlockerState(false, null);
           this._confirmEntryNavigation(response.id);
         }, error => {
-          this._updateAreaBlockerState(false, error.message)
+          this._blockerMessage = error.message;
         });
     }
-  }
-
-  private _updateAreaBlockerState(isBusy: boolean, message: AreaBlockerMessage): void {
-    this._blockerState.isBusy = isBusy;
-    this._blockerState.message = message;
   }
 }

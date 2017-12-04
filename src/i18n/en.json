@@ -20,7 +20,7 @@
       "DropFolders": "Drop Folders"
     },
     "userSettings": {
-      "changeAccount": "Change Acoount",
+      "changeAccount": "Change Account",
       "logout": "Logout"
     },
     "changeAccount": {
@@ -351,8 +351,7 @@
           "delete": "Delete",
           "save": "Save changes",
           "changeOwnerLabel": "Set a new owner for the selected categories",
-          "error": "Categories update failed",
-          "success": "Categories updated successfully"
+          "error": "Categories update failed"
         },
         "deleteCategories": "Delete Categories",
         "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
@@ -362,7 +361,6 @@
         "confirmDeleteSingle": "Are you sure you want to delete this category?",
         "confirmDeleteMultipleWithSubCategories": "Categories will be deleted with their sub-categories. Do you want to continue?",
         "confirmDeleteMultiple": "Are you sure you want to delete these categories?",
-        "deleted": "Category deleted successfully",
         "categoryId": "Category ID: {{0}}",
         "noRestriction": "No Restriction",
         "requiresAuthentication": "Requires Authentication",
@@ -397,7 +395,6 @@
         "confirmDelete": "Are you sure you want to delete the selected entry?",
         "confirmDeleteSingle": "Are you sure you want to delete the selected entry? \n {{0}} \n Please note: the entry will be permanently deleted from your account.",
         "confirmDeleteMultiple": "Are you sure you want to delete the selected entries? \n {{0}} \n Please note: these entries will be permanently deleted from your account.",
-        "deleted": "Entry deleted successfully",
         "entryId": "Entry ID: {{0}}",
         "deleteNote": "Please note: the entry will be permanently deleted from your account."
       },
@@ -412,7 +409,6 @@
         "confirmDeleteMultiple": "Are you sure you want to delete the selected playlists? \n {{0}} \n Please note: these playlists will be permanently deleted from your account.",
         "confirmDeleteSingle": "Are you sure you want to delete the selected playlist? \n {{0}} \n Please note: this playlist will be permanently deleted from your account.",
         "playlistId": "Playlist ID: {{0}}",
-        "deleted": "Playlist deleted successfully",
         "searchEntries": "Search Playlists",
         "addPlaylist": "Add Playlist",
         "addEntry": "Add Entry",
@@ -837,7 +833,6 @@
           },
           "deleteConfirm": "Are you sure you want to delete this Asset: {{0}} ?",
           "deleteConfirmTitle": "Delete Flavor Asset",
-          "deleteSuccess": "Flavor asset was deleted successfully.",
           "uploadSuccess": "Flavor asset was uploaded successfully.",
           "deleteFailure": "Flavor asset deletion failed.",
           "convertFailure": "Flavor conversion failed.",
