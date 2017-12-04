@@ -21,15 +21,24 @@ export class PageExitVerificationService {
     };
   }
 
-  public enablePageExitVerification(verificationMessage?: string): string {
-    this._verificationMessage = verificationMessage;
+  public setVerificationMessage(message: string): void {
+    if (message) {
+      this._verificationMessage = message;
+    }
+  }
+
+  public setDefaultVerificationMessage(): void {
+    this._verificationMessage = null;
+  }
+
+  public add(): string {
     const token = this._tokenGenerator.generateUnique(this._tokens);
     this._tokens.push(token);
 
     return token;
   }
 
-  public disablePageExitVerification(token: string): void {
+  public remove(token: string): void {
     const tokenIndex = this._tokens.indexOf(token);
 
     if (tokenIndex !== -1) {
@@ -37,7 +46,7 @@ export class PageExitVerificationService {
     }
   }
 
-  public disableAllPageExitVerification(): void {
+  public disable(): void {
     this._tokens = [];
   }
 }

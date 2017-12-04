@@ -80,7 +80,7 @@ export class PlaylistStore implements OnDestroy {
     this._playlist.complete();
     this._state.complete();
 
-    this._pageExitVerificationService.disablePageExitVerification(this._pageExitVerificationToken);
+    this._pageExitVerificationService.remove(this._pageExitVerificationToken);
 
     if (this._loadPlaylistSubscription) {
       this._loadPlaylistSubscription.unsubscribe();
@@ -111,9 +111,9 @@ export class PlaylistStore implements OnDestroy {
 
   private _updatePageExitVerification(): void {
     if (this._playlistIsDirty) {
-      this._pageExitVerificationToken = this._pageExitVerificationService.enablePageExitVerification();
+      this._pageExitVerificationToken = this._pageExitVerificationService.add();
     } else {
-      this._pageExitVerificationService.disablePageExitVerification(this._pageExitVerificationToken);
+      this._pageExitVerificationService.remove(this._pageExitVerificationToken);
       this._pageExitVerificationToken = null;
     }
   }

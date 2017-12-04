@@ -122,9 +122,9 @@ export class EntryStore implements  OnDestroy {
 
 	private _updatePageExitVerification() {
     if (this._entryIsDirty) {
-      this._pageExitVerificationToken = this._pageExitVerificationService.enablePageExitVerification();
+      this._pageExitVerificationToken = this._pageExitVerificationService.add();
     } else {
-      this._pageExitVerificationService.disablePageExitVerification(this._pageExitVerificationToken);
+      this._pageExitVerificationService.remove(this._pageExitVerificationToken);
       this._pageExitVerificationToken = null;
     }
 	}
@@ -134,7 +134,7 @@ export class EntryStore implements  OnDestroy {
 		this._state.complete();
 		this._entry.complete();
 
-    this._pageExitVerificationService.disablePageExitVerification(this._pageExitVerificationToken);
+    this._pageExitVerificationService.remove(this._pageExitVerificationToken);
 
 		if (this._saveEntryInvoked)
 		{
