@@ -5,7 +5,6 @@ import { KalturaBatchJobStatus } from 'kaltura-ngx-client/api/types/KalturaBatch
 import { KalturaBulkUploadFilter } from 'kaltura-ngx-client/api/types/KalturaBulkUploadFilter';
 import { Observable } from 'rxjs/Observable';
 import { KalturaBulkUploadListResponse } from 'kaltura-ngx-client/api/types/KalturaBulkUploadListResponse';
-import { RequestFactory } from '@kaltura-ng/kaltura-common';
 import { KalturaServerPolls } from 'app-shared/kmc-shared/server-polls';
 import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events/bulk-log-uploading-started.event';
 import { AppEventsService } from 'app-shared/kmc-shared';
@@ -16,39 +15,7 @@ import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUploa
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { UploadMonitorStatuses } from './upload-monitor.component';
 import { KalturaBulkUploadObjectType } from 'kaltura-ngx-client/api/types/KalturaBulkUploadObjectType';
-
-export class BulkLogUploadChanges implements RequestFactory<BulkListAction> {
-
-  public uploadedOn: Date;
-
-  constructor() {
-  }
-
-  create(): BulkListAction {
-    const bulkUploadObjectTypeIn = [
-      KalturaBulkUploadObjectType.entry,
-      KalturaBulkUploadObjectType.category,
-      KalturaBulkUploadObjectType.user,
-      KalturaBulkUploadObjectType.categoryUser
-    ];
-
-    if (this.uploadedOn === null)
-    {
-        return null;
-    }else {
-        return new BulkListAction({
-            bulkUploadFilter: new KalturaBulkUploadFilter({
-                bulkUploadObjectTypeIn: bulkUploadObjectTypeIn.join(','),
-                uploadedOnGreaterThanOrEqual: this.uploadedOn
-            }),
-            responseProfile: new KalturaDetachedResponseProfile({
-                type: KalturaResponseProfileType.includeFields,
-                fields: 'id,status,uploadedOn'
-            })
-        });
-    }
-  }
-}
+import { BulkLogUploadChanges } from './bulk-upload-monitor-changes';
 
 interface BulkUploadFile
 {
@@ -251,7 +218,7 @@ export class BulkUploadMonitorService implements OnDestroy {
         const oldestUploadedOnFile = this._getTrackedFiles().reduce((acc, item) => !acc || item.uploadedOn < acc.uploadedOn ?  item : acc, null);
         const uploadedOnFrom = oldestUploadedOnFile ? oldestUploadedOnFile.uploadedOn : this._browserService.sessionStartedAt;
         if (this._bulkUploadChangesFactory.uploadedOn !== uploadedOnFrom) {
-            this._log('verbose', `updating poll server query request with uploadedOn from ${uploadedOnFrom.toString()}`);
+            this._log('verbose', `updating poll server query request with uploadedOn from ${uploadedOnFrom && uploadedOnFrom.toString()}`);
             this._bulkUploadChangesFactory.uploadedOn = uploadedOnFrom;
         }
     }

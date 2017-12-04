@@ -224,6 +224,7 @@
         "completed": "{{0}} completed",
         "error": "{{0}} error",
         "upToDate": "Up to date",
+        "loading": "Loading...",
         "bulkErrors": {
           "poll": "Cannot get bulk upload data. Retrying...",
           "prepare": "Could not connect bulk upload monitor!"

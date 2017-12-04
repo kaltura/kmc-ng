@@ -58,6 +58,7 @@ export class UploadMonitorComponent implements OnDestroy {
           .cancelOnDestroy(this)
           .subscribe((state) => {
               if (state.error && state.isErrorRecoverable) {
+                  this._hasError = true;
                   this._bulkUploadLayout = 'recoverableError';
               } else if (state.error && !state.isErrorRecoverable) {
                   this._bulkUploadLayout = 'error';

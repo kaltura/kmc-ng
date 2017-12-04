@@ -45,6 +45,9 @@
       </span>
       </div>
 
+      <span *ngSwitchCase="'loading'">
+        {{ 'applications.upload.uploadMonitor.loading' | translate }}
+      </span>
       <span *ngSwitchCase="'error'">
         {{ 'applications.upload.uploadMonitor.bulkErrors.poll' | translate }}
       </span>
