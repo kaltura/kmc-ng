@@ -59,9 +59,9 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
 
   protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
     if (!this.data.id) {
-      this.entries = [];
-      this.entriesTotalCount = 0;
-      this.entriesDuration = 0;
+      this.entries = this.data.entries;
+      this.entriesTotalCount = this.data.entries.length;
+      this.entriesDuration = this.data.entries.reduce((acc, val) => acc + val.duration, 0);
       this.isNewPlaylist = true;
       return Observable.of({ failed: false });
     }

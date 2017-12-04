@@ -74,6 +74,7 @@ import { ChangeAccountComponent } from './components/changeAccount/change-accoun
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
 import { AppEventsModule } from 'app-shared/kmc-shared';
+import { PlaylistCreationModule, PlaylistCreationService } from 'app-shared/kmc-shared/playlist-creation';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -121,7 +122,8 @@ export function clientConfigurationFactory() {
     TranscodingProfileManagementModule.forRoot(),
     RadioButtonModule,
     StickyModule.forRoot(),
-    OperationTagModule.forRoot()
+    OperationTagModule.forRoot(),
+    PlaylistCreationModule.forRoot(),
   ],
   declarations: <any>[
     AppComponent,
@@ -166,7 +168,10 @@ export function clientConfigurationFactory() {
   ]
 })
 export class AppModule {
-  constructor(appBootstrap: AppBootstrap, appLocalization: AppLocalization, uploadManagement: UploadManagement) {
+  constructor(appBootstrap: AppBootstrap,
+              appLocalization: AppLocalization,
+              uploadManagement: UploadManagement,
+              playlistCreation: PlaylistCreationService) {
 
     // TODO [kmcng] move to a relevant location
     // TODO [kmcng] get max upload request
@@ -174,5 +179,7 @@ export class AppModule {
     uploadManagement.setMaxUploadRequests(2/*environment.uploadsShared.MAX_CONCURENT_UPLOADS*/);
 
     appBootstrap.initApp({ errorRoute: '/error' });
+
+    playlistCreation.init();
   }
 }

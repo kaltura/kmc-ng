@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { PlaylistGetAction } from 'kaltura-ngx-client/api/types/PlaylistGetAction';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { KalturaPlaylist, KalturaPlaylistArgs } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PlaylistUpdateAction } from 'kaltura-ngx-client/api/types/PlaylistUpdateAction';
 import { Observable } from 'rxjs/Observable';
@@ -15,6 +15,8 @@ import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylis
 import { PlaylistAddAction } from 'kaltura-ngx-client/api/types/PlaylistAddAction';
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
+import { PlaylistCreationService } from 'app-shared/kmc-shared/playlist-creation';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 
 export enum ActionTypes {
   PlaylistLoading,
@@ -30,6 +32,14 @@ export enum ActionTypes {
 export interface StatusArgs {
   action: ActionTypes;
   error?: Error;
+}
+
+export class ExtendedKalturaPlaylist extends KalturaPlaylist {
+  public entries: KalturaMediaEntry[] = [];
+  constructor(data?: KalturaPlaylistArgs, entries?: KalturaMediaEntry[]) {
+    super(data);
+    this.entries = entries || [];
+  }
 }
 
 @Injectable()
@@ -66,6 +76,7 @@ export class PlaylistStore implements OnDestroy {
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               private _playlistsStore: PlaylistsStore,
+              private _playlistCreationService: PlaylistCreationService,
               @Host() private _widgetsManager: PlaylistWidgetsManager) {
     this._widgetsManager.playlistStore = this;
     this._mapSections();
@@ -178,20 +189,20 @@ export class PlaylistStore implements OnDestroy {
 
           if (currentPlaylistId !== this._playlistId) {
             if (currentPlaylistId === 'new') {
-              const newData = this._playlistsStore.getNewPlaylistData();
+              const newData = this._playlistCreationService.getNewPlaylistData();
 
               if (newData) {
-                this._playlistsStore.clearNewPlaylistData();
+                this._playlistCreationService.clearNewPlaylistData();
 
                 this._playlistId = currentPlaylistId;
 
                 this._playlist.next({
-                  playlist: new KalturaPlaylist({
+                  playlist: new ExtendedKalturaPlaylist({
                     name: newData.name,
                     description: newData.description,
                     playlistType: KalturaPlaylistType.staticList,
-                    playlistContent: ''
-                  })
+                    playlistContent: Array.isArray(newData.entries) ? newData.entries.map(({id}) => id).join(',') : ''
+                  }, newData.entries)
                 });
 
                 setTimeout(() => {
@@ -344,7 +355,7 @@ export class PlaylistStore implements OnDestroy {
       .filter(({ allowed }) => allowed)
       .monitor('playlist store: return to playlists list')
       .subscribe(() => {
-        this._playlistsStore.clearNewPlaylistData();
+        this._playlistCreationService.clearNewPlaylistData();
         this._router.navigate(['content/playlists'])
       });
   }

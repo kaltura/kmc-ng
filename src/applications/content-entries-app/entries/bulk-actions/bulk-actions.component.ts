@@ -24,6 +24,9 @@ import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import {KalturaAccessControl} from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/playlist-creation';
+import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 
 @Component({
   selector: 'kBulkActions',
@@ -52,7 +55,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     private _bulkChangeOwnerService: BulkChangeOwnerService,
     private _bulkRemoveCategoriesService: BulkRemoveCategoriesService,
     private _bulkDownloadService: BulkDownloadService,
-    private _bulkDeleteService: BulkDeleteService) {
+    private _bulkDeleteService: BulkDeleteService,
+    private _appEvents: AppEventsService) {
 
   }
 
@@ -72,6 +76,19 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.bulkActionsPopup.open();
     }, 0);
+  }
+
+  performBulkAction(action: string): void {
+    switch (action) {
+      case 'addToNewPlaylist':
+        this._appEvents.publish(new CreateNewPlaylistEvent({
+          entries: this.selectedEntries,
+          type: KalturaPlaylistType.staticList
+        }, 'metadata'));
+        break;
+      default:
+        break;
+    }
   }
 
   // set scheduling changes
@@ -197,7 +214,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
       {
         label: this._appLocalization.get('applications.content.bulkActions.addToNewCategoryPlaylist'), items: [
         { label: this._appLocalization.get('applications.content.bulkActions.addToNewCategory'), command: (event) => { this.openBulkActionWindow("addToNewCategory", 500, 500) } },
-        { label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'), command: (event) => { this.openBulkActionWindow("addToNewPlaylist", 500, 500) } }]
+        { label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'), command: (event) => { this.performBulkAction("addToNewPlaylist") } }]
       },
       {
         label: this._appLocalization.get('applications.content.bulkActions.addRemoveCategories'), items: [
