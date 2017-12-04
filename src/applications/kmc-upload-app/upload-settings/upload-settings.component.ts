@@ -84,7 +84,7 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
     const isEditing = false;
 
     const newItems = Array.from(files).map(file => {
-      const ext = this._getFileExtension(file.name).toLowerCase();
+      const ext = this._getFileExtension(file.name);
       const mediaType = this._getMediaTypeFromExtension(ext);
       const { name, size } = file;
       return ({ file, mediaType, name, size, isEditing });
@@ -94,7 +94,8 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   }
 
   private _getFileExtension(filename: string): string {
-    return /(?:\.([^.]+))?$/.exec(filename)[1];
+  	const extension = /(?:\.([^.]+))?$/.exec(filename)[1];
+    return typeof extension === "undefined" ? '' : extension.toLowerCase();
   }
 
   private _getMediaTypeFromExtension(extension: string): KalturaMediaType | null {
