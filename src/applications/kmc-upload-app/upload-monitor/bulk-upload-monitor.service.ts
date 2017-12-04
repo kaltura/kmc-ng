@@ -18,7 +18,6 @@ import { UploadMonitorStatuses } from './upload-monitor.component';
 import { KalturaBulkUploadObjectType } from 'kaltura-ngx-client/api/types/KalturaBulkUploadObjectType';
 
 export class BulkLogUploadChanges implements RequestFactory<BulkListAction> {
-  //private _uploadedOn: Date;
 
   public uploadedOn: Date;
 
@@ -32,16 +31,22 @@ export class BulkLogUploadChanges implements RequestFactory<BulkListAction> {
       KalturaBulkUploadObjectType.user,
       KalturaBulkUploadObjectType.categoryUser
     ];
-    return new BulkListAction({
-      bulkUploadFilter: new KalturaBulkUploadFilter({
-        bulkUploadObjectTypeIn: bulkUploadObjectTypeIn.join(','),
-        uploadedOnGreaterThanOrEqual: this.uploadedOn
-      }),
-      responseProfile: new KalturaDetachedResponseProfile({
-        type: KalturaResponseProfileType.includeFields,
-        fields: 'id,status,uploadedOn'
-      })
-    });
+
+    if (this.uploadedOn === null)
+    {
+        return null;
+    }else {
+        return new BulkListAction({
+            bulkUploadFilter: new KalturaBulkUploadFilter({
+                bulkUploadObjectTypeIn: bulkUploadObjectTypeIn.join(','),
+                uploadedOnGreaterThanOrEqual: this.uploadedOn
+            }),
+            responseProfile: new KalturaDetachedResponseProfile({
+                type: KalturaResponseProfileType.includeFields,
+                fields: 'id,status,uploadedOn'
+            })
+        });
+    }
   }
 }
 
@@ -216,7 +221,7 @@ export class BulkUploadMonitorService implements OnDestroy {
         if (this._initializeState === 'failed' || this._initializeState === null) {
             this._log('info', `getting active uploads status from server`);
             this._initializeState = 'busy';
-            this._totals.state.next({loading: true, error: true});
+            this._totals.state.next({loading: true, error: false});
 
             this._getActiveUploadsList()
                 .subscribe(
@@ -242,8 +247,8 @@ export class BulkUploadMonitorService implements OnDestroy {
         }
     }
 
-    private _updateServerQueryUploadedOnFilter() : void{
-        const oldestUploadedOnFile = this._getTrackedFiles().reduce((acc, item) => !acc || item < acc ?  item : acc, null);
+    private _updateServerQueryUploadedOnFilter(): void{
+        const oldestUploadedOnFile = this._getTrackedFiles().reduce((acc, item) => !acc || item.uploadedOn < acc.uploadedOn ?  item : acc, null);
         const uploadedOnFrom = oldestUploadedOnFile ? oldestUploadedOnFile.uploadedOn : this._browserService.sessionStartedAt;
         if (this._bulkUploadChangesFactory.uploadedOn !== uploadedOnFrom) {
             this._log('verbose', `updating poll server query request with uploadedOn from ${uploadedOnFrom.toString()}`);
@@ -270,28 +275,11 @@ export class BulkUploadMonitorService implements OnDestroy {
                     const serverFiles = response.result.objects;
 
                     if (serverFiles.length > 0) {
-                        this._log('verbose', `updating tracking file list from server. got ${serverFiles.length} files to track`);
-
                         this._cleanDeletedUploads(serverFiles);
 
-                        serverFiles.forEach(upload => {
-                            const currentUploadIsActive = this._activeStatuses.indexOf(upload.status) !== -1;
-                            const relevantUpload = this._bulkUploadFiles[upload.id];
+                        this._updateTrackedFilesFromServer(serverFiles);
 
-                            if (relevantUpload && relevantUpload.status !== upload.status) { // update status for existing upload
-                                this._log('info', `sync upload file '${upload.id} with status '${upload.status}'`);
-                                relevantUpload.status = upload.status;
-                            } else if (currentUploadIsActive) { // track new active upload
-                                this._trackNewFile({
-                                    id: upload.id,
-                                    status: upload.status,
-                                    uploadedOn: upload.uploadedOn
-                                });
-                            }
-
-                            this._updateServerQueryUploadedOnFilter();
-                        });
-
+                        this._updateServerQueryUploadedOnFilter();
 
                         this._getTrackedFiles().filter(item => !item.allowPurging).forEach(file => {
                             this._log('verbose', `update file '${file.id} to allow purging next time syncing from the server`);
@@ -299,12 +287,34 @@ export class BulkUploadMonitorService implements OnDestroy {
                         });
 
                         this._totals.data.next(this._calculateTotalsFromState());
-                        if (this._totals.state.getValue().error) {
-                            this._totals.state.next({loading: false, error: false});
-                        }
+                    }
+
+                    if (this._totals.state.getValue().error) {
+                        this._totals.state.next({loading: false, error: false});
                     }
                 });
         }
+    }
+
+    private _updateTrackedFilesFromServer(serverFiles: BulkUploadFile[]): void{
+        serverFiles.forEach(upload => {
+            const currentUploadIsActive = this._activeStatuses.indexOf(upload.status) !== -1;
+            const relevantUpload = this._bulkUploadFiles[upload.id];
+
+            if (relevantUpload) { // update status for existing upload
+                if (relevantUpload.status !== upload.status) {
+                    this._log('info', `sync upload file '${upload.id} with status '${upload.status}'`);
+                    relevantUpload.status = upload.status;
+                }
+            } else if (currentUploadIsActive) { // track new active upload
+                this._trackNewFile({
+                    id: upload.id,
+                    status: upload.status,
+                    uploadedOn: upload.uploadedOn
+                });
+            }
+        });
+
     }
 
     public retryTracking(): void {
