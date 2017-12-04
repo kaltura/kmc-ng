@@ -2,9 +2,16 @@ import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaRequest
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ServerPolls } from '@kaltura-ng/kaltura-common';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class KalturaServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIException> implements OnDestroy {
+  private _onDestory = new Subject<void>();
+
+  protected _getOnDestroy$() : Observable<void> {
+      return this._onDestory.asObservable();
+  }
+
   constructor(private _kalturaClient: KalturaClient) {
     super();
   }
@@ -45,7 +52,7 @@ export class KalturaServerPolls extends ServerPolls<KalturaRequestBase, KalturaA
   }
 
   ngOnDestroy(): void {
-    this._onDestroy$.next();
-    this._onDestroy$.complete();
+    this._onDestory.next();
+    this._onDestory.complete();
   }
 }
