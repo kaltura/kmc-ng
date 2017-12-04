@@ -15,7 +15,10 @@
     </a>
   </div>
   <div class="kUploadMonitorSectionContent">
-    <div *ngIf="!bulkErrors?.poll && !bulkErrors?.prepare; else bulkErrorsContent">
+
+    <ng-container [ngSwitch]="layout">
+
+      <div *ngSwitchCase="'totals'">
       <span *ngIf="!_isUpToDate">
         <span class="kUploadMonitorStatus" *ngIf="uploading !== 0">
           <i class="kIconrefresh_small kUploadMonitorStatusIcon uploading"></i>
@@ -34,21 +37,22 @@
           {{ 'applications.upload.uploadMonitor.error' | translate:{'0': errors} }}
         </span>
       </span>
-      <span *ngIf="_isUpToDate">
+        <span *ngIf="_isUpToDate">
         <span class="kUploadMonitorStatus">
           <i class="kIconcheck_small kUploadMonitorStatusIcon completed"></i>
           {{ 'applications.upload.uploadMonitor.upToDate' | translate }}
         </span>
       </span>
-    </div>
-    <ng-template #bulkErrorsContent>
-      <span *ngIf="bulkErrors?.poll">
+      </div>
+
+      <span *ngSwitchCase="'error'">
         {{ 'applications.upload.uploadMonitor.bulkErrors.poll' | translate }}
       </span>
-      <span *ngIf="bulkErrors?.prepare">
+      <span *ngSwitchCase="'recoverableError'">
         {{ 'applications.upload.uploadMonitor.bulkErrors.prepare' | translate }}
-        <a (click)="onBulkTryReconnect.emit()">{{ 'app.common.retry' | translate }}</a>
+        <a (click)="requestToRecover.emit()">{{ 'app.common.retry' | translate }}</a>
       </span>
-    </ng-template>
+    </ng-container>
+
   </div>
 </div>

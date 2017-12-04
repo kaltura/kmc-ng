@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { BulkUploadMonitorErrors, BulkUploadMonitorService } from './bulk-upload-monitor.service';
+import { BulkUploadMonitorService } from './bulk-upload-monitor.service';
 import { NewUploadMonitorService } from './new-upload-monitor.service';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 export interface UploadMonitorStatuses {
   uploading: number;
@@ -34,34 +35,38 @@ export class UploadMonitorComponent implements OnDestroy {
     completed: 0,
     errors: 0,
   };
-
-  public _bulkUploadErrors: BulkUploadMonitorErrors;
+  public _bulkUploadLayout: 'loading' | 'totals' | 'error' | 'recoverableError' = null;
 
   constructor(private _bulkUploadMonitor: BulkUploadMonitorService, private _newUploadMonitor: NewUploadMonitorService) {
-    this._newUploadMonitor.totals$
-      .cancelOnDestroy(this)
-      .subscribe(totals => {
-        this._uploadFromDesktop = totals;
-        this._checkUpToDate();
-        this._checkErrors();
-      });
+      this._newUploadMonitor.totals$
+          .cancelOnDestroy(this)
+          .subscribe(totals => {
+              this._uploadFromDesktop = totals;
+              this._checkUpToDate();
+              this._checkErrors();
+          });
 
-    this._bulkUploadMonitor.totals$
-      .cancelOnDestroy(this)
-      .subscribe(totals => {
-        this._bulkUpload = totals;
-        this._checkUpToDate();
-        this._checkErrors();
-      });
+      this._bulkUploadMonitor.totals.data$
+          .cancelOnDestroy(this)
+          .subscribe(totals => {
+              this._bulkUpload = totals;
+              this._checkUpToDate();
+              this._checkErrors();
+          });
 
-    this._bulkUploadMonitor.errors$
-      .cancelOnDestroy(this)
-      .subscribe((errors) => {
-        this._bulkUploadErrors = errors;
-        if (errors.prepare) {
-          this._hasError = true;
-        }
-      });
+      this._bulkUploadMonitor.totals.state$
+          .cancelOnDestroy(this)
+          .subscribe((state) => {
+              if (state.error && state.isErrorRecoverable) {
+                  this._bulkUploadLayout = 'recoverableError';
+              } else if (state.error && !state.isErrorRecoverable) {
+                  this._bulkUploadLayout = 'error';
+              } else if (state.loading) {
+                  this._bulkUploadLayout = 'loading';
+              } else {
+                  this._bulkUploadLayout = 'totals';
+              }
+          });
   }
 
   ngOnDestroy() {

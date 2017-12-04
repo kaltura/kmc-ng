@@ -18,18 +18,9 @@ import { UploadMonitorStatuses } from './upload-monitor.component';
 import { KalturaBulkUploadObjectType } from 'kaltura-ngx-client/api/types/KalturaBulkUploadObjectType';
 
 export class BulkLogUploadChanges implements RequestFactory<BulkListAction> {
-  private _uploadedOn: Date;
+  //private _uploadedOn: Date;
 
-  public set uploadedOn(value: number | Date) {
-    if (value) {
-      const newUploadedOn = typeof value === 'number' ? new Date(value) : value;
-
-      // initialize first time and set only if new is less then current
-      if (!this._uploadedOn || (Number(newUploadedOn) < Number(this._uploadedOn))) {
-        this._uploadedOn = newUploadedOn;
-      }
-    }
-  }
+  public uploadedOn: Date;
 
   constructor() {
   }
@@ -44,7 +35,7 @@ export class BulkLogUploadChanges implements RequestFactory<BulkListAction> {
     return new BulkListAction({
       bulkUploadFilter: new KalturaBulkUploadFilter({
         bulkUploadObjectTypeIn: bulkUploadObjectTypeIn.join(','),
-        uploadedOnGreaterThanOrEqual: this._uploadedOn
+        uploadedOnGreaterThanOrEqual: this.uploadedOn
       }),
       responseProfile: new KalturaDetachedResponseProfile({
         type: KalturaResponseProfileType.includeFields,
@@ -54,183 +45,271 @@ export class BulkLogUploadChanges implements RequestFactory<BulkListAction> {
   }
 }
 
-export interface BulkUploadMonitorErrors {
-  prepare?: boolean;
-  poll?: boolean;
+interface BulkUploadFile
+{
+  status: KalturaBatchJobStatus;
+  uploadedOn: Date;
+  id: number;
+}
+
+interface TrackedBulkUploadFile extends BulkUploadFile
+{
+    allowPurging: boolean;
 }
 
 @Injectable()
 export class BulkUploadMonitorService implements OnDestroy {
-  private _bulkUploadFiles: { [key: string]: { status: KalturaBatchJobStatus, uploadedOn: Date, id: number } } = {};
-  private _totals = new BehaviorSubject<UploadMonitorStatuses>({ uploading: 0, queued: 0, completed: 0, errors: 0 });
-  private _errors = new BehaviorSubject<BulkUploadMonitorErrors>({ prepare: false, poll: false });
-  private _bulkUploadChangesFactory = new BulkLogUploadChanges();
-  private _bulkUploadObjectTypeIn = [
-    KalturaBulkUploadObjectType.entry,
-    KalturaBulkUploadObjectType.category,
-    KalturaBulkUploadObjectType.user,
-    KalturaBulkUploadObjectType.categoryUser
-  ];
-  private _activeStatuses = [
-    KalturaBatchJobStatus.dontProcess,
-    KalturaBatchJobStatus.pending,
-    KalturaBatchJobStatus.queued,
-    KalturaBatchJobStatus.processing,
-    KalturaBatchJobStatus.almostDone,
-    KalturaBatchJobStatus.retry
-  ];
 
-  public totals$ = this._totals.asObservable();
-  public errors$ = this._errors.asObservable();
-
-  constructor(private _kalturaClient: KalturaClient,
-              private _serverPolls: KalturaServerPolls,
-              private _appEvents: AppEventsService,
-              private _browserService: BrowserService) {
-    this._appEvents
-      .event(BulkLogUploadingStartedEvent)
-      .cancelOnDestroy(this)
-      .subscribe(({ id, status, uploadedOn }) => {
-        this._bulkUploadFiles[id] = { id, status, uploadedOn };
-        this._totals.next(this._calculateTotalsFromState());
-      });
-
-    this._initTracking();
-  }
-  ngOnDestroy() {
-    this._totals.complete();
-    this._errors.complete();
-  }
-
-  private _calculateTotalsFromState(): UploadMonitorStatuses {
-    return Object.keys(this._bulkUploadFiles).reduce((totals, key) => {
-      const upload = this._bulkUploadFiles[key];
-      switch (upload.status) {
-        case KalturaBatchJobStatus.pending:
-        case KalturaBatchJobStatus.queued:
-        case KalturaBatchJobStatus.dontProcess:
-          totals.queued += 1;
-          break;
-        case KalturaBatchJobStatus.processing:
-        case KalturaBatchJobStatus.almostDone:
-        case KalturaBatchJobStatus.retry:
-          totals.uploading += 1;
-          break;
-        case KalturaBatchJobStatus.finished:
-        case KalturaBatchJobStatus.finishedPartially:
-        case KalturaBatchJobStatus.processed:
-          totals.completed += 1;
-          break;
-        case KalturaBatchJobStatus.failed:
-        case KalturaBatchJobStatus.fatal:
-        case KalturaBatchJobStatus.aborted:
-        case KalturaBatchJobStatus.movefile:
-          totals.errors += 1;
-          break;
-        default:
-          break;
-      }
-
-      return totals;
-    }, { uploading: 0, queued: 0, completed: 0, errors: 0 });
-  }
-
-  private _getActiveUploadsList(): Observable<KalturaBulkUploadListResponse> {
-    const activeUploads = new BulkListAction({
-      bulkUploadFilter: new KalturaBulkUploadFilter({
-        statusIn: this._activeStatuses.join(','),
-        bulkUploadObjectTypeIn: this._bulkUploadObjectTypeIn.join(','),
-      }),
-      responseProfile: new KalturaDetachedResponseProfile({
-        type: KalturaResponseProfileType.includeFields,
-        fields: 'id,status,uploadedOn'
-      })
-    });
-
-    return this._kalturaClient.request(activeUploads);
-  }
-
-  private _cleanDeletedUploads(uploads: KalturaBulkUpload[]): void {
-    const uploadIds = uploads.map(({ id }) => id);
-    Object.keys(this._bulkUploadFiles).forEach(key => {
-      const trackedUploadIsActive = this._activeStatuses.indexOf(this._bulkUploadFiles[key].status) !== -1;
-      const trackedUploadIsNotInResponse = uploadIds.indexOf(Number(key)) === -1;
-      if (trackedUploadIsActive && trackedUploadIsNotInResponse) {
-        delete this._bulkUploadFiles[key];
-      }
-    })
-  }
-
-  private _recoverFromError(state: keyof BulkUploadMonitorErrors): void {
-    if (this._errors.value[state]) {
-      this._errors.next({ [state]: false })
+    // TODO [kmcng] replace this function with log library
+    private _log(level: 'silly' | 'verbose' | 'info' | 'warn' | 'error', message: string, context?: string): void {
+        const messageContext = context || 'general';
+        const origin = 'bulk upload monitor';
+        const formattedMessage = `log: [${level}] [${origin}] ${messageContext}: ${message}`;
+        switch (level) {
+            case 'silly':
+            case 'verbose':
+            case 'info':
+                console.log(formattedMessage);
+                break;
+            case 'warn':
+                console.warn(formattedMessage);
+                break;
+            case 'error':
+                console.error(formattedMessage);
+                break;
+        }
     }
-  }
 
-  private _initTracking(): void {
-    this._getActiveUploadsList()
-      .subscribe(
-        response => {
-          response.objects.forEach(upload => {
-            this._bulkUploadFiles[upload.id] = {
-              id: upload.id,
-              status: upload.status,
-              uploadedOn: upload.uploadedOn
-            }
-          });
+    private _bulkUploadFiles: { [key: string]: TrackedBulkUploadFile } = {};
 
-          this._bulkUploadChangesFactory.uploadedOn = response.objects.length
-            ? Math.min(...response.objects.map(({ uploadedOn }) => Number(uploadedOn)))
-            : this._browserService.sessionStartedAt;
+    private _initializeState: null | 'busy' | 'succeeded' | 'failed' = null;
+    private _poolingState: null | 'running' = null;
 
-          this._startPolling();
-        },
-        () => {
-          this._errors.next({ prepare: true });
+    private _totals = {
+        data: new BehaviorSubject<UploadMonitorStatuses>({uploading: 0, queued: 0, completed: 0, errors: 0}),
+        state: new BehaviorSubject<{ loading: boolean, error: boolean, isErrorRecoverable?: boolean }>({
+            loading: false,
+            error: false,
+            isErrorRecoverable: false
+        })
+    };
+    public readonly totals = {data$: this._totals.data.asObservable(), state$: this._totals.state.asObservable()};
+
+    private _bulkUploadChangesFactory = new BulkLogUploadChanges();
+    private _bulkUploadObjectTypeIn = [
+        KalturaBulkUploadObjectType.entry,
+        KalturaBulkUploadObjectType.category,
+        KalturaBulkUploadObjectType.user,
+        KalturaBulkUploadObjectType.categoryUser
+    ];
+    private _activeStatuses = [
+        KalturaBatchJobStatus.dontProcess,
+        KalturaBatchJobStatus.pending,
+        KalturaBatchJobStatus.queued,
+        KalturaBatchJobStatus.processing,
+        KalturaBatchJobStatus.almostDone,
+        KalturaBatchJobStatus.retry
+    ];
+
+    constructor(private _kalturaClient: KalturaClient,
+                private _serverPolls: KalturaServerPolls,
+                private _appEvents: AppEventsService,
+                private _browserService: BrowserService) {
+        this._log('silly', 'constructor()');
+        this._log('verbose', `registering to app event 'BulkLogUploadingStartedEvent'`);
+        this._appEvents
+            .event(BulkLogUploadingStartedEvent)
+            .cancelOnDestroy(this)
+            .subscribe(({id, status, uploadedOn}) => {
+                this._log('verbose', `handling app event 'BulkLogUploadingStartedEvent. { id: '${id}' }`);
+                this._trackNewFile({id, status, uploadedOn});
+                this._totals.data.next(this._calculateTotalsFromState());
+            });
+
+        this._initTracking();
+    }
+
+    private _trackNewFile(file: BulkUploadFile) {
+        this._log('verbose', `tracking new file with id: '${file.id}'`);
+        if (this._bulkUploadFiles[file.id]) {
+            this._log('warn', `cannot track new file with id: '${file.id}'. a file with such id already exists`);
+        } else {
+            this._bulkUploadFiles[file.id] = {id: file.id, status: file.status, uploadedOn: file.uploadedOn, allowPurging: false};
         }
-      );
-  }
+    }
 
-  private _startPolling(): void {
-    this._serverPolls.register(10, this._bulkUploadChangesFactory)
-      .subscribe(([response]) => {
-        if (response.error) {
-          this._errors.next({ poll: true });
-          return;
+    private _getTrackedFiles(): TrackedBulkUploadFile[] {
+        return Object.keys(this._bulkUploadFiles).map(key => this._bulkUploadFiles[key]);
+    }
+
+    ngOnDestroy() {
+        this._log('silly', 'ngOnDestroy()');
+        this._totals.data.complete();
+        this._totals.state.complete();
+    }
+
+    private _calculateTotalsFromState(): UploadMonitorStatuses {
+
+        if (this._initializeState !== 'succeeded') {
+            return {uploading: 0, queued: 0, completed: 0, errors: 0};
+        } else {
+            return this._getTrackedFiles().reduce((totals, upload) => {
+                switch (upload.status) {
+                    case KalturaBatchJobStatus.pending:
+                    case KalturaBatchJobStatus.queued:
+                    case KalturaBatchJobStatus.dontProcess:
+                        totals.queued += 1;
+                        break;
+                    case KalturaBatchJobStatus.processing:
+                    case KalturaBatchJobStatus.almostDone:
+                    case KalturaBatchJobStatus.retry:
+                        totals.uploading += 1;
+                        break;
+                    case KalturaBatchJobStatus.finished:
+                    case KalturaBatchJobStatus.finishedPartially:
+                    case KalturaBatchJobStatus.processed:
+                        totals.completed += 1;
+                        break;
+                    case KalturaBatchJobStatus.failed:
+                    case KalturaBatchJobStatus.fatal:
+                    case KalturaBatchJobStatus.aborted:
+                    case KalturaBatchJobStatus.movefile:
+                        totals.errors += 1;
+                        break;
+                    default:
+                        break;
+                }
+
+                return totals;
+            }, {uploading: 0, queued: 0, completed: 0, errors: 0});
         }
+    }
 
-        this._recoverFromError('poll');
-
-        const uploads = response.result.objects;
-
-        this._cleanDeletedUploads(uploads);
-
-        uploads.forEach(upload => {
-          const currentUploadIsActive = this._activeStatuses.indexOf(upload.status) !== -1;
-          let relevantUpload = this._bulkUploadFiles[upload.id];
-
-          if (relevantUpload) { // update status for existing upload
-            relevantUpload.status = upload.status;
-          } else if (currentUploadIsActive) { // track new active upload
-            relevantUpload = { id: upload.id, status: upload.status, uploadedOn: upload.uploadedOn };
-            this._bulkUploadFiles[upload.id] = relevantUpload;
-          }
-
-          if (currentUploadIsActive) { // update smallest uploaded on for active upload
-            this._bulkUploadChangesFactory.uploadedOn = relevantUpload.uploadedOn;
-          }
+    private _getActiveUploadsList(): Observable<KalturaBulkUploadListResponse> {
+        const activeUploads = new BulkListAction({
+            bulkUploadFilter: new KalturaBulkUploadFilter({
+                statusIn: this._activeStatuses.join(','),
+                bulkUploadObjectTypeIn: this._bulkUploadObjectTypeIn.join(','),
+            }),
+            responseProfile: new KalturaDetachedResponseProfile({
+                type: KalturaResponseProfileType.includeFields,
+                fields: 'id,status,uploadedOn'
+            })
         });
 
-        this._totals.next(this._calculateTotalsFromState());
-      });
-  }
-
-  public retryTracking(): void {
-    if (this._errors.value.prepare) {
-      this._recoverFromError('prepare');
-      this._initTracking();
-    } else {
-      console.log('log: [warn] [bulk-upload-monitor]: Everything is operating normally, nothing to retry')
+        return this._kalturaClient.request(activeUploads);
     }
-  }
+
+    private _cleanDeletedUploads(uploads: KalturaBulkUpload[]): void {
+        const uploadIds = uploads.map(({id}) => id);
+        this._getTrackedFiles().forEach(file => {
+            const trackedUploadIsNotInResponse = uploadIds.indexOf(Number(file.id)) === -1;
+            if (file.allowPurging && trackedUploadIsNotInResponse) {
+                this._log('info', `server poll returned without upload with id '${file.id}'. removing file from tracking list`);
+                delete this._bulkUploadFiles[file.id];
+            }
+        })
+    }
+
+    private _initTracking(): void {
+
+        if (this._initializeState === 'failed' || this._initializeState === null) {
+            this._log('info', `getting active uploads status from server`);
+            this._initializeState = 'busy';
+            this._totals.state.next({loading: true, error: true});
+
+            this._getActiveUploadsList()
+                .subscribe(
+                    response => {
+                        this._log('verbose', `syncing tracking file list from server. got ${response.objects.length} files to track`);
+                        response.objects.forEach(upload => {
+                            this._trackNewFile(upload);
+                        });
+
+                        this._updateServerQueryUploadedOnFilter();
+
+                        this._totals.state.next({loading: false, error: false});
+                        this._initializeState = 'succeeded';
+                        this._startPolling();
+                    },
+                    () => {
+                        this._totals.state.next({loading: false, error: true, isErrorRecoverable: true});
+                        this._initializeState = 'failed';
+                    }
+                );
+        } else {
+            this._log('info', `everything is operating normally, no need to re-initialize`);
+        }
+    }
+
+    private _updateServerQueryUploadedOnFilter() : void{
+        const oldestUploadedOnFile = this._getTrackedFiles().reduce((acc, item) => !acc || item < acc ?  item : acc, null);
+        const uploadedOnFrom = oldestUploadedOnFile ? oldestUploadedOnFile.uploadedOn : this._browserService.sessionStartedAt;
+        if (this._bulkUploadChangesFactory.uploadedOn !== uploadedOnFrom) {
+            this._log('verbose', `updating poll server query request with uploadedOn from ${uploadedOnFrom.toString()}`);
+            this._bulkUploadChangesFactory.uploadedOn = uploadedOnFrom;
+        }
+    }
+
+    private _startPolling(): void {
+
+        if (this._poolingState !== 'running') {
+            this._poolingState = 'running';
+            this._log('info', `start server polling every 10 seconds to sync bulk upload status`);
+
+
+            this._serverPolls.register(10, this._bulkUploadChangesFactory)
+                .cancelOnDestroy(this)
+                .subscribe(([response]) => {
+                    if (response.error) {
+                        this._log('warn', `error occurred while trying to sync bulk upload status from server. server error: ${response.error.message}`);
+                        this._totals.state.next({loading: false, error: true, isErrorRecoverable: false});
+                        return;
+                    }
+
+                    const serverFiles = response.result.objects;
+
+                    if (serverFiles.length > 0) {
+                        this._log('verbose', `updating tracking file list from server. got ${serverFiles.length} files to track`);
+
+                        this._cleanDeletedUploads(serverFiles);
+
+                        serverFiles.forEach(upload => {
+                            const currentUploadIsActive = this._activeStatuses.indexOf(upload.status) !== -1;
+                            const relevantUpload = this._bulkUploadFiles[upload.id];
+
+                            if (relevantUpload && relevantUpload.status !== upload.status) { // update status for existing upload
+                                this._log('info', `sync upload file '${upload.id} with status '${upload.status}'`);
+                                relevantUpload.status = upload.status;
+                            } else if (currentUploadIsActive) { // track new active upload
+                                this._trackNewFile({
+                                    id: upload.id,
+                                    status: upload.status,
+                                    uploadedOn: upload.uploadedOn
+                                });
+                            }
+
+                            this._updateServerQueryUploadedOnFilter();
+                        });
+
+
+                        this._getTrackedFiles().filter(item => !item.allowPurging).forEach(file => {
+                            this._log('verbose', `update file '${file.id} to allow purging next time syncing from the server`);
+                            file.allowPurging = true;
+                        });
+
+                        this._totals.data.next(this._calculateTotalsFromState());
+                        if (this._totals.state.getValue().error) {
+                            this._totals.state.next({loading: false, error: false});
+                        }
+                    }
+                });
+        }
+    }
+
+    public retryTracking(): void {
+        this._log('silly', `retryTracking()`);
+
+        this._initTracking();
+    }
 }
