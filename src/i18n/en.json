@@ -1082,6 +1082,59 @@
             "none": "None",
             "manageUsers": "Manage Users",
             "viewUsers": "View Users"
+          },
+          "usersPermissions": {
+            "title":"Manage End-user Permissions",
+            "close": "Close",
+            "table": {
+              "userNameId": "User Name / ID",
+              "permissionLevel": "Permission",
+              "updateMethod": "Update",
+              "updatedOn": "Updated at",
+              "active": "Active",
+              "pendingApproval": "Pending Approval",
+              "updateMethodOptions": {
+                "automatic": "Automatic",
+                "manual" : "Manual"
+              }
+            },
+            "bulkOperations": {
+              "addUsers": "Add Users",
+              "usersCount": "{{0}} Users",
+              "selectedUsersCount": "{{0}} Selected",
+              "cancel": "Cancel",
+              "remove": "Remove",
+              "search": "Search",
+              "refine": "Refine",
+              "moreActions": "More Actions",
+              "active": "Active",
+              "activeOptions": {
+                "activate": "Activate",
+                "deactivate": "Deactivate"
+              },
+              "setPermissionLevel": "Set permission level",
+              "setPermissionLevelOptions": {
+                "member": "Member",
+                "contributor": "Contributor",
+                "moderator": "Moderator",
+                "manager": "Manager"
+              },
+              "updateMethod": "Update",
+              "updateMethodOptions": {
+                "automatic": "Automatic",
+                "manual" : "Manual"
+              },
+              "removeUsers": "Remove Users"
+            },
+            "errors" : {
+              "loadEndUserPermissions": "An error occurred while trying to load Manage End-Users Permissions",
+              "setUpdateMethod": "Unable to set update method for selected users",
+              "setPermissionLevel": "Unable to set Permission Level for selected users",
+              "deleteUsers": "Unable to remove selected users",
+              "deactivateUsers": "Unable to deactivate selected users",
+              "activateUsers": "Unable to activate selected users",
+              "reloadUsers": "Reload users"
+            }
           }
         },
         "errors": {

@@ -1,0 +1,63 @@
+@import 'app-theme/_variables.scss';
+
+.kHeader {
+  height: 72px;
+  width: 100%;
+  padding: 18px;
+  box-sizing: border-box;
+  border-bottom: 1px solid $kGrayscale4;
+  .kButton {
+    float: right;
+    height: 34px;
+    width: 88px;
+  }
+  .kTitle {
+    float: left;
+    font-weight: 700;
+    padding: 8px;
+  }
+}
+
+.kManageEndUserPermissionsBulkOperationsContent {
+  padding-top: 16px;
+  padding-left: 28px;
+}
+
+.kManageEndUserPermissionsTable{
+
+}
+
+.kTableFooter {
+  bottom: 0px;
+  height: 34px;
+  background-color: white;
+  border-top: 1px solid $kGrayscale6;
+  position: fixed;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  padding: 0 14px 28px;
+  display: block;
+}
+
+.kPaginatorShowRowsLabel {
+  color: $kGrayscale1;
+  position: absolute;
+  top: 7px;
+  right: 80px;
+}
+
+:host /deep/ {
+  .ui-dropdown{
+    height: 34px;
+    width: 140px;
+    border: 1px solid $kGrayscale4;
+
+    .ui-dropdown-label{
+      color: $kGrayscale1;
+      font-size: 15px;
+    }
+  }
+  .kBulkActionsBtn {
+    font-size: 15px;
+  }
+}

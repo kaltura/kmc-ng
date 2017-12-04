@@ -1,0 +1,67 @@
+<div class="kManageEndUserPermissionsTableFilters" #kManageEndUserPermissionsTableFiltersHolder>
+  <kSticky stickyId="subcategoryContentBulk"
+           sticksTo="categoryHeader"
+           stickyClass="kStickyHeader"
+           [scrollOffset]="120">
+
+
+    <div class="kHeader">
+      <div class="kBulkActionsContainer">
+        <button
+          *ngIf="!selectedItems.length"
+          pButton
+          type="button"
+          label="{{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.addUsers' | translate}}"
+          class="kButtonBranded kAddItemBtn"
+          (click)="addItem.emit()">
+        </button>
+
+        <span class="kItemsNum" *ngIf="itemsTotalCount" [class.kNoSelected]="!selectedItems.length">
+          {{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.usersCount' | translate: {'0':itemsTotalCount} }}
+        </span>
+
+        <div class="kBulkActions" *ngIf="selectedItems.length">
+           <span class="kSelectedItems">
+             {{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.selectedUsersCount' | translate: {'0':selectedItems.length} }}
+          </span>
+          <div class="kBulkDeleteBtnContainer">
+            <button pButton class="kButtonDanger kBulkDeleteBtn"
+                    label="{{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.remove' | translate}}"
+                    (click)="_deleteItems()"></button>
+          </div>
+          <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton
+                  label="{{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.moreActions' | translate}}"
+                  (click)="menu.toggle($event)"></button>
+          <p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons"
+                        [appendTo]="'body'"></p-tieredMenu>
+
+          <a class="kBulkCancel" (click)="clearSelection.emit()">
+            {{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.cancel' | translate}}
+          </a>
+        </div>
+
+        <div class="kFiltersContainer" *ngIf="!selectedItems.length">
+          <input type="text" pInputText class="kSearchInput"
+                 [(ngModel)]="_freetextSearch"
+                 (keyup.enter)="onFreetextChanged()"
+                 placeholder="{{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.search' | translate}}">
+          <div #refineBtn class="kRefine">
+            <i class="kIconfilter"></i>
+            <span class="kRefineText">{{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.refine' | translate}}</span>
+            <i class="kIcondropdown_arrow_bottom dropdown"></i></div>
+        </div>
+      </div>
+    </div>
+  </kSticky>
+</div>
+ 
+<kPopupWidget #refinePopup
+              [appendTo]="kManageEndUserPermissionsTableFiltersHolder"
+              [popupWidth]="400"
+              [popupHeight]="500"
+              [closeBtn]="false"
+              [targetRef]="refineBtn"
+              [targetOffset]="{'x':-200, 'y': -15}">
+  <ng-template>
+  </ng-template>
+</kPopupWidget>

@@ -7,7 +7,11 @@ import {CategorySubcategoriesComponent} from './category-subcategories/category-
 import {CategoryMetadataComponent} from './category-metadata/category-metadata.component';
 import {CategoryEntitlementsComponent} from './category-entitlements/category-entitlements.component';
 import {CategoryComponent} from './category.component';
-import {CategoryChangeOwnerComponent} from "./category-entitlements/change-owner/change-owner.component";
+import {CategoryChangeOwnerComponent} from './category-entitlements/change-owner/change-owner.component';
+import {ManageEndUserPermissionsComponent} from './category-entitlements/manage-end-user-permissions/manage-end-user-permissions.component';
+import {ManageEndUserPermissionsTableComponent} from './category-entitlements/manage-end-user-permissions/manage-end-user-permissions-table/manage-end-user-permissions-table.component';
+import {CategoryUserStatusPipe} from './category-entitlements/manage-end-user-permissions/manage-end-user-permissions-table/category-user-status.pipe';
+import {ManageEndUserPermissionsBulkOperationsComponent} from './category-entitlements/manage-end-user-permissions/bulk-operations/bulk-operations.component';
 
 export const CategoryComponentsList = [
     CategoryComponent,
@@ -20,5 +24,9 @@ export const CategoryComponentsList = [
     CategoryChangeOwnerComponent,
     JumpToSection,
     LinkedEntriesPopup,
-    LinkedEntries
+    LinkedEntries,
+    ManageEndUserPermissionsComponent,
+    ManageEndUserPermissionsTableComponent,
+    CategoryUserStatusPipe,
+    ManageEndUserPermissionsBulkOperationsComponent
 ];

@@ -203,8 +203,9 @@
   </ng-template>
 </kPopupWidget>
 
-<!--TODO: BEN Implement-->
-<kPopupWidget #manageUsersPopup [popupWidth]="560" [popupHeight]="586" [slider]="true">
+
+<kPopupWidget #manageUsersPopup [popupWidth]="996" [popupHeight]="780" [slider]="true">
   <ng-template>
+    <kManageEndUsers [categoryId]="_widgetService.data.id" [parentPopupWidget]="manageUsersPopup"></kManageEndUsers>
   </ng-template>
 </kPopupWidget>

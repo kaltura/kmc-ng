@@ -12,7 +12,7 @@ import {KalturaCategory} from "kaltura-typescript-client/types/KalturaCategory";
 @Component({
   selector: 'kCategoryEntitlements',
   templateUrl: './category-entitlements.component.html',
-  styleUrls: ['./category-entitlements.component.scss']
+  styleUrls: ['./category-entitlements.component.scss'],
 })
 export class CategoryEntitlementsComponent implements OnInit, OnDestroy {
 
