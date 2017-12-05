@@ -34,7 +34,6 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
     }
   }
 
-  @Output() sortChanged = new EventEmitter<any>();
   @Output() selectedRulesChange = new EventEmitter<any>();
   @Output() onActionSelected = new EventEmitter<{ action: string, rule: PlaylistRule }>();
 
@@ -109,10 +108,6 @@ export class PlaylistRulesTableComponent implements AfterViewInit, OnInit, OnDes
         command: () => this.onActionSelected.emit({ action: 'remove', rule: rule })
       }
     ];
-  }
-
-  public _onSortChanged(event): void {
-    this.sortChanged.emit(event);
   }
 
   public _openActionsMenu(event: any, rowIndex: number, rule: PlaylistRule): void {

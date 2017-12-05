@@ -188,26 +188,4 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     this.rulesTotalCount = this.rules.length;
     this._setDirty();
   }
-
-  public onSortChanged(event: { field: string, order: -1 | 1, multisortmeta: any }): void {
-    this.rules.sort(this._getComparatorFor(event.field, event.order));
-    this._setDirty();
-  }
-
-  private _getComparatorFor(field: string, order: -1 | 1): (a: PlaylistRule, b: PlaylistRule) => number {
-    return (a, b) => {
-      const fieldA = typeof a[field] === 'string' ? a[field].toLowerCase() : a[field];
-      const fieldB = typeof b[field] === 'string' ? b[field].toLowerCase() : b[field];
-
-      if (fieldA < fieldB) {
-        return order;
-      }
-
-      if (fieldA > fieldB) {
-        return -order;
-      }
-
-      return 0;
-    };
-  }
 }
