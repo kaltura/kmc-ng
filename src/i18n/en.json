@@ -294,6 +294,10 @@
     },
     "content": {
       "uploadControl": {
+        "retryError": {
+          "header": "Retry upload",
+          "message": "Cannot resume upload for the requested file. Please upload the file again."
+        },
         "bulkCancel": {
           "header": "Cancel uploads",
           "message": "Are you sure you want to cancel those uploads?"
