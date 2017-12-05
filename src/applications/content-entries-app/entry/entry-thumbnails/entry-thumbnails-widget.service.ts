@@ -4,11 +4,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 
-import { ThumbAssetListAction } from 'kaltura-ngx-client/api/types/ThumbAssetListAction';
 import { ThumbAssetSetAsDefaultAction } from 'kaltura-ngx-client/api/types/ThumbAssetSetAsDefaultAction';
-import { KalturaThumbAssetListResponse } from 'kaltura-ngx-client/api/types/KalturaThumbAssetListResponse';
+import { ThumbAssetGetByEntryIdAction } from 'kaltura-ngx-client/api/types/ThumbAssetGetByEntryIdAction';
 import { KalturaThumbAsset } from 'kaltura-ngx-client/api/types/KalturaThumbAsset';
-import { KalturaAssetFilter } from 'kaltura-ngx-client/api/types/KalturaAssetFilter';
 import { DistributionProfileListAction } from 'kaltura-ngx-client/api/types/DistributionProfileListAction';
 import { KalturaDistributionProfileListResponse } from 'kaltura-ngx-client/api/types/KalturaDistributionProfileListResponse';
 import { KalturaDistributionProfile } from 'kaltura-ngx-client/api/types/KalturaDistributionProfile';
@@ -16,7 +14,7 @@ import { KalturaThumbAssetStatus } from 'kaltura-ngx-client/api/types/KalturaThu
 import { KalturaDistributionThumbDimensions } from 'kaltura-ngx-client/api/types/KalturaDistributionThumbDimensions';
 import { ThumbAssetDeleteAction } from 'kaltura-ngx-client/api/types/ThumbAssetDeleteAction';
 import { ThumbAssetAddFromImageAction } from 'kaltura-ngx-client/api/types/ThumbAssetAddFromImageAction';
-import { AppAuthentication } from 'app-shared/kmc-shell';
+import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 
@@ -51,7 +49,7 @@ export class EntryThumbnailsWidget extends EntryWidget
 	private _distributionProfiles: KalturaDistributionProfile[]; // used to save the response profiles array as it is loaded only once
 
     constructor( private _kalturaServerClient: KalturaClient, private _appAuthentication: AppAuthentication,
-                private _appLocalization: AppLocalization, private _appEvents: AppEventsService)
+                private _appLocalization: AppLocalization, private _appEvents: AppEventsService, private _browserService: BrowserService)
     {
         super(EntryWidgetKeys.Thumbnails);
     }
@@ -69,13 +67,9 @@ export class EntryThumbnailsWidget extends EntryWidget
 
 	    this._thumbnails.next({items : []});
 
-	    const getThumbnails$ = this._kalturaServerClient.request(new ThumbAssetListAction(
+	    const getThumbnails$ = this._kalturaServerClient.request(new ThumbAssetGetByEntryIdAction(
 		    {
-			    filter: new KalturaAssetFilter(
-				    {
-					    entryIdEqual : this.data.id
-				    }
-			    )
+			    entryId : this.data.id
 		    }))
 		    .monitor('get thumbnails');
 
@@ -94,7 +88,7 @@ export class EntryThumbnailsWidget extends EntryWidget
 			    return Observable.throw(error);
 		    })
 		    .do(responses => {
-			    const thumbnails = (responses[0] as KalturaThumbAssetListResponse).objects || [];
+			    const thumbnails = responses[0] || [];
 			    this._distributionProfiles = (responses[1] as KalturaDistributionProfileListResponse).objects || [];
 			    this.buildThumbnailsData(thumbnails);
 			    super._hideLoader();
@@ -152,14 +146,15 @@ export class EntryThumbnailsWidget extends EntryWidget
     private reloadThumbnails(){
 	    super._showLoader();
 	    const thumbs = Array.from(this._thumbnails.getValue().items);
-	    this._kalturaServerClient.request(new ThumbAssetListAction({ filter: new KalturaAssetFilter({
-			entryIdEqual : this.data.id
-		})}))
+	    this._kalturaServerClient.request(new ThumbAssetGetByEntryIdAction(
+	    {
+		    entryId : this.data.id
+	    }))
 	    .cancelOnDestroy(this,this.widgetReset$)
 	    .monitor('reload thumbnails')
 	    .subscribe(
 			    (responses) => {
-				    const thumbnails = (responses as KalturaThumbAssetListResponse).objects || [];
+				    const thumbnails = responses || [];
 				    this.buildThumbnailsData(thumbnails);
 				    super._hideLoader();
 			    },
@@ -189,12 +184,12 @@ export class EntryThumbnailsWidget extends EntryWidget
 
 	public _setAsDefault(thumb: ThumbnailRow):void{
 		const thumbs = Array.from(this._thumbnails.getValue().items);
-		super._showLoader();
 
 		const entryId = this.data ? this.data.id : null;
 
 		this._kalturaServerClient.request(new ThumbAssetSetAsDefaultAction({thumbAssetId: thumb.id}))
 			.cancelOnDestroy(this,this.widgetReset$)
+			.tag('block-shell')
 			.monitor('set thumb as default')
 			.subscribe(
 				() =>
@@ -207,12 +202,9 @@ export class EntryThumbnailsWidget extends EntryWidget
 					if (entryId) {
                         this._appEvents.publish(new PreviewMetadataChangedEvent(entryId));
                     }
-
-					super._hideLoader();
 				},
 				error =>
 				{
-					super._hideLoader();
 					this._showBlockerMessage(new AreaBlockerMessage(
 						{
 							message: 'Error setting default thumb',
@@ -232,19 +224,19 @@ export class EntryThumbnailsWidget extends EntryWidget
 
 	public deleteThumbnail(id: string): void{
 		const thumbs = Array.from(this._thumbnails.getValue().items);
-		super._showLoader();
+
 		this._kalturaServerClient.request(new ThumbAssetDeleteAction({thumbAssetId: id}))
 			.cancelOnDestroy(this,this.widgetReset$)
+            .tag('show-blocker')
 			.monitor('delete thumb')
 			.subscribe(
 				() =>
 				{
-					super._hideLoader();
+					this._browserService.scrollToTop();
 					this.reloadThumbnails();
 				},
 				error =>
 				{
-					super._hideLoader();
 					this._showBlockerMessage(new AreaBlockerMessage(
 						{
 							message: 'Error deleting thumbnail',
@@ -265,7 +257,7 @@ export class EntryThumbnailsWidget extends EntryWidget
   public _onFileSelected(selectedFiles: FileList) {
     if (selectedFiles && selectedFiles.length) {
       const fileData: File = selectedFiles[0];
-      super._showLoader();
+
       this._kalturaServerClient.request(new ThumbAssetAddFromImageAction({ entryId: this.data.id, fileData: fileData }))
         .tag('block-shell')
         .cancelOnDestroy(this, this.widgetReset$)
