@@ -127,6 +127,9 @@
     },
     "changelog": {
       "header": "Change Log"
+    },
+    "pageExitVerification": {
+      "defaultMessage": "Are you sure you want to leave this page? Unsaved changes and uploading files will be lost"
     }
   },
   "applications": {

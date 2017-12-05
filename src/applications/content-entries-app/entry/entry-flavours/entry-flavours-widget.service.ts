@@ -25,9 +25,9 @@ import { UploadManagement } from '@kaltura-ng/kaltura-common/upload-management';
 import { environment } from 'app-environment';
 import { Flavor } from './flavor';
 import { FlavorAssetGetUrlAction } from 'kaltura-ngx-client/api/types/FlavorAssetGetUrlAction';
-import { NewEntryFlavourFile } from './new-entry-flavour-file';
 import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client/api/types/KalturaUploadedFileTokenResource';
 import { EntryWidget } from '../entry-widget';
+import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 
 @Injectable()
 export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
@@ -364,7 +364,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
   }
 
   public uploadFlavor(flavor: Flavor, fileData: File): void {
-    Observable.of(this._uploadManagement.addFile(new NewEntryFlavourFile(fileData)))
+    Observable.of(this._uploadManagement.addFile(new NewEntryFlavourFile(fileData, this.data.id, this.data.mediaType)))
       .subscribe((response) => {
           flavor.uploadFileId = response.id;
           flavor.status = KalturaFlavorAssetStatus.importing.toString();
