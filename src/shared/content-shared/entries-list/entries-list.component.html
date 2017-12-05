@@ -2,7 +2,7 @@
   <div class="kEntries kOverrideFAIcons">
     <div #entriesTableHolder class="kEntriesHolder kContent">
       <kSticky stickyId="entriesFilters" [scrollOffset]="80" [sticksTo]="'header'" >
-        <div class="kEntriesTableFilters kContent">
+        <div class="kEntriesTableFilters kContent" [class.kAdditionalFilters]="additionalFilters">
           <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries$ | async)?.totalCount">{{(_entriesStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
 
           <div [class.kHidden]="!selectedEntries.length" class="kBulkOperations">
@@ -18,22 +18,42 @@
                class="kBulkCancel"
                (click)="clearSelection()">{{'applications.content.entries.cancel' | translate}}</a>
           </div>
-          <div [class.kHidden]="selectedEntries.length" class="kFilters">
-            <input type="text"
-                   pInputText
-                   class="kSearchInput"
-                   [(ngModel)]="_filter.freetextSearch"
-                   (keyup.enter)="onFreetextChanged()"
-                   placeholder="{{'applications.content.entries.searchEntries' | translate}}">
-            <div #categoriesFilterBtn class="kCategoriesFilter">
-              <i class="kIconfolder"></i>
-              <span>{{'applications.content.entries.filterCategories' | translate}}</span>
-              <i class="kIcondropdown_arrow_bottom dropdown"></i>
+          <div class="kFiltersWrapper">
+            <div class="kFilters" [class.kHidden]="!additionalFilters">
+              <input type="text"
+                     pInputText
+                     class="kSearchInput"
+                     [(ngModel)]="_filter.freetextSearch"
+                     (keyup.enter)="onFreetextChanged()"
+                     placeholder="{{'applications.content.entries.searchEntries' | translate}}">
+              <div #categoriesFilterBtn class="kCategoriesFilter">
+                <i class="kIconfolder"></i>
+                <span>{{'applications.content.entries.filterCategories' | translate}}</span>
+                <i class="kIcondropdown_arrow_bottom dropdown"></i>
+              </div>
+              <div #refineBtn class="kRefine">
+                <i class="kIconfilter"></i>
+                <span>{{'applications.content.entries.refine' | translate}}</span>
+                <i class="kIcondropdown_arrow_bottom dropdown"></i>
+              </div>
             </div>
-            <div #refineBtn class="kRefine">
-              <i class="kIconfilter"></i>
-              <span>{{'applications.content.entries.refine' | translate}}</span>
-              <i class="kIcondropdown_arrow_bottom dropdown"></i>
+            <div [class.kHidden]="selectedEntries.length" class="kFilters">
+              <input type="text"
+                     pInputText
+                     class="kSearchInput"
+                     [(ngModel)]="_filter.freetextSearch"
+                     (keyup.enter)="onFreetextChanged()"
+                     placeholder="{{'applications.content.entries.searchEntries' | translate}}">
+              <div #categoriesFilterBtn class="kCategoriesFilter">
+                <i class="kIconfolder"></i>
+                <span>{{'applications.content.entries.filterCategories' | translate}}</span>
+                <i class="kIcondropdown_arrow_bottom dropdown"></i>
+              </div>
+              <div #refineBtn class="kRefine">
+                <i class="kIconfilter"></i>
+                <span>{{'applications.content.entries.refine' | translate}}</span>
+                <i class="kIcondropdown_arrow_bottom dropdown"></i>
+              </div>
             </div>
           </div>
           <button *ngIf="showReload"

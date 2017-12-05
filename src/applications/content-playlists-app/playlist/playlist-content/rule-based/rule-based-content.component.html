@@ -4,7 +4,7 @@
       [selectedRules]="_selectedRules"
       [duration]="_widgetService.entriesDuration"
       [rulesTotalCount]="_widgetService.rulesTotalCount"
-      (addRule)="addRule.open()"
+      (addRule)="playlistRule.open()"
       (deleteRules)="_deleteSelected($event)"
       (clearSelection)="_clearSelection()"
       (moveRules)="_widgetService.moveRules($event)">
@@ -17,9 +17,9 @@
       [(selectedRules)]="_selectedRules"></kPlaylistRulesTable>
   </div>
 
-  <kPopupWidget #addRule [popupWidth]="995" [slider]="true">
+  <kPopupWidget #playlistRule [popupWidth]="995" [slider]="true">
     <ng-template>
-      <h1>TBD</h1>
+      <kPlaylistRule (onClosePopupWidget)="playlistRule.close()"></kPlaylistRule>
     </ng-template>
   </kPopupWidget>
 </k-area-blocker>

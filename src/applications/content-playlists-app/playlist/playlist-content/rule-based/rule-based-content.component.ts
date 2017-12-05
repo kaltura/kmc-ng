@@ -1,11 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PlaylistStore } from '../../playlist-store.service';
 import { PlaylistRule, RuleBasedContentWidget } from './rule-based-content-widget.service';
+import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 
 @Component({
   selector: 'kPlaylistContentRuleBased',
   templateUrl: './rule-based-content.component.html',
   styleUrls: ['./rule-based-content.component.scss'],
+  providers: [EntriesStore]
 })
 export class RuleBasedContentComponent implements OnInit, OnDestroy {
   public _selectedRules: PlaylistRule[] = [];

@@ -13,6 +13,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
   styleUrls: ['./entries-list.component.scss']
 })
 export class EntriesListComponent implements OnInit, OnDestroy {
+  @Input() additionalFilters = false;
   @Input() showReload = true;
   @Input() isBusy = false;
   @Input() blockerMessage: AreaBlockerMessage = null;

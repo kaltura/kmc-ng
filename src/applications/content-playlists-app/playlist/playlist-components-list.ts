@@ -15,6 +15,7 @@ import { PlaylistContentComponent } from './playlist-content/playlist-content.co
 import { PlaylistRulesTableComponent } from './playlist-content/rule-based/playlist-rules-table/playlist-rules-table.component';
 import { PlaylistOrderByPipe } from './playlist-content/rule-based/playlist-rules-table/playlist-rules-order-by.pipe';
 import { RuleBasedBulkOperationsComponent } from './playlist-content/rule-based/bulk-operations/bulk-operations.component';
+import { PlaylistRuleComponent } from './playlist-content/rule-based/playlist-rule/playlist-rule.component';
 
 export const PlaylistComponentsList = [
   PlaylistMetadataComponent,
@@ -32,5 +33,6 @@ export const PlaylistComponentsList = [
   EntryTypePipe,
   EntryDurationPipe,
   PlaylistOrderByPipe,
-  BulkOperationsComponent
+  BulkOperationsComponent,
+  PlaylistRuleComponent
 ];
