@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [bodyScroll]="true">
 	<kFileDialog #fileDialog [allowMultiple]="true" (onFileSelected)="_widgetService._onFileSelected($event)"></kFileDialog>
 	<div class="kRelated">
 		<p class="kTitle">{{'applications.content.entryDetails.related.related' | translate}}</p>
