@@ -221,12 +221,17 @@
         "bulkUpload": "Bulk upload",
         "dropFolders": "Drop folders",
         "viewDetails": "View details",
-        "uploading": "uploading",
-        "syncing": "syncing",
-        "queued": "queued",
-        "completed": "completed",
-        "error": "error",
-        "upToDate": "Up to date"
+        "uploading": "{{0}} uploading",
+        "syncing": "{{0}} syncing",
+        "queued": "{{0}} queued",
+        "completed": "{{0}} completed",
+        "error": "{{0}} error",
+        "upToDate": "Up to date",
+        "loading": "Loading...",
+        "bulkErrors": {
+          "poll": "Cannot get bulk upload data. Retrying...",
+          "prepare": "Could not connect bulk upload monitor!"
+        }
       },
       "transcodingProfilesSelect": {
         "titleVideo": "Prepare Video Entry",

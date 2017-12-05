@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
@@ -15,6 +15,9 @@ export class UploadMonitorSectionComponent {
   @Input() completed = 0;
   @Input() errors = 0;
   @Input() uploadMonitorPopup: PopupWidgetComponent;
+  @Input() layout: 'loading' | 'totals' | 'error' | 'recoverableError' = 'loading';
+
+  @Output() requestToRecover = new EventEmitter<void>();
 
   public get _isUpToDate(): boolean {
     return (this.uploading + this.queued + this.completed + this.errors) === 0;

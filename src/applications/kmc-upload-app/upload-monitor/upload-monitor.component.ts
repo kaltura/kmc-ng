@@ -1,10 +1,9 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
-import { NewEntryUploadFile } from 'app-shared/kmc-shell';
-import { KalturaUploadFile } from 'app-shared/kmc-shared';
-import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
+import { BulkUploadMonitorService } from './bulk-upload-monitor.service';
+import { NewUploadMonitorService } from './new-upload-monitor.service';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
-interface UploadMonitorStatuses {
+export interface UploadMonitorStatuses {
   uploading: number;
   queued: number;
   completed: number;
@@ -14,102 +13,90 @@ interface UploadMonitorStatuses {
 @Component({
   selector: 'kUploadMonitor',
   templateUrl: './upload-monitor.component.html',
-  styleUrls: ['./upload-monitor.component.scss'],
+  styleUrls: ['./upload-monitor.component.scss']
 })
 export class UploadMonitorComponent implements OnDestroy {
   @Input() appmenu;
 
-  private _newUploadFiles: { id: string, status: string }[] = [];
+  private _showErrorIcon = false;
   public _menuOpened = false;
   public _upToDate = true;
+  public _hasError = false;
   public _uploadFromDesktop: UploadMonitorStatuses = {
     uploading: 0,
     queued: 0,
     completed: 0,
     errors: 0,
   };
+  public _bulkUpload: UploadMonitorStatuses = {
+    uploading: 0,
+    queued: 0,
+    completed: 0,
+    errors: 0,
+  };
+  public _bulkUploadLayout: 'loading' | 'totals' | 'error' | 'recoverableError' = null;
 
-  constructor(private _uploadManagement: UploadManagement) {
-    this._monitorEntryUploadFilesChanges();
+  constructor(private _bulkUploadMonitor: BulkUploadMonitorService, private _newUploadMonitor: NewUploadMonitorService) {
+      this._newUploadMonitor.totals$
+          .cancelOnDestroy(this)
+          .subscribe(totals => {
+              if (this._uploadFromDesktop.errors < totals.errors) {
+                  this._updateErrorIconStatus();
+              }
+              this._uploadFromDesktop = totals;
+              this._checkUpToDate();
+          });
+
+      this._bulkUploadMonitor.totals.data$
+          .cancelOnDestroy(this)
+          .subscribe(totals => {
+              if (this._bulkUpload.errors < totals.errors) {
+                  this._updateErrorIconStatus();
+              }
+              this._bulkUpload = totals;
+              this._checkUpToDate();
+          });
+
+      this._bulkUploadMonitor.totals.state$
+          .cancelOnDestroy(this)
+          .subscribe((state) => {
+              if (state.error && state.isErrorRecoverable) {
+                  this._bulkUploadLayout = 'recoverableError';
+              } else if (state.error && !state.isErrorRecoverable) {
+                  this._bulkUploadLayout = 'error';
+              } else if (state.loading) {
+                  this._bulkUploadLayout = 'loading';
+              } else {
+                  this._bulkUploadLayout = 'totals';
+              }
+          });
   }
 
   ngOnDestroy() {
   }
 
+  private _updateErrorIconStatus(): void {
+      if (!this._menuOpened) {
+          this._showErrorIcon = true;
+      }
+  }
+
   private _checkUpToDate(): void {
     const uploadFromDesktop = this._uploadFromDesktop.uploading + this._uploadFromDesktop.queued;
-    this._upToDate = !uploadFromDesktop;
+    const bulkUpload = this._bulkUpload.uploading + this._bulkUpload.queued;
+    this._upToDate = !uploadFromDesktop && !bulkUpload;
   }
 
-  private _increaseParam(objectName: string, paramName: string): void {
-    const newValue = this[objectName][paramName] + 1;
-    this[objectName] = Object.assign({}, this[objectName], { [paramName]: newValue });
-    this._checkUpToDate();
+  public _onMonitorOpen(): void {
+    this._showErrorIcon = false;
+    this._menuOpened = true;
   }
 
-  private _decreaseParam(objectName: string, paramName: string): void {
-    const newValue = this[objectName][paramName] - 1;
-    this[objectName] = Object.assign({}, this[objectName], { [paramName]: newValue >= 0 ? newValue : 0 });
-    this._checkUpToDate();
+  public _onMonitorClose(): void {
+    this._menuOpened = false;
   }
 
-  private _filterUploadFiles(data: KalturaUploadFile): boolean {
-    return data instanceof NewEntryUploadFile || data instanceof NewEntryFlavourFile;
-  }
-
-  private _monitorEntryUploadFilesChanges(): void {
-    this._uploadManagement.onTrackedFileChanged$
-      .cancelOnDestroy(this)
-      .filter(({ data }) => this._filterUploadFiles(<KalturaUploadFile>data))
-      .subscribe(
-        trackedFile => {
-          let relevantFile = this._newUploadFiles.find(({ id }) => id === trackedFile.id);
-          if (!relevantFile) {
-            relevantFile = { id: trackedFile.id, status: trackedFile.status };
-            this._newUploadFiles.push(relevantFile);
-          }
-
-          switch (trackedFile.status) {
-            case TrackedFileStatuses.added:
-              relevantFile.status = TrackedFileStatuses.added;
-              this._increaseParam('_uploadFromDesktop', 'queued');
-              break;
-            case TrackedFileStatuses.uploading:
-              if (relevantFile.status !== TrackedFileStatuses.uploading) {
-                relevantFile.status = TrackedFileStatuses.uploading;
-                this._increaseParam('_uploadFromDesktop', 'uploading');
-                this._decreaseParam('_uploadFromDesktop', 'queued');
-              }
-              break;
-            case TrackedFileStatuses.uploadCompleted:
-              relevantFile.status = TrackedFileStatuses.uploadCompleted;
-              this._increaseParam('_uploadFromDesktop', 'completed');
-              this._decreaseParam('_uploadFromDesktop', 'uploading');
-              break;
-            case TrackedFileStatuses.failure:
-              this._increaseParam('_uploadFromDesktop', 'errors');
-              if (relevantFile.status === TrackedFileStatuses.uploading) {
-                this._decreaseParam('_uploadFromDesktop', 'uploading');
-              } else if (relevantFile.status === TrackedFileStatuses.added) {
-                this._decreaseParam('_uploadFromDesktop', 'queued');
-              }
-
-              relevantFile.status = TrackedFileStatuses.failure;
-              break;
-            case TrackedFileStatuses.purged:
-              if (relevantFile.status === TrackedFileStatuses.uploading) {
-                this._decreaseParam('_uploadFromDesktop', 'uploading');
-              } else if (relevantFile.status === TrackedFileStatuses.added) {
-                this._decreaseParam('_uploadFromDesktop', 'queued');
-              } else if (relevantFile.status === TrackedFileStatuses.failure) {
-                this._decreaseParam('_uploadFromDesktop', 'errors');
-              }
-              break;
-            default:
-              break;
-          }
-        }
-      );
+  public _bulkTryReconnect(): void {
+    this._bulkUploadMonitor.retryTracking();
   }
 }
-

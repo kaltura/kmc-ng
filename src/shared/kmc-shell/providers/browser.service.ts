@@ -35,6 +35,7 @@ export class BrowserService implements IAppStorage {
 
   private _appStatus = new BehaviorSubject<{errorMessage : string}>({ errorMessage : null});
   private _growlMessage = new Subject<GrowlMessage>();
+  private _sessionStartedAt: Date = new Date();
   public appStatus$ = this._appStatus.asObservable();
   public growlMessage$ = this._growlMessage.asObservable();
 
@@ -64,6 +65,10 @@ export class BrowserService implements IAppStorage {
 			}
 		}
 	};
+
+  public get sessionStartedAt(): Date {
+    return this._sessionStartedAt;
+  }
 
 	constructor(private localStorage: LocalStorageService, private sessionStorage: SessionStorageService) {
 	}
