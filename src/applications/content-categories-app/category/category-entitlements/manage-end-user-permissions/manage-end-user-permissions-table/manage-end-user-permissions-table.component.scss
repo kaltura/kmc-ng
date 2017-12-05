@@ -71,6 +71,9 @@
   }
 }
 
+:host /deep/ tr:hover .removeColumn  .kIconremove{
+  visibility: visible;
+}
 :host /deep/ .ui-datatable .removeColumn {
   overflow: visible;
   width: 70px;
@@ -79,6 +82,7 @@
     font-size: 22px;
     color: $kDandger;
     cursor: pointer;
+    visibility: hidden;
   }
 }
 
