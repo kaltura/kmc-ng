@@ -1,14 +1,16 @@
-import { KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaRequest, KalturaRequestBase } from 'kaltura-ngx-client';
+import {
+    KalturaAPIException, KalturaClient, KalturaMultiRequest, KalturaRequest, KalturaRequestBase
+} from 'kaltura-ngx-client';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ServerPolls } from '@kaltura-ng/kaltura-common';
 import { Subject } from 'rxjs/Subject';
 
 @Injectable()
-export class KalturaServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIException> implements OnDestroy {
+export class KmcServerPolls extends ServerPolls<KalturaRequestBase, KalturaAPIException> implements OnDestroy {
   private _onDestory = new Subject<void>();
 
-  protected _getOnDestroy$() : Observable<void> {
+  protected _getOnDestroy$(): Observable<void> {
       return this._onDestory.asObservable();
   }
 
@@ -16,8 +18,8 @@ export class KalturaServerPolls extends ServerPolls<KalturaRequestBase, KalturaA
     super();
   }
 
-  protected _createGlobalError(): KalturaAPIException {
-    return new KalturaAPIException();
+  protected _createGlobalError(error?: Error): KalturaAPIException {
+      return new KalturaAPIException('kmc-server_polls_global_error', error ? error.message : '');
   }
 
   /*
@@ -46,7 +48,9 @@ export class KalturaServerPolls extends ServerPolls<KalturaRequestBase, KalturaA
     return this._kalturaClient.multiRequest(multiRequest)
       .map(responses => {
         return requestsMapping.reduce((aggregatedResponses, requestSize) => {
-          return [...aggregatedResponses, responses.splice(0, requestSize)];
+          const response = responses.splice(0, requestSize);
+          const unwrappedResponse = response.length  === 1 ? response[0] : response;
+          return [...aggregatedResponses, unwrappedResponse];
         }, []);
       });
   }

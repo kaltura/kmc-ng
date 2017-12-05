@@ -5,7 +5,7 @@ import { KalturaBatchJobStatus } from 'kaltura-ngx-client/api/types/KalturaBatch
 import { KalturaBulkUploadFilter } from 'kaltura-ngx-client/api/types/KalturaBulkUploadFilter';
 import { Observable } from 'rxjs/Observable';
 import { KalturaBulkUploadListResponse } from 'kaltura-ngx-client/api/types/KalturaBulkUploadListResponse';
-import { KalturaServerPolls } from 'app-shared/kmc-shared/server-polls';
+import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
 import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events/bulk-log-uploading-started.event';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
@@ -15,7 +15,7 @@ import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUploa
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { UploadMonitorStatuses } from './upload-monitor.component';
 import { KalturaBulkUploadObjectType } from 'kaltura-ngx-client/api/types/KalturaBulkUploadObjectType';
-import { BulkLogUploadChanges } from './bulk-upload-monitor-changes';
+import { BulkUploadRequestFactory } from './bulk-upload-request-factory';
 
 interface BulkUploadFile
 {
@@ -67,7 +67,7 @@ export class BulkUploadMonitorService implements OnDestroy {
     };
     public readonly totals = {data$: this._totals.data.asObservable(), state$: this._totals.state.asObservable()};
 
-    private _bulkUploadChangesFactory = new BulkLogUploadChanges();
+    private _bulkUploadChangesFactory = new BulkUploadRequestFactory();
     private _bulkUploadObjectTypeIn = [
         KalturaBulkUploadObjectType.entry,
         KalturaBulkUploadObjectType.category,
@@ -84,7 +84,7 @@ export class BulkUploadMonitorService implements OnDestroy {
     ];
 
     constructor(private _kalturaClient: KalturaClient,
-                private _serverPolls: KalturaServerPolls,
+                private _kmcServerPolls: KmcServerPolls,
                 private _appEvents: AppEventsService,
                 private _browserService: BrowserService) {
         this._log('silly', 'constructor()');
@@ -230,9 +230,9 @@ export class BulkUploadMonitorService implements OnDestroy {
             this._log('info', `start server polling every 10 seconds to sync bulk upload status`);
 
 
-            this._serverPolls.register(10, this._bulkUploadChangesFactory)
+            this._kmcServerPolls.register<KalturaBulkUploadListResponse>(10, this._bulkUploadChangesFactory)
                 .cancelOnDestroy(this)
-                .subscribe(([response]) => {
+                .subscribe((response) => {
                     if (response.error) {
                         this._log('warn', `error occurred while trying to sync bulk upload status from server. server error: ${response.error.message}`);
                         this._totals.state.next({loading: false, error: true, isErrorRecoverable: false});

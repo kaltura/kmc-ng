@@ -75,7 +75,7 @@ import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
 import { AppEventsModule } from 'app-shared/kmc-shared';
-import { KalturaServerPollsModule } from 'app-shared/kmc-shared/server-polls';
+import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -124,7 +124,7 @@ export function clientConfigurationFactory() {
     RadioButtonModule,
     StickyModule.forRoot(),
     OperationTagModule.forRoot(),
-    KalturaServerPollsModule.forRoot()
+    KMCServerPollsModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,

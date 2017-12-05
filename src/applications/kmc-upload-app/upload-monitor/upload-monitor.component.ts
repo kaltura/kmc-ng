@@ -18,8 +18,7 @@ export interface UploadMonitorStatuses {
 export class UploadMonitorComponent implements OnDestroy {
   @Input() appmenu;
 
-  private _errorsCount = 0;
-
+  private _showErrorIcon = false;
   public _menuOpened = false;
   public _upToDate = true;
   public _hasError = false;
@@ -41,24 +40,27 @@ export class UploadMonitorComponent implements OnDestroy {
       this._newUploadMonitor.totals$
           .cancelOnDestroy(this)
           .subscribe(totals => {
+              if (this._uploadFromDesktop.errors !== totals.errors) {
+                  this._showErrorIcon = true;
+              }
               this._uploadFromDesktop = totals;
               this._checkUpToDate();
-              this._checkErrors();
           });
 
       this._bulkUploadMonitor.totals.data$
           .cancelOnDestroy(this)
           .subscribe(totals => {
+              if (this._bulkUpload.errors !== totals.errors) {
+                  this._showErrorIcon = true;
+              }
               this._bulkUpload = totals;
               this._checkUpToDate();
-              this._checkErrors();
           });
 
       this._bulkUploadMonitor.totals.state$
           .cancelOnDestroy(this)
           .subscribe((state) => {
               if (state.error && state.isErrorRecoverable) {
-                  this._hasError = true;
                   this._bulkUploadLayout = 'recoverableError';
               } else if (state.error && !state.isErrorRecoverable) {
                   this._bulkUploadLayout = 'error';
@@ -79,14 +81,9 @@ export class UploadMonitorComponent implements OnDestroy {
     this._upToDate = !uploadFromDesktop && !bulkUpload;
   }
 
-  private _checkErrors(): void {
-    this._hasError = !this._menuOpened && (this._uploadFromDesktop.errors + this._bulkUpload.errors) !== this._errorsCount;
-  }
-
   public _onMonitorOpen(): void {
+    this._showErrorIcon = false;
     this._menuOpened = true;
-    this._errorsCount = this._uploadFromDesktop.errors + this._bulkUpload.errors;
-    this._checkErrors();
   }
 
   public _onMonitorClose(): void {

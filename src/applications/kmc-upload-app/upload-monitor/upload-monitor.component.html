@@ -2,8 +2,8 @@
    class="kIconfolder_large kUploadMonitorToggler"
    [class.upToDate]="_upToDate"
    [class.open]="_menuOpened">
-  <i *ngIf="!_upToDate && !_hasError" class="kIconrefresh_small"></i>
-  <i *ngIf="_hasError" class="kIconerror"></i>
+  <i *ngIf="!_upToDate && !_showErrorIcon" class="kIconrefresh_small"></i>
+  <i *ngIf="_showErrorIcon" class="kIconerror"></i>
 </i>
 
 <kPopupWidget #uploadmonitor class="uploadMonitorPopup"

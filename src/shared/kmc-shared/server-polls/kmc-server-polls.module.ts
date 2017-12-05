@@ -1,5 +1,5 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { KalturaServerPolls } from './kaltura-server-polls.service';
+import { KmcServerPolls } from './kmc-server-polls.service';
 
 @NgModule({
   imports: [],
@@ -7,11 +7,11 @@ import { KalturaServerPolls } from './kaltura-server-polls.service';
   exports: [],
   providers: []
 })
-export class KalturaServerPollsModule {
+export class KMCServerPollsModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: KalturaServerPollsModule,
-      providers: [KalturaServerPolls]
+      ngModule: KMCServerPollsModule,
+      providers: [KmcServerPolls]
     };
   }
 }

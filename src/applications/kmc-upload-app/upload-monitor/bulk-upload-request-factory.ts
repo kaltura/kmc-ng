@@ -4,8 +4,9 @@ import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/Kaltura
 import { KalturaBulkUploadFilter } from 'kaltura-ngx-client/api/types/KalturaBulkUploadFilter';
 import { BulkListAction } from 'kaltura-ngx-client/api/types/BulkListAction';
 import { RequestFactory } from '@kaltura-ng/kaltura-common';
+import { KalturaBulkUploadListResponse } from 'kaltura-ngx-client/api/types/KalturaBulkUploadListResponse';
 
-export class BulkLogUploadChanges implements RequestFactory<BulkListAction> {
+export class BulkUploadRequestFactory implements RequestFactory<BulkListAction, KalturaBulkUploadListResponse> {
 
   public uploadedOn: Date;
 

@@ -1,2 +1,2 @@
-export * from './kaltura-server-polls.service';
-export * from './kaltura-server-polls.module';
+export * from './kmc-server-polls.service';
+export * from './kmc-server-polls.module';
