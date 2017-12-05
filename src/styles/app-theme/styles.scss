@@ -73,6 +73,7 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
   background-color: $appBkgColor;
   padding-top: 20px;
   width: 100%;
+  min-height: calc(100vh - 125px);
   button{
     cursor: pointer;
   }
@@ -195,9 +196,6 @@ $spinner-colors: rgb(218, 31, 38), rgb(6, 168, 133), rgb(0, 147, 68), rgb(248, 1
 .kForceFix{
   position: fixed !important;
   margin-top: 0px !important;
-}
-.kFillHeight{
-  min-height: $contentArea;
 }
 @media screen and (max-width: 1090px) {
   .kmcDetailsLayout .kDetailsWrapper .kDetailsHeader .kBackBtn {

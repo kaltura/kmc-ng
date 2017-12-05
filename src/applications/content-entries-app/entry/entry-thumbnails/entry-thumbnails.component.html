@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [centerOnScreen]="true">
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [bodyScroll]="true">
 	<kFileDialog #fileDialog [filter]="'image/*'" (onFileSelected)="_widgetService._onFileSelected($event)"></kFileDialog>
 	<div class="kThumbnails" #thumbnails>
 		<div class="kHeader">
