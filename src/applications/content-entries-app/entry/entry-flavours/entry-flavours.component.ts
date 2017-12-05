@@ -12,7 +12,7 @@ import { Flavor } from './flavor';
 
 import { environment } from 'app-environment';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { NewEntryFlavourFile } from './new-entry-flavour-file';
+import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 
 @Component({
     selector: 'kEntryFlavours',

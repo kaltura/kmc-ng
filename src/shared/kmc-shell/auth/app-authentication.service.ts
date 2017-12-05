@@ -22,6 +22,7 @@ import {UserResetPasswordAction} from 'kaltura-ngx-client/api/types/UserResetPas
 import {AdminUserUpdatePasswordAction} from 'kaltura-ngx-client/api/types/AdminUserUpdatePasswordAction';
 import {UserLoginByKsAction} from 'app-shared/kmc-shell/auth/temp-user-logic-by-ks';
 import { BrowserService } from '../providers/browser.service';
+import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 
 
 
@@ -65,7 +66,7 @@ export class AppAuthentication {
 
   constructor(private kalturaServerClient: KalturaClient,
               private appStorage: AppStorage,
-              private browserService: BrowserService) {
+              private _pageExitVerificationService: PageExitVerificationService) {
     this._appUser = new AppUser();
   }
 
@@ -312,7 +313,7 @@ export class AppAuthentication {
 
   // Prevents the browser to verify page exit before reload
   private forceReload() {
-    this.browserService.disablePageExitVerification();
+    this._pageExitVerificationService.disable();
     this.reload();
   }
 }
