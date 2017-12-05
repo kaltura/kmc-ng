@@ -8,7 +8,6 @@ import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file
 export class UploadPageExitVerificationService implements OnDestroy {
   private _trackedFilesIds: string[] = [];
   private _pageExitVerificationToken: string;
-  private _pageExitVerificationMessage = this._appLocalizations.get('app.pageExitVerification.fileUploadMessage');
 
   constructor(private _appLocalizations: AppLocalization,
               private _pageExitVerificationService: PageExitVerificationService,
@@ -22,11 +21,9 @@ export class UploadPageExitVerificationService implements OnDestroy {
   private _syncPageExitVerificationState(): void {
     if (this._trackedFilesIds.length) {
       if (!this._pageExitVerificationToken) {
-        this._pageExitVerificationService.setVerificationMessage(this._pageExitVerificationMessage);
         this._pageExitVerificationToken = this._pageExitVerificationService.add();
       }
     } else {
-      this._pageExitVerificationService.setDefaultVerificationMessage();
       this._pageExitVerificationService.remove(this._pageExitVerificationToken);
       this._pageExitVerificationToken = null;
     }
@@ -39,7 +36,9 @@ export class UploadPageExitVerificationService implements OnDestroy {
       .filter(({ status, progress }) => !(status === TrackedFileStatuses.uploading && progress > 0))
       .subscribe(({ id, status }) => {
         if (status === TrackedFileStatuses.added) {
-          this._trackedFilesIds.push(id);
+          if (this._trackedFilesIds.indexOf(id) === -1) {
+              this._trackedFilesIds.push(id);
+          }
         }
 
         const uploadCompleted = [TrackedFileStatuses.purged, TrackedFileStatuses.uploadCompleted].indexOf(status) !== -1;

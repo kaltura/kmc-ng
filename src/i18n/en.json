@@ -129,8 +129,7 @@
       "header": "Change Log"
     },
     "pageExitVerification": {
-      "defaultMessage": "Are you sure you want to leave this page?",
-      "fileUploadMessage": "Are you sure you want to leave this page? You have unsaved changes or currently uploading files"
+      "defaultMessage": "Are you sure you want to leave this page? Unsaved changes and uploading files will be lost"
     }
   },
   "applications": {
