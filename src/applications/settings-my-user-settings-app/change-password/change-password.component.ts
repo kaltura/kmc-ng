@@ -1,7 +1,8 @@
-import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
 import { PopupWidgetComponent } from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
+import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 @Component({
@@ -16,6 +17,8 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
   _isBusy = false;
   _blockerMessage: AreaBlockerMessage = null;
   @Input() parentPopupWidget: PopupWidgetComponent;
+  @Input() user: KalturaUser;
+  @Output() doUpdateLoginData = new EventEmitter<any>();
 
   constructor(
     private _fb: FormBuilder
@@ -25,15 +28,9 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     this.parentPopupWidget.close();
   }
 
-  _passwordMatchValidator(g: FormGroup) {
+  private _passwordMatchValidator(g: FormGroup) {
     return g.parent && g.parent.value.newPassword === g.value ? null : {'mismatch': true};
   }
-
-  ngOnInit() {
-    this._createForm();
-  }
-
-  ngOnDestroy() {}
 
   // Create empty structured form on loading
   private _createForm(): void {
@@ -44,10 +41,18 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     });
   }
 
-  private markFormFieldsAsTouched() {
-    for (let inner in this.changePasswordForm.controls) {
-      this.changePasswordForm.get(inner).markAsTouched();
-      this.changePasswordForm.get(inner).updateValueAndValidity();
-    }
+  public updateLoginData(): void {
+    let formData: any = this.changePasswordForm.value;
+    this.doUpdateLoginData.emit({
+      oldLoginId:   this.user.email,
+      password:     formData.currentPassword,
+      newPassword:  formData.newPassword,
+    });
   }
+
+  ngOnInit() {
+    this._createForm();
+  }
+
+  ngOnDestroy() {}
 }

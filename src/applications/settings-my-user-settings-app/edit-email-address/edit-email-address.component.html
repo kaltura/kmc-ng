@@ -41,7 +41,8 @@
         <button
           pButton class="kButtonBranded kButton"
           label="{{'applications.settings.myUserSettings.save' | translate}}"
-          [disabled]="editEmailAddressForm.pristine"></button>
+          [disabled]="editEmailAddressForm.pristine"
+          (click)="updateLoginData()"></button>
       </div>
     </form>
   </div>

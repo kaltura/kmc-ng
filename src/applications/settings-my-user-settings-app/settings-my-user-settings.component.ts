@@ -5,6 +5,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import { KalturaUserRole } from 'kaltura-typescript-client/types/KalturaUserRole';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 @Component({
   selector: 'kmc-settings-my-user-settings',
@@ -35,7 +36,7 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
       .subscribe(
         response => {
           this._isBusy = false;
-          this.user = response.user;
+          this.user = response;
           this._getRoleDescription(this.user.roleIds);
         },
         error => {
@@ -72,7 +73,7 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
       .subscribe(
         response => {
           this._isBusy = false;
-          this.role = response.role;
+          this.role = response;
         },
         error => {
           this._areaBlockerMessage = new AreaBlockerMessage(
@@ -99,6 +100,41 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
           )
         }
       );
+  }
+
+  public updateLoginData(userData: any, popup: string): void {
+    this._myUserSettingsStore.updateLoginData(userData)
+      .cancelOnDestroy(this)
+      .tag('block-shell')
+      .subscribe(
+        () => {
+          this[popup].close();
+          this._getUserData();
+        },
+        error => {
+          let buttons = [{
+            label: this._appLocalization.get('app.common.cancel'),
+            action: () => {
+              this._areaBlockerMessage = null;
+            }
+          }];
+          if(error.message === this._appLocalization.get('applications.settings.myUserSettings.errors.connection')) {
+            buttons.push({
+              label: this._appLocalization.get('app.common.retry'),
+              action: () => {
+                this._areaBlockerMessage = null;
+                this.updateLoginData(userData, popup);
+              }
+            })
+          }
+          this._areaBlockerMessage = new AreaBlockerMessage(
+            {
+              message: error.message,
+              buttons: buttons
+            }
+          )
+        }
+      )
   }
 
   private _editUserName(): void {

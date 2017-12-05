@@ -1179,7 +1179,8 @@
         "reTypeNewPassword": "Re-type new password",
         "errors": {
           "required": "This field is required",
-          "doNotMuchPasswords": "Password fields do not match"
+          "doNotMuchPasswords": "Password fields do not match",
+          "connection": "Error connecting to server"
         }
       }
     }

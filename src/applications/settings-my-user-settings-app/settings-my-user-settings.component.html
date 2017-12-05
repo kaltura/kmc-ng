@@ -42,19 +42,25 @@
 
   <kPopupWidget #editUserNamePopup [popupWidth]="600" [popupHeight]="455" [modal]="true" [preventPageScroll]="true">
     <ng-template>
-      <kEditUserName [parentPopupWidget]="editUserNamePopup"></kEditUserName>
+      <kEditUserName [parentPopupWidget]="editUserNamePopup"
+                     [user]="user"
+                     (doUpdateLoginData)="updateLoginData($event, 'editUserNamePopup')"></kEditUserName>
     </ng-template>
   </kPopupWidget>
 
   <kPopupWidget #editEmailAddressPopup [popupWidth]="600" [popupHeight]="370" [modal]="true" [preventPageScroll]="true">
     <ng-template>
-      <kEditEmailAddress [parentPopupWidget]="editEmailAddressPopup"></kEditEmailAddress>
+      <kEditEmailAddress [parentPopupWidget]="editEmailAddressPopup"
+                         [user]="user"
+                         (doUpdateLoginData)="updateLoginData($event, 'editEmailAddressPopup')"></kEditEmailAddress>
     </ng-template>
   </kPopupWidget>
 
   <kPopupWidget #changePasswordPopup [popupWidth]="600" [popupHeight]="440" [modal]="true" [preventPageScroll]="true">
     <ng-template>
-      <kChangePassword [parentPopupWidget]="changePasswordPopup"></kChangePassword>
+      <kChangePassword [parentPopupWidget]="changePasswordPopup"
+                       [user]="user"
+                       (doUpdateLoginData)="updateLoginData($event, 'changePasswordPopup')"></kChangePassword>
     </ng-template>
   </kPopupWidget>
 </k-area-blocker>
