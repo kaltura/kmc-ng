@@ -65,7 +65,8 @@ export class DynamicMetadataSectionFactory {
             {
                 label: item.key,
                 allowMultiple : item.allowMultiple,
-                key: item.name
+                key: item.name,
+                description: item.description
             }
         );
     }
@@ -77,7 +78,8 @@ export class DynamicMetadataSectionFactory {
                 label: item.key,
                 allowMultiple : false,
                 allowMultipleEntries : item.allowMultiple,
-                key: item.name
+                key: item.name,
+                description: item.description
             }
         );
     }
@@ -88,7 +90,8 @@ export class DynamicMetadataSectionFactory {
             {
                 label: item.key,
                 allowMultiple : item.allowMultiple,
-                key: item.name
+                key: item.name,
+                description: item.description
             }
         );
     }
@@ -100,7 +103,8 @@ export class DynamicMetadataSectionFactory {
                 label : item.key,
                 allowMultiple : item.allowMultiple,
                 key: item.name,
-                children: this._extractChildren(item.children)
+                children: this._extractChildren(item.children),
+                description: item.description
             }
         );
     }
@@ -112,7 +116,8 @@ export class DynamicMetadataSectionFactory {
                 values : item.optionalValues,
                 allowMultiple : false,
                 label: item.label,
-                key: item.name
+                key: item.name,
+                description: item.description
             }
         );
     }
@@ -124,7 +129,8 @@ export class DynamicMetadataSectionFactory {
                 values : item.optionalValues,
                 allowMultiple : false,
                 label: item.key,
-                key: item.name
+                key: item.name,
+                description: item.description
             }
         );
     }
@@ -136,7 +142,8 @@ export class DynamicMetadataSectionFactory {
                 label: item.key,
                 allowMultiple : item.allowMultiple,
                 key: item.name,
-                showTime : item.isTimeControl
+                showTime : item.isTimeControl,
+                description: item.description
             }
         );
     }

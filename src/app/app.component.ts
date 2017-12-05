@@ -62,7 +62,6 @@ export class AppComponent implements OnInit {
     this._oprationsTagManager.tagStatus$.subscribe(
       (tags: {[key: string]: number}) => {
         this._isBusy = tags['block-shell'] > 0;
-        console.log(status);
       }
     );
 

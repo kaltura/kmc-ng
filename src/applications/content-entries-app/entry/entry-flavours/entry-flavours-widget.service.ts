@@ -223,33 +223,35 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
 	    this._entryStatus = this._appLocalization.get('applications.content.entryDetails.flavours.' + this._entryStatusClassName.split(" ")[0]);
     }
 
-    public deleteFlavor(flavor: Flavor): void{
-	    this._browserService.confirm(
-		    {
-			    header: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirmTitle'),
-			    message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirm',{"0": flavor.id}),
-			    accept: () => {
-				    super._showLoader();
-				    this._kalturaServerClient.request(new FlavorAssetDeleteAction({
-					    id: flavor.id
-				    }))
-					    .cancelOnDestroy(this,this.widgetReset$)
-					    .monitor('delete flavor: '+flavor.id)
-					    .subscribe(
-						    response =>
-						    {
-							    super._hideLoader();
-                  this._browserService.showGrowlMessage({severity: 'success', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteSuccess')});
-                  this._refresh();
-						    },
-						    error =>
-						    {
-							    super._hideLoader();
-                  this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteFailure')});
-						    }
-					    );
-			    }
-		    });
+    public deleteFlavor(flavor: Flavor): void {
+        this._browserService.confirm(
+            {
+                header: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirmTitle'),
+                message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirm', {"0": flavor.id}),
+                accept: () => {
+                    this._kalturaServerClient.request(new FlavorAssetDeleteAction({
+                        id: flavor.id
+                    }))
+                        .cancelOnDestroy(this, this.widgetReset$)
+                        .tag('block-shell')
+                        .monitor('delete flavor: ' + flavor.id)
+                        .subscribe(
+                            response => {
+                                this._refresh();
+                                this._browserService.scrollToTop();
+                            },
+                            error => {
+                                this._showBlockerMessage(new AreaBlockerMessage({
+                                    message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteFailure'),
+                                    buttons: [{
+                                        label: this._appLocalization.get('app.common.ok'),
+                                        action: () => this._removeBlockerMessage()
+                                    }]
+                                }), false);
+                            }
+                        );
+                }
+            });
     }
 
     public downloadFlavor (flavor: Flavor): void{
@@ -289,6 +291,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
 		flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.converting');
 		this._kalturaServerClient.request(request)
 			.cancelOnDestroy(this,this.widgetReset$)
+      .tag('block-shell')
 			.monitor('convert flavor')
 			.subscribe(
 				response =>
@@ -303,11 +306,16 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
 				},
 				error =>
 				{
-          this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure')});
-					this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
-					{
-						// reload flavors as we need to get the flavor status from the server
-					});
+          this._showBlockerMessage(new AreaBlockerMessage({
+            message: this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure'),
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._refresh();
+                this._removeBlockerMessage();
+              }
+            }]
+          }), false);
 				}
 			);
 	}
@@ -378,6 +386,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
     }))
       .cancelOnDestroy(this, this.widgetReset$)
       .monitor('set flavor resource')
+      .tag('block-shell')
       .catch(error => {
         this._uploadManagement.cancelUploadWithError(flavor.uploadFileId, 'Cannot update flavor, cancel related file');
         return Observable.throw(error);
@@ -387,11 +396,16 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
           this._refresh(false, true);
         },
         error => {
-          this._browserService.showGrowlMessage({
-            severity: 'error',
-            detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')
-          });
-          this._refresh();
+          this._showBlockerMessage(new AreaBlockerMessage({
+            message: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure'),
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._refresh();
+                this._removeBlockerMessage()
+              }
+            }]
+          }), false);
         }
       );
   }
@@ -405,6 +419,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
     }))
       .cancelOnDestroy(this, this.widgetReset$)
       .monitor('add new flavor')
+      .tag('block-shell')
       .catch(error => {
         this._uploadManagement.cancelUploadWithError(flavor.uploadFileId, 'Cannot update flavor, cancel related file');
         return Observable.throw(error);
@@ -415,11 +430,16 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
           this.updateFlavor(flavor, resource);
         },
         error => {
-          this._browserService.showGrowlMessage({
-            severity: 'error',
-            detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')
-          });
-          this._refresh();
+          this._showBlockerMessage(new AreaBlockerMessage({
+            message: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure'),
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._refresh();
+                this._removeBlockerMessage();
+              }
+            }]
+          }), false);
         }
       );
   }
