@@ -296,7 +296,7 @@
       "uploadControl": {
         "retryError": {
           "header": "Retry upload",
-          "message": "Cannot resume upload for the requested file. Please upload the file again!"
+          "message": "Cannot resume upload for the requested file. Please upload the file again."
         },
         "bulkCancel": {
           "header": "Cancel uploads",
