@@ -241,18 +241,17 @@ export class BulkUploadMonitorService implements OnDestroy {
 
                     const serverFiles = response.result.objects;
 
+
+
                     if (serverFiles.length > 0) {
                         this._cleanDeletedUploads(serverFiles);
-
                         this._updateTrackedFilesFromServer(serverFiles);
-
                         this._updateServerQueryUploadedOnFilter();
-
-                        this._getTrackedFiles().filter(item => !item.allowPurging).forEach(file => {
-                            this._log('verbose', `update file '${file.id} to allow purging next time syncing from the server`);
-                            file.allowPurging = true;
-                        });
-
+                        this._updateAllowPurgingMode();
+                        this._totals.data.next(this._calculateTotalsFromState());
+                    }else {
+                        this._cleanDeletedUploads(serverFiles);
+                        this._updateAllowPurgingMode();
                         this._totals.data.next(this._calculateTotalsFromState());
                     }
 
@@ -261,6 +260,13 @@ export class BulkUploadMonitorService implements OnDestroy {
                     }
                 });
         }
+    }
+
+    private _updateAllowPurgingMode(): void{
+        this._getTrackedFiles().filter(item => !item.allowPurging).forEach(file => {
+            this._log('verbose', `update file '${file.id} to allow purging next time syncing from the server`);
+            file.allowPurging = true;
+        });
     }
 
     private _updateTrackedFilesFromServer(serverFiles: BulkUploadFile[]): void{

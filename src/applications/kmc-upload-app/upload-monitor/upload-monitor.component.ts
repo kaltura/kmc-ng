@@ -40,8 +40,8 @@ export class UploadMonitorComponent implements OnDestroy {
       this._newUploadMonitor.totals$
           .cancelOnDestroy(this)
           .subscribe(totals => {
-              if (this._uploadFromDesktop.errors !== totals.errors) {
-                  this._showErrorIcon = true;
+              if (this._uploadFromDesktop.errors < totals.errors) {
+                  this._updateErrorIconStatus();
               }
               this._uploadFromDesktop = totals;
               this._checkUpToDate();
@@ -50,8 +50,8 @@ export class UploadMonitorComponent implements OnDestroy {
       this._bulkUploadMonitor.totals.data$
           .cancelOnDestroy(this)
           .subscribe(totals => {
-              if (this._bulkUpload.errors !== totals.errors) {
-                  this._showErrorIcon = true;
+              if (this._bulkUpload.errors < totals.errors) {
+                  this._updateErrorIconStatus();
               }
               this._bulkUpload = totals;
               this._checkUpToDate();
@@ -73,6 +73,12 @@ export class UploadMonitorComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
+  }
+
+  private _updateErrorIconStatus(): void {
+      if (!this._menuOpened) {
+          this._showErrorIcon = true;
+      }
   }
 
   private _checkUpToDate(): void {
