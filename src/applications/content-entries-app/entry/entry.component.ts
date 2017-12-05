@@ -135,7 +135,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 								});
 								break;
 							case ActionTypes.EntrySaving:
-								this._showLoader = true;
 								break;
 							case ActionTypes.EntrySavingFailed:
 

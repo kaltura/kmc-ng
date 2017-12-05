@@ -3,6 +3,7 @@ import { TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-commo
 import { NewEntryUploadFile } from 'app-shared/kmc-shell';
 import { UploadMonitorStatuses } from './upload-monitor.component';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 
 @Injectable()
 export class NewUploadMonitorService implements OnDestroy {
@@ -13,7 +14,7 @@ export class NewUploadMonitorService implements OnDestroy {
   constructor(private _uploadManagement: UploadManagement) {
     this._uploadManagement
       .onTrackedFileChanged$
-      .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile) // TODO [kmcng] track flavor as well
+      .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile || trackedFile.data instanceof NewEntryFlavourFile)
       .filter(({ status }) => TrackedFileStatuses.purged !== status)
       .cancelOnDestroy(this)
       .subscribe(trackedFile => {

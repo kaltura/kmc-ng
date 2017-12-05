@@ -221,14 +221,6 @@ export class BrowserService implements IAppStorage {
 		});
 	}
 
-	public enablePageExitVerification(verificationMsg: string = null): void{
-		window.onbeforeunload = (e) => {
-			const confirmationMessage = verificationMsg ? verificationMsg : "Are you sure you want to leave this page?";
-			(e || window.event).returnValue = confirmationMessage; // Gecko + IE
-			return confirmationMessage;                            // Webkit, Safari, Chrome
-		};
-	}
-
 	private scrolling = false;
 	public scrollToTop(duration: number = 500): void {
 		if (!this.scrolling){
@@ -249,10 +241,6 @@ export class BrowserService implements IAppStorage {
 			};
 			window.requestAnimationFrame(step);
 		}
-	}
-
-	public disablePageExitVerification(): void{
-		window.onbeforeunload = (e) => {};
 	}
 
 	public showGrowlMessage(message: GrowlMessage): void {
