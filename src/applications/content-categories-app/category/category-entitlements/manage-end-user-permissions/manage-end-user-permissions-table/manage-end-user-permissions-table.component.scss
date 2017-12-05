@@ -24,9 +24,22 @@
   }
 }
 
-:host /deep/ .selectionColumn {
-  width: 56px;
-  padding-left: 28px !important;
+:host /deep/ {
+
+  .kDisabled {
+    .selectionColumn, .ui-chkbox-box {
+      pointer-events: none;
+      .ui-chkbox-box {
+        background-color: $kGrayscale6;
+      }
+    }
+  }
+
+  .selectionColumn {
+    width: 56px;
+    padding-left: 28px !important;
+  }
+
 }
 
 :host /deep/ .ui-datatable .nameColumn {
@@ -38,7 +51,7 @@
   font-weight: normal;
   width: 140px;
   text-align: left;
-  .ui-cell-data{
+  .ui-cell-data {
     text-align: left;
   }
 }
@@ -48,7 +61,7 @@
   width: 140px;
   text-align: left;
 
-  .ui-cell-data{
+  .ui-cell-data {
     text-align: left;
   }
 }
@@ -71,9 +84,10 @@
   }
 }
 
-:host /deep/ tr:hover .removeColumn  .kIconremove{
+:host /deep/ tr:hover .removeColumn .kIconremove.kEnabled {
   visibility: visible;
 }
+
 :host /deep/ .ui-datatable .removeColumn {
   overflow: visible;
   width: 70px;

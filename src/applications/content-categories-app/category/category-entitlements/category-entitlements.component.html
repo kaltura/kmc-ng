@@ -6,17 +6,15 @@
     </div>
     <form [formGroup]="_widgetService.entitlementsForm" novalidate>
 
-
       <!--Parivacy Content Label-->
       <div class="kRow">
         <span class="kLabel">
          <span class="kLabelText">{{'applications.content.categoryDetails.entitlements.privacyContentLabel.label' | translate}}</span>
         </span>
         <div class="kControl">
-       {{_widgetService.data.privacyContext}}
+          {{_widgetService.data.privacyContext}}
         </div>
       </div>
-
 
       <!--Content Privacy-->
       <div class="kRow">
@@ -34,8 +32,7 @@
                            label="{{'applications.content.categoryDetails.entitlements.contentPrivacy.noRestrictions' | translate}}">
             </p-radioButton>
             <div class="kExplanation">
-              {{'applications.content.categoryDetails.entitlements.contentPrivacy.noRestrictions_explanation' |
-              translate}}
+              {{'applications.content.categoryDetails.entitlements.contentPrivacy.noRestrictions_explanation' | translate}}
             </div>
           </div>
           <!--Requires Authentication-->
@@ -45,8 +42,7 @@
                            label="{{'applications.content.categoryDetails.entitlements.contentPrivacy.requiresAuthentication' | translate}}">
             </p-radioButton>
             <div class="kExplanation">
-              {{'applications.content.categoryDetails.entitlements.contentPrivacy.requiresAuthentication_explanation'
-              | translate}}
+              {{'applications.content.categoryDetails.entitlements.contentPrivacy.requiresAuthentication_explanation' | translate}}
             </div>
           </div>
           <!--Private-->
@@ -79,8 +75,7 @@
                            label="{{'applications.content.categoryDetails.entitlements.categoryListing.noRestrictions' | translate}}">
             </p-radioButton>
             <div class="kExplanation">
-              {{'applications.content.categoryDetails.entitlements.categoryListing.noRestrictions_explanation' |
-              translate}}
+              {{'applications.content.categoryDetails.entitlements.categoryListing.noRestrictions_explanation' | translate}}
             </div>
           </div>
           <!--Private-->
@@ -113,8 +108,7 @@
                            label="{{'applications.content.categoryDetails.entitlements.contentPublishPermissions.noRestrictions' | translate}}">
             </p-radioButton>
             <div class="kExplanation">
-              {{'applications.content.categoryDetails.entitlements.contentPublishPermissions.noRestrictions_explanation'
-              | translate}}
+              {{'applications.content.categoryDetails.entitlements.contentPublishPermissions.noRestrictions_explanation' | translate}}
             </div>
           </div>
           <!--Private-->
@@ -125,8 +119,7 @@
                            label="{{'applications.content.categoryDetails.entitlements.contentPublishPermissions.private' | translate}}">
             </p-radioButton>
             <div class="kExplanation">
-              {{'applications.content.categoryDetails.entitlements.contentPublishPermissions.private_explanation' |
-              translate}}
+              {{'applications.content.categoryDetails.entitlements.contentPublishPermissions.private_explanation' | translate}}
             </div>
           </div>
         </div>
@@ -154,7 +147,8 @@
           </i>
         </span>
         <div class="kControl">
-          <p-inputSwitch class="kInputSwitch" formControlName="inheritUsersPermissions" (onChange)="_toggleInherit($event)"></p-inputSwitch>
+          <p-inputSwitch class="kInputSwitch" formControlName="inheritUsersPermissions"
+                         (onChange)="_toggleInherit($event)"></p-inputSwitch>
           <span>{{_widgetService.entitlementsForm.controls['inheritUsersPermissions'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
           <div class="kAdditional kExplanation">
             <span>{{'applications.content.categoryDetails.entitlements.inheritUsersPermissions.parentCategory' | translate}}</span>
@@ -175,7 +169,8 @@
         <span class="kLabel"><span class="kLabelText">{{'applications.content.categoryDetails.entitlements.owner.label' | translate}}</span></span>
         <div class="kControl">
           <span class="kOwner" [kTooltip]="_widgetService.entitlementsForm.get('owner').value">{{_widgetService.entitlementsForm.get('owner').value}}</span>
-          <a [class.disabled]="_widgetService.entitlementsForm.get('owner').disabled" class="kActionLink" (click)="changeOwnerPopup.open()">{{'applications.content.categoryDetails.entitlements.owner.changeOwner' | translate}}</a>
+          <a [class.disabled]="_widgetService.entitlementsForm.get('owner').disabled" class="kActionLink"
+             (click)="changeOwnerPopup.open()">{{'applications.content.categoryDetails.entitlements.owner.changeOwner' | translate}}</a>
         </div>
       </div>
 
@@ -183,18 +178,23 @@
       <div class="kRow">
         <span
           class="kLabel"><span class="kLabelText">{{'applications.content.categoryDetails.entitlements.permittedUsers.label' | translate}}</span></span>
-    <div class="kControl">
-      <!--TODO: BEN Implement-->
-      <span>None</span>
-       <a class="kActionLink" (click)="manageUsersPopup.open()">{{'applications.content.categoryDetails.entitlements.permittedUsers.manageUsers' | translate}}</a>
-      </div>
+        <div class="kControl">
+          <!--TODO: BEN Implement-->
+          <span *ngIf="_widgetService.data.membersCount > 0">
+        {{ 'applications.content.categoryDetails.entitlements.permittedUsers.count' | translate: {'0': _widgetService.data.membersCount } }}
+      </span>
+          <span *ngIf="!_widgetService.data.membersCount">
+        {{'applications.content.categoryDetails.entitlements.permittedUsers.none' | translate}} </span>
+          <a class="kActionLink" (click)="manageUsersPopup.open()">
+            <span *ngIf="!_widgetService.entitlementsForm.controls['inheritUsersPermissions'].value">{{'applications.content.categoryDetails.entitlements.permittedUsers.manageUsers' | translate}}</span>
+            <span *ngIf="_widgetService.entitlementsForm.controls['inheritUsersPermissions'].value">{{'applications.content.categoryDetails.entitlements.permittedUsers.viewUsers' | translate}}</span>
+          </a>
+        </div>
       </div>
 
     </form>
   </div>
-
 </k-area-blocker>
-
 
 <kPopupWidget #changeOwnerPopup [popupWidth]="586" [popupHeight]="278" [closeBtn]="true" [modal]="true">
   <ng-template>
@@ -206,6 +206,8 @@
 
 <kPopupWidget #manageUsersPopup [popupWidth]="996" [popupHeight]="780" [slider]="true">
   <ng-template>
-    <kManageEndUsers [categoryId]="_widgetService.data.id" [parentPopupWidget]="manageUsersPopup"></kManageEndUsers>
+    <kManageEndUsers
+      [categoryInheritUserPermissions]="_widgetService.entitlementsForm.controls['inheritUsersPermissions'].value"
+      [categoryId]="_widgetService.data.id" [parentPopupWidget]="manageUsersPopup"></kManageEndUsers>
   </ng-template>
 </kPopupWidget>

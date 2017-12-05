@@ -1081,7 +1081,8 @@
             "label": "Permitted Users",
             "none": "None",
             "manageUsers": "Manage Users",
-            "viewUsers": "View Users"
+            "viewUsers": "View Users",
+            "count": "{{0}} end-users"
           },
           "usersPermissions": {
             "title":"Manage End-user Permissions",
