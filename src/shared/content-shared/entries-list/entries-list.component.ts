@@ -48,6 +48,8 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
   ];
 
+  public _resultsLimit = 200;
+
   public _filter = {
     pageIndex: 0,
     freetextSearch: '',

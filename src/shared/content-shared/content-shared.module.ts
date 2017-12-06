@@ -11,7 +11,7 @@ import {
   InputTextModule,
   MenuModule,
   PaginatorModule,
-  RadioButtonModule, TieredMenuModule,
+  RadioButtonModule, SliderModule, TieredMenuModule,
   TreeModule
 } from 'primeng/primeng';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -66,7 +66,8 @@ import { EntriesTotalDurationPipe } from 'app-shared/content-shared/pipes/entrie
     TieredMenuModule,
     InputTextModule,
     StickyModule,
-    DropdownModule
+    DropdownModule,
+    SliderModule
   ],
   declarations: [
     EntryStatusPipe,

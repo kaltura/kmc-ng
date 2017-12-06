@@ -413,7 +413,8 @@
         "ruleNamePlaceholder": "Top videos of past week",
         "resultsLimit": "Results limit",
         "orderBy": "Order by",
-        "totalDuration": "Total duration {{0}}"
+        "totalDuration": "Total duration {{0}}",
+        "resultsLimitRange": "1 - 200 Entries"
       },
       "playlists": {
         "playlists": "{{0}} Playlist's",

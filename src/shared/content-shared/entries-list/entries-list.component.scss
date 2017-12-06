@@ -249,6 +249,24 @@
   }
 }
 
+.kResultsLimitPopup {
+  padding: 29px 16px 24px 16px;
+
+  .kResultsLimitSlider {
+
+  }
+
+  .kResultsLimitPopupFooter {
+    margin-top: 24px;
+    display: flex;
+    justify-content: space-between;
+
+    span {
+      color: $kGrayscale3;
+    }
+  }
+}
+
 :host /deep/ .kStickyClass {
   border-bottom: 1px solid $kGrayscale5;
 }
