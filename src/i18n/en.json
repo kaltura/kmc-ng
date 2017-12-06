@@ -414,7 +414,8 @@
         "resultsLimit": "Results limit",
         "orderBy": "Order by",
         "totalDuration": "Total duration {{0}}",
-        "resultsLimitRange": "1 - 200 Entries"
+        "resultsLimitRange": "1 - 200 Entries",
+        "noEntries": "No entries"
       },
       "playlists": {
         "playlists": "{{0}} Playlist's",

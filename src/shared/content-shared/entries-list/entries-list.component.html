@@ -68,9 +68,14 @@
                   (click)="_reload()"></button>
         </div>
         <span class="kEntriesInfo"
-              *ngIf="additionalFilters && (_entriesStore.entries$ | async)?.totalCount && !(_entriesStore.state$ | async)?.loading">
-          {{ _getTranslation('applications.content.entries.entries', (_entriesStore.entries$ | async)?.totalCount) }},
-          {{ _getTranslation('applications.content.entries.totalDuration', (_entriesStore.entries$ | async)?.items | kEntriesTotalDuration | kTime) }}
+              *ngIf="additionalFilters && !(_entriesStore.state$ | async)?.loading">
+          <span *ngIf="(_entriesStore.entries$ | async)?.totalCount">
+            {{ _getTranslation('applications.content.entries.entries', (_entriesStore.entries$ | async)?.totalCount) }},
+            {{ _getTranslation('applications.content.entries.totalDuration', (_entriesStore.entries$ | async)?.items | kEntriesTotalDuration | kTime) }}
+          </span>
+          <span *ngIf="!(_entriesStore.entries$ | async)?.totalCount">
+            {{'applications.content.entries.noEntries' | translate }}
+          </span>
         </span>
       </kSticky>
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="entriesTags" [sticksTo]="'entriesFilters'">
