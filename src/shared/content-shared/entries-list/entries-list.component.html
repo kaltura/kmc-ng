@@ -118,19 +118,16 @@
 
 <!-- popup widgets section -->
 <kPopupWidget #categoriesFilterPopup
-              [appendTo]="entriesTableHolder"
               [popupWidth]="400"
               [popupHeight]="500"
               [closeBtn]="false"
               [targetRef]="categoriesFilterBtn"
               [targetOffset]="{'x':-10, 'y': -21}"
-              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'categoriesFilterPopup'"
-              [scrollOffset]="80">
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'categoriesFilterPopup'" [scrollOffset]="80" >
   <kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup"></kCategoriesFilter>
 </kPopupWidget>
 
 <kPopupWidget #refinePopup
-              [appendTo]="entriesTableHolder"
               [popupWidth]="400"
               [popupHeight]="500"
               [closeBtn]="false"
@@ -143,12 +140,12 @@
 </kPopupWidget>
 
 <kPopupWidget #resultsLimitPopup
-              [appendTo]="entriesTableHolder"
               [popupWidth]="260"
               [popupHeight]="101"
               [closeBtn]="false"
               [targetRef]="resultsLimitBtn"
-              [targetOffset]="{'x': 0, 'y': 37}">
+              [targetOffset]="{'x': 0, 'y': 37}"
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'resultsLimitPopup'" [scrollOffset]="80">
     <div class="kResultsLimitPopup">
       <div class="kResultsLimitSlider">
         <p-slider [(ngModel)]="_resultsLimit" [min]="0" [max]="200"></p-slider>
