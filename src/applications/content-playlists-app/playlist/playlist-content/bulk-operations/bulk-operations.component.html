@@ -28,11 +28,11 @@
           </button>
         </ng-template>
         <span class="kSelectedEntriesNum" *ngIf="entriesTotalCount">
-          {{ _getTranslation('applications.content.playlists.entries', entriesTotalCount) }}
+          {{ 'applications.content.playlists.entries' | translate : [entriesTotalCount] }}
       </span>
         <div *ngIf="selectedEntries.length" class="kSelected">
         <span class="kSelectedEntriesLabel">
-          {{ _getTranslation('applications.content.playlists.selected', selectedEntries.length) }}
+          {{ 'applications.content.playlists.selected' | translate : [selectedEntries.length] }}
         </span>
           <a class="kBulkCancel" (click)="clearSelection.emit()">
             {{'applications.content.playlists.cancel' | translate}}
@@ -40,7 +40,7 @@
         </div>
       </div>
       <div *ngIf="duration" class="kPlaylistEntriesTableDuration">
-        <span>{{_getTranslation('applications.content.playlistDetails.details.duration', (duration | kTime)) }}</span>
+        <span>{{'applications.content.playlistDetails.details.duration' | translate : [(duration | kTime)] }}</span>
       </div>
     </div>
   </kSticky>

@@ -24,8 +24,5 @@ export class BulkOperationsComponent {
     this.moveEntries.emit({ entries: this.selectedEntries, direction });
   }
 
-  public _getTranslation(key: string, params: string): string {
-    return this._appLocalization.get(key, { 0: params });
-  }
 }
 

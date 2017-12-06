@@ -13,11 +13,11 @@
             <span
               class="kSelectedPlaylistsNum"
               *ngIf="(_playlistsStore.playlists$ | async)?.totalCount">
-              {{_getTranslation('applications.content.playlists.playlists', (_playlistsStore.playlists$ | async)?.totalCount)}}</span>
+              {{'applications.content.playlists.playlists' | translate : [(_playlistsStore.playlists$ | async)?.totalCount] }}</span>
 
             <div class="kBulkOperations" [class.kHidden]="!_selectedPlaylists.length">
               <span class="kSelectedPlaylistsLabel">
-                • {{_getTranslation('applications.content.playlists.selected', _selectedPlaylists.length) }}</span>
+                • {{ 'applications.content.playlists.selected' | translate : [_selectedPlaylists.length] }}</span>
               <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_deletePlaylists(_selectedPlaylists)"></button>
               <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.playlists.cancel' | translate}}</a>
             </div>

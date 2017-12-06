@@ -38,9 +38,6 @@ export class MetadataProfileStore extends PartnerProfileStore
         super();
     }
 
-
-
-
     public get(filters : GetFilters) : Observable<{items : MetadataProfile[]}>
     {
         return Observable.create(observer =>
