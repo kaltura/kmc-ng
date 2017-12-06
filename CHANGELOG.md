@@ -58,27 +58,20 @@
 * **upload:** detect file type with case sensitive ([#295](https://github.com/kaltura/kmc-ng/issues/295)) ([0c1a6ba](https://github.com/kaltura/kmc-ng/commit/0c1a6ba))
 * updated red color value for errors ([bb3cfa6](https://github.com/kaltura/kmc-ng/commit/bb3cfa6))
 * verify subscription existance before unsubcscribing ([b46ce86](https://github.com/kaltura/kmc-ng/commit/b46ce86))
-
+* **content/entries:** set focus on auto-complete when opening the category selector dialog ([#225](https://github.com/kaltura/kmc-ng/issues/225)) ([cfbb379](https://github.com/kaltura/kmc-ng/commit/cfbb379))
 
 ### Features
 
-* **content:** improve file uploads stability for content tab ([#266](https://github.com/kaltura/kmc-ng/issues/266)) ([a82aafd](https://github.com/kaltura/kmc-ng/commit/a82aafd))
-*  add application upload monitor popup ([0eb7076](https://github.com/kaltura/kmc-ng/commit/0eb7076))
-* add bulk upload action with bulk uploads view ([cb3f2a6](https://github.com/kaltura/kmc-ng/commit/cb3f2a6))
-* add error notification ([f9dace9](https://github.com/kaltura/kmc-ng/commit/f9dace9))
-* add notification why we can't retry ([f66e03d](https://github.com/kaltura/kmc-ng/commit/f66e03d))
-* block shell when performing save operations so the user will not be able to navigate to other view while application is busy ([4e977ca](https://github.com/kaltura/kmc-ng/commit/4e977ca))
-* clenUp deleted uploads ([354c284](https://github.com/kaltura/kmc-ng/commit/354c284))
+* **content/entries:** improve file uploads stability for content tab ([#266](https://github.com/kaltura/kmc-ng/issues/266)) ([a82aafd](https://github.com/kaltura/kmc-ng/commit/a82aafd))
+* **upload:** add application upload monitor popup ([0eb7076](https://github.com/kaltura/kmc-ng/commit/0eb7076))
+* **upload:** add bulk upload action with bulk uploads view ([cb3f2a6](https://github.com/kaltura/kmc-ng/commit/cb3f2a6))
+* **shell:** block shell when performing save operations so the user will not be able to navigate to other view while application is busy ([4e977ca](https://github.com/kaltura/kmc-ng/commit/4e977ca))
 * **content/categories:** update bulk operations ([#242](https://github.com/kaltura/kmc-ng/issues/242)) ([231da70](https://github.com/kaltura/kmc-ng/commit/231da70))
-* issue warning when leaving app during file upload ([4165504](https://github.com/kaltura/kmc-ng/commit/4165504))
-* show tooltip over custom data fields in metadata sections  ([a448e6c](https://github.com/kaltura/kmc-ng/commit/a448e6c))
-* track bulk upload progress using server poll ([fa4b250](https://github.com/kaltura/kmc-ng/commit/fa4b250))
-* **content/categories:** extend categories table ([6bcc4dc](https://github.com/kaltura/kmc-ng/commit/6bcc4dc))
-* **content/entries:** set focus on auto-complete when opening the category selector dialog ([#225](https://github.com/kaltura/kmc-ng/issues/225)) ([cfbb379](https://github.com/kaltura/kmc-ng/commit/cfbb379))
+* **upload:** issue warning when leaving app during file upload ([4165504](https://github.com/kaltura/kmc-ng/commit/4165504))
+* **upload:** support resume upload in upload control view
+* **content/entries:** show tooltip over custom data fields in metadata sections  ([a448e6c](https://github.com/kaltura/kmc-ng/commit/a448e6c))
 * **playlists:** manage manual playlists ([2f8f813](https://github.com/kaltura/kmc-ng/commit/2f8f813))
 * **shell:** add prepare audio, video, and live entries ([#222](https://github.com/kaltura/kmc-ng/issues/222)) ([ee727d6](https://github.com/kaltura/kmc-ng/commit/ee727d6))
-* verify page exit during active upload ([18ffe12](https://github.com/kaltura/kmc-ng/commit/18ffe12))
-
 
 
 <a name="3.2.0"></a>
