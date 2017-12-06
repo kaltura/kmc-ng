@@ -4,7 +4,7 @@ import { KalturaUtils } from 'kaltura-ngx-client/api/utils/kaltura-utils';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
-import { Scheduler } from 'rxjs';
+import { async } from 'rxjs/scheduler/async';
 import { KalturaClient } from 'kaltura-ngx-client';
 
 import { PlaylistListAction } from 'kaltura-ngx-client/api/types/PlaylistListAction';
@@ -143,7 +143,7 @@ export class PlaylistsStore implements OnDestroy {
 
 		// execute the request
 		this.requestSubscription = this.buildQueryRequest(this._querySource.getValue())
-			.subscribeOn(Scheduler.async) // using async scheduler go allow calling this function multiple times in the same event loop cycle before invoking the logic.
+			.subscribeOn(async) // using async scheduler go allow calling this function multiple times in the same event loop cycle before invoking the logic.
 			.monitor('playlists store: get playlists()')
 			.subscribe(
 				response => {
