@@ -11,12 +11,12 @@ import {
   InputTextModule,
   MenuModule,
   PaginatorModule,
-  RadioButtonModule, SliderModule, TieredMenuModule,
+  RadioButtonModule, TieredMenuModule,
   TreeModule
 } from 'primeng/primeng';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
-import { AutoCompleteModule, KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { AutoCompleteModule, KalturaPrimeNgUIModule, SliderModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 
 import { EntryStatusPipe } from 'app-shared/content-shared/pipes/entry-status.pipe';

@@ -148,7 +148,7 @@
               kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'resultsLimitPopup'" [scrollOffset]="80">
     <div class="kResultsLimitPopup">
       <div class="kResultsLimitSlider">
-        <p-slider [(ngModel)]="_resultsLimit" [min]="0" [max]="200"></p-slider>
+        <kSlider [(ngModel)]="_resultsLimit" [min]="1" [max]="200"></kSlider>
       </div>
       <div class="kResultsLimitPopupFooter">
         <span>{{ 'applications.content.entries.resultsLimitRange' | translate }}</span>
