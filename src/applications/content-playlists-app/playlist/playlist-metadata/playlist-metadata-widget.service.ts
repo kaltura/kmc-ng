@@ -10,6 +10,7 @@ import { KalturaTagFilter } from 'kaltura-ngx-client/api/types/KalturaTagFilter'
 import { KalturaTaggedObjectType } from 'kaltura-ngx-client/api/types/KalturaTaggedObjectType';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { KalturaClient } from 'kaltura-ngx-client';
+import { async } from 'rxjs/scheduler/async';
 
 @Injectable()
 export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy {
@@ -36,6 +37,7 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
   private _monitorFormChanges(): void {
     Observable.merge(this.metadataForm.valueChanges, this.metadataForm.statusChanges)
       .cancelOnDestroy(this)
+        .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
       .subscribe(() => {
           super.updateState({
             isValid: this.metadataForm.status === 'VALID',
