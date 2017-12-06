@@ -6,6 +6,7 @@ import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-s
 import { FreetextFilter } from 'app-shared/content-shared/entries-store/filters/freetext-filter';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 
 @Component({
   selector: 'kEntriesList',
@@ -35,7 +36,9 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     sortDirection: SortDirection.Desc
   };
 
-  constructor(public _entriesStore: EntriesStore, private _browserService: BrowserService) {
+  constructor(public _entriesStore: EntriesStore,
+              private _browserService: BrowserService,
+              private _appLocalization: AppLocalization) {
   }
 
   removeTag(tag: any) {
@@ -116,6 +119,10 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     this._entriesStore.reload(true);
   }
 
+  public _getTranslation(value: string, param: string | number): string {
+    return this._appLocalization.get(value, { 0: param });
+  }
+
   private syncFreetextComponents() {
     const freetextFilter = this._entriesStore.getFirstFilterByType(FreetextFilter);
 
@@ -126,8 +133,8 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
   }
 
-  onTagsChange(event){
-      this.tags.updateLayout();
+  onTagsChange(event) {
+    this.tags.updateLayout();
   }
 
   clearSelection() {
@@ -138,11 +145,10 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     this.selectedEntries = event;
   }
 
-  onBulkChange(event): void {
+  public onBulkChange(event): void {
     if (event.reload === true) {
       this._reload();
     }
   }
-
 }
 

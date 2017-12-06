@@ -39,6 +39,7 @@ import { PrimeTableSortTransformPipe } from 'app-shared/content-shared/pipes/pri
 import { CategoryRadioButtonPocComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc';
 import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc-popup';
 import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-selector/entries-selector.component';
+import { EntriesTotalDurationPipe } from 'app-shared/content-shared/pipes/entries-total-duration.pipe';
 
 @NgModule({
   imports: [
@@ -73,6 +74,7 @@ import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-sele
     SchedulingComponent,
     EntryDurationPipe,
     MaxEntriesPipe,
+    EntriesTotalDurationPipe,
     PrimeTableSortDirectionPipe,
     PrimeTableSortTransformPipe,
     EntriesRefineFiltersComponent,

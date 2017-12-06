@@ -10,7 +10,7 @@
   display: flex;
   flex-flow: row wrap;
   margin: 0px;
-  .kFiltersWrapper{
+  .kFiltersWrapper {
     display: block;
     height: 66px;
   }
@@ -21,6 +21,12 @@
     position: relative;
     display: flex;
     flex-direction: column;
+
+    .kEntriesInfo {
+      position: absolute;
+      top: 144px;
+      left: 28px;
+    }
   }
   .kRefreshBtn {
     font-size: 24px;
@@ -53,7 +59,25 @@
     display: flex;
 
     &.kAdditionalFilters {
-      height: 178px;
+      height: 150px;
+      padding-top: 28px;
+      align-items: start;
+
+      .kFiltersWrapper {
+        height: 88px;
+        justify-content: space-between;
+        padding-right: 12px;
+
+        .kSearchInput {
+          width: 298px;
+          margin-right: 16px;
+        }
+
+        .kCategoriesFilter, .kRefine {
+          width: 260px;
+          margin-right: 16px;
+        }
+      }
     }
     .kSelectedEntriesNum {
       padding-left: 16px;
@@ -93,7 +117,18 @@
     background: $kMagnifyingGlassBkg;
     padding-left: 30px;
     margin-right: 8px;
-    width: 260px;
+    width: 250px;
+  }
+  .kRuleNameInput {
+    width: 298px;
+    margin-right: 16px;
+    padding-left: 10px;
+  }
+  .kRuleNameLabel {
+    font-size: 15px;
+    font-weight: normal;
+    line-height: 32px;
+    margin-right: 16px;
   }
   .kBulkOperations {
     width: 400px;
@@ -166,6 +201,12 @@
       top: 12px;
     }
   }
+  .kResultsLimit, .kOrderBy {
+    @extend .kCategoriesFilter;
+    width: 250px !important;
+    margin-right: 16px;
+    padding-left: 10px;
+  }
   .kRefine {
     @extend .kCategoriesFilter;
     width: 160px;
@@ -199,7 +240,7 @@
   }
 }
 
-:host /deep/ .kStickyClass{
+:host /deep/ .kStickyClass {
   border-bottom: 1px solid $kGrayscale5;
 }
 
