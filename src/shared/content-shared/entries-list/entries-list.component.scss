@@ -74,7 +74,7 @@
         }
 
         .kCategoriesFilter, .kRefine {
-          width: 260px;
+          width: 258px;
           margin-right: 16px;
         }
       }
@@ -201,11 +201,20 @@
       top: 12px;
     }
   }
-  .kResultsLimit, .kOrderBy {
+  .kResultsLimit {
     @extend .kCategoriesFilter;
-    width: 250px !important;
+    width: 248px !important;
     margin-right: 16px;
     padding-left: 10px;
+  }
+
+  .kOrderBy {
+    width: 260px;
+    margin-right: 16px;
+
+    p-dropdown {
+      width: 100%;
+    }
   }
   .kRefine {
     @extend .kCategoriesFilter;
@@ -268,4 +277,12 @@
 
 :host /deep/ .ui-button-icon-only .fa {
   margin-left: -.5em;
+}
+
+:host /deep/ .kOrderBy .ui-dropdown {
+  width: 100%;
+
+  label {
+    color: $kGrayscale1;
+  }
 }

@@ -7,7 +7,7 @@ import {
   ButtonModule,
   CalendarModule,
   CheckboxModule,
-  DataTableModule,
+  DataTableModule, DropdownModule,
   InputTextModule,
   MenuModule,
   PaginatorModule,
@@ -65,7 +65,8 @@ import { EntriesTotalDurationPipe } from 'app-shared/content-shared/pipes/entrie
     PaginatorModule,
     TieredMenuModule,
     InputTextModule,
-    StickyModule
+    StickyModule,
+    DropdownModule
   ],
   declarations: [
     EntryStatusPipe,

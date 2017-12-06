@@ -7,6 +7,7 @@ import { FreetextFilter } from 'app-shared/content-shared/entries-store/filters/
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
 
 @Component({
   selector: 'kEntriesList',
@@ -27,6 +28,25 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
 
   private querySubscription: ISubscription;
+
+  public _orderByOptions = [
+    {
+      value: KalturaPlayableEntryOrderBy.playsDesc,
+      label: this._appLocalization.get('applications.content.playlistDetails.content.orderBy.mostPlayed')
+    },
+    {
+      value: KalturaPlayableEntryOrderBy.recentDesc,
+      label: this._appLocalization.get('applications.content.playlistDetails.content.orderBy.mostRecent')
+    },
+    {
+      value: KalturaPlayableEntryOrderBy.rankDesc,
+      label: this._appLocalization.get('applications.content.playlistDetails.content.orderBy.highestRated')
+    },
+    {
+      value: KalturaPlayableEntryOrderBy.nameDesc,
+      label: this._appLocalization.get('applications.content.playlistDetails.content.orderBy.entryName')
+    }
+  ];
 
   public _filter = {
     pageIndex: 0,

@@ -22,8 +22,9 @@
           </div>
           <div class="kFiltersWrapper">
             <div class="kFilters" [class.kHidden]="!additionalFilters">
-              <label for="ruleNameInput" class="kRuleNameLabel">{{'applications.content.entries.ruleName' |
-                translate}}</label>
+              <label for="ruleNameInput" class="kRuleNameLabel">
+                {{'applications.content.entries.ruleName' | translate}}
+              </label>
               <input type="text"
                      id="ruleNameInput"
                      pInputText
@@ -33,9 +34,10 @@
                 <span>{{'applications.content.entries.resultsLimit' | translate}}</span>
                 <i class="kIcondropdown_arrow_bottom dropdown"></i>
               </div>
-              <div #orderBy class="kOrderBy">
-                <span>{{'applications.content.entries.orderBy' | translate}}</span>
-                <i class="kIcondropdown_arrow_bottom dropdown"></i>
+              <div class="kOrderBy">
+                <p-dropdown [options]="_orderByOptions"
+                            [autoWidth]="false"
+                            [placeholder]="'applications.content.entries.orderBy' | translate"></p-dropdown>
               </div>
             </div>
             <div [class.kHidden]="selectedEntries.length" class="kFilters">
