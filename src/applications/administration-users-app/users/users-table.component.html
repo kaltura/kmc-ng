@@ -7,12 +7,14 @@
       dataKey="id"
       [rowTrackBy]="rowTrackBy"
       kStickyHeader [sticksTo]="'usersFilters'" stickyClass="stickyHeader" [stickyId]="'rolesTable'">
-      <p-column field="status" styleClass="kTableStatus" header="{{'applications.content.table.status' | translate}}" [sortable]="false">
+      <p-column field="status" styleClass="kTableStatus" header="{{'applications.content.table.status' | translate}}"
+                [sortable]="false">
         <ng-template let-col let-user="rowData" pTemplate="body">
           <span class="kTitle">{{user[col.field] | status}}</span>
         </ng-template>
       </p-column>
-      <p-column field="fullName" styleClass="kTableFullName" header="{{'applications.content.table.userName' | translate}}" [sortable]="false">
+      <p-column field="fullName" styleClass="kTableFullName"
+                header="{{'applications.content.table.userName' | translate}}" [sortable]="false">
         <ng-template let-col let-user="rowData" pTemplate="body">
           <span class="kTitle">{{user[col.field] | kFullName:user}}</span>
         </ng-template>
@@ -32,7 +34,8 @@
           <span class="kTitle">{{user[col.field] | kRoleName:(usersStore.usersData$ | async)?.roles.items}}</span>
         </ng-template>
       </p-column>
-      <p-column field="lastLoginTime" header="{{'applications.content.table.lastLogin' | translate}}" [sortable]="false">
+      <p-column field="lastLoginTime" header="{{'applications.content.table.lastLogin' | translate}}"
+                [sortable]="false">
         <ng-template let-col let-user="rowData" pTemplate="body">
           <span class="kTitle">{{user[col.field] | date:'MM/dd/yy HH:mm'}}</span>
         </ng-template>

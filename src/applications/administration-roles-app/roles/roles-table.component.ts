@@ -1,19 +1,9 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  ViewChild,
-  AfterViewInit,
-  OnInit,
-  ChangeDetectorRef,
-  OnDestroy
-} from '@angular/core';
-import {MenuItem, DataTable, Menu} from 'primeng/primeng';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {RolesService} from './roles.service';
-import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { DataTable, Menu, MenuItem } from 'primeng/primeng';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { RolesService } from './roles.service';
+import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
 
 @Component({
   selector: 'kRolesTable',
@@ -111,7 +101,7 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   onActionSelected(action: string, role: KalturaUserRole) {
-    this.actionSelected.emit({'action': action, 'role': role});
+    this.actionSelected.emit({ 'action': action, 'role': role });
   }
 
   openActionsMenu(event: any, role: KalturaUserRole) {
@@ -129,18 +119,18 @@ export class RolesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._items = [
       {
         label: this.appLocalization.get('applications.administration.roles.actions.edit'), command: (event) => {
-        this.onActionSelected('edit', this._actionsMenuRole);
-      }
+          this.onActionSelected('edit', this._actionsMenuRole);
+        }
       },
       {
         label: this.appLocalization.get('applications.administration.roles.actions.duplicate'), command: (event) => {
-        this.onActionSelected('duplicate', this._actionsMenuRole);
-      }
+          this.onActionSelected('duplicate', this._actionsMenuRole);
+        }
       },
       {
         label: this.appLocalization.get('applications.administration.roles.actions.delete'), command: (event) => {
-        this.onActionSelected('delete', this._actionsMenuRole);
-      }
+          this.onActionSelected('delete', this._actionsMenuRole);
+        }
       }
     ];
   }

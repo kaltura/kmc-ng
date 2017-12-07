@@ -15,15 +15,16 @@
       <kSticky stickyId="usersFilters" [sticksTo]="'header'" [scrollOffset]="166">
         <div class="kUsersTableFilters kContent">
           <button [disabled]="usersTotalCount >= _partnerInfo.adminLoginUsersQuota"
-            pButton
-            type="button"
-            label="{{'applications.administration.users.addUser' | translate}}"
-            class="kButtonBranded kAddUserBtn"
-            (click)="addUser()"></button>
+                  pButton
+                  type="button"
+                  label="{{'applications.administration.users.addUser' | translate}}"
+                  class="kButtonBranded kAddUserBtn"
+                  (click)="addUser()"></button>
           <span class="kSelectedUsersNum" *ngIf="usersAmount">
             {{usersAmount}}
           </span>
-          <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh" [kTooltip]="'applications.administration.users.refresh' | translate"></button>
+          <button pButton class="kButtonDefault kRefreshBtn small" (click)="_reload()" type="text" icon="kIconrefresh"
+                  [kTooltip]="'applications.administration.users.refresh' | translate"></button>
         </div>
       </kSticky>
       <kUsersTable

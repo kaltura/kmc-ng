@@ -1,10 +1,10 @@
-import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {RolesService} from './roles.service';
-import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
-import {BrowserService} from 'app-shared/kmc-shell';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { RolesService } from './roles.service';
+import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { BrowserService } from 'app-shared/kmc-shell';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 @Component({
   selector: 'kRolesList',
@@ -48,7 +48,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
         (data) => {
           this._roles = data.items;
           if (data.totalCount > 0) {
-            this._rolesTotalCount =  this.appLocalization.get('applications.administration.roles.rolesNum', {0: data.totalCount});
+            this._rolesTotalCount = this.appLocalization.get('applications.administration.roles.rolesNum', { 0: data.totalCount });
           } else {
             this._rolesTotalCount = '';
           }
@@ -60,7 +60,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
         .cancelOnDestroy(this)
         .subscribe(event => {
           if (event.state === PopupWidgetStates.Close) {
-           this._currentEditRoleIsDuplicated = false;
+            this._currentEditRoleIsDuplicated = false;
           }
         });
     }
@@ -97,7 +97,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
         this._browserService.confirm(
           {
             header: this.appLocalization.get('applications.administration.roles.confirmDeleteHeader'),
-            message: this.appLocalization.get('applications.administration.roles.confirmDeleteBody', {0: role.name}),
+            message: this.appLocalization.get('applications.administration.roles.confirmDeleteBody', { 0: role.name }),
             accept: () => {
               this.deleteRole(role);
             }
@@ -125,7 +125,8 @@ export class RolesListComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(
-        () => { },
+        () => {
+        },
         error => {
           this._blockerMessage = new AreaBlockerMessage(
             {

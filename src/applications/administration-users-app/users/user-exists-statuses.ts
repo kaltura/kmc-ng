@@ -1,5 +1,4 @@
-export enum IsUserExistsStatuses
-{
+export enum IsUserExistsStatuses {
   kmcUser,
   otherSystemUser,
   unknownUser

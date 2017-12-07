@@ -27,28 +27,27 @@ export class UsersListComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   blockerMessage: AreaBlockerMessage = null;
   _users: KalturaUser[];
-  _partnerInfo: PartnerInfo = {adminLoginUsersQuota: 0, adminUserId: null};
+  _partnerInfo: PartnerInfo = { adminLoginUsersQuota: 0, adminUserId: null };
   user: KalturaUser;
 
   _filter = {
-    pageIndex : 0,
-    pageSize : null // pageSize is set to null by design. It will be modified after the first time loading users
+    pageIndex: 0,
+    pageSize: null // pageSize is set to null by design. It will be modified after the first time loading users
   };
 
   @ViewChild('editUserPopup') editUserPopup: PopupWidgetComponent;
   @ViewChild(UsersTableComponent) private dataTable: UsersTableComponent;
 
-  constructor(
-    public usersStore: UsersStore,
-    private _appLocalization: AppLocalization,
-    private _browserService : BrowserService
-  ) {}
+  constructor(public usersStore: UsersStore,
+              private _appLocalization: AppLocalization,
+              private _browserService: BrowserService) {
+  }
 
   upgradeAccount() {
     this._browserService.openLink(environment.core.externalLinks.UPGRADE_ACCOUNT, {}, '_blank');
   }
 
-  onPaginationChanged(state : any) : void {
+  onPaginationChanged(state: any): void {
     if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
       this._filter.pageSize = state.page + 1;
       this._filter.pageIndex = state.rows;
@@ -172,5 +171,6 @@ export class UsersListComponent implements OnInit, OnDestroy {
       );
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+  }
 }

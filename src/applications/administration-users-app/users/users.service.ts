@@ -27,24 +27,23 @@ import { UserGetAction } from 'kaltura-ngx-client/api/types/UserGetAction';
 import { UserEnableLoginAction } from 'kaltura-ngx-client/api/types/UserEnableLoginAction';
 import { UserAddAction } from 'kaltura-ngx-client/api/types/UserAddAction';
 
-export interface QueryData
-{
-  pageIndex : number,
-  pageSize : number
+export interface QueryData {
+  pageIndex: number,
+  pageSize: number
 }
 
 @Injectable()
 export class UsersStore implements OnDestroy {
   private _usersData = new BehaviorSubject<{
-    users: {items: KalturaUser[], totalCount: number},
-    roles: {items: KalturaUserRole[], totalCount: number},
-    partnerInfo : {adminLoginUsersQuota: number, adminUserId: string}
+    users: { items: KalturaUser[], totalCount: number },
+    roles: { items: KalturaUserRole[], totalCount: number },
+    partnerInfo: { adminLoginUsersQuota: number, adminUserId: string }
   }>({
-    users: {items: [], totalCount: 0},
-    roles: {items: [], totalCount: 0},
-    partnerInfo: {adminLoginUsersQuota: 0, adminUserId: null}
+    users: { items: [], totalCount: 0 },
+    roles: { items: [], totalCount: 0 },
+    partnerInfo: { adminLoginUsersQuota: 0, adminUserId: null }
   });
-  private _state = new BehaviorSubject<{errorMessage?: string}>({});
+  private _state = new BehaviorSubject<{ errorMessage?: string }>({});
   private _querySource = new BehaviorSubject<QueryData>({
     pageIndex: 1,
     pageSize: 25
@@ -54,12 +53,10 @@ export class UsersStore implements OnDestroy {
   state$ = this._state.asObservable();
   query$ = this._querySource.monitor('queryData update');
 
-  constructor(
-    private _kalturaServerClient: KalturaClient,
-    private _browserService: BrowserService,
-    private _appLocalization: AppLocalization,
-    private _appAuthentication: AppAuthentication
-  ) {
+  constructor(private _kalturaServerClient: KalturaClient,
+              private _browserService: BrowserService,
+              private _appLocalization: AppLocalization,
+              private _appAuthentication: AppAuthentication) {
     const defaultPageSize = this._browserService.getFromLocalStorage('users.list.pageSize');
     if (defaultPageSize !== null) {
       this._updateQueryData({
@@ -69,20 +66,18 @@ export class UsersStore implements OnDestroy {
     this._loadData();
   }
 
-  private _updateQueryData(partialData : Partial<QueryData>) : void
-  {
-    const newQueryData =Object.assign({}, this._querySource.getValue(), partialData);
+  private _updateQueryData(partialData: Partial<QueryData>): void {
+    const newQueryData = Object.assign({}, this._querySource.getValue(), partialData);
     this._querySource.next(newQueryData);
 
-    if (partialData.pageSize)
-    {
+    if (partialData.pageSize) {
       this._browserService.setInLocalStorage('users.list.pageSize', partialData.pageSize);
     }
   }
 
-  public reload(force : boolean) : void;
-  public reload(query : Partial<QueryData>) : void;
-  public reload(query : boolean | Partial<QueryData>): void {
+  public reload(force: boolean): void;
+  public reload(query: Partial<QueryData>): void;
+  public reload(query: boolean | Partial<QueryData>): void {
     const forceReload = (typeof query === 'object' || (typeof query === 'boolean' && query));
     if (forceReload || this._usersData.getValue().users.totalCount === 0) {
       if (typeof query === 'object') {
@@ -117,24 +112,24 @@ export class UsersStore implements OnDestroy {
           })
         }
       ),
-      new PartnerGetInfoAction ()
+      new PartnerGetInfoAction()
     ])
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(
         response => {
-          if(!response.hasErrors()) {
+          if (!response.hasErrors()) {
             this._usersData.next({
               users: {
-                items : response[1].result.objects,
+                items: response[1].result.objects,
                 totalCount: response[1].result.totalCount
               },
               roles: {
-                items : response[0].result.objects,
+                items: response[0].result.objects,
                 totalCount: response[0].result.totalCount
               },
               partnerInfo: {
-                adminLoginUsersQuota : response[2].result.adminLoginUsersQuota,
+                adminLoginUsersQuota: response[2].result.adminLoginUsersQuota,
                 adminUserId: response[2].result.adminUserId
               }
             });
@@ -152,17 +147,17 @@ export class UsersStore implements OnDestroy {
   public toggleUserStatus(user: KalturaUser): Observable<void> {
     let userStatus: number = user.status;
     this._usersData.getValue().users.items.forEach(item => {
-      if(user.id === item.id) {
+      if (user.id === item.id) {
         userStatus = item.status;
       }
     });
     return Observable.create(observer => {
-      if(this._appAuthentication.appUser.id !== user.id || this._usersData.getValue() && this._usersData.getValue().partnerInfo.adminUserId !== user.id) {
+      if (this._appAuthentication.appUser.id !== user.id || this._usersData.getValue() && this._usersData.getValue().partnerInfo.adminUserId !== user.id) {
         this._kalturaServerClient.request(
           new UserUpdateAction(
             {
               userId: user.id,
-              user: new KalturaUser({status: +!userStatus})
+              user: new KalturaUser({ status: +!userStatus })
             }
           )
         )
@@ -182,9 +177,9 @@ export class UsersStore implements OnDestroy {
     });
   }
 
-  public deleteUser(user: KalturaUser) : Observable<void> {
+  public deleteUser(user: KalturaUser): Observable<void> {
     return Observable.create(observer => {
-      if(this._appAuthentication.appUser.id !== user.id || this._usersData.getValue() && this._usersData.getValue().partnerInfo.adminUserId !== user.id) {
+      if (this._appAuthentication.appUser.id !== user.id || this._usersData.getValue() && this._usersData.getValue().partnerInfo.adminUserId !== user.id) {
         this._kalturaServerClient.request(
           new UserDeleteAction(
             {
@@ -208,7 +203,7 @@ export class UsersStore implements OnDestroy {
     });
   }
 
-  public isUserAlreadyExists(email: string) : Observable<IsUserExistsStatuses> {
+  public isUserAlreadyExists(email: string): Observable<IsUserExistsStatuses> {
     return Observable.create(observer => {
       this._kalturaServerClient.request(
         new UserGetByLoginIdAction(
@@ -230,7 +225,7 @@ export class UsersStore implements OnDestroy {
     });
   }
 
-  public isUserAssociated(email: string) : Observable<KalturaUser> {
+  public isUserAssociated(email: string): Observable<KalturaUser> {
     return Observable.create(observer => {
       this._kalturaServerClient.request(
         new UserGetAction(
@@ -252,28 +247,28 @@ export class UsersStore implements OnDestroy {
     });
   }
 
-  public addUser(userForm: FormGroup) : Observable<KalturaUser> {
+  public addUser(userForm: FormGroup): Observable<KalturaUser> {
     return Observable.create(observer => {
       let roleIds = userForm.controls['roleIds'].value,
-          publisherId = userForm.controls['id'].value;
+        publisherId = userForm.controls['id'].value;
       this._kalturaServerClient.request(
         new UserAddAction(
           {
             user: new KalturaUser({
-              email:        userForm.controls['email'].value,
-              firstName:    userForm.controls['firstName'].value,
-              lastName:     userForm.controls['lastName'].value,
-              roleIds:      roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
-              id:           publisherId ? publisherId : userForm.controls['email'].value,
-              isAdmin:      true
+              email: userForm.controls['email'].value,
+              firstName: userForm.controls['firstName'].value,
+              lastName: userForm.controls['lastName'].value,
+              roleIds: roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
+              id: publisherId ? publisherId : userForm.controls['email'].value,
+              isAdmin: true
             })
           }
         ))
         .cancelOnDestroy(this)
         .subscribe(
           response => {
-              observer.next(response);
-              observer.complete();
+            observer.next(response);
+            observer.complete();
           },
           error => {
             observer.error(error);
@@ -282,20 +277,20 @@ export class UsersStore implements OnDestroy {
     });
   }
 
-  public updateUser(userForm: FormGroup) : Observable<void> {
+  public updateUser(userForm: FormGroup): Observable<void> {
     return Observable.create(observer => {
       let roleIds = userForm.controls['roleIds'].value,
-          publisherId = userForm.controls['id'].value;
+        publisherId = userForm.controls['id'].value;
       this._kalturaServerClient.request(
         new UserUpdateAction(
           {
             userId: publisherId,
             user: new KalturaUser({
-              email:      userForm.controls['email'].value,
-              firstName:  userForm.controls['firstName'].value,
-              lastName:   userForm.controls['lastName'].value,
-              roleIds:    roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
-              id:         publisherId ? publisherId : userForm.controls['email'].value
+              email: userForm.controls['email'].value,
+              firstName: userForm.controls['firstName'].value,
+              lastName: userForm.controls['lastName'].value,
+              roleIds: roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
+              id: publisherId ? publisherId : userForm.controls['email'].value
             })
           }
         )
@@ -313,7 +308,7 @@ export class UsersStore implements OnDestroy {
     });
   }
 
-  public updateUserPermissions(user: KalturaUser, userForm: FormGroup) : Observable<void> {
+  public updateUserPermissions(user: KalturaUser, userForm: FormGroup): Observable<void> {
     let roleIds = userForm.controls['roleIds'].value;
     return Observable.create(observer => {
       this._kalturaServerClient.request(
@@ -321,8 +316,8 @@ export class UsersStore implements OnDestroy {
           {
             userId: user.id,
             user: new KalturaUser({
-              roleIds:    roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
-              isAdmin:    true
+              roleIds: roleIds ? roleIds : this._usersData.getValue().roles.items[0].id,
+              isAdmin: true
             })
           }
         )
@@ -340,7 +335,7 @@ export class UsersStore implements OnDestroy {
     });
   }
 
-  public enableUserLogin(user: KalturaUser) : Observable<void> {
+  public enableUserLogin(user: KalturaUser): Observable<void> {
     return Observable.create(observer => {
       this._kalturaServerClient.request(
         new UserEnableLoginAction(

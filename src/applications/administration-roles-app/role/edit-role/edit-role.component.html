@@ -34,11 +34,11 @@
               <textarea class="kControl threeRows" formControlName="description" pInputTextarea
                         [ngClass]="{'kHasError':!editRoleForm.controls['description'].valid && editRoleForm.controls['description'].touched}">
              </textArea>
-              <div *ngIf="editRoleForm.controls['description'].touched &&
+            <div *ngIf="editRoleForm.controls['description'].touched &&
                    editRoleForm.controls['description'].hasError('required')"
-                   class="error">
-                {{'applications.administration.role.errors.required' | translate}}
-              </div>
+                 class="error">
+              {{'applications.administration.role.errors.required' | translate}}
+            </div>
           </div>
         </div>
       </div>

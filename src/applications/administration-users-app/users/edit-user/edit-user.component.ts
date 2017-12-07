@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { UsersStore } from '../users.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -29,32 +29,30 @@ export class EditUserComponent implements OnInit, OnDestroy {
   _roles: KalturaUserRole[];
   _users: KalturaUser[];
   selectedRole: string = '';
-  userForm : FormGroup;
-  _partnerInfo: PartnerInfo = {adminLoginUsersQuota: 0, adminUserId: null};
+  userForm: FormGroup;
+  _partnerInfo: PartnerInfo = { adminLoginUsersQuota: 0, adminUserId: null };
   isNewUser: boolean = true;
   blockerMessage: AreaBlockerMessage = null;
   isBusy: boolean = false;
 
-  constructor(
-    public usersStore: UsersStore,
-    private _formBuilder : FormBuilder,
-    private _browserService : BrowserService,
-    private _appLocalization: AppLocalization
-  ) {
+  constructor(public usersStore: UsersStore,
+              private _formBuilder: FormBuilder,
+              private _browserService: BrowserService,
+              private _appLocalization: AppLocalization) {
     // build FormControl group
     this.userForm = _formBuilder.group({
-      email     : ['', Validators.compose([Validators.required, Validators.email])],
-      firstName : ['', Validators.required],
-      lastName  : ['', Validators.required],
-      id        : '',
-      roleIds   : ''
+      email: ['', Validators.compose([Validators.required, Validators.email])],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      id: '',
+      roleIds: ''
     });
   }
 
   getRoleDescription(event?: any): void {
     this._roles.forEach(role => {
-      if(event) {
-        if(event === role.id.toString() || event.value === role.id) {
+      if (event) {
+        if (event === role.id.toString() || event.value === role.id) {
           this.selectedRole = role.description;
         }
       } else {
@@ -64,8 +62,8 @@ export class EditUserComponent implements OnInit, OnDestroy {
   }
 
   saveUser(): void {
-    if(this.userForm.valid) {
-      if(this.isNewUser) {
+    if (this.userForm.valid) {
+      if (this.isNewUser) {
         this.isUserAlreadyExists();
       } else {
         this.doUpdateUser();
@@ -83,11 +81,11 @@ export class EditUserComponent implements OnInit, OnDestroy {
       .subscribe(
         (status) => {
           let kmcUser = IsUserExistsStatuses.kmcUser;
-          if(status === kmcUser) {
+          if (status === kmcUser) {
             this.isBusy = false;
             this._browserService.alert(
               {
-                message: this._appLocalization.get('applications.administration.users.alreadyExistError', {0: userEmail})
+                message: this._appLocalization.get('applications.administration.users.alreadyExistError', { 0: userEmail })
               }
             );
           }
@@ -102,7 +100,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
               this._browserService.confirm(
                 {
                   header: this._appLocalization.get('applications.administration.users.alreadyExist'),
-                  message: this._appLocalization.get('applications.administration.users.userAlreadyExist', {0: userEmail}),
+                  message: this._appLocalization.get('applications.administration.users.userAlreadyExist', { 0: userEmail }),
                   accept: () => {
                     this.isUserAssociated();
                   }
@@ -159,7 +157,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
               }
             }
           ];
-          if(error.message === 'Invalid user id') {
+          if (error.message === 'Invalid user id') {
             buttons = [
               {
                 label: this._appLocalization.get('app.common.ok'),
@@ -197,7 +195,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
           this._browserService.confirm(
             {
               header: this._appLocalization.get('applications.administration.users.userAssociatedCaption'),
-              message: this._appLocalization.get('applications.administration.users.userAssociated', {0: userEmail}),
+              message: this._appLocalization.get('applications.administration.users.userAssociated', { 0: userEmail }),
               accept: () => {
                 this.updateUserPermissions(user);
               }
@@ -206,7 +204,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
         },
         error => {
           this.isBusy = false;
-          if(error.code === "INVALID_USER_ID") {
+          if (error.code === 'INVALID_USER_ID') {
             this.addNewUser();
           }
         }
@@ -251,7 +249,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
         },
         error => {
           // todo [kmcng]: need to figure out why it was already enabled
-          if(error.code === 'USER_LOGIN_ALREADY_ENABLED') {
+          if (error.code === 'USER_LOGIN_ALREADY_ENABLED') {
             this.usersStore.reload(true);
             this.parentPopupWidget.close();
           } else {
@@ -309,11 +307,11 @@ export class EditUserComponent implements OnInit, OnDestroy {
             adminUserId: response.partnerInfo.adminUserId
           };
           this._roles.forEach(role => {
-            this.rolesList.push({label: role.name, value: role.id});
+            this.rolesList.push({ label: role.name, value: role.id });
           });
           let selectedRoleIds: string;
           this._users.forEach(item => {
-            if(this.user && this.user.id === item.id) {
+            if (this.user && this.user.id === item.id) {
               this.isNewUser = false;
               selectedRoleIds = item.roleIds;
               this.userForm.reset({
@@ -349,5 +347,6 @@ export class EditUserComponent implements OnInit, OnDestroy {
       );
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+  }
 }

@@ -1,19 +1,20 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
 
-@Pipe({name: 'kRoleName'})
+@Pipe({ name: 'kRoleName' })
 export class RoleNamePipe implements PipeTransform {
-	constructor() {}
+  constructor() {
+  }
 
-	transform(userId: string, roles: KalturaUserRole[]): string {
-		let userRoleName: string = '';
+  transform(userId: string, roles: KalturaUserRole[]): string {
+    let userRoleName: string = '';
 
     if (typeof userId !== 'undefined' && userId !== null && roles != null) {
       let role = roles.find(role => userId === role.id.toString());
-      if(role) {
+      if (role) {
         userRoleName = role.name;
       }
     }
-		return userRoleName;
-	}
+    return userRoleName;
+  }
 }

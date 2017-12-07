@@ -4,7 +4,7 @@
   background-color: white;
   height: auto;
   padding: 0px;
-  width:100%;
+  width: 100%;
   .kRolesTableActions {
     width: 100%;
     text-align: center;
@@ -18,17 +18,18 @@
   }
 }
 
-:host{
+:host {
   display: flex;
   flex-flow: row wrap;
   margin: 0px;
   flex-direction: column;
 }
 
-:host /deep/ p-datatable .ui-datatable-scrollable-body{
+:host /deep/ p-datatable .ui-datatable-scrollable-body {
   margin-bottom: 34px;
 }
-:host /deep/ p-datatable .stickyHeader{
+
+:host /deep/ p-datatable .stickyHeader {
   z-index: 10;
   display: table;
 }

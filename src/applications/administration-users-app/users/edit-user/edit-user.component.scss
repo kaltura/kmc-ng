@@ -25,12 +25,12 @@
     margin-left: 199px;
   }
 
-  .kContainer{
+  .kContainer {
     flex: 0 0 auto;
     margin: 0 28px 20px;
     min-height: 500px;
 
-    .kLabel{
+    .kLabel {
       display: block;
       margin-bottom: 5px;
     }
@@ -130,7 +130,7 @@
     }
 
     .rolesList {
-      width: 100%!important;
+      width: 100% !important;
     }
   }
 
@@ -142,7 +142,7 @@
     visibility: hidden;
     width: 0px;
     height: 0px;
-    padding: 0!important;
+    padding: 0 !important;
   }
 
   .invalid {
@@ -158,7 +158,7 @@
     border-bottom-color: #cd0a0a;
   }
 
-  .kFooter{
+  .kFooter {
     flex: 0 0 auto;
     height: 66px;
     border-top: 1px solid $kGrayscale4;

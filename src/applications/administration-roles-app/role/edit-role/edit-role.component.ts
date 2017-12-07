@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {KalturaUserRole} from "kaltura-ngx-client/api/types/KalturaUserRole";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
-import {AppLocalization} from "@kaltura-ng/kaltura-common";
-import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
-import {RoleService} from "./role.service";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { RoleService } from './role.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 @Component({

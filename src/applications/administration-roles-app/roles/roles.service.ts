@@ -1,22 +1,21 @@
-import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {KalturaUserRoleFilter} from 'kaltura-ngx-client/api/types/KalturaUserRoleFilter';
-import {Injectable, OnDestroy} from '@angular/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
-import {ISubscription} from 'rxjs/Subscription';
+import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { KalturaUserRoleFilter } from 'kaltura-ngx-client/api/types/KalturaUserRoleFilter';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { ISubscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import {KalturaClient} from 'kaltura-ngx-client';
-import {KalturaUserRoleListResponse} from 'kaltura-ngx-client/api/types/KalturaUserRoleListResponse';
-import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
-import {UserRoleListAction} from 'kaltura-ngx-client/api/types/UserRoleListAction';
-import {KalturaUserRoleStatus} from 'kaltura-ngx-client/api/types/KalturaUserRoleStatus';
-import {KalturaUserRoleOrderBy} from 'kaltura-ngx-client/api/types/KalturaUserRoleOrderBy';
-import {UserRoleDeleteAction} from 'kaltura-ngx-client/api/types/UserRoleDeleteAction';
-import {UserRoleUpdateAction} from 'kaltura-ngx-client/api/types/UserRoleUpdateAction';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {UserRoleCloneAction} from 'kaltura-ngx-client/api/types/UserRoleCloneAction';
-import {KalturaMultiRequest} from 'kaltura-ngx-client';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
+import { KalturaUserRoleListResponse } from 'kaltura-ngx-client/api/types/KalturaUserRoleListResponse';
+import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { UserRoleListAction } from 'kaltura-ngx-client/api/types/UserRoleListAction';
+import { KalturaUserRoleStatus } from 'kaltura-ngx-client/api/types/KalturaUserRoleStatus';
+import { KalturaUserRoleOrderBy } from 'kaltura-ngx-client/api/types/KalturaUserRoleOrderBy';
+import { UserRoleDeleteAction } from 'kaltura-ngx-client/api/types/UserRoleDeleteAction';
+import { UserRoleUpdateAction } from 'kaltura-ngx-client/api/types/UserRoleUpdateAction';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { UserRoleCloneAction } from 'kaltura-ngx-client/api/types/UserRoleCloneAction';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -44,8 +43,8 @@ export interface QueryData {
 @Injectable()
 export class RolesService implements OnDestroy {
 
-  private _roles = new BehaviorSubject<Roles>({items: [], totalCount: 0});
-  private _state = new BehaviorSubject<UpdateStatus>({loading: false, errorMessage: null});
+  private _roles = new BehaviorSubject<Roles>({ items: [], totalCount: 0 });
+  private _state = new BehaviorSubject<UpdateStatus>({ loading: false, errorMessage: null });
   private _rolesExecuteSubscription: ISubscription;
   private _queryData = new BehaviorSubject<QueryData>({
     pageIndex: 0,
@@ -110,14 +109,14 @@ export class RolesService implements OnDestroy {
     }
 
     this._browserService.scrollToTop();
-    this._state.next({loading: true, errorMessage: null});
+    this._state.next({ loading: true, errorMessage: null });
 
     // execute the request
     this._rolesExecuteSubscription = this.buildQueryRequest(this._queryData.getValue()).subscribe(
       response => {
         this._rolesExecuteSubscription = null;
 
-        this._state.next({loading: false, errorMessage: null});
+        this._state.next({ loading: false, errorMessage: null });
 
         this._roles.next({
           items: response.objects,
@@ -127,7 +126,7 @@ export class RolesService implements OnDestroy {
       error => {
         this._rolesExecuteSubscription = null;
         const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
-        this._state.next({loading: false, errorMessage});
+        this._state.next({ loading: false, errorMessage });
       });
   }
 
@@ -197,7 +196,7 @@ export class RolesService implements OnDestroy {
     }
 
     const multiRequest = new KalturaMultiRequest(
-      new UserRoleCloneAction({userRoleId: role.id}),
+      new UserRoleCloneAction({ userRoleId: role.id }),
       new UserRoleUpdateAction({
         userRoleId: 0,
         userRole: this._getDuplicatedRole(role),
