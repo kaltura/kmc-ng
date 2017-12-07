@@ -82,7 +82,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     switch (action) {
       case 'addToNewPlaylist':
         this._appEvents.publish(new CreateNewPlaylistEvent({
-          entries: this.selectedEntries,
+          playlistContent: this.selectedEntries.map(({ id }) => id).join(','),
           type: KalturaPlaylistType.staticList
         }, 'metadata'));
         break;

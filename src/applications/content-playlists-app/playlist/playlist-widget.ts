@@ -2,9 +2,9 @@ import { AreaBlockerMessage, AreaBlockerMessageButton, WidgetBase } from '@kaltu
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';
-import { ExtendedKalturaPlaylist } from './playlist-store.service';
+import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 
-export abstract class PlaylistWidget extends WidgetBase<PlaylistWidgetsManager, ExtendedKalturaPlaylist, KalturaMultiRequest> {
+export abstract class PlaylistWidget extends WidgetBase<PlaylistWidgetsManager, KalturaPlaylist, KalturaMultiRequest> {
   public sectionBlockerMessage: AreaBlockerMessage;
   public showSectionLoader: boolean;
 

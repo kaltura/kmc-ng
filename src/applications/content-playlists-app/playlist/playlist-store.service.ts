@@ -35,14 +35,6 @@ export interface StatusArgs {
   error?: Error;
 }
 
-export class ExtendedKalturaPlaylist extends KalturaPlaylist {
-  public entries: KalturaMediaEntry[] = [];
-  constructor(data?: KalturaPlaylistArgs, entries?: KalturaMediaEntry[]) {
-    super(data);
-    this.entries = entries || [];
-  }
-}
-
 @Injectable()
 export class PlaylistStore implements OnDestroy {
   private _loadPlaylistSubscription: ISubscription;
@@ -201,12 +193,12 @@ export class PlaylistStore implements OnDestroy {
                 this._playlistId = currentPlaylistId;
 
                 this._playlist.next({
-                  playlist: new ExtendedKalturaPlaylist({
+                  playlist: new KalturaPlaylist({
                     name: newData.name,
                     description: newData.description,
                     playlistType: KalturaPlaylistType.staticList,
-                    playlistContent: Array.isArray(newData.entries) ? newData.entries.map(({id}) => id).join(',') : ''
-                  }, newData.entries)
+                    playlistContent: newData.playlistContent
+                  })
                 });
 
                 setTimeout(() => {
