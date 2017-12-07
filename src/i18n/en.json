@@ -127,6 +127,9 @@
     },
     "changelog": {
       "header": "Change Log"
+    },
+    "pageExitVerification": {
+      "defaultMessage": "Are you sure you want to leave this page? Unsaved changes and uploading files will be lost"
     }
   },
   "applications": {
@@ -218,12 +221,17 @@
         "bulkUpload": "Bulk upload",
         "dropFolders": "Drop folders",
         "viewDetails": "View details",
-        "uploading": "uploading",
-        "syncing": "syncing",
-        "queued": "queued",
-        "completed": "completed",
-        "error": "error",
-        "upToDate": "Up to date"
+        "uploading": "{{0}} uploading",
+        "syncing": "{{0}} syncing",
+        "queued": "{{0}} queued",
+        "completed": "{{0}} completed",
+        "error": "{{0}} error",
+        "upToDate": "Up to date",
+        "loading": "Loading...",
+        "bulkErrors": {
+          "poll": "Cannot get bulk upload data. Retrying...",
+          "prepare": "Could not connect bulk upload monitor!"
+        }
       },
       "transcodingProfilesSelect": {
         "titleVideo": "Prepare Video Entry",
@@ -294,6 +302,10 @@
     },
     "content": {
       "uploadControl": {
+        "retryError": {
+          "header": "Retry upload",
+          "message": "Cannot resume upload for the requested file. Please upload the file again."
+        },
         "bulkCancel": {
           "header": "Cancel uploads",
           "message": "Are you sure you want to cancel those uploads?"
@@ -399,7 +411,7 @@
         "deleteNote": "Please note: the entry will be permanently deleted from your account."
       },
       "playlists": {
-        "playlists": "{{0}} Playlist's",
+        "playlists": "{{0}} Playlists",
         "entries": "{{0}} Entries",
         "selected": "{{0}} Selected",
         "bulkActions": "Bulk Actions",

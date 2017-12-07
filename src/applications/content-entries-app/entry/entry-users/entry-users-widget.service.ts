@@ -15,6 +15,7 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntr
 
 import 'rxjs/add/observable/forkJoin';
 import { EntryWidget } from '../entry-widget';
+import { async } from 'rxjs/scheduler/async';
 
 @Injectable()
 export class EntryUsersWidget extends EntryWidget implements OnDestroy
@@ -39,6 +40,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 
 		Observable.merge(this.usersForm.valueChanges,
 			this.usersForm.statusChanges)
+            .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
             .cancelOnDestroy(this)
             .subscribe(
 				() => {

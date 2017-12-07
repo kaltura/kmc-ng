@@ -154,13 +154,13 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    * @private
    */
   private _registerToAdditionalFiltersStore(): void {
+    this._showLoader = true;
     this.additionalFiltersStore.status$
       .cancelOnDestroy(this)
       .subscribe(
         result => {
-          this._showLoader = result.loading;
-
           if (result.errorMessage) {
+            this._showLoader = false;
             this._blockerMessage = new AreaBlockerMessage({
               message: result.errorMessage || 'Error loading filters',
               buttons: [{
@@ -217,7 +217,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
             });
 
           });
-
+          this._showLoader = false;
           this._registerToFilterUpdates();
         },
         (error) => {

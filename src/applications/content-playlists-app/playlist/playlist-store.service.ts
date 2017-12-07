@@ -15,6 +15,7 @@ import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylis
 import { PlaylistAddAction } from 'kaltura-ngx-client/api/types/PlaylistAddAction';
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
+import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { PlaylistCreationService } from 'app-shared/kmc-shared/playlist-creation';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 
@@ -51,6 +52,7 @@ export class PlaylistStore implements OnDestroy {
   private _savePlaylistInvoked = false;
   private _playlistId: string;
   private _playlist = new BehaviorSubject<{ playlist: KalturaPlaylist }>({ playlist: null });
+  private _pageExitVerificationToken: string;
 
   public state$ = this._state.asObservable();
 
@@ -77,6 +79,7 @@ export class PlaylistStore implements OnDestroy {
               private _browserService: BrowserService,
               private _playlistsStore: PlaylistsStore,
               private _playlistCreationService: PlaylistCreationService,
+              private _pageExitVerificationService: PageExitVerificationService,
               @Host() private _widgetsManager: PlaylistWidgetsManager) {
     this._widgetsManager.playlistStore = this;
     this._mapSections();
@@ -88,7 +91,7 @@ export class PlaylistStore implements OnDestroy {
     this._playlist.complete();
     this._state.complete();
 
-    this._browserService.disablePageExitVerification();
+    this._pageExitVerificationService.remove(this._pageExitVerificationToken);
 
     if (this._loadPlaylistSubscription) {
       this._loadPlaylistSubscription.unsubscribe();
@@ -119,9 +122,10 @@ export class PlaylistStore implements OnDestroy {
 
   private _updatePageExitVerification(): void {
     if (this._playlistIsDirty) {
-      this._browserService.enablePageExitVerification();
+      this._pageExitVerificationToken = this._pageExitVerificationService.add();
     } else {
-      this._browserService.disablePageExitVerification();
+      this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+      this._pageExitVerificationToken = null;
     }
   }
 

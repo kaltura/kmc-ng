@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AreaBlockerModule, KalturaUIModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
@@ -28,6 +28,8 @@ import {TranscodingProfileSelectComponent} from './prepare-entry/transcoding-pro
 import {CreateLiveComponent} from './create-live/create-live.component';
 import {KalturaLiveStreamComponent} from './create-live/kaltura-live-stream/kaltura-live-stream.component';
 import {PrepareEntryComponent} from './prepare-entry/prepare-entry.component';
+import { NewUploadMonitorService } from './upload-monitor/new-upload-monitor.service';
+import { BulkUploadMonitorService } from './upload-monitor/bulk-upload-monitor.service';
 
 @NgModule({
   imports: [
@@ -71,4 +73,13 @@ import {PrepareEntryComponent} from './prepare-entry/prepare-entry.component';
   ]
 })
 export class KmcUploadAppModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: KmcUploadAppModule,
+      providers: <any[]>[
+        BulkUploadMonitorService,
+        NewUploadMonitorService
+      ]
+    };
+  }
 }
