@@ -27,6 +27,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/playlist-creation';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 
 @Component({
   selector: 'kBulkActions',
@@ -34,6 +35,12 @@ import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylis
   styleUrls: ['./bulk-actions.component.scss']
 })
 export class BulkActionsComponent implements OnInit, OnDestroy {
+  private _allowedStatusesForPlaylist = [
+    KalturaEntryStatus.preconvert.toString(),
+    KalturaEntryStatus.ready.toString(),
+    KalturaEntryStatus.moderate.toString(),
+    KalturaEntryStatus.blocked.toString()
+  ];
 
   public _bulkActionsMenu: MenuItem[] = [];
   public _bulkWindowWidth = 500;
@@ -68,6 +75,45 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   }
 
+  private _onAddToNewPlaylist(): void {
+    const creationEvent = new CreateNewPlaylistEvent({ type: KalturaPlaylistType.staticList, }, 'metadata');
+    const invalidEntries = this.selectedEntries.filter(entry => {
+      return this._allowedStatusesForPlaylist.indexOf(entry.status.toString()) === -1
+    });
+
+    if (!invalidEntries.length) {
+      creationEvent.data.playlistContent = this.selectedEntries.map(({ id }) => id).join(',');
+      this._appEvents.publish(creationEvent);
+    } else {
+      this._handlePlaylistCreationErrors(invalidEntries, creationEvent);
+    }
+  }
+
+  private _handlePlaylistCreationErrors(invalidEntries: KalturaMediaEntry[], creationEvent: CreateNewPlaylistEvent): void {
+    const canCreate = this.selectedEntries.length !== invalidEntries.length;
+
+    if (canCreate) {
+      const invalidEntriesNames = invalidEntries.length < 11 ? invalidEntries.map(entry => `${entry.name}`).join('\n') : '';
+      this._browserService.confirm({
+        header: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarning'),
+        message: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarningMsg', {
+          0: invalidEntriesNames
+        }),
+        accept: () => {
+          creationEvent.data.playlistContent = this.selectedEntries
+            .filter(({ status }) => this._allowedStatusesForPlaylist.indexOf(status.toString()) !== -1) // include only valid
+            .map(({ id }) => id).join(',');
+          this._appEvents.publish(creationEvent);
+        }
+      });
+    } else {
+      this._browserService.alert({
+        header: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarning'),
+        message: this._appLocalization.get('applications.content.bulkActions.createPlaylistErrorMsg'),
+      });
+    }
+  }
+
   openBulkActionWindow(action: string, popupWidth: number, popupHeight: number) {
     this._bulkAction = action;
     this._bulkWindowWidth = popupWidth;
@@ -81,10 +127,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   performBulkAction(action: string): void {
     switch (action) {
       case 'addToNewPlaylist':
-        this._appEvents.publish(new CreateNewPlaylistEvent({
-          playlistContent: this.selectedEntries.map(({ id }) => id).join(','),
-          type: KalturaPlaylistType.staticList
-        }, 'metadata'));
+        this._onAddToNewPlaylist();
         break;
       default:
         break;
