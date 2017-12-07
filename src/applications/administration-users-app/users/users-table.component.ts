@@ -17,9 +17,9 @@ import {
   Menu,
   MenuItem
 } from 'primeng/primeng';
-import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,

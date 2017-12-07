@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { KalturaUserStatus } from 'kaltura-typescript-client/types/KalturaUserStatus';
+import { KalturaUserStatus } from 'kaltura-ngx-client/api/types/KalturaUserStatus';
 
 @Pipe({name: 'status'})
 export class StatusPipe implements PipeTransform {

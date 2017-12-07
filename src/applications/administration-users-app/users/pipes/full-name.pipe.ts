@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import { AppAuthentication } from 'app-shared/kmc-shell';
+import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 
 @Pipe({name: 'kFullName'})
 export class FullNamePipe implements PipeTransform {

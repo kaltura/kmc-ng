@@ -1,14 +1,14 @@
-import { Component, Input, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { UsersStore } from '../users.service';
-import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
-import { KalturaUserRole } from 'kaltura-typescript-client/types/KalturaUserRole';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { IsUserExistsStatuses } from '../user-exists-statuses';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
+import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
+import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,

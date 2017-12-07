@@ -1,31 +1,31 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { UserListAction } from 'kaltura-typescript-client/types/UserListAction';
-import { UserRoleListAction } from 'kaltura-typescript-client/types/UserRoleListAction';
-import { KalturaUserRoleFilter } from 'kaltura-typescript-client/types/KalturaUserRoleFilter';
-import { KalturaUserRoleStatus } from 'kaltura-typescript-client/types/KalturaUserRoleStatus';
-import { KalturaUserRoleOrderBy } from 'kaltura-typescript-client/types/KalturaUserRoleOrderBy';
-import { KalturaUserRole } from 'kaltura-typescript-client/types/KalturaUserRole';
-import { KalturaUserFilter } from 'kaltura-typescript-client/types/KalturaUserFilter';
-import { KalturaNullableBoolean } from 'kaltura-typescript-client/types/KalturaNullableBoolean';
-import { KalturaUserStatus } from 'kaltura-typescript-client/types/KalturaUserStatus';
-import { KalturaUserOrderBy } from 'kaltura-typescript-client/types/KalturaUserOrderBy';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
-import { PartnerGetInfoAction } from 'kaltura-typescript-client/types/PartnerGetInfoAction';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
-import { UserUpdateAction } from 'kaltura-typescript-client/types/UserUpdateAction';
-import { UserDeleteAction } from 'kaltura-typescript-client/types/UserDeleteAction';
 import { Observable } from 'rxjs/Observable';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { FormGroup } from '@angular/forms';
-import { UserGetByLoginIdAction } from 'kaltura-typescript-client/types/UserGetByLoginIdAction';
-import { UserGetAction } from 'kaltura-typescript-client/types/UserGetAction';
-import { UserAddAction } from 'kaltura-typescript-client/types/UserAddAction';
-import { UserEnableLoginAction } from 'kaltura-typescript-client/types/UserEnableLoginAction';
 import { IsUserExistsStatuses } from './user-exists-statuses';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
+import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { UserRoleListAction } from 'kaltura-ngx-client/api/types/UserRoleListAction';
+import { KalturaUserRoleFilter } from 'kaltura-ngx-client/api/types/KalturaUserRoleFilter';
+import { KalturaUserRoleStatus } from 'kaltura-ngx-client/api/types/KalturaUserRoleStatus';
+import { KalturaUserRoleOrderBy } from 'kaltura-ngx-client/api/types/KalturaUserRoleOrderBy';
+import { UserListAction } from 'kaltura-ngx-client/api/types/UserListAction';
+import { KalturaUserFilter } from 'kaltura-ngx-client/api/types/KalturaUserFilter';
+import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import { KalturaUserStatus } from 'kaltura-ngx-client/api/types/KalturaUserStatus';
+import { KalturaUserOrderBy } from 'kaltura-ngx-client/api/types/KalturaUserOrderBy';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { PartnerGetInfoAction } from 'kaltura-ngx-client/api/types/PartnerGetInfoAction';
+import { UserUpdateAction } from 'kaltura-ngx-client/api/types/UserUpdateAction';
+import { UserDeleteAction } from 'kaltura-ngx-client/api/types/UserDeleteAction';
+import { UserGetByLoginIdAction } from 'kaltura-ngx-client/api/types/UserGetByLoginIdAction';
+import { UserGetAction } from 'kaltura-ngx-client/api/types/UserGetAction';
+import { UserEnableLoginAction } from 'kaltura-ngx-client/api/types/UserEnableLoginAction';
+import { UserAddAction } from 'kaltura-ngx-client/api/types/UserAddAction';
 
 export interface QueryData
 {
@@ -60,7 +60,7 @@ export class UsersStore implements OnDestroy {
     private _appLocalization: AppLocalization,
     private _appAuthentication: AppAuthentication
   ) {
-    const defaultPageSize = this._browserService.getFromLocalStorage("users.list.pageSize");
+    const defaultPageSize = this._browserService.getFromLocalStorage('users.list.pageSize');
     if (defaultPageSize !== null) {
       this._updateQueryData({
         pageSize: defaultPageSize
@@ -76,7 +76,7 @@ export class UsersStore implements OnDestroy {
 
     if (partialData.pageSize)
     {
-      this._browserService.setInLocalStorage("users.list.pageSize", partialData.pageSize);
+      this._browserService.setInLocalStorage('users.list.pageSize', partialData.pageSize);
     }
   }
 
@@ -108,7 +108,7 @@ export class UsersStore implements OnDestroy {
           filter: new KalturaUserFilter({
             isAdminEqual: KalturaNullableBoolean.trueValue,
             loginEnabledEqual: KalturaNullableBoolean.trueValue,
-            statusIn: KalturaUserStatus.active + "," + KalturaUserStatus.blocked,
+            statusIn: KalturaUserStatus.active + ',' + KalturaUserStatus.blocked,
             orderBy: KalturaUserOrderBy.createdAtAsc.toString()
           }),
           pager: new KalturaFilterPager({

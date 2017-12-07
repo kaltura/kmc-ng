@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { KalturaUserRole } from 'kaltura-typescript-client/types/KalturaUserRole';
+import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
 
 @Pipe({name: 'kRoleName'})
 export class RoleNamePipe implements PipeTransform {

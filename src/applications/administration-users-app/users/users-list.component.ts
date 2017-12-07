@@ -1,13 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UsersStore } from './users.service';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { environment } from 'app-environment';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { UsersTableComponent } from './users-table.component';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
