@@ -18,7 +18,7 @@ export interface UploadMonitorStatuses {
 export class UploadMonitorComponent implements OnDestroy {
   @Input() appmenu;
 
-  private _showErrorIcon = false;
+  public _showErrorIcon = false;
   public _menuOpened = false;
   public _upToDate = true;
   public _hasError = false;

@@ -1,6 +1,6 @@
 {
   "name": "kmc-ng",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "license": "AGPL-3.0",
   "private": true,
   "repository": {
@@ -40,8 +40,8 @@
     "e2e": "ng e2e",
     "checkout-standalone": "kws bookmark standalone",
     "compodoc": "./node_modules/.bin/compodoc -p tsconfig.json --disableGraph --disablePrivateOrInternalSupport --toggleMenuItems",
-    "release:prepare": "kws publish --publish=false",
-    "release:publish": "kws publish --prepare=false"
+    "release:prepare": "kws release --publish=false",
+    "release:publish": "kws release --prepare=false"
   },
   "dependencies": {
     "@angular/animations": "^4.0.0",
@@ -53,10 +53,10 @@
     "@angular/platform-browser": "^4.0.0",
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
-    "@kaltura-ng/kaltura-common": "~2.2.0",
-    "@kaltura-ng/kaltura-primeng-ui": "~0.6.0",
-    "@kaltura-ng/kaltura-ui": "~3.1.0",
-    "@kaltura-ng/mc-theme": "~0.8.0",
+    "@kaltura-ng/kaltura-common": "~2.3.0",
+    "@kaltura-ng/kaltura-primeng-ui": "~0.6.1",
+    "@kaltura-ng/kaltura-ui": "~3.2.0",
+    "@kaltura-ng/mc-theme": "~0.8.1",
     "core-js": "^2.4.1",
     "intl": "^1.2.5",
     "jquery": "^3.1.0",
