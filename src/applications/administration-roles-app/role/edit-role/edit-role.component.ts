@@ -6,6 +6,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { RoleService } from './role.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { Observer } from 'rxjs/Observer';
 
 @Component({
   selector: 'kEditRole',
@@ -14,20 +15,19 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
   providers: [RoleService]
 })
 export class EditRoleComponent implements OnInit, OnDestroy {
-
-  public editRoleForm: FormGroup;
   @Input() role: KalturaUserRole;
-  // private roleUnderEdit: KalturaUserRole;
-  public _editMode: 'edit' | 'new' = 'edit';
-  public _isBusy = false
-  public _blockerMessage: AreaBlockerMessage = null;
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() duplicatedRole: boolean;
   @Output() onRoleSaved = new EventEmitter<void>();
 
+  public _editRoleForm: FormGroup;
+  public _editMode: 'edit' | 'new' = 'edit';
+  public _isBusy = false;
+  public _blockerMessage: AreaBlockerMessage = null;
+
   constructor(private _fb: FormBuilder,
               private _roleService: RoleService,
-              private appLocalization: AppLocalization) {
+              private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
@@ -43,29 +43,56 @@ export class EditRoleComponent implements OnInit, OnDestroy {
 
   // Create empty structured form on loading
   private _createForm(): void {
-
-    this.editRoleForm = this._fb.group({
+    this._editRoleForm = this._fb.group({
       name: [this.role ? this.role.name : '', Validators.required],
       description: [this.role ? this.role.description : '', Validators.required],
     });
-
   }
 
-  private markFormFieldsAsTouched() {
-    for (let inner in this.editRoleForm.controls) {
-      this.editRoleForm.get(inner).markAsTouched();
-      this.editRoleForm.get(inner).updateValueAndValidity();
+  private _markFormFieldsAsTouched() {
+    this._editRoleForm.markAsUntouched();
+    this._editRoleForm.updateValueAndValidity();
+  }
+
+  private _getObserver(retryFn: () => void): Observer<void> {
+    return <Observer<void>>{
+      next: () => {
+        this.parentPopupWidget.close();
+        this.onRoleSaved.emit();
+      },
+      error: (error) => {
+        this._blockerMessage = new AreaBlockerMessage(
+          {
+            message: error.message,
+            buttons: [
+              {
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => retryFn()
+              },
+              {
+                label: this._appLocalization.get('app.common.cancel'),
+                action: () => {
+                  this._blockerMessage = null;
+                }
+              }
+            ]
+          }
+        );
+      },
+      complete: () => {
+        // empty by design
+      }
     }
   }
 
-  private updateRole(): void {
-    if (!this.editRoleForm.valid) {
-      this.markFormFieldsAsTouched();
+  public _updateRole(): void {
+    if (!this._editRoleForm.valid) {
+      this._markFormFieldsAsTouched();
       return;
     }
 
     // no need to reload the table since the duplicated role remained intact
-    if (this.duplicatedRole && this.editRoleForm.pristine) {
+    if (this.duplicatedRole && this._editRoleForm.pristine) {
       this.parentPopupWidget.close();
       return;
     }
@@ -73,82 +100,30 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     this._blockerMessage = null;
 
     const editedRole = new KalturaUserRole({
-      name: this.editRoleForm.get('name').value,
-      description: this.editRoleForm.get('description').value
+      name: this._editRoleForm.get('name').value,
+      description: this._editRoleForm.get('description').value
     });
 
     this._roleService.updateRole(this.role.id, editedRole)
       .cancelOnDestroy(this)
       .tag('block-shell')
-      .subscribe(
-        (role) => {
-          this.parentPopupWidget.close();
-          this.onRoleSaved.emit();
-        },
-        error => {
-          this._blockerMessage = new AreaBlockerMessage(
-            {
-              message: error.message,
-              buttons: [
-                {
-                  label: this.appLocalization.get('app.common.retry'),
-                  action: () => {
-                    this.updateRole();
-                  }
-                },
-                {
-                  label: this.appLocalization.get('app.common.cancel'),
-                  action: () => {
-                    this._blockerMessage = null;
-                  }
-                }
-              ]
-            }
-          );
-        }
-      );
+      .subscribe(this._getObserver(this._updateRole.bind(this)));
   }
 
 
-  private addRole(): void {
-    if (!this.editRoleForm.valid) {
-      this.markFormFieldsAsTouched();
+  public _addRole(): void {
+    if (!this._editRoleForm.valid) {
+      this._markFormFieldsAsTouched();
       return;
     }
     this._blockerMessage = null;
-    this.role = new KalturaUserRole();
-    this.role.name = this.editRoleForm.get('name').value;
-    this.role.description = this.editRoleForm.get('description').value;
+
+    const { name, description } = this._editRoleForm.value;
+    this.role = new KalturaUserRole({ name, description });
+
     this._roleService.addRole(this.role)
       .cancelOnDestroy(this)
       .tag('block-shell')
-      .subscribe(
-        () => {
-          this.parentPopupWidget.close();
-          this.onRoleSaved.emit();
-        },
-        error => {
-          this.role = null;
-          this._blockerMessage = new AreaBlockerMessage(
-            {
-              message: error.message,
-              buttons: [
-                {
-                  label: this.appLocalization.get('app.common.retry'),
-                  action: () => {
-                    this.addRole();
-                  }
-                },
-                {
-                  label: this.appLocalization.get('app.common.cancel'),
-                  action: () => {
-                    this._blockerMessage = null;
-                  }
-                }
-              ]
-            }
-          );
-        }
-      );
+      .subscribe(this._getObserver(this._addRole.bind(this)));
   }
 }
