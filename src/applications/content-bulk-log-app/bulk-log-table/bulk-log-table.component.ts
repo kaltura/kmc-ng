@@ -12,7 +12,7 @@ import {
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaBulkUpload } from 'kaltura-typescript-client/types/KalturaBulkUpload';
+import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
 import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 
 @Component({

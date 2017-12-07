@@ -4,6 +4,7 @@ import {AppStatus, BrowserService, GrowlMessage} from 'app-shared/kmc-shell/prov
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization, OperationTagManagerService} from '@kaltura-ng/kaltura-common';
 import {NavigationEnd, Router} from '@angular/router';
+import { UploadPageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 
 /*
  * App Component
@@ -21,8 +22,13 @@ export class AppComponent implements OnInit {
   public _blockerMessage: AreaBlockerMessage = null;
   public _growlMessages: GrowlMessage[] = [];
 
-  constructor(private _confirmationService : ConfirmationService, private _browserService : BrowserService, private _appLocalization: AppLocalization, private router: Router, private _oprationsTagManager: OperationTagManagerService) {
-
+  constructor(private _confirmationService: ConfirmationService,
+              private _browserService : BrowserService,
+              private _appLocalization: AppLocalization,
+              private router: Router,
+              private _oprationsTagManager: OperationTagManagerService,
+              private _uploadPageExitVerificationService: UploadPageExitVerificationService) {
+    this._uploadPageExitVerificationService.init();
   }
 
   ngOnInit() {
@@ -62,7 +68,6 @@ export class AppComponent implements OnInit {
     this._oprationsTagManager.tagStatus$.subscribe(
       (tags: {[key: string]: number}) => {
         this._isBusy = tags['block-shell'] > 0;
-        console.log(status);
       }
     );
 

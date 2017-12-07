@@ -16,7 +16,6 @@ export class EntriesListHolderComponent {
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
 
   public _blockerMessage: AreaBlockerMessage = null;
-  public _isBusy = false;
 
   public _columns: EntriesTableColumns = {
     thumbnailUrl: { width: '100px' },
@@ -85,22 +84,15 @@ export class EntriesListHolderComponent {
       return;
     }
 
-    this._isBusy = true;
     this._blockerMessage = null;
-    this._contentEntriesAppService.deleteEntry(entryId).subscribe(
-      () => {
-        this._isBusy = false;
-        this._browserService.showGrowlMessage({
-          severity: 'success',
-          detail: this._appLocalization.get('applications.content.entries.deleted')
-        });
-        this._entriesStore.reload(true);
-      },
-      error => {
-        this._isBusy = false;
-
-        this._blockerMessage = new AreaBlockerMessage(
-          {
+    this._contentEntriesAppService.deleteEntry(entryId)
+      .tag('block-shell')
+      .subscribe(
+        () => {
+          this._entriesStore.reload(true);
+        },
+        error => {
+          this._blockerMessage = new AreaBlockerMessage({
             message: error.message,
             buttons: [
               {
@@ -112,9 +104,8 @@ export class EntriesListHolderComponent {
                 action: () => this._blockerMessage = null
               }
             ]
-          }
-        );
-      }
-    );
+          });
+        }
+      );
   }
 }

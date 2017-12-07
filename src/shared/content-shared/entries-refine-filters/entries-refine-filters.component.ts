@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
+import { KalturaUtils } from 'kaltura-ngx-client/api/utils/kaltura-utils';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PrimeTreeDataProvider, PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -154,13 +154,13 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
    * @private
    */
   private _registerToAdditionalFiltersStore(): void {
+    this._showLoader = true;
     this.additionalFiltersStore.status$
       .cancelOnDestroy(this)
       .subscribe(
         result => {
-          this._showLoader = result.loading;
-
           if (result.errorMessage) {
+            this._showLoader = false;
             this._blockerMessage = new AreaBlockerMessage({
               message: result.errorMessage || 'Error loading filters',
               buttons: [{
@@ -217,7 +217,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
             });
 
           });
-
+          this._showLoader = false;
           this._registerToFilterUpdates();
         },
         (error) => {

@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage">
+<k-area-blocker [showLoader]="_widgetService.showSectionLoader" [message]="_widgetService.sectionBlockerMessage" [bodyScroll]="true">
 	<div class="kCaptions" #captions>
 		<p class="kTitle">{{'applications.content.entryDetails.captions.captions' | translate}}</p>
 		<button type="button" class="kButtonDefault" pButton label="{{'applications.content.entryDetails.captions.add' | translate}}" (click)="_addCaption()"></button>
@@ -36,7 +36,7 @@
 							<span>{{caption.progress && caption.progress !== '0' ? caption.progress + '%' : 'applications.content.entryDetails.captions.pending' | translate}}</span>
 						</div>
 						<div *ngIf="caption.uploadFailure">
-							<a (click)="_widgetService.removeCaption()">{{'applications.content.entryDetails.captions.remove' | translate}}</a>
+							<a (click)="_widgetService.removeCaption(caption.id)">{{'applications.content.entryDetails.captions.remove' | translate}}</a>
 						</div>
 					</ng-template>
 				</p-column>

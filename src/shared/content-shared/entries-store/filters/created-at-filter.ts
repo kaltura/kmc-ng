@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 
-import { KalturaUtils } from 'kaltura-typescript-client/utils/kaltura-utils';
+import { KalturaUtils } from 'kaltura-ngx-client/api/utils/kaltura-utils';
 import { EntriesStore } from '../entries-store.service';
 import { FilterItem } from '../filter-item';
 
