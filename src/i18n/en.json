@@ -1114,7 +1114,12 @@
           "delete": "Delete"
         },
         "errors": {
-          "roleInUse": "The role you selected cannot be deleted since it is currently assigned to existing users."
+          "loadError": "Can't load entries",
+          "roleInUse": "The role you selected cannot be deleted since it is currently assigned to existing users.",
+          "cantDeleteRole": "Can't delete role",
+          "cantDeleteAdminRole": "Can't delete Administrator role",
+          "cantDuplicateRole": "Can't duplicate role",
+          "duplicationError": "Error occurred while trying to duplicate role"
         }
       },
       "users": {

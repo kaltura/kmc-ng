@@ -13,15 +13,13 @@ import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/
 })
 
 export class RolesListComponent implements OnInit, OnDestroy {
-
   @ViewChild('editPopup') public editPopup: PopupWidgetComponent;
 
   public _blockerMessage: AreaBlockerMessage = null;
   public _roles: KalturaUserRole[] = [];
-  public _rolesTotalCount = '';
-  public _currentEditRole: any = null;
+  public _rolesTotalCount = 0;
+  public _currentEditRole: KalturaUserRole = null;
   public _currentEditRoleIsDuplicated = false;
-
   public _filter = {
     pageIndex: 0,
     pageSize: null, // pageSize is set to null by design. It will be modified after the first time loading entries
@@ -29,11 +27,10 @@ export class RolesListComponent implements OnInit, OnDestroy {
 
   constructor(private _rolesService: RolesService,
               private _browserService: BrowserService,
-              private appLocalization: AppLocalization) {
+              private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
-
     this._rolesService.queryData$
       .cancelOnDestroy(this)
       .subscribe(
@@ -42,16 +39,11 @@ export class RolesListComponent implements OnInit, OnDestroy {
           this._filter.pageIndex = query.pageIndex;
         });
 
-    this._rolesService.roles$
+    this._rolesService.roles.data$
       .cancelOnDestroy(this)
-      .subscribe(
-        (data) => {
-          this._roles = data.items;
-          if (data.totalCount > 0) {
-            this._rolesTotalCount = this.appLocalization.get('applications.administration.roles.rolesNum', { 0: data.totalCount });
-          } else {
-            this._rolesTotalCount = '';
-          }
+      .subscribe(({ items, totalCount }) => {
+          this._roles = items;
+          this._rolesTotalCount = totalCount;
         }
       );
 
@@ -69,57 +61,12 @@ export class RolesListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  public _reload() {
-    this._rolesService.reload(true);
-  }
-
-  _onPaginationChanged(state: any): void {
-    if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
-
-      this._rolesService.reload({
-        pageIndex: state.page,
-        pageSize: state.rows
-      });
-    }
-  }
-
-  _onActionSelected(event: { action: string, role: KalturaUserRole }) {
-    const action = event.action;
-    const role = event.role;
-    switch (action) {
-      case 'edit':
-        this.editRole(role);
-        break;
-      case 'duplicate':
-        this.duplicateRole(role);
-        break;
-      case 'delete':
-        this._browserService.confirm(
-          {
-            header: this.appLocalization.get('applications.administration.roles.confirmDeleteHeader'),
-            message: this.appLocalization.get('applications.administration.roles.confirmDeleteBody', { 0: role.name }),
-            accept: () => {
-              this.deleteRole(role);
-            }
-          }
-        );
-        break;
-      default:
-        break;
-    }
-  }
-
-  public addRole(): void {
-    this._currentEditRole = null;
-    this.editPopup.open();
-  }
-
-  public editRole(role: KalturaUserRole): void {
+  private _editRole(role: KalturaUserRole): void {
     this._currentEditRole = role;
     this.editPopup.open();
   }
 
-  private deleteRole(role: KalturaUserRole): void {
+  private _deleteRole(role: KalturaUserRole): void {
     this._blockerMessage = null;
     this._rolesService.deleteRole(role)
       .cancelOnDestroy(this)
@@ -133,16 +80,12 @@ export class RolesListComponent implements OnInit, OnDestroy {
               message: error.message,
               buttons: [
                 {
-                  label: this.appLocalization.get('app.common.retry'),
-                  action: () => {
-                    this.deleteRole(role);
-                  }
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => this._deleteRole(role)
                 },
                 {
-                  label: this.appLocalization.get('app.common.cancel'),
-                  action: () => {
-                    this._blockerMessage = null;
-                  }
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => this._blockerMessage = null
                 }
               ]
             }
@@ -152,7 +95,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
   }
 
 
-  private duplicateRole(role: KalturaUserRole): void {
+  private _duplicateRole(role: KalturaUserRole): void {
     this._blockerMessage = null;
     this._rolesService.duplicateRole(role)
       .cancelOnDestroy(this)
@@ -161,7 +104,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
         (duplicatedRole) => {
           this._rolesService.reload(true);
           this._currentEditRoleIsDuplicated = true;
-          this.editRole(duplicatedRole);
+          this._editRole(duplicatedRole);
         },
         error => {
           this._blockerMessage = new AreaBlockerMessage(
@@ -169,21 +112,60 @@ export class RolesListComponent implements OnInit, OnDestroy {
               message: error.message,
               buttons: [
                 {
-                  label: this.appLocalization.get('app.common.retry'),
-                  action: () => {
-                    this.duplicateRole(role);
-                  }
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => this._duplicateRole(role)
                 },
                 {
-                  label: this.appLocalization.get('app.common.cancel'),
-                  action: () => {
-                    this._blockerMessage = null;
-                  }
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => this._blockerMessage = null
                 }
               ]
             }
           );
         }
       );
+  }
+
+  public _reload() {
+    this._rolesService.reload(true);
+  }
+
+  public _onPaginationChanged(state: any): void {
+    if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
+
+      this._rolesService.reload({
+        pageIndex: state.page,
+        pageSize: state.rows
+      });
+    }
+  }
+
+  public _onActionSelected({ action, role }: { action: string, role: KalturaUserRole }): void {
+    switch (action) {
+      case 'edit':
+        this._editRole(role);
+        break;
+      case 'duplicate':
+        this._duplicateRole(role);
+        break;
+      case 'delete':
+        this._browserService.confirm(
+          {
+            header: this._appLocalization.get('applications.administration.roles.confirmDeleteHeader'),
+            message: this._appLocalization.get('applications.administration.roles.confirmDeleteBody', { 0: role.name }),
+            accept: () => {
+              this._deleteRole(role);
+            }
+          }
+        );
+        break;
+      default:
+        break;
+    }
+  }
+
+  public _addRole(): void {
+    this._currentEditRole = null;
+    this.editPopup.open();
   }
 }
