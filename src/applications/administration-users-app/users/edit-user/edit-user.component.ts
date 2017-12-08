@@ -9,7 +9,6 @@ import { IsUserExistsStatuses } from '../user-exists-statuses';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
-import { KalturaMultiRequest } from 'kaltura-ngx-client';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -222,29 +221,8 @@ export class EditUserComponent implements OnInit, OnDestroy {
   }
 
   private _updateUserPermissions(user: KalturaUser): void {
+    this._blockerMessage = null;
     this._usersStore.updateUserPermissions(user, this._userForm)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
-      .subscribe(
-        () => {
-          this._enableUserLogin(user);
-        },
-        error => {
-          this._blockerMessage = new AreaBlockerMessage({
-            message: error.message,
-            buttons: [{
-              label: this._appLocalization.get('app.common.ok'),
-              action: () => {
-                this._blockerMessage = null;
-              }
-            }]
-          })
-        }
-      );
-  }
-
-  private _enableUserLogin(user: KalturaUser): void {
-    this._usersStore.enableUserLogin(user)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(
@@ -253,32 +231,28 @@ export class EditUserComponent implements OnInit, OnDestroy {
           this.parentPopupWidget.close();
         },
         error => {
-          // todo [kmcng]: need to figure out why it was already enabled
-          if (error.code === 'USER_LOGIN_ALREADY_ENABLED') {
-            this._usersStore.reload(true);
-            this.parentPopupWidget.close();
-          } else {
-            this._blockerMessage = new AreaBlockerMessage({
-              message: error.message,
-              buttons: [{
-                label: this._appLocalization.get('app.common.ok'),
-                action: () => {
-                  this._blockerMessage = null;
-                }
-              }]
-            })
-          }
+          this._blockerMessage = new AreaBlockerMessage({
+            message: error.message,
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._blockerMessage = null;
+              }
+            }]
+          });
         }
       );
   }
 
   private _addNewUser(): void {
+    this._blockerMessage = null;
     this._usersStore.addUser(this._userForm)
       .cancelOnDestroy(this)
       .tag('block-shell')
       .subscribe(
-        user => {
-          this._enableUserLogin(user);
+        () => {
+          this._usersStore.reload(true);
+          this.parentPopupWidget.close();
         },
         error => {
           this._blockerMessage = new AreaBlockerMessage({
@@ -289,7 +263,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
                 this._blockerMessage = null;
               }
             }]
-          })
+          });
         }
       );
   }

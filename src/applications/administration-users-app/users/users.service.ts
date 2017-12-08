@@ -8,7 +8,7 @@ import { IsUserExistsStatuses } from './user-exists-statuses';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
-import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import { UserRoleListAction } from 'kaltura-ngx-client/api/types/UserRoleListAction';
 import { KalturaUserRoleFilter } from 'kaltura-ngx-client/api/types/KalturaUserRoleFilter';
 import { KalturaUserRoleStatus } from 'kaltura-ngx-client/api/types/KalturaUserRoleStatus';
@@ -58,7 +58,7 @@ export class UsersStore implements OnDestroy {
   }
 
   public query$ = this._querySource.monitor('queryData update');
-  public users = { data$: this._users.data.asObservable(), state$: this._users.state.asObservable() };
+  public readonly users = { data$: this._users.data.asObservable(), state$: this._users.state.asObservable() };
 
   constructor(private _kalturaServerClient: KalturaClient,
               private _browserService: BrowserService,
@@ -180,6 +180,7 @@ export class UsersStore implements OnDestroy {
   public isUserAlreadyExists(email: string): Observable<IsUserExistsStatuses> {
     return this._kalturaServerClient
       .request(new UserGetByLoginIdAction({ loginId: email }))
+      .map(() => IsUserExistsStatuses.kmcUser)
       .catch(error => {
         const status = error.code === 'LOGIN_DATA_NOT_FOUND'
           ? IsUserExistsStatuses.otherSystemUser :
@@ -192,7 +193,7 @@ export class UsersStore implements OnDestroy {
     return this._kalturaServerClient.request(new UserGetAction({ userId }));
   }
 
-  public addUser(userForm: FormGroup): Observable<KalturaUser> {
+  public addUser(userForm: FormGroup): Observable<void> {
     const { roleIds, id, email, firstName, lastName } = userForm.value;
     const user = new KalturaUser({
       email,
@@ -203,7 +204,19 @@ export class UsersStore implements OnDestroy {
       isAdmin: true
     });
 
-    return this._kalturaServerClient.request(new UserAddAction({ user }));
+    const request = new KalturaMultiRequest(
+      new UserAddAction({ user }),
+      new UserEnableLoginAction({
+        userId: user.id,
+        loginId: user.email
+      }).setDependency(['password', 0, 'password'])
+    );
+
+    return this._kalturaServerClient
+      .multiRequest(request)
+      .map(() => {
+        return;
+      });
   }
 
   public updateUser(userForm: FormGroup): Observable<void> {
@@ -222,28 +235,22 @@ export class UsersStore implements OnDestroy {
       });
   }
 
-  public updateUserPermissions({ id: userId }: KalturaUser, userForm: FormGroup): Observable<void> {
+  public updateUserPermissions(user: KalturaUser, userForm: FormGroup): Observable<void> {
     const { roleIds } = userForm.value;
-    const user = new KalturaUser({
+    const updatedUser = new KalturaUser({
       roleIds: roleIds ? roleIds : this._usersDataValue.roles.items[0].id,
       isAdmin: true
     });
+    const request = new KalturaMultiRequest(
+      new UserUpdateAction({ userId: user.id, user: updatedUser }),
+      new UserEnableLoginAction({
+        userId: user.id,
+        loginId: user.email
+      }).setDependency(['password', 0, 'password'])
+    );
     return this._kalturaServerClient
-      .request(new UserUpdateAction({ userId, user }))
+      .multiRequest(request)
       .map(() => {
-        return;
-      });
-  }
-
-  public enableUserLogin(user: KalturaUser): Observable<void> {
-    return this._kalturaServerClient
-      .request(
-        new UserEnableLoginAction({
-          userId: user.id,
-          loginId: user.email,
-          password: user.password
-        })
-      ).map(() => {
         return;
       });
   }
