@@ -201,7 +201,8 @@ export class UsersStore implements OnDestroy {
       lastName,
       roleIds: roleIds || this._usersDataValue.roles.items[0].id,
       id: id || email,
-      isAdmin: true
+      isAdmin: true,
+      loginEnabled: true
     });
 
     const request = new KalturaMultiRequest(
