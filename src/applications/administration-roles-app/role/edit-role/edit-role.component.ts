@@ -103,11 +103,12 @@ export class EditRoleComponent implements OnInit, OnDestroy {
       name: this._editRoleForm.get('name').value,
       description: this._editRoleForm.get('description').value
     });
+    const retryFn = () => this._updateRole();
 
     this._roleService.updateRole(this.role.id, editedRole)
       .cancelOnDestroy(this)
       .tag('block-shell')
-      .subscribe(this._getObserver(this._updateRole.bind(this)));
+      .subscribe(this._getObserver(retryFn));
   }
 
 
@@ -118,12 +119,13 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     }
     this._blockerMessage = null;
 
+    const retryFn = () => this._addRole();
     const { name, description } = this._editRoleForm.value;
     this.role = new KalturaUserRole({ name, description });
 
     this._roleService.addRole(this.role)
       .cancelOnDestroy(this)
       .tag('block-shell')
-      .subscribe(this._getObserver(this._addRole.bind(this)));
+      .subscribe(this._getObserver(retryFn));
   }
 }

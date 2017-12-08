@@ -9,6 +9,7 @@ import { IsUserExistsStatuses } from '../user-exists-statuses';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { KalturaMultiRequest } from 'kaltura-ngx-client';
 
 export interface PartnerInfo {
   adminLoginUsersQuota: number,
@@ -25,22 +26,23 @@ export class EditUserComponent implements OnInit, OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() user: KalturaUser;
 
-  rolesList: SelectItem[] = [];
-  _roles: KalturaUserRole[];
-  _users: KalturaUser[];
-  selectedRole: string = '';
-  userForm: FormGroup;
-  _partnerInfo: PartnerInfo = { adminLoginUsersQuota: 0, adminUserId: null };
-  isNewUser: boolean = true;
-  blockerMessage: AreaBlockerMessage = null;
-  isBusy: boolean = false;
+  private _partnerInfo: PartnerInfo = { adminLoginUsersQuota: 0, adminUserId: null };
+  private _roles: KalturaUserRole[] = [];
+  private _users: KalturaUser[];
 
-  constructor(public usersStore: UsersStore,
+  public _rolesList: SelectItem[] = [];
+  public _selectedRoleDescription = '';
+  public _userForm: FormGroup;
+  public _isNewUser = true;
+  public _blockerMessage: AreaBlockerMessage = null;
+  public _isBusy = false;
+
+  constructor(public _usersStore: UsersStore,
               private _formBuilder: FormBuilder,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization) {
     // build FormControl group
-    this.userForm = _formBuilder.group({
+    this._userForm = _formBuilder.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -49,125 +51,138 @@ export class EditUserComponent implements OnInit, OnDestroy {
     });
   }
 
-  getRoleDescription(event?: any): void {
-    this._roles.forEach(role => {
-      if (event) {
-        if (event === role.id.toString() || event.value === role.id) {
-          this.selectedRole = role.description;
+
+  ngOnInit() {
+    this._usersStore.users.data$
+      .cancelOnDestroy(this)
+      .subscribe(({ roles, users, partnerInfo }) => {
+        this._roles = roles.items;
+        this._users = users.items;
+        this._partnerInfo = {
+          adminLoginUsersQuota: partnerInfo.adminLoginUsersQuota,
+          adminUserId: partnerInfo.adminUserId
+        };
+        this._rolesList = this._roles.map(({ name, id }) => ({ label: name, value: id }));
+
+        const relevantUser = this._users.find(user => this.user && this.user.id === user.id);
+        this._isNewUser = !relevantUser;
+
+        if (this._isNewUser) {
+          this._userForm.reset({
+            email: '',
+            firstName: '',
+            lastName: '',
+            id: '',
+            roleIds: null
+          });
+          this._userForm.get('email').enable();
+          this._userForm.get('firstName').enable();
+          this._userForm.get('lastName').enable();
+          this._userForm.get('roleIds').enable();
+          this._setRoleDescription();
+        } else {
+          this._userForm.reset({
+            email: this.user.email,
+            firstName: this.user.firstName,
+            lastName: this.user.lastName,
+            id: this.user.id,
+            roleIds: relevantUser.roleIds ? relevantUser.roleIds : this.user.roleIds
+          });
+          this._userForm.get('email').disable();
+          this._userForm.get('firstName').disable();
+          this._userForm.get('lastName').disable();
+
+          if (this.user.id === this._partnerInfo.adminUserId) {
+            this._userForm.get('roleIds').disable()
+          } else {
+            this._userForm.get('roleIds').enable();
+          }
+
+          this._setRoleDescription(relevantUser.roleIds);
         }
-      } else {
-        this.selectedRole = this._roles[0].description;
-      }
-    });
+      });
   }
 
-  saveUser(): void {
-    if (this.userForm.valid) {
-      if (this.isNewUser) {
-        this.isUserAlreadyExists();
-      } else {
-        this.doUpdateUser();
-      }
-    } else {
-      this.markFormFieldsAsTouched();
-    }
+  ngOnDestroy() {
   }
 
-  isUserAlreadyExists(): void {
-    let userEmail = this.userForm.controls['email'].value;
-    this.isBusy = true;
-    this.usersStore.isUserAlreadyExists(userEmail)
+  private _isUserAlreadyExists(): void {
+    const { email } = this._userForm.value;
+    this._isBusy = true;
+    this._usersStore.isUserAlreadyExists(email)
       .cancelOnDestroy(this)
       .subscribe(
         (status) => {
-          let kmcUser = IsUserExistsStatuses.kmcUser;
-          if (status === kmcUser) {
-            this.isBusy = false;
-            this._browserService.alert(
-              {
-                message: this._appLocalization.get('applications.administration.users.alreadyExistError', { 0: userEmail })
-              }
-            );
+          if (status === IsUserExistsStatuses.kmcUser) {
+            this._isBusy = false;
+            this._browserService.alert({
+              message: this._appLocalization.get('applications.administration.users.alreadyExistError', { 0: email })
+            });
           }
         },
         error => {
-          this.isBusy = false;
+          this._isBusy = false;
           switch (error) {
             case IsUserExistsStatuses.otherSystemUser:
-              this.isUserAssociated();
+              this._isUserAssociated();
               break;
             case IsUserExistsStatuses.unknownUser:
-              this._browserService.confirm(
-                {
+              this._browserService.confirm({
                   header: this._appLocalization.get('applications.administration.users.alreadyExist'),
-                  message: this._appLocalization.get('applications.administration.users.userAlreadyExist', { 0: userEmail }),
-                  accept: () => {
-                    this.isUserAssociated();
-                  }
+                  message: this._appLocalization.get('applications.administration.users.userAlreadyExist', { 0: email }),
+                  accept: () => this._isUserAssociated()
                 }
               );
               break;
             default:
-              this.blockerMessage = new AreaBlockerMessage(
-                {
-                  message: error.message,
-                  buttons: [{
-                    label: this._appLocalization.get('app.common.ok'),
-                    action: () => {
-                      this.blockerMessage = null;
-                    }
-                  }]
-                }
-              );
+              this._blockerMessage = new AreaBlockerMessage({
+                message: error.message,
+                buttons: [{
+                  label: this._appLocalization.get('app.common.ok'),
+                  action: () => this._blockerMessage = null
+                }]
+              });
               break;
           }
         }
       );
   }
 
-  doUpdateUser(): void {
-    this.isBusy = true;
-    this.usersStore.updateUser(this.userForm)
+  private _updateUser(): void {
+    this._usersStore.updateUser(this._userForm)
+      .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe(
         () => {
-          this.isBusy = false;
-          this.usersStore.reload(true);
-          this._browserService.alert(
-            {
-              message: this._appLocalization.get('applications.administration.users.successSavingUser')
-            }
-          );
+          this._usersStore.reload(true);
+          this._browserService.alert({ message: this._appLocalization.get('applications.administration.users.successSavingUser') });
           this.parentPopupWidget.close();
         },
         error => {
-          this.isBusy = false;
           let buttons = [
             {
               label: this._appLocalization.get('app.common.retry'),
               action: () => {
-                this.blockerMessage = null;
-                this.doUpdateUser();
+                this._blockerMessage = null;
+                this._updateUser();
               }
             },
             {
               label: this._appLocalization.get('app.common.cancel'),
               action: () => {
-                this.blockerMessage = null;
+                this._blockerMessage = null;
               }
             }
           ];
           if (error.message === 'Invalid user id') {
-            buttons = [
-              {
-                label: this._appLocalization.get('app.common.ok'),
-                action: () => {
-                  this.blockerMessage = null;
-                }
+            buttons = [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._blockerMessage = null;
               }
-            ]
+            }]
           }
-          this.blockerMessage = new AreaBlockerMessage(
+          this._blockerMessage = new AreaBlockerMessage(
             {
               message: error.message,
               buttons: buttons
@@ -177,176 +192,128 @@ export class EditUserComponent implements OnInit, OnDestroy {
       );
   }
 
-  private markFormFieldsAsTouched() {
-    for (let inner in this.userForm.controls) {
-      this.userForm.get(inner).markAsTouched();
-      this.userForm.get(inner).updateValueAndValidity();
-    }
+  private _markFormFieldsAsTouched(): void {
+    this._userForm.markAsUntouched();
+    this._userForm.updateValueAndValidity();
   }
 
-  isUserAssociated(): void {
-    let userEmail = this.userForm.controls['id'].value ? this.userForm.controls['id'].value : this.userForm.controls['email'].value;
-    this.isBusy = true;
-    this.usersStore.isUserAssociated(userEmail)
+  private _isUserAssociated(): void {
+    const { id, email } = this._userForm.value;
+    const userId = id || email;
+    this._isBusy = true;
+    this._usersStore.isUserAssociated(userId)
       .cancelOnDestroy(this)
       .subscribe(
         user => {
-          this.isBusy = false;
-          this._browserService.confirm(
-            {
-              header: this._appLocalization.get('applications.administration.users.userAssociatedCaption'),
-              message: this._appLocalization.get('applications.administration.users.userAssociated', { 0: userEmail }),
-              accept: () => {
-                this.updateUserPermissions(user);
-              }
-            }
-          );
+          this._isBusy = false;
+          this._browserService.confirm({
+            header: this._appLocalization.get('applications.administration.users.userAssociatedCaption'),
+            message: this._appLocalization.get('applications.administration.users.userAssociated', { 0: userId }),
+            accept: () => this._updateUserPermissions(user)
+          });
         },
         error => {
-          this.isBusy = false;
+          this._isBusy = false;
           if (error.code === 'INVALID_USER_ID') {
-            this.addNewUser();
+            this._addNewUser();
           }
         }
       );
   }
 
-  updateUserPermissions(user: KalturaUser): void {
-    this.isBusy = true;
-    this.usersStore.updateUserPermissions(user, this.userForm)
+  private _updateUserPermissions(user: KalturaUser): void {
+    this._usersStore.updateUserPermissions(user, this._userForm)
       .cancelOnDestroy(this)
+      .tag('block-shell')
       .subscribe(
         () => {
-          this.isBusy = false;
-          this.enableUserLogin(user);
+          this._enableUserLogin(user);
         },
         error => {
-          this.isBusy = false;
-          this.blockerMessage = new AreaBlockerMessage(
-            {
-              message: error.message,
-              buttons: [{
-                label: this._appLocalization.get('app.common.ok'),
-                action: () => {
-                  this.blockerMessage = null;
-                }
-              }]
-            }
-          )
+          this._blockerMessage = new AreaBlockerMessage({
+            message: error.message,
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._blockerMessage = null;
+              }
+            }]
+          })
         }
       );
   }
 
-  enableUserLogin(user: KalturaUser): void {
-    this.isBusy = true;
-    this.usersStore.enableUserLogin(user)
+  private _enableUserLogin(user: KalturaUser): void {
+    this._usersStore.enableUserLogin(user)
       .cancelOnDestroy(this)
+      .tag('block-shell')
       .subscribe(
         () => {
-          this.isBusy = false;
-          this.usersStore.reload(true);
+          this._usersStore.reload(true);
           this.parentPopupWidget.close();
         },
         error => {
           // todo [kmcng]: need to figure out why it was already enabled
           if (error.code === 'USER_LOGIN_ALREADY_ENABLED') {
-            this.usersStore.reload(true);
+            this._usersStore.reload(true);
             this.parentPopupWidget.close();
           } else {
-            this.isBusy = false;
-            this.blockerMessage = new AreaBlockerMessage(
-              {
-                message: error.message,
-                buttons: [{
-                  label: this._appLocalization.get('app.common.ok'),
-                  action: () => {
-                    this.blockerMessage = null;
-                  }
-                }]
-              }
-            )
+            this._blockerMessage = new AreaBlockerMessage({
+              message: error.message,
+              buttons: [{
+                label: this._appLocalization.get('app.common.ok'),
+                action: () => {
+                  this._blockerMessage = null;
+                }
+              }]
+            })
           }
         }
       );
   }
 
-  addNewUser(): void {
-    this.isBusy = true;
-    this.usersStore.addUser(this.userForm)
+  private _addNewUser(): void {
+    this._usersStore.addUser(this._userForm)
       .cancelOnDestroy(this)
+      .tag('block-shell')
       .subscribe(
         user => {
-          this.enableUserLogin(user);
+          this._enableUserLogin(user);
         },
         error => {
-          this.isBusy = false;
-          this.blockerMessage = new AreaBlockerMessage(
-            {
-              message: error.message,
-              buttons: [{
-                label: this._appLocalization.get('app.common.ok'),
-                action: () => {
-                  this.blockerMessage = null;
-                }
-              }]
-            }
-          )
+          this._blockerMessage = new AreaBlockerMessage({
+            message: error.message,
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._blockerMessage = null;
+              }
+            }]
+          })
         }
       );
   }
 
-  ngOnInit() {
-    this.usersStore.usersData$
-      .cancelOnDestroy(this)
-      .subscribe(
-        response => {
-          this._roles = response.roles.items;
-          this._users = response.users.items;
-          this._partnerInfo = {
-            adminLoginUsersQuota: response.partnerInfo.adminLoginUsersQuota,
-            adminUserId: response.partnerInfo.adminUserId
-          };
-          this._roles.forEach(role => {
-            this.rolesList.push({ label: role.name, value: role.id });
-          });
-          let selectedRoleIds: string;
-          this._users.forEach(item => {
-            if (this.user && this.user.id === item.id) {
-              this.isNewUser = false;
-              selectedRoleIds = item.roleIds;
-              this.userForm.reset({
-                email: this.user.email,
-                firstName: this.user.firstName,
-                lastName: this.user.lastName,
-                id: this.user.id,
-                roleIds: selectedRoleIds ? selectedRoleIds : this.user.roleIds
-              });
-              this.userForm.get('email').disable();
-              this.userForm.get('firstName').disable();
-              this.userForm.get('lastName').disable();
-              this.user.id === this._partnerInfo.adminUserId ? this.userForm.get('roleIds').disable() : this.userForm.get('roleIds').enable();
-
-              this.getRoleDescription(item.roleIds);
-            } else {
-              this.isNewUser = true;
-              this.userForm.reset({
-                email: '',
-                firstName: '',
-                lastName: '',
-                id: '',
-                roleIds: null
-              });
-              this.userForm.get('email').enable();
-              this.userForm.get('firstName').enable();
-              this.userForm.get('lastName').enable();
-              this.userForm.get('roleIds').enable();
-              this.getRoleDescription();
-            }
-          });
-        }
-      );
+  public _setRoleDescription(event?: any): void {
+    if (!event) {
+      this._selectedRoleDescription = this._roles[0] ? this._roles[0].description : '';
+    } else {
+      const relevantRole = this._roles.find(role => event === role.id.toString() || event.value === role.id);
+      if (relevantRole) {
+        this._selectedRoleDescription = relevantRole.description;
+      }
+    }
   }
 
-  ngOnDestroy() {
+  public _saveUser(): void {
+    if (this._userForm.valid) {
+      if (this._isNewUser) {
+        this._isUserAlreadyExists();
+      } else {
+        this._updateUser();
+      }
+    } else {
+      this._markFormFieldsAsTouched();
+    }
   }
 }

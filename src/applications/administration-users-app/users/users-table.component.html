@@ -1,11 +1,13 @@
-<k-area-blocker kFillHeight [showLoader]="this._deferredLoading" [message]="blockerMessage">
+<k-area-blocker kFillHeight
+                [showLoader]="(_usersStore.users.state$ | async)?.loading || this._deferredLoading"
+                [message]="_blockerMessage">
   <div class="kUsersTable" [class.noResults]="!_users.length">
     <p-dataTable
       [value]="_users"
       scrollable="true"
       scrollHeight="100%"
       dataKey="id"
-      [rowTrackBy]="rowTrackBy"
+      [rowTrackBy]="_rowTrackBy"
       kStickyHeader [sticksTo]="'usersFilters'" stickyClass="stickyHeader" [stickyId]="'rolesTable'">
       <p-column field="status" styleClass="kTableStatus" header="{{'applications.content.table.status' | translate}}"
                 [sortable]="false">
@@ -31,7 +33,7 @@
       </p-column>
       <p-column field="roleIds" header="{{'applications.content.table.role' | translate}}" [sortable]="false">
         <ng-template let-col let-user="rowData" pTemplate="body">
-          <span class="kTitle">{{user[col.field] | kRoleName:(usersStore.usersData$ | async)?.roles.items}}</span>
+          <span class="kTitle">{{user[col.field] | kRoleName:(_usersStore.users.data$ | async)?.roles.items}}</span>
         </ng-template>
       </p-column>
       <p-column field="lastLoginTime" header="{{'applications.content.table.lastLogin' | translate}}"
@@ -43,7 +45,7 @@
       <p-column header="" styleClass="kTableActions">
         <ng-template let-col let-user="rowData" pTemplate="body">
           <div class="kUsersTableActions">
-            <button type="button" pButton icon="kIconmore" (click)="openActionsMenu($event, user)"></button>
+            <button type="button" pButton icon="kIconmore" (click)="_openActionsMenu($event, user)"></button>
           </div>
         </ng-template>
       </p-column>

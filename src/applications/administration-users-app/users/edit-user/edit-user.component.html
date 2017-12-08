@@ -1,36 +1,36 @@
-<k-area-blocker [showLoader]="isBusy" [message]="blockerMessage">
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
   <div class="kFloater kOverrideFAIcons">
     <div class="kHeader">
       <div class="kTitle">
-        <span *ngIf="!isNewUser; else addTitleText">{{'applications.administration.users.editUser' | translate}}</span>
+        <span *ngIf="!_isNewUser; else addTitleText">{{'applications.administration.users.editUser' | translate}}</span>
         <ng-template #addTitleText>{{'applications.administration.users.addUser' | translate}}</ng-template>
       </div>
     </div>
 
     <div class="kContainer">
-      <form [formGroup]="userForm" novalidate>
+      <form [formGroup]="_userForm" novalidate>
         <div class="kCaption">{{'applications.administration.users.personalDetails' | translate}}</div>
         <div class="kRow kValign">
           <span class="kLabel">{{'applications.administration.users.loginEmailAddress' | translate}}</span>
           <div class="kRequired"
-               [ngClass]="{'kHasError':userForm.controls['email'].invalid && userForm.controls['email'].touched}">*
+               [ngClass]="{'kHasError':_userForm.controls['email'].invalid && _userForm.controls['email'].touched}">*
           </div>
           <div class="kControl">
             <input #email formControlName="email" type="text" pInputText/>
           </div>
         </div>
-        <div class="kErrorRow" [ngClass]="{'hidden': !userForm.controls['email'].touched}">
+        <div class="kErrorRow" [ngClass]="{'hidden': !_userForm.controls['email'].touched}">
           <div class="invalid" [ngClass]="{'hidden': email.value !== ''}">{{'applications.administration.users.required'
             | translate}}
           </div>
-          <div class="invalid" [ngClass]="{'hidden': email.value === '' || userForm.controls['email'].valid}">
+          <div class="invalid" [ngClass]="{'hidden': email.value === '' || _userForm.controls['email'].valid}">
             {{'applications.administration.users.emailFormat' | translate}}
           </div>
         </div>
         <div class="kRow kValign">
           <span class="kLabel">{{'applications.administration.users.firstName' | translate}}</span>
           <div class="kRequired"
-               [ngClass]="{'kHasError':userForm.controls['firstName'].invalid && userForm.controls['firstName'].touched}">
+               [ngClass]="{'kHasError':_userForm.controls['firstName'].invalid && _userForm.controls['firstName'].touched}">
             *
           </div>
           <div class="kControl">
@@ -38,20 +38,20 @@
           </div>
         </div>
         <div class="kErrorRow"
-             [ngClass]="{'hidden': firstName.value !== '' || !userForm.controls['firstName'].touched}">
+             [ngClass]="{'hidden': firstName.value !== '' || !_userForm.controls['firstName'].touched}">
           <div class="invalid">{{'applications.administration.users.required' | translate}}</div>
         </div>
         <div class="kRow kValign">
           <span class="kLabel">{{'applications.administration.users.lastName' | translate}}</span>
           <div class="kRequired"
-               [ngClass]="{'kHasError': userForm.controls['lastName'].invalid && userForm.controls['lastName'].touched}">
+               [ngClass]="{'kHasError': _userForm.controls['lastName'].invalid && _userForm.controls['lastName'].touched}">
             *
           </div>
           <div class="kControl">
             <input #lastName formControlName="lastName" type="text" pInputText/>
           </div>
         </div>
-        <div class="kErrorRow" [ngClass]="{'hidden': lastName.value !== '' || !userForm.controls['lastName'].touched}">
+        <div class="kErrorRow" [ngClass]="{'hidden': lastName.value !== '' || !_userForm.controls['lastName'].touched}">
           <div class="invalid">{{'applications.administration.users.required' | translate}}</div>
         </div>
         <div class="kCaption kExtraPadding">{{'applications.administration.users.accountSpecificDetails' | translate}}
@@ -65,14 +65,14 @@
         <div class="kRow kValign">
           <span class="kLabel kExtraWidth">{{'applications.administration.users.userRole' | translate}}</span>
           <div class="kControl">
-            <p-dropdown [options]="rolesList" (onChange)="this.getRoleDescription($event)" formControlName="roleIds"
+            <p-dropdown [options]="_rolesList" (onChange)="this._setRoleDescription($event)" formControlName="roleIds"
                         styleClass="rolesList" [autoWidth]="false"></p-dropdown>
           </div>
         </div>
         <div class="kRow kValign">
           <span class="kLabel kExtraWidth"></span>
           <div class="kControl">
-            <div class="kSelectedRole">{{selectedRole}}</div>
+            <div class="kSelectedRole">{{_selectedRoleDescription}}</div>
           </div>
         </div>
       </form>
@@ -80,9 +80,9 @@
 
     <div class="kFooter">
       <button type="button" class="kButtonBranded"
-              [disabled]="!userForm.dirty" pButton
+              [disabled]="!_userForm.dirty" pButton
               label="{{'applications.administration.users.save' | translate}}"
-              (click)="this.saveUser()"></button>
+              (click)="_saveUser()"></button>
     </div>
   </div>
 </k-area-blocker>
