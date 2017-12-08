@@ -54,7 +54,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
       .cancelOnDestroy(this)
       .subscribe(
         response => {
-          this._usersInfo = this._appLocalization.get('applications.administration.users._usersInfo',
+          this._usersInfo = this._appLocalization.get('applications.administration.users.usersInfo',
             {
               0: response.users.totalCount,
               1: response.users.totalCount > 1 ? this._appLocalization.get('applications.administration.users.users') : this._appLocalization.get('applications.administration.users.user'),
