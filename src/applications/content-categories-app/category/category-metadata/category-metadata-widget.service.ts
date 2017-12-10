@@ -6,7 +6,7 @@ import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPage
 import {KalturaTaggedObjectType} from 'kaltura-ngx-client/api/types/KalturaTaggedObjectType';
 import {MetadataListAction} from 'kaltura-ngx-client/api/types/MetadataListAction';
 import {KalturaMetadataObjectType} from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
-import {KalturaClient} from 'kaltura-ngx-client';
+import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {KalturaMetadataFilter} from 'kaltura-ngx-client/api/types/KalturaMetadataFilter';
 import {KalturaMetadata} from 'kaltura-ngx-client/api/types/KalturaMetadata';
@@ -22,8 +22,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {CategoryWidgetKeys} from './../category-widget-keys';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CategoryWidget} from '../category-widget';
-import {KalturaMultiRequest} from 'kaltura-ngx-client';
-import { async } from 'rxjs/scheduler/async';
+import {async} from 'rxjs/scheduler/async';
 
 @Injectable()
 export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy {
@@ -134,8 +133,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
         // validate reference ID
         let referenceId = '';
         if (this.data.referenceId &&
-            this.data.referenceId !== '' &&
-            this.data.referenceId !== '__null_string__') {
+            this.data.referenceId !== '') {
             referenceId = this.data.referenceId;
         }
 

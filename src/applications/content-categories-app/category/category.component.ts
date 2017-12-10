@@ -1,15 +1,14 @@
-import { CategoryMetadataWidget } from './category-metadata/category-metadata-widget.service';
+import {CategoryMetadataWidget} from './category-metadata/category-metadata-widget.service';
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { BrowserService } from 'app-shared/kmc-shell';
-import { CategoryService, ActionTypes } from './category.service';
-import { CategorySectionsListWidget } from './category-sections-list/category-sections-list-widget.service';
-import { CategoriesService } from '../categories/categories.service';
-import { CategoryWidgetsManager } from './category-widgets-manager';
-import { AreaBlockerMessage, AreaBlockerMessageButton } from '@kaltura-ng/kaltura-ui';
-import { CategoryWidget } from './category-widget';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { Observable } from 'rxjs/Observable';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {BrowserService} from 'app-shared/kmc-shell';
+import {ActionTypes, CategoryService} from './category.service';
+import {CategorySectionsListWidget} from './category-sections-list/category-sections-list-widget.service';
+import {CategoriesService} from '../categories/categories.service';
+import {CategoryWidgetsManager} from './category-widgets-manager';
+import {AreaBlockerMessage, AreaBlockerMessageButton} from '@kaltura-ng/kaltura-ui';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
 	selector: 'kCategory',
@@ -92,13 +91,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
 							this._areaBlockerMessage = new AreaBlockerMessage({
 								message: message,
 								buttons: [
-									this._createBackToCategoriesButton(),
-									{
-										label: this._appLocalization.get('applications.content.categoryDetails.errors.retry'),
-										action: () => {
-											this._categoryStore.reloadCategory();
-										}
-									}
+									this._createBackToCategoriesButton()
 								]
 							});
 							break;
