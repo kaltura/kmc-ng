@@ -140,7 +140,22 @@ export class AddUsersComponent implements OnInit, OnDestroy {
             }
           },
           error => {
-            this._blockerMessage = error;
+            this._blockerMessage = new AreaBlockerMessage({
+              message: this._appLocalization
+                .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.addUsersFailed'),
+              buttons: [{
+                label: this._appLocalization.get('app.common.cancel'),
+                action: () => {
+                  this._blockerMessage = null;
+                }
+              },  {
+                label: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.retry'),
+                action: () => {
+                  this._apply();
+                }
+              }
+              ]
+            });
           }
         );
     } else {

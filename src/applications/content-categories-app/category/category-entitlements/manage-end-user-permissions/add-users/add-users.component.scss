@@ -66,6 +66,10 @@ $autoCompleteWidth: 326px;
       padding-bottom: 20px;
       .kRadio {
         padding-right: 40px;
+
+        /deep/ .ui-radiobutton-label{
+          font-weight: normal;
+        }
       }
     }
 

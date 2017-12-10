@@ -1143,6 +1143,7 @@
               "updateMethod": "Update method",
               "save": "Add {{0}} Users",
               "cancel": "Cancel",
+              "retry": "Retry",
               "permissionsLevelOptions": {
                 "member": "Member",
                 "contributor": "Contributor",
