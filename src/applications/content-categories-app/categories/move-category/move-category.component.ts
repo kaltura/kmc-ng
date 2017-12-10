@@ -1,11 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {CategoriesService} from '../categories.service';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {CategoryData} from 'app-shared/content-shared/categories-search.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {BrowserService} from 'app-shared/kmc-shell';
+import {KalturaCategory} from "kaltura-ngx-client/api/types/KalturaCategory";
 
 @Component({
   selector: 'kMoveCategory',

@@ -1,12 +1,12 @@
 import {ISubscription} from 'rxjs/Subscription';
-import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {CategoriesService, SortDirection} from '../categories.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
-import {AppLocalization} from "@kaltura-ng/kaltura-common";
-import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 
 @Component({
   selector: 'kCategoriesList',

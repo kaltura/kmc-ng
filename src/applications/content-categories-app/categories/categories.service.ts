@@ -14,12 +14,12 @@ import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaC
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {CategoryDeleteAction} from 'kaltura-ngx-client/api/types/CategoryDeleteAction';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {CategoryAddAction} from 'kaltura-typescript-client/types/CategoryAddAction';
-import {CategoryMoveAction} from 'kaltura-typescript-client/types/CategoryMoveAction';
-import {KalturaPrivacyType} from 'kaltura-typescript-client/types/KalturaPrivacyType';
-import {KalturaAppearInListType} from "kaltura-typescript-client/types/KalturaAppearInListType";
-import {KalturaContributionPolicyType} from "kaltura-typescript-client/types/KalturaContributionPolicyType";
-import {KalturaInheritanceType} from "kaltura-typescript-client/types/KalturaInheritanceType";
+import {CategoryMoveAction} from "kaltura-ngx-client/api/types/CategoryMoveAction";
+import {CategoryAddAction} from "kaltura-ngx-client/api/types/CategoryAddAction";
+import {KalturaInheritanceType} from "kaltura-ngx-client/api/types/KalturaInheritanceType";
+import {KalturaContributionPolicyType} from "kaltura-ngx-client/api/types/KalturaContributionPolicyType";
+import {KalturaAppearInListType} from "kaltura-ngx-client/api/types/KalturaAppearInListType";
+import {KalturaPrivacyType} from "kaltura-ngx-client/api/types/KalturaPrivacyType";
 
 export interface UpdateStatus {
     loading: boolean;
