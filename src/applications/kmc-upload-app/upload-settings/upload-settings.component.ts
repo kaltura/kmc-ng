@@ -2,12 +2,12 @@ import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/cor
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { AppLocalization, UploadManagement } from '@kaltura-ng/kaltura-common';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { environment } from 'app-environment';
-import { TranscodingProfileManagement } from '@kaltura-ng/kaltura-server-utils/transcoding-profile-management';
+import { TranscodingProfileManagement } from 'app-shared/kmc-shared/transcoding-profile-management';
 
 export interface UploadSettingsFile {
   file: File;
@@ -94,7 +94,8 @@ export class UploadSettingsComponent implements OnInit, AfterViewInit {
   }
 
   private _getFileExtension(filename: string): string {
-    return /(?:\.([^.]+))?$/.exec(filename)[1];
+  	const extension = /(?:\.([^.]+))?$/.exec(filename)[1];
+    return typeof extension === "undefined" ? '' : extension.toLowerCase();
   }
 
   private _getMediaTypeFromExtension(extension: string): KalturaMediaType | null {

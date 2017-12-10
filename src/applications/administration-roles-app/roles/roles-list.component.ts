@@ -1,7 +1,7 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {RolesService} from './roles.service';
-import {KalturaUserRole} from 'kaltura-typescript-client/types/KalturaUserRole';
+import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -16,7 +16,6 @@ export class RolesListComponent implements OnInit, OnDestroy {
 
   @ViewChild('editPopup') public editPopup: PopupWidgetComponent;
 
-  public _isBusy = false
   public _blockerMessage: AreaBlockerMessage = null;
   public _roles: KalturaUserRole[] = [];
   public _rolesTotalCount = '';
@@ -121,21 +120,13 @@ export class RolesListComponent implements OnInit, OnDestroy {
   }
 
   private deleteRole(role: KalturaUserRole): void {
-    this._isBusy = true;
     this._blockerMessage = null;
     this._rolesService.deleteRole(role)
       .cancelOnDestroy(this)
+      .tag('block-shell')
       .subscribe(
-        () => {
-          this._isBusy = false;
-          this._browserService.showGrowlMessage({
-            severity: 'success',
-            detail: this.appLocalization.get('applications.administration.roles.deleted')
-          });
-        },
+        () => { },
         error => {
-          this._isBusy = false;
-
           this._blockerMessage = new AreaBlockerMessage(
             {
               message: error.message,
@@ -161,20 +152,17 @@ export class RolesListComponent implements OnInit, OnDestroy {
 
 
   private duplicateRole(role: KalturaUserRole): void {
-    this._isBusy = true;
     this._blockerMessage = null;
     this._rolesService.duplicateRole(role)
       .cancelOnDestroy(this)
+      .tag('block-shell')
       .subscribe(
         (duplicatedRole) => {
-          this._isBusy = false;
           this._rolesService.reload(true);
           this._currentEditRoleIsDuplicated = true;
           this.editRole(duplicatedRole);
         },
         error => {
-          this._isBusy = false;
-
           this._blockerMessage = new AreaBlockerMessage(
             {
               message: error.message,

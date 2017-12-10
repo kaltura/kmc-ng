@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 @Component({
@@ -24,8 +24,5 @@ export class BulkOperationsComponent {
     this.moveEntries.emit({ entries: this.selectedEntries, direction });
   }
 
-  public _getTranslation(key: string, params: string): string {
-    return this._appLocalization.get(key, { 0: params });
-  }
 }
 

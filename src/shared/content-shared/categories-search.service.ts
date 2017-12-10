@@ -3,18 +3,18 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/multicast';
 import 'rxjs/add/operator/publishReplay';
 
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaClient } from 'kaltura-ngx-client';
 
-import { CategoryListAction } from 'kaltura-typescript-client/types/CategoryListAction';
-import { KalturaCategoryFilter } from 'kaltura-typescript-client/types/KalturaCategoryFilter';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { KalturaCategory } from 'kaltura-typescript-client/types/KalturaCategory';
-import { KalturaDetachedResponseProfile } from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-typescript-client/types/KalturaResponseProfileType';
-import { KalturaCategoryListResponse } from 'kaltura-typescript-client/types/KalturaCategoryListResponse';
-import { KalturaPrivacyType } from 'kaltura-typescript-client/types/KalturaPrivacyType';
-import { KalturaAppearInListType } from 'kaltura-typescript-client/types/KalturaAppearInListType';
-import { KalturaContributionPolicyType } from 'kaltura-typescript-client/types/KalturaContributionPolicyType';
+import { CategoryListAction } from 'kaltura-ngx-client/api/types/CategoryListAction';
+import { KalturaCategoryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryFilter';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
+import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
+import { KalturaCategoryListResponse } from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
+import { KalturaPrivacyType } from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
+import { KalturaAppearInListType } from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
+import { KalturaContributionPolicyType } from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 export interface CategoryData {

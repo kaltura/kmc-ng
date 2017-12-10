@@ -39,7 +39,7 @@ import {KMCShellModule} from 'app-shared/kmc-shell';
 import {routing} from './content-categories-app.routes';
 import {ContentCategoriesComponent} from './content-categories.component';
 
-import {DynamicMetadataFormModule, MetadataProfileModule} from '@kaltura-ng/kaltura-server-utils';
+import {DynamicMetadataFormModule, MetadataProfileModule} from 'app-shared/kmc-shared';
 
 import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
 import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';

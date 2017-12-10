@@ -8,16 +8,17 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
-import {KalturaClient} from '@kaltura-ng/kaltura-client';
-import {KalturaMediaEntry} from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import {KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-typescript-client';
-import {BaseEntryGetAction} from 'kaltura-typescript-client/types/BaseEntryGetAction';
-import {BaseEntryUpdateAction} from 'kaltura-typescript-client/types/BaseEntryUpdateAction';
+import {KalturaClient} from 'kaltura-ngx-client';
+import {KalturaMediaEntry} from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import {KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-ngx-client';
+import {BaseEntryGetAction} from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
+import {BaseEntryUpdateAction} from 'kaltura-ngx-client/api/types/BaseEntryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryWidgetsManager } from './entry-widgets-manager';
 import {  OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 
 export enum ActionTypes
 {
@@ -44,6 +45,7 @@ export class EntryStore implements  OnDestroy {
 	private _loadEntrySubscription : ISubscription;
 	private _sectionToRouteMapping : { [key : number] : string} = {};
 	private _state = new BehaviorSubject<StatusArgs>({ action : ActionTypes.EntryLoading, error : null});
+  private _pageExitVerificationToken: string;
 
 	public state$ = this._state.asObservable();
 	private _entryIsDirty : boolean;
@@ -73,7 +75,8 @@ export class EntryStore implements  OnDestroy {
 				private _entriesStore : EntriesStore,
 				@Host() private _widgetsManager: EntryWidgetsManager,
 				private _entryRoute: ActivatedRoute,
-                private _appLocalization: AppLocalization) {
+        private _pageExitVerificationService: PageExitVerificationService,
+        private _appLocalization: AppLocalization) {
 
 
 		this._widgetsManager.entryStore = this;
@@ -118,12 +121,12 @@ export class EntryStore implements  OnDestroy {
 	}
 
 	private _updatePageExitVerification() {
-		if (this._entryIsDirty) {
-			this._browserService.enablePageExitVerification();
-		}
-		else {
-			this._browserService.disablePageExitVerification();
-		}
+    if (this._entryIsDirty) {
+      this._pageExitVerificationToken = this._pageExitVerificationService.add();
+    } else {
+      this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+      this._pageExitVerificationToken = null;
+    }
 	}
 
 	ngOnDestroy() {
@@ -131,7 +134,7 @@ export class EntryStore implements  OnDestroy {
 		this._state.complete();
 		this._entry.complete();
 
-		this._browserService.disablePageExitVerification();
+    this._pageExitVerificationService.remove(this._pageExitVerificationToken);
 
 		if (this._saveEntryInvoked)
 		{

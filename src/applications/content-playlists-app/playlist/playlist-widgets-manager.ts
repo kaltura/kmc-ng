@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { WidgetsManagerBase } from '@kaltura-ng/kaltura-ui'
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
+import { KalturaMultiRequest } from 'kaltura-ngx-client';
+import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { PlaylistStore } from './playlist-store.service';
 
 @Injectable()

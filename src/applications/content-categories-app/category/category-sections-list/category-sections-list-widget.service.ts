@@ -1,13 +1,12 @@
-import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {CategorySectionsList} from './category-sections-list';
 import {Injectable, OnDestroy} from '@angular/core';
-
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {ActivatedRoute} from '@angular/router';
 import {CategoryWidget} from '../category-widget';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 
 export interface SectionWidgetItem {
     label: string,

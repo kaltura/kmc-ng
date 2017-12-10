@@ -165,26 +165,34 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
       );
     };
     const deleteCategory = () => {
-      this._isBusy = true;
       this._blockerMessage = null;
-      this._categoriesService.deleteCategory(category.id).subscribe(
-        () => {
-          this._isBusy = false;
-          this._browserService.showGrowlMessage({
-            severity: 'success',
-            detail: this._appLocalization.get('applications.content.categories.deleted')
-          });
-          this._categoriesService.reload(true);
-        },
-        error => {
-          this._isBusy = false;
-          this._browserService.showGrowlMessage({
-            severity: 'error',
-            detail: this._appLocalization.get('applications.content.categories.errors.categoryCouldNotBeDeleted')
-          });
-        }
+      this._categoriesService.deleteCategory(category.id)
+        .tag('block-shell')
+        .subscribe(
+          () => {
+            this._categoriesService.reload(true);
+          },
+          error => {
+            this._blockerMessage = new AreaBlockerMessage({
+              message: this._appLocalization.get('applications.content.categories.errors.categoryCouldNotBeDeleted'),
+              buttons: [
+                {
+                  label: this._appLocalization.get('app.common.retry'),
+                  action: () => {
+                    deleteCategory();
+                    this._blockerMessage = null;
+                  }
+                },
+                {
+                  label: this._appLocalization.get('app.common.cancel'),
+                  action: () => {
+                    this._blockerMessage = null;
+                  }
+                }]
+            });
+          }
       );
-    }
+    };
 
     // show category edit warning if needed
     if (category.tags && category.tags.indexOf('__EditWarning') > -1) {

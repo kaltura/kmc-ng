@@ -24,7 +24,7 @@ import {
   UploadManagement
 } from '@kaltura-ng/kaltura-common';
 import {AreaBlockerModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
-import {KalturaClient, KalturaClientConfiguration} from '@kaltura-ng/kaltura-client';
+import {KalturaClient, KalturaClientConfiguration} from 'kaltura-ngx-client';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {
   AccessControlProfileStore,
@@ -32,7 +32,7 @@ import {
   KalturaServerModule,
   MetadataProfileModule,
   PartnerProfileStore
-} from '@kaltura-ng/kaltura-server-utils';
+} from 'app-shared/kmc-shared';
 
 import {AppComponent} from './app.component';
 import {routing} from './app.routes';
@@ -69,20 +69,23 @@ import { PasswordExpiredFormComponent } from './components/login/password-expire
 import { InvalidLoginHashFormComponent } from './components/login/invalid-login-hash-form/invalid-login-hash-form.component';
 import { AppMenuContentComponent } from './components/app-menu/app-menu-content.component';
 import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-app.module';
-import { TranscodingProfileManagementModule } from '@kaltura-ng/kaltura-server-utils/transcoding-profile-management';
-import { ChangeAccountComponent } from './components/changeAccount/change-account.component';import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
+import { TranscodingProfileManagementModule } from 'app-shared/kmc-shared/transcoding-profile-management';
+import { ChangeAccountComponent } from './components/changeAccount/change-account.component';
+import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
 import { AppEventsModule } from 'app-shared/kmc-shared';
+import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
 
 export function clientConfigurationFactory() {
-  const result = new KalturaClientConfiguration();
-  result.endpointUrl = environment.core.kaltura.apiUrl;
-  result.clientTag = 'KMCng';
-  return result;
+    const result = new KalturaClientConfiguration();
+    const { useHttpsProtocol, serverEndpoint } = environment.core.kaltura;
+    result.endpointUrl = `${useHttpsProtocol ? 'https' : 'http'}://${serverEndpoint}`;
+    result.clientTag = 'KMCng';
+    return result;
 }
 
 @NgModule({
@@ -114,13 +117,14 @@ export function clientConfigurationFactory() {
     ReactiveFormsModule,
     TooltipModule,
     GrowlModule,
-    KmcUploadAppModule,
+    KmcUploadAppModule.forRoot(),
     NewEntryUploadModule.forRoot(),
     BulkUploadModule.forRoot(),
     TranscodingProfileManagementModule.forRoot(),
     RadioButtonModule,
     StickyModule.forRoot(),
-    OperationTagModule.forRoot()
+    OperationTagModule.forRoot(),
+    KMCServerPollsModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
