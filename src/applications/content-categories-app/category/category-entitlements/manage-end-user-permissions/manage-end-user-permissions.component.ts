@@ -9,6 +9,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-wi
 import {Observable} from "rxjs/Observable";
 import {KalturaCategoryUserPermissionLevel} from "kaltura-typescript-client/types/KalturaCategoryUserPermissionLevel";
 import {KalturaUpdateMethodType} from "kaltura-typescript-client/types/KalturaUpdateMethodType";
+import {KalturaCategory} from "kaltura-typescript-client/types/KalturaCategory";
 
 
 @Component({
@@ -25,7 +26,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
   public _users: User[] = [];
   public _usersTotalCount: number = null;
   public _disabled = false;
-  @Input() categoryId: number = null;
+  @Input() category: KalturaCategory = null;
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() categoryInheritUserPermissions: boolean = false;
   private usersSubscription: ISubscription;
@@ -43,7 +44,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (!this.categoryId) {
+    if (!this.category || !this.category.id) {
       this._blockerMessage = new AreaBlockerMessage({
         message: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.errors.loadEndUserPermissions'),
         buttons: [{
@@ -94,7 +95,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
         }
       });
 
-    this._manageEndUsersPermissionsService.categoryId = this.categoryId;
+    this._manageEndUsersPermissionsService.categoryId = this.category.id;
   }
 
   ngOnDestroy() {

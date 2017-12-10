@@ -27,6 +27,17 @@ $autoCompleteWidth: 238px;
     margin-bottom: 10px;
   }
 
+    .kBlock {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 32px;
+      padding-bottom: 10px;
+      .kRadio {
+        padding-right: 40px;
+      }
+    }
+
     .kAutoCompleteContainer {
       width: $autoCompleteWidth !important;
       margin: 0 auto;

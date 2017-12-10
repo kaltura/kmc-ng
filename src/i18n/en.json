@@ -1127,6 +1127,26 @@
               },
               "removeUsers": "Remove Users"
             },
+            "addUsers": {
+              "title": "Add Users",
+              "setUserPermissions":"Set end-user permissions for this category",
+              "inheritUser": "Inherit users from parent category",
+              "selectEndUsers": "Select End-Users",
+              "permissionLevel": "Permission Level",
+              "updateMethod": "Update method",
+              "save": "Save",
+              "cancel": "Cancel",
+              "permissionsLevelOptions": {
+                "member": "Member",
+                "contributor": "Contributor",
+                "moderator": "Moderator",
+                "manager": "Manager"
+              },
+              "updateMethodOptions": {
+                "manual": "Manual",
+                "automatic": "Automatic"
+              }
+            },
             "errors" : {
               "loadEndUserPermissions": "An error occurred while trying to load Manage End-Users Permissions",
               "setUpdateMethod": "Unable to set update method for selected users",

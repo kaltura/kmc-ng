@@ -12,6 +12,10 @@ import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/po
 import {KalturaUser} from 'kaltura-typescript-client/types/KalturaUser';
 import {KalturaUserFilter} from 'kaltura-typescript-client/types/KalturaUserFilter';
 import {UserListAction} from 'kaltura-typescript-client/types/UserListAction';
+import {KalturaCategory} from "kaltura-typescript-client/types/KalturaCategory";
+import {KalturaUpdateMethodType} from "kaltura-typescript-client/types/KalturaUpdateMethodType";
+import {KalturaCategoryUserPermissionLevel} from "kaltura-typescript-client/types/KalturaCategoryUserPermissionLevel";
+import {KalturaInheritanceType} from "kaltura-typescript-client/types/KalturaInheritanceType";
 
 @Component({
   selector: 'kAddUsers',
@@ -21,38 +25,47 @@ import {UserListAction} from 'kaltura-typescript-client/types/UserListAction';
 export class AddUsersComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @Output() usersChanged = new EventEmitter<KalturaUser>();
+  @Input() parentCategory: KalturaCategory;
+  @Output() usersChanged = new EventEmitter<KalturaUser>(); // TODO: BEN refresh the table upon changing
 
   public _loading = false;
   public _blockerMessage: AreaBlockerMessage;
 
   public _usersProvider = new Subject<SuggestionsProviderData>();
   public _users: KalturaUser = null;
+  public _permissionLevelOptions: { value: number, label: string }[] = [];
+  public _updateMethodOptions: { value: number, label: string }[] = [];
+  public _kalturaInheritanceType = KalturaInheritanceType;
+
+  public _selectedPermissionSettings: 'inherit' | 'selectUsers' = null;
 
   private _searchUsersSubscription: ISubscription;
   private _parentPopupStateChangesSubscription: ISubscription;
-  private _confirmClose = true;
+  private _confirmClose = true; // todo: remove if no need
 
   constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization, private _browserService: BrowserService) {
   }
 
   ngOnInit() {
-    // if (!this.category) {
-    //   this._blockerMessage = new AreaBlockerMessage({
-    //     message: this._appLocalization.get('applications.content.categoryDetails.entitlements.owner.errors.unableToChange'),
-    //     buttons: [{
-    //       label: this._appLocalization.get('app.common.close'),
-    //       action: () => {
-    //         this._blockerMessage = null;
-    //         if (this.parentPopupWidget) {
-    //           this.parentPopupWidget.close();
-    //         }
-    //       }
-    //     }
-    //     ]
-    //   });
-    // }
+    if (!this.parentCategory) {
+      this._blockerMessage = new AreaBlockerMessage({
+        message: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.errors.loadEndUserPermissions'),
+        buttons: [{
+          label: this._appLocalization.get('app.common.close'),
+          action: () => {
+            this._blockerMessage = null;
+            if (this.parentPopupWidget) {
+              this.parentPopupWidget.close();
+            }
+          }
+        }
+        ]
+      });
+    }
 
+    if (this.parentCategory.id) {
+      this._selectedPermissionSettings =  this.parentCategory.membersCount > 0 ? 'inherit' : 'selectUsers';
+    }
   }
 
   ngAfterViewInit() {
@@ -178,6 +191,33 @@ export class AddUsersComponent implements OnInit, OnDestroy, AfterViewInit {
         ]
       });
     }
+  }
+
+
+  private _fillPermissionLevelOptions() {
+    this._permissionLevelOptions = [{
+      value: KalturaCategoryUserPermissionLevel.member,
+      label: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.permissionsLevelOptions.member')
+    }, {
+      value: KalturaCategoryUserPermissionLevel.contributor,
+      label: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.permissionsLevelOptions.contributor')
+    }, {
+      value: KalturaCategoryUserPermissionLevel.moderator,
+      label: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.permissionsLevelOptions.moderator')
+    }, {
+      value: KalturaCategoryUserPermissionLevel.manager,
+      label: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.permissionsLevelOptions.manager')
+    }];
+  }
+
+  private _fillUpdateMethodOptions() {
+    this._updateMethodOptions = [{
+      value: KalturaUpdateMethodType.automatic,
+      label: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.updateMethodOptions.automatic')
+    }, {
+      value: KalturaUpdateMethodType.manual,
+      label: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.updateMethodOptions.manual')
+    }];
   }
 }
 

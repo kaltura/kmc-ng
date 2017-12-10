@@ -1,8 +1,15 @@
 <k-area-blocker [showLoader]="_loading" [message]="_blockerMessage">
   <div class="kContent kOverrideFAIcons">
-    <span class="kTitle">{{'applications.content.categoryDetails.entitlements.owner.changeOwner' | translate}}</span>
+    <span class="kTitle">{{'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.title' | translate}}</span>
     <div class="kContainer">
       <span class="kLabel">{{'applications.content.categoryDetails.entitlements.owner.changeOwnerLabel' | translate}}</span>
+      <div class="kBlock" *ngIf="parentCategory.id > 0 && parentCategory.inheritanceType === _kalturaInheritanceType.manual">
+        <p-radioButton class="kRadio" [(ngModel)]="_selectedPermissionSettings" [value]="'inherit'" name="permissionSettings"
+                       label="{{'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.inheritUser' | translate}}"></p-radioButton>
+        <p-radioButton class="kRadio" [(ngModel)]="_selectedPermissionSettings" [value]="'selectUsers'" name="permissionSettings"
+                       [disabled]="parentCategory.id && parentCategory.membersCount > 0"
+                       name="policy" label="{{'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.selectEndUsers' | translate}}"></p-radioButton>
+      </div>
 <div class="kAutoCompleteContainer" style="margin: 0 auto; width: 258px">
       <kAutoComplete [(ngModel)]="_users"
                      suggestionItemField="item"
@@ -20,9 +27,9 @@
     </div>
     <div class="kFooter">
       <button type="button" class="kButtonDefault" pButton
-              label="{{'app.common.cancel' | translate}}" (click)="parentPopupWidget.close()"></button>
+              label="{{'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.cancel' | translate}}" (click)="parentPopupWidget.close()"></button>
       <button type="button" class="kButtonBranded" pButton
-              label="{{'app.common.apply' | translate}}" (click)="_apply()"
+              label="{{'applications.content.categoryDetails.entitlements.usersPermissions.addUsers.save' | translate}}" (click)="_apply()"
       [disabled]="!_users?.length"></button>
     </div>
   </div>

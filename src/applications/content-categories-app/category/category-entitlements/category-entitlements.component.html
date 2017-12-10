@@ -179,7 +179,6 @@
         <span
           class="kLabel"><span class="kLabelText">{{'applications.content.categoryDetails.entitlements.permittedUsers.label' | translate}}</span></span>
         <div class="kControl">
-          <!--TODO: BEN Implement-->
           <span *ngIf="_widgetService.data.membersCount > 0">
         {{ 'applications.content.categoryDetails.entitlements.permittedUsers.count' | translate: {'0': _widgetService.data.membersCount } }}
       </span>
@@ -208,6 +207,6 @@
   <ng-template>
     <kManageEndUsers
       [categoryInheritUserPermissions]="_widgetService.entitlementsForm.controls['inheritUsersPermissions'].value"
-      [categoryId]="_widgetService.data.id" [parentPopupWidget]="manageUsersPopup"></kManageEndUsers>
+      [category]="_widgetService.data" [parentPopupWidget]="manageUsersPopup"></kManageEndUsers>
   </ng-template>
 </kPopupWidget>
