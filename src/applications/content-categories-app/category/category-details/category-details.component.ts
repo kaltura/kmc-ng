@@ -1,7 +1,7 @@
 import {ActionTypes, CategoryService} from './../category.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 
 @Component({
   selector: 'kCategoryDetails',

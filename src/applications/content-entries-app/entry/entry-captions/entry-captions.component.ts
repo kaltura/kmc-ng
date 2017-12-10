@@ -6,7 +6,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from 'app-shared/kmc-shell';
 import { BrowserService } from 'app-shared/kmc-shell';
-import { KalturaCaptionAssetStatus } from 'kaltura-typescript-client/types/KalturaCaptionAssetStatus'
+import { KalturaCaptionAssetStatus } from 'kaltura-ngx-client/api/types/KalturaCaptionAssetStatus'
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 
 import { EntryCaptionsWidget } from './entry-captions-widget.service';
@@ -92,10 +92,12 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 				this._downloadFile();
 				break;
 			case "preview":
-                const protocol = environment.core.kaltura.useHttpsProtocol ? 'https://' : 'http://';
+				this._widgetService.getCaptionPreviewUrl()
+					.subscribe(({ url }) =>
+					{
+                        this._browserService.openLink(url);
+					})
 
-                const previewUrl = protocol + environment.core.kaltura.serverEndpoint + "/api_v3/service/caption_captionasset/action/serve/captionAssetId/" + this._widgetService.currentCaption.id +"/ks/" + this._appAuthentication.appUser.ks;
-				this._browserService.openLink(previewUrl);
 				break;
 		}
 	}

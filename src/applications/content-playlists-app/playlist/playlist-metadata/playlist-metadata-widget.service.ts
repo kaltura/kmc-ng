@@ -1,15 +1,16 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
+import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { PlaylistWidget } from '../playlist-widget';
 import { PlaylistWidgetKeys } from '../playlist-widget-keys';
-import { KalturaPlaylist } from 'kaltura-typescript-client/types/KalturaPlaylist';
+import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { Observable } from 'rxjs/Observable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TagSearchAction } from 'kaltura-typescript-client/types/TagSearchAction';
-import { KalturaTagFilter } from 'kaltura-typescript-client/types/KalturaTagFilter';
-import { KalturaTaggedObjectType } from 'kaltura-typescript-client/types/KalturaTaggedObjectType';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { TagSearchAction } from 'kaltura-ngx-client/api/types/TagSearchAction';
+import { KalturaTagFilter } from 'kaltura-ngx-client/api/types/KalturaTagFilter';
+import { KalturaTaggedObjectType } from 'kaltura-ngx-client/api/types/KalturaTaggedObjectType';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { async } from 'rxjs/scheduler/async';
 
 @Injectable()
 export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy {
@@ -36,6 +37,7 @@ export class PlaylistMetadataWidget extends PlaylistWidget implements OnDestroy 
   private _monitorFormChanges(): void {
     Observable.merge(this.metadataForm.valueChanges, this.metadataForm.statusChanges)
       .cancelOnDestroy(this)
+        .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
       .subscribe(() => {
           super.updateState({
             isValid: this.metadataForm.status === 'VALID',

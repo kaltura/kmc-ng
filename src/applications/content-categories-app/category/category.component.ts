@@ -94,13 +94,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
 							this._areaBlockerMessage = new AreaBlockerMessage({
 								message: message,
 								buttons: [
-									this._createBackToCategoriesButton(),
-									{
-										label: this._appLocalization.get('applications.content.categoryDetails.errors.retry'),
-										action: () => {
-											this._categoryStore.reloadCategory();
-										}
-									}
+									this._createBackToCategoriesButton()
 								]
 							});
 							break;

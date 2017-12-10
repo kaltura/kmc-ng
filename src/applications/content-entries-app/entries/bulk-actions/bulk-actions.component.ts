@@ -17,12 +17,12 @@ import {
   EntryCategoryItem,
   SchedulingParams
 } from './services'
-import {KalturaMediaEntry} from "kaltura-typescript-client/types/KalturaMediaEntry";
+import {KalturaMediaEntry} from "kaltura-ngx-client/api/types/KalturaMediaEntry";
 import {BulkActionBaseService} from "./services/bulk-action-base.service";
 import {environment} from 'app-environment';
-import {KalturaUser} from 'kaltura-typescript-client/types/KalturaUser';
-import {KalturaMediaType} from 'kaltura-typescript-client/types/KalturaMediaType';
-import {KalturaAccessControl} from 'kaltura-typescript-client/types/KalturaAccessControl';
+import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
+import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import {KalturaAccessControl} from 'kaltura-ngx-client/api/types/KalturaAccessControl';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 @Component({

@@ -4,17 +4,18 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ISubscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { EntryWidgetKeys } from '../entry-widget-keys';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
-import { UserGetAction } from 'kaltura-typescript-client/types/UserGetAction';
-import { UserListAction } from 'kaltura-typescript-client/types/UserListAction';
-import { KalturaUserFilter } from 'kaltura-typescript-client/types/KalturaUserFilter';
-import { KalturaFilterPager } from 'kaltura-typescript-client/types/KalturaFilterPager';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaMultiRequest } from 'kaltura-ngx-client';
+import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
+import { UserGetAction } from 'kaltura-ngx-client/api/types/UserGetAction';
+import { UserListAction } from 'kaltura-ngx-client/api/types/UserListAction';
+import { KalturaUserFilter } from 'kaltura-ngx-client/api/types/KalturaUserFilter';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 
 import 'rxjs/add/observable/forkJoin';
 import { EntryWidget } from '../entry-widget';
+import { async } from 'rxjs/scheduler/async';
 
 @Injectable()
 export class EntryUsersWidget extends EntryWidget implements OnDestroy
@@ -39,6 +40,7 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 
 		Observable.merge(this.usersForm.valueChanges,
 			this.usersForm.statusChanges)
+            .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
             .cancelOnDestroy(this)
             .subscribe(
 				() => {

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { BaseEntryDeleteAction } from 'kaltura-typescript-client/types/BaseEntryDeleteAction';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { BaseEntryDeleteAction } from 'kaltura-ngx-client/api/types/BaseEntryDeleteAction';
 
 @Injectable()
 export class ContentEntriesAppService {

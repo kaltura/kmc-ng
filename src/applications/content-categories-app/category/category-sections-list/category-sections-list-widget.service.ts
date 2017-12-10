@@ -1,4 +1,4 @@
-import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {Injectable, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
