@@ -147,13 +147,14 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
     }
 
     private _registerToRefineFiltersService(): void {
-    this._showLoader = true;
     this._entriesRefineFilters.status$
       .cancelOnDestroy(this)
       .subscribe(
         result => {
+            this._showLoader = result.loading;
+
           if (result.errorMessage) {
-            this._showLoader = false;
+
             this._blockerMessage = new AreaBlockerMessage({
               message: result.errorMessage || 'Error loading filters',
               buttons: [{

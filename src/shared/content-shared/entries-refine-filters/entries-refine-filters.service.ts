@@ -92,6 +92,7 @@ export class EntriesRefineFiltersService {
     });
     const otherData$ = this.buildQueryRequest();
     const getFlavours$ = this._flavoursStore.get();
+      this._status.next({ loading: true, errorMessage: null });
     this.executeQuerySubscription = Observable.forkJoin(getMetadata$, otherData$, getFlavours$)
       .subscribe(
         (responses) => {
