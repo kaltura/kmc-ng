@@ -10,11 +10,10 @@ import {
 } from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {BrowserService} from 'app-shared/kmc-shell';
 import {ManageEndUserPermissionsService, User} from '../manage-end-user-permissions.service';
-import {KalturaCategoryUserPermissionLevel} from 'kaltura-typescript-client/types/KalturaCategoryUserPermissionLevel';
-import {KalturaUpdateMethodType} from 'kaltura-typescript-client/types/KalturaUpdateMethodType';
-import {KalturaCategoryUserStatus} from 'kaltura-typescript-client/types/KalturaCategoryUserStatus';
+import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
+import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
+import {KalturaCategoryUserStatus} from 'kaltura-ngx-client/api/types/KalturaCategoryUserStatus';
 
 @Component({
   selector: 'kManageEndUserPermissionsTable',
@@ -66,8 +65,7 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
 
   constructor(private _appLocalization: AppLocalization,
               public manageEndUserPermissionsService: ManageEndUserPermissionsService,
-              private cdRef: ChangeDetectorRef,
-              private _browserService: BrowserService) {
+              private cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -114,10 +112,12 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
   private _fillUpdateMethodOptions() {
     this._updateMethodOptions = [{
       value: KalturaUpdateMethodType.automatic,
-      label: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.table.updateMethodOptions.automatic')
+      label: this._appLocalization
+        .get('applications.content.categoryDetails.entitlements.usersPermissions.table.updateMethodOptions.automatic')
     }, {
       value: KalturaUpdateMethodType.manual,
-      label: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.table.updateMethodOptions.manual')
+      label: this._appLocalization
+        .get('applications.content.categoryDetails.entitlements.usersPermissions.table.updateMethodOptions.manual')
     }];
   }
 

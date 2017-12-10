@@ -1,23 +1,22 @@
-import {KalturaClient} from '@kaltura-ng/kaltura-client';
-import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
-import {KalturaMetadata} from 'kaltura-typescript-client/types/KalturaMetadata';
 import {Observable} from 'rxjs/Observable';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {CategoryWidgetKeys} from './../category-widget-keys';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CategoryWidget} from '../category-widget';
-import {KalturaMultiRequest} from 'kaltura-typescript-client';
-import {KalturaNullableBoolean} from 'kaltura-typescript-client/types/KalturaNullableBoolean';
-import {KalturaInheritanceType} from 'kaltura-typescript-client/types/KalturaInheritanceType';
-import {KalturaCategoryUserPermissionLevel} from 'kaltura-typescript-client/types/KalturaCategoryUserPermissionLevel';
-import {KalturaPrivacyType} from 'kaltura-typescript-client/types/KalturaPrivacyType';
-import {KalturaAppearInListType} from 'kaltura-typescript-client/types/KalturaAppearInListType';
-import {KalturaContributionPolicyType} from 'kaltura-typescript-client/types/KalturaContributionPolicyType';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {CategoryGetAction} from 'kaltura-typescript-client/types/CategoryGetAction';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {CategoryService} from '../category.service';
+import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
+import {KalturaMetadata} from 'kaltura-ngx-client/api/types/KalturaMetadata';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {CategoryGetAction} from 'kaltura-ngx-client/api/types/CategoryGetAction';
+import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
+import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
+import {KalturaInheritanceType} from 'kaltura-ngx-client/api/types/KalturaInheritanceType';
+import {KalturaNullableBoolean} from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
+import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
 
 @Injectable()
 export class CategoryEntitlementsWidget extends CategoryWidget implements OnDestroy {
@@ -188,7 +187,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
     newData.privacy = metadataFormValue.contentPrivacy;
     newData.appearInList = metadataFormValue.categoryListing;
     newData.contributionPolicy = metadataFormValue.contentPublishPermissions;
-    newData.moderation = metadataFormValue.moderateContent === true ? KalturaNullableBoolean.trueValue : KalturaNullableBoolean.falseValue;
+    newData.moderation = metadataFormValue.moderateContent !== true ? KalturaNullableBoolean.falseValue : KalturaNullableBoolean.trueValue;
     newData.inheritanceType = metadataFormValue.inheritUsersPermissions ? KalturaInheritanceType.inherit : KalturaInheritanceType.manual;
     if (!metadataFormValue.inheritUsersPermissions) {
       newData.defaultPermissionLevel = metadataFormValue.defaultPermissionLevel;

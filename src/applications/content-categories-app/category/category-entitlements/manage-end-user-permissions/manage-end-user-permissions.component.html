@@ -38,8 +38,8 @@
 </k-area-blocker>
  
  
-<kPopupWidget #addUser [popupWidth]="586" [popupHeight]="260" [modal]="true" [preventPageScroll]="true">
+<kPopupWidget #addUser [popupWidth]="790" [popupHeight]="447" [modal]="true" [preventPageScroll]="true">
   <ng-template>
-    <kAddUsers [parentPopupWidget]="addUser" [parentCategory]="category"></kAddUsers>
+    <kAddUsers [parentPopupWidget]="addUser" [parentCategory]="category" (usersAdded)="_reload()"></kAddUsers>
   </ng-template>
 </kPopupWidget>

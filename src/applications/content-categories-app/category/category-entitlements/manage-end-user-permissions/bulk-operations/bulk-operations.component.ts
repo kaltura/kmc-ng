@@ -2,8 +2,8 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {User} from '../manage-end-user-permissions.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {MenuItem} from 'primeng/primeng';
-import {KalturaCategoryUserPermissionLevel} from 'kaltura-typescript-client/types/KalturaCategoryUserPermissionLevel';
-import {KalturaUpdateMethodType} from "kaltura-typescript-client/types/KalturaUpdateMethodType";
+import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
+import {KalturaUpdateMethodType} from "kaltura-ngx-client/api/types/KalturaUpdateMethodType";
 
 @Component({
   selector: 'kManageEndUserPermissionsBulkOperationsContent',
@@ -20,7 +20,7 @@ export class ManageEndUserPermissionsBulkOperationsComponent implements OnInit {
   @Output() clearSelection = new EventEmitter<void>();
   @Output() deleteItems = new EventEmitter<User[]>();
   @Output()
-  onActionSelected = new EventEmitter<{action: 'activate' | 'deactivate' | 'setPermissionLevel'| 'updateMethod' | 'delete', users: User[], actionPayload?: any}>();
+  onActionSelected = new EventEmitter<{action: 'activate' | 'deactivate' | 'permissionLevel'| 'updateMethod' | 'delete', users: User[], actionPayload?: any}>();
 
   public _freetextSearch: string = '';
 
@@ -52,16 +52,16 @@ export class ManageEndUserPermissionsBulkOperationsComponent implements OnInit {
       {
         label: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.setPermissionLevel'), items: [
         { label: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.setPermissionLevelOptions.member'), command: (event) => {
-          this.onActionSelected.emit({action: 'setPermissionLevel', users: this.selectedItems, actionPayload: KalturaCategoryUserPermissionLevel.member});
+          this.onActionSelected.emit({action: 'permissionLevel', users: this.selectedItems, actionPayload: KalturaCategoryUserPermissionLevel.member});
         } },
         { label: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.setPermissionLevelOptions.contributor'), command: (event) => {
-          this.onActionSelected.emit({action: 'setPermissionLevel', users: this.selectedItems, actionPayload: KalturaCategoryUserPermissionLevel.contributor});
+          this.onActionSelected.emit({action: 'permissionLevel', users: this.selectedItems, actionPayload: KalturaCategoryUserPermissionLevel.contributor});
         } },
         { label: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.setPermissionLevelOptions.moderator'), command: (event) => {
-          this.onActionSelected.emit({action: 'setPermissionLevel', users: this.selectedItems, actionPayload: KalturaCategoryUserPermissionLevel.moderator});
+          this.onActionSelected.emit({action: 'permissionLevel', users: this.selectedItems, actionPayload: KalturaCategoryUserPermissionLevel.moderator});
         } },
         { label: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.setPermissionLevelOptions.manager'), command: (event) => {
-          this.onActionSelected.emit({action: 'setPermissionLevel', users: this.selectedItems, actionPayload: KalturaCategoryUserPermissionLevel.manager});
+          this.onActionSelected.emit({action: 'permissionLevel', users: this.selectedItems, actionPayload: KalturaCategoryUserPermissionLevel.manager});
         } }]
       },
       {

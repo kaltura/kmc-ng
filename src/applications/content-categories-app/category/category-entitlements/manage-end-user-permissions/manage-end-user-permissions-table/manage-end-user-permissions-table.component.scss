@@ -22,6 +22,11 @@
     color: $kGrayscale1;
     font-weight: 700;
   }
+
+  /deep/ .ui-datatable-scrollable-body {
+    max-height: 560px !important;
+    overflow: auto;
+  }
 }
 
 :host /deep/ {

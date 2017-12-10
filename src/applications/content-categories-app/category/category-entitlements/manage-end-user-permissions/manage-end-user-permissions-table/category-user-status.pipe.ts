@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {KalturaCategoryUserStatus} from "kaltura-typescript-client/types/KalturaCategoryUserStatus";
+import {KalturaCategoryUserStatus} from "kaltura-ngx-client/api/types/KalturaCategoryUserStatus";
 import {AppLocalization} from "@kaltura-ng/kaltura-common";
 
 @Pipe({ name: 'kCategoryUserStatus' })

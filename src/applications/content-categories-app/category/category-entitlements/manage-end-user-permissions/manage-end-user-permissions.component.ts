@@ -6,11 +6,10 @@ import {BrowserService} from 'app-shared/kmc-shell';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {ISubscription} from 'rxjs/Subscription';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {Observable} from "rxjs/Observable";
-import {KalturaCategoryUserPermissionLevel} from "kaltura-typescript-client/types/KalturaCategoryUserPermissionLevel";
-import {KalturaUpdateMethodType} from "kaltura-typescript-client/types/KalturaUpdateMethodType";
-import {KalturaCategory} from "kaltura-typescript-client/types/KalturaCategory";
-
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
+import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
   selector: 'kManageEndUsers',
@@ -25,10 +24,9 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
   public _selectedUsers: User[] = [];
   public _users: User[] = [];
   public _usersTotalCount: number = null;
-  public _disabled = false;
   @Input() category: KalturaCategory = null;
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @Input() categoryInheritUserPermissions: boolean = false;
+  @Input() categoryInheritUserPermissions = false;
   private usersSubscription: ISubscription;
   private querySubscription: ISubscription;
 
@@ -91,7 +89,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
               }
             }
             ]
-          })
+          });
         }
       });
 
@@ -149,6 +147,17 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
         this._executeAction(this._manageEndUsersPermissionsService.deactivateUsers(usersIds));
         break;
       default:
+        this._blockerMessage = new AreaBlockerMessage({
+          message: this._appLocalization
+            .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.invalidAction'),
+          buttons: [{
+            label: this._appLocalization.get('app.common.close'),
+            action: () => {
+              this._blockerMessage = null;
+            }
+          }
+          ]
+        });
         break;
     }
   }
@@ -176,14 +185,8 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
       );
   }
 
-  onBulkChange(event): void {
-    if (event.reload === true) {
-      this._reload();
-    }
-  }
-
   public _deleteSelected(selectedUsers: User[]): void {
     this._clearSelection();
-    // this._manageEndUsersPermissionsService.deleteUsers(selectedUsers);
+    this._executeAction(this._manageEndUsersPermissionsService.deleteUsers(selectedUsers.map(user => user.id)));
   }
 }

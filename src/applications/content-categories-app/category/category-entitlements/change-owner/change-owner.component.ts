@@ -2,17 +2,17 @@ import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output
 import {ISubscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs/Subject';
 
-import {KalturaClient} from '@kaltura-ng/kaltura-client';
-import {KalturaFilterPager} from 'kaltura-typescript-client/types/KalturaFilterPager';
+import {KalturaClient} from 'kaltura-ngx-client';
+import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import {SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {KalturaUser} from 'kaltura-typescript-client/types/KalturaUser';
-import {KalturaUserFilter} from 'kaltura-typescript-client/types/KalturaUserFilter';
-import {UserListAction} from 'kaltura-typescript-client/types/UserListAction';
-import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
+import {KalturaUserFilter} from 'kaltura-ngx-client/api/types/KalturaUserFilter';
+import {UserListAction} from 'kaltura-ngx-client/api/types/UserListAction';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {CategoriesBulkChangeOwnerService} from '../../../categories/bulk-actions/services/categories-bulk-change-owner.service';
 
 @Component({

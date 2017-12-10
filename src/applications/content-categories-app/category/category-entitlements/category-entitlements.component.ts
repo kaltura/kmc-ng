@@ -1,13 +1,15 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CategoryEntitlementsWidget} from './category-entitlements-widget.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {KalturaPrivacyType} from 'kaltura-typescript-client/types/KalturaPrivacyType';
-import {KalturaAppearInListType} from "kaltura-typescript-client/types/KalturaAppearInListType";
-import {KalturaContributionPolicyType} from "kaltura-typescript-client/types/KalturaContributionPolicyType";
-import {KalturaCategoryUserPermissionLevel} from "kaltura-typescript-client/types/KalturaCategoryUserPermissionLevel";
-import {KalturaUser} from "kaltura-typescript-client/types/KalturaUser";
-import {KalturaCategory} from "kaltura-typescript-client/types/KalturaCategory";
+import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
+import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
+import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
+import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
+import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
 
+
+interface KalturaCategory {
+}
 
 @Component({
   selector: 'kCategoryEntitlements',

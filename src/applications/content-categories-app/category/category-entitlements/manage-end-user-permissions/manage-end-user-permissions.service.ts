@@ -4,25 +4,24 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import {ISubscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
-import {KalturaDetachedResponseProfile} from 'kaltura-typescript-client/types/KalturaDetachedResponseProfile';
-import {KalturaFilterPager} from 'kaltura-typescript-client/types/KalturaFilterPager';
-import {KalturaResponseProfileType} from 'kaltura-typescript-client/types/KalturaResponseProfileType';
-import {KalturaClient} from '@kaltura-ng/kaltura-client';
-import {KalturaUser} from 'kaltura-typescript-client/types/KalturaUser';
-import {CategoryUserDeleteAction} from 'kaltura-typescript-client/types/CategoryUserDeleteAction';
-import {CategoryUserListAction} from 'kaltura-typescript-client/types/CategoryUserListAction';
-import {KalturaCategoryUserFilter} from 'kaltura-typescript-client/types/KalturaCategoryUserFilter';
-import {KalturaMultiRequest} from 'kaltura-typescript-client';
-import {UserGetAction} from 'kaltura-typescript-client/types/UserGetAction';
-import {KalturaCategoryUserListResponse} from 'kaltura-typescript-client/types/KalturaCategoryUserListResponse';
-import {KalturaCategoryUser} from 'kaltura-typescript-client/types/KalturaCategoryUser';
+import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
+import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
+import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
+import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
+import {CategoryUserDeleteAction} from 'kaltura-ngx-client/api/types/CategoryUserDeleteAction';
+import {CategoryUserListAction} from 'kaltura-ngx-client/api/types/CategoryUserListAction';
+import {KalturaCategoryUserFilter} from 'kaltura-ngx-client/api/types/KalturaCategoryUserFilter';
+import {UserGetAction} from 'kaltura-ngx-client/api/types/UserGetAction';
+import {KalturaCategoryUserListResponse} from 'kaltura-ngx-client/api/types/KalturaCategoryUserListResponse';
+import {KalturaCategoryUser} from 'kaltura-ngx-client/api/types/KalturaCategoryUser';
 import {CategoryEntitlementsWidget} from '../category-entitlements-widget.service';
-import {KalturaCategoryUserPermissionLevel} from 'kaltura-typescript-client/types/KalturaCategoryUserPermissionLevel';
-import {KalturaCategoryUserStatus} from 'kaltura-typescript-client/types/KalturaCategoryUserStatus';
-import {KalturaUpdateMethodType} from 'kaltura-typescript-client/types/KalturaUpdateMethodType';
-import {CategoryUserActivateAction} from 'kaltura-typescript-client/types/CategoryUserActivateAction';
-import {CategoryUserDeactivateAction} from 'kaltura-typescript-client/types/CategoryUserDeactivateAction';
-import {CategoryUserUpdateAction} from 'kaltura-typescript-client/types/CategoryUserUpdateAction';
+import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
+import {KalturaCategoryUserStatus} from 'kaltura-ngx-client/api/types/KalturaCategoryUserStatus';
+import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
+import {CategoryUserActivateAction} from 'kaltura-ngx-client/api/types/CategoryUserActivateAction';
+import {CategoryUserDeactivateAction} from 'kaltura-ngx-client/api/types/CategoryUserDeactivateAction';
+import {CategoryUserUpdateAction} from 'kaltura-ngx-client/api/types/CategoryUserUpdateAction';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 
 export interface LoadingStatus {
@@ -148,7 +147,7 @@ export class ManageEndUserPermissionsService implements OnDestroy {
     this._state.next({loading: true, errorMessage: null});
 
     // execute the request
-    this._usersExecuteSubscription = this.buildQueryRequest(this._queryData.getValue()).subscribe(
+    this._usersExecuteSubscription = this._buildQueryRequest(this._queryData.getValue()).subscribe(
       (data: Users) => {
         this._usersExecuteSubscription = null;
         this._state.next({loading: false, errorMessage: null});
@@ -161,7 +160,7 @@ export class ManageEndUserPermissionsService implements OnDestroy {
       });
   }
 
-  private buildQueryRequest(queryData: QueryData): Observable<Users> {
+  private _buildQueryRequest(queryData: QueryData): Observable<Users> {
     if (!this._categoryId) {
       return Observable.throw(new Error('ManageEndUserPermissionsService: Category has no end-users'));
     }
@@ -239,18 +238,6 @@ export class ManageEndUserPermissionsService implements OnDestroy {
       });
   }
 
-
-  public setNewUserData(newUserData: NewUserData) {
-    this._newUserData = newUserData;
-  }
-
-  public getNewUserData(): NewUserData {
-    return this._newUserData;
-  }
-
-  public clearNewUserData(): void {
-    this._newUserData = null
-  }
 
   public activateUsers(usersIds: string[]): Observable<void> {
     if (!usersIds || !usersIds.length) {
@@ -396,6 +383,5 @@ export class ManageEndUserPermissionsService implements OnDestroy {
     }
     return result;
   }
-
 }
 
