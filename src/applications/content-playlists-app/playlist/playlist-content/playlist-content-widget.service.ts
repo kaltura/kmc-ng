@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
 import { PlaylistWidget } from '../playlist-widget';
 import { PlaylistWidgetKeys } from '../playlist-widget-keys';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
@@ -8,10 +8,14 @@ import { Observable } from 'rxjs/Observable';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { PlaylistExecuteAction } from 'kaltura-ngx-client/api/types/PlaylistExecuteAction';
-import { KalturaClient } from 'kaltura-ngx-client';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FriendlyHashId } from '@kaltura-ng/kaltura-common/friendly-hash-id';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
+import { KalturaRequest } from 'kaltura-ngx-client/api/kaltura-request';
+import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
+import { BaseEntryListAction } from 'kaltura-ngx-client/api/types/BaseEntryListAction';
+import { KalturaBaseEntryFilter } from 'kaltura-ngx-client/api/types/KalturaBaseEntryFilter';
+import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client/api/types/KalturaBaseEntryListResponse';
 
 export interface LoadEntriesStatus {
   loading: boolean;
@@ -58,31 +62,28 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   protected onActivate(): Observable<{ failed: boolean, error?: Error }> {
-    if (!this.data.id) {
+    this.isNewPlaylist = !this.data.id;
+
+    if (this.isNewPlaylist && !this.data.playlistContent) {
       this.entries = [];
       this.entriesTotalCount = 0;
       this.entriesDuration = 0;
-      this.isNewPlaylist = true;
       return Observable.of({ failed: false });
     }
 
     super._showLoader();
     this._state.next({ loading: true, error: false });
-    this.isNewPlaylist = false;
 
-    const responseProfile = new KalturaDetachedResponseProfile({
-      type: KalturaResponseProfileType.includeFields,
-      fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration'
-    });
-
-    const request = new PlaylistExecuteAction({
-      id: this.data.id,
-      acceptedTypes: [KalturaMediaEntry],
-      responseProfile: responseProfile
-    });
+    const request = this._getEntriesRequest();
 
     return this._kalturaClient.request(request)
       .cancelOnDestroy(this, this.widgetReset$)
+      .map(response => {
+        if (request instanceof BaseEntryListAction) {
+          return (<KalturaBaseEntryListResponse>response).objects || [];
+        }
+        return response;
+      })
       .map((entries: KalturaMediaEntry[]) => {
         this._extendWithSelectionId(entries);
         this.entries = entries;
@@ -98,6 +99,29 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
         this._state.next({ loading: false, error: true });
         return Observable.of({ failed: true, error });
       });
+  }
+
+  private _getEntriesRequest(): KalturaRequest<KalturaBaseEntry[] | KalturaBaseEntryListResponse> {
+    let request;
+    const responseProfile = new KalturaDetachedResponseProfile({
+      type: KalturaResponseProfileType.includeFields,
+      fields: 'thumbnailUrl,id,name,mediaType,createdAt,duration'
+    });
+
+    if (this.data.playlistContent) {
+      request = new BaseEntryListAction({
+        filter: new KalturaBaseEntryFilter({ idIn: this.data.playlistContent }),
+        responseProfile: responseProfile
+      });
+    } else {
+      request = new PlaylistExecuteAction({
+        id: this.data.id,
+        acceptedTypes: [KalturaMediaEntry],
+        responseProfile: responseProfile
+      });
+    }
+
+    return request;
   }
 
   private _extendWithSelectionId(entries: PlaylistContentMediaEntry[]): void {
@@ -134,17 +158,15 @@ export class PlaylistContentWidget extends PlaylistWidget implements OnDestroy {
   }
 
   private _moveUpEntries(selectedEntries: PlaylistContentMediaEntry[]): void {
-    if (KalturaUtils.moveUpItems(this.entries, selectedEntries))
-    {
-        this._setDirty();
+    if (KalturaUtils.moveUpItems(this.entries, selectedEntries)) {
+      this._setDirty();
     }
   }
 
   private _moveDownEntries(selectedEntries: PlaylistContentMediaEntry[]): void {
-      if (KalturaUtils.moveDownItems(this.entries, selectedEntries))
-      {
-          this._setDirty();
-      }
+    if (KalturaUtils.moveDownItems(this.entries, selectedEntries)) {
+      this._setDirty();
+    }
   }
 
   public deleteSelectedEntries(entries: PlaylistContentMediaEntry[]): void {
