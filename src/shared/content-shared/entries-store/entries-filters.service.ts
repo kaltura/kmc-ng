@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { KalturaSearchOperator } from 'kaltura-typescript-client/types/KalturaSearchOperator';
-import { KalturaMediaEntryFilter } from 'kaltura-typescript-client/types/KalturaMediaEntryFilter';
+import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
+import { KalturaMediaEntryFilter } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
 import { KalturaLogger } from '@kaltura-ng/kaltura-log';
 import { FiltersStoreBase, TypeAdaptersMapping } from './filters-store-base';
 import { StringTypeAdapter } from './filter-types/string-type';

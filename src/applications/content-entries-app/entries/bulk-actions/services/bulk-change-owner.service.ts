@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaClient } from 'kaltura-ngx-client';
 
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaBaseEntry } from 'kaltura-typescript-client/types/KalturaBaseEntry';
-import { BaseEntryUpdateAction } from 'kaltura-typescript-client/types/BaseEntryUpdateAction';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
+import { BaseEntryUpdateAction } from 'kaltura-ngx-client/api/types/BaseEntryUpdateAction';
 import { BulkActionBaseService } from './bulk-action-base.service';
-import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
+import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 
 @Injectable()
 export class BulkChangeOwnerService extends BulkActionBaseService<KalturaUser> {

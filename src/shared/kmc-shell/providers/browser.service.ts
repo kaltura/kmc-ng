@@ -35,6 +35,7 @@ export class BrowserService implements IAppStorage {
 
   private _appStatus = new BehaviorSubject<{errorMessage : string}>({ errorMessage : null});
   private _growlMessage = new Subject<GrowlMessage>();
+  private _sessionStartedAt: Date = new Date();
   public appStatus$ = this._appStatus.asObservable();
   public growlMessage$ = this._growlMessage.asObservable();
 
@@ -65,6 +66,9 @@ export class BrowserService implements IAppStorage {
 		}
 	};
 
+  public get sessionStartedAt(): Date {
+    return this._sessionStartedAt;
+  }
 
 	constructor(private localStorage: LocalStorageService, private sessionStorage: SessionStorageService) {
 	}
@@ -217,14 +221,6 @@ export class BrowserService implements IAppStorage {
 		});
 	}
 
-	public enablePageExitVerification(verificationMsg: string = null): void{
-		window.onbeforeunload = (e) => {
-			const confirmationMessage = verificationMsg ? verificationMsg : "Are you sure you want to leave this page?";
-			(e || window.event).returnValue = confirmationMessage; // Gecko + IE
-			return confirmationMessage;                            // Webkit, Safari, Chrome
-		};
-	}
-
 	private scrolling = false;
 	public scrollToTop(duration: number = 500): void {
 		if (!this.scrolling){
@@ -245,10 +241,6 @@ export class BrowserService implements IAppStorage {
 			};
 			window.requestAnimationFrame(step);
 		}
-	}
-
-	public disablePageExitVerification(): void{
-		window.onbeforeunload = (e) => {};
 	}
 
 	public showGrowlMessage(message: GrowlMessage): void {

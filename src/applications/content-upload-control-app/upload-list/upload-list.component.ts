@@ -1,9 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { BrowserService, NewEntryUploadFile, NewEntryUploadService } from 'app-shared/kmc-shell';
-import { AppLocalization, TrackedFile, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
+import { AppLocalization, TrackedFileStatuses, UploadManagement } from '@kaltura-ng/kaltura-common';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { TrackedFileData } from '@kaltura-ng/kaltura-common/upload-management/tracked-file';
+import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
+import { KalturaUploadFile } from 'app-shared/kmc-shared';
+
+type MonitoredUploadFile = NewEntryUploadFile | NewEntryFlavourFile;
+
+function isMonitoredUploadFile(object: any): object is MonitoredUploadFile
+{
+    return object instanceof NewEntryUploadFile || object instanceof NewEntryFlavourFile;
+}
 
 export interface UploadFileData {
   id: string;
@@ -35,6 +44,8 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._uploadManagement.getTrackedFiles().forEach(file => this._addFile(file));
+
+    // listen for mediaCreated to show entryId in the upload list once media is created for this upload
     this._newEntryUploadService.onMediaCreated$
       .cancelOnDestroy(this)
       .subscribe(
@@ -45,7 +56,7 @@ export class UploadListComponent implements OnInit, OnDestroy {
 
     this._uploadManagement.onTrackedFileChanged$
       .cancelOnDestroy(this)
-      .filter(trackedFile => trackedFile.data instanceof NewEntryUploadFile)
+      .filter(trackedFile => isMonitoredUploadFile(trackedFile.data))
       .subscribe(
         (trackedFile) => {
           // NOTE: this service does not handle 'waitingUpload' status by design.
@@ -55,14 +66,17 @@ export class UploadListComponent implements OnInit, OnDestroy {
               break;
 
             case TrackedFileStatuses.uploading:
-              this._updateFile(trackedFile.id, {
+              const changes = {
                 progress: trackedFile.progress,
                 status: trackedFile.status
-              });
+              };
 
               if (trackedFile.progress === 0) {
                 this._sortUploads();
+                Object.assign(changes, { uploadedOn: trackedFile.uploadStartAt });
               }
+
+              this._updateFile(trackedFile.id, changes);
 
               break;
 
@@ -98,18 +112,26 @@ export class UploadListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  private _addFile(trackedFile: TrackedFileData): void {
-    const fileData = <NewEntryUploadFile>trackedFile.data;
+  private _filterUploadFiles(data: KalturaUploadFile): boolean {
+    return data instanceof NewEntryUploadFile || data instanceof NewEntryFlavourFile;
+  }
 
-    this._uploads.push({
-      id: trackedFile.id,
-      fileName: fileData.getFileName(),
-      fileSize: fileData.getFileSize(),
-      mediaType: fileData.mediaType,
-      status: trackedFile.status,
-      uploadedOn: trackedFile.uploadStartAt,
-      progress: trackedFile.progress
-    });
+  private _addFile(trackedFile: TrackedFileData): void {
+
+    if (isMonitoredUploadFile(trackedFile.data)) {
+        const fileData = trackedFile.data;
+
+        this._uploads.push({
+            id: trackedFile.id,
+            entryId: fileData.entryId,
+            fileName: fileData.getFileName(),
+            fileSize: fileData.getFileSize(),
+            mediaType: fileData.mediaType,
+            status: trackedFile.status,
+            uploadedOn: trackedFile.uploadStartAt,
+            progress: trackedFile.progress
+        });
+    }
   }
 
   private _removeFile(id: string): void {
@@ -164,7 +186,14 @@ export class UploadListComponent implements OnInit, OnDestroy {
   }
 
   public _retryUpload(file: UploadFileData): void {
-    this._uploadManagement.resumeUpload(file.id);
+    if (file.entryId) {
+      this._uploadManagement.resumeUpload(file.id);
+    } else {
+      this._browserService.alert({
+        header: this._appLocalization.get('applications.content.uploadControl.retryError.header'),
+        message: this._appLocalization.get('applications.content.uploadControl.retryError.message')
+      });
+    }
   }
 
   public _bulkCancel(): void {

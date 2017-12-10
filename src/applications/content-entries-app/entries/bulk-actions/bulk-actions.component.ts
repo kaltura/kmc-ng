@@ -10,13 +10,19 @@ import {
   BulkRemoveTagsService,
   BulkSchedulingService,
   EntryCategoryItem,
-  SchedulingParams} from './services'
-import { KalturaMediaEntry } from "kaltura-typescript-client/types/KalturaMediaEntry";
-import { BulkActionBaseService } from "./services/bulk-action-base.service";
-import { environment } from 'app-environment';
-import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import { KalturaAccessControl } from 'kaltura-typescript-client/types/KalturaAccessControl';import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+  SchedulingParams
+} from './services'
+import {KalturaMediaEntry} from "kaltura-ngx-client/api/types/KalturaMediaEntry";
+import {BulkActionBaseService} from "./services/bulk-action-base.service";
+import {environment} from 'app-environment';
+import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
+import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import {KalturaAccessControl} from 'kaltura-ngx-client/api/types/KalturaAccessControl';
+import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/playlist-creation';
+import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 @Component({
   selector: 'kBulkActions',
   templateUrl: './bulk-actions.component.html',
@@ -34,6 +40,12 @@ import { KalturaAccessControl } from 'kaltura-typescript-client/types/KalturaAcc
     ]
 })
 export class BulkActionsComponent implements OnInit, OnDestroy {
+  private _allowedStatusesForPlaylist = [
+    KalturaEntryStatus.preconvert.toString(),
+    KalturaEntryStatus.ready.toString(),
+    KalturaEntryStatus.moderate.toString(),
+    KalturaEntryStatus.blocked.toString()
+  ];
 
   public _bulkActionsMenu: MenuItem[] = [];
   public _bulkWindowWidth = 500;
@@ -55,7 +67,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     private _bulkChangeOwnerService: BulkChangeOwnerService,
     private _bulkRemoveCategoriesService: BulkRemoveCategoriesService,
     private _bulkDownloadService: BulkDownloadService,
-    private _bulkDeleteService: BulkDeleteService) {
+    private _bulkDeleteService: BulkDeleteService,
+    private _appEvents: AppEventsService) {
 
   }
 
@@ -67,6 +80,45 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   }
 
+  private _onAddToNewPlaylist(): void {
+    const creationEvent = new CreateNewPlaylistEvent({ type: KalturaPlaylistType.staticList, }, 'metadata');
+    const invalidEntries = this.selectedEntries.filter(entry => {
+      return this._allowedStatusesForPlaylist.indexOf(entry.status.toString()) === -1
+    });
+
+    if (!invalidEntries.length) {
+      creationEvent.data.playlistContent = this.selectedEntries.map(({ id }) => id).join(',');
+      this._appEvents.publish(creationEvent);
+    } else {
+      this._handlePlaylistCreationErrors(invalidEntries, creationEvent);
+    }
+  }
+
+  private _handlePlaylistCreationErrors(invalidEntries: KalturaMediaEntry[], creationEvent: CreateNewPlaylistEvent): void {
+    const canCreate = this.selectedEntries.length !== invalidEntries.length;
+
+    if (canCreate) {
+      const invalidEntriesNames = invalidEntries.length < 11 ? invalidEntries.map(entry => `${entry.name}`).join('\n') : '';
+      this._browserService.confirm({
+        header: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarning'),
+        message: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarningMsg', {
+          0: invalidEntriesNames
+        }),
+        accept: () => {
+          creationEvent.data.playlistContent = this.selectedEntries
+            .filter(({ status }) => this._allowedStatusesForPlaylist.indexOf(status.toString()) !== -1) // include only valid
+            .map(({ id }) => id).join(',');
+          this._appEvents.publish(creationEvent);
+        }
+      });
+    } else {
+      this._browserService.alert({
+        header: this._appLocalization.get('applications.content.bulkActions.createPlaylistWarning'),
+        message: this._appLocalization.get('applications.content.bulkActions.createPlaylistErrorMsg'),
+      });
+    }
+  }
+
   openBulkActionWindow(action: string, popupWidth: number, popupHeight: number) {
     this._bulkAction = action;
     this._bulkWindowWidth = popupWidth;
@@ -75,6 +127,16 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.bulkActionsPopup.open();
     }, 0);
+  }
+
+  performBulkAction(action: string): void {
+    switch (action) {
+      case 'addToNewPlaylist':
+        this._onAddToNewPlaylist();
+        break;
+      default:
+        break;
+    }
   }
 
   // set scheduling changes
@@ -200,7 +262,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
       {
         label: this._appLocalization.get('applications.content.bulkActions.addToNewCategoryPlaylist'), items: [
         { label: this._appLocalization.get('applications.content.bulkActions.addToNewCategory'), command: (event) => { this.openBulkActionWindow("addToNewCategory", 500, 500) } },
-        { label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'), command: (event) => { this.openBulkActionWindow("addToNewPlaylist", 500, 500) } }]
+        { label: this._appLocalization.get('applications.content.bulkActions.addToNewPlaylist'), command: (event) => { this.performBulkAction("addToNewPlaylist") } }]
       },
       {
         label: this._appLocalization.get('applications.content.bulkActions.addRemoveCategories'), items: [

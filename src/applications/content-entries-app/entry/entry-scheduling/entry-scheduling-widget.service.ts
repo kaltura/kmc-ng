@@ -1,14 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { KalturaMultiRequest } from 'kaltura-typescript-client';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
+import { KalturaMultiRequest } from 'kaltura-ngx-client';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 import { EntryWidgetKeys } from '../entry-widget-keys';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntryWidget } from '../entry-widget';
+import { async } from 'rxjs/scheduler/async';
 
 function datesValidation(checkRequired: boolean = false): ValidatorFn {
 	return (c: AbstractControl): {[key: string]: boolean} | null => {
@@ -138,6 +139,7 @@ export class EntrySchedulingWidget extends EntryWidget implements OnDestroy
 
 		Observable.merge(this.schedulingForm.valueChanges,
 			this.schedulingForm.statusChanges)
+            .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
             .cancelOnDestroy(this)
             .subscribe(
 				() => {

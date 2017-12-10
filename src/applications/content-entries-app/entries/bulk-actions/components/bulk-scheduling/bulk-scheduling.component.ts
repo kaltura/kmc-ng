@@ -8,6 +8,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { SchedulingParams } from '../../services';
+import { async } from 'rxjs/scheduler/async';
 
 function datesValidation(checkRequired: boolean = false): ValidatorFn {
   return (c: AbstractControl): {[key: string]: boolean} | null => {
@@ -134,6 +135,7 @@ export class BulkScheduling implements OnInit, OnDestroy, AfterViewInit {
     Observable.merge(this.schedulingForm.valueChanges,
       this.schedulingForm.statusChanges)
       .cancelOnDestroy(this)
+      .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
       .subscribe(
         () => {
           this._enableSave = this.schedulingForm.status === 'VALID';

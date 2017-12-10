@@ -84,12 +84,6 @@
       "@angular/router/*": [
         "../node_modules/@angular/router/*"
       ],
-      "@kaltura-ng/kaltura-client": [
-        "../node_modules/@kaltura-ng/kaltura-client"
-      ],
-      "@kaltura-ng/kaltura-client/*": [
-        "../node_modules/@kaltura-ng/kaltura-client/*"
-      ],
       "@kaltura-ng/kaltura-common": [
         "../node_modules/@kaltura-ng/kaltura-common"
       ],
@@ -101,12 +95,6 @@
       ],
       "@kaltura-ng/kaltura-primeng-ui/*": [
         "../node_modules/@kaltura-ng/kaltura-primeng-ui/*"
-      ],
-      "@kaltura-ng/kaltura-server-utils": [
-        "../node_modules/@kaltura-ng/kaltura-server-utils"
-      ],
-      "@kaltura-ng/kaltura-server-utils/*": [
-        "../node_modules/@kaltura-ng/kaltura-server-utils/*"
       ],
       "@kaltura-ng/kaltura-ui": [
         "../node_modules/@kaltura-ng/kaltura-ui"
@@ -144,11 +132,11 @@
       "jquery/*": [
         "../node_modules/jquery/*"
       ],
-      "kaltura-typescript-client": [
-        "../node_modules/kaltura-typescript-client"
+      "kaltura-ngx-client": [
+        "../node_modules/kaltura-ngx-client"
       ],
-      "kaltura-typescript-client/*": [
-        "../node_modules/kaltura-typescript-client/*"
+      "kaltura-ngx-client/*": [
+        "../node_modules/kaltura-ngx-client/*"
       ],
       "moment": [
         "../node_modules/moment"
