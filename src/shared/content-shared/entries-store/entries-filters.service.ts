@@ -11,7 +11,9 @@ import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 export interface EntriesFilters {
     freetext: string,
     createdAt: DatesRangeType,
+    scheduledAt: DatesRangeType,
     mediaTypes: ValuesListType,
+    timeScheduling: ValuesListType,
     ingestionStatuses: ValuesListType
 }
 
@@ -27,7 +29,9 @@ export class EntriesFiltersStore extends FiltersStoreBase<EntriesFilters> {
         return {
             freetext: '',
             createdAt: {fromDate: null, toDate: null},
+            scheduledAt: {fromDate: null, toDate: null},
             mediaTypes: [],
+            timeScheduling: [],
             ingestionStatuses: []
         };
     }
@@ -36,7 +40,9 @@ export class EntriesFiltersStore extends FiltersStoreBase<EntriesFilters> {
         return {
             freetext: new StringTypeAdapter(),
             createdAt: new DatesRangeAdapter(),
+            scheduledAt: new DatesRangeAdapter(),
             mediaTypes: new ValuesListAdapter(),
+            timeScheduling: new ValuesListAdapter(),
             ingestionStatuses: new ValuesListAdapter()
         };
     }
@@ -73,6 +79,49 @@ export class EntriesFiltersStore extends FiltersStoreBase<EntriesFilters> {
         if (ingestionStatuses) {
             request.filter.statusIn = ingestionStatuses;
         }
+
+        data.timeScheduling.forEach(item => {
+            switch (item.value) {
+                case 'past':
+                    if (request.filter.endDateLessThanOrEqual === undefined || request.filter.endDateLessThanOrEqual < (new Date())) {
+                        request.filter.endDateLessThanOrEqual = (new Date());
+                    }
+                    break;
+                case 'live':
+                    if (request.filter.startDateLessThanOrEqualOrNull === undefined || request.filter.startDateLessThanOrEqualOrNull > (new Date())) {
+                        request.filter.startDateLessThanOrEqualOrNull = (new Date());
+                    }
+                    if (request.filter.endDateGreaterThanOrEqualOrNull === undefined || request.filter.endDateGreaterThanOrEqualOrNull < (new Date())) {
+                        request.filter.endDateGreaterThanOrEqualOrNull = (new Date());
+                    }
+                    break;
+                case 'future':
+                    if (request.filter.startDateGreaterThanOrEqual === undefined || request.filter.startDateGreaterThanOrEqual > (new Date())) {
+                        request.filter.startDateGreaterThanOrEqual = (new Date());
+                    }
+                    break;
+                case 'scheduled':
+                    if (data.scheduledAt.fromDate) {
+                        if (request.filter.startDateGreaterThanOrEqual === undefined
+                            || request.filter.startDateGreaterThanOrEqual > (KalturaUtils.getStartDateValue(data.scheduledAt.fromDate))
+                        ) {
+                            request.filter.startDateGreaterThanOrEqual = (KalturaUtils.getStartDateValue(data.scheduledAt.fromDate));
+                        }
+                    }
+
+                    if (data.scheduledAt.toDate) {
+                        if (request.filter.endDateLessThanOrEqual === undefined
+                            || request.filter.endDateLessThanOrEqual < (KalturaUtils.getEndDateValue(data.scheduledAt.toDate))
+                        ) {
+                            request.filter.endDateLessThanOrEqual = (KalturaUtils.getEndDateValue(data.scheduledAt.toDate));
+                        }
+                    }
+
+                    break;
+                default:
+                    break
+            }
+        });
     }
 
 }

@@ -7,7 +7,6 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { EntriesRefineFiltersService, RefineGroup } from './entries-refine-filters.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
-import { TimeSchedulingFilter } from 'app-shared/content-shared/entries-store/filters/time-scheduling-filter';
 import {
     EntriesFiltersStore
 } from 'app-shared/content-shared/entries-store/entries-filters.service';
@@ -45,6 +44,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
   public _createdFilterError: string = null;
   public _scheduledAfter: Date;
   public _scheduledBefore: Date;
+  public _scheduledSelected: boolean;
   public _scheduledFilterError: string = null;
   public _createdAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
   public _createdAfter: Date;
@@ -82,6 +82,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
                         this._createdBefore = changes.createdAt.currentValue ? changes.createdAt.currentValue.toDate : null;
                     }
 
+                    if (typeof changes.scheduledAt !== 'undefined') {
+                        this._createdAfter = changes.scheduledAt.currentValue ? changes.scheduledAt.currentValue.fromDate : null;
+                        this._createdBefore = changes.scheduledAt.currentValue ? changes.scheduledAt.currentValue.toDate : null;
+                    }
+
                     Object.keys(this._listDataMap).forEach(listName => {
                         const groupListData = this._listDataMap[listName];
                         const listFilteredItems = changes[listName];
@@ -105,9 +110,25 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
                                 }
                             });
                         }
+
+                        if (listName === 'timeScheduling')
+                        {
+                            this._syncScheduleDatesMode();
+                        }
                     });
                 }
             );
+    }
+
+    private _syncScheduleDatesMode() {
+        const timeScheduling = this._entriesFilters.getFilterData('timeScheduling') || [];
+        this._scheduledSelected = !!timeScheduling.find(item => item.value === 'scheduled');
+
+        if (!this._scheduledSelected) {
+            this._scheduledAfter = null;
+            this._scheduledBefore = null;
+            this._scheduledFilterError = null;
+        }
     }
 
     private _loadFilters(): void {
@@ -158,6 +179,12 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
             this._createdBefore = createdAt.toDate;
         }
 
+        const scheduledAt = this._entriesFilters.getFilterData('scheduledAt');
+        if (scheduledAt) {
+            this._scheduledAfter = scheduledAt.fromDate;
+            this._scheduledBefore = scheduledAt.toDate;
+        }
+
         Object.keys(this._listDataMap).forEach(listName => {
             const groupListData = this._listDataMap[listName];
 
@@ -172,8 +199,12 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
                     if (listItem) {
                         groupListData.selections.push(listItem);
                     }
-
                 });
+
+                if (listName === 'timeScheduling')
+                {
+                    this._syncScheduleDatesMode();
+                }
             }
         });
 
@@ -217,63 +248,6 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
         });
     }
 
-  /**
-   * Update content created components when filters are modified somewhere outside of this component
-   * @private
-   */
-  private syncScheduledComponents(): void {
-    // TODO sakal
-    // const scheduledFilterItem = this._getScheduledFilter();
-    //
-    // if (scheduledFilterItem !== null) {
-    //   this._scheduledSelected = true;
-    //   this._scheduledAfter = scheduledFilterItem.scheduledAfter;
-    //   this._scheduledBefore = scheduledFilterItem.scheduledBefore;
-    // } else {
-    //   this._scheduledBefore = null;
-    //   this._scheduledAfter = null;
-    //   this._scheduledSelected = false;
-    // }
-  }
-
-
-  /**
-   * Update entries store filters with changes in the content scheduling components
-   * @private
-   */
-  private syncSchedulingFilters(): boolean {
-      // TODO sakal scheduling
-    // this._scheduledFilterError = null;
-    // if (this._scheduledBefore && this._scheduledAfter) {
-    //   const isValid = this._scheduledAfter <= this._scheduledBefore;
-    //
-    //   if (!isValid) {
-    //     setTimeout(this.syncScheduledComponents.bind(this), 0);
-    //
-    //     this._scheduledFilterError = this.appLocalization.get('applications.content.entryDetails.errors.schedulingError');
-    //     return false;
-    //   }
-    // }
-    //
-    // const previousFilter = <TimeSchedulingFilter>this.entriesStore.getFiltersByType(TimeSchedulingFilter)
-    //   .find(filter => filter.value === 'scheduled');
-    //
-    // if (previousFilter) {
-    //   // make sure the filter is already set for 'schedule', otherwise ignore update
-    //   this.entriesStore.removeFilters(previousFilter);
-    //   this.entriesStore.addFilters(
-    //     new TimeSchedulingFilter(
-    //       previousFilter.value,
-    //       previousFilter.label,
-    //       KalturaUtils.getEndDateValue(this._scheduledBefore),
-    //       KalturaUtils.getStartDateValue(this._scheduledAfter)
-    //     )
-    //   );
-    // }
-
-    return true;
-  }
-
 
 
   /**
@@ -312,20 +286,6 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
     this._clearCreatedComponents();
   }
 
-  /**
-   * Get current scheduled filter is found in entries store.
-   */
-  private _getScheduledFilter(): TimeSchedulingFilter {
-    let result: TimeSchedulingFilter = null;
-    const timeFilters = this._entriesStore.getFiltersByType(TimeSchedulingFilter);
-
-    if (timeFilters && timeFilters.length > 0) {
-      //result = R.find(R.propEq('value', 'scheduled'), timeFilters);
-    }
-
-    return result || null;
-  }
-
   public _onCreatedChanged(): void {
       const updateResult = this._entriesFilters.update({
           createdAt: {
@@ -354,11 +314,29 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
    * Not part of the API, don't use it from outside this component
    */
   public _onSchedulingChanged(calendarRef: any): void {
-    this.syncSchedulingFilters();
+      const updateResult = this._entriesFilters.update({
+          scheduledAt: {
+              fromDate: this._scheduledAfter,
+              toDate: this._scheduledBefore
+          }
+      });
 
-    if (calendarRef && calendarRef.overlayVisible) {
-      calendarRef.overlayVisible = false;
-    }
+      if (updateResult.scheduledAt && updateResult.scheduledAt.failed) {
+          this._scheduledFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
+
+          setTimeout(() => {
+              const scheduledAt = this._entriesFilters.getFilterData('scheduledAt');
+              this._scheduledAfter = scheduledAt ? scheduledAt.fromDate : null;
+              this._scheduledBefore = scheduledAt ? scheduledAt.toDate : null;
+
+          }, 0);
+      } else {
+          this._scheduledFilterError = null;
+      }
+
+      if (calendarRef && calendarRef.overlayVisible) {
+          calendarRef.overlayVisible = false;
+      }
 
   }
 
@@ -406,6 +384,16 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
                       const itemIndex = newValue.findIndex(item => item.value === selectedNode.data);
                       if (itemIndex > -1) {
                           newValue.splice(itemIndex, 1);
+
+                          if (filterName === 'timeScheduling' && selectedNode.data === 'scheduled')
+                          {
+                              this._entriesFilters.update({
+                                  scheduledAt : {
+                                      fromDate: null,
+                                      toDate: null
+                                  }
+                              });
+                          }
                       }
                   });
 
