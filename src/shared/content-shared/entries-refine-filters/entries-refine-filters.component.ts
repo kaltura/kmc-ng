@@ -1,16 +1,9 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, Self, ViewChild } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
-
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PrimeTreeDataProvider, PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
-
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-
-// TODO sakal remove
-import * as R from 'ramda';
-
 import { EntriesRefineFiltersService, RefineGroup } from './entries-refine-filters.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
@@ -19,7 +12,6 @@ import {
     EntriesFiltersStore
 } from 'app-shared/content-shared/entries-store/entries-filters.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
-import { Observable } from 'rxjs/Observable';
 
 export interface FiltersGroupList {
   items: PrimeTreeNode[];
@@ -69,14 +61,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
   }
 
   ngAfterViewInit() {
-    if (this.parentPopupWidget) {
-      this.parentPopupWidget.state$
-          .cancelOnDestroy(this).subscribe(event => {
-        if (event.state === PopupWidgetStates.Close && this._treeContainer) {
-          this._treeContainer.scrollToTop();
-        }
-      });
-    }
+
   }
 
   ngOnDestroy() {
@@ -312,7 +297,7 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
     const timeFilters = this._entriesStore.getFiltersByType(TimeSchedulingFilter);
 
     if (timeFilters && timeFilters.length > 0) {
-      result = R.find(R.propEq('value', 'scheduled'), timeFilters);
+      //result = R.find(R.propEq('value', 'scheduled'), timeFilters);
     }
 
     return result || null;
