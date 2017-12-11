@@ -1,37 +1,35 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { environment } from 'app-environment';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { DropFoldersService } from 'applications/content-drop-folders-app/drop-folders-list/drop-folders.service';
-import { DropFolderFileDeleteAction } from 'kaltura-typescript-client/types/DropFolderFileDeleteAction';
-import { KalturaMultiRequest, KalturaMultiResponse, KalturaRequest } from 'kaltura-typescript-client';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { KalturaClient, KalturaMultiRequest, KalturaMultiResponse, KalturaRequest } from 'kaltura-ngx-client';
+import { DropFolderFileDeleteAction } from 'kaltura-ngx-client/api/types/DropFolderFileDeleteAction';
 
 @Injectable()
 export class BulkDeleteService implements OnDestroy {
-  constructor(
-    public _dropFoldersService: DropFoldersService,
-    public _kalturaServerClient: KalturaClient
-  ) {}
+  constructor(public _dropFoldersService: DropFoldersService,
+              public _kalturaServerClient: KalturaClient) {
+  }
 
-  public deleteDropFiles(ids: number[]): Observable<void>{
-    return Observable.create(observer =>{
+  public deleteDropFiles(ids: number[]): Observable<void> {
+    return Observable.create(observer => {
       let requests: DropFolderFileDeleteAction[] = [];
-      if(ids && ids.length > 0) {
+      if (ids && ids.length > 0) {
         ids.forEach(id => requests.push(new DropFolderFileDeleteAction({ dropFolderFileId: id })));
 
         this._transmit(requests, true)
           .cancelOnDestroy(this)
           .tag('block-shell')
           .subscribe(
-          () => {
-            observer.next({});
-            observer.complete();
-          },
-          error => {
-            observer.error(error);
-          }
-        );
+            () => {
+              observer.next({});
+              observer.complete();
+            },
+            error => {
+              observer.error(error);
+            }
+          );
       } else {
         observer.next({});
         observer.complete();
@@ -39,18 +37,18 @@ export class BulkDeleteService implements OnDestroy {
     });
   }
 
-  private _transmit(requests : KalturaRequest<any>[], chunk : boolean) : Observable<{}> {
+  private _transmit(requests: KalturaRequest<any>[], chunk: boolean): Observable<{}> {
     let maxRequestsPerMultiRequest = requests.length;
-    if (chunk){
+    if (chunk) {
       maxRequestsPerMultiRequest = environment.modules.dropFolders.bulkActionsLimit;
     }
 
     let multiRequests: Observable<KalturaMultiResponse>[] = [];
-    let mr :KalturaMultiRequest = new KalturaMultiRequest();
+    let mr: KalturaMultiRequest = new KalturaMultiRequest();
 
     let counter = 0;
-    for (let i = 0; i < requests.length; i++){
-      if (counter === maxRequestsPerMultiRequest){
+    for (let i = 0; i < requests.length; i++) {
+      if (counter === maxRequestsPerMultiRequest) {
         multiRequests.push(this._kalturaServerClient.multiRequest(mr));
         mr = new KalturaMultiRequest();
         counter = 0;
@@ -64,14 +62,17 @@ export class BulkDeleteService implements OnDestroy {
     return Observable.forkJoin(multiRequests)
       .map(responses => {
         const mergedResponses = [].concat.apply([], responses);
-        let hasFailure = mergedResponses.filter(function ( response ) {return response.error}).length > 0;
+        let hasFailure = mergedResponses.filter(function (response) {
+          return response.error
+        }).length > 0;
         if (hasFailure) {
-          throw new Error("error");
+          throw new Error('error');
         } else {
           return {};
         }
       });
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+  }
 }

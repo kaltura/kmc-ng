@@ -1,4 +1,5 @@
-<div [class.kSelectUnselect]="(selectedStatuses && (selectedStatuses.length-1 === statuses[0].children.length || !selectedStatuses.length))">
+<div
+  [class.kSelectUnselect]="(selectedStatuses && (selectedStatuses.length-1 === statuses[0].children.length || !selectedStatuses.length))">
   <p-tree
     [value]="statuses"
     selectionMode="checkbox"

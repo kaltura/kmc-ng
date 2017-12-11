@@ -4,26 +4,21 @@ import { RouterModule } from '@angular/router';
 import { routing } from './content-drop-folders-app.routes';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import {
-  DataTableModule,
-  PaginatorModule,
   ButtonModule,
-  TieredMenuModule,
-  CheckboxModule,
-  InputTextModule,
   CalendarModule,
-  TreeModule,
+  CheckboxModule,
+  DataTableModule,
+  InputTextModule,
   MenuModule,
-  SharedModule
+  PaginatorModule,
+  SharedModule,
+  TieredMenuModule,
+  TreeModule
 } from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
-import {
-  KalturaUIModule,
-  TooltipModule,
-  StickyModule
-} from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';

@@ -8,7 +8,8 @@
                  [value]="_dropFolders"
                  (selectionChange)="onSelectedDropFoldersChange.emit($event)"
                  [(selection)]="selectedDropFolders"
-                 kStickyHeader [sticksTo]="'dropFoldersTags'" stickyClass="stickyHeader" [stickyId]="'dropFoldersTable'">
+                 kStickyHeader [sticksTo]="'dropFoldersTags'" stickyClass="stickyHeader"
+                 [stickyId]="'dropFoldersTable'">
       <p-column styleClass="kSelectionColumn" selectionMode="multiple"></p-column>
       <p-column styleClass="kFileNameColumn" field="fileName"
                 [header]="'applications.content.dropFolders.table.fileName' | translate"
@@ -65,6 +66,7 @@
         </ng-template>
       </p-column>
     </p-dataTable>
-    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" styleClass="kActionsMenu" kMenuCloseOnScroll></p-menu>
+    <p-menu #actionsmenu popup="popup" [model]="_items" [appendTo]="'body'" styleClass="kActionsMenu"
+            kMenuCloseOnScroll></p-menu>
   </div>
 </div>

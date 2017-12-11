@@ -19,7 +19,7 @@
     margin-right: 8px;
     padding: 9px 4px 8px 30px;
 
-    &:focus{
+    &:focus {
       background-color: white;
     }
   }
@@ -106,9 +106,9 @@
     cursor: pointer;
     font-size: 12px;
 
-    &:hover{
-      background-color: rgba(255,255,255,0.3);
-      border: 0 solid rgba(255,255,255,0.3);
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+      border: 0 solid rgba(255, 255, 255, 0.3);
       border-radius: 3px;
     }
   }
@@ -261,6 +261,6 @@
   color: $kDandger;
 }
 
-:host /deep/ .kStickyClass{
+:host /deep/ .kStickyClass {
   border-bottom: 1px solid $kGrayscale5;
 }
