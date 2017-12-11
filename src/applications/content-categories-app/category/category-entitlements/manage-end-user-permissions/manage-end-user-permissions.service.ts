@@ -152,6 +152,7 @@ export class ManageEndUserPermissionsService implements OnDestroy {
         this._usersExecuteSubscription = null;
         this._state.next({loading: false, errorMessage: null});
         this._users.next(data);
+        this._widgetService.membersTotalCount = data.totalCount;
       },
       error => {
         this._usersExecuteSubscription = null;

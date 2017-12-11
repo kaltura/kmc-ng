@@ -5,7 +5,6 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {CategoryWidget} from '../category-widget';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {CategoryService} from '../category.service';
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
 import {KalturaMetadata} from 'kaltura-ngx-client/api/types/KalturaMetadata';
@@ -23,8 +22,8 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
 
   public entitlementsForm: FormGroup;
   private _categoryMetadata: KalturaMetadata[] = [];
-  private _parentCategory = new BehaviorSubject<KalturaCategory>(null);
-  public parentCategory$ = this._parentCategory.asObservable();
+  public parentCategory: KalturaCategory = null;
+  public membersTotalCount = 0;
 
   constructor(private _kalturaClient: KalturaClient,
               private _formBuilder: FormBuilder,
@@ -50,13 +49,14 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
     }
   }
 
-  public _fetchData(origin: 'activation' | 'reload', reset: boolean = true, showLoader: boolean = true): Observable<{ failed: boolean, error?: Error }> {
+  public _fetchData(origin: 'activation' | 'reload', reset: boolean = true, showLoader: boolean = true):
+                  Observable<{ failed: boolean, error?: Error }> {
     return Observable.create(observer => {
       if (showLoader) {
         super._showLoader();
       }
       if (reset) {
-        this._parentCategory.next(null);
+        this.parentCategory = null;
       }
 
       let requestSubscription = this._getParentCategory(this.data.parentId)
@@ -65,20 +65,21 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
         .subscribe(
           parentCategory => {
             super._hideLoader();
-            this._parentCategory.next(parentCategory);
+            this.parentCategory = parentCategory;
             this._resetFormData();
             this._monitorFormChanges();
             observer.next({failed: false});
             observer.complete();
           }, error => {
-            this._parentCategory.next(null);
+            this.parentCategory = null;
             super._hideLoader();
             if (origin === 'activation') {
               super._showActivationError();
             } else {
               this._showBlockerMessage(new AreaBlockerMessage(
                 {
-                  message: this._appLocalization.get('applications.content.categoryDetails.entitlements.inheritUsersPermissions.errors.categoryLoadError'),
+                  message: this._appLocalization
+                    .get('applications.content.categoryDetails.entitlements.inheritUsersPermissions.errors.categoryLoadError'),
                   buttons: [
                     {
                       label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
@@ -154,7 +155,7 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   }
 
   private _resetFormData() {
-    const categoryInheritUsersPermission = this._parentCategory.getValue() && this.data.inheritanceType === KalturaInheritanceType.inherit;
+    const categoryInheritUsersPermission = this.parentCategory && this.data.inheritanceType === KalturaInheritanceType.inherit;
     this.entitlementsForm.reset(
       {
         contentPrivacy: this.data.privacy || KalturaPrivacyType.all,
@@ -220,13 +221,16 @@ export class CategoryEntitlementsWidget extends CategoryWidget implements OnDest
   }
 
   ngOnDestroy() {
-
   }
 
   public openCategory(category: KalturaCategory) {
     if (category && category.id) {
       this._categoryService.openCategory(category.id);
     }
+  }
+
+  protected onDataLoaded(data: KalturaCategory): void {
+      this.membersTotalCount = data.membersCount;
   }
 }
 

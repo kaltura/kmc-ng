@@ -1,14 +1,12 @@
-import { Component, Input, OnInit, ViewChild, OnDestroy,forwardRef } from '@angular/core';
-import { FormGroup, AbstractControl }        from '@angular/forms';
-import { DynamicFormControlBase } from '@kaltura-ng/kaltura-ui/dynamic-form';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {AbstractControl, ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {DynamicFormControlBase} from '@kaltura-ng/kaltura-ui/dynamic-form';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { KalturaClient } from 'kaltura-ngx-client';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
+import {KalturaClient} from 'kaltura-ngx-client';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {BaseEntryGetAction} from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
 import 'rxjs/add/observable/forkJoin';
-import 'rxjs/add/observable/forkJoin';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
 
 
 @Component({
@@ -58,7 +56,8 @@ export class LinkedEntries implements OnInit, OnDestroy, ControlValueAccessor {
             const requests = this._innerValue.map(entryId => new BaseEntryGetAction({entryId}));
 
             this._kalturaClient.multiRequest(requests)
-                .subscribe(
+              .cancelOnDestroy(this)
+              .subscribe(
                     responses => {
                         if (responses.hasErrors()) {
                             this._blockerMessage = new AreaBlockerMessage({

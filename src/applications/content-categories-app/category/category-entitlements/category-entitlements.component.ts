@@ -20,7 +20,6 @@ export class CategoryEntitlementsComponent implements OnInit, OnDestroy {
 
 
   public _defaultPermissionLevelOptions: { value: number, label: string }[] = [];
-  public _parentCategory: KalturaCategory = null;
 
   constructor(public _widgetService: CategoryEntitlementsWidget,
               private _appLocalization: AppLocalization) {
@@ -28,10 +27,6 @@ export class CategoryEntitlementsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._widgetService.attachForm();
-
-    this._widgetService.parentCategory$.subscribe(parentCategory => {
-      this._parentCategory = parentCategory;
-    })
 
     this._defaultPermissionLevelOptions = [{
       value: KalturaCategoryUserPermissionLevel.member,
@@ -47,6 +42,7 @@ export class CategoryEntitlementsComponent implements OnInit, OnDestroy {
       label: this._appLocalization.get('applications.content.categoryDetails.entitlements.defaultPermissionLevel.manager')
     }];
   }
+
 
   ngOnDestroy() {
     this._widgetService.detachForm();
@@ -86,5 +82,9 @@ export class CategoryEntitlementsComponent implements OnInit, OnDestroy {
     });
 
     this._widgetService.setDirty();
+  }
+
+  public _onUsersNumberChanged({totalCount}: {totalCount: number}) {
+    this._widgetService.membersTotalCount = totalCount;
   }
 }

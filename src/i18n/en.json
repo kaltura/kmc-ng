@@ -1155,9 +1155,12 @@
                 "automatic": "Automatic"
               },
               "errors" : {
+                "actionFailed": "Error connecting to server",
+                "loadFailed": "Could not load End-Users Permissions",
                 "missingUsers": "Please enter at least one user",
                 "addUsersFailed": "An error occurred while trying to add end-users",
-                "invalidAction": "Please select a valid action for selected users"
+                "invalidAction": "Please select a valid action for selected users",
+                "backToEntitlements": "Back to Entitlements"
               }
             },
             "errors" : {
@@ -1166,8 +1169,7 @@
               "setPermissionLevel": "Unable to set Permission Level for selected users",
               "deleteUsers": "Unable to remove selected users",
               "deactivateUsers": "Unable to deactivate selected users",
-              "activateUsers": "Unable to activate selected users",
-              "reloadUsers": "Reload users"
+              "activateUsers": "Unable to activate selected users"
             }
           }
         },

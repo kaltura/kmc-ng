@@ -12,7 +12,7 @@ import {ManageEndUserPermissionsComponent} from './category-entitlements/manage-
 import {ManageEndUserPermissionsTableComponent} from './category-entitlements/manage-end-user-permissions/manage-end-user-permissions-table/manage-end-user-permissions-table.component';
 import {CategoryUserStatusPipe} from './category-entitlements/manage-end-user-permissions/manage-end-user-permissions-table/category-user-status.pipe';
 import {ManageEndUserPermissionsBulkOperationsComponent} from './category-entitlements/manage-end-user-permissions/bulk-operations/bulk-operations.component';
-import {AddUsersComponent} from "./category-entitlements/manage-end-user-permissions/add-users/add-users.component";
+import {AddUsersComponent} from './category-entitlements/manage-end-user-permissions/add-users/add-users.component';
 
 export const CategoryComponentsList = [
     CategoryComponent,

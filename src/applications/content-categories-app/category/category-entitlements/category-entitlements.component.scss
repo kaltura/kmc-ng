@@ -1,8 +1,7 @@
 @import 'app-theme/_variables.scss';
 
 .kEntitlementsDetails {
-  padding-left: 18px;
-  padding-top: 18px;
+  padding: 18px;
   width: 100%;
 
   .kSchemaTitle {
@@ -51,7 +50,7 @@
 
     .kControl, k-prime-control {
       width: 100%;
-      flex: 0 0 auto;
+      flex: 1 1 auto;
       display: inline-block;
       .kRadioOption {
         padding-top: 20px;
@@ -100,6 +99,21 @@
 
   .kRow:last-child {
     padding-bottom: 60px;
+  }
+
+  .kChangeOwner {
+    .kControl {
+      display: flex;
+      max-width: 493px;
+
+      .kOwner {
+        flex: 1 1 auto;
+      }
+
+      .kActionLink {
+        flex: 0 0 auto;
+      }
+    }
   }
 
   a {

@@ -152,7 +152,7 @@
           <span>{{_widgetService.entitlementsForm.controls['inheritUsersPermissions'].value ? ( 'app.common.yes' | translate) : ( 'app.common.no' | translate)}}</span>
           <div class="kAdditional kExplanation">
             <span>{{'applications.content.categoryDetails.entitlements.inheritUsersPermissions.parentCategory' | translate}}</span>
-            <a (click)="_widgetService.openCategory(_parentCategory)">{{_parentCategory?.name}}</a>
+            <a (click)="_widgetService.openCategory(_widgetService.parentCategory)">{{_widgetService.parentCategory?.name}}</a>
           </div>
         </div>
       </div>
@@ -165,7 +165,7 @@
       </div>
 
       <!--Owner-->
-      <div class="kRow">
+      <div class="kRow kChangeOwner">
         <span class="kLabel"><span class="kLabelText">{{'applications.content.categoryDetails.entitlements.owner.label' | translate}}</span></span>
         <div class="kControl">
           <span class="kOwner" [kTooltip]="_widgetService.entitlementsForm.get('owner').value">{{_widgetService.entitlementsForm.get('owner').value}}</span>
@@ -179,10 +179,10 @@
         <span
           class="kLabel"><span class="kLabelText">{{'applications.content.categoryDetails.entitlements.permittedUsers.label' | translate}}</span></span>
         <div class="kControl">
-          <span *ngIf="_widgetService.data.membersCount > 0">
-        {{ 'applications.content.categoryDetails.entitlements.permittedUsers.count' | translate: {'0': _widgetService.data.membersCount } }}
+          <span *ngIf="_widgetService.membersTotalCount">
+        {{ 'applications.content.categoryDetails.entitlements.permittedUsers.count' | translate: {'0': _widgetService.membersTotalCount } }}
       </span>
-          <span *ngIf="!_widgetService.data.membersCount">
+          <span *ngIf="!_widgetService.membersTotalCount">
         {{'applications.content.categoryDetails.entitlements.permittedUsers.none' | translate}} </span>
           <a class="kActionLink" (click)="manageUsersPopup.open()">
             <span *ngIf="!_widgetService.entitlementsForm.controls['inheritUsersPermissions'].value">{{'applications.content.categoryDetails.entitlements.permittedUsers.manageUsers' | translate}}</span>
@@ -207,6 +207,6 @@
   <ng-template>
     <kManageEndUsers
       [categoryInheritUserPermissions]="_widgetService.entitlementsForm.controls['inheritUsersPermissions'].value"
-      [category]="_widgetService.data" [parentPopupWidget]="manageUsersPopup"></kManageEndUsers>
+      [category]="_widgetService.data" [parentPopupWidget]="manageUsersPopup" (usersNumberChanged)="_onUsersNumberChanged($event)"></kManageEndUsers>
   </ng-template>
 </kPopupWidget>

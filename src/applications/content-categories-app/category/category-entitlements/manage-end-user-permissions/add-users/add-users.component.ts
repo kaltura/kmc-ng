@@ -132,6 +132,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
             updateMethod: this._selectedUpdateMethod
           })
         .tag('block-shell')
+        .cancelOnDestroy(this)
         .subscribe(
           result => {
             this.usersAdded.emit();

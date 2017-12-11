@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit,} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output,} from '@angular/core';
 
 import {LoadingStatus, ManageEndUserPermissionsService, User, Users} from './manage-end-user-permissions.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
@@ -29,6 +29,9 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
   @Input() categoryInheritUserPermissions = false;
   private usersSubscription: ISubscription;
   private querySubscription: ISubscription;
+
+  @Output() usersNumberChanged = new EventEmitter<{totalCount: number}>();
+
 
   public _filter = {
     pageIndex: 0,
@@ -80,7 +83,7 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
             message: state.errorMessage ||
               this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.errors.loadEndUserPermissions'),
             buttons: [{
-              label: this._appLocalization.get('app.common.close'),
+              label: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.backToEntitlements'),
               action: () => {
                 this._blockerMessage = null;
                 if (this.parentPopupWidget) {
@@ -163,6 +166,8 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
   }
 
   private _executeAction(observable$: Observable<void>) {
+    this._blockerMessage = null;
+
     observable$
       .tag('block-shell')
       .cancelOnDestroy(this)
@@ -171,9 +176,10 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
           this._reload();
         }, error => {
           this._blockerMessage = new AreaBlockerMessage({
-            message: error,
+            message: this._appLocalization
+              .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.actionFailed'),
             buttons: [{
-              label: this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.errors.reloadUsers'),
+              label: this._appLocalization.get('applications.content.playlistDetails.errors.ok'),
               action: () => {
                 this._blockerMessage = null;
                 this._manageEndUsersPermissionsService.reload(true);
@@ -188,5 +194,9 @@ export class ManageEndUserPermissionsComponent implements OnInit, OnDestroy {
   public _deleteSelected(selectedUsers: User[]): void {
     this._clearSelection();
     this._executeAction(this._manageEndUsersPermissionsService.deleteUsers(selectedUsers.map(user => user.id)));
+  }
+
+  public _onUsersAdded() {
+    this._reload();
   }
 }
