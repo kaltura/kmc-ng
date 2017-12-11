@@ -52,10 +52,10 @@
         {{ 'applications.upload.uploadMonitor.loading' | translate }}
       </span>
       <span *ngSwitchCase="'error'">
-        {{ 'applications.upload.uploadMonitor.bulkErrors.poll' | translate }}
+        {{ 'applications.upload.uploadMonitor.errors.poll' | translate }}
       </span>
       <span *ngSwitchCase="'recoverableError'">
-        {{ 'applications.upload.uploadMonitor.bulkErrors.prepare' | translate }}
+        {{ 'applications.upload.uploadMonitor.errors.prepare' | translate }}
         <a (click)="requestToRecover.emit()">{{ 'app.common.retry' | translate }}</a>
       </span>
     </ng-container>

@@ -228,9 +228,9 @@
         "error": "{{0}} error",
         "upToDate": "Up to date",
         "loading": "Loading...",
-        "bulkErrors": {
-          "poll": "Cannot get bulk upload data. Retrying...",
-          "prepare": "Could not connect bulk upload monitor!"
+        "errors": {
+          "poll": "Cannot get upload data. Retrying...",
+          "prepare": "Could not connect upload monitor!"
         }
       },
       "transcodingProfilesSelect": {
