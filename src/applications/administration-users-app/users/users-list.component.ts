@@ -34,7 +34,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
     pageSize: null // pageSize is set to null by design. It will be modified after the first time loading users
   };
 
-  constructor(private _usersStore: UsersStore,
+  constructor(public _usersStore: UsersStore,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService) {
   }

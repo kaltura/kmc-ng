@@ -110,44 +110,43 @@ export class EditUserComponent implements OnInit, OnDestroy {
     this._isBusy = true;
     this._usersStore.isUserAlreadyExists(email)
       .cancelOnDestroy(this)
-      .subscribe(
-        (status) => {
-          if (status === IsUserExistsStatuses.kmcUser) {
-            this._isBusy = false;
+      .subscribe((status) => {
+        this._isBusy = false;
+        switch (status) {
+          case IsUserExistsStatuses.kmcUser:
             this._browserService.alert({
               message: this._appLocalization.get('applications.administration.users.alreadyExistError', { 0: email })
             });
-          }
-        },
-        error => {
-          this._isBusy = false;
-          switch (error) {
-            case IsUserExistsStatuses.otherSystemUser:
-              this._isUserAssociated();
-              break;
-            case IsUserExistsStatuses.unknownUser:
-              this._browserService.confirm({
-                  header: this._appLocalization.get('applications.administration.users.alreadyExist'),
-                  message: this._appLocalization.get('applications.administration.users.userAlreadyExist', { 0: email }),
-                  accept: () => this._isUserAssociated()
-                }
-              );
-              break;
-            default:
-              this._blockerMessage = new AreaBlockerMessage({
-                message: error.message,
-                buttons: [{
-                  label: this._appLocalization.get('app.common.ok'),
-                  action: () => this._blockerMessage = null
-                }]
-              });
-              break;
-          }
+            break;
+          case IsUserExistsStatuses.otherSystemUser:
+            this._isUserAssociated();
+            break;
+          case IsUserExistsStatuses.unknownUser:
+            this._browserService.confirm({
+                header: this._appLocalization.get('applications.administration.users.alreadyExist'),
+                message: this._appLocalization.get('applications.administration.users.userAlreadyExist', { 0: email }),
+                accept: () => this._isUserAssociated()
+              }
+            );
+            break;
+          default:
+            this._blockerMessage = new AreaBlockerMessage({
+              message: this._appLocalization.get('applications.administration.users.commonError'),
+              buttons: [{
+                label: this._appLocalization.get('app.common.ok'),
+                action: () => this._blockerMessage = null
+              }]
+            });
+            break;
         }
-      );
+      });
   }
 
   private _updateUser(): void {
+    if (!this._userForm.valid) {
+      return;
+    }
+
     this._usersStore.updateUser(this._userForm)
       .tag('block-shell')
       .cancelOnDestroy(this)
@@ -246,6 +245,11 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
   private _addNewUser(): void {
     this._blockerMessage = null;
+
+    if (!this._userForm.valid) {
+      return;
+    }
+
     this._usersStore.addUser(this._userForm)
       .cancelOnDestroy(this)
       .tag('block-shell')

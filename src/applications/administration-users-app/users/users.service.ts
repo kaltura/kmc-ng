@@ -144,7 +144,7 @@ export class UsersStore implements OnDestroy {
     const isCurrentUser = this._appAuthentication.appUser.id === user.id;
     const isAdminUser = this._usersDataValue && this._usersDataValue.partnerInfo.adminUserId === user.id;
 
-    if (isCurrentUser && isAdminUser) {
+    if (isCurrentUser || isAdminUser) {
       return Observable.throw(new Error(this._appLocalization.get('applications.administration.users.cantPerform')));
     }
 
@@ -166,7 +166,7 @@ export class UsersStore implements OnDestroy {
     const isCurrentUser = this._appAuthentication.appUser.id === user.id;
     const isAdminUser = this._usersDataValue && this._usersDataValue.partnerInfo.adminUserId === user.id;
 
-    if (isCurrentUser && isAdminUser) {
+    if (isCurrentUser || isAdminUser) {
       return Observable.throw(new Error(this._appLocalization.get('applications.administration.users.cantPerform')));
     }
 
@@ -185,7 +185,7 @@ export class UsersStore implements OnDestroy {
         const status = error.code === 'LOGIN_DATA_NOT_FOUND'
           ? IsUserExistsStatuses.otherSystemUser :
           (error.code === 'USER_NOT_FOUND' ? IsUserExistsStatuses.unknownUser : '');
-        return Observable.throw(status);
+        return Observable.of(status);
       });
   }
 
@@ -195,6 +195,11 @@ export class UsersStore implements OnDestroy {
 
   public addUser(userForm: FormGroup): Observable<void> {
     const { roleIds, id, email, firstName, lastName } = userForm.value;
+
+    if (!email || !firstName || !lastName) {
+      return Observable.throw(new Error(this._appLocalization.get('applications.administration.users.addUserError')));
+    }
+
     const user = new KalturaUser({
       email,
       firstName,
@@ -221,11 +226,13 @@ export class UsersStore implements OnDestroy {
   }
 
   public updateUser(userForm: FormGroup): Observable<void> {
-    const { roleIds, id, email, firstName, lastName } = userForm.value;
+    const { roleIds, id, email } = userForm.value;
+
+    if (!id && !email) {
+      return Observable.throw(new Error('Invalid user id'));
+    }
+
     const user = new KalturaUser({
-      email,
-      firstName,
-      lastName,
       roleIds: roleIds ? roleIds : this._usersDataValue.roles.items[0].id,
       id: id || email
     });

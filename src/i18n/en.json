@@ -15,7 +15,6 @@
       "Users": "Users",
       "Account Settings": "Account Settings",
       "Account Upgrade": "Account Upgrade",
-      "Administration": "Administration",
       "Roles": "Roles",
       "UploadControl": "Upload Control",
       "BulkUpload": "Bulk Upload",
@@ -1155,7 +1154,9 @@
         "alreadyExistError": "Login e-mail {{0}} is already listed in the system as an authorized user in your account.",
         "userAssociatedCaption": "Associated user",
         "userAssociated": "User with Id {{0}} already exists on the account. Do you want to enable KMC access to this user?",
-        "refresh": "Refresh"
+        "refresh": "Refresh",
+        "commonError": "Error happened during server request",
+        "addUserError": "Missing one of mandatory fields"
       },
       "role": {
         "titleEdit": "Edit Role",

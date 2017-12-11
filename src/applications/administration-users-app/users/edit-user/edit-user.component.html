@@ -12,18 +12,16 @@
         <div class="kCaption">{{'applications.administration.users.personalDetails' | translate}}</div>
         <div class="kRow kValign">
           <span class="kLabel">{{'applications.administration.users.loginEmailAddress' | translate}}</span>
-          <div class="kRequired"
-               [ngClass]="{'kHasError':_userForm.controls['email'].invalid && _userForm.controls['email'].touched}">*
-          </div>
+          <div class="kRequired" [ngClass]="{'kHasError':email.invalid && email.touched}">*</div>
           <div class="kControl">
             <input #email formControlName="email" type="text" pInputText/>
           </div>
         </div>
-        <div class="kErrorRow" [ngClass]="{'hidden': !_userForm.controls['email'].touched}">
-          <div class="invalid" [ngClass]="{'hidden': email.value !== ''}">{{'applications.administration.users.required'
-            | translate}}
+        <div class="kErrorRow" [ngClass]="{'hidden': !email.touched}">
+          <div class="invalid" [ngClass]="{'hidden': email.value !== ''}">
+            {{'applications.administration.users.required' | translate}}
           </div>
-          <div class="invalid" [ngClass]="{'hidden': email.value === '' || _userForm.controls['email'].valid}">
+          <div class="invalid" [ngClass]="{'hidden': email.value === '' || email.valid}">
             {{'applications.administration.users.emailFormat' | translate}}
           </div>
         </div>
@@ -38,7 +36,7 @@
           </div>
         </div>
         <div class="kErrorRow"
-             [ngClass]="{'hidden': firstName.value !== '' || !_userForm.controls['firstName'].touched}">
+             [ngClass]="{'hidden': firstName.valid || !_userForm.controls['firstName'].touched}">
           <div class="invalid">{{'applications.administration.users.required' | translate}}</div>
         </div>
         <div class="kRow kValign">
@@ -51,7 +49,7 @@
             <input #lastName formControlName="lastName" type="text" pInputText/>
           </div>
         </div>
-        <div class="kErrorRow" [ngClass]="{'hidden': lastName.value !== '' || !_userForm.controls['lastName'].touched}">
+        <div class="kErrorRow" [ngClass]="{'hidden': lastName.valid || !_userForm.controls['lastName'].touched}">
           <div class="invalid">{{'applications.administration.users.required' | translate}}</div>
         </div>
         <div class="kCaption kExtraPadding">{{'applications.administration.users.accountSpecificDetails' | translate}}
