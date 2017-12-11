@@ -6,28 +6,28 @@ import { Observable } from 'rxjs/Observable';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization, TrackedFileStatuses } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
-import { KalturaFlavorAsset } from 'kaltura-typescript-client/types/KalturaFlavorAsset';
-import { KalturaFlavorAssetWithParams } from 'kaltura-typescript-client/types/KalturaFlavorAssetWithParams';
-import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-typescript-client/types/FlavorAssetGetFlavorAssetsWithParamsAction';
-import { KalturaFlavorAssetStatus } from 'kaltura-typescript-client/types/KalturaFlavorAssetStatus';
-import { KalturaLiveParams } from 'kaltura-typescript-client/types/KalturaLiveParams';
-import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
-import { KalturaWidevineFlavorAsset } from 'kaltura-typescript-client/types/KalturaWidevineFlavorAsset';
-import { FlavorAssetDeleteAction } from 'kaltura-typescript-client/types/FlavorAssetDeleteAction';
-import { FlavorAssetConvertAction } from 'kaltura-typescript-client/types/FlavorAssetConvertAction';
-import { FlavorAssetReconvertAction } from 'kaltura-typescript-client/types/FlavorAssetReconvertAction';
-import { FlavorAssetSetContentAction } from 'kaltura-typescript-client/types/FlavorAssetSetContentAction';
-import { FlavorAssetAddAction } from 'kaltura-typescript-client/types/FlavorAssetAddAction';
-import { KalturaUrlResource } from 'kaltura-typescript-client/types/KalturaUrlResource';
-import { KalturaContentResource } from 'kaltura-typescript-client/types/KalturaContentResource';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaFlavorAsset';
+import { KalturaFlavorAssetWithParams } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetWithParams';
+import { FlavorAssetGetFlavorAssetsWithParamsAction } from 'kaltura-ngx-client/api/types/FlavorAssetGetFlavorAssetsWithParamsAction';
+import { KalturaFlavorAssetStatus } from 'kaltura-ngx-client/api/types/KalturaFlavorAssetStatus';
+import { KalturaLiveParams } from 'kaltura-ngx-client/api/types/KalturaLiveParams';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaWidevineFlavorAsset } from 'kaltura-ngx-client/api/types/KalturaWidevineFlavorAsset';
+import { FlavorAssetDeleteAction } from 'kaltura-ngx-client/api/types/FlavorAssetDeleteAction';
+import { FlavorAssetConvertAction } from 'kaltura-ngx-client/api/types/FlavorAssetConvertAction';
+import { FlavorAssetReconvertAction } from 'kaltura-ngx-client/api/types/FlavorAssetReconvertAction';
+import { FlavorAssetSetContentAction } from 'kaltura-ngx-client/api/types/FlavorAssetSetContentAction';
+import { FlavorAssetAddAction } from 'kaltura-ngx-client/api/types/FlavorAssetAddAction';
+import { KalturaUrlResource } from 'kaltura-ngx-client/api/types/KalturaUrlResource';
+import { KalturaContentResource } from 'kaltura-ngx-client/api/types/KalturaContentResource';
 import { UploadManagement } from '@kaltura-ng/kaltura-common/upload-management';
 import { environment } from 'app-environment';
 import { Flavor } from './flavor';
-import { FlavorAssetGetUrlAction } from 'kaltura-typescript-client/types/FlavorAssetGetUrlAction';
-import { NewEntryFlavourFile } from './new-entry-flavour-file';
-import { KalturaUploadedFileTokenResource } from 'kaltura-typescript-client/types/KalturaUploadedFileTokenResource';
+import { FlavorAssetGetUrlAction } from 'kaltura-ngx-client/api/types/FlavorAssetGetUrlAction';
+import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client/api/types/KalturaUploadedFileTokenResource';
 import { EntryWidget } from '../entry-widget';
+import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
 
 @Injectable()
 export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
@@ -223,33 +223,35 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
 	    this._entryStatus = this._appLocalization.get('applications.content.entryDetails.flavours.' + this._entryStatusClassName.split(" ")[0]);
     }
 
-    public deleteFlavor(flavor: Flavor): void{
-	    this._browserService.confirm(
-		    {
-			    header: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirmTitle'),
-			    message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirm',{"0": flavor.id}),
-			    accept: () => {
-				    super._showLoader();
-				    this._kalturaServerClient.request(new FlavorAssetDeleteAction({
-					    id: flavor.id
-				    }))
-					    .cancelOnDestroy(this,this.widgetReset$)
-					    .monitor('delete flavor: '+flavor.id)
-					    .subscribe(
-						    response =>
-						    {
-							    super._hideLoader();
-                  this._browserService.showGrowlMessage({severity: 'success', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteSuccess')});
-                  this._refresh();
-						    },
-						    error =>
-						    {
-							    super._hideLoader();
-                  this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.flavours.deleteFailure')});
-						    }
-					    );
-			    }
-		    });
+    public deleteFlavor(flavor: Flavor): void {
+        this._browserService.confirm(
+            {
+                header: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirmTitle'),
+                message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteConfirm', {"0": flavor.id}),
+                accept: () => {
+                    this._kalturaServerClient.request(new FlavorAssetDeleteAction({
+                        id: flavor.id
+                    }))
+                        .cancelOnDestroy(this, this.widgetReset$)
+                        .tag('block-shell')
+                        .monitor('delete flavor: ' + flavor.id)
+                        .subscribe(
+                            response => {
+                                this._refresh();
+                                this._browserService.scrollToTop();
+                            },
+                            error => {
+                                this._showBlockerMessage(new AreaBlockerMessage({
+                                    message: this._appLocalization.get('applications.content.entryDetails.flavours.deleteFailure'),
+                                    buttons: [{
+                                        label: this._appLocalization.get('app.common.ok'),
+                                        action: () => this._removeBlockerMessage()
+                                    }]
+                                }), false);
+                            }
+                        );
+                }
+            });
     }
 
     public downloadFlavor (flavor: Flavor): void{
@@ -289,6 +291,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
 		flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.converting');
 		this._kalturaServerClient.request(request)
 			.cancelOnDestroy(this,this.widgetReset$)
+      .tag('block-shell')
 			.monitor('convert flavor')
 			.subscribe(
 				response =>
@@ -303,11 +306,16 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
 				},
 				error =>
 				{
-          this._browserService.showGrowlMessage({severity: 'error', detail: this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure')});
-					this._fetchFlavors('reload', false).cancelOnDestroy(this,this.widgetReset$).subscribe(() =>
-					{
-						// reload flavors as we need to get the flavor status from the server
-					});
+          this._showBlockerMessage(new AreaBlockerMessage({
+            message: this._appLocalization.get('applications.content.entryDetails.flavours.convertFailure'),
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._refresh();
+                this._removeBlockerMessage();
+              }
+            }]
+          }), false);
 				}
 			);
 	}
@@ -356,7 +364,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
   }
 
   public uploadFlavor(flavor: Flavor, fileData: File): void {
-    Observable.of(this._uploadManagement.addFile(new NewEntryFlavourFile(fileData)))
+    Observable.of(this._uploadManagement.addFile(new NewEntryFlavourFile(fileData, this.data.id, this.data.mediaType)))
       .subscribe((response) => {
           flavor.uploadFileId = response.id;
           flavor.status = KalturaFlavorAssetStatus.importing.toString();
@@ -378,6 +386,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
     }))
       .cancelOnDestroy(this, this.widgetReset$)
       .monitor('set flavor resource')
+      .tag('block-shell')
       .catch(error => {
         this._uploadManagement.cancelUploadWithError(flavor.uploadFileId, 'Cannot update flavor, cancel related file');
         return Observable.throw(error);
@@ -387,11 +396,16 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
           this._refresh(false, true);
         },
         error => {
-          this._browserService.showGrowlMessage({
-            severity: 'error',
-            detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')
-          });
-          this._refresh();
+          this._showBlockerMessage(new AreaBlockerMessage({
+            message: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure'),
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._refresh();
+                this._removeBlockerMessage()
+              }
+            }]
+          }), false);
         }
       );
   }
@@ -405,6 +419,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
     }))
       .cancelOnDestroy(this, this.widgetReset$)
       .monitor('add new flavor')
+      .tag('block-shell')
       .catch(error => {
         this._uploadManagement.cancelUploadWithError(flavor.uploadFileId, 'Cannot update flavor, cancel related file');
         return Observable.throw(error);
@@ -415,11 +430,16 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
           this.updateFlavor(flavor, resource);
         },
         error => {
-          this._browserService.showGrowlMessage({
-            severity: 'error',
-            detail: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure')
-          });
-          this._refresh();
+          this._showBlockerMessage(new AreaBlockerMessage({
+            message: this._appLocalization.get('applications.content.entryDetails.flavours.uploadFailure'),
+            buttons: [{
+              label: this._appLocalization.get('app.common.ok'),
+              action: () => {
+                this._refresh();
+                this._removeBlockerMessage();
+              }
+            }]
+          }), false);
         }
       );
   }

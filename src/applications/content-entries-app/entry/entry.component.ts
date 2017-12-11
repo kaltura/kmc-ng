@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { EntryStore, ActionTypes } from './entry-store.service';
 import { EntrySectionsListWidget } from './entry-sections-list/entry-sections-list-widget.service';
@@ -135,7 +135,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 								});
 								break;
 							case ActionTypes.EntrySaving:
-								this._showLoader = true;
 								break;
 							case ActionTypes.EntrySavingFailed:
 

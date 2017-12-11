@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaClient } from 'kaltura-ngx-client';
 
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { BaseEntryDeleteAction } from 'kaltura-typescript-client/types/BaseEntryDeleteAction';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { BaseEntryDeleteAction } from 'kaltura-ngx-client/api/types/BaseEntryDeleteAction';
 import { BulkActionBaseService } from './bulk-action-base.service';
 
 export class BulkDeleteError extends Error {

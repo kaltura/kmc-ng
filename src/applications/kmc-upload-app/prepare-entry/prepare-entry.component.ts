@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {KalturaMediaType} from 'kaltura-typescript-client/types/KalturaMediaType';
+import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import {Router} from '@angular/router';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {DraftEntry, PrepareEntryService} from './prepare-entry.service';
@@ -38,25 +38,12 @@ export class PrepareEntryComponent implements OnInit {
 
 
   private _loadEntry(selectedProfile: { profileId?: number }) {
-    this._browserService.setAppStatus({
-      errorMessage: null
-    });
 
     /// passing profileId null will cause to create with default profileId
     this._prepareEntryService.createDraftEntry(this._selectedMediaType, selectedProfile.profileId)
         .tag('block-shell')
       .subscribe((draftEntry: DraftEntry) => {
-          this._router.navigate(['/content/entries/entry', draftEntry.id], {queryParams: {reloadEntriesListOnNavigateOut: true}})
-            .then(() => {
-              this._browserService.setAppStatus({
-                errorMessage: null
-              });
-            })
-            .catch(() => {
-              this._browserService.setAppStatus({
-                errorMessage: 'error occurred while navigating to entry'
-              });
-            });
+          this._router.navigate(['/content/entries/entry', draftEntry.id], {queryParams: {reloadEntriesListOnNavigateOut: true}});
           this.transcodingProfileSelectMenu.close();
         },
         error => {

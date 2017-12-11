@@ -2,9 +2,9 @@ import { Component, Input, OnInit, ViewChild, OnDestroy,forwardRef } from '@angu
 import { FormGroup, AbstractControl }        from '@angular/forms';
 import { DynamicFormControlBase } from '@kaltura-ng/kaltura-ui/dynamic-form';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
+import { KalturaClient } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { BaseEntryGetAction } from 'kaltura-typescript-client/types/BaseEntryGetAction';
+import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/forkJoin';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';

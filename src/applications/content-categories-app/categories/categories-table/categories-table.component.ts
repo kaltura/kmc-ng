@@ -15,7 +15,7 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {CategoriesService} from '../categories.service';
-import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 
 @Component({
   selector: 'kCategoriesTable',

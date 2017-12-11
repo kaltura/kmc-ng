@@ -13,8 +13,12 @@
   &:hover, &.open {
     opacity: 1;
     color: $mainLinkHoverColor;
-    i {
+    .kIconrefresh_smalli {
       color: $mainLinkHoverColor;
+      opacity: 1;
+    }
+    .kIconerror {
+      color: $kDandger;
       opacity: 1;
     }
   }
@@ -33,5 +37,20 @@
     position: relative;
     right: 12px;
     top: 9px;
+  }
+
+  .kIconerror {
+    font-size: 16px;
+    color: $kDandger;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    right: 11px;
+    top: 11px;
   }
 }

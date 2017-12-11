@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaExternalMediaEntry } from 'kaltura-typescript-client/types/KalturaExternalMediaEntry';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaExternalMediaEntry } from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
 
 @Pipe({ name: 'entryDuration' })
 export class EntryDurationPipe implements PipeTransform {

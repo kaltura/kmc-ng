@@ -1,5 +1,5 @@
-import { KalturaUploadFile } from '@kaltura-ng/kaltura-server-utils';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
+import { KalturaUploadFile } from 'app-shared/kmc-shared';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import { ISubscription } from 'rxjs/Subscription';
 
 export class NewEntryUploadFile extends KalturaUploadFile {

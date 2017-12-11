@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import { AppEvent } from 'app-shared/kmc-shared/app-events/app-event';
+import { AppEvent } from './app-event';
 
 @Injectable()
 export class AppEventsService {

@@ -2,7 +2,7 @@ import { Component, ViewChild, AfterViewInit,OnInit, OnDestroy } from '@angular/
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { ISubscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
-import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
+import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { EntryUsersWidget } from './entry-users-widget.service';

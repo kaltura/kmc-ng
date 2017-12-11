@@ -20,7 +20,7 @@
       "DropFolders": "Drop Folders"
     },
     "userSettings": {
-      "changeAccount": "Change Acoount",
+      "changeAccount": "Change Account",
       "logout": "Logout"
     },
     "changeAccount": {
@@ -127,6 +127,9 @@
     },
     "changelog": {
       "header": "Change Log"
+    },
+    "pageExitVerification": {
+      "defaultMessage": "Are you sure you want to leave this page? Unsaved changes and uploading files will be lost"
     }
   },
   "applications": {
@@ -218,12 +221,17 @@
         "bulkUpload": "Bulk upload",
         "dropFolders": "Drop folders",
         "viewDetails": "View details",
-        "uploading": "uploading",
-        "syncing": "syncing",
-        "queued": "queued",
-        "completed": "completed",
-        "error": "error",
-        "upToDate": "Up to date"
+        "uploading": "{{0}} uploading",
+        "syncing": "{{0}} syncing",
+        "queued": "{{0}} queued",
+        "completed": "{{0}} completed",
+        "error": "{{0}} error",
+        "upToDate": "Up to date",
+        "loading": "Loading...",
+        "bulkErrors": {
+          "poll": "Cannot get bulk upload data. Retrying...",
+          "prepare": "Could not connect bulk upload monitor!"
+        }
       },
       "transcodingProfilesSelect": {
         "titleVideo": "Prepare Video Entry",
@@ -294,6 +302,10 @@
     },
     "content": {
       "uploadControl": {
+        "retryError": {
+          "header": "Retry upload",
+          "message": "Cannot resume upload for the requested file. Please upload the file again."
+        },
         "bulkCancel": {
           "header": "Cancel uploads",
           "message": "Are you sure you want to cancel those uploads?"
@@ -352,15 +364,13 @@
           "delete": "Delete",
           "save": "Save changes",
           "changeOwnerLabel": "Set a new owner for the selected categories",
-          "error": "Categories update failed",
-          "success": "Categories updated successfully"
+          "error": "Categories update failed"
         },
         "deleteCategories": "Delete Categories",
         "editWarning": "Some of the selected categories were created by another application and deleting them will effect this application or site.\n",
         "editWithEditWarningTags": "This category was created by another application and editing it will effect this application or site.\n Do you want to continue?",
         "confirmDeleteMultipleWithSubCategories": "Categories will be deleted with their sub-categories. Do you want to continue?",
         "confirmDeleteMultiple": "Are you sure you want to delete these categories?",
-        "deleted": "Category deleted successfully",
         "categoryId": "Category ID: {{0}}",
         "noRestriction": "No Restriction",
         "requiresAuthentication": "Requires Authentication",
@@ -403,12 +413,11 @@
         "confirmDelete": "Are you sure you want to delete the selected entry?",
         "confirmDeleteSingle": "Are you sure you want to delete the selected entry? \n {{0}} \n Please note: the entry will be permanently deleted from your account.",
         "confirmDeleteMultiple": "Are you sure you want to delete the selected entries? \n {{0}} \n Please note: these entries will be permanently deleted from your account.",
-        "deleted": "Entry deleted successfully",
         "entryId": "Entry ID: {{0}}",
         "deleteNote": "Please note: the entry will be permanently deleted from your account."
       },
       "playlists": {
-        "playlists": "Playlist's",
+        "playlists": "{{0}} Playlists",
         "entries": "{{0}} Entries",
         "selected": "{{0}} Selected",
         "bulkActions": "Bulk Actions",
@@ -418,7 +427,6 @@
         "confirmDeleteMultiple": "Are you sure you want to delete the selected playlists? \n {{0}} \n Please note: these playlists will be permanently deleted from your account.",
         "confirmDeleteSingle": "Are you sure you want to delete the selected playlist? \n {{0}} \n Please note: this playlist will be permanently deleted from your account.",
         "playlistId": "Playlist ID: {{0}}",
-        "deleted": "Playlist deleted successfully",
         "searchEntries": "Search Playlists",
         "addPlaylist": "Add Playlist",
         "addEntry": "Add Entry",
@@ -839,7 +847,6 @@
           },
           "deleteConfirm": "Are you sure you want to delete this Asset: {{0}} ?",
           "deleteConfirmTitle": "Delete Flavor Asset",
-          "deleteSuccess": "Flavor asset was deleted successfully.",
           "uploadSuccess": "Flavor asset was uploaded successfully.",
           "deleteFailure": "Flavor asset deletion failed.",
           "convertFailure": "Flavor conversion failed.",

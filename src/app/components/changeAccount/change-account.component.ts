@@ -4,10 +4,10 @@ import {ISubscription} from 'rxjs/Subscription';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {AppAuthentication, BrowserService} from 'app-shared/kmc-shell';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {KalturaClient} from '@kaltura-ng/kaltura-client';
-import {PartnerListPartnersForUserAction} from 'kaltura-typescript-client/types/PartnerListPartnersForUserAction';
-import {KalturaPartnerFilter} from 'kaltura-typescript-client/types/KalturaPartnerFilter';
-import {KalturaPartnerStatus} from 'kaltura-typescript-client/types/KalturaPartnerStatus';
+import {KalturaClient} from 'kaltura-ngx-client';
+import {PartnerListPartnersForUserAction} from 'kaltura-ngx-client/api/types/PartnerListPartnersForUserAction';
+import {KalturaPartnerFilter} from 'kaltura-ngx-client/api/types/KalturaPartnerFilter';
+import {KalturaPartnerStatus} from 'kaltura-ngx-client/api/types/KalturaPartnerStatus';
 import {Observable} from 'rxjs/Observable';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 
