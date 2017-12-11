@@ -54,6 +54,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._usersStore.users.data$
       .cancelOnDestroy(this)
+      .first()
       .subscribe(({ roles, users, partnerInfo }) => {
         this._roles = roles.items;
         this._users = users.items;
