@@ -75,6 +75,7 @@ import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
 import { AppEventsModule } from 'app-shared/kmc-shared';
+import { PlaylistCreationModule, PlaylistCreationService } from 'app-shared/kmc-shared/playlist-creation';
 import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
@@ -124,6 +125,7 @@ export function clientConfigurationFactory() {
     RadioButtonModule,
     StickyModule.forRoot(),
     OperationTagModule.forRoot(),
+    PlaylistCreationModule.forRoot(),
     KMCServerPollsModule.forRoot()
   ],
   declarations: <any>[
@@ -169,7 +171,10 @@ export function clientConfigurationFactory() {
   ]
 })
 export class AppModule {
-  constructor(appBootstrap: AppBootstrap, appLocalization: AppLocalization, uploadManagement: UploadManagement) {
+  constructor(appBootstrap: AppBootstrap,
+              appLocalization: AppLocalization,
+              uploadManagement: UploadManagement,
+              playlistCreation: PlaylistCreationService) {
 
     // TODO [kmcng] move to a relevant location
     // TODO [kmcng] get max upload request
@@ -177,5 +182,7 @@ export class AppModule {
     uploadManagement.setMaxUploadRequests(2/*environment.uploadsShared.MAX_CONCURENT_UPLOADS*/);
 
     appBootstrap.initApp({ errorRoute: '/error' });
+
+    playlistCreation.init();
   }
 }
