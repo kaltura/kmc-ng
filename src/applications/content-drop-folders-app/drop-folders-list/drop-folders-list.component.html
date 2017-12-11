@@ -17,7 +17,7 @@
           <div [class.kHidden]="_selectedDropFolders.length" class="kFilters">
             <input type="text" pInputText class="kSearchInput"
                    [(ngModel)]="_filter.fileNameLike"
-                   (keyup.enter)="onFreetextChanged()"
+                   (keyup.enter)="_onFreetextChanged()"
                    placeholder="{{'applications.content.dropFolders.search' | translate}}">
             <div #statusesFilterBtn class="kStatusesFilter">
               <i class="kIconfilter"></i>
@@ -38,16 +38,16 @@
         <div class="kContent">
           <kTags
             [title]="'applications.content.filters.activeFilters' | translate"
-            [data]="activeFilters"
+            [data]="_activeFilters"
             [labelField]="'label'"
             [tooltipField]="'tooltip'"
-            (onTagRemove)="removeTag($event)"
-            (onRemoveAll)="removeAllTags()"
-            (onTagsChange)="onTagsChange($event)">
+            (onTagRemove)="_removeTag($event)"
+            (onRemoveAll)="_removeAllTags()"
+            (onTagsChange)="_onTagsChange($event)">
             <ng-template let-item="item">
               <div class="kTagContent" [kTooltip]="item.tooltip">
                 <span class="kTagLabel">{{item.label}}</span>
-                <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
+                <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="_removeTag(item.data)"></i>
               </div>
             </ng-template>
           </kTags>
@@ -56,20 +56,19 @@
 
       <kDropFoldersListTable
         class="kDropFoldersTable"
-        [dropFolders]="(_dropFoldersService.dropFolders$ | async)?.items"
-        (navigateToEntry)="doNavigateToEntry($event)"
-        (deleteDropFolderFiles)="deleteDropFolderFiles($event)"
-        (onSelectedDropFoldersChange)="_selectedDropFoldersChange($event)"
+        [dropFolders]="(_dropFoldersService.dropFolders.data$ | async)?.items"
+        (navigateToEntry)="_navigateToEntry($event)"
+        (deleteDropFolderFiles)="_deleteDropFolderFiles($event)"
         [(selectedDropFolders)]="_selectedDropFolders"></kDropFoldersListTable>
 
       <div class="kDropFoldersTableFooter kContent" #footer
-           *ngIf="(_dropFoldersService.dropFolders$ | async)?.totalCount">
+           *ngIf="(_dropFoldersService.dropFolders.data$ | async)?.totalCount">
         <p-paginator
           [rows]="_filter.pageSize"
           [first]="_filter.pageIndex * _filter.pageSize"
           [rowsPerPageOptions]="[25,50,75,100]"
-          [totalRecords]="(_dropFoldersService.dropFolders$ | async)?.totalCount"
-          (onPageChange)="onPaginationChanged($event)"></p-paginator>
+          [totalRecords]="(_dropFoldersService.dropFolders.data$ | async)?.totalCount"
+          (onPageChange)="_onPaginationChanged($event)"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
       </div>
     </div>
@@ -88,7 +87,7 @@
   <div class="kOverrideFAIcons kRefineFilters">
     <div class="kTreeContainer">
       <kDatesFilters
-        (createdChanged)="onCreatedChanged($event)"
+        (createdChanged)="_onCreatedChanged($event)"
         [_createdAfter]="_filter.createdAfter"
         [_createdBefore]="_filter.createdBefore"></kDatesFilters>
 
@@ -99,7 +98,7 @@
     </div>
     <p>
       <a (click)="removeAllTags()">{{'applications.content.filters.clearAll' | translate}}</a>
-      <a class="kClose" (click)="close()">{{'applications.content.filters.close' | translate}}</a>
+      <a class="kClose" (click)="_close()">{{'applications.content.filters.close' | translate}}</a>
     </p>
   </div>
 </kPopupWidget>

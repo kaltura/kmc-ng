@@ -8,9 +8,9 @@ export class FolderFileStatusPipe implements PipeTransform {
   }
 
   transform(value: string, isIcon: boolean, isTooltip: boolean): string {
-    let className = '',
-      label = '',
-      tooltip = '';
+    let className = '';
+    let label = '';
+    let tooltip = '';
     if (typeof(value) !== 'undefined' && value !== null) {
       switch (parseInt(value, 10)) {
         case KalturaDropFolderFileStatus.uploading:

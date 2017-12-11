@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { DataTable, Menu, MenuItem } from 'primeng/primeng';
+import { Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { DropFoldersService } from 'applications/content-drop-folders-app/drop-folders-list/drop-folders.service';
 import * as moment from 'moment';
@@ -12,18 +12,9 @@ import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropF
 })
 
 export class DropFoldersListTableComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('actionsmenu') private actionsMenu: Menu;
-  @ViewChild('dataTable') private dataTable: DataTable;
+  @Input() selectedDropFolders: KalturaDropFolderFile[] = [];
 
-  _deferredLoading = true;
-  _dropFolders: any[] = [];
-  _items: MenuItem[];
-  _emptyMessage: string = '';
-  private _deferredDropFolders: any[];
-
-  @Input() selectedDropFolders: any[] = [];
-
-  @Input() set dropFolders(data: any[]) {
+  @Input() set dropFolders(data: KalturaDropFolderFile[]) {
     if (!this._deferredLoading) {
       this._dropFolders = [];
       this.cdRef.detectChanges();
@@ -38,56 +29,24 @@ export class DropFoldersListTableComponent implements OnInit, AfterViewInit, OnD
   @Output() navigateToEntry = new EventEmitter<string>();
   @Output() deleteDropFolderFiles = new EventEmitter<any>();
 
+  @ViewChild('actionsmenu') private actionsMenu: Menu;
+
+  private _deferredDropFolders: KalturaDropFolderFile[];
+
+  public _deferredLoading = true;
+  public _dropFolders: KalturaDropFolderFile[] = [];
+  public _items: MenuItem[];
+  public _emptyMessage = '';
+
   constructor(private _appLocalization: AppLocalization,
               private cdRef: ChangeDetectorRef,
               public _dropFoldersService: DropFoldersService) {
   }
 
-  openActionsMenu(event: any, rowIndex: number, folder: KalturaDropFolderFile) {
-    if (this.actionsMenu) {
-      this.actionsMenu.toggle(event);
-      this.buildMenu(rowIndex, folder);
-      this.actionsMenu.show(event);
-    }
-  }
-
-  buildMenu(rowIndex: number, folder: KalturaDropFolderFile): void {
-    this._items = [
-      {
-        label: this._appLocalization.get('applications.content.dropFolders.table.delete'),
-        styleClass: 'kDeleteAction',
-        command: (event) => {
-          this.onActionSelected('remove', rowIndex, folder);
-        }
-      }
-    ];
-  }
-
-  dateTooltip(dropFolder: KalturaDropFolderFile) {
-    return this._appLocalization.get('applications.content.dropFolders.table.datesTooltip',
-      {
-        0: dropFolder.uploadStartDetectedAt ? moment(dropFolder.uploadStartDetectedAt.getTime()).format('DD/MM/YYYY HH:mm') : this._appLocalization.get('applications.content.dropFolders.table.notAvailable'),
-        1: dropFolder.uploadEndDetectedAt ? moment(dropFolder.uploadEndDetectedAt.getTime()).format('DD/MM/YYYY HH:mm') : this._appLocalization.get('applications.content.dropFolders.table.notAvailable'),
-        2: dropFolder.importStartedAt ? moment(dropFolder.importStartedAt.getTime()).format('DD/MM/YYYY HH:mm') : this._appLocalization.get('applications.content.dropFolders.table.notAvailable'),
-        3: dropFolder.importEndedAt ? moment(dropFolder.importEndedAt.getTime()).format('DD/MM/YYYY HH:mm') : this._appLocalization.get('applications.content.dropFolders.table.notAvailable')
-      }
-    )
-  }
-
-  onActionSelected(action: string, rowIndex: number, folder: KalturaDropFolderFile) {
-    switch (action) {
-      case 'remove':
-        this.deleteDropFolderFiles.emit(folder);
-        break;
-      default:
-        break;
-    }
-  }
-
   ngOnInit() {
     this._emptyMessage = '';
     let loadedOnce = false; // used to set the empty message to 'no results' only after search
-    this._dropFoldersService.dropFolders$
+    this._dropFoldersService.dropFolders.data$
       .cancelOnDestroy(this)
       .subscribe(
         response => {
@@ -108,7 +67,8 @@ export class DropFoldersListTableComponent implements OnInit, AfterViewInit, OnD
 
   ngAfterViewInit() {
     if (this._deferredLoading) {
-      // use timeout to allow the DOM to render before setting the data to the datagrid. This prevents the screen from hanging during datagrid rendering of the data.
+      // use timeout to allow the DOM to render before setting the data to the datagrid.
+      // This prevents the screen from hanging during datagrid rendering of the data.
       setTimeout(() => {
         this._deferredLoading = false;
         this._dropFolders = this._deferredDropFolders;
@@ -119,6 +79,45 @@ export class DropFoldersListTableComponent implements OnInit, AfterViewInit, OnD
 
   ngOnDestroy() {
     this.actionsMenu.hide();
+  }
+
+  private _buildMenu(rowIndex: number, folder: KalturaDropFolderFile): void {
+    this._items = [
+      {
+        label: this._appLocalization.get('applications.content.dropFolders.table.delete'),
+        styleClass: 'kDeleteAction',
+        command: () => this._onActionSelected('remove', rowIndex, folder)
+      }
+    ];
+  }
+
+  private _onActionSelected(action: string, rowIndex: number, folder: KalturaDropFolderFile) {
+    switch (action) {
+      case 'remove':
+        this.deleteDropFolderFiles.emit(folder);
+        break;
+      default:
+        break;
+    }
+  }
+
+  public _openActionsMenu(event: any, rowIndex: number, folder: KalturaDropFolderFile) {
+    if (this.actionsMenu) {
+      this.actionsMenu.toggle(event);
+      this._buildMenu(rowIndex, folder);
+      this.actionsMenu.show(event);
+    }
+  }
+
+  public _dateTooltip(dropFolder: KalturaDropFolderFile) {
+    return this._appLocalization.get('applications.content.dropFolders.table.datesTooltip',
+      {
+        0: dropFolder.uploadStartDetectedAt ? moment(dropFolder.uploadStartDetectedAt.getTime()).format('DD/MM/YYYY HH:mm') : this._appLocalization.get('applications.content.dropFolders.table.notAvailable'),
+        1: dropFolder.uploadEndDetectedAt ? moment(dropFolder.uploadEndDetectedAt.getTime()).format('DD/MM/YYYY HH:mm') : this._appLocalization.get('applications.content.dropFolders.table.notAvailable'),
+        2: dropFolder.importStartedAt ? moment(dropFolder.importStartedAt.getTime()).format('DD/MM/YYYY HH:mm') : this._appLocalization.get('applications.content.dropFolders.table.notAvailable'),
+        3: dropFolder.importEndedAt ? moment(dropFolder.importEndedAt.getTime()).format('DD/MM/YYYY HH:mm') : this._appLocalization.get('applications.content.dropFolders.table.notAvailable')
+      }
+    );
   }
 }
 

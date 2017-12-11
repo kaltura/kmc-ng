@@ -3,7 +3,7 @@ import { DropFoldersListTableComponent } from './drop-folders-list-table.compone
 import { FolderFileStatusPipe } from './pipes/folder-file-status.pipe';
 import { StatusesFilterComponent } from './statuses-filter/statuses-filter.component';
 
-export const DropFoldersComponentesList = [
+export const DropFoldersComponentsList = [
   DropFoldersListComponent,
   DropFoldersListTableComponent,
   StatusesFilterComponent,

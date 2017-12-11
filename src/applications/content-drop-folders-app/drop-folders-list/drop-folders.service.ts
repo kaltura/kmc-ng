@@ -33,11 +33,13 @@ export interface QueryData {
 
 @Injectable()
 export class DropFoldersService implements OnDestroy {
-  private _dropFolders = new BehaviorSubject<{ items: KalturaDropFolderFile[], totalCount: number }>({
-    items: [],
-    totalCount: 0
-  });
-  private _state = new BehaviorSubject<{ errorMessage?: string }>({});
+  private _dropFolders = {
+    data: new BehaviorSubject<{ items: KalturaDropFolderFile[], totalCount: number }>({
+      items: [],
+      totalCount: 0
+    }),
+    state: new BehaviorSubject<{ loading?: boolean, error?: string }>({ loading: false, error: null })
+  };
   private _query = new BehaviorSubject<QueryData>({
     pageIndex: 1,
     pageSize: 50,
@@ -46,23 +48,24 @@ export class DropFoldersService implements OnDestroy {
     createdAfter: null,
     statuses: null
   });
-  ar: any[] = [];
-  allStatusesList: string = KalturaDropFolderFileStatus.downloading + ',' +
-    KalturaDropFolderFileStatus.errorDeleting + ',' +
-    KalturaDropFolderFileStatus.errorDownloading + ',' +
-    KalturaDropFolderFileStatus.errorHandling + ',' +
-    KalturaDropFolderFileStatus.handled + ',' +
-    KalturaDropFolderFileStatus.noMatch + ',' +
-    KalturaDropFolderFileStatus.pending + ',' +
-    KalturaDropFolderFileStatus.processing + ',' +
-    KalturaDropFolderFileStatus.parsed + ',' +
-    KalturaDropFolderFileStatus.uploading + ',' +
-    KalturaDropFolderFileStatus.detected + ',' +
-    KalturaDropFolderFileStatus.waiting;
+  private _dropFoldersList: KalturaDropFolder[] = [];
+  private _allStatusesList = [
+    KalturaDropFolderFileStatus.downloading,
+    KalturaDropFolderFileStatus.errorDeleting,
+    KalturaDropFolderFileStatus.errorDownloading,
+    KalturaDropFolderFileStatus.errorHandling,
+    KalturaDropFolderFileStatus.handled,
+    KalturaDropFolderFileStatus.noMatch,
+    KalturaDropFolderFileStatus.pending,
+    KalturaDropFolderFileStatus.processing,
+    KalturaDropFolderFileStatus.parsed,
+    KalturaDropFolderFileStatus.uploading,
+    KalturaDropFolderFileStatus.detected,
+    KalturaDropFolderFileStatus.waiting
+  ].join(',');
 
-  dropFolders$ = this._dropFolders.asObservable();
-  state$ = this._state.asObservable();
-  query$ = this._query.monitor('queryData update');
+  public query$ = this._query.monitor('queryData update');
+  public readonly dropFolders = { data$: this._dropFolders.data.asObservable(), state$: this._dropFolders.state.asObservable() };
 
   constructor(private _kalturaServerClient: KalturaClient,
               private _browserService: BrowserService,
@@ -75,17 +78,10 @@ export class DropFoldersService implements OnDestroy {
     }
   }
 
-  public reload(force: boolean): void;
-  public reload(query: Partial<QueryData>): void;
-  public reload(query: boolean | Partial<QueryData>): void {
-    const forceReload = (typeof query === 'object' || (typeof query === 'boolean' && query));
-
-    if (forceReload || this._dropFolders.getValue().totalCount === 0) {
-      if (typeof query === 'object') {
-        this._updateQueryData(query);
-      }
-      this._loadDropFoldersList();
-    }
+  ngOnDestroy() {
+    this._dropFolders.state.complete();
+    this._dropFolders.data.complete();
+    this._query.complete();
   }
 
   private _updateQueryData(partialData: Partial<QueryData>): void {
@@ -98,139 +94,132 @@ export class DropFoldersService implements OnDestroy {
   }
 
   private _loadDropFoldersList(): void {
-    this._kalturaServerClient.request(
-      new DropFolderListAction(
-        {
+    this._dropFolders.state.next({ loading: true, error: null });
+
+    this._kalturaServerClient
+      .request(
+        new DropFolderListAction({
           filter: new KalturaDropFolderFilter({
             orderBy: KalturaDropFolderOrderBy.createdAtDesc.toString(),
             statusEqual: KalturaDropFolderStatus.enabled
           }),
           acceptedTypes: [KalturaDropFolder, KalturaDropFolderContentFileHandlerConfig]
-        }
+        })
       )
-    )
       .cancelOnDestroy(this)
       .subscribe(
         response => {
+          this._dropFolders.state.next({ loading: false, error: null });
           if (response.objects.length) {
             let df: KalturaDropFolder;
 
-            this.ar = [];
+            this._dropFoldersList = [];
             response.objects.forEach(object => {
               if (object instanceof KalturaDropFolder) {
                 df = object;
                 if (df.fileHandlerType.toString() === KalturaDropFolderFileHandlerType.content.toString()) {
-                  let cfg: KalturaDropFolderContentFileHandlerConfig = df.fileHandlerConfig as KalturaDropFolderContentFileHandlerConfig;
+                  const cfg: KalturaDropFolderContentFileHandlerConfig = df.fileHandlerConfig as KalturaDropFolderContentFileHandlerConfig;
                   if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.addAsNew) {
-                    this.ar.push(df);
-                  }
-                  else if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.matchExistingOrKeepInFolder) {
-                    this.ar.push(df);
-                  }
-                  else if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.matchExistingOrAddAsNew) {
-                    this.ar.push(df);
+                    this._dropFoldersList.push(df);
+                  } else if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.matchExistingOrKeepInFolder) {
+                    this._dropFoldersList.push(df);
+                  } else if (cfg.contentMatchPolicy === KalturaDropFolderContentFileHandlerMatchPolicy.matchExistingOrAddAsNew) {
+                    this._dropFoldersList.push(df);
                   }
                 } else if (df.fileHandlerType === KalturaDropFolderFileHandlerType.xml) {
-                  this.ar.push(df);
+                  this._dropFoldersList.push(df);
                 }
               } else {
                 throw new Error(`invalid type provided, expected KalturaDropFolder, got ${typeof object}`);
               }
             });
 
-            if (!this.ar.length) {
+            if (!this._dropFoldersList.length) {
               this._browserService.alert({
                 message: this._appLocalization.get('applications.content.dropFolders.errors.dropFoldersAlert')
               })
             } else {
-              this.loadDropFoldersFiles();
+              this._loadDropFoldersFiles();
             }
           } else {
-            throw new Error('error occurred in action \'_loadDropFoldersList\'');
+            this._browserService.alert({
+              message: this._appLocalization.get('applications.content.dropFolders.errors.dropFoldersAlert')
+            })
           }
         },
-        error => {
-          this._browserService.alert(
-            {
-              message: error.message
-            }
-          );
+        ({ message }) => {
+          this._dropFolders.state.next({ loading: false, error: message });
         }
       );
   }
 
-  loadDropFoldersFiles(): void {
-    let folderIds: String = '';
-    this.ar.forEach(kdf => {
-      folderIds += kdf.id + ',';
-    });
+  private _loadDropFoldersFiles(): void {
+    const folderIds = this._dropFoldersList.reduce((ids, kdf) => `${ids}${kdf.id},`, '');
+    const fileFilter = new KalturaDropFolderFileFilter();
 
-    let _fileFilter = new KalturaDropFolderFileFilter();
     if (this._query.getValue().freeText) {
-      _fileFilter.fileNameLike = this._query.getValue().freeText;
+      fileFilter.fileNameLike = this._query.getValue().freeText;
     }
+
     if (this._query.getValue().createdBefore) {
-      _fileFilter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(this._query.getValue().createdBefore);
+      fileFilter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(this._query.getValue().createdBefore);
     }
+
     if (this._query.getValue().createdAfter) {
-      _fileFilter.createdAtGreaterThanOrEqual = KalturaUtils.getStartDateValue(this._query.getValue().createdAfter);
+      fileFilter.createdAtGreaterThanOrEqual = KalturaUtils.getStartDateValue(this._query.getValue().createdAfter);
     }
-    _fileFilter.orderBy = KalturaDropFolderFileOrderBy.createdAtDesc.toString();
+
+    fileFilter.orderBy = KalturaDropFolderFileOrderBy.createdAtDesc.toString();
     // use selected folder
-    _fileFilter.dropFolderIdIn = folderIds.toString();
-    _fileFilter.statusIn = this._query.getValue().statuses ? this._query.getValue().statuses.join(',') : this.allStatusesList;
+    fileFilter.dropFolderIdIn = folderIds;
+    fileFilter.statusIn = this._query.getValue().statuses ? this._query.getValue().statuses.join(',') : this._allStatusesList;
+
+    this._dropFolders.state.next({ loading: true, error: null });
 
     this._kalturaServerClient.request(
-      new DropFolderFileListAction(
-        {
-          filter: _fileFilter,
-          pager: new KalturaFilterPager({
-            pageIndex: this._query.getValue().pageIndex,
-            pageSize: this._query.getValue().pageSize
-          })
-        }
-      )
+      new DropFolderFileListAction({
+        filter: fileFilter,
+        pager: new KalturaFilterPager({
+          pageIndex: this._query.getValue().pageIndex,
+          pageSize: this._query.getValue().pageSize
+        })
+      })
     )
       .cancelOnDestroy(this)
-      .tag('block-shell')
       .subscribe(
         response => {
           response.objects.forEach(object => {
-            this.ar.forEach(folder => {
+            this._dropFoldersList.forEach(folder => {
               if (object.dropFolderId === folder.id) {
-                object.dropFolderId = folder.name;
+                object.dropFolderId = <any>folder.name;
               }
             })
           });
-          this._dropFolders.next({ items: response.objects, totalCount: response.totalCount });
+          this._dropFolders.data.next({ items: response.objects, totalCount: response.totalCount });
+          this._dropFolders.state.next({ loading: false, error: null });
         },
         error => {
-          this._state.next({ errorMessage: error.message });
+          this._dropFolders.state.next({ loading: false, error: error.message });
         }
       );
   }
 
-  _isEntryExist(entryId: string): Observable<void> {
-    return Observable.create(observer => {
-      this._kalturaServerClient
-        .request(new BaseEntryGetAction({ entryId }))
-        .cancelOnDestroy(this)
-        .subscribe(
-          response => {
-            observer.next(response);
-            observer.complete();
-          },
-          error => {
-            observer.error(error);
-          }
-        );
-    });
+  public isEntryExist(entryId: string): Observable<boolean> {
+    return this._kalturaServerClient.request(new BaseEntryGetAction({ entryId }))
+      .map(Boolean);
   }
 
-  ngOnDestroy() {
-    this._state.complete();
-    this._query.complete();
-    this._dropFolders.complete();
+  public reload(force: boolean): void;
+  public reload(query: Partial<QueryData>): void;
+  public reload(query: boolean | Partial<QueryData>): void {
+    const forceReload = (typeof query === 'object' || (typeof query === 'boolean' && query));
+
+    if (forceReload || this._dropFolders.data.value.totalCount === 0) {
+      if (typeof query === 'object') {
+        this._updateQueryData(query);
+      }
+      this._loadDropFoldersList();
+    }
   }
 }
 

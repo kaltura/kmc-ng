@@ -1,9 +1,9 @@
 <div
-  [class.kSelectUnselect]="(selectedStatuses && (selectedStatuses.length-1 === statuses[0].children.length || !selectedStatuses.length))">
+  [class.kSelectUnselect]="(_selectedStatuses && (_selectedStatuses.length-1 === _statuses[0].children.length || !_selectedStatuses.length))">
   <p-tree
-    [value]="statuses"
+    [value]="_statuses"
     selectionMode="checkbox"
-    [(selection)]="selectedStatuses"
+    [(selection)]="_selectedStatuses"
     (onNodeSelect)="onNodeSelect.emit($event)"
     (onNodeUnselect)="onNodeUnselect.emit($event)">
     <ng-template let-node pTemplate="default">

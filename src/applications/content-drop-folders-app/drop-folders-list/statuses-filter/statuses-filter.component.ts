@@ -10,20 +10,20 @@ import { KalturaDropFolderFileStatus } from 'kaltura-ngx-client/api/types/Kaltur
 })
 
 export class StatusesFilterComponent implements OnInit, AfterViewInit, OnDestroy {
-  selectedStatuses: TreeNode[];
   @Output() onNodeSelect: EventEmitter<any> = new EventEmitter();
   @Output() onNodeUnselect: EventEmitter<any> = new EventEmitter();
-  statuses: TreeNode[];
+  public _selectedStatuses: TreeNode[];
+  public _statuses: TreeNode[];
 
   constructor(private _appLocalization: AppLocalization) {
   }
 
   resetFilters(): void {
-    this.selectedStatuses = [];
+    this._selectedStatuses = [];
   }
 
   ngOnInit() {
-    this.statuses = [{
+    this._statuses = [{
       'label': this._appLocalization.get('applications.content.dropFolders.allStatuses'),
       'children': [
         {
