@@ -11,7 +11,8 @@ import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 export interface EntriesFilters {
     freetext: string,
     createdAt: DatesRangeType,
-    mediaTypes: ValuesListType
+    mediaTypes: ValuesListType,
+    ingestionStatuses: ValuesListType
 }
 
 
@@ -26,7 +27,8 @@ export class EntriesFiltersStore extends FiltersStoreBase<EntriesFilters> {
         return {
             freetext: '',
             createdAt: {fromDate: null, toDate: null},
-            mediaTypes: []
+            mediaTypes: [],
+            ingestionStatuses: []
         };
     }
 
@@ -34,7 +36,8 @@ export class EntriesFiltersStore extends FiltersStoreBase<EntriesFilters> {
         return {
             freetext: new StringTypeAdapter(),
             createdAt: new DatesRangeAdapter(),
-            mediaTypes: new ValuesListAdapter()
+            mediaTypes: new ValuesListAdapter(),
+            ingestionStatuses: new ValuesListAdapter()
         };
     }
 
@@ -63,6 +66,12 @@ export class EntriesFiltersStore extends FiltersStoreBase<EntriesFilters> {
 
         if (mediaTypeFilters) {
             request.filter.mediaTypeIn = mediaTypeFilters;
+        }
+
+        const ingestionStatuses = data.ingestionStatuses.map(item => item.value).join(',');
+
+        if (ingestionStatuses) {
+            request.filter.statusIn = ingestionStatuses;
         }
     }
 

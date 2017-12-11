@@ -17,14 +17,14 @@
         <a class="kClearAll" (click)="_clearCreatedComponents()">{{'applications.content.filters.clearDates' |
           translate}}</a>
         <span *ngIf="_createdFilterError" class="kError">{{_createdFilterError}}</span>
-        <div *ngFor="let filtersGroup of _filtersGroupList">
-          <div *ngIf="filtersGroup.label" class="kFiltersGroupTitle">
-            <span>{{filtersGroup.label | uppercase}}</span>
+        <div *ngFor="let group of _groups">
+          <div *ngIf="group.label" class="kFiltersGroupTitle">
+            <span>{{group.label | uppercase}}</span>
           </div>
-          <div *ngFor="let treeInstance of filtersGroup.lists">
+          <div *ngFor="let treeInstance of group.lists">
             <p-tree [value]="treeInstance.items"
-                    kPrimeTreePropagation
-                    [disableTrackByData]="false"
+                    [selectionMode]="'checkbox'"
+                    kPrimeTreeActions
                     [(selection)]="treeInstance.selections"
                     (onNodeSelect)="_onTreeNodeSelect($event, treeInstance)"
                     (onNodeUnselect)="_onTreeNodeUnselect($event, treeInstance)"

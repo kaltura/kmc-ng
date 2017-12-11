@@ -26,6 +26,7 @@ import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/Kaltura
 import { DefaultFiltersList } from './default-filters-list';
 
 import * as R from 'ramda';
+import { KalturaAccessControlProfile } from 'kaltura-ngx-client/api/types/KalturaAccessControlProfile';
 
 export interface UpdateStatus {
     loading: boolean;
@@ -162,64 +163,42 @@ export class EntriesRefineFiltersService {
         });
 
         // build access control profile filters
-        // TODO
-        // if (responses[1].result.objects.length > 0) {
-        //   const newRefineFilter = new RefineFilter(
-        //     'accessControlProfiles',
-        //     'Access Control Profiles',
-        //     AccessControlProfilesFilter,
-        //     filter => {
-        //       return filter instanceof AccessControlProfilesFilter;
-        //     },
-        //     (node: PrimeTreeNode) => {
-        //       return new AccessControlProfilesFilter(<string>node.data, node.label);
-        //     });
-        //   result.filters.push(newRefineFilter);
-        //   responses[1].result.objects.forEach((accessControlProfile: KalturaAccessControlProfile) => {
-        //     newRefineFilter.items.push({
-        //       id: accessControlProfile.id + '',
-        //       name: accessControlProfile.name
-        //     });
-        //   });
-        // }
+
+        if (responses[1].result.objects.length > 0) {
+          const newRefineFilter = new RefineGroupList(
+            'accessControlProfiles',
+            'Access Control Profiles'
+          );
+          result.lists.push(newRefineFilter);
+          responses[1].result.objects.forEach((accessControlProfile) => {
+            newRefineFilter.items.push({
+                value: accessControlProfile.id + '',
+                label: accessControlProfile.name
+            });
+          });
+        }
 
         // build flavors filters
-        // TODO
-        // if (flavours.length > 0) {
-        //   const newRefineFilter = new RefineFilter(
-        //     'flavors',
-        //     'Flavors',
-        //     FlavorsFilter,
-        //     filter => {
-        //       return filter instanceof FlavorsFilter;
-        //     },
-        //     (node: PrimeTreeNode) => {
-        //       return new FlavorsFilter(<string>node.data, node.label);
-        //     });
-        //   result.filters.push(newRefineFilter);
-        //   flavours.forEach((flavor: KalturaFlavorParams) => {
-        //     newRefineFilter.items.push({ id: flavor.id + '', name: flavor.name });
-        //   });
-        // }
+        if (flavours.length > 0) {
+          const newRefineFilter = new RefineGroupList(
+            'flavors',
+            'Flavors');
+          result.lists.push(newRefineFilter);
+          flavours.forEach((flavor: KalturaFlavorParams) => {
+            newRefineFilter.items.push({ value: flavor.id + '', label: flavor.name });
+          });
+        }
 
         // build distributions filters
-        // TODO
-        // if (responses[0].result.objects.length > 0) {
-        //   const newRefineFilter = new RefineFilter(
-        //     'distributions',
-        //     'Destinations',
-        //     DistributionsFilter,
-        //     filter => {
-        //       return filter instanceof DistributionsFilter;
-        //     },
-        //     (node: PrimeTreeNode) => {
-        //       return new DistributionsFilter(<number>node.data, node.label);
-        //     });
-        //   result.filters.push(newRefineFilter);
-        //   responses[0].result.objects.forEach((distributionProfile: KalturaDistributionProfile) => {
-        //     newRefineFilter.items.push({ id: distributionProfile.id + '', name: distributionProfile.name });
-        //   });
-        // }
+        if (responses[0].result.objects.length > 0) {
+          const newRefineFilter = new RefineGroupList(
+            'distributions',
+            'Destinations');
+          result.lists.push(newRefineFilter);
+          responses[0].result.objects.forEach((distributionProfile) => {
+            newRefineFilter.items.push({ value: distributionProfile.id + '', label: distributionProfile.name });
+          });
+        }
 
         return result;
     }

@@ -1,9 +1,9 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { PrimeTreeDataProvider, PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
+import { PrimeTreeDataProvider, PrimeTreeNode, PrimeTreeActions } from '@kaltura-ng/kaltura-primeng-ui';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
-import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { EntriesRefineFiltersService, RefineGroup } from './entries-refine-filters.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
@@ -28,15 +28,17 @@ export interface FiltersGroup {
   templateUrl: './entries-refine-filters.component.html',
   styleUrls: ['./entries-refine-filters.component.scss']
 })
-export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnDestroy {
+export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterViewInit {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
 
+  @ViewChildren(PrimeTreeActions)
+  public _primeTreesActions: PrimeTreeActions[];
 
-  private _filtersGroupListMapping: { [key: string]: FiltersGroupList } = {};
+  private _listDataMap: { [key: string]: FiltersGroupList } = {};
 
   // properties that are exposed to the template
-  public _filtersGroupList: FiltersGroup[] = [];
+  public _groups: FiltersGroup[] = [];
 
   public _showLoader = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -60,15 +62,16 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
       this._loadFilters();
   }
 
-  ngAfterViewInit() {
-
-  }
-
   ngOnDestroy() {
 
   }
 
-    private _registerToFilterStoreDataChanges(): void {
+  ngAfterViewInit()
+  {
+
+  }
+
+  private _registerToFilterStoreDataChanges(): void {
         this._entriesFilters.dataChanges$
             .cancelOnDestroy(this)
             .subscribe(
@@ -79,8 +82,8 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
                         this._createdBefore = changes.createdAt.currentValue ? changes.createdAt.currentValue.toDate : null;
                     }
 
-                    Object.keys(this._filtersGroupListMapping).forEach(listName => {
-                        const groupListData = this._filtersGroupListMapping[listName];
+                    Object.keys(this._listDataMap).forEach(listName => {
+                        const groupListData = this._listDataMap[listName];
                         const listFilteredItems = changes[listName];
 
                         if (typeof listFilteredItems !== 'undefined') {
@@ -92,10 +95,14 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
                             });
 
                             diff.deleted.forEach(removedItem => {
-                                groupListData.selections.splice(
-                                    groupListData.selections.indexOf(removedItem),
-                                    1
-                                );
+
+                                if (removedItem.data !== null && typeof removedItem.data !== 'undefined') {
+                                    // ignore root items (they are managed by the component tree)
+                                    groupListData.selections.splice(
+                                        groupListData.selections.indexOf(removedItem),
+                                        1
+                                    );
+                                }
                             });
                         }
                     });
@@ -103,6 +110,47 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
             );
     }
 
+    private _loadFilters(): void {
+        this._showLoader = true;
+        this._entriesRefineFilters.getFilters()
+            .cancelOnDestroy(this)
+            .subscribe(
+                groups => {
+                    this._showLoader = false;
+                    this._buildComponentFilters(groups);
+                    this._restoreFiltersState();
+                    this._registerToFilterStoreDataChanges();
+                    this._fixPrimeTreePropagation();
+                },
+                error => {
+                    this._showLoader = false;
+                    this._blockerMessage = new AreaBlockerMessage({
+                        message: error.message || 'Error loading filters',
+                        buttons: [{
+                            label: 'Retry',
+                            action: () => {
+                                this._blockerMessage = null;
+                                this._loadFilters();
+                            }
+                        }
+                        ]
+                    })
+                });
+    }
+
+    private _fixPrimeTreePropagation()
+    {
+        setTimeout(() =>
+        {
+            if (this._primeTreesActions)
+            {
+                this._primeTreesActions.forEach(item =>
+                {
+                    item.fixPropagation();
+                })
+            }
+        });
+    }
     private _restoreFiltersState(): void {
         const createdAt = this._entriesFilters.getFilterData('createdAt');
         if (createdAt) {
@@ -110,8 +158,8 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
             this._createdBefore = createdAt.toDate;
         }
 
-        Object.keys(this._filtersGroupListMapping).forEach(listName => {
-            const groupListData = this._filtersGroupListMapping[listName];
+        Object.keys(this._listDataMap).forEach(listName => {
+            const groupListData = this._listDataMap[listName];
 
             if (groupListData.items && groupListData.items.length) {
                 const listItems = groupListData.items[0].children;
@@ -128,61 +176,36 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
                 });
             }
         });
-    }
 
 
-    private _loadFilters(): void {
-        this._showLoader = true;
-        this._entriesRefineFilters.getFilters()
-            .cancelOnDestroy(this)
-            .subscribe(
-                groups => {
-                    this._showLoader = false;
-                    this._buildComponentFilters(groups);
-                    this._restoreFiltersState();
-                    this._registerToFilterStoreDataChanges();
-                },
-                error => {
-                    this._showLoader = false;
-                    this._blockerMessage = new AreaBlockerMessage({
-                        message: error.message || 'Error loading filters',
-                        buttons: [{
-                            label: 'Retry',
-                            action: () => {
-                                this._loadFilters();
-                            }
-                        }
-                        ]
-                    })
-                });
     }
 
     _buildComponentFilters(groups: RefineGroup[]):void{
-        this._filtersGroupListMapping = {};
-        this._filtersGroupList = [];
+        this._listDataMap = {};
+        this._groups = [];
 
         // create root nodes
         groups.forEach(group => {
             const filtersGroup = { label: group.label, lists: [] };
-            this._filtersGroupList.push(filtersGroup);
+            this._groups.push(filtersGroup);
 
-            group.lists.forEach(groupList => {
+            group.lists.forEach(list => {
 
-                if (groupList.items.length > 0) {
+                if (list.items.length > 0) {
                     const treeData = { items: [], selections: []};
 
-                    this._filtersGroupListMapping[groupList.name] = treeData;
+                    this._listDataMap[list.name] = treeData;
                     filtersGroup.lists.push(treeData);
 
-                    const listRootNode = new PrimeTreeNode(null, groupList.label, [], null, { filterName: groupList.name });
+                    const listRootNode = new PrimeTreeNode(null, list.label, [], null, { filterName: list.name });
 
                     this._primeTreeDataProvider.create(
                         {
-                            items: groupList.items,
+                            items: list.items,
                             idProperty: 'value',
                             rootParent: listRootNode,
                             nameProperty: 'label',
-                            payload: { filterName: groupList.name },
+                            payload: { filterName: list.name },
                             preventSort: true
                         }
                     );
@@ -276,8 +299,8 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
     this._scheduledFilterError = null;
 
     const handledFilterTypeList = [];
-    Object.keys(this._filtersGroupListMapping).forEach(filterName => {
-      const groupListData = this._filtersGroupListMapping[filterName];
+    Object.keys(this._listDataMap).forEach(filterName => {
+      const groupListData = this._listDataMap[filterName];
 
       // TODO sakal
       // if (handledFilterTypeList.indexOf(treeData.refineFilter.entriesFilterType) === -1) {
@@ -339,17 +362,21 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
 
   }
 
-  public _onTreeNodeSelect({ node }: { node: PrimeTreeNode }, treeSection: FiltersGroupList) {
+  public _onTreeNodeSelect({ node }: { node: PrimeTreeNode }) {
+      // find group data by filter name
       const filterName = node instanceof PrimeTreeNode && node.payload ? node.payload.filterName : null;
       if (filterName) {
-          const groupListData = this._filtersGroupListMapping[filterName];
-
-          if (groupListData) {
-
-              const selectedNodes = ((node.children && node.children.length > 0) ? node.children : [node]);
+          const groupData = this._listDataMap[filterName];
+          if (groupData) {
+              // get existing filters by filter name
               const newValue = this._entriesFilters.getFilterData(filterName) || [];
+              const selectedNodes = node.children && node.children.length ? [node, ...node.children] : [node];
+
               selectedNodes
-                  .filter(selectedNode => selectedNode.data !== null && typeof selectedNode.data !== 'undefined')
+                  .filter(selectedNode => {
+                      // ignore root items (they are managed by the component tree)
+                      return selectedNode.data !== null && typeof selectedNode.data !== 'undefined';
+                  })
                   .forEach(selectedNode => {
                       if (!newValue.find(item => item.value === selectedNode.data)) {
                           newValue.push({value: selectedNode.data + '', label: selectedNode.label});
@@ -360,17 +387,29 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
       }
   }
 
-  public _onTreeNodeUnselect({ node }: { node: PrimeTreeNode }, treeSection: FiltersGroupList) {
-      if (node instanceof PrimeTreeNode && node.payload.filterName) {
-          const groupListData = this._filtersGroupListMapping[node.payload.filterName];
+  public _onTreeNodeUnselect({ node }: { node: PrimeTreeNode }) {
+      // find group data by filter name
+      const filterName = node instanceof PrimeTreeNode && node.payload ? node.payload.filterName : null;
+      if (filterName) {
+          // get existing filters by filter name
+          const groupData = this._listDataMap[filterName];
+          if (groupData) {
+              const newValue = this._entriesFilters.getFilterData(filterName) || [];
+              const selectedNodes = node.children && node.children.length ? [node, ...node.children] : [node];
 
-          if (groupListData) {
-              const newValue = this._entriesFilters.getFilterData(node.payload.filterName) || [];
-              const itemIndex = newValue.findIndex(item => item.value === node.data);
-              if (itemIndex > -1) {
-                  newValue.splice(itemIndex, 1);
-                  this._entriesFilters.update({ [node.payload.filterName]: newValue});
-              }
+              selectedNodes
+                  .filter(selectedNode => {
+                      // ignore root items (they are managed by the component tree)
+                      return selectedNode.data !== null && typeof selectedNode.data !== 'undefined';
+                  })
+                  .forEach(selectedNode => {
+                      const itemIndex = newValue.findIndex(item => item.value === selectedNode.data);
+                      if (itemIndex > -1) {
+                          newValue.splice(itemIndex, 1);
+                      }
+                  });
+
+              this._entriesFilters.update({[node.payload.filterName]: newValue});
           }
       }
   }
@@ -394,6 +433,4 @@ export class EntriesRefineFiltersComponent implements OnInit, AfterViewInit, OnD
       this.parentPopupWidget.close();
     }
   }
-
-
 }

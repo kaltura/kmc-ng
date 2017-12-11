@@ -16,14 +16,12 @@
       <a class="kClearAll" (click)="_clearCreatedComponents()">{{'applications.content.bulkUpload.filters.clearDates' |
         translate}}</a>
       <span *ngIf="_createdFilterError" class="kError">{{_createdFilterError}}</span>
-      <div *ngFor="let filtersGroup of _filtersGroupList">
+      <div *ngFor="let filtersGroup of _groups">
         <div *ngIf="filtersGroup.label" class="kFiltersGroupTitle">
           <span>{{filtersGroup.label | uppercase}}</span>
         </div>
         <div *ngFor="let treeInstance of filtersGroup.lists">
           <p-tree [value]="treeInstance.items"
-                  kPrimeTreePropagation
-                  [disableTrackByData]="false"
                   [(selection)]="treeInstance.selections"
                   (onNodeSelect)="_onTreeNodeSelect($event, treeInstance)"
                   (onNodeUnselect)="_onTreeNodeUnselect($event, treeInstance)"
