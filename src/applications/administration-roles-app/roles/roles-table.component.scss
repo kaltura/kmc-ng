@@ -5,6 +5,11 @@
   height: auto;
   padding: 0px;
   width: 100%;
+  .kRoleName {
+    font-weight: bold;
+    color: $kGrayscale1;
+  }
+
   .kRolesTableActions {
     width: 100%;
     text-align: center;

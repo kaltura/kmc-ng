@@ -6,6 +6,17 @@
   position: absolute;
   padding: 0px;
 
+  .kFullName {
+    font-weight: bold;
+    color: $kGrayscale1;
+  }
+
+  .kIconOwner {
+    font-size: 25px;
+    vertical-align: sub;
+    margin-left: 12px;
+  }
+
   .kUsersTableActions {
     width: 100%;
     text-align: center;

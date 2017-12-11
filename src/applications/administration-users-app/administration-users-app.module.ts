@@ -29,7 +29,8 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
     KalturaUIModule,
     TooltipModule,
     StickyModule,
-    RouterModule.forChild(routing)
+    RouterModule.forChild(routing),
+    TooltipModule
   ],
   declarations: [
     AdministrationUsersComponent,

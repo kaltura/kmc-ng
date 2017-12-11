@@ -143,5 +143,20 @@ export class UsersTableComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
   }
+
+  public _getAccountOwner(user: KalturaUser): string {
+    let userAdditionalData = '';
+
+    if (this._appAuthentication.appUser.id === user.id) {
+      userAdditionalData = `${this._appLocalization.get('applications.administration.users.you')}`;
+    } else if (user.isAccountOwner) {
+      userAdditionalData = `${this._appLocalization.get('applications.administration.users.accountOwner')}`;
+    }
+    if (this._appAuthentication.appUser.id === user.id && user.isAccountOwner) {
+      userAdditionalData = `${this._appLocalization.get('applications.administration.users.you')}, ${this._appLocalization.get('applications.administration.users.accountOwner')}`;
+    }
+
+    return userAdditionalData;
+  }
 }
 

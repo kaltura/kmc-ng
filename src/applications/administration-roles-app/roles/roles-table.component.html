@@ -12,8 +12,9 @@
       <p-column [style]="{'padding-left': '14px','width':'130px'}" field="name"
                 header="{{'applications.administration.roles.tableColumns.role' | translate}}" [sortable]="false">
         <ng-template let-col let-role="rowData" pTemplate="body">
-          <span>
-            {{role[col.field]}}</span>
+          <span class="kRoleName">
+            {{role[col.field]}}
+          </span>
         </ng-template>
       </p-column>
       <p-column field="description"
