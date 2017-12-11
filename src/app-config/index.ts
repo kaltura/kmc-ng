@@ -72,7 +72,7 @@ export const environment = {
                   {
                     "routePath": "content/drop-folders",
                     "titleToken": "DropFolders",
-                    "enabled": false,
+                    "enabled": true,
                     "position": "right"
                   }
                 ]
@@ -173,6 +173,10 @@ export const environment = {
         "contentCategories": {
             "createdAtDateRange": "2005:2030",
             "bulkActionsLimit": 50
+        },
+        "dropFolders" : {
+          "createdAtDateRange" : "2005:2030",
+          "bulkActionsLimit": 50
         }
     },
     "entriesShared": {

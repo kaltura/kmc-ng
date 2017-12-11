@@ -3,7 +3,10 @@
     <span class="kUploadMonitorSectionHeadingTitle">{{ title }}</span>
 
     <!--TODO [kmcng] cleanup after implement all sections -->
-    <a *ngIf="!detailsLink" class="kUploadMonitorSectionHeadingDetails" (click)="uploadMonitorPopup.close()">
+    <a *ngIf="!detailsLink"
+       [routerLink]="detailsLink"
+       class="kUploadMonitorSectionHeadingDetails"
+       (click)="uploadMonitorPopup.close()">
       {{ 'applications.upload.uploadMonitor.viewDetails' | translate }}
     </a>
 

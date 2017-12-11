@@ -1,0 +1,13 @@
+<div [class.kSelectUnselect]="(selectedStatuses && (selectedStatuses.length-1 === statuses[0].children.length || !selectedStatuses.length))">
+  <p-tree
+    [value]="statuses"
+    selectionMode="checkbox"
+    [(selection)]="selectedStatuses"
+    (onNodeSelect)="onNodeSelect.emit($event)"
+    (onNodeUnselect)="onNodeUnselect.emit($event)">
+    <ng-template let-node pTemplate="default">
+      <span class="kTreeNodeLabel">{{node.label}}</span>
+      <span class="kTreeNodeNumChildren" *ngIf="node.children">{{node.children.length}}</span>
+    </ng-template>
+  </p-tree>
+</div>

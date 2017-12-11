@@ -38,6 +38,7 @@ import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { PrimeTableSortTransformPipe } from 'app-shared/content-shared/pipes/prime-table-sort-transform.pipe';
 import { CategoryRadioButtonPocComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc';
 import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc-popup';
+import { DatesFiltersComponent } from 'app-shared/content-shared/dates-filters/dates-filters.component';
 import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-selector/entries-selector.component';
 
 @NgModule({
@@ -81,7 +82,7 @@ import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-sele
     EntriesTableComponent,
     EntriesListComponent,
     EntriesSelectorComponent,
-
+    DatesFiltersComponent,
     CategoryRadioButtonPocComponent,
     CategoryRadioButtonPocPopupComponent
   ],
@@ -100,6 +101,7 @@ import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-sele
     CategoriesFilterComponent,
     EntriesTableComponent,
     EntriesListComponent,
+    DatesFiltersComponent,
     EntriesSelectorComponent,
     CategoryRadioButtonPocPopupComponent,
     CategoryRadioButtonPocComponent
