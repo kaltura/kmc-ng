@@ -34,7 +34,6 @@ import { PlaylistsComponentsList } from './playlists/playlists-components-list';
 import { PlaylistComponentsList } from './playlist/playlist-components-list';
 import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.service';
 import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
-import { PlaylistsStore } from './playlists/playlists-store/playlists-store.service';
 
 @NgModule({
     imports: [
@@ -59,9 +58,9 @@ import { PlaylistsStore } from './playlists/playlists-store/playlists-store.serv
       KalturaPrimeNgUIModule,
       AutoCompleteModule,
       SharedModule,
-	  DetailsBarModule,
+	    DetailsBarModule,
       RouterModule.forChild(routing),
-	  StickyModule,
+	    StickyModule,
       ContentSharedModule
     ],
     declarations: [

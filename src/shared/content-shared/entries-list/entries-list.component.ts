@@ -5,6 +5,7 @@ import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { FreetextFilter } from 'app-shared/content-shared/entries-store/filters/freetext-filter';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
+import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { BrowserService } from 'app-shared/kmc-shell';
 
 @Component({
@@ -22,7 +23,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
   @ViewChild('tags') private tags: StickyComponent;
 
-  @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
+  @Output() onActionsSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
 
   private querySubscription: ISubscription;
 
