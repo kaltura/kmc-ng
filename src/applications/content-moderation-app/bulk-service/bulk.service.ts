@@ -1,9 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Observable } from 'rxjs/Observable';
-import { ISubscription } from 'rxjs/Subscription';
 import { environment } from 'app-environment';
-import { KalturaClient, KalturaMultiRequest, KalturaMultiResponse, KalturaRequest } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaRequest } from 'kaltura-ngx-client';
 import { BaseEntryApproveAction } from 'kaltura-ngx-client/api/types/BaseEntryApproveAction';
 import { BaseEntryRejectAction } from 'kaltura-ngx-client/api/types/BaseEntryRejectAction';
 
@@ -13,29 +12,7 @@ export class BulkService implements OnDestroy {
               private _appLocalization: AppLocalization) {
   }
 
-  approveEntry(entryIds: string[]): Observable<void> {
-    return Observable.create(observer => {
-      let subscription: ISubscription,
-        requests: BaseEntryApproveAction[] = [];
-      if (entryIds && entryIds.length) {
-        entryIds.forEach(entryId => requests.push(new BaseEntryApproveAction({ entryId: entryId })));
-        subscription = this._transmit(requests, true).subscribe(
-          () => {
-            observer.next(undefined);
-            observer.complete();
-          },
-          error => {
-            observer.error(new Error(error && error.message ? error.message : typeof error === 'string' ? error : this._appLocalization.get('applications.content.moderation.errorConnecting')));
-          });
-      } else {
-        observer.error(new Error('missing entryIds argument'));
-      }
-      return () => {
-        if (subscription) {
-          subscription.unsubscribe();
-        }
-      }
-    });
+  ngOnDestroy() {
   }
 
   private _transmit(requests: KalturaRequest<any>[], chunk: boolean): Observable<{}> {
@@ -44,61 +21,53 @@ export class BulkService implements OnDestroy {
       maxRequestsPerMultiRequest = environment.modules.contentModeration.bulkActionsLimit;
     }
 
-    let multiRequests: Observable<KalturaMultiResponse>[] = [];
-    let mr: KalturaMultiRequest = new KalturaMultiRequest();
-
-    let counter = 0;
-    for (let i = 0; i < requests.length; i++) {
-      if (counter === maxRequestsPerMultiRequest) {
-        multiRequests.push(this._kalturaServerClient.multiRequest(mr));
-        mr = new KalturaMultiRequest();
-        counter = 0;
-      }
-      mr.requests.push(requests[i]);
-      counter++;
+    // split request on chunks => [[], [], ...], each of inner arrays has length of maxRequestsPerMultiRequest
+    const splittedRequests = [];
+    let start = 0;
+    while (start < requests.length) {
+      const end = start + maxRequestsPerMultiRequest;
+      splittedRequests.push(requests.slice(start, end));
+      start = end;
     }
-
-    multiRequests.push(this._kalturaServerClient.multiRequest(mr));
+    const multiRequests = splittedRequests
+      .map(reqChunk => this._kalturaServerClient.multiRequest(reqChunk));
 
     return Observable.forkJoin(multiRequests)
       .map(responses => {
-        let hasFailure = [...responses[0]].filter(function (response) {
-          return response.error
-        }).length > 0;
-        if (hasFailure) {
-          throw new Error('error');
+        const errorMessage = [].concat.apply([], responses)
+          .filter(response => !!response.error)
+          .reduce((acc, { error }) => `${acc}\n${error.message}`, '')
+          .trim();
+
+        if (!!errorMessage) {
+          throw new Error(errorMessage);
         } else {
           return {};
         }
+      }).catch(error => {
+        const message = error && error.message
+          ? error.message
+          : typeof error === 'string'
+            ? error
+            : this._appLocalization.get('applications.content.moderation.errorConnecting');
+        throw new Error(message)
       });
   }
 
-  rejectEntry(entryIds: string[]): Observable<void> {
-    return Observable.create(observer => {
-      let subscription: ISubscription,
-        requests: BaseEntryRejectAction[] = [];
-      if (entryIds && entryIds.length) {
-        entryIds.forEach(entryId => requests.push(new BaseEntryRejectAction({ entryId: entryId })));
-        subscription = this._transmit(requests, true).subscribe(
-          () => {
-            observer.next(undefined);
-            observer.complete();
-          },
-          error => {
-            observer.error(new Error(error && error.message ? error.message : typeof error === 'string' ? error : this._appLocalization.get('applications.content.moderation.errorConnecting')));
-          });
-      } else {
-        observer.error(new Error('missing entryIds argument'));
-      }
-      return () => {
-        if (subscription) {
-          subscription.unsubscribe();
-        }
-      }
-    });
+  public approveEntry(entryIds: string[]): Observable<{}> {
+    if (!entryIds || entryIds.length <= 0) {
+      return Observable.throw(new Error(this._appLocalization.get('applications.content.moderation.missingIds')));
+    }
+
+    return this._transmit(entryIds.map(entryId => new BaseEntryApproveAction({ entryId })), true);
   }
 
-  ngOnDestroy() {
+  public rejectEntry(entryIds: string[]): Observable<{}> {
+    if (!entryIds || entryIds.length <= 0) {
+      return Observable.throw(new Error(this._appLocalization.get('applications.content.moderation.missingIds')));
+    }
+
+    return this._transmit(entryIds.map(entryId => new BaseEntryRejectAction({ entryId })), true);
   }
 }
 

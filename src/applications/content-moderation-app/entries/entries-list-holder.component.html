@@ -4,7 +4,7 @@
               (onActionsSelected)="_onActionSelected($event)">
   <div class="kBulkActions bulk-actions">
     <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton
-            label="{{'applications.content.moderation.selectAction' | translate}}"
+            [label]="'applications.content.moderation.selectAction' | translate"
             (click)="menu.toggle($event)"></button>
   </div>
   <p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons"
@@ -16,6 +16,6 @@
   <ng-template>
     <kEntryReport
       [parentPopupWidget]="moderationDetails"
-      [entryId]="currentEntryId"></kEntryReport>
+      [entryId]="_currentEntryId"></kEntryReport>
   </ng-template>
 </kPopupWidget>

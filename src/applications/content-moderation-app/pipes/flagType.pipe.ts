@@ -8,7 +8,7 @@ export class FlagTypePipe implements PipeTransform {
   }
 
   transform(value: string): string {
-    let flagType: string = '';
+    let flagType = '';
     if (value) {
       switch (value.toString()) {
         case KalturaModerationFlagType.sexualContent.toString():

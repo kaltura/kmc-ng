@@ -296,7 +296,7 @@
           }
         },
         "confirmEntryNavigation": {
-          "title" : "Stream has been created successfully.",
+          "title": "Stream has been created successfully.",
           "message": "Live Stream Entry has been created successfully. \n Do you want to view entry details?"
         }
       }
@@ -379,8 +379,8 @@
         "requiresAuthentication": "Requires Authentication",
         "private": "Private",
         "selectedCategory": "Selected: {{0}}",
-        "errors" : {
-          "categoryCouldNotBeDeleted" : "Category could not be deleted"
+        "errors": {
+          "categoryCouldNotBeDeleted": "Category could not be deleted"
         }
       },
       "addNewCategory": {
@@ -390,10 +390,9 @@
         "discard": "Discard all changes?",
         "apply": "Apply",
         "cancel": "Cancel",
-        "noParent":"No Parent",
+        "noParent": "No Parent",
         "searchCategories": "Search Categories",
-        "selectedParentCategory":"Parent Category Id: {{value}}"
-
+        "selectedParentCategory": "Parent Category Id: {{value}}"
       },
       "entries": {
         "entries": "Entries",
@@ -460,6 +459,7 @@
         "sureToRejectMultiple": "Are you sure you want to reject the following entries? \n {{0}}",
         "selectAction": "Select Action",
         "errors": {
+          "missingIds": "Missing entryIds argument",
           "bulkApproveEntry": "An error occurred while approving entry. \n Please try again.",
           "bulkRejectEntry": "An error occurred while rejecting entry. \n Please try again."
         }
@@ -471,7 +471,11 @@
         "plays": "Plays",
         "moderationStatus": "Moderation Status",
         "clippedFrom": "Clipped from",
-        "creator": "Creator"
+        "creator": "Creator",
+        "errors": {
+          "entryDetails": "Unable to load the entry moderation details",
+          "ban": "Unable to ban the Creator"
+        }
       },
       "filters": {
         "activeFilters": "Active Filters:",
