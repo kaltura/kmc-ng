@@ -983,7 +983,7 @@
         }
       },
       "categoryDetails": {
-        "header": "Category - {{0}}",
+        "header": "{{0}}",
         "headerProps": {
           "id": "ID:",
           "subCategories": " Sub-Categories:",
