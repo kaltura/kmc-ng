@@ -5,8 +5,8 @@ import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { FreetextFilter } from 'app-shared/content-shared/entries-store/filters/freetext-filter';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 
 @Component({
   selector: 'kEntriesList',

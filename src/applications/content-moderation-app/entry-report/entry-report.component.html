@@ -23,11 +23,13 @@
 
     <div class="kContainer">
       <div class="kFrame">
-        <iframe *ngIf="iframeSrc" [src]="iframeSrc | safe" width="339" height="191" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
+        <iframe *ngIf="iframeSrc" [src]="iframeSrc | safe" width="339" height="191" allowfullscreen
+                webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
       </div>
 
       <div class="appSubMenu">
-        <div *ngFor="let tab of tabs; let i = index;" class="subMenuContainer" [class.active]="tab.isActive" (click)="_changeTab(i)">
+        <div *ngFor="let tab of tabs; let i = index;" class="subMenuContainer" [class.active]="tab.isActive"
+             (click)="_changeTab(i)">
           <a class="menuLink">{{tab.name}}</a>
           <div class="linkMarker"></div>
         </div>

@@ -1,26 +1,24 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { BaseEntryApproveAction } from 'kaltura-typescript-client/types/BaseEntryApproveAction';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
-import { BaseEntryRejectAction } from 'kaltura-typescript-client/types/BaseEntryRejectAction';
-import { KalturaMultiRequest, KalturaMultiResponse, KalturaRequest } from 'kaltura-typescript-client';
 import { environment } from 'app-environment';
+import { KalturaClient, KalturaMultiRequest, KalturaMultiResponse, KalturaRequest } from 'kaltura-ngx-client';
+import { BaseEntryApproveAction } from 'kaltura-ngx-client/api/types/BaseEntryApproveAction';
+import { BaseEntryRejectAction } from 'kaltura-ngx-client/api/types/BaseEntryRejectAction';
 
 @Injectable()
 export class BulkService implements OnDestroy {
-  constructor(
-    private _kalturaServerClient: KalturaClient,
-    private _appLocalization: AppLocalization
-  ) {}
+  constructor(private _kalturaServerClient: KalturaClient,
+              private _appLocalization: AppLocalization) {
+  }
 
   approveEntry(entryIds: string[]): Observable<void> {
     return Observable.create(observer => {
       let subscription: ISubscription,
-          requests: BaseEntryApproveAction[] = [];
-      if(entryIds && entryIds.length) {
-        entryIds.forEach(entryId => requests.push(new BaseEntryApproveAction({entryId: entryId})));
+        requests: BaseEntryApproveAction[] = [];
+      if (entryIds && entryIds.length) {
+        entryIds.forEach(entryId => requests.push(new BaseEntryApproveAction({ entryId: entryId })));
         subscription = this._transmit(requests, true).subscribe(
           () => {
             observer.next(undefined);
@@ -40,18 +38,18 @@ export class BulkService implements OnDestroy {
     });
   }
 
-  private _transmit(requests : KalturaRequest<any>[], chunk : boolean) : Observable<{}> {
+  private _transmit(requests: KalturaRequest<any>[], chunk: boolean): Observable<{}> {
     let maxRequestsPerMultiRequest = requests.length;
-    if (chunk){
+    if (chunk) {
       maxRequestsPerMultiRequest = environment.modules.contentModeration.bulkActionsLimit;
     }
 
     let multiRequests: Observable<KalturaMultiResponse>[] = [];
-    let mr :KalturaMultiRequest = new KalturaMultiRequest();
+    let mr: KalturaMultiRequest = new KalturaMultiRequest();
 
     let counter = 0;
-    for (let i = 0; i < requests.length; i++){
-      if (counter === maxRequestsPerMultiRequest){
+    for (let i = 0; i < requests.length; i++) {
+      if (counter === maxRequestsPerMultiRequest) {
         multiRequests.push(this._kalturaServerClient.multiRequest(mr));
         mr = new KalturaMultiRequest();
         counter = 0;
@@ -64,9 +62,11 @@ export class BulkService implements OnDestroy {
 
     return Observable.forkJoin(multiRequests)
       .map(responses => {
-        let hasFailure = [...responses[0]].filter(function ( response ) {return response.error}).length > 0;
+        let hasFailure = [...responses[0]].filter(function (response) {
+          return response.error
+        }).length > 0;
         if (hasFailure) {
-          throw new Error("error");
+          throw new Error('error');
         } else {
           return {};
         }
@@ -76,9 +76,9 @@ export class BulkService implements OnDestroy {
   rejectEntry(entryIds: string[]): Observable<void> {
     return Observable.create(observer => {
       let subscription: ISubscription,
-          requests: BaseEntryRejectAction[] = [];
-      if(entryIds && entryIds.length) {
-        entryIds.forEach(entryId => requests.push(new BaseEntryRejectAction({entryId: entryId})));
+        requests: BaseEntryRejectAction[] = [];
+      if (entryIds && entryIds.length) {
+        entryIds.forEach(entryId => requests.push(new BaseEntryRejectAction({ entryId: entryId })));
         subscription = this._transmit(requests, true).subscribe(
           () => {
             observer.next(undefined);
@@ -98,6 +98,7 @@ export class BulkService implements OnDestroy {
     });
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+  }
 }
 

@@ -1,20 +1,20 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ModerationStore } from '../moderation-store/moderation-store.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { KalturaMediaEntry } from 'kaltura-typescript-client/types/KalturaMediaEntry';
-import { KalturaEntryStatus } from 'kaltura-typescript-client/types/KalturaEntryStatus';
-import { KalturaSourceType } from 'kaltura-typescript-client/types/KalturaSourceType';
-import { KalturaMediaType } from 'kaltura-typescript-client/types/KalturaMediaType';
 import { Router } from '@angular/router';
-import { KalturaModerationFlag } from 'kaltura-typescript-client/types/KalturaModerationFlag';
 import { AppAuthentication, BrowserService } from 'app-shared/kmc-shell';
 import { BulkService } from '../bulk-service/bulk.service';
 import { environment } from 'app-environment';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { EntryReportSections } from './entry-report-sections';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { KalturaModerationFlag } from 'kaltura-ngx-client/api/types/KalturaModerationFlag';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 
 export interface Tabs {
   name: string;
@@ -22,10 +22,10 @@ export interface Tabs {
 }
 
 @Component({
-	selector: 'kEntryReport',
-	templateUrl: './entry-report.component.html',
-	styleUrls: ['./entry-report.component.scss'],
-  providers: [ ModerationStore ]
+  selector: 'kEntryReport',
+  templateUrl: './entry-report.component.html',
+  styleUrls: ['./entry-report.component.scss'],
+  providers: [ModerationStore]
 })
 
 export class EntryReportComponent implements OnInit, OnDestroy {
@@ -50,18 +50,17 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   UIConfID = environment.core.kaltura.previewUIConf;
   iframeSrc: string = '';
 
-	constructor(
-	  public _moderationStore: ModerationStore,
-    private _appLocalization: AppLocalization,
-    private _router: Router,
-    private _browserService: BrowserService,
-    private _bulkService: BulkService,
-    private appAuthentication: AppAuthentication,
-    private _entriesStore: EntriesStore
-  ) {}
+  constructor(public _moderationStore: ModerationStore,
+              private _appLocalization: AppLocalization,
+              private _router: Router,
+              private _browserService: BrowserService,
+              private _bulkService: BulkService,
+              private appAuthentication: AppAuthentication,
+              private _entriesStore: EntriesStore) {
+  }
 
   private _closePopup(): void {
-    if (this.parentPopupWidget){
+    if (this.parentPopupWidget) {
       this.parentPopupWidget.close();
     }
   }
@@ -72,7 +71,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   private _navigateToEntry(entryId): void {
-    this._router.navigate(["content/entries/entry", entryId]);
+    this._router.navigate(['content/entries/entry', entryId]);
   }
 
   private _banCreator(): void {
@@ -113,11 +112,11 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   private _approveEntry(): void {
-    if(!this.shouldConfirmEntryApproval) { // TODO [kmcng] need to get such permissions from somewhere
+    if (!this.shouldConfirmEntryApproval) { // TODO [kmcng] need to get such permissions from somewhere
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.moderation.approveMedia'),
-          message: this._appLocalization.get('applications.content.moderation.sureToApprove', {0: this.entry.name}),
+          message: this._appLocalization.get('applications.content.moderation.sureToApprove', { 0: this.entry.name }),
           accept: () => {
             this._doApproveEntry();
           }
@@ -163,11 +162,11 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   private _rejectEntry(): void {
-    if(!this.shouldConfirmEntryRejection) { // TODO [kmcng] need to get such permissions from somewhere
+    if (!this.shouldConfirmEntryRejection) { // TODO [kmcng] need to get such permissions from somewhere
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.moderation.rejectMedia'),
-          message: this._appLocalization.get('applications.content.moderation.sureToReject', {0: this.entry.name}),
+          message: this._appLocalization.get('applications.content.moderation.sureToReject', { 0: this.entry.name }),
           accept: () => {
             this._doRejectEntry();
           }
@@ -216,7 +215,8 @@ export class EntryReportComponent implements OnInit, OnDestroy {
     this._moderationStore.loadEntryModerationDetails(this.entryId)
       .cancelOnDestroy(this)
       .subscribe(
-        () => {},
+        () => {
+        },
         error => {
           this.areaBlockerMessage = new AreaBlockerMessage(
             {
@@ -244,7 +244,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-	  this.loadEntryModerationDetails();
+    this.loadEntryModerationDetails();
 
     this.tabs = [
       { name: this._appLocalization.get('applications.content.moderation.report'), isActive: true },
@@ -256,22 +256,22 @@ export class EntryReportComponent implements OnInit, OnDestroy {
       .subscribe(
         response => {
           this.areaBlockerMessage = null;
-          if(response.entry && response.flag) {
+          if (response.entry && response.flag) {
             this.entry = response.entry;
             this.flags = response.flag.objects;
             let moderationCount = response.entry.moderationCount;
-            this.flagsAmount = moderationCount === 1 ? this._appLocalization.get('applications.content.moderation.flagSingular', {0: moderationCount}) : this._appLocalization.get('applications.content.moderation.flagPlural', {0: moderationCount});
+            this.flagsAmount = moderationCount === 1 ? this._appLocalization.get('applications.content.moderation.flagSingular', { 0: moderationCount }) : this._appLocalization.get('applications.content.moderation.flagPlural', { 0: moderationCount });
             this.userId = response.entry.userId;
 
-            if(response.entry.sourceType) {
+            if (response.entry.sourceType) {
               const sourceType = response.entry.sourceType.toString();
               const isLive = (sourceType === KalturaSourceType.liveStream.toString() ||
-              sourceType === KalturaSourceType.akamaiLive.toString() ||
-              sourceType === KalturaSourceType.akamaiUniversalLive.toString() ||
-              sourceType === KalturaSourceType.manualLiveStream.toString());
+                sourceType === KalturaSourceType.akamaiLive.toString() ||
+                sourceType === KalturaSourceType.akamaiUniversalLive.toString() ||
+                sourceType === KalturaSourceType.manualLiveStream.toString());
               this.hasDuration = (response.entry.status !== KalturaEntryStatus.noContent && !isLive && response.entry.mediaType.toString() !== KalturaMediaType.image.toString());
               this.isEntryReady = response.entry.status.toString() === KalturaEntryStatus.ready.toString();
-                if (isLive){
+              if (isLive) {
                 this.flashVars += '&flashvars[disableEntryRedirect]=true';
               }
               this.isRecordedLive = (sourceType === KalturaSourceType.recordedLive.toString());
@@ -283,5 +283,6 @@ export class EntryReportComponent implements OnInit, OnDestroy {
       );
   }
 
-	ngOnDestroy() {}
+  ngOnDestroy() {
+  }
 }

@@ -17,7 +17,6 @@ export const PlaylistComponentsList = [
 	PlaylistDetailsComponent,
   PlaylistEntriesTableComponent,
   PlaylistAddEntryComponent,
-  ModerationPipe,
   EntryTypePipe,
   EntryDurationPipe,
   BulkOperationsComponent

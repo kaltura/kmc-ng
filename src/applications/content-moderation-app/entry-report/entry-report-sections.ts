@@ -1,5 +1,4 @@
-export enum EntryReportSections
-{
-	Report,
-	Details
+export enum EntryReportSections {
+  Report,
+  Details
 }

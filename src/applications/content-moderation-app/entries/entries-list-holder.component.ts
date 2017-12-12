@@ -1,4 +1,4 @@
-import {Component, ViewChild, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
@@ -13,7 +13,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 @Component({
   selector: 'kEntriesListHolder',
   templateUrl: './entries-list-holder.component.html',
-  providers : [ BulkService ]
+  providers: [BulkService]
 })
 export class EntriesListHolderComponent implements OnInit, OnDestroy {
   @ViewChild(EntriesListComponent) private _entriesList: EntriesListComponent;
@@ -52,12 +52,10 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
     }
   ];
 
-  constructor(
-    private _browserService: BrowserService,
-    private _appLocalization: AppLocalization,
-    private _entriesStore: EntriesStore,
-    private _bulkService: BulkService
-  ) {
+  constructor(private _browserService: BrowserService,
+              private _appLocalization: AppLocalization,
+              private _entriesStore: EntriesStore,
+              private _bulkService: BulkService) {
     this._entriesStore.paginationCacheToken = 'entries-list';
   }
 
@@ -67,11 +65,11 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   }
 
   private _approveEntry(entryId: string, entryName: string): void {
-    if(!this.shouldConfirmEntryApproval) { // TODO [kmcng] need to get such permissions from somewhere
+    if (!this.shouldConfirmEntryApproval) { // TODO [kmcng] need to get such permissions from somewhere
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.moderation.approveMedia'),
-          message: this._appLocalization.get('applications.content.moderation.sureToApprove', {0: entryName}),
+          message: this._appLocalization.get('applications.content.moderation.sureToApprove', { 0: entryName }),
           accept: () => {
             this._doApproveEntry(entryId);
           }
@@ -84,11 +82,11 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
 
   private _approveEntries(): void {
     let entriesToApprove = this._entriesList.selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}`),
-        entries: string = this._entriesList.selectedEntries.length <= 10 ? entriesToApprove.join(',').replace(/,/gi, '\n') : '',
-        message = this._entriesList.selectedEntries.length > 1 ?
-        this._appLocalization.get('applications.content.moderation.sureToApproveMultiple', {0: entries}) :
-        this._appLocalization.get('applications.content.moderation.sureToApprove', {0: entries});
-    if(!this.shouldConfirmEntryApproval) { // TODO [kmcng] need to get such permissions from somewhere
+      entries: string = this._entriesList.selectedEntries.length <= 10 ? entriesToApprove.join(',').replace(/,/gi, '\n') : '',
+      message = this._entriesList.selectedEntries.length > 1 ?
+        this._appLocalization.get('applications.content.moderation.sureToApproveMultiple', { 0: entries }) :
+        this._appLocalization.get('applications.content.moderation.sureToApprove', { 0: entries });
+    if (!this.shouldConfirmEntryApproval) { // TODO [kmcng] need to get such permissions from somewhere
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.moderation.approveMedia'),
@@ -109,7 +107,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       .tag('block-shell')
       .subscribe(
         () => {
-          this._entriesList.onBulkChange({reload: true});
+          this._entriesList.onBulkChange({ reload: true });
         },
         error => {
           this._blockerMessage = new AreaBlockerMessage(
@@ -120,7 +118,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
                   label: this._appLocalization.get('app.common.reload'),
                   action: () => {
                     this._blockerMessage = null;
-                    this._entriesList.onBulkChange({reload: true});
+                    this._entriesList.onBulkChange({ reload: true });
                   }
                 }
               ]
@@ -132,11 +130,11 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
 
   private _rejectEntries(): void {
     let entriesToReject = this._entriesList.selectedEntries.map((entry, index) => `${index + 1}: ${entry.name}`),
-        entries: string = this._entriesList.selectedEntries.length <= 10 ? entriesToReject.join(',').replace(/,/gi, '\n') : '',
-        message = this._entriesList.selectedEntries.length > 1 ?
-        this._appLocalization.get('applications.content.moderation.sureToRejectMultiple', {0: entries}) :
-        this._appLocalization.get('applications.content.moderation.sureToReject', {0: entries});
-    if(!this.shouldConfirmEntryRejection) { // TODO [kmcng] need to get such permissions from somewhere
+      entries: string = this._entriesList.selectedEntries.length <= 10 ? entriesToReject.join(',').replace(/,/gi, '\n') : '',
+      message = this._entriesList.selectedEntries.length > 1 ?
+        this._appLocalization.get('applications.content.moderation.sureToRejectMultiple', { 0: entries }) :
+        this._appLocalization.get('applications.content.moderation.sureToReject', { 0: entries });
+    if (!this.shouldConfirmEntryRejection) { // TODO [kmcng] need to get such permissions from somewhere
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.moderation.rejectMedia'),
@@ -152,11 +150,11 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
   }
 
   private _rejectEntry(entryId: string, entryName: string): void {
-    if(!this.shouldConfirmEntryRejection) { // TODO [kmcng] need to get such permissions from somewhere
+    if (!this.shouldConfirmEntryRejection) { // TODO [kmcng] need to get such permissions from somewhere
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.moderation.rejectMedia'),
-          message: this._appLocalization.get('applications.content.moderation.sureToReject', {0: entryName}),
+          message: this._appLocalization.get('applications.content.moderation.sureToReject', { 0: entryName }),
           accept: () => {
             this._doRejectEntry(entryId);
           }
@@ -173,7 +171,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
       .tag('block-shell')
       .subscribe(
         () => {
-          this._entriesList.onBulkChange({reload: true});
+          this._entriesList.onBulkChange({ reload: true });
         },
         error => {
           this._blockerMessage = new AreaBlockerMessage(
@@ -184,7 +182,7 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
                   label: this._appLocalization.get('app.common.reload'),
                   action: () => {
                     this._blockerMessage = null;
-                    this._entriesList.onBulkChange({reload: true});
+                    this._entriesList.onBulkChange({ reload: true });
                   }
                 }
               ]
@@ -231,5 +229,6 @@ export class EntriesListHolderComponent implements OnInit, OnDestroy {
     this._bulkActionsMenu = this.getBulkActionItems();
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+  }
 }
