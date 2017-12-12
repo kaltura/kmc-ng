@@ -35,7 +35,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   @Input() selectedCategories: KalturaCategory[];
 
-  @Output() onBulkChange = new EventEmitter<{ reload: boolean }>();
+  @Output() onBulkChange = new EventEmitter<{ reload: boolean, clearSelection?: boolean}>();
 
   @ViewChild('bulkActionsPopup') public bulkActionsPopup: PopupWidgetComponent;
 

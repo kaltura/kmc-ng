@@ -17,7 +17,7 @@
       <kCategoriesBulkChangeContentPrivacy *ngSwitchCase="'changeContentPrivacy'" [parentPopupWidget]="bulkActionsPopup" (changeContentPrivacyChanged)="onChangeContentPrivacyChanged($event)"></kCategoriesBulkChangeContentPrivacy>
       <kCategoriesBulkChangeCategoryListing *ngSwitchCase="'changeCategoryListing'" [parentPopupWidget]="bulkActionsPopup" (changeCategoryListingChanged)="onChangeCategoryListingChanged($event)"></kCategoriesBulkChangeCategoryListing>
       <kCategoriesBulkChangeContributionPolicy *ngSwitchCase="'changeContributionPolicy'" [parentPopupWidget]="bulkActionsPopup" (changeContributionPolicyChanged)="onChangeContributionPolicyChanged($event)"></kCategoriesBulkChangeContributionPolicy>
-      <kMoveCategory *ngSwitchCase="'moveCategories'" [parentPopupWidget]="bulkActionsPopup" [selectedCategories]="selectedCategories"></kMoveCategory>
+      <kMoveCategory *ngSwitchCase="'moveCategories'" [parentPopupWidget]="bulkActionsPopup" [selectedCategories]="selectedCategories" (onMovedCategories)="onBulkChange.emit({reload: false, clearSelection: true})"></kMoveCategory>
     </div>
   </ng-template>
 </kPopupWidget>

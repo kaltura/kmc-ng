@@ -7,6 +7,8 @@ import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {AppEventsService} from 'app-shared/kmc-shared';
+import {ReloadCategoriesListOnNavigateOutEvent} from 'app-shared/kmc-shared/events/reload-categories-list-on-navigation-out.event';
 
 @Component({
   selector: 'kCategoriesList',
@@ -38,7 +40,8 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
   constructor(private _categoriesService: CategoriesService,
               private router: Router,
               private _browserService: BrowserService,
-              private _appLocalization: AppLocalization) {
+              private _appLocalization: AppLocalization,
+              private _appEvents: AppEventsService) {
   }
 
   ngOnInit() {
@@ -204,9 +207,11 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
 
 
 
-  onBulkChange(event): void {
-    if (event.reload === true) {
+  onBulkChange({reload, clearSelection}: {reload: boolean, clearSelection?: boolean}): void {
+    if (reload === true) {
       this._reload();
+    } else if (clearSelection) {
+      this._clearSelection();
     }
   }
 
@@ -215,8 +220,10 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
       console.log('[CategoriesListComponent.onCategoryAdded] invalid parameters')
     } else {
       // use a flag so the categories will be refreshed upon clicking 'back' from the category page
-      this.router.navigate(['/content/categories/category', categoryId],
-        {queryParams: {reloadCategoriesListOnNavigateOut: true}});
+      this.router.navigate(['/content/categories/category', categoryId])
+        .then((response: boolean) => {
+          this._appEvents.publish(new ReloadCategoriesListOnNavigateOutEvent());
+        });
     }
   }
 }

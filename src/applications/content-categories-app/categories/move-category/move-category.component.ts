@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {CategoriesService} from '../categories.service';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -16,6 +16,7 @@ export class MoveCategoryComponent implements OnInit {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() selectedCategories: KalturaCategory[];
+  @Output() onMovedCategories = new EventEmitter<null>();
 
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -77,6 +78,7 @@ export class MoveCategoryComponent implements OnInit {
       .moveCategory({categories: this.selectedCategories, categoryParent})
       .subscribe(() => {
           this._isBusy = false;
+          this.onMovedCategories.emit();
           if (this.parentPopupWidget) {
             this.parentPopupWidget.close();
           }
