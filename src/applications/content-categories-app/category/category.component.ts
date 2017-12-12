@@ -152,7 +152,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
           }
         },
         error => {
-          // TODO [kmc] navigate to error page
+          // TODO [kmcng] navigate to error page
           throw error;
         });
   }

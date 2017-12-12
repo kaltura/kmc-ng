@@ -1,10 +1,10 @@
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
-import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { CategorySectionsList } from './category-sections-list';
-import { CategoryWidgetKeys } from '../category-widget-keys';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {Injectable, OnDestroy} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {CategorySectionsList} from './category-sections-list';
+import {CategoryWidgetKeys} from '../category-widget-keys';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {CategoryWidget} from '../category-widget';
 import {environment} from 'app-environment';
@@ -101,7 +101,7 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
         return true;
       case CategoryWidgetKeys.Entitlements:
         // Enable if any of these conditions are met:
-        // TODO [kmc] Permissions: showEndUsersTab is set to true
+        // TODO [kmcng] Permissions: showEndUsersTab is set to true
         // KalturaCategory.privacyContexts is defined
         return category.privacyContexts && typeof(category.privacyContexts) !== 'undefined';
       case CategoryWidgetKeys.SubCategories:

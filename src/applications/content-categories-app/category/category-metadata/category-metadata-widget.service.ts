@@ -1,28 +1,28 @@
-import { MetadataAddAction } from 'kaltura-ngx-client/api/types/MetadataAddAction';
-import { MetadataUpdateAction } from 'kaltura-ngx-client/api/types/MetadataUpdateAction';
-import { KalturaTagFilter } from 'kaltura-ngx-client/api/types/KalturaTagFilter';
-import { TagSearchAction } from 'kaltura-ngx-client/api/types/TagSearchAction';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaTaggedObjectType } from 'kaltura-ngx-client/api/types/KalturaTaggedObjectType';
-import { MetadataListAction } from 'kaltura-ngx-client/api/types/MetadataListAction';
-import { KalturaMetadataObjectType } from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
-import { KalturaClient } from 'kaltura-ngx-client';
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
-import { KalturaMetadataFilter } from 'kaltura-ngx-client/api/types/KalturaMetadataFilter';
-import { KalturaMetadata } from 'kaltura-ngx-client/api/types/KalturaMetadata';
-import { Observable } from 'rxjs/Observable';
-import { DynamicMetadataForm, MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes, DynamicMetadataFormFactory } from 'app-shared/kmc-shared';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { CategoryWidgetKeys } from './../category-widget-keys';
-import { Injectable, OnDestroy } from '@angular/core';
-import { CategoryWidget } from '../category-widget';
-import { KalturaMultiRequest } from 'kaltura-ngx-client';
-import { async } from 'rxjs/scheduler/async';
+import {MetadataAddAction} from 'kaltura-ngx-client/api/types/MetadataAddAction';
+import {MetadataUpdateAction} from 'kaltura-ngx-client/api/types/MetadataUpdateAction';
+import {KalturaTagFilter} from 'kaltura-ngx-client/api/types/KalturaTagFilter';
+import {TagSearchAction} from 'kaltura-ngx-client/api/types/TagSearchAction';
+import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import {KalturaTaggedObjectType} from 'kaltura-ngx-client/api/types/KalturaTaggedObjectType';
+import {MetadataListAction} from 'kaltura-ngx-client/api/types/MetadataListAction';
+import {KalturaMetadataObjectType} from 'kaltura-ngx-client/api/types/KalturaMetadataObjectType';
+import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {KalturaMetadataFilter} from 'kaltura-ngx-client/api/types/KalturaMetadataFilter';
+import {KalturaMetadata} from 'kaltura-ngx-client/api/types/KalturaMetadata';
 import {Observable} from 'rxjs/Observable';
+import {
+  DynamicMetadataForm,
+  DynamicMetadataFormFactory,
+  MetadataProfileCreateModes,
+  MetadataProfileStore,
+  MetadataProfileTypes
+} from 'app-shared/kmc-shared';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {CategoryWidgetKeys} from './../category-widget-keys';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CategoryWidget} from '../category-widget';
+import {async} from 'rxjs/scheduler/async';
 
 @Injectable()
 export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy {

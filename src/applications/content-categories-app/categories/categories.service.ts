@@ -14,11 +14,11 @@ import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaC
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {CategoryDeleteAction} from 'kaltura-ngx-client/api/types/CategoryDeleteAction';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {CategoryAddAction} from 'kaltura-typescript-client/types/CategoryAddAction';
-import {KalturaPrivacyType} from 'kaltura-typescript-client/types/KalturaPrivacyType';
-import {KalturaAppearInListType} from "kaltura-typescript-client/types/KalturaAppearInListType";
-import {KalturaContributionPolicyType} from "kaltura-typescript-client/types/KalturaContributionPolicyType";
-import {KalturaInheritanceType} from "kaltura-typescript-client/types/KalturaInheritanceType";
+import {CategoryAddAction} from 'kaltura-ngx-client/api/types/CategoryAddAction';
+import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
+import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
+import {KalturaInheritanceType} from 'kaltura-ngx-client/api/types/KalturaInheritanceType';
+import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
 
 export interface UpdateStatus {
     loading: boolean;
@@ -168,7 +168,8 @@ export class CategoriesService implements OnDestroy {
 
         // execute the request
         this._categoriesExecuteSubscription = this.buildQueryRequest(this._queryData.getValue())
-        // TODO: [kmcng] When developing filters - using async scheduler go allow calling this function multiple times in the same event loop cycle before invoking the logic.
+        // TODO: [kmcng] When developing filters - using async scheduler go
+        // allow calling this function multiple times in the same event loop cycle before invoking the logic.
           .monitor('playlists store: get playlists()')
           .subscribe(
             response => {

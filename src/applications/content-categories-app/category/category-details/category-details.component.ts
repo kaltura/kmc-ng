@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {CategoryDetailsWidget} from './category-details-widget.service';
 import {ActionTypes, CategoryService} from '../category.service';
 
@@ -32,7 +32,7 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
         }
       },
       error => {
-        // TODO [kmc] navigate to error page
+        // TODO [kmcng] navigate to error page
         throw error;
       });
   }

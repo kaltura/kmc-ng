@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 
 @Component({
   selector: 'kSubcategoriesListBulkOperationsContent',

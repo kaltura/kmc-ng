@@ -10,7 +10,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {KalturaCategory} from 'kaltura-typescript-client/types/KalturaCategory';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 
