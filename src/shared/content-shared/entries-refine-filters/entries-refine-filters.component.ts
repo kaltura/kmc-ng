@@ -12,14 +12,15 @@ import {
 } from 'app-shared/content-shared/entries-store/entries-filters.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 
-export interface FiltersGroupList {
-  items: PrimeTreeNode[];
-  selections: PrimeTreeNode[];
+export interface ListData {
+    id?: string;
+    items: PrimeTreeNode[];
+    selections: PrimeTreeNode[];
 }
 
 export interface FiltersGroup {
   label: string;
-  lists: FiltersGroupList[];
+  lists: ListData[];
 }
 
 @Component({
@@ -34,7 +35,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
   @ViewChildren(PrimeTreeActions)
   public _primeTreesActions: PrimeTreeActions[];
 
-  private _listDataMap: { [key: string]: FiltersGroupList } = {};
+  private _groupListDataMap: { [key: string]: ListData } = {};
 
   // properties that are exposed to the template
   public _groups: FiltersGroup[] = [];
@@ -87,8 +88,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
                         this._createdBefore = changes.scheduledAt.currentValue ? changes.scheduledAt.currentValue.toDate : null;
                     }
 
-                    Object.keys(this._listDataMap).forEach(listName => {
-                        const groupListData = this._listDataMap[listName];
+                    Object.keys(this._groupListDataMap).forEach(listName => {
+                        const groupListData = this._groupListDataMap[listName];
                         const listFilteredItems = changes[listName];
 
                         if (typeof listFilteredItems !== 'undefined') {
@@ -185,8 +186,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
             this._scheduledBefore = scheduledAt.toDate;
         }
 
-        Object.keys(this._listDataMap).forEach(listName => {
-            const groupListData = this._listDataMap[listName];
+        Object.keys(this._groupListDataMap).forEach(listName => {
+            const groupListData = this._groupListDataMap[listName];
 
             if (groupListData.items && groupListData.items.length) {
                 const listItems = groupListData.items[0].children;
@@ -212,7 +213,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
     }
 
     _buildComponentFilters(groups: RefineGroup[]):void{
-        this._listDataMap = {};
+        this._groupListDataMap = {};
         this._groups = [];
 
         // create root nodes
@@ -223,9 +224,9 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
             group.lists.forEach(list => {
 
                 if (list.items.length > 0) {
-                    const treeData = { items: [], selections: []};
+                    const treeData = { items: [], selections: [], id: list.id};
 
-                    this._listDataMap[list.name] = treeData;
+                    this._groupListDataMap[list.name] = treeData;
                     filtersGroup.lists.push(treeData);
 
                     const listRootNode = new PrimeTreeNode(null, list.label, [], null, { filterName: list.name });
@@ -273,8 +274,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
     this._scheduledFilterError = null;
 
     const handledFilterTypeList = [];
-    Object.keys(this._listDataMap).forEach(filterName => {
-      const groupListData = this._listDataMap[filterName];
+    Object.keys(this._groupListDataMap).forEach(filterName => {
+      const groupListData = this._groupListDataMap[filterName];
 
       // TODO sakal
       // if (handledFilterTypeList.indexOf(treeData.refineFilter.entriesFilterType) === -1) {
@@ -342,12 +343,23 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
 
   public _onTreeNodeSelect({ node }: { node: PrimeTreeNode }) {
       // find group data by filter name
-      const filterName = node instanceof PrimeTreeNode && node.payload ? node.payload.filterName : null;
-      if (filterName) {
-          const groupData = this._listDataMap[filterName];
-          if (groupData) {
+      const listName = node instanceof PrimeTreeNode && node.payload ? node.payload.filterName : null;
+      if (listName) {
+          const groupListData = this._groupListDataMap[listName];
+          if (groupListData) {
+
+              // DEVELOPER NOTICE: there is a complexity caused since 'customMetadata' holds dynamic lists
+              let filteredList: {value: string, label: string}[];
+              let newValue;
               // get existing filters by filter name
-              const newValue = this._entriesFilters.getFilterData(filterName) || [];
+              if (listName === 'customMetadata')
+              {
+                  newValue = this._entriesFilters.getFilterData('customMetadata');
+                  filteredList = newValue[groupListData.id] = newValue[groupListData.id] || [];
+              }else {
+                  newValue = filteredList = this._entriesFilters.getFilterData(listName) || [];
+              }
+
               const selectedNodes = node.children && node.children.length ? [node, ...node.children] : [node];
 
               selectedNodes
@@ -356,23 +368,34 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
                       return selectedNode.data !== null && typeof selectedNode.data !== 'undefined';
                   })
                   .forEach(selectedNode => {
-                      if (!newValue.find(item => item.value === selectedNode.data)) {
-                          newValue.push({value: selectedNode.data + '', label: selectedNode.label});
+                      if (!filteredList.find(item => item.value === selectedNode.data)) {
+                          filteredList.push({value: selectedNode.data + '', label: selectedNode.label});
                       }
                   });
-              this._entriesFilters.update({[filterName]: newValue});
+              this._entriesFilters.update({[listName]: newValue});
           }
       }
   }
 
   public _onTreeNodeUnselect({ node }: { node: PrimeTreeNode }) {
       // find group data by filter name
-      const filterName = node instanceof PrimeTreeNode && node.payload ? node.payload.filterName : null;
-      if (filterName) {
+      const listName = node instanceof PrimeTreeNode && node.payload ? node.payload.filterName : null;
+      if (listName) {
           // get existing filters by filter name
-          const groupData = this._listDataMap[filterName];
-          if (groupData) {
-              const newValue = this._entriesFilters.getFilterData(filterName) || [];
+          const groupListData = this._groupListDataMap[listName];
+          if (groupListData) {
+
+              // DEVELOPER NOTICE: there is a complexity caused since 'customMetadata' holds dynamic lists
+              let filteredList: { value: string, label: string }[];
+              let newValue;
+              // get existing filters by filter name
+              if (listName === 'customMetadata') {
+                  newValue = this._entriesFilters.getFilterData('customMetadata');
+                  filteredList = newValue[groupListData.id] = newValue[groupListData.id] || [];
+              } else {
+                  newValue = filteredList = this._entriesFilters.getFilterData(listName) || [];
+              }
+
               const selectedNodes = node.children && node.children.length ? [node, ...node.children] : [node];
 
               selectedNodes
@@ -381,14 +404,13 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
                       return selectedNode.data !== null && typeof selectedNode.data !== 'undefined';
                   })
                   .forEach(selectedNode => {
-                      const itemIndex = newValue.findIndex(item => item.value === selectedNode.data);
+                      const itemIndex = filteredList.findIndex(item => item.value === selectedNode.data);
                       if (itemIndex > -1) {
-                          newValue.splice(itemIndex, 1);
+                          filteredList.splice(itemIndex, 1);
 
-                          if (filterName === 'timeScheduling' && selectedNode.data === 'scheduled')
-                          {
+                          if (listName === 'timeScheduling' && selectedNode.data === 'scheduled') {
                               this._entriesFilters.update({
-                                  scheduledAt : {
+                                  scheduledAt: {
                                       fromDate: null,
                                       toDate: null
                                   }

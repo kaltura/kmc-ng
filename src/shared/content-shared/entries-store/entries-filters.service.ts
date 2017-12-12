@@ -5,16 +5,21 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-log';
 import { FiltersStoreBase, TypeAdaptersMapping } from './filters-store-base';
 import { StringTypeAdapter } from './filter-types/string-type';
 import { DatesRangeAdapter, DatesRangeType } from './filter-types/dates-range-type';
-import { ValuesListAdapter, ValuesListType } from './filter-types/values-list-type';
+import { ListAdapter, ListType } from './filter-types/list-type';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
+import {
+    GroupedListAdapter,
+    GroupedListType
+} from 'app-shared/content-shared/entries-store/filter-types/grouped-list-type';
 
 export interface EntriesFilters {
     freetext: string,
     createdAt: DatesRangeType,
     scheduledAt: DatesRangeType,
-    mediaTypes: ValuesListType,
-    timeScheduling: ValuesListType,
-    ingestionStatuses: ValuesListType
+    mediaTypes: ListType,
+    timeScheduling: ListType,
+    ingestionStatuses: ListType,
+    customMetadata: GroupedListType
 }
 
 
@@ -32,7 +37,8 @@ export class EntriesFiltersStore extends FiltersStoreBase<EntriesFilters> {
             scheduledAt: {fromDate: null, toDate: null},
             mediaTypes: [],
             timeScheduling: [],
-            ingestionStatuses: []
+            ingestionStatuses: [],
+            customMetadata : {}
         };
     }
 
@@ -41,9 +47,10 @@ export class EntriesFiltersStore extends FiltersStoreBase<EntriesFilters> {
             freetext: new StringTypeAdapter(),
             createdAt: new DatesRangeAdapter(),
             scheduledAt: new DatesRangeAdapter(),
-            mediaTypes: new ValuesListAdapter(),
-            timeScheduling: new ValuesListAdapter(),
-            ingestionStatuses: new ValuesListAdapter()
+            mediaTypes: new ListAdapter(),
+            timeScheduling: new ListAdapter(),
+            ingestionStatuses: new ListAdapter(),
+            customMetadata: new GroupedListAdapter()
         };
     }
 

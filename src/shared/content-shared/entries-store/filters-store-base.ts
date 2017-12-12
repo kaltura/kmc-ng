@@ -64,7 +64,7 @@ export abstract class FiltersStoreBase<T extends { [key: string]: any }> {
             const currentValue = updates[filterType];
             const previousValue = this._data[filterType];
 
-            if (adapter.hasChanged(currentValue, previousValue)) {
+            if (adapter.hasChanges(currentValue, previousValue)) {
                 const valueValidation = result[filterType] = adapter.validate(currentValue);
                 if (!valueValidation.failed) {
                     this._logger.info(`update filter '${filterType}'`);

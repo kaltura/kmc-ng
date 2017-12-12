@@ -10,14 +10,16 @@ export abstract class SimpleTypeAdapterBase<T extends SimpleTypes> extends TypeA
         return value;
     }
 
-    validate(value: T): { failed: boolean, failureCode: string } {
-        return {failed: false, failureCode: null};
+    validate(value: any): { failed: boolean, failureCode: string } {
+        try {
+            this._validateType(value);
+            return {failed: false, failureCode: null};
+        } catch (error) {
+            return {failed: true, failureCode: 'invalid_types'};
+        }
     }
 
-    hasChanged(currentValue: T, previousValue: T): boolean {
-        this._validateType(previousValue);
-        this._validateType(currentValue);
-
+    hasChanges(currentValue: T, previousValue: T): boolean {
         return previousValue !== currentValue;
     }
 }

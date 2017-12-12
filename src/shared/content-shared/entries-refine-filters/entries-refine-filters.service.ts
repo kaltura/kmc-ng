@@ -40,7 +40,8 @@ export class RefineGroupList {
     public items: RefineGroupListItem[] = [];
 
     constructor(public name: string,
-                public label: string
+                public label: string,
+                public id?: string
     ) {
     }
 }
@@ -111,34 +112,20 @@ export class EntriesRefineFiltersService {
 
 
                 profileLists.forEach(list => {
-                    const metadataProfileId = metadataProfile.id;
-                    const fieldPath = ['metadata', list.name];
+                    const group = new RefineGroupList(
+                        'customMetadata',
+                        list.label,
+                        list.id);
 
-                    // TODO
-                    // const refineFilter = new RefineFilter(
-                    //   list.id,
-                    //   list.label,
-                    //   MetadataProfileFilter,
-                    //   filter => {
-                    //     return filter instanceof MetadataProfileFilter && filter.name === list.id;
-                    //   },
-                    //   (node: PrimeTreeNode) => {
-                    //     if (node.payload && node.payload.filterName) {
-                    //       return new MetadataProfileFilter(list.id, <any>node.data, metadataProfileId, fieldPath, list.label);
-                    //     } else {
-                    //       return null;
-                    //     }
-                    //   });
-                    //
-                    // filterGroup.filters.push(refineFilter);
+                    filterGroup.lists.push(group);
 
-                    // list.optionalValues.forEach(item => {
-                    //   refineFilter.items.push({
-                    //     id: item.value,
-                    //     name: item.text
-                    //   })
+                    list.optionalValues.forEach(item => {
+                      group.items.push({
+                        value: item.value,
+                        label: item.text
+                      })
 
-                    //});
+                    });
                 });
             }
         });
@@ -165,13 +152,13 @@ export class EntriesRefineFiltersService {
         // build access control profile filters
 
         if (responses[1].result.objects.length > 0) {
-          const newRefineFilter = new RefineGroupList(
+          const group = new RefineGroupList(
             'accessControlProfiles',
             'Access Control Profiles'
           );
-          result.lists.push(newRefineFilter);
+          result.lists.push(group);
           responses[1].result.objects.forEach((accessControlProfile) => {
-            newRefineFilter.items.push({
+            group.items.push({
                 value: accessControlProfile.id + '',
                 label: accessControlProfile.name
             });
@@ -180,23 +167,23 @@ export class EntriesRefineFiltersService {
 
         // build flavors filters
         if (flavours.length > 0) {
-          const newRefineFilter = new RefineGroupList(
+          const group = new RefineGroupList(
             'flavors',
             'Flavors');
-          result.lists.push(newRefineFilter);
+          result.lists.push(group);
           flavours.forEach((flavor: KalturaFlavorParams) => {
-            newRefineFilter.items.push({ value: flavor.id + '', label: flavor.name });
+            group.items.push({ value: flavor.id + '', label: flavor.name });
           });
         }
 
         // build distributions filters
         if (responses[0].result.objects.length > 0) {
-          const newRefineFilter = new RefineGroupList(
+          const group = new RefineGroupList(
             'distributions',
             'Destinations');
-          result.lists.push(newRefineFilter);
+          result.lists.push(group);
           responses[0].result.objects.forEach((distributionProfile) => {
-            newRefineFilter.items.push({ value: distributionProfile.id + '', label: distributionProfile.name });
+            group.items.push({ value: distributionProfile.id + '', label: distributionProfile.name });
           });
         }
 
