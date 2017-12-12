@@ -20,6 +20,7 @@ import { Observer } from 'rxjs/Observer';
 export interface Tabs {
   name: string;
   isActive: boolean;
+  disabled: boolean;
 }
 
 @Component({
@@ -42,10 +43,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   private _shouldConfirmEntryRejection = false; // TODO [kmcng] need to get such permissions from somewhere
 
   public _areaBlockerMessage: AreaBlockerMessage = null;
-  public _tabs: Tabs[] = [
-    { name: this._appLocalization.get('applications.content.moderation.report'), isActive: true },
-    { name: this._appLocalization.get('applications.content.moderation.details'), isActive: false }
-  ];
+  public _tabs: Tabs[] = [];
   public _flags: KalturaModerationFlag[] = null;
   public _entry: KalturaMediaEntry = null;
   public _hasDuration = false;
@@ -54,6 +52,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   public _flagsAmount = '';
   public EntryReportSections = EntryReportSections;
   public _iframeSrc = '';
+  public _isBusy = false;
 
   constructor(public _moderationStore: ModerationStore,
               private _appLocalization: AppLocalization,
@@ -123,40 +122,54 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   private _loadEntryModerationDetails(): void {
+    this._isBusy = true;
+    this._tabs = [
+      { name: this._appLocalization.get('applications.content.moderation.report'), isActive: false, disabled: false },
+      { name: this._appLocalization.get('applications.content.moderation.details'), isActive: false, disabled: false }
+    ];
     this._moderationStore.loadEntryModerationDetails(this.entryId)
       .cancelOnDestroy(this)
       .subscribe(
         response => {
+          this._isBusy = false;
           this._areaBlockerMessage = null;
           if (response.entry && response.flag) {
             this._entry = response.entry;
             this._flags = response.flag.objects;
-            const moderationCount = response.entry.moderationCount;
+            const moderationCount = this._entry.moderationCount;
             this._flagsAmount = moderationCount === 1
               ? this._appLocalization.get('applications.content.moderation.flagSingular', { 0: moderationCount })
               : this._appLocalization.get('applications.content.moderation.flagPlural', { 0: moderationCount });
-            this._userId = response.entry.userId;
+            this._userId = this._entry.userId;
 
-            if (response.entry.sourceType) {
-              const sourceType = response.entry.sourceType.toString();
+            if (this._entry.moderationCount > 0) {
+              this._tabs[EntryReportSections.Report].isActive = true;
+            } else {
+              this._tabs[EntryReportSections.Details].isActive = true;
+              this._tabs[EntryReportSections.Report].disabled = true;
+            }
+
+            if (this._entry.sourceType) {
+              const sourceType = this._entry.sourceType.toString();
               const isLive = (sourceType === KalturaSourceType.liveStream.toString() ||
                 sourceType === KalturaSourceType.akamaiLive.toString() ||
                 sourceType === KalturaSourceType.akamaiUniversalLive.toString() ||
                 sourceType === KalturaSourceType.manualLiveStream.toString());
-              this._hasDuration = response.entry.status !== KalturaEntryStatus.noContent
+              this._hasDuration = this._entry.status !== KalturaEntryStatus.noContent
                 && !isLive
-                && response.entry.mediaType.toString() !== KalturaMediaType.image.toString();
-              this._isEntryReady = response.entry.status.toString() === KalturaEntryStatus.ready.toString();
+                && this._entry.mediaType.toString() !== KalturaMediaType.image.toString();
+              this._isEntryReady = this._entry.status.toString() === KalturaEntryStatus.ready.toString();
               if (isLive) {
                 this._flashVars += '&flashvars[disableEntryRedirect]=true';
               }
               this._isRecordedLive = (sourceType === KalturaSourceType.recordedLive.toString());
-              this._isClip = !this._isRecordedLive && (response.entry.id !== response.entry.rootEntryId);
+              this._isClip = !this._isRecordedLive && (this._entry.id !== this._entry.rootEntryId);
             }
             this._iframeSrc = `${environment.core.kaltura.cdnUrl}/p/${this._partnerID}/sp/${this._partnerID}00/embedIframeJs/uiconf_id/${this._UIConfID}/partner_id/${this._partnerID}?iframeembed=true&${this._flashVars}&entry_id=${this.entryId}`;
           }
         },
         error => {
+          this._isBusy = false;
           this._areaBlockerMessage = new AreaBlockerMessage({
             message: error.message,
             buttons: [
@@ -187,8 +200,10 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   }
 
   public _changeTab(index: number): void {
-    this._tabs.forEach(tab => tab.isActive = false);
-    this._tabs[index].isActive = true;
+    if (!this._tabs[index].disabled) {
+      this._tabs.forEach(tab => tab.isActive = false);
+      this._tabs[index].isActive = true;
+    }
   }
 
   public _navigateToEntry(entryId): void {

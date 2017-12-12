@@ -9,9 +9,10 @@ import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/ent
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BulkService } from '../bulk-service/bulk.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { ModerationStatusesFilter } from 'app-shared/content-shared/entries-store/filters/moderation-statuses-filter';
 
 @Component({
-  selector: 'kEntriesListHolder',
+  selector: 'kModerationEntriesListHolder',
   templateUrl: './entries-list-holder.component.html',
   providers: [BulkService]
 })
@@ -63,7 +64,11 @@ export class EntriesListHolderComponent implements OnDestroy {
               private _appLocalization: AppLocalization,
               private _entriesStore: EntriesStore,
               private _bulkService: BulkService) {
-    this._entriesStore.paginationCacheToken = 'entries-list';
+    this._entriesStore.paginationCacheToken = 'moderation-entries-list';
+    this._entriesStore.addFilters( // default filters for moderation
+      new ModerationStatusesFilter('1', 'Pending moderation'),
+      new ModerationStatusesFilter('5', 'Flagged for review'),
+    );
   }
 
   ngOnDestroy() {

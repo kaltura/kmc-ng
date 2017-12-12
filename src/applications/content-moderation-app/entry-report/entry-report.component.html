@@ -1,4 +1,4 @@
-<k-area-blocker [message]="_areaBlockerMessage">
+<k-area-blocker [message]="_areaBlockerMessage" [showLoader]="_isBusy">
   <div class="kEntryReportWrap kOverrideFAIcons">
     <div class="kHeader">
       <span class="kTitle">{{('applications.content.moderation.entryReports') | translate}}</span>
@@ -28,15 +28,16 @@
       </div>
 
       <div class="appSubMenu">
-        <div *ngFor="let tab of _tabs; let i = index;" class="subMenuContainer" [class.active]="tab.isActive"
+        <div *ngFor="let tab of _tabs; let i = index;"
+             class="subMenuContainer"
+             [class.active]="tab.isActive"
              (click)="_changeTab(i)">
           <a class="menuLink">{{tab.name}}</a>
           <div class="linkMarker"></div>
         </div>
       </div>
-
-      <div *ngIf="_entry && _entry.moderationCount > 0">
-        <div class="kEntryReport" *ngIf="_tabs[EntryReportSections.Report].isActive">
+      <div>
+        <div class="kEntryReport" *ngIf="_tabs[EntryReportSections.Report].isActive && !_tabs[EntryReportSections.Report].disabled">
           <div class="kFlagsAmount">{{_flagsAmount}}</div>
           <div class="kFlagsComment" *ngFor="let flag of _flags;">
             <div class="kFlagsCaption">
@@ -48,7 +49,7 @@
           </div>
         </div>
 
-        <div class="kEntryDetails" *ngIf="_tabs[EntryReportSections.Details].isActive">
+        <div class="kEntryDetails" *ngIf="_tabs[EntryReportSections.Details].isActive && !_tabs[EntryReportSections.Details].disabled">
           <div class="kRow">
             <span class="kLabels">{{'applications.content.moderationDetails.name' | translate}}</span>
             <span>{{_entry.name}}</span>
