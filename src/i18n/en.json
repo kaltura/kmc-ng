@@ -13,6 +13,7 @@
       "Settings": "Settings",
       "Account Settings": "Account Settings",
       "Account Upgrade": "Account Upgrade",
+      "My User Settings": "My User Settings",
       "Administration": "Administration",
       "Roles": "Roles",
       "UploadControl": "Upload Control",
@@ -1160,6 +1161,36 @@
           "required": "This field is required.",
           "phoneInvalid": "Telephone must include at least 7 digits and only valid characters.",
           "sendFailed": "An error occurred during account upgrade"
+        }
+      },
+      "myUserSettings": {
+        "userDetails": "User Details",
+        "editUserName": "Edit User Name",
+        "informationMessage": "Please make sure that the information below is up to date",
+        "userName": "User Name",
+        "userId": "User ID",
+        "emailAddress": "Email Address",
+        "role": "Role",
+        "roleDescription": "Role Description",
+        "password": "Password",
+        "editUser": "Edit Password",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "save": "Save",
+        "cancel": "Cancel",
+        "passwordRequiredName": "* Password is required for editing your name.",
+        "passwordRequiredEmail": "* Password is required for editing your email.",
+        "email": "Email",
+        "editEmailAddress": "Edit Email Address",
+        "changePassword": "Change Password",
+        "strongPassword": "It's better to use a strong password that you're not using elsewhere",
+        "currentPassword": "Current Password",
+        "newPassword": "New password",
+        "reTypeNewPassword": "Re-type new password",
+        "errors": {
+          "required": "This field is required",
+          "doNotMuchPasswords": "Password fields do not match",
+          "connection": "Error connecting to server"
         }
       }
     }

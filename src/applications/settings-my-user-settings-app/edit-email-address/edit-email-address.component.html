@@ -1,0 +1,50 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+  <div class="kEditWin">
+    <form [formGroup]="editEmailAddressForm" novalidate>
+      <div class="kHeader">
+        <span class="kTitle">{{'applications.settings.myUserSettings.editEmailAddress' | translate}}</span>
+      </div>
+
+      <div class="kContainer">
+        <div class="kRow">
+          <span class="kLabel">{{'applications.settings.myUserSettings.email' | translate}}</span>
+          <div>
+            <input class="kControl" formControlName="email" pInputText
+              [ngClass]="{'kHasError':!editEmailAddressForm.controls['email'].valid && editEmailAddressForm.controls['email'].touched}">
+            <div
+              *ngIf="editEmailAddressForm.controls['email'].touched && editEmailAddressForm.controls['email'].hasError('required')"
+              class="error">
+              {{'applications.settings.myUserSettings.errors.required' | translate}}
+            </div>
+          </div>
+        </div>
+        <div class="kRow">
+          <span class="kLabel">{{'applications.settings.myUserSettings.password' | translate}}</span>
+          <div>
+            <input type="password"
+                   class="kControl"
+                   formControlName="password"
+                   pInputText
+                   [ngClass]="{'kHasError':!editEmailAddressForm.controls['password'].valid && editEmailAddressForm.controls['password'].touched}">
+            <div
+              *ngIf="editEmailAddressForm.controls['password'].touched && editEmailAddressForm.controls['password'].hasError('required')"
+              class="error">
+              {{'applications.settings.myUserSettings.errors.required' | translate}}
+            </div>
+            <div class="kPasswordRequired">{{'applications.settings.myUserSettings.passwordRequiredEmail' | translate}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kFooter">
+        <button pButton class="kButtonDefault kButton" (click)="_closePopup()" label="{{'applications.settings.myUserSettings.cancel' | translate}}"></button>
+        <button
+          pButton class="kButtonBranded kButton"
+          label="{{'applications.settings.myUserSettings.save' | translate}}"
+          [disabled]="editEmailAddressForm.pristine"
+          (click)="updateLoginData()"></button>
+      </div>
+    </form>
+  </div>
+
+</k-area-blocker>
