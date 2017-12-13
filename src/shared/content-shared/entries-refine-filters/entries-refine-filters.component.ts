@@ -8,12 +8,13 @@ import { EntriesRefineFiltersService, RefineGroup } from './entries-refine-filte
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import {
+    EntriesFilters,
     EntriesFiltersStore
 } from 'app-shared/content-shared/entries-store/entries-filters.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 
 export interface ListData {
-    id?: string;
+    group?: string;
     items: PrimeTreeNode[];
     selections: PrimeTreeNode[];
 }
@@ -35,7 +36,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
   @ViewChildren(PrimeTreeActions)
   public _primeTreesActions: PrimeTreeActions[];
 
-  private _groupListDataMap: { [key: string]: ListData } = {};
+  private _listDataMapping: { [key: string]: ListData } = {};
 
   // properties that are exposed to the template
   public _groups: FiltersGroup[] = [];
@@ -72,57 +73,102 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
 
   }
 
+    private _restoreFiltersState(): void {
+        this._updateComponentState(this._entriesFilters.cloneFilters(
+            [
+                'createdAt',
+                'scheduledAt',
+                'mediaTypes',
+                'ingestionStatuses',
+                'durations',
+                'originalClippedEntries',
+                'timeScheduling',
+                'moderationStatuses',
+                'replacementStatuses',
+                'accessControlProfiles',
+                'flavors',
+                'distributions',
+                'customMetadata'
+            ]
+        ));
+    }
+
+  private _updateComponentState(updates: Partial<EntriesFilters>): void {
+      if (updates.createdAt) {
+          this._createdAfter = updates.createdAt.fromDate || null;
+          this._createdBefore = updates.createdAt.toDate || null;
+      }
+
+      if (updates.scheduledAt) {
+          this._scheduledAfter = updates.scheduledAt.fromDate || null;
+          this._scheduledBefore = updates.scheduledAt.toDate || null;
+      }
+
+      Object.keys(this._listDataMapping).forEach(listName => {
+          const listData = this._listDataMapping[listName];
+          let listFilter: { value: string, label: string }[];
+          if (listData.group === 'customMetadata')
+          {
+              const customMetadataFilter = updates['customMetadata'];
+              listFilter = customMetadataFilter ? customMetadataFilter[listName] : null;
+          }else
+          {
+              listFilter = updates[listName];
+          }
+
+          if (listFilter !== null && typeof listFilter !== 'undefined') {
+              const listSelectionsMap = this._entriesFilters.toMap(listData.selections, 'data');
+              const listFilterMap = this._entriesFilters.toMap(listFilter, 'value');
+              const diff = this._entriesFilters.getDiff(listSelectionsMap, listFilterMap );
+
+              diff.added.forEach(addedItem => {
+                  const listItems = listData.items.length > 0 ? listData.items[0].children : [];
+                  const matchingItem = listItems.find(item => item.data === (<any>addedItem).value);
+                  if (!matchingItem) {
+                      console.warn(`[entries-refine-filters]: failed to sync filter for '${listName}'`);
+                  } else {
+                      listData.selections.push(matchingItem);
+                  }
+              });
+
+              diff.deleted.forEach(removedItem => {
+
+                  if (removedItem.data !== null && typeof removedItem.data !== 'undefined') {
+                      // ignore root items (they are managed by the component tree)
+                      listData.selections.splice(
+                          listData.selections.indexOf(removedItem),
+                          1
+                      );
+                  }
+              });
+          }
+
+          if (listName === 'timeScheduling') {
+              this._syncScheduleDatesMode();
+          }
+      });
+  }
+
+
   private _registerToFilterStoreDataChanges(): void {
         this._entriesFilters.dataChanges$
             .cancelOnDestroy(this)
             .subscribe(
                 changes => {
 
-                    if (typeof changes.createdAt !== 'undefined') {
-                        this._createdAfter = changes.createdAt.currentValue ? changes.createdAt.currentValue.fromDate : null;
-                        this._createdBefore = changes.createdAt.currentValue ? changes.createdAt.currentValue.toDate : null;
-                    }
+                    const changesFlat: Partial<EntriesFilters> = Object.keys(changes).reduce(
+                        (acc, propertyName) => {
+                            acc[propertyName] = changes[propertyName].currentValue;
+                            return acc;
+                        }, {});
 
-                    if (typeof changes.scheduledAt !== 'undefined') {
-                        this._createdAfter = changes.scheduledAt.currentValue ? changes.scheduledAt.currentValue.fromDate : null;
-                        this._createdBefore = changes.scheduledAt.currentValue ? changes.scheduledAt.currentValue.toDate : null;
-                    }
-
-                    Object.keys(this._groupListDataMap).forEach(listName => {
-                        const groupListData = this._groupListDataMap[listName];
-                        const listFilteredItems = changes[listName];
-
-                        if (typeof listFilteredItems !== 'undefined') {
-                            const diff = this._entriesFilters.getDiff(groupListData.selections, 'data', listFilteredItems.currentValue, 'value');
-
-                            diff.added.forEach(addedItem => {
-                                const matchingItem = groupListData.items.find(item => item.data === (<any>addedItem).value);
-                                groupListData.selections.push(matchingItem);
-                            });
-
-                            diff.deleted.forEach(removedItem => {
-
-                                if (removedItem.data !== null && typeof removedItem.data !== 'undefined') {
-                                    // ignore root items (they are managed by the component tree)
-                                    groupListData.selections.splice(
-                                        groupListData.selections.indexOf(removedItem),
-                                        1
-                                    );
-                                }
-                            });
-                        }
-
-                        if (listName === 'timeScheduling')
-                        {
-                            this._syncScheduleDatesMode();
-                        }
-                    });
+                    this._updateComponentState(changesFlat);
                 }
             );
     }
 
     private _syncScheduleDatesMode() {
-        const timeScheduling = this._entriesFilters.getFilterData('timeScheduling') || [];
+        const timeScheduling = this._entriesFilters.cloneFilter('timeScheduling', []);
         this._scheduledSelected = !!timeScheduling.find(item => item.value === 'scheduled');
 
         if (!this._scheduledSelected) {
@@ -173,47 +219,9 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
             }
         });
     }
-    private _restoreFiltersState(): void {
-        const createdAt = this._entriesFilters.getFilterData('createdAt');
-        if (createdAt) {
-            this._createdAfter = createdAt.fromDate;
-            this._createdBefore = createdAt.toDate;
-        }
-
-        const scheduledAt = this._entriesFilters.getFilterData('scheduledAt');
-        if (scheduledAt) {
-            this._scheduledAfter = scheduledAt.fromDate;
-            this._scheduledBefore = scheduledAt.toDate;
-        }
-
-        Object.keys(this._groupListDataMap).forEach(listName => {
-            const groupListData = this._groupListDataMap[listName];
-
-            if (groupListData.items && groupListData.items.length) {
-                const listItems = groupListData.items[0].children;
-
-                // developer notice: since we get the list name dynamically we must cast 'filterName' to 'any'
-                const filteredItems = this._entriesFilters.getFilterData(<any>listName) || [];
-                groupListData.selections = groupListData.selections || []; // makes sure selection array exists
-                filteredItems.forEach(filteredItem => {
-                    const listItem = listItems.find(listDataItem => listDataItem.data === filteredItem.value);
-                    if (listItem) {
-                        groupListData.selections.push(listItem);
-                    }
-                });
-
-                if (listName === 'timeScheduling')
-                {
-                    this._syncScheduleDatesMode();
-                }
-            }
-        });
-
-
-    }
 
     _buildComponentFilters(groups: RefineGroup[]):void{
-        this._groupListDataMap = {};
+        this._listDataMapping = {};
         this._groups = [];
 
         // create root nodes
@@ -224,9 +232,9 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
             group.lists.forEach(list => {
 
                 if (list.items.length > 0) {
-                    const treeData = { items: [], selections: [], id: list.id};
+                    const treeData = { items: [], selections: [], group: list.group};
 
-                    this._groupListDataMap[list.name] = treeData;
+                    this._listDataMapping[list.name] = treeData;
                     filtersGroup.lists.push(treeData);
 
                     const listRootNode = new PrimeTreeNode(null, list.label, [], null, { filterName: list.name });
@@ -274,8 +282,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
     this._scheduledFilterError = null;
 
     const handledFilterTypeList = [];
-    Object.keys(this._groupListDataMap).forEach(filterName => {
-      const groupListData = this._groupListDataMap[filterName];
+    Object.keys(this._listDataMapping).forEach(filterName => {
+      const listData = this._listDataMapping[filterName];
 
       // TODO sakal
       // if (handledFilterTypeList.indexOf(treeData.refineFilter.entriesFilterType) === -1) {
@@ -299,7 +307,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
           this._createdFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
 
           setTimeout(() => {
-              const createdAt = this._entriesFilters.getFilterData('createdAt');
+              const createdAt = this._entriesFilters.cloneFilter('createdAt', null);
               this._createdAfter = createdAt ? createdAt.fromDate : null;
               this._createdBefore = createdAt ? createdAt.toDate : null;
 
@@ -326,7 +334,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
           this._scheduledFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
 
           setTimeout(() => {
-              const scheduledAt = this._entriesFilters.getFilterData('scheduledAt');
+              const scheduledAt = this._entriesFilters.cloneFilter('scheduledAt', null);
               this._scheduledAfter = scheduledAt ? scheduledAt.fromDate : null;
               this._scheduledBefore = scheduledAt ? scheduledAt.toDate : null;
 
@@ -345,19 +353,23 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
       // find group data by filter name
       const listName = node instanceof PrimeTreeNode && node.payload ? node.payload.filterName : null;
       if (listName) {
-          const groupListData = this._groupListDataMap[listName];
-          if (groupListData) {
+          const listData = this._listDataMapping[listName];
+          if (listData) {
 
               // DEVELOPER NOTICE: there is a complexity caused since 'customMetadata' holds dynamic lists
-              let filteredList: {value: string, label: string}[];
-              let newValue;
-              // get existing filters by filter name
-              if (listName === 'customMetadata')
+              let newFilterItems: {value: string, label: string}[];
+              let newFilterValue;
+              let newFilterName: string;
+
+              if (listData.group === 'customMetadata')
               {
-                  newValue = this._entriesFilters.getFilterData('customMetadata');
-                  filteredList = newValue[groupListData.id] = newValue[groupListData.id] || [];
+                  newFilterValue = this._entriesFilters.cloneFilter('customMetadata', {});
+                  newFilterItems = newFilterValue[listName] = newFilterValue[listName] || [];
+                  newFilterName = 'customMetadata';
               }else {
-                  newValue = filteredList = this._entriesFilters.getFilterData(listName) || [];
+                  newFilterValue = newFilterItems = this._entriesFilters.cloneFilter(listName, []);
+                  newFilterName = listName;
+
               }
 
               const selectedNodes = node.children && node.children.length ? [node, ...node.children] : [node];
@@ -368,11 +380,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
                       return selectedNode.data !== null && typeof selectedNode.data !== 'undefined';
                   })
                   .forEach(selectedNode => {
-                      if (!filteredList.find(item => item.value === selectedNode.data)) {
-                          filteredList.push({value: selectedNode.data + '', label: selectedNode.label});
+                      if (!newFilterItems.find(item => item.value === selectedNode.data)) {
+                          newFilterItems.push({value: selectedNode.data + '', label: selectedNode.label});
                       }
                   });
-              this._entriesFilters.update({[listName]: newValue});
+              this._entriesFilters.update({[newFilterName]: newFilterValue});
           }
       }
   }
@@ -381,19 +393,23 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
       // find group data by filter name
       const listName = node instanceof PrimeTreeNode && node.payload ? node.payload.filterName : null;
       if (listName) {
-          // get existing filters by filter name
-          const groupListData = this._groupListDataMap[listName];
-          if (groupListData) {
+
+          const listData = this._listDataMapping[listName];
+          if (listData) {
 
               // DEVELOPER NOTICE: there is a complexity caused since 'customMetadata' holds dynamic lists
-              let filteredList: { value: string, label: string }[];
-              let newValue;
+              let newFilterItems: { value: string, label: string }[];
+              let newFilterValue;
+              let newFilterName: string;
+
               // get existing filters by filter name
-              if (listName === 'customMetadata') {
-                  newValue = this._entriesFilters.getFilterData('customMetadata');
-                  filteredList = newValue[groupListData.id] = newValue[groupListData.id] || [];
+              if (listData.group === 'customMetadata') {
+                  newFilterValue = this._entriesFilters.cloneFilter('customMetadata', {});
+                  newFilterItems = newFilterValue[listName] = newFilterValue[listName] || [];
+                  newFilterName = 'customMetadata';
               } else {
-                  newValue = filteredList = this._entriesFilters.getFilterData(listName) || [];
+                  newFilterValue = newFilterItems = this._entriesFilters.cloneFilter(listName, []);
+                  newFilterName = listName;
               }
 
               const selectedNodes = node.children && node.children.length ? [node, ...node.children] : [node];
@@ -404,9 +420,9 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
                       return selectedNode.data !== null && typeof selectedNode.data !== 'undefined';
                   })
                   .forEach(selectedNode => {
-                      const itemIndex = filteredList.findIndex(item => item.value === selectedNode.data);
+                      const itemIndex = newFilterItems.findIndex(item => item.value === selectedNode.data);
                       if (itemIndex > -1) {
-                          filteredList.splice(itemIndex, 1);
+                          newFilterItems.splice(itemIndex, 1);
 
                           if (listName === 'timeScheduling' && selectedNode.data === 'scheduled') {
                               this._entriesFilters.update({
@@ -419,7 +435,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
                       }
                   });
 
-              this._entriesFilters.update({[node.payload.filterName]: newValue});
+              this._entriesFilters.update({[newFilterName]: newFilterValue});
           }
       }
   }

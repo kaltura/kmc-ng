@@ -3,6 +3,7 @@ import { TypeAdapterBase } from './filter-types/type-adapter-base';
 import { Subject } from 'rxjs/Subject';
 import * as Immutable from 'seamless-immutable';
 import { KalturaLogger } from '@kaltura-ng/kaltura-log';
+import { FiltersUtils } from 'app-shared/content-shared/entries-store/filters-utils';
 
 export type TypeAdaptersMapping<T> = {
     readonly [P in keyof T]: TypeAdapterBase<T[P]>;
@@ -14,14 +15,6 @@ export type DataChanges<T> = {
 
 export type UpdateResult<T> = {
     [P in keyof T]? : { failed: boolean, failureCode: string };
-}
-
-function mapFromArray(array, prop) {
-    const map = {};
-    for (let i = 0; i < array.length; i++) {
-        map[ array[i][prop] ] = array[i];
-    }
-    return map;
 }
 
 export abstract class FiltersStoreBase<T extends { [key: string]: any }> {
@@ -37,9 +30,31 @@ export abstract class FiltersStoreBase<T extends { [key: string]: any }> {
     protected abstract  _createEmptyStore(): T;
     protected abstract _getTypeAdaptersMapping() : TypeAdaptersMapping<T>;
 
-    public getFilterData<K extends keyof T>(filterType: K, defaultValue?: T[K]): T[K] {
-        const result = this._data.getIn([filterType], defaultValue);
-        return result && result.asMutable ? result.asMutable({ deep: true }) : result;
+
+    public cloneFilters<K extends keyof T>(filterNames: K[]): Partial<T>
+    {
+        const result: Partial<T> = {};
+
+        filterNames.forEach((filterName) => {
+            result[filterName] = this.cloneFilter(filterName, null);
+        });
+
+        return result;
+    }
+
+    public cloneFilter<K extends keyof T>(filterName: K, defaultValue: T[K]): T[K] | null {
+        const adapter = this._typeAdaptersMapping[filterName];
+        const value: any = this._data[filterName];
+        if (value) {
+            if (value.asMutable) {
+                return value.asMutable({deep: true});
+            }
+            else {
+                console.error(`[filters-store-base]: found filter data for '${filterName}' but failed to provide a clone for that value. returning default value instead`);
+            }
+        }
+
+        return defaultValue;
     }
 
     protected _getData(): Immutable.ImmutableObject<T> {
@@ -52,25 +67,25 @@ export abstract class FiltersStoreBase<T extends { [key: string]: any }> {
         const dataChanges: DataChanges<T> = {};
         const result: UpdateResult<T> = {};
 
-        Object.keys(updates).forEach(filterType => {
+        Object.keys(updates).forEach(filterName => {
 
-            const adapter = this._typeAdaptersMapping[filterType];
+            const adapter = this._typeAdaptersMapping[filterName];
 
             if (!adapter) {
-                this._logger.error(`cannot sync store, failed to extract type adapter for '${filterType}'`);
-                throw new Error(`cannot sync store, failed to extract type adapter for '${filterType}'`);
+                this._logger.error(`cannot sync store, failed to extract type adapter for '${filterName}'`);
+                throw new Error(`cannot sync store, failed to extract type adapter for '${filterName}'`);
             }
 
-            const currentValue = updates[filterType];
-            const previousValue = this._data[filterType];
+            const newValue = updates[filterName];
+            const previousValue = this._data[filterName];
 
-            if (adapter.hasChanges(currentValue, previousValue)) {
-                const valueValidation = result[filterType] = adapter.validate(currentValue);
+            if (adapter.hasChanges(newValue, previousValue)) {
+                const valueValidation = result[filterName] = adapter.validate(newValue);
                 if (!valueValidation.failed) {
-                    this._logger.info(`update filter '${filterType}'`);
-                    const immutableValue = adapter.copy(currentValue);
-                    newFilters = newFilters.set(filterType, immutableValue);
-                    dataChanges[filterType] = new SimpleChange(previousValue, currentValue, false);
+                    this._logger.info(`update filter '${filterName}'`);
+                    const immutableNewValue = Immutable(newValue);
+                    newFilters = newFilters.set(filterName, immutableNewValue);
+                    dataChanges[filterName] = { previousValue, currentValue: immutableNewValue };
                     hasChanges = true;
                 }
             }
@@ -87,25 +102,13 @@ export abstract class FiltersStoreBase<T extends { [key: string]: any }> {
         return result;
     }
 
-    getDiff<TSource, TCompareTo>(source: TSource[], sourceKeyPropertyName: string, compareTo: TCompareTo[], compareToKeyPropertyName: string): { added: TCompareTo[], deleted: TSource[] } {
-        const delta = {
-            added: [],
-            deleted: []
-        };
+    getDiff<TSource, TCompareTo>(source: { [key: string]: TSource }, compareTo: { [key: string]: TCompareTo }): { added: TCompareTo[], deleted: TSource[] }
+    {
+        return FiltersUtils.getDiff(source, compareTo);
+    }
 
-        const mapSource =  mapFromArray(source, sourceKeyPropertyName);
-        const mapCompareTo = mapFromArray(compareTo, compareToKeyPropertyName);
-        for (const id in mapSource) {
-            if (!mapCompareTo.hasOwnProperty(id)) {
-                delta.deleted.push(mapSource[id]);
-            }
-        }
-
-        for (const id in mapCompareTo) {
-            if (!mapSource.hasOwnProperty(id)) {
-                delta.added.push(mapCompareTo[id])
-            }
-        }
-        return delta;
+    toMap<T>(value: T[], keyPropertyName: keyof T): { [key: string]: T }
+    {
+        return FiltersUtils.toMap(value, keyPropertyName);
     }
 }

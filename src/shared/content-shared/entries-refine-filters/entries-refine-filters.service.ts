@@ -41,7 +41,7 @@ export class RefineGroupList {
 
     constructor(public name: string,
                 public label: string,
-                public id?: string
+                public group?: string
     ) {
     }
 }
@@ -113,9 +113,9 @@ export class EntriesRefineFiltersService {
 
                 profileLists.forEach(list => {
                     const group = new RefineGroupList(
-                        'customMetadata',
+                        list.id,
                         list.label,
-                        list.id);
+                        'customMetadata');
 
                     filterGroup.lists.push(group);
 

@@ -19,6 +19,13 @@ export interface EntriesFilters {
     mediaTypes: ListType,
     timeScheduling: ListType,
     ingestionStatuses: ListType,
+    durations: ListType,
+    originalClippedEntries: ListType,
+    moderationStatuses: ListType,
+    replacementStatuses: ListType,
+    accessControlProfiles: ListType,
+    flavors: ListType,
+    distributions: ListType,
     customMetadata: GroupedListType
 }
 
@@ -38,6 +45,13 @@ export class EntriesFiltersStore extends FiltersStoreBase<EntriesFilters> {
             mediaTypes: [],
             timeScheduling: [],
             ingestionStatuses: [],
+            durations: [],
+            originalClippedEntries: [],
+            moderationStatuses: [],
+            replacementStatuses: [],
+            accessControlProfiles: [],
+            flavors: [],
+            distributions: [],
             customMetadata : {}
         };
     }
@@ -50,6 +64,13 @@ export class EntriesFiltersStore extends FiltersStoreBase<EntriesFilters> {
             mediaTypes: new ListAdapter(),
             timeScheduling: new ListAdapter(),
             ingestionStatuses: new ListAdapter(),
+            durations: new ListAdapter(),
+            originalClippedEntries: new ListAdapter(),
+            moderationStatuses: new ListAdapter(),
+            replacementStatuses: new ListAdapter(),
+            accessControlProfiles: new ListAdapter(),
+            flavors: new ListAdapter(),
+            distributions: new ListAdapter(),
             customMetadata: new GroupedListAdapter()
         };
     }

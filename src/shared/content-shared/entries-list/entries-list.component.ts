@@ -57,7 +57,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
       switch (tag.type) {
           case "mediaType":
-              const previousData = this._store.getFilterData('mediaTypes');
+              const previousData = this._store.cloneFilter('mediaTypes', []);
 
               previousData.splice(
                   previousData.findIndex(item => item.value === tag.value)
@@ -112,7 +112,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      this._query.freetext = this._store.getFilterData('freetext');
+      this._query.freetext = this._store.cloneFilter('freetext', null);
 
       this._store.dataChanges$
           .cancelOnDestroy(this)
@@ -160,7 +160,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
                 1);
         }
 
-        const {fromDate, toDate} = this._store.getFilterData('createdAt') || { fromDate: null, toDate: null};
+        const {fromDate, toDate} = this._store.cloneFilter('createdAt', { fromDate: null, toDate: null});
         if (fromDate || toDate) {
             let tooltip = '';
             if (fromDate && toDate) {
@@ -183,7 +183,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
               1);
       }
 
-      const currentFreetextValue = this._store.getFilterData('freetext');
+      const currentFreetextValue = this._store.cloneFilter('freetext', null);
 
       if (currentFreetextValue) {
           this._filterTags.push({
@@ -196,10 +196,12 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   }
   private _syncTagsOfMediaTypes(): void {
 
-      const currentValue =  this._store.getFilterData('mediaTypes');
+      const currentValue =  this._store.cloneFilter('mediaTypes', []);
       const tagsFilters = this._filterTags.filter(item => item.type === 'mediaType');
 
-      const diff = this._store.getDiff(tagsFilters, 'value', currentValue, 'value');
+      const tagsFiltersMap = this._store.toMap(tagsFilters, 'value');
+      const currentValueMap = this._store.toMap(currentValue, 'value');
+      const diff = this._store.getDiff(tagsFiltersMap, currentValueMap);
 
       diff.deleted.forEach(item => {
           this._filterTags.splice(
