@@ -12,30 +12,31 @@
       <div class="kUserDetailsSection">
         <div class="kRow">
           <div class="kLabel">{{'applications.settings.myUserSettings.userName' | translate}}</div>
-          <span>{{user?.fullName}}</span>
+          <span>{{_user?.fullName}}</span>
           <i class="kIconpen" (click)="_editUserName()"></i>
         </div>
         <div class="kRow">
           <div class="kLabel">{{'applications.settings.myUserSettings.userId' | translate}}</div>
-          <span>{{user?.id}}</span>
+          <span>{{_user?.id}}</span>
         </div>
         <div class="kRow">
           <div class="kLabel">{{'applications.settings.myUserSettings.emailAddress' | translate}}</div>
-          <span>{{user?.email}}</span>
+          <span>{{_user?.email}}</span>
           <i class="kIconpen" (click)="_editEmailAddress()"></i>
         </div>
         <div class="kRow">
           <div class="kLabel">{{'applications.settings.myUserSettings.role' | translate}}</div>
-          <span>{{role?.name}}</span>
+          <span>{{_role?.name}}</span>
         </div>
         <div class="kRow">
           <div class="kLabel">{{'applications.settings.myUserSettings.roleDescription' | translate}}</div>
-          <span>{{role?.description}}</span>
+          <span>{{_role?.description}}</span>
         </div>
         <div class="kRow">
           <div class="kLabel">{{'applications.settings.myUserSettings.password' | translate}}</div>
-          <span><a
-            (click)="_changePassword()">{{'applications.settings.myUserSettings.editUser' | translate}}</a></span>
+          <span>
+            <a (click)="_changePassword()">{{'applications.settings.myUserSettings.editUser' | translate}}</a>
+          </span>
         </div>
       </div>
     </section>
@@ -44,24 +45,27 @@
   <kPopupWidget #editUserNamePopup [popupWidth]="600" [popupHeight]="455" [modal]="true" [preventPageScroll]="true">
     <ng-template>
       <kEditUserName [parentPopupWidget]="editUserNamePopup"
-                     [user]="user"
-                     (doUpdateLoginData)="updateLoginData($event, 'editUserNamePopup')"></kEditUserName>
+                     [user]="_user"
+                     [blockerMessage]="_updateBlockerMessage"
+                     (updateLoginData)="_updateLoginData($event, 'editUserNamePopup')"></kEditUserName>
     </ng-template>
   </kPopupWidget>
 
   <kPopupWidget #editEmailAddressPopup [popupWidth]="600" [popupHeight]="370" [modal]="true" [preventPageScroll]="true">
     <ng-template>
       <kEditEmailAddress [parentPopupWidget]="editEmailAddressPopup"
-                         [user]="user"
-                         (doUpdateLoginData)="updateLoginData($event, 'editEmailAddressPopup')"></kEditEmailAddress>
+                         [user]="_user"
+                         [blockerMessage]="_updateBlockerMessage"
+                         (updateLoginData)="_updateLoginData($event, 'editEmailAddressPopup')"></kEditEmailAddress>
     </ng-template>
   </kPopupWidget>
 
   <kPopupWidget #changePasswordPopup [popupWidth]="600" [popupHeight]="440" [modal]="true" [preventPageScroll]="true">
     <ng-template>
       <kChangePassword [parentPopupWidget]="changePasswordPopup"
-                       [user]="user"
-                       (doUpdateLoginData)="updateLoginData($event, 'changePasswordPopup')"></kChangePassword>
+                       [user]="_user"
+                       [blockerMessage]="_updateBlockerMessage"
+                       (updateLoginData)="_updateLoginData($event, 'changePasswordPopup')"></kChangePassword>
     </ng-template>
   </kPopupWidget>
 </k-area-blocker>

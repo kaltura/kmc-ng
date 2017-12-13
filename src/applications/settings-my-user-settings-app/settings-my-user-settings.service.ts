@@ -1,36 +1,52 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaMultiRequest } from 'kaltura-ngx-client';
 import { UserGetAction } from 'kaltura-ngx-client/api/types/UserGetAction';
 import { UserRoleGetAction } from 'kaltura-ngx-client/api/types/UserRoleGetAction';
-import { UserUpdateLoginDataAction } from 'kaltura-ngx-client/api/types/UserUpdateLoginDataAction';
+import { UserUpdateLoginDataAction, UserUpdateLoginDataActionArgs } from 'kaltura-ngx-client/api/types/UserUpdateLoginDataAction';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
+import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
 
 @Injectable()
 export class SettingsMyUserSettingsService {
-  constructor(private _kalturaServerClient: KalturaClient) {
+  constructor(private _kalturaServerClient: KalturaClient,
+              private _appLocalization: AppLocalization) {
   }
 
-  public getUserData(): Observable<any> {
-    return this._kalturaServerClient.request(new UserGetAction())
-      .catch(() => {
-        return Observable.throw(new Error('Error occurred in action \'getUserData\''));
+  public getUserData(): Observable<{ user: KalturaUser, role: KalturaUserRole }> {
+    const request = new KalturaMultiRequest(
+      new UserGetAction(),
+      new UserRoleGetAction({ userRoleId: 0 })
+        .setDependency(['userRoleId', 0, 'roleIds'])
+    );
+
+    return this._kalturaServerClient
+      .multiRequest(request)
+      .map(([user, role]) => {
+        if (user.error || role.error) {
+          throw new Error((user.error || role.error).message)
+        }
+
+        return {
+          user: user.result,
+          role: role.result
+        }
       })
-  }
-
-  public getRoleDescription(roleIds: string): Observable<any> {
-    return this._kalturaServerClient.request(new UserRoleGetAction({ userRoleId: parseInt(roleIds) }))
       .catch(() => {
-        return Observable.throw(new Error('Error occurred in action \'getRoleDescription\''));
-      })
+        return Observable.throw(new Error(this._appLocalization.get('applications.settings.myUserSettings.errors.getUserData')));
+      });
   }
 
-  public updateLoginData(userData: any): Observable<any> {
-    return this._kalturaServerClient.request(
-      new UserUpdateLoginDataAction(userData)
-    )
+  public updateLoginData(userData: UserUpdateLoginDataActionArgs): Observable<void> {
+    return this._kalturaServerClient
+      .request(new UserUpdateLoginDataAction(userData))
       .catch(error => {
-        return Observable.throw(new Error(error && error.message ? error.message : 'Error occurred in action \'updateLoginData\''));
+        const message = error && error.message
+          ? error.message
+          : this._appLocalization.get('applications.settings.myUserSettings.errors.updateUser');
+        return Observable.throw(new Error(message));
       })
   }
 }

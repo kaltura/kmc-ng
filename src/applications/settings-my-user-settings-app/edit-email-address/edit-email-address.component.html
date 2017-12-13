@@ -1,6 +1,6 @@
-<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+<k-area-blocker [message]="blockerMessage">
   <div class="kEditWin">
-    <form [formGroup]="editEmailAddressForm" novalidate>
+    <form [formGroup]="_editEmailAddressForm" novalidate>
       <div class="kHeader">
         <span class="kTitle">{{'applications.settings.myUserSettings.editEmailAddress' | translate}}</span>
       </div>
@@ -10,9 +10,8 @@
           <span class="kLabel">{{'applications.settings.myUserSettings.email' | translate}}</span>
           <div>
             <input class="kControl" formControlName="email" pInputText
-                   [ngClass]="{'kHasError':!editEmailAddressForm.controls['email'].valid && editEmailAddressForm.controls['email'].touched}">
-            <div
-              *ngIf="editEmailAddressForm.controls['email'].touched && editEmailAddressForm.controls['email'].hasError('required')"
+                   [ngClass]="{'kHasError':!_editEmailAddressForm.controls['email'].valid && _editEmailAddressForm.controls['email'].touched}">
+            <div *ngIf="_editEmailAddressForm.controls['email'].touched && _editEmailAddressForm.controls['email'].hasError('required')"
               class="error">
               {{'applications.settings.myUserSettings.errors.required' | translate}}
             </div>
@@ -25,14 +24,13 @@
                    class="kControl"
                    formControlName="password"
                    pInputText
-                   [ngClass]="{'kHasError':!editEmailAddressForm.controls['password'].valid && editEmailAddressForm.controls['password'].touched}">
-            <div
-              *ngIf="editEmailAddressForm.controls['password'].touched && editEmailAddressForm.controls['password'].hasError('required')"
+                   [ngClass]="{'kHasError':!_editEmailAddressForm.controls['password'].valid && _editEmailAddressForm.controls['password'].touched}">
+            <div *ngIf="_editEmailAddressForm.controls['password'].touched && _editEmailAddressForm.controls['password'].hasError('required')"
               class="error">
               {{'applications.settings.myUserSettings.errors.required' | translate}}
             </div>
-            <div class="kPasswordRequired">{{'applications.settings.myUserSettings.passwordRequiredEmail' |
-              translate}}
+            <div class="kPasswordRequired">
+              {{'applications.settings.myUserSettings.passwordRequiredEmail' | translate}}
             </div>
           </div>
         </div>
@@ -40,12 +38,12 @@
 
       <div class="kFooter">
         <button pButton class="kButtonDefault kButton" (click)="_closePopup()"
-                label="{{'applications.settings.myUserSettings.cancel' | translate}}"></button>
+                [label]="'applications.settings.myUserSettings.cancel' | translate"></button>
         <button
           pButton class="kButtonBranded kButton"
           label="{{'applications.settings.myUserSettings.save' | translate}}"
-          [disabled]="editEmailAddressForm.pristine"
-          (click)="updateLoginData()"></button>
+          [disabled]="_editEmailAddressForm.pristine"
+          (click)="_updateLoginData()"></button>
       </div>
     </form>
   </div>

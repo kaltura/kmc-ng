@@ -1190,7 +1190,9 @@
         "errors": {
           "required": "This field is required",
           "doNotMuchPasswords": "Password fields do not match",
-          "connection": "Error connecting to server"
+          "connection": "Error connecting to server",
+          "getUserData": "Error occurred during getting user data",
+          "updateUser": "Error occurred during updating user data"
         }
       }
     }

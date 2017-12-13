@@ -6,6 +6,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
 import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
+import { UserUpdateLoginDataActionArgs } from 'kaltura-ngx-client/api/types/UserUpdateLoginDataAction';
 
 @Component({
   selector: 'kmc-settings-my-user-settings',
@@ -19,133 +20,14 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
   @ViewChild('editEmailAddressPopup') public editEmailAddressPopup: PopupWidgetComponent;
   @ViewChild('changePasswordPopup') public changePasswordPopup: PopupWidgetComponent;
 
-  private _areaBlockerMessage: AreaBlockerMessage = null;
-  user: KalturaUser = null;
-  role: KalturaUserRole = null;
-  _isBusy = false;
+  public _areaBlockerMessage: AreaBlockerMessage = null;
+  public _updateBlockerMessage: AreaBlockerMessage = null;
+  public _user: KalturaUser = null;
+  public _role: KalturaUserRole = null;
+  public _isBusy = false;
 
-  constructor(public _myUserSettingsStore: SettingsMyUserSettingsService,
+  constructor(private _myUserSettingsStore: SettingsMyUserSettingsService,
               private _appLocalization: AppLocalization) {
-  }
-
-  private _getUserData(): void {
-    this._isBusy = true;
-    this._myUserSettingsStore.getUserData()
-      .cancelOnDestroy(this)
-      .subscribe(
-        response => {
-          this._isBusy = false;
-          this.user = response;
-          this._getRoleDescription(this.user.roleIds);
-        },
-        error => {
-          this._areaBlockerMessage = new AreaBlockerMessage(
-            {
-              message: error.message,
-              buttons: [
-                {
-                  label: this._appLocalization.get('app.common.retry'),
-                  action: () => {
-                    this._isBusy = false;
-                    this._areaBlockerMessage = null;
-                    this._getUserData();
-                  }
-                },
-                {
-                  label: this._appLocalization.get('app.common.cancel'),
-                  action: () => {
-                    this._isBusy = false;
-                    this._areaBlockerMessage = null;
-                  }
-                }
-              ]
-            }
-          )
-        }
-      );
-  }
-
-  private _getRoleDescription(roleIds: string): void {
-    this._isBusy = true;
-    this._myUserSettingsStore.getRoleDescription(roleIds)
-      .cancelOnDestroy(this)
-      .subscribe(
-        response => {
-          this._isBusy = false;
-          this.role = response;
-        },
-        error => {
-          this._areaBlockerMessage = new AreaBlockerMessage(
-            {
-              message: error.message,
-              buttons: [
-                {
-                  label: this._appLocalization.get('app.common.retry'),
-                  action: () => {
-                    this._isBusy = false;
-                    this._areaBlockerMessage = null;
-                    this._getUserData();
-                  }
-                },
-                {
-                  label: this._appLocalization.get('app.common.cancel'),
-                  action: () => {
-                    this._isBusy = false;
-                    this._areaBlockerMessage = null;
-                  }
-                }
-              ]
-            }
-          )
-        }
-      );
-  }
-
-  public updateLoginData(userData: any, popup: string): void {
-    this._myUserSettingsStore.updateLoginData(userData)
-      .cancelOnDestroy(this)
-      .tag('block-shell')
-      .subscribe(
-        () => {
-          this[popup].close();
-          this._getUserData();
-        },
-        error => {
-          let buttons = [{
-            label: this._appLocalization.get('app.common.cancel'),
-            action: () => {
-              this._areaBlockerMessage = null;
-            }
-          }];
-          if (error.message === this._appLocalization.get('applications.settings.myUserSettings.errors.connection')) {
-            buttons.push({
-              label: this._appLocalization.get('app.common.retry'),
-              action: () => {
-                this._areaBlockerMessage = null;
-                this.updateLoginData(userData, popup);
-              }
-            })
-          }
-          this._areaBlockerMessage = new AreaBlockerMessage(
-            {
-              message: error.message,
-              buttons: buttons
-            }
-          )
-        }
-      )
-  }
-
-  private _editUserName(): void {
-    this.editUserNamePopup.open();
-  }
-
-  private _editEmailAddress(): void {
-    this.editEmailAddressPopup.open();
-  }
-
-  private _changePassword(): void {
-    this.changePasswordPopup.open();
   }
 
   ngOnInit() {
@@ -153,5 +35,86 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+  }
+
+  private _getUserData(): void {
+    this._isBusy = true;
+    this._areaBlockerMessage = null;
+    this._myUserSettingsStore
+      .getUserData()
+      .cancelOnDestroy(this)
+      .subscribe(
+        ({ user, role }) => {
+          this._isBusy = false;
+          this._areaBlockerMessage = null;
+          this._user = user;
+          this._role = role;
+        },
+        error => {
+          this._areaBlockerMessage = new AreaBlockerMessage({
+            message: error.message,
+            buttons: [
+              {
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => {
+                  this._isBusy = false;
+                  this._areaBlockerMessage = null;
+                  this._getUserData();
+                }
+              },
+              {
+                label: this._appLocalization.get('app.common.cancel'),
+                action: () => {
+                  this._isBusy = false;
+                  this._areaBlockerMessage = null;
+                }
+              }
+            ]
+          });
+        });
+  }
+
+  public _updateLoginData(userData: UserUpdateLoginDataActionArgs, popup: string): void {
+    this._updateBlockerMessage = null;
+    this._myUserSettingsStore
+      .updateLoginData(userData)
+      .cancelOnDestroy(this)
+      .tag('block-shell')
+      .subscribe(
+        () => {
+          this._updateBlockerMessage = null;
+          this[popup].close();
+          this._getUserData();
+        },
+        error => {
+          const buttons = [{
+            label: this._appLocalization.get('app.common.cancel'),
+            action: () => this._updateBlockerMessage = null
+          }];
+          if (error.message === this._appLocalization.get('applications.settings.myUserSettings.errors.connection')) {
+            buttons.push({
+              label: this._appLocalization.get('app.common.retry'),
+              action: () => this._updateLoginData(userData, popup)
+            })
+          }
+
+          this._updateBlockerMessage = new AreaBlockerMessage({
+            message: error.message,
+            buttons: buttons
+          });
+        }
+      )
+  }
+
+  public _editUserName(): void {
+    this.editUserNamePopup.open();
+  }
+
+  public _editEmailAddress(): void {
+    this.editEmailAddressPopup.open();
+  }
+
+  public _changePassword(): void {
+    this.changePasswordPopup.open();
   }
 }
