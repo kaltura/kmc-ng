@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
-import { KalturaClient } from '@kaltura-ng/kaltura-client';
 import { Observable } from 'rxjs/Observable';
-import { UserGetAction } from 'kaltura-typescript-client/types/UserGetAction';
-import { UserRoleGetAction } from 'kaltura-typescript-client/types/UserRoleGetAction';
-import { UserUpdateLoginDataAction } from 'kaltura-typescript-client/types/UserUpdateLoginDataAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { UserGetAction } from 'kaltura-ngx-client/api/types/UserGetAction';
+import { UserRoleGetAction } from 'kaltura-ngx-client/api/types/UserRoleGetAction';
+import { UserUpdateLoginDataAction } from 'kaltura-ngx-client/api/types/UserUpdateLoginDataAction';
 
 @Injectable()
 export class SettingsMyUserSettingsService {
-  constructor(
-    private _kalturaServerClient: KalturaClient
-  ) {}
+  constructor(private _kalturaServerClient: KalturaClient) {
+  }
 
   public getUserData(): Observable<any> {
     return this._kalturaServerClient.request(new UserGetAction())

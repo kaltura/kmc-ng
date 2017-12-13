@@ -10,7 +10,7 @@
           <span class="kLabel">{{'applications.settings.myUserSettings.email' | translate}}</span>
           <div>
             <input class="kControl" formControlName="email" pInputText
-              [ngClass]="{'kHasError':!editEmailAddressForm.controls['email'].valid && editEmailAddressForm.controls['email'].touched}">
+                   [ngClass]="{'kHasError':!editEmailAddressForm.controls['email'].valid && editEmailAddressForm.controls['email'].touched}">
             <div
               *ngIf="editEmailAddressForm.controls['email'].touched && editEmailAddressForm.controls['email'].hasError('required')"
               class="error">
@@ -31,13 +31,16 @@
               class="error">
               {{'applications.settings.myUserSettings.errors.required' | translate}}
             </div>
-            <div class="kPasswordRequired">{{'applications.settings.myUserSettings.passwordRequiredEmail' | translate}}</div>
+            <div class="kPasswordRequired">{{'applications.settings.myUserSettings.passwordRequiredEmail' |
+              translate}}
+            </div>
           </div>
         </div>
       </div>
 
       <div class="kFooter">
-        <button pButton class="kButtonDefault kButton" (click)="_closePopup()" label="{{'applications.settings.myUserSettings.cancel' | translate}}"></button>
+        <button pButton class="kButtonDefault kButton" (click)="_closePopup()"
+                label="{{'applications.settings.myUserSettings.cancel' | translate}}"></button>
         <button
           pButton class="kButtonBranded kButton"
           label="{{'applications.settings.myUserSettings.save' | translate}}"

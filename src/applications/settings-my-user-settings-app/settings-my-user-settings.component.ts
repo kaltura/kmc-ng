@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SettingsMyUserSettingsService } from './settings-my-user-settings.service';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { KalturaUser } from 'kaltura-typescript-client/types/KalturaUser';
-import { KalturaUserRole } from 'kaltura-typescript-client/types/KalturaUserRole';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { KalturaUser } from 'kaltura-ngx-client/api/types/KalturaUser';
+import { KalturaUserRole } from 'kaltura-ngx-client/api/types/KalturaUserRole';
 
 @Component({
   selector: 'kmc-settings-my-user-settings',
@@ -24,10 +24,9 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
   role: KalturaUserRole = null;
   _isBusy = false;
 
-  constructor(
-    public _myUserSettingsStore: SettingsMyUserSettingsService,
-    private _appLocalization: AppLocalization
-  ) {}
+  constructor(public _myUserSettingsStore: SettingsMyUserSettingsService,
+              private _appLocalization: AppLocalization) {
+  }
 
   private _getUserData(): void {
     this._isBusy = true;
@@ -118,7 +117,7 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
               this._areaBlockerMessage = null;
             }
           }];
-          if(error.message === this._appLocalization.get('applications.settings.myUserSettings.errors.connection')) {
+          if (error.message === this._appLocalization.get('applications.settings.myUserSettings.errors.connection')) {
             buttons.push({
               label: this._appLocalization.get('app.common.retry'),
               action: () => {
@@ -153,5 +152,6 @@ export class SettingsMyUserSettingsComponent implements OnInit, OnDestroy {
     this._getUserData();
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+  }
 }

@@ -10,7 +10,7 @@
           <span class="kLabel">{{'applications.settings.myUserSettings.firstName' | translate}}</span>
           <div>
             <input class="kControl" formControlName="firstName" pInputText
-              [ngClass]="{'kHasError':!editUserNameForm.controls['firstName'].valid && editUserNameForm.controls['firstName'].touched}">
+                   [ngClass]="{'kHasError':!editUserNameForm.controls['firstName'].valid && editUserNameForm.controls['firstName'].touched}">
             <div
               *ngIf="editUserNameForm.controls['firstName'].touched && editUserNameForm.controls['firstName'].hasError('required')"
               class="error">
@@ -22,7 +22,7 @@
           <span class="kLabel">{{'applications.settings.myUserSettings.lastName' | translate}}</span>
           <div>
             <input class="kControl" formControlName="lastName" pInputText
-              [ngClass]="{'kHasError':!editUserNameForm.controls['lastName'].valid && editUserNameForm.controls['lastName'].touched}">
+                   [ngClass]="{'kHasError':!editUserNameForm.controls['lastName'].valid && editUserNameForm.controls['lastName'].touched}">
             <div
               *ngIf="editUserNameForm.controls['lastName'].touched && editUserNameForm.controls['lastName'].hasError('required')"
               class="error">
@@ -41,15 +41,17 @@
             <div
               *ngIf="editUserNameForm.controls['password'].touched && editUserNameForm.controls['password'].hasError('required')"
               class="error">
-                {{'applications.settings.myUserSettings.errors.required' | translate}}
+              {{'applications.settings.myUserSettings.errors.required' | translate}}
             </div>
-            <div class="kPasswordRequired">{{'applications.settings.myUserSettings.passwordRequiredName' | translate}}</div>
+            <div class="kPasswordRequired">{{'applications.settings.myUserSettings.passwordRequiredName' | translate}}
+            </div>
           </div>
         </div>
       </div>
 
       <div class="kFooter">
-        <button pButton class="kButtonDefault kButton" (click)="_closePopup()" label="{{'applications.settings.myUserSettings.cancel' | translate}}"></button>
+        <button pButton class="kButtonDefault kButton" (click)="_closePopup()"
+                label="{{'applications.settings.myUserSettings.cancel' | translate}}"></button>
         <button
           pButton class="kButtonBranded kButton"
           label="{{'applications.settings.myUserSettings.save' | translate}}"
