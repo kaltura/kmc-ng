@@ -7,6 +7,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { CategoriesService, SortDirection } from '../categories.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { routingAliases } from 'app-shared/app-routing-aliases';
 
 @Component({
     selector: 'kCategoriesList',
@@ -99,12 +100,12 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
               header: this._appLocalization.get('applications.content.categories.editCategory'),
               message: this._appLocalization.get('applications.content.categories.editWithEditWarningTags'),
               accept: () => {
-                this.router.navigate(['/content/categories/category', event.categoryID]);
+                this.router.navigate(routingAliases.content.category(event.categoryID));
               }
             }
           );
         } else {
-          this.router.navigate(['/content/categories/category', event.categoryID]);
+          this.router.navigate(routingAliases.content.category(event.categoryID));
         }
         break;
       case 'delete':

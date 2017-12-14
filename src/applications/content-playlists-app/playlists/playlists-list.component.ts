@@ -14,6 +14,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 import * as moment from 'moment';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import { routingAliases } from 'app-shared/app-routing-aliases';
 
 export interface Filter {
   type: string;
@@ -243,7 +244,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
         if (event.playlist.playlistType === KalturaPlaylistType.dynamic) {
           this._onShowNotSupportedMsg(false);
         } else {
-          this.router.navigate(['/content/playlists/playlist', event.playlist.id]);
+          this.router.navigate(routingAliases.content.playlist(event.playlist.id));
         }
         break;
       case 'delete':

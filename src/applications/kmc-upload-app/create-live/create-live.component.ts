@@ -9,6 +9,7 @@ import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/po
 import {KalturaLive} from './kaltura-live-stream/kaltura-live-stream.interface';
 import {ManualLive} from './manual-live/manual-live.interface';
 import {UniversalLive} from './universal-live/universal-live.interface';
+import { routingAliases } from 'app-shared/app-routing-aliases';
 
 export enum StreamTypes {
   kaltura,
@@ -168,7 +169,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
         header: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.title'),
         message: this._appLocalization.get('applications.upload.prepareLive.confirmEntryNavigation.message'),
         accept: () => {
-          this._router.navigate(['/content/entries/entry', id], {queryParams: {reloadEntriesListOnNavigateOut: true}})
+          this._router.navigate(routingAliases.content.entry(id),{queryParams: {reloadEntriesListOnNavigateOut: true}})
           this._showConfirmationOnClose = false;
           this.parentPopupWidget.close();
         },

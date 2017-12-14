@@ -4,6 +4,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { PlaylistContentWidget } from '../playlist-content-widget.service';
+import { routingAliases } from 'app-shared/app-routing-aliases';
 
 @Component({
   selector: 'kPlaylistEntriesTable',
@@ -116,8 +117,8 @@ export class PlaylistEntriesTableComponent implements AfterViewInit, OnInit, OnD
     this.sortChanged.emit(event);
   }
 
-  public _goToEntry(entryId: KalturaMediaEntry): void {
-    this._router.navigate(['/content/entries/entry', entryId]);
+  public _goToEntry(entryId: string): void {
+    this._router.navigate(routingAliases.content.entry(entryId));
   }
 
   public _openActionsMenu(event: any, rowIndex: number, entry: KalturaMediaEntry) {

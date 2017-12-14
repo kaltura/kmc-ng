@@ -7,6 +7,7 @@ import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-st
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { ContentEntriesAppService } from '../content-entries-app.service';
+import { routingAliases } from 'app-shared/app-routing-aliases';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -72,7 +73,7 @@ export class EntriesListHolderComponent {
 
   private _viewEntry(entryId: string): void {
     if (entryId) {
-      this._router.navigate(['/content/entries/entry', entryId]);
+      this._router.navigate(routingAliases.content.entry(entryId));
     } else {
       console.error('EntryId is not defined');
     }
