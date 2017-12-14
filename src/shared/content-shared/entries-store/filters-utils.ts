@@ -50,7 +50,7 @@ export class FiltersUtils {
                 }
             }
 
-            for(const propertyName in source)
+            for(const propertyName in compareTo)
             {
                 if (compareTo.hasOwnProperty(propertyName))
                 {

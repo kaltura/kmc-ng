@@ -6,7 +6,6 @@ import {
 } from 'app-shared/content-shared/entries-store/entries-filters.service';
 
 import * as moment from 'moment';
-import { unitOfTime } from 'moment';
 
 @Component({
     selector: 'k-entries-list-tags',
