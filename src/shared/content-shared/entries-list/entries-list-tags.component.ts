@@ -6,6 +6,11 @@ import {
 } from 'app-shared/content-shared/entries-store/entries-filters.service';
 
 import * as moment from 'moment';
+import { ListType } from 'app-shared/content-shared/entries-store/filter-types/list-type';
+
+
+
+const listTypes: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions' ];
 
 @Component({
     selector: 'k-entries-list-tags',
@@ -25,25 +30,27 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
     removeTag(tag: any) {
 
-        switch (tag.type) {
-            case "mediaType":
-                const previousData = this._entriesFilters.cloneFilter('mediaTypes', []);
+        if (listTypes.indexOf(tag.type))
+        {
+            const previousData = this._entriesFilters.cloneFilter(tag.type, []);
 
-                previousData.splice(
-                    previousData.findIndex(item => item.value === tag.value)
-                    , 1
-                );
+            previousData.splice(
+                previousData.findIndex(item => item.value === tag.value)
+                , 1
+            );
 
-                this._entriesFilters.update({
-                    mediaTypes: previousData
-                });
-                break;
-            case "freetext":
-                this._entriesFilters.update({freetext: null});
-                break;
-            case "createdAt":
-                this._entriesFilters.update({createdAt: {fromDate: null, toDate: null}});
-                break;
+            this._entriesFilters.update({
+                [tag.type]: previousData
+            });
+        }else {
+            switch (tag.type) {
+                case "freetext":
+                    this._entriesFilters.update({freetext: null});
+                    break;
+                case "createdAt":
+                    this._entriesFilters.update({createdAt: {fromDate: null, toDate: null}});
+                    break;
+            }
         }
     }
 
@@ -64,7 +71,8 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 'pageSize',
                 'pageIndex',
                 'sortBy',
-                'sortDirection'
+                'sortDirection',
+                ...listTypes
             ]
         ));
     }
@@ -78,9 +86,11 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             this._syncTagOfCreatedAt();
         }
 
-        if (typeof updates.mediaTypes !== 'undefined') {
-            this._syncTagsOfMediaTypes();
-        }
+        listTypes.forEach(listType => {
+            if (typeof updates[listType] !== 'undefined') {
+                this._syncTagsOfListType(listType);
+            }
+        });
     }
 
     private _registerToFilterStoreDataChanges(): void {
@@ -138,10 +148,11 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             });
         }
     }
-    private _syncTagsOfMediaTypes(): void {
 
-        const currentValue =  this._entriesFilters.cloneFilter('mediaTypes', []);
-        const tagsFilters = this._filterTags.filter(item => item.type === 'mediaType');
+    private _syncTagsOfListType(filterName: keyof EntriesFilters): void {
+
+        const currentValue =  <ListType>this._entriesFilters.cloneFilter(filterName, []);
+        const tagsFilters = this._filterTags.filter(item => item.type === filterName);
 
         const tagsFiltersMap = this._entriesFilters.toMap(tagsFilters, 'value');
         const currentValueMap = this._entriesFilters.toMap(currentValue, 'value');
@@ -153,17 +164,16 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 1);
         });
 
-        // TODO sakal remove explicit types
+        // TODO sakal fix tooltip
         diff.added.forEach(item => {
             this._filterTags.push({
-                type: 'mediaType',
+                type: filterName,
                 value: (<any>item).value,
                 label: (<any>item).label,
                 tooltip: {token: 'applications.content.filters.mediaType', args: {'0': (<any>item).label}}
             });
         });
     }
-
 
     ngOnDestroy() {
     }
