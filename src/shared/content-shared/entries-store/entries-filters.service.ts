@@ -11,9 +11,19 @@ import {
     GroupedListAdapter,
     GroupedListType
 } from 'app-shared/content-shared/entries-store/filter-types/grouped-list-type';
+import { NumberTypeAdapter } from 'app-shared/content-shared/entries-store/filter-types/number-type';
+import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
+import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
+import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
+import { SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 
 export interface EntriesFilters {
     freetext: string,
+    pageSize: number,
+    pageIndex: number,
+    sortBy: string,
+    sortDirection: number,
+    fields: string,
     createdAt: DatesRangeType,
     scheduledAt: DatesRangeType,
     mediaTypes: ListType,
@@ -30,6 +40,7 @@ export interface EntriesFilters {
 }
 
 
+
 @Injectable()
 export class EntriesFiltersStore extends FiltersStoreBase<EntriesFilters> {
 
@@ -40,6 +51,11 @@ export class EntriesFiltersStore extends FiltersStoreBase<EntriesFilters> {
     protected _createEmptyStore(): EntriesFilters {
         return {
             freetext: '',
+            pageSize: 50,
+            pageIndex: 0,
+            sortBy: 'createdAt',
+            sortDirection: SortDirection.Desc,
+            fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,tags,categoriesIds,downloadUrl',
             createdAt: {fromDate: null, toDate: null},
             scheduledAt: {fromDate: null, toDate: null},
             mediaTypes: [],
@@ -59,6 +75,11 @@ export class EntriesFiltersStore extends FiltersStoreBase<EntriesFilters> {
     protected _getTypeAdaptersMapping(): TypeAdaptersMapping<EntriesFilters> {
         return {
             freetext: new StringTypeAdapter(),
+            pageSize: new NumberTypeAdapter(),
+            pageIndex: new NumberTypeAdapter(),
+            sortBy: new StringTypeAdapter(),
+            sortDirection: new NumberTypeAdapter(),
+            fields: new StringTypeAdapter(),
             createdAt: new DatesRangeAdapter(),
             scheduledAt: new DatesRangeAdapter(),
             mediaTypes: new ListAdapter(),
@@ -74,82 +95,4 @@ export class EntriesFiltersStore extends FiltersStoreBase<EntriesFilters> {
             customMetadata: new GroupedListAdapter()
         };
     }
-
-    public toRequest(request: { filter: KalturaMediaEntryFilter, advancedSearch: KalturaSearchOperator }) : void{
-        // TODO sakal replace with adapters
-        const data = this._getData();
-
-        this._logger.info('assign filters to request', { filters: data});
-
-        if (data.freetext) {
-            request.filter.freeText = data.freetext;
-        }
-
-
-        if (data.createdAt ) {
-            if (data.createdAt.fromDate) {
-                request.filter.createdAtGreaterThanOrEqual = KalturaUtils.getStartDateValue(data.createdAt.fromDate);
-            }
-
-            if (data.createdAt.toDate) {
-                request.filter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(data.createdAt.toDate);
-            }
-        }
-
-        const mediaTypeFilters = data.mediaTypes.map(item => item.value).join(',');
-
-        if (mediaTypeFilters) {
-            request.filter.mediaTypeIn = mediaTypeFilters;
-        }
-
-        const ingestionStatuses = data.ingestionStatuses.map(item => item.value).join(',');
-
-        if (ingestionStatuses) {
-            request.filter.statusIn = ingestionStatuses;
-        }
-
-        data.timeScheduling.forEach(item => {
-            switch (item.value) {
-                case 'past':
-                    if (request.filter.endDateLessThanOrEqual === undefined || request.filter.endDateLessThanOrEqual < (new Date())) {
-                        request.filter.endDateLessThanOrEqual = (new Date());
-                    }
-                    break;
-                case 'live':
-                    if (request.filter.startDateLessThanOrEqualOrNull === undefined || request.filter.startDateLessThanOrEqualOrNull > (new Date())) {
-                        request.filter.startDateLessThanOrEqualOrNull = (new Date());
-                    }
-                    if (request.filter.endDateGreaterThanOrEqualOrNull === undefined || request.filter.endDateGreaterThanOrEqualOrNull < (new Date())) {
-                        request.filter.endDateGreaterThanOrEqualOrNull = (new Date());
-                    }
-                    break;
-                case 'future':
-                    if (request.filter.startDateGreaterThanOrEqual === undefined || request.filter.startDateGreaterThanOrEqual > (new Date())) {
-                        request.filter.startDateGreaterThanOrEqual = (new Date());
-                    }
-                    break;
-                case 'scheduled':
-                    if (data.scheduledAt.fromDate) {
-                        if (request.filter.startDateGreaterThanOrEqual === undefined
-                            || request.filter.startDateGreaterThanOrEqual > (KalturaUtils.getStartDateValue(data.scheduledAt.fromDate))
-                        ) {
-                            request.filter.startDateGreaterThanOrEqual = (KalturaUtils.getStartDateValue(data.scheduledAt.fromDate));
-                        }
-                    }
-
-                    if (data.scheduledAt.toDate) {
-                        if (request.filter.endDateLessThanOrEqual === undefined
-                            || request.filter.endDateLessThanOrEqual < (KalturaUtils.getEndDateValue(data.scheduledAt.toDate))
-                        ) {
-                            request.filter.endDateLessThanOrEqual = (KalturaUtils.getEndDateValue(data.scheduledAt.toDate));
-                        }
-                    }
-
-                    break;
-                default:
-                    break
-            }
-        });
-    }
-
 }

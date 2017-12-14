@@ -3,7 +3,7 @@ import { TypeAdapterBase } from './type-adapter-base';
 export type SimpleTypes = string | number | boolean;
 
 export abstract class SimpleTypeAdapterBase<T extends SimpleTypes> extends TypeAdapterBase<T> {
-    protected abstract _validateType(value: any);
+    //protected abstract _validateType(value: any);
 
     // copy(value: T): T {
     //     this._validateType(value);
@@ -21,5 +21,10 @@ export abstract class SimpleTypeAdapterBase<T extends SimpleTypes> extends TypeA
 
     hasChanges(currentValue: T, previousValue: T): boolean {
         return previousValue !== currentValue;
+    }
+
+    get isValueImmutable(): boolean
+    {
+        return true;
     }
 }

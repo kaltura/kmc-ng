@@ -6,7 +6,6 @@ import { environment } from 'app-environment';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { EntriesRefineFiltersService, RefineGroup } from './entries-refine-filters.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import {
     EntriesFilters,
     EntriesFiltersStore
@@ -29,7 +28,7 @@ export interface FiltersGroup {
   templateUrl: './entries-refine-filters.component.html',
   styleUrls: ['./entries-refine-filters.component.scss']
 })
-export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterViewInit {
+export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
 
@@ -56,22 +55,17 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
   constructor(private _entriesRefineFilters: EntriesRefineFiltersService,
               private _entriesFilters: EntriesFiltersStore,
               private _primeTreeDataProvider: PrimeTreeDataProvider,
-              private _entriesStore: EntriesStore,
               private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
-      this._loadFilters();
+      this._prepare();
   }
 
   ngOnDestroy() {
 
   }
 
-  ngAfterViewInit()
-  {
-
-  }
 
     private _restoreFiltersState(): void {
         this._updateComponentState(this._entriesFilters.cloneFilters(
@@ -178,7 +172,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
         }
     }
 
-    private _loadFilters(): void {
+    private _prepare(): void {
         this._showLoader = true;
         this._entriesRefineFilters.getFilters()
             .cancelOnDestroy(this)
@@ -198,7 +192,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy, AfterV
                             label: 'Retry',
                             action: () => {
                                 this._blockerMessage = null;
-                                this._loadFilters();
+                                this._prepare();
                             }
                         }
                         ]

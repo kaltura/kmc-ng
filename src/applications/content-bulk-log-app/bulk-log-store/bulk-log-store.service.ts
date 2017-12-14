@@ -13,7 +13,6 @@ import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUploa
 import { BulkUploadAbortAction } from 'kaltura-ngx-client/api/types/BulkUploadAbortAction';
 import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item';
 import { Subject } from 'rxjs/Subject';
-import { QueryRequestArgs } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { BulkListAction } from 'kaltura-ngx-client/api/types/BulkListAction';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { KalturaMultiResponse } from 'kaltura-ngx-client';
@@ -49,7 +48,7 @@ export class BulkLogStoreService implements OnDestroy {
     loading: false,
     errorMessage: null
   });
-  private _querySource = new Subject<QueryRequestArgs>();
+  private _querySource = new Subject<any>();
   private _activeFilters = new BehaviorSubject<{ filters: Array<FilterItem> }>({ filters: [] });
   private _activeFiltersMap: { [key: string]: Array<FilterItem> } = {};
   private _queryData: QueryData = {
@@ -206,7 +205,7 @@ export class BulkLogStoreService implements OnDestroy {
 
     this._stateSource.next({ loading: true, errorMessage: null });
 
-    const queryArgs: QueryRequestArgs = Object.assign({},
+    const queryArgs: any = Object.assign({},
       {
         addedFilters,
         removedFilters,

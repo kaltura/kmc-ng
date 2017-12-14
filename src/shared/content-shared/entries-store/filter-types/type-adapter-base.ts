@@ -6,4 +6,9 @@ export abstract class TypeAdapterBase<T>
     validate(value: any): { failed: boolean, failureCode: string } {
         return {failed: false, failureCode: null};
     }
+
+    get isValueImmutable(): boolean
+    {
+        return false; // danger - don't override unless you are cetrain this  type is immutable
+    }
 }

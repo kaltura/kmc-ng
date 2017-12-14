@@ -45,11 +45,14 @@ export abstract class FiltersStoreBase<T extends { [key: string]: any }> {
     public cloneFilter<K extends keyof T>(filterName: K, defaultValue: T[K]): T[K] | null {
         const adapter = this._typeAdaptersMapping[filterName];
         const value: any = this._data[filterName];
-        if (value) {
+        if (value !== null && typeof value !== 'undefined') {
             if (value.asMutable) {
                 return value.asMutable({deep: true});
             }
-            else {
+            else if (adapter.isValueImmutable)
+            {
+                return value;
+            }else{
                 console.error(`[filters-store-base]: found filter data for '${filterName}' but failed to provide a clone for that value. returning default value instead`);
             }
         }

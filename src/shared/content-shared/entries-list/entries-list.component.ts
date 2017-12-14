@@ -6,10 +6,10 @@ import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-s
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { BrowserService } from 'app-shared/kmc-shell';
 import {
+    EntriesFilters,
     EntriesFiltersStore
 } from 'app-shared/content-shared/entries-store/entries-filters.service';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { Router } from '@angular/router';
+
 import * as moment from 'moment';
 
 @Component({
@@ -45,10 +45,8 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     sortDirection: SortDirection.Desc
   };
 
-  constructor(private _entriesStore: EntriesStore,
-              private _store: EntriesFiltersStore,
-              private appLocalization: AppLocalization,
-              private router: Router,
+  constructor(private _entriesFilters: EntriesFiltersStore,
+              private _entriesStore: EntriesStore,
               private _browserService: BrowserService) {
   }
 
@@ -57,22 +55,22 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
       switch (tag.type) {
           case "mediaType":
-              const previousData = this._store.cloneFilter('mediaTypes', []);
+              const previousData = this._entriesFilters.cloneFilter('mediaTypes', []);
 
               previousData.splice(
                   previousData.findIndex(item => item.value === tag.value)
                   , 1
               );
 
-              this._store.update({
+              this._entriesFilters.update({
                   mediaTypes: previousData
               });
               break;
           case "freetext":
-              this._store.update({freetext: null});
+              this._entriesFilters.update({freetext: null});
               break;
           case "createdAt":
-              this._store.update({createdAt: {fromDate: null, toDate: null}});
+              this._entriesFilters.update({createdAt: {fromDate: null, toDate: null}});
               break;
       }
   }
@@ -84,73 +82,100 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   }
 
   onFreetextChanged(): void {
-    this._store.update({ freetext: this._query.freetext});
+    this._entriesFilters.update({ freetext: this._query.freetext});
   }
 
   onSortChanged(event) {
     this.clearSelection();
-    this._query.sortDirection = event.order === 1 ? SortDirection.Asc : SortDirection.Desc;
-    this._query.sortBy = event.field;
 
-    this._entriesStore.reload({
-      sortBy: this._query.sortBy,
-      sortDirection: this._query.sortDirection
+      // TODO sakal - should make sure this function is implemented the same in other views
+
+    this._entriesFilters.update({
+      sortBy: event.field,
+      sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
     });
   }
 
   onPaginationChanged(state: any): void {
     if (state.page !== this._query.pageIndex || state.rows !== this._query.pageSize) {
-      this._query.pageIndex = state.page;
-      this._query.pageSize = state.rows;
+
+        // TODO sakal - should make sure this function is implemented the same in other views
 
       this.clearSelection();
-      this._entriesStore.reload({
-        pageIndex: this._query.pageIndex + 1,
-        pageSize: this._query.pageSize
+      this._entriesFilters.update({
+        pageIndex: state.page,
+        pageSize: state.rows
       });
     }
   }
 
   ngOnInit() {
-      this._query.freetext = this._store.cloneFilter('freetext', null);
+      this._restoreFiltersState();
+      this._registerToFilterStoreDataChanges();
+  }
 
-      this._store.dataChanges$
-          .cancelOnDestroy(this)
-          .subscribe(changes => {
-              if (typeof changes.createdAt !== 'undefined') {
-                  this._syncTagOfCreatedAt();
-              }
+  private _restoreFiltersState(): void
+  {
+      this._updateComponentState(this._entriesFilters.cloneFilters(
+          [
+              'freetext',
+              'pageSize',
+              'pageIndex',
+              'sortBy',
+              'sortDirection'
+          ]
+      ));
+  }
 
-              if (typeof changes.mediaTypes !== 'undefined') {
-                  this._syncTagsOfMediaTypes();
-              }
+    private _updateComponentState(updates: Partial<EntriesFilters>): void {
+      if (typeof updates.freetext !== 'undefined') {
+          this._query.freetext = updates.freetext || '';
+      }
 
-              if (typeof changes.freetext !== 'undefined') {
-                  this._syncTagOfFreetext();
-                  this._query.freetext = changes.freetext.currentValue;
-              }
-          });
+        if (typeof updates.pageSize !== 'undefined') {
+            this._query.pageSize = updates.pageSize;
 
-    const queryData = this._entriesStore.queryData;
+        }
 
-    if (queryData) {
-      this._query.pageSize = queryData.pageSize;
-      this._query.pageIndex = queryData.pageIndex - 1;
-      this._query.sortBy = queryData.sortBy;
-      this._query.sortDirection = queryData.sortDirection;
+        if (typeof updates.pageIndex !== 'undefined') {
+            this._query.pageIndex = updates.pageIndex;
+        }
+
+        if (typeof updates.sortBy !== 'undefined') {
+            this._query.sortBy = updates.sortBy;
+        }
+
+        if (typeof updates.sortDirection !== 'undefined') {
+            this._query.sortDirection = updates.sortDirection;
+        }
+
+        // if (typeof changes.createdAt !== 'undefined') {
+        //     this._syncTagOfCreatedAt();
+        // }
+        //
+        // if (typeof changes.mediaTypes !== 'undefined') {
+        //     this._syncTagsOfMediaTypes();
+        // }
+        //
+        // if (typeof changes.freetext !== 'undefined') {
+        //     this._syncTagOfFreetext();
+        //     this._query.freetext = changes.freetext.currentValue;
+        // }
     }
 
-    this.querySubscription = this._entriesStore.query$.subscribe(
-      query => {
-
-        this._query.pageSize = query.data.pageSize;
-        this._query.pageIndex = query.data.pageIndex - 1;
-        this._browserService.scrollToTop();
-      }
-    );
-
-    this._entriesStore.reload(false);
-  }
+    private _registerToFilterStoreDataChanges(): void {
+        this._entriesFilters.dataChanges$
+            .cancelOnDestroy(this)
+            .subscribe(changes => {
+                const changesFlat: Partial<EntriesFilters> = Object.keys(changes).reduce(
+                    (acc, propertyName) => {
+                        acc[propertyName] = changes[propertyName].currentValue;
+                        return acc;
+                    }, {});
+                this._updateComponentState(changesFlat);
+                this._browserService.scrollToTop();
+            });
+    }
 
     private _syncTagOfCreatedAt(): void {
         const previousItem = this._filterTags.findIndex(item => item.type === 'createdAt');
@@ -160,7 +185,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
                 1);
         }
 
-        const {fromDate, toDate} = this._store.cloneFilter('createdAt', { fromDate: null, toDate: null});
+        const {fromDate, toDate} = this._entriesFilters.cloneFilter('createdAt', { fromDate: null, toDate: null});
         if (fromDate || toDate) {
             let tooltip = '';
             if (fromDate && toDate) {
@@ -183,7 +208,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
               1);
       }
 
-      const currentFreetextValue = this._store.cloneFilter('freetext', null);
+      const currentFreetextValue = this._entriesFilters.cloneFilter('freetext', null);
 
       if (currentFreetextValue) {
           this._filterTags.push({
@@ -196,12 +221,12 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   }
   private _syncTagsOfMediaTypes(): void {
 
-      const currentValue =  this._store.cloneFilter('mediaTypes', []);
+      const currentValue =  this._entriesFilters.cloneFilter('mediaTypes', []);
       const tagsFilters = this._filterTags.filter(item => item.type === 'mediaType');
 
-      const tagsFiltersMap = this._store.toMap(tagsFilters, 'value');
-      const currentValueMap = this._store.toMap(currentValue, 'value');
-      const diff = this._store.getDiff(tagsFiltersMap, currentValueMap);
+      const tagsFiltersMap = this._entriesFilters.toMap(tagsFilters, 'value');
+      const currentValueMap = this._entriesFilters.toMap(currentValue, 'value');
+      const diff = this._entriesFilters.getDiff(tagsFiltersMap, currentValueMap);
 
       diff.deleted.forEach(item => {
           this._filterTags.splice(
@@ -228,7 +253,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
   public _reload() {
     this.clearSelection();
-    this._entriesStore.reload(true);
+    this._entriesStore.reload();
   }
 
   clearSelection() {

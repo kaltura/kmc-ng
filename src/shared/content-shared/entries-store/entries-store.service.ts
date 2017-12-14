@@ -32,10 +32,12 @@ import { KalturaLiveStreamAdminEntry } from 'kaltura-ngx-client/api/types/Kaltur
 import { KalturaLiveStreamEntry } from 'kaltura-ngx-client/api/types/KalturaLiveStreamEntry';
 import { KalturaExternalMediaEntry } from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
 import {
+    EntriesFilters,
     EntriesFiltersStore
 } from 'app-shared/content-shared/entries-store/entries-filters.service';
 import { environment } from 'app-environment';
 import { KalturaLogger } from '@kaltura-ng/kaltura-log';
+import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 
 
 export type UpdateStatus = {
@@ -48,163 +50,89 @@ export interface Entries {
   totalCount: number
 }
 
-export interface QueryData {
-  pageIndex?: number,
-  pageSize?: number,
-  sortBy?: string,
-  sortDirection?: SortDirection,
-  fields?: string,
-  metadataProfiles?: number[],
-  statusIn?: string
-}
-
-
-export interface FilterArgs {
-  filter: KalturaMediaEntryFilter,
-  advancedSearch: KalturaSearchOperator
-}
-
 export enum SortDirection {
-  Desc,
-  Asc
+    Desc,
+    Asc
 }
-
-export interface QueryRequestArgs {
-  filters: FilterItem[];
-  addedFilters: FilterItem[];
-  removedFilters: FilterItem[];
-  data: QueryData;
-}
-
-export type FilterTypeConstructor<T extends FilterItem> = { new(...args: any[]): T; };
 
 @Injectable()
 export class EntriesStore implements OnDestroy {
-  private static filterTypeMapping = {};
-
-  private _activeFilters = new BehaviorSubject<{ filters: FilterItem[] }>({ filters: [] });
   private _entries = new BehaviorSubject({ items: [], totalCount: 0 });
   private _state = new BehaviorSubject<UpdateStatus>({ loading: false, errorMessage: null });
   private _paginationCacheToken = 'default';
+  private _isReady = false;
+    private _metadataProfiles: number[];
+    private _querySubscription: ISubscription;
 
-  private _queryData: QueryData = {
-    pageIndex: 1,
-    pageSize: 50,
-    sortBy: 'createdAt',
-    sortDirection: SortDirection.Desc,
-    fields: `
-      id,name,thumbnailUrl,mediaType,plays,createdAt,
-      duration,status,startDate,endDate,moderationStatus,
-      tags,categoriesIds,downloadUrl
-    `
-  };
-  private _querySource = new Subject<QueryRequestArgs>();
-  private _activeFiltersMap: { [key: string]: FilterItem[] } = {};
-  private _metadataProfilesLoaded = false;
-  private executeQueryState: { subscription: ISubscription, deferredRemovedFilters: any[], deferredAddedFilters: any[] } = {
-    subscription: null,
-    deferredAddedFilters: [],
-    deferredRemovedFilters: []
-  };
-
-  // TODO sakal remove 1
-  public activeFilters$ = this._activeFilters.asObservable();
+  // TODO sakal combine
   public entries$ = this._entries.asObservable();
   public state$ = this._state.asObservable();
-
-  // TODO sakal remove 1
-  public query$ = this._querySource.asObservable();
-
-  public static getFilterType(filter: any): string {
-    const result = filter['filterType'] || filter.constructor['filterType'];
-
-    if (!result) {
-      throw new Error('Failed to extract filter type value (do you have a static property named filterType?)');
-    }
-
-    return result;
-  }
-
-
-  public static registerFilterType<T extends FilterItem>(filterType: FilterTypeConstructor<T>,
-                                                         handler: (items: T[], request: FilterArgs) => void): void {
-    EntriesStore.filterTypeMapping[this.getFilterType(filterType)] = handler;
-  }
-
-  public set queryStatusIn(value: number[]) {
-    if (Array.isArray(value) && value.length) {
-      this._queryData.statusIn = value.join(',');
-    }
-  }
 
   public set paginationCacheToken(token: string) {
     this._paginationCacheToken = typeof token === 'string' && token !== '' ? token : 'default';
   }
 
-  public getFilterType(filter: any): string {
-    return EntriesStore.getFilterType(filter);
-  }
-
   constructor(private kalturaServerClient: KalturaClient,
               private browserService: BrowserService,
-              @Host() private _entriesStore : EntriesFiltersStore,
+              @Host() private _entriesFilters: EntriesFiltersStore,
               private metadataProfileService: MetadataProfileStore,
               private _logger: KalturaLogger) {
-    const defaultPageSize = this.browserService.getFromLocalStorage(this._getPaginationCacheKey());
-    if (defaultPageSize !== null) {
-      this._queryData.pageSize = defaultPageSize;
-    }
-
-    this._getMetadataProfiles();
-
-    this._entriesStore.dataChanges$
-        .cancelOnDestroy(this)
-        .subscribe(filters =>
-        {
-          this._executeQuery();
-        });
+    this._prepare();
   }
 
-  private _getPaginationCacheKey(): string {
+    private _prepare(): void {
+        if (!this._isReady) {
+            this._state.next({ loading : true, errorMessage : null });
+            this.metadataProfileService.get(
+                {
+                    type: MetadataProfileTypes.Entry,
+                    ignoredCreateMode: MetadataProfileCreateModes.App
+                })
+                .cancelOnDestroy(this)
+                .first()
+                .monitor('entries store: get metadata profiles')
+                .subscribe(
+                    metadataProfiles => {
+                      this._isReady = true;
+                      this._metadataProfiles = metadataProfiles.items.map(metadataProfile => metadataProfile.id);
+
+                        const defaultPageSize = this.browserService.getFromLocalStorage(this._getPaginationCacheKey());
+                        if (defaultPageSize !== null) {
+                            this._entriesFilters.update({
+                                pageSize: defaultPageSize
+                            });
+                        }
+
+                        this._registerToFilterStoreDataChanges();
+
+                        this._executeQuery();
+
+                        this._state.next({ loading : false, errorMessage : null });
+                    },
+                    (error) =>
+                    {
+                        this._state.next({ loading : false, errorMessage : error.message });
+                    }
+                );
+        }
+    }
+
+    private _registerToFilterStoreDataChanges(): void {
+        this._entriesFilters.dataChanges$
+            .cancelOnDestroy(this)
+            .subscribe(filters => {
+                this._executeQuery();
+            });
+
+    }
+
+
+    private _getPaginationCacheKey(): string {
     return `entries.${this._paginationCacheToken}.list.pageSize`;
   }
 
-  public get queryData(): QueryData {
-    return Object.assign({}, this._queryData);
-  }
-
-  private _getMetadataProfiles(): Observable<void> {
-    if (this._metadataProfilesLoaded) {
-      return Observable.of(undefined);
-    } else {
-      return this.metadataProfileService.get(
-        {
-          type: MetadataProfileTypes.Entry,
-          ignoredCreateMode: MetadataProfileCreateModes.App
-        })
-        .cancelOnDestroy(this)
-        .monitor('entries store: get metadata profiles')
-        .do(
-          metadataProfiles => {
-            this._queryData.metadataProfiles = metadataProfiles.items.map(metadataProfile => metadataProfile.id);
-            this._metadataProfilesLoaded = true;
-          }
-        ).map(() => {
-          return undefined;
-        });
-    }
-  }
-
   ngOnDestroy() {
-    if (this.executeQueryState.subscription) {
-      this.executeQueryState.subscription.unsubscribe();
-      this.executeQueryState.subscription = null;
-    }
-
-    this._activeFilters = null;
-    this._activeFiltersMap = null;
     this._state.complete();
-    this._querySource.complete();
     this._entries.complete();
   }
 
@@ -212,181 +140,57 @@ export class EntriesStore implements OnDestroy {
     return this._entries.getValue().items;
   }
 
-  public reload(force: boolean): void;
-  public reload(query: QueryData): void;
-  public reload(query: boolean | QueryData): void {
-    const forceReload = (typeof query === 'object' || (typeof query === 'boolean' && query));
-
-    if (forceReload || this._entries.getValue().totalCount === 0) {
-      if (typeof query === 'object') {
-        Object.assign(this._queryData, query);
+  public reload(): void {
+      if (this._state.getValue().loading)
+      {
+          return;
       }
-      this._executeQuery();
-    }
-  }
 
-
-  public removeFiltersByType(filterType: FilterTypeConstructor<FilterItem>): void {
-    const filtersOfType = this._activeFiltersMap[this.getFilterType(filterType)];
-
-    if (filtersOfType) {
-      this.removeFilters(...filtersOfType);
-    }
-  }
-
-  public getFirstFilterByType<T extends FilterItem>(filterType: FilterTypeConstructor<T>): T {
-    const filters = <T[]>this.getFiltersByType(filterType);
-    return filters && filters.length > 0 ? filters[0] : null;
-  }
-
-  public getFiltersByType<T extends FilterItem>(filter: FilterItem): T[]
-  public getFiltersByType<T extends FilterItem>(filterType: FilterTypeConstructor<T>): T[];
-  public getFiltersByType<T extends FilterItem>(filterType: FilterItem | FilterTypeConstructor<T>): T[] {
-    if (filterType instanceof FilterItem) {
-      const filtersOfType = <T[]>this._activeFiltersMap[this.getFilterType(filterType)];
-      return filtersOfType ? [...filtersOfType] : [];
-    }
-    if (filterType instanceof Function) {
-      const filtersOfType = <T[]>this._activeFiltersMap[this.getFilterType(filterType)];
-      return filtersOfType ? [...filtersOfType] : [];
-    } else {
-      return [];
-    }
-  }
-
-  public clearAllFilters() {
-    const previousFilters = this._activeFilters.getValue().filters;
-    this._activeFilters.next({ filters: [] });
-    this._activeFiltersMap = {};
-    this._executeQuery({ removedFilters: previousFilters, addedFilters: [] });
-  }
-
-
-  public addFilters(...filters: FilterItem[]): void {
-    if (filters) {
-      const addedFilters = [];
-      const activeFilters = this._activeFilters.getValue().filters;
-
-      filters.forEach(filter => {
-        const index = activeFilters.indexOf(filter);
-
-        if (index === -1) {
-          addedFilters.push(filter);
-          this._activeFiltersMap[this.getFilterType(filter)] = this._activeFiltersMap[this.getFilterType(filter)] || [];
-          this._activeFiltersMap[this.getFilterType(filter)].push(filter);
-        }
-      });
-
-      if (addedFilters.length > 0) {
-        this._activeFilters.next({ filters: [...activeFilters, ...addedFilters] });
-        this._queryData.pageIndex = 1;
-        this._executeQuery({ removedFilters: [], addedFilters: addedFilters });
+      if (this._isReady) {
+          this._executeQuery();
+      }else
+      {
+          this._prepare();
       }
-    }
   }
 
-  public removeFilters(...filters: FilterItem[]): void {
-    if (filters) {
-      const removedFilters: FilterItem[] = [];
-      const activeFilters = this._activeFilters.getValue().filters;
-      const modifiedActiveFilters = [...activeFilters];
+  private _executeQuery(): void {
 
-      filters.forEach(filter => {
-        const index = modifiedActiveFilters.indexOf(filter);
-
-        if (index >= 0) {
-          removedFilters.push(filter);
-          modifiedActiveFilters.splice(index, 1);
-
-          const filterByType = this._activeFiltersMap[this.getFilterType(filter)];
-          filterByType.splice(filterByType.indexOf(filter), 1);
-        }
-      });
-
-      if (removedFilters.length > 0) {
-        this._activeFilters.next({ filters: modifiedActiveFilters });
-
-        this._queryData.pageIndex = 1;
-        this._executeQuery({ removedFilters: removedFilters, addedFilters: [] });
+      if (this._querySubscription)
+      {
+          this._querySubscription.unsubscribe();
+          this._querySubscription = null;
       }
-    }
-  }
 
-  private _executeQuery({ addedFilters, removedFilters }: { addedFilters: FilterItem[], removedFilters: FilterItem[] } = {
-    addedFilters: [],
-    removedFilters: []
-  }) {
-    // cancel previous requests
-    if (this.executeQueryState.subscription) {
-      this.executeQueryState.subscription.unsubscribe();
-      this.executeQueryState.subscription = null;
-    }
+      const pageSize = this._entriesFilters.cloneFilter('pageSize',null);
+      if (pageSize) {
+          this.browserService.setInLocalStorage(this._getPaginationCacheKey(), pageSize);
+      }
 
-    this.executeQueryState.deferredAddedFilters.push(...addedFilters);
-    this.executeQueryState.deferredRemovedFilters.push(...removedFilters);
+      this._state.next({ loading : true, errorMessage : null });
+      this._querySubscription = this.buildQueryRequest()
+          .cancelOnDestroy(this)
+            .subscribe(
+              response => {
+                  this._querySubscription = null;
 
-    this.browserService.setInLocalStorage(this._getPaginationCacheKey(), this._queryData.pageSize);
+                  this._state.next({ loading: false, errorMessage: null });
 
-    // execute the request
-    this.executeQueryState.subscription = Observable.create(observer => {
-
-      this._state.next({ loading: true, errorMessage: null });
-
-      let requestSubscription = this._getMetadataProfiles()
-        .flatMap(
-          () => {
-            const queryArgs: QueryRequestArgs = Object.assign({},
-              {
-                filters: this._activeFilters.getValue().filters,
-                addedFilters: this.executeQueryState.deferredAddedFilters || [],
-                removedFilters: this.executeQueryState.deferredRemovedFilters || [],
-                data: this._queryData
+                  this._entries.next({
+                      items: <any[]>response.objects,
+                      totalCount: <number>response.totalCount
+                  });
+              },
+              error => {
+                  this._querySubscription = null;
+                  const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+                  this._state.next({ loading: false, errorMessage });
               });
 
-            this._querySource.next(queryArgs);
-
-            this.executeQueryState.deferredAddedFilters = [];
-            this.executeQueryState.deferredRemovedFilters = [];
-
-
-
-            return this.buildQueryRequest(queryArgs)
-              .monitor('entries store: transmit request', queryArgs);
-          }
-        ).subscribe(observer);
-
-
-      return () => {
-        if (requestSubscription) {
-          requestSubscription.unsubscribe();
-          requestSubscription = null;
-        }
-      }
-    }).subscribeOn(async) // using async scheduler go allow calling this function multiple times
-                          // in the same event loop cycle before invoking the logic.
-      .monitor('entries store: get entries ()', { addedFilters, removedFilters })
-      .subscribe(
-        response => {
-          this.executeQueryState.subscription = null;
-
-          this._state.next({ loading: false, errorMessage: null });
-
-          this._entries.next({
-            items: <any[]>response.objects,
-            totalCount: <number>response.totalCount
-          });
-        },
-        error => {
-          this.executeQueryState.subscription = null;
-          const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
-          this._state.next({ loading: false, errorMessage });
-        });
 
   }
 
-  private buildQueryRequest(
-    { filters: activeFilters, data: queryData }: { filters: FilterItem[], data: QueryData }
-  ): Observable<KalturaBaseEntryListResponse> {
+  private buildQueryRequest(): Observable<KalturaBaseEntryListResponse> {
     try {
       const filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter({});
       let responseProfile: KalturaDetachedResponseProfile = null;
@@ -395,33 +199,85 @@ export class EntriesStore implements OnDestroy {
       const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
       advancedSearch.type = KalturaSearchOperatorType.searchAnd;
 
-      const requestContext: FilterArgs = {
-        filter: filter,
-        advancedSearch: advancedSearch
-      };
 
-      // build request args by converting filters using registered handlers
-      if (activeFilters && activeFilters.length > 0) {
+        // TODO sakal remove explicit any
+        const data: EntriesFilters = (<any>this._entriesFilters)._getData();
 
-        Object.keys(this._activeFiltersMap).forEach(key => {
-          const handler = EntriesStore.filterTypeMapping[key];
-          const items = this._activeFiltersMap[key];
+        this._logger.info('assign filters to request', { filters: data});
 
-          if (handler && items && items.length > 0) {
-            handler(items, requestContext);
-          }
+        if (data.freetext) {
+            filter.freeText = data.freetext;
+        }
+
+
+        if (data.createdAt ) {
+            if (data.createdAt.fromDate) {
+                filter.createdAtGreaterThanOrEqual = KalturaUtils.getStartDateValue(data.createdAt.fromDate);
+            }
+
+            if (data.createdAt.toDate) {
+                filter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(data.createdAt.toDate);
+            }
+        }
+
+        const mediaTypeFilters = data.mediaTypes.map(item => item.value).join(',');
+
+        if (mediaTypeFilters) {
+            filter.mediaTypeIn = mediaTypeFilters;
+        }
+
+        const ingestionStatuses = data.ingestionStatuses.map(item => item.value).join(',');
+
+        if (ingestionStatuses) {
+            filter.statusIn = ingestionStatuses;
+        }
+
+        data.timeScheduling.forEach(item => {
+            switch (item.value) {
+                case 'past':
+                    if (filter.endDateLessThanOrEqual === undefined || filter.endDateLessThanOrEqual < (new Date())) {
+                        filter.endDateLessThanOrEqual = (new Date());
+                    }
+                    break;
+                case 'live':
+                    if (filter.startDateLessThanOrEqualOrNull === undefined || filter.startDateLessThanOrEqualOrNull > (new Date())) {
+                        filter.startDateLessThanOrEqualOrNull = (new Date());
+                    }
+                    if (filter.endDateGreaterThanOrEqualOrNull === undefined || filter.endDateGreaterThanOrEqualOrNull < (new Date())) {
+                        filter.endDateGreaterThanOrEqualOrNull = (new Date());
+                    }
+                    break;
+                case 'future':
+                    if (filter.startDateGreaterThanOrEqual === undefined || filter.startDateGreaterThanOrEqual > (new Date())) {
+                        filter.startDateGreaterThanOrEqual = (new Date());
+                    }
+                    break;
+                case 'scheduled':
+                    if (data.scheduledAt.fromDate) {
+                        if (filter.startDateGreaterThanOrEqual === undefined
+                            || filter.startDateGreaterThanOrEqual > (KalturaUtils.getStartDateValue(data.scheduledAt.fromDate))
+                        ) {
+                            filter.startDateGreaterThanOrEqual = (KalturaUtils.getStartDateValue(data.scheduledAt.fromDate));
+                        }
+                    }
+
+                    if (data.scheduledAt.toDate) {
+                        if (filter.endDateLessThanOrEqual === undefined
+                            || filter.endDateLessThanOrEqual < (KalturaUtils.getEndDateValue(data.scheduledAt.toDate))
+                        ) {
+                            filter.endDateLessThanOrEqual = (KalturaUtils.getEndDateValue(data.scheduledAt.toDate));
+                        }
+                    }
+
+                    break;
+                default:
+                    break
+            }
         });
-      }
-
-      this._entriesStore.toRequest({
-          filter: filter,
-          advancedSearch: advancedSearch
-      });
-
 
       // handle default args of metadata profiles (we must send all metadata profiles that should take part of the freetext searching
-      if (queryData.metadataProfiles && queryData.metadataProfiles.length > 0) {
-        const missingMetadataProfiles = [...queryData.metadataProfiles]; // create a new array (don't alter the original one)
+      if (this._metadataProfiles && this._metadataProfiles.length > 0) {
+        const missingMetadataProfiles = [...this._metadataProfiles]; // create a new array (don't alter the original one)
 
         // find metadataprofiles that are not part of the request query
         (advancedSearch.items || []).forEach(metadataProfileItem => {
@@ -461,30 +317,27 @@ export class EntriesStore implements OnDestroy {
         filter.statusIn = '-1,-2,0,1,2,7,4';
       }
 
-      if (this.queryData.statusIn) {
-        filter.statusIn = this.queryData.statusIn;
-      }
 
       // update the sort by args
-      if (queryData.sortBy) {
-        filter.orderBy = `${queryData.sortDirection === SortDirection.Desc ? '-' : '+'}${queryData.sortBy}`;
+      if (data.sortBy) {
+        filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
       }
 
       // update desired fields of entries
-      if (queryData.fields) {
+      if (data.fields) {
         responseProfile = new KalturaDetachedResponseProfile({
           type: KalturaResponseProfileType.includeFields,
-          fields: queryData.fields
+          fields: data.fields
         });
 
       }
 
       // update pagination args
-      if (queryData.pageIndex || queryData.pageSize) {
+      if (data.pageIndex || data.pageSize) {
         pagination = new KalturaFilterPager(
           {
-            pageSize: queryData.pageSize,
-            pageIndex: queryData.pageIndex
+            pageSize: data.pageSize,
+            pageIndex: data.pageIndex
           }
         );
       }
@@ -492,9 +345,9 @@ export class EntriesStore implements OnDestroy {
       // build the request
       return <any>this.kalturaServerClient.request(
         new BaseEntryListAction({
-          filter: requestContext.filter,
+          filter,
           pager: pagination,
-          responseProfile: responseProfile,
+          responseProfile,
           acceptedTypes: [KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry, KalturaExternalMediaEntry]
         })
       )

@@ -89,7 +89,7 @@ export class EntriesListHolderComponent {
       .tag('block-shell')
       .subscribe(
         () => {
-          this._entriesStore.reload(true);
+          this._entriesStore.reload();
         },
         error => {
           this._blockerMessage = new AreaBlockerMessage({
