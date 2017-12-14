@@ -1,0 +1,38 @@
+@import 'app-theme/_variables.scss';
+
+.kContainer {
+  padding-left: 30px;
+  padding-top: 28px;
+
+  .kTitle {
+    color: $kGrayscale1;
+    padding-bottom: 30px;
+    width: 100%;
+    font-family: Lato;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 24px;
+  }
+
+  .kRow {
+    padding-bottom: 20px;
+    display: flex;
+    font-size: 15px;
+    .kLabel {
+      flex: 0 0 auto;
+      color: $kGrayscale1;
+      font-weight: bold;
+      width: 200px;
+      word-wrap: break-word;
+    }
+
+    .kControl {
+      padding-left: 30px;
+      flex: 1 1 auto;
+      color: $kGrayscale1;
+    }
+  }
+
+}
+
+

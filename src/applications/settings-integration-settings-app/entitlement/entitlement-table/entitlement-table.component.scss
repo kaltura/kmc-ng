@@ -1,0 +1,34 @@
+@import 'app-theme/_variables.scss';
+
+.kTable {
+
+  /deep/ {
+    .kApplicationRootCategory {
+      .kApplicationRootCategoryLabel {
+        color: $kGrayscale1;
+        font-size: 15px;
+        font-weight: bold;
+        line-height: 18px;
+      }
+    }
+
+    .kPrivacyContextLabel {
+
+    }
+
+    .kActionsColumn {
+      width: 40px;
+
+      .kTableActions {
+        button {
+          border: none;
+          font-size: 24px;
+          width: 24px;
+          padding: 0;
+          margin: 0;
+          color: $kGrayscale3;
+        }
+      }
+    }
+  }
+}

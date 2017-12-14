@@ -1,0 +1,32 @@
+<k-area-blocker [showLoader]="_isBusy"
+                [message]="_blockerMessage">
+  <div class="kContainer">
+    <div class="kTitle">{{'applications.settings.integrationSettings.entitlement.title' | translate}}</div>
+    <!-- TODO: BEN Add helptip after Dvir finishes-->
+    <div class="kExplanation">{{'applications.settings.integrationSettings.entitlement.explanation' | translate}}</div>
+    <div class="kEntitlementReforcement">
+      <div class="kApiDefault">{{'applications.settings.integrationSettings.entitlement.apiDefault' | translate}}</div>
+      <div class="kEntitlementEnforcement">
+        <span *ngIf="_partnerDefaultEntitlementEnforcement">
+          {{'applications.settings.integrationSettings.entitlement.entitlementEnforcementEnabled' | translate}}
+        </span>
+        <span *ngIf="!_partnerDefaultEntitlementEnforcement">
+          {{'applications.settings.integrationSettings.entitlement.entitlementEnforcementDisabled' | translate}}
+        </span>
+      </div>
+    </div>
+    <div class="kEntitlementsHolder">
+      <kEntitlementsTable
+        [entitlements]="_entitlements"
+        (onActionSelected)="_onActionSelected($event)">
+      </kEntitlementsTable>
+    </div>
+  </div>
+</k-area-blocker>
+
+<!--<kPopupWidget #addNewSubcategory [popupWidth]="586" [popupHeight]="260" [modal]="true" [preventPageScroll]="true">-->
+<!--<ng-template>-->
+<!--<kNewSubcategory [categoryParentId]="_widgetService.data?.id" (onApply)="_widgetService.refresh()"-->
+<!--[parentPopupWidget]="addNewSubcategory"></kNewSubcategory>-->
+<!--</ng-template>-->
+<!--</kPopupWidget>-->

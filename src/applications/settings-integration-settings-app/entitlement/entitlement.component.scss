@@ -1,0 +1,61 @@
+@import 'app-theme/_variables.scss';
+
+.kContainer {
+  padding: 28px 30px;
+  background-color: white;
+  height: $contentArea;
+  margin-left: 30px;
+
+  .kTitle {
+    color: $kGrayscale1;
+    padding-bottom: 32px;
+    width: 100%;
+    font-family: Lato;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 24px;
+  }
+
+  .kExplanation {
+    color: $kGrayscale1;
+    font-family: Lato;
+    font-size: 15px;
+    line-height: 22px;
+    padding-bottom: 20px;
+  }
+
+  .kEntitlementReforcement{
+    display: flex;
+    padding-bottom: 32px;
+
+    .kApiDefault{
+      flex: 0 0 auto;
+      padding-right: 10px;
+      font-weight: bold;
+    }
+
+    .kEntitlementEnforcement{
+      flex: 1 1 auto;
+    }
+  }
+
+  .kRow {
+    padding-bottom: 20px;
+    display: flex;
+    font-size: 15px;
+    .kLabel {
+      flex: 0 0 auto;
+      color: $kGrayscale1;
+      font-weight: bold;
+      width: 200px;
+      word-wrap: break-word;
+    }
+
+    .kControl {
+      padding-left: 30px;
+      flex: 1 1 auto;
+      color: $kGrayscale1;
+    }
+  }
+
+}

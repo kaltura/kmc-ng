@@ -12,6 +12,7 @@
       "Analytics": "Analytics",
       "Settings": "Settings",
       "Account Settings": "Account Settings",
+      "Integration Settings": "Integration Settings",
       "Account Upgrade": "Account Upgrade",
       "Administration": "Administration",
       "Roles": "Roles",
@@ -1160,6 +1161,40 @@
           "required": "This field is required.",
           "phoneInvalid": "Telephone must include at least 7 digits and only valid characters.",
           "sendFailed": "An error occurred during account upgrade"
+        }
+      },
+      "integrationSettings": {
+        "accountInfo": {
+          "title": "Account Info",
+          "partnerId": "Partner ID",
+          "subPartnerId": "Sub Partner ID",
+          "adminSecret": "Administrator Secret",
+          "userSecret": "User Secret",
+          "errors": {
+            "loadFailed": "An error occurred during account info loading"
+          },
+          "notifications": {
+            "title": "Notifications",
+            "message": "For notification setting please contact your PM"
+          }
+        },
+        "entitlement": {
+          "title": "Entitlement",
+          "helpTip": "",
+          "explanation": "To add entitlement settings for categories click ‘Add Entitlement’ select the root category integrated with your application and label it below.",
+          "apiDefault": "API default",
+          "entitlementEnforcementDisabled": "Entitlement enforcement disabled",
+          "entitlementEnforcementEnabled": "Entitlement enforcement enabled",
+          "addEntitlement": "Add Entitlement",
+          "table": {
+            "applicationRootCategory": "Application Root Category",
+            "privacyContextLabel": "Privacy Context Label",
+            "edit": "Edit",
+            "delete": "Delete"
+          },
+          "errors": {
+            "loadError": "An error occurred while loading Entitlement."
+          }
         }
       }
     }

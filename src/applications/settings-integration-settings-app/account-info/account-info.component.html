@@ -1,0 +1,25 @@
+<k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+ <div class="kContainer">
+   <div class="kTitle">{{'applications.settings.integrationSettings.accountInfo.title' | translate}}</div>
+
+   <div class="kRow">
+     <div class="kLabel">{{'applications.settings.integrationSettings.accountInfo.partnerId'| translate}}</div>
+     <div class="kControl">{{_accountInfo?.partnerId}}</div>
+   </div>
+
+   <div class="kRow">
+     <div class="kLabel">{{'applications.settings.integrationSettings.accountInfo.subPartnerId'| translate}}</div>
+     <div class="kControl">{{_accountInfo?.subPartnerId}}</div>
+   </div>
+
+   <div class="kRow">
+     <div class="kLabel">{{'applications.settings.integrationSettings.accountInfo.adminSecret'| translate}}</div>
+     <div class="kControl">{{_accountInfo?.adminSecret}}</div>
+   </div>
+
+   <div class="kRow">
+     <div class="kLabel">{{'applications.settings.integrationSettings.accountInfo.userSecret'| translate}}</div>
+     <div class="kControl">{{_accountInfo?.userSecret}}</div>
+   </div>
+ </div>
+</k-area-blocker>
