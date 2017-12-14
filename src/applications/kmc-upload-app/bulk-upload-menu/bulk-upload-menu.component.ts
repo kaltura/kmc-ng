@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AreaBlockerMessage, FileDialogComponent } from '@kaltura-ng/kaltura-ui';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -9,6 +9,7 @@ import { BulkUploadService, BulkUploadTypes } from 'app-shared/kmc-shell/bulk-up
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events/bulk-log-uploading-started.event';
 import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
+import { BlockShellTag, TagValue } from 'app-shared/kmc-shell/providers/tags';
 
 @Component({
   selector: 'kKMCBulkUploadMenu',
@@ -34,7 +35,8 @@ export class BulkUploadMenuComponent {
   public _showFileDialog = true;
   public _blockerMessage: AreaBlockerMessage;
 
-  constructor(private _bulkUploadService: BulkUploadService,
+  constructor(@Inject(BlockShellTag) private _blockShell: TagValue,
+              private _bulkUploadService: BulkUploadService,
               private _appLocalization: AppLocalization,
               private _userAuthentication: AppAuthentication,
               private _appNavigator: AppNavigator,
@@ -95,7 +97,7 @@ export class BulkUploadMenuComponent {
   private _invokeUpload(): void {
     if (this._selectedFiles) {
       this._bulkUploadService.upload(this._selectedFiles, this._selectedType)
-        .tag('block-shell')
+        .tag(this._blockShell)
         .subscribe(
           (response) => this._handleUploadSuccess(response),
           (error) => this._handleUploadError(error)

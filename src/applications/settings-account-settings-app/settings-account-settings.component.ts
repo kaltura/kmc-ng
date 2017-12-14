@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {KalturaPartner} from 'kaltura-ngx-client/api/types/KalturaPartner';
 import {SettingsAccountSettingsService} from './settings-account-settings.service';
@@ -6,6 +6,7 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {SelectItem} from 'primeng/primeng';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { BlockShellTag, TagValue } from 'app-shared/kmc-shell/providers/tags';
 
 
 function phoneValidator(): ValidatorFn {
@@ -38,7 +39,8 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
 
-  constructor(private _accountSettingsService: SettingsAccountSettingsService,
+  constructor(@Inject(BlockShellTag) private _blockShell: TagValue,
+              private _accountSettingsService: SettingsAccountSettingsService,
               private _appLocalization: AppLocalization,
               private _fb: FormBuilder) {
   }
@@ -74,7 +76,7 @@ export class SettingsAccountSettingsComponent implements OnInit, OnDestroy {
     }
     this._accountSettingsService
       .updatePartnerData(this.accountSettingsForm.value)
-      .tag('block-shell')
+      .tag(this._blockShell)
       .cancelOnDestroy(this)
       .subscribe(updatedPartner => {
           this._fillForm(updatedPartner);

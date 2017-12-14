@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {KalturaUserRole} from "kaltura-ngx-client/api/types/KalturaUserRole";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
@@ -6,6 +6,7 @@ import {AppLocalization} from "@kaltura-ng/kaltura-common";
 import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
 import {RoleService} from "./role.service";
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { BlockShellTag, TagValue } from 'app-shared/kmc-shell/providers/tags';
 
 @Component({
   selector: 'kEditRole',
@@ -25,7 +26,8 @@ export class EditRoleComponent implements OnInit, OnDestroy {
   @Input() duplicatedRole: boolean;
   @Output() onRoleSaved = new EventEmitter<void>();
 
-  constructor(private _fb: FormBuilder,
+  constructor(@Inject(BlockShellTag) private _blockShell: TagValue,
+              private _fb: FormBuilder,
               private _roleService: RoleService,
               private appLocalization: AppLocalization) {
   }
@@ -79,7 +81,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
 
     this._roleService.updateRole(this.role.id, editedRole)
       .cancelOnDestroy(this)
-      .tag('block-shell')
+      .tag(this._blockShell)
       .subscribe(
         (role) => {
           this.parentPopupWidget.close();
@@ -121,7 +123,7 @@ export class EditRoleComponent implements OnInit, OnDestroy {
     this.role.description = this.editRoleForm.get('description').value;
     this._roleService.addRole(this.role)
       .cancelOnDestroy(this)
-      .tag('block-shell')
+      .tag(this._blockShell)
       .subscribe(
         () => {
           this.parentPopupWidget.close();

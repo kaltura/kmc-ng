@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
@@ -7,6 +7,7 @@ import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-st
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { ContentEntriesAppService } from '../content-entries-app.service';
+import { BlockShellTag, TagValue } from 'app-shared/kmc-shell/providers/tags';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -43,7 +44,8 @@ export class EntriesListHolderComponent {
     }
   ];
 
-  constructor(private _router: Router,
+  constructor(@Inject(BlockShellTag) private _blockShell: TagValue,
+              private _router: Router,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
               public _entriesStore: EntriesStore,
@@ -86,7 +88,7 @@ export class EntriesListHolderComponent {
 
     this._blockerMessage = null;
     this._contentEntriesAppService.deleteEntry(entryId)
-      .tag('block-shell')
+      .tag(this._blockShell)
       .subscribe(
         () => {
           this._entriesStore.reload(true);

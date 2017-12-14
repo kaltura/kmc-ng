@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -14,6 +14,7 @@ import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 import * as moment from 'moment';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
+import { BlockShellTag, TagValue } from 'app-shared/kmc-shell/providers/tags';
 
 export interface Filter {
   type: string;
@@ -49,7 +50,8 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   public _selectedPlaylists: KalturaPlaylist[] = [];
   public activeFilters: Filter[] = [];
 
-  constructor(public _playlistsStore: PlaylistsStore,
+  constructor(@Inject(BlockShellTag) private _blockShell: TagValue,
+              public _playlistsStore: PlaylistsStore,
               private appLocalization: AppLocalization,
               private router: Router,
               private _browserService: BrowserService,
@@ -82,7 +84,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
   private _proceedDeletePlaylists(ids: string[]): void {
     this._bulkDeleteService.deletePlaylist(ids)
-      .tag('block-shell')
+      .tag(this._blockShell)
       .cancelOnDestroy(this)
       .subscribe(
         () => {
@@ -122,7 +124,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   private _deleteCurrentPlaylist(playlistId: string): void {
     this._playlistsStore.deletePlaylist(playlistId)
       .cancelOnDestroy(this)
-      .tag('block-shell')
+      .tag(this._blockShell)
       .subscribe(
         () => {
           this._clearSelection();

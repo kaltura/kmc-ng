@@ -1,12 +1,13 @@
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { CategoriesService, SortDirection } from '../categories.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { BlockShellTag, TagValue } from 'app-shared/kmc-shell/providers/tags';
 
 @Component({
     selector: 'kCategoriesList',
@@ -32,7 +33,8 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         sortDirection: SortDirection.Desc
     };
 
-    constructor(private _categoriesService: CategoriesService,
+    constructor(@Inject(BlockShellTag) private _blockShell: TagValue,
+        private _categoriesService: CategoriesService,
         private router: Router,
         private _browserService: BrowserService,
         private _appLocalization: AppLocalization) {
@@ -147,7 +149,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     const deleteCategory = () => {
       this._blockerMessage = null;
       this._categoriesService.deleteCategory(category.id)
-        .tag('block-shell')
+        .tag(this._blockShell)
         .subscribe(
           () => {
             this._categoriesService.reload(true);

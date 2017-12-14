@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -28,6 +28,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/playlist-creation';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { BlockShellTag, TagValue } from 'app-shared/kmc-shell/providers/tags';
 
 @Component({
   selector: 'kBulkActions',
@@ -53,7 +54,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
   @ViewChild('bulkActionsPopup') public bulkActionsPopup: PopupWidgetComponent;
 
-  constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService,
+  constructor(@Inject(BlockShellTag) private _blockShell: TagValue,
+    private _appLocalization: AppLocalization, private _browserService: BrowserService,
     private _bulkSchedulingService: BulkSchedulingService,
     private _bulkAccessControlService: BulkAccessControlService,
     private _bulkAddTagsService: BulkAddTagsService,
@@ -219,7 +221,7 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
 
     const execute = () => {
       service.execute(this.selectedEntries, data)
-        .tag('block-shell')
+        .tag(this._blockShell)
         .subscribe(
         result => {if (callback) {
             callback(result);

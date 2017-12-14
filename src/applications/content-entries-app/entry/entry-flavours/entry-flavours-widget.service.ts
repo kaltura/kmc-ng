@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EntryWidgetKeys } from '../entry-widget-keys';
@@ -28,6 +28,7 @@ import { FlavorAssetGetUrlAction } from 'kaltura-ngx-client/api/types/FlavorAsse
 import { KalturaUploadedFileTokenResource } from 'kaltura-ngx-client/api/types/KalturaUploadedFileTokenResource';
 import { EntryWidget } from '../entry-widget';
 import { NewEntryFlavourFile } from 'app-shared/kmc-shell/new-entry-flavour-file';
+import { BlockShellTag, TagValue } from 'app-shared/kmc-shell/providers/tags';
 
 @Injectable()
 export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
@@ -41,7 +42,8 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
 	public _entryStatusClassName = "";
 	public sourceAvailabale: boolean = false;
 
-    constructor( private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization,
+    constructor(@Inject(BlockShellTag) private _blockShell: TagValue,
+      private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization,
 	     private _appAuthentication: AppAuthentication, private _browserService: BrowserService, private _uploadManagement : UploadManagement)
     {
         super(EntryWidgetKeys.Flavours);
@@ -233,7 +235,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
                         id: flavor.id
                     }))
                         .cancelOnDestroy(this, this.widgetReset$)
-                        .tag('block-shell')
+                        .tag(this._blockShell)
                         .monitor('delete flavor: ' + flavor.id)
                         .subscribe(
                             response => {
@@ -291,7 +293,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
 		flavor.statusLabel = this._appLocalization.get('applications.content.entryDetails.flavours.status.converting');
 		this._kalturaServerClient.request(request)
 			.cancelOnDestroy(this,this.widgetReset$)
-      .tag('block-shell')
+      .tag(this._blockShell)
 			.monitor('convert flavor')
 			.subscribe(
 				response =>
@@ -386,7 +388,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
     }))
       .cancelOnDestroy(this, this.widgetReset$)
       .monitor('set flavor resource')
-      .tag('block-shell')
+      .tag(this._blockShell)
       .catch(error => {
         this._uploadManagement.cancelUploadWithError(flavor.uploadFileId, 'Cannot update flavor, cancel related file');
         return Observable.throw(error);
@@ -419,7 +421,7 @@ export class EntryFlavoursWidget extends EntryWidget implements OnDestroy
     }))
       .cancelOnDestroy(this, this.widgetReset$)
       .monitor('add new flavor')
-      .tag('block-shell')
+      .tag(this._blockShell)
       .catch(error => {
         this._uploadManagement.cancelUploadWithError(flavor.uploadFileId, 'Cannot update flavor, cancel related file');
         return Observable.throw(error);

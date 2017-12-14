@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -24,6 +24,7 @@ import { environment } from 'app-environment';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { EntryWidget } from '../entry-widget';
+import { BlockShellTag, TagValue } from 'app-shared/kmc-shell/providers/tags';
 
 export interface ThumbnailRow {
 	id: string,
@@ -48,7 +49,8 @@ export class EntryThumbnailsWidget extends EntryWidget
 	public _thumbnails$ = this._thumbnails.asObservable();
 	private _distributionProfiles: KalturaDistributionProfile[]; // used to save the response profiles array as it is loaded only once
 
-    constructor( private _kalturaServerClient: KalturaClient, private _appAuthentication: AppAuthentication,
+    constructor(@Inject(BlockShellTag) private _blockShell: TagValue,
+                private _kalturaServerClient: KalturaClient, private _appAuthentication: AppAuthentication,
                 private _appLocalization: AppLocalization, private _appEvents: AppEventsService, private _browserService: BrowserService)
     {
         super(EntryWidgetKeys.Thumbnails);
@@ -189,7 +191,7 @@ export class EntryThumbnailsWidget extends EntryWidget
 
 		this._kalturaServerClient.request(new ThumbAssetSetAsDefaultAction({thumbAssetId: thumb.id}))
 			.cancelOnDestroy(this,this.widgetReset$)
-			.tag('block-shell')
+			.tag(this._blockShell)
 			.monitor('set thumb as default')
 			.subscribe(
 				() =>
@@ -227,7 +229,7 @@ export class EntryThumbnailsWidget extends EntryWidget
 
 		this._kalturaServerClient.request(new ThumbAssetDeleteAction({thumbAssetId: id}))
 			.cancelOnDestroy(this,this.widgetReset$)
-            .tag('show-blocker')
+            .tag(this._blockShell)
 			.monitor('delete thumb')
 			.subscribe(
 				() =>
@@ -259,7 +261,7 @@ export class EntryThumbnailsWidget extends EntryWidget
       const fileData: File = selectedFiles[0];
 
       this._kalturaServerClient.request(new ThumbAssetAddFromImageAction({ entryId: this.data.id, fileData: fileData }))
-        .tag('block-shell')
+        .tag(this._blockShell)
         .cancelOnDestroy(this, this.widgetReset$)
         .monitor('add thumb')
         .subscribe(
