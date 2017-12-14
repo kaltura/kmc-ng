@@ -47,20 +47,8 @@
       </kSticky>
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="entriesTags" [sticksTo]="'entriesFilters'">
         <div class="kContent">
-            <kTags [title]="'applications.content.filters.activeFilters' | translate"
-                   [data]="_filterTags"
-                   [labelField]="'label'"
-                   [tooltipField]="'tooltip'"
-                   (onTagRemove)="removeTag($event)"
-                   (onRemoveAll)="removeAllTags()"
-                   (onTagsChange)="onTagsChange($event)">
-              <ng-template let-item="item">
-                <div class="kTagContent" [kTooltip]="item.tooltip?.token | translate : item.tooltip?.args">
-                  <span class="kTagLabel">{{item.label}}</span>
-                  <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
-                </div>
-              </ng-template>
-            </kTags>
+            <k-entries-list-tags
+            (onTagsChange)="onTagsChange($event)"></k-entries-list-tags>
         </div>
       </kSticky>
       <kEntriesTable class="kEntriesTable"

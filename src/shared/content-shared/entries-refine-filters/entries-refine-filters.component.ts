@@ -259,6 +259,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
    * Not part of the API, don't use it from outside this component
    */
   public _clearCreatedComponents(): void {
+      this._createdFilterError = "";
       this._entriesFilters.update({
           createdAt: {
               fromDate: null,

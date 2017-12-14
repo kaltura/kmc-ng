@@ -337,7 +337,7 @@ export class EntriesStore implements OnDestroy {
         pagination = new KalturaFilterPager(
           {
             pageSize: data.pageSize,
-            pageIndex: data.pageIndex
+            pageIndex: data.pageIndex + 1
           }
         );
       }
