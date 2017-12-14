@@ -1,5 +1,5 @@
 import { CategoriesService } from './../categories/categories.service';
-import { Host, Injectable, OnDestroy } from '@angular/core';
+import { Host, Inject, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -19,6 +19,7 @@ import { CategoryWidgetsManager } from './category-widgets-manager';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import { BlockShellTag, TagValue } from 'app-shared/kmc-shell/providers/tags';
 
 export enum ActionTypes {
 	CategoryLoading,
@@ -64,7 +65,8 @@ export class CategoryService implements OnDestroy {
 		return this._category.getValue();
 	}
 
-	constructor(private _kalturaServerClient: KalturaClient,
+	constructor(@Inject(BlockShellTag) private _blockShell: TagValue,
+    private _kalturaServerClient: KalturaClient,
 		private _router: Router,
 		private _browserService: BrowserService,
 		private _categoriesStore: CategoriesService,
@@ -176,7 +178,6 @@ export class CategoryService implements OnDestroy {
 		this._widgetsManager.notifyDataSaving(newCategory, request, this.category)
 			.cancelOnDestroy(this)
 			.monitor('category store: prepare category for save')
-      .tag('block-shell')
 			.flatMap(
 			(response) => {
 				if (response.ready) {
@@ -184,7 +185,6 @@ export class CategoryService implements OnDestroy {
 
 					return this._kalturaServerClient.multiRequest(request)
 						.monitor('category store: save category')
-                        .tag('block-shell')
                         .map(
 						response => {
 							if (response.hasErrors()) {
@@ -214,6 +214,7 @@ export class CategoryService implements OnDestroy {
 				}
 			}
 			)
+      .tag(this._blockShell)
 			.subscribe(
 			response => {
 				// do nothing - the service state is modified inside the map functions.

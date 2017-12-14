@@ -10,7 +10,7 @@ import {
 import {CategoriesBulkActionBaseService} from './services/categories-bulk-action-base.service';
 import {MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {KalturaCategory} from "kaltura-ngx-client/api/types/KalturaCategory";
 import {PopupWidgetComponent} from "@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component";
 import {BrowserService} from "app-shared/kmc-shell";
@@ -22,6 +22,7 @@ import {KalturaAppearInListType} from "kaltura-ngx-client/api/types/KalturaAppea
 import {AppearInListType} from "./components/bulk-change-category-listing/bulk-change-category-listing.component";
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KalturaContributionPolicyType } from "kaltura-ngx-client/api/types/KalturaContributionPolicyType";
+import { BlockShellTag, TagValue } from 'app-shared/kmc-shell/providers/tags';
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -42,7 +43,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   @ViewChild('bulkActionsPopup') public bulkActionsPopup: PopupWidgetComponent;
 
 
-  constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService,
+  constructor(@Inject(BlockShellTag) private _blockShell: TagValue,
+    private _appLocalization: AppLocalization, private _browserService: BrowserService,
     private _bulkAddTagsService: CategoriesBulkAddTagsService,
     private _bulkRemoveTagsService: CategoriesBulkRemoveTagsService,
     private _bulkChangeOwnerService: CategoriesBulkChangeOwnerService,
@@ -205,7 +207,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
     const execute = () => {
       service.execute(this.selectedCategories, data)
-        .tag('block-shell')
+        .tag(this._blockShell)
         .subscribe(
         result => {
           if (callback) {

@@ -1,10 +1,11 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import {KalturaMediaType} from 'kaltura-ngx-client/api/types/KalturaMediaType';
 import {Router} from '@angular/router';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {DraftEntry, PrepareEntryService} from './prepare-entry.service';
 import {BrowserService} from 'app-shared/kmc-shell';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { BlockShellTag, TagValue } from 'app-shared/kmc-shell/providers/tags';
 
 @Component({
   selector: 'kPrepareEntry',
@@ -16,7 +17,8 @@ export class PrepareEntryComponent implements OnInit {
   public _selectedMediaType: KalturaMediaType;
   @ViewChild('transcodingProfileSelectMenu') transcodingProfileSelectMenu: PopupWidgetComponent;
 
-  constructor(private _prepareEntryService: PrepareEntryService,
+  constructor(@Inject(BlockShellTag) private _blockShell: TagValue,
+              private _prepareEntryService: PrepareEntryService,
               private _router: Router,
               private _browserService: BrowserService) {
   }
@@ -41,7 +43,7 @@ export class PrepareEntryComponent implements OnInit {
 
     /// passing profileId null will cause to create with default profileId
     this._prepareEntryService.createDraftEntry(this._selectedMediaType, selectedProfile.profileId)
-        .tag('block-shell')
+        .tag(this._blockShell)
       .subscribe((draftEntry: DraftEntry) => {
           this._router.navigate(['/content/entries/entry', draftEntry.id], {queryParams: {reloadEntriesListOnNavigateOut: true}});
           this.transcodingProfileSelectMenu.close();

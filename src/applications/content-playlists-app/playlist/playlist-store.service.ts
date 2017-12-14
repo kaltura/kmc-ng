@@ -1,4 +1,4 @@
-import { Host, Injectable, OnDestroy } from '@angular/core';
+import { Host, Inject, Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
@@ -18,6 +18,7 @@ import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { PlaylistCreationService } from 'app-shared/kmc-shared/playlist-creation';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { BlockShellTag, TagValue } from 'app-shared/kmc-shell/providers/tags';
 
 export enum ActionTypes {
   PlaylistLoading,
@@ -64,7 +65,8 @@ export class PlaylistStore implements OnDestroy {
     return this._playlistIsDirty;
   }
 
-  constructor(private _router: Router,
+  constructor(@Inject(BlockShellTag) private _blockShell: TagValue,
+              private _router: Router,
               private _playlistRoute: ActivatedRoute,
               private _kalturaServerClient: KalturaClient,
               private _appLocalization: AppLocalization,
@@ -239,7 +241,7 @@ export class PlaylistStore implements OnDestroy {
       this._widgetsManager.notifyDataSaving(newPlaylist, request, this.playlist)
         .cancelOnDestroy(this)
         .monitor('playlist store: prepare playlist for save')
-        .tag('block-shell')
+        .tag(this._blockShell)
         .flatMap((response: { ready: boolean, reason?: OnDataSavingReasons, errors?: Error[] }) => {
             if (response.ready) {
               this._savePlaylistInvoked = true;

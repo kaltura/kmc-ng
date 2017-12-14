@@ -1,4 +1,4 @@
-import {Host, Injectable, OnDestroy} from '@angular/core';
+import { Host, Inject, Injectable, OnDestroy } from '@angular/core';
 import {ActivatedRoute, NavigationEnd, NavigationStart, Router} from '@angular/router';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
@@ -19,6 +19,7 @@ import {  OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import { BlockShellTag, TagValue } from 'app-shared/kmc-shell/providers/tags';
 
 export enum ActionTypes
 {
@@ -69,7 +70,8 @@ export class EntryStore implements  OnDestroy {
 		return this._entry.getValue();
 	}
 
-    constructor(private _kalturaServerClient: KalturaClient,
+    constructor(@Inject(BlockShellTag) private _blockShell: TagValue,
+        private _kalturaServerClient: KalturaClient,
 				private _router: Router,
 				private _browserService : BrowserService,
 				private _entriesStore : EntriesStore,
@@ -202,7 +204,6 @@ export class EntryStore implements  OnDestroy {
 
 						return this._kalturaServerClient.multiRequest(request)
                             .monitor('entry store: save entry')
-                            .tag('block-shell')
                             .map(
 								response => {
 									if (response.hasErrors()) {
@@ -232,6 +233,7 @@ export class EntryStore implements  OnDestroy {
 					}
 				}
 			)
+            .tag(this._blockShell)
             .subscribe(
 				response => {
 					// do nothing - the service state is modified inside the map functions.

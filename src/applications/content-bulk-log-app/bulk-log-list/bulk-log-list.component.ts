@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
@@ -10,6 +10,7 @@ import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUploa
 import { getBulkUploadType } from '../utils/get-bulk-upload-type';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events/bulk-log-uploading-started.event';
+import { BlockShellTag, TagValue } from 'app-shared/kmc-shell/providers/tags';
 
 @Component({
   selector: 'kBulkLogList',
@@ -32,7 +33,8 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     sortDirection: SortDirection.Desc
   };
 
-  constructor(private _appLocalization: AppLocalization,
+  constructor(@Inject(BlockShellTag) private _blockShell: TagValue,
+              private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               public _store: BulkLogStoreService,
               appEvents: AppEventsService) {
@@ -75,7 +77,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
 
     this._store.deleteBulkLog(id)
       .cancelOnDestroy(this)
-      .tag('block-shell')
+      .tag(this._blockShell)
       .subscribe(
         () => {
           this._store.reload(true)
@@ -108,7 +110,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
 
     this._store.deleteBulkLogs(files)
       .cancelOnDestroy(this)
-      .tag('block-shell')
+      .tag(this._blockShell)
       .subscribe(
       () => {
         this._store.reload(true);

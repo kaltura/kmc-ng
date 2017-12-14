@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {CreateLiveService} from './create-live.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {KalturaRecordStatus} from 'kaltura-ngx-client/api/types/KalturaRecordStatus';
@@ -9,6 +9,7 @@ import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/po
 import {KalturaLive} from './kaltura-live-stream/kaltura-live-stream.interface';
 import {ManualLive} from './manual-live/manual-live.interface';
 import {UniversalLive} from './universal-live/universal-live.interface';
+import { BlockShellTag, TagValue } from 'app-shared/kmc-shell/providers/tags';
 
 export enum StreamTypes {
   kaltura,
@@ -58,7 +59,8 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('universalLiveComponent') universalLiveComponent;
   @Input() parentPopupWidget: PopupWidgetComponent;
 
-  constructor(private createLiveService: CreateLiveService,
+  constructor(@Inject(BlockShellTag) private _blockShell: TagValue,
+              private createLiveService: CreateLiveService,
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               private _router: Router) {
@@ -185,7 +187,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.kalturaLiveStreamComponent.validate()) {
       this.createLiveService.createKalturaLiveStream(this.kalturaLiveStreamData)
         .cancelOnDestroy(this)
-        .tag('block-shell')
+        .tag(this._blockShell)
         .subscribe(response => {
           this._confirmEntryNavigation(response.id);
         }, error => {
@@ -198,7 +200,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.universalLiveComponent.validate()) {
       this.createLiveService.createUniversalLiveStream(this.universalLiveData)
         .cancelOnDestroy(this)
-        .tag('block-shell')
+        .tag(this._blockShell)
         .subscribe(response => {
           this._confirmEntryNavigation(response.id);
         }, error => {
@@ -211,7 +213,7 @@ export class CreateLiveComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.manualLiveComponent.validate()) {
       this.createLiveService.createManualLiveStream(this.manualLiveData)
         .cancelOnDestroy(this)
-        .tag('block-shell')
+        .tag(this._blockShell)
         .subscribe(response => {
           this._confirmEntryNavigation(response.id);
         }, error => {

@@ -1,10 +1,11 @@
-import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, Inject } from '@angular/core';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {RolesService} from './roles.service';
 import {KalturaUserRole} from 'kaltura-ngx-client/api/types/KalturaUserRole';
 import {BrowserService} from 'app-shared/kmc-shell';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { BlockShellTag, TagValue } from 'app-shared/kmc-shell/providers/tags';
 
 @Component({
   selector: 'kRolesList',
@@ -27,7 +28,8 @@ export class RolesListComponent implements OnInit, OnDestroy {
     pageSize: null, // pageSize is set to null by design. It will be modified after the first time loading entries
   };
 
-  constructor(private _rolesService: RolesService,
+  constructor(@Inject(BlockShellTag) private _blockShell: TagValue,
+              private _rolesService: RolesService,
               private _browserService: BrowserService,
               private appLocalization: AppLocalization) {
   }
@@ -123,7 +125,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
     this._blockerMessage = null;
     this._rolesService.deleteRole(role)
       .cancelOnDestroy(this)
-      .tag('block-shell')
+      .tag(this._blockShell)
       .subscribe(
         () => { },
         error => {
@@ -155,7 +157,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
     this._blockerMessage = null;
     this._rolesService.duplicateRole(role)
       .cancelOnDestroy(this)
-      .tag('block-shell')
+      .tag(this._blockShell)
       .subscribe(
         (duplicatedRole) => {
           this._rolesService.reload(true);
