@@ -3,7 +3,7 @@
     <div #entriesTableHolder class="kEntriesHolder kContent">
       <kSticky stickyId="entriesFilters" [scrollOffset]="80" [sticksTo]="'header'" >
         <div class="kEntriesTableFilters kContent">
-          <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries$ | async)?.totalCount">{{(_entriesStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
+          <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries.data$ | async)?.totalCount">{{(_entriesStore.entries.data$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
 
           <div [class.kHidden]="!selectedEntries.length" class="kBulkOperations">
             <span *ngIf="bulkWrapper.children.length !== 0"
@@ -53,7 +53,7 @@
       </kSticky>
       <kEntriesTable class="kEntriesTable"
                      scrollHeight="100%"
-                     [entries]="(_entriesStore.entries$ | async)?.items"
+                     [entries]="(_entriesStore.entries.data$ | async)?.items"
                      [showBulkSelect]="bulkWrapper.children.length !== 0"
                      [filter]="_query"
                      [columns]="columns"
@@ -63,11 +63,11 @@
                      [(selectedEntries)]="selectedEntries"
       ></kEntriesTable>
 
-      <div class="kEntriesTableFooter kContent" #footer *ngIf="(_entriesStore.entries$ | async)?.totalCount">
+      <div class="kEntriesTableFooter kContent" #footer *ngIf="(_entriesStore.entries.data$ | async)?.totalCount">
         <p-paginator
           [rows]="_query.pageSize"
           [first]="_query.pageIndex * _query.pageSize"
-          [totalRecords]="(_entriesStore.entries$ | async)?.totalCount | kMaxEntries"
+          [totalRecords]="(_entriesStore.entries.data$ | async)?.totalCount | kMaxEntries"
           [rowsPerPageOptions]="[25,50,75,100]"
           (onPageChange)="onPaginationChanged($event)"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>

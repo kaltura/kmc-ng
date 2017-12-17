@@ -27,8 +27,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
     }
 
     removeTag(tag: any) {
-        if (listTypes.indexOf(tag.type) > -1)
-        {
+        if (listTypes.indexOf(tag.type) > -1) {
             // remove tag of type list from filters
             const previousData = this._entriesStore.cloneFilter(tag.type, []);
             const previousDataItemIndex = previousData.findIndex(item => item.value === tag.value);
@@ -42,14 +41,12 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                     [tag.type]: previousData
                 });
             }
-        }else if (tag.type.indexOf('customMetadata|') === 0)
-        {
+        } else if (tag.type.indexOf('customMetadata|') === 0) {
             // remove tag of type custom metadata from filters
             const previousData = this._entriesStore.cloneFilter('customMetadata', {});
             const [, listId] = tag.type.split('|');
             const list = previousData[listId] || [];
             const listItemIndex = list.findIndex(item => item.value === tag.value);
-
 
             if (listItemIndex > -1) {
                 list.splice(
@@ -57,11 +54,9 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                     , 1
                 );
 
-                this._entriesStore.filter({ customMetadata: previousData});
+                this._entriesStore.filter({customMetadata: previousData});
             }
-
-        } else
-        {
+        } else {
             switch (tag.type) {
                 case "freetext":
                     this._entriesStore.filter({freetext: null});

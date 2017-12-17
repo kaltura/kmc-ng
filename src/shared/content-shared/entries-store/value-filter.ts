@@ -1,5 +1,7 @@
 import { FilterItem, FilterItemLocalizedTooltip } from './filter-item';
 
+
+// TODO sakal remove file once refactored bulk log filtersZ
 export abstract class ValueFilter<T> extends FilterItem {
 
   private _value: T;

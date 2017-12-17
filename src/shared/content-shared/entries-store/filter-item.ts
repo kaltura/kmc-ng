@@ -4,7 +4,7 @@ export interface FilterItemLocalizedTooltip {
 }
 
 
-// TODO sakal remove 1
+// TODO sakal remove file once refactored bulk log filtersZ
 export abstract class FilterItem {
   private _tooltip: FilterItemLocalizedTooltip;
 

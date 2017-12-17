@@ -26,7 +26,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
     @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
 
-    // TODO sakal add type
     public _query = {
         freetext: '',
         createdAfter: null,
@@ -107,9 +106,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
     onSortChanged(event) {
         this.clearSelection();
-
-        // TODO sakal - should make sure this function is implemented the same in other views
-
         this._entriesStore.filter({
             sortBy: event.field,
             sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
@@ -118,9 +114,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
     onPaginationChanged(state: any): void {
         if (state.page !== this._query.pageIndex || state.rows !== this._query.pageSize) {
-
-            // TODO sakal - should make sure this function is implemented the same in other views
-
             this.clearSelection();
             this._entriesStore.filter({
                 pageIndex: state.page,
