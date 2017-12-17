@@ -114,13 +114,8 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
     private _registerToFilterStoreDataChanges(): void {
         this._entriesStore.filtersChange$
             .cancelOnDestroy(this)
-            .subscribe(changes => {
-                const changesFlat: Partial<EntriesFilters> = Object.keys(changes).reduce(
-                    (acc, propertyName) => {
-                        acc[propertyName] = changes[propertyName].currentValue;
-                        return acc;
-                    }, {});
-                this._updateComponentState(changesFlat);
+            .subscribe(({changes}) => {
+                this._updateComponentState(changes);
             });
     }
 

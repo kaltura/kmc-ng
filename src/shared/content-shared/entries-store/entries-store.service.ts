@@ -146,7 +146,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     private _registerToFilterStoreDataChanges(): void {
         this.filtersChange$
             .cancelOnDestroy(this)
-            .subscribe(filters => {
+            .subscribe(() => {
                 this._executeQuery();
             });
 

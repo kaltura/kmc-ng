@@ -150,15 +150,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
         this._entriesStore.filtersChange$
             .cancelOnDestroy(this)
             .subscribe(
-                changes => {
-
-                    const changesFlat: Partial<EntriesFilters> = Object.keys(changes).reduce(
-                        (acc, propertyName) => {
-                            acc[propertyName] = changes[propertyName].currentValue;
-                            return acc;
-                        }, {});
-
-                    this._updateComponentState(changesFlat);
+                ({changes}) => {
+                    this._updateComponentState(changes);
                 }
             );
     }

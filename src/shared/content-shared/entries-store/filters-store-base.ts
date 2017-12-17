@@ -9,7 +9,8 @@ export type TypeAdaptersMapping<T> = {
 }
 
 export type DataChanges<T> = {
-    [P in keyof T]? : {previousValue: T[P] | null, currentValue: T[P] | null };
+    changes: Partial<T>,
+    diff: { [P in keyof T]? : { previousValue: T[P] | null, currentValue: T[P] | null }}
 }
 
 export type UpdateResult<T> = {
@@ -80,7 +81,7 @@ export abstract class FiltersStoreBase<T extends { [key: string]: any }> {
     public filter(updates: Partial<T>): UpdateResult<T> {
         let newFilters = this._filters;
         let hasChanges = false;
-        const dataChanges: DataChanges<T> = {};
+        const dataChanges: DataChanges<T> = { changes: {}, diff : {} };
         const result: UpdateResult<T> = {};
 
         Object.keys(updates).forEach(filterName => {
@@ -101,7 +102,8 @@ export abstract class FiltersStoreBase<T extends { [key: string]: any }> {
                     this._logger.info(`update filter '${filterName}'`);
                     const immutableNewValue = Immutable(newValue);
                     newFilters = newFilters.set(filterName, immutableNewValue);
-                    dataChanges[filterName] = { previousValue, currentValue: immutableNewValue };
+                    dataChanges.changes[filterName] = immutableNewValue;
+                    dataChanges.diff[filterName] = { previousValue, currentValue: immutableNewValue };
                     hasChanges = true;
                 }
             }
