@@ -6,10 +6,10 @@ export interface GroupedListItem {
     label: string;
 }
 
-export type GroupedListType = { [id: string] : GroupedListItem[] };
-
-
-
+export interface GroupedListType
+{
+    [id: string]: GroupedListItem[]
+}
 
 export class GroupedListAdapter extends TypeAdapterBase<GroupedListType> {
 

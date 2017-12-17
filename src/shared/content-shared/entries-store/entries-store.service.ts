@@ -40,6 +40,9 @@ import {
     GroupedListType
 } from 'app-shared/content-shared/entries-store/filter-types/grouped-list-type';
 import { NumberTypeAdapter } from 'app-shared/content-shared/entries-store/filter-types/number-type';
+import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
+import { KalturaContentDistributionSearchItem } from 'kaltura-ngx-client/api/types/KalturaContentDistributionSearchItem';
+import { KalturaSearchCondition } from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
 
 
 export type UpdateStatus = {
@@ -87,7 +90,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
   private _state = new BehaviorSubject<UpdateStatus>({ loading: false, errorMessage: null });
   private _paginationCacheToken = 'default';
   private _isReady = false;
-    private _metadataProfiles: number[];
+    private _metadataProfiles: { id: number, name: string, lists: { id: string, name: string}[] }[];
     private _querySubscription: ISubscription;
 
   // TODO sakal combine
@@ -120,7 +123,12 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
                 .subscribe(
                     metadataProfiles => {
                       this._isReady = true;
-                      this._metadataProfiles = metadataProfiles.items.map(metadataProfile => metadataProfile.id);
+                      this._metadataProfiles = metadataProfiles.items.map(metadataProfile => (
+                          {
+                              id: metadataProfile.id,
+                              name: metadataProfile.name,
+                              lists: (metadataProfile.items || []).map(item => ({ id: item.id, name: item.name }))
+                          }));
 
                         const defaultPageSize = this.browserService.getFromLocalStorage(this._getPaginationCacheKey());
                         if (defaultPageSize !== null) {
@@ -218,6 +226,8 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
   private buildQueryRequest(): Observable<KalturaBaseEntryListResponse> {
     try {
+
+        // create request items
       const filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter({});
       let responseProfile: KalturaDetachedResponseProfile = null;
       let pagination: KalturaFilterPager = null;
@@ -227,13 +237,12 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
         const data: EntriesFilters = this._getData();
 
-        this._logger.info('assign filters to request', { filters: data});
-
+        // filter 'freeText'
         if (data.freetext) {
             filter.freeText = data.freetext;
         }
 
-
+        // filter 'createdAt'
         if (data.createdAt ) {
             if (data.createdAt.fromDate) {
                 filter.createdAtGreaterThanOrEqual = KalturaUtils.getStartDateValue(data.createdAt.fromDate);
@@ -244,86 +253,152 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             }
         }
 
-        const mediaTypeFilters = data.mediaTypes.map(item => item.value).join(',');
+        // filters of joined list
+        this._updateFilterWithJoinedList(data.mediaTypes, filter, 'mediaTypeIn');
+        this._updateFilterWithJoinedList(data.ingestionStatuses, filter, 'statusIn');
+        this._updateFilterWithJoinedList(data.durations, filter, 'durationTypeMatchOr');
+        this._updateFilterWithJoinedList(data.moderationStatuses, filter, 'moderationStatusIn');
+        this._updateFilterWithJoinedList(data.replacementStatuses, filter, 'replacementStatusIn');
+        this._updateFilterWithJoinedList(data.accessControlProfiles, filter, 'accessControlIdIn');
+        this._updateFilterWithJoinedList(data.flavors, filter, 'flavorParamsIdsMatchOr');
 
-        if (mediaTypeFilters) {
-            filter.mediaTypeIn = mediaTypeFilters;
+        // filter 'distribution'
+        if (data.distributions && data.distributions.length > 0) {
+            const distributionItem = new KalturaSearchOperator({
+                type: KalturaSearchOperatorType.searchOr
+            });
+
+            advancedSearch.items.push(distributionItem);
+
+            data.distributions.forEach(item => {
+                // very complex way to make sure the value is number (an also bypass both typescript and tslink checks)
+                if (isFinite(+item.value) && parseInt(item.value) == <any>item.value) { // tslint:disable-line
+                    const newItem = new KalturaContentDistributionSearchItem(
+                        {
+                            distributionProfileId: +item.value,
+                            hasEntryDistributionValidationErrors: false,
+                            noDistributionProfiles: false
+                        }
+                    );
+
+                    distributionItem.items.push(newItem)
+                } else {
+                    this._logger.warn(`cannot convert distribution value '${item.value}' into number. ignoring value`);
+                }
+            });
         }
 
-        const ingestionStatuses = data.ingestionStatuses.map(item => item.value).join(',');
+        // filter 'originalClippedEntries'
+        if (data.originalClippedEntries && data.originalClippedEntries.length > 0) {
+            let originalClippedEntriesValue: KalturaNullableBoolean = null;
 
-        if (ingestionStatuses) {
-            filter.statusIn = ingestionStatuses;
-        }
-
-        data.timeScheduling.forEach(item => {
-            switch (item.value) {
-                case 'past':
-                    if (filter.endDateLessThanOrEqual === undefined || filter.endDateLessThanOrEqual < (new Date())) {
-                        filter.endDateLessThanOrEqual = (new Date());
-                    }
-                    break;
-                case 'live':
-                    if (filter.startDateLessThanOrEqualOrNull === undefined || filter.startDateLessThanOrEqualOrNull > (new Date())) {
-                        filter.startDateLessThanOrEqualOrNull = (new Date());
-                    }
-                    if (filter.endDateGreaterThanOrEqualOrNull === undefined || filter.endDateGreaterThanOrEqualOrNull < (new Date())) {
-                        filter.endDateGreaterThanOrEqualOrNull = (new Date());
-                    }
-                    break;
-                case 'future':
-                    if (filter.startDateGreaterThanOrEqual === undefined || filter.startDateGreaterThanOrEqual > (new Date())) {
-                        filter.startDateGreaterThanOrEqual = (new Date());
-                    }
-                    break;
-                case 'scheduled':
-                    if (data.scheduledAt.fromDate) {
-                        if (filter.startDateGreaterThanOrEqual === undefined
-                            || filter.startDateGreaterThanOrEqual > (KalturaUtils.getStartDateValue(data.scheduledAt.fromDate))
-                        ) {
-                            filter.startDateGreaterThanOrEqual = (KalturaUtils.getStartDateValue(data.scheduledAt.fromDate));
+            data.originalClippedEntries.forEach(item => {
+                switch (item.value) {
+                    case '0':
+                        if (originalClippedEntriesValue == null) {
+                            originalClippedEntriesValue = KalturaNullableBoolean.falseValue;
+                        } else if (originalClippedEntriesValue === KalturaNullableBoolean.trueValue) {
+                            originalClippedEntriesValue = KalturaNullableBoolean.nullValue;
                         }
-                    }
-
-                    if (data.scheduledAt.toDate) {
-                        if (filter.endDateLessThanOrEqual === undefined
-                            || filter.endDateLessThanOrEqual < (KalturaUtils.getEndDateValue(data.scheduledAt.toDate))
-                        ) {
-                            filter.endDateLessThanOrEqual = (KalturaUtils.getEndDateValue(data.scheduledAt.toDate));
+                        break;
+                    case '1':
+                        if (originalClippedEntriesValue == null) {
+                            originalClippedEntriesValue = KalturaNullableBoolean.trueValue;
+                        } else if (originalClippedEntriesValue === KalturaNullableBoolean.falseValue) {
+                            originalClippedEntriesValue = KalturaNullableBoolean.nullValue;
                         }
-                    }
+                        break;
+                }
+            });
 
-                    break;
-                default:
-                    break
+            if (originalClippedEntriesValue) {
+                filter.isRoot = originalClippedEntriesValue;
             }
-        });
+        }
 
-      // handle default args of metadata profiles (we must send all metadata profiles that should take part of the freetext searching
+        // filter 'timeScheduling'
+        if (data.timeScheduling && data.timeScheduling.length > 0) {
+            data.timeScheduling.forEach(item => {
+                switch (item.value) {
+                    case 'past':
+                        if (filter.endDateLessThanOrEqual === undefined || filter.endDateLessThanOrEqual < (new Date())) {
+                            filter.endDateLessThanOrEqual = (new Date());
+                        }
+                        break;
+                    case 'live':
+                        if (filter.startDateLessThanOrEqualOrNull === undefined || filter.startDateLessThanOrEqualOrNull > (new Date())) {
+                            filter.startDateLessThanOrEqualOrNull = (new Date());
+                        }
+                        if (filter.endDateGreaterThanOrEqualOrNull === undefined || filter.endDateGreaterThanOrEqualOrNull < (new Date())) {
+                            filter.endDateGreaterThanOrEqualOrNull = (new Date());
+                        }
+                        break;
+                    case 'future':
+                        if (filter.startDateGreaterThanOrEqual === undefined || filter.startDateGreaterThanOrEqual > (new Date())) {
+                            filter.startDateGreaterThanOrEqual = (new Date());
+                        }
+                        break;
+                    case 'scheduled':
+                        if (data.scheduledAt.fromDate) {
+                            if (filter.startDateGreaterThanOrEqual === undefined
+                                || filter.startDateGreaterThanOrEqual > (KalturaUtils.getStartDateValue(data.scheduledAt.fromDate))
+                            ) {
+                                filter.startDateGreaterThanOrEqual = (KalturaUtils.getStartDateValue(data.scheduledAt.fromDate));
+                            }
+                        }
+
+                        if (data.scheduledAt.toDate) {
+                            if (filter.endDateLessThanOrEqual === undefined
+                                || filter.endDateLessThanOrEqual < (KalturaUtils.getEndDateValue(data.scheduledAt.toDate))
+                            ) {
+                                filter.endDateLessThanOrEqual = (KalturaUtils.getEndDateValue(data.scheduledAt.toDate));
+                            }
+                        }
+
+                        break;
+                    default:
+                        break
+                }
+            });
+        }
+
+        // filters of custom metadata lists
       if (this._metadataProfiles && this._metadataProfiles.length > 0) {
-        const missingMetadataProfiles = [...this._metadataProfiles]; // create a new array (don't alter the original one)
 
-        // find metadataprofiles that are not part of the request query
-        (advancedSearch.items || []).forEach(metadataProfileItem => {
-          if (metadataProfileItem instanceof KalturaMetadataSearchItem) {
-            const indexOfMetadata = missingMetadataProfiles.indexOf((<KalturaMetadataSearchItem>metadataProfileItem).metadataProfileId);
-            if (indexOfMetadata >= 0) {
-              missingMetadataProfiles.splice(indexOfMetadata, 1);
-            }
-          }
+          this._metadataProfiles.forEach(metadataProfile => {
+              // create advanced item for all metadata profiles regardless if the user filtered by them or not.
+              // this is needed so freetext will include all metadata profiles while searching.
+              const metadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem(
+                  {
+                      metadataProfileId: metadataProfile.id,
+                      type: KalturaSearchOperatorType.searchAnd,
+                      items: []
+                  }
+              );
+              advancedSearch.items.push(metadataItem);
 
-        });
+              metadataProfile.lists.forEach(list =>
+              {
+                  const metadataProfileFilters = data.customMetadata[list.id];
+                  if (metadataProfileFilters && metadataProfileFilters.length > 0) {
+                      const innerMetadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem({
+                          metadataProfileId: metadataProfile.id,
+                          type: KalturaSearchOperatorType.searchOr,
+                          items: []
+                      });
+                      metadataItem.items.push(innerMetadataItem);
 
-        // add default values to the missing metadata profiles
-        missingMetadataProfiles.forEach((metadataProfileId: number) => {
-          const metadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem({
-            metadataProfileId: metadataProfileId,
-            type: KalturaSearchOperatorType.searchAnd,
-            items: []
+                      metadataProfileFilters.forEach(filterItem => {
+                          const searchItem = new KalturaSearchCondition({
+                              field: `/*[local-name()='metadata']/*[local-name()='${list.name}']`,
+                              value: filterItem.value
+                          });
+
+                          innerMetadataItem.items.push(searchItem);
+                      });
+                  }
+              });
           });
-
-          advancedSearch.items.push(metadataItem);
-        });
       }
 
       // remove advanced search arg if it is empty
@@ -379,6 +454,14 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
       return Observable.throw(err);
     }
 
+  }
+
+  private _updateFilterWithJoinedList(list: ListType, requestFilter: KalturaMediaEntryFilter, requestFilterProperty: keyof KalturaMediaEntryFilter): void{
+      const value = (list || []).map(item => item.value).join(',');
+
+      if (value) {
+          requestFilter[requestFilterProperty] = value;
+      }
   }
 
   public deleteEntry(entryId: string): Observable<void> {

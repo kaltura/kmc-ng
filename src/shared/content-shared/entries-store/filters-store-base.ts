@@ -31,6 +31,11 @@ export abstract class FiltersStoreBase<T extends { [key: string]: any }> {
     protected abstract _getTypeAdaptersMapping() : TypeAdaptersMapping<T>;
 
 
+    public resetFilters(): void
+    {
+       this.filter(this._createEmptyStore());
+    }
+    
     public cloneFilters<K extends keyof T>(filterNames: K[]): Partial<T>
     {
         const result: Partial<T> = {};

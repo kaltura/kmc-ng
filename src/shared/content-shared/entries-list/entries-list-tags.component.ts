@@ -26,7 +26,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
     removeTag(tag: any) {
 
-        if (listTypes.indexOf(tag.type))
+        if (listTypes.indexOf(tag.type) > -1)
         {
             const previousData = this._entriesStore.cloneFilter(tag.type, []);
 
@@ -51,7 +51,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
     }
 
     removeAllTags() {
-        // TODO sakal not working
+        this._entriesStore.resetFilters();
     }
 
     ngOnInit() {
