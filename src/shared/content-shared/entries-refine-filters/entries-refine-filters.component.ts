@@ -6,11 +6,8 @@ import { environment } from 'app-environment';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { EntriesRefineFiltersService, RefineGroup } from './entries-refine-filters.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import {
-    EntriesFilters,
-    EntriesFiltersStore
-} from 'app-shared/content-shared/entries-store/entries-filters.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
+import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 
 export interface ListData {
     group?: string;
@@ -53,7 +50,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
 
 
   constructor(private _entriesRefineFilters: EntriesRefineFiltersService,
-              private _entriesFilters: EntriesFiltersStore,
+              private _entriesStore: EntriesStore,
               private _primeTreeDataProvider: PrimeTreeDataProvider,
               private _appLocalization: AppLocalization) {
   }
@@ -68,7 +65,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
 
 
     private _restoreFiltersState(): void {
-        this._updateComponentState(this._entriesFilters.cloneFilters(
+        this._updateComponentState(this._entriesStore.cloneFilters(
             [
                 'createdAt',
                 'scheduledAt',
@@ -111,9 +108,9 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
           }
 
           if (listFilter !== null && typeof listFilter !== 'undefined') {
-              const listSelectionsMap = this._entriesFilters.toMap(listData.selections, 'data');
-              const listFilterMap = this._entriesFilters.toMap(listFilter, 'value');
-              const diff = this._entriesFilters.getDiff(listSelectionsMap, listFilterMap );
+              const listSelectionsMap = this._entriesStore.toMap(listData.selections, 'data');
+              const listFilterMap = this._entriesStore.toMap(listFilter, 'value');
+              const diff = this._entriesStore.getDiff(listSelectionsMap, listFilterMap );
 
               diff.added.forEach(addedItem => {
                   const listItems = listData.items.length > 0 ? listData.items[0].children : [];
@@ -145,7 +142,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
 
 
   private _registerToFilterStoreDataChanges(): void {
-        this._entriesFilters.dataChanges$
+        this._entriesStore.dataChanges$
             .cancelOnDestroy(this)
             .subscribe(
                 changes => {
@@ -162,7 +159,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
     }
 
     private _syncScheduleDatesMode() {
-        const timeScheduling = this._entriesFilters.cloneFilter('timeScheduling', []);
+        const timeScheduling = this._entriesStore.cloneFilter('timeScheduling', []);
         this._scheduledSelected = !!timeScheduling.find(item => item.value === 'scheduled');
 
         if (!this._scheduledSelected) {
@@ -260,7 +257,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
    */
   public _clearCreatedComponents(): void {
       this._createdFilterError = "";
-      this._entriesFilters.update({
+      this._entriesStore.filter({
           createdAt: {
               fromDate: null,
               toDate: null
@@ -291,7 +288,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
   }
 
   public _onCreatedChanged(): void {
-      const updateResult = this._entriesFilters.update({
+      const updateResult = this._entriesStore.filter({
           createdAt: {
               fromDate: this._createdAfter,
               toDate: this._createdBefore
@@ -302,7 +299,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
           this._createdFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
 
           setTimeout(() => {
-              const createdAt = this._entriesFilters.cloneFilter('createdAt', null);
+              const createdAt = this._entriesStore.cloneFilter('createdAt', null);
               this._createdAfter = createdAt ? createdAt.fromDate : null;
               this._createdBefore = createdAt ? createdAt.toDate : null;
 
@@ -318,7 +315,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
    * Not part of the API, don't use it from outside this component
    */
   public _onSchedulingChanged(calendarRef: any): void {
-      const updateResult = this._entriesFilters.update({
+      const updateResult = this._entriesStore.filter({
           scheduledAt: {
               fromDate: this._scheduledAfter,
               toDate: this._scheduledBefore
@@ -329,7 +326,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
           this._scheduledFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
 
           setTimeout(() => {
-              const scheduledAt = this._entriesFilters.cloneFilter('scheduledAt', null);
+              const scheduledAt = this._entriesStore.cloneFilter('scheduledAt', null);
               this._scheduledAfter = scheduledAt ? scheduledAt.fromDate : null;
               this._scheduledBefore = scheduledAt ? scheduledAt.toDate : null;
 
@@ -358,11 +355,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
 
               if (listData.group === 'customMetadata')
               {
-                  newFilterValue = this._entriesFilters.cloneFilter('customMetadata', {});
+                  newFilterValue = this._entriesStore.cloneFilter('customMetadata', {});
                   newFilterItems = newFilterValue[listName] = newFilterValue[listName] || [];
                   newFilterName = 'customMetadata';
               }else {
-                  newFilterValue = newFilterItems = this._entriesFilters.cloneFilter(listName, []);
+                  newFilterValue = newFilterItems = this._entriesStore.cloneFilter(listName, []);
                   newFilterName = listName;
 
               }
@@ -379,7 +376,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                           newFilterItems.push({value: selectedNode.data + '', label: selectedNode.label});
                       }
                   });
-              this._entriesFilters.update({[newFilterName]: newFilterValue});
+              this._entriesStore.filter({[newFilterName]: newFilterValue});
           }
       }
   }
@@ -399,11 +396,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
 
               // get existing filters by filter name
               if (listData.group === 'customMetadata') {
-                  newFilterValue = this._entriesFilters.cloneFilter('customMetadata', {});
+                  newFilterValue = this._entriesStore.cloneFilter('customMetadata', {});
                   newFilterItems = newFilterValue[listName] = newFilterValue[listName] || [];
                   newFilterName = 'customMetadata';
               } else {
-                  newFilterValue = newFilterItems = this._entriesFilters.cloneFilter(listName, []);
+                  newFilterValue = newFilterItems = this._entriesStore.cloneFilter(listName, []);
                   newFilterName = listName;
               }
 
@@ -420,7 +417,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                           newFilterItems.splice(itemIndex, 1);
 
                           if (listName === 'timeScheduling' && selectedNode.data === 'scheduled') {
-                              this._entriesFilters.update({
+                              this._entriesStore.filter({
                                   scheduledAt: {
                                       fromDate: null,
                                       toDate: null
@@ -430,7 +427,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                       }
                   });
 
-              this._entriesFilters.update({[newFilterName]: newFilterValue});
+              this._entriesStore.filter({[newFilterName]: newFilterValue});
           }
       }
   }

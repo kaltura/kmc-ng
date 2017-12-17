@@ -1,13 +1,12 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 
-import { EntriesStore, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
+import {
+    EntriesFilters, EntriesStore,
+    SortDirection
+} from 'app-shared/content-shared/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { BrowserService } from 'app-shared/kmc-shell';
-import {
-    EntriesFilters,
-    EntriesFiltersStore
-} from 'app-shared/content-shared/entries-store/entries-filters.service';
 
 @Component({
   selector: 'kEntriesList',
@@ -38,8 +37,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         sortDirection: SortDirection.Desc
     };
 
-    constructor(private _entriesFilters: EntriesFiltersStore,
-                private _entriesStore: EntriesStore,
+    constructor(private _entriesStore: EntriesStore,
                 private _browserService: BrowserService) {
     }
 
@@ -49,7 +47,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
 
     private _restoreFiltersState(): void {
-        this._updateComponentState(this._entriesFilters.cloneFilters(
+        this._updateComponentState(this._entriesStore.cloneFilters(
             [
                 'freetext',
                 'pageSize',
@@ -90,7 +88,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
 
     private _registerToFilterStoreDataChanges(): void {
-        this._entriesFilters.dataChanges$
+        this._entriesStore.dataChanges$
             .cancelOnDestroy(this)
             .subscribe(changes => {
                 const changesFlat: Partial<EntriesFilters> = Object.keys(changes).reduce(
@@ -104,7 +102,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
 
     onFreetextChanged(): void {
-        this._entriesFilters.update({freetext: this._query.freetext});
+        this._entriesStore.filter({freetext: this._query.freetext});
     }
 
     onSortChanged(event) {
@@ -112,7 +110,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
         // TODO sakal - should make sure this function is implemented the same in other views
 
-        this._entriesFilters.update({
+        this._entriesStore.filter({
             sortBy: event.field,
             sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
         });
@@ -124,7 +122,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
             // TODO sakal - should make sure this function is implemented the same in other views
 
             this.clearSelection();
-            this._entriesFilters.update({
+            this._entriesStore.filter({
                 pageIndex: state.page,
                 pageSize: state.rows
             });

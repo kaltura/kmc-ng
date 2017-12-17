@@ -64,7 +64,7 @@ export abstract class FiltersStoreBase<T extends { [key: string]: any }> {
         return this._data;
     }
 
-    public update(updates: Partial<T>): UpdateResult<T> {
+    public filter(updates: Partial<T>): UpdateResult<T> {
         let newFilters = this._data;
         let hasChanges = false;
         const dataChanges: DataChanges<T> = {};

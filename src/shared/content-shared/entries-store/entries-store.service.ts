@@ -1,10 +1,8 @@
 import { Host, Injectable, OnDestroy } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
-import { async } from 'rxjs/scheduler/async';
 import { MetadataProfileCreateModes, MetadataProfileStore, MetadataProfileTypes } from 'app-shared/kmc-shared';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
@@ -26,18 +24,22 @@ import { BaseEntryListAction } from 'kaltura-ngx-client/api/types/BaseEntryListA
 import { KalturaClient } from 'kaltura-ngx-client';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
-import { FilterItem } from './filter-item';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaLiveStreamAdminEntry } from 'kaltura-ngx-client/api/types/KalturaLiveStreamAdminEntry';
 import { KalturaLiveStreamEntry } from 'kaltura-ngx-client/api/types/KalturaLiveStreamEntry';
 import { KalturaExternalMediaEntry } from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
-import {
-    EntriesFilters,
-    EntriesFiltersStore
-} from 'app-shared/content-shared/entries-store/entries-filters.service';
-import { environment } from 'app-environment';
+
 import { KalturaLogger } from '@kaltura-ng/kaltura-log';
+import { FiltersStoreBase, TypeAdaptersMapping } from './filters-store-base';
+import { StringTypeAdapter } from './filter-types/string-type';
+import { DatesRangeAdapter, DatesRangeType } from './filter-types/dates-range-type';
+import { ListAdapter, ListType } from './filter-types/list-type';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
+import {
+    GroupedListAdapter,
+    GroupedListType
+} from 'app-shared/content-shared/entries-store/filter-types/grouped-list-type';
+import { NumberTypeAdapter } from 'app-shared/content-shared/entries-store/filter-types/number-type';
 
 
 export type UpdateStatus = {
@@ -55,8 +57,32 @@ export enum SortDirection {
     Asc
 }
 
+
+export interface EntriesFilters {
+    freetext: string,
+    pageSize: number,
+    pageIndex: number,
+    sortBy: string,
+    sortDirection: number,
+    fields: string,
+    createdAt: DatesRangeType,
+    scheduledAt: DatesRangeType,
+    mediaTypes: ListType,
+    timeScheduling: ListType,
+    ingestionStatuses: ListType,
+    durations: ListType,
+    originalClippedEntries: ListType,
+    moderationStatuses: ListType,
+    replacementStatuses: ListType,
+    accessControlProfiles: ListType,
+    flavors: ListType,
+    distributions: ListType,
+    customMetadata: GroupedListType
+}
+
+
 @Injectable()
-export class EntriesStore implements OnDestroy {
+export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements OnDestroy {
   private _entries = new BehaviorSubject({ items: [], totalCount: 0 });
   private _state = new BehaviorSubject<UpdateStatus>({ loading: false, errorMessage: null });
   private _paginationCacheToken = 'default';
@@ -74,10 +100,10 @@ export class EntriesStore implements OnDestroy {
 
   constructor(private kalturaServerClient: KalturaClient,
               private browserService: BrowserService,
-              @Host() private _entriesFilters: EntriesFiltersStore,
               private metadataProfileService: MetadataProfileStore,
-              private _logger: KalturaLogger) {
-    this._prepare();
+              _logger: KalturaLogger) {
+      super(_logger);
+      this._prepare();
   }
 
     private _prepare(): void {
@@ -98,7 +124,7 @@ export class EntriesStore implements OnDestroy {
 
                         const defaultPageSize = this.browserService.getFromLocalStorage(this._getPaginationCacheKey());
                         if (defaultPageSize !== null) {
-                            this._entriesFilters.update({
+                            this.filter({
                                 pageSize: defaultPageSize
                             });
                         }
@@ -118,7 +144,7 @@ export class EntriesStore implements OnDestroy {
     }
 
     private _registerToFilterStoreDataChanges(): void {
-        this._entriesFilters.dataChanges$
+        this.dataChanges$
             .cancelOnDestroy(this)
             .subscribe(filters => {
                 this._executeQuery();
@@ -162,7 +188,7 @@ export class EntriesStore implements OnDestroy {
           this._querySubscription = null;
       }
 
-      const pageSize = this._entriesFilters.cloneFilter('pageSize',null);
+      const pageSize = this.cloneFilter('pageSize',null);
       if (pageSize) {
           this.browserService.setInLocalStorage(this._getPaginationCacheKey(), pageSize);
       }
@@ -199,9 +225,7 @@ export class EntriesStore implements OnDestroy {
       const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
       advancedSearch.type = KalturaSearchOperatorType.searchAnd;
 
-
-        // TODO sakal remove explicit any
-        const data: EntriesFilters = (<any>this._entriesFilters)._getData();
+        const data: EntriesFilters = this._getData();
 
         this._logger.info('assign filters to request', { filters: data});
 
@@ -382,4 +406,52 @@ export class EntriesStore implements OnDestroy {
     });
 
   }
+
+    protected _createEmptyStore(): EntriesFilters {
+        return {
+            freetext: '',
+            pageSize: 50,
+            pageIndex: 0,
+            sortBy: 'createdAt',
+            sortDirection: SortDirection.Desc,
+            fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,tags,categoriesIds,downloadUrl',
+            createdAt: {fromDate: null, toDate: null},
+            scheduledAt: {fromDate: null, toDate: null},
+            mediaTypes: [],
+            timeScheduling: [],
+            ingestionStatuses: [],
+            durations: [],
+            originalClippedEntries: [],
+            moderationStatuses: [],
+            replacementStatuses: [],
+            accessControlProfiles: [],
+            flavors: [],
+            distributions: [],
+            customMetadata : {}
+        };
+    }
+
+    protected _getTypeAdaptersMapping(): TypeAdaptersMapping<EntriesFilters> {
+        return {
+            freetext: new StringTypeAdapter(),
+            pageSize: new NumberTypeAdapter(),
+            pageIndex: new NumberTypeAdapter(),
+            sortBy: new StringTypeAdapter(),
+            sortDirection: new NumberTypeAdapter(),
+            fields: new StringTypeAdapter(),
+            createdAt: new DatesRangeAdapter(),
+            scheduledAt: new DatesRangeAdapter(),
+            mediaTypes: new ListAdapter(),
+            timeScheduling: new ListAdapter(),
+            ingestionStatuses: new ListAdapter(),
+            durations: new ListAdapter(),
+            originalClippedEntries: new ListAdapter(),
+            moderationStatuses: new ListAdapter(),
+            replacementStatuses: new ListAdapter(),
+            accessControlProfiles: new ListAdapter(),
+            flavors: new ListAdapter(),
+            distributions: new ListAdapter(),
+            customMetadata: new GroupedListAdapter()
+        };
+    }
 }

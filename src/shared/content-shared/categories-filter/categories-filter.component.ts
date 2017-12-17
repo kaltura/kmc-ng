@@ -13,7 +13,7 @@ import { CategoryData } from 'app-shared/content-shared/categories-store.service
 import { CategoriesPrimeService } from 'app-shared/content-shared/categories-prime.service';
 
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
-import { EntriesFiltersStore } from 'app-shared/content-shared/entries-store/entries-filters.service';
+import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 
 export enum TreeSelectionModes {
   Self = 0,
@@ -43,7 +43,7 @@ export class CategoriesFilterComponent implements OnInit, AfterViewInit, OnDestr
   public _selection: PrimeTreeNode[] = [];
   public _TreeSelectionModes = TreeSelectionModes;
 
-  constructor(private _entriesFilters: EntriesFiltersStore,
+  constructor(private _entriesStore: EntriesStore,
               private _categoriesPrimeService: CategoriesPrimeService,
               private _browserService: BrowserService,
               private _filtersRef: ElementRef) {

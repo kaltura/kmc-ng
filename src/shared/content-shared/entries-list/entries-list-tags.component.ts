@@ -1,12 +1,8 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 
-import {
-    EntriesFilters,
-    EntriesFiltersStore
-} from 'app-shared/content-shared/entries-store/entries-filters.service';
-
 import * as moment from 'moment';
 import { ListType } from 'app-shared/content-shared/entries-store/filter-types/list-type';
+import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 
 
 
@@ -25,30 +21,30 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
     public _filterTags : { type : string, value : any, label : string, tooltip : {token : string, args?: any}}[] = [];
 
 
-    constructor(private _entriesFilters: EntriesFiltersStore) {
+    constructor(private _entriesStore: EntriesStore) {
     }
 
     removeTag(tag: any) {
 
         if (listTypes.indexOf(tag.type))
         {
-            const previousData = this._entriesFilters.cloneFilter(tag.type, []);
+            const previousData = this._entriesStore.cloneFilter(tag.type, []);
 
             previousData.splice(
                 previousData.findIndex(item => item.value === tag.value)
                 , 1
             );
 
-            this._entriesFilters.update({
+            this._entriesStore.filter({
                 [tag.type]: previousData
             });
         }else {
             switch (tag.type) {
                 case "freetext":
-                    this._entriesFilters.update({freetext: null});
+                    this._entriesStore.filter({freetext: null});
                     break;
                 case "createdAt":
-                    this._entriesFilters.update({createdAt: {fromDate: null, toDate: null}});
+                    this._entriesStore.filter({createdAt: {fromDate: null, toDate: null}});
                     break;
             }
         }
@@ -65,7 +61,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
     private _restoreFiltersState(): void
     {
-        this._updateComponentState(this._entriesFilters.cloneFilters(
+        this._updateComponentState(this._entriesStore.cloneFilters(
             [
                 'freetext',
                 'pageSize',
@@ -94,7 +90,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
     }
 
     private _registerToFilterStoreDataChanges(): void {
-        this._entriesFilters.dataChanges$
+        this._entriesStore.dataChanges$
             .cancelOnDestroy(this)
             .subscribe(changes => {
                 const changesFlat: Partial<EntriesFilters> = Object.keys(changes).reduce(
@@ -114,7 +110,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 1);
         }
 
-        const {fromDate, toDate} = this._entriesFilters.cloneFilter('createdAt', { fromDate: null, toDate: null});
+        const {fromDate, toDate} = this._entriesStore.cloneFilter('createdAt', { fromDate: null, toDate: null});
         if (fromDate || toDate) {
             let tooltip = '';
             if (fromDate && toDate) {
@@ -137,7 +133,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 1);
         }
 
-        const currentFreetextValue = this._entriesFilters.cloneFilter('freetext', null);
+        const currentFreetextValue = this._entriesStore.cloneFilter('freetext', null);
 
         if (currentFreetextValue) {
             this._filterTags.push({
@@ -151,12 +147,12 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
 
     private _syncTagsOfListType(filterName: keyof EntriesFilters): void {
 
-        const currentValue =  <ListType>this._entriesFilters.cloneFilter(filterName, []);
+        const currentValue =  <ListType>this._entriesStore.cloneFilter(filterName, []);
         const tagsFilters = this._filterTags.filter(item => item.type === filterName);
 
-        const tagsFiltersMap = this._entriesFilters.toMap(tagsFilters, 'value');
-        const currentValueMap = this._entriesFilters.toMap(currentValue, 'value');
-        const diff = this._entriesFilters.getDiff(tagsFiltersMap, currentValueMap);
+        const tagsFiltersMap = this._entriesStore.toMap(tagsFilters, 'value');
+        const currentValueMap = this._entriesStore.toMap(currentValue, 'value');
+        const diff = this._entriesStore.getDiff(tagsFiltersMap, currentValueMap);
 
         diff.deleted.forEach(item => {
             this._filterTags.splice(
@@ -164,13 +160,12 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 1);
         });
 
-        // TODO sakal fix tooltip
         diff.added.forEach(item => {
             this._filterTags.push({
                 type: filterName,
                 value: (<any>item).value,
                 label: (<any>item).label,
-                tooltip: {token: 'applications.content.filters.mediaType', args: {'0': (<any>item).label}}
+                tooltip: {token: `applications.content.filters.${filterName}`, args: {'0': (<any>item).label}}
             });
         });
     }
