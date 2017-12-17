@@ -111,9 +111,9 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
           }
 
           if (listFilter !== null && typeof listFilter !== 'undefined') {
-              const listSelectionsMap = this._entriesStore.toMap(listData.selections, 'data');
-              const listFilterMap = this._entriesStore.toMap(listFilter, 'value');
-              const diff = this._entriesStore.getDiff(listSelectionsMap, listFilterMap );
+              const listSelectionsMap = this._entriesStore.filtersUtils.toMap(listData.selections, 'data');
+              const listFilterMap = this._entriesStore.filtersUtils.toMap(listFilter, 'value');
+              const diff = this._entriesStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap );
 
               diff.added.forEach(addedItem => {
                   const listItems = listData.items.length > 0 ? listData.items[0].children : [];
@@ -147,7 +147,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
 
 
   private _registerToFilterStoreDataChanges(): void {
-        this._entriesStore.dataChanges$
+        this._entriesStore.filtersChange$
             .cancelOnDestroy(this)
             .subscribe(
                 changes => {

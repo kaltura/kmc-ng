@@ -87,7 +87,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
 
     private _registerToFilterStoreDataChanges(): void {
-        this._entriesStore.dataChanges$
+        this._entriesStore.filtersChange$
             .cancelOnDestroy(this)
             .subscribe(changes => {
                 const changesFlat: Partial<EntriesFilters> = Object.keys(changes).reduce(

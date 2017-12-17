@@ -144,7 +144,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     }
 
     private _registerToFilterStoreDataChanges(): void {
-        this.dataChanges$
+        this.filtersChange$
             .cancelOnDestroy(this)
             .subscribe(filters => {
                 this._executeQuery();
@@ -221,7 +221,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
             advancedSearch.type = KalturaSearchOperatorType.searchAnd;
 
-            const data: EntriesFilters = this._getData();
+            const data: EntriesFilters = this._getFiltersAsReadonly();
 
             // filter 'freeText'
             if (data.freetext) {

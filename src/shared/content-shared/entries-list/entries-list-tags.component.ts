@@ -112,7 +112,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
     }
 
     private _registerToFilterStoreDataChanges(): void {
-        this._entriesStore.dataChanges$
+        this._entriesStore.filtersChange$
             .cancelOnDestroy(this)
             .subscribe(changes => {
                 const changesFlat: Partial<EntriesFilters> = Object.keys(changes).reduce(
@@ -172,9 +172,9 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
         const currentValue =  <ListType>this._entriesStore.cloneFilter(filterName, []);
         const tagsFilters = this._filterTags.filter(item => item.type === filterName);
 
-        const tagsFiltersMap = this._entriesStore.toMap(tagsFilters, 'value');
-        const currentValueMap = this._entriesStore.toMap(currentValue, 'value');
-        const diff = this._entriesStore.getDiff(tagsFiltersMap, currentValueMap);
+        const tagsFiltersMap = this._entriesStore.filtersUtils.toMap(tagsFilters, 'value');
+        const currentValueMap = this._entriesStore.filtersUtils.toMap(currentValue, 'value');
+        const diff = this._entriesStore.filtersUtils.getDiff(tagsFiltersMap, currentValueMap);
 
         diff.deleted.forEach(item => {
             this._filterTags.splice(
@@ -222,9 +222,9 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                        )
                    });
                }else {
-                   const tagsListItemsMap = this._entriesStore.toMap(tagsListItems, 'value');
-                   const filtersListItemsMap = this._entriesStore.toMap(filtersListItems, 'value');
-                   const diff = this._entriesStore.getDiff(tagsListItemsMap, filtersListItemsMap);
+                   const tagsListItemsMap = this._entriesStore.filtersUtils.toMap(tagsListItems, 'value');
+                   const filtersListItemsMap = this._entriesStore.filtersUtils.toMap(filtersListItems, 'value');
+                   const diff = this._entriesStore.filtersUtils.getDiff(tagsListItemsMap, filtersListItemsMap);
 
                    diff.deleted.forEach(item => {
                        this._filterTags.splice(
