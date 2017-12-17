@@ -490,7 +490,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
   }
 
-    protected _createEmptyStore(): EntriesFilters {
+    protected _createEmptyStoreData(): EntriesFilters {
         return {
             freetext: '',
             pageSize: 50,

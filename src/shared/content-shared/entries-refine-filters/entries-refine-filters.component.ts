@@ -20,6 +20,22 @@ export interface FiltersGroup {
   lists: ListData[];
 }
 
+const listOfFilterNames: (keyof EntriesFilters)[] = [
+    'createdAt',
+    'scheduledAt',
+    'mediaTypes',
+    'ingestionStatuses',
+    'durations',
+    'originalClippedEntries',
+    'timeScheduling',
+    'moderationStatuses',
+    'replacementStatuses',
+    'accessControlProfiles',
+    'flavors',
+    'distributions',
+    'customMetadata'
+];
+
 @Component({
   selector: 'k-entries-refine-filters',
   templateUrl: './entries-refine-filters.component.html',
@@ -66,21 +82,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
 
     private _restoreFiltersState(): void {
         this._updateComponentState(this._entriesStore.cloneFilters(
-            [
-                'createdAt',
-                'scheduledAt',
-                'mediaTypes',
-                'ingestionStatuses',
-                'durations',
-                'originalClippedEntries',
-                'timeScheduling',
-                'moderationStatuses',
-                'replacementStatuses',
-                'accessControlProfiles',
-                'flavors',
-                'distributions',
-                'customMetadata'
-            ]
+            listOfFilterNames
         ));
     }
 
@@ -95,6 +97,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
           this._scheduledBefore = updates.scheduledAt.toDate || null;
       }
 
+      let updatedList = false;
       Object.keys(this._listDataMapping).forEach(listName => {
           const listData = this._listDataMapping[listName];
           let listFilter: { value: string, label: string }[];
@@ -118,6 +121,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                   if (!matchingItem) {
                       console.warn(`[entries-refine-filters]: failed to sync filter for '${listName}'`);
                   } else {
+                      updatedList = true;
                       listData.selections.push(matchingItem);
                   }
               });
@@ -130,6 +134,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                           listData.selections.indexOf(removedItem),
                           1
                       );
+                      updatedList = true;
                   }
               });
           }
@@ -271,20 +276,14 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
    * Not part of the API, don't use it from outside this component
    */
   public _clearAllComponents(): void {
-    this._scheduledFilterError = null;
 
-    const handledFilterTypeList = [];
-    Object.keys(this._listDataMapping).forEach(filterName => {
-      const listData = this._listDataMapping[filterName];
+      // manually remove all selections, this is needed since the root selections will not be removed by prime library
+      Object.keys(this._listDataMapping).forEach(listId =>
+      {
+          this._listDataMapping[listId].selections = [];
+      });
 
-      // TODO sakal
-      // if (handledFilterTypeList.indexOf(treeData.refineFilter.entriesFilterType) === -1) {
-      //   handledFilterTypeList.push(treeData.refineFilter.entriesFilterType);
-      //   this.entriesStore.removeFiltersByType(treeData.refineFilter.entriesFilterType);
-      // }
-    });
-
-    this._clearCreatedComponents();
+      this._entriesStore.resetFilters(listOfFilterNames);
   }
 
   public _onCreatedChanged(): void {

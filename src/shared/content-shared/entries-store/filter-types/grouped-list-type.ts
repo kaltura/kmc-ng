@@ -4,6 +4,7 @@ import { FiltersUtils } from 'app-shared/content-shared/entries-store/filters-ut
 export interface GroupedListItem {
     value: string;
     label: string;
+    payload?: { [key: string]: any }
 }
 
 export interface GroupedListType

@@ -18,7 +18,7 @@ export type UpdateResult<T> = {
 }
 
 export abstract class FiltersStoreBase<T extends { [key: string]: any }> {
-    private _data: Immutable.ImmutableObject<T> = Immutable(this._createEmptyStore());
+    private _data: Immutable.ImmutableObject<T> = Immutable(this._createEmptyStoreData());
     private _dataChanges = new Subject<DataChanges<T>>();
     public dataChanges$ = this._dataChanges.asObservable();
     private _typeAdaptersMapping: TypeAdaptersMapping<T> = null;
@@ -27,15 +27,23 @@ export abstract class FiltersStoreBase<T extends { [key: string]: any }> {
         this._typeAdaptersMapping = this._getTypeAdaptersMapping();
     }
 
-    protected abstract  _createEmptyStore(): T;
-    protected abstract _getTypeAdaptersMapping() : TypeAdaptersMapping<T>;
+    protected abstract  _createEmptyStoreData(): T;
+    protected abstract _getTypeAdaptersMapping(): TypeAdaptersMapping<T>;
 
 
-    public resetFilters(): void
-    {
-       this.filter(this._createEmptyStore());
+    public resetFilters(filterNames?: (keyof T)[]): void {
+        let newData: Partial<T> = this._createEmptyStoreData();
+        if (filterNames && filterNames.length) {
+            const filteredNewData: Partial<T> = {};
+            filterNames.forEach(filterName => {
+                filteredNewData[filterName] = newData[filterName];
+            });
+
+            newData = filteredNewData;
+        }
+        this.filter(newData);
     }
-    
+
     public cloneFilters<K extends keyof T>(filterNames: K[]): Partial<T>
     {
         const result: Partial<T> = {};
