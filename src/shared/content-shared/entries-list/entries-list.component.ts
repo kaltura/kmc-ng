@@ -77,13 +77,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         if (typeof updates.sortDirection !== 'undefined') {
             this._query.sortDirection = updates.sortDirection;
         }
-
-        if (typeof updates.createdAt !== 'undefined') {
-        }
-
-        if (typeof updates.freetext !== 'undefined') {
-            this._query.freetext = updates.freetext;
-        }
     }
 
     private _registerToFilterStoreDataChanges(): void {
@@ -91,6 +84,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
             .cancelOnDestroy(this)
             .subscribe(({changes}) => {
                 this._updateComponentState(changes);
+                this.clearSelection();
                 this._browserService.scrollToTop();
             });
     }
@@ -100,7 +94,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
 
     onSortChanged(event) {
-        this.clearSelection();
         this._entriesStore.filter({
             sortBy: event.field,
             sortDirection: event.order === 1 ? SortDirection.Asc : SortDirection.Desc
@@ -109,7 +102,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
     onPaginationChanged(state: any): void {
         if (state.page !== this._query.pageIndex || state.rows !== this._query.pageSize) {
-            this.clearSelection();
             this._entriesStore.filter({
                 pageIndex: state.page,
                 pageSize: state.rows
@@ -123,6 +115,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
     public _reload() {
         this.clearSelection();
+        this._browserService.scrollToTop();
         this._entriesStore.reload();
     }
 

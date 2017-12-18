@@ -84,15 +84,16 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
         this._updateComponentState(this._entriesStore.cloneFilters(
             listOfFilterNames
         ));
+        this._fixPrimeTreePropagation();
     }
 
   private _updateComponentState(updates: Partial<EntriesFilters>): void {
-      if (updates.createdAt) {
+      if (typeof updates.createdAt  !== 'undefined') {
           this._createdAfter = updates.createdAt.fromDate || null;
           this._createdBefore = updates.createdAt.toDate || null;
       }
 
-      if (updates.scheduledAt) {
+      if (typeof updates.scheduledAt  !== 'undefined') {
           this._scheduledAfter = updates.scheduledAt.fromDate || null;
           this._scheduledBefore = updates.scheduledAt.toDate || null;
       }
@@ -171,13 +172,13 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
         this._showLoader = true;
         this._entriesRefineFilters.getFilters()
             .cancelOnDestroy(this)
+            .first() // only handle it once, no need to handle changes over time
             .subscribe(
                 groups => {
                     this._showLoader = false;
                     this._buildComponentFilters(groups);
                     this._restoreFiltersState();
                     this._registerToFilterStoreDataChanges();
-                    this._fixPrimeTreePropagation();
                 },
                 error => {
                     this._showLoader = false;
@@ -270,8 +271,9 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
    */
   public _clearAllComponents(): void {
 
-      // manually remove all selections, this is needed since the root selections will not be removed by prime library
-      Object.keys(this._listDataMapping).forEach(listId =>
+      // fix primeng issue: manually remove all selections, this is needed since the root selections will not be removed by prime library
+      Object.keys(this._listDataMapping)
+          .forEach(listId =>
       {
           this._listDataMapping[listId].selections = [];
       });

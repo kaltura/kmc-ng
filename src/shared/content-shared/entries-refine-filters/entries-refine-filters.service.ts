@@ -28,11 +28,6 @@ import { DefaultFiltersList } from './default-filters-list';
 import * as R from 'ramda';
 import { KalturaAccessControlProfile } from 'kaltura-ngx-client/api/types/KalturaAccessControlProfile';
 
-export interface UpdateStatus {
-    loading: boolean;
-    errorMessage: string;
-};
-
 export interface RefineGroupListItem
 { value: string, label: string }
 
@@ -61,6 +56,7 @@ export class EntriesRefineFiltersService {
     }
 
     public getFilters(): Observable<RefineGroup[]> {
+
         if (!this._getRefineFilters$) {
             // execute the request
             const getMetadata$ = this._metadataProfileStore.get({

@@ -152,7 +152,6 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
     }
 
-
     private _getPaginationCacheKey(): string {
         return `entries.${this._paginationCacheToken}.list.pageSize`;
     }
@@ -161,7 +160,6 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
         this._entries.state.complete();
         this._entries.data.complete();
     }
-
 
     public reload(): void {
         if (this._entries.state.getValue().loading) {
