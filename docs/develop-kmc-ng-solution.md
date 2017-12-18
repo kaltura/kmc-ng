@@ -35,7 +35,6 @@ To be able to make changes across repositories we will use a tool (named **kaltu
    "version" : "2.0.0",
    "repositories": [
      { "origin" : "github", "uri": "https://github.com/kaltura/kaltura-ng.git"},
-     { "origin" : "github", "uri": "https://github.com/kaltura/kaltura-ng-mc-theme.git"},
      { "origin" : "github", "uri": "https://github.com/kaltura/kmc-ng.git"}
    ]
  }
