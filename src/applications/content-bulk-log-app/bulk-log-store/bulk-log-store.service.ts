@@ -28,6 +28,8 @@ export enum SortDirection {
   Asc
 }
 
+const localStoarePageSizeKey = 'bulklog.list.pageSize';
+
 export interface BulkLogFilters {
     pageSize: number,
     pageIndex: number,
@@ -43,7 +45,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
     data: new BehaviorSubject<{ items: KalturaBulkUpload[], totalCount: number }>({ items: [], totalCount: 0 }),
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
-  private _paginationCacheToken = 'default';
+
   private _isReady = false;
   private _querySubscription: ISubscription;
 
@@ -56,9 +58,6 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       }
     };
 
-  public set paginationCacheToken(token: string) {
-    this._paginationCacheToken = typeof token === 'string' && token !== '' ? token : 'default';
-  }
 
   constructor(private kalturaServerClient: KalturaClient,
               private browserService: BrowserService,
@@ -75,6 +74,14 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
   private _prepare(): void {
     if (!this._isReady) {
       this._isReady = true;
+
+        const defaultPageSize = this.browserService.getFromLocalStorage(localStoarePageSizeKey);
+        if (defaultPageSize !== null) {
+            this.filter({
+                pageSize: defaultPageSize
+            });
+        }
+
       this._registerToFilterStoreDataChanges();
       this._executeQuery();
     }
@@ -88,10 +95,6 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       });
   }
 
-  private _getPaginationCacheKey(): string {
-    return `bulkupload.${this._paginationCacheToken}.list.pageSize`;
-  }
-
   private _executeQuery(): void {
 
     if (this._querySubscription) {
@@ -101,7 +104,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
 
     const pageSize = this.cloneFilter('pageSize', null);
     if (pageSize) {
-      this.browserService.setInLocalStorage(this._getPaginationCacheKey(), pageSize);
+      this.browserService.setInLocalStorage(localStoarePageSizeKey, pageSize);
     }
 
     this._bulkLog.state.next({ loading: true, errorMessage: null });

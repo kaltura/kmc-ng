@@ -17,7 +17,7 @@
         <a class="kClearAll" (click)="_clearCreatedComponents()">{{'applications.content.filters.clearDates' |
           translate}}</a>
         <span *ngIf="_createdFilterError" class="kError">{{_createdFilterError}}</span>
-        <div *ngFor="let group of _groups">
+        <div *ngFor="let group of _primeListsGroups">
           <div *ngIf="group.label" class="kFiltersGroupTitle">
             <span>{{group.label | uppercase}}</span>
           </div>
