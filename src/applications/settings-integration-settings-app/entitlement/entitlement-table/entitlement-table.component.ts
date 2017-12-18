@@ -9,10 +9,10 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import {KalturaCategory} from "kaltura-ngx-client/api/types/KalturaCategory";
-import {Menu, MenuItem} from "primeng/primeng";
-import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
-import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {Menu, MenuItem} from 'primeng/primeng';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
 
 @Component({
   selector: 'kEntitlementsTable',
@@ -61,7 +61,13 @@ export class EntitlementTableComponent implements OnInit, OnDestroy, AfterViewIn
   private _buildMenu(rowIndex: number, entitlement: KalturaCategory): void {
     this._items = [
       {
-        label: this._appLocalization.get('applications.content.categoryDetails.subcategories.actions.delete'),
+        label: this._appLocalization.get('applications.settings.integrationSettings.entitlement.table.actions.edit'),
+        command: () => {
+          this.onActionSelected.emit({action: 'edit', entitlement});
+        }
+      },
+      {
+        label: this._appLocalization.get('applications.settings.integrationSettings.entitlement.table.actions.delete'),
         command: () => {
           this.onActionSelected.emit({action: 'delete', entitlement});
         }

@@ -39,6 +39,15 @@
     }
   }
 
+  .kAddEntitlement{
+    padding-bottom: 16px;
+    button {
+      font-weight: bold;
+      height: 34px;	width: 142px;
+      font-size: 14px;
+    }
+  }
+
   .kRow {
     padding-bottom: 20px;
     display: flex;

@@ -7,6 +7,10 @@ import {KalturaCategoryFilter} from 'kaltura-ngx-client/api/types/KalturaCategor
 import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
 import {PartnerGetInfoAction} from 'kaltura-ngx-client/api/types/PartnerGetInfoAction';
 import {KalturaPartner} from 'kaltura-ngx-client/api/types/KalturaPartner';
+import {KalturaPrivacyType} from "kaltura-ngx-client/api/types/KalturaPrivacyType";
+import {KalturaContributionPolicyType} from "kaltura-ngx-client/api/types/KalturaContributionPolicyType";
+import {KalturaAppearInListType} from "kaltura-ngx-client/api/types/KalturaAppearInListType";
+import {CategoryUpdateAction} from "kaltura-ngx-client/api/types/CategoryUpdateAction";
 
 export interface Entitlement {
   categories: KalturaCategory[];
@@ -20,7 +24,6 @@ export class EntitlementService {
   constructor(private _kalturaServerClient: KalturaClient) {
   }
 
-  /** Get the account owners list for current partner */
   public getEntitlement(): Observable<Entitlement> {
 
     const request = new KalturaMultiRequest(
@@ -53,7 +56,6 @@ export class EntitlementService {
     });
 
     return this._kalturaServerClient.request(new CategoryListAction({filter}))
-      .monitor('get entitlements')
       .map(
         (response: KalturaCategoryListResponse) => {
           return response.objects;
@@ -63,11 +65,31 @@ export class EntitlementService {
   private _getPartnerDefaultEntitlementEnforcement(): Observable<{ defaultEntitlementEnforcement: boolean }> {
 
     return this._kalturaServerClient.request(new PartnerGetInfoAction())
-      .monitor('get account info')
       .map(
         (response: KalturaPartner) => {
 
           return response;
         });
+  }
+
+  public deleteEntitlement(entitlement: KalturaCategory): Observable<void> {
+    const category = new KalturaCategory();
+    category.privacyContext = null;
+
+    const context = entitlement.privacyContext.split(',');
+    const contexts = entitlement.privacyContexts.split(',');
+
+    // Subtract privacyContext from privacyContexts and if no contexts left so set the following properties
+    if (contexts.filter(c => (context.indexOf(c) < 0)).length) {
+      category.privacy = KalturaPrivacyType.all;
+      category.appearInList = KalturaAppearInListType.partnerOnly;
+      category.contributionPolicy = KalturaContributionPolicyType.all;
+    }
+
+    return this._kalturaServerClient.request(new CategoryUpdateAction({
+      id: entitlement.id,
+      category
+    }))
+      .map(_ => (undefined));
   }
 }

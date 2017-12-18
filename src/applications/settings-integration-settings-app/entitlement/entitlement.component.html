@@ -15,6 +15,10 @@
         </span>
       </div>
     </div>
+    <div class="kAddEntitlement">
+      <button type="button" class="kButtonDefault" (click)="addNewEntitlement.open()" pButton
+              label="{{'applications.settings.integrationSettings.entitlement.addEntitlement.buttonText' | translate}}"></button>
+    </div>
     <div class="kEntitlementsHolder">
       <kEntitlementsTable
         [entitlements]="_entitlements"
@@ -24,9 +28,19 @@
   </div>
 </k-area-blocker>
 
-<!--<kPopupWidget #addNewSubcategory [popupWidth]="586" [popupHeight]="260" [modal]="true" [preventPageScroll]="true">-->
-<!--<ng-template>-->
-<!--<kNewSubcategory [categoryParentId]="_widgetService.data?.id" (onApply)="_widgetService.refresh()"-->
-<!--[parentPopupWidget]="addNewSubcategory"></kNewSubcategory>-->
-<!--</ng-template>-->
-<!--</kPopupWidget>-->
+<kPopupWidget #addNewEntitlement [popupWidth]="586" [popupHeight]="260" [modal]="true" [preventPageScroll]="true">
+<ng-template>
+<kNewEntitlement></kNewEntitlement>
+</ng-template>
+</kPopupWidget>
+
+
+<kPopupWidget #editEntitlementPopup [popupWidth]="586" [popupHeight]="323" [modal]="true" [preventPageScroll]="true">
+  <ng-template>
+    <kEditEntitlement (onEntitlementUpdated)="_fetchEntitlements()"
+                      [entitlement]="_currentEditEntitlement"
+                      [ownerPopup]="editEntitlementPopup">
+    </kEditEntitlement>
+  </ng-template>
+</kPopupWidget>
+

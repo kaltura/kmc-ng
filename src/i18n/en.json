@@ -1185,12 +1185,31 @@
           "apiDefault": "API default",
           "entitlementEnforcementDisabled": "Entitlement enforcement disabled",
           "entitlementEnforcementEnabled": "Entitlement enforcement enabled",
-          "addEntitlement": "Add Entitlement",
+          "addEntitlement": {
+              "buttonText" :"Add Entitlement"
+          },
+          "editEntitlement": {
+            "title" :"Edit Entitlement",
+            "categoryName":"Category Name",
+            "privacyContextLabel": "Privacy context label",
+            "confirmationTitle": "Confirm Edit",
+            "confirmation": "Entitlement settings will be added to all sub-categories in an asynchronous process. This operation may take a few minutes.\n\nNote: This action may impact access to content in the {{0}} category through existing applications that were not updated to work with the Kaltura entitlement services.\n\nAre you sure you want to continue?",
+            "errors": {
+              "privacyContextLabelRequired": "Please enter Privacy Context Label",
+              "privacyContextLabelRegex": "Privacy Context labels must include at least 4 characters"
+            }
+          },
+          "deleteEntitlement": {
+            "title": "Delete Entitlement",
+"confirmation" : "Entitlement settings will be removed from all sub-categories in an asynchronous process. This operation may take a few minutes. \n\nNote: Any previous privacy settings defined for the {{0}} category (including all sub-categories) will be lost.\n\nAre you sure you want to continue?"
+          },
           "table": {
             "applicationRootCategory": "Application Root Category",
             "privacyContextLabel": "Privacy Context Label",
-            "edit": "Edit",
-            "delete": "Delete"
+            "actions": {
+              "edit": "Edit",
+              "delete": "Delete"
+            }
           },
           "errors": {
             "loadError": "An error occurred while loading Entitlement."
