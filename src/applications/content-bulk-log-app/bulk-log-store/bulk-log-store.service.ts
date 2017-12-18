@@ -12,16 +12,16 @@ import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUploa
 import { BulkUploadAbortAction } from 'kaltura-ngx-client/api/types/BulkUploadAbortAction';
 import { BulkListAction } from 'kaltura-ngx-client/api/types/BulkListAction';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { DatesRangeAdapter, DatesRangeType } from 'app-shared/content-shared/entries-store/filter-types/dates-range-type';
-import { ListAdapter, ListType } from 'app-shared/content-shared/entries-store/filter-types/list-type';
-import { FiltersStoreBase, TypeAdaptersMapping } from 'app-shared/content-shared/entries-store/filters-store-base';
+import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-ui/filters';
+import { ListAdapter, ListType } from '@kaltura-ng/mc-ui/filters';
+import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-ui/filters';
 import { KalturaLogger } from '@kaltura-ng/kaltura-log';
 import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
 import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
 import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client/api/types/KalturaBaseEntryListResponse';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
-import { NumberTypeAdapter } from 'app-shared/content-shared/entries-store/filter-types/number-type';
-import { StringTypeAdapter } from 'app-shared/content-shared/entries-store/filter-types/string-type';
+import { NumberTypeAdapter } from '@kaltura-ng/mc-ui/filters';
+import { StringTypeAdapter } from '@kaltura-ng/mc-ui/filters';
 
 export enum SortDirection {
   Desc,
@@ -29,12 +29,12 @@ export enum SortDirection {
 }
 
 export interface BulkLogFilters {
-  pageSize: number,
-  pageIndex: number,
-  fields: string,
-  createdAt: DatesRangeType,
-  bulkUploadObjectTypeIn: ListType,
-  statusIn: ListType
+    pageSize: number,
+    pageIndex: number,
+    fields: string,
+    createdAt: DatesRangeType,
+    uploadedItem: ListType,
+    status: ListType
 }
 
 @Injectable()
@@ -152,8 +152,8 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       }
 
       // filters of joined list
-      this._updateFilterWithJoinedList(data.bulkUploadObjectTypeIn, filter, 'bulkUploadObjectTypeIn');
-      this._updateFilterWithJoinedList(data.statusIn, filter, 'statusIn');
+      this._updateFilterWithJoinedList(data.uploadedItem, filter, 'bulkUploadObjectTypeIn');
+      this._updateFilterWithJoinedList(data.status, filter, 'statusIn');
 
       // handle default value for media types
       if (!filter.bulkUploadObjectTypeIn) {
@@ -212,8 +212,8 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       pageIndex: 0,
       fields: 'id,fileName,bulkUploadType,bulkUploadObjectType,uploadedBy,uploadedByUserId,uploadedOn,numOfObjects,status,error',
       createdAt: { fromDate: null, toDate: null },
-      bulkUploadObjectTypeIn: [],
-      statusIn: []
+        uploadedItem: [],
+      status: []
     };
   }
 
@@ -223,8 +223,8 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       pageIndex: new NumberTypeAdapter(),
       fields: new StringTypeAdapter(),
       createdAt: new DatesRangeAdapter(),
-      bulkUploadObjectTypeIn: new ListAdapter(),
-      statusIn: new ListAdapter()
+        uploadedItem: new ListAdapter(),
+      status: new ListAdapter()
     };
   }
 

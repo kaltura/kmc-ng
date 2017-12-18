@@ -1,11 +1,9 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
-import { EntriesFilters, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
-import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
+import { BulkLogFilters, BulkLogStoreService, SortDirection } from '../bulk-log-store/bulk-log-store.service';
 import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
 import { getBulkUploadType } from '../utils/get-bulk-upload-type';
 import { AppEventsService } from 'app-shared/kmc-shared';
@@ -58,7 +56,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     ));
   }
 
-  private _updateComponentState(updates: Partial<EntriesFilters>): void {
+  private _updateComponentState(updates: Partial<BulkLogFilters>): void {
 
     if (typeof updates.pageSize !== 'undefined') {
       this._query.pageSize = updates.pageSize;

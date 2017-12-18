@@ -4,7 +4,7 @@ export const DefaultFiltersList: {
   items: { value: string, label: string }[]
 }[] = [
   {
-    name: 'bulkUploadObjectTypeIn',
+    name: 'uploadedItem',
     label: 'Uploaded items',
     items: [
       { value: '1', label: 'Entries' },
@@ -14,7 +14,7 @@ export const DefaultFiltersList: {
     ]
   },
   {
-    name: 'statusIn',
+    name: 'status',
     label: 'Statuses',
     items: [
       { value: '5', label: 'Finished successfully' },

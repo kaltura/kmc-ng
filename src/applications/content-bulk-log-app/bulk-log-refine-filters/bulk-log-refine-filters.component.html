@@ -32,9 +32,6 @@
             <ng-template let-node pTemplate="default">
               <span class="kTreeNodeLabel">
                 {{node.label}}
-                <span *ngIf="node.childrenCount" class="kTreeNodeNumChildren">
-                  {{ node.childrenCount}}
-                </span>
               </span>
             </ng-template>
           </p-tree>

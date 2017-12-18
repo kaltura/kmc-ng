@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import * as moment from 'moment';
-import { ListType } from 'app-shared/content-shared/entries-store/filter-types/list-type';
+import { ListType } from '@kaltura-ng/mc-ui/filters';
 import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 
 export interface TagItem {
@@ -10,7 +10,7 @@ export interface TagItem {
   tooltip: { token: string, args?: any }
 }
 
-const listTypes: (keyof BulkLogFilters)[] = ['bulkUploadObjectTypeIn', 'statusIn'];
+const listTypes: (keyof BulkLogFilters)[] = ['uploadedItem', 'status'];
 
 @Component({
   selector: 'k-bulk-log-tags',

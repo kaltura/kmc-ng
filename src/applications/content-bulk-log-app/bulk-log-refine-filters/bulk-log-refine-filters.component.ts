@@ -1,6 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { PrimeTreeDataProvider } from '@kaltura-ng/kaltura-primeng-ui';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
 
@@ -12,24 +11,32 @@ import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 import { PrimeTreeActions } from '@kaltura-ng/kaltura-primeng-ui/prime-tree/prime-tree-actions.directive';
 import { RefineGroup } from 'app-shared/content-shared/entries-refine-filters/entries-refine-filters.service';
-import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui/prime-tree/prime-tree-node';
 
-export interface ListData {
-  group?: string;
-  items: PrimeTreeNode[];
-  selections: PrimeTreeNode[];
+
+const listOfFilterNames: (keyof BulkLogFilters)[] = [
+    'createdAt',
+    'uploadedItem',
+    'status'
+];
+
+export interface FilterGroupListItem
+{
+    label: string,
+    value: string,
+    parent: FilterGroupListItem,
+    listName: string,
+    children: FilterGroupListItem[]
+}
+
+export interface FilterGroupList {
+    items: FilterGroupListItem[];
+    selections: FilterGroupListItem[];
 }
 
 export interface FiltersGroup {
-  label: string;
-  lists: ListData[];
+    label: string;
+    lists: FilterGroupList[];
 }
-
-const listOfFilterNames: (keyof BulkLogFilters)[] = [
-  'createdAt',
-  'bulkUploadObjectTypeIn',
-  'statusIn'
-];
 
 @Component({
   selector: 'k-bulk-log-refine-filters',
@@ -42,7 +49,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
   @ViewChildren(PrimeTreeActions) public _primeTreesActions: PrimeTreeActions[];
 
-  private _listDataMapping: { [key: string]: ListData } = {};
+  private _filterGroupListsMap: { [key: string]: FilterGroupList } = {};
 
   // properties that are exposed to the template
   public _groups: FiltersGroup[] = [];
@@ -55,7 +62,6 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
   public _createdAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
 
   constructor(private _bulkLogRefineFilters: BulkLogRefineFiltersProviderService,
-              private _primeTreeDataProvider: PrimeTreeDataProvider,
               private _bulkLogStore: BulkLogStoreService,
               private _appLocalization: AppLocalization) {
   }
@@ -82,18 +88,18 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
     }
 
     let updatedList = false;
-    Object.keys(this._listDataMapping).forEach(listName => {
-      const listData = this._listDataMapping[listName];
+    Object.keys(this._filterGroupListsMap).forEach(listName => {
+      const listData = this._filterGroupListsMap[listName];
       const listFilter: { value: string, label: string }[] = updates[listName];
 
       if (listFilter !== null && typeof listFilter !== 'undefined') {
-        const listSelectionsMap = this._bulkLogStore.filtersUtils.toMap(listData.selections, 'data');
+        const listSelectionsMap = this._bulkLogStore.filtersUtils.toMap(listData.selections, 'value');
         const listFilterMap = this._bulkLogStore.filtersUtils.toMap(listFilter, 'value');
         const diff = this._bulkLogStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap);
 
         diff.added.forEach(addedItem => {
           const listItems = listData.items.length > 0 ? listData.items[0].children : [];
-          const matchingItem = listItems.find(item => item.data === (<any>addedItem).value);
+          const matchingItem = listItems.find(item => item.value === (<any>addedItem).value);
           if (!matchingItem) {
             console.warn(`[bulk-log-refine-filters]: failed to sync filter for '${listName}'`);
           } else {
@@ -104,7 +110,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
 
         diff.deleted.forEach(removedItem => {
 
-          if (removedItem.data !== null && typeof removedItem.data !== 'undefined') {
+          if (removedItem.value !== null && typeof removedItem.value !== 'undefined') {
             // ignore root items (they are managed by the component tree)
             listData.selections.splice(
               listData.selections.indexOf(removedItem),
@@ -166,7 +172,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
   }
 
   private _buildComponentFilters(groups: RefineGroup[]): void {
-    this._listDataMapping = {};
+    this._filterGroupListsMap = {};
     this._groups = [];
 
     // create root nodes
@@ -179,23 +185,29 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
         if (list.items.length > 0) {
           const treeData = { items: [], selections: [], group: list.group };
 
-          this._listDataMapping[list.name] = treeData;
+          this._filterGroupListsMap[list.name] = treeData;
           filtersGroup.lists.push(treeData);
 
-          const listRootNode = new PrimeTreeNode(null, list.label, [], null, { filterName: list.name });
+            const listRootNode: FilterGroupListItem = {
+                label: list.label,
+                value: null,
+                listName: list.name,
+                parent: null,
+                children: []
+            };
 
-          this._primeTreeDataProvider.create(
+            list.items.forEach(item =>
             {
-              items: list.items,
-              idProperty: 'value',
-              rootParent: listRootNode,
-              nameProperty: 'label',
-              payload: { filterName: list.name },
-              preventSort: true
-            }
-          );
+                listRootNode.children.push({
+                    label: item.label,
+                    value: item.value,
+                    children: [],
+                    listName: <any>list.name,
+                    parent: listRootNode
+                })
+            });
 
-          treeData.items.push(listRootNode);
+            treeData.items.push(listRootNode);
         }
       });
 
@@ -226,9 +238,9 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
   public _clearAllComponents(): void {
 
     // fix primeng issue: manually remove all selections, this is needed since the root selections will not be removed by prime library
-    Object.keys(this._listDataMapping)
+    Object.keys(this._filterGroupListsMap)
       .forEach(listId => {
-        this._listDataMapping[listId].selections = [];
+        this._filterGroupListsMap[listId].selections = [];
       });
 
     this._bulkLogStore.resetFilters(listOfFilterNames);
@@ -256,29 +268,28 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
     }
   }
 
-  public _onTreeNodeSelect({ node }: { node: PrimeTreeNode }) {
+  public _onTreeNodeSelect({ node }: { node: FilterGroupListItem }) {
     // find group data by filter name
-    const listName = node instanceof PrimeTreeNode && node.payload ? node.payload.filterName : null;
-    if (listName) {
-      const listData = this._listDataMapping[listName];
+    if (node.listName) {
+      const listData = this._filterGroupListsMap[node.listName];
       if (listData) {
 
         let newFilterItems: { value: string, label: string }[];
         let newFilterValue;
-        const newFilterName = listName;
+        const newFilterName = node.listName;
 
-        newFilterValue = newFilterItems = this._bulkLogStore.cloneFilter(listName, []);
+        newFilterValue = newFilterItems = this._bulkLogStore.cloneFilter(<any>node.listName, []);
 
         const selectedNodes = node.children && node.children.length ? [node, ...node.children] : [node];
 
         selectedNodes
           .filter(selectedNode => {
             // ignore root items (they are managed by the component tree)
-            return selectedNode.data !== null && typeof selectedNode.data !== 'undefined';
+            return selectedNode.value !== null && typeof selectedNode.value !== 'undefined';
           })
           .forEach(selectedNode => {
-            if (!newFilterItems.find(item => item.value === selectedNode.data)) {
-              newFilterItems.push({ value: selectedNode.data + '', label: selectedNode.label });
+            if (!newFilterItems.find(item => item.value === selectedNode.value)) {
+              newFilterItems.push({ value: selectedNode.value + '', label: selectedNode.label });
             }
           });
         this._bulkLogStore.filter({ [newFilterName]: newFilterValue });
@@ -286,29 +297,28 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
     }
   }
 
-  public _onTreeNodeUnselect({ node }: { node: PrimeTreeNode }) {
+  public _onTreeNodeUnselect({ node }: { node: FilterGroupListItem }) {
     // find group data by filter name
-    const listName = node instanceof PrimeTreeNode && node.payload ? node.payload.filterName : null;
-    if (listName) {
+    if (node.listName) {
 
-      const listData = this._listDataMapping[listName];
+      const listData = this._filterGroupListsMap[node.listName];
       if (listData) {
 
         let newFilterItems: { value: string, label: string }[];
         let newFilterValue;
-        const newFilterName = listName;
+        const newFilterName = node.listName;
 
-        newFilterValue = newFilterItems = this._bulkLogStore.cloneFilter(listName, []);
+        newFilterValue = newFilterItems = this._bulkLogStore.cloneFilter(<any>node.listName, []);
 
         const selectedNodes = node.children && node.children.length ? [node, ...node.children] : [node];
 
         selectedNodes
           .filter(selectedNode => {
             // ignore root items (they are managed by the component tree)
-            return selectedNode.data !== null && typeof selectedNode.data !== 'undefined';
+            return selectedNode.value !== null && typeof selectedNode.value !== 'undefined';
           })
           .forEach(selectedNode => {
-            const itemIndex = newFilterItems.findIndex(item => item.value === selectedNode.data);
+            const itemIndex = newFilterItems.findIndex(item => item.value === selectedNode.value);
             if (itemIndex > -1) {
               newFilterItems.splice(itemIndex, 1);
             }

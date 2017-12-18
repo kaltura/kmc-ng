@@ -58,7 +58,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
   @ViewChildren(PrimeTreeActions)
   public _primeTreesActions: PrimeTreeActions[];
 
-  private _listDataMapping: { [key: string]: FilterGroupList } = {};
+  private _filterGroupListsMap: { [key: string]: FilterGroupList } = {};
 
   // properties that are exposed to the template
   public _groups: FiltersGroup[] = [];
@@ -108,8 +108,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
       }
 
       let updatedList = false;
-      Object.keys(this._listDataMapping).forEach(listName => {
-          const listData = this._listDataMapping[listName];
+      Object.keys(this._filterGroupListsMap).forEach(listName => {
+          const listData = this._filterGroupListsMap[listName];
           let listFilter: { value: string, label: string }[];
           if (listData.group === 'customMetadata')
           {
@@ -220,7 +220,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
     }
 
     _buildComponentFilters(groups: RefineGroup[]):void {
-        this._listDataMapping = {};
+        this._filterGroupListsMap = {};
         this._groups = [];
 
         // create root nodes
@@ -233,7 +233,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                 if (list.items.length > 0) {
                     const treeData = {items: [], selections: [], group: list.group};
 
-                    this._listDataMapping[list.name] = treeData;
+                    this._filterGroupListsMap[list.name] = treeData;
                     filtersGroup.lists.push(treeData);
 
                     const listRootNode: FilterGroupListItem = {
@@ -287,10 +287,10 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
   public _clearAllComponents(): void {
 
       // fix primeng issue: manually remove all selections, this is needed since the root selections will not be removed by prime library
-      Object.keys(this._listDataMapping)
+      Object.keys(this._filterGroupListsMap)
           .forEach(listId =>
       {
-          this._listDataMapping[listId].selections = [];
+          this._filterGroupListsMap[listId].selections = [];
       });
 
       this._entriesStore.resetFilters(listOfFilterNames);
@@ -353,7 +353,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
   public _onTreeNodeSelect({ node }: { node: FilterGroupListItem }) {
       // find group data by filter name
       if (node.listName) {
-          const listData = this._listDataMapping[node.listName];
+          const listData = this._filterGroupListsMap[node.listName];
           if (listData) {
 
               // DEVELOPER NOTICE: there is a complexity caused since 'customMetadata' holds dynamic lists
@@ -392,7 +392,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
       // find group data by filter name
       if (node.listName) {
 
-          const listData = this._listDataMapping[node.listName];
+          const listData = this._filterGroupListsMap[node.listName];
           if (listData) {
 
               // DEVELOPER NOTICE: there is a complexity caused since 'customMetadata' holds dynamic lists
