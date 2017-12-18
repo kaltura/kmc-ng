@@ -31,6 +31,7 @@ import { BulkLogObjectTypePipe } from './pipes/bulk-log-object-type.pipe';
 import { BulkLogStatusPipe } from './pipes/bulk-log-status.pipe';
 import { BulkLogRefineFiltersComponent } from './bulk-log-refine-filters/bulk-log-refine-filters.component';
 import { BulkLogStatusIconPipe } from './pipes/bulk-log-status-icon.pipe';
+import { BulkLogTagsComponent } from './bulk-log-tags/bulk-log-tags.component';
 
 @NgModule({
   imports: [
@@ -67,7 +68,8 @@ import { BulkLogStatusIconPipe } from './pipes/bulk-log-status-icon.pipe';
     BulkLogObjectTypePipe,
     BulkLogStatusPipe,
     BulkLogStatusIconPipe,
-    BulkLogRefineFiltersComponent
+    BulkLogRefineFiltersComponent,
+    BulkLogTagsComponent
   ],
   exports: []
 })
