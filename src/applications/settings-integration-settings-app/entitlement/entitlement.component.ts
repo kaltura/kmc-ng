@@ -58,7 +58,7 @@ export class EntitlementComponent implements OnInit, OnDestroy {
                   },
                   error => {
                     this._isBusy = false;
-                    this._blockerMessage =  error.errorMsg;
+                    this._blockerMessage =  error.message;
                   }
                 );
             }

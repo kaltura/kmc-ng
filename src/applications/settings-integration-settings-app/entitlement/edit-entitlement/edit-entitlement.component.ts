@@ -80,7 +80,7 @@ export class EditEntitlementComponent implements OnInit, OnDestroy {
                 this.ownerPopup.close();
               },
               error => {
-                this._updateAreaBlockerState(false, error.errorMsg);
+                this._updateAreaBlockerState(false, error.message);
               }
             );
         }
