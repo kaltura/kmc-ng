@@ -30,16 +30,16 @@ import { KalturaLiveStreamEntry } from 'kaltura-ngx-client/api/types/KalturaLive
 import { KalturaExternalMediaEntry } from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
 
 import { KalturaLogger } from '@kaltura-ng/kaltura-log';
-import { FiltersStoreBase, TypeAdaptersMapping } from './filters-store-base';
-import { StringTypeAdapter } from './filter-types/string-type';
-import { DatesRangeAdapter, DatesRangeType } from './filter-types/dates-range-type';
-import { ListAdapter, ListType } from './filter-types/list-type';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import {
+    FiltersStoreBase, TypeAdaptersMapping,
     GroupedListAdapter,
+    DatesRangeAdapter, DatesRangeType,
+    StringTypeAdapter,
+    ListAdapter, ListType,
+    NumberTypeAdapter,
     GroupedListType
-} from 'app-shared/content-shared/entries-store/filter-types/grouped-list-type';
-import { NumberTypeAdapter } from 'app-shared/content-shared/entries-store/filter-types/number-type';
+} from '@kaltura-ng/mc-ui/filters';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KalturaContentDistributionSearchItem } from 'kaltura-ngx-client/api/types/KalturaContentDistributionSearchItem';
 import { KalturaSearchCondition } from 'kaltura-ngx-client/api/types/KalturaSearchCondition';

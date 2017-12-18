@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { PrimeTreeDataProvider, PrimeTreeNode, PrimeTreeActions } from '@kaltura-ng/kaltura-primeng-ui';
+import { PrimeTreeActions } from '@kaltura-ng/kaltura-primeng-ui';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -8,17 +8,6 @@ import { EntriesRefineFiltersService, RefineGroup } from './entries-refine-filte
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
-
-export interface ListData {
-    group?: string;
-    items: PrimeTreeNode[];
-    selections: PrimeTreeNode[];
-}
-
-export interface FiltersGroup {
-  label: string;
-  lists: ListData[];
-}
 
 const listOfFilterNames: (keyof EntriesFilters)[] = [
     'createdAt',
@@ -36,6 +25,27 @@ const listOfFilterNames: (keyof EntriesFilters)[] = [
     'customMetadata'
 ];
 
+export interface FilterGroupListItem
+{
+    label: string, 
+    value: string,
+    parent: FilterGroupListItem,
+    listName: string,
+    children: FilterGroupListItem[]
+}
+
+export interface FilterGroupList {
+    group?: string;
+    items: FilterGroupListItem[];
+    selections: FilterGroupListItem[];
+}
+
+export interface FiltersGroup {
+  label: string;
+  lists: FilterGroupList[];
+}
+
+
 @Component({
   selector: 'k-entries-refine-filters',
   templateUrl: './entries-refine-filters.component.html',
@@ -48,7 +58,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
   @ViewChildren(PrimeTreeActions)
   public _primeTreesActions: PrimeTreeActions[];
 
-  private _listDataMapping: { [key: string]: ListData } = {};
+  private _listDataMapping: { [key: string]: FilterGroupList } = {};
 
   // properties that are exposed to the template
   public _groups: FiltersGroup[] = [];
@@ -67,7 +77,6 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
 
   constructor(private _entriesRefineFilters: EntriesRefineFiltersService,
               private _entriesStore: EntriesStore,
-              private _primeTreeDataProvider: PrimeTreeDataProvider,
               private _appLocalization: AppLocalization) {
   }
 
@@ -112,13 +121,13 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
           }
 
           if (listFilter !== null && typeof listFilter !== 'undefined') {
-              const listSelectionsMap = this._entriesStore.filtersUtils.toMap(listData.selections, 'data');
+              const listSelectionsMap = this._entriesStore.filtersUtils.toMap(listData.selections, 'value');
               const listFilterMap = this._entriesStore.filtersUtils.toMap(listFilter, 'value');
               const diff = this._entriesStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap );
 
               diff.added.forEach(addedItem => {
                   const listItems = listData.items.length > 0 ? listData.items[0].children : [];
-                  const matchingItem = listItems.find(item => item.data === (<any>addedItem).value);
+                  const matchingItem = listItems.find(item => item.value === (<any>addedItem).value);
                   if (!matchingItem) {
                       console.warn(`[entries-refine-filters]: failed to sync filter for '${listName}'`);
                   } else {
@@ -129,7 +138,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
 
               diff.deleted.forEach(removedItem => {
 
-                  if (removedItem.data !== null && typeof removedItem.data !== 'undefined') {
+                  if (removedItem.value !== null && typeof removedItem.value !== 'undefined') {
                       // ignore root items (they are managed by the component tree)
                       listData.selections.splice(
                           listData.selections.indexOf(removedItem),
@@ -210,35 +219,41 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
         });
     }
 
-    _buildComponentFilters(groups: RefineGroup[]):void{
+    _buildComponentFilters(groups: RefineGroup[]):void {
         this._listDataMapping = {};
         this._groups = [];
 
         // create root nodes
         groups.forEach(group => {
-            const filtersGroup = { label: group.label, lists: [] };
+            const filtersGroup = {label: group.label, lists: []};
             this._groups.push(filtersGroup);
 
             group.lists.forEach(list => {
 
                 if (list.items.length > 0) {
-                    const treeData = { items: [], selections: [], group: list.group};
+                    const treeData = {items: [], selections: [], group: list.group};
 
                     this._listDataMapping[list.name] = treeData;
                     filtersGroup.lists.push(treeData);
 
-                    const listRootNode = new PrimeTreeNode(null, list.label, [], null, { filterName: list.name });
+                    const listRootNode: FilterGroupListItem = {
+                        label: list.label,
+                        value: null,
+                        listName: list.name,
+                        parent: null,
+                        children: []
+                    };
 
-                    this._primeTreeDataProvider.create(
-                        {
-                            items: list.items,
-                            idProperty: 'value',
-                            rootParent: listRootNode,
-                            nameProperty: 'label',
-                            payload: { filterName: list.name },
-                            preventSort: true
-                        }
-                    );
+                    list.items.forEach(item =>
+                    {
+                        listRootNode.children.push({
+                            label: item.label,
+                            value: item.value,
+                            children: [],
+                            listName: <any>list.name,
+                            parent: listRootNode
+                        })
+                    });
 
                     treeData.items.push(listRootNode);
                 }
@@ -335,11 +350,10 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
 
   }
 
-  public _onTreeNodeSelect({ node }: { node: PrimeTreeNode }) {
+  public _onTreeNodeSelect({ node }: { node: FilterGroupListItem }) {
       // find group data by filter name
-      const listName = node instanceof PrimeTreeNode && node.payload ? node.payload.filterName : null;
-      if (listName) {
-          const listData = this._listDataMapping[listName];
+      if (node.listName) {
+          const listData = this._listDataMapping[node.listName];
           if (listData) {
 
               // DEVELOPER NOTICE: there is a complexity caused since 'customMetadata' holds dynamic lists
@@ -350,12 +364,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
               if (listData.group === 'customMetadata')
               {
                   newFilterValue = this._entriesStore.cloneFilter('customMetadata', {});
-                  newFilterItems = newFilterValue[listName] = newFilterValue[listName] || [];
+                  newFilterItems = newFilterValue[node.listName] = newFilterValue[node.listName] || [];
                   newFilterName = 'customMetadata';
               }else {
-                  newFilterValue = newFilterItems = this._entriesStore.cloneFilter(listName, []);
-                  newFilterName = listName;
-
+                  newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, []);
+                  newFilterName = node.listName;
               }
 
               const selectedNodes = node.children && node.children.length ? [node, ...node.children] : [node];
@@ -363,11 +376,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
               selectedNodes
                   .filter(selectedNode => {
                       // ignore root items (they are managed by the component tree)
-                      return selectedNode.data !== null && typeof selectedNode.data !== 'undefined';
+                      return selectedNode.value !== null && typeof selectedNode.value !== 'undefined';
                   })
                   .forEach(selectedNode => {
-                      if (!newFilterItems.find(item => item.value === selectedNode.data)) {
-                          newFilterItems.push({value: selectedNode.data + '', label: selectedNode.label});
+                      if (!newFilterItems.find(item => item.value === selectedNode.value)) {
+                          newFilterItems.push({value: selectedNode.value + '', label: selectedNode.label});
                       }
                   });
               this._entriesStore.filter({[newFilterName]: newFilterValue});
@@ -375,12 +388,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
       }
   }
 
-  public _onTreeNodeUnselect({ node }: { node: PrimeTreeNode }) {
+  public _onTreeNodeUnselect({ node }: { node: FilterGroupListItem }) {
       // find group data by filter name
-      const listName = node instanceof PrimeTreeNode && node.payload ? node.payload.filterName : null;
-      if (listName) {
+      if (node.listName) {
 
-          const listData = this._listDataMapping[listName];
+          const listData = this._listDataMapping[node.listName];
           if (listData) {
 
               // DEVELOPER NOTICE: there is a complexity caused since 'customMetadata' holds dynamic lists
@@ -391,11 +403,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
               // get existing filters by filter name
               if (listData.group === 'customMetadata') {
                   newFilterValue = this._entriesStore.cloneFilter('customMetadata', {});
-                  newFilterItems = newFilterValue[listName] = newFilterValue[listName] || [];
+                  newFilterItems = newFilterValue[node.listName] = newFilterValue[node.listName] || [];
                   newFilterName = 'customMetadata';
               } else {
-                  newFilterValue = newFilterItems = this._entriesStore.cloneFilter(listName, []);
-                  newFilterName = listName;
+                  newFilterValue = newFilterItems = this._entriesStore.cloneFilter(<any>node.listName, []);
+                  newFilterName = node.listName;
               }
 
               const selectedNodes = node.children && node.children.length ? [node, ...node.children] : [node];
@@ -403,14 +415,14 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
               selectedNodes
                   .filter(selectedNode => {
                       // ignore root items (they are managed by the component tree)
-                      return selectedNode.data !== null && typeof selectedNode.data !== 'undefined';
+                      return selectedNode.value !== null && typeof selectedNode.value !== 'undefined';
                   })
                   .forEach(selectedNode => {
-                      const itemIndex = newFilterItems.findIndex(item => item.value === selectedNode.data);
+                      const itemIndex = newFilterItems.findIndex(item => item.value === selectedNode.value);
                       if (itemIndex > -1) {
                           newFilterItems.splice(itemIndex, 1);
 
-                          if (listName === 'timeScheduling' && selectedNode.data === 'scheduled') {
+                          if (node.listName === 'timeScheduling' && selectedNode.value === 'scheduled') {
                               this._entriesStore.filter({
                                   scheduledAt: {
                                       fromDate: null,

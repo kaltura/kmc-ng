@@ -34,7 +34,7 @@
                 {{node.label}}
                 <span *ngIf="node.childrenCount" class="kTreeNodeNumChildren">{{ node.childrenCount}}</span>
               </span>
-                <div *ngIf="node.data==='scheduled'" (click)="_blockScheduleToggle($event)">
+                <div *ngIf="node.value==='scheduled'" (click)="_blockScheduleToggle($event)">
                   <div class="kDateRange">
                     <p-calendar class="kDateRangeFirst" #scheduledfrom [(ngModel)]="_scheduledAfter" [showIcon]="true"
                                 icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true"
