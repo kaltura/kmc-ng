@@ -98,7 +98,7 @@ export class BulkUploadMonitorService implements OnDestroy {
                 this._totals.data.next(this._calculateTotalsFromState());
             });
 
-        // this._initTracking();
+        this._initTracking();
     }
 
     private _trackNewFile(file: BulkUploadFile) {

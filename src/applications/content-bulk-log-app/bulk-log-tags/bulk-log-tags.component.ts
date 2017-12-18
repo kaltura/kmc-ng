@@ -43,7 +43,7 @@ export class BulkLogTagsComponent implements OnInit, OnDestroy {
   }
 
   private _updateComponentState(updates: Partial<BulkLogFilters>): void {
-    if (typeof updates.uploadedAt !== 'undefined') {
+    if (typeof updates.createdAt !== 'undefined') {
       this._syncTagOfCreatedAt();
     }
 
@@ -63,14 +63,14 @@ export class BulkLogTagsComponent implements OnInit, OnDestroy {
   }
 
   private _syncTagOfCreatedAt(): void {
-    const previousItem = this._filterTags.findIndex(item => item.type === 'uploadedAt');
+    const previousItem = this._filterTags.findIndex(item => item.type === 'createdAt');
     if (previousItem !== -1) {
       this._filterTags.splice(
         previousItem,
         1);
     }
 
-    const { fromDate, toDate } = this._store.cloneFilter('uploadedAt', { fromDate: null, toDate: null });
+    const { fromDate, toDate } = this._store.cloneFilter('createdAt', { fromDate: null, toDate: null });
     if (fromDate || toDate) {
       let tooltip = '';
       if (fromDate && toDate) {
@@ -122,8 +122,8 @@ export class BulkLogTagsComponent implements OnInit, OnDestroy {
           [tag.type]: previousData
         });
       }
-    } else if (tag.type === 'uploadedAt') {
-      this._store.filter({ uploadedAt: { fromDate: null, toDate: null } });
+    } else if (tag.type === 'createdAt') {
+      this._store.filter({ createdAt: { fromDate: null, toDate: null } });
     }
   }
 

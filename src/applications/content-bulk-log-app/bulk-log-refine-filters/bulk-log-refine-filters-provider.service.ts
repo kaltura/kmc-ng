@@ -38,7 +38,6 @@ export class BulkLogRefineFiltersProviderService {
       defaultFilterList.items.forEach((item: any) => {
         newRefineFilter.items.push({ value: item.value, label: item.label });
       });
-
     });
 
     return result;

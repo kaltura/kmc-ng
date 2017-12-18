@@ -15,7 +15,7 @@ import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/Kaltura
 import { DatesRangeAdapter, DatesRangeType } from 'app-shared/content-shared/entries-store/filter-types/dates-range-type';
 import { ListAdapter, ListType } from 'app-shared/content-shared/entries-store/filter-types/list-type';
 import { FiltersStoreBase, TypeAdaptersMapping } from 'app-shared/content-shared/entries-store/filters-store-base';
-import { KalturaLogger } from 'kaltura-ngx-client/api/kaltura-logger';
+import { KalturaLogger } from '@kaltura-ng/kaltura-log';
 import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
 import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
 import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client/api/types/KalturaBaseEntryListResponse';
@@ -32,7 +32,7 @@ export interface BulkLogFilters {
   pageSize: number,
   pageIndex: number,
   fields: string,
-  uploadedAt: DatesRangeType,
+  createdAt: DatesRangeType,
   bulkUploadObjectTypeIn: ListType,
   statusIn: ListType
 }
@@ -43,7 +43,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
     data: new BehaviorSubject<{ items: KalturaBulkUpload[], totalCount: number }>({ items: [], totalCount: 0 }),
     state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
-  private _paginationCacheToken = 'bulkupload.list.pageSize';
+  private _paginationCacheToken = 'default';
   private _isReady = false;
   private _querySubscription: ISubscription;
 
@@ -57,7 +57,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
     };
 
   public set paginationCacheToken(token: string) {
-    this._paginationCacheToken = typeof token === 'string' && token !== '' ? token : 'bulkupload.list.pageSize';
+    this._paginationCacheToken = typeof token === 'string' && token !== '' ? token : 'default';
   }
 
   constructor(private kalturaServerClient: KalturaClient,
@@ -89,7 +89,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
   }
 
   private _getPaginationCacheKey(): string {
-    return `entries.${this._paginationCacheToken}.list.pageSize`;
+    return `bulkupload.${this._paginationCacheToken}.list.pageSize`;
   }
 
   private _executeQuery(): void {
@@ -141,13 +141,13 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       const data: BulkLogFilters = this._getFiltersAsReadonly();
 
       // filter 'createdAt'
-      if (data.uploadedAt) {
-        if (data.uploadedAt.fromDate) {
-          filter.uploadedOnGreaterThanOrEqual = KalturaUtils.getStartDateValue(data.uploadedAt.fromDate);
+      if (data.createdAt) {
+        if (data.createdAt.fromDate) {
+          filter.uploadedOnGreaterThanOrEqual = KalturaUtils.getStartDateValue(data.createdAt.fromDate);
         }
 
-        if (data.uploadedAt.toDate) {
-          filter.uploadedOnLessThanOrEqual = KalturaUtils.getEndDateValue(data.uploadedAt.toDate);
+        if (data.createdAt.toDate) {
+          filter.uploadedOnLessThanOrEqual = KalturaUtils.getEndDateValue(data.createdAt.toDate);
         }
       }
 
@@ -209,9 +209,9 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
   protected _createEmptyStoreData(): BulkLogFilters {
     return {
       pageSize: 50,
-      pageIndex: 1,
+      pageIndex: 0,
       fields: 'id,fileName,bulkUploadType,bulkUploadObjectType,uploadedBy,uploadedByUserId,uploadedOn,numOfObjects,status,error',
-      uploadedAt: { fromDate: null, toDate: null },
+      createdAt: { fromDate: null, toDate: null },
       bulkUploadObjectTypeIn: [],
       statusIn: []
     };
@@ -222,7 +222,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       pageSize: new NumberTypeAdapter(),
       pageIndex: new NumberTypeAdapter(),
       fields: new StringTypeAdapter(),
-      uploadedAt: new DatesRangeAdapter(),
+      createdAt: new DatesRangeAdapter(),
       bulkUploadObjectTypeIn: new ListAdapter(),
       statusIn: new ListAdapter()
     };

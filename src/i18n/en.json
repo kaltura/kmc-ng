@@ -436,6 +436,7 @@
         "confirmDeleteEntries": "Are you sure you want to delete the selected entries?"
       },
       "filters": {
+        "errorLoading": "Error loading filters",
         "activeFilters": "Active Filters:",
         "clearAll": "Clear All",
         "close": "Close",

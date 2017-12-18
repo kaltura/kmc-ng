@@ -183,9 +183,9 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                 error => {
                     this._showLoader = false;
                     this._blockerMessage = new AreaBlockerMessage({
-                        message: error.message || 'Error loading filters',
+                        message: error.message || this._appLocalization.get('applications.content.filters.errorLoading'),
                         buttons: [{
-                            label: 'Retry',
+                            label: this._appLocalization.get('app.common.retry'),
                             action: () => {
                                 this._blockerMessage = null;
                                 this._prepare();

@@ -8,11 +8,14 @@
           </span>
 
           <div [class.kHidden]="!selectedBulkLogItems.length" class="kBulkOperations">
-            <span class="kSelectedEntriesLabel">• {{selectedBulkLogItems.length}} {{'applications.content.bulkUpload.list.selected' | translate}}</span>
+            <span class="kSelectedEntriesLabel">
+              • {{selectedBulkLogItems.length}} {{'applications.content.bulkUpload.list.selected' | translate}}
+            </span>
             <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn" (click)="_deleteFiles()"></button>
 
-            <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.bulkUpload.list.cancel' |
-              translate}}</a>
+            <a class="kBulkCancel" (click)="_clearSelection()">
+              {{'applications.content.bulkUpload.list.cancel' | translate}}
+            </a>
           </div>
           <div [class.kHidden]="selectedBulkLogItems.length" class="kFilters">
             <div #refineBtn class="kRefine">
@@ -36,15 +39,15 @@
       </kSticky>
       <kBulkLogTable class="kBulkLogTable"
                      [list]="(_store.bulkLog.data$ | async)?.items"
-                     [filter]="_filter"
+                     [filter]="_query"
                      (actionSelected)="_onActionSelected($event)"
                      [(selectedBulkLogItems)]="selectedBulkLogItems"
       ></kBulkLogTable>
 
-      <div class="kBulkLogTableFooter kContent" #footer *ngIf="(_store.bulkLog$ | async)?.totalCount">
+      <div class="kBulkLogTableFooter kContent" #footer *ngIf="(_store.bulkLog.data$ | async)?.totalCount">
         <p-paginator
-          [rows]="_filter.pageSize"
-          [first]="_filter.pageIndex * _filter.pageSize"
+          [rows]="_query.pageSize"
+          [first]="_query.pageIndex * _query.pageSize"
           [totalRecords]="(_store.bulkLog.data$ | async)?.totalCount | kMaxEntries"
           [rowsPerPageOptions]="[25,50,75,100]"
           (onPageChange)="_onPaginationChanged($event)"></p-paginator>

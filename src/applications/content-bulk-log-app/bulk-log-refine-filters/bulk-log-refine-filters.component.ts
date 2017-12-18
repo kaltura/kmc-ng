@@ -26,7 +26,7 @@ export interface FiltersGroup {
 }
 
 const listOfFilterNames: (keyof BulkLogFilters)[] = [
-  'uploadedAt',
+  'createdAt',
   'bulkUploadObjectTypeIn',
   'statusIn'
 ];
@@ -51,8 +51,8 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
   public _blockerMessage: AreaBlockerMessage = null;
   public _uploadedAfter: Date;
   public _uploadedBefore: Date;
-  public _uploadedAtFilterError: string = null;
-  public _uploadedAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
+  public _createdAtFilterError: string = null;
+  public _createdAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
 
   constructor(private _bulkLogRefineFilters: BulkLogRefineFiltersProviderService,
               private _primeTreeDataProvider: PrimeTreeDataProvider,
@@ -76,9 +76,9 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
   }
 
   private _updateComponentState(updates: Partial<BulkLogFilters>): void {
-    if (typeof updates.uploadedAt !== 'undefined') {
-      this._uploadedAfter = updates.uploadedAt.fromDate || null;
-      this._uploadedBefore = updates.uploadedAt.toDate || null;
+    if (typeof updates.createdAt !== 'undefined') {
+      this._uploadedAfter = updates.createdAt.fromDate || null;
+      this._uploadedBefore = updates.createdAt.toDate || null;
     }
 
     let updatedList = false;
@@ -143,7 +143,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
         error => {
           this._showLoader = false;
           this._blockerMessage = new AreaBlockerMessage({
-            message: error.message || 'Error loading filters',
+            message: error.message || this._appLocalization.get('applications.content.filters.errorLoading'),
             buttons: [{
               label: this._appLocalization.get('app.common.retry'),
               action: () => {
@@ -160,7 +160,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
       if (this._primeTreesActions) {
         this._primeTreesActions.forEach(item => {
           item.fixPropagation();
-        })
+        });
       }
     });
   }
@@ -209,9 +209,9 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
    * Not part of the API, don't use it from outside this component
    */
   public _clearCreatedComponents(): void {
-    this._uploadedAtFilterError = '';
+    this._createdAtFilterError = '';
     this._bulkLogStore.filter({
-      uploadedAt: {
+      createdAt: {
         fromDate: null,
         toDate: null
       }
@@ -236,23 +236,23 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
 
   public _onCreatedChanged(): void {
     const updateResult = this._bulkLogStore.filter({
-      uploadedAt: {
+      createdAt: {
         fromDate: this._uploadedAfter,
         toDate: this._uploadedBefore
       }
     });
 
-    if (updateResult.uploadedAt && updateResult.uploadedAt.failed) {
-      this._uploadedAtFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
+    if (updateResult.createdAt && updateResult.createdAt.failed) {
+      this._createdAtFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
 
       setTimeout(() => {
-        const createdAt = this._bulkLogStore.cloneFilter('uploadedAt', null);
+        const createdAt = this._bulkLogStore.cloneFilter('createdAt', null);
         this._uploadedAfter = createdAt ? createdAt.fromDate : null;
         this._uploadedBefore = createdAt ? createdAt.toDate : null;
 
       }, 0);
     } else {
-      this._uploadedAtFilterError = null;
+      this._createdAtFilterError = null;
     }
   }
 
