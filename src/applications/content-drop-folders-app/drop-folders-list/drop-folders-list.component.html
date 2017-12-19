@@ -3,22 +3,25 @@
     <div #dropFoldersTableHolder class="kDropFoldersHolder kContent">
       <kSticky stickyId="dropFolderFilters" [scrollOffset]="80" [sticksTo]="'header'">
         <div class="kDropFoldersTableFilters kContent">
-          <span class="kSelectedDropFoldersNum" *ngIf="(_dropFoldersService.dropFolders$ | async)?.totalCount">
-            {{ (_dropFoldersService.dropFolders$ | async)?.totalCount }} {{ 'applications.content.uploadControl.files' | translate }}
+          <span class="kSelectedDropFoldersNum" *ngIf="(_dropFoldersStore.dropFolders.data$ | async)?.totalCount">
+            {{ (_dropFoldersStore.dropFolders.data$ | async)?.totalCount }} {{ 'applications.content.uploadControl.files' | translate }}
           </span>
 
           <div [class.kHidden]="!_selectedDropFolders.length" class="kBulkOperations">
-            <span class="kSelectedDropFoldersLabel">• {{_selectedDropFolders.length}} {{'applications.content.uploadControl.selected' | translate}}</span>
+            <span class="kSelectedDropFoldersLabel">
+              • {{_selectedDropFolders.length}} {{'applications.content.uploadControl.selected' | translate}}
+            </span>
             <button pButton icon="kIcontrash" class="kButtonDanger kBulkDeleteBtn"
                     (click)="_bulkDelete(_selectedDropFolders)"></button>
-            <a class="kBulkCancel" (click)="_clearSelection()">{{'applications.content.uploadControl.cancel' |
-              translate}}</a>
+            <a class="kBulkCancel" (click)="_clearSelection()">
+              {{'applications.content.uploadControl.cancel' | translate}}
+            </a>
           </div>
           <div [class.kHidden]="_selectedDropFolders.length" class="kFilters">
             <input type="text" pInputText class="kSearchInput"
-                   [(ngModel)]="_filter.fileNameLike"
+                   [(ngModel)]="_query.freeText"
                    (keyup.enter)="_onFreetextChanged()"
-                   placeholder="{{'applications.content.dropFolders.search' | translate}}">
+                   [placeholder]="'applications.content.dropFolders.search' | translate">
             <div #statusesFilterBtn class="kStatusesFilter">
               <i class="kIconfilter"></i>
               <span>{{'applications.content.dropFolders.allStatuses' | translate}}</span>
@@ -36,38 +39,24 @@
 
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="dropFoldersTags" [sticksTo]="'dropFolderFilters'">
         <div class="kContent">
-          <kTags
-            [title]="'applications.content.filters.activeFilters' | translate"
-            [data]="_activeFilters"
-            [labelField]="'label'"
-            [tooltipField]="'tooltip'"
-            (onTagRemove)="_removeTag($event)"
-            (onRemoveAll)="_removeAllTags()"
-            (onTagsChange)="_onTagsChange($event)">
-            <ng-template let-item="item">
-              <div class="kTagContent" [kTooltip]="item.tooltip">
-                <span class="kTagLabel">{{item.label}}</span>
-                <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="_removeTag(item.data)"></i>
-              </div>
-            </ng-template>
-          </kTags>
+          <!--TODO [Stas] tags component-->
         </div>
       </kSticky>
 
       <kDropFoldersListTable
         class="kDropFoldersTable"
-        [dropFolders]="(_dropFoldersService.dropFolders.data$ | async)?.items"
+        [dropFolders]="(_dropFoldersStore.dropFolders.data$ | async)?.items"
         (navigateToEntry)="_navigateToEntry($event)"
         (deleteDropFolderFiles)="_deleteDropFolderFiles($event)"
         [(selectedDropFolders)]="_selectedDropFolders"></kDropFoldersListTable>
 
       <div class="kDropFoldersTableFooter kContent" #footer
-           *ngIf="(_dropFoldersService.dropFolders.data$ | async)?.totalCount">
+           *ngIf="(_dropFoldersStore.dropFolders.data$ | async)?.totalCount">
         <p-paginator
-          [rows]="_filter.pageSize"
-          [first]="_filter.pageIndex * _filter.pageSize"
+          [rows]="_query.pageSize"
+          [first]="_query.pageIndex * _query.pageSize"
           [rowsPerPageOptions]="[25,50,75,100]"
-          [totalRecords]="(_dropFoldersService.dropFolders.data$ | async)?.totalCount"
+          [totalRecords]="(_dropFoldersStore.dropFolders.data$ | async)?.totalCount"
           (onPageChange)="_onPaginationChanged($event)"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
       </div>
@@ -84,21 +73,5 @@
               [targetOffset]="{'x':-160, 'y': -15}"
               kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'statusesFilterPopup'"
               [scrollOffset]="80">
-  <div class="kOverrideFAIcons kRefineFilters">
-    <div class="kTreeContainer">
-      <kDatesFilters
-        (createdChanged)="_onCreatedChanged($event)"
-        [_createdAfter]="_filter.createdAfter"
-        [_createdBefore]="_filter.createdBefore"></kDatesFilters>
-
-      <kStatusesFilter
-        (onNodeSelect)="_onTreeNodeSelected($event)"
-        (onNodeUnselect)="_onTreeNodeUnselected($event)">
-      </kStatusesFilter>
-    </div>
-    <p>
-      <a (click)="removeAllTags()">{{'applications.content.filters.clearAll' | translate}}</a>
-      <a class="kClose" (click)="_close()">{{'applications.content.filters.close' | translate}}</a>
-    </p>
-  </div>
+  <!--TODO [Stas] filters component -->
 </kPopupWidget>

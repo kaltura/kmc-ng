@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { DropFoldersService } from 'applications/content-drop-folders-app/drop-folders-list/drop-folders.service';
+import { DropFoldersStoreService } from 'applications/content-drop-folders-app/drop-folders-list/drop-folders-store.service';
 import * as moment from 'moment';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
 
@@ -18,7 +18,7 @@ export class DropFoldersListTableComponent implements OnInit, AfterViewInit, OnD
     if (!this._deferredLoading) {
       this._dropFolders = [];
       this.cdRef.detectChanges();
-      this._dropFolders = data;
+      this._dropFolders = data || [];
       this.cdRef.detectChanges();
     } else {
       this._deferredDropFolders = data
@@ -40,7 +40,7 @@ export class DropFoldersListTableComponent implements OnInit, AfterViewInit, OnD
 
   constructor(private _appLocalization: AppLocalization,
               private cdRef: ChangeDetectorRef,
-              public _dropFoldersService: DropFoldersService) {
+              public _dropFoldersService: DropFoldersStoreService) {
   }
 
   ngOnInit() {

@@ -10,23 +10,23 @@ import { environment } from 'app-environment';
 export class DatesFiltersComponent{
   _createdAtDateRange: string = environment.modules.dropFolders.createdAtDateRange;
 	@Input() parentPopupWidget: PopupWidgetComponent;
-	@Input() _createdAfter: number;
-	@Input() _createdBefore: number;
+	@Input() createdAfter: number;
+	@Input() createdBefore: number;
 	@Output() createdChanged = new EventEmitter<any>();
 
    constructor() {}
 
 	public _onCreatedChanged() : void
 	{
-		if (this._createdAfter || this._createdBefore) {
+		if (this.createdAfter || this.createdBefore) {
 			this._updateDates();
 		}
 	}
 
 	public _clearCreatedComponents() : void {
-    if(this._createdAfter || this._createdBefore) {
-      this._createdAfter = null;
-      this._createdBefore = null;
+    if(this.createdAfter || this.createdBefore) {
+      this.createdAfter = null;
+      this.createdBefore = null;
       this._updateDates();
     }
 	}
@@ -40,8 +40,8 @@ export class DatesFiltersComponent{
 	// emitting the createdAfter and createdBefore values
 	public _updateDates() : void {
 		this.createdChanged.emit({
-			'createdAfter': this._createdAfter,
-			'createdBefore': this._createdBefore
+			'createdAfter': this.createdAfter,
+			'createdBefore': this.createdBefore
 		});
 	}
 }

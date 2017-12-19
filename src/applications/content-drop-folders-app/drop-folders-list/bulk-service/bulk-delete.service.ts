@@ -1,14 +1,14 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { environment } from 'app-environment';
-import { DropFoldersService } from 'applications/content-drop-folders-app/drop-folders-list/drop-folders.service';
+import { DropFoldersStoreService } from 'applications/content-drop-folders-app/drop-folders-list/drop-folders-store.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { KalturaClient, KalturaRequest } from 'kaltura-ngx-client';
 import { DropFolderFileDeleteAction } from 'kaltura-ngx-client/api/types/DropFolderFileDeleteAction';
 
 @Injectable()
 export class BulkDeleteService implements OnDestroy {
-  constructor(public _dropFoldersService: DropFoldersService,
+  constructor(public _dropFoldersService: DropFoldersStoreService,
               public _kalturaServerClient: KalturaClient) {
   }
 
