@@ -377,7 +377,8 @@
         "errors": {
           "retry": "Retry",
           "dropFoldersAlert": "The drop folder capability allows you to easily trigger content ingestion by dropping files into a folder in your environment. To enable this capability for your account, <a href=\"http://corp.kaltura.com/about/contact\" target=\"_blank\">contact us</a>.\n<a href=\"http://knowledge.kaltura.com/kaltura-drop-folders-service-content-ingestion-0\" target=\"_blank\">Learn more about drop folders</a>",
-          "errorDropFoldersFiles": "An error occurred during drop folder files update."
+          "errorDropFoldersFiles": "An error occurred during drop folder files update.",
+          "errorLoad": "Failed to load drop folder"
         }
       },
       "categories": {

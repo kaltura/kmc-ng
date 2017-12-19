@@ -1,9 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { BrowserService } from 'shared/kmc-shell/index';
-import { AppLocalization } from '../../../../../kaltura-ng/kaltura-common/dist/index';
+import { BrowserService } from 'shared/kmc-shell';
 import { Observable } from 'rxjs/Observable';
-import '../../../../../kaltura-ng/kaltura-common/dist/rxjs/add/operators';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
 import { KalturaDropFolderFileStatus } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileStatus';
 import { KalturaClient } from 'kaltura-ngx-client';
@@ -34,6 +32,7 @@ import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/st
 import { KalturaDropFolderFileListResponse } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileListResponse';
 import { DropFolderFileDeleteAction } from 'kaltura-ngx-client/api/types/DropFolderFileDeleteAction';
 import { environment } from 'app-environment';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 
 const localStoragePageSizeKey = 'dropFolders.list.pageSize';
 
@@ -71,6 +70,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFolderFilters>
   ].join(',');
   private _isReady = false;
   private _querySubscription: ISubscription;
+  private _dropFoldersList$;
 
   public readonly dropFolders = { data$: this._dropFolders.data.asObservable(), state$: this._dropFolders.state.asObservable() };
 
@@ -116,11 +116,11 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFolderFilters>
     this.filtersChange$
       .cancelOnDestroy(this)
       .subscribe(() => {
-        this._executeQuery();
+        this._executeQuery(false);
       });
   }
 
-  private _executeQuery(): void {
+  private _executeQuery(reloadFolders: boolean = true): void {
 
     if (this._querySubscription) {
       this._querySubscription.unsubscribe();
@@ -133,7 +133,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFolderFilters>
     }
 
     this._dropFolders.state.next({ loading: true, errorMessage: null });
-    this._querySubscription = this._buildQueryRequest()
+    this._querySubscription = this._buildQueryRequest(reloadFolders)
       .cancelOnDestroy(this)
       .subscribe(
         response => {
@@ -153,8 +153,8 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFolderFilters>
 
   }
 
-  private _buildQueryRequest(): Observable<KalturaDropFolderFileListResponse> {
-    return this._loadDropFoldersList()
+  private _buildQueryRequest(reloadFolders: boolean): Observable<KalturaDropFolderFileListResponse> {
+    return this._loadDropFoldersList(reloadFolders)
       .switchMap(({ dropFoldersList, error }) => {
         if (!dropFoldersList.length || error) {
           this._browserService.alert({
@@ -179,6 +179,11 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFolderFilters>
 
         // use selected folders - list of folders ids separated by comma
         filter.dropFolderIdIn = dropFoldersList.reduce((ids, kdf) => `${ids}${kdf.id},`, '');
+
+        // filter 'freeText'
+        if (data.freeText) {
+          filter.fileNameLike = data.freeText;
+        }
 
         // filter 'createdAt'
         if (data.createdAt) {
@@ -244,10 +249,14 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFolderFilters>
     }
   }
 
-  private _loadDropFoldersList(): Observable<{ dropFoldersList: KalturaDropFolder[], error?: string }> {
+  private _loadDropFoldersList(reloadFolders: boolean): Observable<{ dropFoldersList: KalturaDropFolder[], error?: string }> {
+    if (!reloadFolders && this._dropFoldersList$) {
+      return this._dropFoldersList$;
+    }
+
     this._dropFolders.state.next({ loading: true, errorMessage: null });
 
-    return this._kalturaServerClient
+    this._dropFoldersList$ = this._kalturaServerClient
       .request(new DropFolderListAction({
         filter: new KalturaDropFolderFilter({
           orderBy: KalturaDropFolderOrderBy.createdAtDesc.toString(),
@@ -280,11 +289,16 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFolderFilters>
               throw new Error(`invalid type provided, expected KalturaDropFolder, got ${typeof object}`);
             }
           });
+
           return { dropFoldersList, error: null }
         } else {
           return { dropFoldersList: [], error: this._appLocalization.get('applications.content.dropFolders.errors.dropFoldersAlert') };
         }
-      });
+      })
+      .publishReplay(1)
+      .refCount();
+
+    return this._dropFoldersList$;
   }
 
   public isEntryExist(entryId: string): Observable<boolean> {

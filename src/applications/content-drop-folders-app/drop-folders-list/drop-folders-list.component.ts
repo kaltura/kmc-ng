@@ -47,6 +47,30 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._restoreFiltersState();
     this._registerToFilterStoreDataChanges();
+
+    this._dropFoldersStore.dropFolders.state$
+      .subscribe(status => {
+        if (status.errorMessage) {
+          this._blockerMessage = new AreaBlockerMessage({
+            message: status.errorMessage || this._appLocalization.get('applications.content.dropFolders.errors.errorLoad'),
+            buttons: [
+              {
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => {
+                  this._blockerMessage = null;
+                  this._dropFoldersStore.reload();
+                }
+              },
+              {
+                label: this._appLocalization.get('app.common.cancel'),
+                action: () => {
+                  this._blockerMessage = null;
+                }
+              }
+            ]
+          })
+        }
+      });
   }
 
   ngOnDestroy() {
