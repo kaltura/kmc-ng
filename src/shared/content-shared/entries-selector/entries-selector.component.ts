@@ -5,6 +5,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 
+
 @Component({
   selector: 'kEntriesSelector',
   templateUrl: './entries-selector.component.html',
@@ -14,7 +15,9 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntr
 export class EntriesSelectorComponent {
   @Input() selectedEntries: KalturaMediaEntry[] = [];
   @Input() set filterByStatus(statuses: number[]) {
-    this._entriesStore.queryStatusIn = statuses;
+    // this._entriesStore.filter({
+    //     ingestionStatuses: statuses
+    // })
   }
   @Output() selectedEntriesChange = new EventEmitter<KalturaMediaEntry[]>();
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;

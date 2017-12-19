@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {NgModule, Provider} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -6,7 +6,8 @@ import {HttpModule} from '@angular/http';
 import {CommonModule} from '@angular/common';
 import {Ng2Webstorage} from 'ng2-webstorage';
 import { TranslateModule } from 'ng2-translate/ng2-translate';
-
+import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
+import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui';
 
 import {
   AppBootstrap,
@@ -81,6 +82,7 @@ import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
 
+
 export function clientConfigurationFactory() {
     const result = new KalturaClientConfiguration();
     const { useHttpsProtocol, serverEndpoint } = environment.core.kaltura;
@@ -88,7 +90,6 @@ export function clientConfigurationFactory() {
     result.clientTag = 'KMCng';
     return result;
 }
-
 @NgModule({
   imports: <any>[
     AuthModule,
@@ -107,6 +108,7 @@ export function clientConfigurationFactory() {
     KMCShellModule.forRoot(),
     KalturaCommonModule.forRoot(),
     TranslateModule.forRoot(),
+    PrimeTreeModule.forRoot(),
     Ng2Webstorage,
     PopupWidgetModule,
     routing,
@@ -150,6 +152,10 @@ export function clientConfigurationFactory() {
   exports: [],
   providers: <any>[
     ...partnerProviders,
+      KalturaLogger,
+      {
+          provide: KalturaLoggerName, useValue: 'kmc'
+      },
     AppMenuService,
     {
       provide: BootstrapAdapterToken,
