@@ -17,6 +17,10 @@ import 'rxjs/add/observable/forkJoin';
 import { EntryWidget } from '../entry-widget';
 import { async } from 'rxjs/scheduler/async';
 
+export interface Publishers extends KalturaUser {
+  tooltip?: string
+}
+
 @Injectable()
 export class EntryUsersWidget extends EntryWidget implements OnDestroy
 {
@@ -183,8 +187,9 @@ export class EntryUsersWidget extends EntryWidget implements OnDestroy
 						    throw new Error('failed to fetch publishers data');
 					    }else
 					    {
-						    let publishers = [];
+						    let publishers: Publishers[] = [];
 						    responses.forEach(res => {
+						      res.result.tooltip = res.result.screenName;
 							    publishers.push(res.result);
 						    });
 						    this.usersForm.patchValue({publishers: publishers});
