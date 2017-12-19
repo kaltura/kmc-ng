@@ -9,7 +9,7 @@ import { BulkLogRefineFiltersProviderService } from './bulk-log-refine-filters-p
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
-import { PrimeTreeActions } from '@kaltura-ng/kaltura-primeng-ui/prime-tree/prime-tree-actions.directive';
+import { RefinePrimeTree } from '@kaltura-ng/mc-ui/filters'
 import { RefineList } from './bulk-log-refine-filters-provider.service';
 
 
@@ -43,7 +43,7 @@ export interface PrimeList {
 export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
-  @ViewChildren(PrimeTreeActions) public _primeTreesActions: PrimeTreeActions[];
+  @ViewChildren(RefinePrimeTree) public _primeTreesActions: RefinePrimeTree[];
 
   private _primeListsMap: { [key: string]: PrimeList } = {};
 
@@ -74,49 +74,53 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
     this._updateComponentState(this._bulkLogStore.cloneFilters(
       listOfFilterNames
     ));
-    this._fixPrimeTreePropagation(); // needed to update root component selection state
+    this._fixPrimeTreePropagation(); // update root items state
   }
 
   private _updateComponentState(updates: Partial<BulkLogFilters>): void {
-    if (typeof updates.createdAt !== 'undefined') {
-      this._uploadedAfter = updates.createdAt.fromDate || null;
-      this._uploadedBefore = updates.createdAt.toDate || null;
-    }
-
-    let updatedList = false;
-    Object.keys(this._primeListsMap).forEach(listName => {
-      const listData = this._primeListsMap[listName];
-      const listFilter: { value: string, label: string }[] = updates[listName] ;
-
-      if (typeof listFilter !== 'undefined') {
-        const listSelectionsMap = this._bulkLogStore.filtersUtils.toMap(listData.selections, 'value');
-        const listFilterMap = this._bulkLogStore.filtersUtils.toMap(listFilter, 'value');
-        const diff = this._bulkLogStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap);
-
-        diff.added.forEach(addedItem => {
-          const listItems = listData.items.length > 0 ? listData.items[0].children : [];
-          const matchingItem = listItems.find(item => item.value === (<any>addedItem).value);
-          if (!matchingItem) {
-            console.warn(`[bulk-log-refine-filters]: failed to sync filter for '${listName}'`);
-          } else {
-            updatedList = true;
-            listData.selections.push(matchingItem);
-          }
-        });
-
-        diff.deleted.forEach(removedItem => {
-
-          if (removedItem.value !== null && typeof removedItem.value !== 'undefined') {
-            // ignore root items (they are managed by the component tree)
-            listData.selections.splice(
-              listData.selections.indexOf(removedItem),
-              1
-            );
-            updatedList = true;
-          }
-        });
+      if (typeof updates.createdAt !== 'undefined') {
+          this._uploadedAfter = updates.createdAt.fromDate || null;
+          this._uploadedBefore = updates.createdAt.toDate || null;
       }
-    });
+
+      let updatedPrimeTreeSelections = false;
+      Object.keys(this._primeListsMap).forEach(listName => {
+          const listData = this._primeListsMap[listName];
+          const listFilter: { value: string, label: string }[] = updates[listName];
+
+          if (typeof listFilter !== 'undefined') {
+              const listSelectionsMap = this._bulkLogStore.filtersUtils.toMap(listData.selections, 'value');
+              const listFilterMap = this._bulkLogStore.filtersUtils.toMap(listFilter, 'value');
+              const diff = this._bulkLogStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap);
+
+              diff.added.forEach(addedItem => {
+                  const listItems = listData.items.length > 0 ? listData.items[0].children : [];
+                  const matchingItem = listItems.find(item => item.value === (<any>addedItem).value);
+                  if (!matchingItem) {
+                      console.warn(`[bulk-log-refine-filters]: failed to sync filter for '${listName}'`);
+                  } else {
+                      updatedPrimeTreeSelections = true;
+                      listData.selections.push(matchingItem);
+                  }
+              });
+
+              diff.deleted.forEach(removedItem => {
+
+                  if (removedItem.value !== null && typeof removedItem.value !== 'undefined') {
+                      // ignore root items (they are managed by the component tree)
+                      listData.selections.splice(
+                          listData.selections.indexOf(removedItem),
+                          1
+                      );
+                      updatedPrimeTreeSelections = true;
+                  }
+              });
+          }
+      });
+
+      if (updatedPrimeTreeSelections) {
+          this._fixPrimeTreePropagation();
+      }
   }
 
 
@@ -223,13 +227,6 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
    * Not part of the API, don't use it from outside this component
    */
   public _clearAllComponents(): void {
-
-    // fix primeng issue: manually remove all selections, this is needed since the root selections will not be removed by prime library
-    Object.keys(this._primeListsMap)
-      .forEach(listId => {
-        this._primeListsMap[listId].selections = [];
-      });
-
     this._bulkLogStore.resetFilters(listOfFilterNames);
   }
 

@@ -31,6 +31,7 @@ import { BulkLogStatusPipe } from './pipes/bulk-log-status.pipe';
 import { BulkLogRefineFiltersComponent } from './bulk-log-refine-filters/bulk-log-refine-filters.component';
 import { BulkLogStatusIconPipe } from './pipes/bulk-log-status-icon.pipe';
 import { BulkLogTagsComponent } from './bulk-log-tags/bulk-log-tags.component';
+import { FiltersModule } from '@kaltura-ng/mc-ui/filters';
 
 @NgModule({
   imports: [
@@ -57,7 +58,8 @@ import { BulkLogTagsComponent } from './bulk-log-tags/bulk-log-tags.component';
     RouterModule.forChild(routing),
     TreeModule,
     PrimeTreeModule,
-    StickyModule
+    StickyModule,
+      FiltersModule
   ],
   declarations: [
     ContentBulkLogAppComponent,

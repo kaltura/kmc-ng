@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { PrimeTreeActions } from '@kaltura-ng/kaltura-primeng-ui';
+import { RefinePrimeTree } from '@kaltura-ng/mc-ui/filters'
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -55,8 +55,8 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
 
-  @ViewChildren(PrimeTreeActions)
-  public _primeTreesActions: PrimeTreeActions[];
+  @ViewChildren(RefinePrimeTree)
+  public _primeTreesActions: RefinePrimeTree[];
 
   private _primeListsMap: { [key: string]: PrimeList } = {};
 
@@ -107,7 +107,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
           this._scheduledBefore = updates.scheduledAt.toDate || null;
       }
 
-      let updatedList = false;
+      let updatedPrimeTreeSelections = false;
       Object.keys(this._primeListsMap).forEach(listName => {
           const listData = this._primeListsMap[listName];
           let listFilter: { value: string, label: string }[];
@@ -131,7 +131,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                   if (!matchingItem) {
                       console.warn(`[entries-refine-filters]: failed to sync filter for '${listName}'`);
                   } else {
-                      updatedList = true;
+                      updatedPrimeTreeSelections = true;
                       listData.selections.push(matchingItem);
                   }
               });
@@ -144,7 +144,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                           listData.selections.indexOf(removedItem),
                           1
                       );
-                      updatedList = true;
+                      updatedPrimeTreeSelections = true;
                   }
               });
           }
@@ -153,6 +153,11 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
               this._syncScheduleDatesMode();
           }
       });
+
+      if (updatedPrimeTreeSelections)
+      {
+          this._fixPrimeTreePropagation();
+      }
   }
 
 
@@ -285,14 +290,6 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
    * Not part of the API, don't use it from outside this component
    */
   public _clearAllComponents(): void {
-
-      // fix primeng issue: manually remove all selections, this is needed since the root selections will not be removed by prime library
-      Object.keys(this._primeListsMap)
-          .forEach(listId =>
-      {
-          this._primeListsMap[listId].selections = [];
-      });
-
       this._entriesStore.resetFilters(listOfFilterNames);
   }
 

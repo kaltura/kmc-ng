@@ -105,6 +105,16 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
         this._prepare();
     }
 
+
+    protected _preFilter(updates: Partial<EntriesFilters>): Partial<EntriesFilters> {
+        if (typeof updates.pageIndex === 'undefined') {
+            // reset page index to first page everytime filtering the list by any filter that is not page index
+            updates.pageIndex = 0;
+        }
+
+        return updates;
+    }
+
     private _prepare(): void {
         if (!this._isReady) {
             this._entries.state.next({loading: true, errorMessage: null});

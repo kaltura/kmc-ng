@@ -82,6 +82,15 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
     }
   }
 
+    protected _preFilter(updates: Partial<BulkLogFilters>): Partial<BulkLogFilters> {
+        if (typeof updates.pageIndex === 'undefined') {
+            // reset page index to first page everytime filtering the list by any filter that is not page index
+            updates.pageIndex = 0;
+        }
+
+        return updates;
+    }
+
   private _registerToFilterStoreDataChanges(): void {
     this.filtersChange$
       .cancelOnDestroy(this)

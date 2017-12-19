@@ -40,6 +40,7 @@ import { CategoryRadioButtonPocComponent } from 'app-shared/content-shared/categ
 import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc-popup';
 import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-selector/entries-selector.component';
 import { EntriesListTagsComponent } from 'app-shared/content-shared/entries-list/entries-list-tags.component';
+import { FiltersModule } from '@kaltura-ng/mc-ui/filters';
 
 @NgModule({
   imports: [
@@ -65,7 +66,8 @@ import { EntriesListTagsComponent } from 'app-shared/content-shared/entries-list
     PaginatorModule,
     TieredMenuModule,
     InputTextModule,
-    StickyModule
+    StickyModule,
+    FiltersModule
   ],
   declarations: [
     EntryStatusPipe,

@@ -24,7 +24,7 @@
           <div *ngFor="let treeInstance of group.lists">
             <p-tree [value]="treeInstance.items"
                     [selectionMode]="'checkbox'"
-                    kPrimeTreeActions
+                    kRefinePrimeTree
                     [(selection)]="treeInstance.selections"
                     (onNodeSelect)="_onTreeNodeSelect($event, treeInstance)"
                     (onNodeUnselect)="_onTreeNodeUnselect($event, treeInstance)"
