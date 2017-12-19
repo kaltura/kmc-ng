@@ -12,16 +12,16 @@ import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUploa
 import { BulkUploadAbortAction } from 'kaltura-ngx-client/api/types/BulkUploadAbortAction';
 import { BulkListAction } from 'kaltura-ngx-client/api/types/BulkListAction';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-ui/filters';
-import { ListAdapter, ListType } from '@kaltura-ng/mc-ui/filters';
-import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-ui/filters';
+import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-shared/filters';
+import { ListAdapter, ListType } from '@kaltura-ng/mc-shared/filters';
+import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
 import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
 import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client/api/types/KalturaBaseEntryListResponse';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
-import { NumberTypeAdapter } from '@kaltura-ng/mc-ui/filters';
-import { StringTypeAdapter } from '@kaltura-ng/mc-ui/filters';
+import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters';
+import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters';
 
 const localStoarePageSizeKey = 'bulklog.list.pageSize';
 

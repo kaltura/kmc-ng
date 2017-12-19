@@ -1,9 +1,9 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 
 import * as moment from 'moment';
-import { ListType } from '@kaltura-ng/mc-ui/filters';
+import { ListType } from '@kaltura-ng/mc-shared/filters';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
-import { GroupedListType } from '@kaltura-ng/mc-ui/filters';
+import { GroupedListType } from '@kaltura-ng/mc-shared/filters';
 
 export interface TagItem
 { type: string, value: any, label: string, tooltip:  {token: string, args?: any}}

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import * as moment from 'moment';
-import { ListType } from '@kaltura-ng/mc-ui/filters';
+import { ListType } from '@kaltura-ng/mc-shared/filters';
 import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 
 export interface TagItem {

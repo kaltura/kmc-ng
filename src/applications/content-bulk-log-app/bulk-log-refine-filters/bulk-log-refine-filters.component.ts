@@ -9,7 +9,7 @@ import { BulkLogRefineFiltersProviderService } from './bulk-log-refine-filters-p
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
-import { RefinePrimeTree } from '@kaltura-ng/mc-ui/filters'
+import { RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
 import { RefineList } from './bulk-log-refine-filters-provider.service';
 
 

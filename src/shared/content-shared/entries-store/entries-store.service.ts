@@ -39,7 +39,7 @@ import {
     ListAdapter, ListType,
     NumberTypeAdapter,
     GroupedListType
-} from '@kaltura-ng/mc-ui/filters';
+} from '@kaltura-ng/mc-shared/filters';
 import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
 import { KalturaContentDistributionSearchItem } from 'kaltura-ngx-client/api/types/KalturaContentDistributionSearchItem';
 import { KalturaSearchCondition } from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
@@ -305,7 +305,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
                     }
                 });
 
-                if (originalClippedEntriesValue) {
+                if (originalClippedEntriesValue !== null) {
                     filter.isRoot = originalClippedEntriesValue;
                 }
             }

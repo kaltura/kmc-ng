@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { RefinePrimeTree } from '@kaltura-ng/mc-ui/filters'
+import { RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
