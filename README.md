@@ -21,7 +21,7 @@ KMCng application uses the following technologies and conventions:
 - [x] Ensure you have npm installed, version 5.0.0 or above.
 
 ### Project build options
-> KKC-ng solution is comprised of many packages; The KMC-ng application is developed along-side the [kaltura-ng](https://github.com/kaltura/kaltura-ng) packages and [mc-theme](https://github.com/kaltura/kaltura-ng-mc-theme) package. To simplify local development we created a tool that automagically bind them together as-if they where part of the same repository.
+> KKC-ng solution is comprised of many packages; The KMC-ng application is developed along-side the [kaltura-ng](https://github.com/kaltura/kaltura-ng) packages. To simplify local development we created a tool that automagically bind them together as-if they where part of the same repository.
 
 You have two development options as described below.
 

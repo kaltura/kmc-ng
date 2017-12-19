@@ -5,12 +5,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-wi
 import {BrowserService} from "app-shared/kmc-shell/providers/browser.service";
 
 import {
-  BulkAccessControlService,
-  BulkAddCategoriesService,
-  BulkAddTagsService,
-  BulkChangeOwnerService,
-  BulkDeleteService,
-  BulkDownloadService,
+ BulkAccessControlService,  BulkAddCategoriesService, BulkAddTagsService, BulkChangeOwnerService,  BulkDeleteService, BulkDownloadService ,
   BulkRemoveCategoriesService,
   BulkRemoveTagsService,
   BulkSchedulingService,
@@ -28,11 +23,21 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/playlist-creation';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
-
 @Component({
   selector: 'kBulkActions',
   templateUrl: './bulk-actions.component.html',
-  styleUrls: ['./bulk-actions.component.scss']
+  styleUrls: ['./bulk-actions.component.scss'],
+    providers: [
+        BulkSchedulingService,
+        BulkAccessControlService,
+        BulkAddTagsService,
+        BulkRemoveTagsService,
+        BulkAddCategoriesService,
+        BulkChangeOwnerService,
+        BulkRemoveCategoriesService,
+        BulkDeleteService,
+        BulkDownloadService,
+    ]
 })
 export class BulkActionsComponent implements OnInit, OnDestroy {
   private _allowedStatusesForPlaylist = [

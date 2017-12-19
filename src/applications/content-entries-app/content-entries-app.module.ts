@@ -41,17 +41,7 @@ import { DynamicFormModule } from '@kaltura-ng/kaltura-ui/dynamic-form';
 import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
 import { EntryComponentsList } from './entry/entry-components-list';
 import { EntriesComponentsList } from './entries/entries-components-list';
-import {
-  BulkAccessControlService,
-  BulkAddCategoriesService,
-  BulkAddTagsService,
-  BulkChangeOwnerService,
-  BulkDeleteService,
-  BulkDownloadService,
-  BulkRemoveCategoriesService,
-  BulkRemoveTagsService,
-  BulkSchedulingService
-} from './entries/bulk-actions/services';
+
 import { EntryCanDeactivate } from './entry/entry-can-deactivate.service';
 import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
 import { ContentEntriesAppService } from './content-entries-app.service';
@@ -105,15 +95,6 @@ import { ContentEntriesAppService } from './content-entries-app.service';
   exports: [],
   providers: [
     ConfirmationService,
-    BulkSchedulingService,
-    BulkAccessControlService,
-    BulkAddTagsService,
-    BulkRemoveTagsService,
-    BulkAddCategoriesService,
-    BulkChangeOwnerService,
-    BulkRemoveCategoriesService,
-    BulkDeleteService,
-    BulkDownloadService,
     EntryCanDeactivate,
     ContentEntriesAppService
   ],
