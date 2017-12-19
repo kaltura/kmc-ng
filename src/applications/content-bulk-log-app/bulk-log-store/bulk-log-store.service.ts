@@ -15,18 +15,13 @@ import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/Kaltura
 import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-ui/filters';
 import { ListAdapter, ListType } from '@kaltura-ng/mc-ui/filters';
 import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-ui/filters';
-import { KalturaLogger } from '@kaltura-ng/kaltura-log';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
 import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
 import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client/api/types/KalturaBaseEntryListResponse';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-ui/filters';
 import { StringTypeAdapter } from '@kaltura-ng/mc-ui/filters';
-
-export enum SortDirection {
-  Desc,
-  Asc
-}
 
 const localStoarePageSizeKey = 'bulklog.list.pageSize';
 
@@ -209,7 +204,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
     }
   }
 
-  protected _createEmptyStoreData(): BulkLogFilters {
+  protected _createDefaultFiltersValue(): BulkLogFilters {
     return {
       pageSize: 50,
       pageIndex: 0,

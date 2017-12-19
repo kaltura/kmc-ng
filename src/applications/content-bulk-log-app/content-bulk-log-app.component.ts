@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BulkLogStoreService } from './bulk-log-store/bulk-log-store.service';
-import { KalturaLogger } from '@kaltura-ng/kaltura-log';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
   selector: 'kBulkLog',

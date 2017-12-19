@@ -117,10 +117,10 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
               listFilter = customMetadataFilter ? customMetadataFilter[listName] : null;
           }else
           {
-              listFilter = updates[listName];
+              listFilter = updates[listName] ;
           }
 
-          if (listFilter !== null && typeof listFilter !== 'undefined') {
+          if (typeof listFilter !== 'undefined') {
               const listSelectionsMap = this._entriesStore.filtersUtils.toMap(listData.selections, 'value');
               const listFilterMap = this._entriesStore.filtersUtils.toMap(listFilter, 'value');
               const diff = this._entriesStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap );

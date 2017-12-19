@@ -29,7 +29,7 @@ import { KalturaLiveStreamAdminEntry } from 'kaltura-ngx-client/api/types/Kaltur
 import { KalturaLiveStreamEntry } from 'kaltura-ngx-client/api/types/KalturaLiveStreamEntry';
 import { KalturaExternalMediaEntry } from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
 
-import { KalturaLogger } from '@kaltura-ng/kaltura-log';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import {
     FiltersStoreBase, TypeAdaptersMapping,
@@ -473,7 +473,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
 
     }
 
-    protected _createEmptyStoreData(): EntriesFilters {
+    protected _createDefaultFiltersValue(): EntriesFilters {
         return {
             freetext: '',
             pageSize: 50,

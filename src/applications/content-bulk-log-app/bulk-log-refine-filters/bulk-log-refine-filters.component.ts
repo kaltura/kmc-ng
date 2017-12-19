@@ -74,7 +74,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
     this._updateComponentState(this._bulkLogStore.cloneFilters(
       listOfFilterNames
     ));
-    this._fixPrimeTreePropagation();
+    this._fixPrimeTreePropagation(); // needed to update root component selection state
   }
 
   private _updateComponentState(updates: Partial<BulkLogFilters>): void {
@@ -86,9 +86,9 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
     let updatedList = false;
     Object.keys(this._primeListsMap).forEach(listName => {
       const listData = this._primeListsMap[listName];
-      const listFilter: { value: string, label: string }[] = updates[listName];
+      const listFilter: { value: string, label: string }[] = updates[listName] ;
 
-      if (listFilter !== null && typeof listFilter !== 'undefined') {
+      if (typeof listFilter !== 'undefined') {
         const listSelectionsMap = this._bulkLogStore.filtersUtils.toMap(listData.selections, 'value');
         const listFilterMap = this._bulkLogStore.filtersUtils.toMap(listFilter, 'value');
         const diff = this._bulkLogStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap);

@@ -6,7 +6,7 @@ import {HttpModule} from '@angular/http';
 import {CommonModule} from '@angular/common';
 import {Ng2Webstorage} from 'ng2-webstorage';
 import { TranslateModule } from 'ng2-translate/ng2-translate';
-import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-log';
+import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
 import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui';
 
 import {

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
-import { KalturaLogger } from '@kaltura-ng/kaltura-log';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 
 @Component({
     selector: 'kEntries',

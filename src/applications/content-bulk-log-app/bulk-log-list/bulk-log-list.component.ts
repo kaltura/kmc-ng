@@ -3,7 +3,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
-import { BulkLogFilters, BulkLogStoreService, SortDirection } from '../bulk-log-store/bulk-log-store.service';
+import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
 import { getBulkUploadType } from '../utils/get-bulk-upload-type';
 import { AppEventsService } from 'app-shared/kmc-shared';
@@ -25,8 +25,6 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     uploadedBefore: null,
     pageIndex: 0,
     pageSize: null, // pageSize is set to null by design. It will be modified after the first time loading entries
-    sortBy: 'createdAt',
-    sortDirection: SortDirection.Desc
   };
 
   constructor(private _appLocalization: AppLocalization,
