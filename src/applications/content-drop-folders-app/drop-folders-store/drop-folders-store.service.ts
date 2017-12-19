@@ -1,9 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { BrowserService } from 'app-shared/kmc-shell';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { BrowserService } from 'shared/kmc-shell/index';
+import { AppLocalization } from '../../../../../kaltura-ng/kaltura-common/dist/index';
 import { Observable } from 'rxjs/Observable';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import '../../../../../kaltura-ng/kaltura-common/dist/rxjs/add/operators';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
 import { KalturaDropFolderFileStatus } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileStatus';
 import { KalturaClient } from 'kaltura-ngx-client';
@@ -32,6 +32,8 @@ import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/Kaltura
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
 import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/string-type';
 import { KalturaDropFolderFileListResponse } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileListResponse';
+import { DropFolderFileDeleteAction } from 'kaltura-ngx-client/api/types/DropFolderFileDeleteAction';
+import { environment } from 'app-environment';
 
 const localStoragePageSizeKey = 'dropFolders.list.pageSize';
 
@@ -322,6 +324,41 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFolderFilters>
     } else {
       this._prepare();
     }
+  }
+
+  public deleteDropFiles(ids: number[]): Observable<{}> {
+    if (!ids || !ids.length) {
+      return Observable.empty();
+    }
+
+    const requests = ids.map(id => new DropFolderFileDeleteAction({ dropFolderFileId: id }));
+
+    const maxRequestsPerMultiRequest = environment.modules.dropFolders.bulkActionsLimit;
+
+    // split request on chunks => [[], [], ...], each of inner arrays has length of maxRequestsPerMultiRequest
+    const splittedRequests = [];
+    let start = 0;
+    while (start < requests.length) {
+      const end = start + maxRequestsPerMultiRequest;
+      splittedRequests.push(requests.slice(start, end));
+      start = end;
+    }
+    const multiRequests = splittedRequests
+      .map(reqChunk => this._kalturaServerClient.multiRequest(reqChunk));
+
+    return Observable.forkJoin(multiRequests)
+      .map(responses => {
+        const errorMessage = [].concat.apply([], responses)
+          .filter(response => !!response.error)
+          .reduce((acc, { error }) => `${acc}\n${error.message}`, '')
+          .trim();
+
+        if (!!errorMessage) {
+          throw new Error(errorMessage);
+        } else {
+          return {};
+        }
+      });
   }
 }
 

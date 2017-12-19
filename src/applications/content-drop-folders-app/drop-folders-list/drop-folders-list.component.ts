@@ -1,15 +1,15 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
-import { DropFolderFilters, DropFoldersStoreService } from './drop-folders-store.service';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AreaBlockerMessage, StickyComponent } from '../../../../../kaltura-ng/kaltura-ui/dist/index';
+import { DropFolderFilters, DropFoldersStoreService } from '../drop-folders-store/drop-folders-store.service';
+import { AppLocalization } from '../../../../../kaltura-ng/kaltura-common/dist/index';
 import { Router } from '@angular/router';
-import { BrowserService } from 'app-shared/kmc-shell';
+import { BrowserService } from 'shared/kmc-shell/index';
 import { environment } from 'app-environment';
-import { BulkDeleteService } from './bulk-service/bulk-delete.service';
-import { FolderFileStatusPipe } from './pipes/folder-file-status.pipe';
-import { StatusesFilterComponent } from './statuses-filter/statuses-filter.component';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { BulkDeleteService } from '../bulk-service/bulk-delete.service';
+import { FolderFileStatusPipe } from '../pipes/folder-file-status.pipe';
+import { StatusesFilterComponent } from '../statuses-filter/statuses-filter.component';
+import { PopupWidgetComponent } from '../../../../../kaltura-ng/kaltura-ui/dist/popup-widget/popup-widget.component';
+import '../../../../../kaltura-ng/kaltura-common/dist/rxjs/add/operators';
 import * as moment from 'moment';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
 import { BulkLogFilters } from '../../content-bulk-log-app/bulk-log-store/bulk-log-store.service';
@@ -24,7 +24,7 @@ export interface Filter {
   selector: 'kDropFoldersList',
   templateUrl: './drop-folders-list.component.html',
   styleUrls: ['./drop-folders-list.component.scss'],
-  providers: [BulkDeleteService, FolderFileStatusPipe]
+  providers: [FolderFileStatusPipe]
 })
 
 export class DropFoldersListComponent implements OnInit, OnDestroy {
@@ -39,7 +39,6 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   };
 
   constructor(public _dropFoldersStore: DropFoldersStoreService,
-              public _bulkDeleteService: BulkDeleteService,
               private _appLocalization: AppLocalization,
               private _router: Router,
               private _browserService: BrowserService) {
@@ -89,7 +88,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
 
   private _deleteDropFiles(ids: number[]): void {
     const execute = () => {
-      this._bulkDeleteService.deleteDropFiles(ids)
+      this._dropFoldersStore.deleteDropFiles(ids)
         .cancelOnDestroy(this)
         .tag('block-shell')
         .subscribe(

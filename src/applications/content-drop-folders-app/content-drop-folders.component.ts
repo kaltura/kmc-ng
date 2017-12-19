@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DropFoldersStoreService } from './drop-folders-list/drop-folders-store.service';
+import { DropFoldersStoreService } from './drop-folders-store/drop-folders-store.service';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service';
 
 @Component({

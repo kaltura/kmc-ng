@@ -25,7 +25,7 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
 
 import { ContentDropFoldersComponent } from './content-drop-folders.component';
-import { DropFoldersComponentsList } from './drop-folders-list/drop-folders-components-list';
+import { DropFoldersComponentsList } from './drop-folders-components-list';
 import { KMCShellModule } from 'app-shared/kmc-shell';
 
 @NgModule({

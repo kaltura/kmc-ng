@@ -1,17 +1,17 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { DropFoldersStoreService } from 'applications/content-drop-folders-app/drop-folders-list/drop-folders-store.service';
+import { AppLocalization } from '../../../../../kaltura-ng/kaltura-common/dist/index';
+import { DropFoldersStoreService } from 'applications/content-drop-folders-app/drop-folders-store/drop-folders-store.service';
 import * as moment from 'moment';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
 
 @Component({
   selector: 'kDropFoldersListTable',
-  templateUrl: './drop-folders-list-table.component.html',
-  styleUrls: ['./drop-folders-list-table.component.scss']
+  templateUrl: './drop-folders-table.component.html',
+  styleUrls: ['./drop-folders-table.component.scss']
 })
 
-export class DropFoldersListTableComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() selectedDropFolders: KalturaDropFolderFile[] = [];
 
   @Input() set dropFolders(data: KalturaDropFolderFile[]) {

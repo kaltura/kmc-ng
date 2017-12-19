@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { TreeNode } from 'primeng/primeng';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AppLocalization } from '../../../../../kaltura-ng/kaltura-common/dist/index';
 import { KalturaDropFolderFileStatus } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileStatus';
 
 @Component({
