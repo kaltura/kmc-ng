@@ -1,9 +1,9 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Menu, MenuItem } from 'primeng/primeng';
-import { AppLocalization } from '../../../../../kaltura-ng/kaltura-common/dist/index';
 import { DropFoldersStoreService } from 'applications/content-drop-folders-app/drop-folders-store/drop-folders-store.service';
 import * as moment from 'moment';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 
 @Component({
   selector: 'kDropFoldersListTable',

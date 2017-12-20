@@ -2,10 +2,12 @@ import { DropFoldersListComponent } from './drop-folders-list/drop-folders-list.
 import { DropFoldersTableComponent } from './drop-folders-table/drop-folders-table.component';
 import { FolderFileStatusPipe } from './pipes/folder-file-status.pipe';
 import { StatusesFilterComponent } from './statuses-filter/statuses-filter.component';
+import { DropFoldersTagsComponent } from './drop-folders-tags/drop-folders-tags.component';
 
 export const DropFoldersComponentsList = [
   DropFoldersListComponent,
   DropFoldersTableComponent,
   StatusesFilterComponent,
+  DropFoldersTagsComponent,
   FolderFileStatusPipe
 ];

@@ -39,7 +39,7 @@
 
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="dropFoldersTags" [sticksTo]="'dropFolderFilters'">
         <div class="kContent">
-          <!--TODO [Stas] tags component-->
+          <k-drop-folders-tags (onTagsChange)="_onTagsChange()"></k-drop-folders-tags>
         </div>
       </kSticky>
 

@@ -1,18 +1,13 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AreaBlockerMessage, StickyComponent } from '../../../../../kaltura-ng/kaltura-ui/dist/index';
 import { DropFolderFilters, DropFoldersStoreService } from '../drop-folders-store/drop-folders-store.service';
-import { AppLocalization } from '../../../../../kaltura-ng/kaltura-common/dist/index';
 import { Router } from '@angular/router';
-import { BrowserService } from 'shared/kmc-shell/index';
 import { environment } from 'app-environment';
-import { BulkDeleteService } from '../bulk-service/bulk-delete.service';
 import { FolderFileStatusPipe } from '../pipes/folder-file-status.pipe';
-import { StatusesFilterComponent } from '../statuses-filter/statuses-filter.component';
-import { PopupWidgetComponent } from '../../../../../kaltura-ng/kaltura-ui/dist/popup-widget/popup-widget.component';
-import '../../../../../kaltura-ng/kaltura-common/dist/rxjs/add/operators';
-import * as moment from 'moment';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
-import { BulkLogFilters } from '../../content-bulk-log-app/bulk-log-store/bulk-log-store.service';
+import { BrowserService } from 'app-shared/kmc-shell';
+import { StickyComponent } from '@kaltura-ng/kaltura-ui/sticky/components/sticky.component';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 
 export interface Filter {
   type: string;
@@ -103,7 +98,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   private _registerToFilterStoreDataChanges(): void {
     this._dropFoldersStore.filtersChange$
       .cancelOnDestroy(this)
-      .subscribe(({changes}) => {
+      .subscribe(({ changes }) => {
         this._updateComponentState(changes);
         this._clearSelection();
         this._browserService.scrollToTop();
