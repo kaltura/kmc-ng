@@ -134,7 +134,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
             } else if (toDate) {
                 tooltip = `Until ${moment(toDate).format('LL')}`;
             }
-            // TODO sakal fix tooltip as token
+
             this._filterTags.push({type: 'createdAt', value: null, label: 'Dates', tooltip });
         }
     }

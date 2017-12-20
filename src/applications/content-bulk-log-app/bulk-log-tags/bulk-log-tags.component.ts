@@ -2,12 +2,13 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import * as moment from 'moment';
 import { ListType } from '@kaltura-ng/mc-shared/filters';
 import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 export interface TagItem {
   type: string,
   value: any,
   label: string,
-  tooltip: { token: string, args?: any }
+  tooltip: string
 }
 
 const listTypes: (keyof BulkLogFilters)[] = ['uploadedItem', 'status'];
@@ -23,7 +24,7 @@ export class BulkLogTagsComponent implements OnInit, OnDestroy {
 
   public _filterTags: TagItem[] = [];
 
-  constructor(private _store: BulkLogStoreService) {
+  constructor(private _store: BulkLogStoreService, private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
@@ -80,8 +81,8 @@ export class BulkLogTagsComponent implements OnInit, OnDestroy {
       } else if (toDate) {
         tooltip = `Until ${moment(toDate).format('LL')}`;
       }
-      // TODO sakal fix tooltip as token
-      this._filterTags.push({ type: 'createdAt', value: null, label: 'Dates', tooltip: { token: tooltip } });
+
+      this._filterTags.push({ type: 'createdAt', value: null, label: 'Dates', tooltip });
     }
   }
 
@@ -105,7 +106,7 @@ export class BulkLogTagsComponent implements OnInit, OnDestroy {
         type: filterName,
         value: (<any>item).value,
         label: (<any>item).label,
-        tooltip: { token: `applications.content.filters.${filterName}`, args: { '0': (<any>item).label } }
+        tooltip: this._appLocalization.get(`applications.content.filters.${filterName}`,  { '0': (<any>item).label })
       });
     });
   }
