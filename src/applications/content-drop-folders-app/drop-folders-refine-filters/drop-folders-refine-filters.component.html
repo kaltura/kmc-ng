@@ -2,9 +2,9 @@
   <div class="kOverrideFAIcons kRefineFilters">
     <kScrollToTopContainer #refine class="kTreeContainer">
       <div class="kFiltersGroupTitle">
-        <span>{{'applications.content.bulkUpload.filters.additionalFilters' | translate | uppercase}}</span>
+        <span>{{'applications.content.dropFolders.filters.additionalFilters' | translate | uppercase}}</span>
       </div>
-      <p>{{'applications.content.bulkUpload.filters.createdBetween' | translate}}</p>
+      <p>{{'applications.content.dropFolders.filters.createdBetween' | translate}}</p>
       <div class="kDateRange">
 
         <p-calendar class="kDateRangeFirst" [(ngModel)]="_createdAfter" [readonlyInput]="true" [showIcon]="true"
@@ -15,7 +15,7 @@
                     icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
       </div>
       <a class="kClearAll" (click)="_clearCreatedComponents()">
-        {{'applications.content.bulkUpload.filters.clearDates' | translate}}
+        {{'applications.content.dropFolders.filters.clearDates' | translate}}
       </a>
       <span *ngIf="_createdAtFilterError" class="kError">{{_createdAtFilterError}}</span>
         <div *ngFor="let treeInstance of _primeLists">
@@ -36,10 +36,10 @@
 
     <p>
       <a class="clearAll" (click)="_clearAllComponents()">
-        {{'applications.content.bulkUpload.filters.clearAll' | translate}}
+        {{'applications.content.dropFolders.filters.clearAll' | translate}}
       </a>
       <a class="kClose" (click)="_close()">
-        {{'applications.content.bulkUpload.filters.close' | translate}}
+        {{'applications.content.dropFolders.filters.close' | translate}}
       </a>
     </p>
   </div>

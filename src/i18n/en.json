@@ -348,7 +348,15 @@
           "unknown": "Unknown",
           "delete": "Delete"
         },
+        "filters": {
+          "additionalFilters": "Additional Filters",
+          "createdBetween": "Created Between",
+          "clearDates": "Clear Dates",
+          "clearAll": "Clear All",
+          "close": "Close"
+        },
         "dropFolderStatusLabels": {
+          "allStatuses": "All statuses",
           "uploading": "Uploading",
           "downloading": "Downloading",
           "pending": "Pending",
@@ -617,7 +625,17 @@
           "close": "Close",
           "clearDates": "Clear Dates",
           "createdBetween": "Created Between",
-          "additionalFilters": "Additional Filters"
+          "additionalFilters": "Additional Filters",
+          "uploadedItems": "Uploaded items",
+          "entries": "Entries",
+          "categories": "Categories",
+          "endUsers": "End Users",
+          "endUserEntitlements": "End-User Entitlements",
+          "statuses": "Statuses",
+          "successFinish": "Finished successfully",
+          "errorFinish": "Finished with errors",
+          "failed": "Failed",
+          "otherStatuses": "All other statuses"
         }
       },
       "entryStatus": {

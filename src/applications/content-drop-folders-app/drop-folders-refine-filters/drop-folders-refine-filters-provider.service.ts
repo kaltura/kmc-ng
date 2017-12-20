@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { DefaultFiltersList } from './default-filters-list';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 
 export interface RefineListItem {
   value: string,
@@ -16,22 +17,26 @@ export class RefineList {
 
 @Injectable()
 export class DropFoldersRefineFiltersProviderService {
-    public getFilters(): Observable<RefineList[]> {
-        return Observable.of(this._buildDefaultFiltersGroup());
-    }
+  constructor(private _appLocalization: AppLocalization) {
+  }
 
-    private _buildDefaultFiltersGroup(): RefineList[] {
-        return DefaultFiltersList.map((list) => {
-            const refineList = new RefineList(
-                list.name,
-                list.label
-            );
+  public getFilters(): Observable<RefineList[]> {
+    return Observable.of(this._buildDefaultFiltersGroup());
+  }
 
-            refineList.items = list.items.map((item: any) => (
-                {value: item.value, label: item.label}
-            ));
+  private _buildDefaultFiltersGroup(): RefineList[] {
+    return DefaultFiltersList.map((list) => {
+      const refineList = new RefineList(
+        list.name,
+        this._appLocalization.get(`applications.content.dropFolders.dropFolderStatusLabels.${list.label}`)
+      );
 
-            return refineList;
-        });
-    }
+      refineList.items = list.items.map((item: any) => ({
+        value: item.value,
+        label: this._appLocalization.get(`applications.content.dropFolders.dropFolderStatusLabels.${item.label}`)
+      }));
+
+      return refineList;
+    });
+  }
 }
