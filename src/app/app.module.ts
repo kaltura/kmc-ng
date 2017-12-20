@@ -5,7 +5,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpModule} from '@angular/http';
 import {CommonModule} from '@angular/common';
 import {Ng2Webstorage} from 'ng2-webstorage';
-import { TranslateModule } from 'ng2-translate/ng2-translate';
+import {TranslateModule} from 'ng2-translate/ng2-translate';
 
 
 import {
@@ -28,6 +28,7 @@ import {KalturaClient, KalturaClientConfiguration} from 'kaltura-ngx-client';
 import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 import {
   AccessControlProfileStore,
+  AppEventsModule,
   FlavoursStore,
   KalturaServerModule,
   MetadataProfileModule,
@@ -59,23 +60,23 @@ import {
 } from 'primeng/primeng';
 
 
-import { UploadManagementModule } from '@kaltura-ng/kaltura-common/upload-management';
-import { Ng2PageScrollModule } from 'ng2-page-scroll';
-import { environment } from 'app-environment';
-import { LoginComponent } from './components/login/login.component';
-import { ForgotPasswordFormComponent } from './components/login/forgot-password-form/forgot-password-form.component';
-import { LoginFormComponent } from './components/login/login-form/login-form.component';
-import { PasswordExpiredFormComponent } from './components/login/password-expired-form/password-expired-form.component';
-import { InvalidLoginHashFormComponent } from './components/login/invalid-login-hash-form/invalid-login-hash-form.component';
-import { AppMenuContentComponent } from './components/app-menu/app-menu-content.component';
-import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-app.module';
-import { TranscodingProfileManagementModule } from 'app-shared/kmc-shared/transcoding-profile-management';
-import { ChangeAccountComponent } from './components/changeAccount/change-account.component';
-import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
-import { ChangelogComponent } from './components/changelog/changelog.component';
-import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
-import { AppEventsModule } from 'app-shared/kmc-shared';
-import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
+import {UploadManagementModule} from '@kaltura-ng/kaltura-common/upload-management';
+import {Ng2PageScrollModule} from 'ng2-page-scroll';
+import {environment} from 'app-environment';
+import {LoginComponent} from './components/login/login.component';
+import {ForgotPasswordFormComponent} from './components/login/forgot-password-form/forgot-password-form.component';
+import {LoginFormComponent} from './components/login/login-form/login-form.component';
+import {PasswordExpiredFormComponent} from './components/login/password-expired-form/password-expired-form.component';
+import {InvalidLoginHashFormComponent} from './components/login/invalid-login-hash-form/invalid-login-hash-form.component';
+import {AppMenuContentComponent} from './components/app-menu/app-menu-content.component';
+import {KmcUploadAppModule} from '../applications/kmc-upload-app/kmc-upload-app.module';
+import {TranscodingProfileManagementModule} from 'app-shared/kmc-shared/transcoding-profile-management';
+import {ChangeAccountComponent} from './components/changeAccount/change-account.component';
+import {BulkUploadModule} from 'app-shared/kmc-shell/bulk-upload';
+import {ChangelogComponent} from './components/changelog/changelog.component';
+import {ChangelogContentComponent} from './components/changelog/changelog-content/changelog-content.component';
+import {KMCServerPollsModule} from 'app-shared/kmc-shared/server-polls';
+import {CategoryCreationModule} from "app-shared/kmc-shared/category-creation";
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
 
@@ -124,6 +125,7 @@ export function clientConfigurationFactory() {
     RadioButtonModule,
     StickyModule.forRoot(),
     OperationTagModule.forRoot(),
+    CategoryCreationModule.forRoot(),
     KMCServerPollsModule.forRoot()
   ],
   declarations: <any>[

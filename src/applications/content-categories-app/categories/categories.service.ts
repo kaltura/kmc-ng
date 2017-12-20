@@ -9,7 +9,7 @@ import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/Kaltu
 import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import {CategoryListAction} from 'kaltura-ngx-client/api/types/CategoryListAction';
-import {KalturaClient} from 'kaltura-ngx-client';
+import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
 import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaCategoryListResponse';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {CategoryDeleteAction} from 'kaltura-ngx-client/api/types/CategoryDeleteAction';
@@ -20,231 +20,237 @@ import {KalturaInheritanceType} from "kaltura-ngx-client/api/types/KalturaInheri
 import {KalturaContributionPolicyType} from "kaltura-ngx-client/api/types/KalturaContributionPolicyType";
 import {KalturaAppearInListType} from "kaltura-ngx-client/api/types/KalturaAppearInListType";
 import {KalturaPrivacyType} from "kaltura-ngx-client/api/types/KalturaPrivacyType";
+import {KalturaMediaEntry} from "kaltura-ngx-client/api/types/KalturaMediaEntry";
+import {KalturaCategoryEntry} from "kaltura-ngx-client/api/types/KalturaCategoryEntry";
+import {CategoryEntryAddAction} from "kaltura-ngx-client/api/types/CategoryEntryAddAction";
 
 export interface UpdateStatus {
-    loading: boolean;
-    errorMessage: string;
+  loading: boolean;
+  errorMessage: string;
 }
 
 export interface Categories {
-    items: KalturaCategory[],
-    totalCount: number
+  items: KalturaCategory[],
+  totalCount: number
 }
 
 export enum SortDirection {
-    Desc,
-    Asc
+  Desc,
+  Asc
 }
 
 export interface QueryData {
-    pageIndex: number,
-    pageSize: number,
-    sortBy: string,
-    sortDirection: SortDirection,
-    fields: string
+  pageIndex: number,
+  pageSize: number,
+  sortBy: string,
+  sortDirection: SortDirection,
+  fields: string
 }
 
 export interface MoveCategoryData {
-    categories: KalturaCategory[];
-    categoryParent: {id?: number, fullIds: number[]};
+  categories: KalturaCategory[];
+  categoryParent: { id?: number, fullIds: number[] };
 }
+
 export interface NewCategoryData {
-    categoryParentId?: number;
-    name: string;
+  categoryParentId?: number;
+  name: string;
+  linkedEntries?: KalturaMediaEntry[]
 }
 
 @Injectable()
 export class CategoriesService implements OnDestroy {
 
-    private _categories = new BehaviorSubject<Categories>({ items: [], totalCount: 0 });
-    private _state = new BehaviorSubject<UpdateStatus>({ loading: false, errorMessage: null });
-    private _categoriesExecuteSubscription: ISubscription;
-    private _queryData = new BehaviorSubject<QueryData>({
-        pageIndex: 1,
-        pageSize: 50,
-        sortBy: 'createdAt',
-        sortDirection: SortDirection.Desc,
-        fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, fullName,tags, fullIds, parentId'
-    });
+  private _categories = new BehaviorSubject<Categories>({items: [], totalCount: 0});
+  private _state = new BehaviorSubject<UpdateStatus>({loading: false, errorMessage: null});
+  private _categoriesExecuteSubscription: ISubscription;
+  private _queryData = new BehaviorSubject<QueryData>({
+    pageIndex: 1,
+    pageSize: 50,
+    sortBy: 'createdAt',
+    sortDirection: SortDirection.Desc,
+    fields: 'id,name, createdAt, directSubCategoriesCount, entriesCount, fullName,tags, fullIds, parentId'
+  });
 
-    public state$ = this._state.asObservable();
-    public categories$ = this._categories.asObservable();
-    public queryData$ = this._queryData.asObservable();
-    constructor(private _kalturaClient: KalturaClient,
-        private browserService: BrowserService,
-                private _appLocalization: AppLocalization) {
-        const defaultPageSize = this.browserService.getFromLocalStorage('categories.list.pageSize');
-        if (defaultPageSize !== null) {
-            this._updateQueryData({
-                pageSize: defaultPageSize
-            });
-        }
-        this.reload(false);
+  public state$ = this._state.asObservable();
+  public categories$ = this._categories.asObservable();
+  public queryData$ = this._queryData.asObservable();
+
+  constructor(private _kalturaClient: KalturaClient,
+              private browserService: BrowserService,
+              private _appLocalization: AppLocalization) {
+    const defaultPageSize = this.browserService.getFromLocalStorage('categories.list.pageSize');
+    if (defaultPageSize !== null) {
+      this._updateQueryData({
+        pageSize: defaultPageSize
+      });
+    }
+    this.reload(false);
+  }
+
+  ngOnDestroy() {
+    this._state.complete();
+    this._queryData.complete();
+    this._categories.complete();
+    if (this._categoriesExecuteSubscription) {
+      this._categoriesExecuteSubscription.unsubscribe();
+      this._categoriesExecuteSubscription = null;
+    }
+  }
+
+  public reload(force: boolean): void;
+  public reload(query: Partial<QueryData>): void;
+  public reload(query: boolean | Partial<QueryData>): void {
+    const forceReload = (typeof query === 'object' || (typeof query === 'boolean' && query));
+
+    if (forceReload || this._categories.getValue().totalCount === 0) {
+      if (typeof query === 'object') {
+        this._updateQueryData(query);
+      }
+      this._executeQuery();
+    }
+  }
+
+  private _updateQueryData(partialData: Partial<QueryData>): void {
+    const newQueryData = Object.assign({}, this._queryData.getValue(), partialData);
+    this._queryData.next(newQueryData);
+
+    if (partialData.pageSize) {
+      this.browserService.setInLocalStorage('categories.list.pageSize', partialData.pageSize);
+    }
+  }
+
+  public getNextCategoryId(categoryId: number): number | null {
+    const categories = this._categories.getValue().items;
+    if (!categories || !categories.length) {
+      return null;
     }
 
-    ngOnDestroy() {
-        this._state.complete();
-        this._queryData.complete();
-        this._categories.complete();
-        if (this._categoriesExecuteSubscription) {
-            this._categoriesExecuteSubscription.unsubscribe();
-            this._categoriesExecuteSubscription = null;
-        }
+    // validate category exists
+    const currentCategoryIndex = categories.findIndex(category => category.id === categoryId);
+    if (currentCategoryIndex === -1) {
+      return null;
     }
 
-    public reload(force: boolean): void;
-    public reload(query: Partial<QueryData>): void;
-    public reload(query: boolean | Partial<QueryData>): void {
-        const forceReload = (typeof query === 'object' || (typeof query === 'boolean' && query));
+    // get next category ID
+    if (currentCategoryIndex < categories.length - 1) {
+      return (categories[currentCategoryIndex + 1].id);
+    } else {
+      return null;
+    }
+  }
 
-        if (forceReload || this._categories.getValue().totalCount === 0) {
-            if (typeof query === 'object') {
-                this._updateQueryData(query);
-            }
-            this._executeQuery();
-        }
+  public getPrevCategoryId(categoryId: number): number | null {
+    const categories = this._categories.getValue().items;
+    if (!categories || !categories.length) {
+      return null;
     }
 
-    private _updateQueryData(partialData: Partial<QueryData>): void {
-        const newQueryData = Object.assign({}, this._queryData.getValue(), partialData);
-        this._queryData.next(newQueryData);
-
-        if (partialData.pageSize) {
-            this.browserService.setInLocalStorage('categories.list.pageSize', partialData.pageSize);
-        }
+    // validate category exists
+    const currentCategoryIndex = categories.findIndex(category => category.id === categoryId);
+    if (currentCategoryIndex === -1) {
+      return null;
     }
 
-    public getNextCategoryId(categoryId: number): number | null {
-        const categories = this._categories.getValue().items;
-        if (!categories || !categories.length) {
-          return null;
-        }
+    // get previous category ID
+    if (currentCategoryIndex !== 0) {
+      return (categories[currentCategoryIndex - 1].id);
+    } else {
+      return null;
+    }
+  }
 
-        // validate category exists
-        const currentCategoryIndex = categories.findIndex(category => category.id === categoryId);
-        if (currentCategoryIndex === -1) {
-            return null;
-        }
-
-        // get next category ID
-        if (currentCategoryIndex < categories.length - 1) {
-            return (categories[currentCategoryIndex + 1].id);
-        } else {
-            return null;
-        }
+  private _executeQuery(): void {
+    // cancel previous requests
+    if (this._categoriesExecuteSubscription) {
+      this._categoriesExecuteSubscription.unsubscribe();
     }
 
-    public getPrevCategoryId(categoryId: number): number | null {
-        const categories = this._categories.getValue().items;
-        if (!categories || !categories.length) {
-          return null;
-        }
+    this.browserService.scrollToTop();
 
-        // validate category exists
-        const currentCategoryIndex = categories.findIndex(category => category.id === categoryId);
-        if (currentCategoryIndex === -1) {
-            return null;
-        }
+    this._state.next({loading: true, errorMessage: null});
 
-        // get previous category ID
-        if (currentCategoryIndex !== 0) {
-            return (categories[currentCategoryIndex - 1].id);
-        } else {
-            return null;
-        }
-    }
+    // execute the request
+    this._categoriesExecuteSubscription = this.buildQueryRequest(this._queryData.getValue()).subscribe(
+      response => {
+        this._categoriesExecuteSubscription = null;
 
-    private _executeQuery(): void {
-        // cancel previous requests
-        if (this._categoriesExecuteSubscription) {
-            this._categoriesExecuteSubscription.unsubscribe();
-        }
+        this._state.next({loading: false, errorMessage: null});
 
-        this.browserService.scrollToTop();
-
-        this._state.next({ loading: true, errorMessage: null });
-
-        // execute the request
-        this._categoriesExecuteSubscription = this.buildQueryRequest(this._queryData.getValue()).subscribe(
-            response => {
-                this._categoriesExecuteSubscription = null;
-
-                this._state.next({ loading: false, errorMessage: null });
-
-                this._categories.next({
-                    items: response.objects,
-                    totalCount: <number>response.totalCount
-                });
-            },
-            error => {
-                this._categoriesExecuteSubscription = null;
-                const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
-                this._state.next({ loading: false, errorMessage });
-            });
-    }
-
-    private buildQueryRequest(queryData: QueryData): Observable<KalturaCategoryListResponse> {
-        try {
-            const filter: KalturaCategoryFilter = new KalturaCategoryFilter({});
-            let pagination: KalturaFilterPager = null;
-            const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
-                type: KalturaResponseProfileType.includeFields,
-                fields: queryData.fields
-            });
-
-            // update pagination args
-            if (queryData.pageIndex || queryData.pageSize) {
-                pagination = new KalturaFilterPager(
-                    {
-                        pageSize: queryData.pageSize,
-                        pageIndex: queryData.pageIndex
-                    }
-                );
-            }
-
-            // update the sort by args
-            if (queryData.sortBy) {
-                filter.orderBy = `${queryData.sortDirection === SortDirection.Desc ? '-' : '+'}${queryData.sortBy}`;
-            }
-
-            // build the request
-            return <any>this._kalturaClient.request(
-                new CategoryListAction({
-                    filter,
-                    pager: pagination,
-                    responseProfile
-                })
-            );
-        } catch (err) {
-            return Observable.throw(err);
-        }
-
-    }
-
-    public deleteCategory(categoryId: number): Observable<void> {
-
-        return Observable.create(observer => {
-            let subscription: ISubscription;
-            if (categoryId && categoryId > 0) {
-                subscription = this._kalturaClient.request(new CategoryDeleteAction({ id: categoryId })).subscribe(
-                    result => {
-                        observer.next();
-                        observer.complete();
-                    },
-                    error => {
-                        observer.error(error);
-                    }
-                );
-            } else {
-                observer.error(new Error('missing categoryId argument'));
-            }
-            return () => {
-                if (subscription) {
-                    subscription.unsubscribe();
-                }
-            }
+        this._categories.next({
+          items: response.objects,
+          totalCount: <number>response.totalCount
         });
+      },
+      error => {
+        this._categoriesExecuteSubscription = null;
+        const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+        this._state.next({loading: false, errorMessage});
+      });
+  }
+
+  private buildQueryRequest(queryData: QueryData): Observable<KalturaCategoryListResponse> {
+    try {
+      const filter: KalturaCategoryFilter = new KalturaCategoryFilter({});
+      let pagination: KalturaFilterPager = null;
+      const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
+        type: KalturaResponseProfileType.includeFields,
+        fields: queryData.fields
+      });
+
+      // update pagination args
+      if (queryData.pageIndex || queryData.pageSize) {
+        pagination = new KalturaFilterPager(
+          {
+            pageSize: queryData.pageSize,
+            pageIndex: queryData.pageIndex
+          }
+        );
+      }
+
+      // update the sort by args
+      if (queryData.sortBy) {
+        filter.orderBy = `${queryData.sortDirection === SortDirection.Desc ? '-' : '+'}${queryData.sortBy}`;
+      }
+
+      // build the request
+      return <any>this._kalturaClient.request(
+        new CategoryListAction({
+          filter,
+          pager: pagination,
+          responseProfile
+        })
+      );
+    } catch (err) {
+      return Observable.throw(err);
     }
+
+  }
+
+  public deleteCategory(categoryId: number): Observable<void> {
+
+    return Observable.create(observer => {
+      let subscription: ISubscription;
+      if (categoryId && categoryId > 0) {
+        subscription = this._kalturaClient.request(new CategoryDeleteAction({id: categoryId})).subscribe(
+          result => {
+            observer.next();
+            observer.complete();
+          },
+          error => {
+            observer.error(error);
+          }
+        );
+      } else {
+        observer.error(new Error('missing categoryId argument'));
+      }
+      return () => {
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+      }
+    });
+  }
 
 
   /**
@@ -252,7 +258,7 @@ export class CategoriesService implements OnDestroy {
    * @param newCategoryData {NewCategoryData} holds name and desired categoryParentId (if null - move to root)
    * @return {Observable<number>} new category ID
    */
-  public addNewCategory(newCategoryData: NewCategoryData): Observable<number> {
+  public addNewCategory(newCategoryData: NewCategoryData): Observable<{categoryId: number}> {
     if (!newCategoryData || !newCategoryData.name) {
       const nameRequiredErrorMessage = this._appLocalization.get('applications.content.addNewCategory.errors.requiredName');
       return Observable.throw(new Error(nameRequiredErrorMessage));
@@ -266,12 +272,34 @@ export class CategoriesService implements OnDestroy {
       inheritanceType: KalturaInheritanceType.manual
     });
 
-    return <any>this._kalturaClient.request(
-      new CategoryAddAction({
-        category
-      })).map(addedCategory => {
-      return addedCategory.id;
-    });
+    const multiRequest: KalturaMultiRequest = new KalturaMultiRequest(
+      new CategoryAddAction({category})
+    );
+
+    if (newCategoryData.linkedEntries) {
+      newCategoryData.linkedEntries.forEach((entry) => {
+        const categoryEntry = new KalturaCategoryEntry({
+          entryId: entry.id
+        }).setDependency(['categoryId', 0, 'id']);
+
+        multiRequest.requests.push(
+          new CategoryEntryAddAction({categoryEntry})
+
+        );
+      });
+    }
+
+    return this._kalturaClient.multiRequest(multiRequest)
+      .map(
+        data => {
+          if (data.hasErrors()) {
+            throw new Error('error occurred while trying to add new category');
+          }
+          return {categoryId: data[0].result.id};
+        })
+      .catch(error => {
+        throw new Error('error occurred while trying to add new category');
+      });
   }
 
   /**

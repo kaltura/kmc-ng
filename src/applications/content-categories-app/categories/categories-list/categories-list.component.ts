@@ -1,14 +1,15 @@
 import {ISubscription} from 'rxjs/Subscription';
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {CategoriesService, SortDirection} from '../categories.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {ReloadCategoriesListOnNavigateOutEvent} from 'app-shared/kmc-shared/events/reload-categories-list-on-navigation-out.event';
+import {CategoryCreationService} from 'app-shared/kmc-shared/category-creation';
 
 @Component({
   selector: 'kCategoriesList',
@@ -16,7 +17,7 @@ import {ReloadCategoriesListOnNavigateOutEvent} from 'app-shared/kmc-shared/even
   styleUrls: ['./categories-list.component.scss']
 })
 
-export class CategoriesListComponent implements OnInit, OnDestroy {
+export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -26,6 +27,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
   public _selectedCategoryToMove: KalturaCategory;
   private categoriesSubscription: ISubscription;
   private querySubscription: ISubscription;
+  private parentPopupStateChangeSubscription$: ISubscription;
   @ViewChild('moveCategory') moveCategoryPopup: PopupWidgetComponent;
   @ViewChild('addNewCategory') public addNewCategory: PopupWidgetComponent;
 
@@ -41,7 +43,8 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
               private router: Router,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
-              private _appEvents: AppEventsService) {
+              private _appEvents: AppEventsService,
+              public _categoryCreationService: CategoryCreationService) {
   }
 
   ngOnInit() {
@@ -61,11 +64,25 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         this._categoriesTotalCount = data.totalCount;
       }
     );
+
+    this.parentPopupStateChangeSubscription$ = this.addNewCategory.state$
+      .subscribe(event => {
+        if (event.state === PopupWidgetStates.BeforeClose) {
+          this._categoryCreationService.clearNewCategoryData();
+        }
+      });
+  }
+
+  ngAfterViewInit() {
+    if (this._categoryCreationService.getNewCategoryData()) {
+      this.addNewCategory.open();
+    }
   }
 
   ngOnDestroy() {
     this.categoriesSubscription.unsubscribe();
     this.querySubscription.unsubscribe();
+    this.parentPopupStateChangeSubscription$.unsubscribe();
   }
 
   public _reload() {

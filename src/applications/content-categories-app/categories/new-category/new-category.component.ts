@@ -5,6 +5,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-wi
 import {CategoriesService} from '../categories.service';
 import {CategoryData} from 'app-shared/content-shared/categories-search.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {KalturaMediaEntry} from "kaltura-ngx-client/api/types/KalturaMediaEntry";
 
 @Component({
   selector: 'kNewCategory',
@@ -14,7 +15,8 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 export class NewCategoryComponent implements OnInit {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @Output() onApply = new EventEmitter<{categoryId: number}>();
+  @Input() linkedEntries?: KalturaMediaEntry[];
+  @Output() onApply = new EventEmitter<{ categoryId: number }>();
 
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -23,7 +25,8 @@ export class NewCategoryComponent implements OnInit {
 
   constructor(private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
-              private _categoriesService: CategoriesService) { }
+              private _categoriesService: CategoriesService) {
+  }
 
   ngOnInit() {
     this.newCategoryForm = this._fb.group({
@@ -57,8 +60,13 @@ export class NewCategoryComponent implements OnInit {
         ]
       });
     } else {
-      this._categoriesService.addNewCategory({categoryParentId: categoryParent && categoryParent.id, name: categoryName})
-        .subscribe(categoryId => {
+      this._categoriesService
+        .addNewCategory({
+          categoryParentId: categoryParent && categoryParent.id,
+          name: categoryName,
+          linkedEntries: this.linkedEntries
+        })
+        .subscribe(({categoryId}: {categoryId: number}) => {
             this._isBusy = false;
             this.onApply.emit({categoryId: categoryId});
             if (this.parentPopupWidget) {
@@ -83,6 +91,7 @@ export class NewCategoryComponent implements OnInit {
           });
     }
   }
+
   public _cancel(): void {
     if (this.parentPopupWidget) {
       this.parentPopupWidget.close();

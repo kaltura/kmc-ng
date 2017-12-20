@@ -43,7 +43,7 @@
 
 <kPopupWidget #addNewCategory [popupWidth]="586" [popupHeight]="658" [modal]="true" [preventPageScroll]="true">
   <ng-template>
-    <kNewCategory (onApply)="onCategoryAdded($event)" [parentPopupWidget]="addNewCategory"></kNewCategory>
+    <kNewCategory (onApply)="onCategoryAdded($event)" [parentPopupWidget]="addNewCategory" [linkedEntries]="_categoryCreationService.getNewCategoryData()?.entries"></kNewCategory>
   </ng-template>
 </kPopupWidget>
 
