@@ -27,6 +27,7 @@ import { ContentSharedModule } from 'app-shared/content-shared/content-shared.mo
 import { ContentDropFoldersComponent } from './content-drop-folders.component';
 import { DropFoldersComponentsList } from './drop-folders-components-list';
 import { KMCShellModule } from 'app-shared/kmc-shell';
+import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
 
 @NgModule({
   imports: [
@@ -54,7 +55,8 @@ import { KMCShellModule } from 'app-shared/kmc-shell';
     ReactiveFormsModule,
     StickyModule,
     ContentSharedModule,
-    RouterModule.forChild(routing)
+    RouterModule.forChild(routing),
+    FiltersModule
   ],
   declarations: [
     ContentDropFoldersComponent,

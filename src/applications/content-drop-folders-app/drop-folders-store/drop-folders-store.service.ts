@@ -14,7 +14,7 @@ import { KalturaDropFolderContentFileHandlerConfig } from 'kaltura-ngx-client/ap
 import { KalturaDropFolderFileHandlerType } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileHandlerType';
 import { KalturaDropFolderContentFileHandlerMatchPolicy } from 'kaltura-ngx-client/api/types/KalturaDropFolderContentFileHandlerMatchPolicy';
 import { KalturaDropFolderFileFilter } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileFilter';
-import { KalturaUtils } from 'kaltura-ngx-client/api/utils/kaltura-utils';
+import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { DropFolderFileListAction } from 'kaltura-ngx-client/api/types/DropFolderFileListAction';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { BaseEntryGetAction } from 'kaltura-ngx-client/api/types/BaseEntryGetAction';
