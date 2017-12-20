@@ -4,7 +4,7 @@
       <kSticky stickyId="entriesFilters" [scrollOffset]="80" [sticksTo]="'header'">
         <div class="kEntriesTableFilters kContent" [class.kAdditionalFilters]="additionalFilters">
           <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries.data$ | async)?.totalCount && !additionalFilters">
-            {{ _getTranslation('applications.content.entries.entries', (_entriesStore.entries.data$ | async)?.totalCount) }}
+            {{'applications.content.entries.entries' | translate: [(_entriesStore.entries.data$ | async)?.totalCount]}}
           </span>
 
           <div [class.kHidden]="!selectedEntries.length" class="kBulkOperations">
@@ -68,12 +68,12 @@
                   (click)="_reload()"></button>
         </div>
         <span class="kEntriesInfo"
-              *ngIf="additionalFilters && !(_entriesStore.state$ | async)?.loading">
-          <span *ngIf="(_entriesStore.entries$ | async)?.totalCount">
-            {{ _getTranslation('applications.content.entries.entries', (_entriesStore.entries$ | async)?.totalCount) }},
-            {{ _getTranslation('applications.content.entries.totalDuration', (_entriesStore.entries$ | async)?.items | kEntriesTotalDuration | kTime) }}
+              *ngIf="additionalFilters && !(_entriesStore.entries.state$ | async)?.loading">
+          <span *ngIf="(_entriesStore.entries.data$ | async)?.totalCount">
+            {{'applications.content.entries.entries' | translate: [(_entriesStore.entries.data$ | async)?.totalCount]}}
+            {{'applications.content.entries.totalDuration' | translate: [((_entriesStore.entries.data$ | async)?.items | kEntriesTotalDuration | kTime)]}}
           </span>
-          <span *ngIf="!(_entriesStore.entries$ | async)?.totalCount">
+          <span *ngIf="!(_entriesStore.entries.data$ | async)?.totalCount">
             {{'applications.content.entries.noEntries' | translate }}
           </span>
         </span>

@@ -28,11 +28,11 @@
           </button>
         </ng-template>
         <span class="kSelectedRulesNum" *ngIf="rulesTotalCount">
-          {{ _getTranslation('applications.content.playlistDetails.content.rules', rulesTotalCount) }}
+          {{'applications.content.playlistDetails.content.rules'| translate: [rulesTotalCount]}}
       </span>
         <div *ngIf="selectedRules.length" class="kSelected">
         <span class="kSelectedRulesLabel">
-          {{ _getTranslation('applications.content.playlists.selected', selectedRules.length) }}
+          {{'applications.content.playlists.selected' | translate: [selectedRules.length]}}
         </span>
           <a class="kBulkCancel" (click)="clearSelection.emit()">
             {{'applications.content.playlists.cancel' | translate}}
@@ -40,7 +40,7 @@
         </div>
       </div>
       <div *ngIf="duration" class="kPlaylistRulesTableDuration">
-        <span>{{_getTranslation('applications.content.playlistDetails.details.duration', (duration | kTime)) }}</span>
+        {{'applications.content.playlistDetails.details.duration'| translate: [(duration | kTime)]}}
       </div>
     </div>
   </kSticky>

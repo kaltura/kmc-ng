@@ -134,10 +134,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  public _getTranslation(value: string, param: string | number): string {
-    return this._appLocalization.get(value, { 0: param });
-  }
-
   public _reload() {
     this.clearSelection();
     this._browserService.scrollToTop();
