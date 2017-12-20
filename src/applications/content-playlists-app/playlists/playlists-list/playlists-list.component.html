@@ -72,6 +72,7 @@
   #refinePopup
   [appendTo]="playlistsTableHolder"
   [popupWidth]="350"
+  [popupHeight]="169"
   [closeBtn]="false"
   [targetRef]="refineBtn"
   [targetOffset]="{'x':-294, 'y': -20}"
@@ -81,7 +82,7 @@
   stickyId="playlistsAdditionalFilter"
   [scrollOffset]="80">
   <ng-template>
-    <!--TODO [Stas] refine filters-->
+    <k-playlists-refine-filters [parentPopupWidget]="refinePopup"></k-playlists-refine-filters>
   </ng-template>
 </kPopupWidget>
 

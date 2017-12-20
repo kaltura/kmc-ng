@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaUtils } from 'kaltura-ngx-client/api/utils/kaltura-utils';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
@@ -20,10 +19,11 @@ import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaS
 import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
 import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/string-type';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
+import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 
 export enum SortDirection {
-	Desc,
-	Asc
+  Desc,
+  Asc
 }
 
 export interface PlaylistsFilters {
