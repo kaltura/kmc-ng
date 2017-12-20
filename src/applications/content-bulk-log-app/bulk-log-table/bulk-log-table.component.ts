@@ -71,7 +71,7 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._blockerMessage = null;
     this._emptyMessage = '';
     let loadedOnce = false; // used to set the empty message to 'no results' only after search
-    this._store.state$
+    this._store.bulkLog.state$
       .cancelOnDestroy(this)
       .subscribe(
       result => {
@@ -80,7 +80,7 @@ export class BulkLogTableComponent implements AfterViewInit, OnInit, OnDestroy {
             message: result.errorMessage || 'Error loading files',
             buttons: [{
               label: this._appLocalization.get('app.common.retry'),
-              action: () => this._store.reload(true)
+              action: () => this._store.reload()
             }
             ]
           })

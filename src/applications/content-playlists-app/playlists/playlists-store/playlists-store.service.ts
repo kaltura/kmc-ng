@@ -93,18 +93,6 @@ export class PlaylistsStore implements OnDestroy {
     return this._playlistsSource.getValue().items;
   }
 
-  public setNewPlaylistData(newPlaylistData: PlaylistData) {
-    this._newPlaylistData = newPlaylistData;
-  }
-
-  public getNewPlaylistData(): PlaylistData {
-    return this._newPlaylistData;
-  }
-
-  public clearNewPlaylistData():void {
-    this._newPlaylistData = null
-  }
-
 	ngOnDestroy() {
 		this._stateSource.complete();
 		this._querySource.complete();
