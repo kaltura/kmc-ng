@@ -4,9 +4,10 @@ import * as moment from 'moment';
 import { ListType } from '@kaltura-ng/mc-shared/filters';
 import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { GroupedListType } from '@kaltura-ng/mc-shared/filters';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
 
 export interface TagItem
-{ type: string, value: any, label: string, tooltip:  {token: string, args?: any}}
+{ type: string, value: any, label: string, tooltip: string}
 
 const listTypes: Array<keyof EntriesFilters> = ['mediaTypes', 'timeScheduling', 'ingestionStatuses', 'durations', 'originalClippedEntries', 'moderationStatuses', 'replacementStatuses', 'accessControlProfiles', 'flavors', 'distributions' ];
 
@@ -23,7 +24,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
     public _filterTags: TagItem[] = [];
 
 
-    constructor(private _entriesStore: EntriesStore) {
+    constructor(private _entriesStore: EntriesStore, private _appLocalization: AppLocalization) {
     }
 
     removeTag(tag: any) {
@@ -134,7 +135,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 tooltip = `Until ${moment(toDate).format('LL')}`;
             }
             // TODO sakal fix tooltip as token
-            this._filterTags.push({type: 'createdAt', value: null, label: 'Dates', tooltip: {token: tooltip}});
+            this._filterTags.push({type: 'createdAt', value: null, label: 'Dates', tooltip });
         }
     }
 
@@ -153,7 +154,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 type: 'freetext',
                 value: currentFreetextValue,
                 label: currentFreetextValue,
-                tooltip: {token: `applications.content.filters.freeText`}
+                tooltip: this._appLocalization.get(`applications.content.filters.freeText`)
             });
         }
     }
@@ -178,7 +179,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                 type: filterName,
                 value: (<any>item).value,
                 label: (<any>item).label,
-                tooltip: {token: `applications.content.filters.${filterName}`, args: {'0': (<any>item).label}}
+                tooltip: this._appLocalization.get(`applications.content.filters.${filterName}`, {'0': (<any>item).label})
             });
         });
     }
@@ -229,7 +230,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
                            type: `customMetadata|${listId}`,
                            value: item.value,
                            label: item.label,
-                           tooltip: { token:  tooltip }
+                           tooltip
                        });
                    });
                }
