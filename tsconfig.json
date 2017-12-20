@@ -17,7 +17,7 @@
     ],
     "lib": [
       "es2016",
-      "ES2017",
+      "es2017",
       "dom"
     ],
     "paths": {
@@ -108,6 +108,12 @@
       "@kaltura-ng/mc-theme/*": [
         "../node_modules/@kaltura-ng/mc-theme/*"
       ],
+      "@types/seamless-immutable": [
+        "../node_modules/@types/seamless-immutable"
+      ],
+      "@types/seamless-immutable/*": [
+        "../node_modules/@types/seamless-immutable/*"
+      ],
       "core-js": [
         "../node_modules/core-js"
       ],
@@ -179,6 +185,12 @@
       ],
       "rxjs/*": [
         "../node_modules/rxjs/*"
+      ],
+      "seamless-immutable": [
+        "../node_modules/seamless-immutable"
+      ],
+      "seamless-immutable/*": [
+        "../node_modules/seamless-immutable/*"
       ],
       "ts-md5": [
         "../node_modules/ts-md5"

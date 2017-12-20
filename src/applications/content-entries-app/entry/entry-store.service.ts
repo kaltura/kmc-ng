@@ -138,7 +138,7 @@ export class EntryStore implements  OnDestroy {
 
 		if (this._saveEntryInvoked)
 		{
-			this._entriesStore.reload(true);
+			this._entriesStore.reload();
 		}
 	}
 

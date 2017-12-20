@@ -13,7 +13,6 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 import * as moment from 'moment';
-import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 
 export interface Filter {
   type: string;

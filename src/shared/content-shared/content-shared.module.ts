@@ -16,7 +16,7 @@ import {
 } from 'primeng/primeng';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
-import { AutoCompleteModule, KalturaPrimeNgUIModule, SliderModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { AutoCompleteModule, KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 
 import { EntryStatusPipe } from 'app-shared/content-shared/pipes/entry-status.pipe';
@@ -31,7 +31,7 @@ import { PrimeTableSortDirectionPipe } from 'app-shared/content-shared/pipes/pri
 import { EntriesRefineFiltersComponent } from 'app-shared/content-shared/entries-refine-filters/entries-refine-filters.component';
 import { CategoriesFilterPrefsComponent } from 'app-shared/content-shared/categories-filter-preferences/categories-filter-preferences.component';
 import { CategoriesFilterComponent } from 'app-shared/content-shared/categories-filter/categories-filter.component';
-import { EntriesRefineFiltersProvider } from 'app-shared/content-shared/entries-refine-filters/entries-refine-filters-provider.service';
+import { EntriesRefineFiltersService } from 'app-shared/content-shared/entries-refine-filters/entries-refine-filters.service';
 import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
@@ -39,7 +39,10 @@ import { PrimeTableSortTransformPipe } from 'app-shared/content-shared/pipes/pri
 import { CategoryRadioButtonPocComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc';
 import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc-popup';
 import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-selector/entries-selector.component';
+import { EntriesListTagsComponent } from 'app-shared/content-shared/entries-list/entries-list-tags.component';
+import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
 import { EntriesTotalDurationPipe } from 'app-shared/content-shared/pipes/entries-total-duration.pipe';
+import { SliderModule } from '@kaltura-ng/kaltura-primeng-ui/slider/slider.module';
 
 @NgModule({
   imports: [
@@ -65,6 +68,7 @@ import { EntriesTotalDurationPipe } from 'app-shared/content-shared/pipes/entrie
     PaginatorModule,
     TieredMenuModule,
     InputTextModule,
+    FiltersModule,
     StickyModule,
     DropdownModule,
     SliderModule
@@ -84,8 +88,8 @@ import { EntriesTotalDurationPipe } from 'app-shared/content-shared/pipes/entrie
     CategoriesFilterComponent,
     EntriesTableComponent,
     EntriesListComponent,
+    EntriesListTagsComponent,
     EntriesSelectorComponent,
-
     CategoryRadioButtonPocComponent,
     CategoryRadioButtonPocPopupComponent
   ],
@@ -111,7 +115,7 @@ import { EntriesTotalDurationPipe } from 'app-shared/content-shared/pipes/entrie
   providers: [
     CategoriesPrimeService,
     CategoriesStore,
-    EntriesRefineFiltersProvider
+    EntriesRefineFiltersService
   ]
 })
 export class ContentSharedModule {

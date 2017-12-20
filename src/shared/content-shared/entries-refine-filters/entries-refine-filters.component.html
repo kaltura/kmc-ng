@@ -6,6 +6,7 @@
         </div>
         <p>{{'applications.content.filters.createdBetween' | translate}}</p>
         <div class="kDateRange">
+
           <p-calendar class="kDateRangeFirst" [(ngModel)]="_createdAfter" [readonlyInput]="true" [showIcon]="true"
                       [monthNavigator]="true" [yearNavigator]="true" [yearRange]="_createdAtDateRange"
                       icon="kIconcalendar" (onSelect)="_onCreatedChanged()"></p-calendar>
@@ -16,14 +17,14 @@
         <a class="kClearAll" (click)="_clearCreatedComponents()">{{'applications.content.filters.clearDates' |
           translate}}</a>
         <span *ngIf="_createdFilterError" class="kError">{{_createdFilterError}}</span>
-        <div *ngFor="let filtersGroup of _filtersGroupList">
-          <div *ngIf="filtersGroup.label" class="kFiltersGroupTitle">
-            <span>{{filtersGroup.label | uppercase}}</span>
+        <div *ngFor="let group of _primeListsGroups">
+          <div *ngIf="group.label" class="kFiltersGroupTitle">
+            <span>{{group.label | uppercase}}</span>
           </div>
-          <div *ngFor="let treeInstance of filtersGroup.trees">
+          <div *ngFor="let treeInstance of group.lists">
             <p-tree [value]="treeInstance.items"
-                    kPrimeTreePropagation
-                    [disableTrackByData]="false"
+                    [selectionMode]="'checkbox'"
+                    kRefinePrimeTree
                     [(selection)]="treeInstance.selections"
                     (onNodeSelect)="_onTreeNodeSelect($event, treeInstance)"
                     (onNodeUnselect)="_onTreeNodeUnselect($event, treeInstance)"
@@ -31,9 +32,8 @@
               <ng-template let-node pTemplate="default">
               <span class="kTreeNodeLabel">
                 {{node.label}}
-                <span *ngIf="node.childrenCount" class="kTreeNodeNumChildren">{{ node.childrenCount}}</span>
               </span>
-                <div *ngIf="node.data==='scheduled'" (click)="_blockScheduleToggle($event)">
+                <div *ngIf="node.value==='scheduled'" (click)="_blockScheduleToggle($event)">
                   <div class="kDateRange">
                     <p-calendar class="kDateRangeFirst" #scheduledfrom [(ngModel)]="_scheduledAfter" [showIcon]="true"
                                 icon="kIconcalendar" [disabled]="!_scheduledSelected" [monthNavigator]="true"

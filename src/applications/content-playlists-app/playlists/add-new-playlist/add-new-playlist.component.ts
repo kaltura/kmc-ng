@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 import { PopupWidgetComponent, PopupWidgetStates } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { PlaylistsStore } from '../playlists-store/playlists-store.service';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { CreateNewPlaylistEvent } from 'app-shared/kmc-shared/playlist-creation';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 
 @Component({
@@ -24,7 +25,7 @@ export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy
               public router: Router,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
-              private _playlistsStore: PlaylistsStore) {
+              private _appEvents: AppEventsService) {
     // build FormControl group
     this.addNewPlaylistForm = _formBuilder.group({
       name: ['', Validators.required],
@@ -36,8 +37,9 @@ export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy
 
   goNext() {
     if (this.addNewPlaylistForm.valid) {
-      this._playlistsStore.setNewPlaylistData(this.addNewPlaylistForm.value);
-      this.router.navigate(['/content/playlists/playlist/new/content']);
+      const { name, description } = this.addNewPlaylistForm.value;
+      // TODO rulebased
+      this._appEvents.publish(new CreateNewPlaylistEvent({ name, description, type: KalturaPlaylistType.staticList }))
     }
   }
 

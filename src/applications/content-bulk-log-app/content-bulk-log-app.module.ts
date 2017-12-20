@@ -26,11 +26,12 @@ import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { ContentBulkLogAppComponent } from './content-bulk-log-app.component';
 import { BulkLogTableComponent } from './bulk-log-table/bulk-log-table.component';
 import { BulkLogListComponent } from './bulk-log-list/bulk-log-list.component';
-import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
 import { BulkLogObjectTypePipe } from './pipes/bulk-log-object-type.pipe';
 import { BulkLogStatusPipe } from './pipes/bulk-log-status.pipe';
 import { BulkLogRefineFiltersComponent } from './bulk-log-refine-filters/bulk-log-refine-filters.component';
 import { BulkLogStatusIconPipe } from './pipes/bulk-log-status-icon.pipe';
+import { BulkLogTagsComponent } from './bulk-log-tags/bulk-log-tags.component';
+import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
 
 @NgModule({
   imports: [
@@ -55,10 +56,10 @@ import { BulkLogStatusIconPipe } from './pipes/bulk-log-status-icon.pipe';
     AutoCompleteModule,
     SharedModule,
     RouterModule.forChild(routing),
-    ContentSharedModule,
     TreeModule,
     PrimeTreeModule,
-    StickyModule
+    StickyModule,
+      FiltersModule
   ],
   declarations: [
     ContentBulkLogAppComponent,
@@ -67,7 +68,8 @@ import { BulkLogStatusIconPipe } from './pipes/bulk-log-status-icon.pipe';
     BulkLogObjectTypePipe,
     BulkLogStatusPipe,
     BulkLogStatusIconPipe,
-    BulkLogRefineFiltersComponent
+    BulkLogRefineFiltersComponent,
+    BulkLogTagsComponent
   ],
   exports: []
 })

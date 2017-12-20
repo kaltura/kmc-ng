@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaClient } from 'kaltura-ngx-client';
 import { PlaylistGetAction } from 'kaltura-ngx-client/api/types/PlaylistGetAction';
-import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { KalturaPlaylist, KalturaPlaylistArgs } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { PlaylistUpdateAction } from 'kaltura-ngx-client/api/types/PlaylistUpdateAction';
 import { Observable } from 'rxjs/Observable';
@@ -16,6 +16,8 @@ import { PlaylistAddAction } from 'kaltura-ngx-client/api/types/PlaylistAddActio
 import { PlaylistWidgetsManager } from './playlist-widgets-manager';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import { PlaylistCreationService } from 'app-shared/kmc-shared/playlist-creation';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 
 export enum ActionTypes {
   PlaylistLoading,
@@ -68,6 +70,7 @@ export class PlaylistStore implements OnDestroy {
               private _appLocalization: AppLocalization,
               private _browserService: BrowserService,
               private _playlistsStore: PlaylistsStore,
+              private _playlistCreationService: PlaylistCreationService,
               private _pageExitVerificationService: PageExitVerificationService,
               @Host() private _widgetsManager: PlaylistWidgetsManager) {
     this._widgetsManager.playlistStore = this;
@@ -182,10 +185,10 @@ export class PlaylistStore implements OnDestroy {
 
           if (currentPlaylistId !== this._playlistId) {
             if (currentPlaylistId === 'new') {
-              const newData = this._playlistsStore.getNewPlaylistData();
+              const newData = this._playlistCreationService.getNewPlaylistData();
 
               if (newData) {
-                this._playlistsStore.clearNewPlaylistData();
+                this._playlistCreationService.clearNewPlaylistData();
 
                 this._playlistId = currentPlaylistId;
 
@@ -193,8 +196,8 @@ export class PlaylistStore implements OnDestroy {
                   playlist: new KalturaPlaylist({
                     name: newData.name,
                     description: newData.description,
-                    playlistType: newData.playlistType,
-                    playlistContent: ''
+                    playlistContent: newData.playlistContent,
+                    playlistType: newData.type
                   })
                 });
 
@@ -348,7 +351,7 @@ export class PlaylistStore implements OnDestroy {
       .filter(({ allowed }) => allowed)
       .monitor('playlist store: return to playlists list')
       .subscribe(() => {
-        this._playlistsStore.clearNewPlaylistData();
+        this._playlistCreationService.clearNewPlaylistData();
         this._router.navigate(['content/playlists'])
       });
   }

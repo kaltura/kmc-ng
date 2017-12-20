@@ -39,7 +39,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   public _enableNextButton: boolean;
 
   constructor(private _browserService: BrowserService,
-              private _playlistStore: PlaylistStore,
+              public _playlistStore: PlaylistStore,
               private _appLocalization: AppLocalization,
               private _playlistsStore: PlaylistsStore,
               playlistWidgetsManager: PlaylistWidgetsManager,
