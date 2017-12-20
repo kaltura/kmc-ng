@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -12,13 +12,12 @@ import {KalturaMediaEntry} from "kaltura-ngx-client/api/types/KalturaMediaEntry"
   templateUrl: './new-category.component.html',
   styleUrls: ['./new-category.component.scss']
 })
-export class NewCategoryComponent implements OnInit {
+export class NewCategoryComponent implements OnInit, OnDestroy {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() linkedEntries?: KalturaMediaEntry[];
   @Output() onApply = new EventEmitter<{ categoryId: number }>();
 
-  public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedParentCategory: CategoryData = null;
   public newCategoryForm: FormGroup;
@@ -34,12 +33,14 @@ export class NewCategoryComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+  }
+
   public _onCategorySelected(event: CategoryData) {
     this._selectedParentCategory = event;
   }
 
   public _apply(): void {
-    this._isBusy = true;
     this._blockerMessage = null;
     this._createNewCategory(this._selectedParentCategory);
   }
@@ -53,7 +54,6 @@ export class NewCategoryComponent implements OnInit {
           {
             label: this._appLocalization.get('app.common.cancel'),
             action: () => {
-              this._isBusy = false;
               this._blockerMessage = null;
             }
           }
@@ -66,15 +66,15 @@ export class NewCategoryComponent implements OnInit {
           name: categoryName,
           linkedEntries: this.linkedEntries
         })
+        .cancelOnDestroy(this)
+        .tag('block-shell')
         .subscribe(({categoryId}: {categoryId: number}) => {
-            this._isBusy = false;
             this.onApply.emit({categoryId: categoryId});
             if (this.parentPopupWidget) {
               this.parentPopupWidget.close();
             }
           },
           error => {
-            this._isBusy = false;
 
             this._blockerMessage = new AreaBlockerMessage(
               {
