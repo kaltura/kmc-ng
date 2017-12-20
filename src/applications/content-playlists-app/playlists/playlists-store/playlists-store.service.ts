@@ -54,7 +54,8 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
   };
 
   constructor(private _kalturaServerClient: KalturaClient,
-              private _browserService: BrowserService, _logger: KalturaLogger) {
+              private _browserService: BrowserService,
+              _logger: KalturaLogger) {
     super(_logger);
     this._prepare();
   }

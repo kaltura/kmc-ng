@@ -43,7 +43,7 @@
       </kSticky>
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="playlistsTags" [sticksTo]="'playlistsFilters'">
         <div class="kTagsWrapper kContent">
-          <!--TODO [Stas] tags-->
+          <k-playlists-tags (onTagsChange)="_onTagsChange()"></k-playlists-tags>
         </div>
       </kSticky>
       <kPlaylistsTable
@@ -87,6 +87,7 @@
 
 <kPopupWidget #addNewPlaylist [popupWidth]="586" [popupHeight]="453" [modal]="true" [preventPageScroll]="true">
   <ng-template>
-    <kAddNewPlaylist [parentPopupWidget]="addNewPlaylist" (showNotSupportedMsg)="_onShowNotSupportedMsg()"></kAddNewPlaylist>
+    <kAddNewPlaylist [parentPopupWidget]="addNewPlaylist"
+                     (showNotSupportedMsg)="_onShowNotSupportedMsg()"></kAddNewPlaylist>
   </ng-template>
 </kPopupWidget>
