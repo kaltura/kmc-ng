@@ -9,6 +9,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blo
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { BrowserService } from 'app-shared/kmc-shell';
+import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 
 export interface Filter {
   type: string;
@@ -178,7 +179,11 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   public _onActionSelected(event: { action: string, playlist: KalturaPlaylist }): void {
     switch (event.action) {
       case 'view':
-        this._router.navigate(['/content/playlists/playlist', event.playlist.id]);
+        if (event.playlist.playlistType !== KalturaPlaylistType.dynamic) {
+          this._router.navigate(['/content/playlists/playlist', event.playlist.id]);
+        } else {
+          this._onShowNotSupportedMsg(false);
+        }
         break;
       case 'delete':
         this._browserService.confirm(
@@ -247,5 +252,15 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
   public _addPlaylist(): void {
     this.addNewPlaylist.open();
+  }
+
+  public _onShowNotSupportedMsg(newPlaylist = true): void {
+    const message = newPlaylist ? 'applications.content.addNewPlaylist.notSupportedMsg' : 'applications.content.playlists.notSupportedMsg';
+    this._browserService.alert(
+      {
+        header: this._appLocalization.get('app.common.note'),
+        message: this._appLocalization.get(message)
+      }
+    );
   }
 }

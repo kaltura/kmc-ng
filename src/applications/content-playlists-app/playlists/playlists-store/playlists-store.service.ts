@@ -50,6 +50,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
   public readonly playlists = {
     data$: this._playlists.data.asObservable(),
     state$: this._playlists.state.asObservable(),
+    data: () => this._playlists.data.value.items
   };
 
   constructor(private _kalturaServerClient: KalturaClient,

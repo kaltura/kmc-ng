@@ -38,7 +38,6 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 
   private actionsMenuPlaylistId = '';
   private actionsMenuPlaylist: KalturaPlaylist;
-  private playlistsStoreStatusSubscription: ISubscription;
 
   public _deferredLoading = true;
   public _emptyMessage = '';
@@ -118,8 +117,6 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 
   ngOnDestroy() {
     this.actionsMenu.hide();
-    this.playlistsStoreStatusSubscription.unsubscribe();
-    this.playlistsStoreStatusSubscription = null;
   }
 
   buildMenu(): void {
