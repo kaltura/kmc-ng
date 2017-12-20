@@ -25,8 +25,6 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger/kaltura-logger.service
 import { ISubscription } from 'rxjs/Subscription';
 import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
 import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
 import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/string-type';
 import { KalturaDropFolderFileListResponse } from 'kaltura-ngx-client/api/types/KalturaDropFolderFileListResponse';
@@ -36,17 +34,16 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 
 const localStoragePageSizeKey = 'dropFolders.list.pageSize';
 
-export interface DropFolderFilters {
+export interface DropFoldersFilters {
   pageSize: number,
   pageIndex: number,
-  fields: string,
   freeText: string,
   createdAt: DatesRangeType,
   status: ListType
 }
 
 @Injectable()
-export class DropFoldersStoreService extends FiltersStoreBase<DropFolderFilters> implements OnDestroy {
+export class DropFoldersStoreService extends FiltersStoreBase<DropFoldersFilters> implements OnDestroy {
   private _dropFolders = {
     data: new BehaviorSubject<{ items: KalturaDropFolderFile[], totalCount: number }>({
       items: [],
@@ -103,7 +100,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFolderFilters>
     }
   }
 
-  protected _preFilter(updates: Partial<DropFolderFilters>): Partial<DropFolderFilters> {
+  protected _preFilter(updates: Partial<DropFoldersFilters>): Partial<DropFoldersFilters> {
     if (typeof updates.pageIndex === 'undefined') {
       // reset page index to first page everytime filtering the list by any filter that is not page index
       updates.pageIndex = 0;
@@ -169,13 +166,12 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFolderFilters>
 
         // create request items
         const filter = new KalturaDropFolderFileFilter({});
-        let responseProfile: KalturaDetachedResponseProfile = null;
         let pager: KalturaFilterPager = null;
 
         const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
         advancedSearch.type = KalturaSearchOperatorType.searchAnd;
 
-        const data: DropFolderFilters = this._getFiltersAsReadonly();
+        const data: DropFoldersFilters = this._getFiltersAsReadonly();
 
         // use selected folders - list of folders ids separated by comma
         filter.dropFolderIdIn = dropFoldersList.reduce((ids, kdf) => `${ids}${kdf.id},`, '');
@@ -204,15 +200,6 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFolderFilters>
           filter.statusIn = this._allStatusesList;
         }
 
-        // update desired fields of entries
-        if (data.fields) {
-          responseProfile = new KalturaDetachedResponseProfile({
-            type: KalturaResponseProfileType.includeFields,
-            fields: data.fields
-          });
-
-        }
-
         // update pagination args
         if (data.pageIndex || data.pageSize) {
           pager = new KalturaFilterPager(
@@ -225,7 +212,7 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFolderFilters>
 
         // build the request
         return <any>this._kalturaServerClient
-          .request(new DropFolderFileListAction({ filter, pager, responseProfile }))
+          .request(new DropFolderFileListAction({ filter, pager }))
           .map(response => {
             response.objects.forEach(object => {
               dropFoldersList.forEach(folder => {
@@ -306,22 +293,20 @@ export class DropFoldersStoreService extends FiltersStoreBase<DropFolderFilters>
       .map(Boolean);
   }
 
-  protected _createDefaultFiltersValue(): DropFolderFilters {
+  protected _createDefaultFiltersValue(): DropFoldersFilters {
     return {
       pageSize: 50,
       pageIndex: 0,
       freeText: '',
-      fields: this._allStatusesList,
       createdAt: { fromDate: null, toDate: null },
       status: []
     };
   }
 
-  protected _getTypeAdaptersMapping(): TypeAdaptersMapping<DropFolderFilters> {
+  protected _getTypeAdaptersMapping(): TypeAdaptersMapping<DropFoldersFilters> {
     return {
       pageSize: new NumberTypeAdapter(),
       pageIndex: new NumberTypeAdapter(),
-      fields: new StringTypeAdapter(),
       freeText: new StringTypeAdapter(),
       createdAt: new DatesRangeAdapter(),
       status: new ListAdapter()

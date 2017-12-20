@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import * as moment from 'moment';
 import { ListType } from '@kaltura-ng/mc-shared/filters';
-import { DropFolderFilters, DropFoldersStoreService } from '../drop-folders-store/drop-folders-store.service';
+import { DropFoldersFilters, DropFoldersStoreService } from '../drop-folders-store/drop-folders-store.service';
 
 export interface TagItem {
   type: string,
@@ -10,7 +10,7 @@ export interface TagItem {
   tooltip: { token: string, args?: any }
 }
 
-const listTypes: (keyof DropFolderFilters)[] = ['status'];
+const listTypes: (keyof DropFoldersFilters)[] = ['status'];
 
 @Component({
   selector: 'k-drop-folders-tags',
@@ -43,7 +43,7 @@ export class DropFoldersTagsComponent implements OnInit, OnDestroy {
     ));
   }
 
-  private _updateComponentState(updates: Partial<DropFolderFilters>): void {
+  private _updateComponentState(updates: Partial<DropFoldersFilters>): void {
     if (typeof updates.freeText !== 'undefined') {
       this._syncTagOfFreetext();
     }
@@ -106,7 +106,7 @@ export class DropFoldersTagsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _syncTagsOfList(filterName: keyof DropFolderFilters): void {
+  private _syncTagsOfList(filterName: keyof DropFoldersFilters): void {
 
     const currentValue = <ListType>this._store.cloneFilter(filterName, []);
     const tagsFilters = this._filterTags.filter(item => item.type === filterName);

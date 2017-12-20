@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DropFolderFilters, DropFoldersStoreService } from '../drop-folders-store/drop-folders-store.service';
+import { DropFoldersFilters, DropFoldersStoreService } from '../drop-folders-store/drop-folders-store.service';
 import { Router } from '@angular/router';
 import { environment } from 'app-environment';
 import { FolderFileStatusPipe } from '../pipes/folder-file-status.pipe';
@@ -81,7 +81,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
     ));
   }
 
-  private _updateComponentState(updates: Partial<DropFolderFilters>): void {
+  private _updateComponentState(updates: Partial<DropFoldersFilters>): void {
     if (typeof updates.freeText !== 'undefined') {
       this._query.freeText = updates.freeText || '';
     }

@@ -65,7 +65,8 @@
 </k-area-blocker>
 
 <!-- popup widgets section -->
-<kPopupWidget [appendTo]="dropFoldersTableHolder"
+<kPopupWidget #refinePopup
+              [appendTo]="dropFoldersTableHolder"
               [popupWidth]="400"
               [popupHeight]="400"
               [closeBtn]="false"
@@ -73,5 +74,7 @@
               [targetOffset]="{'x':-160, 'y': -15}"
               kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'statusesFilterPopup'"
               [scrollOffset]="80">
-  <!--TODO [Stas] filters component -->
+  <ng-template>
+    <k-drop-folders-refine-filters [parentPopupWidget]="refinePopup"></k-drop-folders-refine-filters>
+  </ng-template>
 </kPopupWidget>
