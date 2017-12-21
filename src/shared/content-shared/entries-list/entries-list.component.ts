@@ -11,6 +11,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
   selector: 'kEntriesList',
   templateUrl: './entries-list.component.html',
   styleUrls: ['./entries-list.component.scss']
+
 })
 export class EntriesListComponent implements OnInit, OnDestroy {
   @Input() additionalFilters = false;
@@ -21,9 +22,9 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   @Input() columns: EntriesTableColumns | null;
   @Input() rowActions: { label: string, commandName: string }[];
 
-  @ViewChild('tags') private tags: StickyComponent;
+    @ViewChild('tags') private tags: StickyComponent;
 
-  @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
+    @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
 
   public _orderByOptions = [
     {
@@ -129,7 +130,6 @@ export class EntriesListComponent implements OnInit, OnDestroy {
       });
     }
   }
-
 
   ngOnDestroy() {
   }

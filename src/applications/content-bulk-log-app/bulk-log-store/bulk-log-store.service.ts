@@ -71,7 +71,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       this._isReady = true;
 
         const defaultPageSize = this.browserService.getFromLocalStorage(localStoarePageSizeKey);
-        if (defaultPageSize !== null) {
+        if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
             this.filter({
                 pageSize: defaultPageSize
             });
