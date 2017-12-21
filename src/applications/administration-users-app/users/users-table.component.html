@@ -13,7 +13,7 @@
                 header="{{'applications.content.table.userName' | translate}}" [sortable]="false">
         <ng-template let-col let-user="rowData" pTemplate="body">
           <span class="kTitle kFullName">{{user[col.field]}}</span>
-          <i *ngIf="_getAccountOwner(user)" class="kIconuser kIconOwner" [kTooltip]="_getAccountOwner(user)"></i>
+          <i *ngIf="(user | accountOwner)" class="kIconuser kIconOwner" [kTooltip]="user | accountOwner"></i>
         </ng-template>
       </p-column>
       <p-column field="id" header="{{'applications.content.table.userId' | translate}}" [sortable]="false">
