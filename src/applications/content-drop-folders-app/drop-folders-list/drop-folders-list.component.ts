@@ -9,11 +9,6 @@ import { StickyComponent } from '@kaltura-ng/kaltura-ui/sticky/components/sticky
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 
-export interface Filter {
-  type: string;
-  label: string;
-  tooltip: string
-}
 
 @Component({
   selector: 'kDropFoldersList',
