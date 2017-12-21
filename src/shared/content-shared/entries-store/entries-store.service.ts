@@ -137,7 +137,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
                             }));
 
                         const defaultPageSize = this.browserService.getFromLocalStorage(this._getPaginationCacheKey());
-                        if (defaultPageSize !== null) {
+                        if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
                             this.filter({
                                 pageSize: defaultPageSize
                             });
