@@ -2,12 +2,13 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import * as moment from 'moment';
 import { ListType } from '@kaltura-ng/mc-shared/filters';
 import { DropFoldersFilters, DropFoldersStoreService } from '../drop-folders-store/drop-folders-store.service';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 
 export interface TagItem {
   type: string,
   value: any,
   label: string,
-  tooltip: { token: string, args?: any }
+  tooltip: string
 }
 
 const listTypes: (keyof DropFoldersFilters)[] = ['status'];
@@ -23,7 +24,7 @@ export class DropFoldersTagsComponent implements OnInit, OnDestroy {
 
   public _filterTags: TagItem[] = [];
 
-  constructor(private _store: DropFoldersStoreService) {
+  constructor(private _store: DropFoldersStoreService, private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
@@ -80,7 +81,7 @@ export class DropFoldersTagsComponent implements OnInit, OnDestroy {
         type: 'freetext',
         value: currentFreetextValue,
         label: currentFreetextValue,
-        tooltip: { token: `applications.content.filters.freeText` }
+        tooltip: this._appLocalization.get('applications.content.filters.freeText')
       });
     }
   }
@@ -101,8 +102,7 @@ export class DropFoldersTagsComponent implements OnInit, OnDestroy {
       } else if (toDate) {
         tooltip = `Until ${moment(toDate).format('LL')}`;
       }
-      // TODO sakal fix tooltip as token
-      this._filterTags.push({ type: 'createdAt', value: null, label: 'Dates', tooltip: { token: tooltip } });
+      this._filterTags.push({ type: 'createdAt', value: null, label: 'Dates', tooltip });
     }
   }
 
@@ -124,7 +124,7 @@ export class DropFoldersTagsComponent implements OnInit, OnDestroy {
         type: filterName,
         value: (<any>item).value,
         label: (<any>item).label,
-        tooltip: { token: `applications.content.filters.${filterName}`, args: { '0': (<any>item).label } }
+        tooltip: this._appLocalization.get(`applications.content.filters.${filterName}`, { '0': (<any>item).label })
       });
     });
   }

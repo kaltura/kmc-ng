@@ -40,8 +40,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._restoreFiltersState();
-    this._registerToFilterStoreDataChanges();
+    this._prepare();
 
     this._dropFoldersStore.dropFolders.state$
       .subscribe(status => {
@@ -69,6 +68,11 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+  }
+
+  private _prepare(): void {
+    this._restoreFiltersState();
+    this._registerToFilterStoreDataChanges();
   }
 
   private _restoreFiltersState(): void {
