@@ -1,12 +1,13 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import * as moment from 'moment';
 import { PlaylistsFilters, PlaylistsStore } from '../playlists-store/playlists-store.service';
+import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 
 export interface TagItem {
   type: string,
   value: any,
   label: string,
-  tooltip: { token: string, args?: any }
+  tooltip: string
 }
 
 @Component({
@@ -20,7 +21,7 @@ export class PlaylistsTagsComponent implements OnInit, OnDestroy {
 
   public _filterTags: TagItem[] = [];
 
-  constructor(private _store: PlaylistsStore) {
+  constructor(private _store: PlaylistsStore, private _appLocalization: AppLocalization) {
   }
 
   ngOnInit() {
@@ -69,8 +70,7 @@ export class PlaylistsTagsComponent implements OnInit, OnDestroy {
       } else if (toDate) {
         tooltip = `Until ${moment(toDate).format('LL')}`;
       }
-      // TODO sakal fix tooltip as token
-      this._filterTags.push({ type: 'createdAt', value: null, label: 'Dates', tooltip: { token: tooltip } });
+      this._filterTags.push({ type: 'createdAt', value: null, label: 'Dates', tooltip });
     }
   }
 
@@ -89,7 +89,7 @@ export class PlaylistsTagsComponent implements OnInit, OnDestroy {
         type: 'freetext',
         value: currentFreetextValue,
         label: currentFreetextValue,
-        tooltip: {token: `applications.content.filters.freeText`}
+        tooltip: this._appLocalization.get(`applications.content.filters.freeText`)
       });
     }
   }

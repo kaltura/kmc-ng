@@ -70,7 +70,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       this._isReady = true;
 
       const defaultPageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey);
-      if (defaultPageSize !== null) {
+      if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
         this.filter({
           pageSize: defaultPageSize
         });
