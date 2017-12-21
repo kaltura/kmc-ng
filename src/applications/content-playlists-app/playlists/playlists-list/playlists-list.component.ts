@@ -11,11 +11,6 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 
-export interface Filter {
-  type: string;
-  label: string;
-  tooltip: string
-}
 
 @Component({
   selector: 'kPlaylistsList',
