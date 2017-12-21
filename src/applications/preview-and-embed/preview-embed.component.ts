@@ -157,8 +157,9 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private getGenerator():any{
+    const baseCdnUrl = environment.core.kaltura.cdnUrl.substr(environment.core.kaltura.cdnUrl.indexOf('/')+2);
     return new window['kEmbedCodeGenerator']({
-      host: environment.core.kaltura.cdnUrl,
+      host: baseCdnUrl,
       securedHost: environment.core.kaltura.securedCdnUrl,
       partnerId: this._appAuthentication.appUser.partnerId,
       includeKalturaLinks: environment.modules.previewEmbed.includeKalturaLinks
