@@ -6,6 +6,8 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { PlaylistsStore } from './playlists-store/playlists-store.service';
 import { Filter } from './playlists-list.component';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
+import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
+import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
 
 @Component({
   selector: 'kPlaylistsTable',
@@ -106,9 +108,8 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
     if (this.actionsMenu) {
       this.actionsMenu.toggle(event);
       if (this.actionsMenuPlaylistId !== playlist.id) {
-        this.buildMenu();
+        this.buildMenu(playlist);
         this.actionsMenuPlaylistId = playlist.id;
-        this.actionsMenuPlaylist = playlist;
         this.actionsMenu.show(event);
       }
     }
@@ -120,29 +121,36 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
     this.playlistsStoreStatusSubscription = null;
   }
 
-  buildMenu(): void {
+  buildMenu(playlist: KalturaPlaylist): void {
     this._items = [
       {
-        label: this.appLocalization.get('applications.content.table.previewAndEmbed'),
-        command: () => this.onActionSelected('preview', this.actionsMenuPlaylist)
+        label: this.appLocalization.get("applications.content.table.previewAndEmbed"), command: (event) => {
+        this.onActionSelected("preview", playlist);
+      }
       },
       {
-        label: this.appLocalization.get('applications.content.table.delete'),
-        command: () => this.onActionSelected('delete', this.actionsMenuPlaylist)
+        label: this.appLocalization.get("applications.content.table.delete"), command: (event) => {
+        this.onActionSelected("delete", playlist);
+      }
       },
       {
-        label: this.appLocalization.get('applications.content.table.view'),
-        command: () => this.onActionSelected('view', this.actionsMenuPlaylist)
+        label: this.appLocalization.get("applications.content.table.view"), command: (event) => {
+        this.onActionSelected("view", playlist);
+      }
       }
     ];
+    if (playlist.status instanceof KalturaEntryStatus && playlist.status.toString() != KalturaEntryStatus.ready.toString()) {
+      this._items.shift();
+    }
   }
+
 
   onSelectionChange(event) {
     this.selectedPlaylistsChange.emit(event);
   }
 
   onActionSelected(action: string, playlist: KalturaPlaylist) {
-    this.actionSelected.emit({ action, playlist });
+    this.actionSelected.emit({"action": action, "playlist": playlist});
   }
 
   onSortChanged(event) {

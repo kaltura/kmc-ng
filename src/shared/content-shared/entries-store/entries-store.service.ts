@@ -490,7 +490,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             pageIndex: 0,
             sortBy: 'createdAt',
             sortDirection: SortDirection.Desc,
-            fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,tags,categoriesIds,downloadUrl',
+            fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,tags,categoriesIds,downloadUrl,sourceType',
             createdAt: {fromDate: null, toDate: null},
             scheduledAt: {fromDate: null, toDate: null},
             mediaTypes: [],

@@ -5,6 +5,8 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
+import { PreviewAndEmbedEvent } from '../../../applications/preview-and-embed/preview-and-embed-event';
+import { AppEventsService } from 'app-shared/kmc-shared';
 
 import { PlaylistsStore, SortDirection } from './playlists-store/playlists-store.service';
 import { BulkDeleteService } from './bulk-service/bulk-delete.service';
@@ -51,6 +53,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
   constructor(public _playlistsStore: PlaylistsStore,
               private appLocalization: AppLocalization,
+              private _appEvents: AppEventsService,
               private router: Router,
               private _browserService: BrowserService,
               public _bulkDeleteService: BulkDeleteService) {
@@ -239,6 +242,9 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
 
   public _onActionSelected(event: { action: string, playlist: KalturaPlaylist }): void {
     switch (event.action) {
+      case 'preview':
+        this._appEvents.publish(new PreviewAndEmbedEvent(event.playlist));
+        break;
       case 'view':
         if (event.playlist.playlistType === KalturaPlaylistType.dynamic) {
           this._onShowNotSupportedMsg(false);

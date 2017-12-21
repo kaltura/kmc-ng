@@ -61,7 +61,8 @@
       "attention": "Attention",
       "yes": "Yes",
       "no": "No",
-      "apply": "Apply"
+      "apply": "Apply",
+      "done": "Done"
     },
     "login": {
       "login": {
@@ -133,6 +134,31 @@
     }
   },
   "applications": {
+    "embed":{
+      "previewShare": "Share & Embed",
+      "embedType": "Embed type",
+      "selectPlayer": "Select player",
+      "embedIframe": "Iframe Embed",
+      "embedDynamic": "Dynamic Embed",
+      "embedAuto": "Auto Embed",
+      "embedThumb": "Thumbnail Embed",
+      "embedCode": "Embed code",
+      "copy": "Copy",
+      "seo": "Include Search Engine Optimization data",
+      "https": "Support for HTTPS embed code",
+      "qr": "Scan Code for Mobile Preview",
+      "view": "Standalone preview",
+      "advanced": "Advanced Settings",
+      "settings": "List Arrangement Settings",
+      "name": "Name",
+      "added": "Date added",
+      "updated": "Date updated",
+      "helpTip1": "Auto embed is the default embed code type and is best to get a player quickly on a page without any runtime customizations.",
+      "helpTip2": "Read more",
+      "helpTip3": "about the different embed code types.",
+      "helpTip4": "Logic for defining the delivery method is automated by the Kaltura player to ensure the best user experience. Learn more about enforcing",
+      "helpTip5": "specific delivery protocols."
+    },
     "entries": {
       "entryMetadata": {
         "searchTagsPH": "Search Tags",
