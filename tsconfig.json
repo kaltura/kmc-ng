@@ -102,17 +102,17 @@
       "@kaltura-ng/kaltura-primeng-ui/*": [
         "../node_modules/@kaltura-ng/kaltura-primeng-ui/*"
       ],
-      "@kaltura-ng/kaltura-ui": [
-        "../node_modules/@kaltura-ng/kaltura-ui"
-      ],
-      "@kaltura-ng/kaltura-ui/*": [
-        "../node_modules/@kaltura-ng/kaltura-ui/*"
-      ],
       "angular2-qrcode": [
         "../node_modules/angular2-qrcode"
       ],
       "angular2-qrcode/*": [
         "../node_modules/angular2-qrcode/*"
+      ],
+      "@kaltura-ng/kaltura-ui": [
+        "../node_modules/@kaltura-ng/kaltura-ui"
+      ],
+      "@kaltura-ng/kaltura-ui/*": [
+        "../node_modules/@kaltura-ng/kaltura-ui/*"
       ],
       "@kaltura-ng/mc-shared": [
         "../node_modules/@kaltura-ng/mc-shared"

@@ -18,7 +18,7 @@ export const environment = {
             "privileges": "disableentitlement",
             "previewUIConf": "38524931",
             "liveAnalyticsVersion": "v2.6",
-            "securedCdnUrl": "cdnapisec.kaltura.com",
+            "securedCdnUrl": "https://cdnapisec.kaltura.com",
             "contactsalesforce": "https://www.kaltura.com/index.php/partnerservices2/contactsalesforce"
         },
         "menuConfig": [
