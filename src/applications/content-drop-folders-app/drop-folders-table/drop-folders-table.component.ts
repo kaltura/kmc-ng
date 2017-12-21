@@ -4,6 +4,7 @@ import { DropFoldersStoreService } from 'applications/content-drop-folders-app/d
 import * as moment from 'moment';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 
 @Component({
   selector: 'kDropFoldersListTable',
@@ -37,6 +38,7 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
   public _dropFolders: KalturaDropFolderFile[] = [];
   public _items: MenuItem[];
   public _emptyMessage = '';
+  public _areaBlockerMessage: AreaBlockerMessage;
 
   constructor(private _appLocalization: AppLocalization,
               private cdRef: ChangeDetectorRef,
@@ -63,6 +65,31 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
           console.warn('[kmcng] -> could not load entries'); // navigate to error page
           throw error;
         });
+
+    this._dropFoldersService.dropFolders.state$
+      .cancelOnDestroy(this)
+      .subscribe(status => {
+        if (status.errorMessage) {
+          this._areaBlockerMessage = new AreaBlockerMessage({
+            message: status.errorMessage || this._appLocalization.get('applications.content.dropFolders.errors.errorLoad'),
+            buttons: [
+              {
+                label: this._appLocalization.get('app.common.retry'),
+                action: () => {
+                  this._areaBlockerMessage = null;
+                  this._dropFoldersService.reload();
+                }
+              },
+              {
+                label: this._appLocalization.get('app.common.cancel'),
+                action: () => {
+                  this._areaBlockerMessage = null;
+                }
+              }
+            ]
+          })
+        }
+      });
   }
 
   ngAfterViewInit() {

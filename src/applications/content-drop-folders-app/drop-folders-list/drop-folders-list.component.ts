@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DropFoldersFilters, DropFoldersStoreService } from '../drop-folders-store/drop-folders-store.service';
 import { Router } from '@angular/router';
 import { environment } from 'app-environment';
-import { FolderFileStatusPipe } from '../pipes/folder-file-status.pipe';
 import { KalturaDropFolderFile } from 'kaltura-ngx-client/api/types/KalturaDropFolderFile';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { StickyComponent } from '@kaltura-ng/kaltura-ui/sticky/components/sticky.component';
@@ -13,8 +12,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 @Component({
   selector: 'kDropFoldersList',
   templateUrl: './drop-folders-list.component.html',
-  styleUrls: ['./drop-folders-list.component.scss'],
-  providers: [FolderFileStatusPipe]
+  styleUrls: ['./drop-folders-list.component.scss']
 })
 
 export class DropFoldersListComponent implements OnInit, OnDestroy {
@@ -36,30 +34,6 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._prepare();
-
-    this._dropFoldersStore.dropFolders.state$
-      .subscribe(status => {
-        if (status.errorMessage) {
-          this._blockerMessage = new AreaBlockerMessage({
-            message: status.errorMessage || this._appLocalization.get('applications.content.dropFolders.errors.errorLoad'),
-            buttons: [
-              {
-                label: this._appLocalization.get('app.common.retry'),
-                action: () => {
-                  this._blockerMessage = null;
-                  this._dropFoldersStore.reload();
-                }
-              },
-              {
-                label: this._appLocalization.get('app.common.cancel'),
-                action: () => {
-                  this._blockerMessage = null;
-                }
-              }
-            ]
-          })
-        }
-      });
   }
 
   ngOnDestroy() {
