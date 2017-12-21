@@ -1,8 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
 import { Menu, MenuItem } from 'primeng/primeng';
 import { PlaylistsStore } from '../playlists-store/playlists-store.service';
-import { Filter } from '../playlists-list/playlists-list.component';
 import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blocker-message';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
@@ -26,7 +24,6 @@ export class PlaylistsTableComponent implements AfterViewInit, OnInit, OnDestroy
 
   @Input() filter: any = {};
   @Input() selectedPlaylists: any[] = [];
-  @Input() activeFilters: Filter[] = [];
 
   @Output() sortChanged = new EventEmitter<any>();
   @Output() selectedPlaylistsChange = new EventEmitter<any>();

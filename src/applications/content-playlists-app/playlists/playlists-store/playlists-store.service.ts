@@ -30,7 +30,6 @@ export interface PlaylistsFilters {
   pageSize: number,
   pageIndex: number,
   freeText: string,
-  fields: string,
   sortBy: string,
   sortDirection: number,
   createdAt: DatesRangeType
@@ -50,7 +49,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
   public readonly playlists = {
     data$: this._playlists.data.asObservable(),
     state$: this._playlists.state.asObservable(),
-    data: () => this._playlists.data.value.items
+    data: () => this._playlists.data.value
   };
 
   constructor(private _kalturaServerClient: KalturaClient,
@@ -147,13 +146,10 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       }
 
       // update desired fields of entries
-      if (data.fields) {
         responseProfile = new KalturaDetachedResponseProfile({
           type: KalturaResponseProfileType.includeFields,
-          fields: data.fields
+          fields: 'id,name,createdAt,playlistType'
         });
-
-      }
 
       // update the sort by args
       if (data.sortBy) {
@@ -200,7 +196,6 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       freeText: '',
       sortBy: 'createdAt',
       sortDirection: SortDirection.Desc,
-      fields: 'id,name,createdAt,playlistType',
       createdAt: { fromDate: null, toDate: null }
     };
   }
@@ -209,7 +204,6 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
     return {
       pageSize: new NumberTypeAdapter(),
       pageIndex: new NumberTypeAdapter(),
-      fields: new StringTypeAdapter(),
       sortBy: new StringTypeAdapter(),
       sortDirection: new NumberTypeAdapter(),
       freeText: new StringTypeAdapter(),

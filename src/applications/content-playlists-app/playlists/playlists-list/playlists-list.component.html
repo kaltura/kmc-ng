@@ -48,7 +48,6 @@
       </kSticky>
       <kPlaylistsTable
         class="kPlaylistsTable"
-        [activeFilters]="activeFilters"
         [playlists]="(_playlistsStore.playlists.data$ | async)?.items"
         (sortChanged)="_onSortChanged($event)"
         [filter]="_query"

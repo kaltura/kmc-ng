@@ -60,21 +60,6 @@ export class PlaylistsRefineFiltersComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Clear content of created components and sync filters accordingly.
-   *
-   * Not part of the API, don't use it from outside this component
-   */
-  public _clearCreatedComponents(): void {
-    this._createdAtFilterError = '';
-    this._store.filter({
-      createdAt: {
-        fromDate: null,
-        toDate: null
-      }
-    });
-  }
-
-  /**
    * Clear all content components and sync filters accordingly.
    *
    * Not part of the API, don't use it from outside this component
