@@ -41,6 +41,10 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this._prepare();
+    }
+
+    private _prepare(): void{
         this._restoreFiltersState();
         this._registerToFilterStoreDataChanges();
     }
