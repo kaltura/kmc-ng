@@ -19,6 +19,7 @@ import { CategoryWidgetsManager } from './category-widgets-manager';
 import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import { routingAliases } from 'app-shared/app-routing-aliases';
 
 export enum ActionTypes {
 	CategoryLoading,
@@ -303,7 +304,7 @@ export class CategoryService implements OnDestroy {
 			.subscribe(
 			response => {
 				if (response.allowed) {
-					this._router.navigate(["category", categoryId], { relativeTo: this._categoryRoute.parent });
+					this._router.navigate(routingAliases.content.category(categoryId));
 				}
 			}
 			);
@@ -334,7 +335,7 @@ export class CategoryService implements OnDestroy {
 	}
 
 	public returnToCategories(params: { force?: boolean } = {}) {
-		this._router.navigate(['content/categories']);
+		this._router.navigate(routingAliases.content.categories);
 	}
 
 }

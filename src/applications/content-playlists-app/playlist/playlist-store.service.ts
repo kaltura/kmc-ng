@@ -18,6 +18,7 @@ import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
 import { PlaylistCreationService } from 'app-shared/kmc-shared/playlist-creation';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { routingAliases } from 'app-shared/app-routing-aliases';
 
 export enum ActionTypes {
   PlaylistLoading,
@@ -213,7 +214,7 @@ export class PlaylistStore implements OnDestroy {
                   }
                 }, 0);
               } else {
-                this._router.navigate(['content/playlists']);
+                this._router.navigate(routingAliases.content.playlists);
               }
             } else {
               // we must defer the loadPlaylist to the next event cycle loop to allow components
@@ -252,7 +253,7 @@ export class PlaylistStore implements OnDestroy {
                     } else {
                       if (id === 'new') {
                         this._playlistIsDirty = false;
-                        this._router.navigate(['playlist', res.result.id], { relativeTo: this._playlistRoute.parent });
+                        this._router.navigate(routingAliases.content.playlist(res.result.id));
                       } else {
                         this._loadPlaylist(this.playlistId);
                       }
@@ -313,7 +314,7 @@ export class PlaylistStore implements OnDestroy {
         .subscribe(
           response => {
             if (response.allowed) {
-              this._router.navigate(['playlist', playlistId], { relativeTo: this._playlistRoute.parent });
+              this._router.navigate(routingAliases.content.playlist(playlistId));
             }
           }
         );
@@ -352,7 +353,7 @@ export class PlaylistStore implements OnDestroy {
       .monitor('playlist store: return to playlists list')
       .subscribe(() => {
         this._playlistCreationService.clearNewPlaylistData();
-        this._router.navigate(['content/playlists'])
+        this._router.navigate(routingAliases.content.playlists)
       });
   }
 }

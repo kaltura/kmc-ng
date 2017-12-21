@@ -19,6 +19,7 @@ import {  OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import { routingAliases } from 'app-shared/app-routing-aliases';
 
 export enum ActionTypes
 {
@@ -338,7 +339,7 @@ export class EntryStore implements  OnDestroy {
 			{
 				if (response.allowed)
 				{
-					this._router.navigate(["entry", entryId],{ relativeTo : this._entryRoute.parent});
+					this._router.navigate(routingAliases.content.entry(entryId));
 				}
 			}
 		);
@@ -374,7 +375,7 @@ export class EntryStore implements  OnDestroy {
 
 	public returnToEntries(params : {force? : boolean} = {})
 	{
-		this._router.navigate(['content/entries']);
+		this._router.navigate(routingAliases.content.entries);
 	}
 
 }

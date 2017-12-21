@@ -13,6 +13,7 @@ import { Subject } from "rxjs/Subject";
 import { ISubscription } from "rxjs/Subscription";
 import { CategoriesPrimeService } from "app-shared/content-shared/categories-prime.service";
 import { CategoryData } from "app-shared/content-shared/categories-store.service";
+import { routingAliases } from 'app-shared/app-routing-aliases';
 
 
 export interface CategoryItem {
@@ -159,7 +160,7 @@ export class AddNewCategoryComponent implements AfterViewInit, OnDestroy, AfterV
         this._categoriesService.setNewCategoryData({
             parentCategoryId: parentCategoryId
         });
-        this._router.navigate(['/content/categories/category/new/metadata']);
+        this._router.navigate(routingAliases.content.newCategory('metadata'));
     }
 
     _close() {

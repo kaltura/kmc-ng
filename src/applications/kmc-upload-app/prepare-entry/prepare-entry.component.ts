@@ -5,6 +5,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-wi
 import {DraftEntry, PrepareEntryService} from './prepare-entry.service';
 import {BrowserService} from 'app-shared/kmc-shell';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
+import { routingAliases } from 'app-shared/app-routing-aliases';
 
 @Component({
   selector: 'kPrepareEntry',
@@ -43,7 +44,7 @@ export class PrepareEntryComponent implements OnInit {
     this._prepareEntryService.createDraftEntry(this._selectedMediaType, selectedProfile.profileId)
         .tag('block-shell')
       .subscribe((draftEntry: DraftEntry) => {
-          this._router.navigate(['/content/entries/entry', draftEntry.id], {queryParams: {reloadEntriesListOnNavigateOut: true}});
+          this._router.navigate(routingAliases.content.entry(draftEntry.id), {queryParams: {reloadEntriesListOnNavigateOut: true}});
           this.transcodingProfileSelectMenu.close();
         },
         error => {

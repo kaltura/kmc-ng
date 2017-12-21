@@ -9,6 +9,7 @@ import { BulkUploadService, BulkUploadTypes } from 'app-shared/kmc-shell/bulk-up
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events/bulk-log-uploading-started.event';
 import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
+import { routingAliases } from 'app-shared/app-routing-aliases';
 
 @Component({
   selector: 'kKMCBulkUploadMenu',
@@ -125,7 +126,7 @@ export class BulkUploadMenuComponent {
   }
 
   public _goToBulkUploadLog(): void {
-    this._router.navigate(['/content/bulk/list']);
+    this._router.navigate(routingAliases.content.bulkList);
     this.uploadSucceed.close();
     this.onClose.emit();
   }

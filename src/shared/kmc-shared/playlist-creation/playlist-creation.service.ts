@@ -3,6 +3,7 @@ import { AppEventsService } from 'app-shared/kmc-shared';
 import { CreateNewPlaylistEvent, CreateNewPlaylistEventArgs } from 'app-shared/kmc-shared/playlist-creation';
 import { Router } from '@angular/router';
 import { ISubscription } from 'rxjs/Subscription';
+import { routingAliases } from 'app-shared/app-routing-aliases';
 
 @Injectable()
 export class PlaylistCreationService implements OnDestroy {
@@ -24,7 +25,7 @@ export class PlaylistCreationService implements OnDestroy {
       this._creationSubscription = this._appEvents.event(CreateNewPlaylistEvent)
         .subscribe(({ data, tabName = 'content' }) => {
           this._newPlaylistData = data;
-          this._router.navigate([`/content/playlists/playlist/new/${tabName}`]);
+          this._router.navigate(routingAliases.content.newPlaylist(tabName));
         });
     } else {
       console.warn('Service was already initialized!');
