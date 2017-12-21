@@ -90,6 +90,12 @@
       "@kaltura-ng/kaltura-common/*": [
         "../node_modules/@kaltura-ng/kaltura-common/*"
       ],
+      "@kaltura-ng/kaltura-logger": [
+        "../node_modules/@kaltura-ng/kaltura-logger"
+      ],
+      "@kaltura-ng/kaltura-logger/*": [
+        "../node_modules/@kaltura-ng/kaltura-logger/*"
+      ],
       "@kaltura-ng/kaltura-primeng-ui": [
         "../node_modules/@kaltura-ng/kaltura-primeng-ui"
       ],
@@ -101,6 +107,12 @@
       ],
       "@kaltura-ng/kaltura-ui/*": [
         "../node_modules/@kaltura-ng/kaltura-ui/*"
+      ],
+      "@kaltura-ng/mc-shared": [
+        "../node_modules/@kaltura-ng/mc-shared"
+      ],
+      "@kaltura-ng/mc-shared/*": [
+        "../node_modules/@kaltura-ng/mc-shared/*"
       ],
       "@kaltura-ng/mc-theme": [
         "../node_modules/@kaltura-ng/mc-theme"
@@ -131,6 +143,12 @@
       ],
       "jquery/*": [
         "../node_modules/jquery/*"
+      ],
+      "jsnlog": [
+        "../node_modules/jsnlog"
+      ],
+      "jsnlog/*": [
+        "../node_modules/jsnlog/*"
       ],
       "kaltura-ngx-client": [
         "../node_modules/kaltura-ngx-client"
