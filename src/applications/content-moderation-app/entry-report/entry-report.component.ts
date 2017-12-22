@@ -74,7 +74,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
     return {
       next: () => {
         this._closePopup();
-        this._entriesStore.reload(true);
+        this._entriesStore.reload();
         this._areaBlockerMessage = null;
       },
       error: (error) => {
