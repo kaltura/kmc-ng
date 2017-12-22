@@ -94,7 +94,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._blockerMessage = null;
     this._emptyMessage = '';
     let loadedOnce = false; // used to set the empty message to 'no results' only after search
-    this._entriesStoreStatusSubscription = this.entriesStore.state$.subscribe(
+    this.entriesStoreStatusSubscription = this.entriesStore.entries.state$.subscribe(
       result => {
         if (result.errorMessage) {
           this._blockerMessage = new AreaBlockerMessage({
@@ -102,7 +102,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
             buttons: [{
               label: 'Retry',
               action: () => {
-                this.entriesStore.reload(true);
+                this.entriesStore.reload();
               }
             }
             ]
