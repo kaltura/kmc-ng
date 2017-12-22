@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { PlaylistRule } from '../rule-based-content-widget.service';
 import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
+import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
 
 @Pipe({ name: 'playlistRuleOrderBy' })
 export class PlaylistOrderByPipe implements PipeTransform {

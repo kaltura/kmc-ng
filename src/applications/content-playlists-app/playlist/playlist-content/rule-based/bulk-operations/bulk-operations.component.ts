@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PlaylistRule } from '../rule-based-content-widget.service';
+import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
 
 @Component({
   selector: 'kPlaylistRulesListBulkOperationsContent',
