@@ -1,7 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PlaylistStore } from '../../playlist-store.service';
-import { PlaylistRule, RuleBasedContentWidget } from './rule-based-content-widget.service';
+import { RuleBasedContentWidget } from './rule-based-content-widget.service';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
 
 @Component({
   selector: 'kPlaylistContentRuleBased',
@@ -10,7 +12,10 @@ import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-st
   providers: [EntriesStore]
 })
 export class RuleBasedContentComponent implements OnInit, OnDestroy {
+  @ViewChild('playlistRule') private _rulePopup: PopupWidgetComponent;
+
   public _selectedRules: PlaylistRule[] = [];
+  public _selectedRule: PlaylistRule = null;
 
   constructor(public _playlistStore: PlaylistStore,
               public _widgetService: RuleBasedContentWidget) {
@@ -18,6 +23,11 @@ export class RuleBasedContentComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._widgetService.attachForm();
+
+    this._widgetService.selectedRule$.subscribe(rule => {
+      this._selectedRule = rule;
+      this._rulePopup.open();
+    })
   };
 
   ngOnDestroy() {

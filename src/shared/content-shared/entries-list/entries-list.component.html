@@ -3,7 +3,8 @@
     <div #entriesTableHolder class="kEntriesHolder kContent">
       <kSticky stickyId="entriesFilters" [scrollOffset]="80" [sticksTo]="'header'">
         <div class="kEntriesTableFilters kContent" [class.kAdditionalFilters]="additionalFilters">
-          <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries.data$ | async)?.totalCount && !additionalFilters">
+          <span class="kSelectedEntriesNum"
+                *ngIf="(_entriesStore.entries.data$ | async)?.totalCount && !additionalFilters">
             {{'applications.content.entries.entries' | translate: [(_entriesStore.entries.data$ | async)?.totalCount]}}
           </span>
 
@@ -29,7 +30,8 @@
                      id="ruleNameInput"
                      pInputText
                      class="kRuleNameInput"
-                     placeholder="{{'applications.content.entries.ruleNamePlaceholder' | translate}}">
+                     [(ngModel)]="_ruleName"
+                     [placeholder]="'applications.content.entries.ruleNamePlaceholder' | translate">
               <div #resultsLimitBtn class="kResultsLimit">
                 <span>{{'applications.content.entries.resultsLimit' | translate}}</span>
                 <i class="kIcondropdown_arrow_bottom dropdown"></i>
@@ -37,7 +39,9 @@
               <div class="kOrderBy">
                 <p-dropdown [options]="_orderByOptions"
                             [autoWidth]="false"
-                            [placeholder]="'applications.content.entries.orderBy' | translate"></p-dropdown>
+                            [placeholder]="'applications.content.entries.orderBy' | translate"
+                            (onChange)="_onOrderByChange()"
+                            [(ngModel)]="_orderBy"></p-dropdown>
               </div>
             </div>
             <div [class.kHidden]="selectedEntries.length" class="kFilters">
@@ -80,7 +84,7 @@
       </kSticky>
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="entriesTags" [sticksTo]="'entriesFilters'">
         <div class="kContent">
-            <k-entries-list-tags
+          <k-entries-list-tags
             (onTagsChange)="onTagsChange($event)"></k-entries-list-tags>
         </div>
       </kSticky>
@@ -116,7 +120,8 @@
               [closeBtn]="false"
               [targetRef]="categoriesFilterBtn"
               [targetOffset]="{'x':-10, 'y': -21}"
-              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'categoriesFilterPopup'" [scrollOffset]="80" >
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'categoriesFilterPopup'"
+              [scrollOffset]="80">
   <kCategoriesFilter [parentPopupWidget]="categoriesFilterPopup"></kCategoriesFilter>
 </kPopupWidget>
 
@@ -138,14 +143,15 @@
               [closeBtn]="false"
               [targetRef]="resultsLimitBtn"
               [targetOffset]="{'x': 0, 'y': 37}"
-              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'resultsLimitPopup'" [scrollOffset]="80">
-    <div class="kResultsLimitPopup">
-      <div class="kResultsLimitSlider">
-        <kSlider [(ngModel)]="_resultsLimit" [min]="1" [max]="200"></kSlider>
-      </div>
-      <div class="kResultsLimitPopupFooter">
-        <span>{{ 'applications.content.entries.resultsLimitRange' | translate }}</span>
-        <a>{{ 'app.common.apply' | translate }}</a>
-      </div>
+              kSticky [sticksTo]="'header'" [stickyClass]="'kForceFix'" [stickyId]="'resultsLimitPopup'"
+              [scrollOffset]="80">
+  <div class="kResultsLimitPopup">
+    <div class="kResultsLimitSlider">
+      <kSlider [(ngModel)]="_resultsLimit" [min]="1" [max]="200"></kSlider>
     </div>
+    <div class="kResultsLimitPopupFooter">
+      <span>{{ 'applications.content.entries.resultsLimitRange' | translate }}</span>
+      <a>{{ 'app.common.apply' | translate }}</a>
+    </div>
+  </div>
 </kPopupWidget>

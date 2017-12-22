@@ -6,6 +6,7 @@ import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/ent
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
+import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
 
 @Component({
   selector: 'kEntriesList',
@@ -22,9 +23,18 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   @Input() columns: EntriesTableColumns | null;
   @Input() rowActions: { label: string, commandName: string }[];
 
-    @ViewChild('tags') private tags: StickyComponent;
+  @Input() set rule(value: PlaylistRule) {  // rule-based playlist specific
+    console.warn(value);
+    if (value) {
+      this._resultsLimit = value.limit;
+      this._ruleName = value.name;
+      this._orderBy = value.orderBy;
+    }
+  }
 
-    @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
+  @ViewChild('tags') private tags: StickyComponent;
+
+  @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
 
   public _orderByOptions = [
     {
@@ -46,6 +56,8 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   ];
 
   public _resultsLimit = 200;
+  public _ruleName = '';
+  public _orderBy = null;
 
   public _query = {
     freetext: '',
@@ -154,5 +166,12 @@ export class EntriesListComponent implements OnInit, OnDestroy {
       this._reload();
     }
   }
+
+  public _onOrderByChange(): void {
+    const sortBy = this._orderBy.toString().substring(1);
+
+    this._entriesStore.filter({ sortBy });
+  }
 }
+
 

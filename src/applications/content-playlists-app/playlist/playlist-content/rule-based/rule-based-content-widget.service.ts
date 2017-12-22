@@ -10,28 +10,20 @@ import { KalturaPlaylist } from 'kaltura-ngx-client/api/types/KalturaPlaylist';
 import { PlaylistExecuteFromFiltersAction } from 'kaltura-ngx-client/api/types/PlaylistExecuteFromFiltersAction';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
 import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 import { environment } from 'app-environment';
+import { Subject } from 'rxjs/Subject';
+import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
 
 export interface LoadEntriesStatus {
   loading: boolean;
   error: boolean
 }
 
-export interface PlaylistRule {
-  selectionId?: string;
-  name: string;
-  entriesCount: number;
-  entriesDuration: number;
-  orderBy: string;
-  limit: number;
-  originalFilter: KalturaMediaEntryFilterForPlaylist
-}
-
 @Injectable()
 export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy {
   private _state = new BehaviorSubject<LoadEntriesStatus>({ loading: false, error: false });
+  private _selectedRule = new Subject<PlaylistRule>();
   private _selectionIdGenerator = new FriendlyHashId();
 
   public isNewPlaylist = false;
@@ -39,6 +31,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
   public rulesTotalCount = 0;
   public entriesDuration = 0;
   public state$ = this._state.asObservable();
+  public selectedRule$ = this._selectedRule.asObservable();
 
   constructor(private _kalturaClient: KalturaClient) {
     super(PlaylistWidgetKeys.ContentRuleBased);
@@ -73,6 +66,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
     this._state.next({ loading: true, error: false });
     this.isNewPlaylist = false;
     this.rules = [];
+    this.rulesTotalCount = 0;
 
     const rules = this.data.filters.map(filter => {
       return new PlaylistExecuteFromFiltersAction({
@@ -89,14 +83,11 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
       .cancelOnDestroy(this, this.widgetReset$)
       .map(responses => {
         responses.forEach(({result = []}, index) => {
-          if (!result.length) {
-            return;
-          }
           const filter = this.data.filters[index];
           const entriesDuration = result.reduce((duration, entry) => duration + entry.duration, 0);
 
           this.rules.push({
-            name: `Rule ${index + 1}`,
+            name: `Rule ${index + 1}`, // TODO [kmcng] replace with rule's name
             orderBy: filter.orderBy,
             limit: filter.limit,
             entriesCount: result.length,
@@ -168,6 +159,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
         this._moveDownRules([rule]);
         break;
       case 'view':
+        this._selectedRule.next(rule);
         break;
       default:
         break;

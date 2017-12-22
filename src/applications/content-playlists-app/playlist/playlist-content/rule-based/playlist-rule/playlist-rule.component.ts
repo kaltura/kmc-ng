@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
+import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
 
 @Component({
   selector: 'kPlaylistRule',
@@ -9,6 +10,8 @@ import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/ent
   styleUrls: ['./playlist-rule.component.scss']
 })
 export class PlaylistRuleComponent {
+  @Input() rule: PlaylistRule;
+
   @ViewChild(EntriesListComponent) public _entriesList: EntriesListComponent;
 
   @Output() onClosePopupWidget = new EventEmitter<void>();

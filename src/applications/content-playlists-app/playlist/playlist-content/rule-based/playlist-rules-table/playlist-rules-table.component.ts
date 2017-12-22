@@ -1,7 +1,8 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { DataTable, Menu, MenuItem } from 'primeng/primeng';
-import { PlaylistRule, RuleBasedContentWidget } from '../rule-based-content-widget.service';
+import { RuleBasedContentWidget } from '../rule-based-content-widget.service';
+import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
 
 @Component({
   selector: 'kPlaylistRulesTable',
