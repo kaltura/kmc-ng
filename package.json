@@ -57,6 +57,7 @@
     "@kaltura-ng/kaltura-common": "~2.4.0",
     "@kaltura-ng/kaltura-logger": "~0.1.0",
     "@kaltura-ng/kaltura-primeng-ui": "~0.7.0",
+    "angular2-qrcode": "~2.0.1",
     "@kaltura-ng/kaltura-ui": "~3.2.1",
     "@kaltura-ng/mc-shared": "~1.1.0",
     "@kaltura-ng/mc-theme": "~0.9.0",

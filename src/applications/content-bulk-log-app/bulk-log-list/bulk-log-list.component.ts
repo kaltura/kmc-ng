@@ -7,7 +7,7 @@ import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-
 import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
 import { getBulkUploadType } from '../utils/get-bulk-upload-type';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events/bulk-log-uploading-started.event';
+import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events';
 
 @Component({
   selector: 'kBulkLogList',

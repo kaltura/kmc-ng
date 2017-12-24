@@ -417,7 +417,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             // update desired fields of entries
                 responseProfile = new KalturaDetachedResponseProfile({
                     type: KalturaResponseProfileType.includeFields,
-                    fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,tags,categoriesIds,downloadUrl'
+                    fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,tags,categoriesIds,downloadUrl,sourceType'
                 });
 
             // update pagination args
