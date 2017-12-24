@@ -7,7 +7,6 @@ import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui/area-blocker';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
 import { PreviewEmbedComponent } from './preview-and-embed.component';
 import { PreviewEmbedDetailsComponent } from './preview-embed.component';
-import { PreviewEmbedService } from './preview-and-embed.service';
 import { QRCodeModule } from 'angular2-qrcode';
 
 @NgModule({
@@ -30,7 +29,6 @@ import { QRCodeModule } from 'angular2-qrcode';
     PreviewEmbedDetailsComponent
   ],
   providers: [
-    PreviewEmbedService
   ],
   exports: [
     PreviewEmbedComponent

@@ -8,7 +8,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { ContentEntriesAppService } from '../content-entries-app.service';
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { PreviewAndEmbedEvent } from '../../../applications/preview-and-embed/preview-and-embed-event';
+import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 
 @Component({
   selector: 'kEntriesListHolder',

@@ -5,7 +5,7 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
-import { PreviewAndEmbedEvent } from '../../../applications/preview-and-embed/preview-and-embed-event';
+import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 
 import { PlaylistsStore, SortDirection } from './playlists-store/playlists-store.service';

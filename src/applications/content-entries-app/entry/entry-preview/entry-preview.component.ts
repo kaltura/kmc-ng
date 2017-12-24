@@ -5,7 +5,7 @@ import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntr
 import { KalturaEntryStatus } from 'kaltura-ngx-client/api/types/KalturaEntryStatus';
 
 import { AppEventsService } from 'app-shared/kmc-shared';
-import { PreviewAndEmbedEvent } from '../../../../applications/preview-and-embed/preview-and-embed-event';
+import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 
 @Component({
 	selector: 'kEntryPreview',

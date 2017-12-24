@@ -19,6 +19,7 @@ import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceTyp
   selector: 'kPreviewEmbedDetails',
   templateUrl: './preview-embed.component.html',
   styleUrls: ['./preview-embed.component.scss'],
+  providers: [ PreviewEmbedService ]
 })
 export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -159,6 +160,7 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   private getGenerator():any{
     const baseCdnUrl = environment.core.kaltura.cdnUrl.replace("http://","");
     const securedCdnUrl = environment.core.kaltura.securedCdnUrl.replace("https://","");
+    // 'kEmbedCodeGenerator' is bundled with the app. Location: assets/js/KalturaEmbedCodeGenerator.min.js
     return new window['kEmbedCodeGenerator']({
       host: baseCdnUrl,
       securedHost: securedCdnUrl,
@@ -209,27 +211,32 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   private getEmbedFlashVars(isPreview: boolean): any{
     let flashVars =  {};
-    if(isPreview) {
-      flashVars['ks'] = this._appAuthentication.appUser.ks;
-      if (this.media instanceof KalturaMediaEntry){
-        const sourceType = this.media.sourceType.toString();
-        const isLive = (sourceType === KalturaSourceType.liveStream.toString() ||
-        sourceType === KalturaSourceType.akamaiLive.toString() ||
-        sourceType === KalturaSourceType.akamaiUniversalLive.toString() ||
-        sourceType === KalturaSourceType.manualLiveStream.toString());
-        if (isLive){
-          flashVars['disableEntryRedirect'] = true;
+    try {
+      if (isPreview) {
+        flashVars['ks'] = this._appAuthentication.appUser.ks;
+        if (this.media instanceof KalturaMediaEntry) {
+          const sourceType = this.media.sourceType.toString();
+          const isLive = (sourceType === KalturaSourceType.liveStream.toString() ||
+          sourceType === KalturaSourceType.akamaiLive.toString() ||
+          sourceType === KalturaSourceType.akamaiUniversalLive.toString() ||
+          sourceType === KalturaSourceType.manualLiveStream.toString());
+          if (isLive) {
+            flashVars['disableEntryRedirect'] = true;
+          }
         }
+        flashVars['liveAnalytics'] = {
+          "plugin": "false",                // prevent loading the liveAnalytics plugin in v2 players
+          "relativeTo": "PlayerHolder",     // required to prevent v1 players from getting stuck
+          "position": "after",              // required to prevent v1 players from getting stuck
+          "loadingPolicy": "onDemand"       // prevent v1 players from trying to load this plugin
+        };
       }
-      flashVars['liveAnalytics'] = {
-        "plugin": "false",                // prevent loading the liveAnalytics plugin in v2 players
-        "relativeTo": "PlayerHolder",     // required to prevent v1 players from getting stuck
-        "position": "after",              // required to prevent v1 players from getting stuck
-        "loadingPolicy": "onDemand"       // prevent v1 players from trying to load this plugin
-      };
-    }
-    if (this.media instanceof KalturaPlaylist){
-      flashVars['playlistAPI.kpl0Id'] = this.media.id;
+      if (this.media instanceof KalturaPlaylist) {
+        flashVars['playlistAPI.kpl0Id'] = this.media.id;
+      }
+    } catch (e) {
+      console.error("Preview & Embed::Error getting Flashvars: " + e.message);
+      flashVars =  {};
     }
     return flashVars;
   }
@@ -244,15 +251,20 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private createPreviewLink(isPreview: boolean):void{
-      let url = this.getProtocol(isPreview) + '://' + environment.core.kaltura.serverEndpoint + '/index.php/extwidget/preview';
-      url += '/partner_id/' + this._appAuthentication.appUser.partnerId;
-      url += '/uiconf_id/' + this._previewForm.controls['selectedPlayer'].value.id;
-      if (this.media instanceof KalturaMediaEntry){
-        url += '/entry_id/' + this.media.id;
+      let url = '';
+      try {
+        url = this.getProtocol(isPreview) + '://' + environment.core.kaltura.serverEndpoint + '/index.php/extwidget/preview';
+        url += '/partner_id/' + this._appAuthentication.appUser.partnerId;
+        url += '/uiconf_id/' + this._previewForm.controls['selectedPlayer'].value.id;
+        if (this.media instanceof KalturaMediaEntry) {
+          url += '/entry_id/' + this.media.id;
+        }
+        url += '/embed/' + this._previewForm.controls['selectedEmbedType'].value;
+        url += '?' + this.flashVarsToUrl(this.getEmbedFlashVars(isPreview));
+        this._previewLink = url;
+      } catch (e){
+        console.log("could not generate valid URL for short link generation");
       }
-      url += '/embed/' + this._previewForm.controls['selectedEmbedType'].value;
-      url += '?' + this.flashVarsToUrl(this.getEmbedFlashVars(isPreview));
-      this._previewLink = url;
 
       // create short link
       this._previewEmbedService.generateShortLink(url).cancelOnDestroy(this).subscribe(
