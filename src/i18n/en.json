@@ -750,6 +750,12 @@
         "thumbnails": {
           "thumbnails": "Thumbnails",
           "upload": "Upload",
+          "capture": {
+            "choose": "Choose frame",
+            "title": "Choose frame from video",
+            "label": "Pause the video on the appropriate frame and hit the capture button to save your thumbnail.",
+            "save": "Capture and Save"
+          },
           "thumbnail": "Thumbnail",
           "dimensions": "Dimensions",
           "size": "Size",
