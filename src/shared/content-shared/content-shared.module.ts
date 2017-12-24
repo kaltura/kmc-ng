@@ -31,7 +31,7 @@ import { PrimeTableSortDirectionPipe } from 'app-shared/content-shared/pipes/pri
 import { EntriesRefineFiltersComponent } from 'app-shared/content-shared/entries-refine-filters/entries-refine-filters.component';
 import { CategoriesFilterPrefsComponent } from 'app-shared/content-shared/categories-filter-preferences/categories-filter-preferences.component';
 import { CategoriesFilterComponent } from 'app-shared/content-shared/categories-filter/categories-filter.component';
-import { EntriesRefineFiltersProvider } from 'app-shared/content-shared/entries-refine-filters/entries-refine-filters-provider.service';
+import { EntriesRefineFiltersService } from 'app-shared/content-shared/entries-refine-filters/entries-refine-filters.service';
 import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
@@ -39,6 +39,8 @@ import { PrimeTableSortTransformPipe } from 'app-shared/content-shared/pipes/pri
 import { CategoryRadioButtonPocComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc';
 import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc-popup';
 import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-selector/entries-selector.component';
+import { EntriesListTagsComponent } from 'app-shared/content-shared/entries-list/entries-list-tags.component';
+import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
 
 @NgModule({
   imports: [
@@ -64,7 +66,8 @@ import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-sele
     PaginatorModule,
     TieredMenuModule,
     InputTextModule,
-    StickyModule
+    StickyModule,
+    FiltersModule
   ],
   declarations: [
     EntryStatusPipe,
@@ -80,8 +83,8 @@ import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-sele
     CategoriesFilterComponent,
     EntriesTableComponent,
     EntriesListComponent,
+    EntriesListTagsComponent,
     EntriesSelectorComponent,
-
     CategoryRadioButtonPocComponent,
     CategoryRadioButtonPocPopupComponent
   ],
@@ -107,7 +110,7 @@ import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-sele
   providers: [
     CategoriesPrimeService,
     CategoriesStore,
-    EntriesRefineFiltersProvider
+    EntriesRefineFiltersService
   ]
 })
 export class ContentSharedModule {

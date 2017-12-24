@@ -151,7 +151,7 @@ export class LinkedEntries implements OnInit, OnDestroy, ControlValueAccessor {
                 let selectedItem = this._selectedEntries[i];
                 let selectedItemIndex: number = this.findIndexInList(selectedItem, this._entries);
 
-                if(selectedItemIndex != 0) {
+                if(selectedItemIndex !== 0) {
                     let movedItem = this._entries.splice(selectedItemIndex,1)[0];
                     this._entries.unshift(movedItem);
                 }

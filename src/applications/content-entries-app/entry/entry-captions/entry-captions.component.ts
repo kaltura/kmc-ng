@@ -105,7 +105,7 @@ export class EntryCaptions implements AfterViewInit, OnInit, OnDestroy {
 	private _downloadFile(): void {
 		if (this._browserService.isIE11()) { // IE11 - use download API
 			const baseUrl = environment.core.kaltura.cdnUrl;
-			const protocol = baseUrl.split(":")[0];
+			const protocol = 'http';
 			const partnerId = this._appAuthentication.appUser.partnerId;
 			const entryId = this._widgetService.data.id;
 			let url = baseUrl + '/p/' + partnerId +'/sp/' + partnerId + '00/playManifest/entryId/' + entryId + '/flavorId/' + this._widgetService.currentCaption.id + '/format/download/protocol/' + protocol;

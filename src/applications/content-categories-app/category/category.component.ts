@@ -62,35 +62,31 @@ export class CategoryComponent implements OnInit, OnDestroy {
               case ActionTypes.CategoryLoading:
                 this._showLoader = true;
 
-                // when loading new category in progress, the 'categoryID' property
-                // reflect the category that is currently being loaded
-                // while 'category$' stream is null
-                this._currentCategoryId = +this._categoryStore.categoryId;
-                this._updateNavigationState();
-                break;
-              case ActionTypes.CategoryLoaded:
-                this._categoryHeader = this._appLocalization.get('applications.content.categoryDetails.header', {0: this._categoryStore.category.name});
-                break;
-              case ActionTypes.CategoryLoadingFailed:
-                let message = status.error ? status.error.message : '';
-                message = message || this._appLocalization.get('applications.content.errors.loadError');
-                this._areaBlockerMessage = new AreaBlockerMessage({
-                  message: message,
-                  buttons: [
-                    this._createBackToCategoriesButton(),
-                    {
-                      label: this._appLocalization.get('applications.content.categoryDetails.errors.retry'),
-                      action: () => {
-                        this._categoryStore.reloadCategory();
-                      }
-                    }
-                  ]
-                });
-                break;
-              case ActionTypes.CategorySaving:
-                // loader is enabled using 'block-shell' tag automatically, no need to set the showLoader = true
-                break;
-              case ActionTypes.CategorySavingFailed:
+							// when loading new category in progress, the 'categoryID' property
+							// reflect the category that is currently being loaded
+							// while 'category$' stream is null
+							this._currentCategoryId = +this._categoryStore.categoryId;
+							this._updateNavigationState();
+
+							break;
+						case ActionTypes.CategoryLoaded:
+							this._categoryHeader = this._appLocalization.get('applications.content.categoryDetails.header', { 0: this._categoryStore.category.name });
+							break;
+						case ActionTypes.CategoryLoadingFailed:
+							let message = status.error ? status.error.message : '';
+							message = message || this._appLocalization.get('applications.content.errors.loadError');
+							this._areaBlockerMessage = new AreaBlockerMessage({
+								message: message,
+								buttons: [
+									this._createBackToCategoriesButton()
+									]
+
+							});
+							break;
+						case ActionTypes.CategorySaving:
+							// loader is enabled using 'block-shell' tag automatically, no need to set the showLoader = true
+							break;
+						case ActionTypes.CategorySavingFailed:
 
                 this._areaBlockerMessage = new AreaBlockerMessage({
                   message: this._appLocalization.get('applications.content.categoryDetails.errors.saveError'),

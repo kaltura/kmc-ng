@@ -61,7 +61,8 @@
       "attention": "Attention",
       "yes": "Yes",
       "no": "No",
-      "apply": "Apply"
+      "apply": "Apply",
+      "done": "Done"
     },
     "login": {
       "login": {
@@ -133,6 +134,33 @@
     }
   },
   "applications": {
+    "embed":{
+      "previewShare": "Share & Embed",
+      "embedType": "Embed type",
+      "selectPlayer": "Select player",
+      "embedIframe": "Iframe Embed",
+      "embedDynamic": "Dynamic Embed",
+      "embedAuto": "Auto Embed",
+      "embedThumb": "Thumbnail Embed",
+      "embedCode": "Embed code",
+      "copy": "Copy",
+      "seo": "Include Search Engine Optimization data",
+      "https": "Support for HTTPS embed code",
+      "qr": "Scan Code for Mobile Preview",
+      "view": "Standalone preview",
+      "advanced": "Advanced Settings",
+      "settings": "List Arrangement Settings",
+      "name": "Name",
+      "added": "Date added",
+      "updated": "Date updated",
+      "helpTip1": "Auto embed is the default embed code type and is best to get a player quickly on a page without any runtime customizations.",
+      "helpTip2": "Read more",
+      "helpTip3": "about the different embed code types.",
+      "helpTip4": "Logic for defining the delivery method is automated by the Kaltura player to ensure the best user experience. Learn more about enforcing",
+      "helpTip5": "specific delivery protocols.",
+      "playersErrorPlaylist": "Could not find playlist players in this account.\nYou can create new players using the Studio tab.",
+      "playersErrorVideo": "Could not find video players in this account.\nYou can create new players using the Studio tab."
+    },
     "entries": {
       "entryMetadata": {
         "searchTagsPH": "Search Tags",
@@ -442,6 +470,7 @@
         "confirmDeleteEntries": "Are you sure you want to delete the selected entries?"
       },
       "filters": {
+        "errorLoading": "Error loading filters",
         "activeFilters": "Active Filters:",
         "clearAll": "Clear All",
         "close": "Close",
@@ -454,16 +483,16 @@
         "after": "After",
         "before": "Before",
         "createdBetween": "Created Between",
-        "mediaType": "Media Type: {{0}}",
-        "status": "Status: {{0}}",
-        "duration": "Duration: {{0}}",
+        "mediaTypes": "Media Type: {{0}}",
+        "ingestionStatuses": "Status: {{0}}",
+        "durations": "Duration: {{0}}",
         "replacementStatuses": "Replacement Statuses: {{0}}",
-        "moderation": "Moderation: {{0}}",
-        "originalClipped": "Original & Clipped: {{0}}",
-        "scheduling": "Scheduling: {{0}}",
-        "accessControl": "Access Control: {{0}}",
-        "flavor": "Flavor: {{0}}",
-        "distribution": "Distribution: {{0}}",
+        "moderationStatuses": "Moderation: {{0}}",
+        "originalClippedEntries": "Original & Clipped: {{0}}",
+        "timeScheduling": "Scheduling: {{0}}",
+        "accessControlProfiles": "Access Control: {{0}}",
+        "flavors": "Flavor: {{0}}",
+        "distributions": "Distribution: {{0}}",
         "freeText": "Free text search",
         "metaData": "{{0}}: {{1}}",
         "uploadedItem": "Uploaded item: {{0}}",
@@ -668,7 +697,10 @@
         "moveUp": "Move Up",
         "moveDown": "Move Down",
         "duplicate": "Duplicate",
-        "removeCategoriesNone": "No categories to remove"
+        "removeCategoriesNone": "No categories to remove",
+        "createPlaylistWarning": "New playlist",
+        "createPlaylistWarningMsg": "Some of selected entries has invalid status.\nYou can continue, but invalid entries will be ignored\n{{0}}",
+        "createPlaylistErrorMsg": "All selected entries have invalid statuses.\nYou can't create new playlist with those entries"
       },
       "entryDetails": {
         "sections": {
@@ -728,6 +760,12 @@
         "thumbnails": {
           "thumbnails": "Thumbnails",
           "upload": "Upload",
+          "capture": {
+            "choose": "Choose frame",
+            "title": "Choose frame from video",
+            "label": "Pause the video on the appropriate frame and hit the capture button to save your thumbnail.",
+            "save": "Capture and Save"
+          },
           "thumbnail": "Thumbnail",
           "dimensions": "Dimensions",
           "size": "Size",
@@ -991,7 +1029,7 @@
         }
       },
       "categoryDetails": {
-        "header": "Category - {{0}}",
+        "header": "{{0}}",
         "backToCategories": "Back to Categories",
         "headerProps": {
           "id": "ID:",
