@@ -6,25 +6,13 @@ import { DetailsBarModule } from '@kaltura-ng/kaltura-ui/details-bar';
 
 import { routing } from './content-playlists-app.routes';
 
-import { AreaBlockerModule, StickyModule } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule } from '@kaltura-ng/kaltura-ui';
 import {
-	DataTableModule,
-	PaginatorModule,
-	ButtonModule,
-	TieredMenuModule,
-	CheckboxModule,
-	InputTextModule,
-	CalendarModule,
-	MenuModule,
-  RadioButtonModule,
-	SharedModule
+  ButtonModule, CalendarModule, CheckboxModule, DataTableModule, InputTextModule, MenuModule, PaginatorModule, RadioButtonModule,
+  SharedModule, TieredMenuModule
 } from 'primeng/primeng';
 import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
 import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
-import {
-	KalturaUIModule,
-	TooltipModule
-} from '@kaltura-ng/kaltura-ui';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
@@ -34,46 +22,46 @@ import { PlaylistsComponentsList } from './playlists/playlists-components-list';
 import { PlaylistComponentsList } from './playlist/playlist-components-list';
 import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.service';
 import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
-import { PlaylistsStore } from './playlists/playlists-store/playlists-store.service';
+import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
 
 @NgModule({
-    imports: [
-      CommonModule,
-      AreaBlockerModule,
-      DataTableModule,
-      KalturaCommonModule,
-      KalturaUIModule,
-      PaginatorModule,
-      TooltipModule,
-      ButtonModule,
-      TieredMenuModule,
-      CheckboxModule,
-      FormsModule,
-      ReactiveFormsModule,
-      InputTextModule,
-      PopupWidgetModule,
-      CalendarModule,
-      MenuModule,
-      RadioButtonModule,
-      TagsModule,
-      KalturaPrimeNgUIModule,
-      AutoCompleteModule,
-      SharedModule,
-	  DetailsBarModule,
-      RouterModule.forChild(routing),
-	  StickyModule,
-      ContentSharedModule
-    ],
-    declarations: [
-      ContentPlaylistsComponent,
-      PlaylistsComponentsList,
-      PlaylistComponentsList
-    ],
-    exports: [
-    ],
-    providers : [
-      PlaylistCanDeactivate
-    ]
+  imports: [
+    CommonModule,
+    AreaBlockerModule,
+    DataTableModule,
+    KalturaCommonModule,
+    KalturaUIModule,
+    PaginatorModule,
+    TooltipModule,
+    ButtonModule,
+    TieredMenuModule,
+    CheckboxModule,
+    FormsModule,
+    ReactiveFormsModule,
+    InputTextModule,
+    PopupWidgetModule,
+    CalendarModule,
+    MenuModule,
+    RadioButtonModule,
+    TagsModule,
+    KalturaPrimeNgUIModule,
+    AutoCompleteModule,
+    SharedModule,
+    DetailsBarModule,
+    RouterModule.forChild(routing),
+    StickyModule,
+    ContentSharedModule,
+    FiltersModule
+  ],
+  declarations: [
+    ContentPlaylistsComponent,
+    PlaylistsComponentsList,
+    PlaylistComponentsList
+  ],
+  exports: [],
+  providers: [
+    PlaylistCanDeactivate
+  ]
 })
 export class ContentPlaylistsAppModule {
 }

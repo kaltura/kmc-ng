@@ -90,7 +90,7 @@ export class PlaylistStore implements OnDestroy {
     }
 
     if (this._savePlaylistInvoked) {
-      this._playlistsStore.reload(true);
+      this._playlistsStore.reload();
     }
   }
 

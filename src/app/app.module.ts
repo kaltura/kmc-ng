@@ -181,8 +181,7 @@ export function clientConfigurationFactory() {
 export class AppModule {
   constructor(appBootstrap: AppBootstrap,
               appLocalization: AppLocalization,
-              uploadManagement: UploadManagement,
-              playlistCreation: PlaylistCreationService) {
+              uploadManagement: UploadManagement) {
 
     // TODO [kmcng] move to a relevant location
     // TODO [kmcng] get max upload request
@@ -190,7 +189,5 @@ export class AppModule {
     uploadManagement.setMaxUploadRequests(2/*environment.uploadsShared.MAX_CONCURENT_UPLOADS*/);
 
     appBootstrap.initApp({ errorRoute: '/error' });
-
-    playlistCreation.init();
   }
 }
