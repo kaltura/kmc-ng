@@ -157,7 +157,9 @@
       "helpTip2": "Read more",
       "helpTip3": "about the different embed code types.",
       "helpTip4": "Logic for defining the delivery method is automated by the Kaltura player to ensure the best user experience. Learn more about enforcing",
-      "helpTip5": "specific delivery protocols."
+      "helpTip5": "specific delivery protocols.",
+      "playersErrorPlaylist": "Could not find playlist players in this account.\nYou can create new players using the Studio tab.",
+      "playersErrorVideo": "Could not find video players in this account.\nYou can create new players using the Studio tab."
     },
     "entries": {
       "entryMetadata": {

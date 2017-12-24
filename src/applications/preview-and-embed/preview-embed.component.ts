@@ -95,6 +95,20 @@ export class PreviewEmbedDetailsComponent implements OnInit, AfterViewInit, OnDe
             this._previewForm.patchValue({
               selectedPlayer: this._players[0].value
             });
+          }else{
+            this._blockerMessage = new AreaBlockerMessage(
+                {
+                  message: isPlaylist ? this._appLocalization.get("applications.embed.playersErrorPlaylist") : this._appLocalization.get("applications.embed.playersErrorVideo"),
+                  buttons: [
+                    {
+                      label: this._appLocalization.get('app.common.ok'),
+                      action: () => {
+                        this._blockerMessage = null;
+                      }
+                    }
+                  ]
+                }
+            );
           }
 
           this._isBusy = false;
