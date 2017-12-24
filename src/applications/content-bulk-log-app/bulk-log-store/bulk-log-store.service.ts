@@ -3,263 +3,163 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
-import { async } from 'rxjs/scheduler/async';
-import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaMultiResponse } from 'kaltura-ngx-client';
 import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { KalturaBulkUploadFilter } from 'kaltura-ngx-client/api/types/KalturaBulkUploadFilter';
 import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
 import { BulkUploadAbortAction } from 'kaltura-ngx-client/api/types/BulkUploadAbortAction';
-import { FilterItem } from 'app-shared/content-shared/entries-store/filter-item';
-import { Subject } from 'rxjs/Subject';
-import { QueryRequestArgs } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { BulkListAction } from 'kaltura-ngx-client/api/types/BulkListAction';
 import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { KalturaMultiResponse } from 'kaltura-ngx-client';
+import { DatesRangeAdapter, DatesRangeType } from '@kaltura-ng/mc-shared/filters';
+import { ListAdapter, ListType } from '@kaltura-ng/mc-shared/filters';
+import { FiltersStoreBase, TypeAdaptersMapping } from '@kaltura-ng/mc-shared/filters';
+import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
+import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
+import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
+import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client/api/types/KalturaBaseEntryListResponse';
+import { KalturaUtils } from '@kaltura-ng/kaltura-common';
+import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters';
+import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters';
 
-export enum SortDirection {
-  Desc,
-  Asc
+const localStoarePageSizeKey = 'bulklog.list.pageSize';
+
+export interface BulkLogFilters {
+    pageSize: number,
+    pageIndex: number,
+    createdAt: DatesRangeType,
+    uploadedItem: ListType,
+    status: ListType
 }
-
-export interface QueryData {
-  pageIndex?: number,
-  pageSize?: number,
-  sortBy?: string,
-  sortDirection?: SortDirection,
-  fields?: string,
-}
-
-export interface FilterArgs {
-  filter: KalturaBulkUploadFilter
-}
-
-export type FilterTypeConstructor<T extends FilterItem> = { new(...args: Array<any>): T; };
 
 @Injectable()
-export class BulkLogStoreService implements OnDestroy {
-  private static filterTypeMapping = {};
-
-  private _bulkLogSource = new BehaviorSubject<{ items: Array<KalturaBulkUpload>, totalCount: number }>({
-    items: [],
-    totalCount: 0
-  });
-  private _stateSource = new BehaviorSubject<{ loading: boolean, errorMessage: string }>({
-    loading: false,
-    errorMessage: null
-  });
-  private _querySource = new Subject<QueryRequestArgs>();
-  private _activeFilters = new BehaviorSubject<{ filters: Array<FilterItem> }>({ filters: [] });
-  private _activeFiltersMap: { [key: string]: Array<FilterItem> } = {};
-  private _queryData: QueryData = {
-    pageIndex: 1,
-    pageSize: 50,
-    sortBy: 'createdAt',
-    sortDirection: SortDirection.Desc,
-    fields: 'id,fileName,bulkUploadType,bulkUploadObjectType,uploadedBy,uploadedByUserId,uploadedOn,numOfObjects,status,error'
+export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implements OnDestroy {
+  private _bulkLog = {
+    data: new BehaviorSubject<{ items: KalturaBulkUpload[], totalCount: number }>({ items: [], totalCount: 0 }),
+    state: new BehaviorSubject<{ loading: boolean, errorMessage: string }>({ loading: false, errorMessage: null })
   };
-  private _executeQueryStateSubscription: ISubscription;
 
-  public bulkLog$ = this._bulkLogSource.asObservable();
-  public state$ = this._stateSource.asObservable();
-  public query$ = this._querySource.monitor('queryData update');
-  public activeFilters$ = this._activeFilters.asObservable();
+  private _isReady = false;
+  private _querySubscription: ISubscription;
 
-  public static getFilterType(filter: any): string {
-    const result = filter['filterType'] || filter.constructor['filterType'];
+  public readonly bulkLog =
+    {
+      data$: this._bulkLog.data.asObservable(),
+      state$: this._bulkLog.state.asObservable(),
+      data: () => {
+        return this._bulkLog.data.getValue().items;
+      }
+    };
 
-    if (!result) {
-      throw new Error('Failed to extract filter type value (do you have a static property named filterType?)');
-    }
-
-    return result;
-  }
-
-  public static registerFilterType<T extends FilterItem>(filterType: FilterTypeConstructor<T>,
-                                                         handler: (items: Array<T>, request: FilterArgs) => void): void {
-    BulkLogStoreService.filterTypeMapping[this.getFilterType(filterType)] = handler;
-  }
-
-  public get queryData(): QueryData {
-    return Object.assign({}, this._queryData);
-  }
 
   constructor(private kalturaServerClient: KalturaClient,
               private browserService: BrowserService,
-              public _kalturaServerClient: KalturaClient) {
-    const defaultPageSize = this.browserService.getFromLocalStorage('bulkupload.list.pageSize');
-    if (defaultPageSize !== null) {
-      this._queryData.pageSize = defaultPageSize;
-    }
+              _logger: KalturaLogger) {
+    super(_logger);
+    this._prepare();
   }
 
   ngOnDestroy() {
-    this._stateSource.complete();
-    this._querySource.complete();
-    this._bulkLogSource.complete();
-
-    if (this._executeQueryStateSubscription) {
-      this._executeQueryStateSubscription.unsubscribe();
-    }
+    this._bulkLog.data.complete();
+    this._bulkLog.state.complete();
   }
 
-  public getFilterType(filter: any): string {
-    return BulkLogStoreService.getFilterType(filter);
-  }
+  private _prepare(): void {
+    if (!this._isReady) {
+      this._isReady = true;
 
-  public removeFiltersByType(filterType: FilterTypeConstructor<FilterItem>): void {
-    const filtersOfType = this._activeFiltersMap[this.getFilterType(filterType)];
-
-    if (filtersOfType) {
-      this.removeFilters(...filtersOfType);
-    }
-  }
-
-  public getFirstFilterByType<T extends FilterItem>(filterType: FilterTypeConstructor<T>): T {
-    const filters = <Array<T>>this.getFiltersByType(filterType);
-    return filters && filters.length > 0 ? filters[0] : null;
-  }
-
-  public getFiltersByType<T extends FilterItem>(filterType: FilterItem | FilterTypeConstructor<T>): Array<T> {
-    if (filterType instanceof FilterItem) {
-      const filtersOfType = <Array<T>>this._activeFiltersMap[this.getFilterType(filterType)];
-      return filtersOfType ? [...filtersOfType] : [];
-    }
-    if (filterType instanceof Function) {
-      const filtersOfType = <Array<T>>this._activeFiltersMap[this.getFilterType(filterType)];
-      return filtersOfType ? [...filtersOfType] : [];
-    } else {
-      return [];
-    }
-  }
-
-  public clearAllFilters(): void {
-    const previousFilters = this._activeFilters.getValue().filters;
-    this._activeFilters.next({ filters: [] });
-    this._activeFiltersMap = {};
-    this._executeQuery({ removedFilters: previousFilters, addedFilters: [] });
-  }
-
-  public addFilters(...filters: Array<FilterItem>): void {
-    if (filters) {
-      const addedFilters = [];
-      const activeFilters = this._activeFilters.getValue().filters;
-
-      filters.forEach(filter => {
-        const index = activeFilters.indexOf(filter);
-
-        if (index === -1) {
-          addedFilters.push(filter);
-          this._activeFiltersMap[this.getFilterType(filter)] = this._activeFiltersMap[this.getFilterType(filter)] || [];
-          this._activeFiltersMap[this.getFilterType(filter)].push(filter);
+        const defaultPageSize = this.browserService.getFromLocalStorage(localStoarePageSizeKey);
+        if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
+            this.filter({
+                pageSize: defaultPageSize
+            });
         }
-      });
 
-      if (addedFilters.length > 0) {
-        this._activeFilters.next({ filters: [...activeFilters, ...addedFilters] });
-        this._queryData.pageIndex = 1;
-        this._executeQuery({ removedFilters: [], addedFilters: addedFilters });
-      }
+      this._registerToFilterStoreDataChanges();
+      this._executeQuery();
     }
   }
 
-  public removeFilters(...filters: Array<FilterItem>): void {
-    if (filters) {
-      const removedFilters: Array<FilterItem> = [];
-      const activeFilters = this._activeFilters.getValue().filters;
-      const modifiedActiveFilters = [...activeFilters];
-
-      filters.forEach(filter => {
-        const index = modifiedActiveFilters.indexOf(filter);
-
-        if (index >= 0) {
-          removedFilters.push(filter);
-          modifiedActiveFilters.splice(index, 1);
-
-          const filterByType = this._activeFiltersMap[this.getFilterType(filter)];
-          filterByType.splice(filterByType.indexOf(filter), 1);
+    protected _preFilter(updates: Partial<BulkLogFilters>): Partial<BulkLogFilters> {
+        if (typeof updates.pageIndex === 'undefined') {
+            // reset page index to first page everytime filtering the list by any filter that is not page index
+            updates.pageIndex = 0;
         }
-      });
 
-      if (removedFilters.length > 0) {
-        this._activeFilters.next({ filters: modifiedActiveFilters });
-
-        this._queryData.pageIndex = 1;
-        this._executeQuery({ removedFilters: removedFilters, addedFilters: [] });
-      }
+        return updates;
     }
+
+  private _registerToFilterStoreDataChanges(): void {
+    this.filtersChange$
+      .cancelOnDestroy(this)
+      .subscribe(() => {
+        this._executeQuery();
+      });
   }
 
-  private _executeQuery({ addedFilters = [], removedFilters = [] }: { addedFilters: Array<FilterItem>, removedFilters: Array<FilterItem> } = {
-    addedFilters: [],
-    removedFilters: []
-  }): void {
-    // cancel previous requests
-    if (this._executeQueryStateSubscription) {
-      this._executeQueryStateSubscription.unsubscribe();
-      this._executeQueryStateSubscription = null;
+  private _executeQuery(): void {
+
+    if (this._querySubscription) {
+      this._querySubscription.unsubscribe();
+      this._querySubscription = null;
     }
 
-    this.browserService.setInLocalStorage('bulkupload.list.pageSize', this._queryData.pageSize);
-    this.browserService.scrollToTop();
+    const pageSize = this.cloneFilter('pageSize', null);
+    if (pageSize) {
+      this.browserService.setInLocalStorage(localStoarePageSizeKey, pageSize);
+    }
 
-    this._stateSource.next({ loading: true, errorMessage: null });
-
-    const queryArgs: QueryRequestArgs = Object.assign({},
-      {
-        addedFilters,
-        removedFilters,
-        filters: this._activeFilters.getValue().filters,
-        data: this._queryData
-      });
-
-    this._querySource.next(queryArgs);
-
-    // execute the request
-    this._executeQueryStateSubscription = this._buildQueryRequest(queryArgs)
-      .subscribeOn(async) // using async scheduler go allow calling this function multiple times
-      // in the same event loop cycle before invoking the logic.
-      .monitor('bulkLog store: get bulkLog()', { addedFilters, removedFilters })
+    this._bulkLog.state.next({ loading: true, errorMessage: null });
+    this._querySubscription = this._buildQueryRequest()
+      .cancelOnDestroy(this)
       .subscribe(
         response => {
-          this._executeQueryStateSubscription = null;
+          this._querySubscription = null;
 
-          this._stateSource.next({ loading: false, errorMessage: null });
+          this._bulkLog.state.next({ loading: false, errorMessage: null });
 
-          this._bulkLogSource.next({
-            items: <Array<any>>response.objects,
+          this._bulkLog.data.next({
+            items: <any[]>response.objects,
             totalCount: <number>response.totalCount
           });
         },
         error => {
-          this._executeQueryStateSubscription = null;
+          this._querySubscription = null;
           const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
-          this._stateSource.next({ loading: false, errorMessage });
+          this._bulkLog.state.next({ loading: false, errorMessage });
         });
+
 
   }
 
-  private _buildQueryRequest({ filters: activeFilters, data: queryData }: { filters: Array<FilterItem>, data: QueryData }): Observable<any> {
+  private _buildQueryRequest(): Observable<KalturaBaseEntryListResponse> {
     try {
-      const filter: KalturaBulkUploadFilter = new KalturaBulkUploadFilter({});
+
+      // create request items
+      const filter = new KalturaBulkUploadFilter({});
       let responseProfile: KalturaDetachedResponseProfile = null;
       let pagination: KalturaFilterPager = null;
 
-      const requestContext: FilterArgs = { filter };
+      const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
+      advancedSearch.type = KalturaSearchOperatorType.searchAnd;
 
-      // build request args by converting filters using registered handlers
-      if (activeFilters && activeFilters.length > 0) {
+      const data: BulkLogFilters = this._getFiltersAsReadonly();
 
-        Object.keys(this._activeFiltersMap).forEach(key => {
-          const handler = BulkLogStoreService.filterTypeMapping[key];
-          const items = this._activeFiltersMap[key];
+      // filter 'createdAt'
+      if (data.createdAt) {
+        if (data.createdAt.fromDate) {
+          filter.uploadedOnGreaterThanOrEqual = KalturaUtils.getStartDateValue(data.createdAt.fromDate);
+        }
 
-          if (handler && items && items.length > 0) {
-            handler(items, requestContext);
-          }
-        });
+        if (data.createdAt.toDate) {
+          filter.uploadedOnLessThanOrEqual = KalturaUtils.getEndDateValue(data.createdAt.toDate);
+        }
       }
+
+      // filters of joined list
+      this._updateFilterWithJoinedList(data.uploadedItem, filter, 'bulkUploadObjectTypeIn');
+      this._updateFilterWithJoinedList(data.status, filter, 'statusIn');
 
       // handle default value for media types
       if (!filter.bulkUploadObjectTypeIn) {
@@ -271,25 +171,17 @@ export class BulkLogStoreService implements OnDestroy {
         filter.statusIn = '0,1,2,3,4,5,6,7,8,9,10,11,12';
       }
 
-      // update the sort by args
-      if (queryData.sortBy) {
-        filter.orderBy = `${queryData.sortDirection === SortDirection.Desc ? '-' : '+'}${queryData.sortBy}`;
-      }
-
-      // update desired fields of entries
-      if (queryData.fields) {
-        responseProfile = new KalturaDetachedResponseProfile({
-          type: KalturaResponseProfileType.includeFields,
-          fields: queryData.fields
-        });
-      }
+      responseProfile = new KalturaDetachedResponseProfile({
+        type: KalturaResponseProfileType.includeFields,
+        fields: 'id,fileName,bulkUploadType,bulkUploadObjectType,uploadedBy,uploadedByUserId,uploadedOn,numOfObjects,status,error'
+      });
 
       // update pagination args
-      if (queryData.pageIndex || queryData.pageSize) {
+      if (data.pageIndex || data.pageSize) {
         pagination = new KalturaFilterPager(
           {
-            pageSize: queryData.pageSize,
-            pageIndex: queryData.pageIndex
+            pageSize: data.pageSize,
+            pageIndex: data.pageIndex + 1
           }
         );
       }
@@ -297,33 +189,63 @@ export class BulkLogStoreService implements OnDestroy {
       // build the request
       return <any>this.kalturaServerClient.request(
         new BulkListAction({
-          bulkUploadFilter: requestContext.filter,
+          bulkUploadFilter: filter,
           pager: pagination,
           responseProfile: responseProfile
         })
-      )
+      );
     } catch (err) {
       return Observable.throw(err);
+    }
+
+  }
+
+  private _updateFilterWithJoinedList(list: ListType, requestFilter: KalturaBulkUploadFilter, requestFilterProperty: keyof KalturaBulkUploadFilter): void {
+    const value = (list || []).map(item => item.value).join(',');
+
+    if (value) {
+      requestFilter[requestFilterProperty] = value;
+    }
+  }
+
+  protected _createDefaultFiltersValue(): BulkLogFilters {
+    return {
+      pageSize: 50,
+      pageIndex: 0,
+      createdAt: { fromDate: null, toDate: null },
+        uploadedItem: [],
+      status: []
+    };
+  }
+
+  protected _getTypeAdaptersMapping(): TypeAdaptersMapping<BulkLogFilters> {
+    return {
+      pageSize: new NumberTypeAdapter(),
+      pageIndex: new NumberTypeAdapter(),
+      createdAt: new DatesRangeAdapter(),
+        uploadedItem: new ListAdapter(),
+      status: new ListAdapter()
+    };
+  }
+
+  public reload(): void {
+    if (this._bulkLog.state.getValue().loading) {
+      return;
+    }
+
+    if (this._isReady) {
+      this._executeQuery();
+    } else {
+      this._prepare();
     }
   }
 
   public deleteBulkLog(id: number): Observable<KalturaBulkUpload> {
-    return this._kalturaServerClient.request(new BulkUploadAbortAction({ id }));
+    return this.kalturaServerClient.request(new BulkUploadAbortAction({ id }));
   }
 
   public deleteBulkLogs(files: Array<KalturaBulkUpload>): Observable<KalturaMultiResponse> {
-    return this._kalturaServerClient.multiRequest(files.map(({ id }) => new BulkUploadAbortAction({ id })));
-  }
-
-  public reload(query: boolean | Partial<QueryData>): void {
-    const forceReload = (typeof query === 'object' || (typeof query === 'boolean' && query));
-
-    if (forceReload || this._bulkLogSource.getValue().totalCount === 0) {
-      if (typeof query === 'object') {
-        Object.assign(this._queryData, query);
-      }
-      this._executeQuery();
-    }
+    return this.kalturaServerClient.multiRequest(files.map(({ id }) => new BulkUploadAbortAction({ id })));
   }
 }
 

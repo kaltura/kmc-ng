@@ -17,7 +17,7 @@
     ],
     "lib": [
       "es2016",
-      "ES2017",
+      "es2017",
       "dom"
     ],
     "paths": {
@@ -90,11 +90,23 @@
       "@kaltura-ng/kaltura-common/*": [
         "../node_modules/@kaltura-ng/kaltura-common/*"
       ],
+      "@kaltura-ng/kaltura-logger": [
+        "../node_modules/@kaltura-ng/kaltura-logger"
+      ],
+      "@kaltura-ng/kaltura-logger/*": [
+        "../node_modules/@kaltura-ng/kaltura-logger/*"
+      ],
       "@kaltura-ng/kaltura-primeng-ui": [
         "../node_modules/@kaltura-ng/kaltura-primeng-ui"
       ],
       "@kaltura-ng/kaltura-primeng-ui/*": [
         "../node_modules/@kaltura-ng/kaltura-primeng-ui/*"
+      ],
+      "angular2-qrcode": [
+        "../node_modules/angular2-qrcode"
+      ],
+      "angular2-qrcode/*": [
+        "../node_modules/angular2-qrcode/*"
       ],
       "@kaltura-ng/kaltura-ui": [
         "../node_modules/@kaltura-ng/kaltura-ui"
@@ -102,11 +114,23 @@
       "@kaltura-ng/kaltura-ui/*": [
         "../node_modules/@kaltura-ng/kaltura-ui/*"
       ],
+      "@kaltura-ng/mc-shared": [
+        "../node_modules/@kaltura-ng/mc-shared"
+      ],
+      "@kaltura-ng/mc-shared/*": [
+        "../node_modules/@kaltura-ng/mc-shared/*"
+      ],
       "@kaltura-ng/mc-theme": [
         "../node_modules/@kaltura-ng/mc-theme"
       ],
       "@kaltura-ng/mc-theme/*": [
         "../node_modules/@kaltura-ng/mc-theme/*"
+      ],
+      "@types/seamless-immutable": [
+        "../node_modules/@types/seamless-immutable"
+      ],
+      "@types/seamless-immutable/*": [
+        "../node_modules/@types/seamless-immutable/*"
       ],
       "core-js": [
         "../node_modules/core-js"
@@ -125,6 +149,12 @@
       ],
       "jquery/*": [
         "../node_modules/jquery/*"
+      ],
+      "jsnlog": [
+        "../node_modules/jsnlog"
+      ],
+      "jsnlog/*": [
+        "../node_modules/jsnlog/*"
       ],
       "kaltura-ngx-client": [
         "../node_modules/kaltura-ngx-client"
@@ -179,6 +209,12 @@
       ],
       "rxjs/*": [
         "../node_modules/rxjs/*"
+      ],
+      "seamless-immutable": [
+        "../node_modules/seamless-immutable"
+      ],
+      "seamless-immutable/*": [
+        "../node_modules/seamless-immutable/*"
       ],
       "ts-md5": [
         "../node_modules/ts-md5"
