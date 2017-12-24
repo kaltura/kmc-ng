@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {NgModule, Provider} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -6,7 +6,8 @@ import {HttpModule} from '@angular/http';
 import {CommonModule} from '@angular/common';
 import {Ng2Webstorage} from 'ng2-webstorage';
 import { TranslateModule } from 'ng2-translate/ng2-translate';
-
+import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
+import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui';
 
 import {
   AppBootstrap,
@@ -70,12 +71,16 @@ import { InvalidLoginHashFormComponent } from './components/login/invalid-login-
 import { AppMenuContentComponent } from './components/app-menu/app-menu-content.component';
 import { KmcUploadAppModule } from '../applications/kmc-upload-app/kmc-upload-app.module';
 import { TranscodingProfileManagementModule } from 'app-shared/kmc-shared/transcoding-profile-management';
-import { ChangeAccountComponent } from './components/changeAccount/change-account.component';import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
+import { ChangeAccountComponent } from './components/changeAccount/change-account.component';
+import { BulkUploadModule } from 'app-shared/kmc-shell/bulk-upload';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ChangelogContentComponent } from './components/changelog/changelog-content/changelog-content.component';
 import { AppEventsModule } from 'app-shared/kmc-shared';
+import { PlaylistCreationModule, PlaylistCreationService } from 'app-shared/kmc-shared/playlist-creation';
+import { KMCServerPollsModule } from 'app-shared/kmc-shared/server-polls';
 
 const partnerProviders: PartnerProfileStore[] = [AccessControlProfileStore, FlavoursStore];
+
 
 
 export function clientConfigurationFactory() {
@@ -85,7 +90,6 @@ export function clientConfigurationFactory() {
     result.clientTag = 'KMCng';
     return result;
 }
-
 @NgModule({
   imports: <any>[
     AuthModule,
@@ -104,6 +108,7 @@ export function clientConfigurationFactory() {
     KMCShellModule.forRoot(),
     KalturaCommonModule.forRoot(),
     TranslateModule.forRoot(),
+    PrimeTreeModule.forRoot(),
     Ng2Webstorage,
     PopupWidgetModule,
     routing,
@@ -115,13 +120,15 @@ export function clientConfigurationFactory() {
     ReactiveFormsModule,
     TooltipModule,
     GrowlModule,
-    KmcUploadAppModule,
+    KmcUploadAppModule.forRoot(),
     NewEntryUploadModule.forRoot(),
     BulkUploadModule.forRoot(),
     TranscodingProfileManagementModule.forRoot(),
     RadioButtonModule,
     StickyModule.forRoot(),
-    OperationTagModule.forRoot()
+    OperationTagModule.forRoot(),
+    PlaylistCreationModule.forRoot(),
+    KMCServerPollsModule.forRoot()
   ],
   declarations: <any>[
     AppComponent,
@@ -145,6 +152,10 @@ export function clientConfigurationFactory() {
   exports: [],
   providers: <any>[
     ...partnerProviders,
+      KalturaLogger,
+      {
+          provide: KalturaLoggerName, useValue: 'kmc'
+      },
     AppMenuService,
     {
       provide: BootstrapAdapterToken,
@@ -166,7 +177,9 @@ export function clientConfigurationFactory() {
   ]
 })
 export class AppModule {
-  constructor(appBootstrap: AppBootstrap, appLocalization: AppLocalization, uploadManagement: UploadManagement) {
+  constructor(appBootstrap: AppBootstrap,
+              appLocalization: AppLocalization,
+              uploadManagement: UploadManagement) {
 
     // TODO [kmcng] move to a relevant location
     // TODO [kmcng] get max upload request

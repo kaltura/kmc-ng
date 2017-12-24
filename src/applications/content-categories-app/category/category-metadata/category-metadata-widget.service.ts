@@ -20,6 +20,7 @@ import { CategoryWidgetKeys } from './../category-widget-keys';
 import { Injectable, OnDestroy } from '@angular/core';
 import { CategoryWidget } from "../category-widget";
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
+import { async } from 'rxjs/scheduler/async';
 
 @Injectable()
 export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy {
@@ -57,6 +58,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
 
         Observable.merge(...formsChanges)
             .cancelOnDestroy(this, this.widgetReset$)
+            .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
             .subscribe(
             () => {
                 let isValid = true;

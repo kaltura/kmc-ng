@@ -1,11 +1,9 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 
-import { SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
-import { BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
+import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 import { KalturaBulkUpload } from 'kaltura-ngx-client/api/types/KalturaBulkUpload';
 import { getBulkUploadType } from '../utils/get-bulk-upload-type';
 import { AppEventsService } from 'app-shared/kmc-shared';
@@ -22,14 +20,11 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
 
   public _blockerMessage: AreaBlockerMessage = null;
 
-  private querySubscription: ISubscription;
-
-  public _filter = {
+  public _query = {
+    uploadedAfter: null,
+    uploadedBefore: null,
     pageIndex: 0,
-    freetextSearch: '',
     pageSize: null, // pageSize is set to null by design. It will be modified after the first time loading entries
-    sortBy: 'createdAt',
-    sortDirection: SortDirection.Desc
   };
 
   constructor(private _appLocalization: AppLocalization,
@@ -39,36 +34,47 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     appEvents.event(BulkLogUploadingStartedEvent)
       .cancelOnDestroy(this)
       .delay(2000) // Component specific - need to wait due to updating the list on the server side
-      .subscribe(() => this._store.reload(true));
+      .subscribe(() => this._store.reload());
   }
 
   ngOnInit() {
-    const queryData = this._store.queryData;
-
-    if (queryData) {
-      this._filter.pageSize = queryData.pageSize;
-      this._filter.pageIndex = queryData.pageIndex - 1;
-      this._filter.sortBy = queryData.sortBy;
-      this._filter.sortDirection = queryData.sortDirection;
-    }
-
-
-    this.querySubscription = this._store.query$.subscribe(
-      query => {
-        this._filter.pageSize = query.data.pageSize;
-        this._filter.pageIndex = query.data.pageIndex - 1;
-      }
-    );
-
-    this._store.reload(false);
+    this._restoreFiltersState();
+    this._registerToFilterStoreDataChanges();
   }
 
   ngOnDestroy() {
-    if (this.querySubscription) {
-      this.querySubscription.unsubscribe();
-      this.querySubscription = null;
+  }
+
+  private _restoreFiltersState(): void {
+    this._updateComponentState(this._store.cloneFilters(
+      [
+        'pageSize',
+        'pageIndex'
+      ]
+    ));
+  }
+
+  private _updateComponentState(updates: Partial<BulkLogFilters>): void {
+
+    if (typeof updates.pageSize !== 'undefined') {
+      this._query.pageSize = updates.pageSize;
+    }
+
+    if (typeof updates.pageIndex !== 'undefined') {
+      this._query.pageIndex = updates.pageIndex;
     }
   }
+
+  private _registerToFilterStoreDataChanges(): void {
+    this._store.filtersChange$
+      .cancelOnDestroy(this)
+      .subscribe(({changes}) => {
+        this._updateComponentState(changes);
+        this._clearSelection();
+        this._browserService.scrollToTop();
+      });
+  }
+
 
   private _deleteBulkLog(id: number): void {
     this._blockerMessage = null;
@@ -78,7 +84,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
       .tag('block-shell')
       .subscribe(
         () => {
-          this._store.reload(true)
+          this._store.reload()
         },
         () => {
           this._blockerMessage = new AreaBlockerMessage({
@@ -111,7 +117,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
       .tag('block-shell')
       .subscribe(
       () => {
-        this._store.reload(true);
+        this._store.reload();
         this._clearSelection();
       },
       () => {
@@ -166,32 +172,18 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     this._browserService.download(url, fileName, type);
   }
 
-  public _removeTag(tag: any): void {
-    this._clearSelection();
-    this._store.removeFilters(tag);
-  }
-
-  public _removeAllTags(): void {
-    this._clearSelection();
-    this._store.clearAllFilters();
-  }
-
   public _onPaginationChanged(state: any): void {
-    if (state.page !== this._filter.pageIndex || state.rows !== this._filter.pageSize) {
-      this._filter.pageIndex = state.page;
-      this._filter.pageSize = state.rows;
-
-      this._clearSelection();
-      this._store.reload({
-        pageIndex: this._filter.pageIndex + 1,
-        pageSize: this._filter.pageSize
+    if (state.page !== this._query.pageIndex || state.rows !== this._query.pageSize) {
+      this._store.filter({
+        pageIndex: state.page,
+        pageSize: state.rows
       });
     }
   }
 
   public _reload(): void {
     this._clearSelection();
-    this._store.reload(true);
+    this._store.reload();
   }
 
   public _onActionSelected(event: { action: string, bulkLogItem: KalturaBulkUpload }): void {
@@ -214,7 +206,7 @@ export class BulkLogListComponent implements OnInit, OnDestroy {
     this.selectedBulkLogItems = [];
   }
 
-  public onTagsChange(event){
+  public _onTagsChange(): void {
     this.tags.updateLayout();
   }
 

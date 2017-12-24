@@ -80,7 +80,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 	}
 
 	private _updateNavigationState() {
-		const entries = this._entriesStore.entries;
+		const entries = this._entriesStore.entries.data();
 		if (entries && this._currentEntryId) {
 			const currentEntry = entries.find(entry => entry.id === this._currentEntryId);
 			const currentEntryIndex = currentEntry ? entries.indexOf(currentEntry) : -1;
@@ -135,7 +135,6 @@ export class EntryComponent implements OnInit, OnDestroy {
 								});
 								break;
 							case ActionTypes.EntrySaving:
-								this._showLoader = true;
 								break;
 							case ActionTypes.EntrySavingFailed:
 
@@ -224,7 +223,7 @@ export class EntryComponent implements OnInit, OnDestroy {
 
     public _navigateToPrevious() : void
 	{
-		const entries = this._entriesStore.entries;
+		const entries = this._entriesStore.entries.data();
 
 		if (entries && this._currentEntryId) {
 			const currentEntry = entries.find(entry => entry.id === this._currentEntryId);
@@ -239,12 +238,12 @@ export class EntryComponent implements OnInit, OnDestroy {
 
 	public _navigateToNext() : void
 	{
-		const entries = this._entriesStore.entries;
+		const entries = this._entriesStore.entries.data();
 
 		if (entries && this._currentEntryId) {
 			const currentEntry = entries.find(entry => entry.id === this._currentEntryId);
 			const currentEntryIndex =  currentEntry ? entries.indexOf(currentEntry) : -1;
-			if (currentEntryIndex >= 0 && (currentEntryIndex < entries.length -1))
+			if (currentEntryIndex >= 0 && (currentEntryIndex < entries.length - 1))
 			{
 				const nextEntry = entries[currentEntryIndex+1];
 				this._entryStore.openEntry(nextEntry.id);

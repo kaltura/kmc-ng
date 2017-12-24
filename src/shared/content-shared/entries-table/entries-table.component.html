@@ -1,7 +1,7 @@
 <div class="kEntriesTable" [class.noResults]="!_entries.length">
-  <k-area-blocker [showLoader]="(entriesStore.state$ | async)?.loading || this._deferredLoading"
+  <k-area-blocker [showLoader]="(entriesStore.entries.state$ | async)?.loading || this._deferredLoading"
                   [message]="_blockerMessage"
-                  [centerOnScreen]="true">
+                  [bodyScroll]="true">
     <p-dataTable #dataTable
                  dataKey="id"
                  scrollable="true"

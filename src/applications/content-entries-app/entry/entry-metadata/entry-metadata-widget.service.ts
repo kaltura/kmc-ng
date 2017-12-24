@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { IterableDiffers, IterableDiffer, IterableChangeRecord } from '@angular/core';
-
+import { async } from 'rxjs/scheduler/async';
 import { Observable } from 'rxjs/Observable';
 import { KalturaCategoryEntryFilter } from 'kaltura-ngx-client/api/types/KalturaCategoryEntryFilter';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
@@ -88,8 +88,10 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
 
         Observable.merge(...formsChanges)
             .cancelOnDestroy(this, this.widgetReset$)
+            .observeOn(async) // using async scheduler so the form group status/dirty mode will be synchornized
             .subscribe(
                 () => {
+
                     let isValid = true;
                     let isDirty = false;
 

@@ -20,7 +20,7 @@
       "DropFolders": "Drop Folders"
     },
     "userSettings": {
-      "changeAccount": "Change Acoount",
+      "changeAccount": "Change Account",
       "logout": "Logout"
     },
     "changeAccount": {
@@ -127,6 +127,9 @@
     },
     "changelog": {
       "header": "Change Log"
+    },
+    "pageExitVerification": {
+      "defaultMessage": "Are you sure you want to leave this page? Unsaved changes and uploading files will be lost"
     }
   },
   "applications": {
@@ -218,12 +221,17 @@
         "bulkUpload": "Bulk upload",
         "dropFolders": "Drop folders",
         "viewDetails": "View details",
-        "uploading": "uploading",
-        "syncing": "syncing",
-        "queued": "queued",
-        "completed": "completed",
-        "error": "error",
-        "upToDate": "Up to date"
+        "uploading": "{{0}} uploading",
+        "syncing": "{{0}} syncing",
+        "queued": "{{0}} queued",
+        "completed": "{{0}} completed",
+        "error": "{{0}} error",
+        "upToDate": "Up to date",
+        "loading": "Loading...",
+        "bulkErrors": {
+          "poll": "Cannot get bulk upload data. Retrying...",
+          "prepare": "Could not connect bulk upload monitor!"
+        }
       },
       "transcodingProfilesSelect": {
         "titleVideo": "Prepare Video Entry",
@@ -294,6 +302,10 @@
     },
     "content": {
       "uploadControl": {
+        "retryError": {
+          "header": "Retry upload",
+          "message": "Cannot resume upload for the requested file. Please upload the file again."
+        },
         "bulkCancel": {
           "header": "Cancel uploads",
           "message": "Are you sure you want to cancel those uploads?"
@@ -399,7 +411,7 @@
         "deleteNote": "Please note: the entry will be permanently deleted from your account."
       },
       "playlists": {
-        "playlists": "{{0}} Playlist's",
+        "playlists": "{{0}} Playlists",
         "entries": "{{0}} Entries",
         "selected": "{{0}} Selected",
         "bulkActions": "Bulk Actions",
@@ -424,6 +436,7 @@
         "confirmDeleteEntries": "Are you sure you want to delete the selected entries?"
       },
       "filters": {
+        "errorLoading": "Error loading filters",
         "activeFilters": "Active Filters:",
         "clearAll": "Clear All",
         "close": "Close",
@@ -436,16 +449,16 @@
         "after": "After",
         "before": "Before",
         "createdBetween": "Created Between",
-        "mediaType": "Media Type: {{0}}",
-        "status": "Status: {{0}}",
-        "duration": "Duration: {{0}}",
+        "mediaTypes": "Media Type: {{0}}",
+        "ingestionStatuses": "Status: {{0}}",
+        "durations": "Duration: {{0}}",
         "replacementStatuses": "Replacement Statuses: {{0}}",
-        "moderation": "Moderation: {{0}}",
-        "originalClipped": "Original & Clipped: {{0}}",
-        "scheduling": "Scheduling: {{0}}",
-        "accessControl": "Access Control: {{0}}",
-        "flavor": "Flavor: {{0}}",
-        "distribution": "Distribution: {{0}}",
+        "moderationStatuses": "Moderation: {{0}}",
+        "originalClippedEntries": "Original & Clipped: {{0}}",
+        "timeScheduling": "Scheduling: {{0}}",
+        "accessControlProfiles": "Access Control: {{0}}",
+        "flavors": "Flavor: {{0}}",
+        "distributions": "Distribution: {{0}}",
         "freeText": "Free text search",
         "metaData": "{{0}}: {{1}}",
         "uploadedItem": "Uploaded item: {{0}}",
@@ -648,7 +661,10 @@
         "moveUp": "Move Up",
         "moveDown": "Move Down",
         "duplicate": "Duplicate",
-        "removeCategoriesNone": "No categories to remove"
+        "removeCategoriesNone": "No categories to remove",
+        "createPlaylistWarning": "New playlist",
+        "createPlaylistWarningMsg": "Some of selected entries has invalid status.\nYou can continue, but invalid entries will be ignored\n{{0}}",
+        "createPlaylistErrorMsg": "All selected entries have invalid statuses.\nYou can't create new playlist with those entries"
       },
       "entryDetails": {
         "sections": {
