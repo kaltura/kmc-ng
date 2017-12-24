@@ -10,10 +10,10 @@ import {
   ViewChild
 } from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
-import {DataTable, Menu, MenuItem} from 'primeng/primeng';
+import {Menu, MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell';
+import {BrowserService} from 'app-shared/kmc-shell';
 import {CategoriesService} from '../categories.service';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 
@@ -55,7 +55,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   selectedCategoriesChange = new EventEmitter<any>();
 
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
-  private _actionsMenuCategoryId = 0;
+  private _actionsMenuCategory: KalturaCategory = null;
   private _categoriesServiceStatusSubscription: ISubscription;
 
   public _emptyMessage = '';
@@ -73,7 +73,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
     this._blockerMessage = null;
     this._emptyMessage = '';
     let loadedOnce = false; // used to set the empty message to "no results" only after search
-    this._categoriesServiceStatusSubscription = this.categoriesService.state$.subscribe(
+    this._categoriesServiceStatusSubscription = this.categoriesService.categories.state$.subscribe(
       result => {
         if (result.errorMessage) {
           this._blockerMessage = new AreaBlockerMessage({
@@ -81,7 +81,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
             buttons: [{
               label: 'Retry',
               action: () => {
-                this.categoriesService.reload(true);
+                this.categoriesService.reload();
               }
             }
             ]
@@ -99,7 +99,7 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
         }
       },
       error => {
-        console.warn('[kmcng] -> could not load entries'); // navigate to error page
+        console.warn('[kmcng] -> could not load categories'); // navigate to error page
         throw error;
       });
   }
@@ -121,16 +121,16 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
     }
   }
 
-  onActionSelected(action: string, categoryID: number) {
-    this.actionSelected.emit({'action': action, 'categoryID': categoryID});
+  onActionSelected(action: string, category: KalturaCategory) {
+    this.actionSelected.emit({'action': action, 'category': category});
   }
 
   openActionsMenu(event: any, category: KalturaCategory) {
     if (this._actionsMenu) {
       this._actionsMenu.toggle(event);
-      if (this._actionsMenuCategoryId !== category.id) {
+      if (this._actionsMenuCategory.id !== category.id) {
         this.buildMenu();
-        this._actionsMenuCategoryId = category.id;
+        this._actionsMenuCategory = category;
         this._actionsMenu.show(event);
       }
     }
@@ -140,22 +140,22 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
     this._items = [
       {
         label: this.appLocalization.get('applications.content.categories.edit'), command: (event) => {
-        this.onActionSelected('edit', this._actionsMenuCategoryId);
+        this.onActionSelected('edit', this._actionsMenuCategory);
       }
       },
       {
         label: this.appLocalization.get('applications.content.categories.delete'), command: (event) => {
-        this.onActionSelected('delete', this._actionsMenuCategoryId);
+        this.onActionSelected('delete', this._actionsMenuCategory);
       }
       },
       {
         label: this.appLocalization.get('applications.content.categories.viewEntries'), command: (event) => {
-        this.onActionSelected('viewEntries', this._actionsMenuCategoryId);
+        this.onActionSelected('viewEntries', this._actionsMenuCategory);
       }
       },
       {
         label: this.appLocalization.get('applications.content.categories.moveCategory'), command: (event) => {
-        this.onActionSelected('moveCategory', this._actionsMenuCategoryId);
+        this.onActionSelected('moveCategory', this._actionsMenuCategory);
       }
       }
     ];

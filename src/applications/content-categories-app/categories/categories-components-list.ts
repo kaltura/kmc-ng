@@ -10,10 +10,14 @@ import {CategoriesBulkChangeContentPrivacy} from 'applications/content-categorie
 import {CategoriesBulkChangeCategoryListing} from 'applications/content-categories-app/categories/bulk-actions/components/bulk-change-category-listing/bulk-change-category-listing.component';
 import {CategoriesBulkChangeContributionPolicy} from 'applications/content-categories-app/categories/bulk-actions/components/bulk-change-contribution-policy/bulk-change-contribution-policy.component';
 import {AddNewCategoryComponent} from './add-new-category/add-new-category.component';
+import {CategoriesListTagsComponent} from './categories-list/categories-list-tags.component';
+import {CategoriesRefineFiltersComponent} from './categories-refine-filters/categories-refine-filters.component';
 
 export const CategoriesComponentsList = [
     CategoriesListComponent,
     CategoriesTableComponent,
+    CategoriesListTagsComponent,
+    CategoriesRefineFiltersComponent,
     MaxCategoriesPipe,
     CategoriesBulkActionsComponent,
     PrimeTableSortDirectionPipe,

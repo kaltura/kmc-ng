@@ -1,9 +1,8 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 
 import * as moment from 'moment';
-import { ListType } from '@kaltura-ng/mc-shared/filters';
-import { EntriesFilters, EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
-import { GroupedListType } from '@kaltura-ng/mc-shared/filters';
+import {GroupedListType, ListType} from '@kaltura-ng/mc-shared/filters';
+import {EntriesFilters, EntriesStore} from 'app-shared/content-shared/entries-store/entries-store.service';
 
 export interface TagItem
 { type: string, value: any, label: string, tooltip:  {token: string, args?: any}}
@@ -159,28 +158,31 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
     }
 
     private _syncTagsOfList(filterName: keyof EntriesFilters): void {
-
         const currentValue =  <ListType>this._entriesStore.cloneFilter(filterName, []);
-        const tagsFilters = this._filterTags.filter(item => item.type === filterName);
 
-        const tagsFiltersMap = this._entriesStore.filtersUtils.toMap(tagsFilters, 'value');
-        const currentValueMap = this._entriesStore.filtersUtils.toMap(currentValue, 'value');
-        const diff = this._entriesStore.filtersUtils.getDiff(tagsFiltersMap, currentValueMap);
+        if (currentValue instanceof Array) {
+          // Make sure we actually got an array since typescript here cannot help us and we enforced type explicitly
+          const tagsFilters = this._filterTags.filter(item => item.type === filterName);
 
-        diff.deleted.forEach(item => {
+          const tagsFiltersMap = this._entriesStore.filtersUtils.toMap(tagsFilters, 'value');
+          const currentValueMap = this._entriesStore.filtersUtils.toMap(currentValue, 'value');
+          const diff = this._entriesStore.filtersUtils.getDiff(tagsFiltersMap, currentValueMap);
+
+          diff.deleted.forEach(item => {
             this._filterTags.splice(
-                this._filterTags.indexOf(item),
-                1);
-        });
+              this._filterTags.indexOf(item),
+              1);
+          });
 
-        diff.added.forEach(item => {
+          diff.added.forEach(item => {
             this._filterTags.push({
-                type: filterName,
-                value: (<any>item).value,
-                label: (<any>item).label,
-                tooltip: {token: `applications.content.filters.${filterName}`, args: {'0': (<any>item).label}}
+              type: filterName,
+              value: (<any>item).value,
+              label: (<any>item).label,
+              tooltip: {token: `applications.content.filters.${filterName}`, args: {'0': (<any>item).label}}
             });
-        });
+          });
+        }
     }
 
     private _syncTagsOfCustomMetadata(customMetadataFilters: GroupedListType): void {
