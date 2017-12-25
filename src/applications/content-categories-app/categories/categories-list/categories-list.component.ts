@@ -77,7 +77,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   ngAfterViewInit() {
-    const newCategoryData = this._categoryCreationService.getNewCategoryData();
+    const newCategoryData = this._categoryCreationService.popNewCategoryData();
     if (newCategoryData) {
       this._linkedEntries = newCategoryData.entries.map(entry => ({entryId: entry.id}));
       this.addNewCategory.open();

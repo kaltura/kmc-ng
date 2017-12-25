@@ -35,7 +35,7 @@ export class CategoryCreationService implements OnDestroy {
     }
   }
 
-  public getNewCategoryData(): CreateNewCategoryEventArgs {
+  public popNewCategoryData(): CreateNewCategoryEventArgs {
     const tempNewCategoryData = this._newCategoryData;
     this._clearNewCategoryData();
     return tempNewCategoryData;
