@@ -102,6 +102,12 @@
       "@kaltura-ng/kaltura-primeng-ui/*": [
         "../node_modules/@kaltura-ng/kaltura-primeng-ui/*"
       ],
+      "angular2-qrcode": [
+        "../node_modules/angular2-qrcode"
+      ],
+      "angular2-qrcode/*": [
+        "../node_modules/angular2-qrcode/*"
+      ],
       "@kaltura-ng/kaltura-ui": [
         "../node_modules/@kaltura-ng/kaltura-ui"
       ],
