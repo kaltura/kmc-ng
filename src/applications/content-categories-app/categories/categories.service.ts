@@ -20,7 +20,6 @@ import {KalturaInheritanceType} from "kaltura-ngx-client/api/types/KalturaInheri
 import {KalturaContributionPolicyType} from "kaltura-ngx-client/api/types/KalturaContributionPolicyType";
 import {KalturaAppearInListType} from "kaltura-ngx-client/api/types/KalturaAppearInListType";
 import {KalturaPrivacyType} from "kaltura-ngx-client/api/types/KalturaPrivacyType";
-import {KalturaMediaEntry} from "kaltura-ngx-client/api/types/KalturaMediaEntry";
 import {KalturaCategoryEntry} from "kaltura-ngx-client/api/types/KalturaCategoryEntry";
 import {CategoryEntryAddAction} from "kaltura-ngx-client/api/types/CategoryEntryAddAction";
 
@@ -55,7 +54,7 @@ export interface MoveCategoryData {
 export interface NewCategoryData {
   categoryParentId?: number;
   name: string;
-  linkedEntries?: KalturaMediaEntry[]
+  linkedEntriesIds?: string[]
 }
 
 @Injectable()
@@ -276,10 +275,10 @@ export class CategoriesService implements OnDestroy {
       new CategoryAddAction({category})
     );
 
-    if (newCategoryData.linkedEntries) {
-      newCategoryData.linkedEntries.forEach((entry) => {
+    if (newCategoryData.linkedEntriesIds && newCategoryData.linkedEntriesIds.length) {
+      newCategoryData.linkedEntriesIds.forEach((entryId) => {
         const categoryEntry = new KalturaCategoryEntry({
-          entryId: entry.id
+          entryId: entryId
         }).setDependency(['categoryId', 0, 'id']);
 
         multiRequest.requests.push(

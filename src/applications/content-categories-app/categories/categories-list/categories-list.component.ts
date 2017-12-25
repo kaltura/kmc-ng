@@ -25,6 +25,8 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
   public _categories: KalturaCategory[] = [];
   public _categoriesTotalCount: number = null;
   public _selectedCategoryToMove: KalturaCategory;
+
+  public _linkedEntries: { entryId: string}[] = [];
   private categoriesSubscription: ISubscription;
   private querySubscription: ISubscription;
   private parentPopupStateChangeSubscription$: ISubscription;
@@ -68,13 +70,16 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     this.parentPopupStateChangeSubscription$ = this.addNewCategory.state$
       .subscribe(event => {
         if (event.state === PopupWidgetStates.BeforeClose) {
-          this._categoryCreationService.clearNewCategoryData();
+          this._linkedEntries = [];
         }
       });
+
   }
 
   ngAfterViewInit() {
-    if (this._categoryCreationService.getNewCategoryData()) {
+    const newCategoryData = this._categoryCreationService.getNewCategoryData();
+    if (newCategoryData) {
+      this._linkedEntries = newCategoryData.entries.map(entry => ({entryId: entry.id}));
       this.addNewCategory.open();
     }
   }
@@ -224,12 +229,11 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
 
 
 
-  onBulkChange({reload, clearSelection}: {reload: boolean, clearSelection?: boolean}): void {
+  onBulkChange({reload}: {reload: boolean}): void {
     if (reload === true) {
       this._reload();
-    } else if (clearSelection) {
-      this._clearSelection();
     }
+    this._clearSelection();
   }
 
   onCategoryAdded({categoryId}: {categoryId: number}): void {

@@ -22,9 +22,13 @@ export class CategoryCreationService implements OnDestroy {
   public init(): void {
     if (!this._creationSubscription) {
       this._creationSubscription = this._appEvents.event(CreateNewCategoryEvent)
-        .subscribe(({ data }) => {
+        .subscribe(({data}) => {
           this._newCategoryData = data;
-          this._router.navigate([`/content/categories`]);
+          this._router.navigate([`/content/categories`])
+            .catch(() => {
+              this._clearNewCategoryData();
+              console.warn('Navigation to content/categories failed - CategoryCreationService.NewCategoryData value is ignored');
+            });
         });
     } else {
       console.warn('Service was already initialized!');
@@ -32,10 +36,12 @@ export class CategoryCreationService implements OnDestroy {
   }
 
   public getNewCategoryData(): CreateNewCategoryEventArgs {
-    return this._newCategoryData;
+    const tempNewCategoryData = this._newCategoryData;
+    this._clearNewCategoryData();
+    return tempNewCategoryData;
   }
 
-  public clearNewCategoryData(): void {
+  private _clearNewCategoryData(): void {
     this._newCategoryData = null;
   }
 }

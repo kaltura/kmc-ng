@@ -5,7 +5,6 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-wi
 import {CategoriesService} from '../categories.service';
 import {CategoryData} from 'app-shared/content-shared/categories-search.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {KalturaMediaEntry} from "kaltura-ngx-client/api/types/KalturaMediaEntry";
 
 @Component({
   selector: 'kNewCategory',
@@ -15,7 +14,7 @@ import {KalturaMediaEntry} from "kaltura-ngx-client/api/types/KalturaMediaEntry"
 export class NewCategoryComponent implements OnInit, OnDestroy {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
-  @Input() linkedEntries?: KalturaMediaEntry[];
+  @Input() linkedEntries: {entryId: string}[] = [];
   @Output() onApply = new EventEmitter<{ categoryId: number }>();
 
   public _blockerMessage: AreaBlockerMessage = null;
@@ -25,12 +24,13 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
   constructor(private _appLocalization: AppLocalization,
               private _fb: FormBuilder,
               private _categoriesService: CategoriesService) {
-  }
-
-  ngOnInit() {
     this.newCategoryForm = this._fb.group({
       name: ['', Validators.required]
     });
+  }
+
+  ngOnInit() {
+
   }
 
   ngOnDestroy() {
@@ -64,7 +64,7 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
         .addNewCategory({
           categoryParentId: categoryParent && categoryParent.id,
           name: categoryName,
-          linkedEntries: this.linkedEntries
+          linkedEntriesIds: this.linkedEntries.map(entry => entry.entryId)
         })
         .cancelOnDestroy(this)
         .tag('block-shell')
