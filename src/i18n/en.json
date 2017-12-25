@@ -336,6 +336,7 @@
         "refresh" : "Refresh",
         "deleteFiles": "Delete files",
         "confirmDelete": "Are you sure you want to permanently delete all selected files? \n {{0}}",
+        "confirmDeleteSingle": "Are you sure you want to permanently delete selected file? \n {{0}}",
         "table": {
           "fileName": "File name",
           "dropFolderName": "Dropfolder name",

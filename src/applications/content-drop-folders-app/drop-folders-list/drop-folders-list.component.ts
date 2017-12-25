@@ -166,7 +166,7 @@ export class DropFoldersListComponent implements OnInit, OnDestroy {
   public _deleteDropFolderFiles(event): void {
     this._browserService.confirm({
       header: this._appLocalization.get('applications.content.dropFolders.deleteFiles'),
-      message: this._appLocalization.get('applications.content.dropFolders.confirmDelete', {
+      message: this._appLocalization.get('applications.content.dropFolders.confirmDeleteSingle', {
         0: event.name ? event.name : event.fileName
       }),
       accept: () => this._deleteDropFiles([event.id])
