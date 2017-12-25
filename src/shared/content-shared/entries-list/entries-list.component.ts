@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
+import { CategoriesStatusMonitorService, CategoriesStatus } from '../categories-status/categories-status-monitor.service';
 
 import {
     EntriesFilters, EntriesStore,
@@ -27,6 +28,8 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
     @Output() onActionsSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
 
+    public _categoriesUpdating = false;
+
     public _query = {
         freetext: '',
         createdAfter: null,
@@ -37,8 +40,12 @@ export class EntriesListComponent implements OnInit, OnDestroy {
         sortDirection: SortDirection.Desc
     };
 
-    constructor(private _entriesStore: EntriesStore,
-                private _browserService: BrowserService) {
+    constructor(private _entriesStore: EntriesStore, private _browserService: BrowserService, private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
+        this._categoriesStatusMonitorService.$categoriesStatus
+		    .cancelOnDestroy(this)
+		    .subscribe((status: CategoriesStatus) => {
+                this._categoriesUpdating = status.update;
+            });
     }
 
     ngOnInit() {

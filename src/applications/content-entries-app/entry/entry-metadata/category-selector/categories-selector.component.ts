@@ -1,17 +1,6 @@
-import {
-  AfterViewChecked,
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
-} from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
-
+import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 import {PrimeTreeNode} from '@kaltura-ng/kaltura-primeng-ui';
 import {Subject} from 'rxjs/Subject';
 import {AutoComplete, SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
@@ -34,11 +23,13 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, Aft
   @ViewChild('autoComplete') private _autoComplete: AutoComplete;
 
   public _categoriesLoaded = false;
+  public _categoriesLocked = false;
+  public _categoriesUpdating = false;
   public _treeSelection: PrimeTreeNode[] = [];
 
   private _searchCategoriesSubscription: ISubscription;
   public _categoriesProvider = new Subject<SuggestionsProviderData>();
-    @Input() buttonLabel = '';
+  @Input() buttonLabel = '';
   @Input() value: EntryCategoryItem[] = [];
   @Output() valueChange = new EventEmitter<EntryCategoryItem[]>();
 
@@ -52,7 +43,13 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, Aft
     expendTreeSelectionNodeId: null
   };
 
-  constructor(private _categoriesPrimeService: CategoriesPrimeService, private cdRef: ChangeDetectorRef) {
+  constructor(private _categoriesPrimeService: CategoriesPrimeService, private cdRef: ChangeDetectorRef, private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
+    this._categoriesStatusMonitorService.$categoriesStatus
+	    .cancelOnDestroy(this)
+	    .subscribe((status: CategoriesStatus) => {
+          this._categoriesLocked = status.lock;
+          this._categoriesUpdating = status.update;
+        });
   }
 
 

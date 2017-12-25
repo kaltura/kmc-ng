@@ -7,6 +7,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { CategoriesService, SortDirection } from '../categories.service';
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 
 @Component({
     selector: 'kCategoriesList',
@@ -21,6 +22,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     public _selectedCategories: KalturaCategory[] = [];
     public _categories: KalturaCategory[] = [];
     public _categoriesTotalCount: number = null;
+    public _categoriesLocked;
     private categoriesSubscription: ISubscription;
     private querySubscription: ISubscription;
 
@@ -35,7 +37,14 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     constructor(private _categoriesService: CategoriesService,
         private router: Router,
         private _browserService: BrowserService,
-        private _appLocalization: AppLocalization) {
+        private _appLocalization: AppLocalization,
+        private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
+
+        this._categoriesStatusMonitorService.$categoriesStatus
+		    .cancelOnDestroy(this)
+		    .subscribe((status: CategoriesStatus) => {
+                this._categoriesLocked = status.lock;
+            });
     }
 
     ngOnInit() {

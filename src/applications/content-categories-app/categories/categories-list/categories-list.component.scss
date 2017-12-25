@@ -15,6 +15,9 @@
   display: flex;
   flex-flow: row wrap;
   margin: 0px;
+  .kSeparator{
+    height: 24px;
+  }
   .kCategoriesHolder {
     height: 100%;
     min-height: $minTableHeight;

@@ -3,6 +3,7 @@ import {MenuItem} from 'primeng/primeng';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {BrowserService} from "app-shared/kmc-shell/providers/browser.service";
+import { CategoriesStatusMonitorService, CategoriesStatus } from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 
 import {
  BulkAccessControlService,  BulkAddCategoriesService, BulkAddTagsService, BulkChangeOwnerService,  BulkDeleteService, BulkDownloadService ,
@@ -52,6 +53,8 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   public _bulkWindowHeight = 500;
   public _bulkAction: string = "";
 
+  private _categoriesLocked = false;
+
   @Input() selectedEntries: KalturaMediaEntry[];
 
   @Output() onBulkChange = new EventEmitter<{ reload: boolean }>();
@@ -68,8 +71,14 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
     private _bulkRemoveCategoriesService: BulkRemoveCategoriesService,
     private _bulkDownloadService: BulkDownloadService,
     private _bulkDeleteService: BulkDeleteService,
-    private _appEvents: AppEventsService) {
+    private _appEvents: AppEventsService,
+    private _categoriesStatusMonitorService: CategoriesStatusMonitorService) {
 
+    this._categoriesStatusMonitorService.$categoriesStatus
+	    .cancelOnDestroy(this)
+	    .subscribe((status: CategoriesStatus) => {
+          this._categoriesLocked = status.lock;
+        });
   }
 
   ngOnInit() {
@@ -120,13 +129,20 @@ export class BulkActionsComponent implements OnInit, OnDestroy {
   }
 
   openBulkActionWindow(action: string, popupWidth: number, popupHeight: number) {
-    this._bulkAction = action;
-    this._bulkWindowWidth = popupWidth;
-    this._bulkWindowHeight = popupHeight;
-    // use timeout to allow data binding of popup dimensions to update before opening the popup
-    setTimeout(() => {
-      this.bulkActionsPopup.open();
-    }, 0);
+    if (this._categoriesLocked && (action === "addToNewCategory" || action === "addToCategories")){
+      this._browserService.alert({
+        header: this._appLocalization.get('applications.content.categories.categoriesLockTitle'),
+        message: this._appLocalization.get('applications.content.categories.categoriesLockMsg')
+      });
+    }else {
+      this._bulkAction = action;
+      this._bulkWindowWidth = popupWidth;
+      this._bulkWindowHeight = popupHeight;
+      // use timeout to allow data binding of popup dimensions to update before opening the popup
+      setTimeout(() => {
+        this.bulkActionsPopup.open();
+      }, 0);
+    }
   }
 
   performBulkAction(action: string): void {

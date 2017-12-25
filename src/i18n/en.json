@@ -408,7 +408,10 @@
         "selectedCategory": "Selected: {{0}}",
         "errors" : {
           "categoryCouldNotBeDeleted" : "Category could not be deleted"
-        }
+        },
+        "categoriesLockTitle": "Categories Locked",
+        "categoriesLockMsg": "Category tree is currently updating.\nThis operation may take a few minutes.\nCategory editing options will be released when update is completed.",
+        "categoriesUpdateMsg": "Updating Categories"
       },
       "addNewCategory": {
         "newCategory": "New Category",

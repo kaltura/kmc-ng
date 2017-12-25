@@ -9,6 +9,7 @@ import { TranslateModule } from 'ng2-translate/ng2-translate';
 import { KalturaLogger, KalturaLoggerName } from '@kaltura-ng/kaltura-logger';
 import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { PreviewAndEmbedModule } from '../applications/preview-and-embed/preview-and-embed.module';
+import { CategoriesStatusMonitorService} from 'app-shared/content-shared/categories-status/categories-status-monitor.service';
 
 import {
   AppBootstrap,
@@ -175,7 +176,8 @@ export function clientConfigurationFactory() {
       provide: KalturaClientConfiguration,
       useFactory: clientConfigurationFactory
     },
-    ConfirmationService
+    ConfirmationService,
+    CategoriesStatusMonitorService
   ]
 })
 export class AppModule {

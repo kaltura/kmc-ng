@@ -1,6 +1,10 @@
 <k-area-blocker [message]="_blockerMessage" [bodyScroll]="true">
   <div class="kCategories kOverrideFAIcons">
-    <div #categoriesTableHolder class="kCategoriesHolder kContent">
+    <div class="kContent kNotification" *ngIf="_categoriesLocked">
+      <span>{{'applications.content.categories.categoriesLockMsg' | translate}}</span>
+    </div>
+    <div class="kContent kSeparator" *ngIf="_categoriesLocked"></div>
+    <div #categoriesTableHolder class="kCategoriesHolder kContent" [class.kLocked]="_categoriesLocked">
       <kSticky [stickyClass]="'kStickyClass'" stickyId="categoriesListFilters" [scrollOffset]="80" [sticksTo]="'header'">
           <div class="kCategoriesTableFilters kContent">
             <button pButton type="button" label="{{'applications.content.categories.addCategory' | translate}}" class="kButtonBranded kAddCategoryBtn"

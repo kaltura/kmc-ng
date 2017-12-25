@@ -3,8 +3,12 @@
 		<span class="kTitle">{{'applications.content.entryDetails.metadata.selectCategories' | translate}}</span>
 	</div>
 
-	<div class="kTagsContainer">
-		<span *ngIf="!_selectedCategories.length">{{'applications.content.entryDetails.metadata.catSelect' | translate}}</span>
+	<div class="kTagsContainer" [class.kLocked]="_categoriesLocked">
+		<span *ngIf="_categoriesLocked">{{'applications.content.categories.categoriesLockMsg' | translate}}</span>
+		<div *ngIf="_categoriesUpdating" class="k-spinner-background kSpinnerBkg" kTooltip="{{'applications.content.categories.categoriesUpdateMsg' | translate}}">
+			<div class="k-spinner-animation kSpinnerAnim"></div>
+		</div>
+		<span *ngIf="!_selectedCategories.length && !_categoriesLocked">{{'applications.content.entryDetails.metadata.catSelect' | translate}}</span>
 		<kTags #tags *ngIf="_selectedCategories?.length" [data]="_selectedCategories" [labelField]="'name'" [tooltipField]="'fullNamePath'" (onTagRemove)="_removeTag($event)" (onRemoveAll)="_removeAllTag()">
 			<ng-template let-item="item">
 				<div class="kTagContent" [kTooltip]="item.tooltip | kCategoryTooltip">
@@ -14,9 +18,9 @@
 			</ng-template>
 		</kTags>
 	</div>
-	<div class="kMain">
+	<div class="kMain" [class.kLocked]="_categoriesLocked">
 		<kAutoComplete #autoComplete
-					   [disabled]="!_categoriesLoaded"
+					   [disabled]="!_categoriesLoaded || _categoriesLocked"
 					   [multiple]="false"
 					   field="name"
 					   suggestionItemField="item"
@@ -38,7 +42,7 @@
 						   (onNodeChildrenLoaded)="_onTreeNodeChildrenLoaded($event)"></k-categories-tree>
 	</div>
 
-    <div class="kFooter">
+    <div class="kFooter" [class.kLocked]="_categoriesLocked">
         <button class="kButtonBranded" pButton label="{{buttonLabel}}" (click)="_apply()"></button>
     </div>
 </div>
