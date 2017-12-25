@@ -137,13 +137,6 @@
     align-items: center;
   }
 
-  .hidden {
-    visibility: hidden;
-    width: 0px;
-    height: 0px;
-    padding: 0 !important;
-  }
-
   .invalid {
     color: $kDandger;
     padding-top: 5px;

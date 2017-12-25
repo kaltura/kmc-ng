@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/primeng';
 import { UsersStore } from '../users.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
@@ -32,6 +32,11 @@ export class EditUserComponent implements OnInit, OnDestroy {
   public _rolesList: SelectItem[] = [];
   public _selectedRoleDescription = '';
   public _userForm: FormGroup;
+  public _emailField: AbstractControl;
+  public _firstNameField: AbstractControl;
+  public _lastNameField: AbstractControl;
+  public _idField: AbstractControl;
+  public _roleIdsField: AbstractControl;
   public _isNewUser = true;
   public _blockerMessage: AreaBlockerMessage = null;
   public _isBusy = false;
@@ -48,6 +53,12 @@ export class EditUserComponent implements OnInit, OnDestroy {
       id: '',
       roleIds: ''
     });
+
+    this._emailField = this._userForm.controls['email'];
+    this._firstNameField = this._userForm.controls['firstName'];
+    this._lastNameField = this._userForm.controls['lastName'];
+    this._idField = this._userForm.controls['id'];
+    this._roleIdsField = this._userForm.controls['roleIds'];
   }
 
 
@@ -191,11 +202,6 @@ export class EditUserComponent implements OnInit, OnDestroy {
       );
   }
 
-  private _markFormFieldsAsTouched(): void {
-    this._userForm.markAsUntouched();
-    this._userForm.updateValueAndValidity();
-  }
-
   private _isUserAssociated(): void {
     const { id, email } = this._userForm.value;
     const userId = id || email;
@@ -291,8 +297,6 @@ export class EditUserComponent implements OnInit, OnDestroy {
       } else {
         this._updateUser();
       }
-    } else {
-      this._markFormFieldsAsTouched();
     }
   }
 }
