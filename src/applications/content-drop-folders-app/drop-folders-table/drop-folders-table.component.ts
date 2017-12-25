@@ -26,7 +26,7 @@ export class DropFoldersTableComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
-  @Output() onSelectedDropFoldersChange = new EventEmitter<any>();
+  @Output() selectedDropFoldersChange = new EventEmitter<any>();
   @Output() navigateToEntry = new EventEmitter<string>();
   @Output() deleteDropFolderFiles = new EventEmitter<any>();
 

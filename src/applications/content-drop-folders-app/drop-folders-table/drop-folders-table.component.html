@@ -8,7 +8,7 @@
                    dataKey="id"
                    [emptyMessage]="_emptyMessage"
                    [value]="_dropFolders"
-                   (selectionChange)="onSelectedDropFoldersChange.emit($event)"
+                   (selectionChange)="selectedDropFoldersChange.emit($event)"
                    [(selection)]="selectedDropFolders"
                    kStickyHeader [sticksTo]="'dropFoldersTags'" stickyClass="stickyHeader"
                    [stickyId]="'dropFoldersTable'">
