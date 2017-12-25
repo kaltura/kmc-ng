@@ -53,7 +53,8 @@ export interface EntriesFilters {
     accessControlProfiles: ListType,
     flavors: ListType,
     distributions: ListType,
-    customMetadata: GroupedListType
+    customMetadata: GroupedListType,
+    limits: number
 }
 
 
@@ -253,7 +254,8 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             accessControlProfiles: [],
             flavors: [],
             distributions: [],
-            customMetadata: {}
+            customMetadata: {},
+            limits: 200,
         };
     }
 
@@ -277,7 +279,8 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             accessControlProfiles: new ListAdapter(),
             flavors: new ListAdapter(),
             distributions: new ListAdapter(),
-            customMetadata: new GroupedListAdapter()
+            customMetadata: new GroupedListAdapter(),
+            limits: new NumberTypeAdapter()
         };
     }
 }

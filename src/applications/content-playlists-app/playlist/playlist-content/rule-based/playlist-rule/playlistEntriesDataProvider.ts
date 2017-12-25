@@ -56,9 +56,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
       this._updateFilterWithJoinedList(data.mediaTypes, filter, 'mediaTypeIn');
       this._updateFilterWithJoinedList(data.ingestionStatuses, filter, 'statusIn');
       this._updateFilterWithJoinedList(data.durations, filter, 'durationTypeMatchOr');
-      this._updateFilterWithJoinedList(data.moderationStatuses, filter, 'moderationStatusIn');
       this._updateFilterWithJoinedList(data.replacementStatuses, filter, 'replacementStatusIn');
-      this._updateFilterWithJoinedList(data.accessControlProfiles, filter, 'accessControlIdIn');
       this._updateFilterWithJoinedList(data.flavors, filter, 'flavorParamsIdsMatchOr');
 
       // filter 'distribution'
@@ -176,6 +174,8 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
         });
 
       }
+
+      filter.limit = data.limits && data.limits > 0 && data.limits <= 200 ? data.limits : 200;
 
       // update pagination args
       if (data.pageIndex || data.pageSize) {
