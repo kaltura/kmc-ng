@@ -30,15 +30,14 @@ export class AddNewPlaylistComponent implements OnInit, AfterViewInit, OnDestroy
     this.addNewPlaylistForm = _formBuilder.group({
       name: ['', Validators.required],
       description: '',
-      playlistType: KalturaPlaylistType.staticList,
-      ruleBasedSub: false
+      playlistType: KalturaPlaylistType.staticList
     });
   }
 
   goNext() {
     if (this.addNewPlaylistForm.valid) {
-      const { name, description, playlistType: type, ruleBasedSub } = this.addNewPlaylistForm.value;
-      this._appEvents.publish(new CreateNewPlaylistEvent({ name, description, type, ruleBasedSub }))
+      const { name, description, playlistType: type } = this.addNewPlaylistForm.value;
+      this._appEvents.publish(new CreateNewPlaylistEvent({ name, description, type }))
     }
   }
 

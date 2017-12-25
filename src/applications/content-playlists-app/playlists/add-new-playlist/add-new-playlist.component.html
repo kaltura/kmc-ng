@@ -12,9 +12,6 @@
         <p-radioButton class="kRadioLeft" name="playlistType" [value]="_playlistTypes.staticList" formControlName="playlistType" label="{{'applications.content.addNewPlaylist.manualPlaylist' | translate}}"></p-radioButton>
         <p-radioButton class="kRadioRight " name="playlistType" [value]="_playlistTypes.dynamic" formControlName="playlistType" label="{{'applications.content.addNewPlaylist.ruleBasedPlaylist' | translate}}"></p-radioButton>
       </div>
-      <div class="ruleBasedSub">
-        <p-checkbox *ngIf="addNewPlaylistForm.controls['playlistType'].value !== _playlistTypes.staticList" name="ruleBasedSub" value="ruleBasedSub" formControlName="ruleBasedSub" label="{{'applications.content.addNewPlaylist.addRuleBasedSubPlaylist' | translate}}"></p-checkbox>
-      </div>
       <div class="kRow">
         <div class="kControl">
           <input formControlName="name" type="text" placeholder="{{'applications.content.addNewPlaylist.playlistName' | translate}}" pInputText #metadataNameInput />
