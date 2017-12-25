@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
+import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 
 import {
     EntriesFilters, EntriesStore,
@@ -24,7 +25,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
     @ViewChild('tags') private tags: StickyComponent;
 
-    @Output() onActionsSelected = new EventEmitter<{ action: string, entryId: string }>();
+    @Output() onActionsSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
 
     public _query = {
         freetext: '',

@@ -28,7 +28,6 @@ const localStoragePageSizeKey = 'bulklog.list.pageSize';
 export interface BulkLogFilters {
     pageSize: number,
     pageIndex: number,
-    fields: string,
     createdAt: DatesRangeType,
     uploadedItem: ListType,
     status: ListType
@@ -172,14 +171,10 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
         filter.statusIn = '0,1,2,3,4,5,6,7,8,9,10,11,12';
       }
 
-      // update desired fields of entries
-      if (data.fields) {
-        responseProfile = new KalturaDetachedResponseProfile({
-          type: KalturaResponseProfileType.includeFields,
-          fields: data.fields
-        });
-
-      }
+      responseProfile = new KalturaDetachedResponseProfile({
+        type: KalturaResponseProfileType.includeFields,
+        fields: 'id,fileName,bulkUploadType,bulkUploadObjectType,uploadedBy,uploadedByUserId,uploadedOn,numOfObjects,status,error'
+      });
 
       // update pagination args
       if (data.pageIndex || data.pageSize) {
@@ -217,7 +212,6 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
     return {
       pageSize: 50,
       pageIndex: 0,
-      fields: 'id,fileName,bulkUploadType,bulkUploadObjectType,uploadedBy,uploadedByUserId,uploadedOn,numOfObjects,status,error',
       createdAt: { fromDate: null, toDate: null },
         uploadedItem: [],
       status: []
@@ -228,7 +222,6 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
     return {
       pageSize: new NumberTypeAdapter(),
       pageIndex: new NumberTypeAdapter(),
-      fields: new StringTypeAdapter(),
       createdAt: new DatesRangeAdapter(),
         uploadedItem: new ListAdapter(),
       status: new ListAdapter()
