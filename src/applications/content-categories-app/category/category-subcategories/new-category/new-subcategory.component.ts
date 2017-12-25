@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
@@ -11,13 +11,12 @@ import {CategoriesService} from '../../../categories/categories.service';
   templateUrl: './new-subcategory.component.html',
   styleUrls: ['./new-subcategory.component.scss']
 })
-export class NewSubcategoryComponent implements OnInit {
+export class NewSubcategoryComponent implements OnInit, OnDestroy {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() categoryParentId: number;
   @Output() onApply = new EventEmitter<{ category: KalturaCategory }>();
 
-  public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public newCategoryForm: FormGroup;
 
@@ -34,7 +33,6 @@ export class NewSubcategoryComponent implements OnInit {
           {
             label: this._appLocalization.get('app.common.cancel'),
             action: () => {
-              this._isBusy = false;
               this._blockerMessage = null;
               if (this.parentPopupWidget) {
                 this.parentPopupWidget.close();
@@ -49,8 +47,11 @@ export class NewSubcategoryComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+
+  }
+
   public _apply(): void {
-    this._isBusy = true;
     this._blockerMessage = null;
     this._createNewCategory(this.categoryParentId);
   }
@@ -64,7 +65,6 @@ export class NewSubcategoryComponent implements OnInit {
           {
             label: this._appLocalization.get('app.common.cancel'),
             action: () => {
-              this._isBusy = false;
               this._blockerMessage = null;
             }
           }
@@ -72,16 +72,15 @@ export class NewSubcategoryComponent implements OnInit {
       });
     } else {
       this._categoriesService.addNewCategory({categoryParentId: categoryParentId, name: categoryName})
+        .cancelOnDestroy(this)
+        .tag('block-shell')
         .subscribe(category => {
-            this._isBusy = false;
             this.onApply.emit({category});
             if (this.parentPopupWidget) {
               this.parentPopupWidget.close();
             }
           },
           error => {
-            this._isBusy = false;
-
             this._blockerMessage = new AreaBlockerMessage(
               {
                 message: error.message,

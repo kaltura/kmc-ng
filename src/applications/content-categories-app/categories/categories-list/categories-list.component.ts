@@ -1,4 +1,4 @@
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
@@ -17,10 +17,10 @@ import {CategoriesUtilsService} from '../../categories-utils.service';
 export class CategoriesListComponent implements OnInit, OnDestroy {
   @ViewChild('addNewCategory') public addNewCategory: PopupWidgetComponent;
 
-  public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedCategories: KalturaCategory[] = [];
   public _categories: KalturaCategory[] = [];
+  public _totalCount: number;
 
   public _filter = {
     pageIndex: 0,
@@ -49,6 +49,15 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         this._filter.sortBy = query.sortBy;
         this._filter.sortDirection = query.sortDirection;
       });
+
+    this._categoriesService
+      .categories$
+      .cancelOnDestroy(this)
+      .subscribe(
+        ({items, totalCount}: { items: KalturaCategory[], totalCount: number }) => {
+          this._categories = items;
+          this._totalCount = totalCount;
+        });
 
     this._categoriesService.reload(false);
   }
@@ -110,13 +119,17 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
   }
 
   private deleteCategory(category: KalturaCategory): void {
-    this._categoriesUtilsService.confirmDelete(category).subscribe(result => {
+    this._categoriesUtilsService.confirmDelete(category)
+      .cancelOnDestroy(this)
+      .subscribe(result => {
         if (result.confirmed) {
-          this._isBusy = true;
           this._blockerMessage = null;
-          this._categoriesService.deleteCategory(category.id).subscribe(
+          this._categoriesService.deleteCategory(category.id)
+            .cancelOnDestroy(this)
+            .first()
+            .tag('block-shell')
+            .subscribe(
             () => {
-              this._isBusy = false;
               this._browserService.showGrowlMessage({
                 severity: 'success',
                 detail: this._appLocalization.get('applications.content.categories.deleted')
@@ -124,7 +137,6 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
               this._categoriesService.reload(true);
             },
             error => {
-              this._isBusy = false;
               this._browserService.alert({
                 header: this._appLocalization.get('applications.content.categories.errors.deleteError.header'),
                 message: this._appLocalization.get('applications.content.categories.errors.deleteError.message')
@@ -134,7 +146,6 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         }
       },
       error => {
-        this._isBusy = false;
         this._browserService.alert({
           header: this._appLocalization.get('applications.content.categories.errors.deleteError.header'),
           message: this._appLocalization.get('applications.content.categories.errors.deleteError.message')

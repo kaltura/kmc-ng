@@ -10,6 +10,7 @@ import {ActionTypes, CategoryService} from '../category.service';
 })
 export class CategoryDetailsComponent implements OnInit, OnDestroy {
   public _currentCategory: KalturaCategory;
+  public _parentCategoryId: number;
 
   constructor(private _categoryStore: CategoryService,
               public _widgetService: CategoryDetailsWidget) {
@@ -25,6 +26,7 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
           switch (status.action) {
             case ActionTypes.CategoryLoaded:
               this._currentCategory = this._categoryStore.category;
+              this._parentCategoryId = this._currentCategory.parentId;
               break;
             default:
               break;
@@ -40,5 +42,9 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this._widgetService.detachForm();
+  }
+
+  public _onParentClicked(event: any) {
+    this._categoryStore.openCategory(this._parentCategoryId);
   }
 }

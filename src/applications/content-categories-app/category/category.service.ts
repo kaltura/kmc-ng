@@ -1,23 +1,23 @@
-import { CategoriesService } from './../categories/categories.service';
-import { Host, Injectable, OnDestroy } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import {CategoriesService} from './../categories/categories.service';
+import {Host, Injectable, OnDestroy} from '@angular/core';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {ISubscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
-import { KalturaClient } from 'kaltura-ngx-client';
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
-import { KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
-import { CategoryGetAction } from 'kaltura-ngx-client/api/types/CategoryGetAction';
-import { CategoryUpdateAction } from 'kaltura-ngx-client/api/types/CategoryUpdateAction';
+import {KalturaClient, KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-ngx-client';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {CategoryGetAction} from 'kaltura-ngx-client/api/types/CategoryGetAction';
+import {CategoryUpdateAction} from 'kaltura-ngx-client/api/types/CategoryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { CategoryWidgetsManager } from './category-widgets-manager';
-import {  OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import {CategoryWidgetsManager} from './category-widgets-manager';
+import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verification';
 
 export enum ActionTypes {
   CategoryLoading,
@@ -201,8 +201,8 @@ export class CategoryService implements OnDestroy {
               .monitor('category store: save category')
               .tag('block-shell')
               .map(
-                response2 => {
-                  if (response2.hasErrors()) {
+                categorySavedResponse => {
+                  if (categorySavedResponse.hasErrors()) {
                     this._state.next({action: ActionTypes.CategorySavingFailed});
                   } else {
                     this._loadCategory(this.categoryId);

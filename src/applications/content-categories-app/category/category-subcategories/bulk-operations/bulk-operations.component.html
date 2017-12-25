@@ -31,9 +31,9 @@
           {{ _getTranslation('applications.content.categoryDetails.subcategories.tableHeaderDetails.total', itemsTotalCount) }}
       </span>
         <div *ngIf="selectedItems.length" class="kSelected">
-        <span class="kSelectedItemsLabel">
-          {{ _getTranslation('applications.content.categoryDetails.subcategories.tableHeaderDetails.selected', selectedItems.length) }}
-        </span>
+          <span class="kSelectedItemsLabel">
+            • {{ _getTranslation('applications.content.categoryDetails.subcategories.tableHeaderDetails.selected', selectedItems.length) }}
+          </span>
           <a class="kBulkCancel" (click)="clearSelection.emit()">
             {{'applications.content.categoryDetails.subcategories.tableHeaderDetails.cancel' | translate}}
           </a>

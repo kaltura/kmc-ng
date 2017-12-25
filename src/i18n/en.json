@@ -1032,6 +1032,7 @@
         "header": "{{0}}",
         "backToCategories": "Back to Categories",
         "headerProps": {
+          "parent": "Parent:",
           "id": "ID:",
           "subCategories": " Sub-Categories:",
           "entries": " Entries:",
@@ -1073,8 +1074,8 @@
         "subcategories": {
           "tableHeaderDetails": {
             "total": "{{0}} Sub - Categories",
-            "addSubcategory": "Add Sub - Category",
-            "remove": "Remove",
+            "addSubcategory": "Add Sub-Category",
+            "remove": "Delete",
             "selected": "{{0}} Selected",
             "cancel": "Cancel"
           },
@@ -1113,7 +1114,7 @@
       },
       "addNewCategory": {
         "newCategory": "New Category",
-        "newSubcategory": "New Subcategory",
+        "newSubcategory": "New Sub-Category",
         "selectCategoryParent": "Select the parent category under which the new category will appear",
         "cancelEdit": "Cancel Edit",
         "discard": "Discard all changes?",

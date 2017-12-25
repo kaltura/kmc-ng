@@ -159,6 +159,8 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   public deleteCategories(): void {
 
     this._categoriesUtilsService.confirmDeleteMultiple(this.selectedCategories)
+      .cancelOnDestroy(this)
+      .first()
       .subscribe(result => {
         setTimeout(() => {
           this.executeService(this._bulkDeleteService, {}, true, false);

@@ -26,7 +26,9 @@ export class CategorySubcategoriesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._widgetService.attachForm();
-    this._widgetService.subcategories$.subscribe(subcategories => {
+    this._widgetService.subcategories$
+      .cancelOnDestroy(this)
+      .subscribe(subcategories => {
       this._clearSelection();
       this._subcategories = subcategories;
       this._subcategoriesCount = subcategories.length;
