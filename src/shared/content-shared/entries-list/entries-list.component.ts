@@ -79,6 +79,20 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     this._registerToFilterStoreDataChanges();
   }
 
+  private _mapRuleFilters(rule: PlaylistRule): any {
+    const { originalFilter } = rule;
+
+    return {
+      mediaTypes: originalFilter.mediaTypeIn.split(','),
+      durations: originalFilter.durationTypeMatchOr.split(','),
+      replacementStatuses: originalFilter.replacementStatusIn.split(','),
+      createdAt: {
+        fromDate: new Date(originalFilter.createdAtGreaterThanOrEqual),
+        toDate: new Date(originalFilter.createdAtLessThanOrEqual)
+      }
+    }
+  }
+
   private _restoreFiltersState(): void {
     this._updateComponentState(this._entriesStore.cloneFilters(
       [

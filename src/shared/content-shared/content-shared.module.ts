@@ -43,6 +43,7 @@ import { EntriesListTagsComponent } from 'app-shared/content-shared/entries-list
 import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
 import { EntriesTotalDurationPipe } from 'app-shared/content-shared/pipes/entries-total-duration.pipe';
 import { SliderModule } from '@kaltura-ng/kaltura-primeng-ui/slider/slider.module';
+import { DefaultEntriesDataProvider, EntriesDataProviderToken } from 'app-shared/content-shared/entries-store/defaultEntriesDataProvider';
 
 @NgModule({
   imports: [
@@ -115,7 +116,11 @@ import { SliderModule } from '@kaltura-ng/kaltura-primeng-ui/slider/slider.modul
   providers: [
     CategoriesPrimeService,
     CategoriesStore,
-    EntriesRefineFiltersService
+    EntriesRefineFiltersService,
+    {
+      provide: EntriesDataProviderToken,
+      useClass: DefaultEntriesDataProvider
+    }
   ]
 })
 export class ContentSharedModule {

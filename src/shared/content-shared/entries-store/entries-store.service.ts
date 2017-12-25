@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -8,45 +8,30 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
-
-import { KalturaBaseEntryListResponse } from 'kaltura-ngx-client/api/types/KalturaBaseEntryListResponse';
 import { BaseEntryDeleteAction } from 'kaltura-ngx-client/api/types/BaseEntryDeleteAction';
-import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import { KalturaFilterPager } from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import { KalturaMediaEntryFilter } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilter';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
-import { KalturaMetadataSearchItem } from 'kaltura-ngx-client/api/types/KalturaMetadataSearchItem';
-import { KalturaResponseProfileType } from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
-import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
-import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
-import { BaseEntryListAction } from 'kaltura-ngx-client/api/types/BaseEntryListAction';
 
 import { KalturaClient } from 'kaltura-ngx-client';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 
 import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { KalturaLiveStreamAdminEntry } from 'kaltura-ngx-client/api/types/KalturaLiveStreamAdminEntry';
-import { KalturaLiveStreamEntry } from 'kaltura-ngx-client/api/types/KalturaLiveStreamEntry';
-import { KalturaExternalMediaEntry } from 'kaltura-ngx-client/api/types/KalturaExternalMediaEntry';
 
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import {
-    FiltersStoreBase, TypeAdaptersMapping,
-    GroupedListAdapter,
-    DatesRangeAdapter, DatesRangeType,
-    StringTypeAdapter,
-    ListAdapter, ListType,
-    NumberTypeAdapter,
-    GroupedListType
+  DatesRangeAdapter, DatesRangeType, FiltersStoreBase, GroupedListAdapter, GroupedListType, ListAdapter, ListType, NumberTypeAdapter,
+  StringTypeAdapter, TypeAdaptersMapping
 } from '@kaltura-ng/mc-shared/filters';
-import { KalturaNullableBoolean } from 'kaltura-ngx-client/api/types/KalturaNullableBoolean';
-import { KalturaContentDistributionSearchItem } from 'kaltura-ngx-client/api/types/KalturaContentDistributionSearchItem';
-import { KalturaSearchCondition } from 'kaltura-ngx-client/api/types/KalturaSearchCondition';
+import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
+import { EntriesDataProviderToken } from 'app-shared/content-shared/entries-store/defaultEntriesDataProvider';
 
 export enum SortDirection {
     Desc,
     Asc
+}
+
+export interface EntriesDataProvider {
+  executeQuery(filters: EntriesFilters, metadataProfiles): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }>;
+  queryDuringBootstrap(): boolean;
 }
 
 export interface EntriesFilters {
@@ -100,6 +85,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
     constructor(private kalturaServerClient: KalturaClient,
                 private browserService: BrowserService,
                 private metadataProfileService: MetadataProfileStore,
+                @Inject(EntriesDataProviderToken) private _dataProvider: EntriesDataProvider,
                 _logger: KalturaLogger) {
         super(_logger);
         this._prepare();
@@ -144,7 +130,10 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
                         }
 
                         this._registerToFilterStoreDataChanges();
-                        this._executeQuery();
+
+                        if (this._dataProvider.queryDuringBootstrap()) {
+                          this._executeQuery();
+                        }
                     },
                     (error) => {
                         this._entries.state.next({loading: false, errorMessage: error.message});
@@ -196,7 +185,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
         }
 
         this._entries.state.next({loading: true, errorMessage: null});
-        this._querySubscription = this.buildQueryRequest()
+        this._querySubscription = this._dataProvider.executeQuery(this._getFiltersAsReadonly(), this._metadataProfiles)
             .cancelOnDestroy(this)
             .subscribe(
                 response => {
@@ -205,7 +194,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
                     this._entries.state.next({loading: false, errorMessage: null});
 
                     this._entries.data.next({
-                        items: <any[]>response.objects,
+                        items: <any[]>response.entries,
                         totalCount: <number>response.totalCount
                     });
                 },
@@ -216,245 +205,6 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
                 });
 
 
-    }
-
-    private buildQueryRequest(): Observable<KalturaBaseEntryListResponse> {
-        try {
-
-            // create request items
-            const filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter({});
-            let responseProfile: KalturaDetachedResponseProfile = null;
-            let pagination: KalturaFilterPager = null;
-
-            const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
-            advancedSearch.type = KalturaSearchOperatorType.searchAnd;
-
-            const data: EntriesFilters = this._getFiltersAsReadonly();
-
-            // filter 'freeText'
-            if (data.freetext) {
-                filter.freeText = data.freetext;
-            }
-
-            // filter 'createdAt'
-            if (data.createdAt) {
-                if (data.createdAt.fromDate) {
-                    filter.createdAtGreaterThanOrEqual = KalturaUtils.getStartDateValue(data.createdAt.fromDate);
-                }
-
-                if (data.createdAt.toDate) {
-                    filter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(data.createdAt.toDate);
-                }
-            }
-
-            // filters of joined list
-            this._updateFilterWithJoinedList(data.mediaTypes, filter, 'mediaTypeIn');
-            this._updateFilterWithJoinedList(data.ingestionStatuses, filter, 'statusIn');
-            this._updateFilterWithJoinedList(data.durations, filter, 'durationTypeMatchOr');
-            this._updateFilterWithJoinedList(data.moderationStatuses, filter, 'moderationStatusIn');
-            this._updateFilterWithJoinedList(data.replacementStatuses, filter, 'replacementStatusIn');
-            this._updateFilterWithJoinedList(data.accessControlProfiles, filter, 'accessControlIdIn');
-            this._updateFilterWithJoinedList(data.flavors, filter, 'flavorParamsIdsMatchOr');
-
-            // filter 'distribution'
-            if (data.distributions && data.distributions.length > 0) {
-                const distributionItem = new KalturaSearchOperator({
-                    type: KalturaSearchOperatorType.searchOr
-                });
-
-                advancedSearch.items.push(distributionItem);
-
-                data.distributions.forEach(item => {
-                    // very complex way to make sure the value is number (an also bypass both typescript and tslink checks)
-                    if (isFinite(+item.value) && parseInt(item.value) == <any>item.value) { // tslint:disable-line
-                        const newItem = new KalturaContentDistributionSearchItem(
-                            {
-                                distributionProfileId: +item.value,
-                                hasEntryDistributionValidationErrors: false,
-                                noDistributionProfiles: false
-                            }
-                        );
-
-                        distributionItem.items.push(newItem)
-                    } else {
-                        this._logger.warn(`cannot convert distribution value '${item.value}' into number. ignoring value`);
-                    }
-                });
-            }
-
-            // filter 'originalClippedEntries'
-            if (data.originalClippedEntries && data.originalClippedEntries.length > 0) {
-                let originalClippedEntriesValue: KalturaNullableBoolean = null;
-
-                data.originalClippedEntries.forEach(item => {
-                    switch (item.value) {
-                        case '0':
-                            if (originalClippedEntriesValue == null) {
-                                originalClippedEntriesValue = KalturaNullableBoolean.falseValue;
-                            } else if (originalClippedEntriesValue === KalturaNullableBoolean.trueValue) {
-                                originalClippedEntriesValue = KalturaNullableBoolean.nullValue;
-                            }
-                            break;
-                        case '1':
-                            if (originalClippedEntriesValue == null) {
-                                originalClippedEntriesValue = KalturaNullableBoolean.trueValue;
-                            } else if (originalClippedEntriesValue === KalturaNullableBoolean.falseValue) {
-                                originalClippedEntriesValue = KalturaNullableBoolean.nullValue;
-                            }
-                            break;
-                    }
-                });
-
-                if (originalClippedEntriesValue !== null) {
-                    filter.isRoot = originalClippedEntriesValue;
-                }
-            }
-
-            // filter 'timeScheduling'
-            if (data.timeScheduling && data.timeScheduling.length > 0) {
-                data.timeScheduling.forEach(item => {
-                    switch (item.value) {
-                        case 'past':
-                            if (filter.endDateLessThanOrEqual === undefined || filter.endDateLessThanOrEqual < (new Date())) {
-                                filter.endDateLessThanOrEqual = (new Date());
-                            }
-                            break;
-                        case 'live':
-                            if (filter.startDateLessThanOrEqualOrNull === undefined || filter.startDateLessThanOrEqualOrNull > (new Date())) {
-                                filter.startDateLessThanOrEqualOrNull = (new Date());
-                            }
-                            if (filter.endDateGreaterThanOrEqualOrNull === undefined || filter.endDateGreaterThanOrEqualOrNull < (new Date())) {
-                                filter.endDateGreaterThanOrEqualOrNull = (new Date());
-                            }
-                            break;
-                        case 'future':
-                            if (filter.startDateGreaterThanOrEqual === undefined || filter.startDateGreaterThanOrEqual > (new Date())) {
-                                filter.startDateGreaterThanOrEqual = (new Date());
-                            }
-                            break;
-                        case 'scheduled':
-                            if (data.scheduledAt.fromDate) {
-                                if (filter.startDateGreaterThanOrEqual === undefined
-                                    || filter.startDateGreaterThanOrEqual > (KalturaUtils.getStartDateValue(data.scheduledAt.fromDate))
-                                ) {
-                                    filter.startDateGreaterThanOrEqual = (KalturaUtils.getStartDateValue(data.scheduledAt.fromDate));
-                                }
-                            }
-
-                            if (data.scheduledAt.toDate) {
-                                if (filter.endDateLessThanOrEqual === undefined
-                                    || filter.endDateLessThanOrEqual < (KalturaUtils.getEndDateValue(data.scheduledAt.toDate))
-                                ) {
-                                    filter.endDateLessThanOrEqual = (KalturaUtils.getEndDateValue(data.scheduledAt.toDate));
-                                }
-                            }
-
-                            break;
-                        default:
-                            break
-                    }
-                });
-            }
-
-            // filters of custom metadata lists
-            if (this._metadataProfiles && this._metadataProfiles.length > 0) {
-
-                this._metadataProfiles.forEach(metadataProfile => {
-                    // create advanced item for all metadata profiles regardless if the user filtered by them or not.
-                    // this is needed so freetext will include all metadata profiles while searching.
-                    const metadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem(
-                        {
-                            metadataProfileId: metadataProfile.id,
-                            type: KalturaSearchOperatorType.searchAnd,
-                            items: []
-                        }
-                    );
-                    advancedSearch.items.push(metadataItem);
-
-                    metadataProfile.lists.forEach(list => {
-                        const metadataProfileFilters = data.customMetadata[list.id];
-                        if (metadataProfileFilters && metadataProfileFilters.length > 0) {
-                            const innerMetadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem({
-                                metadataProfileId: metadataProfile.id,
-                                type: KalturaSearchOperatorType.searchOr,
-                                items: []
-                            });
-                            metadataItem.items.push(innerMetadataItem);
-
-                            metadataProfileFilters.forEach(filterItem => {
-                                const searchItem = new KalturaSearchCondition({
-                                    field: `/*[local-name()='metadata']/*[local-name()='${list.name}']`,
-                                    value: filterItem.value
-                                });
-
-                                innerMetadataItem.items.push(searchItem);
-                            });
-                        }
-                    });
-                });
-            }
-
-            // remove advanced search arg if it is empty
-            if (advancedSearch.items && advancedSearch.items.length === 0) {
-                delete filter.advancedSearch;
-            }
-
-            // handle default value for media types
-            if (!filter.mediaTypeIn) {
-                filter.mediaTypeIn = '1,2,5,6,201';
-            }
-
-            // handle default value for statuses
-            if (!filter.statusIn) {
-                filter.statusIn = '-1,-2,0,1,2,7,4';
-            }
-
-
-            // update the sort by args
-            if (data.sortBy) {
-                filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
-            }
-
-            // update desired fields of entries
-            if (data.fields) {
-                responseProfile = new KalturaDetachedResponseProfile({
-                    type: KalturaResponseProfileType.includeFields,
-                    fields: data.fields
-                });
-
-            }
-
-            // update pagination args
-            if (data.pageIndex || data.pageSize) {
-                pagination = new KalturaFilterPager(
-                    {
-                        pageSize: data.pageSize,
-                        pageIndex: data.pageIndex + 1
-                    }
-                );
-            }
-
-            // build the request
-            return <any>this.kalturaServerClient.request(
-                new BaseEntryListAction({
-                    filter,
-                    pager: pagination,
-                    responseProfile,
-                    acceptedTypes: [KalturaLiveStreamAdminEntry, KalturaLiveStreamEntry, KalturaExternalMediaEntry]
-                })
-            )
-        } catch (err) {
-            return Observable.throw(err);
-        }
-
-    }
-
-    private _updateFilterWithJoinedList(list: ListType, requestFilter: KalturaMediaEntryFilter, requestFilterProperty: keyof KalturaMediaEntryFilter): void {
-        const value = (list || []).map(item => item.value).join(',');
-
-        if (value) {
-            requestFilter[requestFilterProperty] = value;
-        }
     }
 
     public deleteEntry(entryId: string): Observable<void> {

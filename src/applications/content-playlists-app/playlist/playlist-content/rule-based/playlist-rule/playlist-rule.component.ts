@@ -3,11 +3,17 @@ import { EntriesListComponent } from 'app-shared/content-shared/entries-list/ent
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
+import { PlaylistEntriesDataProvider } from './playlistEntriesDataProvider';
+import { EntriesDataProviderToken } from 'app-shared/content-shared/entries-store/defaultEntriesDataProvider';
 
 @Component({
   selector: 'kPlaylistRule',
   templateUrl: './playlist-rule.component.html',
-  styleUrls: ['./playlist-rule.component.scss']
+  styleUrls: ['./playlist-rule.component.scss'],
+  providers: [{
+    provide: EntriesDataProviderToken,
+    useClass: PlaylistEntriesDataProvider
+  }]
 })
 export class PlaylistRuleComponent {
   @Input() rule: PlaylistRule;
