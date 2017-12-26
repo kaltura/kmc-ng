@@ -45,6 +45,4 @@ export class EntryDetailsWidget extends EntryWidget
         }
         this._landingPage = landingPage;
     }
-
-
 }

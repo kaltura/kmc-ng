@@ -10,10 +10,11 @@
       "Categories": "Categories",
       "Studio": "Studio",
       "Analytics": "Analytics",
+      "Administration": "Administration",
       "Settings": "Settings",
+      "Users": "Users",
       "Account Settings": "Account Settings",
       "Account Upgrade": "Account Upgrade",
-      "Administration": "Administration",
       "Roles": "Roles",
       "UploadControl": "Upload Control",
       "BulkUpload": "Bulk Upload",
@@ -623,7 +624,14 @@
         "moderationStatus": "Moderation Status",
         "reportsAndDetails": "Reports & Details",
         "approve": "Approve",
-        "reject": "Reject"
+        "reject": "Reject",
+        "userName": "User name",
+        "userId": "User ID",
+        "emailAddress": "Email Address",
+        "role": "Role",
+        "lastLogin": "Last Login",
+        "edit": "Edit",
+        "blockUnblock": "Block / Unblock"
       },
       "paginator": {
         "showRows": "Show rows:"
@@ -749,6 +757,11 @@
         "external": "External RSS",
         "staticList": "Manual",
         "unknown": "Unknown"
+      },
+      "userStatus": {
+        "active": "Active",
+        "blocked": "Blocked",
+        "deleted": "Deleted"
       },
       "addNewPlaylist": {
         "addNewPlaylist": "Add New Playlist",
@@ -1258,8 +1271,51 @@
           "delete": "Delete"
         },
         "errors": {
-          "roleInUse": "The role you selected cannot be deleted since it is currently assigned to existing users."
+          "loadError": "Can't load entries",
+          "roleInUse": "The role you selected cannot be deleted since it is currently assigned to existing users.",
+          "cantDeleteRole": "Can't delete role",
+          "cantDeleteAdminRole": "Can't delete Administrator role",
+          "cantDuplicateRole": "Can't duplicate role",
+          "duplicationError": "Error occurred while trying to duplicate role"
         }
+      },
+      "users": {
+        "user": "user",
+        "users": "users",
+        "moreUsers": "Need more KMC users?",
+        "clickHere": "Click here",
+        "usersUpgrade": "to upgrade your account!",
+        "you": "You",
+        "accountOwner": "Account Owner",
+        "deleteUser": "Delete User",
+        "confirmDelete": "Are you sure you want to delete the selected user? \n ({{0}})",
+        "save": "Save",
+        "editUser": "Edit User",
+        "loginEmailAddress": "Login Email address",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "publisherUserId": "Publisher User ID",
+        "userRole": "User role",
+        "addRole": "Add role",
+        "addUser": "Add User",
+        "currentStatus": "Current status:",
+        "usersInfo": "{{0}} KMC {{1}} in use, {{2}} additional available.",
+        "failedLoading": "Failed to load users data",
+        "cantPerform": "You don't have access to perform this action",
+        "successSavingUser": "Changes will take effect immediately. \nPlease instruct the user to refresh their browser.",
+        "personalDetails": "Personal Details",
+        "accountSpecificDetails": "Account Specific Details",
+        "required": "This field is required",
+        "emailFormat": "This Email format is not valid",
+        "userAlreadyExist": "{{0}} is already listed in the system and is associated with another KMC account. \nDo you want to associate this user with this account as well?",
+        "alreadyExist": "User already exist",
+        "alreadyExistError": "Login e-mail {{0}} is already listed in the system as an authorized user in your account.",
+        "userAssociatedCaption": "Associated user",
+        "userAssociated": "User with Id {{0}} already exists on the account. Do you want to enable KMC access to this user?",
+        "refresh": "Refresh",
+        "commonError": "Error happened during server request",
+        "addUserError": "Missing one of mandatory fields",
+        "invalidUserId": "Invalid user id"
       },
       "role": {
         "titleEdit": "Edit Role",

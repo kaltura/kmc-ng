@@ -1,18 +1,26 @@
 @import 'app-theme/_variables.scss';
 
-.kRolesTable {
+.kUsersTable {
   background-color: white;
-  height: auto;
+  overflow-y: hidden;
+  position: absolute;
   padding: 0px;
-  width: 100%;
-  .kRoleName {
+
+  .kFullName {
     font-weight: bold;
     color: $kGrayscale1;
   }
 
-  .kRolesTableActions {
+  .kIconOwner {
+    font-size: 25px;
+    vertical-align: sub;
+    margin-left: 12px;
+  }
+
+  .kUsersTableActions {
     width: 100%;
     text-align: center;
+
     button {
       color: grey !important;
       background-color: rgba(0, 0, 0, 0) !important;
@@ -23,10 +31,25 @@
   }
 }
 
+:host /deep/ .ui-datatable .kTableStatus {
+  padding-left: 14px;
+  width: 100px;
+}
+
+:host /deep/ .ui-datatable .kTableFullName {
+  width: 350px;
+  padding-left: 1.5em;
+}
+
+:host /deep/ .ui-datatable .kTableActions {
+  overflow: hidden;
+  width: 80px;
+}
+
 :host {
   display: flex;
   flex-flow: row wrap;
-  margin: 0px;
+  margin: 0;
   flex-direction: column;
 }
 
@@ -37,4 +60,8 @@
 :host /deep/ p-datatable .stickyHeader {
   z-index: 10;
   display: table;
+}
+
+:host /deep/ p-datatable .ui-widget-header.ui-datatable-scrollable-header {
+  border-top: none;
 }
