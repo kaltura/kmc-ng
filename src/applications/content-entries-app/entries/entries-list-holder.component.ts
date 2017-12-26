@@ -7,6 +7,8 @@ import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-st
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { ContentEntriesAppService } from '../content-entries-app.service';
+import { AppEventsService } from 'app-shared/kmc-shared';
+import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
 
 @Component({
   selector: 'kEntriesListHolder',
@@ -45,6 +47,7 @@ export class EntriesListHolderComponent {
 
   constructor(private _router: Router,
               private _browserService: BrowserService,
+              private _appEvents: AppEventsService,
               private _appLocalization: AppLocalization,
               public _entriesStore: EntriesStore,
               private _contentEntriesAppService: ContentEntriesAppService) {
@@ -53,16 +56,19 @@ export class EntriesListHolderComponent {
 
   public _onActionSelected({ action, entry }) {
     switch (action) {
+      case 'preview':
+        this._appEvents.publish(new PreviewAndEmbedEvent(entry));
+        break;
       case 'view':
         this._viewEntry(entry.id);
         break;
       case 'delete':
         this._browserService.confirm(
-          {
-            header: this._appLocalization.get('applications.content.entries.deleteEntry'),
-            message: this._appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: entry.id }),
-            accept: () => this._deleteEntry(entry.id)
-          }
+            {
+              header: this._appLocalization.get('applications.content.entries.deleteEntry'),
+              message: this._appLocalization.get('applications.content.entries.confirmDeleteSingle', { 0: entry.id }),
+              accept: () => this._deleteEntry(entry.id)
+            }
         );
         break;
       default:

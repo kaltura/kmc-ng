@@ -153,16 +153,16 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     return !(isNotReady && isPreviewCommand) && !(isNotReady && isLiveStreamFlash && isViewCommand);
   }
 
-  private _buildMenu(mediaType: KalturaMediaType = null, status: any = null): void {
+  private _buildMenu(entry: KalturaMediaEntry): void {
     this._items = this.rowActions
-      .filter(item => this._hideMenuItems(status, mediaType, item))
-      .map(action =>
-        Object.assign({}, action, {
-          command: ({ item }) => {
-            this._onActionSelected(item.commandName, this._actionsMenuEntry);
-          }
-        })
-      );
+		.filter(item => this._hideMenuItems(status, entry.mediaType, item))
+		.map(action =>
+            Object.assign({}, action, {
+              command: ({ item }) => {
+                this._onActionSelected(item.commandName, entry);
+              }
+            })
+        );
   }
 
   public _rowTrackBy(index: number, item: any): string {
@@ -174,15 +174,12 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
       this.actionsMenu.toggle(event);
       if (!this._actionsMenuEntry || this._actionsMenuEntry.id !== entry.id) {
         this._actionsMenuEntry = entry;
-        this._buildMenu(entry.mediaType, entry.status);
+        this._buildMenu(entry);
         this.actionsMenu.show(event);
       }
     }
   }
 
-  public _onActionSelected(action: string, entry: KalturaMediaEntry): void {
-    this.actionSelected.emit({ action, entry });
-  }
 
   public _allowDrilldown(mediaType: string, status: string): boolean {
     const isLiveStream = mediaType && mediaType === KalturaMediaType.liveStreamFlash.toString();
@@ -190,7 +187,11 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     return !(isLiveStream && isReady);
   }
 
-  public _onSortChanged(event): void {
+  public _onActionSelected(action: string, entry: KalturaMediaEntry): void {
+      this.actionSelected.emit({ action, entry });
+  }
+
+  public _onSortChanged(event) {
     this.sortChanged.emit(event);
   }
 

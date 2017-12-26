@@ -8,16 +8,11 @@ import { environment } from 'app-environment';
 import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 import { KalturaSourceType } from 'kaltura-ngx-client/api/types/KalturaSourceType';
 
-export interface PreviewEntryData{
-    landingPage : string;
-    iFrameSrc : string;
-}
 
 @Injectable()
 export class EntryDetailsWidget extends EntryWidget
 {
     public _landingPage : string;
-    public iframeSrc : string;
 
     constructor(
                 kalturaServerClient: KalturaClient,
@@ -40,7 +35,6 @@ export class EntryDetailsWidget extends EntryWidget
         const entry: KalturaMediaEntry = this.data;
 
 	    this._landingPage = null;
-	    this.iframeSrc = null;
 
         let landingPage = this.appAuthentication.appUser.partnerInfo.landingPage;
         if (landingPage) {
@@ -50,24 +44,6 @@ export class EntryDetailsWidget extends EntryWidget
             }
         }
         this._landingPage = landingPage;
-
-        // create preview embed code
-        const sourceType = entry.sourceType.toString();
-        const isLive = (sourceType === KalturaSourceType.liveStream.toString() ||
-        sourceType === KalturaSourceType.akamaiLive.toString() ||
-        sourceType === KalturaSourceType.akamaiUniversalLive.toString() ||
-        sourceType === KalturaSourceType.manualLiveStream.toString());
-
-        const UIConfID = environment.core.kaltura.previewUIConf;
-        const partnerID = this.appAuthentication.appUser.partnerId;
-	    const ks = this.appAuthentication.appUser.ks || "";
-
-	    let flashVars = `flashvars[closedCaptions.plugin]=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[ks]=${ks}&flashvars[EmbedPlayer.EnableMobileSkin]=true`;
-	    if (isLive){
-	        flashVars += '&flashvars[disableEntryRedirect]=true';
-        }
-
-        this.iframeSrc = `${environment.core.kaltura.cdnUrl}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${UIConfID}/partner_id/${partnerID}?iframeembed=true&${flashVars}&entry_id=${entry.id}`;
     }
 
 

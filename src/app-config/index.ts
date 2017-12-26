@@ -18,6 +18,7 @@ export const environment = {
             "privileges": "disableentitlement",
             "previewUIConf": "38524931",
             "liveAnalyticsVersion": "v2.6",
+            "securedCdnUrl": "https://cdnapisec.kaltura.com",
             "contactsalesforce": "https://www.kaltura.com/index.php/partnerservices2/contactsalesforce"
         },
         "menuConfig": [
@@ -72,7 +73,7 @@ export const environment = {
                   {
                     "routePath": "content/drop-folders",
                     "titleToken": "DropFolders",
-                    "enabled": false,
+                    "enabled": true,
                     "position": "right"
                   }
                 ]
@@ -125,7 +126,9 @@ export const environment = {
             "SIGNUP": "https://corp.kaltura.com/free-trial",
             "CONTACT_US": "https://corp.kaltura.com/company/contact-us",
             "HIGH_SPEED_UPLOAD": "http://site.kaltura.com/Upgrade_Request_High_Speed_Upload.html",
-            "BULK_UPLOAD_SAMPLES": "http://kmc.kaltura.com/content/docs/kaltura_batch_upload_falcon.zip"
+            "BULK_UPLOAD_SAMPLES": "http://kmc.kaltura.com/content/docs/kaltura_batch_upload_falcon.zip",
+            "EMBED_HELP1": "http://www.kaltura.com/content/docs/NetHelp/default.htm#!Documents/embedcodetypes.htm",
+            "EMBED_HELP2": "https://knowledge.kaltura.com/how-enforce-delivery-type-each-player-using-ui-variables"
         },
         "locales": [
             {
@@ -175,6 +178,16 @@ export const environment = {
             "bulkActionsLimit": 50
         },
         "contentModeration" : {
+          "createdAtDateRange" : "2005:2030",
+          "bulkActionsLimit": 50
+        },
+        "previewEmbed":{
+            "includeKalturaLinks": false,
+            "secureEmbed": true,
+            "includeSeoMetadata": false,
+            "embedType": "dynamic"
+        },
+        "dropFolders" : {
           "createdAtDateRange" : "2005:2030",
           "bulkActionsLimit": 50
         }

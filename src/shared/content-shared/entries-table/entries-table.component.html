@@ -41,7 +41,7 @@
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <div class="kTitle" [kTooltip]="entry[col.field]" [maxWidth]="300"
                 [class.disable]="!_allowDrilldown(entry.mediaType,entry.status)"
-                (click)="actionSelected.emit({action: 'view', entry: entry})">
+                (click)="_onActionSelected('view',entry)">
             {{entry[col.field]}}
           </div>
         </ng-template>

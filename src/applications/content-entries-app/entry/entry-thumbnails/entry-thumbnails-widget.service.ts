@@ -24,6 +24,8 @@ import { environment } from 'app-environment';
 import { PreviewMetadataChangedEvent } from '../../preview-metadata-changed-event';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { EntryWidget } from '../entry-widget';
+import { KalturaThumbParams } from 'kaltura-ngx-client/api/types/KalturaThumbParams';
+import { ThumbAssetGenerateAction } from 'kaltura-ngx-client/api/types/ThumbAssetGenerateAction';
 
 export interface ThumbnailRow {
 	id: string,
@@ -115,7 +117,7 @@ export class EntryThumbnailsWidget extends EntryWidget
 				    fileExt: thumbnail.fileExt
 			    };
 			    thumb.isDefault = thumbnail.tags.indexOf("default_thumb") > -1;
-			    thumb.url = environment.core.kaltura.cdnUrl + "/api_v3/index.php/service/thumbasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/thumbAssetId/" + thumb.id;
+			    thumb.url = "http://" + environment.core.kaltura.cdnUrl + "/api_v3/index.php/service/thumbasset/action/serve/ks/" + this._appAuthentication.appUser.ks + "/thumbAssetId/" + thumb.id;
 			    thumbs.push(thumb);
 		    }
 	    });
@@ -276,6 +278,43 @@ export class EntryThumbnailsWidget extends EntryWidget
         );
     }
   }
+
+
+	public captureThumbnail(position: number):void{
+		super._showLoader();
+		let params: KalturaThumbParams = new KalturaThumbParams();
+		params.videoOffset = position;
+		params.quality = 75;
+		params.stripProfiles = false;
+
+		this._kalturaServerClient.request(new ThumbAssetGenerateAction({entryId: this.data.id, thumbParams: params}))
+			.cancelOnDestroy(this,this.widgetReset$)
+			.monitor('capture thumb from video')
+			.subscribe(
+				() =>
+				{
+					super._hideLoader();
+					this.reloadThumbnails();
+				},
+				error =>
+				{
+					super._hideLoader();
+					this._showBlockerMessage(new AreaBlockerMessage(
+						{
+							message: 'Error capturing thumb',
+							buttons: [
+								{
+									label: 'Retry',
+									action: () => {
+										this.captureThumbnail(position);
+									}
+								}
+							]
+						}
+					), true);
+				}
+			);
+	}
 
 
     ngOnDestroy()

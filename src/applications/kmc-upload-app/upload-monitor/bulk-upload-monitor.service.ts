@@ -6,7 +6,7 @@ import { KalturaBulkUploadFilter } from 'kaltura-ngx-client/api/types/KalturaBul
 import { Observable } from 'rxjs/Observable';
 import { KalturaBulkUploadListResponse } from 'kaltura-ngx-client/api/types/KalturaBulkUploadListResponse';
 import { KmcServerPolls } from 'app-shared/kmc-shared/server-polls';
-import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events/bulk-log-uploading-started.event';
+import { BulkLogUploadingStartedEvent } from 'app-shared/kmc-shared/events';
 import { AppEventsService } from 'app-shared/kmc-shared';
 import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaDetachedResponseProfile } from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';

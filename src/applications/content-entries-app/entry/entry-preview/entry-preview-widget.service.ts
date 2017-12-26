@@ -11,7 +11,7 @@ import { EntryWidget } from '../entry-widget';
 @Injectable()
 export class EntryPreviewWidget extends EntryWidget implements OnDestroy
 {
-    public iframeSrc : string;
+    public _iframeSrc : string;
     private _urlHash: number = 0;
 
     constructor(kalturaServerClient: KalturaClient, private appAuthentication: AppAuthentication, appEvents: AppEventsService) {
@@ -24,7 +24,7 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
             {
                 if (this.data && this.data.id === entryId)
                 {
-                    this.iframeSrc = this._createUrl();
+                    this._iframeSrc = this._createUrl();
                 }
             });
     }
@@ -63,13 +63,14 @@ export class EntryPreviewWidget extends EntryWidget implements OnDestroy
             }
 
             this._urlHash = this._urlHash + 1;
+
             result = `${environment.core.kaltura.cdnUrl}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${UIConfID}/partner_id/${partnerID}?iframeembed=true&${flashVars}&entry_id=${entryId}&hash=${this._urlHash}`;
         }
 
         return result;
     }
     protected onActivate(firstTimeActivating: boolean) {
-	    this.iframeSrc = this._createUrl();
+	    this._iframeSrc = this._createUrl();
     }
 
 
