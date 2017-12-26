@@ -25,7 +25,6 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
   }
 
   public executeQuery(data: EntriesFilters, metadataProfiles): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }> {
-    console.warn('playlistEntriesDataProvider > executeQuery', data, metadataProfiles);
     try {
 
       // create request items
@@ -53,7 +52,6 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
 
       // filters of joined list
       this._updateFilterWithJoinedList(data.mediaTypes, filter, 'mediaTypeIn');
-      this._updateFilterWithJoinedList(data.ingestionStatuses, filter, 'statusIn');
       this._updateFilterWithJoinedList(data.durations, filter, 'durationTypeMatchOr');
       this._updateFilterWithJoinedList(data.replacementStatuses, filter, 'replacementStatusIn');
       this._updateFilterWithJoinedList(data.flavors, filter, 'flavorParamsIdsMatchOr');
@@ -184,6 +182,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
       }
 
       filter.statusIn = '1,2';
+      filter.typeIn = '1,7';
 
       // build the request
       return <any>this._kalturaServerClient.request(
@@ -205,7 +204,7 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
   }
 
   public queryDuringBootstrap(): boolean {
-    return false;
+    return true;
   }
 
   private _updateFilterWithJoinedList(list: ListType,

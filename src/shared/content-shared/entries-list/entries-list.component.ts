@@ -8,6 +8,7 @@ import { BrowserService } from 'app-shared/kmc-shell';
 import { KalturaPlayableEntryOrderBy } from 'kaltura-ngx-client/api/types/KalturaPlayableEntryOrderBy';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
+import { ListType } from '@kaltura-ng/mc-shared/filters/filter-types/list-type';
 
 @Component({
   selector: 'kEntriesList',
@@ -83,11 +84,17 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
   private _mapRuleFilters(rule: PlaylistRule): Partial<EntriesFilters> {
     const { originalFilter } = rule;
+    const getListTypeRuleFromFilter = (ruleItem: string): ListType => {
+      if (!ruleItem) {
+        return null;
+      }
+      return ruleItem.split(',').map(item => ({ value: item, label: item })); // TODO [kmcng] fix label
+    };
 
     return {
-      // mediaTypes: originalFilter.mediaTypeIn.split(','),
-      // durations: originalFilter.durationTypeMatchOr.split(','),
-      // replacementStatuses: originalFilter.replacementStatusIn.split(','),
+      mediaTypes: getListTypeRuleFromFilter(originalFilter.mediaTypeIn),
+      durations: getListTypeRuleFromFilter(originalFilter.durationTypeMatchOr),
+      replacementStatuses: getListTypeRuleFromFilter(originalFilter.replacementStatusIn),
       freetext: rule.originalFilter.freeText,
       createdAt: {
         fromDate: new Date(originalFilter.createdAtGreaterThanOrEqual),

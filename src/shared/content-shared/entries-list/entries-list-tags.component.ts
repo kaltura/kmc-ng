@@ -82,6 +82,7 @@ export class EntriesListTagsComponent implements OnInit, OnDestroy {
         this._updateComponentState(this._entriesStore.cloneFilters(
             [
                 'freetext',
+                'createdAt',
                 'customMetadata',
                 ...listTypes
             ]
