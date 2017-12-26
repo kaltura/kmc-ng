@@ -32,6 +32,8 @@ export class EntriesListComponent implements OnInit, OnDestroy {
       this._orderBy = value.orderBy;
 
       this._entriesStore.filter(this._mapRuleFilters(value));
+    } else {
+      this._entriesStore.resetFilters();
     }
   }
 
@@ -84,7 +86,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
   private _mapRuleFilters(rule: PlaylistRule): Partial<EntriesFilters> {
     const { originalFilter } = rule;
-    const getListTypeRuleFromFilter = (ruleItem: string): ListType => {
+    const getListTypeFilterFromRule = (ruleItem: string): ListType => {
       if (!ruleItem) {
         return null;
       }
@@ -92,9 +94,11 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     };
 
     return {
-      mediaTypes: getListTypeRuleFromFilter(originalFilter.mediaTypeIn),
-      durations: getListTypeRuleFromFilter(originalFilter.durationTypeMatchOr),
-      replacementStatuses: getListTypeRuleFromFilter(originalFilter.replacementStatusIn),
+      mediaTypes: getListTypeFilterFromRule(originalFilter.mediaTypeIn),
+      durations: getListTypeFilterFromRule(originalFilter.durationTypeMatchOr),
+      replacementStatuses: getListTypeFilterFromRule(originalFilter.replacementStatusIn),
+      flavors: getListTypeFilterFromRule(originalFilter.flavorParamsIdsMatchOr),
+      limits: rule.limit,
       freetext: rule.originalFilter.freeText,
       createdAt: {
         fromDate: new Date(originalFilter.createdAtGreaterThanOrEqual),
@@ -195,6 +199,10 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     const sortBy = this._orderBy.toString().substring(1);
 
     this._entriesStore.filter({ sortBy });
+  }
+
+  public _applyResultsLimit(): void {
+    this._entriesStore.filter({ limits: this._resultsLimit });
   }
 }
 
