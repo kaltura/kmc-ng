@@ -1265,7 +1265,8 @@
         "userAssociated": "User with Id {{0}} already exists on the account. Do you want to enable KMC access to this user?",
         "refresh": "Refresh",
         "commonError": "Error happened during server request",
-        "addUserError": "Missing one of mandatory fields"
+        "addUserError": "Missing one of mandatory fields",
+        "invalidUserId": "Invalid user id"
       },
       "role": {
         "titleEdit": "Edit Role",

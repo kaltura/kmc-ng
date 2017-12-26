@@ -225,17 +225,16 @@ export class UsersStore implements OnDestroy {
       });
   }
 
-  public updateUser(userForm: FormGroup): Observable<void> {
+  public updateUser(userForm: FormGroup, userId: string): Observable<void> {
     const { roleIds, id, email } = userForm.getRawValue();
-    const userId = id || email;
 
-    if (!userId) {
-      return Observable.throw(new Error('Invalid user id'));
+    if (!id && !email || !userId) {
+      return Observable.throw(new Error(this._appLocalization.get('applications.administration.users.invalidUserId')));
     }
 
     const user = new KalturaUser({
       roleIds: roleIds ? roleIds : this._usersDataValue.roles.items[0].id,
-      id: userId
+      id: id || email
     });
     return this._kalturaServerClient
       .request(new UserUpdateAction({ userId, user }))

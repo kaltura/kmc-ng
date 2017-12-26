@@ -159,7 +159,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this._usersStore.updateUser(this._userForm)
+    this._usersStore.updateUser(this._userForm, this.user.id)
       .tag('block-shell')
       .cancelOnDestroy(this)
       .subscribe(
