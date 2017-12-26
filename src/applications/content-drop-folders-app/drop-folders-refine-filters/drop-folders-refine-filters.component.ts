@@ -2,45 +2,40 @@ import { Component, Input, OnDestroy, OnInit, ViewChild, ViewChildren } from '@a
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
-
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-
-import { BulkLogRefineFiltersProviderService } from './bulk-log-refine-filters-provider.service';
+import { DropFoldersRefineFiltersProviderService, RefineList } from './drop-folders-refine-filters-provider.service';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { BulkLogFilters, BulkLogStoreService } from '../bulk-log-store/bulk-log-store.service';
 import { ScrollToTopContainerComponent } from '@kaltura-ng/kaltura-ui/components/scroll-to-top-container.component';
 import { RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
-import { RefineList } from './bulk-log-refine-filters-provider.service';
+import { DropFoldersFilters, DropFoldersStoreService } from '../drop-folders-store/drop-folders-store.service';
 
 
-const listOfFilterNames: (keyof BulkLogFilters)[] = [
-    'createdAt',
-    'uploadedItem',
-    'status'
+const listOfFilterNames: (keyof DropFoldersFilters)[] = [
+  'createdAt',
+  'status'
 ];
 
-export interface PrimeListItem
-{
-    label: string,
-    value: string,
-    parent: PrimeListItem,
-    listName: string,
-    children: PrimeListItem[]
+export interface PrimeListItem {
+  label: string,
+  value: string,
+  parent: PrimeListItem,
+  listName: string,
+  children: PrimeListItem[]
 }
 
 export interface PrimeList {
-    items: PrimeListItem[];
-    selections: PrimeListItem[];
+  items: PrimeListItem[];
+  selections: PrimeListItem[];
 }
 
 
 @Component({
-  selector: 'k-bulk-log-refine-filters',
-  templateUrl: './bulk-log-refine-filters.component.html',
-  styleUrls: ['./bulk-log-refine-filters.component.scss'],
-  providers: [BulkLogRefineFiltersProviderService]
+  selector: 'k-drop-folders-refine-filters',
+  templateUrl: './drop-folders-refine-filters.component.html',
+  styleUrls: ['./drop-folders-refine-filters.component.scss'],
+  providers: [DropFoldersRefineFiltersProviderService]
 })
-export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
+export class DropFoldersRefineFiltersComponent implements OnInit, OnDestroy {
   @Input() parentPopupWidget: PopupWidgetComponent;
   @ViewChild(ScrollToTopContainerComponent) _treeContainer: ScrollToTopContainerComponent;
   @ViewChildren(RefinePrimeTree) public _primeTreesActions: RefinePrimeTree[];
@@ -52,13 +47,13 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
 
   public _showLoader = false;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _uploadedAfter: Date;
-  public _uploadedBefore: Date;
+  public _createdAfter: Date;
+  public _createdBefore: Date;
   public _createdAtFilterError: string = null;
   public _createdAtDateRange: string = environment.modules.contentEntries.createdAtDateRange;
 
-  constructor(private _bulkLogRefineFilters: BulkLogRefineFiltersProviderService,
-              private _bulkLogStore: BulkLogStoreService,
+  constructor(private _dropFoldersRefineFilters: DropFoldersRefineFiltersProviderService,
+              private _dropFoldersStore: DropFoldersStoreService,
               private _appLocalization: AppLocalization) {
   }
 
@@ -71,72 +66,65 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
   }
 
   private _restoreFiltersState(): void {
-    this._updateComponentState(this._bulkLogStore.cloneFilters(
-      listOfFilterNames
-    ));
+    this._updateComponentState(this._dropFoldersStore.cloneFilters(listOfFilterNames));
     this._fixPrimeTreePropagation(); // update root items state
   }
 
-  private _updateComponentState(updates: Partial<BulkLogFilters>): void {
-      if (typeof updates.createdAt !== 'undefined') {
-          this._uploadedAfter = updates.createdAt.fromDate || null;
-          this._uploadedBefore = updates.createdAt.toDate || null;
-      }
+  private _updateComponentState(updates: Partial<DropFoldersFilters>): void {
+    if (typeof updates.createdAt !== 'undefined') {
+      this._createdAfter = updates.createdAt.fromDate || null;
+      this._createdBefore = updates.createdAt.toDate || null;
+    }
 
-      let updatedPrimeTreeSelections = false;
-      Object.keys(this._primeListsMap).forEach(listName => {
-          const listData = this._primeListsMap[listName];
-          const listFilter: { value: string, label: string }[] = updates[listName];
+    let updatedPrimeTreeSelections = false;
+    Object.keys(this._primeListsMap).forEach(listName => {
+      const listData = this._primeListsMap[listName];
+      const listFilter: { value: string, label: string }[] = updates[listName];
 
-          if (typeof listFilter !== 'undefined') {
-              const listSelectionsMap = this._bulkLogStore.filtersUtils.toMap(listData.selections, 'value');
-              const listFilterMap = this._bulkLogStore.filtersUtils.toMap(listFilter, 'value');
-              const diff = this._bulkLogStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap);
+      if (typeof listFilter !== 'undefined') {
+        const listSelectionsMap = this._dropFoldersStore.filtersUtils.toMap(listData.selections, 'value');
+        const listFilterMap = this._dropFoldersStore.filtersUtils.toMap(listFilter, 'value');
+        const diff = this._dropFoldersStore.filtersUtils.getDiff(listSelectionsMap, listFilterMap);
 
-              diff.added.forEach(addedItem => {
-                  const listItems = listData.items.length > 0 ? listData.items[0].children : [];
-                  const matchingItem = listItems.find(item => item.value === (<any>addedItem).value);
-                  if (!matchingItem) {
-                      console.warn(`[bulk-log-refine-filters]: failed to sync filter for '${listName}'`);
-                  } else {
-                      updatedPrimeTreeSelections = true;
-                      listData.selections.push(matchingItem);
-                  }
-              });
-
-              diff.deleted.forEach(removedItem => {
-
-                  if (removedItem.value !== null && typeof removedItem.value !== 'undefined') {
-                      // ignore root items (they are managed by the component tree)
-                      listData.selections.splice(
-                          listData.selections.indexOf(removedItem),
-                          1
-                      );
-                      updatedPrimeTreeSelections = true;
-                  }
-              });
+        diff.added.forEach(addedItem => {
+          const listItems = listData.items.length > 0 ? listData.items[0].children : [];
+          const matchingItem = listItems.find(item => item.value === (<any>addedItem).value);
+          if (!matchingItem) {
+            console.warn(`[drop-folders-refine-filters]: failed to sync filter for '${listName}'`);
+          } else {
+            updatedPrimeTreeSelections = true;
+            listData.selections.push(matchingItem);
           }
-      });
+        });
 
-      if (updatedPrimeTreeSelections) {
-          this._fixPrimeTreePropagation();
+        diff.deleted.forEach(removedItem => {
+
+          if (removedItem.value !== null && typeof removedItem.value !== 'undefined') {
+            // ignore root items (they are managed by the component tree)
+            listData.selections.splice(listData.selections.indexOf(removedItem), 1);
+            updatedPrimeTreeSelections = true;
+          }
+        });
       }
+    });
+
+    if (updatedPrimeTreeSelections) {
+      this._fixPrimeTreePropagation();
+    }
   }
 
 
   private _registerToFilterStoreDataChanges(): void {
-    this._bulkLogStore.filtersChange$
+    this._dropFoldersStore.filtersChange$
       .cancelOnDestroy(this)
-      .subscribe(
-        ({ changes }) => {
-          this._updateComponentState(changes);
-        }
-      );
+      .subscribe(({ changes }) => {
+        this._updateComponentState(changes);
+      });
   }
 
   private _prepare(): void {
     this._showLoader = true;
-    this._bulkLogRefineFilters.getFilters()
+    this._dropFoldersRefineFilters.getFilters()
       .cancelOnDestroy(this)
       .first() // only handle it once, no need to handle changes over time
       .subscribe(
@@ -172,37 +160,37 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
   }
 
   private _buildComponentLists(lists: RefineList[]): void {
-      this._primeListsMap = {};
-      this._primeLists = [];
+    this._primeListsMap = {};
+    this._primeLists = [];
 
-      // create root nodes
+    // create root nodes
 
-      lists.forEach(list => {
-          if (list.items.length > 0) {
-              const primeList = {items: [], selections: []};
-              this._primeListsMap[list.name] = primeList;
-              this._primeLists.push(primeList);
-              const listRootNode: PrimeListItem = {
-                  label: list.label,
-                  value: null,
-                  listName: list.name,
-                  parent: null,
-                  children: []
-              };
+    lists.forEach(list => {
+      if (list.items.length > 0) {
+        const primeList = { items: [], selections: [] };
+        this._primeListsMap[list.name] = primeList;
+        this._primeLists.push(primeList);
+        const listRootNode: PrimeListItem = {
+          label: list.label,
+          value: null,
+          listName: list.name,
+          parent: null,
+          children: []
+        };
 
-              list.items.forEach(item => {
-                  listRootNode.children.push({
-                      label: item.label,
-                      value: item.value,
-                      children: [],
-                      listName: <any>list.name,
-                      parent: listRootNode
-                  })
-              });
+        list.items.forEach(item => {
+          listRootNode.children.push({
+            label: item.label,
+            value: item.value,
+            children: [],
+            listName: <any>list.name,
+            parent: listRootNode
+          })
+        });
 
-              primeList.items.push(listRootNode);
-          }
-      });
+        primeList.items.push(listRootNode);
+      }
+    });
   }
 
 
@@ -213,7 +201,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
    */
   public _clearCreatedComponents(): void {
     this._createdAtFilterError = '';
-    this._bulkLogStore.filter({
+    this._dropFoldersStore.filter({
       createdAt: {
         fromDate: null,
         toDate: null
@@ -227,14 +215,14 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
    * Not part of the API, don't use it from outside this component
    */
   public _clearAllComponents(): void {
-    this._bulkLogStore.resetFilters(listOfFilterNames);
+    this._dropFoldersStore.resetFilters(listOfFilterNames);
   }
 
   public _onCreatedChanged(): void {
-    const updateResult = this._bulkLogStore.filter({
+    const updateResult = this._dropFoldersStore.filter({
       createdAt: {
-        fromDate: this._uploadedAfter,
-        toDate: this._uploadedBefore
+        fromDate: this._createdAfter,
+        toDate: this._createdBefore
       }
     });
 
@@ -242,9 +230,9 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
       this._createdAtFilterError = this._appLocalization.get('applications.content.entryDetails.errors.schedulingError');
 
       setTimeout(() => {
-        const createdAt = this._bulkLogStore.cloneFilter('createdAt', null);
-        this._uploadedAfter = createdAt ? createdAt.fromDate : null;
-        this._uploadedBefore = createdAt ? createdAt.toDate : null;
+        const createdAt = this._dropFoldersStore.cloneFilter('createdAt', null);
+        this._createdAfter = createdAt ? createdAt.fromDate : null;
+        this._createdBefore = createdAt ? createdAt.toDate : null;
 
       }, 0);
     } else {
@@ -262,7 +250,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
         let newFilterValue;
         const newFilterName = node.listName;
 
-        newFilterValue = newFilterItems = this._bulkLogStore.cloneFilter(<any>node.listName, []);
+        newFilterValue = newFilterItems = this._dropFoldersStore.cloneFilter(<any>node.listName, []);
 
         const selectedNodes = node.children && node.children.length ? [node, ...node.children] : [node];
 
@@ -276,7 +264,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
               newFilterItems.push({ value: selectedNode.value + '', label: selectedNode.label });
             }
           });
-        this._bulkLogStore.filter({ [newFilterName]: newFilterValue });
+        this._dropFoldersStore.filter({ [newFilterName]: newFilterValue });
       }
     }
   }
@@ -292,7 +280,7 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
         let newFilterValue;
         const newFilterName = node.listName;
 
-        newFilterValue = newFilterItems = this._bulkLogStore.cloneFilter(<any>node.listName, []);
+        newFilterValue = newFilterItems = this._dropFoldersStore.cloneFilter(<any>node.listName, []);
 
         const selectedNodes = node.children && node.children.length ? [node, ...node.children] : [node];
 
@@ -308,12 +296,13 @@ export class BulkLogRefineFiltersComponent implements OnInit, OnDestroy {
             }
           });
 
-        this._bulkLogStore.filter({ [newFilterName]: newFilterValue });
+        this._dropFoldersStore.filter({ [newFilterName]: newFilterValue });
       }
     }
   }
 
-    
+
+
   /**
    * Invoke a request to the popup widget container to close the popup widget.
    *
