@@ -19,7 +19,6 @@ import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verification';
 import {AppEventsService} from 'app-shared/kmc-shared';
-import {ReloadCategoriesListOnNavigateOutEvent} from 'app-shared/kmc-shared/events/reload-categories-list-on-navigation-out.event';
 
 export enum ActionTypes {
 	CategoryLoading,
@@ -52,7 +51,6 @@ export class CategoryService implements OnDestroy {
 		return this._categoryIsDirty;
 	}
 
-	private _reloadCategoriesOnLeave = false;
 	private _category: BehaviorSubject<KalturaCategory> = new BehaviorSubject<KalturaCategory>(null);
 	public category$ = this._category.asObservable();
 	private _categoryId: number;
@@ -80,13 +78,6 @@ export class CategoryService implements OnDestroy {
 
 		this._onSectionsStateChanges();
 		this._onRouterEvents();
-
-    // hard reload the categories upon navigating back from category
-    appEvents.event(ReloadCategoriesListOnNavigateOutEvent)
-      .cancelOnDestroy(this)
-      .subscribe(() => {
-          this._reloadCategoriesOnLeave = true;
-      });
 	}
 
 	private _onSectionsStateChanges() {
@@ -121,10 +112,6 @@ export class CategoryService implements OnDestroy {
 		this._category.complete();
 
 		this._pageExitVerificationService.remove(this._pageExitVerificationToken);
-
-		if (this._reloadCategoriesOnLeave) {
-			this._categoriesStore.reload(true);
-		}
 	}
 
 	private _mapSections(): void {

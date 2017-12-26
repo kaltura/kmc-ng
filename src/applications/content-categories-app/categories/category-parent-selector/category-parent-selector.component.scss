@@ -1,7 +1,7 @@
 @import "app-theme/_variables.scss";
 
 .kNoParentOption {
-  padding-bottom: 8px;
+  padding-bottom: 10px;
   display: block;
 }
 
@@ -11,17 +11,16 @@
   height: 311px;
   padding: 8px;
   box-sizing: border-box;
-
-  .kSelectedCategoryTooltip {
-    display: inline-block;
-    font-size: 15px;
-    color: $kGrayscale3;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding: 8px 0 5px 0px;
-    width: 510px;
-  }
+}
+.kSelectedCategoryTooltip {
+  display: inline-block;
+  font-size: 15px;
+  color: $kGrayscale3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 10px 0 5px 0px;
+  width: 520px;
 }
 
 

@@ -8,7 +8,6 @@ import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {AppEventsService} from 'app-shared/kmc-shared';
-import {ReloadCategoriesListOnNavigateOutEvent} from 'app-shared/kmc-shared/events/reload-categories-list-on-navigation-out.event';
 import {CategoryCreationService} from 'app-shared/kmc-shared/category-creation';
 
 @Component({
@@ -243,7 +242,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
       // use a flag so the categories will be refreshed upon clicking 'back' from the category page
       this.router.navigate(['/content/categories/category', categoryId])
         .then((response: boolean) => {
-          this._appEvents.publish(new ReloadCategoriesListOnNavigateOutEvent());
+          this._categoriesService.reload(true);
         });
     }
   }
