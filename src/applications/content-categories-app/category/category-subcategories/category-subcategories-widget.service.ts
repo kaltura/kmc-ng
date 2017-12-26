@@ -60,7 +60,7 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
   private _loadSubcategories(): Observable<void> {
     return this._getSubcategories(this.data)
       .cancelOnDestroy(this, this.widgetReset$)
-      .monitor('get flavors')
+      .monitor('load Sub-Categories')
       .map(
         response => {
           this._subcategories.next(response.objects || []);
