@@ -239,11 +239,9 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     if (!categoryId) {
       console.log('[CategoriesListComponent.onCategoryAdded] invalid parameters')
     } else {
-      // use a flag so the categories will be refreshed upon clicking 'back' from the category page
-      this.router.navigate(['/content/categories/category', categoryId])
-        .then((response: boolean) => {
-          this._categoriesService.reload(true);
-        });
+        this._categoriesService.reload(true);
+        // use a flag so the categories will be refreshed upon clicking 'back' from the category page
+        this.router.navigate(['/content/categories/category', categoryId]);
     }
   }
 }
