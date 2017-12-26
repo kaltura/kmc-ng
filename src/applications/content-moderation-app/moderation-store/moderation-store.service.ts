@@ -11,8 +11,6 @@ import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-loc
 
 @Injectable()
 export class ModerationStore implements OnDestroy {
-  public sortBy = 'createdAt';
-
   constructor(private _kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization) {
   }
 
