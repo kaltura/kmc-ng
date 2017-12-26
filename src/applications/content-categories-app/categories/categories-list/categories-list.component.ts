@@ -126,7 +126,6 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
           this._blockerMessage = null;
           this._categoriesService.deleteCategory(category.id)
             .cancelOnDestroy(this)
-            .first()
             .tag('block-shell')
             .subscribe(
             () => {

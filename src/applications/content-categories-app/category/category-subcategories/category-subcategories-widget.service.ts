@@ -34,65 +34,42 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
     super(CategoryWidgetKeys.SubCategories);
   }
 
-  protected onActivate(firstTimeActivating: boolean): Observable<{ failed: boolean }> {
-    return this._fetchSubcategories('activation', true);
+  protected onActivate(firstTimeActivating: boolean) {
 
+
+    super._showLoader();
+
+    return this._loadSubcategories()
+      .cancelOnDestroy(this, this.widgetReset$)
+      .map(() => {
+        super._hideLoader();
+        return {failed: false};
+      })
+      .catch((error, caught) => {
+        super._hideLoader();
+        super._showActivationError();
+        return Observable.of({failed: true, error});
+      });
   }
 
   protected onReset() {
+    this._subcategories.next([]);
   }
 
-  public _fetchSubcategories(origin: 'activation' | 'reload', reset: boolean = true, showLoader: boolean = true): Observable<{ failed: boolean, error?: Error }> {
-    return Observable.create(observer => {
-      if (showLoader) {
-        super._showLoader();
-      }
-      if (reset) {
-        this._subcategories.next([]);
-        this._subcategoriesMarkedForDelete = [];
-      }
 
-      let requestSubscription = this._getSubcategories(this.data)
-        .monitor('get category subcategories')
-        .cancelOnDestroy(this, this.widgetReset$)
-        .subscribe(
-          response => {
-            super._hideLoader();
-            this._subcategories.next(response.objects || []);
-            this._subcategoriesMarkedForDelete = [];
-            observer.next({failed: false});
-            observer.complete();
-          }, error => {
-            this._subcategories.next([]);
-            super._hideLoader();
-            if (origin === 'activation') {
-              super._showActivationError();
-            } else {
-              this._showBlockerMessage(new AreaBlockerMessage(
-                {
-                  message: this._appLocalization.get('applications.content.entryDetails.errors.flavorsLoadError'),
-                  buttons: [
-                    {
-                      label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
-                      action: () => {
-                        this.refresh(reset);
-                      }
-                    }
-                  ]
-                }
-              ), true);
-            }
-            observer.error({failed: true, error});
-          }
-        );
-      return () => {
-        if (requestSubscription) {
-          requestSubscription.unsubscribe();
-          requestSubscription = null;
+  private _loadSubcategories(): Observable<void> {
+    return this._getSubcategories(this.data)
+      .cancelOnDestroy(this, this.widgetReset$)
+      .monitor('get flavors')
+      .map(
+        response => {
+          this._subcategories.next(response.objects || []);
+          this._subcategoriesMarkedForDelete = [];
+          return undefined;
         }
-      }
-    });
+      );
   }
+
 
   private _getSubcategories(parentCategory: KalturaCategory): Observable<KalturaCategoryListResponse> {
     const subcategoriesLimit: number = environment.categoriesShared.SUB_CATEGORIES_LIMIT || 50;
@@ -247,12 +224,32 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
   }
 
 
-  public refresh(reset = false, showLoader = true) {
-    this._fetchSubcategories('reload', reset, showLoader)
+  public refresh() {
+    super._showLoader();
+
+    this._loadSubcategories()
       .cancelOnDestroy(this, this.widgetReset$)
       .subscribe(() => {
-        // reload flavors on refresh
-      });
+          super._hideLoader();
+        },
+        (error) => {
+          super._hideLoader();
+
+          this._showBlockerMessage(new AreaBlockerMessage(
+            {
+              message:
+                this._appLocalization.get('applications.content.categoryDetails.subcategories.errors.applications.content.categoryDetails.subcategories.errors.subcategoriesLoadError'),
+              buttons: [
+                {
+                  label: this._appLocalization.get('applications.content.entryDetails.errors.retry'),
+                  action: () => {
+                    this.refresh();
+                  }
+                }
+              ]
+            }
+          ), true);
+        });
   }
 
   ngOnDestroy() {
