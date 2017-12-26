@@ -23,7 +23,7 @@ import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters';
 import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters';
 
-const localStoarePageSizeKey = 'bulklog.list.pageSize';
+const localStoragePageSizeKey = 'bulklog.list.pageSize';
 
 export interface BulkLogFilters {
     pageSize: number,
@@ -53,8 +53,8 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
     };
 
 
-  constructor(private kalturaServerClient: KalturaClient,
-              private browserService: BrowserService,
+  constructor(private _kalturaServerClient: KalturaClient,
+              private _browserService: BrowserService,
               _logger: KalturaLogger) {
     super(_logger);
     this._prepare();
@@ -68,8 +68,8 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
   private _prepare(): void {
     if (!this._isReady) {
       this._isReady = true;
-
-        const defaultPageSize = this.browserService.getFromLocalStorage(localStoarePageSizeKey);
+      
+      const defaultPageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey);
         if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
             this.filter({
                 pageSize: defaultPageSize
@@ -107,7 +107,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
 
     const pageSize = this.cloneFilter('pageSize', null);
     if (pageSize) {
-      this.browserService.setInLocalStorage(localStoarePageSizeKey, pageSize);
+      this._browserService.setInLocalStorage(localStoragePageSizeKey, pageSize);
     }
 
     this._bulkLog.state.next({ loading: true, errorMessage: null });
@@ -187,7 +187,7 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
       }
 
       // build the request
-      return <any>this.kalturaServerClient.request(
+      return <any>this._kalturaServerClient.request(
         new BulkListAction({
           bulkUploadFilter: filter,
           pager: pagination,
@@ -241,11 +241,11 @@ export class BulkLogStoreService extends FiltersStoreBase<BulkLogFilters> implem
   }
 
   public deleteBulkLog(id: number): Observable<KalturaBulkUpload> {
-    return this.kalturaServerClient.request(new BulkUploadAbortAction({ id }));
+    return this._kalturaServerClient.request(new BulkUploadAbortAction({ id }));
   }
 
   public deleteBulkLogs(files: Array<KalturaBulkUpload>): Observable<KalturaMultiResponse> {
-    return this.kalturaServerClient.multiRequest(files.map(({ id }) => new BulkUploadAbortAction({ id })));
+    return this._kalturaServerClient.multiRequest(files.map(({ id }) => new BulkUploadAbortAction({ id })));
   }
 }
 

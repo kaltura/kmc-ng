@@ -36,8 +36,13 @@
                            [layout]="_bulkUploadLayout"
                            (requestToRecover)="_bulkTryReconnect()"></kUploadMonitorSection>
     <kUploadMonitorSection type="dropFolder"
+                           detailsLink="/content/drop-folders"
                            [title]="'applications.upload.uploadMonitor.dropFolders' | translate"
                            [uploadMonitorPopup]="uploadmonitor"
-                           [layout]="'totals'"></kUploadMonitorSection>
+                           [uploading]="_dropFolders.uploading"
+                           [queued]="_dropFolders.queued"
+                           [completed]="_dropFolders.completed"
+                           [errors]="_dropFolders.errors"
+                           [layout]="_dropFoldersLayout"></kUploadMonitorSection>
   </ng-template>
 </kPopupWidget>
