@@ -4,12 +4,20 @@ import { RuleBasedContentWidget } from './rule-based-content-widget.service';
 import { EntriesStore } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
+import { PlaylistEntriesDataProvider } from './playlist-rule/playlistEntriesDataProvider';
+import { EntriesDataProviderToken } from 'app-shared/content-shared/entries-store/defaultEntriesDataProvider';
 
 @Component({
   selector: 'kPlaylistContentRuleBased',
   templateUrl: './rule-based-content.component.html',
   styleUrls: ['./rule-based-content.component.scss'],
-  providers: [EntriesStore]
+  providers: [
+    EntriesStore,
+    {
+      provide: EntriesDataProviderToken,
+      useClass: PlaylistEntriesDataProvider
+    }
+  ]
 })
 export class RuleBasedContentComponent implements OnInit, OnDestroy {
   @ViewChild('playlistRule') private _rulePopup: PopupWidgetComponent;

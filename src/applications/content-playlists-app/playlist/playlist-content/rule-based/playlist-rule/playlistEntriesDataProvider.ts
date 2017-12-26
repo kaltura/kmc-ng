@@ -21,11 +21,11 @@ import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types
 @Injectable()
 export class PlaylistEntriesDataProvider implements EntriesDataProvider {
   constructor(private _kalturaServerClient: KalturaClient) {
-    console.warn('aaaa');
 
   }
 
   public executeQuery(data: EntriesFilters, metadataProfiles): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }> {
+    console.warn('playlistEntriesDataProvider > executeQuery', data, metadataProfiles);
     try {
 
       // create request items

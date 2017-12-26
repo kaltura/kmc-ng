@@ -24,11 +24,12 @@ export class EntriesListComponent implements OnInit, OnDestroy {
   @Input() rowActions: { label: string, commandName: string }[];
 
   @Input() set rule(value: PlaylistRule) {  // rule-based playlist specific
-    console.warn(value);
     if (value) {
       this._resultsLimit = value.limit;
       this._ruleName = value.name;
       this._orderBy = value.orderBy;
+
+      this._entriesStore.filter(this._mapRuleFilters(value));
     }
   }
 
@@ -79,13 +80,14 @@ export class EntriesListComponent implements OnInit, OnDestroy {
     this._registerToFilterStoreDataChanges();
   }
 
-  private _mapRuleFilters(rule: PlaylistRule): any {
+  private _mapRuleFilters(rule: PlaylistRule): Partial<EntriesFilters> {
     const { originalFilter } = rule;
 
     return {
-      mediaTypes: originalFilter.mediaTypeIn.split(','),
-      durations: originalFilter.durationTypeMatchOr.split(','),
-      replacementStatuses: originalFilter.replacementStatusIn.split(','),
+      // mediaTypes: originalFilter.mediaTypeIn.split(','),
+      // durations: originalFilter.durationTypeMatchOr.split(','),
+      // replacementStatuses: originalFilter.replacementStatusIn.split(','),
+      freetext: rule.originalFilter.freeText,
       createdAt: {
         fromDate: new Date(originalFilter.createdAtGreaterThanOrEqual),
         toDate: new Date(originalFilter.createdAtLessThanOrEqual)

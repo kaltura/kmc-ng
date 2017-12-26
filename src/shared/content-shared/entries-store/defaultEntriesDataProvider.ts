@@ -25,8 +25,6 @@ export const EntriesDataProviderToken = new InjectionToken('entries-data-provide
 @Injectable()
 export class DefaultEntriesDataProvider implements EntriesDataProvider {
   constructor(private _kalturaServerClient: KalturaClient) {
-    console.warn('bbbbbbb');
-
   }
 
   public executeQuery(data: EntriesFilters, metadataProfiles): Observable<{ entries: KalturaBaseEntry[], totalCount?: number }> {

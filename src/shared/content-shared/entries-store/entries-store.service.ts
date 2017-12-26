@@ -147,6 +147,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
         this.filtersChange$
             .cancelOnDestroy(this)
             .subscribe(() => {
+              console.warn('filtersChanged');
                 this._executeQuery();
             });
 
