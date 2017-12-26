@@ -32,7 +32,6 @@ export class DefaultEntriesDataProvider implements EntriesDataProvider {
 
       // create request items
       const filter: KalturaMediaEntryFilter = new KalturaMediaEntryFilter({});
-      let responseProfile: KalturaDetachedResponseProfile = null;
       let pagination: KalturaFilterPager = null;
 
       const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
@@ -223,13 +222,10 @@ export class DefaultEntriesDataProvider implements EntriesDataProvider {
       }
 
       // update desired fields of entries
-      if (data.fields) {
-        responseProfile = new KalturaDetachedResponseProfile({
-          type: KalturaResponseProfileType.includeFields,
-          fields: data.fields
-        });
-
-      }
+      const responseProfile = new KalturaDetachedResponseProfile({
+        type: KalturaResponseProfileType.includeFields,
+        fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,tags,categoriesIds,downloadUrl,sourceType'
+      });
 
       // update pagination args
       if (data.pageIndex || data.pageSize) {

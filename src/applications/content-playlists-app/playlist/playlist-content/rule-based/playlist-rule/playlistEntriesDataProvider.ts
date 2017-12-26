@@ -30,7 +30,6 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
 
       // create request items
       const filter = new KalturaMediaEntryFilterForPlaylist({});
-      let responseProfile: KalturaDetachedResponseProfile = null;
       let pagination: KalturaFilterPager = null;
 
       const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
@@ -167,13 +166,10 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
       }
 
       // update desired fields of entries
-      if (data.fields) {
-        responseProfile = new KalturaDetachedResponseProfile({
-          type: KalturaResponseProfileType.includeFields,
-          fields: data.fields
-        });
-
-      }
+      const responseProfile = new KalturaDetachedResponseProfile({
+        type: KalturaResponseProfileType.includeFields,
+        fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,tags,categoriesIds,downloadUrl,sourceType'
+      });
 
       filter.limit = data.limits && data.limits > 0 && data.limits <= 200 ? data.limits : 200;
 

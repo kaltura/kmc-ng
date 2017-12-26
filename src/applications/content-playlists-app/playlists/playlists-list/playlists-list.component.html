@@ -43,12 +43,11 @@
       </kSticky>
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="playlistsTags" [sticksTo]="'playlistsFilters'">
         <div class="kTagsWrapper kContent">
-          <!--TODO [Stas] tags-->
+          <k-playlists-tags (onTagsChange)="_onTagsChange()"></k-playlists-tags>
         </div>
       </kSticky>
       <kPlaylistsTable
         class="kPlaylistsTable"
-        [activeFilters]="activeFilters"
         [playlists]="(_playlistsStore.playlists.data$ | async)?.items"
         (sortChanged)="_onSortChanged($event)"
         [filter]="_query"
@@ -72,6 +71,7 @@
   #refinePopup
   [appendTo]="playlistsTableHolder"
   [popupWidth]="350"
+  [popupHeight]="169"
   [closeBtn]="false"
   [targetRef]="refineBtn"
   [targetOffset]="{'x':-294, 'y': -20}"
@@ -81,7 +81,7 @@
   stickyId="playlistsAdditionalFilter"
   [scrollOffset]="80">
   <ng-template>
-    <!--TODO [Stas] refine filters-->
+    <k-playlists-refine-filters [parentPopupWidget]="refinePopup"></k-playlists-refine-filters>
   </ng-template>
 </kPopupWidget>
 

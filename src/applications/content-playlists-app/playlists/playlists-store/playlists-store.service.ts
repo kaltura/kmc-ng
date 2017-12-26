@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { KalturaUtils } from 'kaltura-ngx-client/api/utils/kaltura-utils';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
@@ -20,6 +19,7 @@ import { KalturaSearchOperatorType } from 'kaltura-ngx-client/api/types/KalturaS
 import { KalturaSearchOperator } from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
 import { StringTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/string-type';
 import { NumberTypeAdapter } from '@kaltura-ng/mc-shared/filters/filter-types/number-type';
+import { KalturaUtils } from '@kaltura-ng/kaltura-common';
 
 export enum SortDirection {
   Desc,
@@ -30,7 +30,6 @@ export interface PlaylistsFilters {
   pageSize: number,
   pageIndex: number,
   freeText: string,
-  fields: string,
   sortBy: string,
   sortDirection: number,
   createdAt: DatesRangeType
@@ -50,11 +49,12 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
   public readonly playlists = {
     data$: this._playlists.data.asObservable(),
     state$: this._playlists.state.asObservable(),
-    data: () => this._playlists.data.value.items
+    data: () => this._playlists.data.value
   };
 
   constructor(private _kalturaServerClient: KalturaClient,
-              private _browserService: BrowserService, _logger: KalturaLogger) {
+              private _browserService: BrowserService,
+              _logger: KalturaLogger) {
     super(_logger);
     this._prepare();
   }
@@ -69,7 +69,7 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       this._isReady = true;
 
       const defaultPageSize = this._browserService.getFromLocalStorage(localStoragePageSizeKey);
-      if (defaultPageSize !== null) {
+      if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
         this.filter({
           pageSize: defaultPageSize
         });
@@ -146,13 +146,10 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       }
 
       // update desired fields of entries
-      if (data.fields) {
         responseProfile = new KalturaDetachedResponseProfile({
           type: KalturaResponseProfileType.includeFields,
-          fields: data.fields
+          fields: 'id,name,createdAt,playlistType'
         });
-
-      }
 
       // update the sort by args
       if (data.sortBy) {
@@ -199,7 +196,6 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
       freeText: '',
       sortBy: 'createdAt',
       sortDirection: SortDirection.Desc,
-      fields: 'id,name,createdAt,playlistType',
       createdAt: { fromDate: null, toDate: null }
     };
   }
@@ -208,7 +204,6 @@ export class PlaylistsStore extends FiltersStoreBase<PlaylistsFilters> implement
     return {
       pageSize: new NumberTypeAdapter(),
       pageIndex: new NumberTypeAdapter(),
-      fields: new StringTypeAdapter(),
       sortBy: new StringTypeAdapter(),
       sortDirection: new NumberTypeAdapter(),
       freeText: new StringTypeAdapter(),

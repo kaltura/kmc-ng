@@ -30,6 +30,7 @@ import { PlaylistsComponentsList } from './playlists/playlists-components-list';
 import { PlaylistComponentsList } from './playlist/playlist-components-list';
 import { PlaylistCanDeactivate } from './playlist/playlist-can-deactivate.service';
 import { ContentSharedModule } from 'app-shared/content-shared/content-shared.module';
+import { FiltersModule } from '@kaltura-ng/mc-shared/filters/filters.module';
 
 @NgModule({
   imports: [
@@ -57,7 +58,8 @@ import { ContentSharedModule } from 'app-shared/content-shared/content-shared.mo
     DetailsBarModule,
     RouterModule.forChild(routing),
     StickyModule,
-    ContentSharedModule
+    ContentSharedModule,
+    FiltersModule
   ],
   declarations: [
     ContentPlaylistsComponent,

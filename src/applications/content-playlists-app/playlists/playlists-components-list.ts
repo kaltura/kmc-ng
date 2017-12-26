@@ -3,11 +3,15 @@ import { PlaylistsTableComponent } from './playlists-table/playlists-table.compo
 import { PlaylistTypePipe } from './pipes/playlist-type.pipe';
 import { PlaylistsAdditionalFiltersComponent } from './playlists-additional-filters/playlists-additional-filters.component';
 import { AddNewPlaylistComponent } from './add-new-playlist/add-new-playlist.component';
+import { PlaylistsTagsComponent } from './playlists-tags/playlists-tags.component';
+import { PlaylistsRefineFiltersComponent } from './playlists-refine-filters/playlists-refine-filters.component';
 
 export const PlaylistsComponentsList = [
   PlaylistsListComponent,
   PlaylistsTableComponent,
   PlaylistsAdditionalFiltersComponent,
   AddNewPlaylistComponent,
+  PlaylistsTagsComponent,
+  PlaylistsRefineFiltersComponent,
   PlaylistTypePipe,
 ];

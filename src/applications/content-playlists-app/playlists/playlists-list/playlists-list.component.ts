@@ -9,12 +9,8 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui/area-blocker/area-blo
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import { AppLocalization } from '@kaltura-ng/kaltura-common/localization/app-localization.service';
 import { BrowserService } from 'app-shared/kmc-shell';
-
-export interface Filter {
-  type: string;
-  label: string;
-  tooltip: string
-}
+import { PreviewAndEmbedEvent } from 'app-shared/kmc-shared/events';
+import { AppEventsService } from 'app-shared/kmc-shared';
 
 @Component({
   selector: 'kPlaylistsList',
@@ -44,6 +40,7 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   constructor(public _playlistsStore: PlaylistsStore,
               private _appLocalization: AppLocalization,
               private _router: Router,
+              private _appEvents: AppEventsService,
               private _browserService: BrowserService,
               public _bulkDeleteService: BulkDeleteService) {
   }
@@ -176,24 +173,27 @@ export class PlaylistsListComponent implements OnInit, OnDestroy {
   }
 
   public _onActionSelected(event: { action: string, playlist: KalturaPlaylist }): void {
-    switch (event.action) {
-      case 'view':
-        this._router.navigate(['/content/playlists/playlist', event.playlist.id]);
-        break;
-      case 'delete':
-        this._browserService.confirm(
-          {
-            header: this._appLocalization.get('applications.content.playlists.deletePlaylist'),
-            message: this._appLocalization.get('applications.content.playlists.confirmDeleteSingle', { 0: event.playlist.id }),
-            accept: () => {
-              this._deleteCurrentPlaylist(event.playlist.id);
-            }
-          }
-        );
-        break;
-      default:
-        break;
-    }
+      switch (event.action) {
+          case 'preview':
+              this._appEvents.publish(new PreviewAndEmbedEvent(event.playlist));
+              break;
+          case 'view':
+              this._router.navigate(['/content/playlists/playlist', event.playlist.id]);
+              break;
+          case 'delete':
+              this._browserService.confirm(
+                  {
+                      header: this._appLocalization.get('applications.content.playlists.deletePlaylist'),
+                      message: this._appLocalization.get('applications.content.playlists.confirmDeleteSingle', {0: event.playlist.id}),
+                      accept: () => {
+                          this._deleteCurrentPlaylist(event.playlist.id);
+                      }
+                  }
+              );
+              break;
+          default:
+              break;
+      }
   }
 
   public _onFreetextChanged(): void {
