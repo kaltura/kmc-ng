@@ -16,9 +16,8 @@ export class RefineList {
 }
 
 @Injectable()
-export class BulkLogRefineFiltersProviderService {
+export class DropFoldersRefineFiltersProviderService {
   constructor(private _appLocalization: AppLocalization) {
-
   }
 
   public getFilters(): Observable<RefineList[]> {
@@ -29,12 +28,12 @@ export class BulkLogRefineFiltersProviderService {
     return DefaultFiltersList.map((list) => {
       const refineList = new RefineList(
         list.name,
-        this._appLocalization.get(`applications.content.bulkUpload.filters.${list.label}`)
+        this._appLocalization.get(`applications.content.dropFolders.dropFolderStatusLabels.${list.label}`)
       );
 
       refineList.items = list.items.map((item: any) => ({
         value: item.value,
-        label: this._appLocalization.get(`applications.content.bulkUpload.filters.${item.label}`)
+        label: this._appLocalization.get(`applications.content.dropFolders.dropFolderStatusLabels.${item.label}`)
       }));
 
       return refineList;
