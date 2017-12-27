@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AreaBlockerMessage, StickyComponent } from '@kaltura-ng/kaltura-ui';
-import { KalturaMediaEntry } from 'kaltura-ngx-client/api/types/KalturaMediaEntry';
 
 import { EntriesFilters, EntriesStore, SortDirection } from 'app-shared/content-shared/entries-store/entries-store.service';
 import { EntriesTableColumns } from 'app-shared/content-shared/entries-table/entries-table.component';
@@ -55,7 +54,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
       label: this._appLocalization.get('applications.content.playlistDetails.content.orderBy.highestRated')
     },
     {
-      value: KalturaPlayableEntryOrderBy.nameDesc,
+      value: KalturaPlayableEntryOrderBy.nameAsc,
       label: this._appLocalization.get('applications.content.playlistDetails.content.orderBy.entryName')
     }
   ];
@@ -93,6 +92,10 @@ export class EntriesListComponent implements OnInit, OnDestroy {
       return ruleItem.split(',').map(item => ({ value: item, label: item })); // TODO [kmcng] fix label
     };
 
+    const getSortDirection = (value) => value === '+' ? SortDirection.Asc : SortDirection.Desc;
+    const sortBy = rule.orderBy ? rule.orderBy.substr(1) : null;
+    const sortDirection = sortBy ? getSortDirection(rule.orderBy.substr(0, 1)) : null;
+
     return {
       mediaTypes: getListTypeFilterFromRule(originalFilter.mediaTypeIn),
       durations: getListTypeFilterFromRule(originalFilter.durationTypeMatchOr),
@@ -100,6 +103,8 @@ export class EntriesListComponent implements OnInit, OnDestroy {
       flavors: getListTypeFilterFromRule(originalFilter.flavorParamsIdsMatchOr),
       limits: rule.limit,
       freetext: rule.originalFilter.freeText,
+      sortBy: sortBy,
+      sortDirection: sortDirection,
       createdAt: {
         fromDate: new Date(originalFilter.createdAtGreaterThanOrEqual),
         toDate: new Date(originalFilter.createdAtLessThanOrEqual)

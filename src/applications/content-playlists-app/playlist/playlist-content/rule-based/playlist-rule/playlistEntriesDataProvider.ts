@@ -181,8 +181,10 @@ export class PlaylistEntriesDataProvider implements EntriesDataProvider {
         );
       }
 
+      // readonly filters for rule-based playlist
       filter.statusIn = '1,2';
       filter.typeIn = '1,7';
+      filter.moderationStatusIn = '1,2,5,6';
 
       // build the request
       return <any>this._kalturaServerClient.request(

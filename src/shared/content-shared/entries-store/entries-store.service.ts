@@ -23,6 +23,7 @@ import {
 } from '@kaltura-ng/mc-shared/filters';
 import { KalturaBaseEntry } from 'kaltura-ngx-client/api/types/KalturaBaseEntry';
 import { EntriesDataProviderToken } from 'app-shared/content-shared/entries-store/defaultEntriesDataProvider';
+import * as Immutable from 'seamless-immutable';
 
 export enum SortDirection {
   Desc,
@@ -261,5 +262,9 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
       customMetadata: new GroupedListAdapter(),
       limits: new NumberTypeAdapter()
     };
+  }
+
+  public getFilters(): Immutable.ImmutableObject<EntriesFilters> {
+    return this._getFiltersAsReadonly();
   }
 }
