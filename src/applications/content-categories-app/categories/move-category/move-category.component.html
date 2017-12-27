@@ -1,0 +1,24 @@
+<k-area-blocker kFillHeight [showLoader]="_isBusy" [message]="_blockerMessage" style="height: 100%">
+  <div class="kTreeContainer kOverrideFAIcons kRadioButtonPOC">
+
+    <div class="kHeader">
+    <span class="kTitle">
+      <span>{{('applications.content.categories.moveCategory') | translate}}</span>
+    </span>
+    </div>
+    <div class="kContainer">
+      <div class="kRow">
+        <span>{{('applications.content.moveCategory.selectCategoryParent') | translate}}</span>
+      </div>
+
+        <kCategoryParentSelector (onCategorySelected)="_onCategorySelected($event)"></kCategoryParentSelector>
+
+    </div>
+    <div class="kFooter">
+      <button type="button" class="kButtonBranded" pButton
+              label="{{'applications.content.addNewCategory.apply' | translate}}"
+              (click)="_apply()"></button>
+      <a class="kLink" (click)="_cancel()">{{'applications.content.addNewCategory.cancel' | translate}}</a>
+    </div>
+  </div>
+</k-area-blocker>

@@ -1,23 +1,37 @@
-import { AfterViewChecked, ChangeDetectorRef, Component, Input, OnDestroy, ViewChild } from '@angular/core';
-import { ISubscription } from 'rxjs/Subscription';
-
-import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
-import { Subject } from 'rxjs/Subject';
-import { AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { CategoriesTreeComponent, TreeSelectionMode } from 'app-shared/content-shared/categories-tree/categories-tree.component';
-import { CategoriesPrimeService } from 'app-shared/content-shared/categories-prime.service';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import {
+  AfterViewChecked,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
+import {ISubscription} from 'rxjs/Subscription';
+import {PrimeTreeNode} from '@kaltura-ng/kaltura-primeng-ui';
+import {Subject} from 'rxjs/Subject';
+import {AutoComplete, SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
+import {
+  CategoriesTreeComponent,
+  TreeSelectionMode
+} from 'app-shared/content-shared/categories-tree/categories-tree.component';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {CategoriesSearchService, CategoryData} from 'app-shared/content-shared/categories-search.service';
 
 @Component({
-  selector: 'kCategoryRadioButtonPOC',
-  templateUrl: './category-radio-button-poc.html',
-  styleUrls: ['./category-radio-button-poc.scss']
+  selector: 'kCategoryParentSelector',
+  templateUrl: './category-parent-selector.component.html',
+  styleUrls: ['./category-parent-selector.component.scss']
 })
-export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChecked {
-  @Input() value: any = null;
+export class CategoryParentSelectorComponent implements OnDestroy, AfterViewChecked, OnInit {
+
+  @Output() onCategorySelected = new EventEmitter<CategoryData>();
+
 
   @ViewChild('categoriesTree') _categoriesTree: CategoriesTreeComponent;
   @ViewChild('autoComplete') private _autoComplete: AutoComplete = null;
+
 
   private _emptyTreeSelection = new PrimeTreeNode(null, 'empty', 0, null);
   public _selectionMode: TreeSelectionMode = 'single';
@@ -27,31 +41,25 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
 
   private _searchCategoriesSubscription: ISubscription;
   public _categoriesProvider = new Subject<SuggestionsProviderData>();
-  public _selectedCategory: any = null;
-
-  private parentPopupStateChangeSubscription: ISubscription;
-
+  public _selectedParentCategory: CategoryData = null;
   private _ngAfterViewCheckedContext: { updateTreeSelections: boolean, expendTreeSelectionNodeId: number } = {
     updateTreeSelections: false,
     expendTreeSelectionNodeId: null
   };
 
-  constructor(private _categoriesPrimeService: CategoriesPrimeService,
+  constructor(private _categoriesSearchService: CategoriesSearchService,
               private cdRef: ChangeDetectorRef,
               private _appLocalization: AppLocalization) {
     this._updateSelectionTooltip();
   }
 
+  ngOnInit() {
+  }
   ngOnDestroy() {
 
     if (this._searchCategoriesSubscription) {
       this._searchCategoriesSubscription.unsubscribe();
       this._searchCategoriesSubscription = null;
-    }
-
-    if (this.parentPopupStateChangeSubscription) {
-      this.parentPopupStateChangeSubscription.unsubscribe();
-      this.parentPopupStateChangeSubscription = null;
     }
   }
 
@@ -66,19 +74,19 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
   }
 
   private _updateSelectionTooltip(): void {
-    const selectionPath = this._selectedCategory ? this._selectedCategory.fullNamePath : '';
+    const selectionPath = this._selectedParentCategory ? this._selectedParentCategory.fullNamePath : [];
     this._selectionTooltip = this._appLocalization.get(
       'applications.content.categories.selectedCategory',
-      { 0: this._createCategoryTooltip(selectionPath) || 'no parent' }
+      { 0: this._createCategoryTooltip(selectionPath) || this._appLocalization.get('applications.content.addNewCategory.noParent') }
     );
   }
 
   private _updateTreeSelections(expandNodeId = null, initial = false): void {
     let treeSelectedItem = initial ? null : this._emptyTreeSelection;
-    const treeItem = this._categoriesTree.findNodeByFullIdPath(this._selectedCategory ? this._selectedCategory.fullIdPath : []);
+    const treeItem = this._categoriesTree.findNodeByFullIdPath(this._selectedParentCategory ? this._selectedParentCategory.fullIdPath : []);
     if (treeItem) {
       treeSelectedItem = treeItem;
-      if (expandNodeId && this._selectedCategory && expandNodeId === this._selectedCategory.id) {
+      if (expandNodeId && this._selectedParentCategory && expandNodeId === this._selectedParentCategory.id) {
         treeItem.expand();
       }
     }
@@ -100,7 +108,7 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
       let selectedNode: PrimeTreeNode = null;
 
       node.children.forEach((attachedCategory) => {
-        if (this._selectedCategory && this._selectedCategory.id === attachedCategory.data) {
+        if (this._selectedParentCategory && this._selectedParentCategory.id === attachedCategory.data) {
           selectedNode = attachedCategory;
         }
       });
@@ -120,13 +128,15 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
       this._searchCategoriesSubscription = null;
     }
 
-    this._searchCategoriesSubscription = this._categoriesPrimeService.searchCategories(event.query).subscribe(data => {
+    this._searchCategoriesSubscription = this._categoriesSearchService.getSuggestions(event.query).subscribe(data => {
         const suggestions = [];
-        const entryCategory = this._selectedCategory;
+        const entryCategory = this._selectedParentCategory;
 
 
-        (data || []).forEach(suggestedCategory => {
-          const label = suggestedCategory.fullNamePath.join(' > ') + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
+        (data.items || []).forEach(suggestedCategory => {
+          const label = suggestedCategory.fullNamePath.join(' > ') +
+              (suggestedCategory.referenceId ?
+              ` (${suggestedCategory.referenceId})` : '');
 
           const isSelectable = !(entryCategory && entryCategory.id === suggestedCategory.id);
 
@@ -140,25 +150,21 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
       });
   }
 
-  public _onAutoCompleteSelected(event: any) {
+  public _onAutoCompleteSelected() {
 
     const selectedItem = this._autoComplete.getValue();
 
     if (selectedItem && selectedItem.id && selectedItem.fullIdPath && selectedItem.name) {
-      const relevantCategory = this._selectedCategory && String(this._selectedCategory.id) === String(selectedItem.id);
+      const relevantCategory = this._selectedParentCategory && String(this._selectedParentCategory.id) === String(selectedItem.id);
 
       if (!relevantCategory) {
-        this._selectedCategory = {
-          id: selectedItem.id,
-          fullIdPath: selectedItem.fullIdPath,
-          fullNamePath: selectedItem.fullNamePath,
-          name: selectedItem.name
-        };
+        this._selectedParentCategory =  selectedItem;
 
         this._ngAfterViewCheckedContext.updateTreeSelections = true;
         this._ngAfterViewCheckedContext.expendTreeSelectionNodeId = selectedItem.id;
 
         this._updateSelectionTooltip();
+        this.onCategorySelected.emit(this._selectedParentCategory);
       }
     }
 
@@ -167,25 +173,21 @@ export class CategoryRadioButtonPocComponent implements OnDestroy, AfterViewChec
 
   }
 
-  public _onTreeNodeSelected({ node }: { node: any }) {
-    if (node instanceof PrimeTreeNode) {
-      const relevantCategory = this._selectedCategory && String(this._selectedCategory.id) === String(node.data);
+  public _onTreeNodeSelected(treeNode: PrimeTreeNode) {
+    if (treeNode instanceof PrimeTreeNode) {
+      const relevantCategory = this._selectedParentCategory && String(this._selectedParentCategory.id) === String(treeNode.data);
 
       if (!relevantCategory) {
-        this._selectedCategory = {
-          id: node.origin.id,
-          fullIdPath: node.origin.fullIdPath,
-          fullNamePath: node.origin.fullNamePath,
-          name: node.origin.name
-        };
-
+        this._selectedParentCategory = treeNode.origin;
         this._updateSelectionTooltip();
+        this.onCategorySelected.emit(this._selectedParentCategory);
       }
     }
   }
 
   public _clearSelection(): void {
-    this._selectedCategory = null;
+    this._selectedParentCategory = null;
     this._updateSelectionTooltip();
+    this.onCategorySelected.emit(this._selectedParentCategory);
   }
 }
