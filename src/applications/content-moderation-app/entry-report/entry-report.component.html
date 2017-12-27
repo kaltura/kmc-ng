@@ -1,0 +1,90 @@
+<k-area-blocker [message]="_areaBlockerMessage" [showLoader]="_isBusy">
+  <div class="kEntryReportWrap kOverrideFAIcons">
+    <div class="kHeader">
+      <span class="kTitle">{{('applications.content.moderation.entryReports') | translate}}</span>
+
+      <div class="kButtons">
+        <a class="cancelLink" (click)="_closePopup()">Cancel</a>
+        <button
+          pButton
+          type="button"
+          [label]="'applications.content.moderation.approveEntry' | translate"
+          (click)="_approveEntry()"
+          class="kButtonBranded kApproveEntryBtn"></button>
+
+        <button
+          pButton
+          type="button"
+          [label]="'applications.content.moderation.rejectEntry' | translate"
+          (click)="_rejectEntry()"
+          class="kButtonDefault kRejectEntryBtn"></button>
+      </div>
+    </div>
+
+    <div class="kContainer">
+      <div class="kFrame">
+        <k-player #player [pid]="_playerConfig.pid" [uiconfid]="_playerConfig.uiconfid" [entryid]="_playerConfig.entryid" [flashvars]="_playerConfig.flashvars" [width]="340" [height]="190" [lazy]="true"></k-player>
+      </div>
+
+      <div class="appSubMenu">
+        <div *ngFor="let tab of _tabs; let i = index;"
+             class="subMenuContainer"
+             [class.active]="tab.isActive"
+             (click)="_changeTab(i)">
+          <a class="menuLink">{{tab.name}}</a>
+          <div class="linkMarker"></div>
+        </div>
+      </div>
+      <div>
+        <div class="kEntryReport" *ngIf="_tabs[EntryReportSections.Report].isActive && !_tabs[EntryReportSections.Report].disabled">
+          <div class="kFlagsAmount">{{_flagsAmount}}</div>
+          <div class="kFlagsComment" *ngFor="let flag of _flags;">
+            <div class="kFlagsCaption">
+              <div class="kIconReport"></div>
+              {{flag.flagType | kFlagType}}
+            </div>
+            <div class="kFlagsDate">{{flag.createdAt | kDate}}</div>
+            <div class="kFlagsText">{{flag.comments}}</div>
+          </div>
+        </div>
+
+        <div class="kEntryDetails" *ngIf="_tabs[EntryReportSections.Details].isActive && !_tabs[EntryReportSections.Details].disabled">
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.moderationDetails.name' | translate}}</span>
+            <span>{{_entry.name}}</span>
+          </div>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.moderationDetails.entryId' | translate}}</span>
+            <a (click)="_navigateToEntry(_entry.rootEntryId)">{{_entry.id}}</a>
+          </div>
+          <div class="kRow" *ngIf="_hasDuration">
+            <span class="kLabels">{{'applications.content.moderationDetails.duration' | translate}}</span>
+            <span>{{_entry.duration | kTime}}</span>
+          </div>
+          <div class="kRow" *ngIf="_isEntryReady">
+            <span class="kLabels">{{'applications.content.moderationDetails.plays' | translate}}</span>
+            <span>{{_entry.plays}}</span>
+          </div>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.moderationDetails.moderationStatus' | translate}}</span>
+            <span>{{_entry.moderationStatus | kModerationStatus}}</span>
+          </div>
+          <div class="kRow" *ngIf="_isClip">
+            <span class="kLabels">{{'applications.content.moderationDetails.clippedFrom' | translate}}</span>
+            <a (click)="_navigateToEntry(_entry.rootEntryId)">{{_entry.rootEntryId}}</a>
+          </div>
+          <div class="kRow">
+            <span class="kLabels">{{'applications.content.moderationDetails.creator' | translate}}</span>
+            <span [kTooltip]="_entry.creatorId">{{_entry.creatorId}}</span>
+            <button
+              pButton
+              type="button"
+              label="{{'applications.content.moderation.banCreator' | translate}}"
+              (click)="_banCreator()"
+              class="kButtonDefault kBanCreatorBtn"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</k-area-blocker>
