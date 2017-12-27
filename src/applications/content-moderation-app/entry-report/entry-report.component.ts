@@ -1,6 +1,6 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { AreaBlockerMessage, KalturaPlayerComponent } from '@kaltura-ng/kaltura-ui';
 import { ModerationStore } from '../moderation-store/moderation-store.service';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { Router } from '@angular/router';
@@ -31,14 +31,14 @@ export interface Tabs {
 })
 
 export class EntryReportComponent implements OnInit, OnDestroy {
+
+  @ViewChild('player') player: KalturaPlayerComponent;
+
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() entryId: string;
 
   private _isRecordedLive = false;
   private _userId = '';
-  private _partnerID = this.appAuthentication.appUser.partnerId;
-  private _flashVars = `flashvars[closedCaptions.plugin]=true&flashvars[EmbedPlayer.SimulateMobile]=true&flashvars[EmbedPlayer.EnableMobileSkin]=true`;
-  private _UIConfID = environment.core.kaltura.previewUIConf;
   private _shouldConfirmEntryApproval = false; // TODO [kmcng] need to get such permissions from somewhere
   private _shouldConfirmEntryRejection = false; // TODO [kmcng] need to get such permissions from somewhere
 
@@ -51,7 +51,7 @@ export class EntryReportComponent implements OnInit, OnDestroy {
   public _isClip = false;
   public _flagsAmount = '';
   public EntryReportSections = EntryReportSections;
-  public _iframeSrc = '';
+  public _playerConfig = {};
   public _isBusy = false;
 
   constructor(public _moderationStore: ModerationStore,
@@ -65,6 +65,12 @@ export class EntryReportComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._loadEntryModerationDetails();
+    this._playerConfig = {
+      uiconfid: parseInt(environment.core.kaltura.previewUIConf),
+      pid: this.appAuthentication.appUser.partnerId,
+      entryid: this.entryId,
+      flashvars: {'closedCaptions': { 'plugin': true }}
+    };
   }
 
   ngOnDestroy() {
@@ -160,12 +166,12 @@ export class EntryReportComponent implements OnInit, OnDestroy {
                 && this._entry.mediaType.toString() !== KalturaMediaType.image.toString();
               this._isEntryReady = this._entry.status.toString() === KalturaEntryStatus.ready.toString();
               if (isLive) {
-                this._flashVars += '&flashvars[disableEntryRedirect]=true';
+                this._playerConfig['flashvars']['disableEntryRedirect'] = true;
               }
               this._isRecordedLive = (sourceType === KalturaSourceType.recordedLive.toString());
               this._isClip = !this._isRecordedLive && (this._entry.id !== this._entry.rootEntryId);
             }
-            this._iframeSrc = `${environment.core.kaltura.cdnUrl}/p/${this._partnerID}/sp/${this._partnerID}00/embedIframeJs/uiconf_id/${this._UIConfID}/partner_id/${this._partnerID}?iframeembed=true&${this._flashVars}&entry_id=${this.entryId}`;
+            this.player.Embed();
           }
         },
         error => {
