@@ -5,22 +5,22 @@ export const DefaultFiltersList: {
 }[] = [
   {
     name: 'uploadedItem',
-    label: 'Uploaded items',
+    label: 'uploadedItems',
     items: [
-      { value: '1', label: 'Entries' },
-      { value: '2', label: 'Categories' },
-      { value: '3', label: 'End Users' },
-      { value: '4', label: 'End-User Entitlements' }
+      { value: '1', label: 'entries' },
+      { value: '2', label: 'categories' },
+      { value: '3', label: 'endUsers' },
+      { value: '4', label: 'endUserEntitlements' }
     ]
   },
   {
     name: 'status',
-    label: 'Statuses',
+    label: 'statuses',
     items: [
-      { value: '5', label: 'Finished successfully' },
-      { value: '12', label: 'Finished with errors' },
-      { value: '6,10', label: 'Failed' },
-      { value: '0,1,2,3,4,7,8,9,11', label: 'All other statuses' }
+      { value: '5', label: 'successFinish' },
+      { value: '12', label: 'errorFinish' },
+      { value: '6,10', label: 'failed' },
+      { value: '0,1,2,3,4,7,8,9,11', label: 'otherStatuses' }
     ]
   }
 ];

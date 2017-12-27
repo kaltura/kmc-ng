@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {RolesService} from "./roles/roles.service";
+import { Component } from '@angular/core';
+import { RolesService } from './roles/roles.service';
 
 @Component({
   selector: 'kRoles',

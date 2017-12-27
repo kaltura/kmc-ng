@@ -22,6 +22,6 @@
 
 <kPopupWidget #addNewSubcategory [popupWidth]="586" [popupHeight]="260" [modal]="true" [preventPageScroll]="true">
   <ng-template>
-    <kNewSubcategory [categoryParentId]="_widgetService.data?.id" (onApply)="_widgetService.refresh()" [parentPopupWidget]="addNewSubcategory"></kNewSubcategory>
+    <kNewSubcategory [categoryParentId]="_widgetService.data?.id" (onSubCategoryAdded)="_widgetService.refresh()" [parentPopupWidget]="addNewSubcategory"></kNewSubcategory>
   </ng-template>
 </kPopupWidget>

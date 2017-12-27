@@ -48,11 +48,9 @@ $ npm run checkout-standalone
 # sync dependencies to the new branch
 $ npm install
 
-# run a local server
-$ npm start
 ```
 
-> Note - if you need to [edit the application configuration](#config), change the environment.ts file only after running all of the commands above 
+> Note - if you need to [edit the application configuration](#config), change file [src/app-config/index.ts](https://github.com/kaltura/kmc-ng/blob/master/src/app-config/index.ts#L13)
 
 #### Option II (the red pill)- Develop kmc-ng complete solution (multiple repos)
 > In this option you will clone all the relevant repos to your machine and bind them together. Use this option to develop and create pull requests.
@@ -69,7 +67,7 @@ navigate to [http://localhost:4200](http://localhost:4200) in your browser.
 
 ## <a name="config"></a>Configuring the application endpoints
 The Github version configures server endpoints against the Kaltura production server.
-If you need to configure these enpoint, edit the [environment.ts](https://github.com/kaltura/kmc-ng/blob/33c3f177bf4437092b4ba46d3f9e9a470463a481/src/environments/environment.ts#L15-L24) file.
+If you need to configure these enpoint, edit file [src/app-config/index.ts](https://github.com/kaltura/kmc-ng/blob/master/src/app-config/index.ts#L13).
 
 ## Deploy standalone application
 

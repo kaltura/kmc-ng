@@ -4,7 +4,7 @@
       <kSticky [stickyClass]="'kStickyClass'" stickyId="categoriesListFilters" [scrollOffset]="80" [sticksTo]="'header'">
           <div class="kCategoriesTableFilters kContent">
             <button pButton type="button" label="{{'applications.content.categories.addCategory' | translate}}" class="kButtonBranded kAddCategoryBtn"
-              [disabled]="_selectedCategories?.length" (click)="_addCategory()"></button>
+              [disabled]="_selectedCategories?.length" (click)="addNewCategory.open()"></button>
             <span class="kSelectedCategoriesNum" *ngIf="_totalCount">
               {{_totalCount}} {{'applications.content.categories.categories' | translate}}
             </span>
@@ -41,8 +41,15 @@
   </div>
 </k-area-blocker>
 
-<kPopupWidget #addNewCategory [popupWidth]="568" [popupHeight]="586" [modal]="true">
+<kPopupWidget #addNewCategory [popupWidth]="586" [popupHeight]="658" [modal]="true" [preventPageScroll]="true">
   <ng-template>
-    <kAddNewCategory [parentPopupWidget]="addNewCategory"></kAddNewCategory>
+    <kNewCategory (onApply)="onCategoryAdded($event)" [parentPopupWidget]="addNewCategory" [linkedEntries]="_linkedEntries"></kNewCategory>
+  </ng-template>
+</kPopupWidget>
+
+
+<kPopupWidget #moveCategory [popupWidth]="586" [popupHeight]="580" [modal]="true" [preventPageScroll]="true">
+  <ng-template>
+    <kMoveCategory [parentPopupWidget]="moveCategory" [selectedCategories]="[_selectedCategoryToMove]" ></kMoveCategory>
   </ng-template>
 </kPopupWidget>

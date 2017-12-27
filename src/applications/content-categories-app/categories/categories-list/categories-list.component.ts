@@ -1,22 +1,30 @@
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
 import {CategoriesService, SortDirection} from '../categories.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {CategoriesUtilsService} from '../../categories-utils.service';
+import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+
+import {AppEventsService} from 'app-shared/kmc-shared';
+import {CategoryCreationService} from 'app-shared/kmc-shared/category-creation';
 
 @Component({
-    selector: 'kCategoriesList',
-    templateUrl: './categories-list.component.html',
-    styleUrls: ['./categories-list.component.scss']
+  selector: 'kCategoriesList',
+  templateUrl: './categories-list.component.html',
+  styleUrls: ['./categories-list.component.scss']
 })
 
-export class CategoriesListComponent implements OnInit, OnDestroy {
-  @ViewChild('addNewCategory') public addNewCategory: PopupWidgetComponent;
+export class CategoriesListComponent implements OnInit, OnDestroy , AfterViewInit {
 
+  public _categoriesTotalCount: number = null;
+  public _selectedCategoryToMove: KalturaCategory;
+
+  public _linkedEntries: { entryId: string}[] = [];
+  @ViewChild('moveCategory') moveCategoryPopup: PopupWidgetComponent;
+  @ViewChild('addNewCategory') public addNewCategory: PopupWidgetComponent;
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedCategories: KalturaCategory[] = [];
   public _categories: KalturaCategory[] = [];
@@ -30,49 +38,62 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     sortDirection: SortDirection.Desc
   };
 
-  constructor(public _categoriesService: CategoriesService,
+  constructor(private _categoriesService: CategoriesService,
               private router: Router,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
-              private _categoriesUtilsService: CategoriesUtilsService) {
+              private _categoriesUtilsService: CategoriesUtilsService,
+              private _appEvents: AppEventsService,
+              public _categoryCreationService: CategoryCreationService) {
   }
 
   ngOnInit() {
 
-    this._categoriesService
-      .queryData$
-      .cancelOnDestroy(this)
-      .subscribe(
-      query => {
-        this._filter.pageSize = query.pageSize;
-        this._filter.pageIndex = query.pageIndex - 1;
-        this._filter.sortBy = query.sortBy;
-        this._filter.sortDirection = query.sortDirection;
+         this._categoriesService.queryData$.cancelOnDestroy(this).subscribe(
+            query => {
+                this._filter.pageSize = query.pageSize;
+                this._filter.pageIndex = query.pageIndex - 1;
+                this._filter.sortBy = query.sortBy;
+                this._filter.sortDirection = query.sortDirection;
+            this._browserService.scrollToTop();});
+
+    this._categoriesService.categories$
+        .cancelOnDestroy(this)
+        .subscribe(
+      (data) => {
+        this._categories = data.items;
+        this._categoriesTotalCount = data.totalCount;
+      }
+    );
+
+    this.addNewCategory.state$
+        .cancelOnDestroy(this)
+      .subscribe(event => {
+        if (event.state === PopupWidgetStates.BeforeClose) {
+          this._linkedEntries = [];
+        }
       });
 
-    this._categoriesService
-      .categories$
-      .cancelOnDestroy(this)
-      .subscribe(
-        ({items, totalCount}: { items: KalturaCategory[], totalCount: number }) => {
-          this._categories = items;
-          this._totalCount = totalCount;
-        });
+  }
 
-    this._categoriesService.reload(false);
+  ngAfterViewInit() {
+    const newCategoryData = this._categoryCreationService.popNewCategoryData();
+    if (newCategoryData) {
+      this._linkedEntries = newCategoryData.entries.map(entry => ({entryId: entry.id}));
+      this.addNewCategory.open();
+    }
   }
 
   ngOnDestroy() {
   }
 
-  public _reload() {
-    this._clearSelection();
-    this._categoriesService.reload(true);
-  }
-
-  _clearSelection() {
-    this._selectedCategories = [];
-  }
+    public _reload() {
+        this._clearSelection();
+        this._categoriesService.reload(true);
+    }
+    _clearSelection() {
+        this._selectedCategories = [];
+    }
 
   _onSortChanged(event): void {
     this._categoriesService.reload({
@@ -92,7 +113,8 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     }
   }
 
-  _onActionSelected({action, category}: { action: string, category: KalturaCategory }) {
+  _onActionSelected({action, category}: { action: string, category : KalturaCategory }) {
+
     switch (action) {
       case 'edit':
         // show category edit warning if needed
@@ -112,6 +134,24 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
         break;
       case 'delete':
         this.deleteCategory(category);
+        break;
+      case 'moveCategory':
+        // show category edit warning if needed
+        if (category.tags && category.tags.indexOf('__EditWarning') > -1) {
+          this._browserService.confirm(
+            {
+              header: this._appLocalization.get('applications.content.categories.editCategory'),
+              message: this._appLocalization.get('applications.content.categories.editWithEditWarningTags'),
+              accept: () => {
+                this._selectedCategoryToMove = category;
+                this.moveCategoryPopup.open();
+              }
+            }
+          );
+        } else {
+          this._selectedCategoryToMove = category;
+          this.moveCategoryPopup.open();
+        }
         break;
       default:
         break;
@@ -152,13 +192,22 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
       });
   }
 
-  _addCategory() {
-    this.addNewCategory.open();
+
+
+  onBulkChange({reload}: {reload: boolean}): void {
+    if (reload === true) {
+      this._reload();
+    }
+    this._clearSelection();
   }
 
-    onBulkChange(event): void {
-        if (event.reload === true) {
-            this._reload();
-        }
+  onCategoryAdded({categoryId}: {categoryId: number}): void {
+    if (!categoryId) {
+      console.log('[CategoriesListComponent.onCategoryAdded] invalid parameters')
+    } else {
+        this._categoriesService.reload(true);
+        // use a flag so the categories will be refreshed upon clicking 'back' from the category page
+        this.router.navigate(['/content/categories/category', categoryId]);
     }
+  }
 }

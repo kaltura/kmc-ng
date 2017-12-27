@@ -26,7 +26,7 @@ import { MetadataProfileStore, MetadataProfileTypes, MetadataProfileCreateModes 
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { KalturaMultiRequest } from 'kaltura-ngx-client';
 import { DynamicMetadataForm, DynamicMetadataFormFactory } from 'app-shared/kmc-shared';
-import { CategoriesStore } from 'app-shared/content-shared/categories-store.service';
+import { CategoriesSearchService } from 'app-shared/content-shared/categories-search.service';
 
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import 'rxjs/add/observable/forkJoin';
@@ -55,7 +55,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
     public customDataForms : DynamicMetadataForm[] = [];
 
     constructor(private _kalturaServerClient: KalturaClient,
-                private _categoriesStore : CategoriesStore,
+                private _categoriesSearchService : CategoriesSearchService,
                 private _formBuilder : FormBuilder,
                 private _iterableDiffers : IterableDiffers,
                 private _dynamicMetadataFormFactory : DynamicMetadataFormFactory,
@@ -241,7 +241,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
                 const categoriesList = response.objects.map(category => category.categoryId);
 
                 if (categoriesList.length) {
-                    return this._categoriesStore.getCategoriesFromList(categoriesList);
+                    return this._categoriesSearchService.getCategoriesFromList(categoriesList);
                 } else {
                     return Observable.of({items: []});
                 }
@@ -402,7 +402,7 @@ export class EntryMetadataWidget extends EntryWidget implements OnDestroy
         return Observable.create(
             observer => {
 
-                const requestSubscription = this._categoriesStore.getSuggestions(text)
+                const requestSubscription = this._categoriesSearchService.getSuggestions(text)
                     .cancelOnDestroy(this, this.widgetReset$)
                     .monitor('search categories')
                     .subscribe(

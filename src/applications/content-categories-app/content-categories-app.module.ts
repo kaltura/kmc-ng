@@ -54,6 +54,9 @@ import {CategoriesComponentsList} from './categories/categories-components-list'
 import {CategoryCanDeactivate} from './category/category-can-deactivate.service';
 import {DetailsBarModule} from '@kaltura-ng/kaltura-ui/details-bar';
 import {CategoriesUtilsService} from './categories-utils.service';
+import {CategoryParentSelectorComponent} from './categories/category-parent-selector/category-parent-selector.component';
+import {NewCategoryComponent} from './categories/new-category/new-category.component';
+import {MoveCategoryComponent} from './categories/move-category/move-category.component';
 
 @NgModule({
     imports: [
@@ -100,7 +103,10 @@ import {CategoriesUtilsService} from './categories-utils.service';
         ContentCategoriesComponent,
         CategoryComponentsList,
         CategoriesComponentsList,
-        CategoriesBulkActionsComponent
+        CategoriesBulkActionsComponent,
+        CategoryParentSelectorComponent,
+        MoveCategoryComponent,
+        NewCategoryComponent
     ],
     exports: [],
     providers: [CategoryCanDeactivate,

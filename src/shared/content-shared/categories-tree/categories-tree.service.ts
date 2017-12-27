@@ -4,14 +4,14 @@ import { Observable } from 'rxjs/Observable';
 import { NodeChildrenStatuses, PrimeTreeDataProvider, PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
 import { AppAuthentication } from 'app-shared/kmc-shell';
-import { CategoriesStore, CategoryData } from './categories-store.service';
+import { CategoriesSearchService, CategoryData } from '../categories-search.service';
 import { environment } from 'app-environment';
 
 @Injectable()
-export class CategoriesPrimeService {
+export class CategoriesTreeService {
   private _inLazyMode = false;
 
-  constructor(private _categoriesStore: CategoriesStore,
+  constructor(private _categoriesSearchService: CategoriesSearchService,
               private primeTreeDataProvider: PrimeTreeDataProvider,
               private appAuthentication: AppAuthentication,
               private appLocalization: AppLocalization) {
@@ -20,7 +20,7 @@ export class CategoriesPrimeService {
 
   public getCategories(): Observable<{ categories: PrimeTreeNode[] }> {
     return Observable.create(observer => {
-      const categories$ = this._inLazyMode ? this._categoriesStore.getRootCategories() : this._categoriesStore.getAllCategories();
+      const categories$ = this._inLazyMode ? this._categoriesSearchService.getRootCategories() : this._categoriesSearchService.getAllCategories();
       let categories = [];
       const categoriesSubsciption = categories$.subscribe(result => {
           categories = this.primeTreeDataProvider.create(
@@ -61,7 +61,7 @@ export class CategoriesPrimeService {
         } else {
           node.setChildrenLoadStatus(NodeChildrenStatuses.loading);
 
-          this._categoriesStore.getChildrenCategories(<number>node.data).subscribe(result => {
+          this._categoriesSearchService.getChildrenCategories(<number>node.data).subscribe(result => {
               // add children to the node
               let nodeChildren = this.primeTreeDataProvider.create(
                 this.createTreeHandlerArguments(result.items, node)
@@ -86,28 +86,6 @@ export class CategoriesPrimeService {
     }
   }
 
-  public searchCategories(text: string): Observable<CategoryData[]> {
-    return Observable.create(
-      observer => {
-
-        const requestSubscription = this._categoriesStore.getSuggestions(text)
-          .monitor('search categories')
-          .subscribe(
-            result => {
-              observer.next(result.items);
-              observer.complete();
-            },
-            err => {
-              observer.error(err);
-            }
-          );
-
-        return () => {
-          console.log('Categories search: cancelled');
-          requestSubscription.unsubscribe();
-        }
-      });
-  }
 
   private createTreeHandlerArguments(items: any[], parentNode: PrimeTreeNode = null): any {
     return {

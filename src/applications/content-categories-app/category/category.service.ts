@@ -18,6 +18,7 @@ import {CategoryWidgetsManager} from './category-widgets-manager';
 import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verification';
+import {AppEventsService} from 'app-shared/kmc-shared';
 
 export enum ActionTypes {
   CategoryLoading,
@@ -49,10 +50,10 @@ export class CategoryService implements OnDestroy {
     return this._categoryIsDirty;
   }
 
-  private _reloadCategoriesOnLeave = false;
-  private _category: BehaviorSubject<KalturaCategory> = new BehaviorSubject<KalturaCategory>(null);
-  public category$ = this._category.asObservable();
-  private _categoryId: number;
+
+	private _category: BehaviorSubject<KalturaCategory> = new BehaviorSubject<KalturaCategory>(null);
+	public category$ = this._category.asObservable();
+	private _categoryId: number;
 
   public get categoryId(): number {
     return this._categoryId;
@@ -69,7 +70,8 @@ export class CategoryService implements OnDestroy {
               @Host() private _widgetsManager: CategoryWidgetsManager,
               private _categoryRoute: ActivatedRoute,
               private _appLocalization: AppLocalization,
-    private _pageExitVerificationService: PageExitVerificationService) {
+    private _pageExitVerificationService: PageExitVerificationService,
+              appEvents: AppEventsService) {
 
     this._widgetsManager.categoryStore = this;
 
@@ -113,12 +115,10 @@ export class CategoryService implements OnDestroy {
     this._state.complete();
     this._category.complete();
 
-    this._pageExitVerificationService.remove(this._pageExitVerificationToken);
+		this._pageExitVerificationService.remove(this._pageExitVerificationToken);
 
-    if (this._reloadCategoriesOnLeave) {
-      this._categoriesStore.reload(true);
-    }
-  }
+
+	}
 
   private _mapSections(): void {
     if (!this._categoryRoute || !this._categoryRoute.snapshot.data.categoryRoute) {
@@ -134,49 +134,25 @@ export class CategoryService implements OnDestroy {
     });
   }
 
-  private _onRouterEvents(): void {
-    this._router.events
-      .cancelOnDestroy(this)
-      .filter(event => event instanceof NavigationEnd)
-      .subscribe(
-        event => {
-          const currentCategoryId = this._categoryRoute.snapshot.params.id;
-          if (currentCategoryId !== this._categoryId) {
-            if (currentCategoryId === 'new') {
-              const newData = this._categoriesStore.getNewCategoryData();
-
-              if (newData) {
-                this._categoriesStore.clearNewCategoryData();
-                this._categoryId = currentCategoryId;
-
-                this._category.next(
-                  new KalturaCategory({
-                    parentId: newData.categoryParentId
-                  })
-                );
-
-                setTimeout(() => {
-                  const categoryLoadedResult = this._widgetsManager.notifyDataLoaded(this.category, {isNewData: true});
-                  if (categoryLoadedResult.errors.length) {
-                    this._state.next({
-                      action: ActionTypes.CategoryLoadingFailed,
-                      error: new Error('one of the widgets failed while handling data loaded event')
+    private _onRouterEvents(): void {
+        this._router.events
+            .cancelOnDestroy(this)
+            .filter(event => event instanceof NavigationEnd)
+            .subscribe(
+                event => {
+                    // we must defer the loadCategory to the next event cycle loop to allow components
+                    // to init them-selves when entering this module directly.
+                    setTimeout(() => {
+                        const currentCategoryId = this._categoryRoute.snapshot.params.id;
+                        const category = this._category.getValue();
+                        if (!category || (category && category.id.toString() !== currentCategoryId)) {
+                            this._loadCategory(currentCategoryId);
+                        }
                     });
-                  } else {
-                    this._state.next({action: ActionTypes.CategoryLoaded});
-                  }
-                }, 0);
-              } else {
-                this.returnToCategories();
-              }
-            } else {
-              // we must defer the loadCategory to the next event cycle loop to allow components
-              // to init them-selves when entering this module directly.
-              setTimeout(() => this._loadCategory(currentCategoryId), 0);
-            }
-          }
-        });
-  }
+                });
+    }
+
+
 
   private _transmitSaveRequest(newCategory: KalturaCategory) {
     this._state.next({action: ActionTypes.CategorySaving});
@@ -195,8 +171,6 @@ export class CategoryService implements OnDestroy {
       .flatMap(
         (response) => {
           if (response.ready) {
-            this._reloadCategoriesOnLeave = true;
-
             return this._kalturaServerClient.multiRequest(request)
               .monitor('category store: save category')
               .tag('block-shell')
