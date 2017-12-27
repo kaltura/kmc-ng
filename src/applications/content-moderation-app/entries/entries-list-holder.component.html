@@ -1,0 +1,21 @@
+<kEntriesList [columns]="_columns"
+              [rowActions]="_rowActions"
+              [blockerMessage]="_blockerMessage"
+              (onActionsSelected)="_onActionSelected($event)">
+  <div class="kBulkActions bulk-actions">
+    <button class="kButtonDefault kBulkActionsBtn" icon="kIcondropdown_arrow_bottom" iconPos="right" pButton
+            [label]="'applications.content.moderation.selectAction' | translate"
+            (click)="menu.toggle($event)"></button>
+  </div>
+  <p-tieredMenu #menu [model]="_bulkActionsMenu" [popup]="true" [styleClass]="menu" class="kOverrideFAIcons"
+                [appendTo]="'body'"></p-tieredMenu>
+</kEntriesList>
+
+<kPopupWidget #moderationDetails [slider]="true" [popupWidth]="792" [popupHeight]="700" [modal]="true"
+              [closeBtn]="false" class="kPopupWidgetWrap">
+  <ng-template>
+    <kEntryReport
+      [parentPopupWidget]="moderationDetails"
+      [entryId]="_currentEntryId"></kEntryReport>
+  </ng-template>
+</kPopupWidget>

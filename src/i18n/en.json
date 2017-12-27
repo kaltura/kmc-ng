@@ -56,6 +56,7 @@
       "ok": "OK",
       "cancel": "Cancel",
       "retry": "Retry",
+      "reload": "Reload",
       "confirm": "Confirm",
       "close": "Close",
       "note": "Note:",
@@ -258,7 +259,7 @@
         "upToDate": "Up to date",
         "loading": "Loading...",
         "errors": {
-          "poll": "Cannot get upload data. Retrying...",
+          "poll": "Cannot get upload status. Retrying...",
           "prepare": "Could not connect upload monitor!"
         }
       },
@@ -465,8 +466,8 @@
         "requiresAuthentication": "Requires Authentication",
         "private": "Private",
         "selectedCategory": "Selected: {{0}}",
-        "deleteAction": {
-          "deleteWarningSubcategoriesConfirmation": "This category was created by another application and editing it will effect this application or site.\nThis category will be deleted with its sub-categories.\nAre you sure you want to delete this category?",
+        "deleteAction" : {
+          "deleteWarningSubcategoriesConfirmation": "This category was created by another application and editing it will effect this application or site.\nThis category will be deletedwith its sub-categories.\nAre you sure you want to delete this category?",
           "deleteWarningConfirmation": "This category was created by another application and editing it will effect this application or site.\nAre you sure you want to delete this category?",
           "deleteSubcategoriesConfirmation": "This category will be deleted with its sub-categories.\nAre you sure you want to delete this category?",
           "deleteConfirmation": "Are you sure you want to delete this category?"
@@ -548,6 +549,48 @@
         "confirmDeleteEntry": "Are you sure you want to delete the selected entry?",
         "confirmDeleteEntries": "Are you sure you want to delete the selected entries?"
       },
+      "moderation": {
+        "entryReports": "Entry Reports",
+        "approveEntry": "Approve Entry",
+        "rejectEntry": "Reject Entry",
+        "report": "Report",
+        "details": "Details",
+        "banCreator": "Ban Creator",
+        "flagSingular": "{{0}} Flag",
+        "flagPlural": "{{0}} Flags",
+        "sexualContent": "Sexual Content",
+        "harmfulOrDangerousAct": "Harmful Or Dangerous Act",
+        "spamOrCommercials": "Spam / Commercials",
+        "violentOrRepulsive": "Violent / Repulsive",
+        "errorConnecting": "Error connecting to server",
+        "errorOccured": "An error has occurred",
+        "notificationHasBeenSent": "A notification has been sent to your CMS system to flag this user.",
+        "approveMedia": "Moderation: Approve media",
+        "sureToApprove": "Are you sure you want to approve the following entry? \n {{0}}",
+        "sureToApproveMultiple": "Are you sure you want to approve the following entries? \n {{0}}",
+        "rejectMedia": "Moderation: Reject media",
+        "sureToReject": "Are you sure you want to reject the following entry? \n {{0}}",
+        "sureToRejectMultiple": "Are you sure you want to reject the following entries? \n {{0}}",
+        "selectAction": "Select Action",
+        "errors": {
+          "missingIds": "Missing entryIds argument",
+          "bulkApproveEntry": "An error occurred while approving entry. \n Please try again.",
+          "bulkRejectEntry": "An error occurred while rejecting entry. \n Please try again."
+        }
+      },
+      "moderationDetails": {
+        "name": "Name",
+        "entryId": "Entry ID",
+        "duration": "Duration",
+        "plays": "Plays",
+        "moderationStatus": "Moderation Status",
+        "clippedFrom": "Clipped from",
+        "creator": "Creator",
+        "errors": {
+          "entryDetails": "Unable to load the entry moderation details",
+          "ban": "Unable to ban the Creator"
+        }
+      },
       "filters": {
         "errorLoading": "Error loading filters",
         "activeFilters": "Active Filters:",
@@ -604,6 +647,11 @@
         "subcategories": "Sub - Categories",
         "loading": "Loading...",
         "noResults": "No Results",
+        "flags": "Flags",
+        "moderationStatus": "Moderation Status",
+        "reportsAndDetails": "Reports & Details",
+        "approve": "Approve",
+        "reject": "Reject",
         "userName": "User name",
         "userId": "User ID",
         "emailAddress": "Email Address",
@@ -800,6 +848,8 @@
         "moveDown": "Move Down",
         "duplicate": "Duplicate",
         "removeCategoriesNone": "No categories to remove",
+        "approve": "Approve",
+        "reject": "Reject",
         "createPlaylistWarning": "New playlist",
         "createPlaylistWarningMsg": "Some of selected entries has invalid status.\nYou can continue, but invalid entries will be ignored\n{{0}}",
         "createPlaylistErrorMsg": "All selected entries have invalid statuses.\nYou can't create new playlist with those entries"
