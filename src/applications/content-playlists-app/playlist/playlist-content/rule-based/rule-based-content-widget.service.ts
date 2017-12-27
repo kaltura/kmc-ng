@@ -39,6 +39,7 @@ export class RuleBasedContentWidget extends PlaylistWidget implements OnDestroy 
 
   ngOnDestroy() {
     this._state.complete();
+    this._selectedRule.complete();
   }
 
   protected onValidate(wasActivated?: boolean): Observable<{ isValid: boolean }> {

@@ -20,7 +20,8 @@
   <kPopupWidget #playlistRule [popupWidth]="995" [slider]="true">
     <ng-template>
       <kPlaylistRule [rule]="_selectedRule"
-                     (onClosePopupWidget)="playlistRule.close()"></kPlaylistRule>
+                     (onClosePopupWidget)="playlistRule.close()"
+                     (onAddRule)="_addRule($event)"></kPlaylistRule>
     </ng-template>
   </kPopupWidget>
 </k-area-blocker>

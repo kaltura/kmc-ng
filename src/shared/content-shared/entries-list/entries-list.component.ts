@@ -32,7 +32,7 @@ export class EntriesListComponent implements OnInit, OnDestroy {
 
       this._entriesStore.filter(this._mapRuleFilters(value));
     } else {
-      this._entriesStore.resetFilters();
+      this._entriesStore.resetFilters(); // TODO [kmcng] reset filters without loading entries
     }
   }
 

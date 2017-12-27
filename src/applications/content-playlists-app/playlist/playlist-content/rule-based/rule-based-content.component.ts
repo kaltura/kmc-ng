@@ -6,6 +6,7 @@ import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-
 import { PlaylistRule } from 'app-shared/content-shared/playlist-rule.interface';
 import { PlaylistEntriesDataProvider } from './playlist-rule/playlistEntriesDataProvider';
 import { EntriesDataProviderToken } from 'app-shared/content-shared/entries-store/defaultEntriesDataProvider';
+import { KalturaMediaEntryFilterForPlaylist } from 'kaltura-ngx-client/api/types/KalturaMediaEntryFilterForPlaylist';
 
 @Component({
   selector: 'kPlaylistContentRuleBased',
@@ -54,6 +55,10 @@ export class RuleBasedContentComponent implements OnInit, OnDestroy {
   public _deleteSelected(selectedRules: PlaylistRule[]): void {
     this._clearSelection();
     this._widgetService.deleteSelectedRules(selectedRules);
+  }
+
+  public _addRule(rule: KalturaMediaEntryFilterForPlaylist): void {
+    console.warn(rule);
   }
 }
 
