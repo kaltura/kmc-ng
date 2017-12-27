@@ -258,7 +258,7 @@
         "upToDate": "Up to date",
         "loading": "Loading...",
         "errors": {
-          "poll": "Cannot get upload data. Retrying...",
+          "poll": "Cannot get upload status. Retrying...",
           "prepare": "Could not connect upload monitor!"
         }
       },
