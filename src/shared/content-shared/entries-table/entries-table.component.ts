@@ -66,7 +66,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() selectedEntries: any[] = [];
 
   @Output() sortChanged = new EventEmitter<any>();
-  @Output() actionSelected = new EventEmitter<{ action: string, entryId: string }>();
+  @Output() actionSelected = new EventEmitter<{ action: string, entry: KalturaMediaEntry }>();
   @Output() selectedEntriesChange = new EventEmitter<any>();
 
   @ViewChild('dataTable') private dataTable: DataTable;
@@ -96,7 +96,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     this._blockerMessage = null;
     this._emptyMessage = '';
     let loadedOnce = false; // used to set the empty message to 'no results' only after search
-    this.entriesStoreStatusSubscription = this.entriesStore.state$.subscribe(
+    this.entriesStoreStatusSubscription = this.entriesStore.entries.state$.subscribe(
       result => {
         if (result.errorMessage) {
           this._blockerMessage = new AreaBlockerMessage({
@@ -104,7 +104,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
             buttons: [{
               label: 'Retry',
               action: () => {
-                this.entriesStore.reload(true);
+                this.entriesStore.reload();
               }
             }
             ]
@@ -155,16 +155,16 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     return !(isNotReady && isPreviewCommand) && !(isNotReady && isLiveStreamFlash && isViewCommand);
   }
 
-  private _buildMenu(mediaType: KalturaMediaType = null, status: any = null): void {
+  private _buildMenu(entry: KalturaMediaEntry): void {
     this._items = this.rowActions
-      .filter(item => this._hideMenuItems(status, mediaType, item))
-      .map(action =>
-        Object.assign({}, action, {
-          command: ({ item }) => {
-            this._onActionSelected(item.commandName, this.actionsMenuEntryId);
-          }
-        })
-      );
+		.filter(item => this._hideMenuItems(status, entry.mediaType, item))
+		.map(action =>
+            Object.assign({}, action, {
+              command: ({ item }) => {
+                this._onActionSelected(item.commandName, entry);
+              }
+            })
+        );
   }
 
   public _rowTrackBy(index: number, item: any): string {
@@ -176,7 +176,7 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
       this.actionsMenu.toggle(event);
       if (this.actionsMenuEntryId !== entry.id) {
         this.actionsMenuEntryId = entry.id;
-        this._buildMenu(entry.mediaType, entry.status);
+        this._buildMenu(entry);
         this.actionsMenu.show(event);
       }
     }
@@ -188,8 +188,8 @@ export class EntriesTableComponent implements AfterViewInit, OnInit, OnDestroy {
     return !(isLiveStream && isReady);
   }
 
-  public _onActionSelected(action: string, entryId: string) {
-    this.actionSelected.emit({ action, entryId });
+  public _onActionSelected(action: string, entry: KalturaMediaEntry) {
+    this.actionSelected.emit({ action, entry });
   }
 
   public _onSortChanged(event) {

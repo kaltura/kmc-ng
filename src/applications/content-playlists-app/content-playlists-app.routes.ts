@@ -1,7 +1,7 @@
 import { Route } from '@angular/router';
 
 import { ContentPlaylistsComponent } from './content-playlists.component';
-import { PlaylistsListComponent } from './playlists/playlists-list.component';
+import { PlaylistsListComponent } from './playlists/playlists-list/playlists-list.component';
 import { PlaylistComponent } from './playlist/playlist.component';
 import { PlaylistMetadataComponent } from './playlist/playlist-metadata/playlist-metadata.component';
 import { PlaylistContentComponent } from './playlist/playlist-content/playlist-content.component';

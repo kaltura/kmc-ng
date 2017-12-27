@@ -10,11 +10,12 @@
       "Categories": "Categories",
       "Studio": "Studio",
       "Analytics": "Analytics",
+      "Administration": "Administration",
       "Settings": "Settings",
+      "Users": "Users",
       "Account Settings": "Account Settings",
       "Integration Settings": "Integration Settings",
       "Account Upgrade": "Account Upgrade",
-      "Administration": "Administration",
       "Roles": "Roles",
       "UploadControl": "Upload Control",
       "BulkUpload": "Bulk Upload",
@@ -62,7 +63,8 @@
       "attention": "Attention",
       "yes": "Yes",
       "no": "No",
-      "apply": "Apply"
+      "apply": "Apply",
+      "done": "Done"
     },
     "login": {
       "login": {
@@ -134,6 +136,33 @@
     }
   },
   "applications": {
+    "embed":{
+      "previewShare": "Share & Embed",
+      "embedType": "Embed type",
+      "selectPlayer": "Select player",
+      "embedIframe": "Iframe Embed",
+      "embedDynamic": "Dynamic Embed",
+      "embedAuto": "Auto Embed",
+      "embedThumb": "Thumbnail Embed",
+      "embedCode": "Embed code",
+      "copy": "Copy",
+      "seo": "Include Search Engine Optimization data",
+      "https": "Support for HTTPS embed code",
+      "qr": "Scan Code for Mobile Preview",
+      "view": "Standalone preview",
+      "advanced": "Advanced Settings",
+      "settings": "List Arrangement Settings",
+      "name": "Name",
+      "added": "Date added",
+      "updated": "Date updated",
+      "helpTip1": "Auto embed is the default embed code type and is best to get a player quickly on a page without any runtime customizations.",
+      "helpTip2": "Read more",
+      "helpTip3": "about the different embed code types.",
+      "helpTip4": "Logic for defining the delivery method is automated by the Kaltura player to ensure the best user experience. Learn more about enforcing",
+      "helpTip5": "specific delivery protocols.",
+      "playersErrorPlaylist": "Could not find playlist players in this account.\nYou can create new players using the Studio tab.",
+      "playersErrorVideo": "Could not find video players in this account.\nYou can create new players using the Studio tab."
+    },
     "entries": {
       "entryMetadata": {
         "searchTagsPH": "Search Tags",
@@ -229,9 +258,9 @@
         "error": "{{0}} error",
         "upToDate": "Up to date",
         "loading": "Loading...",
-        "bulkErrors": {
-          "poll": "Cannot get bulk upload data. Retrying...",
-          "prepare": "Could not connect bulk upload monitor!"
+        "errors": {
+          "poll": "Cannot get upload status. Retrying...",
+          "prepare": "Could not connect upload monitor!"
         }
       },
       "transcodingProfilesSelect": {
@@ -331,6 +360,66 @@
           }
         }
       },
+      "dropFolders": {
+        "search": "Search",
+        "allStatuses": "All Statuses",
+        "refresh" : "Refresh",
+        "deleteFiles": "Delete files",
+        "confirmDelete": "Are you sure you want to permanently delete all selected files? \n {{0}}",
+        "confirmDeleteSingle": "Are you sure you want to permanently delete selected file? \n {{0}}",
+        "table": {
+          "fileName": "File name",
+          "dropFolderName": "Dropfolder name",
+          "createdOn": "Created on",
+          "fileSize": "File size",
+          "entryId": "Entry ID",
+          "status": "Status",
+          "datesTooltip": "Upload start detected on: {{0}}\n Upload completion detected on: {{1}}\n File transfer from drop folder to Kaltura started on: {{2}} \n File transfer of drop folder to Kaltura ended on: {{3}}",
+          "notAvailable": "N/A",
+          "unknown": "Unknown",
+          "delete": "Delete"
+        },
+        "filters": {
+          "additionalFilters": "Additional Filters",
+          "createdBetween": "Created Between",
+          "clearDates": "Clear Dates",
+          "clearAll": "Clear All",
+          "close": "Close"
+        },
+        "dropFolderStatusLabels": {
+          "allStatuses": "All statuses",
+          "uploading": "Uploading",
+          "downloading": "Downloading",
+          "pending": "Pending",
+          "processing": "Processing",
+          "parsedFromXml": "Parsed from XML",
+          "waitingForRelatedFiles": "Waiting for Related Files",
+          "waitingForMatchedEntry": "Waiting for Matched Entry",
+          "error": "Error",
+          "deleteFailed": "Delete Failed",
+          "done": "Done",
+          "downloadFailed": "Download Failed"
+        },
+        "dropFolderStatusTooltips": {
+          "uploading": "File is currently uploading to the drop folder",
+          "downloading": "The file is currently importing from the drop folder to Kaltura",
+          "pending": "File upload is completed - Waiting for drop folder processing to start",
+          "processing": "Drop folder engine is currently processing this file",
+          "parsedFromXml": "File reference was parsed from the XML. File is expected but is not yet available in the drop folder",
+          "waitingForRelatedFiles": "Processing of this file should continue when all related files are available in the drop folder (e.g. XML file, other media files referenced in the same XML or other flavors expected for the same entry).",
+          "waitingForMatchedEntry": "Processing of this file should continue when a matched entry is found",
+          "error": "Drop folder engine processing failed",
+          "deleteFailed": "Failed to delete the file from the drop folder",
+          "done": "Drop folder processing was completed for this file",
+          "downloadFailed": "Failed to import the file from the drop folder to Kaltura"
+        },
+        "errors": {
+          "retry": "Retry",
+          "dropFoldersAlert": "The drop folder capability allows you to easily trigger content ingestion by dropping files into a folder in your environment. To enable this capability for your account, <a href=\"http://corp.kaltura.com/about/contact\" target=\"_blank\">contact us</a>.\n<a href=\"http://knowledge.kaltura.com/kaltura-drop-folders-service-content-ingestion-0\" target=\"_blank\">Learn more about drop folders</a>",
+          "errorDropFoldersFiles": "An error occurred during drop folder files update.",
+          "errorLoad": "Failed to load drop folder"
+        }
+      },
       "categories": {
         "categories": "Categories",
         "search": "Search",
@@ -392,8 +481,24 @@
         "cancel": "Cancel",
         "noParent":"No Parent",
         "searchCategories": "Search Categories",
-        "selectedParentCategory":"Parent Category Id: {{value}}"
-
+        "selectedParentCategory":"Parent Category Id: {{value}}",
+        "name": "Name",
+        "categoryMovedSuccessfully": "Category moved successfully",
+        "errors": {
+          "requiredName": "You must enter name"
+        }
+      },
+      "moveCategory":{
+        "noParent":"No Parent",
+        "selectCategoryParent": "Select the parent category under which the selected category will appear",
+        "treeUpdateNotification": "Category tree will be updated in an asynchronous process. This operation may take a few minutes. Category editing options will be released when update is completed.",
+        "errors": {
+          "invalidParentSelection": "Category cannot be moved into itself or one of its children categories",
+          "categoryMovedFailure": "An error occurred while trying to move category to selected parent",
+          "unableToMove": "Cannot perform Move Category action since no categories to move were selected",
+          "categoryAlreadyBelongsToParent": "Category is already a child of selected parent",
+          "onlySiblingsMoveAllowed" : "Only sub-categories of the same parent category can be moved together."
+        }
       },
       "entries": {
         "entries": "Entries",
@@ -437,6 +542,7 @@
         "confirmDeleteEntries": "Are you sure you want to delete the selected entries?"
       },
       "filters": {
+        "errorLoading": "Error loading filters",
         "activeFilters": "Active Filters:",
         "clearAll": "Clear All",
         "close": "Close",
@@ -449,16 +555,16 @@
         "after": "After",
         "before": "Before",
         "createdBetween": "Created Between",
-        "mediaType": "Media Type: {{0}}",
-        "status": "Status: {{0}}",
-        "duration": "Duration: {{0}}",
+        "mediaTypes": "Media Type: {{0}}",
+        "ingestionStatuses": "Status: {{0}}",
+        "durations": "Duration: {{0}}",
         "replacementStatuses": "Replacement Statuses: {{0}}",
-        "moderation": "Moderation: {{0}}",
-        "originalClipped": "Original & Clipped: {{0}}",
-        "scheduling": "Scheduling: {{0}}",
-        "accessControl": "Access Control: {{0}}",
-        "flavor": "Flavor: {{0}}",
-        "distribution": "Distribution: {{0}}",
+        "moderationStatuses": "Moderation: {{0}}",
+        "originalClippedEntries": "Original & Clipped: {{0}}",
+        "timeScheduling": "Scheduling: {{0}}",
+        "accessControlProfiles": "Access Control: {{0}}",
+        "flavors": "Flavor: {{0}}",
+        "distributions": "Distribution: {{0}}",
         "freeText": "Free text search",
         "metaData": "{{0}}: {{1}}",
         "uploadedItem": "Uploaded item: {{0}}",
@@ -488,7 +594,14 @@
         "delete": "Delete",
         "view": "View Details",
         "loading": "Loading...",
-        "noResults": "No Results"
+        "noResults": "No Results",
+        "userName": "User name",
+        "userId": "User ID",
+        "emailAddress": "Email Address",
+        "role": "Role",
+        "lastLogin": "Last Login",
+        "edit": "Edit",
+        "blockUnblock": "Block / Unblock"
       },
       "paginator": {
         "showRows": "Show rows:"
@@ -566,7 +679,17 @@
           "close": "Close",
           "clearDates": "Clear Dates",
           "createdBetween": "Created Between",
-          "additionalFilters": "Additional Filters"
+          "additionalFilters": "Additional Filters",
+          "uploadedItems": "Uploaded items",
+          "entries": "Entries",
+          "categories": "Categories",
+          "endUsers": "End Users",
+          "endUserEntitlements": "End-User Entitlements",
+          "statuses": "Statuses",
+          "successFinish": "Finished successfully",
+          "errorFinish": "Finished with errors",
+          "failed": "Failed",
+          "otherStatuses": "All other statuses"
         }
       },
       "entryStatus": {
@@ -604,6 +727,11 @@
         "external": "External RSS",
         "staticList": "Manual",
         "unknown": "Unknown"
+      },
+      "userStatus": {
+        "active": "Active",
+        "blocked": "Blocked",
+        "deleted": "Deleted"
       },
       "addNewPlaylist": {
         "addNewPlaylist": "Add New Playlist",
@@ -653,7 +781,8 @@
         "updated": "Entries updated successfully",
         "note": "Update Note",
         "confirm": "Are you sure you want to update {{0}} entries? It could take a while...",
-        "confirmPlaylists": "Are you sure you want to update {{0}} playlists? It could take a while...",
+        "confirmPlaylsts": "Are you sure you want to update {{0}} playlists? It could take a while...",
+        "confirmDropFolders": "Are you sure you want to update {{0}} drop folders files? It could take a while...",
         "deleteEntries": "Delete Entries",
         "deleteConfirm": "Are you sure you want to delete the selected entries?",
         "deleteNote": "Please note: the selected entries will be permanently deleted from your account.",
@@ -724,6 +853,12 @@
         "thumbnails": {
           "thumbnails": "Thumbnails",
           "upload": "Upload",
+          "capture": {
+            "choose": "Choose frame",
+            "title": "Choose frame from video",
+            "label": "Pause the video on the appropriate frame and hit the capture button to save your thumbnail.",
+            "save": "Capture and Save"
+          },
           "thumbnail": "Thumbnail",
           "dimensions": "Dimensions",
           "size": "Size",
@@ -1104,8 +1239,51 @@
           "delete": "Delete"
         },
         "errors": {
-          "roleInUse": "The role you selected cannot be deleted since it is currently assigned to existing users."
+          "loadError": "Can't load entries",
+          "roleInUse": "The role you selected cannot be deleted since it is currently assigned to existing users.",
+          "cantDeleteRole": "Can't delete role",
+          "cantDeleteAdminRole": "Can't delete Administrator role",
+          "cantDuplicateRole": "Can't duplicate role",
+          "duplicationError": "Error occurred while trying to duplicate role"
         }
+      },
+      "users": {
+        "user": "user",
+        "users": "users",
+        "moreUsers": "Need more KMC users?",
+        "clickHere": "Click here",
+        "usersUpgrade": "to upgrade your account!",
+        "you": "You",
+        "accountOwner": "Account Owner",
+        "deleteUser": "Delete User",
+        "confirmDelete": "Are you sure you want to delete the selected user? \n ({{0}})",
+        "save": "Save",
+        "editUser": "Edit User",
+        "loginEmailAddress": "Login Email address",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "publisherUserId": "Publisher User ID",
+        "userRole": "User role",
+        "addRole": "Add role",
+        "addUser": "Add User",
+        "currentStatus": "Current status:",
+        "usersInfo": "{{0}} KMC {{1}} in use, {{2}} additional available.",
+        "failedLoading": "Failed to load users data",
+        "cantPerform": "You don't have access to perform this action",
+        "successSavingUser": "Changes will take effect immediately. \nPlease instruct the user to refresh their browser.",
+        "personalDetails": "Personal Details",
+        "accountSpecificDetails": "Account Specific Details",
+        "required": "This field is required",
+        "emailFormat": "This Email format is not valid",
+        "userAlreadyExist": "{{0}} is already listed in the system and is associated with another KMC account. \nDo you want to associate this user with this account as well?",
+        "alreadyExist": "User already exist",
+        "alreadyExistError": "Login e-mail {{0}} is already listed in the system as an authorized user in your account.",
+        "userAssociatedCaption": "Associated user",
+        "userAssociated": "User with Id {{0}} already exists on the account. Do you want to enable KMC access to this user?",
+        "refresh": "Refresh",
+        "commonError": "Error happened during server request",
+        "addUserError": "Missing one of mandatory fields",
+        "invalidUserId": "Invalid user id"
       },
       "role": {
         "titleEdit": "Edit Role",

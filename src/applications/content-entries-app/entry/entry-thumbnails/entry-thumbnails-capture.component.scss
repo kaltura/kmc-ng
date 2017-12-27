@@ -1,0 +1,48 @@
+@import 'app-theme/_variables.scss';
+
+.kCaptureWin{
+  .kHeader {
+    height: 78px;
+    width: 100%;
+    text-align: center;
+    padding-top: 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid $kGrayscale4;
+    .kTitle {
+      color: #333333;
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+  .kContainer{
+    margin: 12px;
+    height: 276px;
+    padding-left: 112px;
+    padding-right: 112px;
+    padding-top: 30px;
+    .kPlayerTarget{
+      width: 340px;
+      height: 190px;
+      background-color: black;
+      margin-bottom: 34px;
+    }
+    .kLabel{
+      margin-top: 34px;
+      font-size: 15px;
+      text-align: center;
+      color: $kGrayscale1;
+    }
+  }
+  .kFooter{
+    height: 66px;
+    border-top: 1px solid $kGrayscale4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button{
+      height: 34px;
+    }
+  }
+
+}
+
