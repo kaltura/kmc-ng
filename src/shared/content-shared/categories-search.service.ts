@@ -34,7 +34,7 @@ export interface CategoriesQuery {
 
 
 @Injectable()
-export class CategoriesStore {
+export class CategoriesSearchService {
   private _categoriesCache: { [key: string]: Observable<{ items: CategoryData[] }> } = {};
 
   constructor(private kalturaServerClient: KalturaClient, private _appLocalization: AppLocalization) {

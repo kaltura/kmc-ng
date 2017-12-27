@@ -1,13 +1,12 @@
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
-import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AppLocalization } from "@kaltura-ng/kaltura-common";
-import { CategorySectionsList } from './category-sections-list';
-import { CategoryWidgetKeys } from '../category-widget-keys';
-import { KalturaMediaType } from 'kaltura-ngx-client/api/types/KalturaMediaType';
+import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {CategorySectionsList} from './category-sections-list';
+import {Injectable, OnDestroy} from '@angular/core';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { CategoryWidget } from '../category-widget';
+import {ActivatedRoute} from '@angular/router';
+import {CategoryWidget} from '../category-widget';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 
 export interface SectionWidgetItem {
     label: string,
@@ -21,7 +20,8 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
     private _sections = new BehaviorSubject<SectionWidgetItem[]>([]);
     public sections$: Observable<SectionWidgetItem[]> = this._sections.asObservable();
 
-    constructor(private _appLocalization: AppLocalization) {
+    constructor(private _appLocalization: AppLocalization,
+                private _categoryRoute: ActivatedRoute) {
         super('categorySectionsList');
     }
 
@@ -88,48 +88,20 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
 
                 const sectionFormWidgetState = formWidgetsState ? formWidgetsState[section.key] : null;
                 const isSectionActive = sectionFormWidgetState && sectionFormWidgetState.isActive;
-
-                if (this._isSectionEnabled(section.key, category)) {
-                    sections.push(
-                        {
-                            label: this._appLocalization.get(section.label),
-                            active: isSectionActive,
-                            hasErrors: sectionFormWidgetState ? sectionFormWidgetState.isValid : false,
-                            key: section.key
-                        }
-                    );
-                }
+                sections.push(
+                    {
+                        label: this._appLocalization.get(section.label),
+                        active: isSectionActive,
+                        hasErrors: sectionFormWidgetState ? sectionFormWidgetState.isValid : false,
+                        key: section.key
+                    }
+                );
             });
         }
 
         this._sections.next(sections);
     }
 
-    private _isSectionEnabled(sectionKey: string, entry: KalturaCategory): boolean {
-        //const mediaType = this.data.mediaType;
-        // todo: update section list
-        switch (sectionKey) {
-            // case EntryWidgetKeys.Thumbnails:
-            //     return mediaType !== KalturaMediaType.image;
-            // case EntryWidgetKeys.Flavours:
-            //     return mediaType !== KalturaMediaType.image && !this._isLive(entry);
-            // case EntryWidgetKeys.Captions:
-            //     return mediaType !== KalturaMediaType.image && !this._isLive(entry);
-            // case EntryWidgetKeys.Live:
-            //     return this._isLive(entry);
-            // case EntryWidgetKeys.Clips:
-            //     return mediaType !== KalturaMediaType.image;
-            default:
-                return true;
-        }
+    ngOnDestroy() {
     }
-
-    ngOnDestroy()
-    {
-
-    }
-    // private _isLive( entry : KalturaMediaEntry): boolean {
-    //     const mediaType = entry.mediaType;
-    //     return mediaType === KalturaMediaType.liveStreamFlash || mediaType === KalturaMediaType.liveStreamWindowsMedia || mediaType === KalturaMediaType.liveStreamRealMedia || mediaType === KalturaMediaType.liveStreamQuicktime;
-    // }
 }
