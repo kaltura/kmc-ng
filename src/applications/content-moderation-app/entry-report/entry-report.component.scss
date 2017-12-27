@@ -54,8 +54,11 @@
     padding: 24px 28px;
 
     .kFrame {
-      text-align: center;
       width: 100%;
+      display: flex;
+      k-player{
+        margin: 0 auto;
+      }
     }
 
     .appSubMenu {
