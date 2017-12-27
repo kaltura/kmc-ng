@@ -4,9 +4,9 @@ import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {CategorySectionsList} from './category-sections-list';
-import {CategoryWidgetKeys} from '../category-widget-keys';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {CategoryWidget} from '../category-widget';
+import {CategoryWidgetKeys} from '../category-widget-keys';
 import {environment} from 'app-environment';
 
 export interface SectionWidgetItem {
@@ -84,17 +84,14 @@ export class CategorySectionsListWidget extends CategoryWidget implements OnDest
 
                 const sectionFormWidgetState = formWidgetsState ? formWidgetsState[section.key] : null;
                 const isSectionActive = sectionFormWidgetState && sectionFormWidgetState.isActive;
-
-                if (this._isSectionEnabled(section.key, category)) {
-                    sections.push(
-                        {
-                            label: this._appLocalization.get(section.label),
-                            active: isSectionActive,
-                            hasErrors: sectionFormWidgetState ? sectionFormWidgetState.isValid : false,
-                            key: section.key
-                        }
-                    );
-                }
+                sections.push(
+                    {
+                        label: this._appLocalization.get(section.label),
+                        active: isSectionActive,
+                        hasErrors: sectionFormWidgetState ? sectionFormWidgetState.isValid : false,
+                        key: section.key
+                    }
+                );
             });
         }
 

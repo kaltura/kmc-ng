@@ -12,7 +12,7 @@
 .kContent {
   display: flex;
   flex-direction: column;
-  height: 340px;
+  height: 352px;
   .kLabel {
     text-align: center;
     display: block;
@@ -20,7 +20,7 @@
   }
   .kContainer {
     height: 190px;
-    margin: 20px;
+    padding: 20px;
   }
   .kBlock {
     display: block;
@@ -30,9 +30,7 @@
   }
 }
 
-.kFooter {  
-  position: absolute;
-  bottom: 0px;
+.kFooter {
   display: flex;
   width: 100%;
   height: 66px;

@@ -1,24 +1,24 @@
-import { CategoriesService } from './../categories/categories.service';
-import { Host, Injectable, OnDestroy } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ISubscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import {CategoriesService} from './../categories/categories.service';
+import {Host, Injectable, OnDestroy} from '@angular/core';
+import {ActivatedRoute, NavigationEnd, NavigationStart, Router} from '@angular/router';
+import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {ISubscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/switchMap';
 
-import { KalturaClient } from 'kaltura-ngx-client';
-import { KalturaCategory } from 'kaltura-ngx-client/api/types/KalturaCategory';
-import { KalturaMultiRequest, KalturaTypesFactory } from 'kaltura-ngx-client';
-import { CategoryGetAction } from 'kaltura-ngx-client/api/types/CategoryGetAction';
-import { CategoryUpdateAction } from 'kaltura-ngx-client/api/types/CategoryUpdateAction';
+import {KalturaClient, KalturaMultiRequest, KalturaTypesFactory} from 'kaltura-ngx-client';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {CategoryGetAction} from 'kaltura-ngx-client/api/types/CategoryGetAction';
+import {CategoryUpdateAction} from 'kaltura-ngx-client/api/types/CategoryUpdateAction';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
-import { CategoryWidgetsManager } from './category-widgets-manager';
-import { OnDataSavingReasons } from '@kaltura-ng/kaltura-ui';
-import { BrowserService } from 'app-shared/kmc-shell/providers/browser.service';
-import { PageExitVerificationService } from 'app-shared/kmc-shell/page-exit-verification';
+import {CategoryWidgetsManager} from './category-widgets-manager';
+import {OnDataSavingReasons} from '@kaltura-ng/kaltura-ui';
+import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
+import {PageExitVerificationService} from 'app-shared/kmc-shell/page-exit-verification';
+import {AppEventsService} from 'app-shared/kmc-shared';
 
 export enum ActionTypes {
 	CategoryLoading,
@@ -31,8 +31,7 @@ export enum ActionTypes {
 	ActiveSectionBusy
 }
 
-declare type StatusArgs =
-	{
+declare interface StatusArgs {
 		action: ActionTypes;
 		error?: Error;
 	}
@@ -52,7 +51,6 @@ export class CategoryService implements OnDestroy {
 		return this._categoryIsDirty;
 	}
 
-	private _reloadCategoriesOnLeave = false;
 	private _category: BehaviorSubject<KalturaCategory> = new BehaviorSubject<KalturaCategory>(null);
 	public category$ = this._category.asObservable();
 	private _categoryId: number;
@@ -71,7 +69,8 @@ export class CategoryService implements OnDestroy {
 		@Host() private _widgetsManager: CategoryWidgetsManager,
 		private _categoryRoute: ActivatedRoute,
 		private _appLocalization: AppLocalization,
-    private _pageExitVerificationService: PageExitVerificationService) {
+    private _pageExitVerificationService: PageExitVerificationService,
+              appEvents: AppEventsService) {
 
 		this._widgetsManager.categoryStore = this;
 
@@ -113,15 +112,11 @@ export class CategoryService implements OnDestroy {
 		this._category.complete();
 
 		this._pageExitVerificationService.remove(this._pageExitVerificationToken);
-
-		if (this._reloadCategoriesOnLeave) {
-			this._categoriesStore.reload(true);
-		}
 	}
 
 	private _mapSections(): void {
 		if (!this._categoryRoute || !this._categoryRoute.snapshot.data.categoryRoute) {
-			throw new Error("this service can be injected from component that is associated to the category route");
+			throw new Error('this service can be injected from component that is associated to the category route');
 		}
 
 		this._categoryRoute.snapshot.routeConfig.children.forEach(childRoute => {
@@ -145,18 +140,10 @@ export class CategoryService implements OnDestroy {
 					// to init them-selves when entering this module directly.
 					setTimeout(() => {
 						const currentCategoryId = this._categoryRoute.snapshot.params.id;
-						if (currentCategoryId === "new") {
-							if (this._categoriesStore && this._categoriesStore.getNewCategoryData()) {
-								const parentId = this._categoriesStore.getNewCategoryData().parentCategoryId;
-								this._loadCategory(parentId);
-							}
-						}
-						else {
-							const category = this._category.getValue();
-							if (!category || (category && category.id.toString() !== currentCategoryId)) {
-								this._loadCategory(currentCategoryId);
-							}
-						}
+                        const category = this._category.getValue();
+                        if (!category || (category && category.id.toString() !== currentCategoryId)) {
+                          this._loadCategory(currentCategoryId);
+                        }
 					});
 				}
 			}
@@ -303,7 +290,7 @@ export class CategoryService implements OnDestroy {
 			.subscribe(
 			response => {
 				if (response.allowed) {
-					this._router.navigate(["category", categoryId], { relativeTo: this._categoryRoute.parent });
+					this._router.navigate(['category', categoryId], { relativeTo: this._categoryRoute.parent });
 				}
 			}
 			);
