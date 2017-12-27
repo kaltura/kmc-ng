@@ -4,22 +4,14 @@ import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/forkJoin';
 
-import {KalturaClient, KalturaMultiRequest, KalturaMultiResponse} from 'kaltura-ngx-client';
-import {DistributionProfileListAction} from 'kaltura-ngx-client/api/types/DistributionProfileListAction';
-import {AccessControlListAction} from 'kaltura-ngx-client/api/types/AccessControlListAction';
+import {KalturaClient} from 'kaltura-ngx-client';
 import {
-  FlavoursStore,
   MetadataItemTypes,
   MetadataProfile,
   MetadataProfileCreateModes,
   MetadataProfileStore,
   MetadataProfileTypes
 } from 'app-shared/kmc-shared';
-
-import {KalturaAccessControlFilter} from 'kaltura-ngx-client/api/types/KalturaAccessControlFilter';
-import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/KalturaDetachedResponseProfile';
-import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
-import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 
 import {DefaultFiltersList} from './default-filters-list';
 
@@ -50,30 +42,22 @@ export class CategoriesRefineFiltersService {
   private _getRefineFilters$: Observable<RefineGroup[]>;
 
   constructor(private kalturaServerClient: KalturaClient,
-              private _metadataProfileStore: MetadataProfileStore, private _flavoursStore: FlavoursStore) {
+              private _metadataProfileStore: MetadataProfileStore) {
   }
 
   public getFilters(): Observable<RefineGroup[]> {
 
     if (!this._getRefineFilters$) {
       // execute the request
-      const getMetadata$ = this._metadataProfileStore.get({
+      this._getRefineFilters$ = this._metadataProfileStore.get({
         type: MetadataProfileTypes.Category,
         ignoredCreateMode: MetadataProfileCreateModes.App
-      });
-      const otherData$ = this.buildQueryRequest();
-      const getFlavours$ = this._flavoursStore.get();
-      this._getRefineFilters$ = Observable.forkJoin(getMetadata$, otherData$, getFlavours$)
+      })
         .map(
-          (responses) => {
-            if (responses[1].hasErrors()) {
-              throw new Error('failed to load refine filters');
-            } else {
-              const metadataData = this._buildMetadataFiltersGroups(responses[0].items);
-              const defaultFilterGroup = this._buildDefaultFiltersGroup();
-
-              return [defaultFilterGroup, ...metadataData.groups];
-            }
+          (response) => {
+            const metadataData = this._buildMetadataFiltersGroups(response.items);
+            const defaultFilterGroup = this._buildDefaultFiltersGroup();
+            return [defaultFilterGroup, ...metadataData.groups];
           })
         .catch(err => {
           console.log(`log: [warn] [categories-refine-filters] failed to create refine filters: ${err}`);
@@ -144,38 +128,5 @@ export class CategoriesRefineFiltersService {
     });
 
     return result;
-  }
-
-
-  private buildQueryRequest(): Observable<KalturaMultiResponse> {
-
-    try {
-      const accessControlFilter = new KalturaAccessControlFilter({});
-      accessControlFilter.orderBy = '-createdAt';
-
-      const distributionProfilePager = new KalturaFilterPager({});
-      distributionProfilePager.pageSize = 500;
-
-      const accessControlPager = new KalturaFilterPager({});
-      distributionProfilePager.pageSize = 1000;
-
-      const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
-        fields: 'id,name',
-        type: KalturaResponseProfileType.includeFields
-      });
-
-      const request = new KalturaMultiRequest(
-        new DistributionProfileListAction({pager: distributionProfilePager}),
-        new AccessControlListAction({
-          pager: accessControlPager,
-          filter: accessControlFilter,
-          responseProfile
-        }),
-      );
-
-      return <any>this.kalturaServerClient.multiRequest(request);
-    } catch (error) {
-      return Observable.throw(error);
-    }
   }
 }

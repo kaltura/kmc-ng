@@ -471,7 +471,11 @@
         "dateFilter": {
           "until": "Until {{0}}",
           "from": "From {{0}}"
-        }
+        },
+        "privacyTypes": "Content Privacy: {{0}}",
+        "categoryListing": "Category Listing: {{0}}",
+        "contributionPolicy": "Contribution Policy: {{0}}",
+        "endUserPermissions": "End-User Permission: {{0}}"
       },
       "table": {
         "thumbnail": "Thumbnail",

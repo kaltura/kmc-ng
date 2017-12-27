@@ -98,13 +98,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
   private _isReady = false;
   private _metadataProfiles: { id: number, name: string, lists: { id: string, name: string }[] }[];
   private _querySubscription: ISubscription;
-
-
-  // private _categories = new BehaviorSubject<Categories>({ items: [], totalCount: 0 });
-  private _state = new BehaviorSubject<UpdateStatus>({loading: false, errorMessage: null});
-  private _categoriesExecuteSubscription: ISubscription;
-  readonly _fields = 'id,name, createdAt, directSubCategoriesCount, entriesCount, fullName,tags';
-  readonly _pageSizeCacheKey = 'categories.list.pageSize';
+  private readonly _pageSizeCacheKey = 'categories.list.pageSize';
   private _newCategoryData: NewCategoryData = null;
 
   constructor(private _kalturaClient: KalturaClient,
@@ -244,7 +238,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
           this._categories.state.next({loading: false, errorMessage: null});
 
           this._categories.data.next({
-            items: <any[]>response.objects,
+            items: <KalturaCategory[]>response.objects,
             totalCount: <number>response.totalCount
           });
         },
@@ -261,8 +255,12 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
     try {
       // create request items
       const filter: KalturaCategoryFilter = new KalturaCategoryFilter({});
-      let responseProfile: KalturaDetachedResponseProfile = null;
       let pagination: KalturaFilterPager = null;
+      // update desired fields of entries
+      const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
+        type: KalturaResponseProfileType.includeFields,
+        fields: 'id, name, createdAt, directSubCategoriesCount, entriesCount, fullName, tags'
+      });
 
       const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
       advancedSearch.type = KalturaSearchOperatorType.searchAnd;
@@ -323,24 +321,12 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
         });
       }
 
-      // remove advanced search arg if it is empty
-      if (advancedSearch.items && advancedSearch.items.length === 0) {
-        delete filter.advancedSearch;
-      }
-
       // update the sort by args
       if (data.sortBy) {
         filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
       }
 
-      // update desired fields of entries
-      if (this._fields) {
-        responseProfile = new KalturaDetachedResponseProfile({
-          type: KalturaResponseProfileType.includeFields,
-          fields: this._fields
-        });
 
-      }
 
       // update pagination args
       if (data.pageIndex || data.pageSize) {
@@ -360,20 +346,16 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
       // filter 'categoryListing', set filter if only one option selected
       if (data.categoryListing) {
         if (data.categoryListing.length === 1) {
-          data.categoryListing.forEach(item => {
-            switch (item.value) {
-              case KalturaAppearInListType.categoryMembersOnly.toString():
-                filter.appearInListEqual = KalturaAppearInListType.categoryMembersOnly;
-                break;
-              case KalturaAppearInListType.partnerOnly.toString():
-                filter.appearInListEqual = KalturaAppearInListType.partnerOnly;
-                break;
-              default:
-                break
-            }
-          });
-        } else  if (data.categoryListing.length > 1) {
-          filter.appearInListEqual = undefined;
+          switch (data.categoryListing[0].value) {
+            case KalturaAppearInListType.categoryMembersOnly.toString():
+              filter.appearInListEqual = KalturaAppearInListType.categoryMembersOnly;
+              break;
+            case KalturaAppearInListType.partnerOnly.toString():
+              filter.appearInListEqual = KalturaAppearInListType.partnerOnly;
+              break;
+            default:
+              break
+          }
         }
       }
 
@@ -392,8 +374,6 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
                 break
             }
           });
-        } else if (data.contributionPolicy.length > 1) {
-          filter.contributionPolicyEqual = undefined;
         }
     }
 
@@ -414,9 +394,12 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
                 break
             }
           });
-        } else if (data.endUserPermissions.length > 1) {
-          filter.contributionPolicyEqual = undefined;
         }
+      }
+
+      // remove advanced search arg if it is empty
+      if (advancedSearch.items && advancedSearch.items.length === 0) {
+        delete filter.advancedSearch;
       }
 
       // build the request
