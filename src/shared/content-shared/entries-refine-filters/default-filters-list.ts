@@ -1,148 +1,70 @@
-import { FilterItem } from '../entries-store/filter-item';
-import { ValueFilter } from '../entries-store/value-filter';
-import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
+export interface DefaultFilterList {
+    label: string;
+    name: string;
+    items: { value: string, label: string }[]
+}
 
-import { MediaTypesFilter } from '../entries-store/filters/media-types-filter';
-
-import { IngestionStatusesFilter } from '../entries-store/filters/ingestion-statuses-filter';
-import { DurationsFilters } from '../entries-store/filters/durations-filter';
-import { OriginalClippedFilter } from '../entries-store/filters/original-clipped-filter';
-import { ModerationStatusesFilter } from '../entries-store/filters/moderation-statuses-filter';
-import { ReplacementStatusesFilter } from '../entries-store/filters/replacement-statuses-filter';
-import { TimeSchedulingFilter } from '../entries-store/filters/time-scheduling-filter';
-
-export type EntriesFilterResolver = (node: PrimeTreeNode) => ValueFilter<any>;
-export type EntriesFilterType = { new(...args): FilterItem };
-export type IsEntryFilterOfRefineFilter = (filter: FilterItem) => boolean;
-
-
-export const DefaultFiltersList: {
-  name: string;
-  label: string;
-  items: { id: string, name: string }[],
-  entriesFilterResolver: EntriesFilterResolver,
-  isEntryFilterOfRefineFilter: IsEntryFilterOfRefineFilter,
-  entriesFilterType: EntriesFilterType
-}[] = [
+export const DefaultFiltersList: DefaultFilterList[] = [
   {
     name: 'mediaTypes', label: 'Media Types',
-    entriesFilterResolver: (node: PrimeTreeNode) => {
-      return new MediaTypesFilter(<string>node.data, node.label);
-    },
-    entriesFilterType: MediaTypesFilter,
-    isEntryFilterOfRefineFilter: filter => {
-      return filter instanceof MediaTypesFilter;
-    },
     items: [
-      { id: '1', name: 'Video' },
-      { id: '2', name: 'Image' },
-      { id: '5', name: 'Audio' },
-      { id: '6', name: 'Video Mix' },
-      { id: '201', name: 'Live Stream' }
-
+      { value: '1', label: 'Video' },
+      { value: '2', label: 'Image' },
+      { value: '5', label: 'Audio' },
+      { value: '6', label: 'Video Mix' },
+      { value: '201', label: 'Live Stream' }
     ]
   },
-  {
-    name: 'ingestionStatuses', label: 'Ingestion Statuses',
-    entriesFilterResolver: (node: PrimeTreeNode) => {
-      return new IngestionStatusesFilter(<string>node.data, node.label);
+    {
+        name: 'ingestionStatuses', label: 'Ingestion Statuses',
+        items: [
+            { value: '2', label: 'Ready' },
+            { value: '7', label: 'No Media' },
+            { value: '4', label: 'Pending' },
+            { value: '0', label: 'Uploading' },
+            { value: '1', label: 'Transcoding' },
+            { value: '-1,-2', label: 'Error' }
+        ]
     },
-    entriesFilterType: IngestionStatusesFilter,
-    isEntryFilterOfRefineFilter: filter => {
-      return filter instanceof IngestionStatusesFilter;
+    {
+        name: 'durations', label: 'Durations',
+        items: [
+            { value: 'short', label: 'Short (0-4 min.)' },
+            { value: 'medium', label: 'Medium (4-20 min.)' },
+            { value: 'long', label: 'Long (20+ min.)' }
+        ]
     },
-    items: [
-      { id: '2', name: 'Ready' },
-      { id: '7', name: 'No Media' },
-      { id: '4', name: 'Pending' },
-      { id: '0', name: 'Uploading' },
-      { id: '1', name: 'Transcoding' },
-      { id: '-1,-2', name: 'Error' }
-    ]
-  },
-  {
-    name: 'durations', label: 'Durations',
-    entriesFilterResolver: (node: PrimeTreeNode) => {
-      return new DurationsFilters(<string>node.data, node.label);
+    {
+        name: 'originalClippedEntries', label: 'Original & Clipped Entries',
+        items: [
+            { value: '1', label: 'Original Entries' },
+            { value: '0', label: 'Clipped Entries' }
+        ]
     },
-    entriesFilterType: DurationsFilters,
-    isEntryFilterOfRefineFilter: filter => {
-      return filter instanceof DurationsFilters;
+    {
+        name: 'timeScheduling', label: 'Time Scheduling',
+        items: [
+            { value: 'past', label: 'Past Scheduling' },
+            { value: 'live', label: 'Live' },
+            { value: 'future', label: 'Future Scheduling' },
+            { value: 'scheduled', label: 'Scheduled' }
+        ]
     },
-    items: [
-      { id: 'short', name: 'Short (0-4 min.)' },
-      { id: 'medium', name: 'Medium (4-20 min.)' },
-      { id: 'long', name: 'Long (20+ min.)' }
-    ]
-  },
-  {
-    name: 'originalClippedEntries', label: 'Original & Clipped Entries',
-    entriesFilterResolver: (node: PrimeTreeNode) => {
-      let result = null;
-      const value: '0' | '1' = node.data === '0' ? '0' : node.data === '1' ? '1' : null;
-      if (value !== null) {
-        result = new OriginalClippedFilter(value, node.label);
-      }
-
-      return result;
+    {
+        name: 'moderationStatuses', label: 'Moderation Statuses',
+        items: [
+            {value: '2', label: 'Approved'},
+            {value: '5', label: 'Flagged for review'},
+            {value: '3', label: 'Rejected'},
+            {value: '6', label: 'Auto approved'},
+            {value: '1', label: 'Pending moderation'}
+        ]
     },
-    entriesFilterType: OriginalClippedFilter,
-    isEntryFilterOfRefineFilter: filter => {
-      return filter instanceof OriginalClippedFilter;
-    },
-    items: [
-      { id: '1', name: 'Original Entries' },
-      { id: '0', name: 'Clipped Entries' }
-    ]
-  },
-  {
-    name: 'timeScheduling', label: 'Time Scheduling',
-    entriesFilterResolver: (node: PrimeTreeNode) => {
-      return new TimeSchedulingFilter(<string>node.data, node.label);
-
-    },
-    entriesFilterType: TimeSchedulingFilter,
-    isEntryFilterOfRefineFilter: filter => {
-      return filter instanceof TimeSchedulingFilter;
-    },
-    items: [
-      { id: 'past', name: 'Past Scheduling' },
-      { id: 'live', name: 'Live' },
-      { id: 'future', name: 'Future Scheduling' },
-      { id: 'scheduled', name: 'Scheduled' }
-    ]
-  },
-  {
-    name: 'moderationStatuses', label: 'Moderation Statuses',
-    entriesFilterResolver: (node: PrimeTreeNode) => {
-      return new ModerationStatusesFilter(<string>node.data, node.label);
-
-    },
-    entriesFilterType: ModerationStatusesFilter,
-    isEntryFilterOfRefineFilter: filter => {
-      return filter instanceof ModerationStatusesFilter;
-    },
-    items: [
-      { id: '2', name: 'Approved' },
-      { id: '5', name: 'Flagged for review' },
-      { id: '3', name: 'Rejected' },
-      { id: '6', name: 'Auto approved' },
-      { id: '1', name: 'Pending moderation' }
-    ]
-  },
-  {
-    name: 'replacementStatuses', label: 'Replacement Statuses',
-    entriesFilterResolver: (node: PrimeTreeNode) => {
-      return new ReplacementStatusesFilter(<string>node.data, node.label);
-
-    },
-    entriesFilterType: ReplacementStatusesFilter,
-    isEntryFilterOfRefineFilter: filter => {
-      return filter instanceof ReplacementStatusesFilter;
-    },
-    items: [
-      { id: '3,1', name: 'Processing new files' },
-      { id: '2', name: 'Ready for review' }
-    ]
-  }
+    {
+        name: 'replacementStatuses', label: 'Replacement Statuses',
+        items: [
+            {value: '3,1', label: 'Processing new files'},
+            {value: '2', label: 'Ready for review'}
+        ]
+    }
 ];

@@ -1,17 +1,18 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {PrimeTreeNode} from '@kaltura-ng/kaltura-primeng-ui';
-import {AppAuthentication} from 'app-shared/kmc-shell';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {PrimeTreePropagation} from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
-import {CategoriesPrimeService} from 'app-shared/content-shared/categories-prime.service';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
+import { AppAuthentication } from 'app-shared/kmc-shell';
+import { AppLocalization } from '@kaltura-ng/kaltura-common';
+import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import { PrimeTreePropagation } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
+import { CategoriesTreeService } from './categories-tree.service';
 
 export type TreeSelectionMode = 'single' | 'multiple';
 
 @Component({
   selector: 'k-categories-tree',
   templateUrl: './categories-tree.component.html',
-  styleUrls: ['./categories-tree.component.scss']
+  styleUrls: ['./categories-tree.component.scss'],
+  providers: [CategoriesTreeService]
 })
 export class CategoriesTreeComponent implements OnInit {
 
@@ -27,8 +28,7 @@ export class CategoriesTreeComponent implements OnInit {
   @Output() onCategoriesLoad = new EventEmitter<{ categories: PrimeTreeNode[] }>();
   @Output() selectionChange = new EventEmitter<PrimeTreeNode[] | PrimeTreeNode>();
   @Output() onNodeChildrenLoaded = new EventEmitter<{ node: PrimeTreeNode }>();
-  @Output() onNodeSelect: EventEmitter<any> = new EventEmitter();
-  @Output() onNodeUnselect: EventEmitter<any> = new EventEmitter();
+  @Output() onNodeSelect: EventEmitter<PrimeTreeNode> = new EventEmitter();
 
   @ViewChild(PrimeTreePropagation) _primeTreeNodesState: PrimeTreePropagation;
 
@@ -41,6 +41,14 @@ export class CategoriesTreeComponent implements OnInit {
     'single': 'single'
   };
 
+  private _onNodeSelect(event : any) {
+    if (event.node instanceof PrimeTreeNode) {
+      this.onNodeSelect.emit(event.node);
+    } else {
+      console.log(`[categories-tree.component] invalid type provided. cannot select node `);
+    }
+  }
+
   public _categories: PrimeTreeNode[] = [];
 
   public updateNodeState(node: PrimeTreeNode, addToSelection: boolean): void {
@@ -51,7 +59,7 @@ export class CategoriesTreeComponent implements OnInit {
     return this._categories;
   }
 
-  constructor(private _categoriesPrimeService: CategoriesPrimeService,
+  constructor(private _categoriesTreeService: CategoriesTreeService,
               private _appAuthentication: AppAuthentication,
               private _appLocalization: AppLocalization) {
   }
@@ -72,7 +80,7 @@ export class CategoriesTreeComponent implements OnInit {
   private _loadCategories(): void {
     this._loading = true;
     this._blockerMessage = null;
-    this._categoriesPrimeService.getCategories()
+    this._categoriesTreeService.getCategories()
       .subscribe(result => {
           this._categories = result.categories;
           this._loading = false;
@@ -95,7 +103,7 @@ export class CategoriesTreeComponent implements OnInit {
     const node: PrimeTreeNode = event && event.node instanceof PrimeTreeNode ? event.node : null;
 
     if (node && this.inLazyMode) {
-      this._categoriesPrimeService.loadNodeChildren(node, (children) => {
+      this._categoriesTreeService.loadNodeChildren(node, (children) => {
         this.onNodeChildrenLoaded.emit({ node });
         return children;
       });

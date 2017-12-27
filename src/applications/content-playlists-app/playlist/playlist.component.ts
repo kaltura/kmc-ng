@@ -10,6 +10,7 @@ import { PlaylistSectionsListWidget } from './playlist-sections-list/playlist-se
 import { PlaylistContentWidget } from './playlist-content/playlist-content-widget.service';
 import { PlaylistMetadataWidget } from './playlist-metadata/playlist-metadata-widget.service';
 import { PlaylistDetailsWidget } from './playlist-details/playlist-details-widget.service';
+import { KalturaPlaylistType } from 'kaltura-ngx-client/api/types/KalturaPlaylistType';
 
 @Component({
   selector: 'kPlaylist',
@@ -162,7 +163,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
   private _updateNavigationState(): void {
     // TODO [kmcng] find a better way that doesn't need access to the playlist directly
-    const playlists = this._playlistsStore.playlists;
+    const playlists = (this._playlistsStore.playlists.data().items || []).filter(playlist => playlist.playlistType === KalturaPlaylistType.staticList);
     if (playlists && this._currentPlaylistId) {
       const currentPlaylistIndex = playlists.findIndex(playlist => playlist.id === this._currentPlaylistId);
       this._enableNextButton = currentPlaylistIndex >= 0 && (currentPlaylistIndex < playlists.length - 1);
@@ -190,7 +191,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
   public _navigateToPlaylist(direction: 'next' | 'prev'): void {
     // TODO [kmcng] find a better way that doesn't need access to the playlist directly
-    const playlists = this._playlistsStore.playlists;
+    const playlists = (this._playlistsStore.playlists.data().items || []).filter(playlist => playlist.playlistType === KalturaPlaylistType.staticList);
     if (playlists && this._currentPlaylistId) {
       const currentPlaylistIndex = playlists.findIndex(playlist => playlist.id === this._currentPlaylistId);
       let newPlaylist = null;

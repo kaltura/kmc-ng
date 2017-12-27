@@ -66,7 +66,6 @@ export class EntryDetailsWidget extends EntryWidget
 	    if (isLive){
 	        flashVars += '&flashvars[disableEntryRedirect]=true';
         }
-
         this.iframeSrc = `${environment.core.kaltura.cdnUrl}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${UIConfID}/partner_id/${partnerID}?iframeembed=true&${flashVars}&entry_id=${entry.id}`;
     }
 

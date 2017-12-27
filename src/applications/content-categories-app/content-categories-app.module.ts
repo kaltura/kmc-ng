@@ -40,22 +40,24 @@ import {KMCShellModule} from 'app-shared/kmc-shell';
 import {routing} from './content-categories-app.routes';
 import {ContentCategoriesComponent} from './content-categories.component';
 
-import { MetadataProfileModule} from 'app-shared/kmc-shared';
-import { DetailsBarModule } from "@kaltura-ng/kaltura-ui/details-bar";
-import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
-import { KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
-import { KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
-import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
+import {DynamicMetadataFormModule, MetadataProfileModule} from 'app-shared/kmc-shared';
 
-import { AreaBlockerModule } from '@kaltura-ng/kaltura-ui';
-import { DynamicFormModule } from '@kaltura-ng/kaltura-ui/dynamic-form';
-import { DynamicFormModule as PrimeDynamicFormModule } from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
-import { DynamicMetadataFormModule } from 'app-shared/kmc-shared';
-import { CategoryComponentsList } from './category/category-components-list';
-import { CategoriesComponentsList } from './categories/categories-components-list';
-import { CategoryCanDeactivate } from "./category/category-can-deactivate.service";
+import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
+import {KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
+import {PrimeTreeModule} from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
+import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
+import {AutoCompleteModule} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
+import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
+import {DynamicFormModule} from '@kaltura-ng/kaltura-ui/dynamic-form';
+import {DynamicFormModule as PrimeDynamicFormModule} from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
+import {CategoryComponentsList} from './category/category-components-list';
+import {CategoriesComponentsList} from './categories/categories-components-list';
+import {CategoryCanDeactivate} from './category/category-can-deactivate.service';
+import {DetailsBarModule} from '@kaltura-ng/kaltura-ui/details-bar';
+import {CategoriesUtilsService} from './categories-utils.service';
+import {CategoryParentSelectorComponent} from './categories/category-parent-selector/category-parent-selector.component';
+import {NewCategoryComponent} from './categories/new-category/new-category.component';
+import {MoveCategoryComponent} from './categories/move-category/move-category.component';
 
 @NgModule({
     imports: [
@@ -103,7 +105,10 @@ import { CategoryCanDeactivate } from "./category/category-can-deactivate.servic
         ContentCategoriesComponent,
         CategoryComponentsList,
         CategoriesComponentsList,
-        CategoriesBulkActionsComponent
+        CategoriesBulkActionsComponent,
+        CategoryParentSelectorComponent,
+        MoveCategoryComponent,
+        NewCategoryComponent
     ],
     exports: [],
     providers: [CategoryCanDeactivate,
@@ -113,7 +118,8 @@ import { CategoryCanDeactivate } from "./category/category-can-deactivate.servic
         CategoriesBulkDeleteService,
         CategoriesBulkChangeContentPrivacyService,
         CategoriesBulkChangeContributionPolicyService,
-        CategoriesBulkChangeCategoryListingService]
+        CategoriesBulkChangeCategoryListingService,
+        CategoriesUtilsService]
 })
 export class ContentCategoriesAppModule {
 }

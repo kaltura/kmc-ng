@@ -1,5 +1,5 @@
 <div class="kEntriesTable" [class.noResults]="!_entries.length">
-  <k-area-blocker [showLoader]="(entriesStore.state$ | async)?.loading || this._deferredLoading"
+  <k-area-blocker [showLoader]="(entriesStore.entries.state$ | async)?.loading || this._deferredLoading"
                   [message]="_blockerMessage"
                   [bodyScroll]="true">
     <p-dataTable #dataTable
@@ -41,7 +41,7 @@
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <div class="kTitle" [kTooltip]="entry[col.field]" [maxWidth]="300"
                 [class.disable]="!_allowDrilldown(entry.mediaType,entry.status)"
-                (click)="_onActionSelected('view',entry.id,entry.mediaType,entry.status)">
+                (click)="_onActionSelected('view',entry)">
             {{entry[col.field]}}
           </div>
         </ng-template>

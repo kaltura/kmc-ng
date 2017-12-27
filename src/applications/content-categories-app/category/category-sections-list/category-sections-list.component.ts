@@ -1,7 +1,8 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CategoryService} from '../category.service';
 import {CategorySectionsListWidget, SectionWidgetItem} from './category-sections-list-widget.service';
 import {StickyComponent} from '@kaltura-ng/kaltura-ui';
+import {BrowserService} from "app-shared/kmc-shell";
 
 
 @Component({
@@ -9,7 +10,7 @@ import {StickyComponent} from '@kaltura-ng/kaltura-ui';
   templateUrl: './category-sections-list.component.html',
   styleUrls: ['./category-sections-list.component.scss']
 })
-export class CategorySectionsListComponent implements AfterViewInit, OnInit, OnDestroy {
+export class CategorySectionsListComponent implements OnInit, OnDestroy {
 
   @ViewChild('categorySections') private categorySections: StickyComponent;
 
@@ -18,10 +19,11 @@ export class CategorySectionsListComponent implements AfterViewInit, OnInit, OnD
   public _sections: SectionWidgetItem[] = [];
 
 
-  constructor(public _widgetService: CategorySectionsListWidget, public _categoryService: CategoryService) {
+  constructor(public _widgetService: CategorySectionsListWidget, public _categoryService: CategoryService, private _browserService: BrowserService) {
   }
 
   public navigateToSection(widget: SectionWidgetItem): void {
+    this._browserService.scrollToTop();
     this._categoryService.openSection(widget.key);
   }
 
@@ -43,9 +45,6 @@ export class CategorySectionsListComponent implements AfterViewInit, OnInit, OnD
 
   ngOnDestroy() {
     this._widgetService.detachForm();
-  }
-
-  ngAfterViewInit() {
   }
 }
 

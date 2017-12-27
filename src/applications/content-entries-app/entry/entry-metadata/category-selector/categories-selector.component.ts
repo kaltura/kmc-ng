@@ -12,14 +12,14 @@ import {
 } from '@angular/core';
 import {ISubscription} from 'rxjs/Subscription';
 
-import {PrimeTreeNode} from '@kaltura-ng/kaltura-primeng-ui';
-import {Subject} from 'rxjs/Subject';
-import {AutoComplete, SuggestionsProviderData} from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
-import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {EntryCategoryItem} from '../entry-metadata-widget.service';
-import {CategoriesTreeComponent} from 'app-shared/content-shared/categories-tree/categories-tree.component';
-import {CategoriesPrimeService} from 'app-shared/content-shared/categories-prime.service';
-import {TagsComponent} from '@kaltura-ng/kaltura-ui/tags/tags.component';
+import { PrimeTreeNode } from '@kaltura-ng/kaltura-primeng-ui';
+import { Subject } from 'rxjs/Subject';
+import {AutoComplete, SuggestionsProviderData } from '@kaltura-ng/kaltura-primeng-ui/auto-complete';
+import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
+import { EntryCategoryItem } from '../entry-metadata-widget.service';
+
+import { CategoriesTreeComponent } from 'app-shared/content-shared/categories-tree/categories-tree.component';
+import {  TagsComponent } from '@kaltura-ng/kaltura-ui/tags/tags.component';import {CategoriesSearchService} from "app-shared/content-shared/categories-search.service";
 
 
 @Component({
@@ -52,7 +52,7 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, Aft
     expendTreeSelectionNodeId: null
   };
 
-  constructor(private _categoriesPrimeService: CategoriesPrimeService, private cdRef: ChangeDetectorRef) {
+  constructor(private _categoriesSearchService: CategoriesSearchService, private cdRef: ChangeDetectorRef) {
   }
 
 
@@ -154,13 +154,13 @@ export class CategoriesSelector implements OnInit, OnDestroy, AfterViewInit, Aft
       this._searchCategoriesSubscription = null;
     }
 
-    this._searchCategoriesSubscription = this._categoriesPrimeService.searchCategories(event.query).subscribe(data => {
+    this._searchCategoriesSubscription = this._categoriesSearchService.getSuggestions(event.query).subscribe(data => {
         const suggestions = [];
         const entryCategories = this._selectedCategories || [];
 
 
-        (data || []).forEach(suggestedCategory => {
-          const label = suggestedCategory.fullNamePath.join(' > ') + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
+				(data.items|| []).forEach(suggestedCategory => {
+					const label = suggestedCategory.fullNamePath.join(' > ') + (suggestedCategory.referenceId ? ` (${suggestedCategory.referenceId})` : '');
 
           const isSelectable = !entryCategories.find(category => {
             return category.id === suggestedCategory.id;

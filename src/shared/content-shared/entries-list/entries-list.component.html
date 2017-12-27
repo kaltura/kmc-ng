@@ -3,7 +3,7 @@
     <div #entriesTableHolder class="kEntriesHolder kContent">
       <kSticky stickyId="entriesFilters" [scrollOffset]="80" [sticksTo]="'header'" >
         <div class="kEntriesTableFilters kContent">
-          <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries$ | async)?.totalCount">{{(_entriesStore.entries$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
+          <span class="kSelectedEntriesNum" *ngIf="(_entriesStore.entries.data$ | async)?.totalCount">{{(_entriesStore.entries.data$ | async)?.totalCount}} {{'applications.content.entries.entries' | translate}}</span>
 
           <div [class.kHidden]="!selectedEntries.length" class="kBulkOperations">
             <span *ngIf="bulkWrapper.children.length !== 0"
@@ -22,7 +22,7 @@
             <input type="text"
                    pInputText
                    class="kSearchInput"
-                   [(ngModel)]="_filter.freetextSearch"
+                   [(ngModel)]="_query.freetext"
                    (keyup.enter)="onFreetextChanged()"
                    placeholder="{{'applications.content.entries.searchEntries' | translate}}">
             <div #categoriesFilterBtn class="kCategoriesFilter">
@@ -47,27 +47,15 @@
       </kSticky>
       <kSticky #tags [stickyClass]="'kStickyClass'" stickyId="entriesTags" [sticksTo]="'entriesFilters'">
         <div class="kContent">
-            <kTags [title]="'applications.content.filters.activeFilters' | translate"
-                   [data]="(this._entriesStore.activeFilters$ | async)?.filters"
-                   [labelField]="'label'"
-                   [tooltipField]="'tooltip'"
-                   (onTagRemove)="removeTag($event)"
-                   (onRemoveAll)="removeAllTags()"
-                   (onTagsChange)="onTagsChange($event)">
-              <ng-template let-item="item">
-                <div class="kTagContent" [kTooltip]="item.tooltip?.token | translate : item.tooltip?.args">
-                  <span class="kTagLabel">{{item.label}}</span>
-                  <i *ngIf="item.showRemove" class="kTagRemove kIconclose_small" (click)="removeTag(item.data)"></i>
-                </div>
-              </ng-template>
-            </kTags>
+            <k-entries-list-tags
+            (onTagsChange)="onTagsChange($event)"></k-entries-list-tags>
         </div>
       </kSticky>
       <kEntriesTable class="kEntriesTable"
                      scrollHeight="100%"
-                     [entries]="(_entriesStore.entries$ | async)?.items"
+                     [entries]="(_entriesStore.entries.data$ | async)?.items"
                      [showBulkSelect]="bulkWrapper.children.length !== 0"
-                     [filter]="_filter"
+                     [filter]="_query"
                      [columns]="columns"
                      [rowActions]="rowActions"
                      (actionSelected)="onActionsSelected.emit($event)"
@@ -75,11 +63,11 @@
                      [(selectedEntries)]="selectedEntries"
       ></kEntriesTable>
 
-      <div class="kEntriesTableFooter kContent" #footer *ngIf="(_entriesStore.entries$ | async)?.totalCount">
+      <div class="kEntriesTableFooter kContent" #footer *ngIf="(_entriesStore.entries.data$ | async)?.totalCount">
         <p-paginator
-          [rows]="_filter.pageSize"
-          [first]="_filter.pageIndex * _filter.pageSize"
-          [totalRecords]="(_entriesStore.entries$ | async)?.totalCount | kMaxEntries"
+          [rows]="_query.pageSize"
+          [first]="_query.pageIndex * _query.pageSize"
+          [totalRecords]="(_entriesStore.entries.data$ | async)?.totalCount | kMaxEntries"
           [rowsPerPageOptions]="[25,50,75,100]"
           (onPageChange)="onPaginationChanged($event)"></p-paginator>
         <span class="kPaginatorShowRowsLabel">{{'applications.content.paginator.showRows' | translate}}</span>
@@ -92,6 +80,7 @@
 <kPopupWidget #categoriesFilterPopup
               [popupWidth]="400"
               [popupHeight]="500"
+              placement="top"
               [closeBtn]="false"
               [targetRef]="categoriesFilterBtn"
               [targetOffset]="{'x':-10, 'y': -21}"
@@ -102,6 +91,7 @@
 <kPopupWidget #refinePopup
               [popupWidth]="400"
               [popupHeight]="500"
+              placement="top"
               [closeBtn]="false"
               [targetRef]="refineBtn"
               [targetOffset]="{'x':-200, 'y': -15}"

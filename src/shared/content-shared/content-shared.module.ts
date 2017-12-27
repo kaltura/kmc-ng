@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { PrimeTreeModule } from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
-import { AreaBlockerModule, KalturaUIModule, TooltipModule, StickyModule } from '@kaltura-ng/kaltura-ui';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {PrimeTreeModule} from '@kaltura-ng/kaltura-primeng-ui/prime-tree';
+import {AreaBlockerModule, KalturaUIModule, StickyModule, TooltipModule} from '@kaltura-ng/kaltura-ui';
 
 import {
   ButtonModule,
@@ -14,16 +14,15 @@ import {
   RadioButtonModule, TieredMenuModule,
   TreeModule
 } from 'primeng/primeng';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { KalturaCommonModule } from '@kaltura-ng/kaltura-common';
-import { AutoCompleteModule, KalturaPrimeNgUIModule } from '@kaltura-ng/kaltura-primeng-ui';
-import { PopupWidgetModule } from '@kaltura-ng/kaltura-ui/popup-widget';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {KalturaCommonModule} from '@kaltura-ng/kaltura-common';
+import {AutoCompleteModule, KalturaPrimeNgUIModule} from '@kaltura-ng/kaltura-primeng-ui';
+import {PopupWidgetModule} from '@kaltura-ng/kaltura-ui/popup-widget';
 
 import { EntryStatusPipe } from 'app-shared/content-shared/pipes/entry-status.pipe';
 import { CategoriesTreeComponent } from 'app-shared/content-shared/categories-tree/categories-tree.component';
 import { SchedulingComponent } from 'app-shared/content-shared/scheduling/scheduling.component';
-import { CategoriesPrimeService } from 'app-shared/content-shared/categories-prime.service';
-import { CategoriesStore } from 'app-shared/content-shared/categories-store.service';
+import { CategoriesSearchService } from 'app-shared/content-shared/categories-search.service';
 import { EntryTypePipe } from 'app-shared/content-shared/pipes/entry-type.pipe';
 import { EntryDurationPipe } from 'app-shared/content-shared/pipes/entry-duration.pipe';
 import { MaxEntriesPipe } from 'app-shared/content-shared/pipes/max-entries.pipe';
@@ -31,14 +30,14 @@ import { PrimeTableSortDirectionPipe } from 'app-shared/content-shared/pipes/pri
 import { EntriesRefineFiltersComponent } from 'app-shared/content-shared/entries-refine-filters/entries-refine-filters.component';
 import { CategoriesFilterPrefsComponent } from 'app-shared/content-shared/categories-filter-preferences/categories-filter-preferences.component';
 import { CategoriesFilterComponent } from 'app-shared/content-shared/categories-filter/categories-filter.component';
-import { EntriesRefineFiltersProvider } from 'app-shared/content-shared/entries-refine-filters/entries-refine-filters-provider.service';
+import { EntriesRefineFiltersService } from 'app-shared/content-shared/entries-refine-filters/entries-refine-filters.service';
 import { EntriesTableComponent } from 'app-shared/content-shared/entries-table/entries-table.component';
 import { EntriesListComponent } from 'app-shared/content-shared/entries-list/entries-list.component';
 import { TagsModule } from '@kaltura-ng/kaltura-ui/tags';
 import { PrimeTableSortTransformPipe } from 'app-shared/content-shared/pipes/prime-table-sort-transform.pipe';
-import { CategoryRadioButtonPocComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc';
-import { CategoryRadioButtonPocPopupComponent } from 'app-shared/content-shared/category-radio-button-poc/category-radio-button-poc-popup';
-import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-selector/entries-selector.component';
+
+import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-selector/entries-selector.component';import { EntriesListTagsComponent } from 'app-shared/content-shared/entries-list/entries-list-tags.component';
+import { FiltersModule } from '@kaltura-ng/mc-shared/filters';
 
 @NgModule({
   imports: [
@@ -64,7 +63,8 @@ import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-sele
     PaginatorModule,
     TieredMenuModule,
     InputTextModule,
-    StickyModule
+    StickyModule,
+    FiltersModule
   ],
   declarations: [
     EntryStatusPipe,
@@ -80,10 +80,8 @@ import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-sele
     CategoriesFilterComponent,
     EntriesTableComponent,
     EntriesListComponent,
-    EntriesSelectorComponent,
-
-    CategoryRadioButtonPocComponent,
-    CategoryRadioButtonPocPopupComponent
+    EntriesListTagsComponent,
+    EntriesSelectorComponent
   ],
   exports: [
     EntryStatusPipe,
@@ -93,21 +91,17 @@ import { EntriesSelectorComponent } from 'app-shared/content-shared/entries-sele
     SchedulingComponent,
     EntriesListComponent,
     EntryDurationPipe,
-    MaxEntriesPipe,
     PrimeTableSortDirectionPipe,
     EntriesRefineFiltersComponent,
     CategoriesFilterPrefsComponent,
     CategoriesFilterComponent,
     EntriesTableComponent,
     EntriesListComponent,
-    EntriesSelectorComponent,
-    CategoryRadioButtonPocPopupComponent,
-    CategoryRadioButtonPocComponent
+    EntriesSelectorComponent
   ],
   providers: [
-    CategoriesPrimeService,
-    CategoriesStore,
-    EntriesRefineFiltersProvider
+    CategoriesSearchService,
+    EntriesRefineFiltersService
   ]
 })
 export class ContentSharedModule {
