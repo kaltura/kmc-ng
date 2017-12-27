@@ -73,7 +73,7 @@
           <p-column [style]="{ 'width': '40px', 'text-align': 'center'}">
             <ng-template let-col let-file="rowData" pTemplate="body">
               <i *ngIf="file.hasError"
-                 class="kIconinfo kIconError"
+                 class="kIconerror kIconError"
                  [kTooltip]="file.errorToken | translate"
                  placement="top"
                  (click)="_removeFile(file)"></i>
