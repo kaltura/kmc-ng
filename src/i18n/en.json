@@ -420,7 +420,7 @@
         }
       },
       "categories": {
-        "categories": "Categories",
+        "categories": "{{0}} Categories",
         "search": "Search",
         "refresh": "Refresh",
         "addCategory": "Add Category",

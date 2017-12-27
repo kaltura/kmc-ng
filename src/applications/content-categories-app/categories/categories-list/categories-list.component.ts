@@ -18,8 +18,6 @@ import {CategoryCreationService} from 'app-shared/kmc-shared/category-creation';
 })
 
 export class CategoriesListComponent implements OnInit, OnDestroy , AfterViewInit {
-
-  public _categoriesTotalCount: number = null;
   public _selectedCategoryToMove: KalturaCategory;
 
   public _linkedEntries: { entryId: string}[] = [];
@@ -28,7 +26,7 @@ export class CategoriesListComponent implements OnInit, OnDestroy , AfterViewIni
   public _blockerMessage: AreaBlockerMessage = null;
   public _selectedCategories: KalturaCategory[] = [];
   public _categories: KalturaCategory[] = [];
-  public _totalCount: number;
+  public _categoriesTotalCount: number;
 
   public _filter = {
     pageIndex: 0,

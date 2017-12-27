@@ -5,6 +5,7 @@ import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui/popup-widget/popup-wi
 import {CategoriesService} from '../categories.service';
 import {CategoryData} from 'app-shared/content-shared/categories-search.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 
 @Component({
   selector: 'kNewCategory',
@@ -68,8 +69,8 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
         })
         .cancelOnDestroy(this)
         .tag('block-shell')
-        .subscribe(({categoryId}: {categoryId: number}) => {
-            this.onApply.emit({categoryId: categoryId});
+        .subscribe(({category}: {category: KalturaCategory}) => {
+            this.onApply.emit({categoryId: category.id});
             if (this.parentPopupWidget) {
               this.parentPopupWidget.close();
             }

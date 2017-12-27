@@ -40,7 +40,6 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
     super._showLoader();
 
     return this._loadSubcategories()
-      .cancelOnDestroy(this, this.widgetReset$)
       .map(() => {
         super._hideLoader();
         return {failed: false};
@@ -253,5 +252,9 @@ export class CategorySubcategoriesWidget extends CategoryWidget implements OnDes
   }
 
   ngOnDestroy() {
+  }
+
+  public addSubcategoryToList({category}: {category: KalturaCategory}) {
+    this._subcategories.next([...this._subcategories.getValue(), category]);
   }
 }

@@ -15,7 +15,7 @@ export class NewSubcategoryComponent implements OnInit, OnDestroy {
 
   @Input() parentPopupWidget: PopupWidgetComponent;
   @Input() categoryParentId: number;
-  @Output() onSubCategoryAdded = new EventEmitter<void>();
+  @Output() onSubCategoryAdded = new EventEmitter<{category: KalturaCategory}>();
 
   public _blockerMessage: AreaBlockerMessage = null;
   public newCategoryForm: FormGroup;
@@ -74,8 +74,8 @@ export class NewSubcategoryComponent implements OnInit, OnDestroy {
       this._categoriesService.addNewCategory({categoryParentId: categoryParentId, name: categoryName})
         .cancelOnDestroy(this)
         .tag('block-shell')
-        .subscribe(category => {
-            this.onSubCategoryAdded.emit();
+        .subscribe(({category}: {category: KalturaCategory}) => {
+            this.onSubCategoryAdded.emit({category});
             if (this.parentPopupWidget) {
               this.parentPopupWidget.close();
             }
