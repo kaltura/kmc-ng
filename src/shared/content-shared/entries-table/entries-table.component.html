@@ -27,7 +27,7 @@
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <div class="kThumbnailHolder"
                [class.disable]="!_allowDrilldown(entry.mediaType,entry.status)"
-               (click)="_onActionSelected('view',entry.id,entry.mediaType,entry.status)">
+               (click)="_onActionSelected('view',entry)">
             <img src="{{entry[col.field]}}" onError="this.onerror=null;this.style.display='none'">
           </div>
         </ng-template>
