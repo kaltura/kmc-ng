@@ -109,7 +109,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
             .map(responses => {
                 super._hideLoader();
 
-                const hasFailure = (<Array<{ failed: boolean, error?: Error }>>responses).reduce((result, response) => result || response.failed, false); ;
+                const hasFailure = (<Array<{ failed: boolean, error?: Error }>>responses).reduce((result, response) => result || response.failed, false);
 
                 if (hasFailure) {
                     super._showActivationError();
@@ -300,9 +300,7 @@ export class CategoryMetadataWidget extends CategoryWidget implements OnDestroy 
         });
     }
 
-    ngOnDestroy()
-    {
-
+    ngOnDestroy() {
     }
 }
 

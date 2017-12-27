@@ -50,12 +50,12 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
   @Output()
   sortChanged = new EventEmitter<any>();
   @Output()
-  actionSelected = new EventEmitter<any>();
+  actionSelected = new EventEmitter<{action: string, category: KalturaCategory}>();
   @Output()
   selectedCategoriesChange = new EventEmitter<any>();
 
   @ViewChild('actionsmenu') private _actionsMenu: Menu;
-  private _actionsMenuCategoryId = 0;
+  private _actionsMenuCategory: KalturaCategory;
   private _categoriesServiceStatusSubscription: ISubscription;
 
   public _emptyMessage = '';
@@ -121,16 +121,16 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
     }
   }
 
-  onActionSelected(action: string, categoryID: number) {
-    this.actionSelected.emit({'action': action, 'categoryID': categoryID});
+  onActionSelected(action: string, category: KalturaCategory) {
+    this.actionSelected.emit({'action': action, 'category': category});
   }
 
   openActionsMenu(event: any, category: KalturaCategory) {
     if (this._actionsMenu) {
       this._actionsMenu.toggle(event);
-      if (this._actionsMenuCategoryId !== category.id) {
+      if (!this._actionsMenuCategory || this._actionsMenuCategory.id !== category.id) {
         this.buildMenu();
-        this._actionsMenuCategoryId = category.id;
+        this._actionsMenuCategory = category;
         this._actionsMenu.show(event);
       }
     }
@@ -140,22 +140,22 @@ export class CategoriesTableComponent implements AfterViewInit, OnInit, OnDestro
     this._items = [
       {
         label: this.appLocalization.get('applications.content.categories.edit'), command: (event) => {
-        this.onActionSelected('edit', this._actionsMenuCategoryId);
+        this.onActionSelected('edit', this._actionsMenuCategory);
       }
       },
       {
         label: this.appLocalization.get('applications.content.categories.delete'), command: (event) => {
-        this.onActionSelected('delete', this._actionsMenuCategoryId);
+        this.onActionSelected('delete', this._actionsMenuCategory);
       }
       },
       {
         label: this.appLocalization.get('applications.content.categories.viewEntries'), command: (event) => {
-        this.onActionSelected('viewEntries', this._actionsMenuCategoryId);
+        this.onActionSelected('viewEntries', this._actionsMenuCategory);
       }
       },
       {
         label: this.appLocalization.get('applications.content.categories.moveCategory'), command: (event) => {
-        this.onActionSelected('moveCategory', this._actionsMenuCategoryId);
+        this.onActionSelected('moveCategory', this._actionsMenuCategory);
       }
       }
     ];

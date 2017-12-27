@@ -14,14 +14,14 @@ import {KalturaCategoryListResponse} from 'kaltura-ngx-client/api/types/KalturaC
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {CategoryDeleteAction} from 'kaltura-ngx-client/api/types/CategoryDeleteAction';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {CategoryMoveAction} from "kaltura-ngx-client/api/types/CategoryMoveAction";
-import {CategoryAddAction} from "kaltura-ngx-client/api/types/CategoryAddAction";
-import {KalturaInheritanceType} from "kaltura-ngx-client/api/types/KalturaInheritanceType";
-import {KalturaContributionPolicyType} from "kaltura-ngx-client/api/types/KalturaContributionPolicyType";
-import {KalturaAppearInListType} from "kaltura-ngx-client/api/types/KalturaAppearInListType";
-import {KalturaPrivacyType} from "kaltura-ngx-client/api/types/KalturaPrivacyType";
-import {KalturaCategoryEntry} from "kaltura-ngx-client/api/types/KalturaCategoryEntry";
-import {CategoryEntryAddAction} from "kaltura-ngx-client/api/types/CategoryEntryAddAction";
+import {CategoryMoveAction} from 'kaltura-ngx-client/api/types/CategoryMoveAction';
+import {CategoryAddAction} from 'kaltura-ngx-client/api/types/CategoryAddAction';
+import {KalturaInheritanceType} from 'kaltura-ngx-client/api/types/KalturaInheritanceType';
+import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
+import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppearInListType';
+import {KalturaPrivacyType} from 'kaltura-ngx-client/api/types/KalturaPrivacyType';
+import {KalturaCategoryEntry} from 'kaltura-ngx-client/api/types/KalturaCategoryEntry';
+import {CategoryEntryAddAction} from 'kaltura-ngx-client/api/types/CategoryEntryAddAction';
 
 export interface UpdateStatus {
   loading: boolean;
@@ -84,7 +84,6 @@ export class CategoriesService implements OnDestroy {
         pageSize: defaultPageSize
       });
     }
-    this.reload(false);
   }
 
   ngOnDestroy() {
@@ -117,6 +116,10 @@ export class CategoriesService implements OnDestroy {
     if (partialData.pageSize) {
       this.browserService.setInLocalStorage('categories.list.pageSize', partialData.pageSize);
     }
+  }
+
+  public get categories(): KalturaCategory[] {
+    return this._categories.getValue().items;
   }
 
   public getNextCategoryId(categoryId: number): number | null {
@@ -163,6 +166,7 @@ export class CategoriesService implements OnDestroy {
     // cancel previous requests
     if (this._categoriesExecuteSubscription) {
       this._categoriesExecuteSubscription.unsubscribe();
+      this._categoriesExecuteSubscription = null
     }
 
     this.browserService.scrollToTop();
@@ -170,22 +174,26 @@ export class CategoriesService implements OnDestroy {
     this._state.next({loading: true, errorMessage: null});
 
     // execute the request
-    this._categoriesExecuteSubscription = this.buildQueryRequest(this._queryData.getValue()).subscribe(
-      response => {
-        this._categoriesExecuteSubscription = null;
+    this._categoriesExecuteSubscription = this.buildQueryRequest(this._queryData.getValue())
+    // TODO: [kmcng] When developing filters - using async scheduler go
+    // allow calling this function multiple times in the same event loop cycle before invoking the logic.
+      .monitor('playlists store: get playlists()')
+      .subscribe(
+        response => {
+          this._categoriesExecuteSubscription = null;
 
-        this._state.next({loading: false, errorMessage: null});
+          this._state.next({loading: false, errorMessage: null});
 
-        this._categories.next({
-          items: response.objects,
-          totalCount: <number>response.totalCount
+          this._categories.next({
+            items: response.objects,
+            totalCount: <number>response.totalCount
+          });
+        },
+        error => {
+          this._categoriesExecuteSubscription = null;
+          const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+          this._state.next({loading: false, errorMessage});
         });
-      },
-      error => {
-        this._categoriesExecuteSubscription = null;
-        const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
-        this._state.next({loading: false, errorMessage});
-      });
   }
 
   private buildQueryRequest(queryData: QueryData): Observable<KalturaCategoryListResponse> {
@@ -257,7 +265,7 @@ export class CategoriesService implements OnDestroy {
    * @param newCategoryData {NewCategoryData} holds name and desired categoryParentId (if null - move to root)
    * @return {Observable<number>} new category ID
    */
-  public addNewCategory(newCategoryData: NewCategoryData): Observable<{categoryId: number}> {
+  public addNewCategory(newCategoryData: NewCategoryData): Observable<{ category: KalturaCategory }> {
     if (!newCategoryData || !newCategoryData.name) {
       const nameRequiredErrorMessage = this._appLocalization.get('applications.content.addNewCategory.errors.requiredName');
       return Observable.throw(new Error(nameRequiredErrorMessage));
@@ -283,7 +291,6 @@ export class CategoriesService implements OnDestroy {
 
         multiRequest.requests.push(
           new CategoryEntryAddAction({categoryEntry})
-
         );
       });
     }
@@ -294,7 +301,7 @@ export class CategoriesService implements OnDestroy {
           if (data.hasErrors()) {
             throw new Error('error occurred while trying to add new category');
           }
-          return {categoryId: data[0].result.id};
+          return {category: data[0].result};
         })
       .catch(error => {
         throw new Error('error occurred while trying to add new category');

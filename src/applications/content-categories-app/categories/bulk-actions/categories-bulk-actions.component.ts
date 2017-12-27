@@ -22,6 +22,7 @@ import {KalturaAppearInListType} from 'kaltura-ngx-client/api/types/KalturaAppea
 import {AppearInListType} from './components/bulk-change-category-listing/bulk-change-category-listing.component';
 import '@kaltura-ng/kaltura-common/rxjs/add/operators';
 import {KalturaContributionPolicyType} from 'kaltura-ngx-client/api/types/KalturaContributionPolicyType';
+import {CategoriesUtilsService} from "../../categories-utils.service";
 
 @Component({
   selector: 'kCategoriesBulkActions',
@@ -40,14 +41,16 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
   @ViewChild('bulkActionsPopup') public bulkActionsPopup: PopupWidgetComponent;
 
 
-  constructor(private _appLocalization: AppLocalization, private _browserService: BrowserService,
-    private _bulkAddTagsService: CategoriesBulkAddTagsService,
-    private _bulkRemoveTagsService: CategoriesBulkRemoveTagsService,
-    private _bulkChangeOwnerService: CategoriesBulkChangeOwnerService,
-    private _bulkDeleteService: CategoriesBulkDeleteService,
-    private _bulkChangeContentPrivacyService: CategoriesBulkChangeContentPrivacyService,
-    private _bulkChangeCategoryListingService: CategoriesBulkChangeCategoryListingService,
-    private _bulkChangeContributionPolicyService: CategoriesBulkChangeContributionPolicyService) {
+  constructor(private _appLocalization: AppLocalization,
+              private _browserService: BrowserService,
+              private _bulkAddTagsService: CategoriesBulkAddTagsService,
+              private _bulkRemoveTagsService: CategoriesBulkRemoveTagsService,
+              private _bulkChangeOwnerService: CategoriesBulkChangeOwnerService,
+              private _bulkDeleteService: CategoriesBulkDeleteService,
+              private _bulkChangeContentPrivacyService: CategoriesBulkChangeContentPrivacyService,
+              private _bulkChangeCategoryListingService: CategoriesBulkChangeCategoryListingService,
+              private _bulkChangeContributionPolicyService: CategoriesBulkChangeContributionPolicyService,
+              private _categoriesUtilsService: CategoriesUtilsService) {
   }
 
   ngOnInit() {
@@ -76,7 +79,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
   openBulkActionWindow(action: string, popupWidth: number, popupHeight: number) {
 
-    if (this.hasEditWarnings()) {
+    if (this._categoriesUtilsService.hasEditWarnings(this.selectedCategories)) {
       this._browserService.confirm(
         {
           header: this._appLocalization.get('applications.content.categories.editCategory'),
@@ -215,6 +218,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
 
     return editWarningsExists;
   }
+
 
   private executeService(service: CategoriesBulkActionBaseService<any>, data: any = {}, reloadCategories: boolean = true, confirmChunks: boolean = true, callback?: Function): void {
     this._bulkAction = '';

@@ -1,12 +1,13 @@
-import {ISubscription} from 'rxjs/Subscription';
+import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {CategoriesService, SortDirection} from '../categories.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {CategoriesUtilsService} from '../../categories-utils.service';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+
 import {AppEventsService} from 'app-shared/kmc-shared';
 import {CategoryCreationService} from 'app-shared/kmc-shared/category-creation';
 
@@ -16,21 +17,16 @@ import {CategoryCreationService} from 'app-shared/kmc-shared/category-creation';
   styleUrls: ['./categories-list.component.scss']
 })
 
-export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit {
-
-  public _isBusy = false;
-  public _blockerMessage: AreaBlockerMessage = null;
-  public _selectedCategories: KalturaCategory[] = [];
-  public _categories: KalturaCategory[] = [];
-  public _categoriesTotalCount: number = null;
+export class CategoriesListComponent implements OnInit, OnDestroy , AfterViewInit {
   public _selectedCategoryToMove: KalturaCategory;
 
   public _linkedEntries: { entryId: string}[] = [];
-  private categoriesSubscription: ISubscription;
-  private querySubscription: ISubscription;
-  private parentPopupStateChangeSubscription$: ISubscription;
   @ViewChild('moveCategory') moveCategoryPopup: PopupWidgetComponent;
   @ViewChild('addNewCategory') public addNewCategory: PopupWidgetComponent;
+  public _blockerMessage: AreaBlockerMessage = null;
+  public _selectedCategories: KalturaCategory[] = [];
+  public _categories: KalturaCategory[] = [];
+  public _categoriesTotalCount: number;
 
   public _filter = {
     pageIndex: 0,
@@ -44,29 +40,32 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
               private router: Router,
               private _browserService: BrowserService,
               private _appLocalization: AppLocalization,
+              private _categoriesUtilsService: CategoriesUtilsService,
               private _appEvents: AppEventsService,
               public _categoryCreationService: CategoryCreationService) {
   }
 
   ngOnInit() {
 
-    this.querySubscription = this._categoriesService.queryData$.subscribe(
-      query => {
-        this._filter.pageSize = query.pageSize;
-        this._filter.pageIndex = query.pageIndex - 1;
-        this._filter.sortBy = query.sortBy;
-        this._filter.sortDirection = query.sortDirection;
-        this._browserService.scrollToTop();
-      });
+         this._categoriesService.queryData$.cancelOnDestroy(this).subscribe(
+            query => {
+                this._filter.pageSize = query.pageSize;
+                this._filter.pageIndex = query.pageIndex - 1;
+                this._filter.sortBy = query.sortBy;
+                this._filter.sortDirection = query.sortDirection;
+            this._browserService.scrollToTop();});
 
-    this.categoriesSubscription = this._categoriesService.categories$.subscribe(
+    this._categoriesService.categories$
+        .cancelOnDestroy(this)
+        .subscribe(
       (data) => {
         this._categories = data.items;
         this._categoriesTotalCount = data.totalCount;
       }
     );
 
-    this.parentPopupStateChangeSubscription$ = this.addNewCategory.state$
+    this.addNewCategory.state$
+        .cancelOnDestroy(this)
       .subscribe(event => {
         if (event.state === PopupWidgetStates.BeforeClose) {
           this._linkedEntries = [];
@@ -84,18 +83,15 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   ngOnDestroy() {
-    this.categoriesSubscription.unsubscribe();
-    this.querySubscription.unsubscribe();
-    this.parentPopupStateChangeSubscription$.unsubscribe();
   }
 
-  public _reload() {
-    this._clearSelection();
-    this._categoriesService.reload(true);
-  }
-  _clearSelection() {
-    this._selectedCategories = [];
-  }
+    public _reload() {
+        this._clearSelection();
+        this._categoriesService.reload(true);
+    }
+    _clearSelection() {
+        this._selectedCategories = [];
+    }
 
   _onSortChanged(event): void {
     this._categoriesService.reload({
@@ -115,42 +111,43 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
-  _onActionSelected(event: { action: string, categoryID: number }) {
-    const currentCategory = this._categories.find(category => category.id === event.categoryID);
-    switch (event.action) {
+  _onActionSelected({action, category}: { action: string, category : KalturaCategory }) {
+
+    switch (action) {
       case 'edit':
         // show category edit warning if needed
-        if (currentCategory.tags && currentCategory.tags.indexOf('__EditWarning') > -1) {
+        if (category.tags && category.tags.indexOf('__EditWarning') > -1) {
           this._browserService.confirm(
             {
               header: this._appLocalization.get('applications.content.categories.editCategory'),
               message: this._appLocalization.get('applications.content.categories.editWithEditWarningTags'),
               accept: () => {
-                this.router.navigate(['/content/categories/category', event.categoryID]);
+                this.router.navigate(['/content/categories/category', category.id]);
               }
             }
           );
         } else {
-          this.router.navigate(['/content/categories/category', event.categoryID]);
+          this.router.navigate(['/content/categories/category', category.id]);
         }
         break;
       case 'delete':
-        this._handleDelete(currentCategory);
+        this.deleteCategory(category);
         break;
       case 'moveCategory':
         // show category edit warning if needed
-        if (currentCategory.tags && currentCategory.tags.indexOf('__EditWarning') > -1) {
+        if (category.tags && category.tags.indexOf('__EditWarning') > -1) {
           this._browserService.confirm(
             {
               header: this._appLocalization.get('applications.content.categories.editCategory'),
               message: this._appLocalization.get('applications.content.categories.editWithEditWarningTags'),
               accept: () => {
-                this._selectedCategoryToMove = currentCategory;
-                this.moveCategoryPopup.open();                    }
+                this._selectedCategoryToMove = category;
+                this.moveCategoryPopup.open();
+              }
             }
           );
         } else {
-          this._selectedCategoryToMove = currentCategory;
+          this._selectedCategoryToMove = category;
           this.moveCategoryPopup.open();
         }
         break;
@@ -159,71 +156,38 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
-  private _handleDelete(category: KalturaCategory): void {
-    const confirmWarningTags = () => {
-      this._browserService.confirm(
-        {
-          header: this._appLocalization.get('applications.content.categories.deleteCategory'),
-          message: this._appLocalization.get('applications.content.categories.deleteWithEditWarningTags'),
-          accept: () => {
-            setTimeout(confirmDeletion, 0);
-          }
+  private deleteCategory(category: KalturaCategory): void {
+    this._categoriesUtilsService.confirmDelete(category)
+      .cancelOnDestroy(this)
+      .subscribe(result => {
+        if (result.confirmed) {
+          this._blockerMessage = null;
+          this._categoriesService.deleteCategory(category.id)
+            .cancelOnDestroy(this)
+            .tag('block-shell')
+            .subscribe(
+            () => {
+              this._browserService.showGrowlMessage({
+                severity: 'success',
+                detail: this._appLocalization.get('applications.content.categories.deleted')
+              });
+              this._categoriesService.reload(true);
+            },
+            error => {
+              this._browserService.alert({
+                header: this._appLocalization.get('applications.content.categories.errors.deleteError.header'),
+                message: this._appLocalization.get('applications.content.categories.errors.deleteError.message')
+              });
+            }
+          );
         }
-      );
-    };
-    const confirmDeletion = () => {
-      let message: string;
-      if (category.directSubCategoriesCount > 0) {
-        message = this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories');
-      } else {
-        message = this._appLocalization.get('applications.content.categories.confirmDeleteSingle');
-      }
-      this._browserService.confirm(
-        {
-          header: this._appLocalization.get('applications.content.categories.deleteCategory'),
-          message: message,
-          accept: () => {
-            deleteCategory();
-          }
-        }
-      );
-    };
-    const deleteCategory = () => {
-      this._blockerMessage = null;
-      this._categoriesService.deleteCategory(category.id)
-        .tag('block-shell')
-        .subscribe(
-          () => {
-            this._categoriesService.reload(true);
-          },
-          error => {
-            this._blockerMessage = new AreaBlockerMessage({
-              message: this._appLocalization.get('applications.content.categories.errors.categoryCouldNotBeDeleted'),
-              buttons: [
-                {
-                  label: this._appLocalization.get('app.common.retry'),
-                  action: () => {
-                    deleteCategory();
-                    this._blockerMessage = null;
-                  }
-                },
-                {
-                  label: this._appLocalization.get('app.common.cancel'),
-                  action: () => {
-                    this._blockerMessage = null;
-                  }
-                }]
-            });
-          }
-      );
-    };
-
-    // show category edit warning if needed
-    if (category.tags && category.tags.indexOf('__EditWarning') > -1) {
-      confirmWarningTags();
-    } else {
-      confirmDeletion();
-    }
+      },
+      error => {
+        this._browserService.alert({
+          header: this._appLocalization.get('applications.content.categories.errors.deleteError.header'),
+          message: this._appLocalization.get('applications.content.categories.errors.deleteError.message')
+        });
+      });
   }
 
 

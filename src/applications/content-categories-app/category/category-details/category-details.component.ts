@@ -1,7 +1,7 @@
-import {ActionTypes, CategoryService} from './../category.service';
-import {AppLocalization} from '@kaltura-ng/kaltura-common';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
+import {CategoryDetailsWidget} from './category-details-widget.service';
+import {ActionTypes, CategoryService} from '../category.service';
 
 @Component({
   selector: 'kCategoryDetails',
@@ -10,13 +10,11 @@ import {KalturaCategory} from 'kaltura-ngx-client/api/types/KalturaCategory';
 })
 export class CategoryDetailsComponent implements OnInit, OnDestroy {
   public _currentCategory: KalturaCategory;
+  public _parentCategoryId: number;
 
   constructor(private _categoryStore: CategoryService,
-    private _appLocalization: AppLocalization) {
+              public _widgetService: CategoryDetailsWidget) {
   }
-
-
-
 
   ngOnInit() {
     this._categoryStore.state$
@@ -28,6 +26,7 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
           switch (status.action) {
             case ActionTypes.CategoryLoaded:
               this._currentCategory = this._categoryStore.category;
+              this._parentCategoryId = this._currentCategory.parentId;
               break;
             default:
               break;
@@ -35,12 +34,17 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
         }
       },
       error => {
-        // TODO [kmc] navigate to error page
+        // TODO [kmcng] navigate to error page
         throw error;
       });
   }
 
 
   ngOnDestroy() {
+    this._widgetService.detachForm();
+  }
+
+  public _onParentClicked(event: any) {
+    this._categoryStore.openCategory(this._parentCategoryId);
   }
 }
