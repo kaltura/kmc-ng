@@ -11,79 +11,12 @@ const routes: Routes = <Routes>[
     path: 'error', component: ErrorComponent
   },
   {
-    path: '', canActivate: [AppBootstrap],
-    children: [
-      { path: 'login', component: LoginComponent },
-        {
-            path: '', redirectTo: '/login', pathMatch: 'full'
-        },
+    path: '', canActivate: [AppBootstrap], component: DashboardComponent, children: [
       {
-        path: '', component: DashboardComponent, canActivate: [AuthCanActivate], children: [
-        {
-          path: 'content', children: [
-          { path: '', redirectTo: 'entries', pathMatch: 'full' },
-          {
-            path: 'entries',
-            loadChildren: '../applications/content-entries-app/content-entries-app.module#ContentEntriesAppModule'
-          },
-          {
-            path: 'playlists',
-            loadChildren: '../applications/content-playlists-app/content-playlists-app.module#ContentPlaylistsAppModule'
-          },
-          {
-            path: 'categories',
-            loadChildren: '../applications/content-categories-app/content-categories-app.module#ContentCategoriesAppModule'
-          },
-          {
-            path: 'upload-control',
-            loadChildren: '../applications/content-upload-control-app/content-upload-control-app.module#ContentUploadControlAppModule'
-          },
-          {
-            path: 'drop-folders',
-            loadChildren: '../applications/content-drop-folders-app/content-drop-folders-app.module#ContentDropFoldersAppModule'
-          },
-          {
-            path: 'bulk',
-            loadChildren: '../applications/content-bulk-log-app/content-bulk-log-app.module#ContentBulkLogAppModule'
-          },
-            {
-                path: 'moderation',
-                loadChildren: '../applications/content-moderation-app/content-moderation-app.module#ContentModerationAppModule'
-            }
-        ]},
-        {
-          path: 'settings', children: [
-          { path: '', redirectTo: 'accountSettings', pathMatch: 'full' },
-          {
-            path: 'accountSettings',
-            loadChildren: '../applications/settings-account-settings-app/settings-account-settings-app.module#SettingsAccountSettingsAppModule'
-          },
-          {
-            path: 'accountUpgrade',
-            loadChildren: '../applications/settings-account-upgrade-app/settings-account-upgrade-app.module#SettingsAccountUpgradeAppModule'
-          }
-        ]
-        },
-        {
-          path: 'administration', children: [
-            { path: '', redirectTo: 'users', pathMatch: 'full' },
-            {
-              path: 'roles',
-              loadChildren: '../applications/administration-roles-app/administration-roles-app.module#AdministrationRolesAppModule'
-            },
-          {
-            path: 'users',
-            loadChildren: '../applications/administration-users-app/administration-users-app.module#AdministrationUsersAppModule'
-          }
-          ]
-        },
-        { path: 'studio', loadChildren: '../applications/studio-app/studio-app.module#StudioAppModule' },
-      ]
+          path: '',
+          loadChildren: '../applications/analytics-live-app/analytics-live-app.module#AnalyticsLiveAppModule'
       }
-    ]
-  },
-  {
-    path: '**', redirectTo: '/login', pathMatch: 'full'
+  ]
   }
 ];
 

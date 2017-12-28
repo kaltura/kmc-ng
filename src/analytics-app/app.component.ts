@@ -18,6 +18,7 @@ import { UploadPageExitVerificationService } from 'app-shared/kmc-shell/page-exi
 })
 export class AppComponent implements OnInit {
 
+  public _isAuthenticated = false;
   public _isBusy: boolean = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _growlMessages: GrowlMessage[] = [];

@@ -13,6 +13,15 @@
       </div>
     </li>
   </ul>
+  <hr>
+  <div class="kMenuItemLabel">
+    <span>{{'app.languageMenu.selectLang' | translate}}</span>
+  </div>
+
+  <ul class="kLanguages kOverrideFAIcons">
+    <p-dropdown [options]="_languages" [(ngModel)]="_selectedLanguage" [appendTo]="'body'"
+                (onChange)="onLangSelected($event)"></p-dropdown>
+  </ul>
 </div>
 <kPopupWidget #changeAccountPopup [popupWidth]="500" [popupHeight]="370" [modal]="true">
   <ng-template>

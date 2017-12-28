@@ -1,5 +1,6 @@
 <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage" [bodyScroll]="true" [classes]="'kAreaBlockerCoverAll'">
-    <router-outlet></router-outlet>
+    <kKMCLogin *ngIf="!_isAuthenticated"></kKMCLogin>
+    <router-outlet *ngIf="_isAuthenticated"></router-outlet>
 </k-area-blocker>
 <!--router-outlet></router-outlet-->
 <p-confirmDialog header="Confirmation" [key]="'confirm'" [closeOnEscape]="false" width="440"></p-confirmDialog>

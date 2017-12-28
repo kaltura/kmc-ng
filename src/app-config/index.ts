@@ -160,6 +160,9 @@ export const environment = {
         ]
     },
     "modules": {
+        "analyticsLive" : {
+            "url" : "http://localhost:9090/"
+        },
         "studio": {
             "api_url": "http://www.kaltura.com",
             "path": "./studio/index.html",
