@@ -326,7 +326,7 @@
         },
         "confirmEntryNavigation": {
           "title": "Stream has been created successfully.",
-          "message": "Live Stream Entry has been created successfully. \n Do you want to view entry details?"
+          "message": "Live Stream Entry has been created successfully.\nStream activation for broadcasting with the CDN may take up to 3 hours.\n Do you want to view entry details?"
         }
       }
     },
