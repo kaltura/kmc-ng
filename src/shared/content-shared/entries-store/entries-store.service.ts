@@ -55,7 +55,6 @@ export interface EntriesFilters {
     pageIndex: number,
     sortBy: string,
     sortDirection: number,
-    fields: string,
     createdAt: DatesRangeType,
     scheduledAt: DatesRangeType,
     mediaTypes: ListType,
@@ -137,7 +136,7 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
                             }));
 
                         const defaultPageSize = this.browserService.getFromLocalStorage(this._getPaginationCacheKey());
-                        if (defaultPageSize !== null) {
+                        if (defaultPageSize !== null && (defaultPageSize !== this.cloneFilter('pageSize', null))) {
                             this.filter({
                                 pageSize: defaultPageSize
                             });
@@ -416,13 +415,10 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             }
 
             // update desired fields of entries
-            if (data.fields) {
                 responseProfile = new KalturaDetachedResponseProfile({
                     type: KalturaResponseProfileType.includeFields,
-                    fields: data.fields
+                    fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,tags,categoriesIds,downloadUrl,sourceType'
                 });
-
-            }
 
             // update pagination args
             if (data.pageIndex || data.pageSize) {
@@ -490,7 +486,6 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             pageIndex: 0,
             sortBy: 'createdAt',
             sortDirection: SortDirection.Desc,
-            fields: 'id,name,thumbnailUrl,mediaType,plays,createdAt,duration,status,startDate,endDate,moderationStatus,tags,categoriesIds,downloadUrl',
             createdAt: {fromDate: null, toDate: null},
             scheduledAt: {fromDate: null, toDate: null},
             mediaTypes: [],
@@ -514,7 +509,6 @@ export class EntriesStore extends FiltersStoreBase<EntriesFilters> implements On
             pageIndex: new NumberTypeAdapter(),
             sortBy: new StringTypeAdapter(),
             sortDirection: new NumberTypeAdapter(),
-            fields: new StringTypeAdapter(),
             createdAt: new DatesRangeAdapter(),
             scheduledAt: new DatesRangeAdapter(),
             mediaTypes: new ListAdapter(),

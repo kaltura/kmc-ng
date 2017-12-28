@@ -51,7 +51,10 @@ import {DynamicFormModule} from '@kaltura-ng/kaltura-ui/dynamic-form';
 import {DynamicFormModule as PrimeDynamicFormModule} from '@kaltura-ng/kaltura-primeng-ui/dynamic-form';
 import {CategoryComponentsList} from './category/category-components-list';
 import {CategoriesComponentsList} from './categories/categories-components-list';
-import {CategoryCanDeactivate} from "./category/category-can-deactivate.service";
+import {CategoryCanDeactivate} from './category/category-can-deactivate.service';
+import {CategoryParentSelectorComponent} from './categories/category-parent-selector/category-parent-selector.component';
+import {NewCategoryComponent} from './categories/new-category/new-category.component';
+import {MoveCategoryComponent} from './categories/move-category/move-category.component';
 import {CategoriesRefineFiltersService} from './categories/categories-refine-filters/categories-refine-filters.service';
 
 @NgModule({
@@ -98,7 +101,10 @@ import {CategoriesRefineFiltersService} from './categories/categories-refine-fil
         ContentCategoriesComponent,
         CategoryComponentsList,
         CategoriesComponentsList,
-        CategoriesBulkActionsComponent
+        CategoriesBulkActionsComponent,
+        CategoryParentSelectorComponent,
+        MoveCategoryComponent,
+        NewCategoryComponent
     ],
     exports: [],
     providers: [CategoryCanDeactivate,

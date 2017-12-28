@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AppLocalization } from '@kaltura-ng/kaltura-common';
-import { RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
+import { GroupedListItem, ListItem, RefinePrimeTree } from '@kaltura-ng/mc-shared/filters'
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { environment } from 'app-environment';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
@@ -354,7 +354,7 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
           if (listData) {
 
               // DEVELOPER NOTICE: there is a complexity caused since 'customMetadata' holds dynamic lists
-              let newFilterItems: {value: string, label: string}[];
+              let newFilterItems: (GroupedListItem | ListItem)[];
               let newFilterValue;
               let newFilterName: string;
 
@@ -377,7 +377,12 @@ export class EntriesRefineFiltersComponent implements OnInit,  OnDestroy {
                   })
                   .forEach(selectedNode => {
                       if (!newFilterItems.find(item => item.value === selectedNode.value)) {
-                          newFilterItems.push({value: selectedNode.value + '', label: selectedNode.label});
+
+                          if (listData.group === 'customMetadata') {
+                              newFilterItems.push({value: selectedNode.value + '', label: selectedNode.label, payload: { tooltip: `${listData.items[0].label}: ${selectedNode.value}` } });
+                          } else {
+                              newFilterItems.push({value: selectedNode.value + '', label: selectedNode.label });
+                          }
                       }
                   });
               this._entriesStore.filter({[newFilterName]: newFilterValue});

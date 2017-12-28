@@ -27,7 +27,7 @@
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <div class="kThumbnailHolder"
                [class.disable]="!_allowDrilldown(entry.mediaType,entry.status)"
-               (click)="_onActionSelected('view',entry.id,entry.mediaType,entry.status)">
+               (click)="_onActionSelected('view',entry)">
             <img src="{{entry[col.field]}}" onError="this.onerror=null;this.style.display='none'">
           </div>
         </ng-template>
@@ -41,7 +41,7 @@
         <ng-template let-col let-entry="rowData" pTemplate="body">
           <div class="kTitle" [kTooltip]="entry[col.field]" [maxWidth]="300"
                 [class.disable]="!_allowDrilldown(entry.mediaType,entry.status)"
-                (click)="_onActionSelected('view',entry.id,entry.mediaType,entry.status)">
+                (click)="_onActionSelected('view',entry)">
             {{entry[col.field]}}
           </div>
         </ng-template>
@@ -71,13 +71,33 @@
                 [style]="_getColumnStyle(_columns.plays)">
       </p-column>
 
+      <p-column *ngIf="_columns.moderationCount"
+                field="moderationCount"
+                [header]="'applications.content.table.flags' | translate"
+                [sortable]="_columns.moderationCount?.sortable | kPrimeTableSortTransform"
+                [style]="_getColumnStyle(_columns.moderationCount)">
+        <ng-template let-col let-entry="rowData" pTemplate="body">{{entry[col.field]}}</ng-template>
+      </p-column>
+
       <p-column *ngIf="_columns.createdAt"
                 field="createdAt"
                 [header]="'applications.content.table.createdOn' | translate"
                 [sortable]="_columns.createdAt?.sortable | kPrimeTableSortTransform"
                 [style]="_getColumnStyle(_columns.createdAt)">
+        <ng-container *ngIf="!_columns.moderationCount">
+          <ng-template let-col let-entry="rowData" pTemplate="body">{{entry[col.field] | kDate}}</ng-template>
+        </ng-container>
+        <ng-container *ngIf="_columns.moderationCount">
+          <ng-template let-col let-entry="rowData" pTemplate="body">{{entry[col.field] | date:'d/M/yy'}}</ng-template>
+        </ng-container>
+      </p-column>
+
+      <p-column *ngIf="_columns.moderationStatus"
+                field="moderationStatus"
+                [header]="'applications.content.table.moderationStatus' | translate"
+                [style]="_getColumnStyle(_columns.moderationStatus)">
         <ng-template let-col let-entry="rowData" pTemplate="body">
-          <span>{{entry[col.field] | kDate}}</span>
+           {{entry[col.field] | kModerationStatus}}
         </ng-template>
       </p-column>
 

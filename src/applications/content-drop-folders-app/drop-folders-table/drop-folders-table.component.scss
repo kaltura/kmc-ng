@@ -1,0 +1,83 @@
+@import 'app-theme/_variables.scss';
+
+.kDropFoldersTableWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex: 1 1 auto;
+
+  .kDropFoldersTable {
+    background-color: white;
+    overflow-y: hidden;
+    position: absolute;
+    padding: 0;
+  }
+
+  .kDropFoldersTableActions {
+    width: 100%;
+    text-align: center;
+
+    button {
+      color: grey !important;
+      background-color: rgba(0, 0, 0, 0) !important;
+      border: none !important;
+      font-size: 16px !important;
+      outline: 0;
+    }
+  }
+
+  .kStatusWrap {
+    display: flex;
+    align-items: center;
+  }
+
+  .kDropFolderStatusIcon {
+    font-size: 16px;
+    margin-right: 12px;
+  }
+
+  .kIconBlue {
+    color: #1cabcb;
+  }
+
+  .kIconOrange {
+    color: #F9A71B;
+  }
+
+  .kIconRed {
+    color: #DB1F26;
+  }
+
+  .kIconGreen {
+    color: #149347;
+  }
+}
+
+:host {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0;
+  flex-direction: column;
+}
+
+:host /deep/ .kSelectionColumn {
+  width: 44px;
+  padding-left: 14px !important;
+}
+
+:host /deep/ .kFileNameColumn {
+  width: 250px;
+  font-weight: bold;
+  color: #333;
+}
+
+:host /deep/ .ui-datatable .actionsColumn {
+  overflow: visible;
+  width: 80px;
+}
+
+:host /deep/ p-datatable .stickyHeader {
+  z-index: 10;
+  display: table;
+}
