@@ -8,6 +8,7 @@ import {KalturaDetachedResponseProfile} from 'kaltura-ngx-client/api/types/Kaltu
 import {KalturaFilterPager} from 'kaltura-ngx-client/api/types/KalturaFilterPager';
 import {KalturaResponseProfileType} from 'kaltura-ngx-client/api/types/KalturaResponseProfileType';
 import {KalturaClient, KalturaMultiRequest} from 'kaltura-ngx-client';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
 import {KalturaUser} from 'kaltura-ngx-client/api/types/KalturaUser';
 import {CategoryUserDeleteAction} from 'kaltura-ngx-client/api/types/CategoryUserDeleteAction';
 import {CategoryUserListAction} from 'kaltura-ngx-client/api/types/CategoryUserListAction';
@@ -23,6 +24,16 @@ import {CategoryUserActivateAction} from 'kaltura-ngx-client/api/types/CategoryU
 import {CategoryUserDeactivateAction} from 'kaltura-ngx-client/api/types/CategoryUserDeactivateAction';
 import {CategoryUserUpdateAction} from 'kaltura-ngx-client/api/types/CategoryUserUpdateAction';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
+import {
+  FiltersStoreBase,
+  ListAdapter,
+  ListType,
+  NumberTypeAdapter,
+  StringTypeAdapter,
+  TypeAdaptersMapping
+} from '@kaltura-ng/mc-shared/filters';
+import {KalturaSearchOperator} from 'kaltura-ngx-client/api/types/KalturaSearchOperator';
+import {KalturaSearchOperatorType} from 'kaltura-ngx-client/api/types/KalturaSearchOperatorType';
 
 export interface LoadingStatus {
   loading: boolean;
@@ -54,56 +65,85 @@ export interface QueryData {
   fields: string
 }
 
-export interface NewUserData {
-  parentUserId: number;
+export interface UsersFilters {
+  freetext: string,
+  pageSize: number,
+  pageIndex: number,
+  permissionLevels: ListType,
+  status: ListType,
+  updateMethod: ListType,
 }
 
 
 @Injectable()
-export class ManageEndUserPermissionsService implements OnDestroy {
+export class ManageEndUserPermissionsService extends FiltersStoreBase<UsersFilters> implements OnDestroy {
 
-  private _users = new BehaviorSubject<Users>({items: [], totalCount: 0});
-  private _state = new BehaviorSubject<LoadingStatus>({loading: false, errorMessage: null});
-  private _usersExecuteSubscription: ISubscription;
-  private _queryData = new BehaviorSubject<QueryData>({
-    pageIndex: 1,
-    pageSize: 50,
-    fields: 'userId,permissionLevel,status,updateMethod,updatedAt'
-  });
+  private _users = {
+    data: new BehaviorSubject<Users>({items: [], totalCount: 0}),
+    state: new BehaviorSubject<LoadingStatus>({loading: false, errorMessage: null})
+  };
 
-  public state$ = this._state.asObservable(); // state refers only to the users loading
-  public users$ = this._users.asObservable();
-  public queryData$ = this._queryData.asObservable();
+  public readonly users =
+    {
+      data$: this._users.data.asObservable(),
+      state$: this._users.state.asObservable(),
+      data: () => {
+        return this._users.data.getValue().items;
+      }
+    };
+
+
+  private _isReady = false;
+  private _querySubscription: ISubscription;
+  private readonly _pageSizeCacheKey = 'categories.list.pageSize';
   private _categoryId: number = null;
-  private _newUserData: NewUserData = null;
 
   constructor(private _kalturaClient: KalturaClient,
               private browserService: BrowserService,
               private _widgetService: CategoryEntitlementsWidget,
-              private _appLocalization: AppLocalization) {
-    const defaultPageSize = this.browserService.getFromLocalStorage('endUsersPermissions.list.pageSize');
-    if (defaultPageSize !== null) {
-      this._updateQueryData({
-        pageSize: defaultPageSize
-      });
-    }
+              private _appLocalization: AppLocalization,
+              _logger: KalturaLogger) {
+    super(_logger);
     this._categoryId = this._widgetService.data.id;
   }
 
-  ngOnDestroy() {
-    this._state.complete();
-    this._queryData.complete();
-    this._users.complete();
-    if (this._usersExecuteSubscription) {
-      this._usersExecuteSubscription.unsubscribe();
-      this._usersExecuteSubscription = null;
+
+  private _prepare(): void {
+    if (!this._isReady) {
+      this._users.state.next({loading: true, errorMessage: null});
+
+      this._isReady = true;
+
+      const defaultPageSize = this.browserService.getFromLocalStorage(this._pageSizeCacheKey);
+      if (defaultPageSize !== null) {
+        this.filter({
+          pageSize: defaultPageSize
+        });
+      }
+
+      this._registerToFilterStoreDataChanges();
+      this._executeQuery();
     }
+  }
+
+  private _registerToFilterStoreDataChanges(): void {
+    this.filtersChange$
+      .cancelOnDestroy(this)
+      .subscribe(() => {
+        this._executeQuery();
+      });
+  }
+
+
+  ngOnDestroy() {
+    this._users.state.complete();
+    this._users.data.complete();
   }
 
   set categoryId(categoryId: number) {
     if (categoryId) {
       this._categoryId = categoryId;
-      this.reload(true);
+      this.reload();
     }
   }
 
@@ -111,98 +151,135 @@ export class ManageEndUserPermissionsService implements OnDestroy {
     return this._categoryId;
   }
 
-  public reload(force: boolean): void;
-  public reload(query: Partial<QueryData>): void;
-  public reload(query: boolean | Partial<QueryData>): void {
-    if (!this._categoryId) {
-      return undefined;
+  public reload(): void {
+    if (this._users.state.getValue().loading) {
+      return;
     }
-    const forceReload = (typeof query === 'object' || (typeof query === 'boolean' && query));
 
-    if (forceReload || this._users.getValue().totalCount === 0) {
-      if (typeof query === 'object') {
-        this._updateQueryData(query);
-      }
+    if (this._isReady) {
       this._executeQuery();
-    }
-  }
-
-  private _updateQueryData(partialData: Partial<QueryData>): void {
-    const newQueryData = Object.assign({}, this._queryData.getValue(), partialData);
-    this._queryData.next(newQueryData);
-
-    if (partialData.pageSize) {
-      this.browserService.setInLocalStorage('endUsersPermissions.list.pageSize', partialData.pageSize);
+    } else {
+      this._prepare();
     }
   }
 
   private _executeQuery(): void {
-    // cancel previous requests
-    if (this._usersExecuteSubscription) {
-      this._usersExecuteSubscription.unsubscribe();
+    if (this._querySubscription) {
+      this._querySubscription.unsubscribe();
+      this._querySubscription = null;
     }
 
-    this.browserService.scrollToTop();
+    const pageSize = this.cloneFilter('pageSize', null);
+    if (pageSize) {
+      this.browserService.setInLocalStorage(this._pageSizeCacheKey, pageSize);
+    }
 
-    this._state.next({loading: true, errorMessage: null});
+    this._users.state.next({loading: true, errorMessage: null});
 
-    // execute the request
-    this._usersExecuteSubscription = this._buildQueryRequest(this._queryData.getValue()).subscribe(
-      (data: Users) => {
-        this._usersExecuteSubscription = null;
-        this._state.next({loading: false, errorMessage: null});
-        this._users.next(data);
-        this._widgetService.membersTotalCount = data.totalCount;
-      },
-      error => {
-        this._usersExecuteSubscription = null;
-        const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
-        this._state.next({loading: false, errorMessage});
-      });
+
+    this._querySubscription = this.buildQueryRequest()
+      .cancelOnDestroy(this).subscribe(
+        response => {
+          this._querySubscription = null;
+
+          this._users.state.next({loading: false, errorMessage: null});
+
+          this._users.data.next({
+            items: response.items,
+            totalCount: response.totalCount
+          });
+
+          this._widgetService.membersTotalCount = response.totalCount;
+        },
+        error => {
+          this._querySubscription = null;
+          const errorMessage = error && error.message ? error.message : typeof error === 'string' ? error : 'invalid error';
+          this._users.state.next({loading: false, errorMessage});
+        });
   }
 
-  private _buildQueryRequest(queryData: QueryData): Observable<Users> {
-    if (!this._categoryId) {
-      return Observable.throw(new Error('ManageEndUserPermissionsService: Category has no end-users'));
-    }
-    const filter: KalturaCategoryUserFilter = new KalturaCategoryUserFilter({
-      categoryIdEqual: this._categoryId
-    });
-    let pagination: KalturaFilterPager = null;
-    const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
-      type: KalturaResponseProfileType.includeFields,
-      fields: queryData.fields
-    });
 
-    // update pagination args
-    if (queryData.pageIndex || queryData.pageSize) {
-      pagination = new KalturaFilterPager(
-        {
-          pageSize: queryData.pageSize,
-          pageIndex: queryData.pageIndex
-        }
-      );
-    }
+  private buildQueryRequest(): Observable<Users> {
+    try {
 
-    return this._kalturaClient.request(
-      new CategoryUserListAction({
-        filter,
-        pager: pagination,
-        responseProfile
-      }))
-      .monitor('ManageEndUserPermissionsService: get Category users')
-      .switchMap((result: KalturaCategoryUserListResponse) => (this._getKalturaUsers(result.objects, result.totalCount)))
-      .catch(error => {
-        return Observable.throw(new Error('Could not load End-Users Permissions'));
+      // create request items
+      if (!this._categoryId) {
+        return Observable.throw(new Error('ManageEndUserPermissionsService: Category has no end-users'));
+      }
+
+      const filter: KalturaCategoryUserFilter = new KalturaCategoryUserFilter({
+        categoryIdEqual: this._categoryId
       });
+
+      let pagination: KalturaFilterPager = null;
+      // update desired fields of entries
+      const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
+        type: KalturaResponseProfileType.includeFields,
+        fields: 'userId,permissionLevel,status,updateMethod,updatedAt'
+      });
+
+      const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
+      advancedSearch.type = KalturaSearchOperatorType.searchAnd;
+
+      const data: UsersFilters = this._getFiltersAsReadonly();
+
+      // filter 'freeText'
+      if (data.freetext) {
+        filter.freeText = data.freetext;
+      }
+
+      // update pagination args
+      if (data.pageIndex || data.pageSize) {
+        pagination = new KalturaFilterPager(
+          {
+            pageSize: data.pageSize,
+            pageIndex: data.pageIndex + 1
+          }
+        );
+      }
+
+      // filter 'status'
+      if (data.status && data.status.length > 0) {
+        filter.statusIn = data.status.map(e => e.value).join(',');
+      }
+
+      // filter 'updateMethod'
+      if (data.updateMethod && data.updateMethod.length > 0) {
+        filter.updateMethodIn = data.updateMethod.map(e => e.value).join(',');
+      }
+
+      // filter 'permissionLevels'
+      if (data.permissionLevels && data.permissionLevels.length > 0) {
+        filter.permissionLevelIn = data.permissionLevels.map(e => e.value).join(',');
+      }
+
+      // remove advanced search arg if it is empty
+      if (advancedSearch.items && advancedSearch.items.length === 0) {
+        delete filter.advancedSearch;
+      }
+
+      return this._kalturaClient.request(
+        new CategoryUserListAction({
+          filter,
+          pager: pagination,
+          responseProfile
+        }))
+        .monitor('ManageEndUserPermissionsService: get Category users')
+        .switchMap((result: KalturaCategoryUserListResponse) => (this._getKalturaUsers(result.objects, result.totalCount)))
+        .catch(error => {
+          return Observable.throw(error);
+        });
+    } catch (err) {
+      return Observable.throw(err);
+    }
   }
 
   private _getKalturaUsers(categoryUsers: KalturaCategoryUser[], totalCount: number): Observable<Users> {
-    if (!categoryUsers ) {
+    if (!categoryUsers) {
       return Observable.throw(new Error('ManageEndUserPermissionsService: Category has no end-users'))
     }
     if (!categoryUsers.length) {
-      return Observable.of({items:[], totalCount: 0});
+      return Observable.of({items: [], totalCount: 0});
     }
     const multiRequest = new KalturaMultiRequest();
     categoryUsers.forEach(user => {
@@ -242,7 +319,6 @@ export class ManageEndUserPermissionsService implements OnDestroy {
       });
   }
 
-
   public activateUsers(usersIds: string[]): Observable<void> {
     if (!usersIds || !usersIds.length) {
       return Observable.throw('Unable to activate users');
@@ -277,7 +353,7 @@ export class ManageEndUserPermissionsService implements OnDestroy {
 
     return this._kalturaClient.multiRequest(multiRequest)
       .map(response => {
-        if (response.hasErrors()) {
+          if (response.hasErrors()) {
             throw new Error(
               this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.errors.deactivateUsers'));
           }
@@ -299,7 +375,7 @@ export class ManageEndUserPermissionsService implements OnDestroy {
 
     return this._kalturaClient.multiRequest(multiRequest)
       .map(response => {
-        if (response.hasErrors()) {
+          if (response.hasErrors()) {
             throw new Error(
               this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.errors.deleteUsers'));
           }
@@ -387,5 +463,38 @@ export class ManageEndUserPermissionsService implements OnDestroy {
     }
     return result;
   }
+
+  protected _preFilter(updates: Partial<UsersFilters>): Partial<UsersFilters> {
+    if (typeof updates.pageIndex === 'undefined') {
+      // reset page index to first page everytime filtering the list by any filter that is not page index
+      updates.pageIndex = 0;
+    }
+
+    return updates;
+  }
+
+  protected _createDefaultFiltersValue(): UsersFilters {
+    return {
+      freetext: '',
+      pageSize: 50,
+      pageIndex: 0,
+      permissionLevels: [],
+      status: [],
+      updateMethod: []
+    };
+  }
+
+  protected _getTypeAdaptersMapping(): TypeAdaptersMapping<UsersFilters> {
+    return {
+      freetext: new StringTypeAdapter(),
+      pageSize: new NumberTypeAdapter(),
+      pageIndex: new NumberTypeAdapter(),
+      permissionLevels: new ListAdapter(),
+      status: new ListAdapter(),
+      updateMethod: new ListAdapter(),
+    };
+  }
+
+
 }
 

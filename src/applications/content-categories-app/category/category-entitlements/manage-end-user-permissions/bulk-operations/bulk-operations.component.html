@@ -47,7 +47,7 @@
         <div class="kFiltersContainer" *ngIf="!selectedItems.length">
           <input type="text" pInputText class="kSearchInput"
                  [(ngModel)]="_freetextSearch"
-                 (keyup.enter)="onFreetextChanged()"
+                 (keyup.enter)="freetextChanged.emit()"
                  placeholder="{{'applications.content.categoryDetails.entitlements.usersPermissions.bulkOperations.search' | translate}}">
           <div #refineBtn class="kRefine">
             <i class="kIconfilter"></i>

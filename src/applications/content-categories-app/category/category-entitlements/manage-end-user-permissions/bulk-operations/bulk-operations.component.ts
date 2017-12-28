@@ -18,6 +18,7 @@ export class ManageEndUserPermissionsBulkOperationsComponent implements OnInit {
 
   @Output() addItem = new EventEmitter<void>();
   @Output() clearSelection = new EventEmitter<void>();
+  @Output() freetextChanged = new EventEmitter<void>();
   @Output() deleteItems = new EventEmitter<User[]>();
   @Output()
   onActionSelected = new EventEmitter<{action: 'activate' | 'deactivate' | 'permissionLevel'| 'updateMethod' | 'delete', users: User[], actionPayload?: any}>();
@@ -33,10 +34,6 @@ export class ManageEndUserPermissionsBulkOperationsComponent implements OnInit {
     this._bulkActionsMenu = this.getBulkActionItems();
   }
 
-
-  onFreetextChanged(): void {
-    // todo: [kmcng]
-  }
 
   getBulkActionItems(): MenuItem[] {
     return [

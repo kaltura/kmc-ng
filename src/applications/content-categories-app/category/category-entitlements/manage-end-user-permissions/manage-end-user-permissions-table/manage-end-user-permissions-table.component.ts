@@ -14,6 +14,7 @@ import {ManageEndUserPermissionsService, User} from '../manage-end-user-permissi
 import {KalturaCategoryUserPermissionLevel} from 'kaltura-ngx-client/api/types/KalturaCategoryUserPermissionLevel';
 import {KalturaUpdateMethodType} from 'kaltura-ngx-client/api/types/KalturaUpdateMethodType';
 import {KalturaCategoryUserStatus} from 'kaltura-ngx-client/api/types/KalturaCategoryUserStatus';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 
 @Component({
   selector: 'kManageEndUserPermissionsTable',
@@ -22,6 +23,7 @@ import {KalturaCategoryUserStatus} from 'kaltura-ngx-client/api/types/KalturaCat
 })
 export class ManageEndUserPermissionsTableComponent implements OnInit, AfterViewInit, OnDestroy {
   public _users: User[] = [];
+  public _blockerMessage: AreaBlockerMessage = null;
   private _deferredUsers: any[];
   public _deferredLoading = true;
 
@@ -41,7 +43,7 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
 
   @Input() filter: any = {};
   @Input() selectedUsers: User[] = [];
-  @Input() categoryInheritUserPermissions: boolean = false;
+  @Input() categoryInheritUserPermissions = false;
 
   @Output()
   sortChanged = new EventEmitter<any>();
@@ -49,15 +51,14 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
   onActionSelected = new EventEmitter<{action: string, users: User, actionPayload: any}>();
   @Output()
   selectedUsersChange = new EventEmitter<any>();
+  @Output()
+  closeParentPopup = new EventEmitter<void>();
 
   private _usersServiceStatusSubscription: ISubscription;
   public _permissionLevelOptions: { value: number, label: string }[] = [];
   public _updateMethodOptions: { value: number, label: string }[] = [];
   public _kalturaCategoryUserStatus = KalturaCategoryUserStatus;
-
-
   public _emptyMessage = '';
-
 
   public rowTrackBy: Function = (index: number, item: any) => {
     return item.id
@@ -69,14 +70,32 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
   }
 
   ngOnInit() {
+    this._blockerMessage = null;
     this._emptyMessage = '';
     let loadedOnce = false; // used to set the empty message to "no results" only after search
-    this._usersServiceStatusSubscription = this.manageEndUserPermissionsService.state$.subscribe(
-    result => {
-      if (!result.errorMessage) {
+    this._usersServiceStatusSubscription = this.manageEndUserPermissionsService.users.state$.subscribe(
+      result => {
+        if (result.errorMessage) {
+          this._blockerMessage = new AreaBlockerMessage({
+            message: result.errorMessage ||
+            this._appLocalization.get('applications.content.categoryDetails.entitlements.usersPermissions.errors.loadEndUserPermissions'),
+            buttons: [{
+              label: this._appLocalization
+                .get('applications.content.categoryDetails.entitlements.usersPermissions.addUsers.errors.backToEntitlements'),
+              action: () => {
+                this._blockerMessage = null;
+                this.closeParentPopup.emit();
+              }
+            }
+            ]
+          });
+        } else {
+          this._blockerMessage = null;
           if (result.loading) {
             this._emptyMessage = '';
             loadedOnce = true;
+            this._fillPermissionLevelOptions();
+            this._fillUpdateMethodOptions();
           } else {
             if (loadedOnce) {
               this._emptyMessage = this._appLocalization.get('applications.content.table.noResults');
@@ -88,9 +107,6 @@ export class ManageEndUserPermissionsTableComponent implements OnInit, AfterView
         console.warn('[kmcng] -> could not load end users permissions'); // navigate to error page
         throw error;
       });
-
-    this._fillPermissionLevelOptions();
-    this._fillUpdateMethodOptions();
   }
 
   private _fillPermissionLevelOptions() {

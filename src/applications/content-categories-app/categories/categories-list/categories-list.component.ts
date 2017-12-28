@@ -3,13 +3,10 @@ import {AreaBlockerMessage, StickyComponent} from '@kaltura-ng/kaltura-ui';
 import {CategoriesFilters, CategoriesService, SortDirection} from '../categories.service';
 import {BrowserService} from 'app-shared/kmc-shell/providers/browser.service';
 import {AppLocalization} from '@kaltura-ng/kaltura-common';
-import {ISubscription} from 'rxjs/Subscription';
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {CategoriesUtilsService} from '../../categories-utils.service';
 import {PopupWidgetComponent, PopupWidgetStates} from '@kaltura-ng/kaltura-ui/popup-widget/popup-widget.component';
-
-import {AppEventsService} from 'app-shared/kmc-shared';
 import {CategoryCreationService} from 'app-shared/kmc-shared/category-creation';
 
 @Component({
@@ -22,7 +19,6 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
 
     public _blockerMessage: AreaBlockerMessage = null;
     public _selectedCategories: KalturaCategory[] = [];
-    public _categories: KalturaCategory[] = [];
     public _categoriesTotalCount: number = null;
     public _selectedCategoryToMove: KalturaCategory;
 
@@ -40,12 +36,11 @@ export class CategoriesListComponent implements OnInit, OnDestroy, AfterViewInit
         sortDirection: null
     };
 
-    constructor(private _categoriesService: CategoriesService,
+    constructor(public _categoriesService: CategoriesService,
                 private router: Router,
                 private _browserService: BrowserService,
                 private _appLocalization: AppLocalization,
                 private _categoriesUtilsService: CategoriesUtilsService,
-                private _appEvents: AppEventsService,
                 public _categoryCreationService: CategoryCreationService) {
     }
 

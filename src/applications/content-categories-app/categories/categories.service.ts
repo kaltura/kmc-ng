@@ -244,7 +244,7 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
 
                     this._categories.data.next({
                         items: response.objects,
-                        totalCount: <number>response.totalCount
+                        totalCount: response.totalCount
                     });
                 },
                 error => {
@@ -254,169 +254,169 @@ export class CategoriesService extends FiltersStoreBase<CategoriesFilters> imple
                 });
     }
 
-    private buildQueryRequest(): Observable<KalturaCategoryListResponse> {
-        try {
-            // create request items
-            const filter: KalturaCategoryFilter = new KalturaCategoryFilter({});
-            let pagination: KalturaFilterPager = null;
-// update desired fields of entries
-            const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
-                type: KalturaResponseProfileType.includeFields,
-                fields: 'id, name, createdAt, directSubCategoriesCount, entriesCount, fullName, tags'
-            });
+  private buildQueryRequest(): Observable<KalturaCategoryListResponse> {
+    try {
+      // create request items
+      const filter: KalturaCategoryFilter = new KalturaCategoryFilter({});
+      let pagination: KalturaFilterPager = null;
+      // update desired fields of entries
+      const responseProfile: KalturaDetachedResponseProfile = new KalturaDetachedResponseProfile({
+        type: KalturaResponseProfileType.includeFields,
+        fields: 'id, name, createdAt, directSubCategoriesCount, entriesCount, fullName, tags'
+      });
 
-            const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
-            advancedSearch.type = KalturaSearchOperatorType.searchAnd;
+      const advancedSearch = filter.advancedSearch = new KalturaSearchOperator({});
+      advancedSearch.type = KalturaSearchOperatorType.searchAnd;
 
-            const data: CategoriesFilters = this._getFiltersAsReadonly();
+      const data: CategoriesFilters = this._getFiltersAsReadonly();
 
-// filter 'freeText'
-            if (data.freetext) {
-                filter.freeText = data.freetext;
-            }
+      // filter 'freeText'
+      if (data.freetext) {
+        filter.freeText = data.freetext;
+      }
 
-// filter 'createdAt'
-            if (data.createdAt) {
-                if (data.createdAt.fromDate) {
-                    filter.createdAtGreaterThanOrEqual = KalturaUtils.getStartDateValue(data.createdAt.fromDate);
-                }
-
-                if (data.createdAt.toDate) {
-                    filter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(data.createdAt.toDate);
-                }
-            }
-
-// filters of custom metadata lists
-            if (this._metadataProfiles && this._metadataProfiles.length > 0) {
-
-                this._metadataProfiles.forEach(metadataProfile => {
-                    // create advanced item for all metadata profiles regardless if the user filtered by them or not.
-                    // this is needed so freetext will include all metadata profiles while searching.
-                    const metadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem(
-                        {
-                            metadataProfileId: metadataProfile.id,
-                            type: KalturaSearchOperatorType.searchAnd,
-                            items: []
-                        }
-                    );
-                    advancedSearch.items.push(metadataItem);
-
-                    metadataProfile.lists.forEach(list => {
-                        const metadataProfileFilters = data.customMetadata[list.id];
-                        if (metadataProfileFilters && metadataProfileFilters.length > 0) {
-                            const innerMetadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem({
-                                metadataProfileId: metadataProfile.id,
-                                type: KalturaSearchOperatorType.searchOr,
-                                items: []
-                            });
-                            metadataItem.items.push(innerMetadataItem);
-
-                            metadataProfileFilters.forEach(filterItem => {
-                                const searchItem = new KalturaSearchCondition({
-                                    field: `/*[local-name()='metadata']/*[local-name()='${list.name}']`,
-                                    value: filterItem.value
-                                });
-
-                                innerMetadataItem.items.push(searchItem);
-                            });
-                        }
-                    });
-                });
-            }
-
-// update the sort by args
-            if (data.sortBy) {
-                filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
-            }
-
-
-// update pagination args
-            if (data.pageIndex || data.pageSize) {
-                pagination = new KalturaFilterPager(
-                    {
-                        pageSize: data.pageSize,
-                        pageIndex: data.pageIndex + 1
-                    }
-                );
-            }
-
-// filter 'privacyTypes'
-            if (data.privacyTypes && data.privacyTypes.length > 0) {
-                filter.privacyIn = data.privacyTypes.map(e => e.value).join(',');
-            }
-
-// filter 'categoryListing', set filter if only one option selected
-            if (data.categoryListing) {
-                if (data.categoryListing.length === 1) {
-                    switch (data.categoryListing[0].value) {
-                        case KalturaAppearInListType.categoryMembersOnly.toString():
-                            filter.appearInListEqual = KalturaAppearInListType.categoryMembersOnly;
-                            break;
-                        case KalturaAppearInListType.partnerOnly.toString():
-                            filter.appearInListEqual = KalturaAppearInListType.partnerOnly;
-                            break;
-                        default:
-                            break
-                    }
-                }
-            }
-
-// filter 'contributionPolicy', set filter if only one option selected
-            if (data.contributionPolicy) {
-                if (data.contributionPolicy.length === 1) {
-                    data.contributionPolicy.forEach(item => {
-                        switch (item.value) {
-                            case KalturaContributionPolicyType.all.toString():
-                                filter.contributionPolicyEqual = KalturaContributionPolicyType.all;
-                                break;
-                            case KalturaContributionPolicyType.membersWithContributionPermission.toString():
-                                filter.contributionPolicyEqual = KalturaContributionPolicyType.membersWithContributionPermission;
-                                break;
-                            default:
-                                break
-                        }
-                    });
-                }
-            }
-
-// filter 'endUserPermissions', set filter if only one option selected
-            if (data.endUserPermissions) {
-                if (data.endUserPermissions.length === 1) {
-                    data.endUserPermissions.forEach(item => {
-                        switch (item.value) {
-                            case 'has':
-                                filter.membersCountGreaterThanOrEqual = 1;
-                                filter.membersCountLessThanOrEqual = undefined;
-                                break;
-                            case 'no':
-                                filter.membersCountLessThanOrEqual = 0;
-                                filter.membersCountGreaterThanOrEqual = undefined;
-                                break;
-                            default:
-                                break
-                        }
-                    });
-                }
-            }
-
-// remove advanced search arg if it is empty
-            if (advancedSearch.items && advancedSearch.items.length === 0) {
-                delete filter.advancedSearch;
-            }
-
-// build the request
-            return this._kalturaClient.request(
-                new CategoryListAction({
-                    filter,
-                    pager: pagination,
-                    responseProfile
-                })
-            );
-        } catch (err) {
-            return Observable.throw(err);
+      // filter 'createdAt'
+      if (data.createdAt) {
+        if (data.createdAt.fromDate) {
+          filter.createdAtGreaterThanOrEqual = KalturaUtils.getStartDateValue(data.createdAt.fromDate);
         }
 
+        if (data.createdAt.toDate) {
+          filter.createdAtLessThanOrEqual = KalturaUtils.getEndDateValue(data.createdAt.toDate);
+        }
+      }
+
+      // filters of custom metadata lists
+      if (this._metadataProfiles && this._metadataProfiles.length > 0) {
+
+        this._metadataProfiles.forEach(metadataProfile => {
+          // create advanced item for all metadata profiles regardless if the user filtered by them or not.
+          // this is needed so freetext will include all metadata profiles while searching.
+          const metadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem(
+            {
+              metadataProfileId: metadataProfile.id,
+              type: KalturaSearchOperatorType.searchAnd,
+              items: []
+            }
+          );
+          advancedSearch.items.push(metadataItem);
+
+          metadataProfile.lists.forEach(list => {
+            const metadataProfileFilters = data.customMetadata[list.id];
+            if (metadataProfileFilters && metadataProfileFilters.length > 0) {
+              const innerMetadataItem: KalturaMetadataSearchItem = new KalturaMetadataSearchItem({
+                metadataProfileId: metadataProfile.id,
+                type: KalturaSearchOperatorType.searchOr,
+                items: []
+              });
+              metadataItem.items.push(innerMetadataItem);
+
+              metadataProfileFilters.forEach(filterItem => {
+                const searchItem = new KalturaSearchCondition({
+                  field: `/*[local-name()='metadata']/*[local-name()='${list.name}']`,
+                  value: filterItem.value
+                });
+
+                innerMetadataItem.items.push(searchItem);
+              });
+            }
+          });
+        });
+      }
+
+      // update the sort by args
+      if (data.sortBy) {
+        filter.orderBy = `${data.sortDirection === SortDirection.Desc ? '-' : '+'}${data.sortBy}`;
+      }
+
+
+      // update pagination args
+      if (data.pageIndex || data.pageSize) {
+        pagination = new KalturaFilterPager(
+          {
+            pageSize: data.pageSize,
+            pageIndex: data.pageIndex + 1
+          }
+        );
+      }
+
+      // filter 'privacyTypes'
+      if (data.privacyTypes && data.privacyTypes.length > 0) {
+        filter.privacyIn = data.privacyTypes.map(e => e.value).join(',');
+      }
+
+      // filter 'categoryListing', set filter if only one option selected
+      if (data.categoryListing) {
+        if (data.categoryListing.length === 1) {
+          switch (data.categoryListing[0].value) {
+            case KalturaAppearInListType.categoryMembersOnly.toString():
+              filter.appearInListEqual = KalturaAppearInListType.categoryMembersOnly;
+              break;
+            case KalturaAppearInListType.partnerOnly.toString():
+              filter.appearInListEqual = KalturaAppearInListType.partnerOnly;
+              break;
+            default:
+              break
+          }
+        }
+      }
+
+      // filter 'contributionPolicy', set filter if only one option selected
+      if (data.contributionPolicy) {
+        if (data.contributionPolicy.length === 1) {
+          data.contributionPolicy.forEach(item => {
+            switch (item.value) {
+              case KalturaContributionPolicyType.all.toString():
+                filter.contributionPolicyEqual = KalturaContributionPolicyType.all;
+                break;
+              case KalturaContributionPolicyType.membersWithContributionPermission.toString():
+                filter.contributionPolicyEqual = KalturaContributionPolicyType.membersWithContributionPermission;
+                break;
+              default:
+                break
+            }
+          });
+        }
+      }
+
+      // filter 'endUserPermissions', set filter if only one option selected
+      if (data.endUserPermissions) {
+        if (data.endUserPermissions.length === 1) {
+          data.endUserPermissions.forEach(item => {
+            switch (item.value) {
+              case 'has':
+                filter.membersCountGreaterThanOrEqual = 1;
+                filter.membersCountLessThanOrEqual = undefined;
+                break;
+              case 'no':
+                filter.membersCountLessThanOrEqual = 0;
+                filter.membersCountGreaterThanOrEqual = undefined;
+                break;
+              default:
+                break
+            }
+          });
+        }
+      }
+
+      // remove advanced search arg if it is empty
+      if (advancedSearch.items && advancedSearch.items.length === 0) {
+        delete filter.advancedSearch;
+      }
+
+      // build the request
+      return this._kalturaClient.request(
+        new CategoryListAction({
+          filter,
+          pager: pagination,
+          responseProfile
+        })
+      );
+    } catch (err) {
+      return Observable.throw(err);
     }
+
+  }
 
     public deleteCategory(categoryId: number): Observable<void> {
 
