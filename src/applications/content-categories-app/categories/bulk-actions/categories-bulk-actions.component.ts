@@ -65,15 +65,23 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
     return [
       {
         label: this._appLocalization.get('applications.content.categories.bActions.addRemoveTags'), items: [
-          { label: this._appLocalization.get('applications.content.categories.bActions.addTags'), command: (event) => { this.openBulkActionWindow('addTags', 500, 500) } },
-          { label: this._appLocalization.get('applications.content.categories.bActions.removeTags'), command: (event) => { this.openBulkActionWindow('removeTags', 500, 500) } }]
+          { label: this._appLocalization.get('applications.content.categories.bActions.addTags'),
+            command: () => { this.openBulkActionWindow('addTags', 500, 500) } },
+          { label: this._appLocalization.get('applications.content.categories.bActions.removeTags'),
+            command: () => { this.openBulkActionWindow('removeTags', 500, 500) } }]
       },
-      { label: this._appLocalization.get('applications.content.categories.bActions.moveCategories'), command: (event) => { this._moveCategories() } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'), command: (event) => { this.openBulkActionWindow('changeContentPrivacy', 586, 352) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'), command: (event) => { this.openBulkActionWindow('changeCategoryListing', 586, 314) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'), command: (event) => { this.openBulkActionWindow('changeContributionPolicy', 586, 314) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryOwner'), command: (event) => { this.openBulkActionWindow('changeOwner', 500, 280) } },
-      { label: this._appLocalization.get('applications.content.categories.bActions.delete'), command: (event) => { this.deleteCategories() } }
+      { label: this._appLocalization.get('applications.content.categories.bActions.moveCategories'),
+        command: () => { this._moveCategories() } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeContentPrivacy'),
+        command: () => { this.openBulkActionWindow('changeContentPrivacy', 586, 352) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryListing'),
+        command: () => { this.openBulkActionWindow('changeCategoryListing', 586, 314) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeContributionPolicy'),
+        command: () => { this.openBulkActionWindow('changeContributionPolicy', 586, 314) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.changeCategoryOwner'),
+        command: () => { this.openBulkActionWindow('changeOwner', 500, 280) } },
+      { label: this._appLocalization.get('applications.content.categories.bActions.delete'),
+        command: () => { this.deleteCategories() } }
     ];
   }
 
@@ -171,8 +179,7 @@ export class CategoriesBulkActionsComponent implements OnInit, OnDestroy {
       message = deleteMessage.concat(this.selectedCategories.length > 1 ?
         this._appLocalization.get('applications.content.categories.confirmDeleteMultipleWithSubCategories') :
         this._appLocalization.get('applications.content.categories.confirmDeleteWithSubCategories'));
-    }
-    else {
+    } else {
       message = deleteMessage.concat(this.selectedCategories.length > 1 ?
         this._appLocalization.get('applications.content.categories.confirmDeleteMultiple') :
         this._appLocalization.get('applications.content.categories.confirmDeleteSingle'));
